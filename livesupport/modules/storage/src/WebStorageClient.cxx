@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.48 $
+    Version  : $Revision: 1.49 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,7 +43,6 @@
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcClient.h>
-#include <XmlRpcValue.h>
 #include <XmlRpcUtil.h>
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -63,6 +62,7 @@ using namespace XmlRpc;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Storage;
+
 
 /* ===================================================  local data structures */
 
@@ -408,6 +408,11 @@ static const std::string    getPlaylistUrlParamName = "url";
  *  The name of the token parameter returned (for open) or input (for close)
  *----------------------------------------------------------------------------*/
 static const std::string    getPlaylistTokenParamName = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the content parameter returned (for open) or input (for close)
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistContentParamName = "content";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: editPlaylist */
@@ -914,7 +919,8 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
-                                Ptr<UniqueId>::Ref  id) const
+                                Ptr<UniqueId>::Ref  id,
+                                bool                deep) const
                                                 throw (Core::XmlRpcException)
 {
     EditedPlaylistsType::const_iterator
@@ -932,12 +938,9 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                               storageServerPath.c_str(), false);
 
     parameters.clear();
-    parameters[getPlaylistSessionIdParamName] 
-            = sessionId->getId();
-    parameters[getPlaylistPlaylistIdParamName] 
-            = std::string(*id);
-    parameters[getPlaylistRecursiveParamName] 
-            = false;
+    parameters[getPlaylistSessionIdParamName]  = sessionId->getId();
+    parameters[getPlaylistPlaylistIdParamName] = std::string(*id);
+    parameters[getPlaylistRecursiveParamName]  = deep;
 
     result.clear();
     if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
@@ -957,7 +960,6 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
              << result;
         throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
-
     if (! result.hasMember(getPlaylistUrlParamName)
             || result[getPlaylistUrlParamName].getType() 
                                                 != XmlRpcValue::TypeString
@@ -991,6 +993,10 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     } catch (xmlpp::exception &e) {
         throw XmlRpcInvalidDataException(
                                     "error parsing playlist metafile");
+    }
+
+    if (deep) {
+        playlist = acquirePlaylist(playlist, result);
     }
 
     parameters.clear();
@@ -1075,6 +1081,9 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Opens the playlist for editing, and returns its URL.
+ *----------------------------------------------------------------------------*/
 void
 WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                                        Ptr<UniqueId>::Ref  id,
@@ -1267,12 +1276,12 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
-                                    Ptr<UniqueId>::Ref  id) const
+WebStorageClient :: acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
+                                    XmlRpcValue       & result) const
                                                 throw (Core::XmlRpcException)
 {
-    Ptr<Playlist>::Ref      oldPlaylist = getPlaylist(sessionId, id);
-    
+    XmlRpcValue             content;
+    int                     index;
     Ptr<time_duration>::Ref playlength = oldPlaylist->getPlaylength();
     Ptr<Playlist>::Ref      newPlaylist(new Playlist(oldPlaylist->getId(),
                                                      playlength));
@@ -1293,31 +1302,53 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         = smilBodyNode->add_child(smilParNodeName);
     
     Playlist::const_iterator it = oldPlaylist->begin();
+    if (result.hasMember(getPlaylistContentParamName)) {
+        content = result[getPlaylistContentParamName];
+    }
+    // if there is no content parameter, leave the original, empty content
 
+    index = 0;
+    // assume that it is as long as the size of the content array
     while (it != oldPlaylist->end()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         Ptr<time_duration>::Ref     relativeOffset
                                               = plElement->getRelativeOffset();
         Ptr<FadeInfo>::Ref          fadeInfo  = plElement->getFadeInfo();
 
-        Ptr<Playable>::Ref playable;
+        if (index >= content.size()) {
+            break;
+        }
+        XmlRpcValue     contents = content[index];
+        ++index;
+        if (!contents.hasMember(getPlaylistUrlParamName)) {
+            // TODO: maybe signal error?
+            continue;
+        }
+
+        Ptr<Playable>::Ref              playable;
+        Ptr<const std::string>::Ref     url;
+        Ptr<AudioClip>::Ref             audioClip;
+        Ptr<Playlist>::Ref              playlist;
         switch (plElement->getType()) {
             case PlaylistElement::AudioClipType :
-                playable = acquireAudioClip(sessionId, plElement
-                                                        ->getAudioClip()
-                                                        ->getId());
+                url.reset(new std::string(contents[getPlaylistUrlParamName]));
+                audioClip.reset(new AudioClip(*plElement->getAudioClip()));
+                audioClip->setUri(url);
+                url.reset();
+                newPlaylist->addPlayable(audioClip, relativeOffset, fadeInfo);
+                playable = audioClip;
                 break;
             case PlaylistElement::PlaylistType :
-                playable = acquirePlaylist(sessionId, plElement
-                                                        ->getPlaylist()
-                                                        ->getId());
+                playlist.reset(new Playlist(*plElement->getPlaylist()));
+                playlist = acquirePlaylist(playlist, contents);
+                newPlaylist->addPlayable(playlist, relativeOffset, fadeInfo);
+                playable = playlist;
                 break;
             default :     // this should never happen
                 throw XmlRpcInvalidArgumentException(
                                            "unexpected playlist element type "
                                            "(neither audio clip nor playlist)");
         }
-        newPlaylist->addPlayable(playable, relativeOffset, fadeInfo);
 
         xmlpp::Element* smilPlayableNode
                         = smilParNode->add_child(smilPlayableNodeName);
@@ -1440,13 +1471,8 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
     while (it != playlist->end()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         if (plElement->getType() == PlaylistElement::AudioClipType) {
-            try {
-                releaseAudioClip(it->second->getAudioClip());
-            }
-            catch (XmlRpcException &e) {
-                eMsg += e.what();
-                eMsg += "\n";
-            }
+            // don't have to release, as it will be done by the storage server
+            // for clips inside the playlist
             ++it;
         } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             try {
@@ -1457,8 +1483,9 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
                 eMsg += "\n";
             }
             ++it;
-        } else {                      // this should never happen
-                eMsg += "unexpected playlist element type\n";
+        } else {
+            // this should never happen
+            eMsg += "unexpected playlist element type\n";
         }        
     }
 
@@ -2230,7 +2257,7 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
         playlists->push_back(getPlaylist(sessionId, *it));
         ++it;
     }
-    
+
     return playlists;
 }
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <stdexcept>
 
+#include <XmlRpcValue.h>
+
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
@@ -49,6 +51,8 @@
 
 namespace LiveSupport {
 namespace Storage {
+
+using namespace XmlRpc;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
@@ -95,8 +99,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location path          CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.32 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.33 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -141,6 +145,18 @@ class WebStorageClient :
         EditedPlaylistsType         editedPlaylists;
 
         /**
+         *  A vector containing the unique IDs of the audio clips returned 
+         *  by reset() (for testing) or by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
+
+        /**
+         *  A vector containing the unique IDs of the playlists returned 
+         *  by reset() (for testing) or by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+
+        /**
          *  Auxilliary method used by editPlaylist() and createPlaylist().
          *  Opens the playlist for editing, and returns its URL.
          *
@@ -160,16 +176,47 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  A vector containing the unique IDs of the audio clips returned 
-         *  by reset() (for testing) or by search().
+         *  Return a playlist with the specified id to be displayed.
+         *  If the playlist is being edited, and this method is called
+         *  by the same user who is editing the playlist,
+         *  (i.e., the method is called with the same sessionId and playlistId
+         *  that editPlaylist() was), then the working copy of the playlist
+         *  is returned.
+         *  Any other user gets the old (pre-editPlaylist()) copy from storage.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param id the id of the playlist to return.
+         *  @param deep signal if all playable objects are to be accessed
+         *         and locked, that are referenced by this playlist, or
+         *         any playlist contained in this one.
+         *  @return the requested playlist.
+         *  @exception XmlRpcInvalidDataException if the audio clip we got
+         *                  from the storage is invalid.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                  call or no playlist with the specified id exists.
          */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
+        Ptr<Playlist>::Ref
+        getPlaylist(Ptr<SessionId>::Ref sessionId,
+                    Ptr<UniqueId>::Ref  id,
+                    bool                deep) const
+                                                throw (XmlRpcException);
 
         /**
-         *  A vector containing the unique IDs of the playlists returned 
-         *  by reset() (for testing) or by search().
+         *  Do the final stages of acquring a playlist: generate SMIL
+         *  files, etc.
+         * 
+         *  @param oldPlaylist the playlist to work on.
+         *  @param result the XML-RPC result from  getPlaylist() call
+         *         with deep == true
+         *  @return a playlist which has a URI filed, and all things below
+         *          it are openned properly and processed as well.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                  call or no playlist with the specified id exists.
          */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+        Ptr<Playlist>::Ref
+        acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
+                        XmlRpcValue       & result) const
+                                                throw (XmlRpcException);
 
 
     public:
@@ -266,8 +313,10 @@ class WebStorageClient :
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
                     Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException);
-
+                                                throw (XmlRpcException)
+        {
+            return getPlaylist(sessionId, id, false);
+        }
 
         /**
          *  Return a playlist with the specified id to be edited.
@@ -352,7 +401,12 @@ class WebStorageClient :
         virtual Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                            throw (XmlRpcException);
+                                            throw (XmlRpcException)
+        {
+            // FIXME: silently, with deep == true, getPlaylist will also
+            //        generate all related SMIL files, etc.
+            return getPlaylist(sessionId, id, true);
+        }
 
         /**
          *  Release the resources (audio clips, other playlists) used 
