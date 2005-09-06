@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include <gtkmm/alignment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/window.h>
+#include <gtkmm/scrolledwindow.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
@@ -87,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -95,7 +96,7 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The layout used in the window.
          */
-        Gtk::Table                * layout;
+        Gtk::Box                 * layout;
 
         /**
          *  The choose file label
@@ -123,29 +124,14 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         Notebook                  * metadataNotebook;
 
         /**
-         *  The main input section.
-         */
-        Gtk::Alignment            * mainSection;
-
-        /**
          *  The layout of the main section.
          */
         Gtk::Table                * mainLayout;
 
         /**
-         *  The music input section.
-         */
-        Gtk::Alignment            * musicSection;
-
-        /**
          *  The layout of the music section.
          */
         Gtk::Table                * musicLayout;
-
-        /**
-         *  The talk input section.
-         */
-        Gtk::Alignment            * talkSection;
 
         /**
          *  The layout of the talk section.
@@ -173,9 +159,9 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         Gtk::Label                * lengthValueLabel;
 
         /**
-         *  The button bar.
+         *  The button box.
          */
-        Gtk::HBox                 * buttonBar;
+        Gtk::ButtonBox            * buttonBox;
 
         /**
          *  The upload button.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,36 +87,11 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         chooseFileButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("chooseFileButtonLabel")));
 
-        // build up the notepad for the different metadata sections
-        metadataNotebook = Gtk::manage(new Notebook());
-        
-        mainSection  = Gtk::manage(new Gtk::Alignment());
-        musicSection = Gtk::manage(new Gtk::Alignment());
-        talkSection  = Gtk::manage(new Gtk::Alignment());
-        
+        // add the metadata entry fields
         mainLayout   = Gtk::manage(new Gtk::Table());
         musicLayout  = Gtk::manage(new Gtk::Table());
         talkLayout   = Gtk::manage(new Gtk::Table());
-        
-        mainLayout->set_row_spacings(2);
-        mainLayout->set_col_spacings(5);
-        musicLayout->set_row_spacings(2);
-        musicLayout->set_col_spacings(5);
-        talkLayout->set_row_spacings(2);
-        talkLayout->set_col_spacings(5);
-        
-        mainSection->add(*mainLayout);
-        musicSection->add(*musicLayout);
-        talkSection->add(*talkLayout);
-        
-        metadataNotebook->appendPage(*mainSection,
-                                *getResourceUstring("mainSectionLabel"));
-        metadataNotebook->appendPage(*musicSection,
-                                *getResourceUstring("musicSectionLabel"));
-        metadataNotebook->appendPage(*talkSection,
-                                *getResourceUstring("talkSectionLabel"));
-        
-        // add the metadata entry fields
+                
         Ptr<MetadataTypeContainer>::Ref
                     metadataTypes = gLiveSupport->getMetadataTypeContainer();
         MetadataTypeContainer::Vector::const_iterator   it;
@@ -171,10 +146,8 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
         // set up the length label, and add it to the main tab
         lengthLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("lengthLabel"),
-                                Gtk::ALIGN_RIGHT));
+                                *getResourceUstring("lengthLabel") ));
         lengthValueLabel = Gtk::manage(new Gtk::Label());
-        lengthValueLabel->set_width_chars(8);
 
         mainLayout->attach(*lengthLabel,      0, 1, mainCounter, mainCounter+1);
         mainLayout->attach(*lengthValueLabel, 1, 2, mainCounter, mainCounter+1);
@@ -192,21 +165,57 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         std::exit(1);
     }
 
-    // build up the button bar
-    buttonBar   = Gtk::manage(new Gtk::HBox());
-    buttonBar->add(*closeButton);
-    buttonBar->add(*uploadButton);
+    // build up the notepad for the different metadata sections
+    metadataNotebook = Gtk::manage(new Notebook());
+    
+    mainLayout->set_row_spacings(2);
+    mainLayout->set_col_spacings(5);
+    musicLayout->set_row_spacings(2);
+    musicLayout->set_col_spacings(5);
+    talkLayout->set_row_spacings(2);
+    talkLayout->set_col_spacings(5);
+    
+    Gtk::Alignment *    mainAlignment  = Gtk::manage(new Gtk::Alignment());
+    Gtk::Alignment *    musicAlignment = Gtk::manage(new Gtk::Alignment());
+    Gtk::Alignment *    talkAlignment  = Gtk::manage(new Gtk::Alignment());
+    mainAlignment->add(*mainLayout);
+    musicAlignment->add(*musicLayout);
+    talkAlignment->add(*talkLayout);
+    
+    try {
+        metadataNotebook->appendPage(*mainAlignment,
+                                *getResourceUstring("mainSectionLabel"));
+        metadataNotebook->appendPage(*musicAlignment,
+                                *getResourceUstring("musicSectionLabel"));
+        metadataNotebook->appendPage(*talkAlignment,
+                                *getResourceUstring("talkSectionLabel"));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
 
-    // set up the layout, which is a button box
-    layout = Gtk::manage(new Gtk::Table());
+    // build up the button box
+    buttonBox   = Gtk::manage(new Gtk::HButtonBox());
+    buttonBox->set_layout(Gtk::BUTTONBOX_END);
+    buttonBox->set_spacing(5);
+    buttonBox->pack_start(*closeButton);
+    buttonBox->pack_start(*uploadButton);
 
     // set up the main window, and show everything
-    layout->attach(*chooseFileLabel,   0, 1, 0, 1);
-    layout->attach(*fileNameEntryBin,  0, 1, 1, 2);
-    layout->attach(*chooseFileButton,  1, 2, 1, 2);
-    layout->attach(*metadataNotebook,  0, 2, 2, 3);
-    layout->attach(*buttonBar,         0, 2, 3, 4);
-    layout->attach(*statusBar,         0, 2, 4, 5);
+    Gtk::Box *      topBox = Gtk::manage(new Gtk::HBox);
+    topBox->pack_start(*chooseFileLabel,  Gtk::PACK_SHRINK, 5);
+    topBox->pack_start(*fileNameEntryBin, Gtk::PACK_EXPAND_WIDGET, 5);
+    topBox->pack_start(*chooseFileButton, Gtk::PACK_SHRINK, 5);
+    
+    Gtk::Box *      extraSpace = Gtk::manage(new Gtk::HBox);
+        
+    layout = Gtk::manage(new Gtk::VBox());
+    layout->pack_start(*extraSpace, Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*topBox,     Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*metadataNotebook, Gtk::PACK_EXPAND_WIDGET, 5);
+    layout->pack_start(*buttonBox,  Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*statusBar,  Gtk::PACK_SHRINK, 5);
 
     add(*layout);
 

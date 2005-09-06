@@ -196,61 +196,76 @@
         <metadataType dcName          = "ls:encoded_by"
                       id3Tag          = "TENC"
                       localizationKey = "encoded_by"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:track_num"
                       id3Tag          = "TRCK"
                       localizationKey = "track_number"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:disc_num"
                       id3Tag          = "TPOS"
                       localizationKey = "disc_number"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:mood"
                       id3Tag          = "TMOO"
                       localizationKey = "mood"
+                      tab             = "music"
         />
         <metadataType dcName          = "dc:publisher"
                       id3Tag          = "TPUB"
                       localizationKey = "publishing_label"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:composer"
                       id3Tag          = "TCOM"
                       localizationKey = "composer"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:bitrate"
                       localizationKey = "bitrate"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:channels"
                       localizationKey = "channels"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:samplerate"
                       localizationKey = "sample_rate"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:encoder"
                       id3Tag          = "TSSE"
                       localizationKey = "encoding_software"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:crc"
                       localizationKey = "checksum"
         />
         <metadataType dcName          = "ls:lyrics"
                       localizationKey = "lyrics"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:orchestra"
                       id3Tag          = "TPE2"
                       localizationKey = "orchestra_or_band"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:conductor"
                       id3Tag          = "TPE3"
                       localizationKey = "conductor"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:lyricist"
                       id3Tag          = "TEXT"
                       localizationKey = "lyricist"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:originallyricist"
                       id3Tag          = "TOLY"
                       localizationKey = "original_lyricist"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:radiostationname"
                       id3Tag          = "TRSN"
@@ -286,10 +301,12 @@
         <metadataType dcName          = "ls:originalartist"
                       id3Tag          = "TOPE"
                       localizationKey = "original_artist"
+                      tab             = "music"
         />
         <metadataType dcName          = "dc:rights"
                       id3Tag          = "TCOP"
                       localizationKey = "copyright"
+                      tab             = "music"
         />
         <metadataType dcName          = "dcterms:temporal"
                       localizationKey = "report_date_time"
