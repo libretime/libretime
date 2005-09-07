@@ -4,6 +4,9 @@
         <par>
             <audio src = "file:var/simple.smil"
             /> 
+            <audio src       = "file:var/5seccounter.mp3"
+                   begin     = "5s"
+            /> 
         </par>
     </body>
 </smil>

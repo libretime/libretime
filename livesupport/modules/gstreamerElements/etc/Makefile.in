@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -145,7 +145,8 @@ PARTIAL_PLAY_LIB_OBJS = ${TMP_DIR}/partial-play.o
 SWITCHER_LIB_OBJS = ${TMP_DIR}/switcher.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/AutoplugTest.o \
+                   ${TMP_DIR}/AutoplugTest.o 
+DONT_TEST=         ${TMP_DIR}/AutoplugTest.o \
                    ${TMP_DIR}/SeekTest.o \
                    ${TMP_DIR}/SwitcherTest.o \
                    ${TMP_DIR}/SeekPackTest.o \

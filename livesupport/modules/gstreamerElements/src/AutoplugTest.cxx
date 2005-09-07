@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,9 +55,14 @@ using namespace LiveSupport::GstreamerElements;
 CPPUNIT_TEST_SUITE_REGISTRATION(AutoplugTest);
 
 /**
- *  Define this is time statistics should be printed while running tests.
+ *  Define this if time statistics should be printed while running tests.
  */
 #undef PRINT_TIMES
+
+/**
+ *  Define this if time statistics should be printed for each iteration.
+ */
+#undef PRINT_ITERATION_TIMES
 
 
 /**
@@ -156,7 +161,6 @@ AutoplugTest :: playFile(const char   * audioFile)
     GstElement    * decoder;
     GstElement    * sink;
     GstCaps       * caps;
-    GstFormat       format;
     gint64          timePlayed;
 
     /* initialize GStreamer */
@@ -196,12 +200,14 @@ AutoplugTest :: playFile(const char   * audioFile)
     gst_element_set_state(sink, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    while (gst_bin_iterate(GST_BIN(pipeline)));
+    while (gst_bin_iterate(GST_BIN(pipeline))) {
+#ifdef PRINT_ITERATION_TIMES
+        timePlayed = ls_gst_autoplug_get_position(decoder);
+        std::cerr << "iteration time: " << timePlayed << std::endl;
+#endif
+    }
 
-    /* FIXME: query the decoder, as for some reason, the sink will return
-     *        unreal numbers, when playing back mp3s only! */
-    format = GST_FORMAT_TIME;
-    gst_element_query(decoder, GST_QUERY_POSITION, &format, &timePlayed);
+    timePlayed = ls_gst_autoplug_get_position(decoder);
 
     /* clean up nicely */
     gst_element_set_state(pipeline, GST_STATE_NULL);
@@ -492,6 +498,12 @@ AutoplugTest :: playDurationTest(void)
     duration = playFile(sequentialSmilFile);
 #ifdef PRINT_TIMES
     std::cerr << "duration for " << sequentialSmilFile << ": "
+              << duration << std::endl;
+#endif
+
+    duration = playFile(embeddedSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << embeddedSmilFile << ": "
               << duration << std::endl;
 #endif
 }

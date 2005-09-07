@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -308,8 +308,8 @@ MinimalAudioSmilTest :: embeddedTest(void)
 
     timePlayed = playSmilFile(embeddedSmilFile);
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
-    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 9.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 10.1 * GST_SECOND);
 }
 
 
