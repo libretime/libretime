@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/prepare.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -71,6 +71,9 @@ if [ ! -d $plugins ]; then
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
     # for details on the following patch
     patch -p1 < ${etcdir}/adder-duration-fix.patch
+    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=315457
+    # for details on the following patch
+    patch -p1 < ${etcdir}/adder-query.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
     # for details on the following patch
     patch -p1 < ${etcdir}/switch-fix.patch
