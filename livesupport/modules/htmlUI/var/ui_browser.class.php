@@ -152,7 +152,8 @@ class uiBrowser extends uiBase {
         $mask =& $GLOBALS['ui_fmask']['file'];
 
         $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
+        if (!$this->STATIONPREFS['stationMaxfilesize'])    $form->setMaxFileSize(strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000')));
+        else												$form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
         $form->setConstants(array('folderId' => $folderId,
                                   'id'  => $id,
                                   'act' => $id ? 'editItem' : 'addFileData'));

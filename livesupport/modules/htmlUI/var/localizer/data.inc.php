@@ -434,7 +434,7 @@ class Data {
     }
 
     function langId2Name($id, $type='xml')
-    {                
+    {
 
         if ($arr = Data::readXML2Arr('./languages.xml')) {
             $languages = $arr[language];

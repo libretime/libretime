@@ -12,21 +12,8 @@
     <form name="SCHEDULER">
     <table class="scheduler_day" style="width: 606px;">
 
-        {*    Tag vor/zurück + code um heutigen Tag abzufragen
-        <tr>
-            <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=--')"><<</a></th>
-            <th colspan="3" {if $SCHEDULER->curr.isToday} bgcolor="grey"{/if}>##{$SCHEDULER->curr.dayname}##, ##{$SCHEDULER->curr.year}##-##{$SCHEDULER->curr.month}##-##{$SCHEDULER->curr.day}##</th>
-            <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=%2B%2B')">>></a></th>
-        </tr>
-        *}
 
         <tr class="blue_head">
-
-            {*
-            Multi-action checkboxen, die brauchen wir aber höchstens bei den Einträgen um mehere auf einmal zu löschen ?
-            <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SCHEDULER')"></td>
-            *}
-
             <td style="border-left: 1px solid #ccc; width: 95px">##Time##</td>
             <td style="width: 481px; border-right: 0;">##Show Info##</td>
         </tr>
@@ -35,21 +22,33 @@
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left:  1px solid #ccc; cursor: pointer" {include file="scheduler/day_additem.tpl"}>{$_hour|string_format:"%02d"}:00</td>
-                    <td style="border-right: 1px solid #ccc;">
+                	<td style="border-left: 1px solid #ccc; cursor: pointer" {include file="scheduler/day_additem.tpl"}>
+                   	{$_hour|string_format:"%02d"}:00
+                   </td>
+                   <td style="border-right: 1px solid #ccc;">
+	                   {if $_entrys[$_hour].end}
+	                       {include file="scheduler/between_additem.tpl"}
+	                   {/if}
 
-                    {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
-                        <div {include file="scheduler/removeitem.tpl"}>
-                            <img src="img/playlist.png" border="0" {include file="sub/alttext.tpl"}>
-                            &nbsp;
-                            <b>{$i.title}</b>
-                            {$i.start}-{$i.end}
-                            {$i.creator}
-                        </div>
-                       {include file="scheduler/between_additem.tpl"}
-                    {/foreach}
+	                   {if $_entrys[$_hour].start}
+	                       {foreach from=$_entrys[$_hour].start item="i"}
+	                          <div {include file="scheduler/removeitem.tpl"}>
+	                              <img src="img/playlist.png" border="0" {include file="sub/alttext.tpl"}>
+	                              &nbsp;
+	                              <b>{$i.title}</b>
+	                              {$i.start}-{$i.end}
+	                              {$i.creator}
+                                 {if $i.endshere}
+                                 	{include file="scheduler/between_additem.tpl"}
+                                 {/if}
+	                          </div>
+	                       {/foreach}
+	                   {/if}
 
-                    </td>
+	                   {if $_entrys.span[$_hour]}
+                          span
+	                   {/if}
+                   </td>
                 </tr>
             {else}
                 <tr class="blue2" {include file="scheduler/day_additem.tpl"}>
@@ -58,6 +57,7 @@
                 </tr>
             {/if}
         {/foreach}
+
     </table>
     </form>
 

@@ -115,7 +115,7 @@ class uiBase
 
     function uiBase(&$config)
     {
-        $this->dbc = DB::connect($config['dsn'], TRUE); 
+        $this->dbc = DB::connect($config['dsn'], TRUE);
         if (DB::isError($this->dbc)) {
             die($this->dbc->getMessage());
         }
@@ -152,6 +152,7 @@ class uiBase
     function loadStationPrefs(&$mask, $reload=FALSE)
     {
         if (!is_array($this->STATIONPREFS) || $reload===TRUE) {
+        	 $this->STATIONPREFS = array();
             foreach ($mask as $key=>$val) {
                 if ($val['isPref']) {
                     if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
@@ -161,8 +162,8 @@ class uiBase
                     }
                 }
             }
-            if (!$this->STATIONPREFS['stationMaxfilesize'])
-                $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
+
+            #if ($this->STATIONPREFS['stationMaxfilesize']) $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
 
             if ($miss && $this->gb->getSessLogin($this->sessid)) {
                 if (UI_WARNING) $this->_retMsg('Note: Station Preferences not setup proberly.');

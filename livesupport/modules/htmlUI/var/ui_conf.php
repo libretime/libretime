@@ -88,7 +88,7 @@ define('UI_BROWSE_DEFAULT_LIMIT',       10);
 ## Scheduler / Calendar
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
 define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
-define('UI_SCHEDULER_PAUSE_PL2PL',      '5 seconds');
+define('UI_SCHEDULER_PAUSE_PL2PL',      '0 seconds');
 
 ## File types
 define('UI_FILETYPE_ANY',               'file');
