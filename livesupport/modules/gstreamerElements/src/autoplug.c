@@ -26,7 +26,7 @@
     under the GNU LGPL license.
 
  
-    Author   : $Author: maroy $
+    Author   : $Author$
     Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
@@ -810,7 +810,6 @@ ls_gst_autoplug_get_position(GstElement       * element)
 {
     GstFormat       format;
     gint64          position;
-    GstElement    * sink;
 
     if (!element || !GST_IS_BIN(element)) {
         return 0LL;
