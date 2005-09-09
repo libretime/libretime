@@ -20,7 +20,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
+#   Author   : $Author$
 #   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
@@ -61,8 +61,12 @@ install: copy_files
 	${INSTALL_DIR}/usr/lib/pear/bin/install.sh -d ${INSTALL_DIR}
 
 copy_files:
-	${MKDIR} ${INSTALL_DIR}/usr/lib
-	cp -pPR ${BASE_DIR}/../pear ${INSTALL_DIR}/usr/lib
+	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/bin
+	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/etc
+	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/src
+	cp -pP ${BASE_DIR}/../pear/bin/install.sh ${INSTALL_DIR}/usr/lib/pear/bin
+	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/usr/lib/pear/etc
+	cp -pP ${BASE_DIR}/../pear/src/*.tgz ${INSTALL_DIR}/usr/lib/pear/src
 
 clean:
 

@@ -21,7 +21,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
+#   Author   : $Author$
 #   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
@@ -173,7 +173,8 @@ do echo -n " "
         $pearcmd upgrade $pkgv.tgz >/dev/null && echo -n "upgrading to $pkgv"
         #|| echo -n "code: $?"
     ) || (
-        $pearcmd install $pkgv.tgz >/dev/null && echo -n "installing $pkgv" || exit 1
+#        $pearcmd install $pkgv.tgz >/dev/null && echo -n "installing $pkgv" || exit 1
+        $pearcmd install $pkgv.tgz  && echo -n "installing $pkgv" || exit 1
     )
     check_pear_module $pkg && echo " OK" || exit 1
 done
