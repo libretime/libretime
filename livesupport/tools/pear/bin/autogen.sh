@@ -21,7 +21,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
+#   Author   : $Author$
 #   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ package="pear"
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 test -z "$basedir" && basedir=.
-usrdir=`cd $basedir/../../../usr; pwd;`
+usrdir=`cd $basedir/../../usr; pwd;`
 
 bindir=$basedir/bin
 etcdir=$basedir/etc
