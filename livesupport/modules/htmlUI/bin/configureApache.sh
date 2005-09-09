@@ -21,7 +21,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
+#   Author   : $Author$
 #   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/bin/configureApache.sh,v $
 #-------------------------------------------------------------------------------                                                                                
@@ -102,7 +102,8 @@ echo "Configuring apache ..."
 CONFFILE=90_php_livesupport.conf
 AP_DDIR_FOUND=no
 for APACHE_DDIR in \
-    /etc/apache/conf.d /etc/apache2/conf/modules.d /etc/httpd/conf.d
+    /etc/apache/conf.d /etc/apache2/conf/modules.d /etc/httpd/conf.d \
+    /etc/apache2/conf.d
 do
     echo -n "$APACHE_DDIR "
     if [ -d $APACHE_DDIR ]; then
