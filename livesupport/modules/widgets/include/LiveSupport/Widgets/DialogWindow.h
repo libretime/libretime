@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/DialogWindow.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef DialogWindow_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/MessageWindow.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef MessageWindow_h

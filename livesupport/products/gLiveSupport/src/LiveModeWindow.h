@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LiveModeWindow_h

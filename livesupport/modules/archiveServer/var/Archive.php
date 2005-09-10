@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/Archive.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../storageServer/var/LocStor.php";

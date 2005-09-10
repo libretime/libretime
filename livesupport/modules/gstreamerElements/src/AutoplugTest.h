@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef AutoplugTest_h

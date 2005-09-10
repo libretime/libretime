@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script creates a distribution tarball for livesupport.

@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/updateStudioConfig.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script updates the configuration file of gLiveSupport.

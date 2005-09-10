@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/XmlParser.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 require_once "XML/Util.php";

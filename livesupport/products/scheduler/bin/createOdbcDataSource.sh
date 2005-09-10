@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/createOdbcDataSource.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script creates the ODBC data source needed for LiveSupport scheduler

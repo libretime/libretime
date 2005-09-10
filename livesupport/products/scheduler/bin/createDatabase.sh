@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/createDatabase.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script reates the database used by LiveSupport

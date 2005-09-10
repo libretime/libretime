@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script configures the environment for a developer.

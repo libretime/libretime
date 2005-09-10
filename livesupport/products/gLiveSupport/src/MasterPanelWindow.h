@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef MasterPanelWindow_h

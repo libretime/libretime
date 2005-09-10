@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethodTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef GetSchedulerTimeMethodTest_h

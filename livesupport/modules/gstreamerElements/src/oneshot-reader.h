@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LivesSupport_GstreamerElements_OneShotReader_h

@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/getid3/bin/autogen.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------

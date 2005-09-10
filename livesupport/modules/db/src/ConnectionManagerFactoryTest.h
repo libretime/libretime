@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/ConnectionManagerFactoryTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef ConnectionManagerFactoryTest_h

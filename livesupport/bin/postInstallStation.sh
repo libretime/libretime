@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #  This script makes post-installation steps for the LiveSupport Station.

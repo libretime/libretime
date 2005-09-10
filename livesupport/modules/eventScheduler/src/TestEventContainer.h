@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/TestEventContainer.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef TestEventContainer_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef RpcDisplayPlaylistTest_h

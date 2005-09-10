@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/include/LiveSupport/EventScheduler/EventContainerInterface.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_EventScheduler_EventContainerInterface_h

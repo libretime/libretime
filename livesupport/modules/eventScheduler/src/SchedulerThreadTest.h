@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThreadTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SchedulerThreadTest_h

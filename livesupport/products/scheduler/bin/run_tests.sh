@@ -22,7 +22,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/run_tests.sh,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------

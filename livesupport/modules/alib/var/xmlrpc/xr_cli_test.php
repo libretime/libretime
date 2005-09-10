@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/xmlrpc/xr_cli_test.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 include("xmlrpc.inc");

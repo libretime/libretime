@@ -24,7 +24,7 @@
 
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/ui_schedulerPhpClient.class.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

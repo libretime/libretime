@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerClientFactoryTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SchedulerClientFactoryTest_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef UpdateFadeInFadeOutMethod_h

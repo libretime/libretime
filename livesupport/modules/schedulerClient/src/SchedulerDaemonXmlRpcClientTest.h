@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SchedulerDaemonXmlRpcClientTest_h

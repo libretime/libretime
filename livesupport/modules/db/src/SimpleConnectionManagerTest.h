@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/SimpleConnectionManagerTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SimpleConnectionManagerTest_h

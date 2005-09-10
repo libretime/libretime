@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibExTestAuth.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 $login = $alib->getSessLogin($_REQUEST['alibsid']);

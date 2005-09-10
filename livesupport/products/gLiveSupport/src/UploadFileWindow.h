@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef UploadFileWindow_h

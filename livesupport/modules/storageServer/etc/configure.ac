@@ -22,7 +22,7 @@ dnl
 dnl
 dnl Author   : $Author$
 dnl Version  : $Revision$
-dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/configure.ac,v $
+dnl Location : $URL$
 dnl-----------------------------------------------------------------------------
 
 dnl-----------------------------------------------------------------------------

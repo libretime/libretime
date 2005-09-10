@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef WebAuthenticationClient_h

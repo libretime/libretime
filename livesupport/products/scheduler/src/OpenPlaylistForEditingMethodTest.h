@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef OpenPlaylistForEditingMethodTest_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunner.cxx,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef TimeConversionTest_h

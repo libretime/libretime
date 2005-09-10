@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef RemoveFromScheduleMethod_h

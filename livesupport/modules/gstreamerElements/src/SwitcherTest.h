@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SwitcherTest_h

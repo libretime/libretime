@@ -74,7 +74,7 @@ documentation and/or software.
 
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Md5.cxx,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LivesSupport_GstreamerElements_MinimalAudioSmil_h

@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibHttp.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 require_once "alib_h.php";

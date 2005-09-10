@@ -23,7 +23,7 @@
 #
 #   Author   : $Author$
 #   Version  : $Revision$
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/bin/configurePHP.php,v $
+#   Location : $URL$
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #  This script configures php for the htmlUI

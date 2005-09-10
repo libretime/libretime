@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethod.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef GeneratePlayReportMethod_h

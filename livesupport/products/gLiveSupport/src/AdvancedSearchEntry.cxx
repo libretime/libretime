@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.cxx,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

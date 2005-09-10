@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethodTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef ResetStorageMethodTest_h

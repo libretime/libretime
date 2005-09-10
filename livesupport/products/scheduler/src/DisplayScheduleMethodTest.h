@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef DisplayScheduleMethodTest_h

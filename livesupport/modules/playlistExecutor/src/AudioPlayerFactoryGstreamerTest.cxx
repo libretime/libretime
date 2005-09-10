@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactoryGstreamerTest.cxx,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

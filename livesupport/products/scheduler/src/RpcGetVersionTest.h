@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef RpcGetVersionTest_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/smil-util.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef SmilUtil_h

@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Transport.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 define('TRERR_', 70);

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/TwoGstreamerPlayersTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef TwoGstreamerPlayersTest_h

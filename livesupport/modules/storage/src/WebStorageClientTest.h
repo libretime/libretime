@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef WebStorageClientTest_h

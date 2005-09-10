@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/restore.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 define('NSPACE', 'lse');

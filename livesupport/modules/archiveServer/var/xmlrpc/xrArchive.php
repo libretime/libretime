@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 /* ====================================================== specific PHP config */

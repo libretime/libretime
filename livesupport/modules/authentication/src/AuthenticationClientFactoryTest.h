@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef AuthenticationClientFactoryTest_h

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LivesSupport_GstreamerElements_PartialPlay_h

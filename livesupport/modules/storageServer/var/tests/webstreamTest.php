@@ -24,7 +24,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/webstreamTest.php,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 header("Content-type: text/plain");

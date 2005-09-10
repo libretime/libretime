@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef GstreamerPlayer_h
