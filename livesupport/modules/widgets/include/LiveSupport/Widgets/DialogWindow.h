@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/DialogWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,8 +76,8 @@ using namespace LiveSupport::Core;
  *  it is the responsibility of the caller to delete it (or it can be
  *  reused a few times first).
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 class DialogWindow : public WhiteWindow,
                      public LocalizedObject

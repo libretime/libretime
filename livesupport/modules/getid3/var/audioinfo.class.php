@@ -27,7 +27,7 @@
 // | Authors: Allan Hansen <ah@artemis.dk>                                |
 // +----------------------------------------------------------------------+
 //
-// $Id: audioinfo.class.php,v 1.1 2004/09/12 21:32:36 tomas Exp $
+// $Id: audioinfo.class.php 53 2004-09-12 21:31:19Z tomas $
 
 
 

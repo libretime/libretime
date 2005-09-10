@@ -72,8 +72,8 @@ documentation and/or software.
 
   ------------------------------------------------------------------------------
 
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Md5.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,8 +129,8 @@ namespace Core {
  *  on the basis of the original C code by RSA Data Security, Inc.  See the
  *  header of the source file for further information.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class Md5
 {

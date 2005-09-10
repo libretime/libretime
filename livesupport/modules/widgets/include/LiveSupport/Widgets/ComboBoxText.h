@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ComboBoxText.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,8 +66,8 @@ using namespace LiveSupport::Core;
 /**
  *  A combo box holding text entries.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class ComboBoxText : public Gtk::ComboBoxText
 {

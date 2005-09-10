@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,8 +105,8 @@ using namespace LiveSupport::Core;
  *     <li>320 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

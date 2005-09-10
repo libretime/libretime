@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,8 +38,8 @@ define('ALIBERR_BADSMEMB', 21);
  *   with "linearized recursive membership" ;)
  *   (allow adding users to groups or groups to groups)
  *   
- *  @author  $Author: tomas $
- *  @version $Revision: 1.10 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see ObjClasses
  *  @see Alib
  */

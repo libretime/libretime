@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,8 +91,8 @@ using namespace LiveSupport::Widgets;
  *  +--------------------------------------------------+
  *  </code></pre>
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/include/LiveSupport/EventScheduler/EventScheduler.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,8 +66,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic event scheduler, for non-everlapping subsequent events.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class EventScheduler
 {

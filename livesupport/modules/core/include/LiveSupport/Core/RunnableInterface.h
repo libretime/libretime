@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/RunnableInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,8 +56,8 @@ namespace Core {
 /**
  *  A Runnable object, that can form the main execution body of a thread.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see Thread
  */
 class RunnableInterface

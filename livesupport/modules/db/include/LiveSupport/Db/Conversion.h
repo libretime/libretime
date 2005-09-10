@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/include/LiveSupport/Db/Conversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,8 @@ using namespace LiveSupport::Core;
  *  A helper object holding static conversion functions, that are
  *  helpful when accessing databases.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class Conversion
 {

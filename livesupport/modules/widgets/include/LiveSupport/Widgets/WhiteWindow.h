@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,8 +93,8 @@ using namespace LiveSupport::Core;
  *  }
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */

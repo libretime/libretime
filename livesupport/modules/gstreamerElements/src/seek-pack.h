@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@
  *  A SeekPack - a structure that plays a gstreamer source by playing
  *  some silence and then some specified part of the source.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 
 #ifdef __cplusplus

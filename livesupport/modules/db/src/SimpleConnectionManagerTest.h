@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/SimpleConnectionManagerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,8 +62,8 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the SimpleConnectionManager class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see SimpleConnectionManager
  */
 class SimpleConnectionManagerTest : public BaseTestMethod

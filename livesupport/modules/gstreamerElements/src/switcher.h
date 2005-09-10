@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,8 +35,8 @@
  *  element. The element will switch the active source on the attached
  *  switcher according to the time positions it is configured with.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 
 

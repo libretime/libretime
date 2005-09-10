@@ -72,8 +72,8 @@ documentation and/or software.
 
   ------------------------------------------------------------------------------
 
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Md5.cxx,v $
 
 ------------------------------------------------------------------------------*/

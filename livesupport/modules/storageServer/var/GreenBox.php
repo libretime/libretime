@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.66 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@ require_once "BasicStor.php";
  *
  *  LiveSupport file storage module
  *
- *  @author  $Author: tomas $
- *  @version $Revision: 1.66 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{

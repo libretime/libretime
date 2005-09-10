@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,8 @@ using namespace LiveSupport::Core;
  *     <li>220 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

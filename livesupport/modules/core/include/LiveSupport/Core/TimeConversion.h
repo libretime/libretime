@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,8 @@ using namespace LiveSupport;
 /**
  *  A helper object holding static time conversion functions.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class TimeConversion
 {

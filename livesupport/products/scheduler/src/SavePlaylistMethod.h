@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,8 +90,8 @@ using namespace LiveSupport::Core;
  *     <li>705 - could not save playlist </li>
  *     <li>720 - missing session ID argument </li>
  *  </ul>
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class SavePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

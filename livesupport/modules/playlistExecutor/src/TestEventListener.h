@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/TestEventListener.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,8 +61,8 @@ using namespace LiveSupport::Core;
 /**
  *  A simple event listener, used for testing.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class TestEventListener : public AudioPlayerEventListener
 {

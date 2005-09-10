@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/PlayableTreeModelColumnRecord.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,8 +58,8 @@ namespace Widgets {
  *  A basic column record class for tree models with colorable rows and a
  *  (usually invisible) column of type Ptr<Playable>::Ref.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class PlayableTreeModelColumnRecord : public ZebraTreeModelColumnRecord
 {

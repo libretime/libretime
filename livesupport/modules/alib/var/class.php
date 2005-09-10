@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/class.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@ require_once "m2tree.php";
  *
  *  class for 'object classes' handling - i.e. groups of object in tree
  *
- *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see Mtree
  *  @see Subj
  */

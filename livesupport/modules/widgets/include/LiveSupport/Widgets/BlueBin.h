@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/BlueBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,8 +64,8 @@ using namespace LiveSupport::Core;
 /**
  *  A container holding exactly one child, habing a light blue border to it.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class BlueBin : public Gtk::Bin
 {

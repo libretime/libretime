@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,8 +97,8 @@ using namespace LiveSupport::Core;
  *     <li>1608 - error executing setFadeInfo() method </li>
  *     <li>1620 - missing session ID argument </li>
  *  </ul>
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
 {

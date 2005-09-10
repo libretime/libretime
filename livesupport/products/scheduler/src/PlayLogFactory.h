@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlayLogFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,8 +85,8 @@ using namespace LiveSupport::Core;
  *  For details on the &lt;postgreslPlayLog&gt; element, see the
  *  PostgresqlPlayLog documentation.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see PostgresqlPlayLog
  */
 class PlayLogFactory : virtual public Configurable,

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ImageButton.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,8 +59,8 @@ namespace Widgets {
  *  The button is fixed in size, which is determined by the images used
  *  to represent it.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class ImageButton : public Gtk::Button
 {

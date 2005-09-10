@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,8 +79,8 @@ using namespace LiveSupport::Widgets;
  *  of all search conditions selected in BrowseItem objects to the left of
  *  this one.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class BrowseItem : public Gtk::VBox,
                    public LocalizedObject
@@ -108,8 +108,8 @@ class BrowseItem : public Gtk::VBox,
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
-         *  @author $Author: fgerlits $
-         *  @version $Revision: 1.3 $
+         *  @author $Author$
+         *  @version $Revision$
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

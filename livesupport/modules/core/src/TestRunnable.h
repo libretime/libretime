@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunnable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,8 +58,8 @@ namespace Core {
 /**
  *  A sample Runnable object, for testing purposes.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class TestRunnable : public virtual RunnableInterface
 {

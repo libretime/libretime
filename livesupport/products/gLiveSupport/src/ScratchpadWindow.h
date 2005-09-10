@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,8 @@ using namespace LiveSupport::Widgets;
  *  The Scratchpad window, showing recent and relevant audio clips and
  *  playlists.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -86,8 +86,8 @@ class ScratchpadWindow : public WhiteWindow,
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
-         *  @author $Author: fgerlits $
-         *  @version $Revision: 1.12 $
+         *  @author $Author$
+         *  @version $Revision$
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {

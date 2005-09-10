@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,8 +58,8 @@ namespace Scheduler {
 /**
  *  Unit test to test the getVersion XML-RPC call.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see SchedulerDaemon
  */
 class RpcGetVersionTest : public BaseTestMethod

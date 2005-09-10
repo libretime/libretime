@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace GstreamerElements {
 /**
  *  Unit test for the partialplay gstreamer element.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class SwitcherTest : public CPPUNIT_NS::TestFixture
 {

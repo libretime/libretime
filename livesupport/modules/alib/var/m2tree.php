@@ -21,8 +21,8 @@ define('ALIBERR_MTREE', 10);
  *        'RootNode'	=>'RootNode',
  *    );
  *   </code></pre>
- *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see ObjClasses
  *  Original author Tom Hlava
  */

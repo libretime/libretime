@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author$
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision$
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/bin/configureApache.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------

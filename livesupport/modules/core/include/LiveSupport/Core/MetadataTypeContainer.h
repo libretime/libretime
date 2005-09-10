@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/MetadataTypeContainer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,8 +86,8 @@ namespace Core {
  *  For a description of the metadataType XML element, see the documentation
  *  for the MetadataType class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see MetadataType
  */
 class MetadataTypeContainer : public Configurable,

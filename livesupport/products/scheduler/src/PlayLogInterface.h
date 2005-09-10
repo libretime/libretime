@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlayLogInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,8 @@ using namespace LiveSupport::Core;
 /**
  *  The generic interface for the component scheduling events.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class PlayLogInterface : virtual public Installable
 {

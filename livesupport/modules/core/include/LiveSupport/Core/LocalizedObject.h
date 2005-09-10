@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,8 +63,8 @@ namespace Core {
  *  Base class for localized objects, containing some helper functions
  *  to make localized life easier.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 class LocalizedObject
 {

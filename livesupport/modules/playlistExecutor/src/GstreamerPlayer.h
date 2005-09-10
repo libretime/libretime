@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,8 +85,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetVersionMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,8 +79,8 @@ using namespace LiveSupport::Core;
  *
  *  There are no possible internal error condititons for this function.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class GetVersionMethod : public XmlRpc::XmlRpcServerMethod
 {

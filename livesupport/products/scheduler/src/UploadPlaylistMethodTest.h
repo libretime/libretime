@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,8 +65,8 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the UploadPlaylistMethod class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see UploadPlaylistMethod
  */
 class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture

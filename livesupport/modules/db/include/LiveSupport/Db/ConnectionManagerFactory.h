@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/include/LiveSupport/Db/ConnectionManagerFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,8 +89,8 @@ using namespace LiveSupport::Core;
  *  For the DTD and details of the simpleConnectionManager configuration
  *  element, see the SimpleConnectionManager documentation.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see SimpleConnectionManager
  */
 class ConnectionManagerFactory :

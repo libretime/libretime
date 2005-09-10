@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,8 @@ using namespace LiveSupport::Core;
  *                                         webAuthentication) &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see TestAuthenticationClient
  *  @see WebAuthenticationClient
  */

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,8 +130,8 @@ using namespace boost::posix_time;
  *  &lt;!ATTLIST audioClip  uri          CDATA       #IMPLIED   &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.29 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class AudioClip : public Configurable,
                   public Playable

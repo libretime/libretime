@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,8 +71,8 @@ using namespace LiveSupport::Storage;
 /**
  *  A scheduled event for playing a playlist.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {

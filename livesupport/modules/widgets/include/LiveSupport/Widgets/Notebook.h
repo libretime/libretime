@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Notebook.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,8 @@ using namespace LiveSupport::Core;
  *
  *  After adding pages to a Notebook object, call the function pagesAdded().
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class Notebook : public Gtk::Alignment
 {
@@ -79,8 +79,8 @@ class Notebook : public Gtk::Alignment
          *  A container class, holding all that is needed to represent
          *  a page in the notepad.
          *
-         *  @author  $Author: maroy $
-         *  @version $Revision: 1.1 $
+         *  @author  $Author$
+         *  @version $Revision$
          */
         class Page
         {

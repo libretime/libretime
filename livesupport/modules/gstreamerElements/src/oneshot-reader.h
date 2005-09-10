@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@
  *  A gstreamer element that reads all input from it's sink pad, and
  *  returns it in one byte array.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace Core {
 /**
  *  Unit test for the UploadPlaylistMetohd class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture

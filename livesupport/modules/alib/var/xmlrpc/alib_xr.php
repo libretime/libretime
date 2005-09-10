@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/xmlrpc/alib_xr.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,8 +47,8 @@ function v2xr($var, $struct=true){
  *  XMLRPC interface for Alib class<br>
  *  only for testing now (with example) - LiveSupport uses special interface
  *
- *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see Subjects
  *  @see GreenBox
  */

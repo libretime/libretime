@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,8 +91,8 @@ using namespace LiveSupport::Core;
  *  2) added to a TreeViewColumn using a constructor or pack_start() etc;
  *  3) connected with a TreeModelColumn using set_renderer(). 
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class ZebraTreeView : public Gtk::TreeView
 {

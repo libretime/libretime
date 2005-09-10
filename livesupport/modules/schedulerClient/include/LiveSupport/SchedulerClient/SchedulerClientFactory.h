@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,8 +90,8 @@ using namespace LiveSupport::Core;
  *  <!ELEMENT schedulerClientFactory        (schedulerDaemonXmlRpcClient) >
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerClientFactory : virtual public Configurable

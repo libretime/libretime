@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,8 +85,8 @@ using namespace LiveSupport::Core;
  *  For details on the &lt;postgreslSchedule&gt; element, see the
  *  PostgresqlSchedule documentation.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see PostgresqlSchedule
  */
 class ScheduleFactory : virtual public Configurable,

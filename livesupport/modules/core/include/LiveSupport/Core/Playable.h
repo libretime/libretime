@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,8 @@ using namespace boost::posix_time;
  *  An abstract class which is extended by AudioClip and Playlist.
  *  It contains the methods which are common to these classes.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.12 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {

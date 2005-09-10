@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>C++ header file conventions</title>
-  <meta content="$Author: maroy $" name="author">
+  <meta content="$Author$" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.2 $</li>
+  <li>Author: $Author$</li>
+  <li>Version: $Revision$</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/developmentEnvironment/cxxHeaderFileConventions.html,v
 $</li>
@@ -96,7 +96,7 @@ compiler).<br>
 A sample for a C++ header file header follows, where the file itself
 would be expected to be included as <code>"LiveSupport/Foo/Bar.h"</code>.<br>
 <br>
-<pre>/*------------------------------------------------------------------------------<br><br>    Copyright (c) 2004 Media Development Loan Fund<br>                                                                                <br>    This file is part of the LiveSupport project.<br>    http://livesupport.campware.org/<br>    To report bugs, send an e-mail to bugs@campware.org<br>                                                                                <br>    LiveSupport is free software; you can redistribute it and/or modify<br>    it under the terms of the GNU General Public License as published by<br>    the Free Software Foundation; either version 2 of the License, or<br>    (at your option) any later version.<br>                                                                                <br>    LiveSupport is distributed in the hope that it will be useful,<br>    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>    GNU General Public License for more details.<br>                                                                                <br>    You should have received a copy of the GNU General Public License<br>    along with LiveSupport; if not, write to the Free Software<br>    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>                                                                                <br>                                                                                <br>    Author   : $Author: maroy $<br>    Version  : $Revision: 1.2 $<br>    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxHeaderFileConventions.html,v $<br>                                                                                <br>------------------------------------------------------------------------------*/<br>#ifndef LiveSupport_Foo_Bar_h<br>#define LiveSupport_Foo_Bar_h<br>                                                                                <br>#ifndef __cplusplus<br>#error This is a C++ include file<br>#endif<br><br></pre>
+<pre>/*------------------------------------------------------------------------------<br><br>    Copyright (c) 2004 Media Development Loan Fund<br>                                                                                <br>    This file is part of the LiveSupport project.<br>    http://livesupport.campware.org/<br>    To report bugs, send an e-mail to bugs@campware.org<br>                                                                                <br>    LiveSupport is free software; you can redistribute it and/or modify<br>    it under the terms of the GNU General Public License as published by<br>    the Free Software Foundation; either version 2 of the License, or<br>    (at your option) any later version.<br>                                                                                <br>    LiveSupport is distributed in the hope that it will be useful,<br>    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>    GNU General Public License for more details.<br>                                                                                <br>    You should have received a copy of the GNU General Public License<br>    along with LiveSupport; if not, write to the Free Software<br>    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>                                                                                <br>                                                                                <br>    Author   : $Author$<br>    Version  : $Revision$<br>    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxHeaderFileConventions.html,v $<br>                                                                                <br>------------------------------------------------------------------------------*/<br>#ifndef LiveSupport_Foo_Bar_h<br>#define LiveSupport_Foo_Bar_h<br>                                                                                <br>#ifndef __cplusplus<br>#error This is a C++ include file<br>#endif<br><br></pre>
 <h2>Include files &amp; namespace <br>
 </h2>
 This section contains all the include files that the header file needs
@@ -163,7 +163,7 @@ Within each of the above blocks, the order is the following:<br>
 For proper indentation of the above blocks, see the example below.<br>
 <h3>Sample</h3>
 A sample data types section follows.<br>
-<pre>/* =============================================================== data types */<br><br>/**<br> *  Hello class.<br> *  The only purpose of this class is to say hello.<br> *<br> *  @author  $Author: maroy $<br> *  @version $Revision: 1.2 $<br> */<br>class Hello<br>{<br>    private:<br>        /**<br>         *  Our famous hello string.<br>         */<br>        static const std::string        helloWorld;<br><br>    public:<br>        /**<br>         *  Default constructor.<br>         */<br>        Hello (void)                                    throw ()<br>        {<br>        }<br><br>        /**<br>         *  Say hello.<br>         *<br>         *  @return the string "Hello, World!"<br>         *  @exception std::exception on problems<br>         */<br>        const std::string<br>        hello (void)                        throw (std::exception)<br>        {<br>            return helloWorld;<br>        }<br>};<br><br></pre>
+<pre>/* =============================================================== data types */<br><br>/**<br> *  Hello class.<br> *  The only purpose of this class is to say hello.<br> *<br> *  @author  $Author$<br> *  @version $Revision$<br> */<br>class Hello<br>{<br>    private:<br>        /**<br>         *  Our famous hello string.<br>         */<br>        static const std::string        helloWorld;<br><br>    public:<br>        /**<br>         *  Default constructor.<br>         */<br>        Hello (void)                                    throw ()<br>        {<br>        }<br><br>        /**<br>         *  Say hello.<br>         *<br>         *  @return the string "Hello, World!"<br>         *  @exception std::exception on problems<br>         */<br>        const std::string<br>        hello (void)                        throw (std::exception)<br>        {<br>            return helloWorld;<br>        }<br>};<br><br></pre>
 <h2>External data structures<br>
 </h2>
 The external data structures section contains any external data

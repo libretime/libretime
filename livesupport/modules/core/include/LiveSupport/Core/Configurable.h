@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Configurable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,8 +61,8 @@ namespace Core {
 /**
  *  An interface marking a class configurable by an XML element.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  */
 class Configurable
 {

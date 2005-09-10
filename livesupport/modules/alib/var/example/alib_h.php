@@ -1,5 +1,5 @@
 <?
-// $Id: alib_h.php,v 1.1 2004/07/23 00:22:13 tomas Exp $
+// $Id: alib_h.php 6 2004-07-23 00:22:13Z tomas $
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 session_start();

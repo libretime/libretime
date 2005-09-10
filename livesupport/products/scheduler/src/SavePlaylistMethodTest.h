@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,8 +64,8 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the SavePlaylistMethod class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see SavePlaylistMethod
  */
 class SavePlaylistMethodTest : public CPPUNIT_NS::TestFixture

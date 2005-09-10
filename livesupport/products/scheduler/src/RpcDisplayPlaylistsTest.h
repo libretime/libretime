@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistsTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,8 +63,8 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the DisplayPlaylistsMethod class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see DisplayPlaylistsMethod
  */
 class RpcDisplayPlaylistsTest : public BaseTestMethod

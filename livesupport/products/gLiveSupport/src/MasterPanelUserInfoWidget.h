@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
  *
  *  This widget handles login and login info display.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @author $Author$
+ *  @version $Revision$
  */
 class MasterPanelUserInfoWidget : public Gtk::Table,
                                   public LocalizedObject

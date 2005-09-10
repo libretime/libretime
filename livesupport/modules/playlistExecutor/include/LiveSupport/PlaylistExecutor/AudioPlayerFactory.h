@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,8 +86,8 @@ using namespace LiveSupport::Core;
  *  For the DTD and details of the gstreamerPlayer configuration
  *  element, see the GstreamerPlayer documentation.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see GstreamerPlayer
  */
 class AudioPlayerFactory :

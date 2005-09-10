@@ -44,8 +44,8 @@
 ** this software for any purpose.
 
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author$
+    Version  : $Revision$
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Uuid.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,8 +89,8 @@ namespace Core {
  *  This implementation is based on the Leach UUID/GUID draft:
  *  http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt
  */
 class Uuid
