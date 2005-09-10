@@ -22,8 +22,8 @@
 #
 #
 #   Author   : $Author$
-#   Version  : $Revision: 1.10 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
+#   Version  : $Revision$
+#   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 # Run this script to install PEAR packages needed by LiveSupport locally

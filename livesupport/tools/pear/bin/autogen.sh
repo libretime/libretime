@@ -22,8 +22,8 @@
 #
 #
 #   Author   : $Author$
-#   Version  : $Revision: 1.3 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/autogen.sh,v $
+#   Version  : $Revision$
+#   Location : $URL$
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
