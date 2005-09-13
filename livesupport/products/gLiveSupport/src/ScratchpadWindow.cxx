@@ -571,7 +571,6 @@ void
 ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-std::cerr << *playable->getXmlElementString() << std::endl << std::endl;
     gLiveSupport->addToLiveMode(playable);
 }
 
