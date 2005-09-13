@@ -273,9 +273,9 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
 
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        gLiveSupport->playOutputAudio(playable);
         gLiveSupport->setNowPlaying(playable);
         treeView->removeItem(iter);
+        gLiveSupport->playOutputAudio(playable);
     }
 }
 
