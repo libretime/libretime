@@ -106,14 +106,14 @@ Md5Test :: firstTest(void)
     FILE    *f = fopen("src/Md5Test.h", "r");
     Md5     testFile(f);
     CPPUNIT_ASSERT(testFile.hexDigest()
-                   == "f60ee2049d9ed598ad35ee24f98de1f6");
+                   == "eb7be2dc3d542a9f1682c363f25e1977");
     fclose(f);
 
     // test the construction from an istream
     std::ifstream   ifs("src/Md5Test.h");
     Md5             testFileStream(ifs);
     CPPUNIT_ASSERT(testFileStream.hexDigest()
-                   == "f60ee2049d9ed598ad35ee24f98de1f6");
+                   == "eb7be2dc3d542a9f1682c363f25e1977");
     ifs.close();
 }
 
