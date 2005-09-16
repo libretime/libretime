@@ -49,8 +49,11 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${tar}
     cd $product
+    # see http://sourceforge.net/tracker/index.php?func=detail&aid=1176652&group_id=19075&atid=319075
     patch -p1 < $etcdir/libodbc++-no-namespace-closing-colon.patch
+    # see http://sourceforge.net/tracker/index.php?func=detail&aid=1176656&group_id=19075&atid=319075
     patch -p1 < $etcdir/libodbc++-no-thread-dmaccess-mutex-fix.patch
+    # patch not submitted
     patch -p1 < $etcdir/libodbc++-dont-install-some-docs.patch
 fi
 

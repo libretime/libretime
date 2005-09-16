@@ -49,7 +49,9 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfz ${tar}
     cd $product
+    # see https://sourceforge.net/tracker/index.php?func=detail&aid=1292850&group_id=3382&atid=303382
     patch -p1 < $etcdir/lcov-1.3-geninfo-regexp.patch
+    # see https://sourceforge.net/tracker/index.php?func=detail&aid=1292854&group_id=3382&atid=303382
     patch -p1 < $etcdir/lcov-1.3-install-to-prefix.patch
 fi
 

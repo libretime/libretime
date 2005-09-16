@@ -51,6 +51,7 @@ cp -r $bindir/install-sh $tmpdir
 if [ ! -d $product ]; then
     tar xfz $tar
     cd $product
+    # see http://sourceforge.net/tracker/index.php?func=detail&aid=997006&group_id=11795&atid=311795
     patch -p1 < $etcdir/cppunit-1.10.2-nostandalone.patch
 fi
 

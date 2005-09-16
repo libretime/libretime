@@ -51,8 +51,11 @@ cd ${tmpdir}
 if [ ! -d xmlrpc++ ]; then
     tar xfz ${tar}
     cd xmlrpc++
+    # see http://sourceforge.net/tracker/index.php?func=detail&aid=990356&group_id=70654&atid=528555
     patch -p1 < $etcdir/xmlrpc++-automake.patch
+    # see http://sourceforge.net/tracker/index.php?func=detail&aid=990676&group_id=70654&atid=528555
     patch -p1 < $etcdir/uninitialised_XmlRpcSource_ssl_ssl.patch
+    # see http://sourceforge.net/tracker/?group_id=70654&atid=528555&func=detail&aid=1085119
     patch -p1 < $etcdir/incorrect_XmlRpcValue_struct_tm_conversion.patch
 fi
 

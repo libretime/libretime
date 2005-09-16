@@ -50,6 +50,7 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfz ${tar}
     cd $product
+    # see https://bugs.kde.org/show_bug.cgi?id=112728
     patch -p1 < $etcdir/taglib-1.3.1-length-in-microseconds.patch
 fi
 
