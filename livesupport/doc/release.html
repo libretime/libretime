@@ -54,7 +54,7 @@ control system</li>
 To get a fresh copy of the LiveSupport repository, execute the
 following in an empty directory:<br>
 <br>
-<pre><code>cvs -z3 -d :ext:&lt;username&gt;@netfinity-5.mdlf.org:/home/cvs checkout -P livesupport</code><br></pre>
+<pre><code>svn checkout svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/livesupport/trunk/livesupport</code><br></pre>
 <br>
 Where <code>&lt;username&gt;</code> is the user name for accessing the
 repository of the person making the release.<br>
@@ -90,7 +90,7 @@ manager is quite picky on the format of the changelog file. See <a
  href="http://www.debian.org/doc/debian-policy/ch-source.html#s-dpkgchangelog">section
 4.4</a> of the Debian Policy Manual for more details.<br>
 <br>
-Don't forget to commit the changes made to the changelog into the CVS
+Don't forget to commit the changes made to the changelog into Subversion
 before proceeding.<br>
 <h1>Creating release tarballs<br>
 </h1>
@@ -137,22 +137,20 @@ The above commands will result in the following debian packages:<br>
 <br>
 <pre><code>livesupport-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb</code><br></pre>
 <pre><code></code><code></code></pre>
+
 <h1>Tagging the sources</h1>
 After the tarballs have been tested, the release can be finalized. As a
 first step, the current state of the LiveSupport version control
 repository has to be tagged, so that the the very versions in the
 release can be retrieved at any later date. To tag the repository,
-issue the following command from the LiveSupport checked out source
-directory:<br>
+issue the following command:<br>
 <br>
-<pre><code>cvs tag livesupport_&lt;ls-version&gt;<br></code></pre>
+<pre><code>svn copy svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/livesupport/trunk/ \
+         svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/livesupport/tags/livesupport-&lt;ls-version&gt;<br></code></pre>
 <br>
-This will tag the current state of the repository with the tag <code>livesupport_&lt;ls-version&gt;</code>,
-enabling later retrieval of this specific state. Please note that since
-CVS does not support dots (<code>'.'</code>) in tags, the dots in the
-version number are replaced by underscore (<code>'_'</code>) when
-tagging. Thus, <code>livesupport-0.9.1</code> is tagged as <code>livesupport-0_9_1</code>,
-for example.<br>
+This will tag the current state of the repository with the tag <code>livesupport-&lt;ls-version&gt;</code>,
+enabling later retrieval of this specific state.<br>
+
 <h1>Publishing the tarballs</h1>
 To make the release available to the public, the created tarballs have
 to be published. This is done by making the files accessible under the

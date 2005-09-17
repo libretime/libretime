@@ -89,15 +89,15 @@ XMLv2 module for PHP<br>
   </li>
   <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
   <li><a href="http://pear.php.net/">PEAR</a> </li>
-<!--  <li><a href="http:///"></a></li>-->
 </ul>
+
 <h2>Check out the sources</h2>
-The LiveSupport development directory tree can be accessed via
-anonymous <a href="https://www.cvshome.org/">CVS</a>, using the
-CVSROOT <code>:pserver:anonymous@netfinity-5.mdlf.org:/home/cvs</code>.
-The repository is called livesupport, thus the following CVS command
-would check out the development tree:<br>
-<pre><code><br>cvs -z3 -d </code><code>:pserver:anonymous@netfinity-5.mdlf.org:/home/cvs checkout livesupport<br><br></code></pre>
+The LiveSupport development directory tree can be accessed anonymously via
+<a href="http://subversion.tigris.org/">Subversion</a>, at
+<code>svn+ssh://code.campware.org/home/svn/repo/livesupport/trunk/livesupport</code>.
+The following Subversion command
+would check out the development tree:<br><br>
+<pre><code>svn checkout svn+ssh://code.campware.org/home/svn/repo/livesupport/trunk/livesupport</code></pre><br>
 This will check out and create the LiveSupport development <a
  href="developmentEnvironment/directoryStructure.html">directory
 structure</a>.<br>
@@ -120,6 +120,7 @@ development. In the former case, only one database instance, scheduler
 daemon and apache (XML-RPC and HTTP/HTML) entry point is needed. In the
 latter case, each user will have their own database instance, scheduler
 daemon and apache entry points.<br>
+
 <h3>Only one developer doing development on the system<br>
 </h3>
 If only one developer is doing development on the system, there is no
@@ -139,26 +140,27 @@ regularly create and destroy database tables.<br>
 <br>
 The scheduler daemon will use the port 3344.<br>
 <br>
-Please, check settings in <code>var/conf.php</code> files in both
-storageServer and archiveServer modules and create two
-symlinks with name corresponding to 'URL configuration' part of
-<code>var/conf.php</code> files - example for default values:
+Please check settings in <code>var/conf.php</code> files in both
+the storageServer and archiveServer modules and create two
+symlinks with name corresponding to the 'URL configuration' part of
+<code>var/conf.php</code> files.  Here is an example for default values:
 <ul>
   <li> <code>http://localhost:80/livesupportStorageServer/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/storageServer/var</code>
+should point to the <code>&lt;livesupport-src&gt;/modules/storageServer/var</code>
 directory </li>
   <li> <code>http://localhost:80/livesupportArchiveServer/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/archiveServer/var</code>
+should point to the <code>&lt;livesupport-src&gt;/modules/archiveServer/var</code>
 directory </li>
   <li> <code>http://localhost:80/admin/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var</code>
+should point to the <code>&lt;livesupport-src&gt;/modules/htmlUI/var</code>
 directory </li>
 </ul>
-Please make <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var/templates_c/</code>
+Please make <code>&lt;livesupport-src&gt;/modules/htmlUI/var/templates_c/</code>
 and
-<code>&lt;livesupport-cvs&gt;/modules/htmlUI/var/html/img/</code>
+<code>&lt;livesupport-src&gt;/modules/htmlUI/var/html/img/</code>
 writable for
 apache.
+
 <h3>Multiple developers doing development on the system</h3>
 In case multiple developers are sharing a system for LiveSupport
 development, each resource has to be personalized. Please run the <code>livesupport/bin/user_setup_db.sh</code>
