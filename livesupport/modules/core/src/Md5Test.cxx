@@ -103,17 +103,17 @@ Md5Test :: firstTest(void)
     CPPUNIT_ASSERT(someString.high64bits() == 0x9007a3599f5d3ae2LL);
 
     // test the construction from a FILE*
-    FILE    *f = fopen("src/Md5Test.h", "r");
+    FILE    *f = fopen("var/md5test.data", "r");
     Md5     testFile(f);
     CPPUNIT_ASSERT(testFile.hexDigest()
-                   == "eb7be2dc3d542a9f1682c363f25e1977");
+                   == "fc359d2b366cc110db86c3d68bdf39c4");
     fclose(f);
 
     // test the construction from an istream
-    std::ifstream   ifs("src/Md5Test.h");
+    std::ifstream   ifs("var/md5test.data");
     Md5             testFileStream(ifs);
     CPPUNIT_ASSERT(testFileStream.hexDigest()
-                   == "eb7be2dc3d542a9f1682c363f25e1977");
+                   == "fc359d2b366cc110db86c3d68bdf39c4");
     ifs.close();
 }
 
