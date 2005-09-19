@@ -261,6 +261,7 @@ G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_es.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_nl.res \
+                    ${TMP_DIR}/${PACKAGE_NAME}_pl.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_sr_CS.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_sr_CS_CYRILLIC.res
 
