@@ -958,7 +958,7 @@ class XR_LocStor extends LocStor{
      *                  inside playlist (default: false)</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     *  On success, returns an XML-RPC struct with the following fields:
      *  <ul>
      *      <li> url : string - readable url of accessed playlist in
      *          XML format</li>
@@ -966,6 +966,11 @@ class XR_LocStor extends LocStor{
      *      <li> chsum : string - md5 checksum</li>
      *      <li> content: array of structs - recursive access (optional)</li>
      *  </ul>
+     *
+     *  The <code>content</code> field contains a struct for each playlist
+     *  element contained in the playlist.  For audio clips, this struct is
+     *  of type <code>{url, token}</code>; for sub-playlists, it is of type
+     *  <code>{url, token, chsum, content}</code>.
      *
      *  On errors, returns an XML-RPC error response.
      *  The possible error codes and error message are:

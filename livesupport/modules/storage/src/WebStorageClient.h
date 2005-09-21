@@ -163,7 +163,8 @@ class WebStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @param url pointer in which the URL of the playlist is returned.
-         *  @param token pointer in which the token of the playlist is returned.
+         *  @param editToken pointer in which the token of the playlist is
+         *                   returned.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call or no playlist with the specified
          *                             id exists.
@@ -172,50 +173,53 @@ class WebStorageClient :
         editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                            Ptr<UniqueId>::Ref  id,
                            Ptr<const std::string>::Ref& url,
-                           Ptr<const std::string>::Ref& token)
+                           Ptr<const std::string>::Ref& editToken)
                                                 throw (XmlRpcException);
 
         /**
-         *  Return a playlist with the specified id to be displayed.
-         *  If the playlist is being edited, and this method is called
-         *  by the same user who is editing the playlist,
-         *  (i.e., the method is called with the same sessionId and playlistId
-         *  that editPlaylist() was), then the working copy of the playlist
-         *  is returned.
-         *  Any other user gets the old (pre-editPlaylist()) copy from storage.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @param id the id of the playlist to return.
-         *  @param deep signal if all playable objects are to be accessed
-         *         and locked, that are referenced by this playlist, or
-         *         any playlist contained in this one.
-         *  @return the requested playlist.
-         *  @exception XmlRpcInvalidDataException if the audio clip we got
-         *                  from the storage is invalid.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                  call or no playlist with the specified id exists.
-         */
-        Ptr<Playlist>::Ref
-        getPlaylist(Ptr<SessionId>::Ref sessionId,
-                    Ptr<UniqueId>::Ref  id,
-                    bool                deep) const
-                                                throw (XmlRpcException);
-
-        /**
-         *  Do the final stages of acquring a playlist: generate SMIL
-         *  files, etc.
+         *  Do the second step of acquring a playlist: generate the SMIL
+         *  temp files.
          * 
-         *  @param oldPlaylist the playlist to work on.
-         *  @param result the XML-RPC result from  getPlaylist() call
-         *         with deep == true
+         *  @param id       the ID of the new playlist to be constructed
+         *  @param content  the XML-RPC result from  locstor.accessPlaylist
          *  @return a playlist which has a URI filed, and all things below
-         *          it are openned properly and processed as well.
+         *          it are opened properly and processed as well.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                  call or no playlist with the specified id exists.
          */
         Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
-                        XmlRpcValue       & result) const
+        acquirePlaylist(Ptr<UniqueId>::Ref  id,
+                        XmlRpcValue &       content) const
+                                                throw (XmlRpcException);
+
+        /**
+         *  Execute the XML-RPC function call to release the playlist
+         *  access URL at the storage server.
+         *
+         *  This needs to be done for the outermost playlist only; the 
+         *  sub-playlists and audio clips contained inside are released
+         *  recursively by the storage server automatically.
+         *
+         *  @param playlist the playlist to release.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or the playlist has no token field
+         */
+        void
+        releasePlaylistFromServer(Ptr<Playlist>::Ref   playlist) const
+                                                throw (XmlRpcException);
+
+        /**
+         *  Remove the temporary SMIL file created for the playlist.
+         *
+         *  This needs to be done for every playlist, including sub-playlists
+         *  contained inside other playlists.
+         *
+         *  @param playlist the playlist to release.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or the playlist has no uri field
+         */
+        void
+        releasePlaylistTempFile(Ptr<Playlist>::Ref   playlist) const
                                                 throw (XmlRpcException);
 
 
@@ -313,10 +317,7 @@ class WebStorageClient :
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
                     Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
-        {
-            return getPlaylist(sessionId, id, false);
-        }
+                                                throw (XmlRpcException);
 
         /**
          *  Return a playlist with the specified id to be edited.
@@ -364,13 +365,13 @@ class WebStorageClient :
          *  the playlist (and lose all changes) at the next login using
          *  this method.
          *
-         *  @param playlistToken the token of the edited playlist
+         *  @param editToken the token of the edited playlist
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call or no playlist with the specified
          *                             token exists.
          */
         virtual void
-        revertPlaylist(Ptr<const std::string>::Ref    playlistToken)
+        revertPlaylist(Ptr<const std::string>::Ref    editToken)
                                                 throw (XmlRpcException);
 
 
@@ -401,12 +402,7 @@ class WebStorageClient :
         virtual Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                            throw (XmlRpcException)
-        {
-            // FIXME: silently, with deep == true, getPlaylist will also
-            //        generate all related SMIL files, etc.
-            return getPlaylist(sessionId, id, true);
-        }
+                                            throw (XmlRpcException);
 
         /**
          *  Release the resources (audio clips, other playlists) used 

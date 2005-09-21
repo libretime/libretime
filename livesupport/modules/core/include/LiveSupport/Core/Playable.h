@@ -156,6 +156,9 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  Return the token which is used to identify this audio clip
          *  or playlist to the storage server.
          *
+         *  The token is set when the Playable object is acquired and
+         *  unset (made null again) when it is released.
+         *
          *  @return the token.
          */
         virtual Ptr<const std::string>::Ref
@@ -164,6 +167,9 @@ class Playable : public boost::enable_shared_from_this<Playable>
         /**
          *  Set the token which is used to identify this audio clip
          *  or playlist to the storage server.
+         *
+         *  The token is set when the Playable object is acquired and
+         *  unset (made null again) when it is released.
          *
          *  @param token a new token.
          */

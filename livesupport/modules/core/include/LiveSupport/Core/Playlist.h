@@ -127,6 +127,28 @@ using namespace boost::posix_time;
  *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
  *  </code></pre>
  *
+ *  A Playlist can be of various kinds, depending on what we want to use it
+ *  for, and how we got it from the StorageClientInterface:
+ *  <ul>
+ *      <li>A playlist obtained by getPlaylist() has its <code>uri</code>,
+ *          <code>token</code> and <code>editToken</code> fields all unset
+ *          (i.e., null).  Such playlist contain sub-playlists which
+ *          are just stubs, i.e., <code>id, title, playlength</code> triples,
+ *          without actual references to its content objects.</li>
+ *      <li>A playlist obtained by acquirePlaylist() has its <code>uri</code>
+ *          and <code>token</code> fields set, but its <code>editToken</code>
+ *          field unset.  These are complete Playlist objects, and their
+ *          sub-playlists contain references to all their sub-objects etc.
+ *          The sub-playlists have their <code>uri</code> fields set, which
+ *          allows them to be played by the audio player, but their 
+ *          <code>token</code> field is unset, because these sub-playlists
+ *          are acquired and will be released recursively when the outermost
+ *          playlist containing them is acquired and released.</li>
+ *      <li>A playlist obtained by editPlaylist() has its <code>editToken</code>
+ *          field set (but <code>uri</code> and <code>token</code> unset).
+ *          The sub-playlists of these are also just stubs.</li>
+ *  </ul>
+ *
  *  @author  $Author$
  *  @version $Revision$
  */
@@ -160,9 +182,16 @@ class Playlist : public Configurable,
         Ptr<const std::string>::Ref     uri;
 
         /**
-         *  The token given to this playlist by the storage server.
+         *  The token given to this playlist by the storage server when
+         *  the playlist is acquired; removed when it is released.
          */
         Ptr<const std::string>::Ref     token;
+
+        /**
+         *  The token given to this playlist by the storage server when
+         *  it is opened for editing; removed when it is saved or reverted.
+         */
+        Ptr<const std::string>::Ref     editToken;
 
         /**
          *  A map type for storing the playlist elements associated with 
@@ -464,6 +493,9 @@ class Playlist : public Configurable,
          *  Return the token which is used to identify this
          *  playlist to the storage server.
          *
+         *  The token is set when the Playable object is acquired and
+         *  unset (made null again) when it is released.
+         *
          *  @return the token.
          */
         virtual Ptr<const std::string>::Ref
@@ -476,6 +508,9 @@ class Playlist : public Configurable,
          *  Set the token which is used to identify this
          *  playlist to the storage server.
          *
+         *  The token is set when the Playable object is acquired and
+         *  unset (made null again) when it is released.
+         *
          *  @param token a new token.
          */
         virtual void
@@ -486,6 +521,37 @@ class Playlist : public Configurable,
         }
 
         /**
+         *  Return the token which is used to identify this
+         *  playlist to the storage server.
+         *
+         *  The edit token is set when the Playable object is opened for
+         *  editing and unset (made null again) when it is saved or reverted.
+         *
+         *  @return the token.
+         */
+        virtual Ptr<const std::string>::Ref
+        getEditToken(void) const                throw ()
+        {
+            return editToken;
+        }
+
+        /**
+         *  Set the token which is used to identify this
+         *  playlist to the storage server.
+         *
+         *  The edit token is set when the Playable object is opened for
+         *  editing and unset (made null again) when it is saved or reverted.
+         *
+         *  @param token a new token.
+         */
+        virtual void
+        setEditToken(Ptr<const std::string>::Ref token) 
+                                                throw ()
+        {
+            this->editToken = token;
+        }
+
+        /**
          *  Test whether the playlist is locked for editing.
          *
          *  @return true if the playlist is currently being edited
@@ -493,7 +559,7 @@ class Playlist : public Configurable,
         bool
         isLocked() const                         throw ()
         {
-            return (token.get() != 0);
+            return (editToken.get() != 0);
         }
 
 
@@ -560,10 +626,10 @@ class Playlist : public Configurable,
          *  Checks the type of the playlist, and calls either addAudioClip()
          *  or addPlaylist().
          *
-         *  @param audioClip the new playable item to be added
-         *  @param relativeOffset the start of the playable item, relative
-         *             to the start of the playlist
-         *  @param fadeInfo the fade in / fade out info (optional)
+         *  @param playable         the new playable item to be added
+         *  @param relativeOffset   the start of the playable item, relative
+         *                              to the start of the playlist
+         *  @param fadeInfo         the fade in / fade out info (optional)
          *  @return the ID of the new PlaylistElement
          *  @exception std::invalid_argument if playable is neither an AudioClip
          *                                   nor a Playlist
@@ -711,7 +777,7 @@ class Playlist : public Configurable,
         /**
          *  Return a partial XML representation of this audio clip or playlist.
          *  
-         *  This is a string containing a single <playlist>
+         *  This is a string containing a single &lt;playlist&gt;
          *  XML element, with minimal information (ID, title, playlength)
          *  only, without an XML header or any other metadata.
          *
@@ -728,8 +794,8 @@ class Playlist : public Configurable,
          *  Return a complete XML representation of this playlist.
          *  
          *  This is a string containing a an XML document with a 
-         *  <playlist> root node, together with an XML header and a 
-         *  <metadata> element (for the outermost playlist only).
+         *  &lt;playlist&gt; root node, together with an XML header and a 
+         *  &lt;metadata&gt; element (for the outermost playlist only).
          *  
          *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
          *  time durations have the format "hh:mm:ss.ssssss".
@@ -751,8 +817,8 @@ class Playlist : public Configurable,
          *  All other metadata fields in the audio clips and sub-playlists 
          *  will be lost.
          *  
-         *  The <i>uri</i> and <i>token</i> fields are currently not part
-         *  of the XML document string returned.
+         *  The <i>uri</i>, <i>token</i> and <i>editToken</i> fields are not
+         *  part of the XML document string returned.
          *  
          *  @return a string representation of the playlist as an XML document
          */

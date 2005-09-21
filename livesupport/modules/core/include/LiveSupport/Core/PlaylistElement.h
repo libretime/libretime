@@ -203,6 +203,7 @@ class PlaylistElement : public Configurable
             this->audioClip      = audioClip;
             this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
+            this->type           = AudioClipType;
         }
 
         /**
@@ -349,6 +350,31 @@ class PlaylistElement : public Configurable
         getPlayable(void) const                            throw ()
         {
             return playable;
+        }
+
+        /**
+         *  Set the Playable instance (an AudioClip or a Playlist)
+         *  associated with the playlist element.
+         *
+         *  This is used by WebStorageClient::acquirePlaylist() to replace
+         *  a stub (id, title, playlength only) sub-playlist with a full one.
+         *
+         *  @param playable the new Playable object.
+         */
+        void
+        setPlayable(Ptr<Playable>::Ref  playable)           throw ()
+        {
+            this->playable = playable;
+            switch (playable->getType()) {
+                case Playable::AudioClipType : 
+                                    audioClip = playable->getAudioClip();
+                                    type = AudioClipType;
+                                    break;
+                case Playable::PlaylistType : 
+                                    playlist  = playable->getPlaylist();
+                                    type = PlaylistType;
+                                    break;
+            }
         }
 
         /**

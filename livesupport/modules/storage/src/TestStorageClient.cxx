@@ -346,7 +346,7 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     EditedPlaylistsType::const_iterator
                     editIt = editedPlaylists.find(id->getId());
     if (editIt != editedPlaylists.end()                     // is being edited
-        && (*editIt->second->getToken() == sessionId->getId())) {   // by us
+        && (*editIt->second->getEditToken() == sessionId->getId())) { // by us
         playlist = editIt->second;
     } else {
         PlaylistMapType::const_iterator
@@ -378,8 +378,8 @@ TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
     }
     
     Ptr<Playlist>::Ref      playlist = getPlaylist(sessionId, id);
-    Ptr<std::string>::Ref   token(new std::string(sessionId->getId()));
-    playlist->setToken(token);
+    Ptr<std::string>::Ref   editToken(new std::string(sessionId->getId()));
+    playlist->setEditToken(editToken);
 
     editedPlaylists[id->getId()] = playlist;
     return playlist;
@@ -398,11 +398,11 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcException("missing session ID argument");
     }
 
-    if (! playlist->getToken()) {
+    if (! playlist->getEditToken()) {
         throw XmlRpcException("savePlaylist() called without editPlaylist()");
     }
 
-    if (sessionId->getId() != *playlist->getToken()) {
+    if (sessionId->getId() != *playlist->getEditToken()) {
         throw XmlRpcException("tried to save playlist in different session"
                               " than the one it was opened in???");
     }
@@ -411,12 +411,12 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                     editIt = editedPlaylists.find(playlist->getId()->getId());
     
     if ((editIt == editedPlaylists.end()) 
-            || (*playlist->getToken() != *editIt->second->getToken())) {
+            || (*playlist->getEditToken() != *editIt->second->getEditToken())) {
         throw XmlRpcException("savePlaylist() called without editPlaylist()");
     }
 
     Ptr<std::string>::Ref   nullPointer;
-    playlist->setToken(nullPointer);
+    playlist->setEditToken(nullPointer);
 
     PlaylistMapType::iterator
                     storeIt = playlistMap.find(playlist->getId()->getId());
@@ -434,7 +434,7 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
  *  Revert a playlist to its pre-editing state.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
+TestStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
                                                 throw (XmlRpcException)
 {
     std::cerr << "TestStorageClient :: revertPlaylist"

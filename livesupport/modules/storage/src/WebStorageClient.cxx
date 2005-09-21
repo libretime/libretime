@@ -847,13 +847,13 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     
     Ptr<time_duration>::Ref     playlength(new time_duration(0,0,0,0));
     Ptr<Playlist>::Ref          playlist(new Playlist(newId, playlength));
-    playlist->setToken(token);
+    playlist->setEditToken(token);
     
     editedPlaylists[newId->getId()] = std::make_pair(sessionId, playlist);
     savePlaylist(sessionId, playlist);
     
     token.reset();
-    playlist->setToken(token);
+    playlist->setEditToken(token);
     
     return playlist->getId();
 }
@@ -918,9 +918,8 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
  *  Return a playlist to be displayed.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
-                                Ptr<UniqueId>::Ref  id,
-                                bool                deep) const
+WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref     sessionId,
+                                Ptr<UniqueId>::Ref      id) const
                                                 throw (Core::XmlRpcException)
 {
     EditedPlaylistsType::const_iterator
@@ -940,7 +939,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     parameters.clear();
     parameters[getPlaylistSessionIdParamName]  = sessionId->getId();
     parameters[getPlaylistPlaylistIdParamName] = std::string(*id);
-    parameters[getPlaylistRecursiveParamName]  = deep;
+    parameters[getPlaylistRecursiveParamName]  = false;
 
     result.clear();
     if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
@@ -960,25 +959,33 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
              << result;
         throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
-    if (! result.hasMember(getPlaylistUrlParamName)
-            || result[getPlaylistUrlParamName].getType() 
-                                                != XmlRpcValue::TypeString
-            || ! result.hasMember(getPlaylistTokenParamName)
+    
+    if (! result.hasMember(getPlaylistTokenParamName)
             || result[getPlaylistTokenParamName].getType() 
                                                 != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
-             << getPlaylistOpenMethodName
-             << "' returned unexpected value:\n"
-             << result;
+                << getPlaylistOpenMethodName
+                << "' returned unexpected value:\n"
+                << result;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    Ptr<const std::string>::Ref     token(new std::string(
+                                        result[getPlaylistTokenParamName] ));
+    
+    if (! result.hasMember(getPlaylistUrlParamName)
+            || result[getPlaylistUrlParamName].getType() 
+                                            != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+                << getPlaylistOpenMethodName
+                << "' returned unexpected value:\n"
+                << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
     const std::string   url     = result[getPlaylistUrlParamName];
-    const std::string   token   = result[getPlaylistTokenParamName];
 
-    Ptr<Playlist>::Ref playlist(new Playlist(id));
-
+    Ptr<Playlist>::Ref  playlist(new Playlist(id));
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
         parser->parse_file(url);
@@ -994,48 +1001,10 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcInvalidDataException(
                                     "error parsing playlist metafile");
     }
+    playlist->setToken(token);
 
-    if (deep) {
-        playlist = acquirePlaylist(playlist, result);
-    }
-
-    parameters.clear();
-    parameters[getPlaylistSessionIdParamName] = sessionId->getId();
-    parameters[getPlaylistTokenParamName]     = token;
+    releasePlaylistFromServer(playlist);
     
-    result.clear();
-    if (!xmlRpcClient.execute(getPlaylistCloseMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getPlaylistCloseMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getPlaylistCloseMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-
-    if (! result.hasMember(getPlaylistPlaylistIdParamName)
-            || result[getPlaylistPlaylistIdParamName].getType() 
-                                                    != XmlRpcValue::TypeString
-            || std::string(result[getPlaylistPlaylistIdParamName])
-                                                    != std::string(*id)) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getPlaylistCloseMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
     return playlist;
 }
 
@@ -1053,9 +1022,9 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                              " being edited");
     }
     
-    Ptr<const std::string>::Ref     url, token;
+    Ptr<const std::string>::Ref     url, editToken;
 
-    editPlaylistGetUrl(sessionId, id, url, token);
+    editPlaylistGetUrl(sessionId, id, url, editToken);
 
     Ptr<Playlist>::Ref              playlist(new Playlist(id));
     try {
@@ -1074,7 +1043,7 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                     "error parsing playlist metafile");
     }
 
-    playlist->setToken(token);
+    playlist->setEditToken(editToken);
     editedPlaylists[id->getId()] = std::make_pair(sessionId, playlist);
 
     return playlist;
@@ -1088,7 +1057,7 @@ void
 WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                                        Ptr<UniqueId>::Ref  id,
                                        Ptr<const std::string>::Ref& url,
-                                       Ptr<const std::string>::Ref& token)
+                                       Ptr<const std::string>::Ref& editToken)
                                                 throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
@@ -1138,7 +1107,7 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
     }
 
     url.reset(new const std::string(result[getPlaylistUrlParamName]));
-    token.reset(new const std::string(result[getPlaylistTokenParamName]));
+    editToken.reset(new const std::string(result[getPlaylistTokenParamName]));
 }
 
 
@@ -1150,8 +1119,8 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<Playlist>::Ref  playlist)
                                                 throw (Core::XmlRpcException)
 {
-    if (!playlist || !playlist->getToken()) {
-        throw XmlRpcInvalidArgumentException("playlist has no token field");
+    if (!playlist || !playlist->getEditToken()) {
+        throw XmlRpcInvalidArgumentException("playlist has no editToken field");
     }
     
     EditedPlaylistsType::iterator
@@ -1174,7 +1143,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     parameters[savePlaylistSessionIdParamName] 
             = sessionId->getId();
     parameters[savePlaylistTokenParamName] 
-            = *playlist->getToken();
+            = *playlist->getEditToken();
     parameters[savePlaylistNewPlaylistParamName] 
             = std::string(*playlist->getXmlDocumentString());
 
@@ -1212,7 +1181,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     }
 
     Ptr<const std::string>::Ref     nullpointer;
-    playlist->setToken(nullpointer);
+    playlist->setEditToken(nullpointer);
 }
 
 
@@ -1220,10 +1189,10 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
  *  Revert a playlist to its pre-editing state.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
+WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
                                                 throw (XmlRpcException)
 {
-    if (!playlistToken) {
+    if (!editToken) {
         throw XmlRpcInvalidArgumentException("null pointer in argument");
     }
     
@@ -1237,7 +1206,7 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
     parameters[revertPlaylistSessionIdParamName]        // dummy parameter
             = "";
     parameters[revertPlaylistTokenParamName] 
-            = *playlistToken;
+            = *editToken;
 
     result.clear();
     if (!xmlRpcClient.execute(revertPlaylistMethodName.c_str(),
@@ -1273,22 +1242,115 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
 
 
 /*------------------------------------------------------------------------------
- *  Acquire resources for a playlist.
+ *  Acquire resources for a playlist, step 1: execute the XML-RPC call.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
-                                    XmlRpcValue       & result) const
+WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref     sessionId,
+                                    Ptr<UniqueId>::Ref      id) const
                                                 throw (Core::XmlRpcException)
 {
-    XmlRpcValue             content;
-    int                     index;
-    Ptr<time_duration>::Ref playlength = oldPlaylist->getPlaylength();
-    Ptr<Playlist>::Ref      newPlaylist(new Playlist(oldPlaylist->getId(),
-                                                     playlength));
-    newPlaylist->setTitle(oldPlaylist->getTitle());
-    newPlaylist->setToken(oldPlaylist->getToken());
-    // TODO: copy over all metadata as well
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
 
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[getPlaylistSessionIdParamName]  = sessionId->getId();
+    parameters[getPlaylistPlaylistIdParamName] = std::string(*id);
+    parameters[getPlaylistRecursiveParamName]  = true;
+
+    result.clear();
+    if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
+                              parameters, result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getPlaylistOpenMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistOpenMethodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(getPlaylistTokenParamName)
+            || result[getPlaylistTokenParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+                << getPlaylistOpenMethodName
+                << "' returned unexpected value:\n"
+                << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    Ptr<const std::string>::Ref     token(new std::string(
+                                        result[getPlaylistTokenParamName] ));
+
+    Ptr<Playlist>::Ref  playlist = acquirePlaylist(id, result);
+    playlist->setToken(token);
+    
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Acquire resources for a playlist, step 2: create the temp files.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+WebStorageClient :: acquirePlaylist(Ptr<UniqueId>::Ref  id,
+                                    XmlRpcValue &       content) const
+                                                throw (Core::XmlRpcException)
+{
+    // construct the playlist
+    if (! content.hasMember(getPlaylistUrlParamName)
+            || content[getPlaylistUrlParamName].getType() 
+                                            != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+                << getPlaylistOpenMethodName
+                << "' returned unexpected value:\n"
+                << content;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    const std::string   url     = content[getPlaylistUrlParamName];
+
+    Ptr<Playlist>::Ref  playlist(new Playlist(id));
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
+        parser->parse_file(url);
+        const xmlpp::Document     * document = parser->get_document();
+        const xmlpp::Element      * root     = document->get_root_node();
+
+        playlist->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        throw XmlRpcInvalidDataException(
+                                    "semantic error in playlist metafile");
+    } catch (xmlpp::exception &e) {
+        throw XmlRpcInvalidDataException(
+                                    "error parsing playlist metafile");
+    }
+
+    // read the content array corresponding to the playlist
+    if (! content.hasMember(getPlaylistContentParamName)
+            || content[getPlaylistContentParamName].getType() 
+                                            != XmlRpcValue::TypeArray) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+                << getPlaylistOpenMethodName
+                << "' returned unexpected value:\n"
+                << content;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    XmlRpcValue         innerContent = content[getPlaylistContentParamName];
+
+    // construct the SMIL file
     Ptr<xmlpp::Document>::Ref
                         smilDocument(new xmlpp::Document(xmlVersion));
     xmlpp::Element    * smilRootNode 
@@ -1301,48 +1363,32 @@ WebStorageClient :: acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
     xmlpp::Element    * smilParNode
                         = smilBodyNode->add_child(smilParNodeName);
     
-    Playlist::const_iterator it = oldPlaylist->begin();
-    if (result.hasMember(getPlaylistContentParamName)) {
-        content = result[getPlaylistContentParamName];
-    }
-    // if there is no content parameter, leave the original, empty content
-
-    index = 0;
-    // assume that it is as long as the size of the content array
-    while (it != oldPlaylist->end()) {
+    // we assume that the playlist is as long as the size of the content array
+    Playlist::const_iterator it = playlist->begin();
+    int                      index = 0;
+    while (it != playlist->end() && index < innerContent.size()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         Ptr<time_duration>::Ref     relativeOffset
                                               = plElement->getRelativeOffset();
         Ptr<FadeInfo>::Ref          fadeInfo  = plElement->getFadeInfo();
 
-        if (index >= content.size()) {
-            break;
-        }
-        XmlRpcValue     contents = content[index];
-        ++index;
-        if (!contents.hasMember(getPlaylistUrlParamName)) {
-            // TODO: maybe signal error?
-            continue;
-        }
+        XmlRpcValue     contentElement = innerContent[index];
 
         Ptr<Playable>::Ref              playable;
         Ptr<const std::string>::Ref     url;
-        Ptr<AudioClip>::Ref             audioClip;
-        Ptr<Playlist>::Ref              playlist;
+        Ptr<UniqueId>::Ref              subPlaylistId;
+        
         switch (plElement->getType()) {
             case PlaylistElement::AudioClipType :
-                url.reset(new std::string(contents[getPlaylistUrlParamName]));
-                audioClip.reset(new AudioClip(*plElement->getAudioClip()));
-                audioClip->setUri(url);
-                url.reset();
-                newPlaylist->addPlayable(audioClip, relativeOffset, fadeInfo);
-                playable = audioClip;
+                url.reset(new std::string(
+                                    contentElement[getPlaylistUrlParamName]));
+                playable = plElement->getAudioClip();
                 break;
             case PlaylistElement::PlaylistType :
-                playlist.reset(new Playlist(*plElement->getPlaylist()));
-                playlist = acquirePlaylist(playlist, contents);
-                newPlaylist->addPlayable(playlist, relativeOffset, fadeInfo);
-                playable = playlist;
+                subPlaylistId = plElement->getPlaylist()->getId();
+                playable = acquirePlaylist(subPlaylistId, contentElement);
+                url      = playable->getUri();
+                plElement->setPlayable(playable);
                 break;
             default :     // this should never happen
                 throw XmlRpcInvalidArgumentException(
@@ -1354,7 +1400,7 @@ WebStorageClient :: acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
                         = smilParNode->add_child(smilPlayableNodeName);
         smilPlayableNode->set_attribute(
                         smilPlayableUriAttrName, 
-                        *playable->getUri() );
+                        *url );
         smilPlayableNode->set_attribute(
                         smilRelativeOffsetAttrName, 
                         *TimeConversion::timeDurationToSmilString(
@@ -1430,19 +1476,20 @@ WebStorageClient :: acquirePlaylist(Ptr<Playlist>::Ref  oldPlaylist,
                                     smilAnimateFillAttrValue );
             }
         }
-        ++it;        
+        ++it;
+        ++index;
     }
 
     std::stringstream fileName;
-    fileName << localTempStorage << std::string(*newPlaylist->getId())
+    fileName << localTempStorage << std::string(*playlist->getId())
              << "-" << std::rand() << ".smil";
 
     smilDocument->write_to_file_formatted(fileName.str(), "UTF-8");
    
     Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
-    newPlaylist->setUri(playlistUri);
+    playlist->setUri(playlistUri);
 
-    return newPlaylist;
+    return playlist;
 }
 
 
@@ -1453,10 +1500,90 @@ void
 WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
                                                 throw (Core::XmlRpcException)
 {
+    if (playlist->getToken()) {
+        releasePlaylistFromServer(playlist);
+    }
+    
+    releasePlaylistTempFile(playlist);
+}
+    
+    
+/*------------------------------------------------------------------------------
+ *  Release a playlist, step 1: release access URLs at the storage server.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: releasePlaylistFromServer(
+                                        Ptr<Playlist>::Ref      playlist) const
+                                                throw (Core::XmlRpcException)
+{
+    if (! playlist->getToken()) {
+        throw XmlRpcInvalidArgumentException("releasePlaylist() called without"
+                                             " acquirePlaylist()");
+    }
+
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[getPlaylistTokenParamName]     = std::string(
+                                                        *playlist->getToken());
+    // TODO: remove the 'recursive' param from locstor.releasePlaylist because
+    // it is error-prone; should always use the same value as for accessPlaylist
+    parameters[getPlaylistRecursiveParamName] = true;
+    
+    result.clear();
+    if (!xmlRpcClient.execute(getPlaylistCloseMethodName.c_str(),
+                              parameters, result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getPlaylistCloseMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    xmlRpcClient.close();
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistCloseMethodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(getPlaylistPlaylistIdParamName)
+            || result[getPlaylistPlaylistIdParamName].getType() 
+                                        != XmlRpcValue::TypeString
+            || std::string(result[getPlaylistPlaylistIdParamName])
+                                        != std::string(*playlist->getId())) {
+        std::stringstream eMsg;
+        eMsg << "Mismatched playlist ID from XML-RPC method '" 
+             << getPlaylistCloseMethodName
+             << "': "
+             << result[getPlaylistPlaylistIdParamName]
+             << " instead of "
+             << std::string(*playlist->getId())
+             << ".";
+// removed temporarily; see ticket #1468
+//        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Release a playlist, step 2: delete the temp file.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: releasePlaylistTempFile(Ptr<Playlist>::Ref  playlist) const
+                                                throw (Core::XmlRpcException)
+{
     if (! playlist->getUri()) {
         throw XmlRpcInvalidArgumentException("playlist URI not found");
     }
-    
+
     std::ifstream ifs(playlist->getUri()->substr(7).c_str());
     if (!ifs) {                                              // cut of "file://"
         ifs.close();
@@ -1471,16 +1598,15 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
     while (it != playlist->end()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         if (plElement->getType() == PlaylistElement::AudioClipType) {
-            // don't have to release, as it will be done by the storage server
-            // for clips inside the playlist
+            // no temp file; nothing to do
             ++it;
         } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             try {
-                releasePlaylist(it->second->getPlaylist());
+                releasePlaylistTempFile(it->second->getPlaylist());
             }
             catch (XmlRpcException &e) {
                 eMsg += e.what();
-                eMsg += "\n";
+                eMsg += '\n';
             }
             ++it;
         } else {

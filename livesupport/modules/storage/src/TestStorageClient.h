@@ -321,13 +321,13 @@ class TestStorageClient :
          *  the playlist (and lose all changes) at the next login using
          *  this method.
          *
-         *  @param playlistToken the token of the edited playlist
+         *  @param editToken the token of the edited playlist
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call or no playlist with the specified
          *                             token exists.
          */
         virtual void
-        revertPlaylist(Ptr<const std::string>::Ref    playlistToken)
+        revertPlaylist(Ptr<const std::string>::Ref    editToken)
                                                 throw (XmlRpcException);
 
 
