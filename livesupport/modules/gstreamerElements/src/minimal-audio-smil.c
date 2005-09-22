@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 
@@ -114,7 +114,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.8 $",
+                  "$Revision$",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")

@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_Foo_Bar_h

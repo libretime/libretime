@@ -27,8 +27,8 @@
 
  
     Author   : $Author$
-    Version  : $Revision: 1.11 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

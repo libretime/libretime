@@ -23,9 +23,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 # 
-#    Author   : $Author: tomas $
-#    Version  : $Revision: 1.1 $
-#    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/xmlrpc/xr_cli_test.py,v $
+#    Author   : $Author$
+#    Version  : $Revision$
+#    Location : $URL$
 #
 #------------------------------------------------------------------------------
 

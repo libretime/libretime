@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.c,v $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 
@@ -93,7 +93,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "oneshotreaderplugin",
                   "A reader that reads all of the input on one go",
                   plugin_init,
-                  "$Revision: 1.4 $",
+                  "$Revision$",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")

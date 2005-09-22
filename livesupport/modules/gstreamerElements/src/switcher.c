@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 
@@ -65,7 +65,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.10 $",
+    "$Revision$",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"

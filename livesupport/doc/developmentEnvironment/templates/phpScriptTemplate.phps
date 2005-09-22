@@ -22,9 +22,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/templates/phpScriptTemplate.phps,v $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 
@@ -41,8 +41,8 @@ require_once "LocalBaseClass.php";
  *
  *  Description of Example class
  *
- *  @author  $Author: tomas $
- *  @version $Revision: 1.1 $
+ *  @author  $Author$
+ *  @version $Revision$
  *  @see LocalBaseClass
  */
 class Example extends LocalBaseClass{

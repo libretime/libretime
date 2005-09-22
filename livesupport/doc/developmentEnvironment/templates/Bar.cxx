@@ -23,7 +23,7 @@
  
     Author   : $Author$
     Version  : $Revision$
-    Location : $Source$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

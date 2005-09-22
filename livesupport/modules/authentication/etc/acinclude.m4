@@ -20,9 +20,9 @@ dnl along with LiveSupport; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.2 $
-dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/etc/acinclude.m4,v $
+dnl Author   : $Author$
+dnl Version  : $Revision$
+dnl Location : $URL$
 dnl-----------------------------------------------------------------------------
 
 dnl-----------------------------------------------------------------------------

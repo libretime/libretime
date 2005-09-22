@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.6 $",
+    "$Revision$",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
