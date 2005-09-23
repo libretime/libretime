@@ -61,7 +61,9 @@ SRC_DIR     = ${BASE_DIR}/src
 TMP_DIR     = ${BASE_DIR}/tmp
 VAR_DIR     = ${BASE_DIR}/var
 
-USR_DIR         = @prefix@
+prefix = @prefix@
+
+USR_DIR         = ${prefix}
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_VAR_DIR     = ${USR_DIR}/var
 

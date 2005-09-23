@@ -54,7 +54,10 @@ prefix = @prefix@
 
 USR_DIR     = ${prefix}
 USR_BIN_DIR = ${USR_DIR}/bin
+USR_DOC_DIR = ${USR_DIR}/doc
 USR_ETC_DIR = ${USR_DIR}/etc
+USR_LIB_DIR = ${USR_DIR}/lib
+USR_VAR_DIR = ${USR_DIR}/var
 
 HOSTNAME          		= @HOSTNAME@
 APACHE_GROUP      		= @APACHE_GROUP@
@@ -314,6 +317,7 @@ ${TMP_DIR}/modules_setup.stamp:
 		./configure --prefix=${prefix} \
 	                --with-apache-group=${APACHE_GROUP} \
 	                --with-hostname=${HOSTNAME} \
+                    --with-www-docroot=${WWW_DOCROOT} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
 					--with-database-server=${DB_SERVER} \
@@ -426,9 +430,10 @@ check:
 #-------------------------------------------------------------------------------
 #   Installation related targets
 #-------------------------------------------------------------------------------
-.PHONY: install create_database install_modules install_products
+.PHONY: install create_database setup_install_dirs
+.PHONY: install_modules install_products
 
-install: setup compile create_database install_modules install_products
+install: setup compile setup_install_dirs create_database install_modules install_products
 	${MKDIR} ${USR_ETC_DIR}/apache
 	${CP} ${ETC_DIR}/apache/*.conf ${USR_ETC_DIR}/apache
 	${MKDIR} ${USR_BIN_DIR}
@@ -443,6 +448,13 @@ ifeq (@CREATE_LS_DATABASE@,yes)
                                            --dbuser=${DB_USER} \
                                            --dbpassword=${DB_PASSWORD}
 endif
+
+setup_install_dirs:
+	${MKDIR} ${USR_BIN_DIR}
+	${MKDIR} ${USR_DOC_DIR}
+	${MKDIR} ${USR_ETC_DIR}
+	${MKDIR} ${USR_LIB_DIR}
+	${MKDIR} ${USR_VAR_DIR}
 
 install_modules:
 	${MAKE} -C ${ALIB_DIR} install
