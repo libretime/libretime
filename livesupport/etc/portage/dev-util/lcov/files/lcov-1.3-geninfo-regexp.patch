@@ -1,0 +1,12 @@
+diff -Naur lcov-1.3/bin/geninfo lcov-1.3-regexp-fix/bin/geninfo
+--- lcov-1.3/bin/geninfo	2004-04-29 00:57:11.000000000 +0700
++++ lcov-1.3-regexp-fix/bin/geninfo	2004-08-02 12:51:48.996719688 +0700
+@@ -707,7 +707,7 @@
+ 
+ 	foreach (@list)
+ 	{
+-		if (/\/$filename$/)
++		if (m,/\Q$filename\E$,)
+ 		{
+ 			@result = (@result, $_);
+ 		}

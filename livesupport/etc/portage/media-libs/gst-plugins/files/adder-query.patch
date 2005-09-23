@@ -1,0 +1,54 @@
+--- gst-plugins-0.8.10/gst/adder/gstadder.c	2005-09-07 16:24:18.000000000 +0200
++++ gst-plugins-0.8.10-livesupport/gst/adder/gstadder.c	2005-09-07 16:22:40.000000000 +0200
+@@ -107,6 +107,11 @@
+                                const GstCaps  * caps);
+ static GstCaps *gst_adder_get_caps (GstPad * pad);
+ 
++static gboolean gst_adder_query(GstPad        * pad,
++                                GstQueryType    type,
++                                GstFormat     * format,
++                                gint64        * value);
++
+ static GstElementClass *parent_class = NULL;
+ 
+ /* static guint gst_adder_signals[LAST_SIGNAL] = { 0 }; */
+@@ -283,6 +288,7 @@
+   gst_element_set_loop_function (GST_ELEMENT (adder), gst_adder_loop);
+   gst_pad_set_getcaps_function (adder->srcpad, gst_adder_get_caps);
+   gst_pad_set_link_function (adder->srcpad, gst_adder_link);
++  gst_pad_set_query_function (adder->srcpad, gst_adder_query);
+ 
+   adder->format = GST_ADDER_FORMAT_UNSET;
+ 
+@@ -654,6 +660,31 @@
+ }
+ 
+ 
++static gboolean gst_adder_query(GstPad        * pad,
++                                GstQueryType    type,
++                                GstFormat     * format,
++                                gint64        * value)
++{
++    GstAdder      * adder;
++
++    adder = GST_ADDER(gst_pad_get_parent(pad));
++    if (!GST_IS_ADDER(adder)) {
++        return FALSE;
++    }
++
++    if (pad != adder->srcpad) {
++        return gst_pad_query_default(pad, type, format, value);
++    }
++
++    if (type != GST_QUERY_POSITION || *format != GST_FORMAT_TIME) {
++        return gst_pad_query_default(pad, type, format, value);
++    }
++
++    *value = adder->timestamp;
++    return TRUE;
++}
++
++
+ static GstElementStateReturn
+ gst_adder_change_state (GstElement * element)
+ {

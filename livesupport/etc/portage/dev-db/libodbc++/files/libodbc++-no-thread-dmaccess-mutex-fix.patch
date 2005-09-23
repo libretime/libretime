@@ -1,0 +1,14 @@
+diff -Naur libodbc++-0.2.3-20050404/src/drivermanager.cpp libodbc++-0.2.3-20050404-no-thread-dmaccess-mutex-fix/src/drivermanager.cpp
+--- libodbc++-0.2.3-20050404/src/drivermanager.cpp	2005-02-27 23:37:23.000000000 +0100
++++ libodbc++-0.2.3-20050404-no-thread-dmaccess-mutex-fix/src/drivermanager.cpp	2005-04-04 18:35:25.725465880 +0200
+@@ -87,8 +87,10 @@
+     }
+   }
+ 
++#ifdef ODBCXX_ENABLE_THREADS
+   // remove the mutex as we can't rely on static destructors
+   DMAccessMutex(1);
++#endif
+ }
+ 
+ 

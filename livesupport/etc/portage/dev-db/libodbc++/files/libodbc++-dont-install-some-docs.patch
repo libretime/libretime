@@ -1,0 +1,180 @@
+diff -Naur libodbc++-0.2.3-20050404/doc/Makefile.am libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.am
+--- libodbc++-0.2.3-20050404/doc/Makefile.am	2001-06-12 12:38:12.000000000 +0200
++++ libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.am	2005-04-04 21:16:50.447164392 +0200
+@@ -17,41 +17,6 @@
+ #  the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ #  Boston, MA 02111-1307, USA.
+ 
+-instdoc_dir=@docdir@/@PACKAGE@-@VERSION@/INSTALL
+-
+-instdoc_name=INSTALL
+-
+ SUBDIRS=progref
+ 
+-all-local: $(instdoc_name)
+-
+-$(instdoc_name): $(instdoc_name).sgml
+-	test -z "$(db2html)" && mkdir $@ || $(db2html) $<
+-
+-maintainer-clean-local:
+-	rm -rf $(instdoc_name)
+-
+-clean-local:
+-	rm -rf $(instdoc_name).junk DBTOHTML_OUTPUT_DIR*
+-
+-dist-hook: all-local
+-	cp -r $(srcdir)/$(instdoc_name) $(distdir)
+-
+-install-data-local:
+-	$(mkinstalldirs) $(DESTDIR)$(instdoc_dir) $(DESTDIR)$(instdoc_dir)/stylesheet-images
+-	for i in $(srcdir)/$(instdoc_name)/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/$$fn; \
+-	done
+-	for i in $(srcdir)/$(instdoc_name)/stylesheet-images/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/stylesheet-images/$$fn; \
+-	done
+-
+-uninstall-local:
+-	if test -d $(DESTDIR)$(instdoc_dir); then \
+-		rm -rf $(DESTDIR)$(instdoc_dir)/*; \
+-		rmdir $(DESTDIR)$(instdoc_dir) || true; \
+-	fi
+-
+-EXTRA_DIST=$(instdoc_name).sgml
++EXTRA_DIST=INSTALL.sgml
+diff -Naur libodbc++-0.2.3-20050404/doc/Makefile.in libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.in
+--- libodbc++-0.2.3-20050404/doc/Makefile.in	2005-04-04 18:21:26.000000000 +0200
++++ libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.in	2005-04-04 21:16:50.447164392 +0200
+@@ -174,13 +174,9 @@
+ target_alias = @target_alias@
+ zip = @zip@
+ 
+-instdoc_dir = @docdir@/@PACKAGE@-@VERSION@/INSTALL
+-
+-instdoc_name = INSTALL
+-
+ SUBDIRS = progref
+ 
+-EXTRA_DIST = $(instdoc_name).sgml
++EXTRA_DIST = INSTALL.sgml
+ subdir = doc
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+@@ -382,12 +378,9 @@
+ 	      || exit 1; \
+ 	  fi; \
+ 	done
+-	$(MAKE) $(AM_MAKEFLAGS) \
+-	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+-	  dist-hook
+ check-am: all-am
+ check: check-recursive
+-all-am: Makefile all-local
++all-am: Makefile
+ installdirs: installdirs-recursive
+ installdirs-am:
+ 
+@@ -417,7 +410,7 @@
+ 	@echo "it deletes files that may require special tools to rebuild."
+ clean: clean-recursive
+ 
+-clean-am: clean-generic clean-libtool clean-local mostlyclean-am
++clean-am: clean-generic clean-libtool mostlyclean-am
+ 
+ distclean: distclean-recursive
+ 	-rm -f Makefile
+@@ -432,7 +425,7 @@
+ 
+ info-am:
+ 
+-install-data-am: install-data-local
++install-data-am:
+ 
+ install-exec-am:
+ 
+@@ -444,8 +437,7 @@
+ 
+ maintainer-clean: maintainer-clean-recursive
+ 	-rm -f Makefile
+-maintainer-clean-am: distclean-am maintainer-clean-generic \
+-	maintainer-clean-local
++maintainer-clean-am: distclean-am maintainer-clean-generic
+ 
+ mostlyclean: mostlyclean-recursive
+ 
+@@ -459,59 +451,27 @@
+ 
+ ps-am:
+ 
+-uninstall-am: uninstall-info-am uninstall-local
++uninstall-am: uninstall-info-am
+ 
+ uninstall-info: uninstall-info-recursive
+ 
+-.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am all-local check \
+-	check-am clean clean-generic clean-libtool clean-local \
+-	clean-recursive ctags ctags-recursive distclean \
+-	distclean-generic distclean-libtool distclean-recursive \
+-	distclean-tags distdir dvi dvi-am dvi-recursive info info-am \
+-	info-recursive install install-am install-data install-data-am \
+-	install-data-local install-data-recursive install-exec \
+-	install-exec-am install-exec-recursive install-info \
+-	install-info-am install-info-recursive install-man \
++.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am clean \
++	clean-generic clean-libtool clean-recursive ctags \
++	ctags-recursive distclean distclean-generic distclean-libtool \
++	distclean-recursive distclean-tags distdir dvi dvi-am \
++	dvi-recursive info info-am info-recursive install install-am \
++	install-data install-data-am install-data-recursive \
++	install-exec install-exec-am install-exec-recursive \
++	install-info install-info-am install-info-recursive install-man \
+ 	install-recursive install-strip installcheck installcheck-am \
+ 	installdirs installdirs-am installdirs-recursive \
+ 	maintainer-clean maintainer-clean-generic \
+-	maintainer-clean-local maintainer-clean-recursive mostlyclean \
+-	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
+-	pdf pdf-am pdf-recursive ps ps-am ps-recursive tags \
+-	tags-recursive uninstall uninstall-am uninstall-info-am \
+-	uninstall-info-recursive uninstall-local uninstall-recursive
+-
+-
+-all-local: $(instdoc_name)
+-
+-$(instdoc_name): $(instdoc_name).sgml
+-	test -z "$(db2html)" && mkdir $@ || $(db2html) $<
+-
+-maintainer-clean-local:
+-	rm -rf $(instdoc_name)
+-
+-clean-local:
+-	rm -rf $(instdoc_name).junk DBTOHTML_OUTPUT_DIR*
+-
+-dist-hook: all-local
+-	cp -r $(srcdir)/$(instdoc_name) $(distdir)
+-
+-install-data-local:
+-	$(mkinstalldirs) $(DESTDIR)$(instdoc_dir) $(DESTDIR)$(instdoc_dir)/stylesheet-images
+-	for i in $(srcdir)/$(instdoc_name)/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/$$fn; \
+-	done
+-	for i in $(srcdir)/$(instdoc_name)/stylesheet-images/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/stylesheet-images/$$fn; \
+-	done
++	maintainer-clean-recursive mostlyclean mostlyclean-generic \
++	mostlyclean-libtool mostlyclean-recursive pdf pdf-am \
++	pdf-recursive ps ps-am ps-recursive tags tags-recursive \
++	uninstall uninstall-am uninstall-info-am \
++	uninstall-info-recursive uninstall-recursive
+ 
+-uninstall-local:
+-	if test -d $(DESTDIR)$(instdoc_dir); then \
+-		rm -rf $(DESTDIR)$(instdoc_dir)/*; \
+-		rmdir $(DESTDIR)$(instdoc_dir) || true; \
+-	fi
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:

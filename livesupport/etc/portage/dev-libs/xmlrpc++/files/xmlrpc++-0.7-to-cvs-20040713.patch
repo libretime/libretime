@@ -1,0 +1,2539 @@
+diff -Naur xmlrpc++0.7/debian/changelog xmlrpc++/debian/changelog
+--- xmlrpc++0.7/debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/changelog	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,5 @@
++xmlrpc++ (0.8) unstable; urgency=low
++
++  * Initial release.
++
++ -- jeff <jeff@freemedsoftware.com>  Tue, 13 Apr 2004 11:36:50 -0400
+diff -Naur xmlrpc++0.7/debian/control xmlrpc++/debian/control
+--- xmlrpc++0.7/debian/control	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/control	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,30 @@
++Source: xmlrpc++
++Section: devel
++Priority: optional
++Maintainer: jeff <jeff@freemedsoftware.com>
++Standards-Version: 3.5.8
++Build-Depends: debmake make gcc libssl-dev
++
++Package: libxmlrpc++1-dev
++Architecture: any
++Depends: libxmlrpc++1, libc6-dev, libssl-dev
++Provides: libxmlrpc++-dev
++Conflicts: libxmlrpc++-dev
++Description: C++ library for XML-RPC development files
++  XmlRpc++ is a C++ implementation of the XML-RPC protocol. It is based upon
++  Shilad Sen's excellent py-xmlrpc. The XmlRpc protocol was designed to make
++  remote procedure calls easy: it encodes data in a simple XML format and
++  uses HTTP for communication. XmlRpc++ is designed to make it easy to
++  incorporate XML-RPC client and server support into C++ applications.
++  This package is needed to develop applications with this library.
++
++Package: libxmlrpc++1
++Architecture: any
++Depends: ${shlibs:Depends}
++Description: C++ library for XML-RPC
++  XmlRpc++ is a C++ implementation of the XML-RPC protocol. It is based upon
++  Shilad Sen's excellent py-xmlrpc. The XmlRpc protocol was designed to make
++  remote procedure calls easy: it encodes data in a simple XML format and
++  uses HTTP for communication. XmlRpc++ is designed to make it easy to
++  incorporate XML-RPC client and server support into C++ applications.
++
+diff -Naur xmlrpc++0.7/debian/copyright xmlrpc++/debian/copyright
+--- xmlrpc++0.7/debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/copyright	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,5 @@
++This packaging was written by jeff (jeff@freemedsoftware.com)
++  on Tue, 13 Apr 2004 11:36:50 -0400.
++
++Copyright: GPL (see /usr/share/common-licenses/GPL)
++
+diff -Naur xmlrpc++0.7/debian/.cvsignore xmlrpc++/debian/.cvsignore
+--- xmlrpc++0.7/debian/.cvsignore	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/.cvsignore	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,2 @@
++libxmlrpc++1
++tmp
+diff -Naur xmlrpc++0.7/debian/dirs xmlrpc++/debian/dirs
+--- xmlrpc++0.7/debian/dirs	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/dirs	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,3 @@
++usr/lib
++usr/include
++usr/share/man/man3
+diff -Naur xmlrpc++0.7/debian/files xmlrpc++/debian/files
+--- xmlrpc++0.7/debian/files	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/files	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,2 @@
++libxmlrpc++1_0.8_i386.deb devel optional
++libxmlrpc++1-dev_0.8_i386.deb devel optional
+diff -Naur xmlrpc++0.7/debian/libxmlrpc++1.files xmlrpc++/debian/libxmlrpc++1.files
+--- xmlrpc++0.7/debian/libxmlrpc++1.files	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/libxmlrpc++1.files	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1 @@
++usr/lib/*.so*
+diff -Naur xmlrpc++0.7/debian/libxmlrpc++1.substvars xmlrpc++/debian/libxmlrpc++1.substvars
+--- xmlrpc++0.7/debian/libxmlrpc++1.substvars	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/libxmlrpc++1.substvars	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1 @@
++shlibs:Depends=libc6 (>= 2.3.2.ds1-4), libgcc1 (>= 1:3.3.3-1), libstdc++5 (>= 1:3.3.3-1)
+diff -Naur xmlrpc++0.7/debian/libxmlrpc++-dev.files xmlrpc++/debian/libxmlrpc++-dev.files
+--- xmlrpc++0.7/debian/libxmlrpc++-dev.files	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/libxmlrpc++-dev.files	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,2 @@
++usr/lib/*.a
++usr/include/*.h
+diff -Naur xmlrpc++0.7/debian/rules xmlrpc++/debian/rules
+--- xmlrpc++0.7/debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/debian/rules	2004-04-19 15:51:26.000000000 +0200
+@@ -0,0 +1,86 @@
++#!/usr/bin/make -f
++# Made with the aid of debmake, by Christoph Lameter,
++# based on the sample debian/rules file for GNU hello by Ian Jackson.
++
++package=libxmlrpc++
++
++version=$(shell expr `pwd` : '.*-\([0-9.]*\)')
++version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
++
++build:
++	$(checkdir)
++	
++	#--- All this would be nice, but I really don't want to debug it:
++	#-mkdir shared static
++	#
++	# First build the shared library
++	#
++	#cd shared ; \
++	#    ln -s ../src . ; \
++	#    $(MAKE) -f ../Makefile VPATH=".." srcdir=".." \
++	#        CFLAGS="-O2 -fPIC -pipe" ; \
++	#    gcc -shared -Wl,-soname,$(package).so.$(version_major) -o $(package).so.$(version) `ls *.o`
++	#
++	# Build the static library (it does not need Position Independent Code,
++	# which reserves one register; thus, without -fPIC we get more efficient
++	# code).
++	#
++	#cd static ; \
++	#    ln -s ../src . ; \
++	#     $(MAKE) -f ../Makefile VPATH=".." srcdir=".." \
++	#          CFLAGS="-O2 -pipe" LDFLAGS="-s" libXmlRpc.a; \
++        #     mv libXmlRpc.a libxmlrpc++.a
++
++	# So we go with this instead:
++	make CFLAGS="-O2" all
++	touch build
++
++clean:
++	$(checkdir)
++#	rm -rf static shared
++	rm -f build
++	-$(MAKE) clean
++	rm -f `find . -name "*~"`
++	rm -rf debian/tmp `find debian/* -type d ! -name CVS` debian/files* core
++	rm -f debian/*substvars
++
++binary-indep: checkroot build
++	$(checkdir)
++# There are no architecture-independent files to be uploaded
++# generated by this package.  If there were any they would be
++# made here.
++
++binary-arch: checkroot build
++	$(checkdir)
++	rm -rf debian/tmp `find debian/* -type d ! -name CVS`
++	install -d debian/tmp
++	cd debian/tmp && install -d `cat ../dirs`
++	install -m644 $(package).a debian/tmp/usr/lib/
++	install -m644 src/*.h debian/tmp/usr/include/
++
++	install -m644 $(package).so.$(version) debian/tmp/usr/lib
++
++	# Should do this in the makefile, but we'll do it here - Jeff
++	#$(MAKE) install DESTDIR=`pwd`/debian/tmp
++	#mkdir -p debian/tmp/usr/{include,lib}
++	#install -m755 *.so* *.a debian/tmp/usr/lib	
++	#install -m644 src/*.h *.a debian/tmp/usr/include
++
++	debstd -m README.html 
++	dpkg-gencontrol -isp -plibxmlrpc++1
++	dpkg-gencontrol -isp -plibxmlrpc++1-dev
++	chown -R root:root debian/tmp
++	chmod -R go=rX debian/tmp
++	dpkg --build debian/tmp ..
++
++define checkdir
++	test -f debian/rules
++endef
++
++binary: binary-indep binary-arch
++
++checkroot:
++	$(checkdir)
++	test root = "`whoami`"
++
++.PHONY: binary binary-arch binary-indep clean checkroot
+diff -Naur xmlrpc++0.7/Makefile xmlrpc++/Makefile
+--- xmlrpc++0.7/Makefile	2003-03-06 18:25:38.000000000 +0100
++++ xmlrpc++/Makefile	2004-04-19 15:53:00.000000000 +0200
+@@ -1,13 +1,23 @@
+ # makefile written for gnu make
+ CXX		= g++
+ SRC		= ./src
++SHARED		= -shared
+ CPPFLAGS	= -I$(SRC)
+ DEBUG		= -g
+ OPTIMIZE	= -O2
+ GCCWARN		= -Wall -Wstrict-prototypes
+ CXXFLAGS	= $(DEBUG) $(GCCWARN) $(OPTIMIZE) $(INCLUDES)
++VERSION		= 0.8
++
++DESTDIR		=
++prefix		= /usr
++MKDIR		= mkdir -p
++CP		= cp
++LN		= ln -s
+ 
+ LIB		= ./libXmlRpc.a
++LIBALT		= ./libxmlrpc++.a
++SO		= ./libxmlrpc++.so.$(VERSION)
+ 
+ # Add your system-dependent network libs here. These are
+ # only used to build the tests (your application will need them too).
+@@ -22,10 +32,14 @@
+ 		$(SRC)/XmlRpcServerMethod.o $(SRC)/XmlRpcSocket.o $(SRC)/XmlRpcSource.o \
+ 		$(SRC)/XmlRpcUtil.o $(SRC)/XmlRpcValue.o
+ 
+-all:		$(LIB) tests
++all:		$(LIB) $(SO) tests
+ 
+ $(LIB):		$(OBJ)
+ 		$(AR) $(ARFLAGS) $(LIB) $(OBJ)
++		cp $(LIB) $(LIBALT)
++
++$(SO):		$(OBJ)
++		$(CXX) -o $(SO) $(SHARED) $(OBJ)
+ 
+ 
+ tests:		$(LIB)
+@@ -34,9 +48,24 @@
+ doc doxygen:
+ 		cd src && doxygen Doxyfile
+ 
++distclean: clean
++
+ clean:
+ 		rm -f $(SRC)/*.o
+ 		rm -f $(SRC)/*~
+-		rm -f $(LIB)
++		rm -f $(LIB) $(LIBALT) $(SO)
++		rm -f build
+ 		cd test && $(MAKE) clean
+ 
++install:
++		$(MKDIR) $(DESTDIR)$(prefix)/lib
++		$(CP) $(SO) $(LIB) $(DESTDIR)$(prefix)/lib
++		$(MKDIR) $(DESTDIR)$(prefix)/include
++		$(CP) src/*.h $(DESTDIR)$(prefix)/include
++		( cd $(DESTDIR)$(prefix)/lib; rm -f libxmlrpc++.so; $(LN) $(SO) libxmlrpc++.so )
++		# Does not install tests right now	
++
++# Debian package make target, in case you want to manually build a package
++# from the distribution.
++deb:
++		dpkg-buildpackage -rfakeroot
+diff -Naur xmlrpc++0.7/src/XmlRpcClient.cpp xmlrpc++/src/XmlRpcClient.cpp
+--- xmlrpc++0.7/src/XmlRpcClient.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcClient.cpp	2004-04-14 20:36:25.000000000 +0200
+@@ -4,11 +4,14 @@
+ #include "XmlRpcSocket.h"
+ #include "XmlRpc.h"
+ 
++#include "base64.h"   // For HTTP authentication encoding
++
+ #include <stdio.h>
+ #include <stdlib.h>
+-
++#include <string>
+ 
+ using namespace XmlRpc;
++using namespace std;
+ 
+ // Static data
+ const char XmlRpcClient::REQUEST_BEGIN[] = 
+@@ -31,13 +34,83 @@
+ 
+   _host = host;
+   _port = port;
++  if (uri && *uri)
++    _uri = uri;
++  else
++    _uri = "/RPC2";
++  _connectionState = NO_CONNECTION;
++  _executing = false;
++  _eof = false;
++  _ssl = false; _ssl_ssl = (SSL *) NULL;
++
++  // Default to keeping the connection open until an explicit close is done
++  setKeepOpen();
++}
++XmlRpcClient::XmlRpcClient(const char* host, int port, const char* uri, bool ssl)
++{
++  XmlRpcUtil::log(1, "XmlRpcClient new client: host %s, port %d.", host, port);
++
++  _host = host;
++  _port = port;
++  if (uri && *uri)
++    _uri = uri;
++  else
++    _uri = "/RPC2";
++  _connectionState = NO_CONNECTION;
++  _executing = false;
++  _eof = false;
++  _ssl = ssl;
++  if (!_ssl) { _ssl_ssl = (SSL *) NULL; }
++
++  // Default to keeping the connection open until an explicit close is done
++  setKeepOpen();
++}
++
++
++XmlRpcClient::XmlRpcClient(const char* host, int port, 
++                           const char* login, const char* password, const char* uri/*=0*/)
++{
++  XmlRpcUtil::log(1, "XmlRpcClient new client: host %s, port %d, login %s.", host, port, login);
++
++  _host = host;
++  _port = port;
+   if (uri)
+     _uri = uri;
+   else
+     _uri = "/RPC2";
++
++  _login = login;
++  _password = password;
++
++  _connectionState = NO_CONNECTION;
++  _executing = false;
++  _eof = false;
++
++  // Default to keeping the connection open until an explicit close is done
++  setKeepOpen();
++}
++
++XmlRpcClient::XmlRpcClient(const char* host, int port, 
++                           const char* login, const char* password,
++                           const char* uri/*=0*/, bool ssl)
++{
++  XmlRpcUtil::log(1, "XmlRpcClient new client: host %s, port %d, login %s.", host, port, login);
++
++  _host = host;
++  _port = port;
++  if (uri)
++    _uri = uri;
++  else
++    _uri = "/RPC2";
++
++  _login = login;
++  _password = password;
++
+   _connectionState = NO_CONNECTION;
+   _executing = false;
+   _eof = false;
++  _ssl = ssl;
++  if (!_ssl) { _ssl_ssl = (SSL *) NULL; }
+ 
+   // Default to keeping the connection open until an explicit close is done
+   setKeepOpen();
+@@ -46,8 +119,11 @@
+ 
+ XmlRpcClient::~XmlRpcClient()
+ {
++  XmlRpcUtil::log(1, "XmlRpcClient dtor client: host %s, port %d.", _host.c_str(), _port);
++  if (_connectionState != NO_CONNECTION) close();
+ }
+ 
++
+ // Close the owned fd
+ void 
+ XmlRpcClient::close()
+@@ -56,7 +132,21 @@
+   _connectionState = NO_CONNECTION;
+   _disp.exit();
+   _disp.removeSource(this);
++  if (_ssl) {
++    // Pre-socket shutdown
++    XmlRpcUtil::log(4, "XmlRpcClient::close: before SSL_shutdown");
++    SSL_shutdown(_ssl_ssl);
++    XmlRpcUtil::log(4, "XmlRpcClient::close: after SSL_shutdown");
++  }
+   XmlRpcSource::close();
++  if (_ssl) {
++    // Post-socket shutdown
++    XmlRpcUtil::log(4, "XmlRpcClient::close: before SSL_free(_ssl_ssl)");
++    SSL_free(_ssl_ssl);
++    XmlRpcUtil::log(4, "XmlRpcClient::close: before SSL_CTX_free(_ssl_ctx)");
++    SSL_CTX_free(_ssl_ctx);
++    XmlRpcUtil::log(4, "XmlRpcClient::close: SSL shutdown successful!");
++  }
+ }
+ 
+ 
+@@ -113,6 +203,10 @@
+ {
+   if (eventType == XmlRpcDispatch::Exception)
+   {
++    //if (XmlRpcSocket::nonFatalError())
++    //  return (_connectionState == WRITE_REQUEST) 
++    //        ? XmlRpcDispatch::WritableEvent : XmlRpcDispatch::ReadableEvent;
++
+     if (_connectionState == WRITE_REQUEST && _bytesWritten == 0)
+       XmlRpcUtil::error("Error in XmlRpcClient::handleEvent: could not connect to server (%s).", 
+                        XmlRpcSocket::getErrorMsg().c_str());
+@@ -191,6 +285,17 @@
+     return false;
+   }
+ 
++  // Perform SSL if needed
++  if (_ssl) {
++    SSLeay_add_ssl_algorithms();
++    _ssl_meth = SSLv23_client_method();
++    SSL_load_error_strings();
++    _ssl_ctx = SSL_CTX_new (_ssl_meth);
++    _ssl_ssl = SSL_new (_ssl_ctx);
++    SSL_set_fd (_ssl_ssl, fd);
++    int err = SSL_connect (_ssl_ssl);
++  }
++
+   return true;
+ }
+ 
+@@ -247,6 +352,35 @@
+   sprintf(buff,":%d\r\n", _port);
+ 
+   header += buff;
++
++  if (_login.length() != 0)
++  {
++    // convert to base64
++    std::vector<char> base64data;
++    int iostatus = 0;
++    base64<char> encoder;
++    std::back_insert_iterator<std::vector<char> > ins =
++      std::back_inserter(base64data);
++
++    std::string authBuf = _login + ":" + _password;
++
++    encoder.put(authBuf.begin(), authBuf.end(), ins, iostatus,
++                base64<>::crlf());
++
++    header += "Authorization: Basic ";
++    std::string authEnc(base64data.begin(), base64data.end());
++    // handle pesky linefeed characters
++    string::size_type lf;
++    while ( (lf = authEnc.find("\r")) != string::npos ) {
++      authEnc.erase(lf, 1);
++    }
++    while ( (lf = authEnc.find("\n")) != string::npos ) {
++      authEnc.erase(lf, 1);
++    }
++    header += authEnc;
++    header += "\r\n";
++  }
++
+   header += "Content-Type: text/xml\r\nContent-length: ";
+ 
+   sprintf(buff,"%d\r\n\r\n", body.size());
+@@ -261,7 +395,7 @@
+     XmlRpcUtil::log(5, "XmlRpcClient::writeRequest (attempt %d):\n%s\n", _sendAttempts+1, _request.c_str());
+ 
+   // Try to write the request
+-  if ( ! XmlRpcSocket::nbWrite(this->getfd(), _request, &_bytesWritten)) {
++  if ( ! XmlRpcSocket::nbWrite(this->getfd(), _request, &_bytesWritten, _ssl_ssl)) {
+     XmlRpcUtil::error("Error in XmlRpcClient::writeRequest: write error (%s).",XmlRpcSocket::getErrorMsg().c_str());
+     return false;
+   }
+@@ -283,7 +417,7 @@
+ XmlRpcClient::readHeader()
+ {
+   // Read available data
+-  if ( ! XmlRpcSocket::nbRead(this->getfd(), _header, &_eof) ||
++  if ( ! XmlRpcSocket::nbRead(this->getfd(), _header, &_eof, _ssl_ssl) ||
+        (_eof && _header.length() == 0)) {
+ 
+     // If we haven't read any data yet and this is a keep-alive connection, the server may
+@@ -355,7 +489,7 @@
+ {
+   // If we dont have the entire response yet, read available data
+   if (int(_response.length()) < _contentLength) {
+-    if ( ! XmlRpcSocket::nbRead(this->getfd(), _response, &_eof)) {
++    if ( ! XmlRpcSocket::nbRead(this->getfd(), _response, &_eof, _ssl_ssl)) {
+       XmlRpcUtil::error("Error in XmlRpcClient::readResponse: read error (%s).",XmlRpcSocket::getErrorMsg().c_str());
+       return false;
+     }
+diff -Naur xmlrpc++0.7/src/XmlRpcClient.h xmlrpc++/src/XmlRpcClient.h
+--- xmlrpc++0.7/src/XmlRpcClient.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcClient.h	2004-04-13 17:21:59.000000000 +0200
+@@ -37,10 +37,21 @@
+     static const char FAULT_TAG[];
+ 
+     //! Construct a client to connect to the server at the specified host:port address
+-    //!  @param host The name of the remote machine hosting the server
++    //!  @param host The name of the remote machine hosting the server, eg "myserver.mycompany.com"
+     //!  @param port The port on the remote machine where the server is listening
+     //!  @param uri  An optional string to be sent as the URI in the HTTP GET header
++    //! Note that the host is not a URL, do not prepend "http://" or other protocol specifiers.
+     XmlRpcClient(const char* host, int port, const char* uri=0);
++    XmlRpcClient(const char* host, int port, const char* uri=0, bool ssl=false);
++
++    //! Construct a client to connect to the server at the specified host:port address including HTTP authentication
++    //!  @param host  The name of the remote machine hosting the server
++    //!  @param port  The port on the remote machine where the server is listening
++    //!  @param login The username passed to the server
++    //!  @param pass  The password passed to the server
++    //!  @param uri   An optional string to be sent as the URI in the HTTP GET header
++    XmlRpcClient(const char* host, int port, const char* login, const char* password, const char* uri=0);
++    XmlRpcClient(const char* host, int port, const char* login, const char* password, const char* uri=0, bool ssl=false);
+ 
+     //! Destructor
+     virtual ~XmlRpcClient();
+@@ -60,6 +71,14 @@
+     //! Returns true if the result of the last execute() was a fault response.
+     bool isFault() const { return _isFault; }
+ 
++    //! Return the host name of the server
++    const char* const host() const { return _host.c_str(); }
++
++    //! Return the port
++    int port() const { return _port; }
++
++    //! Return the URI
++    const char* const uri() const { return _uri.c_str(); }
+ 
+     // XmlRpcSource interface implementation
+     //! Close the connection
+@@ -91,6 +110,10 @@
+     std::string _uri;
+     int _port;
+ 
++    // Login information for HTTP authentication
++    std::string _login;
++    std::string _password;
++
+     // The xml-encoded request, http header of response, and response xml
+     std::string _request;
+     std::string _header;
+@@ -108,9 +131,9 @@
+ 
+     // True if the server closed the connection
+     bool _eof;
+-
+-    // True if a fault response was returned by the server
+-    bool _isFault;
++
++    // True if a fault response was returned by the server
++    bool _isFault;
+ 
+     // Number of bytes expected in the response body (parsed from response header)
+     int _contentLength;
+diff -Naur xmlrpc++0.7/src/XmlRpcDispatch.cpp xmlrpc++/src/XmlRpcDispatch.cpp
+--- xmlrpc++0.7/src/XmlRpcDispatch.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcDispatch.cpp	2003-04-29 03:06:22.000000000 +0200
+@@ -3,6 +3,7 @@
+ #include "XmlRpcSource.h"
+ #include "XmlRpcUtil.h"
+ 
++#include <errno.h>
+ #include <math.h>
+ #include <sys/timeb.h>
+ 
+@@ -74,73 +75,21 @@
+ XmlRpcDispatch::work(double timeout)
+ {
+   // Compute end time
+-  _endTime = (timeout < 0.0) ? -1.0 : (getTime() + timeout);
++  double timeNow = getTime();
++  _endTime = (timeout < 0.0) ? -1.0 : (timeNow + timeout);
+   _doClear = false;
+   _inWork = true;
+ 
+   // Only work while there is something to monitor
+   while (_sources.size() > 0) {
+ 
+-    // Construct the sets of descriptors we are interested in
+-    fd_set inFd, outFd, excFd;
+-	  FD_ZERO(&inFd);
+-	  FD_ZERO(&outFd);
+-	  FD_ZERO(&excFd);
+-
+-    int maxFd = -1;     // Not used on windows
+-    SourceList::iterator it;
+-    for (it=_sources.begin(); it!=_sources.end(); ++it) {
+-      int fd = it->getSource()->getfd();
+-      if (it->getMask() & ReadableEvent) FD_SET(fd, &inFd);
+-      if (it->getMask() & WritableEvent) FD_SET(fd, &outFd);
+-      if (it->getMask() & Exception)     FD_SET(fd, &excFd);
+-      if (it->getMask() && fd > maxFd)   maxFd = fd;
+-    }
+-
+-    // Check for events
+-    int nEvents;
+-    if (timeout < 0.0)
+-      nEvents = select(maxFd+1, &inFd, &outFd, &excFd, NULL);
+-    else 
++    // Wait for and dispatch events
++    if ( ! waitForAndProcessEvents(timeout))
+     {
+-      struct timeval tv;
+-      tv.tv_sec = (int)floor(timeout);
+-      tv.tv_usec = ((int)floor(1000000.0 * (timeout-floor(timeout)))) % 1000000;
+-      nEvents = select(maxFd+1, &inFd, &outFd, &excFd, &tv);
+-    }
+-
+-    if (nEvents < 0)
+-    {
+-      XmlRpcUtil::error("Error in XmlRpcDispatch::work: error in select (%d).", nEvents);
+       _inWork = false;
+       return;
+     }
+ 
+-    // Process events
+-    for (it=_sources.begin(); it != _sources.end(); )
+-    {
+-      SourceList::iterator thisIt = it++;
+-      XmlRpcSource* src = thisIt->getSource();
+-      int fd = src->getfd();
+-      unsigned newMask = (unsigned) -1;
+-      if (fd <= maxFd) {
+-        // If you select on multiple event types this could be ambiguous
+-        if (FD_ISSET(fd, &inFd))
+-          newMask &= src->handleEvent(ReadableEvent);
+-        if (FD_ISSET(fd, &outFd))
+-          newMask &= src->handleEvent(WritableEvent);
+-        if (FD_ISSET(fd, &excFd))
+-          newMask &= src->handleEvent(Exception);
+-
+-        if ( ! newMask) {
+-          _sources.erase(thisIt);  // Stop monitoring this one
+-          if ( ! src->getKeepOpen())
+-            src->close();
+-        } else if (newMask != (unsigned) -1) {
+-          thisIt->getMask() = newMask;
+-        }
+-      }
+-    }
+ 
+     // Check whether to clear all sources
+     if (_doClear)
+@@ -148,22 +97,35 @@
+       SourceList closeList = _sources;
+       _sources.clear();
+       for (SourceList::iterator it=closeList.begin(); it!=closeList.end(); ++it) {
+-	XmlRpcSource *src = it->getSource();
++        XmlRpcSource *src = it->getSource();
+         src->close();
+       }
+ 
+       _doClear = false;
+     }
+ 
+-    // Check whether end time has passed
+-    if (0 <= _endTime && getTime() > _endTime)
++    // Check whether end time has passed or exit has been called
++    if (_endTime == 0.0)        // Exit
+       break;
++    else if (_endTime > 0.0)    // Check for timeout
++    {
++      double t = getTime();
++      if (t > _endTime)
++        break;
++
++      // Decrement timeout by elapsed time
++      timeout -= (t - timeNow);
++      if (timeout < 0.0) 
++        timeout = 0.0;    // Shouldn't happen but its fp math...
++      timeNow = t;
++    }
+   }
+ 
+   _inWork = false;
+ }
+ 
+ 
++
+ // Exit from work routine. Presumably this will be called from
+ // one of the source event handlers.
+ void
+@@ -172,6 +134,7 @@
+   _endTime = 0.0;   // Return from work asap
+ }
+ 
++
+ // Clear all sources from the monitored sources list
+ void
+ XmlRpcDispatch::clear()
+@@ -188,6 +151,7 @@
+ }
+ 
+ 
++// Time utility
+ double
+ XmlRpcDispatch::getTime()
+ {
+@@ -207,3 +171,98 @@
+ }
+ 
+ 
++// Wait for I/O on any source, timeout, or interrupt signal.
++bool
++XmlRpcDispatch::waitForAndProcessEvents(double timeout)
++{
++#if defined(_WINDOWS) && 0
++
++  int nHandles = 0;
++  SourceList::iterator it;
++  for (it=_sources.begin(); it!=_sources.end(); ++it) {
++    int fd = it->getSource()->getfd();
++    int mask = 0;
++    if (it->getMask() & ReadableEvent) mask = (FD_READ | FD_CLOSE | FD_ACCEPT);
++    if (it->getMask() & WritableEvent) mask |= (FD_WRITE | FD_CLOSE);
++
++#else   // Posix
++
++  // Construct the sets of descriptors we are interested in
++  fd_set inFd, outFd, excFd;
++  FD_ZERO(&inFd);
++  FD_ZERO(&outFd);
++  FD_ZERO(&excFd);
++
++  int maxFd = -1;
++  SourceList::iterator it;
++  for (it=_sources.begin(); it!=_sources.end(); ++it) {
++    int fd = it->getSource()->getfd();
++    if (it->getMask() & ReadableEvent) FD_SET(fd, &inFd);
++    if (it->getMask() & WritableEvent) FD_SET(fd, &outFd);
++    if (it->getMask() & Exception)     FD_SET(fd, &excFd);
++    if (it->getMask() && fd > maxFd)   maxFd = fd;
++  }
++
++  // Check for events
++  int nEvents;
++  if (_endTime < 0.0)
++    nEvents = select(maxFd+1, &inFd, &outFd, &excFd, NULL);
++  else 
++  {
++    struct timeval tv;
++    tv.tv_sec = (int)floor(timeout);
++    tv.tv_usec = ((int)floor(1000000.0 * (timeout-floor(timeout)))) % 1000000;
++    nEvents = select(maxFd+1, &inFd, &outFd, &excFd, &tv);
++  }
++
++  if (nEvents < 0 && errno != EINTR)
++  {
++    XmlRpcUtil::error("Error in XmlRpcDispatch::work: error in select (%d).", nEvents);
++    return false;
++  }
++
++  // Process events
++  for (it=_sources.begin(); it != _sources.end(); )
++  {
++    SourceList::iterator thisIt = it++;
++    XmlRpcSource* src = thisIt->getSource();
++    int fd = src->getfd();
++
++    if (fd <= maxFd) {
++      // handleEvent is called once per event type signalled
++      unsigned newMask = 0;
++      int nset = 0;
++      if (FD_ISSET(fd, &inFd))
++      {
++        newMask |= src->handleEvent(ReadableEvent);
++        ++nset;
++      }
++      if (FD_ISSET(fd, &outFd))
++      {
++        newMask |= src->handleEvent(WritableEvent);
++        ++nset;
++      }
++      if (FD_ISSET(fd, &excFd))
++      {
++        newMask |= src->handleEvent(Exception);
++        ++nset;
++      }
++
++      // Some event occurred
++      if (nset)
++      {
++        if (newMask)
++          thisIt->getMask() = newMask;
++        else       // Stop monitoring this one
++        {
++          _sources.erase(thisIt);
++          if ( ! src->getKeepOpen())
++            src->close();
++        }
++      }
++    }
++  }
++#endif
++
++  return true;
++}
+diff -Naur xmlrpc++0.7/src/XmlRpcDispatch.h xmlrpc++/src/XmlRpcDispatch.h
+--- xmlrpc++0.7/src/XmlRpcDispatch.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcDispatch.h	2003-04-29 03:06:22.000000000 +0200
+@@ -40,6 +40,7 @@
+ 
+     //! Stop monitoring this source.
+     //!  @param source The source to stop monitoring
++    //! The source socket is not closed.
+     void removeSource(XmlRpcSource* source);
+ 
+     //! Modify the types of events to watch for on this source
+@@ -58,6 +59,10 @@
+ 
+   protected:
+ 
++    //! Wait for I/O on any source, timeout, or interrupt signal.
++    bool waitForAndProcessEvents(double timeout);
++
++
+     // helper
+     double getTime();
+ 
+diff -Naur xmlrpc++0.7/src/XmlRpc.h xmlrpc++/src/XmlRpc.h
+--- xmlrpc++0.7/src/XmlRpc.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpc.h	2003-04-29 03:06:21.000000000 +0200
+@@ -15,6 +15,9 @@
+ // You should have received a copy of the GNU Lesser General Public
+ // License along with this library; if not, write to the Free Software
+ // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++//
++// The XmlRpc++ home page is http://xmlrpcpp.sourceforge.net/
++// My home page is http://www.vermontel.net/~cmorley/
+ // 
+ 
+ #if defined(_MSC_VER)
+diff -Naur xmlrpc++0.7/src/XmlRpcMutex.cpp xmlrpc++/src/XmlRpcMutex.cpp
+--- xmlrpc++0.7/src/XmlRpcMutex.cpp	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcMutex.cpp	2003-04-29 03:06:22.000000000 +0200
+@@ -0,0 +1,60 @@
++#if defined(XMLRPC_THREADS)
++
++#include "XmlRpcMutex.h"
++
++#if defined(_WINDOWS)
++# define WIN32_LEAN_AND_MEAN
++# include <windows.h>
++#else
++# include <pthread.h>
++#endif
++
++using namespace XmlRpc;
++
++
++//! Destructor.
++XmlRpcMutex::~XmlRpcMutex()
++{
++  if (_pMutex)
++  {
++#if defined(_WINDOWS)
++    ::CloseHandle((HANDLE)_pMutex);
++#else
++    ::pthread_mutex_destroy((pthread_mutex_t*)_pMutex);
++    delete _pMutex;
++#endif
++    _pMutex = 0;
++  }
++}
++
++//! Wait for the mutex to be available and then acquire the lock.
++void XmlRpcMutex::acquire()
++{
++#if defined(_WINDOWS)
++  if ( ! _pMutex)
++    _pMutex = ::CreateMutex(0, TRUE, 0);
++  else
++    ::WaitForSingleObject(_pMutex, INFINITE);
++#else
++  if ( ! _pMutex)
++  {
++    _pMutex = new pthread_mutex_t;
++    ::pthread_mutex_init((pthread_mutex_t*)_pMutex, 0);
++  }
++  ::pthread_mutex_lock((pthread_mutex_t*)_pMutex);
++#endif
++}
++
++//! Release the mutex.
++void XmlRpcMutex::release()
++{
++  if (_pMutex)
++#if defined(_WINDOWS)
++    ::ReleaseMutex(_pMutex);
++#else
++    ::pthread_mutex_unlock((pthread_mutex_t*)_pMutex);
++#endif
++}
++
++#endif // XMLRPC_THREADS
++
+diff -Naur xmlrpc++0.7/src/XmlRpcMutex.h xmlrpc++/src/XmlRpcMutex.h
+--- xmlrpc++0.7/src/XmlRpcMutex.h	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcMutex.h	2003-04-23 22:57:52.000000000 +0200
+@@ -0,0 +1,46 @@
++#ifndef _XMLRPCMUTEX_H_
++#define _XMLRPCMUTEX_H_
++//
++// XmlRpc++ Copyright (c) 2002-2003 by Chris Morley
++//
++#if defined(_MSC_VER)
++# pragma warning(disable:4786)    // identifier was truncated in debug info
++#endif
++
++namespace XmlRpc {
++
++  //! A simple platform-independent mutex API implemented for posix and windows.
++  class XmlRpcMutex {
++  public:
++    //! Construct a Mutex object.
++    XmlRpcMutex() : _pMutex(0) {}
++
++    //! Destroy a Mutex object.
++    ~XmlRpcMutex();
++
++    //! Wait for the mutex to be available and then acquire the lock.
++    void acquire();
++
++    //! Release the mutex.
++    void release();
++
++    //! Utility class to acquire a mutex at construction and release it when destroyed.
++    struct AutoLock {
++      //! Acquire the mutex at construction
++      AutoLock(XmlRpcMutex& m) : _m(m) { _m.acquire(); }
++      //! Release at destruction
++      ~AutoLock() { _m.release(); }
++      //! The mutex being held
++      XmlRpcMutex& _m;
++    };
++
++  private:
++
++    //! Native Mutex object
++    void* _pMutex;
++
++  };  // class XmlRpcMutex
++
++}  // namespace XmlRpc
++
++#endif	//  _XMLRPCMUTEX_H_
+diff -Naur xmlrpc++0.7/src/XmlRpcServerConnection.cpp xmlrpc++/src/XmlRpcServerConnection.cpp
+--- xmlrpc++0.7/src/XmlRpcServerConnection.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcServerConnection.cpp	2004-04-13 17:21:59.000000000 +0200
+@@ -2,32 +2,23 @@
+ #include "XmlRpcServerConnection.h"
+ 
+ #include "XmlRpcSocket.h"
+-#include "XmlRpc.h"
+ #ifndef MAKEDEPEND
+ # include <stdio.h>
+ # include <stdlib.h>
+ #endif
+ 
+-using namespace XmlRpc;
+-
+-// Static data
+-const char XmlRpcServerConnection::METHODNAME_TAG[] = "<methodName>";
+-const char XmlRpcServerConnection::PARAMS_TAG[] = "<params>";
+-const char XmlRpcServerConnection::PARAMS_ETAG[] = "</params>";
+-const char XmlRpcServerConnection::PARAM_TAG[] = "<param>";
+-const char XmlRpcServerConnection::PARAM_ETAG[] = "</param>";
+-
+-const std::string XmlRpcServerConnection::SYSTEM_MULTICALL = "system.multicall";
+-const std::string XmlRpcServerConnection::METHODNAME = "methodName";
+-const std::string XmlRpcServerConnection::PARAMS = "params";
++#include "XmlRpcDispatch.h"
++#include "XmlRpcServer.h"
++#include "XmlRpcUtil.h"
+ 
+-const std::string XmlRpcServerConnection::FAULTCODE = "faultCode";
+-const std::string XmlRpcServerConnection::FAULTSTRING = "faultString";
++using namespace XmlRpc;
+ 
+ 
+ 
+ // The server delegates handling client requests to a serverConnection object.
+-XmlRpcServerConnection::XmlRpcServerConnection(int fd, XmlRpcServer* server, bool deleteOnClose /*= false*/) :
++XmlRpcServerConnection::XmlRpcServerConnection(int fd,
++                                               XmlRpcServer* server,
++                                               bool deleteOnClose /*= false*/) :
+   XmlRpcSource(fd, deleteOnClose)
+ {
+   XmlRpcUtil::log(2,"XmlRpcServerConnection: new socket %d.", fd);
+@@ -69,7 +60,7 @@
+ {
+   // Read available data
+   bool eof;
+-  if ( ! XmlRpcSocket::nbRead(this->getfd(), _header, &eof)) {
++  if ( ! XmlRpcSocket::nbRead(this->getfd(), _header, &eof, _ssl_ssl)) {
+     // Its only an error if we already have read some data
+     if (_header.length() > 0)
+       XmlRpcUtil::error("XmlRpcServerConnection::readHeader: error while reading header (%s).",XmlRpcSocket::getErrorMsg().c_str());
+@@ -141,13 +132,15 @@
+   return true;    // Continue monitoring this source
+ }
+ 
++
++
+ bool
+ XmlRpcServerConnection::readRequest()
+ {
+   // If we dont have the entire request yet, read available data
+   if (int(_request.length()) < _contentLength) {
+     bool eof;
+-    if ( ! XmlRpcSocket::nbRead(this->getfd(), _request, &eof)) {
++    if ( ! XmlRpcSocket::nbRead(this->getfd(), _request, &eof, _ssl_ssl)) {
+       XmlRpcUtil::error("XmlRpcServerConnection::readRequest: read error (%s).",XmlRpcSocket::getErrorMsg().c_str());
+       return false;
+     }
+@@ -172,6 +165,7 @@
+ }
+ 
+ 
++
+ bool
+ XmlRpcServerConnection::writeResponse()
+ {
+@@ -185,7 +179,7 @@
+   }
+ 
+   // Try to write the response
+-  if ( ! XmlRpcSocket::nbWrite(this->getfd(), _response, &_bytesWritten)) {
++  if ( ! XmlRpcSocket::nbWrite(this->getfd(), _response, &_bytesWritten, _ssl_ssl)) {
+     XmlRpcUtil::error("XmlRpcServerConnection::writeResponse: write error (%s).",XmlRpcSocket::getErrorMsg().c_str());
+     return false;
+   }
+@@ -202,170 +196,10 @@
+   return _keepAlive;    // Continue monitoring this source if true
+ }
+ 
+-// Run the method, generate _response string
+-void
+-XmlRpcServerConnection::executeRequest()
+-{
+-  XmlRpcValue params, resultValue;
+-  std::string methodName = parseRequest(params);
+-  XmlRpcUtil::log(2, "XmlRpcServerConnection::executeRequest: server calling method '%s'", 
+-                    methodName.c_str());
+-
+-  try {
+-
+-    if ( ! executeMethod(methodName, params, resultValue) &&
+-         ! executeMulticall(methodName, params, resultValue))
+-      generateFaultResponse(methodName + ": unknown method name");
+-    else
+-      generateResponse(resultValue.toXml());
+-
+-  } catch (const XmlRpcException& fault) {
+-    XmlRpcUtil::log(2, "XmlRpcServerConnection::executeRequest: fault %s.",
+-                    fault.getMessage().c_str()); 
+-    generateFaultResponse(fault.getMessage(), fault.getCode());
+-  }
+-}
+-
+-// Parse the method name and the argument values from the request.
+-std::string
+-XmlRpcServerConnection::parseRequest(XmlRpcValue& params)
+-{
+-  int offset = 0;   // Number of chars parsed from the request
+-
+-  std::string methodName = XmlRpcUtil::parseTag(METHODNAME_TAG, _request, &offset);
+-
+-  if (methodName.size() > 0 && XmlRpcUtil::findTag(PARAMS_TAG, _request, &offset))
+-  {
+-    int nArgs = 0;
+-    while (XmlRpcUtil::nextTagIs(PARAM_TAG, _request, &offset)) {
+-      params[nArgs++] = XmlRpcValue(_request, &offset);
+-      (void) XmlRpcUtil::nextTagIs(PARAM_ETAG, _request, &offset);
+-    }
+-
+-    (void) XmlRpcUtil::nextTagIs(PARAMS_ETAG, _request, &offset);
+-  }
+-
+-  return methodName;
+-}
+-
+-// Execute a named method with the specified params.
+-bool
+-XmlRpcServerConnection::executeMethod(const std::string& methodName, 
+-                                      XmlRpcValue& params, XmlRpcValue& result)
+-{
+-  XmlRpcServerMethod* method = _server->findMethod(methodName);
+-
+-  if ( ! method) return false;
+-
+-  method->execute(params, result);
+-
+-  // Ensure a valid result value
+-  if ( ! result.valid())
+-      result = std::string();
+-
+-  return true;
+-}
+-
+-// Execute multiple calls and return the results in an array.
+-bool
+-XmlRpcServerConnection::executeMulticall(const std::string& methodName, 
+-                                         XmlRpcValue& params, XmlRpcValue& result)
+-{
+-  if (methodName != SYSTEM_MULTICALL) return false;
+-
+-  // There ought to be 1 parameter, an array of structs
+-  if (params.size() != 1 || params[0].getType() != XmlRpcValue::TypeArray)
+-    throw XmlRpcException(SYSTEM_MULTICALL + ": Invalid argument (expected an array)");
+-
+-  int nc = params[0].size();
+-  result.setSize(nc);
+-
+-  for (int i=0; i<nc; ++i) {
+-
+-    if ( ! params[0][i].hasMember(METHODNAME) ||
+-         ! params[0][i].hasMember(PARAMS)) {
+-      result[i][FAULTCODE] = -1;
+-      result[i][FAULTSTRING] = SYSTEM_MULTICALL +
+-              ": Invalid argument (expected a struct with members methodName and params)";
+-      continue;
+-    }
+-
+-    const std::string& methodName = params[0][i][METHODNAME];
+-    XmlRpcValue& methodParams = params[0][i][PARAMS];
+-
+-    XmlRpcValue resultValue;
+-    resultValue.setSize(1);
+-    try {
+-      if ( ! executeMethod(methodName, methodParams, resultValue[0]) &&
+-           ! executeMulticall(methodName, params, resultValue[0]))
+-      {
+-        result[i][FAULTCODE] = -1;
+-        result[i][FAULTSTRING] = methodName + ": unknown method name";
+-      }
+-      else
+-        result[i] = resultValue;
+-
+-    } catch (const XmlRpcException& fault) {
+-        result[i][FAULTCODE] = fault.getCode();
+-        result[i][FAULTSTRING] = fault.getMessage();
+-    }
+-  }
+-
+-  return true;
+-}
+-
+ 
+-// Create a response from results xml
+-void
+-XmlRpcServerConnection::generateResponse(std::string const& resultXml)
++//! Helper method to execute the client request
++void XmlRpcServerConnection::executeRequest()
+ {
+-  const char RESPONSE_1[] = 
+-    "<?xml version=\"1.0\"?>\r\n"
+-    "<methodResponse><params><param>\r\n\t";
+-  const char RESPONSE_2[] =
+-    "\r\n</param></params></methodResponse>\r\n";
+-
+-  std::string body = RESPONSE_1 + resultXml + RESPONSE_2;
+-  std::string header = generateHeader(body);
+-
+-  _response = header + body;
+-  XmlRpcUtil::log(5, "XmlRpcServerConnection::generateResponse:\n%s\n", _response.c_str()); 
+-}
+-
+-// Prepend http headers
+-std::string
+-XmlRpcServerConnection::generateHeader(std::string const& body)
+-{
+-  std::string header = 
+-    "HTTP/1.1 200 OK\r\n"
+-    "Server: ";
+-  header += XMLRPC_VERSION;
+-  header += "\r\n"
+-    "Content-Type: text/xml\r\n"
+-    "Content-length: ";
+-
+-  char buffLen[40];
+-  sprintf(buffLen,"%d\r\n\r\n", body.size());
+-
+-  return header + buffLen;
+-}
+-
+-
+-void
+-XmlRpcServerConnection::generateFaultResponse(std::string const& errorMsg, int errorCode)
+-{
+-  const char RESPONSE_1[] = 
+-    "<?xml version=\"1.0\"?>\r\n"
+-    "<methodResponse><fault>\r\n\t";
+-  const char RESPONSE_2[] =
+-    "\r\n</fault></methodResponse>\r\n";
+-
+-  XmlRpcValue faultStruct;
+-  faultStruct[FAULTCODE] = errorCode;
+-  faultStruct[FAULTSTRING] = errorMsg;
+-  std::string body = RESPONSE_1 + faultStruct.toXml() + RESPONSE_2;
+-  std::string header = generateHeader(body);
+-
+-  _response = header + body;
++  _response = _server->executeRequest(_request);
+ }
+ 
+diff -Naur xmlrpc++0.7/src/XmlRpcServerConnection.h xmlrpc++/src/XmlRpcServerConnection.h
+--- xmlrpc++0.7/src/XmlRpcServerConnection.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcServerConnection.h	2003-04-29 03:06:24.000000000 +0200
+@@ -17,26 +17,13 @@
+ namespace XmlRpc {
+ 
+ 
+-  // The server waits for client connections and provides methods
++  // The server waits for client connections and provides support for executing methods
+   class XmlRpcServer;
+   class XmlRpcServerMethod;
+ 
+   //! A class to handle XML RPC requests from a particular client
+   class XmlRpcServerConnection : public XmlRpcSource {
+   public:
+-    // Static data
+-    static const char METHODNAME_TAG[];
+-    static const char PARAMS_TAG[];
+-    static const char PARAMS_ETAG[];
+-    static const char PARAM_TAG[];
+-    static const char PARAM_ETAG[];
+-
+-    static const std::string SYSTEM_MULTICALL;
+-    static const std::string METHODNAME;
+-    static const std::string PARAMS;
+-
+-    static const std::string FAULTCODE;
+-    static const std::string FAULTSTRING;
+ 
+     //! Constructor
+     XmlRpcServerConnection(int fd, XmlRpcServer* server, bool deleteOnClose = false);
+@@ -50,51 +37,44 @@
+ 
+   protected:
+ 
++    //! Reads the http header
+     bool readHeader();
+-    bool readRequest();
+-    bool writeResponse();
+-
+-    // Parses the request, runs the method, generates the response xml.
+-    virtual void executeRequest();
+ 
+-    // Parse the methodName and parameters from the request.
+-    std::string parseRequest(XmlRpcValue& params);
++    //! Reads the request (based on the content-length header value)
++    bool readRequest();
+ 
+-    // Execute a named method with the specified params.
+-    bool executeMethod(const std::string& methodName, XmlRpcValue& params, XmlRpcValue& result);
++    //! Executes the request and writes the resulting response
++    bool writeResponse();
+ 
+-    // Execute multiple calls and return the results in an array.
+-    bool executeMulticall(const std::string& methodName, XmlRpcValue& params, XmlRpcValue& result);
+ 
+-    // Construct a response from the result XML.
+-    void generateResponse(std::string const& resultXml);
+-    void generateFaultResponse(std::string const& msg, int errorCode = -1);
+-    std::string generateHeader(std::string const& body);
++    //! Helper method to execute the client request
++    virtual void executeRequest();
+ 
+ 
+-    // The XmlRpc server that accepted this connection
++    //! The XmlRpc server that accepted this connection
+     XmlRpcServer* _server;
+ 
+-    // Possible IO states for the connection
++    //! Possible IO states for the connection
+     enum ServerConnectionState { READ_HEADER, READ_REQUEST, WRITE_RESPONSE };
++    //! Current IO state for the connection
+     ServerConnectionState _connectionState;
+ 
+-    // Request headers
++    //! Request headers
+     std::string _header;
+ 
+-    // Number of bytes expected in the request body (parsed from header)
++    //! Number of bytes expected in the request body (parsed from header)
+     int _contentLength;
+ 
+-    // Request body
++    //! Request body
+     std::string _request;
+ 
+-    // Response
++    //! Response
+     std::string _response;
+ 
+-    // Number of bytes of the response written so far
++    //! Number of bytes of the response written so far
+     int _bytesWritten;
+ 
+-    // Whether to keep the current client connection open for further requests
++    //! Whether to keep the current client connection open for further requests
+     bool _keepAlive;
+   };
+ } // namespace XmlRpc
+diff -Naur xmlrpc++0.7/src/XmlRpcServer.cpp xmlrpc++/src/XmlRpcServer.cpp
+--- xmlrpc++0.7/src/XmlRpcServer.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcServer.cpp	2003-05-08 03:21:35.000000000 +0200
+@@ -1,15 +1,32 @@
+ 
++
+ #include "XmlRpcServer.h"
+ #include "XmlRpcServerConnection.h"
+ #include "XmlRpcServerMethod.h"
+ #include "XmlRpcSocket.h"
+ #include "XmlRpcUtil.h"
+ #include "XmlRpcException.h"
++#include "XmlRpc.h"
+ 
+ 
+ using namespace XmlRpc;
+ 
+ 
++// Static data
++const char XmlRpcServer::METHODNAME_TAG[] = "<methodName>";
++const char XmlRpcServer::PARAMS_TAG[] = "<params>";
++const char XmlRpcServer::PARAMS_ETAG[] = "</params>";
++const char XmlRpcServer::PARAM_TAG[] = "<param>";
++const char XmlRpcServer::PARAM_ETAG[] = "</param>";
++
++const std::string XmlRpcServer::METHODNAME = "methodName";
++const std::string XmlRpcServer::PARAMS = "params";
++
++const std::string XmlRpcServer::FAULTCODE = "faultCode";
++const std::string XmlRpcServer::FAULTSTRING = "faultString";
++
++
++
+ XmlRpcServer::XmlRpcServer()
+ {
+   _introspectionEnabled = false;
+@@ -119,6 +136,15 @@
+ }
+ 
+ 
++// Get port number that this server is listening on
++int
++XmlRpcServer::getPort(void) const
++{
++  return XmlRpcSocket::getPort(getfd());
++}
++
++
++
+ // Process client requests for the specified time
+ void 
+ XmlRpcServer::work(double msTime)
+@@ -159,7 +185,8 @@
+   else  // Notify the dispatcher to listen for input on this source when we are in work()
+   {
+     XmlRpcUtil::log(2, "XmlRpcServer::acceptConnection: creating a connection");
+-    _disp.addSource(this->createConnection(s), XmlRpcDispatch::ReadableEvent);
++    XmlRpcServerConnection* c = this->createConnection(s);
++    if (c) this->dispatchConnection(c);
+   }
+ }
+ 
+@@ -173,6 +200,15 @@
+ }
+ 
+ 
++// Hand off a new connection to a dispatcher
++void
++XmlRpcServer::dispatchConnection(XmlRpcServerConnection* sc)
++{
++  _disp.addSource(sc, XmlRpcDispatch::ReadableEvent);
++}
++
++
++// Remove a connection. Called by the connection when it closes down.
+ void 
+ XmlRpcServer::removeConnection(XmlRpcServerConnection* sc)
+ {
+@@ -276,9 +312,183 @@
+   for (MethodMap::iterator it=_methods.begin(); it != _methods.end(); ++it)
+     result[i++] = it->first;
+ 
+-  // Multicall support is built into XmlRpcServerConnection
++  // Multicall support is built into XmlRpcServer::executeRequest
+   result[i] = MULTICALL;
+ }
+ 
+ 
+ 
++// Parse the request, run the method, generate a response string.
++std::string
++XmlRpcServer::executeRequest(std::string const& request)
++{
++  XmlRpcValue params, resultValue;
++  std::string methodName = parseRequest(request, params);
++  XmlRpcUtil::log(2, "XmlRpcServer::executeRequest: server calling method '%s'", 
++                    methodName.c_str());
++
++  std::string response;
++  try {
++
++    if ( ! executeMethod(methodName, params, resultValue) &&
++         ! executeMulticall(methodName, params, resultValue))
++      response = generateFaultResponse(methodName + ": unknown method name");
++    else
++      response = generateResponse(resultValue.toXml());
++
++  } catch (const XmlRpcException& fault) {
++    XmlRpcUtil::log(2, "XmlRpcServer::executeRequest: fault %s.",
++                    fault.getMessage().c_str()); 
++    response = generateFaultResponse(fault.getMessage(), fault.getCode());
++  }
++
++  return response;
++}
++
++// Parse the method name and the argument values from the request.
++std::string
++XmlRpcServer::parseRequest(std::string const& request, XmlRpcValue& params)
++{
++  int offset = 0;   // Number of chars parsed from the request
++
++  std::string methodName = XmlRpcUtil::parseTag(METHODNAME_TAG, request, &offset);
++
++  if (methodName.size() > 0 && XmlRpcUtil::findTag(PARAMS_TAG, request, &offset))
++  {
++    int nArgs = 0;
++    while (XmlRpcUtil::nextTagIs(PARAM_TAG, request, &offset)) {
++      params[nArgs++] = XmlRpcValue(request, &offset);
++      (void) XmlRpcUtil::nextTagIs(PARAM_ETAG, request, &offset);
++    }
++
++    (void) XmlRpcUtil::nextTagIs(PARAMS_ETAG, request, &offset);
++  }
++
++  return methodName;
++}
++
++// Execute a named method with the specified params.
++bool
++XmlRpcServer::executeMethod(const std::string& methodName, 
++                            XmlRpcValue& params, 
++                            XmlRpcValue& result)
++{
++  XmlRpcServerMethod* method = findMethod(methodName);
++
++  if ( ! method) return false;
++
++  method->execute(params, result);
++
++  // Ensure a valid result value
++  if ( ! result.valid())
++      result = std::string();
++
++  return true;
++}
++
++// Execute multiple calls and return the results in an array.
++bool
++XmlRpcServer::executeMulticall(const std::string& methodName, 
++                               XmlRpcValue& params, 
++                               XmlRpcValue& result)
++{
++  if (methodName != MULTICALL) return false;
++
++  // There ought to be 1 parameter, an array of structs
++  if (params.size() != 1 || params[0].getType() != XmlRpcValue::TypeArray)
++    throw XmlRpcException(MULTICALL + ": Invalid argument (expected an array)");
++
++  int nc = params[0].size();
++  result.setSize(nc);
++
++  for (int i=0; i<nc; ++i) {
++
++    if ( ! params[0][i].hasMember(METHODNAME) ||
++         ! params[0][i].hasMember(PARAMS)) {
++      result[i][FAULTCODE] = -1;
++      result[i][FAULTSTRING] = MULTICALL +
++              ": Invalid argument (expected a struct with members methodName and params)";
++      continue;
++    }
++
++    const std::string& methodName = params[0][i][METHODNAME];
++    XmlRpcValue& methodParams = params[0][i][PARAMS];
++
++    XmlRpcValue resultValue;
++    resultValue.setSize(1);
++    try {
++      if ( ! executeMethod(methodName, methodParams, resultValue[0]) &&
++           ! executeMulticall(methodName, params, resultValue[0]))
++      {
++        result[i][FAULTCODE] = -1;
++        result[i][FAULTSTRING] = methodName + ": unknown method name";
++      }
++      else
++        result[i] = resultValue;
++
++    } catch (const XmlRpcException& fault) {
++        result[i][FAULTCODE] = fault.getCode();
++        result[i][FAULTSTRING] = fault.getMessage();
++    }
++  }
++
++  return true;
++}
++
++
++// Create a response from results xml
++std::string
++XmlRpcServer::generateResponse(std::string const& resultXml)
++{
++  const char RESPONSE_1[] = 
++    "<?xml version=\"1.0\"?>\r\n"
++    "<methodResponse><params><param>\r\n\t";
++  const char RESPONSE_2[] =
++    "\r\n</param></params></methodResponse>\r\n";
++
++  std::string body = RESPONSE_1 + resultXml + RESPONSE_2;
++  std::string header = generateHeader(body);
++  std::string response = header + body;
++
++  XmlRpcUtil::log(5, "XmlRpcServer::generateResponse:\n%s\n", response.c_str());
++  return response;
++}
++
++
++// Prepend http headers
++std::string
++XmlRpcServer::generateHeader(std::string const& body)
++{
++  std::string header = 
++    "HTTP/1.1 200 OK\r\n"
++    "Server: ";
++  header += XMLRPC_VERSION;
++  header += "\r\n"
++    "Content-Type: text/xml\r\n"
++    "Content-length: ";
++
++  char buffLen[40];
++  sprintf(buffLen,"%d\r\n\r\n", body.size());
++
++  return header + buffLen;
++}
++
++
++std::string
++XmlRpcServer::generateFaultResponse(std::string const& errorMsg, int errorCode)
++{
++  const char RESPONSE_1[] = 
++    "<?xml version=\"1.0\"?>\r\n"
++    "<methodResponse><fault>\r\n\t";
++  const char RESPONSE_2[] =
++    "\r\n</fault></methodResponse>\r\n";
++
++  XmlRpcValue faultStruct;
++  faultStruct[FAULTCODE] = errorCode;
++  faultStruct[FAULTSTRING] = errorMsg;
++  std::string body = RESPONSE_1 + faultStruct.toXml() + RESPONSE_2;
++  std::string header = generateHeader(body);
++
++  return header + body;
++}
++
+diff -Naur xmlrpc++0.7/src/XmlRpcServer.h xmlrpc++/src/XmlRpcServer.h
+--- xmlrpc++0.7/src/XmlRpcServer.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcServer.h	2003-05-08 03:21:35.000000000 +0200
+@@ -54,8 +54,12 @@
+ 
+     //! Create a socket, bind to the specified port, and
+     //! set it in listen mode to make it available for clients.
++    //! @param port The port to bind and listen on (zero to choose an arbitrary port)
+     bool bindAndListen(int port, int backlog = 5);
+ 
++    //! Get the port number this server is listening on.
++    int getPort(void) const;
++
+     //! Process client requests for the specified time
+     void work(double msTime);
+ 
+@@ -68,6 +72,12 @@
+     //! Introspection support
+     void listMethods(XmlRpcValue& result);
+ 
++
++    //! Parses the request xml, runs the method, generates the response (header+xml).
++    //! Returns a fault response if an error occurs during method execution.
++    virtual std::string executeRequest(std::string const& request);
++
++
+     // XmlRpcSource interface implementation
+ 
+     //! Handle client connection requests
+@@ -78,24 +88,70 @@
+ 
+   protected:
+ 
++    // Static data
++    static const char METHODNAME_TAG[];
++    static const char PARAMS_TAG[];
++    static const char PARAMS_ETAG[];
++    static const char PARAM_TAG[];
++    static const char PARAM_ETAG[];
++
++    static const std::string SYSTEM_MULTICALL;
++    static const std::string METHODNAME;
++    static const std::string PARAMS;
++
++    static const std::string FAULTCODE;
++    static const std::string FAULTSTRING;
++
++
+     //! Accept a client connection request
+     virtual void acceptConnection();
+ 
+     //! Create a new connection object for processing requests from a specific client.
++    //! If the client is not authorized to connect, close the socket and return 0.
+     virtual XmlRpcServerConnection* createConnection(int socket);
+ 
+-    // Whether the introspection API is supported by this server
++    //! Hand off a new connection object to a dispatcher.
++    virtual void dispatchConnection(XmlRpcServerConnection* sc);
++
++
++    //! Parse the methodName and parameters from the request.
++    //! @returns the methodName
++    std::string parseRequest(std::string const& request, XmlRpcValue& params);
++
++    //! Execute a named method with the specified params.
++    bool executeMethod(const std::string& methodName, XmlRpcValue& params, XmlRpcValue& result);
++
++    //! Execute multiple calls and return the results in an array.
++    //! System.multicall implementation
++    bool executeMulticall(const std::string& methodName, XmlRpcValue& params, XmlRpcValue& result);
++
++    //! Construct a response from the result XML.
++    std::string generateResponse(std::string const& resultXml);
++
++    //! Construct a fault response.
++    std::string generateFaultResponse(std::string const& msg, int errorCode = -1);
++
++    //! Return the appropriate headers for the response.
++    std::string generateHeader(std::string const& body);
++
++
++    
++    //! Whether the introspection API is supported by this server
+     bool _introspectionEnabled;
+ 
+-    // Event dispatcher
++    //! Event dispatcher
+     XmlRpcDispatch _disp;
+ 
+-    // Collection of methods. This could be a set keyed on method name if we wanted...
++    //! Collection of methods. This could be a set keyed on method name if we wanted...
+     typedef std::map< std::string, XmlRpcServerMethod* > MethodMap;
++
++    //! Registered RPC methods.
+     MethodMap _methods;
+ 
+-    // system methods
++    //! List all registered RPC methods (only available if introspection is enabled)
+     XmlRpcServerMethod* _listMethods;
++
++    //! Return help string for a specified method (only available if introspection is enabled)
+     XmlRpcServerMethod* _methodHelp;
+ 
+   };
+diff -Naur xmlrpc++0.7/src/XmlRpcSocket.cpp xmlrpc++/src/XmlRpcSocket.cpp
+--- xmlrpc++0.7/src/XmlRpcSocket.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcSocket.cpp	2004-04-13 17:21:59.000000000 +0200
+@@ -5,13 +5,16 @@
+ #ifndef MAKEDEPEND
+ 
+ #if defined(_WINDOWS)
+-# include <stdio.h>
++# include <stdio.h>
+ # include <winsock2.h>
+ //# pragma lib(WS2_32.lib)
+ 
+ # define EINPROGRESS	WSAEINPROGRESS
+ # define EWOULDBLOCK	WSAEWOULDBLOCK
+ # define ETIMEDOUT	    WSAETIMEDOUT
++
++typedef int socklen_t;
++
+ #else
+ extern "C" {
+ # include <unistd.h>
+@@ -53,15 +56,14 @@
+ #endif // _WINDOWS
+ 
+ 
+-// These errors are not considered fatal for an IO operation; the operation will be re-tried.
+-static inline bool
+-nonFatalError()
+-{
+-  int err = XmlRpcSocket::getError();
+-  return (err == EINPROGRESS || err == EAGAIN || err == EWOULDBLOCK || err == EINTR);
+-}
+-
+-
++// These errors are not considered fatal for an IO operation; the operation will be re-tried.
++bool
++XmlRpcSocket::nonFatalError()
++{
++  int err = XmlRpcSocket::getError();
++  return (err == EINPROGRESS || err == EAGAIN || err == EWOULDBLOCK || err == EINTR);
++}
++
+ 
+ int
+ XmlRpcSocket::socket()
+@@ -131,12 +133,7 @@
+ XmlRpcSocket::accept(int fd)
+ {
+   struct sockaddr_in addr;
+-#if defined(_WINDOWS)
+-  int
+-#else
+-  socklen_t
+-#endif
+-    addrlen = sizeof(addr);
++  socklen_t addrlen = sizeof(addr);
+ 
+   return (int) ::accept(fd, (struct sockaddr*)&addr, &addrlen);
+ }
+@@ -168,7 +165,7 @@
+ 
+ // Read available text from the specified socket. Returns false on error.
+ bool 
+-XmlRpcSocket::nbRead(int fd, std::string& s, bool *eof)
++XmlRpcSocket::nbRead(int fd, std::string& s, bool *eof, SSL* ssl)
+ {
+   const int READ_SIZE = 4096;   // Number of bytes to attempt to read at a time
+   char readBuf[READ_SIZE];
+@@ -180,10 +177,15 @@
+ #if defined(_WINDOWS)
+     int n = recv(fd, readBuf, READ_SIZE-1, 0);
+ #else
+-    int n = read(fd, readBuf, READ_SIZE-1);
++    int n;
++    if (ssl != (SSL *) NULL) {
++      n = SSL_read(ssl, readBuf, READ_SIZE-1);
++    } else {
++      n = read(fd, readBuf, READ_SIZE-1);
++    }
+ #endif
+     XmlRpcUtil::log(5, "XmlRpcSocket::nbRead: read/recv returned %d.", n);
+-
++
+     if (n > 0) {
+       readBuf[n] = 0;
+       s.append(readBuf, n);
+@@ -201,7 +203,7 @@
+ 
+ // Write text to the specified socket. Returns false on error.
+ bool 
+-XmlRpcSocket::nbWrite(int fd, std::string& s, int *bytesSoFar)
++XmlRpcSocket::nbWrite(int fd, std::string& s, int *bytesSoFar, SSL* ssl)
+ {
+   int nToWrite = int(s.length()) - *bytesSoFar;
+   char *sp = const_cast<char*>(s.c_str()) + *bytesSoFar;
+@@ -211,7 +213,12 @@
+ #if defined(_WINDOWS)
+     int n = send(fd, sp, nToWrite, 0);
+ #else
+-    int n = write(fd, sp, nToWrite);
++    int n;
++    if (ssl != (SSL *) NULL) {
++      n = SSL_write(ssl, sp, nToWrite);
++    } else {
++      n = write(fd, sp, nToWrite);
++    }
+ #endif
+     XmlRpcUtil::log(5, "XmlRpcSocket::nbWrite: send/write returned %d.", n);
+ 
+@@ -228,6 +235,24 @@
+   return true;
+ }
+ 
++// Get the port of a bound socket
++int
++XmlRpcSocket::getPort(int socket)
++{
++  struct sockaddr_in saddr;
++  socklen_t saddr_len = sizeof(saddr);
++  int port;
++
++  int result = ::getsockname(socket, (sockaddr*) &saddr, &saddr_len);
++
++  if (result != 0) {
++    port = -1;
++  } else {
++    port = ntohs(saddr.sin_port);
++  }
++  return port;
++}
++
+ 
+ // Returns last errno
+ int 
+diff -Naur xmlrpc++0.7/src/XmlRpcSocket.h xmlrpc++/src/XmlRpcSocket.h
+--- xmlrpc++0.7/src/XmlRpcSocket.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcSocket.h	2004-04-13 17:21:59.000000000 +0200
+@@ -11,11 +11,14 @@
+ # include <string>
+ #endif
+ 
++#include <openssl/ssl.h>
++
+ namespace XmlRpc {
+ 
+   //! A platform-independent socket API.
+   class XmlRpcSocket {
+   public:
++    // TODO - typedef the socket type, casting to int won't work for 64 bit windows
+ 
+     //! Creates a stream (TCP) socket. Returns -1 on failure.
+     static int socket();
+@@ -28,10 +31,10 @@
+     static bool setNonBlocking(int socket);
+ 
+     //! Read text from the specified socket. Returns false on error.
+-    static bool nbRead(int socket, std::string& s, bool *eof);
++    static bool nbRead(int socket, std::string& s, bool *eof, SSL *ssl);
+ 
+     //! Write text to the specified socket. Returns false on error.
+-    static bool nbWrite(int socket, std::string& s, int *bytesSoFar);
++    static bool nbWrite(int socket, std::string& s, int *bytesSoFar, SSL* ssl);
+ 
+ 
+     // The next four methods are appropriate for servers.
+@@ -49,10 +52,14 @@
+     //! Accept a client connection request
+     static int accept(int socket);
+ 
+-
+     //! Connect a socket to a server (from a client)
+     static bool connect(int socket, std::string& host, int port);
+ 
++    //! Get the port of a bound socket
++    static int getPort(int socket);
++
++    //! Returns true if the last error was not a fatal one (eg, EWOULDBLOCK)
++    static bool nonFatalError();
+ 
+     //! Returns last errno
+     static int getError();
+diff -Naur xmlrpc++0.7/src/XmlRpcSource.cpp xmlrpc++/src/XmlRpcSource.cpp
+--- xmlrpc++0.7/src/XmlRpcSource.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcSource.cpp	2004-04-13 17:21:59.000000000 +0200
+@@ -30,6 +30,11 @@
+       _deleteOnClose = false;
+       delete this;
+     }
++    if (_ssl_ssl != (SSL *) NULL) {
++      SSL_shutdown (_ssl_ssl);
++      SSL_free (_ssl_ssl);
++      SSL_CTX_free (_ssl_ctx);
++    }
+   }
+ 
+ } // namespace XmlRpc
+diff -Naur xmlrpc++0.7/src/XmlRpcSource.h xmlrpc++/src/XmlRpcSource.h
+--- xmlrpc++0.7/src/XmlRpcSource.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcSource.h	2004-04-13 17:21:59.000000000 +0200
+@@ -8,6 +8,13 @@
+ # pragma warning(disable:4786)    // identifier was truncated in debug info
+ #endif
+ 
++// Deal with SSL dependencies
++#include <openssl/crypto.h>
++#include <openssl/x509.h>
++#include <openssl/pem.h>
++#include <openssl/ssl.h>
++#include <openssl/err.h>
++
+ namespace XmlRpc {
+ 
+   //! An RPC source represents a file descriptor to monitor
+@@ -37,6 +44,11 @@
+     //! Return true to continue monitoring this source
+     virtual unsigned handleEvent(unsigned eventType) = 0;
+ 
++    // Keep track of SSL status and other such things
++    bool _ssl;
++    SSL_CTX* _ssl_ctx;
++    SSL* _ssl_ssl;
++    SSL_METHOD* _ssl_meth;
+   private:
+ 
+     // Socket. This should really be a SOCKET (an alias for unsigned int*) on windows...
+diff -Naur xmlrpc++0.7/src/XmlRpcThread.cpp xmlrpc++/src/XmlRpcThread.cpp
+--- xmlrpc++0.7/src/XmlRpcThread.cpp	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcThread.cpp	2003-04-29 03:06:24.000000000 +0200
+@@ -0,0 +1,74 @@
++#if defined(XMLRPC_THREADS)
++
++#include "XmlRpcThread.h"
++
++#if defined(_WINDOWS)
++# define WIN32_LEAN_AND_MEAN
++# include <windows.h>
++# include <process.h>
++#else
++# include <pthread.h>
++#endif
++
++
++using namespace XmlRpc;
++
++
++//! Destructor. Does not perform a join() (ie, the thread may continue to run).
++XmlRpcThread::~XmlRpcThread()
++{
++  if (_pThread)
++  {
++#if defined(_WINDOWS)
++    ::CloseHandle((HANDLE)_pThread);
++#else
++    ::pthread_detach((pthread_t)_pThread);
++#endif
++    _pThread = 0;
++  }
++}
++
++//! Execute the run method of the runnable object in a separate thread.
++//! Returns immediately in the calling thread.
++void
++XmlRpcThread::start()
++{
++  if ( ! _pThread)
++  {
++#if defined(_WINDOWS)
++    unsigned threadID;
++    _pThread = (HANDLE)_beginthreadex(NULL, 0, &runInThread, this, 0, &threadID);
++#else
++    ::pthread_create((pthread_t*) &_pThread, NULL, &runInThread, this);
++#endif
++  }
++}
++
++//! Waits until the thread exits.
++void
++XmlRpcThread::join()
++{
++  if (_pThread)
++  {
++#if defined(_WINDOWS)
++    ::WaitForSingleObject(_pThread, INFINITE);
++    ::CloseHandle(_pThread);
++#else
++    ::pthread_join((pthread_t)_pThread, 0);
++#endif
++    _pThread = 0;
++  }
++}
++
++//! Start the runnable going in a thread
++unsigned int
++XmlRpcThread::runInThread(void* pThread)
++{
++  XmlRpcThread* t = (XmlRpcThread*)pThread;
++  t->getRunnable()->run();
++  return 0;
++}
++
++#endif // XMLRPC_THREADS
++
++
+diff -Naur xmlrpc++0.7/src/XmlRpcThreadedServer.cpp xmlrpc++/src/XmlRpcThreadedServer.cpp
+--- xmlrpc++0.7/src/XmlRpcThreadedServer.cpp	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcThreadedServer.cpp	2003-04-29 03:06:25.000000000 +0200
+@@ -0,0 +1,27 @@
++#if defined(XMLRPC_THREADS)
++
++#include "XmlRpcThreadedServer.h"
++//#include "XmlRpcServerConnection.h"
++
++
++using namespace XmlRpc;
++
++// executeRequestThreaded:
++//  remove the serverConnection from the dispatcher (but don't close the socket)
++//  push the request onto the request queue 
++//   (acquire the mutex, push_back request, release mutex, incr semaphore)
++//  
++
++// worker::run
++//  while ! stopped
++//    pop a request off the request queue (block on semaphore/decr, acquire mutex, get request, rel)
++//    executeRequest (parse, run, generate response)
++//    notify the serverConnection that the response is available
++//    (the serverConnection needs to add itself back to the dispatcher safely - mutex)
++
++// How do I interrupt the dispatcher if it is waiting in a select call? 
++//  i) Replace select with WaitForMultipleObjects, using WSAEventSelect to associate
++//     each socket with an event object, and adding an additional "signal" event.
++//
++
++#endif // XMLRPC_THREADS
+diff -Naur xmlrpc++0.7/src/XmlRpcThreadedServer.h xmlrpc++/src/XmlRpcThreadedServer.h
+--- xmlrpc++0.7/src/XmlRpcThreadedServer.h	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcThreadedServer.h	2003-04-29 03:06:25.000000000 +0200
+@@ -0,0 +1,67 @@
++
++#ifndef _XMLRPCTHREADEDSERVER_H_
++#define _XMLRPCTHREADEDSERVER_H_
++//
++// XmlRpc++ Copyright (c) 2002-2003 by Chris Morley
++//
++#if defined(_MSC_VER)
++# pragma warning(disable:4786)    // identifier was truncated in debug info
++#endif
++
++#ifndef MAKEDEPEND
++# include <map>
++# include <vector>
++#endif
++
++
++#include "XmlRpcMutex.h"
++#include "XmlRpcServer.h"
++#include "XmlRpcThread.h"
++
++
++namespace XmlRpc {
++
++  //! A class to handle multiple simultaneous XML RPC requests
++  class XmlRpcThreadedServer : public XmlRpcServer {
++  public:
++
++    //! Create a server object with a specified number of worker threads.
++    XmlRpcThreadedServer(int nWorkers = 6) : _workers(nWorkers) {}
++
++
++    //! Execute a request
++
++  protected:
++
++    //! Each client request is assigned to one worker to handle.
++    //! Workers are executed on separate threads, and one worker may be
++    //! responsible for dispatching events to multiple client connections.
++    class Worker : XmlRpcRunnable {
++    public:
++      //! Constructor. Executes the run method in a separate thread.
++      Worker() { _thread.setRunnable(this); _thread.start(); }
++
++      //! Implement the Runnable interface
++      void run();
++
++    protected:
++
++      //! The thread this worker is running in.
++      XmlRpcThread _thread;
++
++    };
++
++
++    //! The worker pool
++    std::vector<Worker> _workers;
++
++
++    //! Serialize dispatcher access
++    XmlRpcMutex _mutex;
++
++
++  };  // class XmlRpcThreadedServer
++
++}
++
++#endif  // _XMLRPCTHREADEDSERVER_H_
+diff -Naur xmlrpc++0.7/src/XmlRpcThread.h xmlrpc++/src/XmlRpcThread.h
+--- xmlrpc++0.7/src/XmlRpcThread.h	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/src/XmlRpcThread.h	2003-04-29 03:06:24.000000000 +0200
+@@ -0,0 +1,60 @@
++#ifndef _XMLRPCTHREAD_H_
++#define _XMLRPCTHREAD_H_
++//
++// XmlRpc++ Copyright (c) 2002-2003 by Chris Morley
++//
++#if defined(_MSC_VER)
++# pragma warning(disable:4786)    // identifier was truncated in debug info
++#endif
++
++namespace XmlRpc {
++
++  //! An abstract class providing an interface for objects that can run in a separate thread.
++  class XmlRpcRunnable {
++  public:
++      //! Code to be executed.
++      virtual void run() = 0;
++  };  // class XmlRpcRunnable
++
++
++  //! A simple platform-independent thread API implemented for posix and windows.
++  class XmlRpcThread {
++  public:
++    //! Construct a thread object. Not usable until setRunnable() has been called.
++    XmlRpcThread() : _runner(0), _pThread(0) {}
++
++    //! Construct a thread object.
++    XmlRpcThread(XmlRpcRunnable* runnable) : _runner(runnable), _pThread(0) {}
++
++    //! Destructor. Does not perform a join() (ie, the thread may continue to run).
++    ~XmlRpcThread();
++
++    //! Execute the run method of the runnable object in a separate thread.
++    //! Returns immediately in the calling thread.
++    void start();
++
++    //! Waits until the thread exits.
++    void join();
++
++    //! Access the runnable
++    XmlRpcRunnable* getRunnable() const { return _runner; }
++
++    //! Set the runnable
++    void setRunnable(XmlRpcRunnable* r) { _runner = r; }
++
++  private:
++
++    //! Start the runnable going in a thread
++    static unsigned int __stdcall runInThread(void* pThread);
++
++    //! Code to be executed
++    XmlRpcRunnable* _runner;
++
++    //! Native thread object
++    void* _pThread;
++
++  };  // class XmlRpcThread
++
++}  // namespace XmlRpc
++
++#endif	//  _XMLRPCTHREAD_H_
+diff -Naur xmlrpc++0.7/src/XmlRpcUtil.cpp xmlrpc++/src/XmlRpcUtil.cpp
+--- xmlrpc++0.7/src/XmlRpcUtil.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcUtil.cpp	2003-04-29 03:03:19.000000000 +0200
+@@ -21,7 +21,7 @@
+ #endif
+ 
+ // Version id
+-const char XmlRpc::XMLRPC_VERSION[] = "XMLRPC++ 0.7";
++const char XmlRpc::XMLRPC_VERSION[] = "XMLRPC++ 0.8";
+ 
+ // Default log verbosity: 0 for no messages through 5 (writes everything)
+ int XmlRpcLogHandler::_verbosity = 0;
+@@ -147,28 +147,37 @@
+ }
+ 
+ // Returns the next tag and updates offset to the char after the tag, or empty string
+-// if the next non-whitespace character is not '<'
++// if the next non-whitespace character is not '<'. Ignores parameters and values within
++// the tag entity.
+ std::string 
+ XmlRpcUtil::getNextTag(std::string const& xml, int* offset)
+ {
+   if (*offset >= int(xml.length())) return std::string();
+ 
+-  size_t pos = *offset;
+-  const char* cp = xml.c_str() + pos;
+-  while (*cp && isspace(*cp)) {
++  const char* cp = xml.c_str() + size_t(*offset);
++  const char* startcp = cp;
++  while (*cp && isspace(*cp))
+     ++cp;
+-    ++pos;
+-  }
++
+ 
+   if (*cp != '<') return std::string();
+ 
+-  std::string s;
+-  do {
+-    s += *cp;
+-    ++pos;
+-  } while (*cp++ != '>' && *cp != 0);
++  // Tag includes the non-blank characters after <
++  const char* start = cp++;
++  while (*cp != '>' && *cp != 0 && ! isspace(*cp))
++    ++cp;
++
++  std::string s(start, cp-start+1);
++
++  if (*cp != '>')   // Skip parameters and values
++  {
++    while (*cp != '>' && *cp != 0)
++      ++cp;
++
++    s[s.length()-1] = *cp;
++  }
+ 
+-  *offset = int(pos);
++  *offset += int(cp - startcp + 1);
+   return s;
+ }
+ 
+diff -Naur xmlrpc++0.7/src/XmlRpcValue.cpp xmlrpc++/src/XmlRpcValue.cpp
+--- xmlrpc++0.7/src/XmlRpcValue.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcValue.cpp	2003-06-06 20:13:28.000000000 +0200
+@@ -389,6 +389,7 @@
+     if (sscanf(stime.c_str(),"%4d%2d%2dT%2d:%2d:%2d",&t.tm_year,&t.tm_mon,&t.tm_mday,&t.tm_hour,&t.tm_min,&t.tm_sec) != 6)
+       return false;
+ 
++    t.tm_year -= 1900;
+     t.tm_isdst = -1;
+     _type = TypeDateTime;
+     _value.asTime = new struct tm(t);
+@@ -400,8 +401,8 @@
+   {
+     struct tm* t = _value.asTime;
+     char buf[20];
+-    snprintf(buf, sizeof(buf)-1, "%4d%02d%02dT%02d:%02d:%02d", 
+-      t->tm_year,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
++    snprintf(buf, sizeof(buf)-1, "%04d%02d%02dT%02d:%02d:%02d", 
++      1900+t->tm_year,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
+     buf[sizeof(buf)-1] = 0;
+ 
+     std::string xml = VALUE_TAG;
+diff -Naur xmlrpc++0.7/src/XmlRpcValue.h xmlrpc++/src/XmlRpcValue.h
+--- xmlrpc++0.7/src/XmlRpcValue.h	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/src/XmlRpcValue.h	2003-03-25 22:19:30.000000000 +0100
+@@ -4,6 +4,7 @@
+ //
+ // XmlRpc++ Copyright (c) 2002-2003 by Chris Morley
+ //
++
+ #if defined(_MSC_VER)
+ # pragma warning(disable:4786)    // identifier was truncated in debug info
+ #endif
+@@ -17,12 +18,15 @@
+ 
+ namespace XmlRpc {
+ 
+-  //! RPC method arguments and results are represented by Values
++  //! A class to represent RPC arguments and results.
++  //! Each XmlRpcValue object contains a typed value,
++  //! where the type is determined by the initial value
++  //! assigned to the object.
+   //   should probably refcount them...
+   class XmlRpcValue {
+   public:
+ 
+-
++    //! XmlRpcValue types
+     enum Type {
+       TypeInvalid,
+       TypeBoolean,
+@@ -41,22 +45,36 @@
+     typedef std::map<std::string, XmlRpcValue> ValueStruct;
+ 
+ 
+-    //! Constructors
++    // Constructors
++    //! Construct an empty XmlRpcValue
+     XmlRpcValue() : _type(TypeInvalid) { _value.asBinary = 0; }
++
++    //! Construct an XmlRpcValue with a bool value
+     XmlRpcValue(bool value) : _type(TypeBoolean) { _value.asBool = value; }
++
++    //! Construct an XmlRpcValue with an int value
+     XmlRpcValue(int value)  : _type(TypeInt) { _value.asInt = value; }
++
++    //! Construct an XmlRpcValue with a double value
+     XmlRpcValue(double value)  : _type(TypeDouble) { _value.asDouble = value; }
+ 
++    //! Construct an XmlRpcValue with a string value
+     XmlRpcValue(std::string const& value) : _type(TypeString) 
+     { _value.asString = new std::string(value); }
+ 
++    //! Construct an XmlRpcValue with a string value.
++    //! @param value A null-terminated (C) string.
+     XmlRpcValue(const char* value)  : _type(TypeString)
+     { _value.asString = new std::string(value); }
+ 
++    //! Construct an XmlRpcValue with a date/time value.
++    //! @param value A pointer to a struct tm (see localtime)
+     XmlRpcValue(struct tm* value)  : _type(TypeDateTime) 
+     { _value.asTime = new struct tm(*value); }
+ 
+-
++    //! Construct an XmlRpcValue with a binary data value
++    //! @param value A pointer to data
++    //! @param nBytes The length of the data pointed to, in bytes
+     XmlRpcValue(void* value, int nBytes)  : _type(TypeBase64)
+     {
+       _value.asBinary = new BinaryData((char*)value, ((char*)value)+nBytes);
+@@ -66,7 +84,7 @@
+     XmlRpcValue(std::string const& xml, int* offset) : _type(TypeInvalid)
+     { if ( ! fromXml(xml,offset)) _type = TypeInvalid; }
+ 
+-    //! Copy
++    //! Copy constructor
+     XmlRpcValue(XmlRpcValue const& rhs) : _type(TypeInvalid) { *this = rhs; }
+ 
+     //! Destructor (make virtual if you want to subclass)
+@@ -76,27 +94,79 @@
+     void clear() { invalidate(); }
+ 
+     // Operators
++    //! Assignment from one XmlRpcValue to this one.
++    //! @param rhs The value in rhs is copied to this value.
+     XmlRpcValue& operator=(XmlRpcValue const& rhs);
++
++    //! Assign an int to this XmlRpcValue.
+     XmlRpcValue& operator=(int const& rhs) { return operator=(XmlRpcValue(rhs)); }
++
++    //! Assign a double to this XmlRpcValue.
+     XmlRpcValue& operator=(double const& rhs) { return operator=(XmlRpcValue(rhs)); }
++
++    //! Assign a string to this XmlRpcValue.
+     XmlRpcValue& operator=(const char* rhs) { return operator=(XmlRpcValue(std::string(rhs))); }
+ 
++    //! Tests two XmlRpcValues for equality
+     bool operator==(XmlRpcValue const& other) const;
++
++    //! Tests two XmlRpcValues for inequality
+     bool operator!=(XmlRpcValue const& other) const;
+ 
++    //! Treat an XmlRpcValue as a bool.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeBoolean.
+     operator bool&()          { assertTypeOrInvalid(TypeBoolean); return _value.asBool; }
++
++    //! Treat an XmlRpcValue as an int.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeInt.
+     operator int&()           { assertTypeOrInvalid(TypeInt); return _value.asInt; }
++
++    //! Treat an XmlRpcValue as a double.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeDouble.
+     operator double&()        { assertTypeOrInvalid(TypeDouble); return _value.asDouble; }
++
++    //! Treat an XmlRpcValue as a string.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeString.
+     operator std::string&()   { assertTypeOrInvalid(TypeString); return *_value.asString; }
++
++    //! Access the BinaryData value.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeBase64.
+     operator BinaryData&()    { assertTypeOrInvalid(TypeBase64); return *_value.asBinary; }
++
++    //! Access the DateTime value.
++    //! Throws XmlRpcException if the value is initialized to 
++    //! a type that is not TypeDateTime.
+     operator struct tm&()     { assertTypeOrInvalid(TypeDateTime); return *_value.asTime; }
+ 
++
++    //! Const array value accessor.
++    //! Access the ith value of the array.
++    //! Throws XmlRpcException if the value is not an array or if the index i is
++    //! not a valid index for the array.
+     XmlRpcValue const& operator[](int i) const { assertArray(i+1); return _value.asArray->at(i); }
++
++    //! Array value accessor.
++    //! Access the ith value of the array, growing the array if necessary.
++    //! Throws XmlRpcException if the value is not an array.
+     XmlRpcValue& operator[](int i)             { assertArray(i+1); return _value.asArray->at(i); }
+ 
++    //! Struct entry accessor.
++    //! Returns the value associated with the given entry, creating one if necessary.
+     XmlRpcValue& operator[](std::string const& k) { assertStruct(); return (*_value.asStruct)[k]; }
++
++    //! Struct entry accessor.
++    //! Returns the value associated with the given entry, creating one if necessary.
+     XmlRpcValue& operator[](const char* k) { assertStruct(); std::string s(k); return (*_value.asStruct)[s]; }
+ 
++    //! Access the struct value map.
++    //! Can be used to iterate over the entries in the map to find all defined entries.
++    operator ValueStruct const&() { assertStruct(); return *_value.asStruct; } 
++
+     // Accessors
+     //! Return true if the value has been set to something.
+     bool valid() const { return _type != TypeInvalid; }
+diff -Naur xmlrpc++0.7/test/HelloClient.cpp xmlrpc++/test/HelloClient.cpp
+--- xmlrpc++0.7/test/HelloClient.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/test/HelloClient.cpp	2004-04-13 17:22:00.000000000 +0200
+@@ -15,7 +15,7 @@
+   //XmlRpc::setVerbosity(5);
+ 
+   // Use introspection API to look up the supported methods
+-  XmlRpcClient c(argv[1], port);
++  XmlRpcClient c(argv[1], port, "/RPC2", false);
+   XmlRpcValue noArgs, result;
+   if (c.execute("system.listMethods", noArgs, result))
+     std::cout << "\nMethods:\n " << result << "\n\n";
+diff -Naur xmlrpc++0.7/test/Makefile xmlrpc++/test/Makefile
+--- xmlrpc++0.7/test/Makefile	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/test/Makefile	2004-04-13 17:22:00.000000000 +0200
+@@ -7,7 +7,7 @@
+ GCCWARN		= -Wall -Wstrict-prototypes
+ CXXFLAGS	= $(DEBUG) $(GCCWARN) $(OPTIMIZE) $(INCLUDES)
+ 
+-LIB		= ../libXmlRpc.a
++LIB		= ../libXmlRpc.a -lssl
+ 
+ # Add your system-dependent network libs here
+ # Solaris: -lsocket -lnsl
+@@ -15,7 +15,7 @@
+ 
+ LDLIBS		= $(SYSTEMLIBS) $(LIB)
+ 
+-TESTS		= HelloClient HelloServer TestBase64Client TestBase64Server TestValues TestXml Validator
++TESTS		= HelloClient HelloServer TestBase64Client TestBase64Server TestValues TestXml Validator TestEGroupwareSSLClient
+ 
+ all:		$(TESTS)
+ 
+diff -Naur xmlrpc++0.7/test/TestBase64Client.cpp xmlrpc++/test/TestBase64Client.cpp
+--- xmlrpc++0.7/test/TestBase64Client.cpp	2003-03-06 18:25:37.000000000 +0100
++++ xmlrpc++/test/TestBase64Client.cpp	2004-04-13 17:22:00.000000000 +0200
+@@ -21,7 +21,7 @@
+   int port = atoi(argv[2]);
+ 
+   //XmlRpc::setVerbosity(5);
+-  XmlRpcClient c(argv[1], port);
++  XmlRpcClient c(argv[1], port, "/RPC2", false);
+ 
+   XmlRpcValue noArgs, result;
+   if (c.execute("TestBase64", noArgs, result))
+diff -Naur xmlrpc++0.7/test/TestEGroupwareSSLClient.cpp xmlrpc++/test/TestEGroupwareSSLClient.cpp
+--- xmlrpc++0.7/test/TestEGroupwareSSLClient.cpp	1970-01-01 01:00:00.000000000 +0100
++++ xmlrpc++/test/TestEGroupwareSSLClient.cpp	2004-04-13 17:22:00.000000000 +0200
+@@ -0,0 +1,65 @@
++#include "XmlRpc.h"
++#include <iostream>
++
++using namespace XmlRpc;
++using namespace std;
++
++int main ( int argc, char *argv[]) {
++	XmlRpc::setVerbosity(3);
++
++	if (argc != 5) {
++		cout << "eGroupware SSL Client Test\n\n";
++		cout << "usage: " << argv[0] << " host url user password\n";
++		cout << "example: " << argv[0] << " www.egroupware.org \"/egroupware/xmlrpc.php\" demo guest\n";
++		exit (0);
++	}
++	XmlRpcClient client (argv[1], 443, argv[2], true);
++
++	XmlRpcValue result;
++	XmlRpcValue params;
++	params["username"] = argv[3];
++	params["password"] = argv[4];
++	if (!client.execute ("system.login", params, result)) {
++		cout << "Failed.\n";
++		return 0;
++	} else {
++		cout << result << "\n";
++	}
++	string sessionid = string(result["sessionid"]);
++	string kp3 = string(result["kp3"]);
++/*
++	XmlRpcClient authClient (argv[1], 443, sessionid.c_str(), kp3.c_str(), argv[2], true);
++	XmlRpcValue calParam;
++	XmlRpcValue calResult;
++
++	calParam["syear"] = "2001";
++	calParam["smonth"] = "03";
++	calParam["sday"] = "01";
++	calParam["eyear"] = "2005";
++	calParam["emonth"] = "04";
++	calParam["eday"] = "25";
++
++	if (!authClient.execute("calendar.bocalendar.search", calParam, calResult)) {
++		cout << "No calendar events\n";
++	} else {
++		cout << calResult << "\n";
++	}
++*/
++
++	XmlRpcValue logoutParam;
++	XmlRpcValue logoutResult;
++	XmlRpcClient client_logout (argv[1], 443, argv[2], true);
++
++	logoutParam["sessionid"] = sessionid;
++	logoutParam["kp3"] = kp3;
++
++	if (!client_logout.execute("system.logout", logoutParam, logoutResult)) {
++		cout << "failed to logout\n";
++	} else {
++		// params['GOODBYE'] == 'XOXO'
++		cout << logoutResult << "\n";
++	}
++
++	return 1;
++}
++
+diff -Naur xmlrpc++0.7/test/Validator.cpp xmlrpc++/test/Validator.cpp
+--- xmlrpc++0.7/test/Validator.cpp	2003-03-06 18:25:38.000000000 +0100
++++ xmlrpc++/test/Validator.cpp	2003-12-16 01:10:32.000000000 +0100
+@@ -137,7 +137,7 @@
+   {
+     std::cerr << "ModerateSizeArrayCheck\n";
+     std::string s = params[0][0];
+-    s += params[0][params[0].size()-1];
++    s += (std::string)params[0][params[0].size()-1];
+     result = s;
+   }
+ } moderateSizeArrayCheck(&s);
+diff -Naur xmlrpc++0.7/XmlRpc.vcproj xmlrpc++/XmlRpc.vcproj
+--- xmlrpc++0.7/XmlRpc.vcproj	2003-03-06 18:25:38.000000000 +0100
++++ xmlrpc++/XmlRpc.vcproj	2003-04-23 22:57:37.000000000 +0200
+@@ -127,6 +127,8 @@
+ 			<File
+ 				RelativePath="src\XmlRpcDispatch.cpp"/>
+ 			<File
++				RelativePath="src\XmlRpcMutex.cpp"/>
++			<File
+ 				RelativePath="src\XmlRpcServer.cpp"/>
+ 			<File
+ 				RelativePath="src\XmlRpcServerConnection.cpp"/>
+@@ -137,6 +139,10 @@
+ 			<File
+ 				RelativePath="src\XmlRpcSource.cpp"/>
+ 			<File
++				RelativePath="src\XmlRpcThread.cpp"/>
++			<File
++				RelativePath="src\XmlRpcThreadedServer.cpp"/>
++			<File
+ 				RelativePath="src\XmlRpcUtil.cpp"/>
+ 			<File
+ 				RelativePath="src\XmlRpcValue.cpp"/>
+@@ -151,6 +157,10 @@
+ 			<File
+ 				RelativePath="src\XmlRpcDispatch.h"/>
+ 			<File
++				RelativePath="src\XmlRpcException.h"/>
++			<File
++				RelativePath="src\XmlRpcMutex.h"/>
++			<File
+ 				RelativePath="src\XmlRpcServer.h"/>
+ 			<File
+ 				RelativePath="src\XmlRpcServerConnection.h"/>
+@@ -161,6 +171,10 @@
+ 			<File
+ 				RelativePath="src\XmlRpcSource.h"/>
+ 			<File
++				RelativePath="src\XmlRpcThread.h"/>
++			<File
++				RelativePath="src\XmlRpcThreadedServer.h"/>
++			<File
+ 				RelativePath="src\XmlRpcUtil.h"/>
+ 			<File
+ 				RelativePath="src\XmlRpcValue.h"/>

@@ -1,0 +1,24 @@
+--- livesupport-1.0/etc/pg_hba.conf	2005-08-13 12:33:33.000000000 +0200
++++ livesupport-1.0-gentoo/etc/pg_hba.conf	2005-09-22 13:48:24.000000000 +0200
+@@ -85,18 +85,16 @@
+ # Database administrative login by UNIX sockets
+ local   all         postgres                                        ident sameuser
+ #
+-# All other connections by UNIX sockets
+-local   all         all                                             ident sameuser
+-#
+ # All IPv4 connections from localhost
+ # The following line was inserted by the livesupport-station package installer
+ # the original pg_hba.conf file is saved under pg_hba.conf.before-livesupport
+ host    all         all         127.0.0.1         255.255.255.255   password
+ #host    all         all         127.0.0.1         255.255.255.255   ident sameuser
+ #
++# All other connections by UNIX sockets
++local   all         all                                             password
++#
+ # All IPv6 localhost connections
+-host    all         all         ::1               ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff        ident sameuser
+-host    all         all         ::ffff:127.0.0.1/128                ident sameuser
+ #
+ # reject all other connection attempts
+ host    all         all         0.0.0.0           0.0.0.0           reject

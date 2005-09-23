@@ -1,0 +1,15 @@
+--- gst-plugins-0.8.9/ext/mad/gstid3demuxbin.c	2005-04-10 22:24:17.000000000 +0200
++++ gst-plugins-0.8.9-livesupport/ext/mad/gstid3demuxbin.c	2005-06-22 10:45:31.000000000 +0200
+@@ -188,7 +188,11 @@
+ gst_id3demux_bin_remove_pad (GstId3DemuxBin * id3)
+ {
+   if (id3->srcpad) {
+-    gst_element_remove_pad (GST_ELEMENT (id3), id3->srcpad);
++    GstPad    * pad = gst_element_get_pad(GST_ELEMENT(id3), "src");
++
++    if (pad && pad == id3->srcpad) {
++      gst_element_remove_pad (GST_ELEMENT (id3), id3->srcpad);
++    }
+     id3->srcpad = NULL;
+   }
+ }

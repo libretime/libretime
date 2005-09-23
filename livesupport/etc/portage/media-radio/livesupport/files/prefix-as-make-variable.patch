@@ -1,0 +1,238 @@
+diff -Naur livesupport-1.0/modules/alib/etc/Makefile.in livesupport-1.0-gentoo/modules/alib/etc/Makefile.in
+--- livesupport-1.0/modules/alib/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
++++ livesupport-1.0-gentoo/modules/alib/etc/Makefile.in	2005-09-21 11:55:23.000000000 +0200
+@@ -59,7 +59,9 @@
+ TMP_DIR     = ${BASE_DIR}/tmp
+ VAR_DIR     = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_VAR_DIR     = ${USR_DIR}/var
+ 
+diff -Naur livesupport-1.0/modules/archiveServer/etc/Makefile.in livesupport-1.0-gentoo/modules/archiveServer/etc/Makefile.in
+--- livesupport-1.0/modules/archiveServer/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
++++ livesupport-1.0-gentoo/modules/archiveServer/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -62,7 +62,9 @@
+ TMP_DIR     = ${BASE_DIR}/tmp
+ VAR_DIR     = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ USR_VAR_DIR     = ${USR_DIR}/var
+diff -Naur livesupport-1.0/modules/authentication/etc/Makefile.in livesupport-1.0-gentoo/modules/authentication/etc/Makefile.in
+--- livesupport-1.0/modules/authentication/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
++++ livesupport-1.0-gentoo/modules/authentication/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -50,7 +50,9 @@
+ SRC_DIR      = ${BASE_DIR}/src
+ TMP_DIR      = ${BASE_DIR}/tmp
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/core/etc/Makefile.in livesupport-1.0-gentoo/modules/core/etc/Makefile.in
+--- livesupport-1.0/modules/core/etc/Makefile.in	2005-09-21 11:57:28.000000000 +0200
++++ livesupport-1.0-gentoo/modules/core/etc/Makefile.in	2005-09-21 11:55:38.000000000 +0200
+@@ -53,7 +53,9 @@
+ TMP_DIR      = ${BASE_DIR}/tmp
+ VAR_DIR      = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_BIN_DIR     = ${USR_DIR}/bin
+ USR_LIB_DIR     = ${USR_DIR}/lib
+diff -Naur livesupport-1.0/modules/db/etc/Makefile.in livesupport-1.0-gentoo/modules/db/etc/Makefile.in
+--- livesupport-1.0/modules/db/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
++++ livesupport-1.0-gentoo/modules/db/etc/Makefile.in	2005-09-21 11:55:10.000000000 +0200
+@@ -51,7 +51,9 @@
+ SRC_DIR      = ${BASE_DIR}/src
+ TMP_DIR      = ${BASE_DIR}/tmp
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/eventScheduler/etc/Makefile.in livesupport-1.0-gentoo/modules/eventScheduler/etc/Makefile.in
+--- livesupport-1.0/modules/eventScheduler/etc/Makefile.in	2005-08-08 13:57:53.000000000 +0200
++++ livesupport-1.0-gentoo/modules/eventScheduler/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -50,7 +50,9 @@
+ SRC_DIR      = ${BASE_DIR}/src
+ TMP_DIR      = ${BASE_DIR}/tmp
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/getid3/etc/Makefile.in livesupport-1.0-gentoo/modules/getid3/etc/Makefile.in
+--- livesupport-1.0/modules/getid3/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
++++ livesupport-1.0-gentoo/modules/getid3/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -60,7 +60,9 @@
+ TMP_DIR     = ${BASE_DIR}/tmp
+ VAR_DIR     = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_VAR_DIR     = ${USR_DIR}/var
+ 
+diff -Naur livesupport-1.0/modules/gstreamerElements/etc/Makefile.in livesupport-1.0-gentoo/modules/gstreamerElements/etc/Makefile.in
+--- livesupport-1.0/modules/gstreamerElements/etc/Makefile.in	2005-09-21 11:57:28.000000000 +0200
++++ livesupport-1.0-gentoo/modules/gstreamerElements/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -56,7 +56,9 @@
+ REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
+ 
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_BIN_DIR     = ${USR_DIR}/bin
+ USR_LIB_DIR     = ${USR_DIR}/lib
+diff -Naur livesupport-1.0/modules/htmlUI/etc/Makefile.in livesupport-1.0-gentoo/modules/htmlUI/etc/Makefile.in
+--- livesupport-1.0/modules/htmlUI/etc/Makefile.in	2005-08-10 00:03:11.000000000 +0200
++++ livesupport-1.0-gentoo/modules/htmlUI/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -61,7 +61,9 @@
+ TMP_DIR     = ${BASE_DIR}/tmp
+ VAR_DIR     = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_VAR_DIR     = ${USR_DIR}/var
+ 
+diff -Naur livesupport-1.0/modules/playlistExecutor/etc/Makefile.in livesupport-1.0-gentoo/modules/playlistExecutor/etc/Makefile.in
+--- livesupport-1.0/modules/playlistExecutor/etc/Makefile.in	2005-09-21 11:57:28.000000000 +0200
++++ livesupport-1.0-gentoo/modules/playlistExecutor/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -53,7 +53,9 @@
+ REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
+ 
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/schedulerClient/etc/Makefile.in livesupport-1.0-gentoo/modules/schedulerClient/etc/Makefile.in
+--- livesupport-1.0/modules/schedulerClient/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
++++ livesupport-1.0-gentoo/modules/schedulerClient/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -50,7 +50,9 @@
+ SRC_DIR      = ${BASE_DIR}/src
+ TMP_DIR      = ${BASE_DIR}/tmp
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/storage/etc/Makefile.in livesupport-1.0-gentoo/modules/storage/etc/Makefile.in
+--- livesupport-1.0/modules/storage/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
++++ livesupport-1.0-gentoo/modules/storage/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -50,7 +50,9 @@
+ SRC_DIR      = ${BASE_DIR}/src
+ TMP_DIR      = ${BASE_DIR}/tmp
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+diff -Naur livesupport-1.0/modules/storageAdmin/etc/Makefile.in livesupport-1.0-gentoo/modules/storageAdmin/etc/Makefile.in
+--- livesupport-1.0/modules/storageAdmin/etc/Makefile.in	2005-08-11 02:41:22.000000000 +0200
++++ livesupport-1.0-gentoo/modules/storageAdmin/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -64,7 +64,9 @@
+ VAR_DIR     = ${BASE_DIR}/var
+ BIN_DIR     = ${BASE_DIR}/bin
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_VAR_DIR     = ${USR_DIR}/var
+ 
+diff -Naur livesupport-1.0/modules/storageServer/etc/Makefile.in livesupport-1.0-gentoo/modules/storageServer/etc/Makefile.in
+--- livesupport-1.0/modules/storageServer/etc/Makefile.in	2005-08-16 14:45:00.000000000 +0200
++++ livesupport-1.0-gentoo/modules/storageServer/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -64,7 +64,9 @@
+ TMP_DIR     = ${BASE_DIR}/tmp
+ VAR_DIR     = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ USR_VAR_DIR     = ${USR_DIR}/var
+diff -Naur livesupport-1.0/modules/widgets/etc/Makefile.in livesupport-1.0-gentoo/modules/widgets/etc/Makefile.in
+--- livesupport-1.0/modules/widgets/etc/Makefile.in	2005-08-08 13:57:53.000000000 +0200
++++ livesupport-1.0-gentoo/modules/widgets/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -53,7 +53,9 @@
+ TMP_DIR      = ${BASE_DIR}/tmp
+ VAR_DIR      = ${BASE_DIR}/var
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+ USR_BIN_DIR     = ${USR_DIR}/bin
+ USR_LIB_DIR     = ${USR_DIR}/lib
+diff -Naur livesupport-1.0/products/gLiveSupport/etc/Makefile.in livesupport-1.0-gentoo/products/gLiveSupport/etc/Makefile.in
+--- livesupport-1.0/products/gLiveSupport/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
++++ livesupport-1.0-gentoo/products/gLiveSupport/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -58,7 +58,9 @@
+ REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
+ 
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_BIN_DIR     = ${USR_DIR}/bin
+ USR_ETC_DIR     = ${USR_DIR}/etc
+ USR_INCLUDE_DIR = ${USR_DIR}/include
+diff -Naur livesupport-1.0/products/scheduler/etc/Makefile.in livesupport-1.0-gentoo/products/scheduler/etc/Makefile.in
+--- livesupport-1.0/products/scheduler/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
++++ livesupport-1.0-gentoo/products/scheduler/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
+@@ -56,7 +56,9 @@
+ REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
+ 
+ 
+-USR_DIR         = @prefix@
++prefix = @prefix@
++
++USR_DIR         = ${prefix}
+ USR_BIN_DIR     = ${USR_DIR}/bin
+ USR_ETC_DIR     = ${USR_DIR}/etc
+ USR_INCLUDE_DIR = ${USR_DIR}/include

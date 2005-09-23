@@ -1,0 +1,193 @@
+--- livesupport-1.0/bin/postInstallStation.sh	2005-08-14 14:15:30.000000000 +0200
++++ livesupport-1.0-gentoo/bin/postInstallStation.sh	2005-09-22 13:16:23.000000000 +0200
+@@ -155,9 +155,13 @@
+ echo "  apache document root:   $www_root";
+ echo ""
+ 
++
+ #-------------------------------------------------------------------------------
+ #  The details of installation
+ #-------------------------------------------------------------------------------
++ls_hostname=localhost
++ls_www_port=80
++
+ ls_dbserver=$dbserver
+ ls_dbuser=$dbuser
+ ls_dbpassword=$dbpassword
+@@ -168,9 +172,15 @@
+ install_bin=$installdir/bin
+ install_etc=$installdir/etc
+ install_lib=$installdir/lib
++install_tmp=$installdir/tmp
+ install_usr=$installdir/usr
+ install_var_ls=$installdir/var/LiveSupport
+ 
++php_url_prefix=livesupport
++alib_xml_rpc_prefix=xmlrpc/xrLocStor.php
++audio_out=plughw:0
++scheduler_port=3344
++
+ 
+ #-------------------------------------------------------------------------------
+ #  Function to check for the existence of an executable on the PATH
+@@ -226,19 +236,68 @@
+ 
+ 
+ #-------------------------------------------------------------------------------
++#  Create the replacement string for the config files
++#-------------------------------------------------------------------------------
++install_lib_s=`echo ${install_lib} | sed -e "s/\//\\\\\\\\\//g"`
++install_tmp_s=`echo ${install_tmp} | sed -e "s/\//\\\\\\\\\//g"`
++php_url_prefix_s=`echo ${php_url_prefix} | sed -e "s/\//\\\\\\\\\//g"`
++alib_xml_rpc_prefix_s=`echo ${alib_xml_rpc_prefix} | sed -e "s/\//\\\\\\\\\//g"`
++audio_out_s=`echo ${audio_out} | sed -e "s/\//\\\\\\\\\//g"`
++
++
++replace_sed_string="s/ls_lib_dir/${install_lib_s}/; \
++              s/ls_dbuser/${ls_dbuser}/; \
++              s/ls_dbpassword/${ls_dbpassword}/; \
++              s/ls_dbserver/${ls_dbserver}/; \
++              s/ls_database/${ls_database}/; \
++              s/ls_php_urlPrefix/${php_url_prefix_s}/; \
++              s/ls_php_host/${ls_hostname}/; \
++              s/ls_php_port/${ls_www_port}/; \
++              s/ls_alib_xmlRpcPrefix/${alib_xml_rpc_prefix_s}/; \
++              s/ls_tmp_dir/${install_tmp_s}/; \
++              s/ls_audio_output_device/${audio_out_s}/; \
++              s/ls_scheduler_host/${ls_hostname}/; \
++              s/ls_scheduler_port/${scheduler_port}/;"
++
++
++#-------------------------------------------------------------------------------
++#  Creating configuration files
++#-------------------------------------------------------------------------------
++echo "Creating configuration files...";
++
++cat $install_etc/scheduler.xml.template | sed -e "${replace_sed_string}" \
++    > $install_etc/scheduler.xml
++
++cat $install_var_ls/archiveServer/var/conf.php.template \
++    | sed -e "${replace_sed_string}" \
++    > $install_var_ls/archiveServer/var/conf.php
++
++cat $install_var_ls/storageServer/var/conf.php.template \
++    | sed -e "${replace_sed_string}" \
++    > $install_var_ls/storageServer/var/conf.php
++
++
++#-------------------------------------------------------------------------------
+ #  Install the new pg_hba.conf file
+ #-------------------------------------------------------------------------------
+ echo "Modifying postgresql access permissions...";
+ 
+-pg_config_dir=/etc/postgresql
+ pg_config_file=pg_hba.conf
+ pg_config_file_saved=pg_hba.conf.before-livesupport
+ 
++pg_config_dir=/etc/postgresql
+ if [ -f $pg_config_dir/$pg_config_file ] ; then
+     mv -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
++    cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
++    chown root:$postgres_user $pg_config_dir/$pg_config_file
++fi
++
++pg_config_dir=/var/lib/postgresql/data/
++if [ -f $pg_config_dir/$pg_config_file ] ; then
++    mv -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
++    cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
++    chown root:$postgres_user $pg_config_dir/$pg_config_file
+ fi
+-cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
+-chown root:$postgres_user $pg_config_dir/$pg_config_file
+ 
+ /etc/init.d/postgresql restart
+ 
+@@ -290,6 +349,10 @@
+ odbc_template=$install_etc/odbc_template
+ odbc_template_tmp=/tmp/odbc_template.$$
+ 
++# customied odbc template file
++cat $install_etc/odbc_template | sed -e "${replace_sed_string}" \
++    > $odbc_template_tmp
++
+ # check for an existing PostgreSQL ODBC driver, and only install if necessary
+ odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
+ if [ "x$odbcinst_res" == "x" ]; then
+@@ -298,13 +361,17 @@
+ fi
+ 
+ echo "Registering LiveSupport ODBC data source...";
+-odbcinst -i -s -l -f $odbc_template || exit 1;
++odbcinst -i -s -l -f $odbc_template_tmp || exit 1;
++
++rm -f $odbc_template_tmp
+ 
+ 
+ #-------------------------------------------------------------------------------
+ #   Install PEAR packages (locally in the LiveSupport)
+ #-------------------------------------------------------------------------------
+-$install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
++if [ -f $install_usr/lib/pear/bin/install.sh ]; then
++    $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
++fi
+ 
+ 
+ #-------------------------------------------------------------------------------
+@@ -338,6 +405,7 @@
+ chmod g+sw $install_var_ls/htmlUI/var/templates_c
+ chmod g+sw $install_var_ls/htmlUI/var/html/img
+ 
++
+ #-------------------------------------------------------------------------------
+ #  Configuring Apache
+ #-------------------------------------------------------------------------------
+@@ -421,7 +489,9 @@
+ export LD_LIBRARY_PATH=$install_lib
+ export GST_REGISTRY=$install_etc/gst-registry.xml
+ export GST_PLUGIN_PATH=$gstreamer_dir
+-$install_bin/gst-register > /dev/null 2>&1
++if [ -f $install_bin/gst-register ]; then
++    $install_bin/gst-register > /dev/null 2>&1
++fi
+ 
+ 
+ #-------------------------------------------------------------------------------
+--- livesupport-1.0/products/scheduler/etc/Makefile.in	2005-09-21 15:33:18.000000000 +0200
++++ livesupport-1.0-gentoo/products/scheduler/etc/Makefile.in	2005-09-22 12:47:38.000000000 +0200
+@@ -375,10 +375,8 @@
+ 	${CP} ${SCHEDULER_EXE} ${USR_BIN_DIR}
+ 	${CP} ${ETC_DIR}/odbcinst_debian_template \
+ 	      ${ETC_DIR}/odbcinst_template ${USR_ETC_DIR}
+-	${CAT} ${ETC_DIR}/odbc_template | ${SED} -e ${REPLACE_SED_STRING} \
+-	       > ${USR_ETC_DIR}/odbc_template
+-	${CAT} ${ETC_DIR}/scheduler.xml.template | ${SED} -e ${REPLACE_SED_STRING} \
+-	       > ${USR_ETC_DIR}/scheduler.xml
++	${CP} ${ETC_DIR}/odbc_template ${USR_ETC_DIR}
++	${CP} ${ETC_DIR}/scheduler.xml.template ${USR_ETC_DIR}
+ 
+ create_database:
+ ifeq (@CREATE_LS_DATABASE@,yes)
+--- livesupport-1.0/modules/archiveServer/etc/Makefile.in	2005-09-21 15:33:18.000000000 +0200
++++ livesupport-1.0-gentoo/modules/archiveServer/etc/Makefile.in	2005-09-22 13:14:20.000000000 +0200
+@@ -165,8 +165,7 @@
+ 	${CP} ${VAR_DIR}/*.{php,template} ${DEST_DIR}
+ 	${CP} ${VAR_DIR}/install/*.php ${DEST_DIR}/install
+ 	${CP} ${VAR_DIR}/xmlrpc/*.php ${DEST_DIR}/xmlrpc
+-	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
+-	       > ${DEST_DIR}/conf.php
++	${CP} ${VAR_DIR}/conf.php.template ${DEST_DIR}
+ 
+ 	
+ #-------------------------------------------------------------------------------
+--- livesupport-1.0/modules/storageServer/etc/Makefile.in	2005-09-21 15:33:18.000000000 +0200
++++ livesupport-1.0-gentoo/modules/storageServer/etc/Makefile.in	2005-09-22 13:14:20.000000000 +0200
+@@ -183,8 +183,7 @@
+ 	      ${DEST_DIR}/install
+ 	${CP} ${VAR_DIR}/xmlrpc/*.php \
+ 	      ${DEST_DIR}/xmlrpc
+-	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
+-	       > ${DEST_DIR}/conf.php
++	${CP} ${VAR_DIR}/conf.php.template ${DEST_DIR}
+ 
+ 	chgrp ${APACHE_GROUP} ${DEST_DIR}/access
+ 	chgrp ${APACHE_GROUP} ${DEST_DIR}/stor

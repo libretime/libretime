@@ -1,0 +1,6 @@
+MD5 9dd6a3434f7eaef06fb2956937bbfe2c libodbc++-0.2.3-r2.ebuild 2335
+MD5 178bef12f773384d7586dd35c1ec0125 files/libodbc++-no-thread-dmaccess-mutex-fix.patch 498
+MD5 fe58a608d688d22afe285174f283a89e files/libodbc++-no-namespace-closing-colon.patch 4840
+MD5 398c2a40f5ea13cadbb9c297488ef43f files/libodbc++-0.2.3-to-cvs-20050404.patch 3249529
+MD5 0aab8e76fcf033af346511bb1fef5f90 files/libodbc++-dont-install-some-docs.patch 6037
+MD5 76859551271b481b467298625eca2fbf files/digest-libodbc++-0.2.3-r2 67

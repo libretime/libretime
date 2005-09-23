@@ -1,0 +1,32 @@
+--- gst-plugins-0.8.9/gst/switch/gstswitch.c	2005-04-14 18:26:47.000000000 +0200
++++ gst-plugins-0.8.9-livesupport/gst/switch/gstswitch.c	2005-06-18 11:26:19.000000000 +0200
+@@ -241,15 +241,23 @@
+       GstEvent *event = GST_EVENT (data);
+ 
+       GST_LOG_OBJECT (gstswitch,
+-          "handling event from active pad %p", switchpad->sinkpad);
++          "handling event of type %d from active pad %p",
++          GST_EVENT_TYPE(GST_EVENT(data)),
++          switchpad->sinkpad);
+       /* Handling event */
+       gst_pad_event_default (switchpad->sinkpad, event);
+     } else {
+-      /* Pushing active sinkpad data to srcpad */
+-      GST_LOG_OBJECT (gstswitch,
+-          "pushing data from active pad %p to %p",
+-          switchpad->sinkpad, gstswitch->srcpad);
+-      gst_pad_push (gstswitch->srcpad, data);
++      if (GST_PAD_IS_ACTIVE(GST_PAD_PEER(gstswitch->srcpad))) {
++        /* Pushing active sinkpad data to srcpad */
++        GST_LOG_OBJECT (gstswitch,
++            "pushing data from active pad %p to %p",
++            switchpad->sinkpad, gstswitch->srcpad);
++        gst_pad_push (gstswitch->srcpad, data);
++      } else {
++        /* the peer has become inactive, put us into EOS state */
++        GST_LOG_OBJECT(gstswitch, "peer pad inactivated, going to eos");
++        gst_element_set_eos(GST_ELEMENT(gstswitch));
++      }
+     }
+ 
+     /* Mark this data as forwarded so that it won't get unrefed on next poll */

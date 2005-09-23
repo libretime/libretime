@@ -1,0 +1,6 @@
+MD5 c98236a5a9e80d523bd9ae18b85d92c7 xmlrpc++-0.7.ebuild 1046
+MD5 9c03b31bd18ec67ca2d1a38ea5e0da59 files/digest-xmlrpc++-0.7 62
+MD5 30ffa4ae3a5736ec63cb3d72867211a2 files/xmlrpc++-automake.patch 7756
+MD5 1bfb17903af3f417349ffbb38db5abc0 files/incorrect_XmlRpcValue_struct_tm_conversion.patch 1207
+MD5 b5bdda7867960ddfb6530224a2e1dc88 files/uninitialised_XmlRpcSource_ssl_ssl.patch 423
+MD5 ec8a71135df6f24e75e41b0f8b27556b files/xmlrpc++-0.7-to-cvs-20040713.patch 79370

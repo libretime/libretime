@@ -1,0 +1,7 @@
+MD5 230cec8bdd27a33315b67c3eb5cd59f7 gst-plugins-0.8.10-r1.ebuild 2151
+MD5 14463cc56953050a6161f55a1abb9228 files/adder-query.patch 1754
+MD5 d05851db15053a9e5b1c114dfecabbf4 files/adder-duration-fix.patch 1102
+MD5 36f4a0bacb3d1f85c78525f4a1e46fe5 files/switch-fix.patch 1434
+MD5 9f833bb88c0c1d6b9c2b0bdf20f47e4e files/adder-caps-property.patch 9086
+MD5 e5a6b80e2dfc0bf36559f4663fb90e25 files/digest-gst-plugins-0.8.10-r1 72
+MD5 0fd59e0dd0c56f118ccc1a5309cb69b8 files/typefind-smil.patch 2783

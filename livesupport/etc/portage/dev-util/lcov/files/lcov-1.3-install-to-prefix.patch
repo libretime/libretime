@@ -1,0 +1,13 @@
+--- lcov-1.3/Makefile	2004-04-28 19:57:09.000000000 +0200
++++ lcov-1.3-livesupport/Makefile	2005-07-22 12:12:18.000000000 +0200
+@@ -15,8 +15,8 @@
+ RELEASE := 1
+ DATE    := $(shell date +%Y-%m-%d)
+ 
+-BIN_DIR := $(PREFIX)/usr/bin
+-MAN_DIR := $(PREFIX)/usr/share/man
++BIN_DIR := $(PREFIX)/bin
++MAN_DIR := $(PREFIX)/share/man
+ TMP_DIR := /tmp/lcov-tmp.$(shell echo $$$$)
+ FILES   := $(wildcard bin/*) $(wildcard man/*) README CHANGES Makefile \
+ 	   $(wildcard rpm/*)
