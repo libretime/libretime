@@ -139,7 +139,7 @@ DisplayPlaylistsMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT(result.size() == 2);
+    CPPUNIT_ASSERT(result.size() == 3);
     XmlRpc::XmlRpcValue     result0;
     Ptr<Playlist>::Ref      playlist;
 
