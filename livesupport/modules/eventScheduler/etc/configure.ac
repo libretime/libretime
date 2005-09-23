@@ -57,6 +57,8 @@ AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 
 export PKG_CONFIG_PATH
 
+export PATH=${prefix}/bin:${PATH}
+
 
 AX_BOOST_DATE_TIME()
 

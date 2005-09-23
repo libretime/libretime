@@ -83,10 +83,12 @@ BOOST_DATE_TIME_LIB = boost_date_time-gcc
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-# TODO: move ICU flag determination to configure script
-ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
+ICU_CFLAGS=@ICU_CFLAGS@
+ICU_CXXFLAGS=@ICU_CXXFLAGS@
+ICU_LIBS=@ICU_LIBS@
 
-TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
+TAGLIB_CFLAGS=@TAGLIB_CFLAGS@
+TAGLIB_LIBS=@TAGLIB_LIBS@
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR

@@ -113,13 +113,15 @@ GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
 
-CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
+CURL_CFLAGS=@CURL_CFLAGS@
+CURL_LIBS=@CURL_LIBS@
 
-# TODO: move ICU flag determination to configure script
-ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
+ICU_CFLAGS=@ICU_CFLAGS@
+ICU_CXXFLAGS=@ICU_CXXFLAGS@
+ICU_LIBS=@ICU_LIBS@
 
-TAGLIB_CFLAGS   =`${USR_DIR}/bin/taglib-config --cflags`
-TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
+TAGLIB_CFLAGS=@TAGLIB_CFLAGS@
+TAGLIB_LIBS=@TAGLIB_LIBS@
 
 MODULES_DIR = ${BASE_DIR}/../../modules
 

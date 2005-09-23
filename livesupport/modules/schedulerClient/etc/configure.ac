@@ -57,6 +57,8 @@ AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 
 export PKG_CONFIG_PATH
 
+export PATH=${prefix}/bin:${PATH}
+
 
 AX_BOOST_DATE_TIME()
 
@@ -69,6 +71,18 @@ fi
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
+
+AC_CHECK_TAGLIB(1.3.1)
+AC_SUBST(TAGLIB_CFLAGS)
+AC_SUBST(TAGLIB_LIBS)
+
+AC_CHECK_ICU(3.0)
+AC_SUBST(ICU_CFLAGS)
+AC_SUBST(ICU_CXXFLAGS)
+AC_SUBST(ICU_LIBS)
+
+AC_PATH_PROG(GENRB, genrb)
+AC_SUBST(GENRB)
 
 
 dnl-----------------------------------------------------------------------------

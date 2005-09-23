@@ -59,7 +59,7 @@ USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
 
-GENRB     = ${USR_BIN_DIR}/genrb
+GENRB     = @GENRB@
 GENRBOPTS = --destdir ${TMP_DIR} \
             --encoding utf-8 \
             --package-name ${PACKAGE_NAME} \
@@ -73,12 +73,12 @@ BOOST_DATE_TIME_LIB = boost_date_time-gcc
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-# TODO: move ICU flag determination to configure script
-ICU_CFLAGS=
-ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
+ICU_CFLAGS=@ICU_CFLAGS@
+ICU_CXXFLAGS=@ICU_CXXFLAGS@
+ICU_LIBS=@ICU_LIBS@
 
-TAGLIB_CFLAGS   =`${USR_DIR}/bin/taglib-config --cflags`
-TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
+TAGLIB_CFLAGS=@TAGLIB_CFLAGS@
+TAGLIB_LIBS=@TAGLIB_LIBS@
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
@@ -99,7 +99,6 @@ export LD_LIBRARY_PATH:=${LD_LIBRARY_PATH}:${USR_LIB_DIR}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
-                             ${ICU_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \

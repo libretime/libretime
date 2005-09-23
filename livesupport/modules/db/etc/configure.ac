@@ -57,6 +57,8 @@ AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 
 export PKG_CONFIG_PATH
 
+export PATH=${prefix}/bin:${PATH}
+
 
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)

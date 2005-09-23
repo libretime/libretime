@@ -58,10 +58,15 @@ AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 
 export PKG_CONFIG_PATH
 
+export PATH=${prefix}/bin:${PATH}
+
 
 PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
 AC_SUBST(GSTREAMER_CFLAGS)
 AC_SUBST(GSTREAMER_LIBS)
+
+AC_PATH_PROG(GST_REGISTER, gst-register-0.8)
+AC_SUBST(GST_REGISTER)
 
 
 dnl-----------------------------------------------------------------------------

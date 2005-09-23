@@ -90,3 +90,175 @@ AC_DEFUN([PKG_CHECK_MODULES], [
 
 
 
+dnl-----------------------------------------------------------------------------
+dnl Macro to check for taglib of sufficient version by looking at taglib-config
+dnl
+dnl usage:
+dnl AC_CHECK_TAGLIB(version, action-if, action-not)
+dnl
+dnl defines TAGLIB_LIBS, TAGLIB_CFLAGS, see taglib-config man page
+dnl-----------------------------------------------------------------------------
+AC_DEFUN([AC_CHECK_TAGLIB], [
+  succeeded=no
+
+  if test -z "$TAGLIB_CONFIG"; then
+    AC_PATH_PROG(TAGLIB_CONFIG, taglib-config, no)
+  fi
+
+  if test "$TAGLIB_CONFIG" = "no" ; then
+    echo "*** The taglib-config script could not be found. Make sure it is"
+    echo "*** in your path, and that taglib is properly installed."
+    echo "*** Or see http://developer.kde.org/~wheeler/taglib.html"
+  else
+    TAGLIB_VERSION=`$TAGLIB_CONFIG --version`
+    AC_MSG_CHECKING(for taglib >= $1)
+        VERSION_CHECK=`expr $TAGLIB_VERSION \>\= $1`
+        if test "$VERSION_CHECK" = "1" ; then
+            AC_MSG_RESULT(yes)
+            succeeded=yes
+
+            AC_MSG_CHECKING(TAGLIB_CFLAGS)
+            TAGLIB_CFLAGS=`$TAGLIB_CONFIG --cflags`
+            AC_MSG_RESULT($TAGLIB_CFLAGS)
+
+            AC_MSG_CHECKING(TAGLIB_LIBS)
+            TAGLIB_LIBS=`$TAGLIB_CONFIG --libs`
+            AC_MSG_RESULT($TAGLIB_LIBS)
+        else
+            TAGLIB_CFLAGS=""
+            TAGLIB_LIBS=""
+            ## If we have a custom action on failure, don't print errors, but 
+            ## do set a variable so people can do so.
+            ifelse([$3], ,echo "can't find taglib >= $1",)
+        fi
+
+        AC_SUBST(TAGLIB_CFLAGS)
+        AC_SUBST(TAGLIB_LIBS)
+  fi
+
+  if test $succeeded = yes; then
+     ifelse([$2], , :, [$2])
+  else
+     ifelse([$3], , AC_MSG_ERROR([Library requirements (taglib) not met.]), [$3])
+  fi
+])
+
+
+
+dnl-----------------------------------------------------------------------------
+dnl Macro to check for ICU of sufficient version by looking at icu-config
+dnl
+dnl usage:
+dnl AC_CHECK_ICU(version, action-if, action-not)
+dnl
+dnl defines ICU_LIBS, ICU_CFLAGS, ICU_CXXFLAGS, see icu-config man page
+dnl-----------------------------------------------------------------------------
+AC_DEFUN([AC_CHECK_ICU], [
+  succeeded=no
+
+  if test -z "$ICU_CONFIG"; then
+    AC_PATH_PROG(ICU_CONFIG, icu-config, no)
+  fi
+
+  if test "$ICU_CONFIG" = "no" ; then
+    echo "*** The icu-config script could not be found. Make sure it is"
+    echo "*** in your path, and that taglib is properly installed."
+    echo "*** Or see http://ibm.com/software/globalization/icu/"
+  else
+    ICU_VERSION=`$ICU_CONFIG --version`
+    AC_MSG_CHECKING(for ICU >= $1)
+        VERSION_CHECK=`expr $ICU_VERSION \>\= $1`
+        if test "$VERSION_CHECK" = "1" ; then
+            AC_MSG_RESULT(yes)
+            succeeded=yes
+
+            AC_MSG_CHECKING(ICU_CFLAGS)
+            ICU_CFLAGS=`$ICU_CONFIG --cflags`
+            AC_MSG_RESULT($ICU_CFLAGS)
+
+            AC_MSG_CHECKING(ICU_CXXFLAGS)
+            ICU_CXXFLAGS=`$ICU_CONFIG --cxxflags`
+            AC_MSG_RESULT($ICU_CXXFLAGS)
+
+            AC_MSG_CHECKING(ICU_LIBS)
+            ICU_LIBS=`$ICU_CONFIG --ldflags`
+            AC_MSG_RESULT($ICU_LIBS)
+        else
+            ICU_CFLAGS=""
+            ICU_CXXFLAGS=""
+            ICU_LIBS=""
+            ## If we have a custom action on failure, don't print errors, but 
+            ## do set a variable so people can do so.
+            ifelse([$3], ,echo "can't find ICU >= $1",)
+        fi
+
+        AC_SUBST(ICU_CFLAGS)
+        AC_SUBST(ICU_CXXFLAGS)
+        AC_SUBST(ICU_LIBS)
+  fi
+
+  if test $succeeded = yes; then
+     ifelse([$2], , :, [$2])
+  else
+     ifelse([$3], , AC_MSG_ERROR([Library requirements (ICU) not met.]), [$3])
+  fi
+])
+
+
+
+dnl-----------------------------------------------------------------------------
+dnl Macro to check for curl of sufficient version by looking at curl-config
+dnl
+dnl usage:
+dnl AC_CHECK_CURL(version, action-if, action-not)
+dnl
+dnl defines CURL_LIBS, CURL_CFLAGS, see curl-config man page
+dnl-----------------------------------------------------------------------------
+AC_DEFUN([AC_CHECK_CURL], [
+  succeeded=no
+
+  if test -z "$CURL_CONFIG"; then
+    AC_PATH_PROG(CURL_CONFIG, curl-config, no)
+  fi
+
+  if test "$CURL_CONFIG" = "no" ; then
+    echo "*** The curl-config script could not be found. Make sure it is"
+    echo "*** in your path, and that curl is properly installed."
+    echo "*** Or see http://curl.haxx.se/"
+  else
+    dnl curl-config --version returns "libcurl <version>", thus cut the number
+    CURL_VERSION=`$CURL_CONFIG --version | cut -d" " -f2`
+    AC_MSG_CHECKING(for curl >= $1)
+        VERSION_CHECK=`expr $CURL_VERSION \>\= $1`
+        if test "$VERSION_CHECK" = "1" ; then
+            AC_MSG_RESULT(yes)
+            succeeded=yes
+
+            AC_MSG_CHECKING(CURL_CFLAGS)
+            CURL_CFLAGS=`$CURL_CONFIG --cflags`
+            AC_MSG_RESULT($CURL_CFLAGS)
+
+            AC_MSG_CHECKING(CURL_LIBS)
+            CURL_LIBS=`$CURL_CONFIG --libs`
+            AC_MSG_RESULT($CURL_LIBS)
+        else
+            CURL_CFLAGS=""
+            CURL_LIBS=""
+            ## If we have a custom action on failure, don't print errors, but 
+            ## do set a variable so people can do so.
+            ifelse([$3], ,echo "can't find curl >= $1",)
+        fi
+
+        AC_SUBST(CURL_CFLAGS)
+        AC_SUBST(CURL_LIBS)
+  fi
+
+  if test $succeeded = yes; then
+     ifelse([$2], , :, [$2])
+  else
+     ifelse([$3], , AC_MSG_ERROR([Library requirements (curl) not met.]), [$3])
+  fi
+])
+
+
+

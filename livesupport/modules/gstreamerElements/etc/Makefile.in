@@ -74,7 +74,7 @@ VPATH    = ${SRC_DIR}
 
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
-GST_REGISTER=${USR_BIN_DIR}/gst-register
+GST_REGISTER=@GST_REGISTER@
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
