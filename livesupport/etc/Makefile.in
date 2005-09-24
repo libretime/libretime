@@ -77,7 +77,7 @@ STUDIO_AUDIO_OUT  		= "@STUDIO_AUDIO_OUT@"
 STUDIO_AUDIO_CUE  		= "@STUDIO_AUDIO_CUE@"
 
 
-export LD_LIBRARY_PATH=${prefix}/lib
+export LD_LIBRARY_PATH:=${prefix}/lib:${LD_LIBRARY_PATH}
 export PKG_CONFIG_PATH=${prefix}/lib/pkgconfig
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
