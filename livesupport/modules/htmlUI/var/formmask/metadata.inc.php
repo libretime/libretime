@@ -237,7 +237,7 @@ $mask = array(
                 'type'      => 'text',
                 'label'     => 'Sample rate',
                 'rule'      => 'numeric',
-                
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => array('Samplerate')
             ),
             array(
