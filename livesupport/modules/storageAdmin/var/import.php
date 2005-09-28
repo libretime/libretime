@@ -97,55 +97,64 @@ if(is_null($r)){
 }
 $parid = $r;
 
+function addMdata($key, $val){
+    global $mdata, $titleHaveSet;
+    if(!is_null($val)){
+        $mdata[$key] = addslashes($val);
+        if($key == 'dc:title') $titleHaveSet = TRUE;
+    }
+}
+
 $stdin = fopen('php://stdin', 'r');
 while($filename = fgets($stdin, 2048)){
     $filename = rtrim($filename);
     echo "$filename:   ";
     set_time_limit(30);
-    $ia = GetAllFileInfo("$filename", 'mp3');
-    if(PEAR::isError($ia)){ _err($ia, $filename); continue; }
-    if(!$ia['fileformat']){ echo "???\n"; continue; }
-    if(!$ia['bitrate']){ echo "not audio?\n"; continue; }
+    $infoFromFile = GetAllFileInfo("$filename", 'mp3');
+    if(PEAR::isError($infoFromFile)){ _err($infoFromFile, $filename); continue; }
+    if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
+    if(!$infoFromFile['bitrate']){ echo "not audio?\n"; continue; }
     
     $mdata = array();
+    $titleHaveSet = FALSE;
     foreach($flds as $k1=>$fn1){
         if(is_null($fn1)) continue;
-        list($fn, $v)  = array($fn1, $ia[$k1]);
+        list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
         if(is_array($fn1)){
             $k0 = $k1;
-            if($k0=='tags') $k1=$ia['tags'][0];
-            list($fn, $v)  = array($fn1, $ia[$k1]);
+            if($k0=='tags') $k1=$infoFromFile['tags'][0];
+            list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
             foreach($fn1 as $k2=>$fn2){
                 if(is_null($fn2)) continue;
-                if(!isset($ia[$k1][$k2])) continue;
+                if(!isset($infoFromFile[$k1][$k2])) continue;
                 switch($k0){
                 case"tags":
-                    list($fn, $v)  = array($fn2, $ia[$k1][$k2]['data']);
-                    $enc = $ia[$k1][$k2]['encoding'];
+                    list($fn, $v)  = array($fn2, $infoFromFile[$k1][$k2]['data']);
+                    $enc = $infoFromFile[$k1][$k2]['encoding'];
                     if($enc != 'UTF-8' && $enc != 'ISO-8859-1'){
                         echo " Warning: wrong encoding '$enc' in $fn2.\n";
                     }
                     break;
                 case"comments":
-                    list($fn, $v)  = array($fn2, $ia[$k1][$k2][0]);
+                    list($fn, $v)  = array($fn2, $infoFromFile[$k1][$k2][0]);
                     break;
                 default;
-                    list($fn, $v)  = array($fn2, $ia[$k1][$k2]);
+                    list($fn, $v)  = array($fn2, $infoFromFile[$k1][$k2]);
                 }
-#                if(is_array($fn)) var_dump($fn);
-                if(!is_null($v)) $mdata[$fn] = addslashes($v);
+                addMdata($fn, $v);
             }
         }else{
             switch($fn){
             case"dcterms:extent":
-                list($fn, $v)  = array($fn1, round($ia[$k1], 6));
+                list($fn, $v)  = array($fn1, round($infoFromFile[$k1], 6));
                 break;
             default:
-                list($fn, $v)  = array($fn1, $ia[$k1]);
+                list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
             }
-            if(!is_null($v)) $mdata[$fn] = addslashes($v);
+            addMdata($fn, $v);
         }
     }
+    if(!$titleHaveSet) addMdata('dc:title', basename($filename));
 
     if(!$testonly){
         $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
@@ -156,7 +165,7 @@ while($filename = fgets($stdin, 2048)){
         if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
     }else{
         var_dump($mdata); echo"======================= ";
-#        var_dump($ia); echo"======================= ";
+#        var_dump($infoFromFile); echo"======================= ";
     }
 
     echo "OK\n";
