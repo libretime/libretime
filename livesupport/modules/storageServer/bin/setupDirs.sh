@@ -33,7 +33,15 @@
 WWW_ROOT=`cd var/install; php -q getWwwRoot.php` || exit $?
 echo "#StorageServer step 1:"
 echo "# root URL: $WWW_ROOT"
-PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || exit $?
+PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
+  {
+    errno=$?
+    if [ $errno -eq 22 ]
+    then
+        echo "root URL is not accessible - configure HTTP entry point, please"
+    fi
+    exit $errno
+  }
 echo "# webspace mapping test:"
 echo "#  mod_php : $PHP_PWD"
 INSTALL_DIR="$PWD/var/install"
@@ -41,7 +49,7 @@ echo "#  install : $INSTALL_DIR"
 if [ $PHP_PWD == $INSTALL_DIR ]; then
  echo "# mapping OK"
 else
- echo "# !!! probably problem in webspace mapping !!!"
+ echo "# WARNING: probably problem in webspace mapping !!!"
 fi
 
 HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
