@@ -31,7 +31,7 @@
 # (based on the version in enlightenment's cvs)
 #-------------------------------------------------------------------------------
 
-package="Alib"
+package="htmlUI"
 
 # assume we're in $basedir/bin
 reldir=`dirname $0`/..
