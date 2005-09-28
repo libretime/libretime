@@ -129,6 +129,7 @@ install: configure_apache
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/assets
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins
@@ -159,6 +160,8 @@ install: configure_apache
 	${CP} ${VAR_DIR}/html/img/*.png ${VAR_DIR}/html/img/*.gif \
 	      ${VAR_DIR}/html/img/*.swf ${VAR_DIR}/html/img/*.image \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	${CP} ${VAR_DIR}/html/assets/*.js \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/assets
 	${CP} ${VAR_DIR}/html/css_img/*.png \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
 	${CP} ${VAR_DIR}/formmask/*.php \
