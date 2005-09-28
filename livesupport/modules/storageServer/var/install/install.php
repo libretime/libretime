@@ -57,14 +57,17 @@ if(!function_exists('pg_connect')){
   exit(2);
 }
 
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){
+    echo $dbc->getMessage()."\n";
+    echo $dbc->getUserInfo()."\n";
     echo "Database connection problem.\n";
     echo "Check if database '{$config['dsn']['database']}' exists".
         " with corresponding permissions.\n";
-    echo "Database access is defined by 'dsn' values in var/conf.php.\n";
-    echo $dbc->getMessage()."\n";
+    echo "Database access is defined by 'dsn' values in var/conf.php ".
+        "(in storageServer directory).\n";
     exit(1);
 }
 
@@ -80,7 +83,7 @@ $pr =& new Prefs($gb);
 echo "#StorageServer install:\n";
 echo "# Install ...\n";
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
+PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s\n");
 #$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $r = $gb->install();
 if(PEAR::isError($r)){ echo $r->getMessage()."\n"; echo $r->getUserInfo()."\n"; exit(1); }
