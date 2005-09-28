@@ -1,295 +1,149 @@
-// ----------------------------------------------------------------------------
-// (c) Copyright, DTLink, LLC 1997-2005
-//     http://www.dtlink.com
-//
-// DragList - Drag and Drop Ordered Lists
-//
-// Javascript Support file for formVista <draglist> fvml tag.
-//
-// For more information please see:
-//
-//    http://www.formvista.com/otherprojects/draglist.html
-//
-// For questions or comments please contact us at:
-//
-//     http://www.formvista.com/contact.html
-//
-// LICENSE: This file is governed by the new BSD license. For more information
-// please see the LICENSE.txt file accompanying this package. 
-//
-// REVISION HISTORY:
-//
-// 2004-11-12 YmL:
-//	.	initial revision.
-//
-// 2005-05-28 YmL:
-//	.	pulled out of formVista, relicensed and packaged as a standalone implementation.
-//
-// 2005-06-02 mtmosier:
-//	.	added horizontal dragging support.
-//
-// ------------------------
+/**************************************************
+ * dom-drag.js
+ * 09.25.2001
+ * www.youngpup.net
+ **************************************************
+ * 10.28.2001 - fixed minor bug where events
+ * sometimes fired off the handle, not the root.
+ **************************************************
+ * 05.30.2005 - added a workaround for firefox
+ * activating links when finished dragging.
+ * mmosier@astrolabe.com
+ **************************************************/
 
-/**
-* constructor for dragList class
-*/
+var Drag = {
 
-function fv_dragList( name )
+	obj : null,
+
+	init : function(o, oRoot, minX, maxX, minY, maxY, bSwapHorzRef, bSwapVertRef, fXMapper, fYMapper)
 	{
+		o.onmousedown	= Drag.start;
 
-	// name of this dragList. Must match the id of the root DIV tag.
+		o.hmode			= bSwapHorzRef ? false : true ;
+		o.vmode			= bSwapVertRef ? false : true ;
 
-	this.dragListRootId = name;
+		o.root = oRoot && oRoot != null ? oRoot : o ;
 
-	// array of item offsets
+		if (o.hmode  && isNaN(parseInt(o.root.style.left  ))) o.root.style.left   = "0px";
+		if (o.vmode  && isNaN(parseInt(o.root.style.top   ))) o.root.style.top    = "0px";
+		if (!o.hmode && isNaN(parseInt(o.root.style.right ))) o.root.style.right  = "0px";
+		if (!o.vmode && isNaN(parseInt(o.root.style.bottom))) o.root.style.bottom = "0px";
 
-	this.offsetsX = new Array();
-	this.offsetsY = new Array();
+		o.minX	= typeof minX != 'undefined' ? minX : null;
+		o.minY	= typeof minY != 'undefined' ? minY : null;
+		o.maxX	= typeof maxX != 'undefined' ? maxX : null;
+		o.maxY	= typeof maxY != 'undefined' ? maxY : null;
 
-	}
+		o.xMapper = fXMapper ? fXMapper : null;
+		o.yMapper = fYMapper ? fYMapper : null;
 
-// ----------------------------------------------
+		o.root.onDragStart	= new Function();
+		o.root.onDragEnd	= new Function();
+		o.root.onDrag		= new Function();
+	},
 
-/**
-* setup the draglist prior to use
-*
-* @param string orientation defaults to vert. if set to "horz" renders horizontally.
-* @param string itemTagName. if null defaults to "div". Can be "span".
-*/
-
-fv_dragList.prototype.setup = function( orientation, itemTagName )
+	start : function(e)
 	{
+		var o = Drag.obj = this;
+		e = Drag.fixE(e);
+		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
+		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
+		o.root.onDragStart(x, y);
 
-	var horizontal;
+		o.startX		= x;
+		o.startY		= y;
+		o.lastMouseX	= e.clientX;
+		o.lastMouseY	= e.clientY;
 
-	if ( orientation == "horz" )
-		horizontal = true;
-	else
-		horizontal = false;
-
-	this.listRoot = document.getElementById( this.dragListRootId );
-	this.listItems = this.getListItems( itemTagName );
-
-	for (var i = 0; i < this.listItems.length; i++) 
-		{
-
-		if ( this.listItems[i] == undefined )
-			continue;
-
-		if ( horizontal )
-			{
-			Drag.init(this.listItems[i], null, null, null, 0, 0);
-			}
-		else
-			{
-			Drag.init(this.listItems[i], null, 0, 0, null, null);
-			}
-
-		// ---------------------------------------------------
-		// on drag method
-
-		this.listItems[i].onDrag = function( x, y, thisElem ) 
-			{
-
-			x = thisElem.offsetLeft;
-			y = thisElem.offsetTop;
-
-			// this is a callback from the dom-drag code. From within this
-			// function "this" does not refer to the fv_draglist function.
-
-			draglist = getDragList( thisElem );
-
-			draglist.recalcOffsets( itemTagName );
-
-			var pos = draglist.getCurrentOffset( thisElem, itemTagName );
-
-			//var listItems = this.getListItems( itemTagName );
-
-			// if bottom edge is below top of lower item.
-
-			var testMoveUp;
-			var testMoveDown;
-			if ( horizontal )
-				{
-				testMoveUp = (x + draglist.getDivWidth(thisElem) > draglist.offsetsX[pos + 1] + draglist.getDivWidth( draglist.listItems[pos + 1] ));
-				testMoveDown = x < draglist.offsetsX[pos - 1];
-				}
-			else
-				{
-				testMoveUp = (y + draglist.getDivHeight(thisElem) > draglist.offsetsY[pos + 1] + draglist.getDivHeight( draglist.listItems[pos + 1] ));
-				testMoveDown = y < draglist.offsetsY[pos - 1];
-				}
-
-			if (( pos != draglist.listItems.length - 1) && testMoveUp )
-				{ 
-				draglist.listRoot.removeChild(thisElem);
-
-				if ( pos + 1 == draglist.listItems.length )
-					{
-					draglist.listRoot.appendChild( thisElem );
-					}
-				else
-					{
-					draglist.listRoot.insertBefore(thisElem, draglist.listItems[pos+1]);
-					}
-
-				thisElem.style["top"] = "0px";
-				thisElem.style["left"] = "0px";
-				}
-			else if ( pos != 0 && testMoveDown ) 
-				{ 
-				draglist.listRoot.removeChild(thisElem);
-				draglist.listRoot.insertBefore(thisElem, draglist.listItems[pos-1]);
-				thisElem.style["top"] = "0px";
-				thisElem.style["left"] = "0px";
-				}
-
-			};
-
-		this.listItems[i].onDragEnd = function(x,y,thisElem) 
-			{
-			thisElem.style["top"] = "0px";
-			thisElem.style["left"] = "0px";
-			}
-
-		}	// end of for loop.
-
-	this.recalcOffsets( itemTagName );
-
-	}	// end of setup.
-
-// ----------------------------------------------
-
-
-/**
-* update the order value fields and submit the form.
-*/
-
-fv_dragList.prototype.do_submit = function( formName, dragListRootId )
-	{
-
-	var listOrderItems = this.listRoot.getElementsByTagName("input");
-
-	for (var i = 0; i < listOrderItems.length; i++) 
-		{
-		listOrderItems[i].value = i;
+		if (o.hmode) {
+			if (o.minX != null)	o.minMouseX	= e.clientX - x + o.minX;
+			if (o.maxX != null)	o.maxMouseX	= o.minMouseX + o.maxX - o.minX;
+		} else {
+			if (o.minX != null) o.maxMouseX = -o.minX + e.clientX + x;
+			if (o.maxX != null) o.minMouseX = -o.maxX + e.clientX + x;
 		}
 
-	expr = "document." + formName + ".submit()";
-
-	eval( expr );
-	}
-
-// ----------------------------------------------
-// "Private" methods.
-// ----------------------------------------------
-
-fv_dragList.prototype.recalcOffsets = function( itemTagName ) 
-	{
-	var listItems = this.getListItems( itemTagName );
-
-	for (var i = 0; i < listItems.length; i++) 
-		{
-		this.offsetsX[i] = listItems[i].offsetLeft;
-		this.offsetsY[i] = listItems[i].offsetTop;
+		if (o.vmode) {
+			if (o.minY != null)	o.minMouseY	= e.clientY - y + o.minY;
+			if (o.maxY != null)	o.maxMouseY	= o.minMouseY + o.maxY - o.minY;
+		} else {
+			if (o.minY != null) o.maxMouseY = -o.minY + e.clientY + y;
+			if (o.maxY != null) o.minMouseY = -o.maxY + e.clientY + y;
 		}
-	}
 
-fv_dragList.prototype.getCurrentOffset = function(elem, itemTagName) 
-	{ 
-	var listItems = this.getListItems( itemTagName );
+		document.onmousemove	= Drag.drag;
+		document.onmouseup		= Drag.end;
 
-	for (var i = 0; i < listItems.length; i++) 
-		{
-		if (listItems[i] == elem) 
-			{ 
-			return i;
+		if (o.linkDisabled) {
+			var hrefs = o.root.getElementsByTagName("a");
+			for (var i = 0; i < hrefs.length; i++) {
+				hrefs[i].onclick = hrefs[i].prevOnclick;
+				hrefs[i].prevOnclick = null;
+			}
+			o.linkDisabled = false;
+		}
+
+		return false;
+	},
+
+	drag : function(e)
+	{
+		e = Drag.fixE(e);
+		var o = Drag.obj;
+
+		var ey	= e.clientY;
+		var ex	= e.clientX;
+		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
+		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
+		var nx, ny;
+
+		if (o.minX != null) ex = o.hmode ? Math.max(ex, o.minMouseX) : Math.min(ex, o.maxMouseX);
+		if (o.maxX != null) ex = o.hmode ? Math.min(ex, o.maxMouseX) : Math.max(ex, o.minMouseX);
+		if (o.minY != null) ey = o.vmode ? Math.max(ey, o.minMouseY) : Math.min(ey, o.maxMouseY);
+		if (o.maxY != null) ey = o.vmode ? Math.min(ey, o.maxMouseY) : Math.max(ey, o.minMouseY);
+
+		nx = x + ((ex - o.lastMouseX) * (o.hmode ? 1 : -1));
+		ny = y + ((ey - o.lastMouseY) * (o.vmode ? 1 : -1));
+
+		if (o.xMapper)		nx = o.xMapper(y)
+		else if (o.yMapper)	ny = o.yMapper(x)
+
+		Drag.obj.root.style[o.hmode ? "left" : "right"] = nx + "px";
+		Drag.obj.root.style[o.vmode ? "top" : "bottom"] = ny + "px";
+		Drag.obj.lastMouseX	= ex;
+		Drag.obj.lastMouseY	= ey;
+
+		var threshold = 4;
+		if (!o.linkDisabled) {
+			if (Math.abs(nx - o.startX) > threshold || Math.abs(ny - o.startY) > threshold) {
+				var hrefs = o.root.getElementsByTagName("a");
+				for (var i = 0; i < hrefs.length; i++) {
+					hrefs[i].prevOnclick = hrefs[i].onclick;
+					hrefs[i].onclick = function() { return false; };
+				}
+				o.linkDisabled = true;
 			}
 		}
-	}
 
-fv_dragList.prototype.getDivWidth = function(elem) 								  
+		Drag.obj.root.onDrag(nx, ny, Drag.obj.root);
+		return false;
+	},
+
+	end : function()
 	{
+		document.onmousemove = null;
+		document.onmouseup   = null;
+		Drag.obj.root.onDragEnd(	parseInt(Drag.obj.root.style[Drag.obj.hmode ? "left" : "right"]), 
+									parseInt(Drag.obj.root.style[Drag.obj.vmode
+                                    ? "top" : "bottom"]), Drag.obj.root);
+		Drag.obj = null;
+	},
 
-	if (( elem == undefined) || ( elem.offsetWidth == undefined ))
-		return( 0 );
-
-	value = elem.offsetWidth;
-	if (isNaN(value))
-		{
-		value = 0;
-		}
-
-	return( value );
-	}
-
-fv_dragList.prototype.getDivHeight = function(elem) 
+	fixE : function(e)
 	{
-
-	if (( elem == undefined) || ( elem.offsetHeight == undefined ))
-		return( 0 );
-
-	value = elem.offsetHeight;
-	if (isNaN(value))
-		{
-		value = 25;
-		}
-
-	return( value );
+		if (typeof e == 'undefined') e = window.event;
+		if (typeof e.layerX == 'undefined') e.layerX = e.offsetX;
+		if (typeof e.layerY == 'undefined') e.layerY = e.offsetY;
+		return e;
 	}
-
-/**
-* return list of draggable items
-*/
-
-fv_dragList.prototype.getListItems = function( itemTagName )
-	{
-	if ( itemTagName == undefined )
-		{
-		itemTagName = "div";
-		}
-
-	var listItems = this.listRoot.getElementsByTagName( itemTagName );
-
-	return( listItems );
-	}
-
-// end of draglist class definition.
-
-// -------------------------------------
-
-/**
-* add a new dragList to the list of draglists on this page
-*
-* This implementatoin supports multiple managed draglists on
-* a single page. The index is contained in a global dragListIndex
-* array that must be declared in the page.
-*/
-
-function addDragList( draglist )
-	{
-	dragListIndex[ draglist.dragListRootId ] = draglist;
-	}
-
-// -------------------------------------------------------
-
-/**
-* given a draggable div element, return the draglist it belongs to
-*
-* @see fv_draglist.prototype.setup
-* @todo this should probably be a method inside the draglist class.
-*/
-
-function getDragList( elem )
-	{
-
-	// given a list item return the drag list it belongs to.
-
-	var draglistContainer = elem.parentNode;
-
-	var draglist = dragListIndex[ draglistContainer.id ];
-
-	return( draglist );
-	}
-
-// END
+};
