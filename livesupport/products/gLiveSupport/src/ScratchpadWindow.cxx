@@ -53,6 +53,20 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/*
+ *  The modifier keys we check against in onKeyPressed().
+ *  The following modifiers are omitted, hence ignored: 
+ *  GDK_LOCK_MASK (caps lock),
+ *  GDK_MOD2_MASK (don't know what; always on on my computer),
+ *  GDK_MOD3_MASK (don't know what; always off on my computer),
+ *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+ */
+static const guint  MODIFIERS_CHECKED   = GDK_SHIFT_MASK 
+                                        | GDK_CONTROL_MASK
+                                        | GDK_MOD1_MASK     // Alt
+                                        | GDK_MOD4_MASK     // Windows key
+                                        | GDK_MOD5_MASK;    // Alt-gr
+
 
 /* ===============================================  local function prototypes */
 
@@ -121,6 +135,10 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                             &ScratchpadWindow::onEntryClicked));
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onDoubleClick));
+
+    // register the signal handler for keyboard key presses
+    treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
+                                            &ScratchpadWindow::onKeyPressed));
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
@@ -389,12 +407,36 @@ ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Select the row which contains the playable specified.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: selectRow(Ptr<Playable>::Ref    playable)   throw ()
+{
+    Gtk::TreeModel::const_iterator  iter;
+
+    for (iter = treeModel->children().begin(); 
+            iter != treeModel->children().end(); ++iter) {
+        
+        Gtk::TreeRow        row = *iter;
+        Ptr<Playable>::Ref  currentPlayable = row[modelColumns.playableColumn];
+        
+        if (*playable->getId() == *currentPlayable->getId()) {
+            Glib::RefPtr<Gtk::TreeView::Selection> 
+                            selection = treeView->get_selection();
+            selection->select(iter);
+            return;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Event handler for the Up menu item selected from the entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onUpItem(void)                              throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<Playable>::Ref  playable  = currentRow[modelColumns.playableColumn];
 
     Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
     GLiveSupport::PlayableList::iterator    it;
@@ -421,6 +463,8 @@ ScratchpadWindow :: onUpItem(void)                              throw ()
 
         it++;
     }
+    
+    selectRow(playable);
 }
 
 
@@ -460,6 +504,8 @@ ScratchpadWindow :: onDownItem(void)                            throw ()
 
         it++;
     }
+
+    selectRow(playable);
 }
 
 
@@ -587,6 +633,61 @@ ScratchpadWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
     if (iter) {
         currentRow = *iter;
         onAddToLiveMode();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a key pressed.
+ *----------------------------------------------------------------------------*/
+bool
+ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
+{
+    if (event->type == GDK_KEY_PRESS) {
+        if ((event->keyval == GDK_Up
+                || event->keyval == GDK_KP_Up)
+                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+            if (isSelectionSingle()) {
+                onUpItem();
+                return true;
+            }
+            
+        } else if ((event->keyval == GDK_Down 
+                || event->keyval == GDK_KP_Down)
+                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+            if (isSelectionSingle()) {
+                onDownItem();
+                return true;
+            }
+            
+        } else if (event->keyval == GDK_Delete
+                || event->keyval == GDK_KP_Delete) {
+            onRemoveItemButtonClicked();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check whether exactly one row is selected.
+ *----------------------------------------------------------------------------*/
+bool
+ScratchpadWindow :: isSelectionSingle(void)                     throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                    selection       = treeView->get_selection();
+    std::vector<Gtk::TreePath> 
+                    selectedRows    = selection->get_selected_rows();
+
+    if (selectedRows.size() == 1) {
+        Gtk::TreeIter   iter = treeModel->get_iter(selectedRows.at(0));
+        currentRow = *iter;
+        return true;
+    } else {
+        return false;
     }
 }
 

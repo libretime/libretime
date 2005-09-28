@@ -164,7 +164,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  @param event the button event recieved
          */
         void
-        onEntryClicked(GdkEventButton     * event)              throw ();
+        onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
          *  Signal handler for the user double-clicking, or pressing Enter
@@ -176,6 +176,28 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         onDoubleClick(const Gtk::TreeModel::Path &      path,
                       const Gtk::TreeViewColumn *       column)
                                                                 throw ();
+
+        /**
+         *  Signal handler for a key pressed at one of the entries.
+         *  The keys handled are:
+         *  <ul>
+         *      <li>Alt-Up   : move item up</li>
+         *      <li>Alt-Down : move item down</li>
+         *      <li>Delete   : remove item</li>
+         *  </ul>
+         *
+         *  Technical note: the symbolic key names are found in 
+         *  <code>/usr/include/gtk-2.0/gdk/gdkkeysyms.h</code>,
+         *  and the symbolic modifier names are found in
+         *  <code>/usr/include/gtk-2.0/gdk/gdktypes.h</code>.
+         *
+         *  TODO: make keys customizable from a config file?
+         *
+         *  @param  event the button event recieved
+         *  @return true if the key press was fully handled, false if not
+         */
+        bool
+        onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
          *  Signal handler for the "rows reordered" event.

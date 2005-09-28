@@ -79,6 +79,26 @@ class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
 {
     private:
+        /**
+         *  Check whether exactly one row is selected, and if so, set
+         *  the currentRow variable to point to it.
+         *
+         *  This is an auxilliary function used by onKeyPressed().
+         *
+         *  @return true if a single row is selected, false if not.
+         */
+        bool
+        isSelectionSingle(void)                                 throw ();
+
+        /**
+         *  Select the (first) row which contains the playable specified.
+         *  If no such row is found, then it does nothing.
+         *
+         *  @param playable     the playable to be selected.
+         */
+        void
+        selectRow(Ptr<Playable>::Ref    playable)               throw ();
+
 
     protected:
 
@@ -233,6 +253,28 @@ class ScratchpadWindow : public WhiteWindow,
         onDoubleClick(const Gtk::TreeModel::Path &      path,
                       const Gtk::TreeViewColumn *       column)
                                                                 throw ();
+
+        /**
+         *  Signal handler for a key pressed at one of the entries.
+         *  The keys handled are:
+         *  <ul>
+         *      <li>Alt-Up   : move item up</li>
+         *      <li>Alt-Down : move item down</li>
+         *      <li>Delete   : remove item</li>
+         *  </ul>
+         *
+         *  Technical note: the symbolic key names are found in 
+         *  <code>/usr/include/gtk-2.0/gdk/gdkkeysyms.h</code>,
+         *  and the symbolic modifier names are found in
+         *  <code>/usr/include/gtk-2.0/gdk/gdktypes.h</code>.
+         *
+         *  TODO: make keys customizable from a config file?
+         *
+         *  @param  event the button event recieved
+         *  @return true if the key press was fully handled, false if not
+         */
+        bool
+        onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
          *  Signal handler for the "up" menu item selected from

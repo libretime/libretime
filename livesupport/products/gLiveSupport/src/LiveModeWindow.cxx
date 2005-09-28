@@ -53,6 +53,20 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/*
+ *  The modifier keys we check against in onKeyPressed().
+ *  The following modifiers are omitted, hence ignored: 
+ *  GDK_LOCK_MASK (caps lock),
+ *  GDK_MOD2_MASK (don't know what; always on on my computer),
+ *  GDK_MOD3_MASK (don't know what; always off on my computer),
+ *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+ */
+static const guint  MODIFIERS_CHECKED   = GDK_SHIFT_MASK 
+                                        | GDK_CONTROL_MASK
+                                        | GDK_MOD1_MASK     // Alt
+                                        | GDK_MOD4_MASK     // Windows key
+                                        | GDK_MOD5_MASK;    // Alt-gr
+
 
 /* ===============================================  local function prototypes */
 
@@ -106,6 +120,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                             &LiveModeWindow::onEntryClicked));
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &LiveModeWindow::onDoubleClick));
+    
+    // register the signal handler for keyboard key presses
+    treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
+                                            &LiveModeWindow::onKeyPressed));
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
@@ -284,7 +302,7 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
  *  Event handler for an entry being clicked in the list.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
+LiveModeWindow :: onEntryClicked(GdkEventButton *   event)          throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
@@ -321,5 +339,41 @@ LiveModeWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                                                                     throw ()
 {
     onOutputPlay();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a key pressed.
+ *----------------------------------------------------------------------------*/
+bool
+LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
+{
+    if (event->type == GDK_KEY_PRESS) {
+        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                      treeView->get_selection();
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        
+        if (iter) {
+            if ((event->keyval == GDK_Up
+                    || event->keyval == GDK_KP_Up)
+                    && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+                treeView->onUpMenuOption();
+                return true;
+                
+            } else if ((event->keyval == GDK_Down 
+                    || event->keyval == GDK_KP_Down)
+                    && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+                treeView->onDownMenuOption();
+                return true;
+                
+            } else if (event->keyval == GDK_Delete
+                    || event->keyval == GDK_KP_Delete) {
+                treeView->onRemoveMenuOption();
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
