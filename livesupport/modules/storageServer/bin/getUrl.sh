@@ -34,7 +34,7 @@ URL=$1
 RES=`curl -sf ${URL}` || \
  {
   ERN=$?;
-  if [ $ERN == 22 ] ; then
+  if [ $ERN -eq 22 ] ; then
    echo "ERROR: curl: 22 - wrong URL ($URL)";
   else
    echo "ERROR: $ERN - unknown";
