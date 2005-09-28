@@ -327,6 +327,15 @@ ln -s $modules_dir $htmldir/livesupport
 
 
 #-------------------------------------------------------------------------------
+#  Setup storageServer
+#-------------------------------------------------------------------------------
+echo "Setting up storageServer..."
+
+make -C $modules_dir/storageServer storage || exit 1
+make -C $modules_dir/archiveServer storage || exit 1
+
+
+#-------------------------------------------------------------------------------
 #  Setup directory permissions
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
