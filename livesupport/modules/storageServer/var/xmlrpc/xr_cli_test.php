@@ -51,6 +51,7 @@ $client = new XML_RPC_Client($url['path'], $url['host']);
 $method = array_shift($pars);
 
 if($verbose){
+    $client->debug = 1;
     echo "serverPath: $serverPath\n";
     echo "host: {$url['host']}, path: {$url['path']}\n";
     echo "method: $method\n";
@@ -105,7 +106,9 @@ $infos = array(
         'p'=>array('sessid', 'gunid', 'metadata'), 'r'=>'status'),
     "searchMetadata"    => array('m'=>"locstor.searchMetadata", 'p'=>NULL),
     "browseCategory"    => array('m'=>"locstor.browseCategory", 'p'=>NULL),
-    "resetStorage"  => array('m'=>"locstor.resetStorage", 'p'=>array()),
+    "resetStorage"  => array('m'=>"locstor.resetStorage",
+        'p'=>array()),
+#        'p'=>array('loadSampleData', 'filesOnly')),
     "storeWebstream"    => array('m'=>"locstor.storeWebstream",
         'p'=>array('sessid', 'gunid', 'metadata', 'fname', 'url'),
         'r'=>array('gunid')
@@ -184,6 +187,12 @@ case"browseCategory":
         ),
     );
     break;
+case"resetStorage":
+    $parr = array(
+        'loadSampleData'=>(boolean)$pars[0],
+        'filesOnly'=>(boolean)$pars[1],
+    );
+    break;
 default:
     $pinfo = $infos[$method]['p'];
     if(is_null($pinfo)){
@@ -215,6 +224,7 @@ if($verbose){
 $res = $client->send($msg);
 if($res->faultCode() > 0) {
     echo "xr_cli_test.php: ".$res->faultString()." ".$res->faultCode()."\n";
+#    echo var_export($res);
     exit(1);
 }
 

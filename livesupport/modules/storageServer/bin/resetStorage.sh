@@ -39,7 +39,7 @@ echo "# storageServer root URL: $WWW_ROOT"
 
 cd $reldir/var/xmlrpc
 php -q xr_cli_test.php -s $WWW_ROOT/xmlrpc/xrLocStor.php \
- resetStorage || exit $?
+ resetStorage 1 0 || exit $?
 
 echo "# resetStorage: OK"
 exit 0

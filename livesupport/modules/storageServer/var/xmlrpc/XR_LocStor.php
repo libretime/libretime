@@ -1870,7 +1870,15 @@ class XR_LocStor extends LocStor{
      *
      *  The XML-RPC name of this method is "locstor.resetStorage".
      *
-     *  The input parameters are an empty XML-RPC struct.
+     *  The input parameters are an empty XML-RPC struct,
+     *  or struct with the following <b>optional</b> fields:
+     *  <ul>
+     *      <li> loadSampleData : boolean - flag for allow sample data loading
+     *      </li>
+     *      <li> filesOnly : boolean - flag for files cleanup only,
+     *            no sampleData insert
+     *      </li>
+     *  </ul>
      *
      *  On success, returns a XML-RPC struct with following
      *  fields:
@@ -1899,7 +1907,10 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->resetStorage();
+        $res = $this->resetStorage(
+            isset($r['loadSampleData']) ? $r['loadSampleData'] : TRUE,
+            isset($r['filesOnly']) ? $r['filesOnly'] : FALSE
+        );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()

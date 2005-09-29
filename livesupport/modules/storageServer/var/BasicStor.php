@@ -1278,23 +1278,26 @@ class BasicStor extends Alib{
     /**
      *  Reset storageServer for debugging.
      *
-     *  @param loadSampleData boolean - allows deny sample data loading
+     *  @param loadSampleData boolean - flag for allow sample data loading
+     *  @param filesOnly boolean - flag for operate only on files in storage
      */
-    function resetStorage($loadSampleData=TRUE)
+    function resetStorage($loadSampleData=TRUE, $filesOnly=FALSE)
     {
-        $this->deleteData();
+        if($filesOnly) $this->deleteFiles();
+        else $this->deleteData();
         if(!$this->config['isArchive']){
             $tr =& new Transport($this->dbc, $this, $this->config);
             $tr->resetData();
         }
+        $res = array(
+            'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
+        );
+        if(!$loadSampleData) return $res;
         $rootHD = $this->getObjId('root', $this->storId);
         $samples = dirname(__FILE__)."/tests/sampleData.php";
         if(file_exists($samples)){
             include $samples;
         }else $sampleData = array();
-        $res = array(
-            'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
-        );
         foreach($sampleData as $k=>$it){
             $type = $it['type'];
             $xml = $it['xml'];
@@ -1354,17 +1357,25 @@ class BasicStor extends Alib{
     }
 
     /**
+     *  deleteFiles
+     *
+     *  @return void
+     */
+    function deleteFiles()
+    {
+        $ids = $this->dbc->getAll("SELECT id FROM {$this->filesTable}");
+        if(is_array($ids)) foreach($ids as $i=>$item){
+            $this->bsDeleteFile($item['id'], TRUE);
+        }
+    }
+    /**
      *  deleteData
      *
      *  @return void
      */
     function deleteData()
     {
-//        $this->dbc->query("DELETE FROM {$this->filesTable}");
-        $ids = $this->dbc->getAll("SELECT id FROM {$this->filesTable}");
-        if(is_array($ids)) foreach($ids as $i=>$item){
-            $this->bsDeleteFile($item['id'], TRUE);
-        }
+        $this->deleteFiles();
         parent::deleteData();
         $this->initData();
     }
