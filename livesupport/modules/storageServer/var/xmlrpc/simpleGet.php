@@ -108,6 +108,7 @@ switch($ftype){
         $realFname  = $ac->_getRealRADFname();
         $mime = $ac->rmd->getMime();
         header("Content-type: $mime");
+	header("Content-length: ".filesize($realFname));
         readfile($realFname);
         break;
     case"webstream":
