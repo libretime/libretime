@@ -249,6 +249,7 @@ class MetaData{
         $parname = ($parns ? "$parns:" : '').$parname;
         $category = ($chns ? "$chns:" : '').$chname;
         $r = $this->validateOneValue($parname, $category, $predxml, $value);
+        foreach(array('value') as $v) $$v = addslashes($$v);
         if(PEAR::isError($r)) return $r;
         if(!is_null($value)){
             $sql = "
@@ -645,6 +646,7 @@ class MetaData{
      */
     function updateRecord($mdid, $object, $objns='_L')
     {
+        foreach(array('objns', 'object') as $v) $$v = addslashes($$v);
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");
         $res = $this->dbc->query("UPDATE {$this->mdataTable}
@@ -676,6 +678,9 @@ class MetaData{
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
         //$predns = strtolower($predns);
         //$predicate = strtolower($predicate);
+        foreach(
+            array('subjns', 'subject', 'predns', 'predicate', 'objns', 'object'
+        ) as $v) $$v = addslashes($$v);
         $predns_sql = (is_null($predns) ? "NULL" : "'$predns'" );
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");
@@ -803,6 +808,7 @@ class MetaData{
                 'localPart' => $predicate,
                 'attributes'=> $attrs,
                 'content'   => (is_null($object) ? $children : $object),
+#                'content'   => (is_null($object) ? $children : htmlentities($object, ENT_COMPAT, 'UTF-8')),
             ), FALSE);
         }else{
             $node = array_merge(
@@ -851,10 +857,12 @@ class MetaData{
             switch($predxml){
             case"N":
                 $nSpaces["$predicate"] = $object;
+#                $nSpaces["$predicate"] = htmlentities($object, ENT_COMPAT, 'UTF-8');
             case"A":
                 $sep=':';
                 if($predns=='' || $predicate=='') $sep='';
                 $attrs["{$predns}{$sep}{$predicate}"] = $object;
+#                $attrs["{$predns}{$sep}{$predicate}"] = htmlentities($object, ENT_COMPAT, 'UTF-8');
                 break;
             case"T":
                 $children[] = $this->genXMLNode($row, $genXML);
