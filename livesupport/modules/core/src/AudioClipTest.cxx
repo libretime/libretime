@@ -180,8 +180,8 @@ AudioClipTest :: firstTest(void)
 
     CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
                                         "<audioClip id=\"0000000000000001\" "
-                                        "playlength=\"00:18:30.000000\" "
-                                        "title=\"File Title txt\"/>");
+                                        "title=\"File Title txt\" "
+                                        "playlength=\"00:18:30.000000\"/>");
 }
 
 

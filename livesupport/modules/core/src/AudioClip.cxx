@@ -573,12 +573,12 @@ AudioClip :: getXmlElementString(void) const    throw ()
     xmlString->append(idAttrName + "=\"" 
                                  + std::string(*id) 
                                  + "\" ");
-    xmlString->append(playlengthAttrName + "=\"" 
-                                         + toFixedString(playlength)
-                                         + "\" ");
     xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
                                                    + *title
-                                                   + "\"/>");
+                                                   + "\" ");
+    xmlString->append(playlengthAttrName + "=\"" 
+                                         + toFixedString(playlength)
+                                         + "\"/>");
     return xmlString;
 }
 

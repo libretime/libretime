@@ -76,21 +76,31 @@ using namespace boost::posix_time;
  *  called playlist. This may look like the following:
  *
  *  <pre><code>
- *  &lt;playlist id="1" title="My Playlist" playlength="00:18:30.000000" &gt;
+ *  &lt;playlist id="0000000000000001"
+ *            title="My Playlist" 
+ *            playlength="00:18:30.000000"&gt;
  *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
  *      ...
  *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
- *      &lt;metadata
- *                   xmlns="http://mdlf.org/livesupport/elements/1.0/"
- *                   xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
- *                   xmlns:dc="http://purl.org/dc/elements/1.1/"
- *                   xmlns:dcterms="http://purl.org/dc/terms/"
- *                   xmlns:xml="http://www.w3.org/XML/1998/namespace" &gt;
- *             &lt;dc:title  &gt;File Title txt&lt;/dc:title&gt;
- *             &lt;dcterms:extent  &gt;00:02:30.000000&lt;/dcterms:extent&gt;
- *             ...
- *         &lt;/metadata&gt;
+ *      &lt;metadata xmlns="http://mdlf.org/livesupport/elements/1.0/"
+ *                 xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+ *                 xmlns:dc="http://purl.org/dc/elements/1.1/"
+ *                 xmlns:dcterms="http://purl.org/dc/terms/"
+ *                 xmlns:xml="http://www.w3.org/XML/1998/namespace"&gt;
+ *          &lt;dc:title&gt;File Title txt&lt;/dc:title&gt;
+ *          &lt;dcterms:extent&gt;00:02:30.000000&lt;/dcterms:extent&gt;
+ *          ...
+ *      &lt;/metadata&gt;
  *  &lt;/playlist&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT playlist (playlistElement*, metadata?) &gt;
+ *  &lt;!ATTLIST playlist  id           NMTOKEN    #REQUIRED &gt;
+ *  &lt;!ATTLIST playlist  title        CDATA      ""        &gt;
+ *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
  *  </code></pre>
  *
  *  For detais of the playlistElement element, see the documentation 
@@ -105,34 +115,18 @@ using namespace boost::posix_time;
  *  the attribute and the element is ignored..
  *  The same is true for the <code>playlength</code> attribute and the 
  *  <code>&lt;dcterms:extent&gt;</code> element.
+ *
  *  It is required that by the end of the configure() method, the playlength
  *  is set somehow (from a constructor, the attribute or the element).
  *  If the title is not set by the end of the configure() method, it is then
  *  set to the empty string.
- *  Embedded XML elements are currently ignored: e.g., 
- *  <pre><code>  &lt;group&gt;
- *      &lt;member1&gt;value1&lt;/member1&gt;
- *      &lt;member2&gt;value2&lt;/member2&gt;
- *  &lt;/group&gt;</code></pre>
- *  produces a single metadata field <code>group</code> with an empty value,
- *  and ignores <code>member1</code> and <code>member2</code>.
- *  TODO: fix this?
- *
- *  The DTD for the above element is:
- *
- *  <pre><code>
- *  &lt;!ELEMENT playlist (playlistElement*, metadata?) &gt;
- *  &lt;!ATTLIST playlist  id           NMTOKEN    #REQUIRED &gt;
- *  &lt;!ATTLIST playlist  title        CDATA      ""  &gt;
- *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
- *  </code></pre>
  *
  *  A Playlist can be of various kinds, depending on what we want to use it
  *  for, and how we got it from the StorageClientInterface:
  *  <ul>
  *      <li>A playlist obtained by getPlaylist() has its <code>uri</code>,
  *          <code>token</code> and <code>editToken</code> fields all unset
- *          (i.e., null).  Such playlist contain sub-playlists which
+ *          (i.e., null).  Such playlists contain sub-playlists which
  *          are just stubs, i.e., <code>id, title, playlength</code> triples,
  *          without actual references to its content objects.</li>
  *      <li>A playlist obtained by acquirePlaylist() has its <code>uri</code>
@@ -148,6 +142,56 @@ using namespace boost::posix_time;
  *          field set (but <code>uri</code> and <code>token</code> unset).
  *          The sub-playlists of these are also just stubs.</li>
  *  </ul>
+ *
+ *  The playlists are stored by the storage server in the format returned by
+ *  the getXmlDocumentString() function:
+ *  <ul>
+ *      <li>The outermost &lt;playlist&gt; has an id attribute,
+ *              a list of &lt;playlistElement&gt; children 
+ *              and a &lt;metadata&gt; child.</li>
+ *      <li>Each &lt;playlistElement&gt; has an id 
+ *              and a relativeOffset attribute,
+ *              either a &lt;playlist&gt; or an &lt;audioClip&gt; child,
+ *              and optionally a &lt;fadeInfo&gt; child.</li>
+ *      <li>Each &lt;playlist&gt; and &lt;audioClip&gt; has id, title
+ *              and playlength attributes (and no children).</li>
+ *      <li>Each &lt;fadeInfo&gt; has fadeIn and fadeOut attributes 
+ *              (and no children).</li>
+ *      <li>The &lt;metadata&gt; element contains all the metadata of 
+ *              the outermost playlist.
+ *              The dc:title and dcterms:extent elements are compulsory,
+ *              everything else is optional.</li>
+ *  </ul>
+ *  An example:
+ *
+ *  <pre><code>
+ *  &lt;playlist id="0000000000000001"&gt;
+ *      &lt;playlistElement id="0000000000000101"
+ *                       relativeOffset="00:00:00.000000"&gt;
+ *          &lt;audioClip id="0000000000010001" 
+ *                    title="My Audio Clip"
+ *                    playlength="00:02:30.000000"/&gt;
+ *          &lt;fadeInfo id="0000000000009901" 
+ *                    fadeIn="00:00:02.000000"
+ *                    fadeOut="00:00:01.500000"/&gt;
+ *      &lt;/playlistElement&gt;
+ *      &lt;playlistElement id="0000000000000102"
+ *                       relativeOffset="00:02:30.000000"&gt;
+ *          &lt;playlist id="0000000000000002" 
+ *                    title="Embedded Playlist"
+ *                    playlength="00:18:30.000000"/&gt;
+ *      &lt;/playlistElement&gt;
+ *      &lt;metadata xmlns="http://mdlf.org/livesupport/elements/1.0/"
+ *                xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+ *                xmlns:dc="http://purl.org/dc/elements/1.1/"
+ *                xmlns:dcterms="http://purl.org/dc/terms/"
+ *                xmlns:xml="http://www.w3.org/XML/1998/namespace"&gt;
+ *          &lt;dc:title&gt;My Playlist&lt;/dc:title&gt;
+ *          &lt;dcterms:extent&gt;00:21:00.000000&lt;/dcterms:extent&gt;
+ *          ...
+ *      &lt;/metadata&gt;
+ *  &lt;/playlist&gt;
+ *  </code></pre>
  *
  *  @author  $Author$
  *  @version $Revision$
@@ -778,8 +822,9 @@ class Playlist : public Configurable,
          *  Return a partial XML representation of this audio clip or playlist.
          *  
          *  This is a string containing a single &lt;playlist&gt;
-         *  XML element, with minimal information (ID, title, playlength)
+         *  XML element, with minimal information { id, title, playlength }
          *  only, without an XML header or any other metadata.
+         *  It does not contain the list of playlist elements in the playlist.
          *
          *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
          *  time durations have the format "hh:mm:ss.ssssss".
@@ -797,25 +842,13 @@ class Playlist : public Configurable,
          *  &lt;playlist&gt; root node, together with an XML header and a 
          *  &lt;metadata&gt; element (for the outermost playlist only).
          *  
+         *  The playlist elements listed are only stubs returned by
+         *  getXmlElementString(), i.e., { id, title, playlength } triples,
+         *  without their contents.  See the more detailed description at
+         *  the top of this page.
+         *
          *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
          *  time durations have the format "hh:mm:ss.ssssss".
-         *  
-         *  The playlist can be almost completely reconstructed from 
-         *  the string returned by this method:
-         *  <pre><code>
-         *  Ptr<Playlist>::Ref          playlist1 = ... something ...;
-         *  Ptr<xmlpp::DomParser>::Ref  parser;
-         *  parser->parse_memory(*playlist1->getXmlDocumentString());
-         *  const xmlpp::Document*      document = parser->get_document();
-         *  const xmlpp::Element*       root     = document->get_root_node();
-         *  Ptr<Playlist>::Ref          playlist2(new Playlist());
-         *  playlist2->configure(*root);
-         *  </code></pre>
-         *  results in two identical playlists if the audio clips
-         *  and sub-playlists inside <i>playlist1</i> do not contain any 
-         *  metadata other than title and playlength. 
-         *  All other metadata fields in the audio clips and sub-playlists 
-         *  will be lost.
          *  
          *  The <i>uri</i>, <i>token</i> and <i>editToken</i> fields are not
          *  part of the XML document string returned.

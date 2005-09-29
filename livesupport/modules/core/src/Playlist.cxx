@@ -785,23 +785,13 @@ Playlist :: getXmlElementString(void) const     throw ()
     xmlString->append(idAttrName + "=\"" 
                                  + std::string(*getId()) 
                                  + "\" ");
-    xmlString->append(playlengthAttrName + "=\"" 
-                                         + toFixedString(getPlaylength())
-                                         + "\" ");
-
     xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
                                                    + *getTitle()
-                                                   + "\">\n");
+                                                   + "\" ");
+    xmlString->append(playlengthAttrName + "=\"" 
+                                         + toFixedString(getPlaylength())
+                                         + "\"/>");
     
-    PlaylistElementListType::const_iterator  it = elementList->begin();
-    while (it != elementList->end()) {
-        xmlString->append(*it->second->getXmlElementString() + "\n");
-        ++it;
-    }
-
-    xmlString->append("</");
-    xmlString->append(configElementNameStr + ">");
-
     return xmlString;
 }
 

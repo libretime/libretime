@@ -152,8 +152,8 @@ PlaylistElementTest :: firstTest(void)
                                 "<playlistElement id=\"0000000000000111\" "
                                 "relativeOffset=\"00:00:00.000000\">\n"
                                         "<audioClip id=\"0000000000010003\" "
-                                        "playlength=\"00:00:11.000000\" "
-                                        "title=\"three\"/>\n"
+                                        "title=\"three\" "
+                                        "playlength=\"00:00:11.000000\"/>\n"
                                 "</playlistElement>");
 
         // and the audio clip inside the playlist element
