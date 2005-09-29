@@ -500,12 +500,14 @@ class GreenBox extends BasicStor{
      *  @param sessid string, session ID
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
      *  @param fadeOut string, dtto
+     *  @param length string - optional length in extent format -
+     *          for webstream (or for overrule length of audioclip)
      *  @param pause string, optional - pause between half-faded points
      *          in time format hh:mm:ss.ssssss
      *  @return string, generated playlistElement gunid
      */
     function addAudioClipToPlaylist($token, $acId, $sessid,
-        $fadeIn=NULL, $fadeOut=NULL, $pause=NULL)
+        $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
     {
         require_once"Playlist.php";
         $pl =& Playlist::recallByToken($this, $token);
@@ -525,11 +527,11 @@ class GreenBox extends BasicStor{
             );
         }
 */
-#        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
-        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL);
+//        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
+        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length);
         if(PEAR::isError($res)) return $res;
         // recalculate offsets and total length:
-#        $r = $pl->recalculateTimes($pause);
+//        $r = $pl->recalculateTimes($pause);
         $r = $pl->recalculateTimes();
         if(PEAR::isError($r)){ return $r; }
         return $res;

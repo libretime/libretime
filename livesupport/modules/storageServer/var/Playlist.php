@@ -164,7 +164,7 @@ class Playlist extends StoredFile{
      *  @param parid int - parent record id
      *  @param offset string - relative offset in extent format
      *  @param acGunid string - audioClip gunid
-     *  @param acLen string - audiClip length in extent format
+     *  @param acLen string - audioClip length in extent format
      *  @param acTit string - audioClip title
      *  @param fadeIn string - fadeIn value in ss.ssssss or extent format
      *  @param fadeOut string - fadeOut value in ss.ssssss or extent format
@@ -296,15 +296,19 @@ class Playlist extends StoredFile{
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
      *  @param fadeOut string, dtto
      *  @param plElGunid string - optional playlist element gunid
+     *  @param length string - optional length in extent format -
+     *          for webstream (or for overrule length of audioclip)
      *  @return string, generated playlistElement gunid
      */
-    function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL)
+    function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL,
+        $length=NULL)
     {
         $plGunid = $this->gunid;
         // get information about audioClip
         $acInfo = $this->getAcInfo($acId);
         if(PEAR::isError($acInfo)){ return $acInfo; }
         extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
+        if(!is_null($length)) $acLen = $length;
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
