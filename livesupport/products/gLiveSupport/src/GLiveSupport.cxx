@@ -854,11 +854,11 @@ GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);
 
     try {
-        Ptr<const Glib::ustring>::Ref   token(new const Glib::ustring(
-                                                *editedPlaylist->getToken() ));
+        Ptr<const Glib::ustring>::Ref   editToken(new const Glib::ustring(
+                                            *editedPlaylist->getEditToken() ));
         authentication->savePreferencesItem(sessionId,
                                             editedPlaylistTokenKey,
-                                            token);
+                                            editToken);
     } catch (XmlRpcException &e) {
         std::cerr << "Problem saving "
                   << editedPlaylistTokenKey
