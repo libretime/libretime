@@ -120,7 +120,7 @@ class AccessRecur{
                     return $r;
                 break;
                 case"playlist":
-#                    if(empty($ac['children'])){
+//                    if(empty($ac['children'])){
                         $r = $this->accessPlaylist($this->ls, $this->sessid,
                             $ac['attrs']['id'], $parent);
                         if(PEAR::isError($r)){

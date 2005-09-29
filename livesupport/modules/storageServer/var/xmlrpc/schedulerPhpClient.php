@@ -500,7 +500,7 @@ class SchedulerPhpClient{
 /**
  *  Example of use:
  *
- */
+ * /
 
 
 // db object handling:
@@ -526,5 +526,6 @@ $r = $spc->DisplayScheduleMethod($this->Base->sessid, '20040101T00:00:00', '2005
 #$r = $spc->LogoutMethod('dummySessionId3-1714636915'); var_dump($r);
 #$r = $spc->listMethods(); var_dump($r);
 #$r = $spc->GetSchedulerTimeMethod(); var_dump($r);
+================= */
 
 ?>
