@@ -155,6 +155,7 @@ install: configure_apache
 	${CP} ${BASE_DIR}/index.php ${USR_VAR_DIR}/LiveSupport/htmlUI
 	${CP} ${VAR_DIR}/*.xml ${VAR_DIR}/*.php \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${CP} ${VAR_DIR}/.htaccess ${USR_VAR_DIR}/LiveSupport/htmlUI/var
 	${CP} ${VAR_DIR}/html/*.php ${VAR_DIR}/html/*.css \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
 	${CP} ${VAR_DIR}/html/img/*.png ${VAR_DIR}/html/img/*.gif \
