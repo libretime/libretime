@@ -39,12 +39,14 @@ require_once "$storageServerPath/var/GreenBox.php";
 
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+#PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s\n");
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){ echo "ERROR: ".$dbc->getMessage()." ".$dbc->getUserInfo()."\n"; exit(1); }
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox($dbc, $config);
 
 $testonly = ($argv[1] == '-n');
+#$testonly = TRUE;
 
 $errors=0;
 $filecount=0;
@@ -71,11 +73,13 @@ $flds = array(
         'TENC' => 'ls:encoded_by',
         'TRK' => 'ls:track_num',
         'TRCK' => 'ls:track_num',
+        'TCON' => 'ls:genre',
     ),
     'audio' => array(
         'channels'   => 'ls:channels',
 //        'bitrate'    => 'ls:bitrate',
     ),
+/*
     'comments' => array(
         'genre'     => 'dc:type',
         'title'     => 'dc:title',
@@ -86,8 +90,11 @@ $flds = array(
         'label'      => 'dc:publisher',
 //        'genreid'  => 'GENREID',
     ),
+*/
     'filename'  => 'ls:filename',
 );
+
+$titleKey = 'dc:title';
 
 $r = $gb->getObjId('import', $gb->storId);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n"; exit(1); }
@@ -98,10 +105,16 @@ if(is_null($r)){
 $parid = $r;
 
 function addMdata($key, $val){
-    global $mdata, $titleHaveSet;
+    global $mdata, $titleHaveSet, $titleKey;
     if(!is_null($val)){
-        $mdata[$key] = addslashes($val);
-        if($key == 'dc:title') $titleHaveSet = TRUE;
+        $mdata[$key] = $val;
+/*
+        $iEnc = 'UTF-8';
+        $oEnc = 'ISO-8859-1';
+        $oEnc = 'UTF-8';
+        $mdata[$key] = iconv($iEnc, $oEnc, $mdata[$key]);
+*/
+        if($key == $titleKey) $titleHaveSet = TRUE;
     }
 }
 
@@ -122,7 +135,8 @@ while($filename = fgets($stdin, 2048)){
         list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
         if(is_array($fn1)){
             $k0 = $k1;
-            if($k0=='tags') $k1=$infoFromFile['tags'][0];
+            //if($k0=='tags') $k1=$infoFromFile['tags'][0];
+            $k1 = 'id3v2';
             list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
             foreach($fn1 as $k2=>$fn2){
                 if(is_null($fn2)) continue;
@@ -154,18 +168,20 @@ while($filename = fgets($stdin, 2048)){
             addMdata($fn, $v);
         }
     }
-    if(!$titleHaveSet) addMdata('dc:title', basename($filename));
+    if(!$titleHaveSet || trim($mdata[$titleKey])=='') addMdata($titleKey, basename($filename)." X");
+//    unset($mdata['dc:title']);
 
     if(!$testonly){
         $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
         if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
         $id = $r;
 
+//        echo "\n".var_export($mdata)."\n";
         $r = $gb->bsSetMetadataBatch($id, $mdata);
         if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
     }else{
+        var_dump($infoFromFile); echo"======================= ";
         var_dump($mdata); echo"======================= ";
-#        var_dump($infoFromFile); echo"======================= ";
     }
 
     echo "OK\n";
