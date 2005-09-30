@@ -446,6 +446,7 @@ class MetaData{
             );
         }
         fclose($fh);
+        @chmod($fn, 0664);
         return TRUE;
     }
     
