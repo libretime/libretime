@@ -39,7 +39,7 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 srcdir=$basedir/src
-installdir=$basedir/../../..
+installdir=$basedir/../../usr
 
 package="PEAR packages needed by LiveSupport"
 
