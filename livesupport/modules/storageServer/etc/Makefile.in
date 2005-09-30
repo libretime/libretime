@@ -222,8 +222,7 @@ storage: pear_setup_devel dir_setup db_init
 
 storagecheck: storage testonly
 
-pear_setup_devel:
-	${PEAR_INSTALLER} -d ${PEAR_TOOL_DIR}/tmp
+pear_setup_devel: pear_install
 
 pear_install:
 	${PEAR_INSTALLER} -d ${USR_DIR}
