@@ -108,7 +108,12 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('data', $uiBrowser->testStream($_REQUEST['url']));
                 $Smarty->display('popup/testStream.tpl');
             break;
-
+            
+            case "listen2AudioClip":
+                $Smarty->assign('data', $uiBrowser->listen2AudioClip($_REQUEST['id']));
+                $Smarty->display('popup/listen2AudioClip.tpl');
+            break;
+            
             case "help":
                 $Smarty->display('popup/help.tpl');
             break;
@@ -118,7 +123,7 @@ if (is_array($_REQUEST['popup'])){
 };
 
 if ($uiBrowser->userid) {
-    $Smarty->assign('showMenuTop',        TRUE);
+    $Smarty->assign('showMenuTop',  TRUE);
 
     switch ($_REQUEST['act']){
     case "fileList":

@@ -1,14 +1,16 @@
 <?php
-require_once('PEAR.php');
-require_once('DB.php');
-require_once('File.php');
-require_once('File/Find.php');
-require_once('XML/Serializer.php');
-require_once('XML/Unserializer.php');
+ini_set('include_path', '.:../../../../../lib/pear/');  # path should be absulut, parsed during install process
 
-require_once('display.inc.php');
-require_once('data.inc.php');
-require_once('helpfunctions.inc.php');
+require_once 'PEAR.php';
+require_once 'DB.php';
+require_once 'File.php';
+require_once 'File/Find.php';
+require_once 'XML/Serializer.php';
+require_once 'XML/Unserializer.php';
+
+require_once 'display.inc.php';
+require_once 'data.inc.php';
+require_once 'helpfunctions.inc.php';
 
 define('_DEFAULT_LANG_', 'en_US');
 define('_PREFIX_',       'locals');

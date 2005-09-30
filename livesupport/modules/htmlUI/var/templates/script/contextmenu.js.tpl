@@ -63,11 +63,11 @@
                 break;
 
                 case "SP.removeItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove from Scratchpad##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove from ScratchPad##&nbsp;</a></li>";
                 break;
 
                 case "listen":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_BROWSER}?popup[]=listen2AudioClip&id="+contextmenu.arguments[++i]+"')\" "+oF+">&nbsp;##Listen##&nbsp;</a></li>";
                 break;
 
                 case "edit":
@@ -128,8 +128,7 @@
 
         return false;
     }
-
-
+    
     function showcontextmenu(e) {
         var contextmenuWidth   = document.getElementById('contextmenu').clientWidth;
         var contextmenuHeight  = document.getElementById('contextmenu').clientHeight;

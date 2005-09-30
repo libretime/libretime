@@ -8,15 +8,6 @@ $ui_fmask = array(
             'constant'  => 'changeStationPrefs'
         ),
         array(
-            'element'   => 'basics',
-            'type'      => 'header',
-            'label'     => 'Station Settings',
-        ),
-        array(
-            'rule'      => 'nopunctuation',
-            'element'   => 'stationMaxfilesize',
-        ),
-        array(
             'element'   => 'stationFrequency',
             'isPref'    => TRUE,
             'type'      => 'text',
@@ -67,11 +58,6 @@ $ui_fmask = array(
             'attributes'=> array('multiple' => 'application/pdf')
         ),
         array(
-            'element'   => 'systemsettings',
-            'type'      => 'header',
-            'label'     => 'System Settings'
-        ),
-        array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
             'isPref'    => TRUE,
             'type'      => 'select',
@@ -86,21 +72,22 @@ $ui_fmask = array(
             'required'  => TRUE
         ),
         array(
-            'element'   => 'stationMaxfilesize',
-            'isPref'    => TRUE,
-            'type'      => 'text',
-            'label'     => 'Limit upload filesize',
-            'rule'      => 'numeric',
-            'attributes'   => array(
-                                'onClick'  => 'alert ("'.tra('Note: System Maximum is set to $1 in php.ini. You can just reduce this amount here.',
-                                                            ini_get('upload_max_filesize')).'")'
-                           )
+            'element'   =>'cancel',
+            'type'      =>'button',
+            'label'     =>'Cancel',
+            'attributes'=>array('onclick' => 'location.href="'.UI_BROWSER.'"'),
+            'groupit'   => TRUE            
         ),
         array(
             'element'   =>'Submit',
             'type'      =>'submit',
-            'label'     =>'Submit'
-        )
+            'label'     =>'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'Submit'),
+            'label'     => '&nbsp;'
+        ),
     ),
 
     'chgPasswd' => array(

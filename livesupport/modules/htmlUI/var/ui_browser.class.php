@@ -431,5 +431,25 @@ class uiBrowser extends uiBase {
                      'port'     => $port,
         );
     }
+    
+    function listen2AudioClip($clipid)
+    { 
+        #$pls  = "[playlist]\n".
+        #$pls .= "File1=http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
+        #$pls .= "Title1=Mein Titel\n";
+        #$pls .= "NumberOfEntries=1\nVersion=2";
+        
+        #$m3u  = "#EXTM3U\n";
+        #$m3u .= "#EXTINF:111,Mein Titel\n";
+        $m3u .= "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
+           
+        touch(UI_TESTSTREAM_MU3_TMP);
+        $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
+        fwrite($handle, $m3u);
+        fclose($handle);        
+    }  
+    
+ 
+ 
 }
 ?>
