@@ -733,7 +733,7 @@ class BasicStor extends Alib{
             if($this->dbc->isError($res)) return $res;
         }
         $res = $this->bsSetMetadataValue($id, 'ls:mtime', date('U'),
-            $lang, NULL, $container, TRUE);
+            $lang, NULL, $container, $regen);
         if($this->dbc->isError($res)) return $res;
         return TRUE;
     }
