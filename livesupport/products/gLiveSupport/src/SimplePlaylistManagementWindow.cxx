@@ -52,6 +52,20 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/*
+ *  The modifier keys we check against in onKeyPressed().
+ *  The following modifiers are omitted, hence ignored: 
+ *  GDK_LOCK_MASK (caps lock),
+ *  GDK_MOD2_MASK (don't know what; always on on my computer),
+ *  GDK_MOD3_MASK (don't know what; always off on my computer),
+ *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+ */
+static const guint  MODIFIERS_CHECKED   = GDK_SHIFT_MASK 
+                                        | GDK_CONTROL_MASK
+                                        | GDK_MOD1_MASK     // Alt
+                                        | GDK_MOD4_MASK     // Windows key
+                                        | GDK_MOD5_MASK;    // Alt-gr
+
 
 /* ===============================================  local function prototypes */
 
@@ -132,6 +146,8 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                     *this, &SimplePlaylistManagementWindow::onEntryClicked ));
     entriesView->signalCellEdited().connect(sigc::mem_fun(
                     *this, &SimplePlaylistManagementWindow::onFadeInfoEdited ));
+    entriesView->signal_key_press_event().connect(sigc::mem_fun(
+                    *this, &SimplePlaylistManagementWindow::onKeyPressed));
 
     // create the right-click entry context menu
     rightClickMenu = Gtk::manage(new Gtk::Menu());
@@ -608,11 +624,14 @@ void
 SimplePlaylistManagementWindow :: onUpItem(void)                    throw()
 {
     if (currentItem && currentItem != entriesModel->children().begin()) {
+        int             rowNumber    = (*currentItem)
+                                            [modelColumns.rowNumberColumn];
         Gtk::TreeIter   previousItem = currentItem;
         --previousItem;
         swapPlaylistElements(previousItem, currentItem);
         isPlaylistModified = true;
         showContents();
+        selectRow(--rowNumber);
     }
 }
 
@@ -624,12 +643,15 @@ void
 SimplePlaylistManagementWindow :: onDownItem(void)                  throw()
 {
     if (currentItem) {
-        Gtk::TreeIter   nextItem = currentItem;
+        Gtk::TreeIter   nextItem  = currentItem;
         ++nextItem;
         if (nextItem) {
+            int         rowNumber = (*currentItem)
+                                            [modelColumns.rowNumberColumn];
             swapPlaylistElements(currentItem, nextItem);
             isPlaylistModified = true;
             showContents();
+            selectRow(++rowNumber);
         }
     }
 }
@@ -719,14 +741,82 @@ SimplePlaylistManagementWindow :: swapPlaylistElements(
 void
 SimplePlaylistManagementWindow :: onRemoveItem(void)                throw()
 {
-    Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
-    Ptr<PlaylistElement>::Ref   playlistElement 
-                        = (*currentItem)[modelColumns.playlistElementColumn];
+    if (currentItem) {
+        Ptr<Playlist>::Ref 
+                playlist        = gLiveSupport->getEditedPlaylist();
+        Ptr<PlaylistElement>::Ref 
+                playlistElement = (*currentItem)
+                                        [modelColumns.playlistElementColumn];
     
-    playlist->removePlaylistElement(playlistElement->getId());
-    playlist->eliminateGaps();
+        playlist->removePlaylistElement(playlistElement->getId());
+        playlist->eliminateGaps();
 
-    isPlaylistModified = true;
-    showContents();
+        isPlaylistModified = true;
+        showContents();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a key pressed.
+ *----------------------------------------------------------------------------*/
+bool
+SimplePlaylistManagementWindow :: onKeyPressed(GdkEventKey *    event)
+                                                                    throw ()
+{
+    if (event->type == GDK_KEY_PRESS) {
+        if ((event->keyval == GDK_Up
+                || event->keyval == GDK_KP_Up)
+                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+            findCurrentItem();
+            onUpItem();
+            return true;
+            
+        } else if ((event->keyval == GDK_Down 
+                || event->keyval == GDK_KP_Down)
+                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
+            findCurrentItem();
+            onDownItem();
+            return true;
+            
+        } else if (event->keyval == GDK_Delete
+                || event->keyval == GDK_KP_Delete) {
+            findCurrentItem();
+            onRemoveItem();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Find (an iterator pointing to) the currently selected row.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: findCurrentItem(void)             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = entriesView->get_selection();
+    currentItem = selection->get_selected();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Select (highlight) the nth row.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: selectRow(int rowNumber)          throw ()
+{
+    Gtk::TreeModel::iterator    iter = entriesModel->children().begin();
+    for (; rowNumber > 0; --rowNumber) {
+        ++iter;
+    }
+    if (iter) {
+        Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                                = entriesView->get_selection();
+        selection->select(iter);
+    }
 }
 

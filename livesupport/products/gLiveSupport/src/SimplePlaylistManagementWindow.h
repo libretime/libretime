@@ -153,6 +153,46 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         onEntryClicked(GdkEventButton     * event)              throw ();
 
         /**
+         *  Signal handler for a key pressed at one of the entries.
+         *  The keys handled are:
+         *  <ul>
+         *      <li>Alt-Up   : move item up</li>
+         *      <li>Alt-Down : move item down</li>
+         *      <li>Delete   : remove item</li>
+         *  </ul>
+         *
+         *  Technical note: the symbolic key names are found in 
+         *  <code>/usr/include/gtk-2.0/gdk/gdkkeysyms.h</code>,
+         *  and the symbolic modifier names are found in
+         *  <code>/usr/include/gtk-2.0/gdk/gdktypes.h</code>.
+         *
+         *  TODO: make keys customizable from a config file?
+         *
+         *  @param  event the button event recieved
+         *  @return true if the key press was fully handled, false if not
+         */
+        bool
+        onKeyPressed(GdkEventKey *          event)              throw ();
+
+        /**
+         *  Find (an iterator pointing to) the currently selected row.
+         *
+         *  This is an auxilliary function used by onKeyPressed().
+         */
+        void
+        findCurrentItem(void)                                   throw ();
+
+        /**
+         *  Select (highlight) the nth row.
+         *
+         *  This is an auxilliary function used by onUpItem() and onDownItem().
+         *
+         *  @param rowNumber    the number of the row to be selected.
+         */
+        void
+        selectRow(int   rowNumber)                              throw ();
+
+        /**
          *  Signal handler for the save button clicked.
          */
         void
