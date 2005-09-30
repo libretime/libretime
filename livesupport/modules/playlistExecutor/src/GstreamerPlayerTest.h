@@ -78,6 +78,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
     CPPUNIT_TEST(eventListenerOnStopTest);
     CPPUNIT_TEST(openTimeTest);
     CPPUNIT_TEST(pauseResumeTest);
+    CPPUNIT_TEST(openSoundcardTwiceTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -208,6 +209,15 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
          */
         void
         pauseResumeTest(void)                   throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test for opening the same sound card twice
+         *  (thus forcing an error)
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        openSoundcardTwiceTest(void)            throw (CPPUNIT_NS::Exception);
 
 
     public:

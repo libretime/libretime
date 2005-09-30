@@ -295,11 +295,15 @@ class GstreamerPlayer : virtual public Configurable,
          *  @param fileUrl a URL to a file
          *  @exception std::invalid_argument if the supplied fileUrl
          *             seems to be invalid.
+         *  @exception std::runtime_error if the file could not be openned,
+         *             for example because the audio device of the player
+         *             is being exclusively used by an other process.
          *  @see #close
          *  @see #start
          */
         virtual void
-        open(const std::string  fileUrl)        throw (std::invalid_argument);
+        open(const std::string  fileUrl)        throw (std::invalid_argument,
+                                                       std::runtime_error);
 
         /**
          *  Tell if the object is currently opened (has a file source to

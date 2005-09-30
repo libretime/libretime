@@ -233,7 +233,8 @@ GstreamerPlayer :: eosEventHandler(GstElement    * element,
  *----------------------------------------------------------------------------*/
 void
 GstreamerPlayer :: open(const std::string   fileUrl)
-                                                throw (std::invalid_argument)
+                                                throw (std::invalid_argument,
+                                                       std::runtime_error)
 {
     std::string     filePath;
     GstElement    * pipe;
@@ -294,7 +295,12 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // connect the eos signal handler
     g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
-    gst_element_set_state(pipeline, GST_STATE_PAUSED);
+    if (gst_element_set_state(pipeline,GST_STATE_PAUSED) == GST_STATE_FAILURE) {
+        close();
+        // the error is most probably caused by not being able to open
+        // the audio device (as it might be blocked by an other process
+        throw std::runtime_error("can't open audio device " + audioDevice);
+    }
     gst_bin_sync_children_state(GST_BIN(pipeline));
 }
 

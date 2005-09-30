@@ -1018,20 +1018,23 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
     } catch (XmlRpcException &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     }
-    
+
     outputPlayerIsPaused = false;
 }
     
@@ -1125,16 +1128,19 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
     } catch (XmlRpcException &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
+        eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
     }

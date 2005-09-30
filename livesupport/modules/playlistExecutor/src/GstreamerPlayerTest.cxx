@@ -134,6 +134,8 @@ GstreamerPlayerTest :: simplePlayTest(void)
         player->open("file:var/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     player->start();
@@ -167,6 +169,8 @@ GstreamerPlayerTest :: getPositionTest(void)
     try {
         player->open("file:var/test.mp3");
     } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -213,6 +217,8 @@ GstreamerPlayerTest :: setDeviceTest(void)
         player->open("file:var/test-short.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     player->start();
@@ -231,6 +237,8 @@ GstreamerPlayerTest :: setDeviceTest(void)
         player->open("file:var/test-short.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     player->start();
@@ -248,6 +256,8 @@ GstreamerPlayerTest :: setDeviceTest(void)
     try {
         player->open("file:var/test-short.mp3");
     } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
@@ -282,6 +292,8 @@ GstreamerPlayerTest :: simpleSmilTest(void)
         player->open("file:var/simpleSmil.smil");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -310,6 +322,8 @@ GstreamerPlayerTest :: secondSmilTest(void)
     try {
         player->open("file:var/sequentialSmil.smil");
     } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -340,6 +354,8 @@ GstreamerPlayerTest :: animatedSmilTest(void)
     try {
         player->open("file:var/animatedSmil.smil");
     } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -389,6 +405,8 @@ GstreamerPlayerTest :: checkErrorConditions(void)
         player->open("totally/bad/URL");
     } catch (std::invalid_argument &e) {
         gotException = true;
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(gotException);
 
@@ -405,6 +423,8 @@ GstreamerPlayerTest :: checkErrorConditions(void)
         player->open("file:var/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     player->close();
     gotException = false;
@@ -412,6 +432,8 @@ GstreamerPlayerTest :: checkErrorConditions(void)
         player->open("totally/bad/URL");
     } catch (std::invalid_argument &e) {
         gotException = true;
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(gotException);
 
@@ -634,6 +656,8 @@ GstreamerPlayerTest :: timeSteps(const std::string  fileName)
         player->open(fileName);
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     end = TimeConversion::now();
     openTime.reset(new time_duration(*end - *start));
@@ -697,6 +721,8 @@ GstreamerPlayerTest :: pauseResumeTest(void)
         player->open("file:var/test10001.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     
@@ -728,4 +754,65 @@ GstreamerPlayerTest :: pauseResumeTest(void)
     player->close();
     player->deInitialize();
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Open the same soundcard twice, thus force an error
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: openSoundcardTwiceTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+    Ptr<GstreamerPlayer>::Ref   player2;
+
+    // create a second player, with the same config as our usual player
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                    new xmlpp::DomParser(configFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        player2.reset(new GstreamerPlayer());
+        player2->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in configuration file");
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // initialize & start playing on the first player
+    player->initialize();
+    try {
+        player->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+
+    // now open the same again in the second one
+    player2->initialize();
+    try {
+        player2->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        // this is what we're expecting, if open failed for the reason of
+        // the soundcard being blocked. this doesn't always happen with
+        // ALSA drivers (with dmix, for example)
+    }
+    CPPUNIT_ASSERT(!player2->isPlaying());
+
+    // close everything
+    player2->close();
+    player2->deInitialize();
+    player->close();
+    player->deInitialize();
+}
+
 

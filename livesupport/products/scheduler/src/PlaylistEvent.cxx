@@ -146,6 +146,9 @@ PlaylistEvent :: start(void)                       throw ()
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         // TODO: handle error?
+    } catch (std::runtime_error &e) {
+        std::cerr << e.what() << std::endl;
+        // TODO: handle error?
     }
     state = running;
 }
