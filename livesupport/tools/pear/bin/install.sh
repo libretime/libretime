@@ -169,7 +169,7 @@ do echo -n " "
     echo -n "$pkg: "
     eval "pkgv=\$VERSION_$pkg"
     check_pear_module $pkg && (
-        $pearcmd upgrade $pkgv.tgz >/dev/null && echo -n "upgrading to $pkgv"
+        $pearcmd upgrade -f $pkgv.tgz >/dev/null && echo -n "upgrading to $pkgv"
         #|| echo -n "code: $?"
     ) || (
 #        $pearcmd install $pkgv.tgz >/dev/null && echo -n "installing $pkgv" || exit 1
