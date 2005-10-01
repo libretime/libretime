@@ -3,7 +3,7 @@
 
 function login(&$data)
 {
-    include_once dirname(__FILE__).'/../../../storageServer/var/conf.php';
+    include dirname(__FILE__).'/../../../storageServer/var/conf.php';
     include_once dirname(__FILE__).'/../../../storageServer/var/GreenBox.php';
     $dbc = DB::connect($config['dsn'], TRUE);
 

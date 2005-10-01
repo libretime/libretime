@@ -1,5 +1,5 @@
 <?php
-#ini_set('include_path', '.:../../../../../lib/pear/');  # path should be absulute, parsed during install process
+require_once dirname(__FILE__).'/../../../storageServer/var/conf.php';
 
 require_once 'PEAR.php';
 require_once 'DB.php';
