@@ -33,7 +33,7 @@
  *  archiveServer configuration file
  */
 
-define('LS_VERSION', '0.9');
+define('LS_VERSION', '1.0');
 
 /**
  *  configuration structure:
