@@ -227,15 +227,15 @@ class uiScheduler extends uiCalendar
             return FALSE;
 
         foreach ($arr as $key => $val) {
-        	 $start = $this->_datetime2timestamp($val['start']);
+        	$start = $this->_datetime2timestamp($val['start']);
             $end   = $this->_datetime2timestamp($val['end']);
-        	 $Y = strftime('%Y', $start);
+        	$Y = strftime('%Y', $start);
             $m = number_format(strftime('%m', $start));
             $d = number_format(strftime('%d', $start));
             $h = number_format(strftime('%H', $start));
             $M = number_format(strftime('%i', $start));
 
-            ## item starts today -> put metadata to array
+            ## item starts today 
             if (strftime('%Y%m%d', $start) === $thisDay) {
             	$items[number_format(strftime('%H', $start))]['start'][] = array(
 	                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
@@ -245,16 +245,30 @@ class uiScheduler extends uiCalendar
 	                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
 	                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
 	                'type'      => 'Playlist',
-                   'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
+	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
+                    'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
 	            );
             }
+            
             /* mark the span as in use
             for ($n = number_format(strftime('%H', $start))+1; $n <= number_format(strftime('%H', $end)); $n++) {
             	$items['span'][$n] = TRUE;
-            }  */
-            ## item which end today
+            }  
+            */
+            
+            ## item ends today
             if (strftime('%Y%m%d', $end) === $thisDay && strftime('%H', $start) !== strftime('%H', $end)) {
-            	$items[number_format(strftime('%H', $end))]['end'] = TRUE;
+            	$items[number_format(strftime('%H', $end))]['end'][] =
+            	array(
+	                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
+	                'scheduleid'=> $val['id'],
+	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+	                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+	                'type'      => 'Playlist',
+	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
+	            );
             }
         }
 
