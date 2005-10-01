@@ -1,3 +1,17 @@
+livesupport (1.0.1-1) unstable; urgency=low
+
+  * 1.0.1 bugfix release
+
+ -- Akos Maroy <maroy@campware.org>  Sat, 01 Oct 2005 17:19:29 +0200
+
+
+livesupport (1.0-1) unstable; urgency=low
+
+  * 1.0 final release
+
+ -- Akos Maroy <maroy@campware.org>  Fri, 09 Sep 2005 15:04:13 +0200
+
+
 livesupport (1.0rc2-1) unstable; urgency=low
 
   * second release candidate
