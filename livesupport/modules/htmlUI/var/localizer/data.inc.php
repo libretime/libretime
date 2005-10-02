@@ -13,8 +13,6 @@ class Data {
                            "mode"             => 'simplexml'
             );
 
-    var $unserializeoptions = array();
-
     var $_gs;
 
     function &getInstance()
@@ -150,7 +148,7 @@ class Data {
 
     function convXML2Arr($xml)
     {
-        $handle = new XML_Unserializer($this->unserializeoptions);
+        $handle = new XML_Unserializer();
         $handle->unserialize($xml);
         $arr = $handle->getUnserializedData();
 
