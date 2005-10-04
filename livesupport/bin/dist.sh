@@ -43,10 +43,11 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 docdir=$basedir/doc
+srcdir=$basedir/src
 tmpdir=$basedir/tmp
-toolsdir=$basedir/tools
-modules_dir=$basedir/modules
-products_dir=$basedir/products
+toolsdir=$srcdir/tools
+modules_dir=$srcdir/modules
+products_dir=$srcdir/products
 
 usrdir=`cd $basedir/usr; pwd;`
 
@@ -135,9 +136,10 @@ tarball=$directory/livesupport-$version.tar.bz2
 tarball_libs=$directory/livesupport-libraries-$version.tar.bz2
 
 ls_tmpdir=$tmpdir/livesupport-$version
-tools_tmpdir=$ls_tmpdir/tools
-modules_tmpdir=$ls_tmpdir/modules
-products_tmpdir=$ls_tmpdir/products
+src_tmpdir=$ls_tmpdir/src
+tools_tmpdir=$src_tmpdir/tools
+modules_tmpdir=$src_tmpdir/modules
+products_tmpdir=$src_tmpdir/products
 doc_tmpdir=$ls_tmpdir/doc
 etc_tmpdir=$ls_tmpdir/etc
 tmp_tmpdir=$ls_tmpdir/tmp
@@ -205,6 +207,7 @@ echo "Creating $tarball...";
 mkdir -p $ls_tmpdir
 mkdir -p $ls_tmpdir/usr
 mkdir -p $tmp_tmpdir
+mkdir -p $src_tmpdir
 mkdir -p $modules_tmpdir
 mkdir -p $products_tmpdir
 

@@ -42,10 +42,11 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 docdir=$basedir/doc
+srcdir=$basedir/src
 tmpdir=$basedir/tmp
-toolsdir=$basedir/tools
-modules_dir=$basedir/modules
-products_dir=$basedir/products
+toolsdir=$srcdir/tools
+modules_dir=$srcdir/modules
+products_dir=$srcdir/products
 
 usrdir=`cd $basedir/usr; pwd;`
 

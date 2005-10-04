@@ -34,9 +34,10 @@ reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 docdir=$basedir/doc
+srcdir=$basedir/src
 tmpdir=$basedir/tmp
-modules_dir=$basedir/modules
-products_dir=$basedir/products
+modules_dir=$srcdir/modules
+products_dir=$srcdir/products
 
 usrdir=`cd $basedir/usr; pwd;`
 

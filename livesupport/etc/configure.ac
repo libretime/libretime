@@ -37,7 +37,7 @@ AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
+AC_CONFIG_SRCDIR(../src/products/scheduler/src/main.cxx)
 
 AC_PROG_CC()
 AC_PROG_CXX()
@@ -417,72 +417,72 @@ fi
 
 
 dnl set up the alib module
-AC_CONFIG_COMMANDS([../modules/alib/tmp/configure],
-                   [../modules/alib/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/alib/tmp/configure],
+                   [../src/modules/alib/bin/autogen.sh])
 
 dnl set up the archive server module
-AC_CONFIG_COMMANDS([../modules/archiveServer/tmp/configure],
-                   [../modules/archiveServer/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/archiveServer/tmp/configure],
+                   [../src/modules/archiveServer/bin/autogen.sh])
 
 dnl set up the getid3 module
-AC_CONFIG_COMMANDS([../modules/getid3/tmp/configure],
-                   [../modules/getid3/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/getid3/tmp/configure],
+                   [../src/modules/getid3/bin/autogen.sh])
 
 dnl set up the htmlUI module
-AC_CONFIG_COMMANDS([../modules/htmlUI/tmp/configure],
-                   [../modules/htmlUI/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/htmlUI/tmp/configure],
+                   [../src/modules/htmlUI/bin/autogen.sh])
 
 dnl set up the storage admin module
-AC_CONFIG_COMMANDS([../modules/storageAdmin/tmp/configure],
-                   [../modules/storageAdmin/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/storageAdmin/tmp/configure],
+                   [../src/modules/storageAdmin/bin/autogen.sh])
 
 dnl set up the storage server module
-AC_CONFIG_COMMANDS([../modules/storageServer/tmp/configure],
-                   [../modules/storageServer/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/storageServer/tmp/configure],
+                   [../src/modules/storageServer/bin/autogen.sh])
 
 dnl set up the core module
-AC_CONFIG_COMMANDS([../modules/core/tmp/configure],
-                   [../modules/core/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/core/tmp/configure],
+                   [../src/modules/core/bin/autogen.sh])
 
 dnl set up the authentication module
-AC_CONFIG_COMMANDS([../modules/authentication/tmp/configure],
-                   [../modules/authentication/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/authentication/tmp/configure],
+                   [../src/modules/authentication/bin/autogen.sh])
 
 dnl set up the db module
-AC_CONFIG_COMMANDS([../modules/db/tmp/configure],
-                   [../modules/db/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/db/tmp/configure],
+                   [../src/modules/db/bin/autogen.sh])
 
 dnl set up the storage module
-AC_CONFIG_COMMANDS([../modules/storage/tmp/configure],
-                   [../modules/storage/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/storage/tmp/configure],
+                   [../src/modules/storage/bin/autogen.sh])
 
 dnl set up the gstreamer elements module
-AC_CONFIG_COMMANDS([../modules/gstreamerElements/tmp/configure],
-                   [../modules/gstreamerElements/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/gstreamerElements/tmp/configure],
+                   [../src/modules/gstreamerElements/bin/autogen.sh])
 
 dnl set up the playlist executor module
-AC_CONFIG_COMMANDS([../modules/playlistExecutor/tmp/configure],
-                   [../modules/playlistExecutor/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/playlistExecutor/tmp/configure],
+                   [../src/modules/playlistExecutor/bin/autogen.sh])
 
 dnl set up the event scheduler module
-AC_CONFIG_COMMANDS([../modules/eventScheduler/tmp/configure],
-                   [../modules/eventScheduler/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/eventScheduler/tmp/configure],
+                   [../src/modules/eventScheduler/bin/autogen.sh])
 
 dnl set up the scheduler client module
-AC_CONFIG_COMMANDS([../modules/schedulerClient/tmp/configure],
-                   [../modules/schedulerClient/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/schedulerClient/tmp/configure],
+                   [../src/modules/schedulerClient/bin/autogen.sh])
 
 dnl set up the  widgets module
-AC_CONFIG_COMMANDS([../modules/widgets/tmp/configure],
-                   [../modules/widgets/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/modules/widgets/tmp/configure],
+                   [../src/modules/widgets/bin/autogen.sh])
 
 dnl set up the scheduler product
-AC_CONFIG_COMMANDS([../products/scheduler/tmp/configure],
-                   [../products/scheduler/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/products/scheduler/tmp/configure],
+                   [../src/products/scheduler/bin/autogen.sh])
 
 dnl set up the gLiveSupport product
-AC_CONFIG_COMMANDS([../products/gLiveSupport/tmp/configure],
-                   [../products/gLiveSupport/bin/autogen.sh])
+AC_CONFIG_COMMANDS([../src/products/gLiveSupport/tmp/configure],
+                   [../src/products/gLiveSupport/bin/autogen.sh])
 
 
 
