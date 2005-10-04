@@ -46,7 +46,7 @@ coverage_report_dir=$docdir/coverage
 core_coverage_file=$modules_dir/core/tmp/coverage.info
 authentication_coverage_file=$modules_dir/authentication/tmp/coverage.info
 db_coverage_file=$modules_dir/db/tmp/coverage.info
-storage_coverage_file=$modules_dir/storage/tmp/coverage.info
+storageClient_coverage_file=$modules_dir/storageClient/tmp/coverage.info
 eventScheduler_coverage_file=$modules_dir/eventScheduler/tmp/coverage.info
 schedulerClient_coverage_file=$modules_dir/schedulerClient/tmp/coverage.info
 playlistExecutor_coverage_file=$modules_dir/playlistExecutor/tmp/coverage.info
@@ -64,7 +64,7 @@ genhtml=$usrdir/bin/genhtml
 $modules_dir/core/bin/gen_coverage_data.sh
 $modules_dir/authentication/bin/gen_coverage_data.sh
 $modules_dir/db/bin/gen_coverage_data.sh
-$modules_dir/storage/bin/gen_coverage_data.sh
+$modules_dir/storageClient/bin/gen_coverage_data.sh
 $modules_dir/eventScheduler/bin/gen_coverage_data.sh
 $modules_dir/schedulerClient/bin/gen_coverage_data.sh
 $modules_dir/playlistExecutor/bin/gen_coverage_data.sh
@@ -80,7 +80,7 @@ echo "" > $coverage_file
 cat $core_coverage_file | sed -e "s/core\/tmp\//core\//g" >> $coverage_file
 cat $authentication_coverage_file | sed -e "s/authentication\/tmp\//authentication\//g" >> $coverage_file
 cat $db_coverage_file | sed -e "s/db\/tmp\//db\//g" >> $coverage_file
-cat $storage_coverage_file | sed -e "s/storage\/tmp\//storage\//g" >> $coverage_file
+cat $storageClient_coverage_file | sed -e "s/storageClient\/tmp\//storageClient\//g" >> $coverage_file
 cat $eventScheduler_coverage_file | sed -e "s/eventScheduler\/tmp\//eventScheduler\//g" >> $coverage_file
 cat $schedulerClient_coverage_file | sed -e "s/schedulerClient\/tmp\//schedulerClient\//g" >> $coverage_file
 cat $playlistExecutor_coverage_file | sed -e "s/playlistExecutor\/tmp\//playlistExecutor\//g" >> $coverage_file

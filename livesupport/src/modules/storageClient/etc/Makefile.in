@@ -90,8 +90,8 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
-STORAGE_LIB      = livesupport_storage
-STORAGE_LIB_FILE = ${LIB_DIR}/lib${STORAGE_LIB}.a
+STORAGE_CLIENT_LIB      = livesupport_storage_client
+STORAGE_CLIENT_LIB_FILE = ${LIB_DIR}/lib${STORAGE_CLIENT_LIB}.a
 TEST_RUNNER      = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
@@ -125,16 +125,17 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-STORAGE_LIB_OBJS = ${TMP_DIR}/StorageClientFactory.o \
-                   ${TMP_DIR}/TestStorageClient.o \
-                   ${TMP_DIR}/WebStorageClient.o
+STORAGE_CLIENT_LIB_OBJS = ${TMP_DIR}/StorageClientFactory.o \
+                          ${TMP_DIR}/TestStorageClient.o \
+                          ${TMP_DIR}/WebStorageClient.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/StorageClientFactoryTest.o \
                    ${TMP_DIR}/TestStorageClientTest.o \
                    ${TMP_DIR}/WebStorageClientTest.o                   
 
-TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -l${AUTHENTICATION_LIB} \
+TEST_RUNNER_LIBS = -l${STORAGE_CLIENT_LIB} -l${CORE_LIB} \
+                   -l${AUTHENTICATION_LIB} \
                    -lcppunit -ldl -lxmlrpc++ -lssl
 
 
@@ -143,7 +144,7 @@ TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -l${AUTHENTICATION_LIB} \
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean check install
 
-all: dir_setup ${STORAGE_LIB_FILE}
+all: dir_setup ${STORAGE_CLIENT_LIB_FILE}
 
 dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
 
@@ -151,7 +152,7 @@ doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
 
 clean:
-	${RM} ${STORAGE_LIB_OBJS} ${STORAGE_LIB_FILE}
+	${RM} ${STORAGE_CLIENT_LIB_OBJS} ${STORAGE_CLIENT_LIB_FILE}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
@@ -172,13 +173,13 @@ install: all
 	${MKDIR} ${USR_INCLUDE_DIR}/LiveSupport/Storage
 	${CP} ${INCLUDE_DIR}/LiveSupport/Storage/*.h \
           ${USR_INCLUDE_DIR}/LiveSupport/Storage
-	${CP} ${STORAGE_LIB_FILE} ${USR_LIB_DIR}
+	${CP} ${STORAGE_CLIENT_LIB_FILE} ${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-${STORAGE_LIB_FILE}: ${STORAGE_LIB_OBJS}
+${STORAGE_CLIENT_LIB_FILE}: ${STORAGE_CLIENT_LIB_OBJS}
 	${AR} crus $@ $^
 
 ${TMP_DIR}:
@@ -188,7 +189,7 @@ ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
 ${TEST_RUNNER}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} \
-                ${TEST_RUNNER_OBJS} ${STORAGE_LIB_FILE}
+                ${TEST_RUNNER_OBJS} ${STORAGE_CLIENT_LIB_FILE}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:

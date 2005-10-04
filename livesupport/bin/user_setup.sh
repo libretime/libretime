@@ -290,11 +290,11 @@ cat $modules_dir/schedulerClient/etc/schedulerDaemonXmlRpcClient.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/schedulerDaemonXmlRpcClient.xml
 
-cat $modules_dir/storage/etc/webAuthenticationClient.xml.template \
+cat $modules_dir/storageClient/etc/webAuthenticationClient.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/webAuthenticationClient.xml
 
-cat $modules_dir/storage/etc/webStorage.xml.template \
+cat $modules_dir/storageClient/etc/webStorage.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/webStorage.xml
 

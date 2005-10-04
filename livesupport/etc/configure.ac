@@ -452,9 +452,9 @@ dnl set up the db module
 AC_CONFIG_COMMANDS([../src/modules/db/tmp/configure],
                    [../src/modules/db/bin/autogen.sh])
 
-dnl set up the storage module
-AC_CONFIG_COMMANDS([../src/modules/storage/tmp/configure],
-                   [../src/modules/storage/bin/autogen.sh])
+dnl set up the storage client module
+AC_CONFIG_COMMANDS([../src/modules/storageClient/tmp/configure],
+                   [../src/modules/storageClient/bin/autogen.sh])
 
 dnl set up the gstreamer elements module
 AC_CONFIG_COMMANDS([../src/modules/gstreamerElements/tmp/configure],

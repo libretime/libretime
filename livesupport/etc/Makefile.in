@@ -128,7 +128,7 @@ MODULES_DIR            = ${SRC_DIR}/modules
 CORE_DIR               = ${MODULES_DIR}/core
 AUTHENTICATION_DIR     = ${MODULES_DIR}/authentication
 DB_DIR                 = ${MODULES_DIR}/db
-STORAGE_DIR            = ${MODULES_DIR}/storage
+STORAGE_CLIENT_DIR     = ${MODULES_DIR}/storageClient
 GSTREAMER_ELEMENTS_DIR = ${MODULES_DIR}/gstreamerElements
 PLAYLIST_EXECUTOR_DIR  = ${MODULES_DIR}/playlistExecutor
 EVENT_SCHEDULER_DIR    = ${MODULES_DIR}/eventScheduler
@@ -186,7 +186,7 @@ flawfinder:
                   ${CORE_DIR}/include ${CORE_DIR}/src \
                   ${AUTHENTICATION_DIR}/include ${AUTHENTICATION_DIR}/src \
                   ${DB_DIR}/include ${DB_DIR}/src \
-                  ${STORAGE_DIR}/include ${STORAGE_DIR}/src \
+                  ${STORAGE_CLIENT_DIR}/include ${STORAGE_CLIENT_DIR}/src \
                   ${GSTREAMER_ELEMENTS_DIR}/include \
                   ${GSTREAMER_ELEMENTS_DIR}/src \
                   ${PLAYLIST_EXECUTOR_DIR}/include \
@@ -329,7 +329,7 @@ ${TMP_DIR}/modules_setup.stamp:
 	cd ${CORE_DIR} && ./configure --prefix=${prefix}
 	cd ${AUTHENTICATION_DIR} && ./configure --prefix=${prefix}
 	cd ${DB_DIR} && ./configure --prefix=${prefix}
-	cd ${STORAGE_DIR} && ./configure --prefix=${prefix}
+	cd ${STORAGE_CLIENT_DIR} && ./configure --prefix=${prefix}
 	cd ${GSTREAMER_ELEMENTS_DIR} && ./configure --prefix=${prefix}
 	cd ${PLAYLIST_EXECUTOR_DIR} && ./configure --prefix=${prefix}
 	cd ${EVENT_SCHEDULER_DIR} && ./configure --prefix=${prefix}
@@ -370,7 +370,7 @@ modprod_distclean:
 	${MAKE} -C ${CORE_DIR} distclean
 	${MAKE} -C ${AUTHENTICATION_DIR} distclean
 	${MAKE} -C ${DB_DIR} distclean
-	${MAKE} -C ${STORAGE_DIR} distclean
+	${MAKE} -C ${STORAGE_CLIENT_DIR} distclean
 	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} distclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
@@ -386,7 +386,7 @@ depclean:
 	${MAKE} -C ${CORE_DIR} depclean
 	${MAKE} -C ${AUTHENTICATION_DIR} depclean
 	${MAKE} -C ${DB_DIR} depclean
-	${MAKE} -C ${STORAGE_DIR} depclean
+	${MAKE} -C ${STORAGE_CLIENT_DIR} depclean
 	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} depclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} depclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} depclean
@@ -402,7 +402,7 @@ ${TMP_DIR}/compile.stamp:
 	${MAKE} -C ${CORE_DIR} all
 	${MAKE} -C ${AUTHENTICATION_DIR} all
 	${MAKE} -C ${DB_DIR} all
-	${MAKE} -C ${STORAGE_DIR} all
+	${MAKE} -C ${STORAGE_CLIENT_DIR} all
 	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} all
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} all
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} all
@@ -416,7 +416,7 @@ check:
 	-${MAKE} -C ${CORE_DIR} check
 	-${MAKE} -C ${AUTHENTICATION_DIR} check
 	-${MAKE} -C ${DB_DIR} check
-	-${MAKE} -C ${STORAGE_DIR} check
+	-${MAKE} -C ${STORAGE_CLIENT_DIR} check
 	-${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} check
 	-${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} check
 	-${MAKE} -C ${EVENT_SCHEDULER_DIR} check
@@ -467,7 +467,7 @@ install_modules:
 	${MAKE} -C ${CORE_DIR} install
 	${MAKE} -C ${AUTHENTICATION_DIR} install
 	${MAKE} -C ${DB_DIR} install
-	${MAKE} -C ${STORAGE_DIR} install
+	${MAKE} -C ${STORAGE_CLIENT_DIR} install
 	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} install
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} install

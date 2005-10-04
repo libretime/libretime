@@ -133,11 +133,11 @@ AUTHENTICATION_LIB_DIR     = ${AUTHENTICATION_DIR}/lib
 AUTHENTICATION_LIB         = livesupport_authentication
 AUTHENTICATION_LIB_FILE   = ${AUTHENTICATION_LIB_DIR}/lib${AUTHENTICATION_LIB}.a
 
-STORAGE_DIR         = ${MODULES_DIR}/storage
-STORAGE_INCLUDE_DIR = ${STORAGE_DIR}/include
-STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
-STORAGE_LIB         = livesupport_storage
-STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
+STORAGE_CLIENT_DIR         = ${MODULES_DIR}/storageClient
+STORAGE_CLIENT_INCLUDE_DIR = ${STORAGE_CLIENT_DIR}/include
+STORAGE_CLIENT_LIB_DIR     = ${STORAGE_CLIENT_DIR}/lib
+STORAGE_CLIENT_LIB         = livesupport_storage_client
+STORAGE_CLIENT_LIB_FILE    = ${STORAGE_CLIENT_LIB_DIR}/lib${STORAGE_CLIENT_LIB}.a
 
 SCHEDULER_CLIENT_DIR         = ${MODULES_DIR}/schedulerClient
 SCHEDULER_CLIENT_INCLUDE_DIR = ${SCHEDULER_CLIENT_DIR}/include
@@ -215,7 +215,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
-                             -I${STORAGE_INCLUDE_DIR} \
+                             -I${STORAGE_CLIENT_INCLUDE_DIR} \
                              -I${WIDGETS_INCLUDE_DIR} \
                              -I${SCHEDULER_CLIENT_INCLUDE_DIR} \
                              -I${GSTREAMER_ELEMENTS_INCLUDE_DIR} \
@@ -231,7 +231,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
-                     -L${STORAGE_LIB_DIR} \
+                     -L${STORAGE_CLIENT_LIB_DIR} \
                      -L${WIDGETS_LIB_DIR} \
                      -L${SCHEDULER_CLIENT_LIB_DIR} \
                      -L${GSTREAMER_ELEMENTS_LIB_DIR} \
@@ -275,7 +275,7 @@ FSDF = ${G_LIVESUPPORT_OBJS} \
 G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${GSTREAMER_ELEMENTS_LIB} \
                          -l${AUTHENTICATION_LIB} \
-                         -l${STORAGE_LIB} \
+                         -l${STORAGE_CLIENT_LIB} \
                          -l${WIDGETS_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
@@ -316,7 +316,7 @@ depclean: clean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} clean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} clean
 	${MAKE} -C ${WIDGETS_DIR} clean
-	${MAKE} -C ${STORAGE_DIR} clean
+	${MAKE} -C ${STORAGE_CLIENT_DIR} clean
 	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
 
@@ -328,7 +328,7 @@ check: all ${TEST_RUNNER} storage_server_init run_tests
 install: all
 	${MAKE} -C ${CORE_DIR} install
 	${MAKE} -C ${AUTHENTICATION_DIR} install
-	${MAKE} -C ${STORAGE_DIR} install
+	${MAKE} -C ${STORAGE_CLIENT_DIR} install
 	${MAKE} -C ${WIDGETS_DIR} install
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} install
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
@@ -377,7 +377,7 @@ storage_server_init:
 #-------------------------------------------------------------------------------
 ${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
                       ${AUTHENTICATION_LIB_FILE} \
-                      ${STORAGE_LIB_FILE} \
+                      ${STORAGE_CLIENT_LIB_FILE} \
                       ${WIDGETS_LIB_FILE} \
                       ${SCHEDULER_CLIENT_LIB_FILE} \
                       ${PLAYLIST_EXECUTOR_LIB_FILE} \
@@ -392,7 +392,7 @@ ${DOXYGEN_DIR}:
 
 ${TEST_RUNNER}: ${CORE_LIB_FILE} \
                 ${AUTHENTICATION_LIB_FILE} \
-                ${STORAGE_LIB_FILE} \
+                ${STORAGE_CLIENT_LIB_FILE} \
                 ${WIDGETS_LIB_FILE} \
                 ${SCHEDULER_CLIENT_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
@@ -404,8 +404,8 @@ ${CORE_LIB_FILE}:
 ${AUTHENTICATION_LIB_FILE}:
 	${MAKE} -C ${AUTHENTICATION_DIR}
 
-${STORAGE_LIB_FILE}:
-	${MAKE} -C ${STORAGE_DIR}
+${STORAGE_CLIENT_LIB_FILE}:
+	${MAKE} -C ${STORAGE_CLIENT_DIR}
 
 ${WIDGETS_LIB_FILE}:
 	${MAKE} -C ${WIDGETS_DIR}

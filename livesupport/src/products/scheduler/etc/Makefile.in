@@ -145,11 +145,11 @@ DB_LIB_DIR     = ${DB_DIR}/lib
 DB_LIB         = livesupport_db
 DB_LIB_FILE    = ${DB_LIB_DIR}/lib${DB_LIB}.a
 
-STORAGE_DIR         = ${MODULES_DIR}/storage
-STORAGE_INCLUDE_DIR = ${STORAGE_DIR}/include
-STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
-STORAGE_LIB         = livesupport_storage
-STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
+STORAGE_CLIENT_DIR         = ${MODULES_DIR}/storageClient
+STORAGE_CLIENT_INCLUDE_DIR = ${STORAGE_CLIENT_DIR}/include
+STORAGE_CLIENT_LIB_DIR     = ${STORAGE_CLIENT_DIR}/lib
+STORAGE_CLIENT_LIB         = livesupport_storage_client
+STORAGE_CLIENT_LIB_FILE    = ${STORAGE_CLIENT_LIB_DIR}/lib${STORAGE_CLIENT_LIB}.a
 
 STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
 
@@ -204,7 +204,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${DB_INCLUDE_DIR} \
-                             -I${STORAGE_INCLUDE_DIR} \
+                             -I${STORAGE_CLIENT_INCLUDE_DIR} \
                              -I${GSTREAMER_ELEMENTS_INCLUDE_DIR} \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${EVENT_SCHEDULER_INCLUDE_DIR} \
@@ -220,7 +220,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${DB_LIB_DIR} \
-                     -L${STORAGE_LIB_DIR} \
+                     -L${STORAGE_CLIENT_LIB_DIR} \
                      -L${GSTREAMER_ELEMENTS_LIB_DIR} \
                      -L${PLAYLIST_EXECUTOR_LIB_DIR} \
                      -L${EVENT_SCHEDULER_LIB_DIR}
@@ -266,7 +266,8 @@ SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
 SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
                      -l${GSTREAMER_ELEMENTS_LIB} \
-                     -l${STORAGE_LIB} -l${DB_LIB} -l${AUTHENTICATION_LIB} \
+                     -l${STORAGE_CLIENT_LIB} -l${DB_LIB} \
+					 -l${AUTHENTICATION_LIB} \
                      -l${CORE_LIB} \
                      -l${BOOST_DATE_TIME_LIB} \
                      -lxmlrpc++ -lssl
@@ -350,7 +351,7 @@ docclean:
 depclean: clean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} clean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} clean
-	${MAKE} -C ${STORAGE_DIR} clean
+	${MAKE} -C ${STORAGE_CLIENT_DIR} clean
 	${MAKE} -C ${DB_DIR} clean
 	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
@@ -366,7 +367,7 @@ copy_files:
 	${MAKE} -C ${CORE_DIR} install
 	${MAKE} -C ${AUTHENTICATION_DIR} install
 	${MAKE} -C ${DB_DIR} install
-	${MAKE} -C ${STORAGE_DIR} install
+	${MAKE} -C ${STORAGE_CLIENT_DIR} install
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} install
 	${MKDIR} ${USR_BIN_DIR}
@@ -459,7 +460,7 @@ kill:
 #   Specific targets
 #-------------------------------------------------------------------------------
 ${SCHEDULER_EXE}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} ${DB_LIB_FILE} \
-                  ${STORAGE_LIB_FILE} \
+                  ${STORAGE_CLIENT_LIB_FILE} \
                   ${PLAYLIST_EXECUTOR_LIB_FILE} ${EVENT_SCHEDULER_LIB_FILE} \
                   ${SCHEDULER_EXE_OBJS}
 	${CXX} ${LDFLAGS} -o $@ $^ ${SCHEDULER_EXE_LIBS}
@@ -471,7 +472,7 @@ ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
 ${TEST_RUNNER}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} ${DB_LIB_FILE} \
-                ${STORAGE_LIB_FILE} \
+                ${STORAGE_CLIENT_LIB_FILE} \
                 ${PLAYLIST_EXECUTOR_LIB_FILE} ${EVENT_SCHEDULER_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
@@ -485,8 +486,8 @@ ${AUTHENTICATION_LIB_FILE} :
 ${DB_LIB_FILE}:
 	${MAKE} -C ${DB_DIR}
 
-${STORAGE_LIB_FILE}:
-	${MAKE} -C ${STORAGE_DIR}
+${STORAGE_CLIENT_LIB_FILE}:
+	${MAKE} -C ${STORAGE_CLIENT_DIR}
 
 ${GSTREAMER_ELEMENTS_LIB_FILE}:
 	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR}
