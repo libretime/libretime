@@ -104,7 +104,6 @@ $methods = array(
     'browseCategory'          =>'Return values of specified metadata category.',
     'accessRawAudioData'      => 'Get access to raw audio data.',
     'releaseRawAudioData'     => 'Release access to raw audio data.',
-    'getAudioClip'            => 'Return the contents of an Audio clip.',
     'resetStorage'            => 'Reset storageServer for debugging.',
     'storeWebstream'          => 'Store audio stream identified by URL',
 
