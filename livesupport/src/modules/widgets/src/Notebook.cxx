@@ -60,12 +60,12 @@ Notebook :: Notebook(void)                                      throw ()
 {
     Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
-    layout     = Gtk::manage(new Gtk::Table());
+    layout     = Gtk::manage(new Gtk::VBox());
     tabBox     = Gtk::manage(new Gtk::HBox());
     pageHolder = Gtk::manage(new Gtk::Alignment());
 
-    layout->attach(*tabBox,     0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 5);
-    layout->attach(*pageHolder, 0, 1, 1, 2, Gtk::SHRINK, Gtk::SHRINK, 5, 5);
+    layout->pack_start(*tabBox, Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*pageHolder, Gtk::PACK_EXPAND_WIDGET, 5);
 
     add(*layout);
 
@@ -241,7 +241,7 @@ Notebook :: pagesAdded(void)                            throw ()
     while (pagesIt != pagesEnd) {
         Page        * page   = *pagesIt;
 
-        tabBox->pack_start(*page->button);
+        tabBox->pack_start(*page->button, Gtk::PACK_SHRINK, 0);
         page->button->signal_clicked().connect(sigc::mem_fun(*page,
                                                 &Notebook::Page::onTabClicked));
         pagesIt++;

@@ -88,9 +88,9 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 *getResourceUstring("chooseFileButtonLabel")));
 
         // add the metadata entry fields
-        mainLayout   = Gtk::manage(new Gtk::Table());
-        musicLayout  = Gtk::manage(new Gtk::Table());
-        talkLayout   = Gtk::manage(new Gtk::Table());
+        mainTable   = Gtk::manage(new Gtk::Table());
+        musicTable  = Gtk::manage(new Gtk::Table());
+        talkTable   = Gtk::manage(new Gtk::Table());
                 
         Ptr<MetadataTypeContainer>::Ref
                     metadataTypes = gLiveSupport->getMetadataTypeContainer();
@@ -116,25 +116,25 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
             
             switch (tab) {
                 case MetadataType::mainTab :
-                        mainLayout->attach(*metadataName, 0, 1,
+                        mainTable->attach(*metadataName, 0, 1,
                                            mainCounter, mainCounter + 1);
-                        mainLayout->attach(*metadataEntryBin, 1, 2,
+                        mainTable->attach(*metadataEntryBin, 1, 2,
                                            mainCounter, mainCounter + 1);
                         ++mainCounter;
                         break;
                         
                 case MetadataType::musicTab :
-                        musicLayout->attach(*metadataName, 0, 1,
+                        musicTable->attach(*metadataName, 0, 1,
                                            musicCounter, musicCounter + 1);
-                        musicLayout->attach(*metadataEntryBin, 1, 2,
+                        musicTable->attach(*metadataEntryBin, 1, 2,
                                            musicCounter, musicCounter + 1);
                         ++musicCounter;
                         break;
                         
                 case MetadataType::talkTab :
-                        talkLayout->attach(*metadataName, 0, 1,
+                        talkTable->attach(*metadataName, 0, 1,
                                            talkCounter, talkCounter + 1);
-                        talkLayout->attach(*metadataEntryBin, 1, 2,
+                        talkTable->attach(*metadataEntryBin, 1, 2,
                                            talkCounter, talkCounter + 1);
                         ++talkCounter;
                         break;
@@ -149,8 +149,8 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 *getResourceUstring("lengthLabel") ));
         lengthValueLabel = Gtk::manage(new Gtk::Label());
 
-        mainLayout->attach(*lengthLabel,      0, 1, mainCounter, mainCounter+1);
-        mainLayout->attach(*lengthValueLabel, 1, 2, mainCounter, mainCounter+1);
+        mainTable->attach(*lengthLabel,      0, 1, mainCounter, mainCounter+1);
+        mainTable->attach(*lengthValueLabel, 1, 2, mainCounter, mainCounter+1);
         
         // buttons, etc.
         uploadButton = Gtk::manage(wf->createButton(
@@ -168,26 +168,49 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // build up the notepad for the different metadata sections
     metadataNotebook = Gtk::manage(new Notebook());
     
-    mainLayout->set_row_spacings(2);
-    mainLayout->set_col_spacings(5);
-    musicLayout->set_row_spacings(2);
-    musicLayout->set_col_spacings(5);
-    talkLayout->set_row_spacings(2);
-    talkLayout->set_col_spacings(5);
+    mainTable->set_row_spacings(2);
+    mainTable->set_col_spacings(5);
+    musicTable->set_row_spacings(2);
+    musicTable->set_col_spacings(5);
+    talkTable->set_row_spacings(2);
+    talkTable->set_col_spacings(5);
+      
+    // expand the input fields horizontally, but shrink-wrap vertically
+    Gtk::Alignment *    mainAlignment  = Gtk::manage(new Gtk::Alignment(
+                                                0.0, 0.0, 1.0, 0.0));
+    Gtk::Alignment *    musicAlignment = Gtk::manage(new Gtk::Alignment(
+                                                0.0, 0.0, 1.0, 0.0));
+    Gtk::Alignment *    talkAlignment  = Gtk::manage(new Gtk::Alignment(
+                                                0.0, 0.0, 1.0, 0.0));
+
+    mainAlignment->add(*mainTable);
+    musicAlignment->add(*musicTable);
+    talkAlignment->add(*talkTable);
     
-    Gtk::Alignment *    mainAlignment  = Gtk::manage(new Gtk::Alignment());
-    Gtk::Alignment *    musicAlignment = Gtk::manage(new Gtk::Alignment());
-    Gtk::Alignment *    talkAlignment  = Gtk::manage(new Gtk::Alignment());
-    mainAlignment->add(*mainLayout);
-    musicAlignment->add(*musicLayout);
-    talkAlignment->add(*talkLayout);
-    
+    Gtk::ScrolledWindow *   mainScrolledWindow 
+                            = Gtk::manage(new Gtk::ScrolledWindow());
+    Gtk::ScrolledWindow *   musicScrolledWindow 
+                            = Gtk::manage(new Gtk::ScrolledWindow());
+    Gtk::ScrolledWindow *   talkScrolledWindow 
+                            = Gtk::manage(new Gtk::ScrolledWindow());
+
+    mainScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
+                                   Gtk::POLICY_AUTOMATIC);
+    musicScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
+                                    Gtk::POLICY_AUTOMATIC);
+    talkScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
+                                   Gtk::POLICY_AUTOMATIC);
+
+    mainScrolledWindow->add(*mainAlignment);
+    musicScrolledWindow->add(*musicAlignment);
+    talkScrolledWindow->add(*talkAlignment);
+       
     try {
-        metadataNotebook->appendPage(*mainAlignment,
+        metadataNotebook->appendPage(*mainScrolledWindow,
                                 *getResourceUstring("mainSectionLabel"));
-        metadataNotebook->appendPage(*musicAlignment,
+        metadataNotebook->appendPage(*musicScrolledWindow,
                                 *getResourceUstring("musicSectionLabel"));
-        metadataNotebook->appendPage(*talkAlignment,
+        metadataNotebook->appendPage(*talkScrolledWindow,
                                 *getResourceUstring("talkSectionLabel"));
     } catch (std::invalid_argument &e) {
         // TODO: signal error
@@ -230,6 +253,11 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 &UploadFileWindow::onCloseButtonClicked));
 
     // show everything
+    set_name("uploadFileWindow");
+    set_default_size(350, 500);
+    set_modal(false);
+    property_window_position().set_value(Gtk::WIN_POS_NONE);
+    
     show_all();
 }
 

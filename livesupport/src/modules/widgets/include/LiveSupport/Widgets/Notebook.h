@@ -88,12 +88,12 @@ class Notebook : public Gtk::Alignment
                 /**
                  *  The Notebook this page is contained in.
                  */
-                Notebook      * notebook;
+                Notebook          * notebook;
 
                 /**
                  *  The index of the page.
                  */
-                unsigned int    index;
+                unsigned int        index;
 
                 /**
                  *  The container for the widget.
@@ -103,12 +103,12 @@ class Notebook : public Gtk::Alignment
                 /**
                  *  The contents of the page.
                  */
-                Gtk::Widget   * widget;
+                Gtk::Widget       * widget;
 
                 /**
                  *  The button of the page.
                  */
-                Button        * button;
+                Button            * button;
 
                 /**
                  *  Signal handler for the tab button clicked.
@@ -154,7 +154,7 @@ class Notebook : public Gtk::Alignment
         /**
          *  The list type, for the list of pages.
          */
-        typedef std::vector<Page*>  PageList;
+        typedef std::vector<Page*>      PageList;
 
         /**
          *  The list of pages in the notebook.
@@ -164,7 +164,7 @@ class Notebook : public Gtk::Alignment
         /**
          *  The layout of the window.
          */
-        Gtk::Table                    * layout;
+        Gtk::VBox                     * layout;
 
         /**
          *  The horizontal box holding the tabs.

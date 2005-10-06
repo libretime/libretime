@@ -126,17 +126,17 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The layout of the main section.
          */
-        Gtk::Table                * mainLayout;
+        Gtk::Table                * mainTable;
 
         /**
          *  The layout of the music section.
          */
-        Gtk::Table                * musicLayout;
+        Gtk::Table                * musicTable;
 
         /**
          *  The layout of the talk section.
          */
-        Gtk::Table                * talkLayout;
+        Gtk::Table                * talkTable;
 
         /**
          *  A list of the Dublin Core names of the metadata fields.
