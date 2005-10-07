@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_Colors_h
-#define LiveSupport_Widgets_Colors_h
+#ifndef LiveSupport_Widgets_ScrolledWindow_h
+#define LiveSupport_Widgets_ScrolledWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,16 +40,16 @@
 #include "configure.h"
 #endif
 
-#include <stdexcept>
-#include <map>
+#include <gtkmm/scrolledwindow.h>
 
-#include "gdkmm/color.h"
-#include "gdkmm/colormap.h"
+#include "LiveSupport/Widgets/Colors.h"
 
 
 namespace LiveSupport {
 namespace Widgets {
 
+using namespace LiveSupport::Core;
+    
 /* ================================================================ constants */
 
 
@@ -59,51 +59,33 @@ namespace Widgets {
 /* =============================================================== data types */
 
 /**
- *  A helper class to hold all the standard colors used by the LiveSupport GUI.
- *
- *  The definitions of the colors can be found in doc/gui/styleguide.pdf;
- *  the last two colors were taken from doc/gui/designs/livemode.gif.
+ *  A subclass of Gtk::ScrolledWindow.  The only difference is that the
+ *  background color is hard-coded to be LiveSupport::Widgets::Colors::White.
  *
  *  @author  $Author$
  *  @version $Revision$
  */
-class Colors
+class ScrolledWindow : public Gtk::ScrolledWindow
 {
-    public:
+    protected:
         /**
-         *  The names of the colors.
+         *  Handle the realize event.
          */
-        typedef enum  { White, Black, 
-                        LightBlue, BrightBlue, Blue, DarkBlue, 
-                        Gray, SlateGray, MediumBlueGray, DarkGray, 
-                        Orange, 
-                        MasterPanelCenterBlue, LiveModeRowBlue,
-                        WindowBackground = White }              ColorName;
+        virtual void
+        on_realize()                                                throw ();
 
-    private:
-        /**
-         *  The vector holding the colors.
-         */
-        static std::map<ColorName, Gdk::Color>  colors;
-
-        /**
-         *  This loads the colors.
-         */
-        static void
-        initialize(void)                                        throw ();
-
-        /**
-         *  Whether we have been initialized yet.
-         */
-        bool
-        static initialized;
 
     public:
         /**
-         *  Get a color by its name.
+         *  Constructor.
          */
-        static const Gdk::Color&
-        getColor(const ColorName&)                              throw ();
+        ScrolledWindow()                                            throw ();
+
+        /**
+         *  A virtual destructor.
+         */
+        virtual
+        ~ScrolledWindow(void)                                       throw ();
 };
 
 
@@ -116,5 +98,5 @@ class Colors
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_Colors_h
+#endif // LiveSupport_Widgets_ScrolledWindow_h
 

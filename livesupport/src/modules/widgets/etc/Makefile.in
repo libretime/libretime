@@ -147,7 +147,8 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
 				   ${TMP_DIR}/ZebraCellRenderer.o \
 				   ${TMP_DIR}/Colors.o \
 				   ${TMP_DIR}/MessageWindow.o \
-				   ${TMP_DIR}/DialogWindow.o
+				   ${TMP_DIR}/DialogWindow.o \
+				   ${TMP_DIR}/ScrolledWindow.o
 				   
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o

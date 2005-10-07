@@ -187,12 +187,12 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     musicAlignment->add(*musicTable);
     talkAlignment->add(*talkTable);
     
-    Gtk::ScrolledWindow *   mainScrolledWindow 
-                            = Gtk::manage(new Gtk::ScrolledWindow());
-    Gtk::ScrolledWindow *   musicScrolledWindow 
-                            = Gtk::manage(new Gtk::ScrolledWindow());
-    Gtk::ScrolledWindow *   talkScrolledWindow 
-                            = Gtk::manage(new Gtk::ScrolledWindow());
+    ScrolledWindow *   mainScrolledWindow 
+                            = Gtk::manage(new ScrolledWindow());
+    ScrolledWindow *   musicScrolledWindow 
+                            = Gtk::manage(new ScrolledWindow());
+    ScrolledWindow *   talkScrolledWindow 
+                            = Gtk::manage(new ScrolledWindow());
 
     mainScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
                                    Gtk::POLICY_AUTOMATIC);
