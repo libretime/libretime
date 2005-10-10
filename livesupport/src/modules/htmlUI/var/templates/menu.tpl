@@ -17,10 +17,10 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 
 <div class="container_nav">
     <ul id="nav">
-        <li><a>##Add Audio##</a>
+        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Add Audio##</a>
             <ul>
-                <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData"     >##Audioclip##</a></li>
-                <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li>
+                <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Audioclip##</a></li>
+                {* <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li> *}
             </ul>
         </li>
         <li><a>##Media Library##</a>
