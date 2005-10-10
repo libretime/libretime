@@ -40,7 +40,7 @@ var pl_loop;
 
 function pl_start(direction)
 {
-    pl_loop = setInterval("pl_switch"+ direction + "()", 100);
+    pl_loop = setInterval("pl_switch"+ direction + "()", 300);
 }
 
 function pl_stop()
