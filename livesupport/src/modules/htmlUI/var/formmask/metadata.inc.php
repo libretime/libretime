@@ -381,7 +381,7 @@ $mask = array(
                 'id3'       => array('Copyright')
             ),
         ),
-        'Talk'   => array(
+        'Voice'   => array(
             array(
                 'element'   => 'dc:title',
                 'type'      => 'text',

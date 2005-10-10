@@ -59,7 +59,7 @@ function spread(element, name)
 {
     if (document.forms['editMetaData'].elements['Main___' + name])     document.forms['editMetaData'].elements['Main___' + name].value  = element.value;
     if (document.forms['editMetaData'].elements['Music___' + name])    document.forms['editMetaData'].elements['Music___' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Talk___' + name])     document.forms['editMetaData'].elements['Talk___' + name].value  = element.value;
+    if (document.forms['editMetaData'].elements['Voice___' + name])     document.forms['editMetaData'].elements['Voice___' + name].value  = element.value;
 }
 {/literal}
 </script>
