@@ -63,9 +63,11 @@ switch($_REQUEST['act']){
     break;
 
     case "delete":
-        if ($uiHandler->delete($uiHandler->id, $_REQUEST['delOverride']))
-            if ($uiHandler->type != 'Folder')
-                $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
+        if ($uiHandler->delete($_REQUEST['id'], $_REQUEST['delOverride'])) {
+            if ($uiHandler->type != 'Folder') {
+                $uiHandler->SCRATCHPAD->removeItems($_REQUEST['id']);
+            }
+        }
     break;
 
     case "addPerm":

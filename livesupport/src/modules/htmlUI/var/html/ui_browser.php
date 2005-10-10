@@ -60,8 +60,16 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/login.tpl');
             break;
 
-            case "deleteItem":
-                $Smarty->assign('filename', $uiBrowser->_getMDataValue($_REQUEST['id'], UI_MDATA_KEY_TITLE));
+            case "deleteItem": 
+                if (is_array($_REQUEST['id'])) { 
+                    foreach ($_REQUEST['id'] as $i) {
+                        $idstr .= '&id[]='.$i;
+                    }
+                    $Smarty->assign('filecount', count($_REQUEST['id']));
+                    $Smarty->assign('idstr', $idstr);                
+                } else {
+                    $Smarty->assign('filename', $uiBrowser->_getMDataValue($_REQUEST['id'], UI_MDATA_KEY_TITLE));
+                }
                 $Smarty->display('popup/deleteItem.tpl');
             break;
 

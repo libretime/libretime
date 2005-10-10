@@ -67,6 +67,7 @@
                 {/if}
             </select>
             <script type="text/javascript">
+                // due to browser remembers filled form fields, here this is unwanted behavior
                 document.forms['SP'].elements['SP_multiaction'].options[0].selected = true;
                 document.forms['SP'].elements['all'].checked = false;
                 collector_switchAll('SP');

@@ -109,7 +109,7 @@ class uiHandler extends uiBase {
     {
         if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
             if (UI_ERROR) $this->_retMsg('$1 uses an unsupported file type.', $formdata['mediafile']['name']);
-            $this->redirUrl = UI_BROWSER."?act=editFile&folderId=".$formdata['folderId'];
+            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
             return FALSE;
         }
 
@@ -366,7 +366,6 @@ class uiHandler extends uiBase {
      */
     function delete($id, $delOverride=FALSE)
     {
-        #$this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
         $this->redirUrl = UI_BROWSER."?popup[]=_reload_parent&popup[]=_close";
 
         /* no folder support yet
@@ -378,15 +377,22 @@ class uiHandler extends uiBase {
         }
         */
 
-        if ($this->gb->getFileType($id)=='playlist') {
-            $r = $this->gb->deletePlaylist($id, $this->sessid);
-        } else {
-            $r = $this->gb->deleteFile($id, $this->sessid);
+        if (is_array($id))  $ids   = $id;
+        else                $ids[] = $id;
+
+        foreach ($ids as $id) {
+            if ($this->gb->getFileType($id) == 'playlist') {
+                $r = $this->gb->deletePlaylist($id, $this->sessid);
+            } else {
+                $r = $this->gb->deleteFile($id, $this->sessid);
+            }
+            
+            if(PEAR::isError($r)) {
+                $this->_retMsg($r->getMessage());
+                return FALSE;
+            }
         }
-        if(PEAR::isError($r)) {
-            $this->_retMsg($r->getMessage());
-            return FALSE;
-        }
+        
         return TRUE;
     }
 

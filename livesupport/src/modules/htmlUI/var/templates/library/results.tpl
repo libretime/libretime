@@ -64,11 +64,13 @@
                 {else}
                     <option value="PL.create">##New Playlist using this file(s)##</option>
                 {/if}
+                <option value="delete">##Delete files##</option>
          </select>
          <script type="text/javascript">
-            document.forms['SEARCHRESULTS'].elements['SEARCHRESULTS_multiaction'].options[0].selected=true;
-            //document.forms['SEARCHRESULTS'].elements['all'].checked = false;
-            //collector_switchAll('SEARCHRESULTS')
+            // due to browser remembers filled form fields, here this is unwanted behavior
+            document.forms['SEARCHRESULTS'].elements['SEARCHRESULTS_multiaction'].options[0].selected = true;
+            document.forms['SEARCHRESULTS'].elements['all'].checked = false;
+            collector_switchAll('SEARCHRESULTS')
          </script>
 
     </div>

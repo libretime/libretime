@@ -5,16 +5,26 @@ function collector_submit(formname, action, script, name, width, height)
 {
     var href = '';
     var n;
-    if (!script) var script = '{/literal}{$UI_HANDLER}{literal}';
-
-    for (n=0; n < (document.forms[formname].elements.length); n++) {
+    
+    {/literal}
+    if (!script) var script = '{$UI_HANDLER}';
+    {literal}
+    
+    for (n = 0; n < (document.forms[formname].elements.length); n++) {
         if (document.forms[formname].elements[n].checked && document.forms[formname].elements[n].name != 'all') {
             href = href + '&id[]=' + document.forms[formname].elements[n].name;
         }
     }
 
     if (href == '') return false;
-
+    
+    
+    if (action == 'delete') {
+                {/literal}
+                popup('{$UI_BROWSER}?popup[]=deleteItem' + href, 'deleteItem', 400, 100);
+                return;
+                {literal}
+    }
     if (name)   popup (script + '?act=' + action + href, popup, width, height);
     else        hpopup(script + '?act=' + action + href);
 }
@@ -23,7 +33,7 @@ function collector_switchAll(formname)
 {
     var n;
 
-    for (n=0; n < document.forms[formname].elements.length; n++) {
+    for (n = 0; n < document.forms[formname].elements.length; n++) {
         if (document.forms[formname].elements[n].type == 'checkbox') {
             document.forms[formname].elements[n].checked = document.forms[formname].elements['all'].checked;
         }
