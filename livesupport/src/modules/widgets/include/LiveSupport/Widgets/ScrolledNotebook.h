@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_ScrolledWindow_h
-#define LiveSupport_Widgets_ScrolledWindow_h
+#ifndef LiveSupport_Widgets_ScrolledNotebook_h
+#define LiveSupport_Widgets_ScrolledNotebook_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,14 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/scrolledwindow.h>
-
-#include "LiveSupport/Widgets/Colors.h"
+#include "LiveSupport/Widgets/Notebook.h"
 
 
 namespace LiveSupport {
 namespace Widgets {
-    
+
 /* ================================================================ constants */
 
 
@@ -57,33 +55,40 @@ namespace Widgets {
 /* =============================================================== data types */
 
 /**
- *  A subclass of Gtk::ScrolledWindow.  The only difference is that the
- *  background color is hard-coded to be LiveSupport::Widgets::Colors::White.
+ *  A Widgets::Notebook subclass, which puts pages inside 
+ *  a Widgets::ScrolledWindow before appending them.
  *
  *  @author  $Author$
  *  @version $Revision$
  */
-class ScrolledWindow : public Gtk::ScrolledWindow
+class ScrolledNotebook : public Notebook
 {
-    protected:
-        /**
-         *  Handle the realize event.
-         */
-        virtual void
-        on_realize()                                                throw ();
-
-
     public:
         /**
          *  Constructor.
          */
-        ScrolledWindow()                                            throw ();
+        ScrolledNotebook()                                          throw ()
+            : Notebook()
+        {
+        }
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~ScrolledWindow(void)                                       throw ();
+        ~ScrolledNotebook(void)                                     throw ()
+        {
+        }
+
+        /**
+         *  Append a page to the notebook.
+         *
+         *  @param widget the widget that is the page itself.
+         *  @param label the label of the page.
+         */
+        virtual void
+        appendPage(Gtk::Widget            & widget,
+                   const Glib::ustring    & label)                  throw ();
 };
 
 
@@ -96,5 +101,5 @@ class ScrolledWindow : public Gtk::ScrolledWindow
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_ScrolledWindow_h
+#endif // LiveSupport_Widgets_ScrolledNotebook_h
 

@@ -38,7 +38,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/Notebook.h"
+#include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SearchWindow.h"
@@ -74,18 +74,18 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
             LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Gtk::Box *      simpleSearchView = constructSimpleSearchView();
-    Gtk::Box *      advancedSearchView = constructAdvancedSearchView();
-    Gtk::Box *      browseView = constructBrowseView();
+    Gtk::Box *          simpleSearchView = constructSimpleSearchView();
+    Gtk::Box *          advancedSearchView = constructAdvancedSearchView();
+    Gtk::Box *          browseView = constructBrowseView();
 
-    Notebook *      views = Gtk::manage(new Notebook);
+    ScrolledNotebook *  searchInput = Gtk::manage(new ScrolledNotebook);
     try {
         set_title(*getResourceUstring("windowTitle"));
-        views->appendPage(*simpleSearchView,   *getResourceUstring(
+        searchInput->appendPage(*simpleSearchView, *getResourceUstring(
                                                         "simpleSearchTab"));
-        views->appendPage(*advancedSearchView, *getResourceUstring(
+        searchInput->appendPage(*advancedSearchView, *getResourceUstring(
                                                         "advancedSearchTab"));
-        views->appendPage(*browseView,         *getResourceUstring(
+        searchInput->appendPage(*browseView, *getResourceUstring(
                                                         "browseTab"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -94,19 +94,23 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // set up the search results box    
     ZebraTreeView *       searchResultsView = constructSearchResultsView();
-    Gtk::ScrolledWindow * scrolledWindow = Gtk::manage(new Gtk::ScrolledWindow);
-    scrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    scrolledWindow->add(*searchResultsView);
+    Gtk::ScrolledWindow * searchResults = Gtk::manage(
+                                                    new Gtk::ScrolledWindow);
+    searchResults->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    searchResults->add(*searchResultsView);
 
+    // set the sizes of the two parts of the window
+    searchInput  ->set_size_request(750, 240);
+    searchResults->set_size_request(750, 300);
+    
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
-    bigBox->pack_start(*views, Gtk::PACK_SHRINK);
-    bigBox->pack_start(*scrolledWindow);
+    bigBox->pack_start(*searchInput, Gtk::PACK_SHRINK);
+    bigBox->pack_start(*searchResults);
     add(*bigBox);
     
     // show
     set_name("searchWindow");
-    set_default_size(600, 500);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -148,12 +152,18 @@ SearchWindow :: constructSimpleSearchView(void)                 throw ()
                                     *this, &SearchWindow::onSimpleSearch ));
 
     Gtk::HBox *         entryBox = Gtk::manage(new Gtk::HBox);
-    entryBox->pack_start(*simpleSearchEntry,    Gtk::PACK_SHRINK,  5);
-    entryBox->pack_start(*searchButton,         Gtk::PACK_SHRINK,  5);
+    entryBox->pack_start(*simpleSearchEntry, Gtk::PACK_EXPAND_WIDGET,  5);
+    entryBox->pack_start(*searchButton,      Gtk::PACK_SHRINK,         5);
+
+    // make the search entry + button take up 50% of the window horizontally
+    Gtk::Alignment *    entryAlignment = Gtk::manage(new Gtk::Alignment(
+                                                           0, 0, 0.5, 0));
+    entryAlignment->add(*entryBox);
 
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*entryBox,         Gtk::PACK_EXPAND_WIDGET, 5);
+    view->pack_start(*entryAlignment, Gtk::PACK_SHRINK, 5);
+    
     return view;
 }
 

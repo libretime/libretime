@@ -80,10 +80,10 @@ AdvancedSearchItem :: AdvancedSearchItem(
     pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
 
     metadataEntry = Gtk::manage(wf->createMetadataComboBoxText(metadataTypes));
-    pack_start(*metadataEntry, Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_start(*metadataEntry, Gtk::PACK_SHRINK, 5);
 
     operatorEntry = Gtk::manage(wf->createOperatorComboBoxText(bundle));
-    pack_start(*operatorEntry,  Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_start(*operatorEntry,  Gtk::PACK_SHRINK, 5);
 
     valueEntry = Gtk::manage(wf->createEntryBin());
     pack_start(*valueEntry,     Gtk::PACK_EXPAND_WIDGET, 5);

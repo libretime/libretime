@@ -48,6 +48,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 
 
@@ -307,7 +308,7 @@ class Notebook : public Gtk::Alignment
          *  @param widget the widget that is the page itself.
          *  @param label the label of the page.
          */
-        void
+        virtual void
         appendPage(Gtk::Widget            & widget,
                    const Glib::ustring    & label)          throw ();
 };
