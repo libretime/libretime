@@ -128,6 +128,17 @@ static const char *         longSmilFile = "var/bach.smil";
 
 /* ===============================================  local function prototypes */
 
+/**
+ *  Signal handler for the eos event of the autoplug element.
+ *
+ *  @param element the element emitting the eos signal
+ *  @param userData pointer to the container bin of the switcher.
+ */
+static void
+eos_signal_handler(GstElement     * element,
+                   gpointer         userData);
+
+
 
 /* =============================================================  module code */
 
@@ -192,6 +203,8 @@ AutoplugTest :: playFile(const char   * audioFile)
         return 0LL;
     }
 
+    g_signal_connect(decoder, "eos", G_CALLBACK(eos_signal_handler), pipeline);
+
     gst_element_link(decoder, sink);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
@@ -214,6 +227,23 @@ AutoplugTest :: playFile(const char   * audioFile)
     gst_object_unref(GST_OBJECT(pipeline));
 
     return timePlayed;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  eos signal handler for the switcher element
+ *----------------------------------------------------------------------------*/
+static void
+eos_signal_handler(GstElement     * element,
+                   gpointer         userData)
+{
+    GstElement    * container = GST_ELEMENT(userData);
+
+    g_return_if_fail(container != NULL);
+    g_return_if_fail(GST_IS_ELEMENT(container));
+
+    // set the container into eos state
+    gst_element_set_eos(container);
 }
 
 
