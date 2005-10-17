@@ -103,7 +103,7 @@ pl:table
 
         mainSectionLabel:string     { "Start" }
         musicSectionLabel:string    { "Muzyka" }
-        talkSectionLabel:string     { "Audycja" }
+        voiceSectionLabel:string    { "Audycja" }
         
         lengthLabel:string          { "Długość" }
 

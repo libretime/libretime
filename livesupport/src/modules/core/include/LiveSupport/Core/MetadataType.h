@@ -75,10 +75,10 @@ class MetadataTypeContainer;
  *  />
  *  </code></pre>
  *
- *  The tab attribute (if present) must be one of "main", "music" or "talk"
+ *  The tab attribute (if present) must be one of "main", "music" or "voice"
  *  (all lowercase, case sensitive).
  *  This determines whether, at file upload, the metadata field appears in
- *  the Main, Music, or Talk tab.  If the attribute is omitted, the metadata
+ *  the Main, Music, or Voice tab.  If the attribute is omitted, the metadata
  *  field will appear in none of the tabs.
  *
  *  The DTD for the expected XML element looks like the following:
@@ -107,7 +107,7 @@ class MetadataType : public Configurable
         typedef enum { noTab,
                        mainTab,
                        musicTab,
-                       talkTab }    TabType;
+                       voiceTab }    TabType;
 
 
     private:

@@ -103,7 +103,7 @@ root:table
 
         mainSectionLabel:string     { "Main" }
         musicSectionLabel:string    { "Music" }
-        talkSectionLabel:string     { "Talk" }
+        voiceSectionLabel:string    { "Voice" }
         
         lengthLabel:string          { "Duration" }
 

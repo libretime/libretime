@@ -311,19 +311,19 @@
         />
         <metadataType dcName          = "dcterms:temporal"
                       localizationKey = "report_date_time"
-                      tab             = "talk"
+                      tab             = "voice"
         />
         <metadataType dcName          = "dcterms:spatial"
                       localizationKey = "report_location"
-                      tab             = "talk"
+                      tab             = "voice"
         />
         <metadataType dcName          = "dcterms:entity"
                       localizationKey = "report_organizations"
-                      tab             = "talk"
+                      tab             = "voice"
         />
         <metadataType dcName          = "dc:subject"
                       localizationKey = "subject"
-                      tab             = "talk"
+                      tab             = "voice"
         />
     </metadataTypeContainer>
 </gLiveSupport>

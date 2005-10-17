@@ -145,8 +145,8 @@ MetadataType :: configure(const xmlpp::Element & element)
             tab = mainTab;
         } else if (tabString == "music") {
             tab = musicTab;
-        } else if (tabString == "talk") {
-            tab = talkTab;
+        } else if (tabString == "voice") {
+            tab = voiceTab;
         }
     }
 }

@@ -90,14 +90,14 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         // add the metadata entry fields
         mainTable   = Gtk::manage(new Gtk::Table());
         musicTable  = Gtk::manage(new Gtk::Table());
-        talkTable   = Gtk::manage(new Gtk::Table());
+        voiceTable   = Gtk::manage(new Gtk::Table());
                 
         Ptr<MetadataTypeContainer>::Ref
                     metadataTypes = gLiveSupport->getMetadataTypeContainer();
         MetadataTypeContainer::Vector::const_iterator   it;
         int     mainCounter  = 0;
         int     musicCounter = 0;
-        int     talkCounter  = 0;
+        int     voiceCounter  = 0;
         for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
             Ptr<const MetadataType>::Ref    metadata = *it;
             
@@ -131,12 +131,12 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                         ++musicCounter;
                         break;
                         
-                case MetadataType::talkTab :
-                        talkTable->attach(*metadataName, 0, 1,
-                                           talkCounter, talkCounter + 1);
-                        talkTable->attach(*metadataEntryBin, 1, 2,
-                                           talkCounter, talkCounter + 1);
-                        ++talkCounter;
+                case MetadataType::voiceTab :
+                        voiceTable->attach(*metadataName, 0, 1,
+                                           voiceCounter, voiceCounter + 1);
+                        voiceTable->attach(*metadataEntryBin, 1, 2,
+                                           voiceCounter, voiceCounter + 1);
+                        ++voiceCounter;
                         break;
                         
                 case MetadataType::noTab :      // added to prevent compiler
@@ -172,46 +172,46 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     mainTable->set_col_spacings(5);
     musicTable->set_row_spacings(2);
     musicTable->set_col_spacings(5);
-    talkTable->set_row_spacings(2);
-    talkTable->set_col_spacings(5);
+    voiceTable->set_row_spacings(2);
+    voiceTable->set_col_spacings(5);
       
     // expand the input fields horizontally, but shrink-wrap vertically
     Gtk::Alignment *    mainAlignment  = Gtk::manage(new Gtk::Alignment(
                                                 0.0, 0.0, 1.0, 0.0));
     Gtk::Alignment *    musicAlignment = Gtk::manage(new Gtk::Alignment(
                                                 0.0, 0.0, 1.0, 0.0));
-    Gtk::Alignment *    talkAlignment  = Gtk::manage(new Gtk::Alignment(
+    Gtk::Alignment *    voiceAlignment  = Gtk::manage(new Gtk::Alignment(
                                                 0.0, 0.0, 1.0, 0.0));
 
     mainAlignment->add(*mainTable);
     musicAlignment->add(*musicTable);
-    talkAlignment->add(*talkTable);
+    voiceAlignment->add(*voiceTable);
     
     ScrolledWindow *   mainScrolledWindow 
                             = Gtk::manage(new ScrolledWindow());
     ScrolledWindow *   musicScrolledWindow 
                             = Gtk::manage(new ScrolledWindow());
-    ScrolledWindow *   talkScrolledWindow 
+    ScrolledWindow *   voiceScrolledWindow 
                             = Gtk::manage(new ScrolledWindow());
 
     mainScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
                                    Gtk::POLICY_AUTOMATIC);
     musicScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
                                     Gtk::POLICY_AUTOMATIC);
-    talkScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
+    voiceScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
                                    Gtk::POLICY_AUTOMATIC);
 
     mainScrolledWindow->add(*mainAlignment);
     musicScrolledWindow->add(*musicAlignment);
-    talkScrolledWindow->add(*talkAlignment);
+    voiceScrolledWindow->add(*voiceAlignment);
        
     try {
         metadataNotebook->appendPage(*mainScrolledWindow,
                                 *getResourceUstring("mainSectionLabel"));
         metadataNotebook->appendPage(*musicScrolledWindow,
                                 *getResourceUstring("musicSectionLabel"));
-        metadataNotebook->appendPage(*talkScrolledWindow,
-                                *getResourceUstring("talkSectionLabel"));
+        metadataNotebook->appendPage(*voiceScrolledWindow,
+                                *getResourceUstring("voiceSectionLabel"));
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;
