@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE keyboardShortcutContainer [
+
+<!ELEMENT keyboardShortcutContainer (keyboardShortcut+) >
+
+<!ELEMENT keyboardShortcut (action, key+) >
+ 
+<!ELEMENT action (CDATA) >
+<!ELEMENT key    (CDATA) >
+
+]>
+<keyboardShortcutContainer>
+    <keyboardShortcut>
+        <action>playAudio</action>
+        <key>P</key>
+    </keyboardShortcut>
+    <keyboardShortcut>
+        <action>pauseAudio</action>
+        <key>Ctrl-P</key>
+        <key>Space</key>
+    </keyboardShortcut>
+</keyboardShortcutContainer>
