@@ -44,11 +44,16 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
-/*------------------------------------------------------------------------------
+/**
  *  The name of the config element for this class
- *----------------------------------------------------------------------------*/
-const std::string KeyboardShortcutContainer::configElementNameStr
+ */
+const std::string           KeyboardShortcutContainer::configElementName
                                                 = "keyboardShortcutContainer";
+
+/**
+ *  The name of the window name sub-element.
+ */
+static const std::string    windowNameElementName = "windowName";
 
 
 /* ===============================================  local function prototypes */
@@ -63,7 +68,7 @@ void
 KeyboardShortcutContainer :: configure(const xmlpp::Element & element)
                                                 throw (std::invalid_argument)
 {
-    if (element.get_name() != configElementNameStr) {
+    if (element.get_name() != configElementName) {
         throw std::invalid_argument("bad coniguration element "
                                   + element.get_name());
     }
@@ -82,6 +87,18 @@ KeyboardShortcutContainer :: configure(const xmlpp::Element & element)
         shortcutList.push_back(keyboardShortcut);
         ++it;
     }
+    
+    childNodes = element.get_children(windowNameElementName);
+    if (childNodes.size() < 1) {
+        throw std::invalid_argument("no windowName element");
+    } else if (childNodes.size() > 1) {
+        throw std::invalid_argument("more than one windowName element");
+    }
+    const xmlpp::Element *          windowNameElement
+                                    = dynamic_cast<const xmlpp::Element*> (
+                                            childNodes.front() );
+    windowName.reset(new const Glib::ustring(windowNameElement->get_child_text()
+                                                              ->get_content()));
 }
 
 /*------------------------------------------------------------------------------

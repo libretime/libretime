@@ -54,6 +54,8 @@
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "KeyboardShortcutContainer.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -86,21 +88,23 @@ class MasterPanelWindow;
  *  configuration file is:
  *
  *  <pre><code>
- *  <!ELEMENT gLiveSupport                (resourceBundle,
- *                                         supportedLanguages,
- *                                         widgetFactory,
- *                                         authenticationClientFactory,
- *                                         storageClientFactory,
- *                                         schedulerClientFactory,
- *                                         outputPlayer,
- *                                         cuePlayer) >
+ *  <!ELEMENT gLiveSupport  (resourceBundle,
+ *                           supportedLanguages,
+ *                           widgetFactory,
+ *                           authenticationClientFactory,
+ *                           storageClientFactory,
+ *                           schedulerClientFactory,
+ *                           outputPlayer,
+ *                           cuePlayer,
+ *                           stationLogo,
+ *                           metadataTypeContainer,
+ *                           keyboardShortcutContainer*) >
  *  </code></pre>
  *
- *  For a description of the <code>resourceBundle</code>,
- *  <code>authenticationClientFactory</code>,
- *  <code>storageClientFactory</code> and
- *  <code>schedulerClientFactory</code> elements see their
- *  respective documentation.
+ *  These elements configure objects of the same name, except for
+ *  outputPlayer and cuePlayer, which configure two instances of
+ *  AudioPlayerFactory; and stationLogo, which is just a path to the
+ *  station logo image file.
  *
  *  @author $Author$
  *  @version $Revision$
@@ -291,6 +295,18 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         uncachePlaylist(Ptr<UniqueId>::Ref  id)                 throw ();
+        
+        /**
+         *  The type for storing the keyboard shortcuts.
+         */
+        typedef std::map<const Glib::ustring, 
+                         Ptr<KeyboardShortcutContainer>::Ref> 
+                                                    KeyboardShortcutListType;
+
+        /**
+         *  The list of keyboard shortcuts for the various windows.
+         */
+        KeyboardShortcutListType    keyboardShortcutList;
 
 
     protected:
@@ -918,6 +934,20 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return signalEditedPlaylistModifiedObject;
         }
+        
+        /**
+         *  Find the action triggered by the given key in the given window.
+         *
+         *  @param  windowName  a string identifying the window (not localized).
+         *  @param  modifiers   the gdktypes code for the Shift, Ctrl etc.
+         *                          modifier keys which are pressed.
+         *  @param  key         the gdkkeysyms code for the key pressed.
+         *  @return the associated action; or noAction, if none is found.
+         */
+        KeyboardShortcut::Action
+        findAction(const Glib::ustring &    windowName,
+                   unsigned int             modifiers,
+                   unsigned int             key) const              throw ();
 };
 
 /* ================================================= external data structures */

@@ -53,19 +53,10 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
-/*
- *  The modifier keys we check against in onKeyPressed().
- *  The following modifiers are omitted, hence ignored: 
- *  GDK_LOCK_MASK (caps lock),
- *  GDK_MOD2_MASK (don't know what; always on on my computer),
- *  GDK_MOD3_MASK (don't know what; always off on my computer),
- *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+/**
+ *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const guint  MODIFIERS_CHECKED   = GDK_SHIFT_MASK 
-                                        | GDK_CONTROL_MASK
-                                        | GDK_MOD1_MASK     // Alt
-                                        | GDK_MOD4_MASK     // Windows key
-                                        | GDK_MOD5_MASK;    // Alt-gr
+static const Glib::ustring  windowName = "liveModeWindow";
 
 
 /* ===============================================  local function prototypes */
@@ -197,7 +188,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     contextMenu->accelerate(*this);
 
     // show
-    set_name("liveModeWindow");
+    set_name(windowName);
     set_default_size(400, 500);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
@@ -354,26 +345,28 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
         
         if (iter) {
-            if ((event->keyval == GDK_Up
-                    || event->keyval == GDK_KP_Up)
-                    && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
-                treeView->onUpMenuOption();
-                return true;
+            KeyboardShortcut::Action    action = gLiveSupport->findAction(
+                                                        windowName,
+                                                        event->state,
+                                                        event->keyval);
+            switch (action) {
+                case KeyboardShortcut::moveItemUp :
+                                        treeView->onUpMenuOption();
+                                        return true;
+
+                case KeyboardShortcut::moveItemDown :
+                                        treeView->onDownMenuOption();
+                                        return true;
                 
-            } else if ((event->keyval == GDK_Down 
-                    || event->keyval == GDK_KP_Down)
-                    && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
-                treeView->onDownMenuOption();
-                return true;
+                case KeyboardShortcut::removeItem :
+                                        treeView->onRemoveMenuOption();
+                                        return true;
                 
-            } else if (event->keyval == GDK_Delete
-                    || event->keyval == GDK_KP_Delete) {
-                treeView->onRemoveMenuOption();
-                return true;
+                default :               break;
             }
         }
     }
-
+    
     return false;
 }
 

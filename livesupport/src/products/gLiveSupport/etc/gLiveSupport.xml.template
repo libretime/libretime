@@ -10,7 +10,8 @@
                                        outputPlayer,
                                        cuePlayer,
                                        stationLogo,
-                                       metadataTypeContainer) >
+                                       metadataTypeContainer,
+                                       keyboardShortcutContainer*) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -93,6 +94,13 @@
 <!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
 <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
+
+<!ELEMENT keyboardShortcutContainer     (windowName, keyboardShortcut+) >
+<!ELEMENT windowName                    (#PCDATA) >
+<!ELEMENT keyboardShortcut              (action, key+) >
+<!ELEMENT action                        (#PCDATA) >
+<!ELEMENT key                           (#PCDATA) >
+
 ]>
 
 <gLiveSupport>
@@ -326,5 +334,54 @@
                       tab             = "voice"
         />
     </metadataTypeContainer>
+    
+    <keyboardShortcutContainer>
+        <windowName>liveModeWindow</windowName>
+        <keyboardShortcut>
+            <action>moveItemUp</action>
+            <key>Alt-Up</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>moveItemDown</action>
+            <key>Alt-Down</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>removeItem</action>
+            <key>Delete</key>
+        </keyboardShortcut>
+    </keyboardShortcutContainer>
+
+    <keyboardShortcutContainer>
+        <windowName>scratchpadWindow</windowName>
+        <keyboardShortcut>
+            <action>moveItemUp</action>
+            <key>Alt-Up</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>moveItemDown</action>
+            <key>Alt-Down</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>removeItem</action>
+            <key>Delete</key>
+        </keyboardShortcut>
+    </keyboardShortcutContainer>
+
+    <keyboardShortcutContainer>
+        <windowName>simplePlaylistManagementWindow</windowName>
+        <keyboardShortcut>
+            <action>moveItemUp</action>
+            <key>Alt-Up</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>moveItemDown</action>
+            <key>Alt-Down</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>removeItem</action>
+            <key>Delete</key>
+        </keyboardShortcut>
+    </keyboardShortcutContainer>
+
 </gLiveSupport>
 

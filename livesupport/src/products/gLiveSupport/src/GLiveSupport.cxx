@@ -281,6 +281,17 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     metadataTypeContainer.reset(new MetadataTypeContainer(metadataBundle));
     metadataTypeContainer->configure( 
                                 *((const xmlpp::Element*) *(nodes.begin())) );
+
+    // configure the KeyboardShortcutContainer classes
+    nodes = element.get_children(
+                            KeyboardShortcutContainer::getConfigElementName());
+    xmlpp::Node::NodeList::const_iterator   it = nodes.begin();
+    while (it != nodes.end()) {
+        Ptr<KeyboardShortcutContainer>::Ref ksc(new KeyboardShortcutContainer);
+        ksc->configure(*((const xmlpp::Element*) *it));
+        keyboardShortcutList[*ksc->getWindowName()] = ksc;
+        ++it;
+    }
 }
 
 
@@ -1269,5 +1280,25 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: getStationLogoImage(void)       throw()
 {
     return new Gtk::Image(stationLogoPixbuf);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Find the action triggered by the given key in the given window.
+ *----------------------------------------------------------------------------*/
+KeyboardShortcut::Action
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: findAction(const Glib::ustring &    windowName,
+                           unsigned int             modifiers,
+                           unsigned int             key) const      throw ()
+{
+    KeyboardShortcutListType::const_iterator    it  = keyboardShortcutList.find(
+                                                                    windowName);
+    if (it != keyboardShortcutList.end()) {
+        Ptr<KeyboardShortcutContainer>::Ref     ksc = it->second;
+        return ksc->findAction(modifiers, key);
+    } else {
+        return KeyboardShortcut::noAction;
+    }
 }
 

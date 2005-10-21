@@ -179,21 +179,11 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
 
         /**
          *  Signal handler for a key pressed at one of the entries.
-         *  The keys handled are:
-         *  <ul>
-         *      <li>Alt-Up   : move item up</li>
-         *      <li>Alt-Down : move item down</li>
-         *      <li>Delete   : remove item</li>
-         *  </ul>
+         *  The keys can be customized by the keyboardShortcutContainer
+         *  element in the gLiveSupport configuration file.
+         *  The actions handled are: moveItemUp, moveItemDown and removeItem.
          *
-         *  Technical note: the symbolic key names are found in 
-         *  <code>/usr/include/gtk-2.0/gdk/gdkkeysyms.h</code>,
-         *  and the symbolic modifier names are found in
-         *  <code>/usr/include/gtk-2.0/gdk/gdktypes.h</code>.
-         *
-         *  TODO: make keys customizable from a config file?
-         *
-         *  @param  event the button event recieved
+         *  @param  event the button event received
          *  @return true if the key press was fully handled, false if not
          */
         bool

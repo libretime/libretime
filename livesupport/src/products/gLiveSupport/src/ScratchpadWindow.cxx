@@ -53,19 +53,10 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
-/*
- *  The modifier keys we check against in onKeyPressed().
- *  The following modifiers are omitted, hence ignored: 
- *  GDK_LOCK_MASK (caps lock),
- *  GDK_MOD2_MASK (don't know what; always on on my computer),
- *  GDK_MOD3_MASK (don't know what; always off on my computer),
- *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+/**
+ *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const guint  MODIFIERS_CHECKED   = GDK_SHIFT_MASK 
-                                        | GDK_CONTROL_MASK
-                                        | GDK_MOD1_MASK     // Alt
-                                        | GDK_MOD4_MASK     // Windows key
-                                        | GDK_MOD5_MASK;    // Alt-gr
+static const Glib::ustring  windowName = "scratchpadWindow";
 
 
 /* ===============================================  local function prototypes */
@@ -247,7 +238,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     playlistMenu->accelerate(*this);
 
     // show
-    set_name("scratchpadWindow");
+    set_name(windowName);
     set_default_size(300, 330);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
@@ -644,26 +635,30 @@ bool
 ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
-        if ((event->keyval == GDK_Up
-                || event->keyval == GDK_KP_Up)
-                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
-            if (isSelectionSingle()) {
-                onUpItem();
-                return true;
-            }
+        KeyboardShortcut::Action    action = gLiveSupport->findAction(
+                                                    windowName,
+                                                    event->state,
+                                                    event->keyval);
+        switch (action) {
+            case KeyboardShortcut::moveItemUp :
+                                    if (isSelectionSingle()) {
+                                        onUpItem();
+                                        return true;
+                                    }
+                                    break;
+
+            case KeyboardShortcut::moveItemDown :
+                                    if (isSelectionSingle()) {
+                                        onDownItem();
+                                        return true;
+                                    }
+                                    break;
             
-        } else if ((event->keyval == GDK_Down 
-                || event->keyval == GDK_KP_Down)
-                && (event->state & MODIFIERS_CHECKED) == GDK_MOD1_MASK) {
-            if (isSelectionSingle()) {
-                onDownItem();
-                return true;
-            }
+            case KeyboardShortcut::removeItem :
+                                    onRemoveItemButtonClicked();
+                                    return true;
             
-        } else if (event->keyval == GDK_Delete
-                || event->keyval == GDK_KP_Delete) {
-            onRemoveItemButtonClicked();
-            return true;
+            default :               break;
         }
     }
 

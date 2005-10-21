@@ -86,6 +86,7 @@ KeyboardShortcutTest :: setUp(void)                         throw ()
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
         parser->parse_stream(ifs);
+        parser->set_validate();
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
 

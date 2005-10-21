@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE keyboardShortcutContainer [
 
-<!ELEMENT keyboardShortcutContainer (keyboardShortcut+) >
-
-<!ELEMENT keyboardShortcut (action, key+) >
- 
-<!ELEMENT action (CDATA) >
-<!ELEMENT key    (CDATA) >
+<!ELEMENT keyboardShortcutContainer     (windowName, keyboardShortcut+) >
+<!ELEMENT windowName                    (#PCDATA) >
+<!ELEMENT keyboardShortcut              (action, key+) >
+<!ELEMENT action                        (#PCDATA) >
+<!ELEMENT key                           (#PCDATA) >
 
 ]>
+
 <keyboardShortcutContainer>
+    <windowName>hiMyNameIsWindow</windowName>
     <keyboardShortcut>
         <action>playAudio</action>
         <key>P</key>
