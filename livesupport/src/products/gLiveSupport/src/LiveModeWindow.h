@@ -181,7 +181,9 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Signal handler for a key pressed at one of the entries.
          *  The keys can be customized by the keyboardShortcutContainer
          *  element in the gLiveSupport configuration file.
-         *  The actions handled are: moveItemUp, moveItemDown and removeItem.
+         *  
+         *  The actions handled are: moveItemUp, moveItemDown, removeItem,
+         *  and playAudio (which plays the item in the output player).
          *
          *  @param  event the button event received
          *  @return true if the key press was fully handled, false if not

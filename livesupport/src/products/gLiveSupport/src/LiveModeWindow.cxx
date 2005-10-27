@@ -95,6 +95,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // ... and the tree view:
     treeView = Gtk::manage(wf->createTreeView(treeModel));
     treeView->set_headers_visible(false);
+    treeView->set_enable_search(false);
 
     // Add the TreeView's view columns:
     try {
@@ -360,6 +361,10 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
                 
                 case KeyboardShortcut::removeItem :
                                         treeView->onRemoveMenuOption();
+                                        return true;
+                
+                case KeyboardShortcut::playAudio :
+                                        onOutputPlay();
                                         return true;
                 
                 default :               break;

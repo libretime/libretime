@@ -284,7 +284,7 @@ KeyboardShortcut :: stringToKey(Ptr<const Glib::ustring>::Ref   keyName)
         } else if (c >= 'A' && c <= 'Z') {
             return GDK_A + (c - 'A');
         } else if (c >= 'a' && c <= 'z') {
-            return GDK_A + (c - 'a');
+            return GDK_a + (c - 'a');
         }
     } else if (*keyName == "Space") {
         return GDK_space;

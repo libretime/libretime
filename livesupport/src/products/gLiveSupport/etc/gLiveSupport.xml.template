@@ -336,6 +336,31 @@
     </metadataTypeContainer>
     
     <keyboardShortcutContainer>
+        <windowName>masterPanelWindow</windowName>
+        <keyboardShortcut>
+            <action>playAudio</action>
+            <key>x</key>
+            <key>X</key>
+            <key>Space</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>pauseAudio</action>
+            <key>v</key>
+            <key>V</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>stopAudio</action>
+            <key>c</key>
+            <key>C</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>nextTrack</action>
+            <key>b</key>
+            <key>B</key>
+        </keyboardShortcut>
+    </keyboardShortcutContainer>
+
+    <keyboardShortcutContainer>
         <windowName>liveModeWindow</windowName>
         <keyboardShortcut>
             <action>moveItemUp</action>
@@ -348,6 +373,12 @@
         <keyboardShortcut>
             <action>removeItem</action>
             <key>Delete</key>
+        </keyboardShortcut>
+        <keyboardShortcut>
+            <action>playAudio</action>
+            <key>x</key>
+            <key>X</key>
+            <key>Space</key>
         </keyboardShortcut>
     </keyboardShortcutContainer>
 

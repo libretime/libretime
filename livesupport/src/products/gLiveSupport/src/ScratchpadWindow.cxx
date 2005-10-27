@@ -109,6 +109,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     treeModel = Gtk::ListStore::create(modelColumns);
     treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
     treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
+    treeView->set_enable_search(false);
 
     // Add the TreeView's view columns:
     try {

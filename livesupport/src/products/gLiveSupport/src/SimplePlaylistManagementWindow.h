@@ -156,6 +156,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Signal handler for a key pressed at one of the entries.
          *  The keys can be customized by the keyboardShortcutContainer
          *  element in the gLiveSupport configuration file.
+         *  
          *  The actions handled are: moveItemUp, moveItemDown and removeItem.
          *
          *  @param  event the button event received

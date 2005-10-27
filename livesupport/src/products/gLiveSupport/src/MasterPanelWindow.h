@@ -358,6 +358,20 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
             }
         }
 
+        /**
+         *  Signal handler for a key pressed at one of the entries.
+         *  The keys can be customized by the keyboardShortcutContainer
+         *  element in the gLiveSupport configuration file.
+         *
+         *  The action handled is: playAudio, pauseAudio, stopAudio, 
+         *  and nextTrack.
+         *
+         *  @param  event the button event received
+         *  @return true if the key press was fully handled, false if not
+         */
+        bool
+        onKeyPressed(GdkEventKey *          event)              throw ();
+
 
     public:
         /**

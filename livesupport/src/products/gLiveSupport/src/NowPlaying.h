@@ -193,6 +193,38 @@ class NowPlaying : public Gtk::HBox,
         void
         onUpdateTime(void)                              throw ();
 
+        /**
+         *  Public interface for restarting the audio.
+         *
+         *  This is used by MasterPanelWindow::onKeyPressed().
+         */
+        void
+        onPlayAudio(void)                               throw ()
+        {
+            onPlayButtonClicked();
+        }
+
+        /**
+         *  Public interface for pausing the audio.
+         *
+         *  This is used by MasterPanelWindow::onKeyPressed().
+         */
+        void
+        onPauseAudio(void)                              throw ()
+        {
+            onPauseButtonClicked();
+        }
+
+        /**
+         *  Public interface for stopping the audio.
+         *
+         *  This is used by MasterPanelWindow::onKeyPressed().
+         */
+        void
+        onStopAudio(void)                               throw ()
+        {
+            onStopButtonClicked();
+        }
 };
 
 

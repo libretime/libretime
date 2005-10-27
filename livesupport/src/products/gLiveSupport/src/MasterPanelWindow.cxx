@@ -51,6 +51,11 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/**
+ *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
+ */
+static const Glib::ustring  windowName = "masterPanelWindow";
+
 
 /* ===============================================  local function prototypes */
 
@@ -155,6 +160,10 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                     0, 0);
     add(*layout);
 
+    // register the signal handler for keyboard key presses
+    this->signal_key_press_event().connect(sigc::mem_fun(*this,
+                                        &MasterPanelWindow::onKeyPressed));
+
     // set the background to white
     bgColor = Colors::getColor(Colors::White);
     modify_bg(Gtk::STATE_NORMAL, bgColor);
@@ -168,6 +177,9 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     set_default_size(width, height);
     move(0, 0);
     set_decorated(false);
+    set_name(windowName);
+// need to make it focusable first
+//    set_focus(*nowPlayingWidget);
 
     // set the localized resources
     liveModeButton           = 0;
@@ -584,6 +596,7 @@ MasterPanelWindow :: setNowPlaying(Ptr<Playable>::Ref    playable)
                                                                     throw ()
 {
     nowPlayingWidget->setPlayable(playable);
+    present();  // this moves the global keyboard focus to the master panel
 }
 
 
@@ -610,5 +623,42 @@ resizeImage(Gtk::Image* image, int width, int height)               throw ()
                                         height,
                                         Gdk::INTERP_HYPER ));
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a key pressed.
+ *----------------------------------------------------------------------------*/
+bool
+MasterPanelWindow :: onKeyPressed(GdkEventKey *    event)           throw ()
+{
+    if (event->type == GDK_KEY_PRESS) {
+        KeyboardShortcut::Action    action = gLiveSupport->findAction(
+                                                    windowName,
+                                                    event->state,
+                                                    event->keyval);
+        switch (action) {
+            case KeyboardShortcut::playAudio :
+                                    nowPlayingWidget->onPlayAudio();
+                                    return true;
+            
+            case KeyboardShortcut::pauseAudio :
+                                    nowPlayingWidget->onPauseAudio();
+                                    return true;
+            
+            case KeyboardShortcut::stopAudio :
+                                    nowPlayingWidget->onStopAudio();
+                                    return true;
+            
+            case KeyboardShortcut::nextTrack :
+                                    gLiveSupport->stopOutputAudio();
+                                    gLiveSupport->onStop();
+                                    return true;
+            
+            default :               break;
+        }
+    }
+    
+    return false;
 }
 
