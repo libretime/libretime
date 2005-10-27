@@ -178,8 +178,6 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     move(0, 0);
     set_decorated(false);
     set_name(windowName);
-// need to make it focusable first
-//    set_focus(*nowPlayingWidget);
 
     // set the localized resources
     liveModeButton           = 0;
