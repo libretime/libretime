@@ -37,6 +37,7 @@
 #include <stdexcept>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/Button.h"
@@ -244,11 +245,11 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
         searchResults->appendColumn(*getResourceUstring("typeColumnLabel"),
                                modelColumns.typeColumn, 20);
         searchResults->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 200);
+                               modelColumns.titleColumn, 360);
         searchResults->appendColumn(*getResourceUstring("creatorColumnLabel"),
-                               modelColumns.creatorColumn, 200);
+                               modelColumns.creatorColumn, 260);
         searchResults->appendColumn(*getResourceUstring("lengthColumnLabel"),
-                               modelColumns.lengthColumn, 120);
+                               modelColumns.lengthColumn, 50);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -377,8 +378,8 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
                                       : "";
 
         Ptr<time_duration>::Ref length = playable->getPlaylength();
-        row[modelColumns.lengthColumn] = length ? to_simple_string(*length)
-                                                : "";
+        row[modelColumns.lengthColumn] = length ? 
+                    *TimeConversion::timeDurationToHhMmSsString(length) : "";
     }
 }
 

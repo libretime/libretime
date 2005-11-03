@@ -327,14 +327,10 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
     }
 
     // display the new play length
-    std::ostringstream  lengthStr;
-    lengthStr << std::setfill('0')
-        << std::setw(2) << playlength->hours() << ":"
-        << std::setw(2) << playlength->minutes() << ":"
-        << std::setw(2) << (playlength->fractional_seconds() < 500000
-                                                ? playlength->seconds() 
-                                                : playlength->seconds() + 1);
-    lengthValueLabel->set_text(lengthStr.str());
+    Ptr<const std::string>::Ref lengthStr
+                                = TimeConversion::timeDurationToHhMmSsString(
+                                        playlength);
+    lengthValueLabel->set_text(*lengthStr);
 
     // read the id3 tags
     Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);

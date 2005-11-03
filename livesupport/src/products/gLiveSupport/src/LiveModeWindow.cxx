@@ -37,6 +37,7 @@
 #include <stdexcept>
 #include <glibmm.h>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
 #include "LiveModeWindow.h"
@@ -239,7 +240,8 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 
     infoString->append("\n<span font_desc='Bitstream Vera Sans 12'>"
                        "duration: ");
-    infoString->append(to_simple_string(*playable->getPlaylength()));
+    infoString->append(*TimeConversion::timeDurationToHhMmSsString(
+                                            playable->getPlaylength() ));
     infoString->append("</span>");
 
     row[modelColumns.infoColumn] = *infoString;
