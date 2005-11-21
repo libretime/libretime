@@ -497,18 +497,24 @@ GLiveSupport :: login(const std::string & login,
 /*------------------------------------------------------------------------------
  *  Log the user out.
  *----------------------------------------------------------------------------*/
-void
+bool
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: logout(void)                                throw ()
 {
-    if (sessionId.get() != 0) {
-        cancelEditedPlaylist();
-        stopCueAudio();
-        storeScratchpadContents();
-        scratchpadContents->clear();
-        authentication->logout(sessionId);
-        sessionId.reset();
+    if (!sessionId) {
+        return false;
     }
+    
+    if (masterPanel && !masterPanel->cancelEditedPlaylist()) {
+        return false;   // do nothing if the user presses the cancel button
+    }
+    
+    stopCueAudio();
+    storeScratchpadContents();
+    scratchpadContents->clear();
+    authentication->logout(sessionId);
+    sessionId.reset();
+    return true;
 }
 
 

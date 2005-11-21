@@ -452,3 +452,32 @@ PlaylistTest :: eliminateGapsTest(void)
     CPPUNIT_ASSERT(*playlist->getPlaylength() == seconds(23));
 }   
 
+
+/*------------------------------------------------------------------------------
+ *  A second test of the eliminateGaps() method
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: eliminateGapsLastItemTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // the same thing as above, but now we remove the last item
+    Ptr<UniqueId>::Ref      secondElement(new UniqueId("103"));
+    try {
+        playlist->removePlaylistElement(secondElement);
+    } catch (std::invalid_argument &e) {
+        string eMsg = "removePlaylistElement() returned with error: ";
+        eMsg += e.what(); 
+        CPPUNIT_FAIL(eMsg);
+    }
+    CPPUNIT_ASSERT(!playlist->valid());         // big gap in playlist
+    CPPUNIT_ASSERT(playlist->getPlaylength());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() == seconds(34));
+
+    bool                    result = playlist->eliminateGaps();
+    CPPUNIT_ASSERT(result == true);
+    CPPUNIT_ASSERT(playlist->valid());          // the gap is gone
+    CPPUNIT_ASSERT(playlist->getPlaylength());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() == seconds(23));
+
+}   
+

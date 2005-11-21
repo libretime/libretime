@@ -562,6 +562,20 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Cancel the playlist edited in the SimplePlaylistMgmtWindow, if any.
+ *----------------------------------------------------------------------------*/
+bool
+MasterPanelWindow :: cancelEditedPlaylist(void)                     throw ()
+{
+    if (simplePlaylistMgmtWindow) {
+        return simplePlaylistMgmtWindow->cancelPlaylist();
+    } else {
+        return true;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Show the UI components that are visible to a specific user.
  *----------------------------------------------------------------------------*/
 void

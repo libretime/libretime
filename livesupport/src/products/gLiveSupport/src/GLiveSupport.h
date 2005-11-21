@@ -446,9 +446,12 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Log out the user, if he has been authenticated previously
          *  with a successful call to login().
          *
+         *  @return true if the logout was successful, false if not
+         *          (e.g., if the user is editing a playlist, and
+         *          presses "cancel" at the "Save playlist?" dialog.)
          *  @see #logout
          */
-        void
+        bool
         logout(void)                                            throw ();
 
         /**

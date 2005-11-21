@@ -567,7 +567,7 @@ Playlist::removePlaylistElement(Ptr<UniqueId>::Ref  playlistElementId)
  *  Validate the playlist.
  *----------------------------------------------------------------------------*/
 bool
-Playlist::valid(void)                           throw ()
+Playlist::valid(void) const                     throw ()
 {
     time_duration   runningTime(0,0,0,0);
 
@@ -595,9 +595,10 @@ Playlist::valid(void)                           throw ()
         ++it;
     }
     
-    Ptr<time_duration>::Ref     playlength(new time_duration());
-    *playlength = runningTime;
-    setPlaylength(playlength);      // fix playlength, if everything else is OK
+    if (runningTime != *getPlaylength()) {
+        return false;
+    }
+    
     return true;
 }
 
@@ -891,7 +892,7 @@ Playlist :: eliminateGaps(void)                 throw ()
         ++it;
     }
     
-    if (didSomething) {
+    if (didSomething || position != *getPlaylength()) {
         Ptr<time_duration>::Ref     newPlaylength(new time_duration(position));
         setPlaylength(newPlaylength);
         return true;

@@ -27,8 +27,7 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  System V runlevel style invoke script for the LiveSupport Scheduler
-#  This script is only used in the LiveSupport development environment
+#  Invoke script for the LiveSupport gui.
 #-------------------------------------------------------------------------------
 
 
@@ -51,6 +50,8 @@ gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
 gLiveSupport_exe=$bindir/gLiveSupport
 config_file=$etcdir/gLiveSupport.xml
+
+$gLiveSupport_exe --version
 
 echo "using configuration file:  $config_file";
 

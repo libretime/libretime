@@ -411,6 +411,16 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         showAnonymousUI(void)                                   throw ();
 
         /**
+         *  Cancel the playlist edited in the SimplePlaylistMgmtWindow.
+         *
+         *  @return true if the canceling worked (or if there was nothing 
+         *          to cancel); false if the user canceled the canceling
+         *  @see SimplePlaylistManagementWindow::cancelPlaylist()
+         */
+        bool
+        cancelEditedPlaylist(void)                              throw ();
+
+        /**
          *  Show the UI components that are visible when someone is logged in.
          */
         void

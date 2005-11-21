@@ -279,8 +279,8 @@ WebStorageClientTest :: playlistTest(void)
     relativeOffset.reset(new time_duration(0,0,6,0));    
     playlist->addAudioClip(audioClip, relativeOffset);
 
-    CPPUNIT_ASSERT(playlist->valid());      // WARNING: side effect; fixes the
-                                            //      playlength of the playlist
+    CPPUNIT_ASSERT(playlist->valid());
+    
     try {
         Ptr<Playlist>::Ref  throwAwayPlaylist
                             = wsc->getPlaylist(sessionId, playlistIdxx);
@@ -331,22 +331,12 @@ WebStorageClientTest :: playlistTest(void)
     }
     CPPUNIT_ASSERT(newPlaylist);
     CPPUNIT_ASSERT(newPlaylist->getUri());
-//  std::cerr << "url:\n" << *newPlaylist->getUri() << "\n";
-//  sleep(30);
 
     std::ifstream ifs(newPlaylist->getUri()->substr(7).c_str());
     if (!ifs) {                                            // cut off "file://"
         ifs.close();
         CPPUNIT_FAIL("playlist temp file not found");
     }
-//  std::stringstream   playlistSmilFile;
-//  std::string         tempString;
-//  while (ifs) {
-//      std::getline(ifs, tempString);
-//      playlistSmilFile << tempString << "\n";
-//  }
-//  std::cerr << "smil:\n" << playlistSmilFile.str() << "\n";
-//  sleep(60);
     ifs.close();
 
     try {
@@ -423,12 +413,6 @@ WebStorageClientTest :: audioClipTest(void)
     }
     CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 2);
     Ptr<UniqueId>::Ref  id01 = wsc->getAudioClipIds()->at(1);
-    
-//    std::cout << "\nReset storage result:\n";
-//    for (unsigned i=0; i < wsc->getAudioClipIds()->size(); i++) {
-//        std::cout << std::hex << std::string(*wsc->getAudioClipIds()->at(i))
-//                  << std::endl;
-//    } 
 
     Ptr<SessionId>::Ref sessionId;
     try {
@@ -506,8 +490,6 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newAudioClip->getUri());
-//  std::cerr << *newAudioClip->getUri() << std::endl;
-//  sleep(30);
 
     try {
         wsc->releaseAudioClip(newAudioClip);
@@ -784,8 +766,10 @@ WebStorageClientTest :: getAllTest(void)
     }
     CPPUNIT_ASSERT(sessionId);
 
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref 
-                playlists = wsc->getAllPlaylists(sessionId);
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlists;
+    CPPUNIT_ASSERT_NO_THROW(
+        playlists = wsc->getAllPlaylists(sessionId)
+    );
     CPPUNIT_ASSERT(playlists);
     CPPUNIT_ASSERT(playlists->size() >= 1);
     

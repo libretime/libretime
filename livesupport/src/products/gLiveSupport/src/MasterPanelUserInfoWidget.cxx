@@ -127,7 +127,10 @@ MasterPanelUserInfoWidget :: ~MasterPanelUserInfoWidget (void)      throw ()
 void
 MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
 {
-    gLiveSupport->logout();
+    bool userCanceledTheLogout = !gLiveSupport->logout();
+    if (userCanceledTheLogout) {
+        return;
+    }
 
     loggedIn = false;
     login.reset();

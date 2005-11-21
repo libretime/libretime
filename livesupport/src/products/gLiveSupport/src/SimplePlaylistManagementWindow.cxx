@@ -303,45 +303,49 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked(void)         throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Cancel the edited playlist (no questions asked).
- *----------------------------------------------------------------------------*/
-void
-SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
-{
-    gLiveSupport->cancelEditedPlaylist();
-    closeWindow();
-}
-
-
-/*------------------------------------------------------------------------------
  *  Signal handler for the close button getting clicked.
  *----------------------------------------------------------------------------*/
 void
 SimplePlaylistManagementWindow :: onCloseButtonClicked(void)        throw ()
 {
+    if (cancelPlaylist()) {
+        closeWindow();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Cancel the edited playlist, after asking for confirmation.
+ *----------------------------------------------------------------------------*/
+bool
+SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
+{
     if (gLiveSupport->getEditedPlaylist()) {
         if (!isPlaylistModified) {
-            cancelPlaylist();
+            gLiveSupport->cancelEditedPlaylist();
         } else {
             DialogWindow::ButtonType    result = dialogWindow->run();
             switch (result) {
-                case DialogWindow::noButton:        cancelPlaylist();
-                                                    break;
+                case DialogWindow::noButton:
+                                gLiveSupport->cancelEditedPlaylist();
+                                break;
 
-                case DialogWindow::yesButton:       if (savePlaylist(false)) {
-                                                        closeWindow();
-                                                    }
-                                                    break;
+                case DialogWindow::yesButton:
+                                if (!savePlaylist(false)) {
+                                    return false;
+                                }
+                                break;
 
-                case DialogWindow::cancelButton:    break;
+                case DialogWindow::cancelButton:
+                                return false;
 
-                default :                           break;
+                default :       return false;
                                         // can happen if window is closed
             }                           //   with Alt-F4 -- treated as cancel
         }
-    } else {
-        closeWindow();
     }
+    
+    return true;
 }
 
 

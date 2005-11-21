@@ -257,16 +257,6 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                      Ptr<FadeInfo>::Ref         newFadeInfo)    throw();
 
         /**
-         *  Cancel the edited playlist.
-         *  Cancel the edited playlist in GLiveSupport, and close the window.
-         *
-         *  @see GLiveSupport::cancelEditedPlaylist()
-         *  @see closeWindow()
-         */
-        void
-        cancelPlaylist(void)                                    throw();
-
-        /**
          *  Clean and close the window.
          *  Set all widgets to empty and close the window.
          */
@@ -428,6 +418,19 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         virtual void
         showContents(void)                                      throw ();
 
+        /**
+         *  Cancel the edited playlist, after asking for confirmation.
+         *
+         *  Displays a "Save playlist?" dialog, with "yes", "no" and
+         *  "cancel" buttons.
+         *
+         *  @return true if the window was closed (the user selected "yes"
+         *          or "no"); false if not (the user selected "cancel").
+         *  @see GLiveSupport::cancelEditedPlaylist()
+         *  @see closeWindow()
+         */
+        bool
+        cancelPlaylist(void)                                    throw();
 };
 
 /* ================================================= external data structures */

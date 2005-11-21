@@ -759,12 +759,24 @@ class Playlist : public Configurable,
                                                 throw (std::invalid_argument);
 
         /**
-         *  Validate the playlist: check that there are no overlaps or gaps.
-         *  If the playlength is the only thing amiss, playlist is considered
-         *  valid, and the playlength is fixed.  (Hence no 'const'.)
+         *  Check if the playlist is valid.
+         *
+         *  This means that 
+         *  <ul>
+         *      <li>there are no gaps between the playlist elements
+         *                  (overlaps are allowed); and</li>
+         *      <li>the length of the playlist is equal
+         *                  to the ending time of the last item in it.</li>
+         *  </ul>
+         *
+         *  This is checked for the playlist itself, and all sub-playlists
+         *  contained inside it.
+         *
+         *  NOTE: all kinds of overlaps are allowed.
+         *  TODO: restrict it somehow?
          */
         bool
-        valid(void)                             throw ();
+        valid(void) const                       throw ();
 
 
         /**
@@ -861,6 +873,7 @@ class Playlist : public Configurable,
 
         /**
          *  Eliminate the gaps in the playlist.
+         *
          *  If there is a 2s gap between elements 2 and 3, then elements 3,
          *  4, etc. are moved to 2s earlier.  Elements 2 and 3 will not
          *  overlap, even if the first has a fade-out and the second has a
