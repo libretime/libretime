@@ -33,16 +33,17 @@
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
-docdir=$basedir/doc
 tmpdir=$basedir/tmp
 logdir=$basedir/tmp
 
 echo "";
-echo "The source code will be updated now ... logged within the log directory";
+echo "The LiveSupport source code will be updated now ... and logged in";
 echo "$logdir";
 echo "";
 
 cd $bindir/..
-cvs update -dP >& $logdir/cvs_update.log
-ls -l $logdir/cvs_update.log >> $logdir/cvs_update.log
-cat $logdir/cvs_update.log
+svn update >& $logdir/svn_update.log
+ls -l $logdir/svn_update.log >> $logdir/svn_update.log
+cat $logdir/svn_update.log
+echo "";
+echo "The svn update is done, svn_update.log is created";

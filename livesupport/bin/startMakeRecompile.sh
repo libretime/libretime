@@ -27,55 +27,52 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# This script runs cvs to update the LiveSupport source code and starts
-# the recompile process. 
+# This script starts the LiveSupport recompile process. 
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
-docdir=$basedir/doc
 tmpdir=$basedir/tmp
 logdir=$basedir/tmp
 export PATH=~/bin:$PATH
 
 echo "";
-echo "The source code will be updated by cvs and the recompile process"; 
-echo "will be started. All steps are being logged within the log";
-echo "directory $logdir";
+echo "The recompile process will be started. All steps are being logged in"; 
+echo "$logdir ";
 echo "";
 echo "Are you certainly of ran ./configure first !";
-echo "";
-echo "Now updating the code by cvs...";
+
 
 cd $bindir/..
-cvs update -dP >& $logdir/cvs_update_just_before_setup.log
-ls -l $logdir/cvs_update_just_before_setup.log >> $logdir/cvs_update_just_before_setup.log
-echo "Compare with cvs is be done, cvs_update_just_before_setup.log is created";
-make distclean >& $logdir/make_distclean_setup.log
-ls -l $logdir/make_distclean_setup.log >> $logdir/make_distclean_setup.log
-echo "Cleaning the setup is be done, make_distclean_setup.log is created";
+make modprod_distclean >& $logdir/make_modprod_distclean_setup.log
+ls -l $logdir/make_modprod_distclean_setup.log >> $logdir/make_modprod_distclean_setup.log
+echo "";
+echo "Cleaning the setup is done, make_modprod_distclean_setup.log is created";
+#echo "";
+#echo "Now Recompiling ... Tools";
 #make tools_setup >& $logdir/make_install_tools_setup.log
 #ls -l $logdir/make_install_tools_setup.log >> $logdir/make_install_tools_setup.log
 #echo "Done Tools Setup, make_install_tools_setup.log is created";
 echo "";
 echo "Skipping Tools setup, remove # for recompiling tools";
 echo "";
-echo "Now Configure ...";
-make modules_setup >& $logdir/configure_modules_setup.log
-ls -l $logdir/configure_modules_setup.log >> $logdir/configure_modules_setup.log
-echo "Configure the Modules is be done, configure_modules_setup.log is created";
-make products_setup >& $logdir/configure_products_setup.log
-ls -l $logdir/configure_products_setup.log >> $logdir/configure_products_setup.log
-echo "Configure the Products is be done, configure_products_setup.log is created";
+echo "Now Configure ... Modules ... Products";
+make modules_setup >& $logdir/make_configure_modules_setup.log
+ls -l $logdir/make_configure_modules_setup.log >> $logdir/make_configure_modules_setup.log
+echo "Configure the Modules is done, make_configure_modules_setup.log is created";
+make products_setup >& $logdir/make_configure_products_setup.log
+ls -l $logdir/make_configure_products_setup.log >> $logdir/make_configure_products_setup.log
+echo "Configure the Products is done, make_configure_products_setup.log is created";
 echo "";
-echo "Now Recompiling ...";
+echo "Now Recompiling ... ";
 make compile >& $logdir/make_compile_setup.log 
 ls -l $logdir/make_compile_setup.log >> $logdir/make_compile_setup.log
-echo "Compiling is be done, make_compile_setup.log is created";
+echo "Compiling is done, make_compile_setup.log is created";
 echo "";
 echo "Now checking ...";
 make check >& $logdir/make_check_setup.log
 ls -l $logdir/make_check_setup.log >> $logdir/make_check_setup.log
 echo "Checking is be done, make_check_setup.log is created";
 echo "";
+ls -l $logdir

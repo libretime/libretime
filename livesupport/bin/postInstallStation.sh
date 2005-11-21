@@ -64,6 +64,8 @@ printUsage()
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
     echo "                      [default: livesupport]";
+    echo "  -p, --postgresql-dir    The postgresql data directory, containing"
+    echo "                          pg_hba.conf [default: /etc/postgresql]"
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -74,7 +76,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:H:hp:P:r:s:u:w:o: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port:,www-root:,output-device -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:D:g:hp:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,help,postgresql-dir:,www-root: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -90,6 +92,9 @@ while true; do
         -h|--help)
             printUsage;
             exit 0;;
+        -p|--postgresql-dir)
+            postgresql_dir=$2;
+            shift; shift;;
         -r|--www-root)
             www_root=$2;
             shift; shift;;
@@ -138,6 +143,10 @@ if [ "x$apache_group" == "x" ]; then
     apache_group=www-data;
 fi
 
+if [ "x$postgresql_dir" == "x" ]; then
+    postgresql_dir=/etc/postgresql;
+fi
+
 if [ "x$www_root" == "x" ]; then
     www_root=/var/www;
 fi
@@ -146,13 +155,14 @@ echo "Making post-install steps for the LiveSupport scheduler.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
-echo "  installation directory: $installdir";
-echo "  database server:        $dbserver";
-echo "  database:               $database";
-echo "  database user:          $dbuser";
-echo "  database user password: $dbpassword";
-echo "  apache daemon group:    $apache_group";
-echo "  apache document root:   $www_root";
+echo "  installation directory:     $installdir";
+echo "  database server:            $dbserver";
+echo "  database:                   $database";
+echo "  database user:              $dbuser";
+echo "  database user password:     $dbpassword";
+echo "  apache daemon group:        $apache_group";
+echo "  apache document root:       $www_root";
+echo "  postgresql data directory:  $postgresql_dir";
 echo ""
 
 #-------------------------------------------------------------------------------
@@ -230,7 +240,7 @@ rm -f $group_tmp_file;
 #-------------------------------------------------------------------------------
 echo "Modifying postgresql access permissions...";
 
-pg_config_dir=/etc/postgresql
+pg_config_dir=$postgresql_dir
 pg_config_file=pg_hba.conf
 pg_config_file_saved=pg_hba.conf.before-livesupport
 
@@ -240,7 +250,10 @@ fi
 cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
 chown root:$postgres_user $pg_config_dir/$pg_config_file
 
-/etc/init.d/postgresql restart
+# don't use restart for the init script, as it might return prematurely
+# and in the later call to psql we wouldn't be able to connect
+/etc/init.d/postgresql stop
+/etc/init.d/postgresql start
 
 
 #-------------------------------------------------------------------------------
@@ -303,8 +316,11 @@ odbcinst -i -s -l -f $odbc_template || exit 1;
 
 #-------------------------------------------------------------------------------
 #   Install PEAR packages (locally in the LiveSupport)
+#   only if necessary
 #-------------------------------------------------------------------------------
-$install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
+if [ -f $install_usr/lib/pear/bin/install.sh ]; then
+    $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
+fi
 
 
 #-------------------------------------------------------------------------------
