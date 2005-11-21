@@ -1567,8 +1567,7 @@ WebStorageClient :: releasePlaylistFromServer(
              << " instead of "
              << std::string(*playlist->getId())
              << ".";
-// removed temporarily; see ticket #1468
-//        throw XmlRpcMethodResponseException(eMsg.str());
+        throw XmlRpcMethodResponseException(eMsg.str());
     }
 }
 
