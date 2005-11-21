@@ -30,14 +30,14 @@ endif
 config.status: configure
 	dh_testdir
 	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
-                                   --build=$(DEB_BUILD_GNU_TYPE) \
-								   --prefix=/opt/livesupport \
-								   --with-www-docroot=/var/www \
-								   --with-apache-group=www-data \
-								   --with-station-audio-out=/dev/dsp \
-								   --with-studio-audio-out=/dev/dsp1 \
-								   --with-studio-audio-cue=/dev/dsp2 \
-								   --with-hostname=localhost
+                                       --build=$(DEB_BUILD_GNU_TYPE) \
+                                       --prefix=/opt/livesupport \
+                                       --with-www-docroot=/var/www \
+                                       --with-apache-group=www-data \
+                                       --with-station-audio-out=/dev/dsp \
+                                       --with-studio-audio-out=/dev/dsp1 \
+                                       --with-studio-audio-cue=/dev/dsp2 \
+                                       --with-hostname=localhost
 
 build: build-arch
 
@@ -64,7 +64,7 @@ install-arch:
 	dh_clean -k -s 
 	dh_installdirs -s
 
-	# this will install everything into /opt/livesupport
+	# this will install everything into /opt/livesupport/usr
 	$(MAKE) install
 
 	# move the installation to debian/livesupport
@@ -110,10 +110,13 @@ install-arch:
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/index.php \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageAdmin \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/bin \
-           $(CURDIR)/debian/livesupport/opt/livesupport/usr/var \
-           $(CURDIR)/debian/livesupport-station/opt/livesupport/usr
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/backup.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/dumpDbSchema.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/import.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/restore.sh \
+              $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \

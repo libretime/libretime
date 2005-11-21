@@ -311,9 +311,12 @@ ${TMP_DIR}/modules_setup.stamp:
 	cd ${GETID3_DIR} && ./configure --prefix=${prefix}
 	cd ${HTML_UI_DIR} && ./configure --prefix=${prefix} \
                                          --with-apache-group=${APACHE_GROUP} \
-										 --with-www-docroot=${WWW_DOCROOT} \
-								 --with-configure-apache=${CONFIGURE_APACHE}
-	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix}
+                                         --with-www-docroot=${WWW_DOCROOT} \
+                                         --with-configure-apache=${CONFIGURE_APACHE} \
+	                                 --with-storage-server=${prefix}/var/LiveSupport/storageServer
+	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix} \
+	                --with-storage-server=${prefix}/var/LiveSupport/storageServer \
+	                --with-phppart-dir=${prefix}/var/LiveSupport/storageAdmin
 	cd ${STORAGE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-apache-group=${APACHE_GROUP} \
