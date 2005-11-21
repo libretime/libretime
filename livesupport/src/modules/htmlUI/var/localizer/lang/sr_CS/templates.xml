@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>sr_CS</Id>
+	<item>
+		<key>5.1</key>
+		<value>5.1</value>
+	</item>
+	<item>
+		<key>And</key>
+		<value>I</value>
+	</item>
+	<item>
+		<key>Crossfade</key>
+		<value>Miks</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path)</key>
+		<value>Ciljni direktorijum (relativna putanja)</value>
+	</item>
+	<item>
+		<key>Mono</key>
+		<value>Mono</value>
+	</item>
+	<item>
+		<key>Or</key>
+		<value>Ili</value>
+	</item>
+	<item>
+		<key>Pause</key>
+		<value>Pauza</value>
+	</item>
+	<item>
+		<key>Stereo</key>
+		<value>Stereo</value>
+	</item>
+	<item>
+		<key>full</key>
+		<value>Ceo</value>
+	</item>
+	<item>
+		<key>partial</key>
+		<value>Delimičan</value>
+	</item>
+	<item>
+		<key>prefix</key>
+		<value>Prefiks</value>
+	</item>
+	<item>
+		<key>April</key>
+		<value>April</value>
+	</item>
+	<item>
+		<key>August</key>
+		<value>Avgust</value>
+	</item>
+	<item>
+		<key>December</key>
+		<value>Decembar</value>
+	</item>
+	<item>
+		<key>February</key>
+		<value>Februar</value>
+	</item>
+	<item>
+		<key>January</key>
+		<value>Januar</value>
+	</item>
+	<item>
+		<key>July</key>
+		<value>Jul</value>
+	</item>
+	<item>
+		<key>June</key>
+		<value>Jun</value>
+	</item>
+	<item>
+		<key>March</key>
+		<value>Mart</value>
+	</item>
+	<item>
+		<key>May</key>
+		<value>Maj</value>
+	</item>
+	<item>
+		<key>November</key>
+		<value>Novembar</value>
+	</item>
+	<item>
+		<key>October</key>
+		<value>Oktobar</value>
+	</item>
+	<item>
+		<key>September</key>
+		<value>Septembar</value>
+	</item>
+	<item>
+		<key>Access</key>
+		<value>Pristup</value>
+	</item>
+	<item>
+		<key>Action</key>
+		<value>Radnja</value>
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value>Dodaj Audio</value>
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value>Dodaj Grupu</value>
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value>Dodaj Članove</value>
+	</item>
+	<item>
+		<key>Add User</key>
+		<value>Dodaj Korisnika</value>
+	</item>
+	<item>
+		<key>Add files to ScratchPad</key>
+		<value>Dodaj fajlove u Pripremu</value>
+	</item>
+	<item>
+		<key>Add files to open Playlist</key>
+		<value>Dodaj fajlove u otvorenu Plej listu</value>
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value>Dodaj odabrano</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>Dodaj u Pripremu</value>
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value>Dodaj u grupu</value>
+	</item>
+	<item>
+		<key>Add to playlist</key>
+		<value>Dodaj u plej listu</value>
+	</item>
+	<item>
+		<key>Are you sure to delete $1 selected files?</key>
+		<value>Da li ste sigurni da želite da obrišete $1 odabrane fajlove ?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value>Da li ste sigurni da želite da obrišete fajl &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete open Playlist?</key>
+		<value>Da li ste sigurni da želite da obrišete otvorenu Plej listu?</value>
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value>Da li ste sigurni da želite da odbacite sve promene?</value>
+	</item>
+	<item>
+		<key>Are you sure to logout?</key>
+		<value>Da li ste sigurni da želite da se odjavite?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove &quot;$1&quot;?</key>
+		<value>Da li ste sigurni da želite da uklonite &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value>Da li ste sigurni da želite da uklonite plej listu &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value>Da li ste sigurni da želite da promenite postojeću metadatu?</value>
+	</item>
+	<item>
+		<key>Artist</key>
+		<value>Izvođač</value>
+	</item>
+	<item>
+		<key>Audioclip</key>
+		<value>Audio fajl</value>
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value>Povratak na pregled</value>
+	</item>
+	<item>
+		<key>Browse</key>
+		<value>Pregledaj</value>
+	</item>
+	<item>
+		<key>CW</key>
+		<value>KN</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Otkaži</value>
+	</item>
+	<item>
+		<key>Cannot connect to Scheduler</key>
+		<value>Ne možete da se povežete sa Rasporedom</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Promeni ulazni miks</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Promeni izlazni miks</value>
+	</item>
+	<item>
+		<key>Change Fades</key>
+		<value>Promeni prelazni miks</value>
+	</item>
+	<item>
+		<key>Change Password</key>
+		<value>Promeni lozinku</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Promeni pretapanje</value>
+	</item>
+	<item>
+		<key>Change password</key>
+		<value>Promeni lozinku</value>
+	</item>
+	<item>
+		<key>Change password for: $1</key>
+		<value>Promeni lozinku za: $1</value>
+	</item>
+	<item>
+		<key>Clear</key>
+		<value>Očisti</value>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value>Očisti plej listu</value>
+	</item>
+	<item>
+		<key>Close</key>
+		<value>Zatvori</value>
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value>Zatvori Plej listu</value>
+	</item>
+	<item>
+		<key>Connection to $1 port $2 $3</key>
+		<value>Konekcija za $1 port $2 $3</value>
+	</item>
+	<item>
+		<key>Count</key>
+		<value>Broj</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Autor</value>
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value>Trenutni Članovi</value>
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value>Dnevni pregled</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Podaci</value>
+	</item>
+	<item>
+		<key>Day</key>
+		<value>Dan</value>
+	</item>
+	<item>
+		<key>Delete</key>
+		<value>Obriši</value>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value>Obriši plejlistu</value>
+	</item>
+	<item>
+		<key>Delete files</key>
+		<value>Obriši fajlove</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Opis</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path):</key>
+		<value>Destinacija foldera (relativna putanja):</value>
+	</item>
+	<item>
+		<key>New folder name:</key>
+		<value>Ime novog foldera:</value>
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value>Da li želite da sačuvate promene?</value>
+	</item>
+	<item>
+		<key>Duration</key>
+		<value>Trajanje</value>
+	</item>
+	<item>
+		<key>Edit</key>
+		<value>Obrada</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Obradi Plej listu</value>
+	</item>
+	<item>
+		<key>Fade</key>
+		<value>Miks</value>
+	</item>
+	<item>
+		<key>File List</key>
+		<value>Lista fajlova</value>
+	</item>
+	<item>
+		<key>File Management</key>
+		<value>Administracija fajlova</value>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value>Struktura foldera</value>
+	</item>
+	<item>
+		<key>Fr</key>
+		<value>Pe</value>
+	</item>
+	<item>
+		<key>Friday</key>
+		<value>Petak</value>
+	</item>
+	<item>
+		<key>Go</key>
+		<value>Kreni</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Pomoć</value>
+	</item>
+	<item>
+		<key>Insert playlist here</key>
+		<value>Unesi Plej listu ovde</value>
+	</item>
+	<item>
+		<key>Item</key>
+		<value>Stavka</value>
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value>Pretraga audioteke</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Izlistaj folder</value>
+	</item>
+	<item>
+		<key>Listen</key>
+		<value>Preslušaj</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Prijava</value>
+	</item>
+	<item>
+		<key>Main</key>
+		<value>Glavno</value>
+	</item>
+	<item>
+		<key>Manage Group: $1</key>
+		<value>Uredi Grupu: $1</value>
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value>Uredi članove grupe</value>
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value>Audioteka</value>
+	</item>
+	<item>
+		<key>Members</key>
+		<value>Članovi</value>
+	</item>
+	<item>
+		<key>Metadata XML</key>
+		<value>Metadata XML</value>
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>Po</value>
+	</item>
+	<item>
+		<key>Monday</key>
+		<value>Ponedeljak</value>
+	</item>
+	<item>
+		<key>Month</key>
+		<value>Mesec</value>
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value>Mesečni pregled</value>
+	</item>
+	<item>
+		<key>Move</key>
+		<value>Premesti</value>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value>Višestruka operacija:</value>
+	</item>
+	<item>
+		<key>Music</key>
+		<value>Muzika</value>
+	</item>
+	<item>
+		<key>New</key>
+		<value>Novo</value>
+	</item>
+	<item>
+		<key>New Playlist using this files</key>
+		<value>Napravi novu Plej listu od ovih fajlova</value>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value>Napravi novu praznu plej listu</value>
+	</item>
+	<item>
+		<key>New playlist using this files</key>
+		<value>Napravi novu plej listu od ovih fajlova</value>
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value>Nema unosa</value>
+	</item>
+	<item>
+		<key>No group members</key>
+		<value>Grupa nema članove</value>
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value>Nije pronađeno.</value>
+	</item>
+	<item>
+		<key>No objects</key>
+		<value>Nema tih objekata</value>
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value>Ništa nije ostalo</value>
+	</item>
+	<item>
+		<key>Now Playing</key>
+		<value>Trenutno u programu</value>
+	</item>
+	<item>
+		<key>OK</key>
+		<value>U redu</value>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value>Otvori poslednju plej listu</value>
+	</item>
+	<item>
+		<key>Page</key>
+		<value>Stranica</value>
+	</item>
+	<item>
+		<key>Playing Next</key>
+		<value>Sledeće u programu</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Plej lista</value>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value>Obrada Plej liste</value>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value>Metadata plej liste</value>
+	</item>
+	<item>
+		<key>Playlists</key>
+		<value>Plej liste</value>
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value>Podešavanja</value>
+	</item>
+	<item>
+		<key>Range</key>
+		<value>Opseg</value>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value>Prosta analiza</value>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value>Ukloni odabrano</value>
+	</item>
+	<item>
+		<key>Remove files</key>
+		<value>Ukloni fajlove</value>
+	</item>
+	<item>
+		<key>Remove from ScratchPad</key>
+		<value>Ukloni iz Pripreme</value>
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value>Ukloni iz grupe</value>
+	</item>
+	<item>
+		<key>Remove from playlist</key>
+		<value>Ukloni iz plej liste</value>
+	</item>
+	<item>
+		<key>Remove playlist</key>
+		<value>Ukloni plej listu</value>
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value>Ukloni odabrano</value>
+	</item>
+	<item>
+		<key>Reorder Playlist</key>
+		<value>Preuredi Plej listu</value>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value>Vrati na snimljenu verziju</value>
+	</item>
+	<item>
+		<key>Sa</key>
+		<value>Su</value>
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value>Subota</value>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value>Snimi plej listu</value>
+	</item>
+	<item>
+		<key>Schedule</key>
+		<value>Rasporedi</value>
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value>Raspored</value>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value>Navigacija rasporeda</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>Priprema</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Pretraži</value>
+	</item>
+	<item>
+		<key>Show Info</key>
+		<value>Prikaži info</value>
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value>Prijavljen</value>
+	</item>
+	<item>
+		<key>Start Scheduler</key>
+		<value>Pokreni Raspored</value>
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value>Podešavanje&amp;nbsp;stanice</value>
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value>Vreme u stanici</value>
+	</item>
+	<item>
+		<key>Station settings</key>
+		<value>Podešavanja&amp;nbsp;stanice</value>
+	</item>
+	<item>
+		<key>Stream has wrong content type &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Strim ima  pogrešan sadržaj &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>Stream is wanted type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Strim ima željeni sadržaj &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>Su</key>
+		<value>Ne</value>
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value>Nedelja</value>
+	</item>
+	<item>
+		<key>Th</key>
+		<value>Če</value>
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value>Četvrtak</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Vreme</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Naslov</value>
+	</item>
+	<item>
+		<key>Today</key>
+		<value>Danas</value>
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value>Direktorijumsko stablo</value>
+	</item>
+	<item>
+		<key>Tu</key>
+		<value>Ut</value>
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value>Utorak</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Tip</value>
+	</item>
+	<item>
+		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
+		<value>URL je &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
+		<value>URL je &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Povratni kod greške: $1.</value>
+	</item>
+	<item>
+		<key>Use to create playlist</key>
+		<value>Upotrebi za kreiranje plej liste.</value>
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value>Upravljanje grupama/korisnicima</value>
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value>Korisnik/Grupe</value>
+	</item>
+	<item>
+		<key>Voice</key>
+		<value>Govor</value>
+	</item>
+	<item>
+		<key>We</key>
+		<value>Sr</value>
+	</item>
+	<item>
+		<key>Webstream</key>
+		<value>Web strim</value>
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value>Sreda</value>
+	</item>
+	<item>
+		<key>Week</key>
+		<value>Nedelja</value>
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value>Nedeljni pregled</value>
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value>Treba da imate najmanje jednu neotvorenu plej listu u Pripremi da biste je stavili u raspored.</value>
+	</item>
+	<item>
+		<key>_Name of translator</key>
+		<value>Danijela Jevtic, Robert Klajn and Sava Tatic</value>
+	</item>
+	<item>
+		<key>_Native language name</key>
+		<value>Srpski (CS)</value>
+	</item>
+	<item>
+		<key>audioclip</key>
+		<value>audio fajl</value>
+	</item>
+	<item>
+		<key>calendar week</key>
+		<value>kalendarska nedelja</value>
+	</item>
+	<item>
+		<key>copy</key>
+		<value>iskopiraj</value>
+	</item>
+	<item>
+		<key>empty</key>
+		<value>prazno</value>
+	</item>
+	<item>
+		<key>go up</key>
+		<value>idi gore</value>
+	</item>
+	<item>
+		<key>h</key>
+		<value>č</value>
+	</item>
+	<item>
+		<key>in use by: $1</key>
+		<value>koristi: $1</value>
+	</item>
+	<item>
+		<key>login</key>
+		<value>prijava</value>
+	</item>
+	<item>
+		<key>logout</key>
+		<value>odjava</value>
+	</item>
+	<item>
+		<key>m</key>
+		<value>m</value>
+	</item>
+	<item>
+		<key>move</key>
+		<value>pomeri</value>
+	</item>
+	<item>
+		<key>move down</key>
+		<value>pomeri dole</value>
+	</item>
+	<item>
+		<key>move up</key>
+		<value>pomeri gore</value>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value>novi&amp;nbsp;folder</value>
+	</item>
+	<item>
+		<key>next</key>
+		<value>sledeće</value>
+	</item>
+	<item>
+		<key>permissions</key>
+		<value>dopuštenja</value>
+	</item>
+	<item>
+		<key>playlist</key>
+		<value>plej lista</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>prethodno</value>
+	</item>
+	<item>
+		<key>s</key>
+		<value>s</value>
+	</item>
+	<item>
+		<key>sign over</key>
+		<value>prepiši</value>
+	</item>
+	<item>
+		<key>tomorrow</key>
+		<value>sutra</value>
+	</item>
+	<item>
+		<key>webstream</key>
+		<value>web strim</value>
+	</item>
+	<item>
+		<key>yesterday</key>
+		<value>juče</value>
+	</item>
+</translations>

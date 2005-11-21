@@ -70,7 +70,7 @@
 
     function hpopup(url)
     {
-        var width  = 160;
+        var width  = 180;
         var height = 120;
         var name = Math.round(Math.random()*100000);
         var screenX;

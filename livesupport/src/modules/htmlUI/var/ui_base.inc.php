@@ -17,6 +17,21 @@ function errCallBack($err)
 }
 
 // --- basic funtionality ---
+
+function _getLanguages()
+{
+    $languages =& $_SESSION[UI_LOCALIZATION_SESSNAME]['languages'];
+    
+    if (!is_array($languages)) {
+        include_once dirname(__FILE__).'/localizer/loader.inc.php'; 
+        foreach (getLanguages() as $k => $lang) { 
+            $languages[$lang->m_languageId] = $lang->m_nativeName;    
+        }    
+          
+    } 
+    return $languages;
+}
+
 /**
  *  tra
  *
@@ -29,15 +44,16 @@ function tra($input)
 {
     ## initialize at first call of this function ###
 
-    $GS =& $_SESSION['GS'];
-    #static $GS;
+    #$GS =& $_SESSION[UI_LOCALIZATION_SESSNAME]['GS'];
+    static $GS;
     global $uiBase;
 
     if ($uiBase->langid && !is_array($GS)) {
         #echo "load translation";
-        include_once dirname(__FILE__).'/localizer/require.inc.php';
+        include_once dirname(__FILE__).'/localizer/loader.inc.php';
         #echo $uiBase->langid;
-        $GS = loadTranslations($uiBase->langid);
+        $GS = loadTranslations($uiBase->langid); 
+        #print_r($GS);
     }
     ## end init ####################################
 
@@ -83,14 +99,6 @@ function _getNumArr($start, $end, $step=1)
     }
     return $arr;
 }
-
-
-function _getLanguages()
-{
-    global $config;
-    return $config['languages'];
-}
-
 
 /**
  *  uiBase class
@@ -166,7 +174,7 @@ class uiBase
             #if ($this->STATIONPREFS['stationMaxfilesize']) $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
 
             if ($miss && $this->gb->getSessLogin($this->sessid)) {
-                if (UI_WARNING) $this->_retMsg('Note: Station Preferences not setup proberly.');
+                if (UI_WARNING) $this->_retMsg('Warning: station preferences have not been set up properly.');
                 $this->redirUrl = UI_BROWSER.'?popup[]=_2changeStationPrefs&popup[]=_close';         ## popup because check is taken in login-popup
             }
 
@@ -209,6 +217,7 @@ class uiBase
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
 
             } elseif (isset($v['type'])) {
+                if (!is_array($v['attributes'])) $v['attributes'] = array();
                 $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']),
                                             ($v[type]=='text' || $v['type']=='file' || $v['type']=='password') ? array_merge(array('size'=>UI_INPUT_STANDARD_SIZE, 'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH), $v['attributes']) :
                                             ($v['type']=='textarea' ? array_merge(array('rows'=>UI_TEXTAREA_STANDART_ROWS, 'cols'=>UI_TEXTAREA_STANDART_COLS), $v['attributes']) :
@@ -371,12 +380,13 @@ class uiBase
 
 
     function _setMDataValue($id, $key, $value, $langid=NULL)
-    {
+    { 
         if (!$langid) $langid = UI_DEFAULT_LANGID;
+        if (ini_get('magic_quotes_gpc')) $value = str_replace("\'", "'", $value);
 
         if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;
-        }
+        } 
 
         return FALSE;
     }

@@ -58,11 +58,11 @@
 
          <select name="SEARCHRESULTS_multiaction" onChange="collector_submit('SEARCHRESULTS', this.value)">
                 <option>##Multiple Action:##</option>
-                <option value="SP.addItem">##Add file(s) to ScratchPad##</option>
+                <option value="SP.addItem">##Add files to ScratchPad##</option>
                 {if $_PL_activeId}
-                    <option value="PL.addItem">##Add file(s) to active Playlist##</option>
+                    <option value="PL.addItem">##Add files to open Playlist##</option>
                 {else}
-                    <option value="PL.create">##New Playlist using this file(s)##</option>
+                    <option value="PL.create">##New Playlist using this files##</option>
                 {/if}
                 <option value="delete">##Delete files##</option>
          </select>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>hu_HU</Id>
+	<item>
+		<key>+</key>
+		<value>+</value>
+	</item>
+	<item>
+		<key>-</key>
+		<value>-</value>
+	</item>
+	<item>
+		<key>Album</key>
+		<value>Lemez</value>
+	</item>
+	<item>
+		<key>Artist web page</key>
+		<value>Előadó honlapja</value>
+	</item>
+	<item>
+		<key>Audio file information web page</key>
+		<value>Zeneszám honlapja</value>
+	</item>
+	<item>
+		<key>Audio source web page</key>
+		<value>Forrás honlapja</value>
+	</item>
+	<item>
+		<key>BPM</key>
+		<value>Tempó (BPM)</value>
+	</item>
+	<item>
+		<key>Bitrate</key>
+		<value>Bitek száma mp-ként</value>
+	</item>
+	<item>
+		<key>Buy CD web page</key>
+		<value>CD-bolt honlapja</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Mégse</value>
+	</item>
+	<item>
+		<key>Catalog number</key>
+		<value>Katalógusszám</value>
+	</item>
+	<item>
+		<key>Category</key>
+		<value>Típus</value>
+	</item>
+	<item>
+		<key>Channels</key>
+		<value>Csatornák száma</value>
+	</item>
+	<item>
+		<key>Checksum</key>
+		<value>Ellenőrző összeg</value>
+	</item>
+	<item>
+		<key>Composer</key>
+		<value>Zeneszerző</value>
+	</item>
+	<item>
+		<key>Conductor</key>
+		<value>Karmester</value>
+	</item>
+	<item>
+		<key>Contributor</key>
+		<value>Társszerző</value>
+	</item>
+	<item>
+		<key>Copyright</key>
+		<value>Szerzői jog tulajdonosa</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Előadó</value>
+	</item>
+	<item>
+		<key>Date</key>
+		<value>Dátum</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Leírás</value>
+	</item>
+	<item>
+		<key>Disc number</key>
+		<value>Hányadik lemez</value>
+	</item>
+	<item>
+		<key>Duration (ms)</key>
+		<value>Hossz (ms)</value>
+	</item>
+	<item>
+		<key>Encoded by</key>
+		<value>Rögzítő neve</value>
+	</item>
+	<item>
+		<key>Encoder software used</key>
+		<value>Rögzítő szoftver</value>
+	</item>
+	<item>
+		<key>File format</key>
+		<value>Fájlformátum</value>
+	</item>
+	<item>
+		<key>File type</key>
+		<value>Fájltípus</value>
+	</item>
+	<item>
+		<key>Format</key>
+		<value>Típus</value>
+	</item>
+	<item>
+		<key>Frequency</key>
+		<value>Gyakoriság</value>
+	</item>
+	<item>
+		<key>Genre</key>
+		<value>Műfaj</value>
+	</item>
+	<item>
+		<key>Groupname</key>
+		<value>Csoport neve</value>
+	</item>
+	<item>
+		<key>ISRC number</key>
+		<value>ISRC-szám</value>
+	</item>
+	<item>
+		<key>Label</key>
+		<value>Kiadó</value>
+	</item>
+	<item>
+		<key>Language</key>
+		<value>Nyelv</value>
+	</item>
+	<item>
+		<key>Length</key>
+		<value>Hossz</value>
+	</item>
+	<item>
+		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
+		<value>Hossz
+Élő internetes adásnál írjon nullát</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Bejelentkezés</value>
+	</item>
+	<item>
+		<key>Lyricist</key>
+		<value>Szövegíró</value>
+	</item>
+	<item>
+		<key>Lyrics</key>
+		<value>Dalszöveg</value>
+	</item>
+	<item>
+		<key>Maximum length of scratchpad</key>
+		<value>Gyorslista maximális hossza</value>
+	</item>
+	<item>
+		<key>Media file</key>
+		<value>Hangfájl</value>
+	</item>
+	<item>
+		<key>Metadata</key>
+		<value>Metaadat</value>
+	</item>
+	<item>
+		<key>Mood</key>
+		<value>Hangulat</value>
+	</item>
+	<item>
+		<key>New password</key>
+		<value>Új jelszó</value>
+	</item>
+	<item>
+		<key>Old password</key>
+		<value>Régi jelszó</value>
+	</item>
+	<item>
+		<key>Operator</key>
+		<value>Logikai művelet</value>
+	</item>
+	<item>
+		<key>Orchestra or band</key>
+		<value>Zenekar vagy együttes</value>
+	</item>
+	<item>
+		<key>Original artist</key>
+		<value>Eredeti előadó</value>
+	</item>
+	<item>
+		<key>Original lyricist</key>
+		<value>Eredeti szövegíró</value>
+	</item>
+	<item>
+		<key>Password</key>
+		<value>Jelszó</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Műsor</value>
+	</item>
+	<item>
+		<key>Radio station name</key>
+		<value>Rádiöállomás neve</value>
+	</item>
+	<item>
+		<key>Radio station web page</key>
+		<value>Rádiöállomás honlapja</value>
+	</item>
+	<item>
+		<key>Rating</key>
+		<value>Értékelés</value>
+	</item>
+	<item>
+		<key>Repeat password</key>
+		<value>Jelszó még egyszer</value>
+	</item>
+	<item>
+		<key>Report date/time</key>
+		<value>A tudósítás dátuma, időpontja</value>
+	</item>
+	<item>
+		<key>Report location</key>
+		<value>A tudósítás helyszíne</value>
+	</item>
+	<item>
+		<key>Report organizations</key>
+		<value>A tudósításban szereplő szervezetek</value>
+	</item>
+	<item>
+		<key>Reset</key>
+		<value>Visszaállítani</value>
+	</item>
+	<item>
+		<key>Reset criteria</key>
+		<value>Keresési feltételek visszaállítása</value>
+	</item>
+	<item>
+		<key>Rows per page</key>
+		<value>Sorok száma oldalanként</value>
+	</item>
+	<item>
+		<key>Sample rate</key>
+		<value>Mintavételi gyakoriság</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Keresés</value>
+	</item>
+	<item>
+		<key>Search library</key>
+		<value>Keresés a könyvtárban</value>
+	</item>
+	<item>
+		<key>Snap to hour</key>
+		<value>Egész órához igazítás</value>
+	</item>
+	<item>
+		<key>Snap to next</key>
+		<value>Utána következő műsorhoz igazítás</value>
+	</item>
+	<item>
+		<key>Snap to previous</key>
+		<value>Előtte levő műsorhoz igazítás</value>
+	</item>
+	<item>
+		<key>Station URL</key>
+		<value>Rádióállomás honlapja</value>
+	</item>
+	<item>
+		<key>Station logo</key>
+		<value>Rádióállomás logója</value>
+	</item>
+	<item>
+		<key>Station logo path</key>
+		<value>Rádióállomás logo helye</value>
+	</item>
+	<item>
+		<key>Station name</key>
+		<value>Rádióállomás neve</value>
+	</item>
+	<item>
+		<key>Stream URL</key>
+		<value>Élő internetes adás címe (URL-je)</value>
+	</item>
+	<item>
+		<key>Subject</key>
+		<value>Tárgy</value>
+	</item>
+	<item>
+		<key>Submit</key>
+		<value>Mehet</value>
+	</item>
+	<item>
+		<key>Test</key>
+		<value>Próba</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Idő</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Cím</value>
+	</item>
+	<item>
+		<key>Track number</key>
+		<value>Hányadik szám</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Típus</value>
+	</item>
+	<item>
+		<key>Username</key>
+		<value>Felhasználónév</value>
+	</item>
+	<item>
+		<key>Year</key>
+		<value>Év</value>
+	</item>
+</translations>

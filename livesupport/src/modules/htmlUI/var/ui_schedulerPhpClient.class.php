@@ -477,7 +477,7 @@ class SchedulerPhpClient{
         }
         $this->client->setDebug($this->debug);
         if (!$res = $this->client->send($msg)) {
-            return array('error' => array('code' => -1, 'message' => 'Cannot connect to Scheduler'));
+            return array('error' => array('code' => -1, 'message' => '##Cannot connect to Scheduler##'));
         }
         if($res->faultCode() > 0) {
             return array('error' => array('code' => $res->faultCode(), 'message' => $res->faultString()));   ## changed by sebastian

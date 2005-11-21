@@ -79,10 +79,26 @@ AC_ARG_WITH([www-docroot],
 
 AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
 
+AC_MSG_RESULT([configure apache: ${CONFIGURE_APACHE}])
+
+
+dnl-----------------------------------------------------------------------------
+dnl  specify folder of storageServer
+dnl-----------------------------------------------------------------------------
+AC_SUBST(STORAGE_SERVER)
+
+AC_ARG_WITH([storage-server],
+            AC_HELP_STRING([--with-storage-server],
+                          [use storageServer in given folder]),
+            [STORAGE_SERVER=${withval}], [STORAGE_SERVER=${prefix}/var/LiveSupport/storageServer])
+
+AC_MSG_RESULT([using storageServer at: ${STORAGE_SERVER}])
+
 
 AC_MSG_NOTICE(
 [using the following configuration settings:
 
+    storageServer location:          ${STORAGE_SERVER}
     apache group:                    ${APACHE_GROUP}
     www document root:               ${WWW_DOCROOT}
     configuring apache:              ${CONFIGURE_APACHE}

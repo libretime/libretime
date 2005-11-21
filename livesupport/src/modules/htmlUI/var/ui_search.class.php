@@ -25,7 +25,7 @@ class uiSearch
         return $this->criteria;
     }
 
-    function searchForm($id, &$mask2)
+    function searchForm($id, $mask2)
     {
         #print_r($this->criteria['form']);
         include dirname(__FILE__).'/formmask/metadata.inc.php';
@@ -117,7 +117,7 @@ class uiSearch
     }
 
 
-    function simpleSearchForm(&$mask)
+    function simpleSearchForm($mask)
     {
         $form = new HTML_QuickForm('simplesearch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask);
@@ -130,7 +130,7 @@ class uiSearch
     }
 
 
-    function simpleSearch(&$formdata)
+    function simpleSearch($formdata)
     {
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;
@@ -197,17 +197,19 @@ class uiSearch
 
         #print_r($this->results);
         $this->pagination($results);
+        
+        return TRUE;
     }
 
 
-    function pagination(&$results)
+    function pagination($results)
     {
         if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
 
         $currp = ($this->criteria['offset'] / $this->criteria['limit']) + 1;   # current page
-        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
+        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);             # maximum page
 
         /*
         for ($n = 1; $n <= $maxp; $n = $n+$width) {
@@ -218,9 +220,9 @@ class uiSearch
 
         $deltaLower = UI_SEARCHRESULTS_DELTA;
         $deltaUpper = UI_SEARCHRESULTS_DELTA;
-        $start = $currp;
+        $start      = $currp;
 
-        if ($start+$delta-$maxp > 0) $deltaLower += $start+$delta-$maxp;  ## correct lower boarder if page is near end
+        if ($start + $maxp > 0) $deltaLower += $start - $maxp;  ## correct lower boarder if page is near end
 
         for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
             if ($n <= 0)            $deltaUpper++;                        ## correct upper boarder if page is near zero
@@ -233,6 +235,8 @@ class uiSearch
         $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
         $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
         ksort($this->results['pagination']);
+        
+        return TRUE;
     }
 
 

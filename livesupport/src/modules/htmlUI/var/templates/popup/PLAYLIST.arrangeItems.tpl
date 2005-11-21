@@ -53,7 +53,7 @@
 
         <div style="width: 500px;">
            <div style="float: left;"><input type="button" class="button_large" value="##Cancel##" onClick="window.close()"> </div>
-           <div style="float: right;"><INPUT TYPE="button" class="button_large" VALUE="##Save Reorder##" onClick="javascript:draglist_manager.do_submit('PL','draglist_container')"></div>
+           <div style="float: right;"><INPUT TYPE="button" class="button_large" VALUE="##Save Playlist##" onClick="javascript:draglist_manager.do_submit('PL','draglist_container')"></div>
         </div>
 
     </form>

@@ -14,7 +14,7 @@
         <div class="headRight">
             <!-- start station information -->
             <div class="station">
-                <img src="{$STATIONPREFS.stationLogoPath}" alt="{$STATIONPREFS.stationName}" width='127' height='34'>
+                <img src="{$STATIONPREFS.stationLogoPath}" alt="{$STATIONPREFS.stationName}">
                 <div class="frequence">{$STATIONPREFS.stationFrequency}</div>
             </div>
             <!-- end station information -->

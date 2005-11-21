@@ -52,7 +52,7 @@
                   {/if}
 
                   {if $i.type|lower != 'folder'}
-                      &nbsp;<a href="{$UI_BROWSER}?act=getMData&id={$i.id}">##MDataXML##</a>
+                      &nbsp;<a href="{$UI_BROWSER}?act=getMData&id={$i.id}">##Metadata XML##</a>
                       &nbsp;<a href="{$UI_BROWSER}?act=editMetaData&id={$i.id}">[MDataForm]</a>
 
                       {if $i.type|lower eq 'webstream'}

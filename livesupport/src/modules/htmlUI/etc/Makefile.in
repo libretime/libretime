@@ -35,6 +35,9 @@ RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
 CP      = cp -f
+SED     = sed
+ECHO    = echo
+CAT     = cat
 
 
 #-------------------------------------------------------------------------------
@@ -74,6 +77,9 @@ PHP_DIR         = ${VAR_DIR}
 
 APACHE_GROUP = @APACHE_GROUP@
 WWW_DOCROOT  = @WWW_DOCROOT@
+STORAGE_SERVER = @STORAGE_SERVER@
+
+REPLACE_SED_STRING="s\storage_server\${STORAGE_SERVER}\;"
 
 
 #-------------------------------------------------------------------------------
@@ -130,14 +136,16 @@ install: configure_apache
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/assets
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/icon
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/includes
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/internals
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/.icons
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/sub
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/file
@@ -151,11 +159,16 @@ install: configure_apache
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
 
-	${CP} ${BASE_DIR}/redir.php ${USR_VAR_DIR}/LiveSupport/index.php
-	${CP} ${BASE_DIR}/index.php ${USR_VAR_DIR}/LiveSupport/htmlUI
-	${CP} ${VAR_DIR}/*.xml ${VAR_DIR}/*.php \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/index.php
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/htmlUI/index.php
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/index.php
+	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${CAT} ${VAR_DIR}/ui_conf.php.template | ${SED} -e ${REPLACE_SED_STRING} > ${USR_VAR_DIR}/LiveSupport/htmlUI/var/ui_conf.php
 	${CP} ${VAR_DIR}/.htaccess ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${CP} ${VAR_DIR}/localizer/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
+	${CP} ${VAR_DIR}/localizer/includes/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/includes
+	${CP} ${VAR_DIR}/localizer/icon/*.png ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/icon
+	${CP} -r ${VAR_DIR}/localizer/lang/* ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang/
 	${CP} ${VAR_DIR}/html/*.php ${VAR_DIR}/html/*.css \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
 	${CP} ${VAR_DIR}/html/img/*.png ${VAR_DIR}/html/img/*.gif \
@@ -167,10 +180,6 @@ install: configure_apache
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
 	${CP} ${VAR_DIR}/formmask/*.php \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
-	${CP} ${VAR_DIR}/localizer/*.php ${VAR_DIR}/localizer/*.xml\
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
-	${CP} ${VAR_DIR}/localizer/.icons/*.jpg ${VAR_DIR}/localizer/.icons/*.gif \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/.icons
 	${CP} ${VAR_DIR}/Smarty/libs/*.php \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/
 	${CP} ${VAR_DIR}/Smarty/libs/internals/*.php \
@@ -206,13 +215,14 @@ install: configure_apache
 
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	chgrp -R ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
 
 	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
 	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	chmod -R g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
 
 	${RM} ${WWW_DOCROOT}/livesupport
 	ln -sf ${USR_VAR_DIR}/LiveSupport ${WWW_DOCROOT}/livesupport
-	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/index.php
 
 configure_apache:
 ifeq (@CONFIGURE_APACHE@,yes)

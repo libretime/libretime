@@ -274,8 +274,10 @@ switch($_REQUEST['act']){
          $uiHandler->SCHEDULER->setReload();
     break;
 
-    default:
-        if ($uiHandler->userid) $uiHandler->_retMsg("Unknown method: $1.\\nSee Help for more information.", $_REQUEST["act"]);
+    default: 
+        if ($uiHandler->userid) {
+            $uiHandler->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.');
+        }
         $uiHandler->redirUrl = UI_BROWSER;
         if ($_REQUEST['is_popup'])
              $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';

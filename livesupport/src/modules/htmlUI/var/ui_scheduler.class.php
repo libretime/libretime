@@ -578,7 +578,7 @@ class uiScheduler extends uiCalendar
         if ($this->_isError($r))
             return FALSE;
         if (isset($r['scheduleEntryId']))
-            $this->Base->_retMsg('Entry added at $1 with ScheduleId: $2', strftime("%Y-%m-%d %H:%M:%S", $this->_datetime2timestamp($datetime)), $r['scheduleEntryId']);
+            $this->Base->_retMsg('Entry added at $1 with ScheduleId $2.', strftime("%Y-%m-%d %H:%M:%S", $this->_datetime2timestamp($datetime)), $r['scheduleEntryId']);
     }
 
 
@@ -589,7 +589,7 @@ class uiScheduler extends uiCalendar
         #print_r($r);
         if ($this->_isError($r))
             return FALSE;
-        if (UI_VERBOSE) $this->Base->_retMsg('Entry with ScheduleId $1 removed', $id);
+        if (UI_VERBOSE) $this->Base->_retMsg('Entry with ScheduleId $1 removed.', $id);
     }
 
 

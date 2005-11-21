@@ -1,7 +1,7 @@
 {assign var="_gname" value=$SUBJECTS->Base->gb->getSubjName($_REQUEST.id)}
 
 <div class="container_elements" style="width: 607px;">
-    <h1>{tra 0='Manage Group: $1' 1=$_gname}</h1>
+    <h1>{tra str='Manage Group: $1' 1=$_gname}</h1>
 
     <div class="container_table" style="width: 594px;">
 
@@ -23,8 +23,8 @@
                         {foreach from=$_member item="i"}
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">{$i.login}</td>
-                                <td style="border: 0; text-align: center"
+                                <td style="cursor: pointer" onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">{$i.login}</td>
+                                <td style="border: 0; text-align: center; cursor: pointer"
                                     onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
                                         <img src="img/user.png" border="0" alt="User" />
@@ -70,8 +70,8 @@
                             <!-- start item -->
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
-                                <td style="border: 0; text-align: center"
+                                <td style="cursor: pointer" onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
+                                <td style="border: 0; text-align: center; cursor: pointer"
                                     onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
                                         <img src="img/user.png" border="0" alt="User" />

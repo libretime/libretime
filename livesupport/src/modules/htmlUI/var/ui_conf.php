@@ -1,7 +1,4 @@
 <?php
-if ($_SERVER['SERVER_ADDR'] !== '192.168.0.110') { 
-    error_reporting(E_ERROR);
-}
 ini_set('memory_limit', '64M'); 
 
 define('UI_PL_DRAG_ENABLED',             TRUE);
@@ -20,7 +17,7 @@ define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
 
 ## Local settings
-define('UI_DEFAULT_LANGID',             'en_US');
+define('UI_DEFAULT_LANGID',             'en_GB');
 #define('UI_UPLOAD_LANGID',              $_SESSION['langid']);
 define('UI_UPLOAD_LANGID',              UI_DEFAULT_LANGID);
 define('UI_TIMEZONEOFFSET',             date('Z'));
@@ -53,6 +50,7 @@ define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
+define('UI_LOCALIZATION_SESSNAME',      'LOCALIZATION');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
@@ -122,20 +120,7 @@ $config = array_merge($config,
         'stream_types'  => array(
                             'application/ogg',
                             'audio/mpeg'
-        ),
-        'languages'     => array(
-                            'ar_JO'        => 'Arabic(JO)',
-                            'am_AM'        => 'Armenian(AM)',
-                            'en_GB'        => 'English (GB)',
-                            'en_US'        => 'English (US)',
-                            'es_CO'        => 'Español (CO)',
-                            'cz_CZ'        => 'Česky (CZ)',
-                            'de_DE'        => 'Deutsch (DE)',
-                            'hu_HU'        => 'Magyar (HU)',
-                            'nl_NL'        => 'Nederlands (NL)',
-                            'sr_CS'        => 'Srpski (CS)',
-                            'ru_RU'        => 'Russia(RU)'
-        ),
+        )
     )
 );
 require_once dirname(__FILE__).'/ui_base.inc.php';

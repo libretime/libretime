@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>nl_NL</Id>
+	<item>
+		<key>5.1</key>
+		<value>5.1</value>
+	</item>
+	<item>
+		<key>And</key>
+		<value>en</value>
+	</item>
+	<item>
+		<key>Crossfade</key>
+		<value>Overgangsfade</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path)</key>
+		<value>Doel map (relatieve weg):</value>
+	</item>
+	<item>
+		<key>Mono</key>
+		<value>Mono</value>
+	</item>
+	<item>
+		<key>Or</key>
+		<value>Of</value>
+	</item>
+	<item>
+		<key>Pause</key>
+		<value>Pause</value>
+	</item>
+	<item>
+		<key>Stereo</key>
+		<value>Stereo</value>
+	</item>
+	<item>
+		<key>full</key>
+		<value>volledig</value>
+	</item>
+	<item>
+		<key>partial</key>
+		<value>gedeeltelijk</value>
+	</item>
+	<item>
+		<key>prefix</key>
+		<value>parameter</value>
+	</item>
+	<item>
+		<key>April</key>
+		<value>april</value>
+	</item>
+	<item>
+		<key>August</key>
+		<value>augustus</value>
+	</item>
+	<item>
+		<key>December</key>
+		<value>december</value>
+	</item>
+	<item>
+		<key>February</key>
+		<value>februari</value>
+	</item>
+	<item>
+		<key>January</key>
+		<value>januari</value>
+	</item>
+	<item>
+		<key>July</key>
+		<value>juli</value>
+	</item>
+	<item>
+		<key>June</key>
+		<value>juni</value>
+	</item>
+	<item>
+		<key>March</key>
+		<value>maart</value>
+	</item>
+	<item>
+		<key>May</key>
+		<value>mei</value>
+	</item>
+	<item>
+		<key>November</key>
+		<value>november</value>
+	</item>
+	<item>
+		<key>October</key>
+		<value>oktober</value>
+	</item>
+	<item>
+		<key>September</key>
+		<value>september</value>
+	</item>
+	<item>
+		<key>Access</key>
+		<value>Toegang</value>
+	</item>
+	<item>
+		<key>Action</key>
+		<value>Actie</value>
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value>Audio toevoegen</value>
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value>Groep toevoegen</value>
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value>Leden toevoegen</value>
+	</item>
+	<item>
+		<key>Add User</key>
+		<value>Gebruiker toevoegen</value>
+	</item>
+	<item>
+		<key>Add files to ScratchPad</key>
+		<value>Voeg bestanden aan ScratchPad toe</value>
+	</item>
+	<item>
+		<key>Add files to open Playlist</key>
+		<value>Voeg bestanden aan de open Playlist toe</value>
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value>Geselecteerd toevoegen</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>Aan ScratchPad toevoegen</value>
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value>Toevoegen aan groep</value>
+	</item>
+	<item>
+		<key>Add to playlist</key>
+		<value>Aan playlist toevoegen.</value>
+	</item>
+	<item>
+		<key>Are you sure to delete $1 selected files?</key>
+		<value>Bent u er zeker van om de geselecteerde bestanden $1 te verwijderen?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value>Bent u er zeker van het bestand &quot;$1&quot; te verwijderen?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete open Playlist?</key>
+		<value>Bent u er zeker van de open Playlist te verwijderen?</value>
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value>Wilt u alle wijzigingen negeren?</value>
+	</item>
+	<item>
+		<key>Are you sure to logout?</key>
+		<value>Wilt u uitloggen?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove &quot;$1&quot;?</key>
+		<value>Wilt u &quot;$1&quot; verwijderen?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value>Weet u zeker dat u playlist &quot;$1&quot; wilt verwijderen?</value>
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value>Wilt U alle bestaande metadata veranderen?</value>
+	</item>
+	<item>
+		<key>Artist</key>
+		<value>Artiest</value>
+	</item>
+	<item>
+		<key>Audioclip</key>
+		<value>Audioclip</value>
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value>Terug naar overzicht</value>
+	</item>
+	<item>
+		<key>Browse</key>
+		<value>Bladeren</value>
+	</item>
+	<item>
+		<key>CW</key>
+		<value>WK</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Annuleer</value>
+	</item>
+	<item>
+		<key>Cannot connect to Scheduler</key>
+		<value>Kan niet met de Scheduler verbinden</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Fadein aanpassen</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Fadeout aanpassen</value>
+	</item>
+	<item>
+		<key>Change Fades</key>
+		<value>Fades aanpassen</value>
+	</item>
+	<item>
+		<key>Change Password</key>
+		<value>Wijzig wachtwoord</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Overgang aanpassen</value>
+	</item>
+	<item>
+		<key>Change password</key>
+		<value>Wijzig wachtwoord</value>
+	</item>
+	<item>
+		<key>Change password for: $1</key>
+		<value>Wijzig wachtwoord voor:  $1</value>
+	</item>
+	<item>
+		<key>Clear</key>
+		<value>Leeg maken</value>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value>Playlist leeg maken</value>
+	</item>
+	<item>
+		<key>Close</key>
+		<value>Sluiten</value>
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value>Sluit Playlist</value>
+	</item>
+	<item>
+		<key>Connection to $1 port $2 $3</key>
+		<value>Verbinden met $1 via poort $2 $3</value>
+	</item>
+	<item>
+		<key>Count</key>
+		<value>Teller</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Schrijver</value>
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value>Huidige leden</value>
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value>Dagelijks</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Gegevens</value>
+	</item>
+	<item>
+		<key>Day</key>
+		<value>Dag</value>
+	</item>
+	<item>
+		<key>Delete</key>
+		<value>Verwijderen</value>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value>Verwijder playlist</value>
+	</item>
+	<item>
+		<key>Delete files</key>
+		<value>Verwijder bestanden</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Omschrijving</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path):</key>
+		<value>Doel map (relatieve weg):</value>
+	</item>
+	<item>
+		<key>New folder name:</key>
+		<value>Nieuwe naam van de map</value>
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value>Wilt u alle wijzigingen opslaan?</value>
+	</item>
+	<item>
+		<key>Duration</key>
+		<value>Duur</value>
+	</item>
+	<item>
+		<key>Edit</key>
+		<value>Bewerken</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Playlist bewerken</value>
+	</item>
+	<item>
+		<key>Fade</key>
+		<value>Fade</value>
+	</item>
+	<item>
+		<key>File List</key>
+		<value>Bestandenlijst</value>
+	</item>
+	<item>
+		<key>File Management</key>
+		<value>Bestandenbeheer</value>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value>Mappen structuur</value>
+	</item>
+	<item>
+		<key>Fr</key>
+		<value>vr</value>
+	</item>
+	<item>
+		<key>Friday</key>
+		<value>vrijdag</value>
+	</item>
+	<item>
+		<key>Go</key>
+		<value>Go</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Help</value>
+	</item>
+	<item>
+		<key>Insert playlist here</key>
+		<value>Playlist hier invoegen</value>
+	</item>
+	<item>
+		<key>Item</key>
+		<value>Item</value>
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value>Zoeken in bibliotheek</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Laat Map zien</value>
+	</item>
+	<item>
+		<key>Listen</key>
+		<value>Luister</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Aanmelden</value>
+	</item>
+	<item>
+		<key>Main</key>
+		<value>Algemeen</value>
+	</item>
+	<item>
+		<key>Manage Group: $1</key>
+		<value>Groep $1 beheren</value>
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value>Beheer groepsleden</value>
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value>Media bibliotheek</value>
+	</item>
+	<item>
+		<key>Members</key>
+		<value>Leden</value>
+	</item>
+	<item>
+		<key>Metadata XML</key>
+		<value>Metadata XML</value>
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>ma</value>
+	</item>
+	<item>
+		<key>Monday</key>
+		<value>maandag</value>
+	</item>
+	<item>
+		<key>Month</key>
+		<value>Maand</value>
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value>Maand overzicht</value>
+	</item>
+	<item>
+		<key>Move</key>
+		<value>Verplaats</value>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value>Meervoudige actie:</value>
+	</item>
+	<item>
+		<key>Music</key>
+		<value>Muziek</value>
+	</item>
+	<item>
+		<key>New</key>
+		<value>Nieuw</value>
+	</item>
+	<item>
+		<key>New Playlist using this files</key>
+		<value>Deze bestanden in nieuwe Playlist gebruiken</value>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value>Nieuwe lege Playlist creëren</value>
+	</item>
+	<item>
+		<key>New playlist using this files</key>
+		<value>Deze bestanden in nieuwe Playlist gebruiken</value>
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value>Geen Items</value>
+	</item>
+	<item>
+		<key>No group members</key>
+		<value>Geen groepsleden</value>
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value>Geen Items gevonden.</value>
+	</item>
+	<item>
+		<key>No objects</key>
+		<value>Geen objecten.</value>
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value>Niets over</value>
+	</item>
+	<item>
+		<key>Now Playing</key>
+		<value>Now Playing</value>
+	</item>
+	<item>
+		<key>OK</key>
+		<value>OK</value>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value>Laatste Playlist openen</value>
+	</item>
+	<item>
+		<key>Page</key>
+		<value>Pagina</value>
+	</item>
+	<item>
+		<key>Playing Next</key>
+		<value>Playing Next</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Playlist</value>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value>Playlist Editor</value>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value>Playlist meta-gegevens</value>
+	</item>
+	<item>
+		<key>Playlists</key>
+		<value>Playlists</value>
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value>Eigenschappen</value>
+	</item>
+	<item>
+		<key>Range</key>
+		<value>Totaal</value>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value>AnalyseerRaw</value>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value>Geselecteerde verwijderen</value>
+	</item>
+	<item>
+		<key>Remove files</key>
+		<value>Bestanden verwijderen</value>
+	</item>
+	<item>
+		<key>Remove from ScratchPad</key>
+		<value>Verwijder uit scratchPad</value>
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value>Verwijder uit groep</value>
+	</item>
+	<item>
+		<key>Remove from playlist</key>
+		<value>Verwijder uit playlist</value>
+	</item>
+	<item>
+		<key>Remove playlist</key>
+		<value>Playlist verwijderen</value>
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value>Verwijder geselecteerde</value>
+	</item>
+	<item>
+		<key>Reorder Playlist</key>
+		<value>Playlist sorteren</value>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value>Ongedaan maken</value>
+	</item>
+	<item>
+		<key>Sa</key>
+		<value>za</value>
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value>zaterdag</value>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value>Playlist bewaren</value>
+	</item>
+	<item>
+		<key>Schedule</key>
+		<value>Plannen</value>
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value>Scheduler</value>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value>Scheduler verkenner</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>ScratchPad</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Zoeken</value>
+	</item>
+	<item>
+		<key>Show Info</key>
+		<value>Informatie weergeven</value>
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value>Aanmelden</value>
+	</item>
+	<item>
+		<key>Start Scheduler</key>
+		<value>Scheduler starten</value>
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value>Eigenschappen</value>
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value>Station tijd</value>
+	</item>
+	<item>
+		<key>Station settings</key>
+		<value>Eigenschappen</value>
+	</item>
+	<item>
+		<key>Stream has wrong content type &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>De Stream heeft verkeerd inhoudstype &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>Stream is wanted type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Voor de stream is type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt; gewenst.</value>
+	</item>
+	<item>
+		<key>Su</key>
+		<value>zo</value>
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value>zondag</value>
+	</item>
+	<item>
+		<key>Th</key>
+		<value>do</value>
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value>donderdag</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Tijd</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Titel</value>
+	</item>
+	<item>
+		<key>Today</key>
+		<value>Vandaag</value>
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value>Tree overzicht</value>
+	</item>
+	<item>
+		<key>Tu</key>
+		<value>di</value>
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value>dinsdag</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Type</value>
+	</item>
+	<item>
+		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
+		<value>De URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
+		<value>De URL blijkt &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Foutmelding  $1 ontvangen.</value>
+	</item>
+	<item>
+		<key>Use to create playlist</key>
+		<value>Deze gebruiken om playlist te creëren</value>
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value>Gebruiker/Groep Beheer</value>
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value>Gebruikers/Groepen</value>
+	</item>
+	<item>
+		<key>Voice</key>
+		<value>Items</value>
+	</item>
+	<item>
+		<key>We</key>
+		<value>wo</value>
+	</item>
+	<item>
+		<key>Webstream</key>
+		<value>Webstream</value>
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value>woensdag</value>
+	</item>
+	<item>
+		<key>Week</key>
+		<value>Week</value>
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value>Week overzicht</value>
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value>U moet minimaal 1 afgesloten playlist in ScratchPad hebben om een lijst te plannen.</value>
+	</item>
+	<item>
+		<key>_Name of translator</key>
+		<value>Frans van Berckel</value>
+	</item>
+	<item>
+		<key>_Native language name</key>
+		<value>Nederlands (NL)</value>
+	</item>
+	<item>
+		<key>audioclip</key>
+		<value>audioclip</value>
+	</item>
+	<item>
+		<key>calendar week</key>
+		<value>week kalender</value>
+	</item>
+	<item>
+		<key>copy</key>
+		<value>kopiëren</value>
+	</item>
+	<item>
+		<key>empty</key>
+		<value>leeg</value>
+	</item>
+	<item>
+		<key>go up</key>
+		<value>naar boven</value>
+	</item>
+	<item>
+		<key>h</key>
+		<value>u</value>
+	</item>
+	<item>
+		<key>in use by: $1</key>
+		<value>Is in gebruik bij: $1</value>
+	</item>
+	<item>
+		<key>login</key>
+		<value>aanmelden</value>
+	</item>
+	<item>
+		<key>logout</key>
+		<value>afmelden</value>
+	</item>
+	<item>
+		<key>m</key>
+		<value>m</value>
+	</item>
+	<item>
+		<key>move</key>
+		<value>verplaatsen</value>
+	</item>
+	<item>
+		<key>move down</key>
+		<value>naar beneden verplaatsen</value>
+	</item>
+	<item>
+		<key>move up</key>
+		<value>naar boven verplaatsen</value>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value>nieuwe&amp;nbsp;map</value>
+	</item>
+	<item>
+		<key>next</key>
+		<value>volgende</value>
+	</item>
+	<item>
+		<key>permissions</key>
+		<value>rechten</value>
+	</item>
+	<item>
+		<key>playlist</key>
+		<value>playlist</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>Vorige</value>
+	</item>
+	<item>
+		<key>s</key>
+		<value>s</value>
+	</item>
+	<item>
+		<key>sign over</key>
+		<value>aanmelden als</value>
+	</item>
+	<item>
+		<key>tomorrow</key>
+		<value>morgen</value>
+	</item>
+	<item>
+		<key>webstream</key>
+		<value>webstream</value>
+	</item>
+	<item>
+		<key>yesterday</key>
+		<value>gisteren</value>
+	</item>
+</translations>

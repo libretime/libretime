@@ -59,11 +59,11 @@
         <div class="footer" style="width:250px;">
             <select name="SP_multiaction" onChange="collector_submit('SP', this.value)">
                 <option>##Multiple Action:##</option>
-                <option value="SP.removeItem">##Remove file(s)##</option>
+                <option value="SP.removeItem">##Remove files##</option>
                 {if $_PL_activeId}
-                    <option value="PL.addItem">##Add file(s) to active Playlist##</option>
+                    <option value="PL.addItem">##Add files to open Playlist##</option>
                 {else}
-                    <option value="PL.create">##New Playlist using this file(s)##</option>
+                    <option value="PL.create">##New playlist using this files##</option>
                 {/if}
             </select>
             <script type="text/javascript">

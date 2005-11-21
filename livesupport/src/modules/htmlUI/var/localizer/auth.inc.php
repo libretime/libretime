@@ -1,10 +1,11 @@
 <?php
-
-
 function login(&$data)
-{
+{ 
+    
     include dirname(__FILE__).'/../../../storageServer/var/conf.php';
     include_once dirname(__FILE__).'/../../../storageServer/var/GreenBox.php';
+    include_once 'DB.php';
+
     $dbc = DB::connect($config['dsn'], TRUE);
 
     if (DB::isError($dbc)) {
@@ -51,7 +52,7 @@ function authenticate()
 
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     authenticate();
-} elseif (login($_SERVER) !== TRUE) {
+} elseif (login($_SERVER) !== TRUE) { 
     authenticate();
 }
 ?>

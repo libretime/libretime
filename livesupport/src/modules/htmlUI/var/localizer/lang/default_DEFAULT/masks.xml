@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>default_DEFAULT</Id>
+	<item>
+		<key>+</key>
+		<value />
+	</item>
+	<item>
+		<key>-</key>
+		<value />
+	</item>
+	<item>
+		<key>Album</key>
+		<value />
+	</item>
+	<item>
+		<key>Artist web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Audio file information web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Audio source web page</key>
+		<value />
+	</item>
+	<item>
+		<key>BPM</key>
+		<value />
+	</item>
+	<item>
+		<key>Bitrate</key>
+		<value />
+	</item>
+	<item>
+		<key>Buy CD web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value />
+	</item>
+	<item>
+		<key>Catalog number</key>
+		<value />
+	</item>
+	<item>
+		<key>Category</key>
+		<value />
+	</item>
+	<item>
+		<key>Channels</key>
+		<value />
+	</item>
+	<item>
+		<key>Checksum</key>
+		<value />
+	</item>
+	<item>
+		<key>Composer</key>
+		<value />
+	</item>
+	<item>
+		<key>Conductor</key>
+		<value />
+	</item>
+	<item>
+		<key>Contributor</key>
+		<value />
+	</item>
+	<item>
+		<key>Copyright</key>
+		<value />
+	</item>
+	<item>
+		<key>Creator</key>
+		<value />
+	</item>
+	<item>
+		<key>Date</key>
+		<value />
+	</item>
+	<item>
+		<key>Description</key>
+		<value />
+	</item>
+	<item>
+		<key>Disc number</key>
+		<value />
+	</item>
+	<item>
+		<key>Duration (ms)</key>
+		<value>Duration (ms)</value>
+	</item>
+	<item>
+		<key>Encoded by</key>
+		<value />
+	</item>
+	<item>
+		<key>Encoder software used</key>
+		<value />
+	</item>
+	<item>
+		<key>File format</key>
+		<value />
+	</item>
+	<item>
+		<key>File type</key>
+		<value />
+	</item>
+	<item>
+		<key>Format</key>
+		<value />
+	</item>
+	<item>
+		<key>Frequency</key>
+		<value />
+	</item>
+	<item>
+		<key>Genre</key>
+		<value />
+	</item>
+	<item>
+		<key>Groupname</key>
+		<value>Groupname</value>
+	</item>
+	<item>
+		<key>ISRC number</key>
+		<value />
+	</item>
+	<item>
+		<key>Label</key>
+		<value />
+	</item>
+	<item>
+		<key>Language</key>
+		<value />
+	</item>
+	<item>
+		<key>Length</key>
+		<value />
+	</item>
+	<item>
+		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
+		<value />
+	</item>
+	<item>
+		<key>Login</key>
+		<value />
+	</item>
+	<item>
+		<key>Lyricist</key>
+		<value />
+	</item>
+	<item>
+		<key>Lyrics</key>
+		<value />
+	</item>
+	<item>
+		<key>Maximum length of scratchpad</key>
+		<value>Maximum length of scratchpad</value>
+	</item>
+	<item>
+		<key>Media file</key>
+		<value>Media file</value>
+	</item>
+	<item>
+		<key>Metadata</key>
+		<value>Metadata</value>
+	</item>
+	<item>
+		<key>Mood</key>
+		<value />
+	</item>
+	<item>
+		<key>New password</key>
+		<value>New password</value>
+	</item>
+	<item>
+		<key>Old password</key>
+		<value>Old password</value>
+	</item>
+	<item>
+		<key>Operator</key>
+		<value />
+	</item>
+	<item>
+		<key>Orchestra or band</key>
+		<value />
+	</item>
+	<item>
+		<key>Original artist</key>
+		<value />
+	</item>
+	<item>
+		<key>Original lyricist</key>
+		<value />
+	</item>
+	<item>
+		<key>Password</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Radio station name</key>
+		<value />
+	</item>
+	<item>
+		<key>Radio station web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Rating</key>
+		<value />
+	</item>
+	<item>
+		<key>Repeat password</key>
+		<value>Repeat password</value>
+	</item>
+	<item>
+		<key>Report date/time</key>
+		<value />
+	</item>
+	<item>
+		<key>Report location</key>
+		<value />
+	</item>
+	<item>
+		<key>Report organizations</key>
+		<value />
+	</item>
+	<item>
+		<key>Reset</key>
+		<value />
+	</item>
+	<item>
+		<key>Reset criteria</key>
+		<value>Reset criteria</value>
+	</item>
+	<item>
+		<key>Rows per page</key>
+		<value>Rows per page</value>
+	</item>
+	<item>
+		<key>Sample rate</key>
+		<value />
+	</item>
+	<item>
+		<key>Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Search library</key>
+		<value>Search library</value>
+	</item>
+	<item>
+		<key>Snap to hour</key>
+		<value>Snap to hour</value>
+	</item>
+	<item>
+		<key>Snap to next</key>
+		<value>Snap to next</value>
+	</item>
+	<item>
+		<key>Snap to previous</key>
+		<value>Snap to previous</value>
+	</item>
+	<item>
+		<key>Station URL</key>
+		<value />
+	</item>
+	<item>
+		<key>Station logo</key>
+		<value>Station logo</value>
+	</item>
+	<item>
+		<key>Station logo path</key>
+		<value>Station logo path</value>
+	</item>
+	<item>
+		<key>Station name</key>
+		<value>Station name</value>
+	</item>
+	<item>
+		<key>Stream URL</key>
+		<value />
+	</item>
+	<item>
+		<key>Subject</key>
+		<value />
+	</item>
+	<item>
+		<key>Submit</key>
+		<value />
+	</item>
+	<item>
+		<key>Test</key>
+		<value>Test</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value />
+	</item>
+	<item>
+		<key>Title</key>
+		<value />
+	</item>
+	<item>
+		<key>Track number</key>
+		<value />
+	</item>
+	<item>
+		<key>Type</key>
+		<value />
+	</item>
+	<item>
+		<key>Username</key>
+		<value />
+	</item>
+	<item>
+		<key>Year</key>
+		<value />
+	</item>
+</translations>

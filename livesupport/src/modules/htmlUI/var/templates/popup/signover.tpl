@@ -4,10 +4,10 @@
 <div id="logout">
   <form>
     <table border=0>
-        <tr><td>{tra 0='Are you sure to logout $1' 1=$USER.login}</td></tr>
+        <tr><td>##Are you sure to logout?##</td></tr>
         <tr><td align="right">
-            <input type="button" value="{tra 0=OK}" onclick="javascript: location.href='{$UI_HANDLER}?act=signover'">&nbsp;
-            <input type="button" value="{tra 0=Cancel}" onclick="javascript: window.close()">
+            <input type="button" value="##Cancel##" onclick="javascript: window.close()">
+            <input type="button" value="##OK##" onclick="javascript: location.href='{$UI_HANDLER}?act=signover'">&nbsp;
         </td></tr>
     </table>
   </form>

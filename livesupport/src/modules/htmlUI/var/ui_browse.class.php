@@ -112,17 +112,17 @@ class uiBrowse
             $this->col[$next]['criteria'] = array('operator' => 'and');
         } else {
             $this->col[$next]['criteria'] = array(
-                                            'operator' => 'and',
-                                            'conditions'  =>
-                                                array_merge($this->col[$which]['criteria']['conditions'],
-                                                            array(
-                                                                array('cat'  => $this->Base->_formElementDecode($formdata['category']),
-                                                                      'op'   => '=',
-                                                                      'val'  => $formdata['value'][0]
-                                                                )
-                                                            )
-                                                        )
-                                            );
+                'operator' => 'and',
+                'conditions'  => array_merge(#
+                    is_array($this->col[$which]['criteria']['conditions']) ? $this->col[$which]['criteria']['conditions'] : array(),
+                    array(
+                        array('cat'  => $this->Base->_formElementDecode($formdata['category']),
+                              'op'   => '=',
+                              'val'  => $formdata['value'][0]
+                        )
+                    )
+                )
+            );
         }
         $this->col[$next]['values'] = $this->Base->gb->browseCategory($this->col[$next]['category'], $this->col[$next]['criteria'], $this->Base->sessid);
 

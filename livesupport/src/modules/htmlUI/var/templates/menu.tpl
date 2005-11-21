@@ -52,14 +52,19 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         </li>
 
         {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'subjects')}
-        <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
-            <ul>
-                <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
-                <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
-                <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
-                {* <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.startDaemon')">##Start Scheduler##</a></li> *}
-            </ul>
-        </li>
+            <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
+                <ul>
+                    <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
+                    <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
+                    <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
+                    {* <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.startDaemon')">##Start Scheduler##</a></li> *}
+                </ul>
+            </li>
+        {else}
+            <li><a>##Preferences##</a>
+                <ul>
+                    <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
+                </ul>        
         {/if}
         <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Help##</a></li>
     </ul>

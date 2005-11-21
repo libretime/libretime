@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>cz_CZ</Id>
+	<item>
+		<key>5.1</key>
+		<value>5.1</value>
+	</item>
+	<item>
+		<key>And</key>
+		<value>a</value>
+	</item>
+	<item>
+		<key>Crossfade</key>
+		<value>Přechod</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path)</key>
+		<value>Destinační složka (relativní cesta)</value>
+	</item>
+	<item>
+		<key>Mono</key>
+		<value>Mono</value>
+	</item>
+	<item>
+		<key>Or</key>
+		<value>nebo</value>
+	</item>
+	<item>
+		<key>Pause</key>
+		<value>Pauzovat</value>
+	</item>
+	<item>
+		<key>Stereo</key>
+		<value>Stereo</value>
+	</item>
+	<item>
+		<key>full</key>
+		<value>přesný</value>
+	</item>
+	<item>
+		<key>partial</key>
+		<value>častečný</value>
+	</item>
+	<item>
+		<key>prefix</key>
+		<value>předpona</value>
+	</item>
+	<item>
+		<key>April</key>
+		<value>Duben</value>
+	</item>
+	<item>
+		<key>August</key>
+		<value>Srpen</value>
+	</item>
+	<item>
+		<key>December</key>
+		<value>Prosinec</value>
+	</item>
+	<item>
+		<key>February</key>
+		<value>Únor</value>
+	</item>
+	<item>
+		<key>January</key>
+		<value>Leden</value>
+	</item>
+	<item>
+		<key>July</key>
+		<value>Červenec</value>
+	</item>
+	<item>
+		<key>June</key>
+		<value>Červen</value>
+	</item>
+	<item>
+		<key>March</key>
+		<value>Březen</value>
+	</item>
+	<item>
+		<key>May</key>
+		<value>Květen</value>
+	</item>
+	<item>
+		<key>November</key>
+		<value>Listopad</value>
+	</item>
+	<item>
+		<key>October</key>
+		<value>Říjen</value>
+	</item>
+	<item>
+		<key>September</key>
+		<value>Září</value>
+	</item>
+	<item>
+		<key>Access</key>
+		<value>Přístup</value>
+	</item>
+	<item>
+		<key>Action</key>
+		<value>Akce</value>
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value>Přidat audio</value>
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value>Pridat skupinu</value>
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value>Přidat členy</value>
+	</item>
+	<item>
+		<key>Add User</key>
+		<value>Přidat uživatele</value>
+	</item>
+	<item>
+		<key>Add files to ScratchPad</key>
+		<value>Přidat soubory na pracovní plochu</value>
+	</item>
+	<item>
+		<key>Add files to open Playlist</key>
+		<value>Přidat soubory do otevřeného playlistu</value>
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value>Přidat vybrané</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>Přidat na pracovní plochu</value>
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value>Přidat do skupiny</value>
+	</item>
+	<item>
+		<key>Add to playlist</key>
+		<value>Přidat do playlistu</value>
+	</item>
+	<item>
+		<key>Are you sure to delete $1 selected files?</key>
+		<value>Opravdu chcete smazat $1 vybraných souborů?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value>Opravdu chcete smazat soubor &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete open Playlist?</key>
+		<value>Opravdu chcete smazat otevřený playlist?</value>
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value>Opravdu chcete zrušit všechny změny?</value>
+	</item>
+	<item>
+		<key>Are you sure to logout?</key>
+		<value>Opravdu se chcete odhlásit?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove &quot;$1&quot;?</key>
+		<value>Opravdu chcete smazat &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value>Opravdu chcete smazat playlist &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value>Opravdu chcete změnit existující metadata?</value>
+	</item>
+	<item>
+		<key>Artist</key>
+		<value>Umělec</value>
+	</item>
+	<item>
+		<key>Audioclip</key>
+		<value>Zvukový klip</value>
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value>Zpět na přehled</value>
+	</item>
+	<item>
+		<key>Browse</key>
+		<value>Procházet</value>
+	</item>
+	<item>
+		<key>CW</key>
+		<value>KT</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Storno</value>
+	</item>
+	<item>
+		<key>Cannot connect to Scheduler</key>
+		<value>Selhalo připojení k plánovači</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Změnit zesilování nástupu</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Změnit zeslabovaní</value>
+	</item>
+	<item>
+		<key>Change Fades</key>
+		<value>Změnit přechody</value>
+	</item>
+	<item>
+		<key>Change Password</key>
+		<value>Změnit heslo</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Změnit přechod</value>
+	</item>
+	<item>
+		<key>Change password</key>
+		<value>Změnit heslo</value>
+	</item>
+	<item>
+		<key>Change password for: $1</key>
+		<value>Změnit heslo pro: $1</value>
+	</item>
+	<item>
+		<key>Clear</key>
+		<value>Vymazat (obsah)</value>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value>Vyprázdnit playlist</value>
+	</item>
+	<item>
+		<key>Close</key>
+		<value>Zavřít</value>
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value>Zavřít playlist</value>
+	</item>
+	<item>
+		<key>Connection to $1 port $2 $3</key>
+		<value>Připojení k $1 na port $2 $3</value>
+	</item>
+	<item>
+		<key>Count</key>
+		<value>Počet</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Tvůrce</value>
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value>Současní členové</value>
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value>Pohled na den</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Data</value>
+	</item>
+	<item>
+		<key>Day</key>
+		<value>Den</value>
+	</item>
+	<item>
+		<key>Delete</key>
+		<value>Smazat</value>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value>Vymazat playlist</value>
+	</item>
+	<item>
+		<key>Delete files</key>
+		<value>Smazat soubory</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Popis</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path):</key>
+		<value>Cílová složka (relativní cesta)</value>
+	</item>
+	<item>
+		<key>New folder name:</key>
+		<value>Jméno nové složky</value>
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value>Chcete uložit změny?</value>
+	</item>
+	<item>
+		<key>Duration</key>
+		<value>Délka</value>
+	</item>
+	<item>
+		<key>Edit</key>
+		<value>Editovat</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Editovat playlist</value>
+	</item>
+	<item>
+		<key>Fade</key>
+		<value>Prolínat</value>
+	</item>
+	<item>
+		<key>File List</key>
+		<value>Seznam souborů</value>
+	</item>
+	<item>
+		<key>File Management</key>
+		<value>Správa souborů</value>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value>Struktura složek</value>
+	</item>
+	<item>
+		<key>Fr</key>
+		<value>Pá</value>
+	</item>
+	<item>
+		<key>Friday</key>
+		<value>pátek</value>
+	</item>
+	<item>
+		<key>Go</key>
+		<value>Jdi</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Pomoc</value>
+	</item>
+	<item>
+		<key>Insert playlist here</key>
+		<value>Zde vložit playlist</value>
+	</item>
+	<item>
+		<key>Item</key>
+		<value>Položka</value>
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value>Hledat v knihovně</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Zobrazit složku</value>
+	</item>
+	<item>
+		<key>Listen</key>
+		<value>Poslouchat</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Uživatelské jméno</value>
+	</item>
+	<item>
+		<key>Main</key>
+		<value>Hlavní</value>
+	</item>
+	<item>
+		<key>Manage Group: $1</key>
+		<value>Správa skupiny: $1</value>
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value>Správa členů skupiny</value>
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value>Knihovna médií</value>
+	</item>
+	<item>
+		<key>Members</key>
+		<value>Členové</value>
+	</item>
+	<item>
+		<key>Metadata XML</key>
+		<value>Metadata XML</value>
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>Po</value>
+	</item>
+	<item>
+		<key>Monday</key>
+		<value>pondělí</value>
+	</item>
+	<item>
+		<key>Month</key>
+		<value>Měsíc</value>
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value>Program na měsíc</value>
+	</item>
+	<item>
+		<key>Move</key>
+		<value>Přemístit</value>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value>Multiplicitní akce</value>
+	</item>
+	<item>
+		<key>Music</key>
+		<value>Hudba</value>
+	</item>
+	<item>
+		<key>New</key>
+		<value>Nový</value>
+	</item>
+	<item>
+		<key>New Playlist using this files</key>
+		<value>Smazat</value>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value>Nový&amp;nbsp;prázdný&amp;nbsp;playlist</value>
+	</item>
+	<item>
+		<key>New playlist using this files</key>
+		<value>Nový playlist použitím toho souboru</value>
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value>Prazdné pole</value>
+	</item>
+	<item>
+		<key>No group members</key>
+		<value>Nenalezen žádný člen</value>
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value>Žadný soubor nenalezen</value>
+	</item>
+	<item>
+		<key>No objects</key>
+		<value>Žadné objekty</value>
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value>Nic nezbylo</value>
+	</item>
+	<item>
+		<key>Now Playing</key>
+		<value>Právě se přehrává</value>
+	</item>
+	<item>
+		<key>OK</key>
+		<value>OK</value>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value>Otevřit poslední playlist</value>
+	</item>
+	<item>
+		<key>Page</key>
+		<value>Stránka</value>
+	</item>
+	<item>
+		<key>Playing Next</key>
+		<value>Příští program</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Playlist</value>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value>Editor playlistů</value>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value>Metadata playlistu</value>
+	</item>
+	<item>
+		<key>Playlists</key>
+		<value>Editor playlistu</value>
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value>Možnosti</value>
+	</item>
+	<item>
+		<key>Range</key>
+		<value>Rozsah</value>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value>Analyzovat soubor</value>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value>Odstranit vybrané</value>
+	</item>
+	<item>
+		<key>Remove files</key>
+		<value>Odstranit soubory</value>
+	</item>
+	<item>
+		<key>Remove from ScratchPad</key>
+		<value>Odstranit z pracovní plochy</value>
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value>Odstranit ze skupiny</value>
+	</item>
+	<item>
+		<key>Remove from playlist</key>
+		<value>Odstranit z playlistu</value>
+	</item>
+	<item>
+		<key>Remove playlist</key>
+		<value>Odstranit playlist</value>
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value>Odstranit vybrané</value>
+	</item>
+	<item>
+		<key>Reorder Playlist</key>
+		<value>Přeskupit playlist</value>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value>Vrátit do uloženého stavu</value>
+	</item>
+	<item>
+		<key>Sa</key>
+		<value>So</value>
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value>sobota</value>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value>Uložit playlist</value>
+	</item>
+	<item>
+		<key>Schedule</key>
+		<value>Naplánovat</value>
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value>Plánovač</value>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value>Navigace v plánovači</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>Pracovní plocha</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Vyhledat</value>
+	</item>
+	<item>
+		<key>Show Info</key>
+		<value>Zobrazit informace</value>
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value>Zalogován</value>
+	</item>
+	<item>
+		<key>Start Scheduler</key>
+		<value>Spustit plánovač</value>
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value>Předvolby stanice</value>
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value>Místní čas stanice</value>
+	</item>
+	<item>
+		<key>Station settings</key>
+		<value>Předvolby stanice</value>
+	</item>
+	<item>
+		<key>Stream has wrong content type &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Stream má špatný typ obsahu $1.</value>
+	</item>
+	<item>
+		<key>Stream is wanted type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Je očekáván stream typu &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</value>
+	</item>
+	<item>
+		<key>Su</key>
+		<value>Ne</value>
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value>neděle</value>
+	</item>
+	<item>
+		<key>Th</key>
+		<value>Čt</value>
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value>čtvrtek</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Čas</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Název</value>
+	</item>
+	<item>
+		<key>Today</key>
+		<value>Dnes</value>
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value>Zobrazit strom</value>
+	</item>
+	<item>
+		<key>Tu</key>
+		<value>Út</value>
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value>úterý</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Typ</value>
+	</item>
+	<item>
+		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
+		<value>URL adresa je platná</value>
+	</item>
+	<item>
+		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
+		<value>URL adresa vypadá neplatně, Chybový kód je: $1.</value>
+	</item>
+	<item>
+		<key>Use to create playlist</key>
+		<value>Použít k vytvoření playlistu</value>
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value>Správa účtů a skupin</value>
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value>Uživatelé a skupiny</value>
+	</item>
+	<item>
+		<key>Voice</key>
+		<value>Hlas</value>
+	</item>
+	<item>
+		<key>We</key>
+		<value>St</value>
+	</item>
+	<item>
+		<key>Webstream</key>
+		<value>Webstream</value>
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value>středa</value>
+	</item>
+	<item>
+		<key>Week</key>
+		<value>Týden</value>
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value>Týdenní program</value>
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value>Pro naplánování je nutné mít alespoň jeden neotevřený playlist na pracovní ploše.</value>
+	</item>
+	<item>
+		<key>_Name of translator</key>
+		<value>Tomash Hlava</value>
+	</item>
+	<item>
+		<key>_Native language name</key>
+		<value>Czech</value>
+	</item>
+	<item>
+		<key>audioclip</key>
+		<value>zvukový klip</value>
+	</item>
+	<item>
+		<key>calendar week</key>
+		<value>týden v kalendáři</value>
+	</item>
+	<item>
+		<key>copy</key>
+		<value>kopírovat</value>
+	</item>
+	<item>
+		<key>empty</key>
+		<value>prázdný</value>
+	</item>
+	<item>
+		<key>go up</key>
+		<value>jdi nahoru</value>
+	</item>
+	<item>
+		<key>h</key>
+		<value>h</value>
+	</item>
+	<item>
+		<key>in use by: $1</key>
+		<value>používán uživatelem: $1</value>
+	</item>
+	<item>
+		<key>login</key>
+		<value>přihlášení</value>
+	</item>
+	<item>
+		<key>logout</key>
+		<value>odhlášení</value>
+	</item>
+	<item>
+		<key>m</key>
+		<value>m</value>
+	</item>
+	<item>
+		<key>move</key>
+		<value>přemístit</value>
+	</item>
+	<item>
+		<key>move down</key>
+		<value>posunout dolů</value>
+	</item>
+	<item>
+		<key>move up</key>
+		<value>posunout nahoru</value>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value>nová složka</value>
+	</item>
+	<item>
+		<key>next</key>
+		<value>příští</value>
+	</item>
+	<item>
+		<key>permissions</key>
+		<value>práva</value>
+	</item>
+	<item>
+		<key>playlist</key>
+		<value>playlist</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>předchozí</value>
+	</item>
+	<item>
+		<key>s</key>
+		<value>s</value>
+	</item>
+	<item>
+		<key>sign over</key>
+		<value>Přihlásit jako jiný uživatel</value>
+	</item>
+	<item>
+		<key>tomorrow</key>
+		<value>zítra</value>
+	</item>
+	<item>
+		<key>webstream</key>
+		<value>webstream</value>
+	</item>
+	<item>
+		<key>yesterday</key>
+		<value>včera</value>
+	</item>
+</translations>

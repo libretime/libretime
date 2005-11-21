@@ -100,11 +100,10 @@ $mask = array(
             'label'     => 'Repeat password',
             'required'  => TRUE
         ),
-        array(
+        'cancel' => array(
             'element'   => 'cancel',
             'type'      => 'button',
             'label'     => 'Cancel',
-            'attributes'=> array('onClick' => 'location.href="'.UI_BROWSER.'?act=SUBJECTS"'),
             'groupit'   => TRUE
         ),
         array(

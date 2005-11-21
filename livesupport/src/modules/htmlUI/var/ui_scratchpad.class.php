@@ -67,11 +67,11 @@ class uiScratchPad
     function addItem($ids)
     {
         if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
-            if (UI_WARNING) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
+            if (UI_WARNING) $this->Base->_retMsg('The scratchpad length is not set in system preferences, so it cannot be used.');
             return false;
         }
         if (!$ids) {
-            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
+            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
             return FALSE;
         }
         if (!is_array($ids))
@@ -84,7 +84,7 @@ class uiScratchPad
             foreach ($sp as $key=>$val) {
                 if ($val['id'] == $item['id']) {
                     unset($sp[$key]);
-                    if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 was already on the ScratchPad. It has been moved to the top of the list.', $item['title'], $val['added']);
+                    if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 is already on the scratchpad. It has been moved to the top of the list.', $item['title'], $val['added']);
                 } else {
                     #$this->Base->incAccessCounter($id);
                 }
@@ -102,7 +102,7 @@ class uiScratchPad
     function removeItems($ids)
     {
         if (!$ids) {
-            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
+            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
             return FALSE;
         }
         if (!is_array($ids))

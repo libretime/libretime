@@ -228,19 +228,20 @@ input, select { font-size: 12px;
 
 /* #################################### NAVIGATION ############################### */
 
-.container_nav { font-size: 12px;
+.container_nav { 
+    font-size : 11px;
     height: 26px;
     clear: both;
     background: url("css_img/bg_navigation.png") repeat-x top left;
     margin-bottom: 38px;
 }
 
-.container_nav[class] { font-size: 12px;
+.container_nav[class] { 
     padding-left: 10px;
     margin-bottom: 50px;
 }
 
-#nav, #nav ul { font-size: 12px;
+#nav, #nav ul { 
     float: left;
     width: auto;
     list-style: none;
@@ -250,19 +251,19 @@ input, select { font-size: 12px;
     display: block;
 }
 
-#nav a { font-size: 12px;
+#nav a { 
     display: block;
     color: #666;
     text-decoration: none;
     padding-right: 40px;
 }
 
-#nav li { font-size: 12px;
+#nav li { 
     float: left;
     padding: 0;
 }
 
-#nav li ul { font-size: 12px;
+#nav li ul { 
     display: block;
     position: absolute;
     left: -999px;
@@ -272,12 +273,12 @@ input, select { font-size: 12px;
     z-index: 1;
 }
 
-#nav li ul li { font-size: 12px;
+#nav li ul li { 
     clear: both;
     margin: 0;
 }
 
-#nav li ul a { font-size: 12px;
+#nav li ul a {
     width: 100px;
     line-height: 25px;
     background: #eee;
@@ -288,19 +289,19 @@ input, select { font-size: 12px;
     border-right: 1px solid #ACB3BA;
 }
 
-#nav a:hover { font-size: 12px;
+#nav a:hover { 
     color: #000;
 }
 
-#nav li li a:hover { font-size: 12px;
+#nav li li a:hover { 
     background: #D6E3EF;
 }
 
-#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul { font-size: 12px;
+#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul { 
     left: -999em;
 }
 
-#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul { font-size: 12px;
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
     left: auto;
 }
 
