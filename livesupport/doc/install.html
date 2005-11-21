@@ -126,7 +126,7 @@ importantly a PHP-capable web server (we assume apache), and a database
 server (we assume PostgreSQL). <br>
 <h2>Database</h2>
 LiveSupport expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
-database, version 7.4 or later, to be installed on your system.  You will 
+database, version 7.4 or later, to be installed on your system.  You will
 also need a postgresql driver for unixODBC; this may be in the unixODBC
 package, or may need to be installed separately.<br>
 <br>
@@ -168,7 +168,7 @@ If you changed this setting, increase "post_max_size" to something bigger than "
 Please note the user group your apache daemon is running as (usually <code>apache</code>
 or <code>www-data</code>), you will need this information later. Later
 on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.  For the automatic install scripts to work, the user
-running them must either be <code>root</code>, or belong to 
+running them must either be <code>root</code>, or belong to
 <code>&lt;apache-group&gt;</code>.<br>
 <br>
 Also note the document root directory for your apache installation
@@ -176,16 +176,14 @@ Also note the document root directory for your apache installation
 or <code>/var/www/&lt;yourhost&gt;/htdocs</code>). Later on in this
 document, this directory will be referred to as <code>&lt;www-root&gt;</code>.<br>
 
-<h2>Alsa</h2>
-Please check if alsa is installed and configured properly.
-<br><code>cat /proc/asound/cards</code><br> should show entry for your soundcard.
+<h2>ALSA</h2>
+Please check if ALSA is installed and configured properly.
+File /proc/asound/cards should contain entry(s) for your soundcard(s).
 <br>
-If not, maybe you do not have suitable alsa module for your soundcard on the system. Try to
-<br><code>apt-get install alsa-modules-2.4.27-2-386</code><br>
+If not, maybe you do not have suitable ALSA module for your soundcard on the system. Search you package manager for "alsa-modules" and figure out which are suitable for your kernel version and architecture.
 or one other from <a href="http://packages.debian.org/cgi-bin/search_packages.pl?version=stable&subword=1&exact=&arch=any&releases=all&case=insensitive&keywords=alsa-modules&searchon=names" target="_blank">http://packages.debian.org/cgi-bin/search_packages.pl...</a>.
 <br>
-Then run <br><code>alsaconf</code><br> and check
-<br><code>cat /proc/asound/cards</code><br> again.
+Then run "alsaconf" and check /proc/asound/cards again.
 
 
 <h1>Obtaining LiveSupport sources</h1>
