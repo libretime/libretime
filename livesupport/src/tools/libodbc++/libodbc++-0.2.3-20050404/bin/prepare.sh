@@ -55,5 +55,7 @@ if [ ! -d $product ]; then
     patch -p1 < $etcdir/libodbc++-no-thread-dmaccess-mutex-fix.patch
     # patch not submitted
     patch -p1 < $etcdir/libodbc++-dont-install-some-docs.patch
+    # patch to fix bug #1545 (not submitted; already fixed in 0.2.4)
+    patch -p1 < $etcdir/libodbc++-gcc-4.0-fix.patch
 fi
 

@@ -1,0 +1,11 @@
+diff -Naur libodbc++-0.2.3-20050404/include/odbc++/drivermanager.h libodbc++-0.2.3-20050404-gcc-4.0-fix/include/odbc++/drivermanager.h
+--- libodbc++-0.2.3-20050404/include/odbc++/drivermanager.h	2001-06-12 12:38:17.000000000 +0200
++++ libodbc++-0.2.3-20050404-gcc-4.0-fix/include/odbc++/drivermanager.h	2005-11-19 17:51:33.979494541 +0100
+@@ -30,6 +30,7 @@
+ namespace odbc {
+ 
+   class Connection;
++  class ErrorHandler;
+   
+   /** An ODBC Driver with it's information.
+    */
