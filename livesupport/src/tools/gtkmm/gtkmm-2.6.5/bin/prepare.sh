@@ -67,6 +67,7 @@ cd ${tmpdir}
 if [ ! -d $gtkmm_product ]; then
     tar xfj ${gtkmm_tar}
     cd ${gtkmm_product}
-    # patch here
+    # not submitted; already fixed in version 2.8.1
+    patch -p1 < ${etcdir}/remove-extra-semicolon.patch
 fi
 
