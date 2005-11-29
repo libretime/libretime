@@ -34,20 +34,12 @@ plugins=gst-plugins-0.8.10
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
-installdir=`cd ${basedir}/../../../usr; pwd;`
 bindir=${basedir}/bin
 etcdir=${basedir}/etc
 tmpdir=${basedir}/tmp
+
 gstreamer_tar=${basedir}/src/${product}.tar.bz2
 plugins_tar=${basedir}/src/${plugins}.tar.bz2
-pkg_config_path=${installdir}/lib/pkgconfig
-
-export PATH=${installdir}/bin:$PATH
-export LD_LIBRARY_PATH=${installdir}/lib
-export PKG_CONFIG_PATH=${pkg_config_path}
-
-export LDFLAGS="-L${installdir}/lib"
-export CPPFLAGS="-I${installdir}/install"
 
 mkdir -p ${tmpdir}
 

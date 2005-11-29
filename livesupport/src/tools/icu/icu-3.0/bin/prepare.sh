@@ -33,14 +33,11 @@ product=icu-3.0
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
-installdir=`cd ${basedir}/../../../usr; pwd;`
 bindir=${basedir}/bin
 etcdir=${basedir}/etc
 tmpdir=${basedir}/tmp
 
 tar=$basedir/src/$product.tgz
-docdir=$installdir/share/doc/icu/3.0
-doczip=$basedir/src/$product-docs.zip
 
 mkdir -p ${tmpdir}
 

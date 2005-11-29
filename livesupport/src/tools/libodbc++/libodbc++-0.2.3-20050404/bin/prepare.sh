@@ -33,7 +33,6 @@ product=libodbc++-0.2.3-20050404
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
-installdir=`cd ${basedir}/../../../usr; pwd;`
 bindir=${basedir}/bin
 etcdir=${basedir}/etc
 tmpdir=${basedir}/tmp

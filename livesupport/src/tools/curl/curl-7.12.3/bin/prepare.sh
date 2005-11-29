@@ -33,21 +33,11 @@ product=curl-7.12.3
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
-usrdir=`cd $basedir/../../../usr; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 tmpdir=$basedir/tmp
+
 tar=$basedir/src/$product.tar.bz2
-installdir=$usrdir
-
-export CPPFLAGS="-I$usrdir/include"
-export LDFLAGS="-L$usrdir/lib"
-export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
-
-
-echo "installing $product from $basedir to $installdir"
-
 
 mkdir -p $tmpdir
 cd $tmpdir

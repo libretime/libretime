@@ -34,7 +34,6 @@ product=taglib-1.3.1
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
-installdir=`cd ${basedir}/../../../usr; pwd;`
 bindir=${basedir}/bin
 etcdir=${basedir}/etc
 tmpdir=${basedir}/tmp

@@ -37,6 +37,8 @@ XSLTPROC   = xsltproc
 ECHO       = @echo
 FLAWFINDER = flawfinder
 
+UNZIP      = unzip -o
+
 
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
@@ -54,6 +56,9 @@ ICU_DIR        = ${TMP_DIR}/icu/source
 
 prefix=@prefix@
 
+DOC_ZIP         = ${BASE_DIR}/src/${ICU_VERSION}-docs.zip
+DOC_INSTALL_DIR = ${prefix}/share/doc/icu/3.0
+
 
 #-------------------------------------------------------------------------------
 #   Targets
@@ -64,7 +69,11 @@ ${TMP_DIR}/all.stamp:
 	${MAKE} -C ${ICU_DIR} install
 	touch ${TMP_DIR}/all.stamp
 
-install: all
+install: all install_docs
+
+install_docs:
+	${MKDIR} ${DOC_INSTALL_DIR}
+	${UNZIP} ${DOC_ZIP} -d ${DOC_INSTALL_DIR}
 
 clean:
 	${MAKE} -C ${ICU_DIR} clean
@@ -75,5 +84,3 @@ distclean:
 	${RMDIR} ${ICU_DIR}
 	${RMDIR} ${TMP_DIR}/icu
 	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
-
-

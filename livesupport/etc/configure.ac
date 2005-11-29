@@ -349,8 +349,8 @@ fi
 
 
 if test "$CHECK_GTK_LIB" = "yes" ; then
-    dnl check for gtk+ 2.6.1 or more recent
-    PKG_CHECK_MODULES(GTK,[gtk+-2.0 >= 2.6.1],
+    dnl check for gtk+ 2.6.10 or more recent
+    PKG_CHECK_MODULES(GTK,[gtk+-2.0 >= 2.6.10],
     [
         AC_MSG_RESULT([using gtk+ found on the system])
         COMPILE_GTK="no"
@@ -365,8 +365,8 @@ fi
 
 
 if test "$CHECK_GTKMM_LIB" = "yes" ; then
-    dnl check for gtk-- 2.5.5 or more recent
-    PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5],
+    dnl check for gtk-- 2.6.5 or more recent
+    PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.6.5],
     [
         AC_MSG_RESULT([using gtk-- found on the system])
         COMPILE_GTKMM="no"
@@ -496,8 +496,8 @@ by LiveSupport:
     cppunit 1.10.2             yes
     curl 7.12.3                yes
     gstreamer 0.8.10           yes
-    gtk+ 2.6.1                 ${COMPILE_GTK}
-    gtk-- 2.5.5                ${COMPILE_GTKMM}
+    gtk+ 2.6.10                ${COMPILE_GTK}
+    gtk-- 2.6.5                ${COMPILE_GTKMM}
     icu 3.0                    ${COMPILE_ICU}
     lcov 1.3                   yes
     libodbc++ 0.2.3            yes

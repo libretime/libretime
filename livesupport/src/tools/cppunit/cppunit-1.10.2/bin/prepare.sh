@@ -36,10 +36,8 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 tmpdir=$basedir/tmp
+
 tar=$basedir/src/$product.tar.gz
-
-echo "preparing $product from $basedir to $tmpdir"
-
 
 mkdir -p $tmpdir
 cd $tmpdir
