@@ -353,8 +353,8 @@ class M2tree{
                 WHERE id=$oid
             ");
             if($this->dbc->isError($r)) return $r;
+            array_push($path, $r);
         }
-        array_push($path, $r);
         return $path;
     }
 

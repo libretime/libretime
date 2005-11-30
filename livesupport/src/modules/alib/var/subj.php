@@ -162,11 +162,11 @@ class Subjects extends ObjClasses{
             $oldcpass = md5($oldpass);
             $oldpCond = "AND pass='$oldcpass'";
         }else{ $oldpCond = ''; }
-        $this->dbc->query("
+        $r = $this->dbc->query("
             UPDATE {$this->subjTable} SET pass='$cpass'
             WHERE login='$login' $oldpCond AND type='U'
         ");
-        if(PEAR::isError($id)) return $id;
+        if(PEAR::isError($r)) return $r;
         return TRUE;
     }
 
