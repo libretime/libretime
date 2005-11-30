@@ -27,6 +27,7 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
+define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
 
 /* ====================================================== specific PHP config */
 //error_reporting(0);
@@ -65,12 +66,16 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars){
     echo $xr->serialize();
     exit($errno);
 }
-$old_error_handler = set_error_handler("errHndl");
-
+if(PHP5){
+    $old_error_handler = set_error_handler("errHndl", E_ALL);
+}else{
+    $old_error_handler = set_error_handler("errHndl");
+}
 
 /* ============================================================= runable code */
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
+#PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+$dbc =& DB::connect($config['dsn'], TRUE);
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
 $locStor = &new XR_LocStor($dbc, $config);
@@ -104,6 +109,7 @@ $methods = array(
     'browseCategory'          =>'Return values of specified metadata category.',
     'accessRawAudioData'      => 'Get access to raw audio data.',
     'releaseRawAudioData'     => 'Release access to raw audio data.',
+    'getAudioClip'            => 'Return the contents of an Audio clip.',
     'resetStorage'            => 'Reset storageServer for debugging.',
     'storeWebstream'          => 'Store audio stream identified by URL',
 

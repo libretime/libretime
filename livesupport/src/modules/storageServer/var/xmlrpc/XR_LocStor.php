@@ -991,7 +991,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        if(is_null($r['recursive'])) $r['recursive']=FALSE;
+        if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
         $res = $this->accessPlaylist($r['sessid'], $r['plid'],
             (boolean)$r['recursive']);
         if(PEAR::isError($res)){
@@ -1042,7 +1042,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        if(is_null($r['recursive'])) $r['recursive']=FALSE;
+        if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
         $res = $this->releasePlaylist(NULL, $r['token'],
             (boolean)$r['recursive']);
         if(PEAR::isError($res)){
@@ -1199,6 +1199,51 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         return new XML_RPC_Response(XML_RPC_encode(array('exists'=>$res)));
+    }
+
+    /* ----------------------------------------------------- metadata methods */
+    /**
+     *  Return all file's metadata as XML string
+     *
+     *  The XML-RPC name of this method is "locstor.getAudioClip".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> metadata : string - metadata as XML</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::getAudioClip
+     */
+    function xr_getAudioClip($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->getAudioClip($r['sessid'], $r['gunid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('metadata'=>$res)));
     }
 
     /**
@@ -1387,7 +1432,7 @@ class XR_LocStor extends LocStor{
         );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
-                "xr_browseCategory: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
                 
             );
         }
@@ -1448,7 +1493,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == GBERR_PREF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_loadPref: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
                 
             );
         }
@@ -1499,7 +1544,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_savePref: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
@@ -1549,7 +1594,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == GBERR_PREF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_delPref: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
@@ -1604,7 +1649,7 @@ class XR_LocStor extends LocStor{
                 ? 800+$ec0 : 805 
             );
             return new XML_RPC_Response(0, $ec,
-                "xr_loadGroupPref: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
                 
             );
         }
@@ -1657,7 +1702,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0==GBERR_SESS || $ec0==ALIBERR_NOTGR ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_saveGroupPref: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
@@ -1707,7 +1752,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_uploadToArchive: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
@@ -1756,7 +1801,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_downloadFromArchive: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
@@ -1813,7 +1858,7 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_getTransportInfo: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode($res));
@@ -1856,7 +1901,7 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see BasicStor::resetStorage
+     *  @see LocStor::getAudioClip
      */
     function xr_resetStorage($input)
     {
@@ -1868,7 +1913,7 @@ class XR_LocStor extends LocStor{
         );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
-                "xr_resetStorage: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode($res));
@@ -1906,7 +1951,7 @@ class XR_LocStor extends LocStor{
         $res = $this->bsOpenPut();
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
-                "xr_openPut: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode($res));
@@ -1925,7 +1970,7 @@ class XR_LocStor extends LocStor{
         $res = $this->bsClosePut($r['token'], $r['chsum']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
-                "xr_closePut: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('fname'=>$res)));

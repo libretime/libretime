@@ -44,7 +44,7 @@ class Playlist extends StoredFile{
      *  @param className string, optional classname to recall
      *  @return instace of Playlist object
      */
-    function recallByGunid(&$gb, $gunid, $className='Playlist')
+    function &recallByGunid(&$gb, $gunid, $className='Playlist')
     {
         return parent::recallByGunid($gb, $gunid, $className);
     }
@@ -58,7 +58,7 @@ class Playlist extends StoredFile{
      *  @param className string, optional classname to recall
      *  @return instace of Playlist object
      */
-    function recallByToken(&$gb, $token, $className='Playlist')
+    function &recallByToken(&$gb, $token, $className='Playlist')
     {
         return parent::recallByToken($gb, $token, $className);
     }
@@ -77,7 +77,7 @@ class Playlist extends StoredFile{
      */
     function getAcInfo($acId)
     {
-        $ac =& StoredFile::recall($this->gb, $acId);
+        $ac = StoredFile::recall($this->gb, $acId);
         if(PEAR::isError($ac)){ return $ac; }
         $acGunid = $ac->gunid;
         $r = $ac->md->getMetadataEl('dcterms:extent');
@@ -611,71 +611,58 @@ class Playlist extends StoredFile{
         $arr = $this->md->genPhpArray();
         if(PEAR::isError($arr)){ return $arr; }
         $plArr = array('els'=>array());
-        foreach($arr[children] as $i=>$plEl){
+        // cycle over playlistElements inside playlist:
+        foreach($arr['children'] as $i=>$plEl){
             switch($plEl['elementname']){
-            case"playlistElement":
-                $plInfo = array(
-                    'acLen'   => '00:00:00.000000', 'acLenS'   => 0,
-                    'fadeIn'  => '00:00:00.000000', 'fadeInS'  => 0,
-                    'fadeOut' => '00:00:00.000000', 'fadeOutS' => 0,
-                );
-                $plInfo['elOffset']  = $pom = $plEl['attrs']['relativeOffset'];
-                $plInfo['elOffsetS'] = $this->_plTimeToSecs($pom);
-                foreach($plEl['children'] as $j=>$acFi){
-                    switch($acFi['elementname']){
-                    case"audioClip":
-                        $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
-                        $plInfo['acLenS'] = $this->_plTimeToSecs($pom);
-                        $plInfo['acGunid'] = $pom = $acFi['attrs']['id'];
-                        break;
-                    case"fadeInfo":
-                        $plInfo['fadeIn'] = $pom = $acFi['attrs']['fadeIn'];
-                        $plInfo['fadeInS'] = $this->_plTimeToSecs($pom);
-                        $plInfo['fadeOut'] = $pom = $acFi['attrs']['fadeOut'];
-                        $plInfo['fadeOutS'] = $this->_plTimeToSecs($pom);
-                        break;
-                    }
-                }
+            case"playlistElement":  // process playlistElement
+                $plElObj = new PlaylistElement($this, $plEl);
+                $plInfo = $plElObj->analyze();
                 $plArr['els'][] = $plInfo;
                 break;
-            case"metadata":
-                foreach($plEl[children] as $j=>$ch){
-                    switch($ch['elementname']){
-                    case"dcterms:extent":
-                        $plArr['length'] = $pom = $ch['content'];
-                        $plArr['lengthS'] = $this->_plTimeToSecs($pom);
-                        break;
-                    }
-                }
-                break;
+            default:
             }
         }
-        if(isset($arr['attrs']['playlength'])){
-            $plArr['length'] = $pom = $arr['attrs']['playlength'];
-            $plArr['lengthS'] = $this->_plTimeToSecs($pom);
-        }
-        
         $res  = array('gunid'=>NULL, 'elapsed'=>NULL,
             'remaining'=>NULL, 'duration'=>NULL);
-        $dd = -1;
+        $dd = 0; $found = FALSE;
         foreach($plArr['els'] as $el){
-            extract($el);
-            if($offsetS > $elOffsetS &&
-                $offsetS < ($elOffsetS + $acLenS) &&
-                $dd<0
-            ) $dd=0;
-            if($dd == $distance){
-                $playedS = $offsetS - $elOffsetS;
-                if($playedS < 0) $playedS = 0;
-                $remainS = $acLenS - $playedS;
-                $res  = array('gunid'=>$acGunid,
-                    'elapsed'   => $this->_secsToPlTime($playedS),
-                    'remaining' => $this->_secsToPlTime($remainS),
-                    'duration'  => $this->_secsToPlTime($acLenS),
-                );
-                return $res;
+            extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
+            if($offsetS >= $elOffsetS &&
+                $offsetS < ($elOffsetS + $acLenS)
+            ){ $found = TRUE; }
+            if($found){               // we've found offset
+                switch($el['type']){
+                case"playlist":
+                    $pl = Playlist::recallByGunid($this->gb, $acGunid);
+                    if(PEAR::isError($pl)) return $pl;
+                    if($dd >0 ){
+                        $offsetLoc = "00:00:00.000000";
+                    }else{
+                        $offsetLoc = $this->_secsToPlTime($offsetS - $elOffsetS);
+                    }
+                    $distanceLoc = $distance - $dd;
+                    $res2 = $pl->displayPlaylistClipAtOffset($offsetLoc, $distanceLoc);
+                    if(PEAR::isError($res2)) return $res2;
+                    if(!is_null($res2['gunid'])){ return $res2; }
+                    $dd += $res2['dd'];
+                    break;
+                case"audioClip":
+                    if($dd == $distance){
+                        $playedS = $offsetS - $elOffsetS;
+                        if($playedS < 0) $playedS = 0;
+                        $remainS = $acLenS - $playedS;
+                        $res  = array('gunid'=>$acGunid,
+                            'elapsed'   => $this->_secsToPlTime($playedS),
+                            'remaining' => $this->_secsToPlTime($remainS),
+                            'duration'  => $this->_secsToPlTime($acLenS),
+                        );
+                        return $res;
+                    }
+                    $res['dd'] = $dd;
+                    break;
+                }
+                $dd++;
             }
-            if($dd >= 0) $dd++;
         }
         return $res;
     }
@@ -725,7 +712,7 @@ class Playlist extends StoredFile{
     function _cyclicRecursion($insGunid)
     {
         if($this->gunid == $insGunid) return TRUE;
-        $pl =& Playlist::recallByGunid($this->gb, $insGunid);
+        $pl = Playlist::recallByGunid($this->gb, $insGunid);
         if(PEAR::isError($pl)){ return $pl; }
         $arr = $pl->md->genPhpArray();
         if(PEAR::isError($arr)){ return $arr; }
@@ -751,6 +738,53 @@ class Playlist extends StoredFile{
     }
 
     */
+}
+
+/**
+ *  Auxiliary class for GB playlist editing methods
+ */
+class PlaylistElement {
+    var $pl   = NULL;
+    var $plEl = NULL;
+    function PlaylistElement(&$pl, $plEl){
+        $this->pl   = $pl;
+        $this->plEl = $plEl;
+    }
+    function analyze(){
+        $plInfo = array(
+            'acLen'   => '00:00:00.000000', 'acLenS'   => 0,
+            'fadeIn'  => '00:00:00.000000', 'fadeInS'  => 0,
+            'fadeOut' => '00:00:00.000000', 'fadeOutS' => 0,
+        );
+        $plInfo['elOffset']  = $pom = $this->plEl['attrs']['relativeOffset'];
+        $plInfo['elOffsetS'] = $this->pl->_plTimeToSecs($pom);
+        // cycle over tags inside playlistElement
+        foreach($this->plEl['children'] as $j=>$acFi){
+            switch($acFi['elementname']){
+            case"playlist":
+                $plInfo['type'] = 'playlist';
+                break;
+            case"audioClip":
+                $plInfo['type'] = 'audioClip';
+                break;
+            }
+            switch($acFi['elementname']){
+            case"playlist":
+            case"audioClip":
+                $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
+                $plInfo['acLenS'] = $this->pl->_plTimeToSecs($pom);
+                $plInfo['acGunid'] = $pom = $acFi['attrs']['id'];
+                break;
+            case"fadeInfo":
+                $plInfo['fadeIn'] = $pom = $acFi['attrs']['fadeIn'];
+                $plInfo['fadeInS'] = $this->pl->_plTimeToSecs($pom);
+                $plInfo['fadeOut'] = $pom = $acFi['attrs']['fadeOut'];
+                $plInfo['fadeOutS'] = $this->pl->_plTimeToSecs($pom);
+                break;
+            }
+        }
+        return $plInfo;
+    }
 }
 
 ?>

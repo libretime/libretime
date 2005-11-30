@@ -163,6 +163,11 @@ updateAudioClipMetadata() {
     $XR_CLI updateAudioClipMetadata $SESSID $GUNID "$METADATA" || exit $?
 }
 
+getAudioClip() {
+    echo -n "#getAudioClip: "
+    $XR_CLI getAudioClip $SESSID $GUNID || exit $?
+}
+
 searchMetadata() {
     echo -n "# searchMetadata: "
     RES=`$XR_CLI searchMetadata $SESSID 'title' 'testRunner'` || \
@@ -380,6 +385,7 @@ webstreamTest(){
     storeWebstream;    GUNID=$RGUNID
 #    GUNID="4e58a66cf6e9f539"
 #    downloadMeta
+    getAudioClip
     deleteAudioClip
     logout
     echo "#XMLRPC: webstream: OK."
@@ -406,7 +412,7 @@ usage(){
     echo "Usage: $0 [<command>] [args]"
     echo -e "commands:\n test\n existsAudioClip\n accessRawAudioData"
     echo -e " storeAudioClip\n deleteAudioClip\n updateAudioClipMetadata"
-    echo -e " searchMetadata\n"
+    echo -e " getAudioClip\n searchMetadata\n"
     echo -e " preferences\n playlists\n storage\n"
 }
 
@@ -433,6 +439,10 @@ elif [ "$COMM" == "deleteAudioClip" ]; then
 elif [ "$COMM" == "updateAudioClipMetadata" ]; then
     login
     updateAudioClipMetadata
+    logout
+elif [ "$COMM" == "getAudioClip" ]; then
+    login
+    getAudioClip
     logout
 elif [ "$COMM" == "searchMetadata" ]; then
     searchTest

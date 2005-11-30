@@ -83,7 +83,7 @@ class StoredFile{
      *  @param ftype string, internal file type
      *  @return instace of StoredFile object
      */
-    function insert(&$gb, $oid, $name,
+    function &insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL)
     {
@@ -158,7 +158,7 @@ class StoredFile{
      *  @param className string, optional classname to recall
      *  @return instace of StoredFile object
      */
-    function recall(&$gb, $oid='', $gunid='', $className='StoredFile')
+    function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
     {
         $cond = ($oid != ''
             ? "id='".intval($oid)."'"
@@ -193,7 +193,7 @@ class StoredFile{
      *  @param className string, optional classname to recall
      *  @return instace of StoredFile object
      */
-    function recallByGunid(&$gb, $gunid='', $className='StoredFile')
+    function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
     {
       return StoredFile::recall($gb, '', $gunid, $className);
     }
@@ -227,9 +227,9 @@ class StoredFile{
      *  @param src reference to source object
      *  @param nid int, new local id
      */
-    function copyOf(&$src, $nid)
+    function &copyOf(&$src, $nid)
     {
-        $ac =& StoredFile::insert(
+        $ac = StoredFile::insert(
             $src->gb, $nid, $src->name, $src->_getRealRADFname(),
             '', '', NULL, $src->gb->_getType($src->gunid)
         );

@@ -93,7 +93,8 @@ class RawMediaData{
      */
     function replace($mediaFileLP)
     {
-        if($this->exists) $r = $this->delete();
+        if($this->exists){ $r = $this->delete(); }
+        else{ $r = NULL; }
         if(PEAR::isError($r)) return $r;
         return $this->insert($mediaFileLP);
     }

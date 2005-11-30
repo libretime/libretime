@@ -100,6 +100,8 @@ $infos = array(
             'p'=>array('sessid', 'gunid'), 'r'=>'status'),
     "existsAudioClip"   => array('m'=>"locstor.existsAudioClip",
         'p'=>array('sessid', 'gunid'), 'r'=>'exists'),
+    "getAudioClip"  => array('m'=>"locstor.getAudioClip",
+        'p'=>array('sessid', 'gunid'), 'r'=>'metadata'),
     "updateAudioClipMetadata"   => array('m'=>"locstor.updateAudioClipMetadata",
         'p'=>array('sessid', 'gunid', 'metadata'), 'r'=>'status'),
     "searchMetadata"    => array('m'=>"locstor.searchMetadata", 'p'=>NULL),

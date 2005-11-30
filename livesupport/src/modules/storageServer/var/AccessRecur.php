@@ -47,7 +47,7 @@ class AccessRecur{
         $r = $ls->accessPlaylist($sessid, $plid, FALSE, $parent);
         if(PEAR::isError($r)) return $r;
         $plRes = $r;
-        $r =& StoredFile::recallByGunid($ppa->ls, $plid);
+        $r = StoredFile::recallByGunid($ppa->ls, $plid);
         if(PEAR::isError($r)) return $r;
         $ac = $r;
         $r = $ac->md->genPhpArray();
@@ -89,7 +89,7 @@ class AccessRecur{
         }
         $r = $ppa->ls->releasePlaylist($ppa->sessid, $token, FALSE);
         if($ppa->dbc->isError($r)){ return $r; }
-        return TRUE;
+        return $r;
     }
     function processPlaylist($pla, $parent){
         $res = array();

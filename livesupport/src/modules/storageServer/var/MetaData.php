@@ -393,7 +393,10 @@ class MetaData{
         if(!is_null($aktual)){
             $res = $this->setMetadataEl($aktual['mid'], $value);
             if(PEAR::isError($res)) return $res;
-            if(!is_null($lang) && $aktual['attrs']['xml:lang']!=$lang){
+            if(!is_null($lang) &&
+                isset($aktual['attrs']['xml:lang']) &&
+                $aktual['attrs']['xml:lang']!=$lang
+            ){
                 $lg = $this->getMetadataEl('xml:lang', $aktual['mid']);
                 if(PEAR::isError($lg)) return $lg;
                 if(isset($lg['mid'])){
@@ -419,7 +422,7 @@ class MetaData{
             if(PEAR::isError($nid)) return $nid;
             if(!is_null($lang)){
                 $res = $this->insertMetadataEl($nid, 'xml:lang', $lang, 'A');
-                if(PEAR::isError($res)) return $res;
+                if(PEAR::isError($res) && $res->getCode()!=VAL_UNKNOWNA) return $res;
             }
         }
         return TRUE;

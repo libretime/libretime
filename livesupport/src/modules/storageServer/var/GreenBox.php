@@ -269,7 +269,7 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        $ac =& StoredFile::recall($this, $id);
+        $ac = StoredFile::recall($this, $id);
         if(PEAR::isError($ac)){ return $ac; }
         $arr = $ac->md->genPhpArray();
         $md = FALSE;
@@ -450,7 +450,7 @@ class GreenBox extends BasicStor{
     function getPlaylistArray($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
-        $pl =& StoredFile::recall($this, $id);
+        $pl = StoredFile::recall($this, $id);
         if(PEAR::isError($pl)){ return $pl; }
         $gunid = $pl->gunid;
         return $pl->md->genPhpArray();
@@ -484,7 +484,7 @@ class GreenBox extends BasicStor{
     {
         $gunid = $this->bsCloseDownload($token, 'metadata');
         if(PEAR::isError($gunid)) return $gunid;
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac = StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)){ return $ac; }
         $r = $ac->md->regenerateXmlFile();
         if(PEAR::isError($r)) return $r;
@@ -510,7 +510,7 @@ class GreenBox extends BasicStor{
         $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
     {
         require_once"Playlist.php";
-        $pl =& Playlist::recallByToken($this, $token);
+        $pl = Playlist::recallByToken($this, $token);
         if(PEAR::isError($pl)) return $pl;
         $acGunid = $this->_gunidFromId($acId);
         if($pl->_cyclicRecursion($acGunid)){
@@ -548,7 +548,7 @@ class GreenBox extends BasicStor{
     function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
         require_once"Playlist.php";
-        $pl =& Playlist::recallByToken($this, $token);
+        $pl = Playlist::recallByToken($this, $token);
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->delAudioClip($plElGunid);
         if(PEAR::isError($res)) return $res;
@@ -571,7 +571,7 @@ class GreenBox extends BasicStor{
     function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
     {
         require_once"Playlist.php";
-        $pl =& Playlist::recallByToken($this, $token);
+        $pl = Playlist::recallByToken($this, $token);
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
         if(PEAR::isError($res)) return $res;
@@ -596,7 +596,7 @@ class GreenBox extends BasicStor{
     function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
     {
         require_once"Playlist.php";
-        $pl =& Playlist::recallByToken($this, $token);
+        $pl = Playlist::recallByToken($this, $token);
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->moveAudioClip($plElGunid, $newPos);
         if(PEAR::isError($res)) return $res;
@@ -656,7 +656,7 @@ class GreenBox extends BasicStor{
         $lang=NULL, $deflang=NULL)
     {
         require_once"Playlist.php";
-        $pl =& Playlist::recallByGunid($this, $plid);
+        $pl = Playlist::recallByGunid($this, $plid);
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->displayPlaylistClipAtOffset($offset, $distance);
         if(PEAR::isError($res)) return $res;
@@ -913,7 +913,6 @@ class GreenBox extends BasicStor{
                     "GreenBox::passwd: access denied (oldpass)", GBERR_DENY);
             }
         }
-        return PEAR::raiseError("GreenBox::passwd: OK");
         $res = parent::passwd($login, $oldpass, $pass);
         if(PEAR::isError($res)) return $res;
         return TRUE;
