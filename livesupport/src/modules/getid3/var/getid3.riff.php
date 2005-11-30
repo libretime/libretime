@@ -312,6 +312,7 @@ function getRIFFHeaderFilepointer(&$fd, &$ThisFileInfo) {
 		$ThisFileInfo['tags'][] = 'riff';
 		$RIFFinfoKeyLookup = array('IART'=>'artist', 'IGNR'=>'genre', 'ICMT'=>'comment', 'ICOP'=>'copyright', 'IENG'=>'engineers', 'IKEY'=>'keywords', 'IMED'=>'orignalmedium', 'INAM'=>'name', 'ISRC'=>'sourcesupplier', 'ITCH'=>'digitizer', 'ISBJ'=>'subject', 'ISRF'=>'digitizationsource');
 		foreach ($RIFFinfoKeyLookup as $key => $value) {
+		    if(isset($ThisFileInfo['RIFF']['WAVE']['INFO']["$key"]) && is_array($ThisFileInfo['RIFF']['WAVE']['INFO']["$key"]))
 			foreach ($ThisFileInfo['RIFF']['WAVE']['INFO']["$key"] as $commentid => $commentdata) {
 				if (trim($commentdata['data']) != '') {
 					$ThisFileInfo['RIFF']['comments']["$value"][] = trim($commentdata['data']);
