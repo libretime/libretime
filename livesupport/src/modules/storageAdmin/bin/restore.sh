@@ -36,14 +36,15 @@
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir/var; pwd`
-phpdir=`cd $reldir/var; pwd`
+phpdir=ls_storageAdmin_phppart_dir
+if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
+then
+    phpdir=`cd $reldir/var; pwd`
+fi
 mkdir -p $reldir/tmp
 tmpmaindir=`cd $reldir/tmp; pwd`
 dbxml="db.xml"
-#datestr=`date '+%Y%m%d%H%M%S'`
 tarfile0="xmls.tar"
-#tarfile="storage$datestr.tar"
 
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.

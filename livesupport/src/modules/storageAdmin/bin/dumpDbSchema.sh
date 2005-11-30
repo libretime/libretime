@@ -36,7 +36,11 @@
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
-phpdir=`cd $reldir/var; pwd`
+phpdir=ls_storageAdmin_phppart_dir
+if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
+then
+    phpdir=`cd $reldir/var; pwd`
+fi
 filelistpathname=.
 
 #-------------------------------------------------------------------------------

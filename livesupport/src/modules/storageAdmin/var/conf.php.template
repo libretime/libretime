@@ -28,5 +28,5 @@
 
 ------------------------------------------------------------------------------*/
 
-$storageServerPath = 'ls_var_dir/LiveSupport/storageServer';
+$storageServerPath = 'ls_storageServer';
 ?>

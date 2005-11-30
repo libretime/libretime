@@ -37,7 +37,6 @@ package="StorageAdmin"
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 test -z "$basedir" && basedir=.
-usrdir=`cd $basedir/../../../usr; pwd;`
 
 bindir=$basedir/bin
 etcdir=$basedir/etc

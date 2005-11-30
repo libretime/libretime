@@ -57,6 +57,7 @@ BASE_DIR    = .
 DOC_DIR     = ${BASE_DIR}/doc
 DOXYGEN_DIR = ${DOC_DIR}/doxygen
 ETC_DIR     = ${BASE_DIR}/etc
+DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 INCLUDE_DIR = ${BASE_DIR}/include
 LIB_DIR     = ${BASE_DIR}/lib
 SRC_DIR     = ${BASE_DIR}/src
@@ -67,30 +68,21 @@ BIN_DIR     = ${BASE_DIR}/bin
 prefix = @prefix@
 
 USR_DIR         = ${prefix}
-USR_INCLUDE_DIR = ${USR_DIR}/include
-USR_VAR_DIR     = ${USR_DIR}/var
 
-DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
+DEST_DIR    = ${USR_DIR}
+PHPPART_DIR = ${prefix}/var/LiveSupport/storageAdmin/var
+STORAGE_SERVER 	= @STORAGE_SERVER@
 
-PHP_DIR         = ${VAR_DIR}
-#TEST_RUNNER     = ${PHP_DIR}/tests/index.php
+PHPPART_DIR_S=$(shell ${ECHO} ${PHPPART_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+STORAGE_SERVER_S=$(shell ${ECHO} ${STORAGE_SERVER} | ${SED} -e "s/\//\\\\\\\\\//g")
 
-#DEST_DIR   = ${USR_VAR_DIR}/LiveSupport/storageAdmin/var
-DEST_DIR   = ${USR_DIR}/usr
-
-USR_VAR_DIR_S=$(shell ${ECHO} ${USR_VAR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
-
-REPLACE_SED_STRING="s/ls_var_dir/${USR_VAR_DIR_S}/;"
+SED_STORAGE_SERVER="s/ls_storageServer/${STORAGE_SERVER_S}/;"
+SED_PHPPART_DIR="s/phpdir=ls_storageAdmin_phppart_dir/phpdir=${PHPPART_DIR_S}/;"
 
 
 #-------------------------------------------------------------------------------
 #   Configuration parameters
 #-------------------------------------------------------------------------------
-#CPPFLAGS = @CPPFLAGS@
-#CXXFLAGS = @CXXFLAGS@ @DEFS@ -I${USR_INCLUDE_DIR} -I${INCLUDE_DIR} -I${TMP_DIR}\
-#                             -pedantic -Wall
-#LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${LIB_DIR}
-
 
 #-------------------------------------------------------------------------------
 #   Dependencies
@@ -126,18 +118,24 @@ dist: all
 distclean: clean docclean
 #	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-#check: all ${TEST_RUNNER}
-#	${TEST_RUNNER}
 check: all
 
 install:
 	${MKDIR} ${DEST_DIR}/bin
 	${CP} ${BIN_DIR}/*.sh ${DEST_DIR}/bin
 	${RM} ${DEST_DIR}/bin/autogen.sh
-	${MKDIR} ${DEST_DIR}/var
-	${CP} ${VAR_DIR}/*.php ${DEST_DIR}/var
-	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
-	       > ${DEST_DIR}/var/conf.php
+	${CAT} ${BIN_DIR}/import.sh | ${SED} -e ${SED_PHPPART_DIR} \
+	       > ${DEST_DIR}/bin/import.sh
+	${CAT} ${BIN_DIR}/backup.sh | ${SED} -e ${SED_PHPPART_DIR} \
+	       > ${DEST_DIR}/bin/backup.sh
+	${CAT} ${BIN_DIR}/restore.sh | ${SED} -e ${SED_PHPPART_DIR} \
+	       > ${DEST_DIR}/bin/restore.sh
+	${CAT} ${BIN_DIR}/dumpDbSchema.sh | ${SED} -e ${SED_PHPPART_DIR} \
+	       > ${DEST_DIR}/bin/dumpDbSchema.sh
+	${MKDIR} ${PHPPART_DIR}
+	${CP} ${VAR_DIR}/*.php ${PHPPART_DIR}
+	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${SED_STORAGE_SERVER} \
+	       > ${PHPPART_DIR}/conf.php
 
 
 #-------------------------------------------------------------------------------

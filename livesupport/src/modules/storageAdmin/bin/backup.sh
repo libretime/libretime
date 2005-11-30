@@ -36,14 +36,17 @@
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir/var; pwd`
-phpdir=`cd $reldir/var; pwd`
+phpdir=ls_storageAdmin_phppart_dir
+if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
+then
+    phpdir=`cd $reldir/var; pwd`
+fi
 mkdir -p $reldir/tmp
 tmpmaindir=`cd $reldir/tmp; pwd`
 dbxml="db.xml"
 datestr=`date '+%Y%m%d%H%M%S'`
-tarfile0="xmls.tar"
-tarfile="storage$datestr.tar"
+xmltar="xmls.tar"
+destfile="storage$datestr.tar"
 
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.
@@ -94,7 +97,7 @@ destdir=`cd $destdir; pwd`
 
 tmpdir=`mktemp -d $tmpmaindir/tmp.XXXXXX`
 
-echo "Backuping to $destdir/$tarfile :"
+echo "Backuping to $destdir/$destfile :"
 echo "Dumping database  ..."
 cd $phpdir
 php -q backup.php > $tmpdir/$dbxml
@@ -102,14 +105,14 @@ echo "Packaging stored files ..."
 cd $phpdir
 storpath=`php -q getStorPath.php`
 cd $storpath/..
-find stor -name "*.xml" -print | tar cf $tmpdir/$tarfile0 -T -
-find stor ! -name "*.xml" -a -type f -print | tar cf $tmpdir/$tarfile -T -
+find stor -name "*.xml" -print | tar cf $tmpdir/$xmltar -T -
+find stor ! -name "*.xml" -a -type f -print | tar cf $tmpdir/$destfile -T -
 cd $tmpdir
-tar rf $tarfile0 $dbxml --remove-files
+tar rf $xmltar $dbxml --remove-files
 echo "Compressing XML part ..."
-bzip2 $tarfile0
-tar rf $tarfile $tarfile0.bz2 --remove-files
-mv $tarfile "$destdir"
+bzip2 $xmltar
+tar rf $destfile $xmltar.bz2 --remove-files
+mv $destfile "$destdir"
 rmdir $tmpdir
 
 #-------------------------------------------------------------------------------

@@ -27,6 +27,7 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
+ini_set('memory_limit', '64M');
 header("Content-type: text/plain");
 echo "\n#StorageServer import script:\n";
 //echo date('H:i:s')."\n";
@@ -45,7 +46,7 @@ if(PEAR::isError($dbc)){ echo "ERROR: ".$dbc->getMessage()." ".$dbc->getUserInfo
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox($dbc, $config);
 
-$testonly = ($argv[1] == '-n');
+$testonly = (isset($argv[1]) && $argv[1] == '-n');
 #$testonly = TRUE;
 
 $errors=0;
@@ -61,7 +62,13 @@ $flds = array(
     'mime_type'     => 'dc:format',
     'bitrate'       => 'ls:bitrate',
     'playtime_seconds'  => 'dcterms:extent',
-    'tags'  => array(
+/*
+    'id3v1'  => array(
+        'title'     => 'dc:title',
+        'artist'    => 'dc:creator',
+    ),
+*/
+    'id3v2'  => array(
         'TT2' => 'dc:title',
         'TIT2' => 'dc:title',
         'TP1' => 'dc:creator',
@@ -95,6 +102,8 @@ $flds = array(
 );
 
 $titleKey = 'dc:title';
+$enc      = 'iso-8859-1';
+#$enc      = 'UTF-8';
 
 $r = $gb->getObjId('import', $gb->storId);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n"; exit(1); }
@@ -104,16 +113,16 @@ if(is_null($r)){
 }
 $parid = $r;
 
-function addMdata($key, $val){
+function addMdata($key, $val, $iEnc='iso-8859-1'){
     global $mdata, $titleHaveSet, $titleKey;
+    #echo "$key($iEnc): $val\n";
     if(!is_null($val)){
         $mdata[$key] = $val;
-/*
-        $iEnc = 'UTF-8';
-        $oEnc = 'ISO-8859-1';
         $oEnc = 'UTF-8';
-        $mdata[$key] = iconv($iEnc, $oEnc, $mdata[$key]);
-*/
+        if(function_exists('iconv')){
+            $mdata[$key] = $r = @iconv($iEnc, $oEnc, $mdata[$key]);
+            if($r === FALSE) die("Recoding metadata to unicode failed.");
+        }
         if($key == $titleKey) $titleHaveSet = TRUE;
     }
 }
@@ -131,18 +140,23 @@ while($filename = fgets($stdin, 2048)){
     $mdata = array();
     $titleHaveSet = FALSE;
     foreach($flds as $k1=>$fn1){
+        if($testonly) echo"#$k1, $fn1\n";
         if(is_null($fn1)) continue;
+        if(!isset($infoFromFile[$k1])) continue;
         list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
         if(is_array($fn1)){
             $k0 = $k1;
             //if($k0=='tags') $k1=$infoFromFile['tags'][0];
-            $k1 = 'id3v2';
+            //$k1 = 'id3v2';
+            if(!isset($infoFromFile[$k1])) continue;
             list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
             foreach($fn1 as $k2=>$fn2){
+                if($testonly) echo" #$k2, $fn2\n";
                 if(is_null($fn2)) continue;
                 if(!isset($infoFromFile[$k1][$k2])) continue;
                 switch($k0){
                 case"tags":
+                case"id3v2":
                     list($fn, $v)  = array($fn2, $infoFromFile[$k1][$k2]['data']);
                     $enc = $infoFromFile[$k1][$k2]['encoding'];
                     if($enc != 'UTF-8' && $enc != 'ISO-8859-1'){
@@ -155,7 +169,8 @@ while($filename = fgets($stdin, 2048)){
                 default;
                     list($fn, $v)  = array($fn2, $infoFromFile[$k1][$k2]);
                 }
-                addMdata($fn, $v);
+                if($testonly) echo"  - $v\n";
+                addMdata($fn, $v, $enc);
             }
         }else{
             switch($fn){
@@ -165,10 +180,10 @@ while($filename = fgets($stdin, 2048)){
             default:
                 list($fn, $v)  = array($fn1, $infoFromFile[$k1]);
             }
-            addMdata($fn, $v);
+            addMdata($fn, $v, $enc);
         }
     }
-    if(!$titleHaveSet || trim($mdata[$titleKey])=='') addMdata($titleKey, basename($filename)." X");
+    if(!$titleHaveSet || trim($mdata[$titleKey])=='') addMdata($titleKey, basename($filename));
 //    unset($mdata['dc:title']);
 
     if(!$testonly){

@@ -75,7 +75,7 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
                 $r = $bs->bsCreateFolder($parid, $obj['name']);
                 ls_restore_checkErr($r, __LINE__);
             }else $r=$parid;
-            if(is_array($obj['children'])){
+            if(isset($obj['children']) && is_array($obj['children'])){
                 foreach($obj['children'] as $i=>$ch){
                     ls_restore_restoreObject($ch, $r);
                 }
@@ -167,7 +167,7 @@ foreach($subjArr as $i=>$el){
                 'pass'      => $el->attrs['pass']->val,
 #                'realname'  => $el->attrs['realname']->val,
                 'realname'  => '',
-                'prefs'     => $el->children[0]->children,
+                'prefs'     => (isset($el->children[0]) ? $el->children[0]->children : NULL),
             );
         break;
     }

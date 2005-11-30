@@ -36,7 +36,11 @@
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
-phpdir=`cd $reldir/var; pwd`
+phpdir=ls_storageAdmin_phppart_dir
+if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
+then
+    phpdir=`cd $reldir/var; pwd`
+fi
 filelistpathname=.
 
 #-------------------------------------------------------------------------------
@@ -70,10 +74,12 @@ while true; do
     case "$1" in
         -d|--directory)
             srcdir=$2;
+            test -d $srcdir || { echo "Directory not found ($srcdir)."; exit 1;  }
             srcabsdir=`cd "$srcdir"; pwd`
             shift; shift;;
         -l|--list)
             filelist=$2;
+            test -f $filelist || { echo "File not found ($filelist)."; exit 1;  }
             filelistbasename=`basename "$filelist"`
             filelistdir=`dirname "$filelist"`
             filelistabsdir=`cd "$filelistdir"; pwd`

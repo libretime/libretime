@@ -39,6 +39,41 @@ AC_REVISION($Revision$)
 
 AC_CONFIG_SRCDIR(../var/getStorPath.php)
 
+dnl-----------------------------------------------------------------------------
+dnl  specify directory with php parts of scripts
+dnl-----------------------------------------------------------------------------
+AC_SUBST(PHPPART_DIR)
+
+AC_ARG_WITH([phppart-dir],
+            AC_HELP_STRING([--with-phppart-dir],
+                   [directory with php parts of scripts]),
+            [PHPPART_DIR=${withval}], [PHPPART_DIR=${prefix}/var/LiveSupport/storageAdmin/var])
+
+AC_MSG_RESULT([directory with php parts of scripts: ${PHPPART_DIR}])
+
+dnl-----------------------------------------------------------------------------
+dnl  specify storageServer directory
+dnl-----------------------------------------------------------------------------
+AC_SUBST(STORAGE_SERVER)
+
+AC_ARG_WITH([storage-server],
+            AC_HELP_STRING([--with-storage-server],
+                          [use storageServer in given directory]),
+            [STORAGE_SERVER=${withval}], [STORAGE_SERVER=${prefix}/var/LiveSupport/storageServer])
+
+AC_MSG_RESULT([using storageServer at: ${STORAGE_SERVER}])
+
+dnl-----------------------------------------------------------------------------
+dnl  msg notice
+dnl-----------------------------------------------------------------------------
+AC_MSG_NOTICE(
+[using the following configuration settings:
+
+    storageServer directory:           ${STORAGE_SERVER}
+    php parts directory:               ${PHPPART_DIR}
+
+])
+
 
 AC_CONFIG_FILES(../Makefile:../etc/Makefile.in)
 

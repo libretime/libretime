@@ -122,7 +122,7 @@ function admDumpGroup(&$bs, $gid, $ind=''){
         ));
     }
     $garr = $bs->listGroup($gid);
-    if(PEAR::isError($farr)){ echo $farr->getMessage(); exit; }
+    if(PEAR::isError($garr)){ echo $garr->getMessage(); exit; }
     $res = '';
     foreach($garr as $i =>$member){
         $fid2 = $member['id'];
