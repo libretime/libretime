@@ -1,23 +1,23 @@
 <?php
-if ($_SERVER['SERVER_ADDR'] !== '192.168.0.110') { 
-    error_reporting(E_ERROR);
-}
 ini_set('memory_limit', '64M'); 
 
 define('UI_PL_DRAG_ENABLED',             TRUE);
-define('UI_PL_DRAG_INTRO',              'Here you can simply rearrange whole playlist on just drag items up or down.');
-define('UI_VERSION',                    'LiveSupport 1.0.1');
-define('UI_VERSION_FULLNAME',           'LiveSupport 1.0 stable');
+define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
+
+## Warning/Error level
+define('UI_VERBOSE',                    FALSE);
+define('UI_WARNING',                    TRUE);
+define('UI_ERROR',                      TRUE);
+
+
+define('UI_VERSION',                    'LiveSupport 1.0.2');
+define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler
 define('UI_SCHEDULER_DAEMON_CMD',       '/etc/init.d/livesupport-station start >/tmp/scheduler.log 2>&1 &'); ## adjust the start-command here
 define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                     ## this is name of scheduler process to grep in process list for it
 
-## Warning/Error level
-define('UI_VERBOSE',                    FALSE);
-define('UI_WARNING',                    TRUE);
-define('UI_ERROR',                      TRUE);
 
 ## Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');

@@ -42,11 +42,13 @@ function _getLanguages()
  */
 function tra($input)
 {
-    ## initialize at first call of this function ###
-
-    #$GS =& $_SESSION[UI_LOCALIZATION_SESSNAME]['GS'];
-    static $GS;
     global $uiBase;
+
+    if (UI_LOCALIZER_SESSNAME) {
+        $GS =& $_SESSION[UI_LOCALIZATION_SESSNAME]['GS'];
+    } else {
+        static $GS;
+    }
 
     if ($uiBase->langid && !is_array($GS)) {
         #echo "load translation";

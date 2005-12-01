@@ -2,9 +2,16 @@
 ini_set('memory_limit', '64M'); 
 
 define('UI_PL_DRAG_ENABLED',             TRUE);
-define('UI_PL_DRAG_INTRO',              'Here you can simply rearrange whole playlist on just drag items up or down.');
-define('UI_VERSION',                    'LiveSupport 1.0.1');
-define('UI_VERSION_FULLNAME',           'LiveSupport 1.0 stable');
+define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
+
+## Warning/Error level
+define('UI_VERBOSE',                    FALSE);
+define('UI_WARNING',                    TRUE);
+define('UI_ERROR',                      TRUE);
+
+## Misc
+define('UI_VERSION',                    'LiveSupport 1.0.2');
+define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler
