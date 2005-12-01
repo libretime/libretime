@@ -183,7 +183,8 @@ The script will set up the following resources:<br>
 writable by <code>apache</code></li>
   <li>create personalized configuration files in <code>~/.livesupport/</code></li>
   <li>create symlinks from <code>~/public_html/</code> to XML-RPC and
-HTML entry points</li>
+HTML entry points and make sure Apache could FollowSymlinks in this
+directory</li>
 </ul>
 After running the above script, the livesupport development environment
 for the specified user will be unique on the system, and will not
