@@ -190,6 +190,14 @@ class ScheduleInterface : virtual public Installable
                    Ptr<ptime>::Ref      playtime)
                                             throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~ScheduleInterface(void)            throw ()
+        {
+        }
 };
 
 

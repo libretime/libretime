@@ -71,6 +71,14 @@ class SignalHandler
          */
         virtual void
         handleSignal(int signal)                throw ()        = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~SignalHandler(void)                    throw ()
+        {
+        }
 };
 
 

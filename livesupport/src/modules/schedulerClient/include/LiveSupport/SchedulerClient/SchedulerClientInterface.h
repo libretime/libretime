@@ -265,6 +265,13 @@ class SchedulerClientInterface
                                                     throw (XmlRpcException)
                                                                         = 0;
 
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~SchedulerClientInterface(void)             throw ()
+        {
+        }
 };
 
 

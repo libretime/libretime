@@ -448,6 +448,14 @@ class StorageClientInterface
                         const int limit = 0, const int offset = 0)
                                                 throw (XmlRpcException)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~StorageClientInterface(void)           throw ()
+        {
+        }
 };
 
 

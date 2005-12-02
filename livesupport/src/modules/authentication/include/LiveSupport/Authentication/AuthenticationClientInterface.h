@@ -202,6 +202,14 @@ class AuthenticationClientInterface
                               const Glib::ustring &         key)
                                                 throw (XmlRpcException)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~AuthenticationClientInterface(void)    throw ()
+        {
+        }
 };
 
 

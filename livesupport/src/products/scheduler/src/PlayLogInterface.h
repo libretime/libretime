@@ -102,6 +102,14 @@ class PlayLogInterface : virtual public Installable
                           Ptr<const ptime>::Ref  toTime)
                                                 throw (std::invalid_argument)
                                                                          = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~PlayLogInterface(void)                 throw ()
+        {
+        }
 };
 
 

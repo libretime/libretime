@@ -91,6 +91,14 @@ class ConnectionManagerInterface
         returnConnection(Ptr<odbc::Connection>::Ref connection)
                                                 throw (std::runtime_error)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~ConnectionManagerInterface(void)       throw ()
+        {
+        }
 };
 
 

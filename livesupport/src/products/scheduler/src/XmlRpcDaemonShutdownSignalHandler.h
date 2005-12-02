@@ -91,9 +91,17 @@ class XmlRpcDaemonShutdownSignalHandler : public SignalHandler
          *  @param signal the actual signal received.
          */
         virtual void
-        handleSignal(int signal)                throw ()
+        handleSignal(int signal)                        throw ()
         {
             xmlRpcDaemon->shutdown();
+        }
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~XmlRpcDaemonShutdownSignalHandler(void)        throw ()
+        {
         }
 };
 

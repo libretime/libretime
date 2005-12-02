@@ -83,6 +83,14 @@ class Configurable
                                                 throw (std::invalid_argument,
                                                        std::logic_error)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~Configurable(void)                     throw ()
+        {
+        }
 };
 
 

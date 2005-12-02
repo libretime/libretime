@@ -120,6 +120,14 @@ class Installable
         virtual void
         uninstall(void)                         throw (std::exception)
                                                                         = 0;
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~Installable(void)                      throw ()
+        {
+        }
 };
 
 
