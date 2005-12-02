@@ -291,12 +291,30 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
 void
 SearchWindow :: onSimpleSearch(void)                            throw ()
 {
-    Glib::ustring               value = simpleSearchEntry->get_text();
+    Glib::ustring                   value = simpleSearchEntry->get_text();
     
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
-    criteria->addCondition("dc:title",   "partial", value);    // id3v2 Title
-    criteria->addCondition("dc:creator", "partial", value);    // id3v2 Artist
-    criteria->addCondition("dc:source",  "partial", value);    // id3v2 Album
+    Ptr<MetadataTypeContainer>::Ref metadataTypes 
+                                    = gLiveSupport->getMetadataTypeContainer();
+    MetadataTypeContainer::Vector::const_iterator
+                                    it = metadataTypes->begin();
+    
+    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria("all", "or"));    
+    Ptr<const MetadataType>::Ref    metadata;
+    
+    if (it != metadataTypes->end()) {
+        metadata = *it;
+        criteria->addCondition(*metadata->getDcName(), "partial", value);
+    }
+
+    if (++it != metadataTypes->end()) {
+        metadata = *it;
+        criteria->addCondition(*metadata->getDcName(), "partial", value);
+    }
+    
+    if (++it != metadataTypes->end()) {
+        metadata = *it;
+        criteria->addCondition(*metadata->getDcName(), "partial", value);
+    }
     
     onSearch(criteria);
 }
