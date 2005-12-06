@@ -124,13 +124,13 @@ class NowPlaying : public Gtk::HBox,
         ImageButton *           stopButton;
 
         /**
-         *  The possible states of the "time remains" label.
+         *  The possible states of the 'time remains' label.
          */
         typedef enum { TIME_GREEN, TIME_YELLOW, TIME_RED }
                                 RemainsTimeStateType;
         
         /**
-         *  The current state of the "time remains" label.
+         *  The current state of the 'time remains' label.
          */
         RemainsTimeStateType    remainsTimeState;
         
@@ -173,12 +173,14 @@ class NowPlaying : public Gtk::HBox,
         createFormattedLabel(int    fontSize)           throw ();
 
         /**
-         *  Set the background color of the t'ime remains' label.
+         *  Set the state of the 'remains time' label.
+         *  It sets the remainsTimeState variable to 'state', and
+         *  sets the background color of the label to blue, yellow or red.
          *
-         *  @param state    the "alert level" of the label.
+         *  @param state    the new state of the label.
          */
         void
-        setRemainsTimeColor(RemainsTimeStateType  state)
+        setRemainsTimeState(RemainsTimeStateType  state)
                                                         throw ();
 
     
