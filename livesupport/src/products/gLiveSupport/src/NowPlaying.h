@@ -104,6 +104,11 @@ class NowPlaying : public Gtk::HBox,
         Gtk::Label *            remainsTime;
 
         /**
+         *  A box around the remaining time label, so we can modify its color.
+         */
+        Gtk::EventBox *         remainsTimeBox;
+
+        /**
          *  The play button.
          */
         ImageButton *           playButton;
@@ -118,6 +123,17 @@ class NowPlaying : public Gtk::HBox,
          */
         ImageButton *           stopButton;
 
+        /**
+         *  The possible states of the "time remains" label.
+         */
+        typedef enum { TIME_GREEN, TIME_YELLOW, TIME_RED }
+                                RemainsTimeStateType;
+        
+        /**
+         *  The current state of the "time remains" label.
+         */
+        RemainsTimeStateType    remainsTimeState;
+        
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
@@ -155,6 +171,15 @@ class NowPlaying : public Gtk::HBox,
          */
         Gtk::Label *
         createFormattedLabel(int    fontSize)           throw ();
+
+        /**
+         *  Set the background color of the t'ime remains' label.
+         *
+         *  @param state    the "alert level" of the label.
+         */
+        void
+        setRemainsTimeColor(RemainsTimeStateType  state)
+                                                        throw ();
 
     
     public:

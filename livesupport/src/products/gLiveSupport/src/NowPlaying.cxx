@@ -37,6 +37,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/Colors.h"
 
 #include "NowPlaying.h"
 
@@ -93,6 +94,16 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     Gtk::Label *    remainsLabel = createFormattedLabel(8);
     elapsedTime = createFormattedLabel(12);
     remainsTime = createFormattedLabel(12);
+    
+    remainsTimeBox = Gtk::manage(new Gtk::EventBox);
+    Gtk::HBox *         remainsTimeHBox = Gtk::manage(new Gtk::HBox);
+    Gtk::VBox *         remainsTimeVBox = Gtk::manage(new Gtk::VBox);
+    Gtk::HBox *         remainsTimeOuterBox = Gtk::manage(new Gtk::HBox);
+    remainsTimeHBox->pack_start(*remainsTime,     Gtk::PACK_SHRINK, 4);
+    remainsTimeVBox->pack_start(*remainsTimeHBox, Gtk::PACK_SHRINK, 2);
+    remainsTimeBox->add(*remainsTimeVBox);
+    remainsTimeOuterBox->pack_start(*remainsTimeBox, Gtk::PACK_EXPAND_PADDING);
+    setRemainsTimeColor(TIME_GREEN);
 
     try {
         elapsedLabel->set_text(*getResourceUstring("elapsedTimeLabel"));
@@ -107,8 +118,8 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     elapsedBox->pack_start(*elapsedTime,  Gtk::PACK_EXPAND_WIDGET, 2);
     
     Gtk::Box *      remainsBox = Gtk::manage(new Gtk::VBox);
-    remainsBox->pack_start(*remainsLabel, Gtk::PACK_EXPAND_WIDGET, 2);
-    remainsBox->pack_start(*remainsTime,  Gtk::PACK_EXPAND_WIDGET, 2);
+    remainsBox->pack_start(*remainsLabel,        Gtk::PACK_EXPAND_WIDGET, 2);
+    remainsBox->pack_start(*remainsTimeOuterBox, Gtk::PACK_EXPAND_WIDGET, 0);
     
     Gtk::Box *      timeBox = Gtk::manage(new Gtk::HBox);
     timeBox->pack_start(*elapsedBox, Gtk::PACK_EXPAND_WIDGET, 2);
@@ -159,6 +170,8 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_markup(*infoString);
         
         audioLength = playable->getPlaylength();
+        remainsTimeState = TIME_GREEN;
+        setRemainsTimeColor(TIME_GREEN);
         
     } else {
         if (isActive && !isPaused) {
@@ -170,6 +183,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_markup("");
         elapsedTime->set_text("");
         remainsTime->set_text("");
+        setRemainsTimeColor(TIME_GREEN);
         audioLength.reset();
     }
 }
@@ -254,17 +268,39 @@ NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
  *  Update the timer displays. This is called every second by the master panel.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: onUpdateTime(void)
-                                                                    throw ()
+NowPlaying :: onUpdateTime(void)                                    throw ()
 {
     if (isActive) {
         try {
             Ptr<time_duration>::Ref     elapsed = gLiveSupport->
                                                       getOutputAudioPosition();
-            Ptr<time_duration>::Ref     remains(new time_duration(
-                                                    *audioLength - *elapsed ));
             elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
                                                         elapsed ));
+            
+            Ptr<time_duration>::Ref     remains(new time_duration(
+                                                   *audioLength - *elapsed ));
+            switch (remainsTimeState) {
+                case TIME_GREEN :
+                    if (*remains <= seconds(20)) {
+                        remainsTimeState = TIME_YELLOW;
+                        remainsTimeBox->modify_bg(
+                                        Gtk::STATE_NORMAL,
+                                        Colors::getColor(Colors::Yellow) );
+                    }
+                    break;
+                
+                case TIME_YELLOW :
+                    if (*remains <= seconds(10)) {
+                        remainsTimeState = TIME_RED;
+                        remainsTimeBox->modify_bg(
+                                        Gtk::STATE_NORMAL,
+                                        Colors::getColor(Colors::Red) );
+                    }
+                    break;
+                
+                case TIME_RED :
+                    break;
+            }
             remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
                                                         remains ));
         } catch (std::logic_error &e) {
@@ -272,4 +308,30 @@ NowPlaying :: onUpdateTime(void)
         }
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Set the background color of the "remains time" label.
+ *----------------------------------------------------------------------------*/
+void
+NowPlaying :: setRemainsTimeColor(RemainsTimeStateType  state)      throw ()
+{
+    Gdk::Color    color;
+    
+    switch (state) {
+        case TIME_GREEN:
+            color = Colors::getColor(Colors::MasterPanelCenterBlue);
+            break;
+            
+        case TIME_YELLOW:
+            color = Colors::getColor(Colors::White);
+            break;
+            
+        case TIME_RED:
+            color = Colors::getColor(Colors::Orange);
+            break;
+    }
+    
+    remainsTimeBox->modify_bg(Gtk::STATE_NORMAL, color);
+}                
 

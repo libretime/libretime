@@ -79,7 +79,9 @@ Colors :: initialize(void)                                      throw ()
     Gdk::Color  slateGrayColor      ("#c7cdd3");
     Gdk::Color  mediumBlueGrayColor ("#97bacf");
     Gdk::Color  darkGrayColor       ("#5a5a5a");
+    Gdk::Color  yellowColor         ("#ffff99");
     Gdk::Color  orangeColor         ("#ff4b00");
+    Gdk::Color  redColor            ("#ff4b4b");
     Gdk::Color  masterPanelCenterBlueColor  ("#99cdff");
     Gdk::Color  liveModeRowBlueColor        ("#cde0f1");
 
@@ -94,7 +96,9 @@ Colors :: initialize(void)                                      throw ()
     colormap->alloc_color(slateGrayColor);
     colormap->alloc_color(mediumBlueGrayColor);
     colormap->alloc_color(darkGrayColor);
+    colormap->alloc_color(yellowColor);
     colormap->alloc_color(orangeColor);
+    colormap->alloc_color(redColor);
     colormap->alloc_color(masterPanelCenterBlueColor);
     colormap->alloc_color(liveModeRowBlueColor);
 
@@ -108,9 +112,12 @@ Colors :: initialize(void)                                      throw ()
     colors[SlateGray]       = slateGrayColor;
     colors[MediumBlueGray]  = mediumBlueGrayColor;
     colors[DarkGray]        = darkGrayColor;
+    colors[Yellow]          = yellowColor;
     colors[Orange]          = orangeColor;
-    colors[MasterPanelCenterBlue]   = masterPanelCenterBlueColor;
-    colors[LiveModeRowBlue]         = liveModeRowBlueColor;
+    colors[Red]             = redColor;
+    colors[MasterPanelCenterBlue]
+                            = masterPanelCenterBlueColor;
+    colors[LiveModeRowBlue] = liveModeRowBlueColor;
     
     initialized = true;
 }

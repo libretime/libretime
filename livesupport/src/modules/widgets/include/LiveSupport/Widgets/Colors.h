@@ -76,7 +76,7 @@ class Colors
         typedef enum  { White, Black, 
                         LightBlue, BrightBlue, Blue, DarkBlue, 
                         Gray, SlateGray, MediumBlueGray, DarkGray, 
-                        Orange, 
+                        Yellow, Orange, Red,
                         MasterPanelCenterBlue, LiveModeRowBlue,
                         WindowBackground = White }              ColorName;
 
