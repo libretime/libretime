@@ -1016,7 +1016,8 @@ class XR_LocStor extends LocStor{
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.accessPlaylist</li>
      *      <li> recursive : boolean - flag for recursive release content
-     *              accessed by recursive accessPlaylist (default: false)</li>
+     *              accessed by recursive accessPlaylist
+     *              (ignored now - true forced)</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
@@ -1042,9 +1043,8 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
-        $res = $this->releasePlaylist(NULL, $r['token'],
-            (boolean)$r['recursive']);
+        //if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
+        $res = $this->releasePlaylist(NULL, $r['token'], TRUE);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_releasePlaylist: ".$res->getMessage().
