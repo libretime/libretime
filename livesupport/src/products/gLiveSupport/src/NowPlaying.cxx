@@ -51,6 +51,11 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/**
+ *  This should be 1/4th of MasterPanelWindow::updateTimeConstant.
+ */
+static const int    blinkingConstant = 5;
+
 
 /* ===============================================  local function prototypes */
 
@@ -103,7 +108,7 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     remainsTimeVBox->pack_start(*remainsTimeHBox, Gtk::PACK_SHRINK, 2);
     remainsTimeBox->add(*remainsTimeVBox);
     remainsTimeOuterBox->pack_start(*remainsTimeBox, Gtk::PACK_EXPAND_PADDING);
-    setRemainsTimeState(TIME_GREEN);
+    resetRemainsTimeState();
 
     try {
         elapsedLabel->set_text(*getResourceUstring("elapsedTimeLabel"));
@@ -170,7 +175,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_markup(*infoString);
         
         audioLength = playable->getPlaylength();
-        setRemainsTimeState(TIME_GREEN);
+        resetRemainsTimeState();
         
     } else {
         if (isActive && !isPaused) {
@@ -182,7 +187,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_markup("");
         elapsedTime->set_text("");
         remainsTime->set_text("");
-        setRemainsTimeState(TIME_GREEN);
+        resetRemainsTimeState();
         audioLength.reset();
     }
 }
@@ -269,37 +274,48 @@ NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
 void
 NowPlaying :: onUpdateTime(void)                                    throw ()
 {
-    if (isActive) {
-        try {
-            Ptr<time_duration>::Ref     elapsed = gLiveSupport->
-                                                      getOutputAudioPosition();
-            elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                        elapsed ));
-            
-            Ptr<time_duration>::Ref     remains(new time_duration(
-                                                   *audioLength - *elapsed ));
-            switch (remainsTimeState) {
-                case TIME_GREEN :
-                    if (*remains <= seconds(20)) {
-                        setRemainsTimeState(TIME_YELLOW);
-                    }
-                    break;
-                
-                case TIME_YELLOW :
-                    if (*remains <= seconds(10)) {
-                        setRemainsTimeState(TIME_RED);
-                    }
-                    break;
-                
-                case TIME_RED :
-                    break;
-            }
-            remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                        remains ));
-        } catch (std::logic_error &e) {
-            // just act as if nothing has happened
-        }
+    if (!isActive) {
+        return;
     }
+
+    remainsTimeCounter++;
+    if (remainsTimeCounter == 2*blinkingConstant) {
+        remainsTimeCounter = 0;
+    }
+
+    Ptr<time_duration>::Ref     elapsed;
+    try {
+        elapsed = gLiveSupport->getOutputAudioPosition();
+        
+    } catch (std::logic_error &e) {
+        // just act as if nothing has happened
+        return;
+    }
+        
+    Ptr<time_duration>::Ref     remains(new time_duration(
+                                            *audioLength - *elapsed ));
+    switch (remainsTimeState) {
+        case TIME_GREEN :
+            if (*remains <= seconds(20)) {
+                remainsTimeState = TIME_YELLOW;
+            }
+            break;
+        
+        case TIME_YELLOW :
+            if (*remains <= seconds(10)) {
+                remainsTimeState = TIME_RED;
+            }
+            break;
+        
+        case TIME_RED :
+            break;
+    }
+    setRemainsTimeColor(remainsTimeState);
+
+    elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                elapsed ));
+    remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                remains ));
 }
 
 
@@ -307,25 +323,42 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
  *  Set the background color of the "remains time" label.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: setRemainsTimeState(RemainsTimeStateType  state)      throw ()
+NowPlaying :: setRemainsTimeColor(RemainsTimeStateType  state)      throw ()
 {
-    Gdk::Color    color;
+    bool        isBlinkOn = (remainsTimeCounter < blinkingConstant);
+
+    Gdk::Color  color;
     
-    switch (state) {
-        case TIME_GREEN:
-            color = Colors::getColor(Colors::MasterPanelCenterBlue);
-            break;
-            
-        case TIME_YELLOW:
-            color = Colors::getColor(Colors::Yellow);
-            break;
-            
-        case TIME_RED:
-            color = Colors::getColor(Colors::Red);
-            break;
+    if (isBlinkOn) {
+        switch (state) {
+            case TIME_GREEN:
+                color = Colors::getColor(Colors::MasterPanelCenterBlue);
+                break;
+                
+            case TIME_YELLOW:
+                color = Colors::getColor(Colors::Yellow);
+                break;
+                
+            case TIME_RED:
+                color = Colors::getColor(Colors::Red);
+                break;
+        }
+    } else {
+        color = Colors::getColor(Colors::MasterPanelCenterBlue);
     }
     
-    remainsTimeState = state;
     remainsTimeBox->modify_bg(Gtk::STATE_NORMAL, color);
 }                
+
+
+/*------------------------------------------------------------------------------
+ *  Reset all remains-time-blinking related variables.
+ *----------------------------------------------------------------------------*/
+void
+NowPlaying :: resetRemainsTimeState(void)                           throw ()
+{
+    remainsTimeState   = TIME_GREEN;
+    remainsTimeCounter = 0;
+    setRemainsTimeColor(TIME_GREEN);
+}
 

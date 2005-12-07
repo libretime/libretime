@@ -135,6 +135,11 @@ class NowPlaying : public Gtk::HBox,
         RemainsTimeStateType    remainsTimeState;
         
         /**
+         *  Counter which makes the 'time remains' label blink.
+         */
+        int                     remainsTimeCounter;
+        
+        /**
          *  The GLiveSupport object, holding the state of the application.
          */
         Ptr<GLiveSupport>::Ref  gLiveSupport;
@@ -173,16 +178,27 @@ class NowPlaying : public Gtk::HBox,
         createFormattedLabel(int    fontSize)           throw ();
 
         /**
-         *  Set the state of the 'remains time' label.
-         *  It sets the remainsTimeState variable to 'state', and
-         *  sets the background color of the label to blue, yellow or red.
+         *  Set the color of the 'remains time' label.
+         *
+         *  It sets the background color of the label to blue, yellow or red,
+         *  depending on the remainsTimeState and the remainsTimeCounter
+         *  variables.
          *
          *  @param state    the new state of the label.
          */
         void
-        setRemainsTimeState(RemainsTimeStateType  state)
+        setRemainsTimeColor(RemainsTimeStateType  state)
                                                         throw ();
 
+        /**
+         *  Reset all remains-time-blinking related variables.
+         *
+         *  Sets remainsTimeState to TIME_GREEN, remainsTimeCounter to 0,
+         *  and the background color of the label to blue.
+         */
+        void inline
+        resetRemainsTimeState(void)                     throw ();
+ 
     
     public:
     

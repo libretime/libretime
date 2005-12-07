@@ -56,6 +56,13 @@ using namespace LiveSupport::GLiveSupport;
  */
 static const Glib::ustring  windowName = "masterPanelWindow";
 
+/**
+ *  Number of times per second that onUpdateTime() is called.
+ *  It's a good idea to make this a divisor of 1000.
+ *  If you change this, then you must change NowPlaying::blinkingConstant, too.
+ */
+static const int    updateTimeConstant = 20;
+
 
 /* ===============================================  local function prototypes */
 
@@ -306,9 +313,9 @@ MasterPanelWindow :: setTimer(void)                                  throw ()
                                               &MasterPanelWindow::onUpdateTime),
                                               0);
 
-    // set the timer to active once a second
+    // set the timer to activate every 1/somethingth of a second
     timer.reset(new sigc::connection(
-                                  Glib::signal_timeout().connect(slot, 1000)));
+            Glib::signal_timeout().connect(slot, 1000/updateTimeConstant)));
 }
 
 
