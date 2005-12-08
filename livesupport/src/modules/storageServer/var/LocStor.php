@@ -293,7 +293,7 @@ class LocStor extends BasicStor{
      *  @param criteria hash, with following structure:<br>
      *   <ul>
      *     <li>filetype - string, type of searched files,
-     *       meaningful values: 'audioclip', 'playlist', 'all'</li>
+     *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
      *     <li>operator - string, type of conditions join
      *       (any condition matches / all conditions match), 
      *       meaningful values: 'and', 'or', ''
@@ -334,34 +334,25 @@ class LocStor extends BasicStor{
         $filetype = strtolower($criteria['filetype']);
         $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        if($filetype=='all'){
-            $criteriaAC = $criteria;    $criteriaAC['filetype'] = 'audioclip';
-            $criteriaPL = $criteria;    $criteriaPL['filetype'] = 'playlist';
-            $resAC = $this->bsLocalSearch($criteriaAC, $limit, $offset);
-            $resPL = $this->bsLocalSearch($criteriaPL, $limit, $offset);
-            return array(
-                'audioClipResults'  => $resAC['results'],
-                'audioClipCnt'      => $resAC['cnt'],
-                'playlistResults'   => $resPL['results'],
-                'playlistCnt'       => $resPL['cnt'],
-            );
-        }
-        $srchRes = $this->bsLocalSearch($criteria, $limit, $offset);
-        $res = array(
-            'audioClipResults'  => array(),
-            'audioClipCnt'      => 0,
-            'playlistResults'   => array(),
-            'playlistCnt'       => 0,
+        $filetypes = array(
+            'audioclip' => 'audioClip',
+            'webstream' => 'webstream',
+            'playlist'  => 'playlist',
         );
-        switch($filetype){
-        case"audioclip":
-            $res['audioClipResults'] = $srchRes['results'];
-            $res['audioClipCnt']     = $srchRes['cnt'];
-            break;
-        case"playlist":
-            $res['playlistResults'] = $srchRes['results'];
-            $res['playlistCnt']     = $srchRes['cnt'];
-            break;
+        $cri = array(); $res = array();
+        // cycle over all possible filetypes:
+        foreach($filetypes as $ft=>$ftn){
+            $cri[$ft] = $criteria;
+            $cri[$ft]['filetype'] = $ft;
+            // search only required filetypes:
+            if($filetype == 'all' || $filetype == $ft){
+                $r = $this->bsLocalSearch($cri[$ft], $limit, $offset);
+            }else{
+                // empty results for non-required filetypes:
+                $r = array('results'=>array(), 'cnt'=>0);
+            }
+            $res["{$ftn}Results"]   = $r['results'];
+            $res["{$ftn}Cnt"]       = $r['cnt'];
         }
         return $res;
     }

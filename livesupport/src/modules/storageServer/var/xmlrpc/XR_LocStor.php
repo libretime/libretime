@@ -1306,7 +1306,7 @@ class XR_LocStor extends LocStor{
      *      <li> criteria : struct, with following fields:<br>
      *   <ul>
      *     <li>filetype : string - type of searched files,
-     *       meaningful values: 'audioclip', 'playlist', 'all'</li>
+     *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
      *     <li>operator : string - type of conditions join
      *       (any condition matches / all conditions match), 
      *       meaningful values: 'and', 'or', ''
@@ -1374,11 +1374,17 @@ class XR_LocStor extends LocStor{
         $xv = new XML_RPC_Value;
         $xv->addStruct(array(
             'audioClipCnt'      => XML_RPC_encode($res['audioClipCnt']),
+            'webstreamCnt'      => XML_RPC_encode($res['webstreamCnt']),
             'playlistCnt'       => XML_RPC_encode($res['playlistCnt']),
             'audioClipResults'  =>
                 (count($res['audioClipResults'])==0
                     ? new XML_RPC_Value(array(), 'array')
                     : XML_RPC_encode($res['audioClipResults'])
+                ),
+            'webstreamResults'  =>
+                (count($res['webstreamResults'])==0
+                    ? new XML_RPC_Value(array(), 'array')
+                    : XML_RPC_encode($res['webstreamResults'])
                 ),
             'playlistResults'   =>
                 (count($res['playlistResults'])==0

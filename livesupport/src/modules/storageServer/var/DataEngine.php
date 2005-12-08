@@ -37,7 +37,7 @@ require_once "XML/Util.php";
  *  Format of search criteria: hash, with following structure:<br>
  *   <ul>
  *     <li>filetype - string, type of searched files,
- *       meaningful values: 'audioclip', 'playlist'</li>
+ *       meaningful values: 'audioclip', 'webstream', 'playlist'</li>
  *     <li>operator - string, type of conditions join
  *       (any condition matches / all conditions match), 
  *       meaningful values: 'and', 'or', ''
@@ -81,7 +81,11 @@ class DataEngine{
         $this->mdataTable =  $gb->mdataTable;
         $this->filesTable =  $gb->filesTable;
         $this->filetypes  = array(
-            'all'=>NULL, 'audioclip'=>'audioclip', 'playlist'=>'playlist');
+            'all'=>NULL,
+            'audioclip'=>'audioclip',
+            'webstream'=>'webstream',
+            'playlist'=>'playlist',
+        );
     }
 
     /**
@@ -277,7 +281,13 @@ class DataEngine{
     function _localGenSearch($criteria, $limit=0, $offset=0,
         $brFldNs=NULL, $brFld=NULL)
     {
-        $filetype   = $this->filetypes[strtolower($criteria['filetype'])];
+        $filetype = strtolower($criteria['filetype']);
+        if(!array_key_exists($filetype, $this->filetypes)){
+            return PEAR::raiseError(
+                'DataEngine::_localGenSearch: unknown filetype in search criteria'
+            );
+        }
+        $filetype   = $this->filetypes[$filetype];
         $operator   = strtolower($criteria['operator']);
         $desc       = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $whereArr   = $this->_makeWhereArr($criteria['conditions']);
