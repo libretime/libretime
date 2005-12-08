@@ -320,6 +320,10 @@ class LocStor extends BasicStor{
      *          of audioClips have been found</li>
      *      <li>audioClipCnt : int - number of audioClips matching
      *          the criteria</li>
+     *      <li>webstreamResults : array with gunid strings
+     *          of webstreams have been found</li>
+     *      <li>webstreamCnt : int - number of webstreams matching
+     *          the criteria</li>
      *      <li>playlistResults : array with gunid strings
      *          of playlists have been found</li>
      *      <li>playlistCnt : int - number of playlists matching
