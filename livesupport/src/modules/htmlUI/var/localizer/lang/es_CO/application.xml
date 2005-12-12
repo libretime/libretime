@@ -3,7 +3,7 @@
 	<Id>es_CO</Id>
 	<item>
 		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
-		<value />
+		<value>El archivo cargado es más grande de lo permitido en la configuración del sistema. Vea en la &quot;Ayuda&quot; el capítulo &quot;Troubleshooting&quot; para más información.</value>
 	</item>
 	<item>
 		<key>&quot;$1&quot; uses an unsupported file type.</key>
