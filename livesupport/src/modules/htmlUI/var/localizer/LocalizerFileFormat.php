@@ -275,7 +275,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 	 * Get all supported languages as an array of LanguageMetadata objects.
 	 * @return array
 	 */
-	function getLanguages($p_default=TRUE) 
+	function getLanguages($p_default=TRUE, $p_completed_only=FALSE) 
 	{
 	    global $g_localizerConfig; 
 	    
@@ -299,16 +299,18 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
     	   $languages[0] = $arr['item'];    
     	}
         foreach ($languages as $language) {
-            // just display default language in maintainance mode
-            if ($p_default || $language['Id'] !== $g_localizerConfig['DEFAULT_LANGUAGE']) {
-                list ($langCode, $countryCode) = explode('_', $language['Id']);
-                $languageDef =& new LanguageMetadata();
-                $languageDef->m_languageId      = $language['Id'];
-                $languageDef->m_languageCode    = $langCode;
-                $languageDef->m_countryCode     = $countryCode;
-                $languageDef->m_englishName     = $language['Name'];
-                $languageDef->m_nativeName      = $language['NativeName'];
-                $return[] = $languageDef;
+            if(!$p_completed_only || $language['Completed']) {
+                // just display default language in maintainance mode
+                if ($p_default || $language['Id'] !== $g_localizerConfig['DEFAULT_LANGUAGE']) {
+                    list ($langCode, $countryCode) = explode('_', $language['Id']);
+                    $languageDef =& new LanguageMetadata();
+                    $languageDef->m_languageId      = $language['Id'];
+                    $languageDef->m_languageCode    = $langCode;
+                    $languageDef->m_countryCode     = $countryCode;
+                    $languageDef->m_englishName     = $language['Name'];
+                    $languageDef->m_nativeName      = $language['NativeName'];
+                    $return[] = $languageDef;
+                }
             }
         }
         return $return;

@@ -62,7 +62,7 @@
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
         url     =  url  + '&is_popup=1';
-        arg     = 'width='+width+', height='+height+',resizable=yes, scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
+        arg     = 'width='+width+', height='+height+',resizable=yes, scrollbars=no, menubar=no, dependent=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
         window.popupwin.focus();
@@ -96,7 +96,7 @@
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
         url     =  url  + '&is_popup=1';
-        arg     = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
+        arg     = 'width='+width+', height='+height+', scrollbars=no, menubar=no, dependent=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
         //window.parent.focus();

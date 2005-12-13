@@ -10,6 +10,6 @@ function loadTranslations($langid)
 
 function getLanguages()
 {
-    return LOCALIZER::getAllLanguages(NULL, FALSE);    
+    return LOCALIZER::getAllLanguages(NULL, FALSE, TRUE);    
 }
 ?>

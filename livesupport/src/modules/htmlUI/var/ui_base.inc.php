@@ -162,24 +162,18 @@ class uiBase
     function loadStationPrefs(&$mask, $reload=FALSE)
     {
         if (!is_array($this->STATIONPREFS) || $reload===TRUE) {
-        	 $this->STATIONPREFS = array();
+        	$this->STATIONPREFS = array();
             foreach ($mask as $key=>$val) {
                 if ($val['isPref']) {
                     if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
                         $this->STATIONPREFS[$val['element']] = $setting;
                     } elseif ($val['required']){
-                        $miss = TRUE;
+                        // set default values on first login
+                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $val['default']);
+                        $this->STATIONPREFS[$val['element']] = $val['default'];
                     }
                 }
             }
-
-            #if ($this->STATIONPREFS['stationMaxfilesize']) $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
-
-            if ($miss && $this->gb->getSessLogin($this->sessid)) {
-                if (UI_WARNING) $this->_retMsg('Warning: station preferences have not been set up properly.');
-                $this->redirUrl = UI_BROWSER.'?popup[]=_2changeStationPrefs&popup[]=_close';         ## popup because check is taken in login-popup
-            }
-
         }
     }
 

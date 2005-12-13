@@ -540,7 +540,7 @@ class Localizer {
      * @return array
      *		An array of LanguageMetadata objects.
      */
-    function GetAllLanguages($p_mode = null, $p_default=TRUE) 
+    function GetAllLanguages($p_mode = null, $p_default=TRUE, $p_completed_only=FALSE) 
     {
 		if (is_null($p_mode)) {
 			$p_mode = Localizer::GetMode();
@@ -549,7 +549,7 @@ class Localizer {
 		if (class_exists($className)) {
 		    $object =& new $className();
 		    if (method_exists($object, "getLanguages")) {
-		        $languages = $object->getLanguages($p_default);
+		        $languages = $object->getLanguages($p_default, $p_completed_only);
 		    }
 		}
         //$this->m_languageDefs =& $languages;
