@@ -132,7 +132,7 @@ in extracted debianized source tree generated below.<br>
 Building is best done
 in an empty directory as follows:<br>
 <br>
-<pre><code>rm -rf debian_build<br>mkdir debian_build<br>cd debian_build<br></code>dpkg-source -x ../livesupport_&lt;ls_version&gt;-1.dsc<br>cd livesupport-&lt;ls-version&gt;<br>dpkg-buildpackage -rfakeroot<br>cd ../..<br><br></pre>
+<pre><code>rm -rf /opt/livesupport<br>rm -rf debian_build<br>mkdir debian_build<br>cd debian_build<br></code>dpkg-source -x ../livesupport_&lt;ls_version&gt;-1.dsc<br>cd livesupport-&lt;ls-version&gt;<br>dpkg-buildpackage -rfakeroot<br>cd ../..<br><br></pre>
 The above commands will result in the following debian packages:<br>
 <br>
 <pre><code>livesupport-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb</code><br></pre>
@@ -150,6 +150,12 @@ issue the following command:<br>
 <br>
 This will tag the current state of the repository with the tag <code>livesupport-&lt;ls-version&gt;</code>,
 enabling later retrieval of this specific state.<br>
+
+<h1>Updating Trac</h1>
+Add the new version number to the Version pull-down menu in Trac by 
+executing
+<pre><code>trac-admin /usr/local/trac-projects/livesupport version add &lt;ls-version&gt;</code></pre>
+on <code>code.campware.org</code>.
 
 <h1>Publishing the tarballs</h1>
 To make the release available to the public, the created tarballs have
