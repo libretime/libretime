@@ -276,7 +276,7 @@ AC_ARG_WITH([check-boost],
             AC_HELP_STRING([--with-check-boost],
                [check for the availability of the boost library on the
                 system, and use it if available (yes)]),
-            [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=yes])
+            [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=no])
 
 AC_MSG_RESULT([checking for boost library on system: ${CHECK_BOOST_LIB}])
 
@@ -311,7 +311,7 @@ AC_ARG_WITH([check-icu],
             AC_HELP_STRING([--with-check-icu],
                [check for the availability of the icu library on the
                 system, and use it if available (yes)]),
-            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=yes])
+            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=no])
 
 AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
 
@@ -336,12 +336,7 @@ if test "$CHECK_BOOST_LIB" = "yes" ; then
         AC_MSG_RESULT([not found boost library of sufficient version, will compile from our own])
         COMPILE_BOOST="yes"
     else
-dnl     COMPILE_BOOST="no"
-dnl force compilation of boost, as recognizing a pre-existing version
-dnl does not seem to work -- fgerlits, 2005-08-08
-        AC_MSG_RESULT([found boost library, but recompiling anyway])
-        BOOST_DATE_TIME_LIB=""
-        COMPILE_BOOST="yes"
+        COMPILE_BOOST="no"
     fi
 else
     COMPILE_BOOST="yes"
@@ -384,12 +379,8 @@ if test "$CHECK_ICU_LIB" = "yes" ; then
     dnl check for ICU 3.0 or more recent
     AC_CHECK_ICU(3.0,
     [
-dnl     AC_MSG_RESULT([using ICU found on the system])
-dnl     COMPILE_ICU="no"
-dnl force compilation of ICU, as recognizing a pre-existing version
-dnl does not seem to work -- fgerlits, 2005-08-08
-    AC_MSG_RESULT([found ICU on the system, but recompiling anyway])
-    COMPILE_ICU="yes"
+        AC_MSG_RESULT([using ICU found on the system])
+        COMPILE_ICU="no"
     ],
     [
         AC_MSG_RESULT([not found ICU of sufficient version, will compile from our own])
