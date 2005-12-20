@@ -160,8 +160,7 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
            Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
            5, 0);
 
-    // show only the anonymous UI
-    gLiveSupport->showAnonymousUI();
+    show_all();
 }
 
 

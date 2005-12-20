@@ -687,3 +687,14 @@ ScratchpadWindow :: isSelectionSingle(void)                     throw ()
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  The event when the close button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onCloseButtonClicked(void)                  throw ()
+{
+    gLiveSupport->putWindowPosition(shared_from_this());
+    hide();
+}
+

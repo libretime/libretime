@@ -378,6 +378,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
         }
 
         liveModeWindow.reset(new LiveModeWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(liveModeWindow);
     }
     
     if (playable) {
@@ -385,6 +386,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
     }
     
     if (!liveModeWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(liveModeWindow);
         liveModeWindow->show();
     }
 }
@@ -406,13 +408,16 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
         }
 
         uploadFileWindow.reset(new UploadFileWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(uploadFileWindow);
         uploadFileWindow->show();
         return;
     }
 
     if (!uploadFileWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(uploadFileWindow);
         uploadFileWindow->show();
     } else {
+        gLiveSupport->putWindowPosition(uploadFileWindow);
         uploadFileWindow->hide();
     }
 }
@@ -432,13 +437,14 @@ MasterPanelWindow :: updateScratchpadWindow(void)                   throw ()
             std::cerr << e.what() << std::endl;
             return;
         }
-
         scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(scratchpadWindow);
     }
 
     scratchpadWindow->showContents();
 
     if (!scratchpadWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(scratchpadWindow);
         scratchpadWindow->show();
     }
 }
@@ -461,11 +467,13 @@ MasterPanelWindow :: updateSimplePlaylistMgmtWindow(void)           throw ()
 
         simplePlaylistMgmtWindow.reset(
                 new SimplePlaylistManagementWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(simplePlaylistMgmtWindow);
     }
     
     simplePlaylistMgmtWindow->showContents();
     
     if (!simplePlaylistMgmtWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(simplePlaylistMgmtWindow);
         simplePlaylistMgmtWindow->show();
     }
 }
@@ -489,6 +497,7 @@ MasterPanelWindow :: updateSchedulerWindow(
         }
 
         schedulerWindow.reset(new SchedulerWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(schedulerWindow);
     }
     
     if (time.get()) {
@@ -498,6 +507,7 @@ MasterPanelWindow :: updateSchedulerWindow(
     schedulerWindow->showContents();
 
     if (!schedulerWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(schedulerWindow);
         schedulerWindow->show();
     }
 }
@@ -519,9 +529,11 @@ MasterPanelWindow :: updateSearchWindow(void)                       throw ()
         }
 
         searchWindow.reset(new SearchWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(searchWindow);
     }
 
     if (!searchWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(searchWindow);
         searchWindow->show();
     }
 }
@@ -542,27 +554,45 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     searchButton->hide();
     
     if (liveModeWindow.get()) {
-        liveModeWindow->hide();
+        if (liveModeWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(liveModeWindow);
+            liveModeWindow->hide();
+        }
         liveModeWindow.reset();
     }
     if (uploadFileWindow.get()) {
-        uploadFileWindow->hide();
+        if (uploadFileWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(uploadFileWindow);
+            uploadFileWindow->hide();
+        }
         uploadFileWindow.reset();
     }
     if (scratchpadWindow.get()) {
-        scratchpadWindow->hide();
+        if (scratchpadWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(scratchpadWindow);
+            scratchpadWindow->hide();
+        }
         scratchpadWindow.reset();
     }
     if (simplePlaylistMgmtWindow.get()) {
-        simplePlaylistMgmtWindow->hide();
+        if (simplePlaylistMgmtWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(simplePlaylistMgmtWindow);
+            simplePlaylistMgmtWindow->hide();
+        }
         simplePlaylistMgmtWindow.reset();
     }
     if (schedulerWindow.get()) {
-        schedulerWindow->hide();
+        if (schedulerWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(schedulerWindow);
+            schedulerWindow->hide();
+        }
         schedulerWindow.reset();
     }
     if (searchWindow.get()) {
-        searchWindow->hide();
+        if (searchWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(searchWindow);
+            searchWindow->hide();
+        }
         searchWindow.reset();
     }
 }

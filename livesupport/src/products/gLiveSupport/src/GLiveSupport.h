@@ -308,6 +308,26 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         KeyboardShortcutListType    keyboardShortcutList;
 
+        /**
+         *  The type for a single window position.
+         */
+        typedef struct {
+                    int x;
+                    int y;
+                    int width;
+                    int height;
+                }                   WindowPositionType;
+        /**
+         *  The type for storing the window positions.
+         */
+        typedef std::map<const Glib::ustring, WindowPositionType>
+                                    WindowPositionsListType;
+
+        /**
+         *  The positions of the various windows.
+         */
+        WindowPositionsListType     windowPositions;
+
 
     protected:
         /**
@@ -951,6 +971,55 @@ class GLiveSupport : public LocalizedConfigurable,
         findAction(const Glib::ustring &    windowName,
                    unsigned int             modifiers,
                    unsigned int             key) const              throw ();
+
+        /**
+         *  Save the position and size of the window.
+         *
+         *  The coordinates of the window's North-West corner and the
+         *  size of the window are read, and stored in a variable of the
+         *  GLiveSupport object, indexed by the window's get_name().
+         *
+         *  @param  window   the window to save the position and size of.
+         *  @see    getWindowPosition()
+         */
+        void
+        putWindowPosition(Ptr<const Gtk::Window>::Ref    window)   throw ();
+        
+        /**
+         *  Apply saved position and size data to the window.
+         *
+         *  If position and size data were previously saved for a window
+         *  with the same get_name(), then these data are read and applied to
+         *  the window, restoring its position and size.
+         *
+         *  @param  window   the window to apply the position and size info to.
+         *  @see    putWindowPosition()
+         */
+        void
+        getWindowPosition(Ptr<Gtk::Window>::Ref    window)         throw ();
+
+        /**
+         *  Store the saved window positions.
+         *
+         *  The window positions (and sizes) are stored in a user preference
+         *  item.  This is called when the user logs out.
+         *
+         *  @see    loadWindowPositions()
+         */
+        void
+        storeWindowPositions(void)                                  throw ();
+        
+        /**
+         *  Load the window positions.
+         *
+         *  The window positions (and sizes) are retrieved from the user
+         *  preference item they were stored in.  This is called when the
+         *  user logs in.
+         *
+         *  @see    storeWindowPosition()
+         */
+        void
+        loadWindowPositions(void)                                   throw ();
 };
 
 /* ================================================= external data structures */

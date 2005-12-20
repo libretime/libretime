@@ -256,6 +256,15 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         Ptr<GLiveSupport>::Ref          gLiveSupport;
 
 
+    protected:
+
+        /**
+         *  Function to catch the event of the close button being pressed.
+         */
+        virtual void
+        onCloseButtonClicked(void)                              throw ();
+
+
     public:
 
         /**

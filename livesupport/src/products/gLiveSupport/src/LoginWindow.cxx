@@ -193,7 +193,7 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // set up the window itself
     set_name("loginWindow");
     set_modal(true);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
+    property_window_position().set_value(Gtk::WIN_POS_CENTER);
     set_resizable(false);
     property_destroy_with_parent().set_value(false);
     set_default(*okButton);

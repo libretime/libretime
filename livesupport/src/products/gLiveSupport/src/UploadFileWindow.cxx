@@ -430,11 +430,10 @@ UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
         Gtk::Entry *    metadataEntry = metadataEntries[i];
         metadataEntry->set_text("");
     }
-
     statusBar->set_text("");
-
     isAudioClipValid = false;
 
+    gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
 

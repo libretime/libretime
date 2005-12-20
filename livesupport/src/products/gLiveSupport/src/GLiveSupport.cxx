@@ -111,6 +111,11 @@ static const std::string stationLogoConfigElementName = "stationLogo";
 static const std::string scratchpadContentsKey = "scratchpadContents";
 
 /*------------------------------------------------------------------------------
+ *  The name of the user preference for storing window positions
+ *----------------------------------------------------------------------------*/
+static const std::string windowPositionsKey = "windowPositions";
+
+/*------------------------------------------------------------------------------
  *  The name of the user preference for storing the token of the edited p.l.
  *----------------------------------------------------------------------------*/
 static const std::string editedPlaylistTokenKey = "editedPlaylistToken";
@@ -489,6 +494,7 @@ GLiveSupport :: login(const std::string & login,
     }
 
     loadScratchpadContents();
+    loadWindowPositions();
     
     return true;
 }
@@ -510,10 +516,17 @@ GLiveSupport :: logout(void)                                throw ()
     }
     
     stopCueAudio();
+    showAnonymousUI();
+    
+    storeWindowPositions();
+    windowPositions.clear();
+    
     storeScratchpadContents();
     scratchpadContents->clear();
+    
     authentication->logout(sessionId);
     sessionId.reset();
+    
     return true;
 }
 
@@ -574,7 +587,7 @@ GLiveSupport :: loadScratchpadContents(void)                throw ()
         return;
     }
     
-    // just store this as a space-delimited list of ids
+    // load the prefs, which is a space-delimited list
     std::istringstream          prefsString(prefsUstring->raw());
     Ptr<Playable>::Ref          playable;
 
@@ -1305,6 +1318,132 @@ GLiveSupport :: findAction(const Glib::ustring &    windowName,
         return ksc->findAction(modifiers, key);
     } else {
         return KeyboardShortcut::noAction;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the position and size of the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: putWindowPosition(Ptr<const Gtk::Window>::Ref    window)
+                                                                    throw ()
+{
+    WindowPositionType  pos;
+    window->get_position(pos.x, pos.y);
+    window->get_size(pos.width, pos.height);
+
+    windowPositions[window->get_name()] = pos;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Apply saved position and size data to the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getWindowPosition(Ptr<Gtk::Window>::Ref         window)
+                                                                    throw ()
+{
+    WindowPositionsListType::const_iterator it = windowPositions.find(
+                                                        window->get_name());
+    if (it != windowPositions.end()) {
+        WindowPositionType  pos = it->second;
+        window->move(pos.x, pos.y);
+        window->resize(pos.width, pos.height);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Store the saved window positions.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: storeWindowPositions(void)                          throw ()
+{
+    // just store this as a space-delimited list of window names and numbers
+    std::ostringstream                      prefsString;
+    WindowPositionsListType::iterator       it;
+    WindowPositionsListType::iterator       end;
+    WindowPositionType                      pos;
+
+    it  = windowPositions.begin();
+    end = windowPositions.end();
+    while (it != end) {
+        prefsString << it->first << " ";
+        pos  = it->second;
+        prefsString << pos.x << " "
+                    << pos.y << " "
+                    << pos.width << " "
+                    << pos.height << " ";
+        ++it;
+    }
+
+    Ptr<Glib::ustring>::Ref  prefsUstring(new Glib::ustring(prefsString.str()));
+    try {
+        authentication->savePreferencesItem(sessionId,
+                                            windowPositionsKey,
+                                            prefsUstring);
+    } catch (XmlRpcException &e) {
+        // TODO: signal error
+        std::cerr << "error saving user preferences: " << e.what() << std::endl;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Load the window positions.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: loadWindowPositions(void)                           throw ()
+{
+    Ptr<Glib::ustring>::Ref     prefsUstring;
+
+    try {
+        prefsUstring = authentication->loadPreferencesItem(sessionId,
+                                                           windowPositionsKey);
+    } catch (XmlRpcException &e) {
+        // TODO: signal error
+        std::cerr << "error loading user preferences: " << e.what()
+                  << std::endl;
+        return;
+    } catch (std::invalid_argument &e) {
+        // no window positions were stored for this user yet; no problem
+        return;
+    }
+    
+    // load the prefs, which is a space-delimited list
+    std::istringstream          prefsString(prefsUstring->raw());
+
+    while (!prefsString.eof()) {
+        Glib::ustring           windowName;
+        prefsString >> windowName;
+        if (prefsString.fail()) {
+            break;
+        }
+        
+        WindowPositionType      pos;
+        prefsString >> pos.x;
+        if (prefsString.fail()) {
+            continue;
+        }
+        prefsString >> pos.y;
+        if (prefsString.fail()) {
+            continue;
+        }
+        prefsString >> pos.width;
+        if (prefsString.fail()) {
+            continue;
+        }
+        prefsString >> pos.height;
+        if (prefsString.fail()) {
+            continue;
+        }
+        
+        windowPositions[windowName] = pos;
     }
 }
 

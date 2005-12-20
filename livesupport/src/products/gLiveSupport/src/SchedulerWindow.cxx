@@ -51,6 +51,11 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/**
+ *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
+ */
+static const Glib::ustring  windowName = "schedulerWindow";
+
 
 /* ===============================================  local function prototypes */
 
@@ -140,6 +145,7 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     mainBox->add(*layout);
     add(*mainBox);
 
+    set_name(windowName);
     show_all();
 
     showContents();
@@ -298,7 +304,7 @@ SchedulerWindow :: onDeleteItem(void)                       throw ()
 void
 SchedulerWindow :: onCloseButtonClicked (void)                  throw ()
 {
+    gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
-
 

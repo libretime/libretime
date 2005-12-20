@@ -98,7 +98,8 @@ using namespace LiveSupport::Core;
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
-class WhiteWindow : public Gtk::Window
+class WhiteWindow : public Gtk::Window,
+                    public boost::enable_shared_from_this<WhiteWindow>
 {
     private:
         /**

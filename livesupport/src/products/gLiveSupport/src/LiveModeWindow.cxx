@@ -377,3 +377,14 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
     return false;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the close button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onCloseButtonClicked (void)                       throw ()
+{
+    gLiveSupport->putWindowPosition(shared_from_this());
+    hide();
+}
+

@@ -496,3 +496,13 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
 }
 
 
+/*------------------------------------------------------------------------------
+ *  The event when the close button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onCloseButtonClicked(void)                      throw ()
+{
+    gLiveSupport->putWindowPosition(shared_from_this());
+    hide();
+}
+

@@ -359,6 +359,7 @@ SimplePlaylistManagementWindow :: closeWindow(void)                 throw ()
     nameEntry->set_text("");
     entriesModel->clear();
     isPlaylistModified = false;
+    gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
 

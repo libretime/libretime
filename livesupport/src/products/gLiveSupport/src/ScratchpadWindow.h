@@ -316,6 +316,12 @@ class ScratchpadWindow : public WhiteWindow,
         virtual void
         onAddToLiveMode(void)                                   throw ();
 
+        /**
+         *  Function to catch the event of the close button being pressed.
+         */
+        virtual void
+        onCloseButtonClicked(void)                              throw ();
+
 
     public:
         /**

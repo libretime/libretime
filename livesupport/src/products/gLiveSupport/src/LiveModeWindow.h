@@ -214,6 +214,12 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
             treeView->columns_autosize();
         }
 
+        /**
+         *  Function to catch the event of the close button being pressed.
+         */
+        virtual void
+        onCloseButtonClicked(void)                              throw ();
+
 
     public:
         /**
