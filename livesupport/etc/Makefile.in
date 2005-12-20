@@ -220,9 +220,6 @@ ifeq ("@BOOST_DATE_TIME_LIB@","")
 	${MAKE} -C ${BOOST_DIR}/${BOOST_VERSION} install
 endif
 
-	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && ./configure --prefix=${prefix}
-	${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} install
-
 	cd ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} install
 
