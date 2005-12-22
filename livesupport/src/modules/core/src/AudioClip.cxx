@@ -312,7 +312,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
         throw std::invalid_argument(eMsg);
     }
     
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
 
     if (!id) {
         if (!(attribute = element.get_attribute(idAttrName))) {

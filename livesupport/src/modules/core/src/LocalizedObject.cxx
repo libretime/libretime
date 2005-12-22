@@ -79,7 +79,7 @@ LocalizedObject :: getBundle(const xmlpp::Element     & element)
         throw std::invalid_argument(eMsg);
     }
 
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
 
     if (!(attribute = element.get_attribute(pathAttrName))) {
         std::string eMsg = "Missing attribute ";

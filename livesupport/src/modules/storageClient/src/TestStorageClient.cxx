@@ -232,7 +232,7 @@ TestStorageClient :: reset(void)
     const xmlpp::Element      * element = savedConfigurationElement
                                                             ->get_root_node();
     
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
 
     if (!(attribute = element->get_attribute(localTempStorageAttrName))) {
         std::string eMsg = "Missing attribute ";

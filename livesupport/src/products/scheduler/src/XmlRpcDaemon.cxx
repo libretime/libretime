@@ -126,7 +126,7 @@ XmlRpcDaemon :: configureXmlRpcDaemon(
         throw std::logic_error("already configured");
     }
 
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
     std::stringstream           strStr;
 
     if (element.get_name() != configElementNameStr) {

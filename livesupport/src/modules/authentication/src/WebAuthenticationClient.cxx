@@ -221,7 +221,7 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
 
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
 
     // read the storage server location
     xmlpp::Node::NodeList   childNodes 

@@ -346,9 +346,10 @@ KeyboardShortcut :: stringToKey(Ptr<const Glib::ustring>::Ref   keyName)
         return GDK_F11;
     } else if (*keyName == "F12") {
         return GDK_F12;
-    } else {
-        throw std::invalid_argument("");
     }
+    
+    // if none of the above:
+    throw std::invalid_argument("");
 }
 
 

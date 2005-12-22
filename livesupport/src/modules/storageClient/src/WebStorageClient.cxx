@@ -674,7 +674,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
 
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Attribute    * attribute = 0;
 
     if (!(attribute = element.get_attribute(localTempStorageAttrName))) {
         std::string eMsg = "Missing attribute ";

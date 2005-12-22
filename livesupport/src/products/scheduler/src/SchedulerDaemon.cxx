@@ -172,8 +172,8 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     }
 
     xmlpp::Node::NodeList       nodes;
-    const xmlpp::Element      * elem;
-    const xmlpp::Attribute    * attribute;
+    const xmlpp::Element      * elem = 0;
+    const xmlpp::Attribute    * attribute = 0;
 
     // read in the user data
 
