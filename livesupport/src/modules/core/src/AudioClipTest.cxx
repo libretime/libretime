@@ -156,9 +156,12 @@ void
 AudioClipTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(audioClip);
+    CPPUNIT_ASSERT(audioClip->getId());
     CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x1);
     Ptr<const boost::posix_time::time_duration>::Ref  duration
                                             = audioClip->getPlaylength();
+    CPPUNIT_ASSERT(duration);
     CPPUNIT_ASSERT(duration->hours() == 0);
     CPPUNIT_ASSERT(duration->minutes() == 18);
     CPPUNIT_ASSERT(duration->seconds() == 30);
@@ -178,6 +181,7 @@ AudioClipTest :: firstTest(void)
     CPPUNIT_ASSERT(*alternativeTitle ==
                         "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
 
+    CPPUNIT_ASSERT(audioClip->getXmlElementString());
     CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
                                         "<audioClip id=\"0000000000000001\" "
                                         "title=\"File Title txt\" "
