@@ -229,9 +229,9 @@ cp -pPR README INSTALL configure $ls_tmpdir
 
 
 #-------------------------------------------------------------------------------
-#  Get rid of the remnants of the CVS system
+#  Get rid of the remnants of the subversion system
 #-------------------------------------------------------------------------------
-rm -rf `find $ls_tmpdir -name CVS -type d`
+rm -rf `find $ls_tmpdir -name .svn -type d`
 
 
 #-------------------------------------------------------------------------------
@@ -313,9 +313,9 @@ cp -pPR $pear_dir/* $pear_tmpdir
 
 
 #-------------------------------------------------------------------------------
-#  Get rid of the remnants of the CVS system
+#  Get rid of the remnants of the subversion system
 #-------------------------------------------------------------------------------
-rm -rf `find $ls_tmpdir -name CVS -type d`
+rm -rf `find $ls_tmpdir -name .svn -type d`
 
 
 #-------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ CP      = cp -f
 #-------------------------------------------------------------------------------
 
 MODULE_NAME = alib
-TAR_C       = tar -cj --exclude CVS --exclude '*~' -C ${BASE_DIR} -f
+TAR_C       = tar -cj --exclude .svn --exclude '*~' -C ${BASE_DIR} -f
 DIST_EXT    = .tgz
 DATE        = `date +%y%m%d`
 
