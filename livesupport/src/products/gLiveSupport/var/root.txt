@@ -12,6 +12,7 @@ root:table
                                     { "edit playlist" }
     schedulerButtonLabel:string     { "scheduler" }
     searchButtonLabel:string        { "search" }
+    optionsButtonLabel:string       { "options" }
 
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
@@ -216,6 +217,17 @@ root:table
         cuePlayerLabel:string       { "Preview" }
     }
     
+    optionsWindow:table
+    {
+        windowTitle:string          { "LiveSupport Options Window" }
+        
+        aboutSectionLabel:string    { "About" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        applyButtonLabel:string     { "Apply" }
+        okButtonLabel:string        { "OK" }
+    }
+
     metadataTypes:table
     {
         title:string                { "Title" }

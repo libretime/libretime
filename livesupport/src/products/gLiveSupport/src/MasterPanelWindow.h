@@ -57,6 +57,7 @@
 #include "SimplePlaylistManagementWindow.h"
 #include "SchedulerWindow.h"
 #include "SearchWindow.h"
+#include "OptionsWindow.h"
 
 
 namespace LiveSupport {
@@ -214,6 +215,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Button                    * searchButton;
 
         /**
+         *  The button to invoke the Options Window.
+         */
+        Button                    * optionsButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -246,7 +252,12 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The one and only search window.
          */
-        Ptr<SearchWindow>::Ref   searchWindow;
+        Ptr<SearchWindow>::Ref      searchWindow;
+
+        /**
+         *  The one and only options window.
+         */
+        Ptr<OptionsWindow>::Ref     optionsWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -364,6 +375,22 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         }
 
         /**
+         *  Function to catch the event of the Options button
+         *  button being pressed.
+         */
+        virtual void
+        onOptionsButtonClicked(void)                            throw ()
+        {
+            if (!optionsWindow ||
+                    optionsWindow && !optionsWindow->is_visible()) {
+                updateOptionsWindow();
+            } else {
+                gLiveSupport->putWindowPosition(optionsWindow);
+                optionsWindow->hide();
+            }
+        }
+
+        /**
          *  Signal handler for a key pressed at one of the entries.
          *  The keys can be customized by the keyboardShortcutContainer
          *  element in the gLiveSupport configuration file.
@@ -466,6 +493,12 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         updateSearchWindow(void)                                throw ();
+
+        /**
+         *  Update the Options Window
+         */
+        void
+        updateOptionsWindow(void)                               throw ();
 
         /**
          *  Get the next item from the top of the Live Mode window.

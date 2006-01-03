@@ -259,7 +259,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/LiveModeWindow.o \
                      ${TMP_DIR}/CuePlayer.o \
                      ${TMP_DIR}/KeyboardShortcut.o \
-                     ${TMP_DIR}/KeyboardShortcutContainer.o
+                     ${TMP_DIR}/KeyboardShortcutContainer.o \
+                     ${TMP_DIR}/OptionsWindow.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \

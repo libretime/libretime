@@ -193,6 +193,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     simplePlaylistMgmtButton = 0;
     schedulerButton          = 0;
     searchButton             = 0;
+    optionsButton            = 0;
     changeLanguage(bundle);
 
     // show what's there to see
@@ -241,6 +242,9 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     if (searchButton) {
         buttonBar->remove(*searchButton);
     }
+    if (optionsButton) {
+        buttonBar->remove(*optionsButton);
+    }
 
     try {
         set_title(*getResourceUstring("windowTitle"));
@@ -259,6 +263,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                                 *getResourceUstring("schedulerButtonLabel")));
         searchButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("searchButtonLabel")));
+        optionsButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("optionsButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -285,6 +291,9 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     buttonBar->attach(*searchButton,               5, 6, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
+    buttonBar->attach(*optionsButton,              6, 7, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
 
     // re-bind events to the buttons
     liveModeButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -300,6 +309,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                             &MasterPanelWindow::onSchedulerButtonClicked));
     searchButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelWindow::onSearchButtonClicked));
+    optionsButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onOptionsButtonClicked));
 }
 
 
@@ -540,6 +551,32 @@ MasterPanelWindow :: updateSearchWindow(void)                       throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  The event when the Options button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
+{
+    if (!optionsWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("optionsWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        optionsWindow.reset(new OptionsWindow(gLiveSupport, bundle));
+        gLiveSupport->getWindowPosition(optionsWindow);
+    }
+
+    if (!optionsWindow->is_visible()) {
+        gLiveSupport->getWindowPosition(optionsWindow);
+        optionsWindow->show();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Show only the UI components that are visible when no one is logged in
  *----------------------------------------------------------------------------*/
 void
@@ -552,6 +589,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     simplePlaylistMgmtButton->hide();
     schedulerButton->hide();
     searchButton->hide();
+    optionsButton->hide();
     
     if (liveModeWindow.get()) {
         if (liveModeWindow->is_visible()) {
@@ -594,6 +632,13 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
             searchWindow->hide();
         }
         searchWindow.reset();
+    }
+    if (optionsWindow.get()) {
+        if (optionsWindow->is_visible()) {
+            gLiveSupport->putWindowPosition(optionsWindow);
+            optionsWindow->hide();
+        }
+        optionsWindow.reset();
     }
 }
 
