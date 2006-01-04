@@ -275,7 +275,7 @@ dnl-----------------------------------------------------------------------------
 AC_ARG_WITH([check-boost],
             AC_HELP_STRING([--with-check-boost],
                [check for the availability of the boost library on the
-                system, and use it if available (yes)]),
+                system, and use it if available (no)]),
             [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=no])
 
 AC_MSG_RESULT([checking for boost library on system: ${CHECK_BOOST_LIB}])
@@ -310,7 +310,7 @@ dnl-----------------------------------------------------------------------------
 AC_ARG_WITH([check-icu],
             AC_HELP_STRING([--with-check-icu],
                [check for the availability of the icu library on the
-                system, and use it if available (yes)]),
+                system, and use it if available (no)]),
             [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=no])
 
 AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
