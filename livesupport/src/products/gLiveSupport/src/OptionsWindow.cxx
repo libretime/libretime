@@ -197,8 +197,14 @@ OptionsWindow :: constructAboutSection(void)                        throw ()
     aboutLabelContents.append(" ");
     aboutLabelContents.append(PACKAGE_VERSION);
     aboutLabelContents.append("\n\n");
-    aboutLabelContents.append("Report bugs to: ");
-    aboutLabelContents.append(PACKAGE_BUGREPORT);
+    try {
+        aboutLabelContents.append(*formatMessage("reportBugsToText",
+                                                 PACKAGE_BUGREPORT ));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
     Gtk::Label *    aboutLabel = Gtk::manage(
                                     new Gtk::Label(aboutLabelContents) );
 
