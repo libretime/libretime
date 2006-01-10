@@ -95,7 +95,6 @@ BaseTestMethod :: getCwd(void)                      throw ()
     return cwd;
 }
 
-#include <iostream>             #### remove me ####
 
 /*------------------------------------------------------------------------------
  *  Return the full path for a configuration file.
@@ -108,15 +107,6 @@ BaseTestMethod :: getConfigFile(const std::string   configFileName)
     std::ifstream   file;
 
     // first, try with ~/.livesupport/configFileName
-std::cerr << "login: ";
-char * loginString = getlogin();
-if (loginString == 0) {
-    std::cerr << "zero";
-} else {
-    std::cerr << "non-zero: ---";
-    std::cerr << *loginString << "---\n";
-}
-std::cerr << "< " << loginString << ">" << std::endl;
     struct passwd  * pwd = getpwnam(getlogin());
     if (pwd) {
         fileName += pwd->pw_dir;
