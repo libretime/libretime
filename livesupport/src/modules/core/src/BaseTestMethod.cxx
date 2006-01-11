@@ -107,7 +107,7 @@ BaseTestMethod :: getConfigFile(const std::string   configFileName)
     std::ifstream   file;
 
     // first, try with ~/.livesupport/configFileName
-    struct passwd  * pwd = getpwnam(getlogin());
+    struct passwd  * pwd = getpwuid(getuid());
     if (pwd) {
         fileName += pwd->pw_dir;
         fileName += "/.livesupport/" + configFileName;
