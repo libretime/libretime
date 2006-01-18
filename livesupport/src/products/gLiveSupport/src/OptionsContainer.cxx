@@ -115,7 +115,6 @@ OptionsContainer :: getOptionItem(OptionItemString  optionItem)
 {
     const xmlpp::Node *     targetNode = 0;
     bool                    isAttribute = false; // child text node or attr
-    Glib::ustring           errorMessage = "option item not found";
     
     switch (optionItem) {
         case outputPlayerDeviceName :
