@@ -87,8 +87,8 @@ function getID3v2Filepointer($fd, &$ThisFileInfo) {
 //                Total frame CRC    5 * %0xxxxxxx
 //            d - Tag restrictions
 //                Flag data length       $01
-			$extheaderflagbytes = fread ($fd, 1);
-			$extheaderflags     = fread ($fd, $extheaderflagbytes);
+			//$extheaderflagbytes = fread ($fd, 1);
+			//$extheaderflags     = fread ($fd, $extheaderflagbytes);
 			$id3_exthead_flags = BigEndian2Bin(substr($header, 5, 1));
 			$ThisFileInfo['id3v2']['exthead_flags']['update']       = substr($id3_exthead_flags, 1, 1);
 			$ThisFileInfo['id3v2']['exthead_flags']['CRC']          = substr($id3_exthead_flags, 2, 1);

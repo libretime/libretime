@@ -133,6 +133,9 @@ while($filename = fgets($stdin, 2048)){
     echo "$filename:   ";
     set_time_limit(30);
     $infoFromFile = GetAllFileInfo("$filename", 'mp3');
+    //prepared for getid3 upgrade:
+    //$getID3 = new getID3;
+    //$infoFromFile = $getID3->analyze("$filename");
     if(PEAR::isError($infoFromFile)){ _err($infoFromFile, $filename); continue; }
     if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
     if(!$infoFromFile['bitrate']){ echo "not audio?\n"; continue; }
