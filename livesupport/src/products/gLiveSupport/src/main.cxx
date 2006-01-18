@@ -157,7 +157,7 @@ int main (  int     argc,
 
     try {
         std::auto_ptr<xmlpp::DomParser> 
-                            parser(new xmlpp::DomParser(configFileName, true));
+                            parser(new xmlpp::DomParser(configFileName, false));
         const xmlpp::Document * document = parser->get_document();
         gLiveSupport->configure(*(document->get_root_node()));
     } catch (std::invalid_argument &e) {

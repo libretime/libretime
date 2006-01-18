@@ -55,6 +55,7 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "KeyboardShortcutContainer.h"
+#include "OptionsContainer.h"
 
 
 namespace LiveSupport {
@@ -327,6 +328,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The positions of the various windows.
          */
         WindowPositionsListType     windowPositions;
+        
+        /**
+         *  An object containing the contents of the options file.
+         */
+        Ptr<OptionsContainer>::Ref  optionsContainer;
 
 
     protected:
@@ -1020,6 +1026,15 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         loadWindowPositions(void)                                   throw ();
+        
+        /**
+         *  Access the OptionsContainer object containing the options.
+         */
+        Ptr<OptionsContainer>::Ref
+        getOptionsContainer(void)                                   throw()
+        {
+            return optionsContainer;
+        }
 };
 
 /* ================================================= external data structures */

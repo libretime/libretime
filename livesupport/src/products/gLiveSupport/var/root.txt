@@ -222,12 +222,16 @@ root:table
         windowTitle:string          { "LiveSupport Options Window" }
         
         aboutSectionLabel:string    { "About" }
+        soundSectionLabel:string    { "Sound" }
 
         cancelButtonLabel:string    { "Cancel" }
         applyButtonLabel:string     { "Apply" }
         okButtonLabel:string        { "OK" }
         
         reportBugsToText:string     { "Report bugs to: {0}" }
+        
+        cueDeviceLabel:string       { "Cue audio device:" }
+        outputDeviceLabel:string    { "Live Mode audio device:" }
     }
 
     metadataTypes:table

@@ -163,6 +163,14 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         Gtk::VBox*
         constructAboutSection(void)                         throw ();
 
+        /**
+         *  Construct the "Sound" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructSoundSection(void)                         throw ();
+
 
     public:
         /**

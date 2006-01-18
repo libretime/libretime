@@ -297,6 +297,10 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         keyboardShortcutList[*ksc->getWindowName()] = ksc;
         ++it;
     }
+    
+    // save the config file so we can modify it later
+    // TODO: move configuration code to the OptionsContainer class?
+    optionsContainer.reset(new OptionsContainer(element));
 }
 
 

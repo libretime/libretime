@@ -38,6 +38,7 @@
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
+#include "LiveSupport/Widgets/EntryBin.h"
 #include "OptionsWindow.h"
 
 
@@ -88,10 +89,13 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // build up the notepad for the various sections
     mainNotebook = Gtk::manage(new ScrolledNotebook);
     Gtk::Box *      aboutSectionBox = constructAboutSection();
+    Gtk::Box *      soundSectionBox = constructSoundSection();
 
     try {
         mainNotebook->appendPage(*aboutSectionBox,
-                                *getResourceUstring("aboutSectionLabel"));
+                                 *getResourceUstring("aboutSectionLabel"));
+        mainNotebook->appendPage(*soundSectionBox,
+                                 *getResourceUstring("soundSectionLabel"));
 
     } catch (std::invalid_argument &e) {
         // TODO: signal error
@@ -138,7 +142,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // show everything
     set_name(windowName);
-    set_default_size(350, 250);
+    set_default_size(350, 300);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -211,6 +215,71 @@ OptionsWindow :: constructAboutSection(void)                        throw ()
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
     section->pack_start(*aboutLabel, Gtk::PACK_SHRINK, 5);
+    
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "Sound" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructSoundSection(void)                        throw ()
+{
+    Ptr<OptionsContainer>::Ref  optionsContainer
+                                   = gLiveSupport->getOptionsContainer();
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Table *    audioDeviceTable = Gtk::manage(new Gtk::Table);
+    audioDeviceTable->set_row_spacings(10);
+    audioDeviceTable->set_col_spacings(5);
+    
+    // display the settings for the cue player device
+    Glib::ustring   cuePlayerLabelContents;
+    try {
+        cuePlayerLabelContents.append(*getResourceUstring("cueDeviceLabel"));
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::Label *    cuePlayerLabel = Gtk::manage(
+                                    new Gtk::Label(cuePlayerLabelContents) );
+    audioDeviceTable->attach(*cuePlayerLabel, 0, 1, 0, 1);
+    
+    EntryBin *      cuePlayerEntry = Gtk::manage(wf->createEntryBin());
+    cuePlayerEntry->set_text(*optionsContainer->getOptionItem(
+                                    OptionsContainer::cuePlayerDeviceName ));
+    audioDeviceTable->attach(*cuePlayerEntry, 1, 2, 0, 1);
+    
+    // display the settings for the output player device
+    Glib::ustring   outputPlayerLabelContents;
+    try {
+        outputPlayerLabelContents.append(*getResourceUstring(
+                                                        "outputDeviceLabel"));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::Label *    outputPlayerLabel = Gtk::manage(
+                                    new Gtk::Label(outputPlayerLabelContents) );
+    audioDeviceTable->attach(*outputPlayerLabel, 0, 1, 1, 2);
+    
+    EntryBin *      outputPlayerEntry = Gtk::manage(wf->createEntryBin());
+    outputPlayerEntry->set_text(*optionsContainer->getOptionItem(
+                                    OptionsContainer::outputPlayerDeviceName ));
+    audioDeviceTable->attach(*outputPlayerEntry, 1, 2, 1, 2);
+
+    // TODO: remove this
+    Gtk::Label *    notFinishedWarning = Gtk::manage(new Gtk::Label(
+                        "Note: device settings can not be edited (yet)." ));
+
+    // make a new box and pack the components into it
+    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*audioDeviceTable,   Gtk::PACK_SHRINK, 5);
+    section->pack_start(*notFinishedWarning, Gtk::PACK_SHRINK, 20);
     
     return section;
 }
