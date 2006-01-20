@@ -167,8 +167,8 @@ class OptionsContainer
          *  Save the options to a file.
          *
          *  This writes the options in XML format to the file specified in the
-         *  constructor, under $HOME/.livesupport.  If the directory does not
-         *  exist, it is created.
+         *  constructor.  The directory must already exist (it's OK if the file
+	 *  does not), otherwise nothing is written.
          */
         void
         writeToFile(void)                                           throw ();

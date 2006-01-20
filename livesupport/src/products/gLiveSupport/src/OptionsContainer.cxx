@@ -193,9 +193,11 @@ OptionsContainer :: writeToFile(void)                               throw ()
 {
     if (configFileName) {
         std::ofstream   file(configFileName->c_str());
-        optionsDocument.write_to_stream_formatted(file, "utf-8");
+        if (file.good()) {
+            optionsDocument.write_to_stream_formatted(file, "utf-8");
+            changed = false;
+        }
         file.close();
-        changed = false;
     }
 }
 
