@@ -85,7 +85,7 @@ const std::string LiveSupport :: GLiveSupport ::
 /*------------------------------------------------------------------------------
  *  The name of the configuration file for this class
  *----------------------------------------------------------------------------*/
-const std::string configFileDirStr = "/dot-livesupport/";
+const std::string configFileDirStr = "/.livesupport/";
 
 /*------------------------------------------------------------------------------
  *  The name of the configuration file for this class

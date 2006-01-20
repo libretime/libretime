@@ -168,7 +168,7 @@ class OptionsContainer
          *
          *  This writes the options in XML format to the file specified in the
          *  constructor.  The directory must already exist (it's OK if the file
-	 *  does not), otherwise nothing is written.
+         *  does not), otherwise nothing is written.
          */
         void
         writeToFile(void)                                           throw ();
