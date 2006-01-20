@@ -88,14 +88,14 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // build up the notepad for the various sections
     mainNotebook = Gtk::manage(new ScrolledNotebook);
-    Gtk::Box *      aboutSectionBox = constructAboutSection();
     Gtk::Box *      soundSectionBox = constructSoundSection();
+    Gtk::Box *      aboutSectionBox = constructAboutSection();
 
     try {
-        mainNotebook->appendPage(*aboutSectionBox,
-                                 *getResourceUstring("aboutSectionLabel"));
         mainNotebook->appendPage(*soundSectionBox,
                                  *getResourceUstring("soundSectionLabel"));
+        mainNotebook->appendPage(*aboutSectionBox,
+                                 *getResourceUstring("aboutSectionLabel"));
 
     } catch (std::invalid_argument &e) {
         // TODO: signal error
@@ -156,7 +156,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 void
 OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 {
-    onCloseButtonClicked();
+    onCloseButtonClicked(false);
 }
 
 
@@ -166,6 +166,33 @@ OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 void
 OptionsWindow :: onApplyButtonClicked(void)                         throw ()
 {
+    Ptr<OptionsContainer>::Ref
+            optionsContainer  = gLiveSupport->getOptionsContainer();
+
+    // check for changes in the Sound tab
+    Ptr<const Glib::ustring>::Ref
+            oldCueDevice      = optionsContainer->getOptionItem(
+                                    OptionsContainer::cuePlayerDeviceName );
+    Ptr<const Glib::ustring>::Ref
+            newCueDevice(new Glib::ustring(cuePlayerEntry->get_text()));
+    
+    if (*oldCueDevice != *newCueDevice) {
+        optionsContainer->setOptionItem(
+                                    OptionsContainer::cuePlayerDeviceName,
+                                    newCueDevice );
+    }
+    
+    Ptr<const Glib::ustring>::Ref
+            oldOutputDevice   = optionsContainer->getOptionItem(
+                                    OptionsContainer::outputPlayerDeviceName );
+    Ptr<const Glib::ustring>::Ref
+            newOutputDevice(new Glib::ustring(outputPlayerEntry->get_text()));
+    
+    if (*oldOutputDevice != *newOutputDevice) {
+        optionsContainer->setOptionItem(
+                                    OptionsContainer::outputPlayerDeviceName,
+                                    newOutputDevice );
+    }
 }
 
 
@@ -175,7 +202,8 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
 void
 OptionsWindow :: onOkButtonClicked(void)                            throw ()
 {
-    onCloseButtonClicked();
+    onApplyButtonClicked();
+    onCloseButtonClicked(false);
 }
 
 
@@ -183,8 +211,11 @@ OptionsWindow :: onOkButtonClicked(void)                            throw ()
  *  Event handler for the Close button.
  *----------------------------------------------------------------------------*/
 void
-OptionsWindow :: onCloseButtonClicked(void)                         throw ()
+OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
 {
+    if (needConfirm) {
+        //TODO: add confirmation dialog
+    }
     gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
@@ -248,7 +279,7 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
                                     new Gtk::Label(cuePlayerLabelContents) );
     audioDeviceTable->attach(*cuePlayerLabel, 0, 1, 0, 1);
     
-    EntryBin *      cuePlayerEntry = Gtk::manage(wf->createEntryBin());
+    cuePlayerEntry = Gtk::manage(wf->createEntryBin());
     cuePlayerEntry->set_text(*optionsContainer->getOptionItem(
                                     OptionsContainer::cuePlayerDeviceName ));
     audioDeviceTable->attach(*cuePlayerEntry, 1, 2, 0, 1);
@@ -267,19 +298,14 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
                                     new Gtk::Label(outputPlayerLabelContents) );
     audioDeviceTable->attach(*outputPlayerLabel, 0, 1, 1, 2);
     
-    EntryBin *      outputPlayerEntry = Gtk::manage(wf->createEntryBin());
+    outputPlayerEntry = Gtk::manage(wf->createEntryBin());
     outputPlayerEntry->set_text(*optionsContainer->getOptionItem(
                                     OptionsContainer::outputPlayerDeviceName ));
     audioDeviceTable->attach(*outputPlayerEntry, 1, 2, 1, 2);
 
-    // TODO: remove this
-    Gtk::Label *    notFinishedWarning = Gtk::manage(new Gtk::Label(
-                        "Note: device settings can not be edited (yet)." ));
-
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
     section->pack_start(*audioDeviceTable,   Gtk::PACK_SHRINK, 5);
-    section->pack_start(*notFinishedWarning, Gtk::PACK_SHRINK, 20);
     
     return section;
 }

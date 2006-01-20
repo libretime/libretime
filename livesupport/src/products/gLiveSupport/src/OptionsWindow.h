@@ -93,7 +93,7 @@ using namespace LiveSupport::Widgets;
  */
 class OptionsWindow : public WhiteWindow, public LocalizedObject
 {
-    protected:
+    private:
         /**
          *  The notepad holding the different sections.
          */
@@ -120,6 +120,16 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         Gtk::Button               * okButton;
 
         /**
+         *  The entry field for the cue player device's name.
+         */
+        EntryBin                  * cuePlayerEntry;
+
+        /**
+         *  The entry field for the output player device's name.
+         */
+        EntryBin                  * outputPlayerEntry;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -129,6 +139,24 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          */
         bool                        isChanged;
 
+        /**
+         *  Construct the "About" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructAboutSection(void)                         throw ();
+
+        /**
+         *  Construct the "Sound" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructSoundSection(void)                         throw ();
+
+
+    protected:
         /**
          *  Event handler for the Cancel button.
          */
@@ -150,28 +178,15 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         /**
          *  Event handler for the Close button.
          *
-         *  @see WhiteWindow::onCloseButtonClicked()
+         *  @param  needConfirm     if true, we check if changes has been
+         *                          made to the input fields, and if yes, then
+         *                          a "save changes?" dialog is displayed
+         *  @see    WhiteWindow::onCloseButtonClicked()
          */
         virtual void
-        onCloseButtonClicked(void)                          throw ();
+        onCloseButtonClicked(bool   needConfirm = true)     throw ();
 
-        /**
-         *  Construct the "About" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
-         */
-        Gtk::VBox*
-        constructAboutSection(void)                         throw ();
-
-        /**
-         *  Construct the "Sound" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
-         */
-        Gtk::VBox*
-        constructSoundSection(void)                         throw ();
-
-
+    
     public:
         /**
          *  Constructor.

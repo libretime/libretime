@@ -33,6 +33,18 @@
 #include "configure.h"
 #endif
 
+#ifdef HAVE_PWD_H
+#include <pwd.h>
+#else
+#error need pwd.h
+#endif
+
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#else
+#error need sys/stat.h
+#endif
+
 #include <stdexcept>
 #include <gtkmm/main.h>
 
@@ -69,6 +81,16 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 const std::string LiveSupport :: GLiveSupport ::
                   GLiveSupport :: configElementNameStr = "gLiveSupport";
+
+/*------------------------------------------------------------------------------
+ *  The name of the configuration file for this class
+ *----------------------------------------------------------------------------*/
+const std::string configFileDirStr = "/.livesupport/";
+
+/*------------------------------------------------------------------------------
+ *  The name of the configuration file for this class
+ *----------------------------------------------------------------------------*/
+const std::string configFileNameStr = "gLiveSupport.xml";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the list of supported languages
@@ -298,9 +320,19 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         ++it;
     }
     
-    // save the config file so we can modify it later
+    // save the configuration so we can modify it later
     // TODO: move configuration code to the OptionsContainer class?
-    optionsContainer.reset(new OptionsContainer(element));
+    Ptr<Glib::ustring>::Ref     configFileName(new Glib::ustring);
+    struct passwd *             pwd = getpwuid(getuid());
+    if (pwd) {
+        configFileName->append(pwd->pw_dir);
+    } else {
+        throw std::logic_error("this never happens: getpwuid() returned 0");
+    }
+    configFileName->append(configFileDirStr);
+    mkdir(configFileName->c_str(), 0700);   // create dir if does not exist
+    configFileName->append(configFileNameStr);
+    optionsContainer.reset(new OptionsContainer(element, configFileName));
 }
 
 
@@ -530,6 +562,10 @@ GLiveSupport :: logout(void)                                throw ()
     
     authentication->logout(sessionId);
     sessionId.reset();
+    
+    if (optionsContainer->isChanged()) {
+        optionsContainer->writeToFile();
+    }
     
     return true;
 }

@@ -72,7 +72,17 @@ class OptionsContainer
         /**
          *  The XML document containing the options.
          */
-        xmlpp::Document         optionsDocument;
+        xmlpp::Document                 optionsDocument;
+        
+        /**
+         *  The file name (including path) used by writeToFile().
+         */
+        Ptr<const Glib::ustring>::Ref   configFileName;
+        
+        /**
+         *  Remember if we have been changed.
+         */
+        bool                            changed;
         
         /**
          *  Default constructor.
@@ -99,9 +109,28 @@ class OptionsContainer
          *  Constructor with XML element parameter.
          *
          *  @param optionsElement   the XML element containing the options
+         *  @param configFileName   the name (with path) of the configuration
+         *                              file used by writeToFile()
+         *  @see writeToFile()
          */
-        OptionsContainer(const xmlpp::Element &   optionsElement)   throw ();
+        OptionsContainer(const xmlpp::Element &         optionsElement,
+                         Ptr<const Glib::ustring>::Ref  configFileName)
+                                                                    throw ();
         
+        /**
+         *  Report if the object has been changed.
+         *
+         *  It returns true if there has been any calls to setOptionItem()
+         *  since its construction or the last call to writeToFile().
+         *
+         *  @return whether the options have been changed
+         */
+        bool
+        isChanged(void)                                             throw ()
+        {
+            return changed;
+        }
+
         /**
          *  The list of string options one can set.
          *  
@@ -133,6 +162,16 @@ class OptionsContainer
         Ptr<Glib::ustring>::Ref
         getOptionItem(OptionItemString      optionItem)
                                                  throw (std::invalid_argument);
+
+        /**
+         *  Save the options to a file.
+         *
+         *  This writes the options in XML format to the file specified in the
+         *  constructor, under $HOME/.livesupport.  If the directory does not
+         *  exist, it is created.
+         */
+        void
+        writeToFile(void)                                           throw ();
 };
 
 

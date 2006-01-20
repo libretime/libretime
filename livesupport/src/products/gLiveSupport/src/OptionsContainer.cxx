@@ -34,6 +34,7 @@
 #endif
 
 #include <iostream>
+#include <fstream>
 
 #include "OptionsContainer.h"
 
@@ -55,8 +56,12 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-OptionsContainer :: OptionsContainer(const xmlpp::Element &   optionsElement)
+OptionsContainer :: OptionsContainer(
+                            const xmlpp::Element &          optionsElement,
+                            Ptr<const Glib::ustring>::Ref   configFileName)
                                                                     throw ()
+      : configFileName(configFileName),
+        changed(false)
 {
     optionsDocument.create_root_node_by_import(&optionsElement, true);
                                                         // true == recursive
@@ -76,13 +81,13 @@ OptionsContainer :: setOptionItem(OptionItemString                  optionItem,
     
     switch (optionItem) {
         case outputPlayerDeviceName :
-            targetNode  = getNode("/outputPlayer/audioPlayer/gstreamerPlayer/"
+            targetNode  = getNode("outputPlayer/audioPlayer/gstreamerPlayer/"
                                   "@audioDevice");
             isAttribute = true;
             break;
         
         case cuePlayerDeviceName :
-            targetNode  = getNode("/cuePlayer/audioPlayer/gstreamerPlayer/"
+            targetNode  = getNode("cuePlayer/audioPlayer/gstreamerPlayer/"
                                   "@audioDevice");
             isAttribute = true;
             break;
@@ -92,12 +97,14 @@ OptionsContainer :: setOptionItem(OptionItemString                  optionItem,
         xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
         if (attr != 0) {
             attr->set_value(*value);
+            changed = true;
             return;
         }
     } else {
         xmlpp::TextNode *   text = dynamic_cast<xmlpp::TextNode*>(targetNode);
         if (text != 0) {
             text->set_content(*value);
+            changed = true;
             return;
         }
     }
@@ -174,6 +181,21 @@ OptionsContainer :: getNode(const Glib::ustring &   xPath)
         return *it;
     } else {
         return 0;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the options to a file.
+ *----------------------------------------------------------------------------*/
+void
+OptionsContainer :: writeToFile(void)                               throw ()
+{
+    if (configFileName) {
+        std::ofstream   file(configFileName->c_str());
+        optionsDocument.write_to_stream_formatted(file, "utf-8");
+        file.close();
+        changed = false;
     }
 }
 
