@@ -744,7 +744,7 @@ class BasicStor extends Alib{
      *  @param criteria hash, with following structure:<br>
      *   <ul>
      *     <li>filetype - string, type of searched files,
-     *       meaningful values: 'audioclip', 'webstream', 'playlist'</li>
+     *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
      *     <li>operator - string, type of conditions join
      *       (any condition matches / all conditions match), 
      *       meaningful values: 'and', 'or', ''
