@@ -120,14 +120,15 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         Gtk::Button               * okButton;
 
         /**
-         *  The entry field for the cue player device's name.
+         *  The type for the list of user entry fields of string type.
          */
-        EntryBin                  * cuePlayerEntry;
+        typedef std::vector<std::pair<OptionsContainer::OptionItemString,
+                                      EntryBin*> >      StringEntryListType;
 
         /**
-         *  The entry field for the output player device's name.
+         *  The list of user entry fields of string type.
          */
-        EntryBin                  * outputPlayerEntry;
+        StringEntryListType         stringEntryList;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.
@@ -140,12 +141,18 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         bool                        isChanged;
 
         /**
-         *  Construct the "About" section.
+         *  Create a new user entry field item.
          *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         *  This constructs [and Gtk::manage()s] the EntryBin, and
+         *  sets its text to the current value of the option.
+         *  The EntryBin is then added to the list of user entry fields.
+         *
+         *  @param  optionItem  the name of the option item for this entry
+         *  @return the newly created EntryBin
          */
-        Gtk::VBox*
-        constructAboutSection(void)                         throw ();
+        EntryBin *
+        createEntry(OptionsContainer::OptionItemString  optionItem)
+                                                            throw ();
 
         /**
          *  Construct the "Sound" section.
@@ -154,6 +161,22 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          */
         Gtk::VBox*
         constructSoundSection(void)                         throw ();
+
+        /**
+         *  Construct the "Servers" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructServersSection(void)                       throw ();
+
+        /**
+         *  Construct the "About" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructAboutSection(void)                         throw ();
 
 
     protected:

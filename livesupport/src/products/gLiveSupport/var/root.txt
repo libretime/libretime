@@ -221,17 +221,24 @@ root:table
     {
         windowTitle:string          { "LiveSupport Options Window" }
         
-        aboutSectionLabel:string    { "About" }
         soundSectionLabel:string    { "Sound" }
+        serversSectionLabel:string  { "Servers" }
+        aboutSectionLabel:string    { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
         applyButtonLabel:string     { "Apply" }
         okButtonLabel:string        { "OK" }
         
-        reportBugsToText:string     { "Report bugs to: {0}" }
-        
         cueDeviceLabel:string       { "Cue audio device:" }
         outputDeviceLabel:string    { "Live Mode audio device:" }
+        
+        authenticationLabel:string  { "Authentication server" }
+        storageLabel:string         { "Storage server" }
+        serverLabel:string          { "address:" }
+        portLabel:string            { "port:" }
+        pathLabel:string            { "path:" }
+        
+        reportBugsToText:string     { "Report bugs to: {0}" }
     }
 
     metadataTypes:table

@@ -76,22 +76,8 @@ OptionsContainer :: setOptionItem(OptionItemString                  optionItem,
                                   Ptr<const Glib::ustring>::Ref     value)
                                                 throw (std::invalid_argument)
 {
-    xmlpp::Node *           targetNode   = 0;
-    bool                    isAttribute  = false; // text node or attr node
-    
-    switch (optionItem) {
-        case outputPlayerDeviceName :
-            targetNode  = getNode("outputPlayer/audioPlayer/gstreamerPlayer/"
-                                  "@audioDevice");
-            isAttribute = true;
-            break;
-        
-        case cuePlayerDeviceName :
-            targetNode  = getNode("cuePlayer/audioPlayer/gstreamerPlayer/"
-                                  "@audioDevice");
-            isAttribute = true;
-            break;
-    }
+    bool              isAttribute  = false; // text node or attr node
+    xmlpp::Node *     targetNode = selectNode(optionItem, isAttribute);
 
     if (isAttribute) {
         xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
@@ -120,23 +106,9 @@ Ptr<Glib::ustring>::Ref
 OptionsContainer :: getOptionItem(OptionItemString  optionItem)
                                                 throw (std::invalid_argument)
 {
-    const xmlpp::Node *     targetNode = 0;
-    bool                    isAttribute = false; // child text node or attr
+    bool                    isAttribute = false; // text node or attr node
+    const xmlpp::Node *     targetNode = selectNode(optionItem, isAttribute);
     
-    switch (optionItem) {
-        case outputPlayerDeviceName :
-            targetNode  = getNode("outputPlayer/audioPlayer/gstreamerPlayer/"
-                                  "@audioDevice");
-            isAttribute = true;
-            break;
-        
-        case cuePlayerDeviceName :
-            targetNode  = getNode("cuePlayer/audioPlayer/gstreamerPlayer/"
-                                  "@audioDevice");
-            isAttribute = true;
-            break;
-    }
-
     if (isAttribute) {
         const xmlpp::Attribute *
                     attr = dynamic_cast<const xmlpp::Attribute*>(targetNode);
@@ -156,6 +128,70 @@ OptionsContainer :: getOptionItem(OptionItemString  optionItem)
     }
     
     throw std::invalid_argument("option item not found");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Find the node corresponding to an OptionItemString value.
+ *----------------------------------------------------------------------------*/
+xmlpp::Node *
+OptionsContainer :: selectNode(OptionItemString     optionItem,
+                               bool &               isAttribute)
+                                                throw (std::invalid_argument)
+{
+    xmlpp::Node *   targetNode = 0;
+
+    switch (optionItem) {
+        case outputPlayerDeviceName :
+            targetNode  = getNode("outputPlayer/audioPlayer/gstreamerPlayer/"
+                                  "@audioDevice");
+            isAttribute = true;
+            break;
+        
+        case cuePlayerDeviceName :
+            targetNode  = getNode("cuePlayer/audioPlayer/gstreamerPlayer/"
+                                  "@audioDevice");
+            isAttribute = true;
+            break;
+        
+        case authenticationServer :
+            targetNode  = getNode("authenticationClientFactory/"
+                                  "webAuthentication/location/@server");
+            isAttribute = true;
+            break;
+        
+        case authenticationPort :
+            targetNode  = getNode("authenticationClientFactory/"
+                                  "webAuthentication/location/@port");
+            isAttribute = true;
+            break;
+        
+        case authenticationPath :
+            targetNode  = getNode("authenticationClientFactory/"
+                                  "webAuthentication/location/@path");
+            isAttribute = true;
+            break;
+        
+        case storageServer :
+            targetNode  = getNode("storageClientFactory/"
+                                  "webStorage/location/@server");
+            isAttribute = true;
+            break;
+        
+        case storagePort :
+            targetNode  = getNode("storageClientFactory/"
+                                  "webStorage/location/@port");
+            isAttribute = true;
+            break;
+        
+        case storagePath :
+            targetNode  = getNode("storageClientFactory/"
+                                  "webStorage/location/@path");
+            isAttribute = true;
+            break;
+    }
+    
+    return targetNode;
 }
 
 

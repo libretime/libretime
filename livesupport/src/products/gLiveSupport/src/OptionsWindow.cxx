@@ -88,12 +88,15 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // build up the notepad for the various sections
     mainNotebook = Gtk::manage(new ScrolledNotebook);
-    Gtk::Box *      soundSectionBox = constructSoundSection();
-    Gtk::Box *      aboutSectionBox = constructAboutSection();
+    Gtk::Box *      soundSectionBox     = constructSoundSection();
+    Gtk::Box *      serversSectionBox   = constructServersSection();
+    Gtk::Box *      aboutSectionBox     = constructAboutSection();
 
     try {
         mainNotebook->appendPage(*soundSectionBox,
                                  *getResourceUstring("soundSectionLabel"));
+        mainNotebook->appendPage(*serversSectionBox,
+                                 *getResourceUstring("serversSectionLabel"));
         mainNotebook->appendPage(*aboutSectionBox,
                                  *getResourceUstring("aboutSectionLabel"));
 
@@ -142,7 +145,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // show everything
     set_name(windowName);
-    set_default_size(350, 300);
+    set_default_size(500, 400);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -169,29 +172,24 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
     Ptr<OptionsContainer>::Ref
             optionsContainer  = gLiveSupport->getOptionsContainer();
 
-    // check for changes in the Sound tab
-    Ptr<const Glib::ustring>::Ref
-            oldCueDevice      = optionsContainer->getOptionItem(
-                                    OptionsContainer::cuePlayerDeviceName );
-    Ptr<const Glib::ustring>::Ref
-            newCueDevice(new Glib::ustring(cuePlayerEntry->get_text()));
+    StringEntryListType::const_iterator it;
+    for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
     
-    if (*oldCueDevice != *newCueDevice) {
-        optionsContainer->setOptionItem(
-                                    OptionsContainer::cuePlayerDeviceName,
-                                    newCueDevice );
-    }
-    
-    Ptr<const Glib::ustring>::Ref
-            oldOutputDevice   = optionsContainer->getOptionItem(
-                                    OptionsContainer::outputPlayerDeviceName );
-    Ptr<const Glib::ustring>::Ref
-            newOutputDevice(new Glib::ustring(outputPlayerEntry->get_text()));
-    
-    if (*oldOutputDevice != *newOutputDevice) {
-        optionsContainer->setOptionItem(
-                                    OptionsContainer::outputPlayerDeviceName,
-                                    newOutputDevice );
+        OptionsContainer::OptionItemString  optionItem = it->first;
+        EntryBin *                          entry      = it->second;
+        
+        Ptr<const Glib::ustring>::Ref
+            oldValue = optionsContainer->getOptionItem(optionItem);
+        Ptr<const Glib::ustring>::Ref
+            newValue(new Glib::ustring(entry->get_text()));
+
+        if (*oldValue != *newValue) {
+            try {
+                optionsContainer->setOptionItem(optionItem, newValue);
+            } catch (std::invalid_argument &e) {
+                // TODO: signal error
+            }
+        }
     }
 }
 
@@ -222,32 +220,29 @@ OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Construct the "About" section.
+ *  Create a new user entry field item.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
-OptionsWindow :: constructAboutSection(void)                        throw ()
+EntryBin *
+OptionsWindow :: createEntry(OptionsContainer::OptionItemString  optionItem)
+                                                                    throw ()
 {
-    Glib::ustring   aboutLabelContents;
-    aboutLabelContents.append(PACKAGE_NAME);
-    aboutLabelContents.append(" ");
-    aboutLabelContents.append(PACKAGE_VERSION);
-    aboutLabelContents.append("\n\n");
-    try {
-        aboutLabelContents.append(*formatMessage("reportBugsToText",
-                                                 PACKAGE_BUGREPORT ));
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::Label *    aboutLabel = Gtk::manage(
-                                    new Gtk::Label(aboutLabelContents) );
+    Ptr<OptionsContainer>::Ref  optionsContainer
+                                   = gLiveSupport->getOptionsContainer();
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*aboutLabel, Gtk::PACK_SHRINK, 5);
+    EntryBin *  entry = Gtk::manage(wf->createEntryBin());
+
+    try {
+        entry->set_text(*optionsContainer->getOptionItem(optionItem));
+
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error?
+        entry->set_text("");
+    }
     
-    return section;
+    stringEntryList.push_back(std::make_pair(optionItem, entry));
+
+    return entry;
 }
 
 
@@ -277,11 +272,11 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
     }
     Gtk::Label *    cuePlayerLabel = Gtk::manage(
                                     new Gtk::Label(cuePlayerLabelContents) );
-    audioDeviceTable->attach(*cuePlayerLabel, 0, 1, 0, 1);
+    audioDeviceTable->attach(*cuePlayerLabel, 
+                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
     
-    cuePlayerEntry = Gtk::manage(wf->createEntryBin());
-    cuePlayerEntry->set_text(*optionsContainer->getOptionItem(
-                                    OptionsContainer::cuePlayerDeviceName ));
+    EntryBin *      cuePlayerEntry = createEntry(
+                                    OptionsContainer::cuePlayerDeviceName);
     audioDeviceTable->attach(*cuePlayerEntry, 1, 2, 0, 1);
     
     // display the settings for the output player device
@@ -296,16 +291,156 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
     }
     Gtk::Label *    outputPlayerLabel = Gtk::manage(
                                     new Gtk::Label(outputPlayerLabelContents) );
-    audioDeviceTable->attach(*outputPlayerLabel, 0, 1, 1, 2);
+    audioDeviceTable->attach(*outputPlayerLabel, 
+                                    0, 1, 1, 2, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
     
-    outputPlayerEntry = Gtk::manage(wf->createEntryBin());
-    outputPlayerEntry->set_text(*optionsContainer->getOptionItem(
-                                    OptionsContainer::outputPlayerDeviceName ));
+    EntryBin *      outputPlayerEntry = createEntry(
+                                    OptionsContainer::outputPlayerDeviceName);
     audioDeviceTable->attach(*outputPlayerEntry, 1, 2, 1, 2);
 
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
     section->pack_start(*audioDeviceTable,   Gtk::PACK_SHRINK, 5);
+    
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "Servers" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructServersSection(void)                      throw ()
+{
+    Ptr<OptionsContainer>::Ref  optionsContainer
+                                   = gLiveSupport->getOptionsContainer();
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    // the settings for the authentication server
+    Gtk::Table *    authenticationTable = Gtk::manage(new Gtk::Table);
+    authenticationTable->set_row_spacings(5);
+    authenticationTable->set_col_spacings(5);
+    
+    Gtk::Label *    authenticationLabel;
+    Gtk::Label *    authenticationServerLabel;
+    Gtk::Label *    authenticationPortLabel;
+    Gtk::Label *    authenticationPathLabel;
+    try {
+        authenticationLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("authenticationLabel") ));
+        authenticationServerLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("serverLabel") ));
+        authenticationPortLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("portLabel") ));
+        authenticationPathLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("pathLabel") ));
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    authenticationTable->attach(*authenticationLabel,
+                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
+    authenticationTable->attach(*authenticationServerLabel,
+                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+    authenticationTable->attach(*authenticationPortLabel,
+                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
+    authenticationTable->attach(*authenticationPathLabel,
+                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
+    
+    EntryBin *  authenticationServerEntry = createEntry(
+                                    OptionsContainer::authenticationServer);
+    EntryBin *  authenticationPortEntry   = createEntry(
+                                    OptionsContainer::authenticationPort);
+    EntryBin *  authenticationPathEntry   = createEntry(
+                                    OptionsContainer::authenticationPath);
+    
+    authenticationTable->attach(*authenticationServerEntry, 2, 3, 0, 1);
+    authenticationTable->attach(*authenticationPortEntry,   2, 3, 1, 2);
+    authenticationTable->attach(*authenticationPathEntry,   2, 3, 2, 3);
+    
+    // the settings for the storage server
+    Gtk::Table *    storageTable = Gtk::manage(new Gtk::Table);
+    storageTable->set_row_spacings(5);
+    storageTable->set_col_spacings(5);
+    
+    Gtk::Label *    storageLabel;
+    Gtk::Label *    storageServerLabel;
+    Gtk::Label *    storagePortLabel;
+    Gtk::Label *    storagePathLabel;
+    try {
+        storageLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("storageLabel") ));
+        storageServerLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("serverLabel") ));
+        storagePortLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("portLabel") ));
+        storagePathLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("pathLabel") ));
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    storageTable->attach(*storageLabel,
+                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
+    storageTable->attach(*storageServerLabel,
+                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+    storageTable->attach(*storagePortLabel,
+                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
+    storageTable->attach(*storagePathLabel,
+                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
+    
+    EntryBin *  storageServerEntry = createEntry(
+                                            OptionsContainer::storageServer);
+    EntryBin *  storagePortEntry   = createEntry(
+                                            OptionsContainer::storagePort);
+    EntryBin *  storagePathEntry   = createEntry(
+                                            OptionsContainer::storagePath);
+    
+    storageTable->attach(*storageServerEntry, 2, 3, 0, 1);
+    storageTable->attach(*storagePortEntry,   2, 3, 1, 2);
+    storageTable->attach(*storagePathEntry,   2, 3, 2, 3);
+    
+    // make a new box and pack the components into it
+    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*authenticationTable,   Gtk::PACK_SHRINK, 10);
+    section->pack_start(*storageTable,          Gtk::PACK_SHRINK, 10);
+    
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "About" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructAboutSection(void)                        throw ()
+{
+    Glib::ustring   aboutLabelContents;
+    aboutLabelContents.append("\n\n");
+    aboutLabelContents.append(PACKAGE_NAME);
+    aboutLabelContents.append(" ");
+    aboutLabelContents.append(PACKAGE_VERSION);
+    aboutLabelContents.append("\n\n");
+    try {
+        aboutLabelContents.append(*formatMessage("reportBugsToText",
+                                                 PACKAGE_BUGREPORT ));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::Label *    aboutLabel = Gtk::manage(
+                                    new Gtk::Label(aboutLabelContents) );
+
+    // make a new box and pack the components into it
+    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*aboutLabel, Gtk::PACK_SHRINK, 5);
     
     return section;
 }

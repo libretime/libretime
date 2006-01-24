@@ -68,6 +68,25 @@ using namespace LiveSupport::Core;
  */
 class OptionsContainer
 {
+    public:
+        /**
+         *  The list of string options one can set.
+         *  
+         *  These are options of type Glib::ustring; any string is accepted
+         *  as value, no range checking is done.
+         *  
+         *  For the moment, this is the only kind of option supported. 
+         */
+        typedef enum { outputPlayerDeviceName,
+                       cuePlayerDeviceName,
+                       authenticationServer,
+                       authenticationPort,
+                       authenticationPath,
+                       storageServer,
+                       storagePort,
+                       storagePath }    OptionItemString;
+        
+
     private:
         /**
          *  The XML document containing the options.
@@ -92,12 +111,31 @@ class OptionsContainer
         }
 
         /**
+         *  Find the node corresponding to an OptionItemString value.
+         *
+         *  If there is no matching node, it returns a 0 pointer.
+         *
+         *  @param  optionItem      the name of the item to find the node for
+         *  @param  isAttribute     return parameter; is set to true if the
+         *                              node is an attribute, false if it's
+         *                              a CDATA text
+         *  @return a pointer to the node found, or 0
+         *  @exception  std::invalid_argument   thrown by getNode() [should
+         *                                      never happen]
+         */
+        xmlpp::Node *
+        selectNode(OptionItemString     optionItem,
+                   bool &               isAttribute)
+                                                throw (std::invalid_argument);
+        
+        /**
          *  Return the first node matching an XPath string.
          *
          *  If there is no matching node, it returns a 0 pointer.
          *
          *  @param  xPath   the XPath of the node (from the root node)
          *  @return a pointer to the node found, or 0
+         *  @exception  std::invalid_argument   if the XPath is not well formed
          */
         xmlpp::Node *
         getNode(const Glib::ustring &   xPath)
@@ -131,17 +169,6 @@ class OptionsContainer
             return changed;
         }
 
-        /**
-         *  The list of string options one can set.
-         *  
-         *  These are options of type Glib::ustring; any string is accepted
-         *  as value, no range checking is done.
-         *  
-         *  For the moment, this is the only kind of option supported. 
-         */
-        typedef enum { outputPlayerDeviceName,
-                       cuePlayerDeviceName }    OptionItemString;
-        
         /**
          *  Set a string type option.
          *
