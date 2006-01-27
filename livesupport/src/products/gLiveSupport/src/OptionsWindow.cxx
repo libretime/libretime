@@ -220,6 +220,28 @@ OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the test button
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: onTestButtonClicked(const EntryBin *    entry)
+                                                                    throw ()
+{
+    Ptr<OptionsContainer>::Ref  optionsContainer
+                                   = gLiveSupport->getOptionsContainer();
+
+    Ptr<const Glib::ustring>::Ref
+        oldDevice = optionsContainer->getOptionItem(OptionsContainer::
+                                                        outputPlayerDeviceName);
+    Ptr<const Glib::ustring>::Ref
+        newDevice(new Glib::ustring(entry->get_text()));
+    
+    gLiveSupport->setCueAudioDevice(newDevice);     // NOTE: we can't use the
+    gLiveSupport->playTestSoundOnCue();             // output player b/c that
+    gLiveSupport->setCueAudioDevice(oldDevice);     // would trigger onStop()
+}
+
+
+/*------------------------------------------------------------------------------
  *  Create a new user entry field item.
  *----------------------------------------------------------------------------*/
 EntryBin *
@@ -279,6 +301,20 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
                                     OptionsContainer::cuePlayerDeviceName);
     audioDeviceTable->attach(*cuePlayerEntry, 1, 2, 0, 1);
     
+    Button *        cueTestButton;
+    try {
+        cueTestButton = Gtk::manage(wf->createButton(
+                                    *getResourceUstring("testButtonLabel") ));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    cueTestButton->signal_clicked().connect(sigc::bind<EntryBin*>(
+                sigc::mem_fun(*this,&OptionsWindow::onTestButtonClicked),
+                cuePlayerEntry));
+    audioDeviceTable->attach(*cueTestButton, 2, 3, 0, 1);
+    
     // display the settings for the output player device
     Glib::ustring   outputPlayerLabelContents;
     try {
@@ -297,6 +333,20 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
     EntryBin *      outputPlayerEntry = createEntry(
                                     OptionsContainer::outputPlayerDeviceName);
     audioDeviceTable->attach(*outputPlayerEntry, 1, 2, 1, 2);
+
+    Button *        outputTestButton;
+    try {
+        outputTestButton = Gtk::manage(wf->createButton(
+                                    *getResourceUstring("testButtonLabel") ));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    outputTestButton->signal_clicked().connect(sigc::bind<EntryBin*>(
+                sigc::mem_fun(*this, &OptionsWindow::onTestButtonClicked),
+                outputPlayerEntry));
+    audioDeviceTable->attach(*outputTestButton, 2, 3, 1, 2);
 
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);

@@ -231,6 +231,7 @@ root:table
         
         cueDeviceLabel:string       { "Cue audio device:" }
         outputDeviceLabel:string    { "Live Mode audio device:" }
+        testButtonLabel:string      { "Test" }
         
         authenticationLabel:string  { "Authentication server" }
         storageLabel:string         { "Storage server" }

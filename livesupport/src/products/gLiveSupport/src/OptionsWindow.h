@@ -152,7 +152,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          */
         EntryBin *
         createEntry(OptionsContainer::OptionItemString  optionItem)
-                                                            throw ();
+                                                                    throw ();
 
         /**
          *  Construct the "Sound" section.
@@ -160,7 +160,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
         Gtk::VBox*
-        constructSoundSection(void)                         throw ();
+        constructSoundSection(void)                                 throw ();
 
         /**
          *  Construct the "Servers" section.
@@ -168,7 +168,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
         Gtk::VBox*
-        constructServersSection(void)                       throw ();
+        constructServersSection(void)                               throw ();
 
         /**
          *  Construct the "About" section.
@@ -176,7 +176,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
         Gtk::VBox*
-        constructAboutSection(void)                         throw ();
+        constructAboutSection(void)                                 throw ();
 
 
     protected:
@@ -184,19 +184,19 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  Event handler for the Cancel button.
          */
         virtual void
-        onCancelButtonClicked(void)                         throw ();
+        onCancelButtonClicked(void)                                 throw ();
 
         /**
          *  Event handler for the Apply button.
          */
         virtual void
-        onApplyButtonClicked(void)                          throw ();
+        onApplyButtonClicked(void)                                  throw ();
 
         /**
          *  Event handler for the OK button.
          */
         virtual void
-        onOkButtonClicked(void)                             throw ();
+        onOkButtonClicked(void)                                     throw ();
 
         /**
          *  Event handler for the Close button.
@@ -207,9 +207,19 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @see    WhiteWindow::onCloseButtonClicked()
          */
         virtual void
-        onCloseButtonClicked(bool   needConfirm = true)     throw ();
+        onCloseButtonClicked(bool   needConfirm = true)             throw ();
 
-    
+        /**
+         *  Event handler for the test button
+         *
+         *  @param  entry   the text entry field containing the new device name
+         *  @see    GLiveSupport::setCueAudioDevice()
+         *  @see    GLiveSupport::playTestSoundOnCue()
+         */
+        virtual void
+        onTestButtonClicked(const EntryBin *    entry)              throw ();
+
+
     public:
         /**
          *  Constructor.
@@ -219,14 +229,13 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @param bundle the resource bundle holding localized resources
          */
         OptionsWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                      Ptr<ResourceBundle>::Ref   bundle)
-                                                            throw ();
+                      Ptr<ResourceBundle>::Ref   bundle)            throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~OptionsWindow(void)                                throw ()
+        ~OptionsWindow(void)                                        throw ()
         {
         }
 

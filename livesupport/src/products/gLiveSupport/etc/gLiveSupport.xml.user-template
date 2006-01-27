@@ -89,6 +89,9 @@
 <!ELEMENT stationLogo    EMPTY >
 <!ATTLIST stationLogo    path    CDATA   #REQUIRED >
 
+<!ELEMENT testAudioUrl   EMPTY >
+<!ATTLIST testAudioUrl   path    CDATA   #REQUIRED >
+
 <!ELEMENT metadataType EMPTY >
 <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
@@ -153,7 +156,9 @@
         </audioPlayer>
     </cuePlayer>
 
-    <stationLogo    path="var/stationLogo.png" />
+    <stationLogo    path = "var/stationLogo.png" />
+
+    <testAudioUrl   path = "file:var/testAudio.ogg" />
 
     <metadataTypeContainer>
         <metadataType dcName          = "dc:title"

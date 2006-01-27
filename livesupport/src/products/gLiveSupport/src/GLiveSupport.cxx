@@ -128,6 +128,11 @@ static const std::string cuePlayerElementName = "cuePlayer";
 static const std::string stationLogoConfigElementName = "stationLogo";
 
 /*------------------------------------------------------------------------------
+ *  The name of the config element for the test audio file location
+ *----------------------------------------------------------------------------*/
+static const std::string testAudioUrlConfigElementName = "testAudioUrl";
+
+/*------------------------------------------------------------------------------
  *  The name of the user preference for storing Scratchpad contents
  *----------------------------------------------------------------------------*/
 static const std::string scratchpadContentsKey = "scratchpadContents";
@@ -333,6 +338,17 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     mkdir(configFileName->c_str(), 0700);   // create dir if does not exist
     configFileName->append(configFileNameStr);
     optionsContainer.reset(new OptionsContainer(element, configFileName));
+    
+    // read the test audio file location
+    nodes = element.get_children(testAudioUrlConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no test audio url element");
+    }
+    const xmlpp::Element*  testAudioUrlElement 
+                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
+    testAudioUrl.reset(new Glib::ustring(
+                           testAudioUrlElement->get_attribute("path")
+                                              ->get_value() ));
 }
 
 
@@ -1485,5 +1501,42 @@ GLiveSupport :: loadWindowPositions(void)                           throw ()
         
         windowPositions[windowName] = pos;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the device for the cue audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: setCueAudioDevice(Ptr<const Glib::ustring>::Ref  deviceName)
+                                                                    throw ()
+{
+    cuePlayer->setAudioDevice(*deviceName);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a test sound on the cue audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: playTestSoundOnCue(void)                            throw ()
+{
+    if (cueItemPlayingNow) {
+        stopCueAudio();     // stop the audio player and
+    }                       // release old resources
+    
+    try {
+        cuePlayer->open(*testAudioUrl);
+        cuePlayer->start();
+        Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+        while (cuePlayer->isPlaying()) {
+            TimeConversion::sleep(sleepT);
+        }
+    } catch (std::runtime_error &e) {
+        // "invalid device" error from open(); do nothing
+    }
+    cuePlayer->close();
 }
 

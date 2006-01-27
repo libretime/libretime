@@ -301,3 +301,41 @@ AudioPlayerTest :: playPlaylistTest(void)
     audioPlayer->close();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test if we can switch back and forth between devices.
+ *----------------------------------------------------------------------------*/
+void
+AudioPlayerTest :: switchDevicesTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<AudioPlayerFactory>::Ref        audioPlayerFactory;
+    audioPlayerFactory = AudioPlayerFactory::getInstance();
+    CPPUNIT_ASSERT(audioPlayerFactory.get());
+
+    Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+    audioPlayer = audioPlayerFactory->getAudioPlayer();
+    CPPUNIT_ASSERT(audioPlayer.get());
+
+    audioPlayer->setAudioDevice("/dev/dsp");
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->open("file:var/testAudio.ogg")
+    );
+    audioPlayer->start();
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+    while (audioPlayer->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    audioPlayer->close();
+    
+    audioPlayer->setAudioDevice("plughw:0,0");
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->open("file:var/testAudio.ogg")
+    );
+    audioPlayer->start();
+    while (audioPlayer->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    audioPlayer->close();
+}
+

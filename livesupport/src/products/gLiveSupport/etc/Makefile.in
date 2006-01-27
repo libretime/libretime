@@ -341,8 +341,10 @@ install: all
 	${MKDIR} ${USR_ETC_DIR}
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport
 	${CP} ${TMP_DIR}/*.res ${USR_VAR_DIR}/LiveSupport
-	${CP} ${VAR_DIR}/livesupport.png ${VAR_DIR}/stationLogo.png \
-	      ${USR_VAR_DIR}/LiveSupport
+	${CP} ${VAR_DIR}/livesupport.png \
+	      ${VAR_DIR}/stationLogo.png \
+	      ${VAR_DIR}/testAudio.ogg \
+	      ${VAR_DIR}/testAudio.ogg.license ${USR_VAR_DIR}/LiveSupport
 	${CP} ${BIN_DIR}/gLiveSupport.sh ${USR_BIN_DIR}
 	${CP} ${G_LIVESUPPORT_EXE} ${USR_BIN_DIR}
 	${CP} ${ETC_DIR}/gLiveSupport.xml.template ${USR_ETC_DIR}

@@ -105,12 +105,23 @@ class EntryBin : public BlueBin
         }
 
         /**
+         *  Return the entry held in this container (const version).
+         *
+         *  @return the entry held in this container.
+         */
+        const Gtk::Entry *
+        getEntry(void) const                                throw ()
+        {
+            return entry;
+        }
+
+        /**
          *  Return the text of the entry.
          *
          *  @return the get_text() string of the Gtk::Entry.
          */
         Glib::ustring
-        get_text(void)                                      throw ()
+        get_text(void) const                                throw ()
         {
             return getEntry()->get_text();
         }

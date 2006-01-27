@@ -255,6 +255,11 @@ class GLiveSupport : public LocalizedConfigurable,
         Glib::RefPtr<Gdk::Pixbuf>       stationLogoPixbuf;
 
         /**
+         *  The location of the test audio file.
+         */
+        Ptr<Glib::ustring>::Ref        testAudioUrl;
+
+        /**
          *  Read a supportedLanguages configuration element,
          *  and fill the supportedLanguages map with its contents.
          *
@@ -906,6 +911,21 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         detachCueAudioListener(AudioPlayerEventListener *   listener)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Set the device for the cue audio player.
+         *
+         *  @param  deviceName  the name of the new device
+         */
+        void
+        setCueAudioDevice(Ptr<const Glib::ustring>::Ref     deviceName)
+                                                throw ();
+
+        /**
+         *  Play a test sound on the cue audio player.
+         */
+        void
+        playTestSoundOnCue(void)                throw ();
 
         /**
          *  Search in the local storage.
