@@ -73,7 +73,6 @@ class AudioPlayerTest : public BaseTestMethod
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(playAudioClipTest);
     CPPUNIT_TEST(playPlaylistTest);
-    CPPUNIT_TEST(switchDevicesTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -108,14 +107,6 @@ class AudioPlayerTest : public BaseTestMethod
          */
         void
         playPlaylistTest(void)                  throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Test if we can switch back and forth between devices.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        switchDevicesTest(void)                 throw (CPPUNIT_NS::Exception);
 
     public:
         
