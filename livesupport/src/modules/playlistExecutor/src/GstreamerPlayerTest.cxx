@@ -272,6 +272,17 @@ GstreamerPlayerTest :: setDeviceTest(void)
     CPPUNIT_ASSERT(playlength->seconds() == 2);
     CPPUNIT_ASSERT(!player->isPlaying());
 
+    // test playing on ALSA after playing on OSS
+    player->close();
+    CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
+    CPPUNIT_ASSERT_NO_THROW(
+        player->open("file:var/test-short.mp3")
+    );
+    player->start();
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
 
     player->close();
     player->deInitialize();
