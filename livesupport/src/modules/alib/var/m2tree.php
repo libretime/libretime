@@ -1,4 +1,4 @@
-<?
+<?php
 define('ALIBERR_MTREE', 10);
 
 /**
