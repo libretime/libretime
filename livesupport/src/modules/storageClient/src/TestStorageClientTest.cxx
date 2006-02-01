@@ -74,7 +74,7 @@ static const std::string configFileName = "etc/testStorage.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: setUp(void)                         throw ()
+TestStorageClientTest :: setUp(void)            throw (CPPUNIT_NS::Exception)
 {
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(

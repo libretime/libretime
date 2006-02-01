@@ -89,7 +89,7 @@ static const std::string authenticationFactoryConfigFileName
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-WebStorageClientTest :: setUp(void)                         throw ()
+WebStorageClientTest :: setUp(void)             throw (CPPUNIT_NS::Exception)
 {
     Ptr<AuthenticationClientFactory>::Ref   acf;
     acf             = AuthenticationClientFactory::getInstance();
@@ -101,9 +101,15 @@ WebStorageClientTest :: setUp(void)                         throw ()
 
         acf->configure(*root);
     } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
+        std::string     eMsg = "semantic error in "
+                               "authentication configuration file:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL("error parsing authentication configuration file");
+        std::string     eMsg = "error parsing "
+                               "authentication configuration file:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     }
 
     authentication  = acf->getAuthenticationClient();
@@ -116,12 +122,21 @@ WebStorageClientTest :: setUp(void)                         throw ()
 
         wsc.reset(new WebStorageClient());
         wsc->configure(*root);
-        wsc->reset();
     } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in storage configuration file");
+        std::string     eMsg = "semantic error in "
+                               "authentication configuration file:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL("error parsing storage configuration file");
+        std::string     eMsg = "error parsing "
+                               "authentication configuration file:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     }
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->reset()
+    );
 }
 
 
