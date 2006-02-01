@@ -143,6 +143,15 @@ class ZebraTreeView : public Gtk::TreeView
             signalCellEdited().emit(path, columnId, newText);
         }
 
+        /**
+         *  Renumber the rows after they have changed.
+         *
+         *  This is called from the onRowInserted(), onRowDeleted() and
+         *  onRowsReordered() signal handlers.
+         */
+        void
+        renumberRows(void)                                      throw ();
+
 
     protected:
     
@@ -153,6 +162,42 @@ class ZebraTreeView : public Gtk::TreeView
                      const Glib::ustring &, 
                      int, 
                      const Glib::ustring &>     signalCellEditedObject;
+
+        /**
+         *  Event handler for the row_inserted signal.
+         *
+         *  @param  path    a path pointing to the inserted row.
+         *  @param  iter    an iterator pointing to the inserted row.
+         */
+        void
+        onRowInserted(const Gtk::TreeModel::Path &      path,
+                      const Gtk::TreeModel::iterator &  iter)
+                                                                throw ();
+
+        /**
+         *  Event handler for the row_deleted signal.
+         *
+         *  @param  path    points to the previous location of the deleted row.
+         */
+        void
+        onRowDeleted(const Gtk::TreeModel::Path &   path)       throw ();
+
+        /**
+         *  Event handler for the rows_reordered signal.
+         *
+         *  @param  path    points to the tree node whose children have been
+         *                  reordered.
+         *  @param  iter    points to the node whose children have been
+         *                  reordered, or 0 if the depth of path is 0.
+         *  @param  mapping an array of integers mapping the current position 
+         *                  of each child to its old position before the 
+         *                  re-ordering, i.e. mapping[newpos] = oldpos.
+         */
+        void
+        onRowsReordered(const Gtk::TreeModel::Path &      path,
+                        const Gtk::TreeModel::iterator&   iter,
+                        int*                              mapping)
+                                                                throw ();
 
 
     public:

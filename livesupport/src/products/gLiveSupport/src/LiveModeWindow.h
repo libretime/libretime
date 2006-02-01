@@ -192,29 +192,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
-         *  Signal handler for the "rows reordered" event.
-         */
-        void
-        onRowsReordered(const Gtk::TreeModel::Path &      path,
-                        const Gtk::TreeModel::iterator&   iter,
-                        int*                              newToOldMapping)
-                                                                throw ()
-        {
-//            std::cerr << "rows changed: " << path.to_string() << "; "
-//                      << "iter: " << (iter ? "true" : "false") << "\n";
-        }
-
-        /**
-         *  Signal handler for the "row deleted" event.
-         */
-        void
-        onRowDeleted(const Gtk::TreeModel::Path &   path)       throw ()
-        {
-//            std::cerr << "rows deleted: " << path.to_string() << ";\n";
-            treeView->columns_autosize();
-        }
-
-        /**
          *  Function to catch the event of the close button being pressed.
          */
         virtual void

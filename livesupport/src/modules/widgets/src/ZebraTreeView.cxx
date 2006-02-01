@@ -62,6 +62,12 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
                                                                 throw ()
                 : Gtk::TreeView(treeModel)
 {
+    treeModel->signal_row_inserted().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowInserted));
+    treeModel->signal_row_deleted().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowDeleted));
+    treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowsReordered));
 }
 
 
@@ -434,3 +440,62 @@ ZebraTreeView :: removeItem(const Gtk::TreeModel::iterator &   iter)
     
     treeModel->erase(iter);
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the row_inserted signal.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRowInserted(const Gtk::TreeModel::Path &      path,
+                               const Gtk::TreeModel::iterator &  iter)
+                                                                    throw ()
+{
+    renumberRows();
+    columns_autosize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the row_deleted signal.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRowDeleted(const Gtk::TreeModel::Path &      path)
+                                                                    throw ()
+{
+    renumberRows();
+    columns_autosize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the rows_reordered signal.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRowsReordered(const Gtk::TreeModel::Path &      path,
+                                 const Gtk::TreeModel::iterator &  iter,
+                                 int*                              mapping)
+                                                                    throw ()
+{
+    renumberRows();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Renumber the rows after they have changed.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: renumberRows(void)                                 throw ()
+{
+    Glib::RefPtr<Gtk::TreeModel>    treeModel = get_model();
+    ZebraTreeModelColumnRecord      modelColumns;
+    int                             rowNumber = 0;
+    Gtk::TreeModel::iterator        iter;
+
+    for (iter = treeModel->children().begin(); 
+                            iter != treeModel->children().end(); ++iter) {
+        Gtk::TreeRow    row = *iter;
+        row[modelColumns.rowNumberColumn] = rowNumber;
+        ++rowNumber;
+    }
+}
+

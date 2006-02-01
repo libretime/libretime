@@ -88,13 +88,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     
     // Create the tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
-    treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onRowsReordered));
-    treeModel->signal_row_deleted().connect(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onRowDeleted));
     
     // ... and the tree view:
     treeView = Gtk::manage(wf->createTreeView(treeModel));
+    treeView->set_reorderable(true);
     treeView->set_headers_visible(false);
     treeView->set_enable_search(false);
 
@@ -262,13 +259,6 @@ LiveModeWindow :: popTop(void)                                      throw ()
         treeModel->erase(iter);
     }
 
-    for (iter = treeModel->children().begin(); 
-                            iter != treeModel->children().end(); ++iter) {
-        Gtk::TreeRow    row = *iter;
-        int     rowNumber = row[modelColumns.rowNumberColumn];
-        row[modelColumns.rowNumberColumn] = --rowNumber;
-    }
-    
     return playable;
 }
 
