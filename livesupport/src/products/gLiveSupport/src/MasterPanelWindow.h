@@ -470,7 +470,9 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Update the Scratchpad window.
          */
         void
-        updateScratchpadWindow(void)                            throw ();
+        updateScratchpadWindow(Ptr<Playable>::Ref   playable
+                                                    = Ptr<Playable>::Ref())
+                                                                throw ();
 
         /**
          *  Update the Simple Playlist Management Window

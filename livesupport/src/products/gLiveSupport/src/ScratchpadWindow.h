@@ -99,6 +99,18 @@ class ScratchpadWindow : public WhiteWindow,
         void
         selectRow(Ptr<Playable>::Ref    playable)               throw ();
 
+        /**
+         *  Remove an item from the Scratchpad.
+         *  If an item with the specified unique ID is found, it is removed.
+         *  (There should never be more than one entry with the same ID;
+         *  if there are, then only the first one is removed.)
+         *  If no such item is found, the function does nothing.
+         *
+         *  @param id the id of the item to remove.
+         */
+        void
+        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
+
 
     protected:
 
@@ -268,27 +280,6 @@ class ScratchpadWindow : public WhiteWindow,
         onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
-         *  Signal handler for the "up" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onUpItem(void)                                          throw ();
-
-        /**
-         *  Signal handler for the "down" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onDownItem(void)                                        throw ();
-
-        /**
-         *  Signal handler for the "remove" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onRemoveItem(void)                                      throw ();
-        
-        /**
          *  Signal handler for the "edit playlist" menu item selected from
          *  the entry context menu.
          */
@@ -343,18 +334,42 @@ class ScratchpadWindow : public WhiteWindow,
         }
 
         /**
-         *  Update the window contents, with the contents of the Scratchpad.
+         *  Add an item to the Scratchpad.
+         *  If it was already in the Scratchpad, move it to the top.
+         *
+         *  @param playable the Playable object to add.
          */
         void
-        showContents(void)                                      throw ();
+        addItem(Ptr<Playable>::Ref    playable)                 throw ();
 
         /**
-         *  Remove an item from the Scratchpad.
+         *  Add an item to the Scratchpad.
+         *  If it was already in the Scratchpad, move it to the top.
          *
-         *  @param id the id of the item to remove.
+         *  @param id the id of the item to add.
          */
         void
-        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
+        addItem(Ptr<UniqueId>::Ref    id)                       throw ();
+
+        /**
+         *  Return the contents of the Scratchpad.
+         *
+         *  @return a space-separated list of the unique IDs, in base 10.
+         *  @see restore()
+         */
+        Ptr<Glib::ustring>::Ref
+        contents()                                              throw ();
+
+        /**
+         *  Restore the contents of the Scratchpad.
+         *  The current contents are discarded, and replaced with the items
+         *  listed in the 'contents' parameter.
+         *
+         *  @param contents a space-separated list of unique IDs, in base 10.
+         *  @see contents()
+         */
+        void
+        restore(Ptr<Glib::ustring>::Ref     contents)           throw ();
 };
 
 /* ================================================= external data structures */

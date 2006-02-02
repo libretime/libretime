@@ -61,6 +61,8 @@
 namespace LiveSupport {
 namespace GLiveSupport {
 
+class ScratchpadWindow;     // forward declaration to avoid circularity
+
 using namespace LiveSupport::Core;
 using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::Authentication;
@@ -129,7 +131,7 @@ class GLiveSupport : public LocalizedConfigurable,
                          const std::string>         LanguageMap;
 
         /**
-         *  The type of the list for storing the Scratchpad contents.
+         *  The type of the list of search results.
          *  This is a list holding Ptr<Playable>::Ref references.
          */
         typedef std::list<Ptr<Playable>::Ref>       PlayableList;
@@ -218,11 +220,6 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<PlaylistMap>::Ref           opennedPlaylists;
 
         /**
-         *  The contents of a Scratchpad, stored as a list.
-         */
-        Ptr<PlayableList>::Ref          scratchpadContents;
-
-        /**
          *  The one and only playlist that may be edited at any one time.
          */
         Ptr<Playlist>::Ref              editedPlaylist;
@@ -270,18 +267,6 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         configSupportedLanguages(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument);
-
-        /**
-         *  Store the contents of the Scratchpad as a user preference.
-         */
-        void
-        storeScratchpadContents(void)                           throw ();
-
-        /**
-         *  Load the contents of the Scratchpad as a user preference.
-         */
-        void
-        loadScratchpadContents(void)                            throw ();
 
         /**
          *  Emit the "edited playlist has been modified" signal.
@@ -355,7 +340,6 @@ class GLiveSupport : public LocalizedConfigurable,
                 : outputPlayerIsPaused(false),
                   cuePlayerIsPaused(false)
         {
-            scratchpadContents.reset(new PlayableList());
             opennedAudioClips.reset(new AudioClipMap());
             opennedPlaylists.reset(new PlaylistMap());
         }
@@ -550,17 +534,6 @@ class GLiveSupport : public LocalizedConfigurable,
         addToScratchpad(Ptr<Playable>::Ref  playable)           throw ();
 
         /**
-         *  Return the Scratchpad contents.
-         *
-         *  @return the list holding the Scratchpad contents.
-         */
-        Ptr<PlayableList>::Ref
-        getScratchpadContents(void)                             throw ()
-        {
-            return scratchpadContents;
-        }
-
-        /**
          *  Reset the storage behind GLiveSupport.
          *  Used for testing only.
          *
@@ -684,6 +657,22 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Acquire a playable object.
+         *  Calls either acquireAudioClip() or acquirePlaylist().
+         *
+         *  @param id the id of the playable object.
+         *  @return the playable object acquired.
+         *          note that the returned Playable does not have to be
+         *          released, this will be done by the caching system
+         *          automatically.
+         *  @exception XmlRpcException if no Playable with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<Playable>::Ref
+        acquirePlayable(Ptr<UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -1055,6 +1044,24 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return optionsContainer;
         }
+
+        /**
+         *  Store the contents of the Scratchpad as a user preference.
+         *
+         *  @param  window  the ScratchpadWindow to query.
+         */
+        void
+        storeScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+                                                                throw ();
+
+        /**
+         *  Load the contents of the Scratchpad as a user preference.
+         *
+         *  @param  window  the ScratchpadWindow to restore the contents of.
+         */
+        void
+        loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+                                                                throw ();
 };
 
 /* ================================================= external data structures */

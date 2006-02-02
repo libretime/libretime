@@ -545,7 +545,6 @@ GLiveSupport :: login(const std::string & login,
         }
     }
 
-    loadScratchpadContents();
     loadWindowPositions();
     
     return true;
@@ -573,9 +572,6 @@ GLiveSupport :: logout(void)                                throw ()
     storeWindowPositions();
     windowPositions.clear();
     
-    storeScratchpadContents();
-    scratchpadContents->clear();
-    
     authentication->logout(sessionId);
     sessionId.reset();
     
@@ -592,31 +588,20 @@ GLiveSupport :: logout(void)                                throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: storeScratchpadContents(void)               throw ()
+GLiveSupport :: storeScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+                                                            throw ()
 {
-    // just store this as a space-delimited list of ids
-    std::ostringstream                      prefsString;
-    GLiveSupport::PlayableList::iterator    it;
-    GLiveSupport::PlayableList::iterator    end;
-    Ptr<Playable>::Ref                      playable;
-
-    it  = scratchpadContents->begin();
-    end = scratchpadContents->end();
-    while (it != end) {
-        playable  = *it;
-        prefsString << playable->getId()->getId() << " ";
-
-        ++it;
-    }
-
-    Ptr<Glib::ustring>::Ref  prefsUstring(new Glib::ustring(prefsString.str()));
+    Ptr<Glib::ustring>::Ref     scratchpadContents = window->contents();
+    
     try {
         authentication->savePreferencesItem(sessionId,
                                             scratchpadContentsKey,
-                                            prefsUstring);
+                                            scratchpadContents);
     } catch (XmlRpcException &e) {
         // TODO: signal error
-        std::cerr << "error saving user preferences: " << e.what() << std::endl;
+        std::cerr << "error saving user preferences: " 
+                    << e.what() 
+                    << std::endl;
     }
 }
 
@@ -626,12 +611,14 @@ GLiveSupport :: storeScratchpadContents(void)               throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: loadScratchpadContents(void)                throw ()
+GLiveSupport :: loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+                                                            throw ()
 {
-    Ptr<Glib::ustring>::Ref     prefsUstring;
+    Ptr<Glib::ustring>::Ref     scratchpadContents;
 
     try {
-        prefsUstring = authentication->loadPreferencesItem(sessionId,
+        scratchpadContents = authentication->loadPreferencesItem(
+                                                        sessionId,
                                                         scratchpadContentsKey);
     } catch (XmlRpcException &e) {
         // TODO: signal error
@@ -643,30 +630,7 @@ GLiveSupport :: loadScratchpadContents(void)                throw ()
         return;
     }
     
-    // load the prefs, which is a space-delimited list
-    std::istringstream          prefsString(prefsUstring->raw());
-    Ptr<Playable>::Ref          playable;
-
-    while (!prefsString.eof()) {
-        UniqueId::IdType        idValue;
-        Ptr<UniqueId>::Ref      id;
-
-        prefsString >> idValue;
-        if (prefsString.fail()) {
-            break;
-        }
-        id.reset(new UniqueId(idValue));
-
-        // now we have the id, get the corresponding playlist or audio clip from
-        // the storage
-        if (existsPlaylist(id)) {
-            Ptr<Playlist>::Ref  playlist = acquirePlaylist(id);
-            scratchpadContents->push_back(playlist);
-        } else if (existsAudioClip(id)) {
-            Ptr<AudioClip>::Ref clip = acquireAudioClip(id);
-            scratchpadContents->push_back(clip);
-        }
-    }
+    window->restore(scratchpadContents);
 }
 
 
@@ -781,6 +745,27 @@ GLiveSupport :: acquirePlaylist(Ptr<UniqueId>::Ref  id)
 
 
 /*------------------------------------------------------------------------------
+ *  Acquire an Playable object.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: acquirePlayable(Ptr<UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<Playable>::Ref  playable;
+    
+    if (existsPlaylist(id)) {
+        playable = acquirePlaylist(id);
+
+    } else if (existsAudioClip(id)) {
+        playable = acquireAudioClip(id);
+    }
+
+    return playable;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Release all openned audio clips.
  *----------------------------------------------------------------------------*/
 void
@@ -873,27 +858,14 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
-    // make sure playable is in the appropriate cache as well
     if (playable->getType() == Playable::AudioClipType) {
         acquireAudioClip(playable->getId());
     } else if (playable->getType() == Playable::PlaylistType) {
         acquirePlaylist(playable->getId());
     }
 
-    // erase previous reference from list, if it's still in there
-    PlayableList::iterator  it;
-    for (it = scratchpadContents->begin(); it != scratchpadContents->end();
-                                                                     ++it) {
-        Ptr<Playable>::Ref  listElement = *it;
-        if (*listElement->getId() == *playable->getId()) {
-            scratchpadContents->erase(it);
-            break;
-        }
-    }
-
-    // add to list
-    scratchpadContents->push_front(playable);
-    masterPanel->updateScratchpadWindow();   
+    // this will also add it to the local cache
+    masterPanel->updateScratchpadWindow(playable);
 }
 
 

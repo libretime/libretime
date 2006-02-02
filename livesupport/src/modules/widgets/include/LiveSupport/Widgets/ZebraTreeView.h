@@ -152,6 +152,17 @@ class ZebraTreeView : public Gtk::TreeView
         void
         renumberRows(void)                                      throw ();
 
+        /**
+         *  Find the selected row.
+         *  Returns the selected row (if the selection type is single),
+         *  or the first selected row (if the selection type is multiple).
+         *  May return 0 if no row is selected.
+         *
+         *  @return     an iterator pointing to the selected row; or 0.
+         */
+        Gtk::TreeModel::iterator
+        getSelectedRow(void)                                    throw ();
+
 
     protected:
     

@@ -438,7 +438,8 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
  *  The event when the Scratchpad button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateScratchpadWindow(void)                   throw ()
+MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
+                                                                     throw ()
 {
     if (!scratchpadWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -449,11 +450,14 @@ MasterPanelWindow :: updateScratchpadWindow(void)                   throw ()
             return;
         }
         scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport, bundle));
+        gLiveSupport->loadScratchpadContents(scratchpadWindow);
         gLiveSupport->getWindowPosition(scratchpadWindow);
     }
 
-    scratchpadWindow->showContents();
-
+    if (playable) {
+        scratchpadWindow->addItem(playable);
+    }
+    
     if (!scratchpadWindow->is_visible()) {
         gLiveSupport->getWindowPosition(scratchpadWindow);
         scratchpadWindow->show();
@@ -606,6 +610,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         uploadFileWindow.reset();
     }
     if (scratchpadWindow.get()) {
+        gLiveSupport->storeScratchpadContents(scratchpadWindow);
         if (scratchpadWindow->is_visible()) {
             gLiveSupport->putWindowPosition(scratchpadWindow);
             scratchpadWindow->hide();

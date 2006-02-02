@@ -359,11 +359,11 @@ ZebraTreeView :: appendEditableColumn(
 void
 ZebraTreeView :: onUpMenuOption(void)                               throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
-    Gtk::TreeModel::iterator                iter = selection->get_selected();
-    Glib::RefPtr<Gtk::ListStore>            treeModel
+    Gtk::TreeModel::iterator        iter = getSelectedRow();
+    
+    Glib::RefPtr<Gtk::ListStore>    treeModel
                     = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
-    ZebraTreeModelColumnRecord              modelColumns;
+    ZebraTreeModelColumnRecord      modelColumns;
 
     if (iter && iter != treeModel->children().begin()) {
         Gtk::TreeModel::iterator    previous = iter;
@@ -384,11 +384,11 @@ ZebraTreeView :: onUpMenuOption(void)                               throw ()
 void
 ZebraTreeView :: onDownMenuOption(void)                             throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
-    Gtk::TreeModel::iterator                iter = selection->get_selected();
-    Glib::RefPtr<Gtk::ListStore>            treeModel
+    Gtk::TreeModel::iterator        iter = getSelectedRow();
+
+    Glib::RefPtr<Gtk::ListStore>    treeModel
                     = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
-    ZebraTreeModelColumnRecord              modelColumns;
+    ZebraTreeModelColumnRecord      modelColumns;
 
     if (iter) {
         Gtk::TreeModel::iterator    next = iter;
@@ -411,8 +411,7 @@ ZebraTreeView :: onDownMenuOption(void)                             throw ()
 void
 ZebraTreeView :: onRemoveMenuOption(void)                           throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
-    Gtk::TreeModel::iterator                iter = selection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelectedRow();
 
     if (iter) {
         removeItem(iter);
@@ -427,11 +426,11 @@ void
 ZebraTreeView :: removeItem(const Gtk::TreeModel::iterator &   iter)
                                                                     throw ()
 {
-    Glib::RefPtr<Gtk::ListStore>            treeModel
+    Glib::RefPtr<Gtk::ListStore>    treeModel
                     = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
-    ZebraTreeModelColumnRecord              modelColumns;
+    ZebraTreeModelColumnRecord      modelColumns;
 
-    Gtk::TreeModel::iterator    later = iter;
+    Gtk::TreeModel::iterator        later = iter;
 
     int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
     for (++later; later != treeModel->children().end(); ++later) {
@@ -439,6 +438,36 @@ ZebraTreeView :: removeItem(const Gtk::TreeModel::iterator &   iter)
     }
     
     treeModel->erase(iter);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Find the selected row.
+ *----------------------------------------------------------------------------*/
+Gtk::TreeModel::iterator
+ZebraTreeView :: getSelectedRow(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
+    std::vector<Gtk::TreePath>              selectedRows;
+    Gtk::TreeModel::iterator                it;
+    
+    switch (selection->get_mode()) {
+        case Gtk::SELECTION_SINGLE:
+                it = selection->get_selected();
+                break;
+
+        case Gtk::SELECTION_MULTIPLE:
+                selectedRows = selection->get_selected_rows();
+                if (selectedRows.size() > 0) {
+                    it = get_model()->get_iter(selectedRows.front());
+                }
+                break;
+
+        default:
+                break;
+    }
+    
+    return it;
 }
 
 
