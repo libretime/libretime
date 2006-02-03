@@ -284,8 +284,7 @@ SchedulerWindow :: onDeleteItem(void)                       throw ()
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
         if (iter) {
-            Ptr<const UniqueId>::Ref uid = (*iter)[entryColumns->idColumn];
-            Ptr<UniqueId>::Ref       entryId(new UniqueId(uid->getId()));
+            Ptr<const UniqueId>::Ref entryId = (*iter)[entryColumns->idColumn];
 
             try {
                 gLiveSupport->removeFromSchedule(entryId);

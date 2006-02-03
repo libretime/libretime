@@ -666,7 +666,7 @@ GLiveSupport :: showLoggedInUI(void)                        throw ()
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: getAudioClip(Ptr<UniqueId>::Ref  id)
+GLiveSupport :: getAudioClip(Ptr<const UniqueId>::Ref  id)
                                                         throw (XmlRpcException)
 {
     Ptr<AudioClip>::Ref     clip;
@@ -687,7 +687,7 @@ GLiveSupport :: getAudioClip(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: acquireAudioClip(Ptr<UniqueId>::Ref  id)
+GLiveSupport :: acquireAudioClip(Ptr<const UniqueId>::Ref  id)
                                                         throw (XmlRpcException)
 {
     Ptr<AudioClip>::Ref     clip;
@@ -708,7 +708,7 @@ GLiveSupport :: acquireAudioClip(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: getPlaylist(Ptr<UniqueId>::Ref  id)
+GLiveSupport :: getPlaylist(Ptr<const UniqueId>::Ref  id)
                                                         throw (XmlRpcException)
 {
     Ptr<Playlist>::Ref      playlist;
@@ -729,7 +729,7 @@ GLiveSupport :: getPlaylist(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: acquirePlaylist(Ptr<UniqueId>::Ref  id)
+GLiveSupport :: acquirePlaylist(Ptr<const UniqueId>::Ref  id)
                                                         throw (XmlRpcException)
 {
     Ptr<Playlist>::Ref      playlist;
@@ -749,7 +749,7 @@ GLiveSupport :: acquirePlaylist(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 Ptr<Playable>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: acquirePlayable(Ptr<UniqueId>::Ref  id)
+GLiveSupport :: acquirePlayable(Ptr<const UniqueId>::Ref  id)
                                                         throw (XmlRpcException)
 {
     Ptr<Playable>::Ref  playable;
@@ -770,7 +770,8 @@ GLiveSupport :: acquirePlayable(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: uncachePlaylist(Ptr<UniqueId>::Ref  id)     throw ()
+GLiveSupport :: uncachePlaylist(Ptr<const UniqueId>::Ref  id)
+                                                        throw ()
 {
     Ptr<Playlist>::Ref      playlist;
     PlaylistMap::iterator   it;
@@ -874,7 +875,7 @@ GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
+GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref    playable)
                                                             throw ()
 {
     masterPanel->updateLiveModeWindow(playable);
@@ -898,7 +899,7 @@ GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
+GLiveSupport :: openPlaylistForEditing(Ptr<const UniqueId>::Ref   playlistId)
                                                     throw (XmlRpcException)
 {
     cancelEditedPlaylist();
@@ -973,16 +974,12 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
         openPlaylistForEditing();
     }
 
-    // for some weird reason, the storage functions won't accept
-    // Ptr<const UniqueId>::Ref, just a non-const version
-    Ptr<UniqueId>::Ref  uid(new UniqueId(id->getId()));
-
     // append the appropriate playable object to the end of the playlist
-    if (existsPlaylist(uid)) {
-        Ptr<Playlist>::Ref      playlist = getPlaylist(uid);
+    if (existsPlaylist(id)) {
+        Ptr<Playlist>::Ref      playlist = getPlaylist(id);
         editedPlaylist->addPlaylist(playlist, editedPlaylist->getPlaylength());
-    } else if (existsAudioClip(uid)) {
-        Ptr<AudioClip>::Ref clip = getAudioClip(uid);
+    } else if (existsAudioClip(id)) {
+        Ptr<AudioClip>::Ref clip = getAudioClip(id);
         editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
     }
 
@@ -1041,10 +1038,14 @@ GLiveSupport :: schedulePlaylist(Ptr<Playlist>::Ref             playlist,
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
+GLiveSupport :: removeFromSchedule(Ptr<const UniqueId>::Ref   scheduleEntryId)
                                                     throw (XmlRpcException)
 {
-    scheduler->removeFromSchedule(sessionId, scheduleEntryId);
+    // for some weird reason, the schedule functions won't accept
+    // Ptr<const UniqueId>::Ref, just a non-const version
+    Ptr<UniqueId>::Ref  seid(new UniqueId(scheduleEntryId->getId()));
+
+    scheduler->removeFromSchedule(sessionId, seid);
 }
 
 

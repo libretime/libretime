@@ -170,8 +170,8 @@ class WebStorageClient :
          *                             id exists.
          */
         void
-        editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
-                           Ptr<UniqueId>::Ref  id,
+        editPlaylistGetUrl(Ptr<SessionId>::Ref          sessionId,
+                           Ptr<const UniqueId>::Ref     id,
                            Ptr<const std::string>::Ref& url,
                            Ptr<const std::string>::Ref& editToken)
                                                 throw (XmlRpcException);
@@ -188,8 +188,8 @@ class WebStorageClient :
          *                  call or no playlist with the specified id exists.
          */
         Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<UniqueId>::Ref  id,
-                        XmlRpcValue &       content) const
+        acquirePlaylist(Ptr<const UniqueId>::Ref    id,
+                        XmlRpcValue &               content) const
                                                 throw (XmlRpcException);
 
         /**
@@ -292,9 +292,9 @@ class WebStorageClient :
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual const bool
-        existsPlaylist(Ptr<SessionId>::Ref  sessionId,
-                       Ptr<UniqueId>::Ref   id) const
+        virtual bool
+        existsPlaylist(Ptr<SessionId>::Ref          sessionId,
+                       Ptr<const UniqueId>::Ref     id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -315,8 +315,8 @@ class WebStorageClient :
          *                  call or no playlist with the specified id exists.
          */
         virtual Ptr<Playlist>::Ref
-        getPlaylist(Ptr<SessionId>::Ref sessionId,
-                    Ptr<UniqueId>::Ref  id) const
+        getPlaylist(Ptr<SessionId>::Ref       sessionId,
+                    Ptr<const UniqueId>::Ref  id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -336,8 +336,8 @@ class WebStorageClient :
          *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
-        editPlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<UniqueId>::Ref  id)
+        editPlaylist(Ptr<SessionId>::Ref            sessionId,
+                     Ptr<const UniqueId>::Ref       id)
                                                 throw (XmlRpcException);
 
         /**
@@ -400,8 +400,8 @@ class WebStorageClient :
          *                             specified id exists. 
          */
         virtual Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<SessionId>::Ref sessionId,
-                        Ptr<UniqueId>::Ref  id) const
+        acquirePlaylist(Ptr<SessionId>::Ref         sessionId,
+                        Ptr<const UniqueId>::Ref    id) const
                                             throw (XmlRpcException);
 
         /**
@@ -432,9 +432,9 @@ class WebStorageClient :
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual const bool
-        existsAudioClip(Ptr<SessionId>::Ref sessionId,
-                        Ptr<UniqueId>::Ref  id) const
+        virtual bool
+        existsAudioClip(Ptr<SessionId>::Ref         sessionId,
+                        Ptr<const UniqueId>::Ref    id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -452,8 +452,8 @@ class WebStorageClient :
          *                  call or no audio clip with the specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
-        getAudioClip(Ptr<SessionId>::Ref    sessionId,
-                     Ptr<UniqueId>::Ref     id) const
+        getAudioClip(Ptr<SessionId>::Ref      sessionId,
+                     Ptr<const UniqueId>::Ref id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -505,8 +505,8 @@ class WebStorageClient :
          *                             specified id exists. 
          */
         virtual Ptr<AudioClip>::Ref
-        acquireAudioClip(Ptr<SessionId>::Ref  sessionId,
-                         Ptr<UniqueId>::Ref   id) const
+        acquireAudioClip(Ptr<SessionId>::Ref        sessionId,
+                         Ptr<const UniqueId>::Ref   id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -614,7 +614,8 @@ class WebStorageClient :
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId,
-                        const int limit = 0, const int offset = 0)
+                        int                 limit  = 0,
+                        int                 offset = 0)
                                                 throw (XmlRpcException);
 
 
@@ -631,8 +632,9 @@ class WebStorageClient :
          *                             call.
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(Ptr<SessionId>::Ref sessionId,
-                        const int limit = 0, const int offset = 0)
+        getAllAudioClips(Ptr<SessionId>::Ref  sessionId,
+                         int                  limit  = 0,
+                         int                  offset = 0)
                                                 throw (XmlRpcException);
 };
 

@@ -285,7 +285,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param id the id of the playlist to remove.
          */
         void
-        uncachePlaylist(Ptr<UniqueId>::Ref  id)                 throw ();
+        uncachePlaylist(Ptr<const UniqueId>::Ref  id)           throw ();
         
         /**
          *  The type for storing the keyboard shortcuts.
@@ -566,7 +566,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception XmlRpcException on communication problems.
          */
         bool
-        existsAudioClip(Ptr<UniqueId>::Ref   id)     throw (XmlRpcException)
+        existsAudioClip(Ptr<const UniqueId>::Ref   id)  throw (XmlRpcException)
         {
             return storage->existsAudioClip(sessionId, id);
         }
@@ -582,7 +582,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *             id exists, or there was a communication problem.
          */
         Ptr<AudioClip>::Ref
-        getAudioClip(Ptr<UniqueId>::Ref  id)
+        getAudioClip(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -599,7 +599,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *             id exists, or there was a communication problem.
          */
         Ptr<AudioClip>::Ref
-        acquireAudioClip(Ptr<UniqueId>::Ref  id)
+        acquireAudioClip(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -623,7 +623,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception XmlRpcException on communication problems.
          */
         bool
-        existsPlaylist(Ptr<UniqueId>::Ref   id)     throw (XmlRpcException)
+        existsPlaylist(Ptr<const UniqueId>::Ref   id)   throw (XmlRpcException)
         {
             return storage->existsPlaylist(sessionId, id);
         }
@@ -639,7 +639,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *             id exists, or there was a communication problem.
          */
         Ptr<Playlist>::Ref
-        getPlaylist(Ptr<UniqueId>::Ref  id)
+        getPlaylist(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -656,7 +656,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *             id exists, or there was a communication problem.
          */
         Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<UniqueId>::Ref  id)
+        acquirePlaylist(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -672,7 +672,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *             id exists, or there was a communication problem.
          */
         Ptr<Playable>::Ref
-        acquirePlayable(Ptr<UniqueId>::Ref  id)
+        acquirePlayable(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
 
         /**
@@ -722,7 +722,8 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         Ptr<Playlist>::Ref
         openPlaylistForEditing(
-                    Ptr<UniqueId>::Ref playlistId = Ptr<UniqueId>::Ref())
+                    Ptr<const UniqueId>::Ref    playlistId
+                                                = Ptr<const UniqueId>::Ref())
                                                       throw (XmlRpcException);
 
         /**
@@ -802,7 +803,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception XmlRpcException in case of XML-RPC errors.
          */
         virtual void
-        removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
+        removeFromSchedule(Ptr<const UniqueId>::Ref   scheduleEntryId)
                                                     throw (XmlRpcException);
 
         /**

@@ -316,9 +316,9 @@ TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 /*------------------------------------------------------------------------------
  *  Tell if a playlist exists.
  *----------------------------------------------------------------------------*/
-const bool
-TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
-                                    Ptr<UniqueId>::Ref  id) const
+bool
+TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref         sessionId,
+                                    Ptr<const UniqueId>::Ref    id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -333,8 +333,8 @@ TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
  *  Return a playlist to be displayed.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
-                                 Ptr<UniqueId>::Ref  id) const
+TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref        sessionId,
+                                 Ptr<const UniqueId>::Ref   id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -365,8 +365,8 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
  *  Return a playlist to be edited.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
-                                  Ptr<UniqueId>::Ref  id)
+TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref       sessionId,
+                                  Ptr<const UniqueId>::Ref  id)
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -446,8 +446,8 @@ TestStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
-                                     Ptr<UniqueId>::Ref  id) const
+TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref        sessionId,
+                                     Ptr<const UniqueId>::Ref   id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -659,9 +659,9 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
 /*------------------------------------------------------------------------------
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
-const bool
-TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
-                                     Ptr<UniqueId>::Ref  id) const
+bool
+TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref        sessionId,
+                                     Ptr<const UniqueId>::Ref   id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -676,8 +676,8 @@ TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
  *  Return an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
-                                  Ptr<UniqueId>::Ref  id) const
+TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref       sessionId,
+                                  Ptr<const UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -730,8 +730,8 @@ TestStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
  *  Acquire resources for an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
-                                      Ptr<UniqueId>::Ref  id) const
+TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref       sessionId,
+                                      Ptr<const UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
     if (!sessionId) {
@@ -936,8 +936,9 @@ LiveSupport::Storage :: separateNameAndNameSpace(const std::string & key,
  *  Return a list of all playlists in the storage.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
-                                     const int limit, const int offset)
+TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref    sessionId,
+                                     int                    limit,
+                                     int                    offset)
                                                 throw (XmlRpcException)
 {
     Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("playlist"));
@@ -964,8 +965,9 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
  *  Return a list of all audio clips in the storage.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId,
-                                      const int limit, const int offset)
+TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
+                                      int                   limit,
+                                      int                   offset)
                                                 throw (XmlRpcException)
 {
     Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("audioClip"));

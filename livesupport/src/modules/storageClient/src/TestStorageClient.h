@@ -251,9 +251,9 @@ class TestStorageClient :
          *  @return true if a playlist with the specified id exists,
          *          false otherwise.
          */
-        virtual const bool
-        existsPlaylist(Ptr<SessionId>::Ref  sessionId,
-                       Ptr<UniqueId>::Ref   id) const
+        virtual bool
+        existsPlaylist(Ptr<SessionId>::Ref          sessionId,
+                       Ptr<const UniqueId>::Ref     id) const
                                                 throw (XmlRpcException);
 
 
@@ -273,8 +273,8 @@ class TestStorageClient :
          *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
-        getPlaylist(Ptr<SessionId>::Ref sessionId,
-                    Ptr<UniqueId>::Ref  id) const
+        getPlaylist(Ptr<SessionId>::Ref       sessionId,
+                    Ptr<const UniqueId>::Ref  id) const
                                                 throw (XmlRpcException);
 
 
@@ -294,8 +294,8 @@ class TestStorageClient :
          *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
-        editPlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<UniqueId>::Ref  id)
+        editPlaylist(Ptr<SessionId>::Ref      sessionId,
+                     Ptr<const UniqueId>::Ref id)
                                                 throw (XmlRpcException);
 
 
@@ -355,8 +355,8 @@ class TestStorageClient :
          *                             specified id exists. 
          */
         virtual Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<SessionId>::Ref sessionId,
-                        Ptr<UniqueId>::Ref  id) const
+        acquirePlaylist(Ptr<SessionId>::Ref         sessionId,
+                        Ptr<const UniqueId>::Ref    id) const
                                             throw (XmlRpcException);
 
 
@@ -385,9 +385,9 @@ class TestStorageClient :
          *  @return true if an audio clip with the specified id exists,
          *          false otherwise.
          */
-        virtual const bool
-        existsAudioClip(Ptr<SessionId>::Ref sessionId,
-                        Ptr<UniqueId>::Ref  id) const
+        virtual bool
+        existsAudioClip(Ptr<SessionId>::Ref         sessionId,
+                        Ptr<const UniqueId>::Ref    id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -403,8 +403,8 @@ class TestStorageClient :
          *                             specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
-        getAudioClip(Ptr<SessionId>::Ref    sessionId,
-                     Ptr<UniqueId>::Ref     id) const
+        getAudioClip(Ptr<SessionId>::Ref      sessionId,
+                     Ptr<const UniqueId>::Ref id) const
                                                 throw (XmlRpcException);
 
         /**
@@ -450,8 +450,8 @@ class TestStorageClient :
          *                             specified id exists. 
          */
         virtual Ptr<AudioClip>::Ref
-        acquireAudioClip(Ptr<SessionId>::Ref  sessionId,
-                         Ptr<UniqueId>::Ref   id) const
+        acquireAudioClip(Ptr<SessionId>::Ref        sessionId,
+                         Ptr<const UniqueId>::Ref   id) const
                                                 throw (XmlRpcException);
 
 
@@ -570,7 +570,8 @@ class TestStorageClient :
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId,
-                        const int limit = 0, const int offset = 0)
+                        int                 limit  = 0,
+                        int                 offset = 0)
                                                 throw (XmlRpcException);
 
 
@@ -587,8 +588,9 @@ class TestStorageClient :
          *                             call.
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(Ptr<SessionId>::Ref sessionId,
-                        const int limit = 0, const int offset = 0)
+        getAllAudioClips(Ptr<SessionId>::Ref  sessionId,
+                         int                  limit  = 0,
+                         int                  offset = 0)
                                                 throw (XmlRpcException);
 };
 

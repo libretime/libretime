@@ -593,7 +593,7 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
  *  Add an item to the Scratchpad.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: addItem(Ptr<UniqueId>::Ref    id)
+ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
                                                                 throw ()
 {
     Ptr<Playable>::Ref  playable = gLiveSupport->acquirePlayable(id);
@@ -637,13 +637,13 @@ ScratchpadWindow :: restore(Ptr<Glib::ustring>::Ref     contents)
     
     while (!contentsStream.eof()) {
         UniqueId::IdType            idValue;
-        Ptr<UniqueId>::Ref          id;
+        Ptr<const UniqueId>::Ref    id;
 
         contentsStream >> idValue;
         if (contentsStream.fail()) {
             break;
         } else {
-            id.reset(new UniqueId(idValue));
+            id.reset(new const UniqueId(idValue));
             addItem(id);
         }
     }

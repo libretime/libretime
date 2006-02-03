@@ -349,7 +349,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  @param id the id of the item to add.
          */
         void
-        addItem(Ptr<UniqueId>::Ref    id)                       throw ();
+        addItem(Ptr<const UniqueId>::Ref    id)                 throw ();
 
         /**
          *  Return the contents of the Scratchpad.
