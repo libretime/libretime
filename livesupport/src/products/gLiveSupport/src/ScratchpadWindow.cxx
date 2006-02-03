@@ -607,11 +607,11 @@ ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
 Ptr<Glib::ustring>::Ref
 ScratchpadWindow :: contents(void)                              throw ()
 {
-    std::ostringstream              contentsStream;
-    Gtk::TreeModel::const_iterator  it;
+    std::ostringstream                      contentsStream;
+    Gtk::TreeModel::const_reverse_iterator  it;
 
-    for (it = treeModel->children().begin(); 
-                                it != treeModel->children().end(); ++it) {
+    for (it = treeModel->children().rbegin(); 
+                                it != treeModel->children().rend(); ++it) {
         Gtk::TreeRow        row = *it;
         Ptr<Playable>::Ref  playable = row[modelColumns.playableColumn];
         contentsStream << playable->getId()->getId() << " ";
