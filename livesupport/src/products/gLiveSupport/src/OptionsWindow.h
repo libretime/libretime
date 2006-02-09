@@ -155,6 +155,12 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
                                                                     throw ();
 
         /**
+         *  Reset all user entries to their saved state.
+         */
+        void
+        resetEntries(void)                                          throw ();
+
+        /**
          *  Construct the "Sound" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)

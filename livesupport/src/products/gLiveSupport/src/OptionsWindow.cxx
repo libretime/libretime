@@ -159,6 +159,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 void
 OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 {
+    resetEntries();
     onCloseButtonClicked(false);
 }
 
@@ -172,6 +173,7 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
     Ptr<OptionsContainer>::Ref
             optionsContainer  = gLiveSupport->getOptionsContainer();
 
+    bool                                changed = false;
     StringEntryListType::const_iterator it;
     for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
     
@@ -186,9 +188,27 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
         if (*oldValue != *newValue) {
             try {
                 optionsContainer->setOptionItem(optionItem, newValue);
+                changed = true;
             } catch (std::invalid_argument &e) {
-                // TODO: signal error
+                Ptr<Glib::ustring>::Ref
+                        errorMessage(new Glib::ustring(
+                                    *getResourceUstring("errorMsg") ));
+                errorMessage->append(e.what());
+                gLiveSupport->displayMessageWindow(errorMessage);
             }
+        }
+    }
+    
+    if (changed) {
+        try {
+            Ptr<Glib::ustring>::Ref
+                    restartMessage(new Glib::ustring(
+                                *getResourceUstring("needToRestartMsg") ));
+            gLiveSupport->displayMessageWindow(restartMessage);
+        } catch (std::invalid_argument &e) {
+            // TODO: signal error
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
         }
     }
 }
@@ -212,7 +232,8 @@ void
 OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
 {
     if (needConfirm) {
-        //TODO: add confirmation dialog
+        // TODO: add confirmation dialog
+        // and either save changes or cancel them
     }
     gLiveSupport->putWindowPosition(shared_from_this());
     hide();
@@ -493,5 +514,30 @@ OptionsWindow :: constructAboutSection(void)                        throw ()
     section->pack_start(*aboutLabel, Gtk::PACK_SHRINK, 5);
     
     return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset all user entries to their saved state.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: resetEntries()                                     throw ()
+{
+    Ptr<OptionsContainer>::Ref      optionsContainer
+                                        = gLiveSupport->getOptionsContainer();
+
+    StringEntryListType::iterator   it;
+    for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
+        OptionsContainer::OptionItemString  optionItem = it->first;
+        EntryBin *                          entry      = it->second;
+     
+        try {
+            entry->set_text(*optionsContainer->getOptionItem(optionItem));
+
+        } catch (std::invalid_argument &e) {
+            // TODO: signal error?
+            entry->set_text("");
+        }
+    }
 }
 

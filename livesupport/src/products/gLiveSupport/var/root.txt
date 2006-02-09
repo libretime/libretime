@@ -221,6 +221,11 @@ root:table
     {
         windowTitle:string          { "LiveSupport Options Window" }
         
+        needToRestartMsg:string     { "You will need to restart the "
+                                      "application\nfor the new settings "
+                                      "to take effect." }
+        errorMsg:string             { "Could not save the options: " }
+        
         soundSectionLabel:string    { "Sound" }
         serversSectionLabel:string  { "Servers" }
         aboutSectionLabel:string    { "About" }
