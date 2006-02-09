@@ -190,11 +190,17 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
                 optionsContainer->setOptionItem(optionItem, newValue);
                 changed = true;
             } catch (std::invalid_argument &e) {
-                Ptr<Glib::ustring>::Ref
-                        errorMessage(new Glib::ustring(
-                                    *getResourceUstring("errorMsg") ));
-                errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(errorMessage);
+                try {
+                    Ptr<Glib::ustring>::Ref
+                            errorMessage(new Glib::ustring(
+                                        *getResourceUstring("errorMsg") ));
+                    errorMessage->append(e.what());
+                    gLiveSupport->displayMessageWindow(errorMessage);
+                } catch (std::invalid_argument &e) {
+                    // TODO: signal error
+                    std::cerr << e.what() << std::endl;
+                    std::exit(1);
+                }
             }
         }
     }
