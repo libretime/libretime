@@ -133,7 +133,8 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
 				${TMP_DIR}/BaseTestMethod.o \
 				${TMP_DIR}/SearchCriteria.o \
 				${TMP_DIR}/MetadataType.o \
-				${TMP_DIR}/MetadataTypeContainer.o
+				${TMP_DIR}/MetadataTypeContainer.o \
+				${TMP_DIR}/OptionsContainer.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/UuidTest.o \

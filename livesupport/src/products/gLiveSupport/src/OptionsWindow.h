@@ -49,6 +49,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/OptionsContainer.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"

@@ -49,13 +49,13 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedConfigurable.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
+#include "LiveSupport/Core/OptionsContainer.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "KeyboardShortcutContainer.h"
-#include "OptionsContainer.h"
 
 
 namespace LiveSupport {

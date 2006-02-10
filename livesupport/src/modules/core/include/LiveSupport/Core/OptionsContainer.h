@@ -26,8 +26,8 @@
     Location : $URL $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_OptionsContainer_h
-#define LiveSupport_GLiveSupport_OptionsContainer_h
+#ifndef LiveSupport_Core_OptionsContainer_h
+#define LiveSupport_Core_OptionsContainer_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -48,9 +48,7 @@
 
 
 namespace LiveSupport {
-namespace GLiveSupport {
-
-using namespace LiveSupport::Core;
+namespace Core {
     
 /* ================================================================ constants */
 
@@ -208,8 +206,8 @@ class OptionsContainer
 /* ====================================================== function prototypes */
 
 
-} // namespace GLiveSupport
+} // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_OptionsContainer_h
+#endif // LiveSupport_Core_OptionsContainer_h
 

@@ -36,11 +36,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "OptionsContainer.h"
+#include "LiveSupport/Core/OptionsContainer.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
 
