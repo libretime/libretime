@@ -69,11 +69,11 @@ CuePlayer :: CuePlayer(Ptr<GLiveSupport>::Ref                   gLiveSupport,
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     playButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::smallPlayButton ));
+                                    WidgetConstants::smallPlayButton ));
     pauseButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::smallPauseButton ));
+                                    WidgetConstants::smallPauseButton ));
     stopButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::smallStopButton ));
+                                    WidgetConstants::smallStopButton ));
 
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &CuePlayer::onPlayButtonClicked ));

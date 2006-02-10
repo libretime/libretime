@@ -36,6 +36,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 
 #include "LiveSupport/Widgets/ZebraTreeView.h"
@@ -155,7 +156,7 @@ ZebraTreeView :: appendColumn(
 int 
 ZebraTreeView :: appendColumn(
                     const Glib::ustring &           title, 
-                    WidgetFactory::ImageButtonType  buttonType,
+                    WidgetConstants::ImageButtonType  buttonType,
                     int                             minimumWidth)
                                                                 throw ()
 {

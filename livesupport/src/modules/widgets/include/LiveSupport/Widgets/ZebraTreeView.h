@@ -50,7 +50,7 @@
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/WidgetConstants.h"
 #include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/BlueBin.h"
@@ -269,7 +269,7 @@ class ZebraTreeView : public Gtk::TreeView
          */
         int 
         appendColumn(const Glib::ustring&               title, 
-                     WidgetFactory::ImageButtonType     buttonType,
+                     WidgetConstants::ImageButtonType   buttonType,
                      int                                minimumWidth = 0)
                                                                 throw ();
 

@@ -68,7 +68,7 @@ static const Glib::ustring  windowName = "schedulerWindow";
 SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-          : WhiteWindow(WidgetFactory::schedulerWindowTitleImage,
+          : WhiteWindow(WidgetConstants::schedulerWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),

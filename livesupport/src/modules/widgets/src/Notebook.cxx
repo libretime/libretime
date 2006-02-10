@@ -58,8 +58,6 @@ using namespace LiveSupport::Widgets;
  *----------------------------------------------------------------------------*/
 Notebook :: Notebook(void)                                      throw ()
 {
-    Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
-
     layout     = Gtk::manage(new Gtk::VBox());
     tabBox     = Gtk::manage(new Gtk::HBox());
     pageHolder = Gtk::manage(new Gtk::Alignment());
@@ -216,7 +214,7 @@ Notebook :: appendPage(Gtk::Widget            & widget,
 {
     Ptr<WidgetFactory>::Ref     wf     = WidgetFactory::getInstance();
     Button                    * button = wf->createButton(label,
-                                                    WidgetFactory::tabButton);
+                                                    WidgetConstants::tabButton);
 
     Page      * page = new Page(this, pageList.size(), &widget, button);
     pageList.push_back(page);

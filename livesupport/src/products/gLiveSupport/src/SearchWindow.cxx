@@ -69,7 +69,7 @@ using namespace LiveSupport::GLiveSupport;
 SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                               Ptr<ResourceBundle>::Ref    bundle)
                                                                 throw ()
-          : WhiteWindow(WidgetFactory::searchWindowTitleImage,
+          : WhiteWindow(WidgetConstants::searchWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
@@ -373,11 +373,11 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
         switch (playable->getType()) {
             case Playable::AudioClipType:
                 row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
-                                            WidgetFactory::audioClipIconImage);
+                                        WidgetConstants::audioClipIconImage);
                 break;
             case Playable::PlaylistType:
                 row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
-                                            WidgetFactory::playlistIconImage);
+                                        WidgetConstants::playlistIconImage);
                 break;
             default:
                 break;

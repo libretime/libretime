@@ -70,7 +70,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                     Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-          : WhiteWindow(WidgetFactory::playlistsWindowTitleImage,
+          : WhiteWindow(WidgetConstants::playlistsWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),

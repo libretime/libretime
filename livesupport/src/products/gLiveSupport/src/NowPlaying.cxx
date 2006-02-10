@@ -74,11 +74,11 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     playButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::masterPlayButton ));
+                                    WidgetConstants::masterPlayButton ));
     pauseButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::masterPauseButton ));
+                                    WidgetConstants::masterPauseButton ));
     stopButton = Gtk::manage(wf->createButton(
-                                    WidgetFactory::masterStopButton ));
+                                    WidgetConstants::masterStopButton ));
 
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &NowPlaying::onPlayButtonClicked ));

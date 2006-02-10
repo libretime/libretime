@@ -21,13 +21,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
+    Author   : $Author $
+    Version  : $Revision $
+    Location : $URL $
 
 ------------------------------------------------------------------------------*/
-#ifndef MessageWindow_h
-#define MessageWindow_h
+#ifndef LiveSupport_Widgets_WidgetConstants_h
+#define LiveSupport_Widgets_WidgetConstants_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -36,22 +36,8 @@
 
 /* ============================================================ include files */
 
-#ifdef HAVE_CONFIG_H
-#include "configure.h"
-#endif
-
-#include <gtkmm/box.h>
-#include <gtkmm/label.h>
-
-#include "LiveSupport/Core/Ptr.h"
-
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
-
 namespace LiveSupport {
 namespace Widgets {
-
-using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -62,52 +48,49 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A message window, displaying a single line of message, with an OK
- *  button.
+ *  A collection of constants used by the widgets.
  *
- *  @author $Author$
- *  @version $Revision$
+ *  Constants which are either used by more than one widget or used by
+ *  the WidgetFactory class are collected here.  This way widget headers
+ *  do not need to include each other's or WidgetFactory's header.
+ *
+ *  @author  $Author $
+ *  @version $Revision $
  */
-class MessageWindow : public WhiteWindow
+class WidgetConstants
 {
-    protected:
-        /**
-         *  The vertical box holding the message and the button.
-         */
-        Gtk::Box                  * layout;
-
-        /**
-         *  The message.
-         */
-        Gtk::Label                * messageLabel;
-
-        /**
-         *  The OK button.
-         */
-        Button                    * okButton;
-
-        /**
-         *  The event handler for the OK button clicked.
-         */
-        virtual void
-        onOkButtonClicked(void)                             throw ();
-
-
     public:
         /**
-         *  Constructor.
-         *
-         *  @param message the message to display in the window
+         *  The types of available buttons.
          */
-        MessageWindow(Ptr<Glib::ustring>::Ref   message)        throw ();
+        typedef enum { pushButton, tabButton }      ButtonType;
 
         /**
-         *  Virtual destructor.
+         *  The types of available image buttons.
          */
-        virtual
-        ~MessageWindow(void)                                throw ();
+        typedef enum { deleteButton, plusButton, minusButton,
+                       smallPlayButton, smallPauseButton, smallStopButton,
+                       hugePlayButton, 
+                       cuePlayButton, cueStopButton,
+                       masterPlayButton, masterPauseButton, masterStopButton,
+                       windowMinimizeButton, windowMaximizeButton,
+                                             windowCloseButton }
+                                                    ImageButtonType;
 
+        /**
+         *  The list of available miscellaneous images.
+         */
+        typedef enum { resizeImage,
+                       scratchpadWindowTitleImage,
+                       searchWindowTitleImage,
+                       liveModeWindowTitleImage,
+                       playlistsWindowTitleImage,
+                       schedulerWindowTitleImage,
+                       audioClipIconImage,
+                       playlistIconImage }
+                                                    ImageType;
 };
+
 
 /* ================================================= external data structures */
 
@@ -118,5 +101,5 @@ class MessageWindow : public WhiteWindow
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // MessageWindow_h
+#endif // LiveSupport_Widgets_WidgetConstants_h
 

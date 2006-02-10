@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include <boost/enable_shared_from_this.hpp>
 #include <gtkmm/label.h>
 #include <gtkmm/table.h>
 #include <gtkmm/alignment.h>
@@ -49,11 +50,11 @@
 #include <gtkmm/buttonbox.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Widgets/WidgetConstants.h"
 #include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/Colors.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/BlueBin.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
 
 
 namespace LiveSupport {
@@ -341,7 +342,7 @@ class WhiteWindow : public Gtk::Window,
          *  @param cornerImages the corner images.
          *  @param properties   some WindowProperties flags
          */
-        WhiteWindow(WidgetFactory::ImageType    title,
+        WhiteWindow(WidgetConstants::ImageType    title,
                     Colors::ColorName           backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages,
                     int                         properties = isResizable)

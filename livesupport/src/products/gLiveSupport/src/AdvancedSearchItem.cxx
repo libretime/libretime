@@ -89,12 +89,13 @@ AdvancedSearchItem :: AdvancedSearchItem(
     pack_start(*valueEntry,     Gtk::PACK_EXPAND_WIDGET, 5);
     
     if (isFirst) {
-        plusButton = Gtk::manage(wf->createButton(WidgetFactory::plusButton));
+        plusButton = Gtk::manage(wf->createButton(WidgetConstants::plusButton));
         pack_start(*plusButton, Gtk::PACK_SHRINK, 5);
         plusButton->signal_clicked().connect(sigc::mem_fun(*this, 
                                     &AdvancedSearchItem::onPlusButtonClicked ));
     } else {
-        closeButton = Gtk::manage(wf->createButton(WidgetFactory::minusButton));
+        closeButton = Gtk::manage(wf->createButton(
+                                                WidgetConstants::minusButton));
         closeButton->signal_clicked().connect(sigc::mem_fun(*this, 
                                     &AdvancedSearchItem::destroy_ ));
         pack_start(*closeButton, Gtk::PACK_SHRINK, 5);

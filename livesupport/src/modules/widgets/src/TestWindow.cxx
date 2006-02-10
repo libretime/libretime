@@ -72,13 +72,13 @@ TestWindow :: TestWindow (void)
 
     // init the imageButtons
     hugeImageButton = Gtk::manage(
-                    widgetFactory->createButton(WidgetFactory::hugePlayButton));
+                widgetFactory->createButton(WidgetConstants::hugePlayButton));
     cuePlayImageButton = Gtk::manage(
-                    widgetFactory->createButton(WidgetFactory::cuePlayButton));
+                widgetFactory->createButton(WidgetConstants::cuePlayButton));
     cuePlayImageButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &TestWindow::onPlayButtonClicked));
     cueStopImageButton = Gtk::manage(
-                    widgetFactory->createButton(WidgetFactory::cueStopButton));
+                widgetFactory->createButton(WidgetConstants::cueStopButton));
     cueStopImageButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &TestWindow::onStopButtonClicked));
 

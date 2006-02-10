@@ -71,7 +71,7 @@ static const Glib::ustring  windowName = "liveModeWindow";
 LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                   Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-          : WhiteWindow(WidgetFactory::liveModeWindowTitleImage,
+          : WhiteWindow(WidgetConstants::liveModeWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
@@ -98,7 +98,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendLineNumberColumn("", 2 /* offset */, 50);
-//        treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
+//        treeView->appendColumn("", WidgetConstants::hugePlayButton, 82);
         treeView->appendColumn("", modelColumns.infoColumn, 200);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -124,7 +124,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Create the play etc buttons:
     Gtk::HBox *         buttonBox = Gtk::manage(new Gtk::HBox);
     ImageButton *       outputPlayButton = Gtk::manage(wf->createButton(
-                                        WidgetFactory::hugePlayButton ));
+                                        WidgetConstants::hugePlayButton ));
     Gtk::VBox *         cueAudioBox = Gtk::manage(new Gtk::VBox);
     Gtk::HBox *         cueAudioLabelBox = Gtk::manage(new Gtk::HBox);
     Gtk::Label *        cueAudioLabel;

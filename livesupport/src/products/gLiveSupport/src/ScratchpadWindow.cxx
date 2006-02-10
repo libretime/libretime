@@ -70,7 +70,7 @@ static const Glib::ustring  windowName = "scratchpadWindow";
 ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                       Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-          : WhiteWindow(WidgetFactory::scratchpadWindowTitleImage,
+          : WhiteWindow(WidgetConstants::scratchpadWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
@@ -575,17 +575,17 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
     
     switch (playable->getType()) {
         case Playable::AudioClipType:
-            row[modelColumns.typeColumn]    = widgetFactory->getPixbuf(
-                                            WidgetFactory::audioClipIconImage);
+            row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                          WidgetConstants::audioClipIconImage);
             break;
 
         case Playable::PlaylistType:
-            row[modelColumns.typeColumn]    = widgetFactory->getPixbuf(
-                                            WidgetFactory::playlistIconImage);
+            row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                          WidgetConstants::playlistIconImage);
             break;
     }
     
-    row[modelColumns.titleColumn]           = Glib::Markup::escape_text(
+    row[modelColumns.titleColumn]         = Glib::Markup::escape_text(
                                                         *playable->getTitle());
     
     // cache the item if it hasn't been cached yet

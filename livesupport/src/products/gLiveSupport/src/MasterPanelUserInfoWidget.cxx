@@ -75,7 +75,7 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
 
-    closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
+    closeButton = Gtk::manage(wf->createButton(WidgetConstants::deleteButton));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onCloseButtonClicked));
 

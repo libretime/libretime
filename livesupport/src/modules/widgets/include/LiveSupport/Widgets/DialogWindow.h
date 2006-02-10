@@ -48,6 +48,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 
 #include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/Button.h"
 
 namespace LiveSupport {
 namespace Widgets {

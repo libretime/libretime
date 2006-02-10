@@ -37,7 +37,6 @@
 #include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/Colors.h"
-#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "MessageWindow.h"
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
@@ -389,20 +388,21 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
 
     // load the miscellaneous images
-    imageTypePixbufs[resizeImage]   = loadImage(resizeImageName);
-    imageTypePixbufs[scratchpadWindowTitleImage]
+    imageTypePixbufs[WidgetConstants::resizeImage] 
+                                    = loadImage(resizeImageName);
+    imageTypePixbufs[WidgetConstants::scratchpadWindowTitleImage]
                                     = loadImage(scratchpadWindowTitleImageName);
-    imageTypePixbufs[searchWindowTitleImage]
+    imageTypePixbufs[WidgetConstants::searchWindowTitleImage]
                                     = loadImage(searchWindowTitleImageName);
-    imageTypePixbufs[liveModeWindowTitleImage]
+    imageTypePixbufs[WidgetConstants::liveModeWindowTitleImage]
                                     = loadImage(liveModeWindowTitleImageName);
-    imageTypePixbufs[playlistsWindowTitleImage]
+    imageTypePixbufs[WidgetConstants::playlistsWindowTitleImage]
                                     = loadImage(playlistsWindowTitleImageName);
-    imageTypePixbufs[schedulerWindowTitleImage]
+    imageTypePixbufs[WidgetConstants::schedulerWindowTitleImage]
                                     = loadImage(schedulerWindowTitleImageName);
-    imageTypePixbufs[audioClipIconImage]
+    imageTypePixbufs[WidgetConstants::audioClipIconImage]
                                     = loadImage(audioClipIconImageName);
-    imageTypePixbufs[playlistIconImage]
+    imageTypePixbufs[WidgetConstants::playlistIconImage]
                                     = loadImage(playlistIconImageName);
 }
 
@@ -437,14 +437,14 @@ WidgetFactory :: loadImage(const std::string    imageName)
  *  Create a button
  *----------------------------------------------------------------------------*/
 Button *
-WidgetFactory :: createButton(const Glib::ustring & label,
-                              ButtonType            type)           throw ()
+WidgetFactory :: createButton(const Glib::ustring &         label,
+                              WidgetConstants::ButtonType   type)   throw ()
 {
     switch (type) {
-        case pushButton:
+        case WidgetConstants::pushButton:
             return new Button(label, buttonImages);
 
-        case tabButton:
+        case WidgetConstants::tabButton:
             return new Button(label, tabButtonImages);
 
         default:
@@ -529,83 +529,84 @@ WidgetFactory :: createEntryBin(void)                               throw ()
  *  Create a stock button
  *----------------------------------------------------------------------------*/
 ImageButton *
-WidgetFactory :: createButton(ImageButtonType    type)              throw ()
+WidgetFactory :: createButton(WidgetConstants::ImageButtonType  type)
+                                                                    throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
     Glib::RefPtr<Gdk::Pixbuf>   rollImage;
 
     switch (type) {
-        case deleteButton:
+        case WidgetConstants::deleteButton:
             passiveImage = loadImage(deleteButtonPassiveName);
             rollImage    = loadImage(deleteButtonRollName);
             break;
 
-        case plusButton:
+        case WidgetConstants::plusButton:
             passiveImage = loadImage(plusButtonPassiveName);
             rollImage    = loadImage(plusButtonRollName);
             break;
 
-        case minusButton:
+        case WidgetConstants::minusButton:
             passiveImage = loadImage(minusButtonPassiveName);
             rollImage    = loadImage(minusButtonRollName);
             break;
 
-        case smallPlayButton:
+        case WidgetConstants::smallPlayButton:
             passiveImage = loadImage(smallPlayButtonPassiveName);
             rollImage    = loadImage(smallPlayButtonRollName);
             break;
 
-        case smallPauseButton:
+        case WidgetConstants::smallPauseButton:
             passiveImage = loadImage(smallPauseButtonPassiveName);
             rollImage    = loadImage(smallPauseButtonRollName);
             break;
 
-        case smallStopButton:
+        case WidgetConstants::smallStopButton:
             passiveImage = loadImage(smallStopButtonPassiveName);
             rollImage    = loadImage(smallStopButtonRollName);
             break;
 
-        case hugePlayButton:
+        case WidgetConstants::hugePlayButton:
             passiveImage = loadImage(hugePlayButtonPassiveName);
             rollImage    = loadImage(hugePlayButtonRollName);
             break;
 
-        case cuePlayButton:
+        case WidgetConstants::cuePlayButton:
             passiveImage = loadImage(cuePlayButtonPassiveName);
             rollImage    = loadImage(cuePlayButtonRollName);
             break;
 
-        case cueStopButton:
+        case WidgetConstants::cueStopButton:
             passiveImage = loadImage(cueStopButtonPassiveName);
             rollImage    = loadImage(cueStopButtonRollName);
             break;
 
-        case masterPlayButton:
+        case WidgetConstants::masterPlayButton:
             passiveImage = loadImage(masterPlayButtonPassiveName);
             rollImage    = loadImage(masterPlayButtonRollName);
             break;
 
-        case masterPauseButton:
+        case WidgetConstants::masterPauseButton:
             passiveImage = loadImage(masterPauseButtonPassiveName);
             rollImage    = loadImage(masterPauseButtonRollName);
             break;
 
-        case masterStopButton:
+        case WidgetConstants::masterStopButton:
             passiveImage = loadImage(masterStopButtonPassiveName);
             rollImage    = loadImage(masterStopButtonRollName);
             break;
 
-        case windowMinimizeButton:
+        case WidgetConstants::windowMinimizeButton:
             passiveImage = loadImage(windowMinimizeButtonPassiveName);
             rollImage    = loadImage(windowMinimizeButtonRollName);
             break;
 
-        case windowMaximizeButton:
+        case WidgetConstants::windowMaximizeButton:
             passiveImage = loadImage(windowMaximizeButtonPassiveName);
             rollImage    = loadImage(windowMaximizeButtonRollName);
             break;
 
-        case windowCloseButton:
+        case WidgetConstants::windowCloseButton:
             passiveImage = loadImage(windowCloseButtonPassiveName);
             rollImage    = loadImage(windowCloseButtonRollName);
             break;
@@ -622,7 +623,7 @@ WidgetFactory :: createButton(ImageButtonType    type)              throw ()
  *  Return a Gdk::Pixbuf reference to a named image
  *----------------------------------------------------------------------------*/
 Glib::RefPtr<Gdk::Pixbuf>
-WidgetFactory :: getPixbuf(ImageType  imageName)                    throw ()
+WidgetFactory :: getPixbuf(WidgetConstants::ImageType  imageName)   throw ()
 {
     return imageTypePixbufs[imageName];
 }
@@ -632,7 +633,7 @@ WidgetFactory :: getPixbuf(ImageType  imageName)                    throw ()
  *  Create a Gtk::Image
  *----------------------------------------------------------------------------*/
 Gtk::Image *
-WidgetFactory :: createImage(ImageType  imageName)                  throw ()
+WidgetFactory :: createImage(WidgetConstants::ImageType  imageName) throw ()
 {
     return new Gtk::Image(getPixbuf(imageName));
 }

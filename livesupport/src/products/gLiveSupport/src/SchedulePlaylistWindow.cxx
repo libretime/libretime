@@ -66,7 +66,7 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                     Ptr<ResourceBundle>::Ref    bundle,
                                     Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
-          : WhiteWindow(WidgetFactory::schedulerWindowTitleImage,
+          : WhiteWindow(WidgetConstants::schedulerWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),

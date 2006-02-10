@@ -46,6 +46,7 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 
+#include "LiveSupport/Widgets/WidgetConstants.h"
 #include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/ButtonImages.h"
 #include "LiveSupport/Widgets/Button.h"
@@ -55,6 +56,8 @@
 #include "LiveSupport/Widgets/OperatorComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/DialogWindow.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 
 
 namespace LiveSupport {
@@ -69,9 +72,6 @@ using namespace LiveSupport::Core;
 
 
 /* =============================================================== data types */
-
-class WhiteWindow;
-class ZebraTreeView;
 
 /**
  *  A factory to provide access to LiveSupport Widgets.
@@ -97,38 +97,6 @@ class ZebraTreeView;
 class WidgetFactory :
                         virtual public Configurable
 {
-    public:
-        /**
-         *  The types of available buttons.
-         */
-        typedef enum { pushButton, tabButton }      ButtonType;
-
-        /**
-         *  The types of available image buttons.
-         */
-        typedef enum { deleteButton, plusButton, minusButton,
-                       smallPlayButton, smallPauseButton, smallStopButton,
-                       hugePlayButton, 
-                       cuePlayButton, cueStopButton,
-                       masterPlayButton, masterPauseButton, masterStopButton,
-                       windowMinimizeButton, windowMaximizeButton,
-                                             windowCloseButton }
-                                                    ImageButtonType;
-
-        /**
-         *  The list of available miscellaneous images.
-         */
-        typedef enum { resizeImage,
-                       scratchpadWindowTitleImage,
-                       searchWindowTitleImage,
-                       liveModeWindowTitleImage,
-                       playlistsWindowTitleImage,
-                       schedulerWindowTitleImage,
-                       audioClipIconImage,
-                       playlistIconImage }
-                                                    ImageType;
-
-
     private:
         /**
          *  The name of the configuration XML elmenent used by this object.
@@ -193,7 +161,7 @@ class WidgetFactory :
         /**
          *  A container holding the miscallenous image pixbuf references.
          */
-        std::map<ImageType, Glib::RefPtr<Gdk::Pixbuf> >
+        std::map<WidgetConstants::ImageType, Glib::RefPtr<Gdk::Pixbuf> >
                                         imageTypePixbufs;
 
         /**
@@ -268,8 +236,9 @@ class WidgetFactory :
          *  @return a button with the specified label.
          */
         Button *
-        createButton(const Glib::ustring      & label,
-                     ButtonType                 type = pushButton)
+        createButton(
+            const Glib::ustring &           label,
+            WidgetConstants::ButtonType     type = WidgetConstants::pushButton)
                                                                     throw ();
 
         /**
@@ -281,7 +250,7 @@ class WidgetFactory :
          *  @return a button of the requested type, or 0
          */
         ImageButton *
-        createButton(ImageButtonType    type)                       throw ();
+        createButton(WidgetConstants::ImageButtonType    type)      throw ();
 
         /**
          *  Create a combo box that holds text entries.
@@ -366,7 +335,7 @@ class WidgetFactory :
          *  @return the image.
          */
         Glib::RefPtr<Gdk::Pixbuf>
-        getPixbuf(ImageType   imageName)                            throw ();
+        getPixbuf(WidgetConstants::ImageType   imageName)           throw ();
 
         /**
          *  Create and return a container holding an image.
@@ -376,7 +345,7 @@ class WidgetFactory :
          *  @return the container holding the requested image.
          */
         Gtk::Image *
-        createImage(ImageType   imageName)                          throw ();
+        createImage(WidgetConstants::ImageType   imageName)         throw ();
 
         /**
          *  Create and return a ZebraTreeView instance.
