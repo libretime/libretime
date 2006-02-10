@@ -359,15 +359,21 @@ class WidgetFactory :
                                                                     throw ();
 
         /**
-         *  Create a window with a single line of text, and an OK button.
-         *  Good for displaying error messages.
+         *  Create a DialogWindow.
+         *  Good for displaying error messages, confirmation messages, etc.
          *  It is the reponsibility of the caller to dispose of the created
          *  object properly.
          *
-         *  @param message the message to include in the window.
+         *  @param  message the message to include in the window.
+         *  @param  bundle  localization for the button(s).
+         *  @param  buttons a list of buttons; default is a single OK button.
+         *  @return the DialogWindow object.
          */
-        WhiteWindow *
-        createMessageWindow(Ptr<Glib::ustring>::Ref message)        throw ();
+        DialogWindow *
+        createDialogWindow(Ptr<Glib::ustring>::Ref     message,
+                           Ptr<ResourceBundle>::Ref    bundle,
+                           int              buttons = DialogWindow::okButton)
+                                                                    throw ();
 };
 
 

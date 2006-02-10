@@ -117,14 +117,13 @@ TestWindow :: TestWindow (void)
     show_all();
     layout->attach(*cueStopImageButton, 1, 2, 0, 1);
     
-    Ptr<ResourceBundle>::Ref    resourceBundle;
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
                               new xmlpp::DomParser(bundleConfigFileName, true));
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
 
-        resourceBundle = LocalizedObject::getBundle(*root);
+        bundle = LocalizedObject::getBundle(*root);
 
     } catch (std::invalid_argument &e) {
         std::cerr << "semantic error in bundle configuration file:\n"
@@ -141,7 +140,7 @@ TestWindow :: TestWindow (void)
     dialogWindow.reset(new DialogWindow(confirmationMessage,
                                         DialogWindow::noButton |
                                         DialogWindow::yesButton,
-                                        resourceBundle ));
+                                        bundle ));
 }
 
 
@@ -162,8 +161,8 @@ TestWindow :: onButtonClicked(void)                                 throw ()
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     Ptr<Glib::ustring>::Ref     message(new Glib::ustring("Hello, World!"));
 
-    WhiteWindow   * helloWindow = wf->createMessageWindow(message);
-    Gtk::Main::run(*helloWindow);
+    DialogWindow   * helloWindow = wf->createDialogWindow(message, bundle);
+    helloWindow->run();
     delete helloWindow;
 }
 

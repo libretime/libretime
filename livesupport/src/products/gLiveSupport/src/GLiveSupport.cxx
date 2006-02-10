@@ -454,8 +454,9 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
                                                                     throw ()
 {
-    WhiteWindow   * window = widgetFactory->createMessageWindow(message);
-    Gtk::Main::run(*window);
+    DialogWindow   * window = widgetFactory->createDialogWindow(message,
+                                                                getBundle());
+    window->run();
     delete window;
 }
 

@@ -37,6 +37,7 @@
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Colors.h"
+#include "LiveSupport/Widgets/Button.h"
 
 #include "LiveSupport/Widgets/DialogWindow.h"
 
@@ -69,56 +70,63 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
-    layout = Gtk::manage(new Gtk::VBox());
-
-    messageLabel = Gtk::manage(new Gtk::Label(*message));
-    layout->pack_start(*messageLabel, true, true);
-
+    Gtk::Label *        messageLabel = Gtk::manage(new Gtk::Label(*message,
+                                                          Gtk::ALIGN_CENTER,
+                                                          Gtk::ALIGN_CENTER ));
+    Gtk::Box *          messageBox = Gtk::manage(new Gtk::HBox);
+    messageBox->pack_start(*messageLabel, true, false, 10);
+    
     Gtk::ButtonBox *    buttonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END, 5));
-    layout->pack_start(*buttonBox, Gtk::PACK_SHRINK, 0);
-    
+                                                            
     int     buttonCount = 0;
     try {
         if (buttonTypes & cancelButton) {
-            cancelDialogButton = Gtk::manage(widgetFactory->createButton(
+            Button *    button = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("cancelButtonLabel") ));
-            cancelDialogButton->signal_clicked().connect(sigc::mem_fun(*this,
+            button->signal_clicked().connect(sigc::mem_fun(*this,
                                     &DialogWindow::onCancelButtonClicked));
-            buttonBox->pack_start(*cancelDialogButton);
+            buttonBox->pack_start(*button);
             ++buttonCount;
         }
 
         if (buttonTypes & noButton) {
-            noDialogButton = Gtk::manage(widgetFactory->createButton(
+            Button *    button = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("noButtonLabel") ));
-            noDialogButton->signal_clicked().connect(sigc::mem_fun(*this,
+            button->signal_clicked().connect(sigc::mem_fun(*this,
                                     &DialogWindow::onNoButtonClicked));
-            buttonBox->pack_start(*noDialogButton);
+            buttonBox->pack_start(*button);
             ++buttonCount;
         }
 
         if (buttonTypes & yesButton) {
-            yesDialogButton = Gtk::manage(widgetFactory->createButton(
+            Button *    button = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("yesButtonLabel") ));
-            yesDialogButton->signal_clicked().connect(sigc::mem_fun(*this,
+            button->signal_clicked().connect(sigc::mem_fun(*this,
                                     &DialogWindow::onYesButtonClicked));
-            buttonBox->pack_start(*yesDialogButton);
+            buttonBox->pack_start(*button);
             ++buttonCount;
         }
 
         if (buttonTypes & okButton) {
-            okDialogButton = Gtk::manage(widgetFactory->createButton(
+            Button *    button = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("okButtonLabel") ));
-            okDialogButton->signal_clicked().connect(sigc::mem_fun(*this,
+            button->signal_clicked().connect(sigc::mem_fun(*this,
                                     &DialogWindow::onOkButtonClicked));
-            buttonBox->pack_start(*okDialogButton);
+            buttonBox->pack_start(*button);
             ++buttonCount;
         }
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+
+    Gtk::Box *  bottomBox = Gtk::manage(new Gtk::HBox);
+    bottomBox->pack_start(*buttonBox, true, true, 10);
+    
+    Gtk::Box *  layout = Gtk::manage(new Gtk::VBox);
+    layout->pack_start(*messageBox, true, false, 5);
+    layout->pack_start(*bottomBox, false, false, 0);
 
     set_default_size(100*buttonCount + 50, 120);
     property_window_position().set_value(Gtk::WIN_POS_CENTER);

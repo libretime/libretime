@@ -48,7 +48,6 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 
 #include "LiveSupport/Widgets/WhiteWindow.h"
-#include "LiveSupport/Widgets/Button.h"
 
 namespace LiveSupport {
 namespace Widgets {
@@ -101,36 +100,6 @@ class DialogWindow : public WhiteWindow,
 
 
     protected:
-        /**
-         *  The vertical box holding the message and the button.
-         */
-        Gtk::Box                  * layout;
-
-        /**
-         *  The message.
-         */
-        Gtk::Label                * messageLabel;
-
-        /**
-         *  The Cancel button.
-         */
-        Button                    * cancelDialogButton;
-
-        /**
-         *  The No button.
-         */
-        Button                    * noDialogButton;
-
-        /**
-         *  The Yes button.
-         */
-        Button                    * yesDialogButton;
-
-        /**
-         *  The OK button.
-         */
-        Button                    * okDialogButton;
-
         /**
          *  The event handler for the Cancel button clicked.
          */

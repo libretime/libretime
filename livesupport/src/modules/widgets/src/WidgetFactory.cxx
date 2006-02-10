@@ -37,7 +37,6 @@
 #include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/Colors.h"
-#include "MessageWindow.h"
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
@@ -651,12 +650,14 @@ WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
 
 
 /*------------------------------------------------------------------------------
- *  Create a message window.
+ *  Create a dialog window.
  *----------------------------------------------------------------------------*/
-WhiteWindow *
-WidgetFactory :: createMessageWindow(Ptr<Glib::ustring>::Ref    message)
+DialogWindow *
+WidgetFactory :: createDialogWindow(Ptr<Glib::ustring>::Ref     message,
+                                    Ptr<ResourceBundle>::Ref    bundle,
+                                    int                         buttons)
                                                                     throw ()
 {
-    return new MessageWindow(message);
+    return new DialogWindow(message, buttons, bundle);
 }
 

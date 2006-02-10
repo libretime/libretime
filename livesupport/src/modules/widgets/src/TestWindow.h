@@ -91,6 +91,11 @@ class TestWindow : public WhiteWindow
         onStopButtonClicked(void)                           throw ();
     
         /**
+         *  The resource bundle.
+         */
+        Ptr<ResourceBundle>::Ref    bundle;
+    
+        /**
          *  The "are you sure?" dialog window.
          */
         Ptr<DialogWindow>::Ref      dialogWindow;
