@@ -44,6 +44,7 @@
 #include <vector>
 #include <gdk/gdktypes.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdkkeys.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
@@ -82,7 +83,8 @@ using namespace LiveSupport::Core;
  *
  *  The possible action values are the members of the Action enumeration.
  *
- *  The possible key values are the letters a-z, A-Z, the numbers 0-9,
+ *  The possible key values are the letters A-Z (or a-z; they are not 
+ *  case-sensitive), the numbers 0-9,
  *  plus Space, Esc (or Escape), Tab, Backspace, Delete (Del), Home, End,
  *  Up, Down, Left, Right, PgUp (PageUp), PgDown (PageDown, PgDn),
  *  and the function keys F1 through F12.

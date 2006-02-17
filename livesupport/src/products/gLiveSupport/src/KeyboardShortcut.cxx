@@ -113,7 +113,7 @@ KeyboardShortcut :: addKey(unsigned int     modifiers,
                            unsigned int     key)                    throw ()
 {
     modifierList.push_back(modifiers);
-    keyList.push_back(key);
+    keyList.push_back(gdk_keyval_to_upper(key));
 }
 
 
@@ -186,11 +186,14 @@ bool
 KeyboardShortcut :: isTriggeredBy(unsigned int  modifiers,
                                   unsigned int  key) const          throw ()
 {
+    unsigned int    myKey       = gdk_keyval_to_upper(key);
+    unsigned int    myModifiers = modifiers & modifiersChecked;
+
     KeyListType::const_iterator modifierIt = modifierList.begin();
     KeyListType::const_iterator keyIt      = keyList.begin();
     
     while (keyIt != keyList.end()) {
-        if (*modifierIt == (modifiers & modifiersChecked) && *keyIt == key) {
+        if (*modifierIt == myModifiers && *keyIt == myKey) {
             return true;
         }
         ++modifierIt;
