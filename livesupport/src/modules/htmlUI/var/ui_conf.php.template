@@ -1,13 +1,13 @@
 <?php
 ini_set('memory_limit', '64M'); 
 
-define('UI_PL_DRAG_ENABLED',             TRUE);
-define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
-
 ## Warning/Error level
+define('UI_DEBUG',                      FALSE);
 define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
+
+if (UI_DEBUG) error_reporting(E_ALL);
 
 
 define('UI_VERSION',                    'LiveSupport 1.0.2');
@@ -53,6 +53,7 @@ define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
+define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
@@ -96,7 +97,7 @@ define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '0 seconds');
 
 ## File types
-define('UI_FILETYPE_ANY',               'file');
+define('UI_FILETYPE_ANY',               'all');
 define('UI_FILETYPE_PLAYLIST',          'playlist');
 define('UI_FILETYPE_AUDIOCLIP',         'audioClip');
 define('UI_FILETYPE_WEBSTREAM',         'webstream');

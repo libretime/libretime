@@ -10,7 +10,7 @@ class uiBrowse
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
-        if (empty($this->criteria['filetype']))  $this->criteria['filetype'] = NULL;
+        if (empty($this->criteria['filetype']))  $this->criteria['filetype'] = UI_FILETYPE_ANY;
 
         if (!is_array($this->col)) {
             ## init Categorys
