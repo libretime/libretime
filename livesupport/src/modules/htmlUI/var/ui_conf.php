@@ -43,8 +43,8 @@ define('UI_REGEX_URL',                  '/^(ht|f)tps?:\/\/[^ ]+$/');
 
 ## DB ls_pref keys
 define('UI_PL_ACCESSTOKEN_KEY',         'playlistToken');
-define('UI_SCRATCHPAD_KEY',             'djBagContents');
-define('UI_SCRATCHPAD_MAXLENGTH_KEY',   'djBagMaxlength');
+define('UI_SCRATCHPAD_KEY',             'scratchpadContents');
+define('UI_SCRATCHPAD_MAXLENGTH_KEY',   'scratchpadMaxlength');
 #define('UI_SCRATCHPAD_REGEX', '/^[0-9a-f]{16}:[0-9]{4}-[0-9]{2}-[0-9]{2}$/');
 
 ## Session Keys
@@ -111,7 +111,7 @@ define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
 
 ## LS stuff
-require_once '/opt/livesupport/var/LiveSupport/storageServer//var/conf.php';
+require_once '../../storageServer/var/conf.php';
 ## extent config
 $config = array_merge($config,
     array(
@@ -144,7 +144,7 @@ require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
-require_once '/opt/livesupport/var/LiveSupport/storageServer//var/GreenBox.php';
+require_once '../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';
