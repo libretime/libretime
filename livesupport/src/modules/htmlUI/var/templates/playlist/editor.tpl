@@ -73,9 +73,7 @@
                     <input type="button" class="button_large" value="##Delete Playlist##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmDelete',  'PL.deleteActive',   400, 50)">
                 </div>
                 <div class="container_button">
-                    {if $UI_PL_DRAG_ENABLED}
-                        <input type="button" class="button_large" value="##Reorder Playlist##" onClick="popup('{$UI_BROWSER}?popup[]=PL.arrangeItems',   'PL.arrangeItems',   533, 600)">
-                    {/if}
+                    <input type="button" class="button_large" value="##Reorder Playlist##" onClick="popup('{$UI_BROWSER}?popup[]=PL.arrangeItems',   'PL.arrangeItems',   533, 600)">
                     <input type="button" class="button_large" value="##Close Playlist##"   onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)">
                     <input type="button" class="button_large" value="##Description##"      onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
                 </div>
