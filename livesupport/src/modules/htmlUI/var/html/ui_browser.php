@@ -1,6 +1,8 @@
 <?php
 require_once dirname(__FILE__).'/../ui_browser_init.php';
 
+if (UI_DEBUG === TRUE) $Smarty->assign('DEBUG', TRUE);
+
 if (is_array($_REQUEST['popup'])){
     foreach ($_REQUEST['popup'] as $val) {
         switch ($val) {
@@ -181,7 +183,7 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showLibrary', TRUE);
     break;
 
-    case "BROWSE":
+    case "BROWSE":  
         $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
     break;

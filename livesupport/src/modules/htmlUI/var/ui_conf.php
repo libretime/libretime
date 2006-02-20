@@ -1,7 +1,9 @@
 <?php
 ini_set('memory_limit', '64M'); 
 
-define('UI_PL_DRAG_ENABLED',             TRUE);
+define('UI_DEBUG',                      FALSE);
+
+define('UI_PL_DRAG_ENABLED',            TRUE);
 define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
 
 ## Warning/Error level
@@ -9,19 +11,15 @@ define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
 
-## Misc
+
 define('UI_VERSION',                    'LiveSupport 1.0.2');
 define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler
-define('UI_SCHEDULER_DAEMON_CMD',       'make -C /var/www/livesupport/products/scheduler/ run >/tmp/scheduler.log 2>&1 &'); ## adjust the path here
-define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                      ## this is just name of scheduler process to grep in process list for it
+define('UI_SCHEDULER_DAEMON_CMD',       '/etc/init.d/livesupport-station start >/tmp/scheduler.log 2>&1 &'); ## adjust the start-command here
+define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                     ## this is name of scheduler process to grep in process list for it
 
-## Warning/Error level
-define('UI_VERBOSE',                    FALSE);
-define('UI_WARNING',                    TRUE);
-define('UI_ERROR',                      TRUE);
 
 ## Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');
@@ -57,7 +55,6 @@ define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
-define('UI_LOCALIZATION_SESSNAME',      'LOCALIZATION');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
@@ -115,7 +112,7 @@ define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
 
 ## LS stuff
-require_once dirname(__FILE__).'/../../storageServer/var/conf.php';
+require_once '/opt/livesupport/var/LiveSupport/storageServer//var/conf.php';
 ## extent config
 $config = array_merge($config,
     array(
@@ -127,7 +124,20 @@ $config = array_merge($config,
         'stream_types'  => array(
                             'application/ogg',
                             'audio/mpeg'
-        )
+        ),
+        'languages'     => array(
+                            'ar_JO'        => 'Arabic(JO)',
+                            'am_AM'        => 'Armenian(AM)',
+                            'en_GB'        => 'English (GB)',
+                            'en_US'        => 'English (US)',
+                            'es_CO'        => 'Español (CO)',
+                            'cz_CZ'        => 'Česky (CZ)',
+                            'de_DE'        => 'Deutsch (DE)',
+                            'hu_HU'        => 'Magyar (HU)',
+                            'nl_NL'        => 'Nederlands (NL)',
+                            'sr_CS'        => 'Srpski (CS)',
+                            'ru_RU'        => 'Russia(RU)'
+        ),
     )
 );
 require_once dirname(__FILE__).'/ui_base.inc.php';
@@ -135,7 +145,7 @@ require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
-require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
+require_once '/opt/livesupport/var/LiveSupport/storageServer//var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';

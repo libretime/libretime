@@ -273,14 +273,20 @@ switch($_REQUEST['act']){
          $uiHandler->SCHEDULER->startDaemon(TRUE);
          $uiHandler->SCHEDULER->setReload();
     break;
-
+    
+    case "SESSION.CLEAR":
+        $_SESSION = array();
+        die();        
+    break;
+    
     default: 
-        if ($uiHandler->userid) {
+        if ($uiHandler->userid) { 
             $uiHandler->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.');
         }
+        
         $uiHandler->redirUrl = UI_BROWSER;
-        if ($_REQUEST['is_popup'])
-             $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';
+        
+        if ($_REQUEST['is_popup']) $uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 }
 
 if ($uiHandler->alertMsg) {

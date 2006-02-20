@@ -9,9 +9,11 @@ class uiBrowse
         #$this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
-        $this->criteria['limit'] ? NULL : $this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
+        if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        if (empty($this->criteria['filetype']))  $this->criteria['filetype'] = NULL;
 
         if (!is_array($this->col)) {
+            ## init Categorys
             $this->setDefaults();
         }
     }
@@ -29,15 +31,18 @@ class uiBrowse
         $this->col[2]['value'][0] = '%%all%%';
         $this->col[3]['category'] = UI_BROWSE_DEFAULT_KEY_3;
         $this->col[3]['value'][0] = '%%all%%';
+        
         for ($col=1; $col<=3; $col++) {
             $this->setCategory(array('col' => $col, 'category' => $this->col[$col]['category'], 'value' => array(0 => '%%all%%')));
-        }
 
-        $this->setValue(array('col'      => 1,
-                              'category' => UI_BROWSE_DEFAULTKEY_1,
-                              'value'    => Array(0 => '%%all%%')
-                        )
-        );
+
+            $this->setValue(
+                array('col'      => $col,
+                      'category' => $this->col[$col]['category'],
+                      'value'    => $this->col[$col]['value']
+                )
+            );
+        }
 
         if ($reload === TRUE) $this->setReload();
     }
@@ -49,14 +54,14 @@ class uiBrowse
 
 
     function getResult()
-    {
+    {   
         $this->searchDB();
         return $this->results;
     }
 
 
     function browseForm($id, $mask2)
-    {
+    {   
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         #$mask2['browse_columns']['category']['options'][0] = tra('Select a Value');
         foreach ($mask['pages'] as $key=>$val) {
@@ -77,7 +82,7 @@ class uiBrowse
             $output['col'.$n]['dynform'] = $renderer->toArray();
         }
 
-        ## just to change limit and file-type
+        ## form to change limit and file-type
         $form = new HTML_QuickForm('switch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask2['browse_global']);
         $form->setDefaults(array('limit'    => $this->criteria['limit'],
@@ -90,10 +95,10 @@ class uiBrowse
     }
 
 
-    function setCategory($formdata)
+    function setCategory($parm)
     {
-        $which = $formdata['col'];
-        $this->col[$which]['category'] = $this->Base->_formElementDecode($formdata['category']);
+        $which = $parm['col'];
+        $this->col[$which]['category'] = $this->Base->_formElementDecode($parm['category']);
         $this->col[$which]['values']   = $this->Base->gb->browseCategory($this->col[$which]['category'], $this->col[$which]['criteria'], $this->Base->sessid);
 
         $this->Base->redirUrl = UI_BROWSER.'?act=BROWSE';
@@ -102,23 +107,24 @@ class uiBrowse
         #print_r($this->col);
     }
 
-    function setValue($formdata)
+    function setValue($parm)
     {
         $this->criteria['offset'] = 0;
-        $which = $formdata['col'];
+        $which = $parm['col'];
         $next  = $which + 1;
-        $this->col[$which]['form_value'] =  $formdata['value'][0];
-        if ($formdata['value'][0] == '%%all%%') {
-            $this->col[$next]['criteria'] = array('operator' => 'and');
-        } else {
+        $this->col[$which]['form_value'] =  $parm['value'][0];
+        if ($parm['value'][0] == '%%all%%') { 
+            $this->col[$next]['criteria'] = array('operator' => 'and', 'filetype' => $this->criteria['filetype']);
+        } else { 
             $this->col[$next]['criteria'] = array(
                 'operator' => 'and',
-                'conditions'  => array_merge(#
+                'filetype' => $this->criteria['filetype'],
+                'conditions'  => array_merge(
                     is_array($this->col[$which]['criteria']['conditions']) ? $this->col[$which]['criteria']['conditions'] : array(),
                     array(
-                        array('cat'  => $this->Base->_formElementDecode($formdata['category']),
+                        array('cat'  => $this->Base->_formElementDecode($parm['category']),
                               'op'   => '=',
-                              'val'  => $formdata['value'][0]
+                              'val'  => $parm['value'][0]
                         )
                     )
                 )
@@ -137,7 +143,8 @@ class uiBrowse
 
 
     function options($arr)
-    {   $ret['%%all%%'] = '---all---';
+    {   
+        $ret['%%all%%'] = '---all---';
         if (is_array($arr)) {
             foreach ($arr as $val)
                 $ret[$val]  = $val;
@@ -150,7 +157,7 @@ class uiBrowse
     {
         $this->col[$which]['form_value'] = NULL;
         $which++;
-        for ($col=$which; $col<=4; $col++) {
+        for ($col=$which; $col<=3; $col++) {
             $this->col[$col]['criteria']    = NULL;
             $this->col[$col]['values']      = NULL;
             $this->col[$col]['form_value']  = NULL;
@@ -165,7 +172,7 @@ class uiBrowse
         $this->criteria['conditions'] = array();
         for($col=4; $col>=1; $col--) {
             if (is_array($this->col[$col]['criteria'])) {
-                $this->criteria = array_merge ($this->criteria, $this->col[$col]['criteria']);
+                $this->criteria = array_merge ($this->col[$col]['criteria'], $this->criteria);
                 break;
             }
         }
@@ -268,16 +275,24 @@ class uiBrowse
     }
 
     function setLimit($limit)
-    {
+    {   
         $this->criteria['limit'] = $limit;
         $this->setReload();
         #$this->searchDB();
     }
 
     function setFiletype($filetype)
-    {
-        $this->criteria['filetype'] = $filetype;
+    {  
+        $this->criteria['filetype'] = $filetype; 
         $this->criteria['offset'] = 0;
+        
+        for ($n=1; $n<=3; $n++) {
+             $this->col[$n]['criteria']['filetype'] = $filetype;  
+             
+            $this->col[$n]['values'] = $this->Base->gb->browseCategory($this->col[$n]['category'], $this->col[$n]['criteria'], $this->Base->sessid);
+            $this->clearHierarchy($n);
+        }
+        
         $this->setReload();
         #$this->searchDB();
     }
