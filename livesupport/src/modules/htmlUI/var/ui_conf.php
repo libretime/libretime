@@ -2,7 +2,7 @@
 ini_set('memory_limit', '64M'); 
 
 ## Warning/Error level
-define('UI_DEBUG',                      TRUE);
+define('UI_DEBUG',                      FALSE);
 define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
@@ -111,7 +111,7 @@ define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
 
 ## LS stuff
-require_once '../../storageServer/var/conf.php';
+require_once '../../../storageServer/var/conf.php';
 ## extent config
 $config = array_merge($config,
     array(
@@ -122,7 +122,8 @@ $config = array_merge($config,
         ),
         'stream_types'  => array(
                             'application/ogg',
-                            'audio/mpeg'
+                            'audio/mpeg',
+                            'audio/x-mpegurl'
         ),
         'languages'     => array(
                             'ar_JO'        => 'Arabic(JO)',
@@ -144,7 +145,7 @@ require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
-require_once '../../storageServer/var/GreenBox.php';
+require_once '../../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';

@@ -35,7 +35,7 @@
                             <td><input type="checkbox" class="checkbox" name="{$i.attrs.id}"/></td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
                             <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
-                                {assign var="_duration" value=$i.duration}{niceTime in=$_duration}
+                                {assign var="_duration" value=$i.playlength}{niceTime in=$_duration}
                             </td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
                             <td {include file="playlist/actionhandler.tpl"}>

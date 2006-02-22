@@ -180,8 +180,14 @@ switch($_REQUEST['act']){
     break;
 
     case "PL.addItem":
-        if ($uiHandler->PLAYLIST->addItem($_REQUEST['id']) !== FALSE)
+        if ($uiHandler->PLAYLIST->addItem($_REQUEST['id'], $_REQUEST['playlength']) !== FALSE)
             $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+    
+
+    case "PL.setItemPlaylength":
+        $uiHandler->PLAYLIST->setItemPlaylength($_REQUEST['elemId'], $_REQUEST['playlength']);
         $uiHandler->PLAYLIST->setReload();
     break;
 
@@ -279,14 +285,20 @@ switch($_REQUEST['act']){
         die();        
     break;
     
-    default: 
+    case NULL: 
         if ($uiHandler->userid) { 
             $uiHandler->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.');
         }
         
-        $uiHandler->redirUrl = UI_BROWSER;
-        
+        $uiHandler->redirUrl = UI_BROWSER;    
         if ($_REQUEST['is_popup']) $uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+    break;
+    
+    default:
+        $uiHandler->_retMsg(tra('Unknown method: $1', $_REQUEST['act']));
+        $uiHandler->redirUrl = UI_BROWSER;
+        if ($_REQUEST['is_popup']) $uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+    break;
 }
 
 if ($uiHandler->alertMsg) {

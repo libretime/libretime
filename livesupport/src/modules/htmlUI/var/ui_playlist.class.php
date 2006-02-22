@@ -68,9 +68,9 @@ class uiPlaylist
              if (UI_WARNING) $this->Base->_retMsg('Playlist has been locked by "$1".', $this->Base->gb->getSubjName($userid));
             return FALSE;
         }
-        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
+        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid); 
         if (PEAR::isError($token)) {
-            #print_r($token);
+            if (UI_VERBOSE === TRUE) print_r($token);
             $this->Base->_retMsg('Unable to open playlist "$1".', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
             return FALSE;
         }
@@ -94,7 +94,7 @@ class uiPlaylist
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            #print_r($plgunid);
+            if (UI_VERBOSE === TRUE) print_r($plgunid);
             if (UI_WARNING) $this->Base->_retMsg('Unable to release playlist.');
             return FALSE;
         }
@@ -128,7 +128,7 @@ class uiPlaylist
         }
         $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            # print_r($plgunid);
+            if (UI_VERBOSE === TRUE) print_r($plgunid);
             if (UI_WARNING) $this->Base->_retMsg('Unable to revert to locked state.');
             return FALSE;
         }
@@ -176,21 +176,27 @@ class uiPlaylist
         return FALSE;
     }
 
-    function addItem($elemIds)
+    function addItem($elemIds, $duration=null)
     {
-        $this->changed = TRUE;
+        $this->changed  = TRUE;
+        $fadeIn         = null;
+        $fadeOut        = null;
+        $pause          = null;        
         
         if (!$elemIds) {
             if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
             return FALSE;
         }
-        if (!is_array($elemIds))
+        if (!is_array($elemIds)) {
             $elemIds = array($elemIds);
-
-        foreach ($elemIds as $elemId) {
-            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid);
+        }
+        if (isset($duration)) {
+            $length = sprintf('%02d', $duration['H']).':'.sprintf('%02d', $duration['i']).':'.sprintf('%02d', $duration['s']).'.000000';
+        }
+        foreach ($elemIds as $elemId) { 
+            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid, $fadeIn, $fadeOut, $length, $pause);
             if (PEAR::isError($r)) {
-                #print_r($r);
+                if (UI_VERBOSE === TRUE) print_r($r);
                 $this->Base->_retMsg('Error while trying to add item to playlist.');
                 return FALSE;
             }
@@ -258,13 +264,17 @@ class uiPlaylist
         unset($this->flat);
         $this->_plwalk($this->getPLArray($id));
         
-        reset($this->flat);
-        $this->flat[key($this->flat)]['firstInList'] = true;
-        end($this->flat);
-        $this->flat[key($this->flat)]['lastInList'] = true; 
-        reset($this->flat);
+        if (is_Array($this->flat)) {
+            reset($this->flat);
+            $this->flat[key($this->flat)]['firstInList'] = true;
+            end($this->flat);
+            $this->flat[key($this->flat)]['lastInList'] = true; 
+            reset($this->flat);
 
-        return $this->flat;
+            return $this->flat;
+        } else {
+            return array();    
+        }
     }
 
 
@@ -279,6 +289,7 @@ class uiPlaylist
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
                 $this->flat[$parent] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
+                $this->flat[$parent]['playlength'] = $sub['attrs']['playlength'];
             }
             if ($sub['elementname']===UI_PL_ELEM_FADEINFO) {
                 $this->flat[$parent][UI_PL_ELEM_FADEIN]  = GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEIN]);
@@ -337,7 +348,7 @@ class uiPlaylist
                 $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
                 #print_r($r);
                 if (PEAR::isError($r)) {
-                    if (UI_VERBOSE) print_r($r);
+                    if (UI_VERBOSE === TRUE) print_r($r);
                     $this->Base->_retMsg('Changing fade information failed.');
                     return FALSE;
                 }
@@ -348,7 +359,7 @@ class uiPlaylist
                 $r = $this->Base->gb->changeFadeInfo($this->token, $v['attrs']['id'], $type==='pause'?$pause:$xfade, $type==='pause'?$pause:$xfade, $this->Base->sessid);
                 #print_r($r);
                 if (PEAR::isError($r)) {
-                    if (UI_VERBOSE) print_r($r);
+                    if (UI_VERBOSE === TRUE) print_r($r);
                     $this->Base->_retMsg('Changing fade information failed.');
                     return FALSE;
                 }
@@ -364,7 +375,7 @@ class uiPlaylist
         
         $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
         if (PEAR::isError($r)) {
-            if (UI_VERBOSE) print_r($r);
+            if (UI_VERBOSE === TRUE) print_r($r);
             $this->Base->_retMsg('Cannot move item.');
             return FALSE;
         }
@@ -382,7 +393,7 @@ class uiPlaylist
             $pos++;
             $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
             if (PEAR::isError($r)) {
-                if (UI_VERBOSE) print_r($r);
+                if (UI_VERBOSE === TRUE) print_r($r);
                 $this->Base->_retMsg('Cannot move item.');
                 return FALSE;
             }
@@ -467,6 +478,28 @@ class uiPlaylist
         $form->accept($renderer);
         return $renderer->toArray();
     }
+    
+    function setItemPlaylengthForm($id, $elemId, $mask)
+    {
+        if (isset($elemId)) { 
+            $mask['act']['constant']        = 'PL.setItemPlaylength';
+            $mask['elemId']['constant']     = $elemId;    
+            $element                        = $this->getCurrElement($elemId);
+            $mask['playlength']['default']  = substr($element['playlength'], 0, 8);
+            $mask['duration']['constant']   = substr($element['duration'], 0, 8); 
+        } else {
+            $mask['act']['constant']        = 'PL.addItem';
+            $mask['id']['constant']         = $id;
+            $mask['playlength']['default']  = substr($this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION), 0, 8); 
+            $mask['duration']['constant']   = $mask['playlength']['default'];
+        }
+        
+        $form = new HTML_QuickForm('PL_setItemPlaylengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $mask);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
+    }
 
 
     function metaDataForm($langid)
@@ -531,7 +564,7 @@ class uiPlaylist
         foreach ($mData as $key=>$val) {
             $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
-                #print_r($r);
+                if (UI_VERBOSE === TRUE) print_r($r);
                 $this->Base->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }

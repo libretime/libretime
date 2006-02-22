@@ -100,7 +100,12 @@ if (is_array($_REQUEST['popup'])){
             case "PL.arrangeItems":
                 $Smarty->display('popup/PLAYLIST.arrangeItems.tpl');
             break;
-
+            
+            case "PL.setItemPlaylengthForm": 
+                $Smarty->assign('dynform', $uiBrowser->PLAYLIST->setItemPlaylengthForm($_REQUEST['id'], $_REQUEST['elemId'], $ui_fmask['PL.setItemPlaylength']));
+                $Smarty->display('popup/PLAYLIST.setItemPlaylength.tpl');
+            break;
+            
             case "SCHEDULER.addItem":
                 $Smarty->display('popup/SCHEDULER.addItem.tpl');
             break;
@@ -119,9 +124,9 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/testStream.tpl');
             break;
             
-            case "listen2AudioClip":
-                $Smarty->assign('data', $uiBrowser->listen2AudioClip($_REQUEST['id']));
-                $Smarty->display('popup/listen2AudioClip.tpl');
+            case "listen2Audio":
+                $Smarty->assign('data', $uiBrowser->listen2Audio($_REQUEST['id']));
+                $Smarty->display('popup/listen2Audio.tpl');
             break;
             
             case "help":

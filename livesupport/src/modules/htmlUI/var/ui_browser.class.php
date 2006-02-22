@@ -432,21 +432,20 @@ class uiBrowser extends uiBase {
         );
     }
     
-    function listen2AudioClip($clipid)
+    function listen2Audio($clipid)
     { 
-        #$pls  = "[playlist]\n".
-        #$pls .= "File1=http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
-        #$pls .= "Title1=Mein Titel\n";
-        #$pls .= "NumberOfEntries=1\nVersion=2";
-        
-        #$m3u  = "#EXTM3U\n";
-        #$m3u .= "#EXTINF:111,Mein Titel\n";
-        $m3u .= "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
-           
+        $id   = $this->gb->_idFromGunid($clipid);
+        $type = $this->gb->getFileType($id); 
+
+        if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
+            $m3u = "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
+        } else {
+            $m3u = $this->_getMDataValue($id, UI_MDATA_KEY_URL);
+        }
         touch(UI_TESTSTREAM_MU3_TMP);
         $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
         fwrite($handle, $m3u);
-        fclose($handle);        
+        fclose($handle);       
     }  
     
  

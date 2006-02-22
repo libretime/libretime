@@ -642,6 +642,53 @@ $ui_fmask = array(
             )
         )
     ),
+    'PL.setItemPlaylength' => array(
+        'act'       => array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+        ),
+        'id'        => array(
+            'element'   => 'id',
+            'type'      => 'hidden'
+        ),
+        'elemId'    => array(
+            'element'   => 'elemId',
+            'type'      => 'hidden'
+        ),
+        'duration'    => array(
+            'element'   => 'duration',
+            'type'      => 'hidden'
+        ),
+        'playlength'  => array(
+            'element'   => 'playlength',
+            'type'      => 'date',
+            'label'     => 'Playlength',
+            'options'   => array('format' => 'His'),
+        ),
+        array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'attributes'=> array('onClick' => 'window.close()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'reset',
+            'type'      => 'reset',
+            'label'     => 'Reset',
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'submitter',
+            'type'      => 'button',
+            'label'     => 'Submit',
+            'attributes'=> array('onClick' => 'PL_checkItemPlaylength()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'reset', 'submitter')
+        )
+    ),
     'schedule'  => array(
         array(
             'element'   => 'act',

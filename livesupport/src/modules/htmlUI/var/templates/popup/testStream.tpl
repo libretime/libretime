@@ -15,8 +15,10 @@
     {if $data.type.valid === true}
         {tra str='Stream is wanted type <font color="green">$1</font>.' 1=$data.type.type}
 
-    {else}
+    {elseif $data.type.type}
         {tra str='Stream has wrong content type <font color="red">$1</font>.' 1=$data.type.type}
+    {else}
+        ##No content type declared.##
     {/if}
     </div>
 
