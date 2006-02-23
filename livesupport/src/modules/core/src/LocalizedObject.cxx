@@ -112,7 +112,8 @@ LocalizedObject :: getBundle(const xmlpp::Element     & element)
  *  Get a resource bundle by the specified key
  *----------------------------------------------------------------------------*/
 Ptr<ResourceBundle>::Ref
-LocalizedObject :: getBundle(const char  * key)
+LocalizedObject :: getBundle(Ptr<ResourceBundle>::Ref   bundle,
+                             const char *               key)
                                                 throw (std::invalid_argument)
 {
     UErrorCode                  status = U_ZERO_ERROR;
@@ -132,13 +133,14 @@ LocalizedObject :: getBundle(const char  * key)
 
 
 /*------------------------------------------------------------------------------
- *  Get a string from a resource bundle un Glib ustring format
+ *  Get a string from a resource bundle in the ICU string format
  *----------------------------------------------------------------------------*/
 Ptr<UnicodeString>::Ref
-LocalizedObject :: getResourceString(const char * key)
+LocalizedObject :: getResourceString(Ptr<ResourceBundle>::Ref   bundle,
+                                     const char *               key)
                                                 throw (std::invalid_argument)
 {
-    Ptr<ResourceBundle>::Ref    rb = getBundle(key);
+    Ptr<ResourceBundle>::Ref    rb = getBundle(bundle, key);
     if (rb->getType() == URES_STRING) {
         UErrorCode                status = U_ZERO_ERROR;
         Ptr<UnicodeString>::Ref   str(new UnicodeString(rb->getString(status)));

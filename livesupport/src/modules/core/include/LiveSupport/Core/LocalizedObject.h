@@ -188,7 +188,23 @@ class LocalizedObject
          *             the specified key
          */
         Ptr<ResourceBundle>::Ref
-        getBundle(const char  * key)            throw (std::invalid_argument);
+        getBundle(const char  * key)            throw (std::invalid_argument)
+        {
+            return getBundle(getBundle(), key);
+        }
+
+        /**
+         *  Get a resource bundle nested inside our bundle.
+         *
+         *  @param bundle   the resource bundle containing the key.
+         *  @param key      the name of the nested resource bundle to get.
+         *  @exception std::invalid_argument if there is no bundle by
+         *             the specified key
+         */
+        Ptr<ResourceBundle>::Ref
+        getBundle(Ptr<ResourceBundle>::Ref  bundle,
+                  const char *              key)
+                                                throw (std::invalid_argument);
 
         /**
          *  Get a string from the resource bundle.
@@ -200,6 +216,40 @@ class LocalizedObject
          */
         virtual Ptr<UnicodeString>::Ref
         getResourceString(const char  * key)
+                                                throw (std::invalid_argument)
+        {
+            return getResourceString(getBundle(), key);
+        }
+
+        /**
+         *  Get a string from the resource bundle.
+         *
+         *  @param bundle   the nested resource bundle containing the key.
+         *  @param key      the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getResourceString(const char *  bundle,
+                          const char *  key)
+                                                throw (std::invalid_argument)
+        {
+            return getResourceString(getBundle(bundle), key);
+        }
+        
+        /**
+         *  Get a string from the resource bundle.
+         *
+         *  @param bundle   the nested resource bundle containing the key.
+         *  @param key      the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getResourceString(Ptr<ResourceBundle>::Ref  bundle,
+                          const char *              key)
                                                 throw (std::invalid_argument);
 
         /**
@@ -389,6 +439,23 @@ class LocalizedObject
             return unicodeStringToUstring(getResourceString(key.c_str()));
         }
 
+        /**
+         *  Get a string from a resource bundle nested inside this bundle,
+         *  as a Glib ustring.
+         *
+         *  @param bundle   the name of the resource bundle to get.
+         *  @param key      the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
+         */
+        Ptr<Glib::ustring>::Ref
+        getResourceUstring(const char *     bundle,
+                           const char *     key)
+                                                throw (std::invalid_argument)
+        {
+            return unicodeStringToUstring(getResourceString(bundle, key) );
+        }
 };
 
 /* ================================================= external data structures */
