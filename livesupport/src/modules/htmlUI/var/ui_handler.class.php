@@ -41,7 +41,9 @@ class uiHandler extends uiBase {
         #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
-            $_SESSION['retransferFormData']['login'] = $formdata['login'];
+            $_SESSION['retransferFormData']['login']  = $formdata['login'];
+            $_SESSION['retransferFormData']['langid'] = $formdata['langid'];
+            $_SESSION['retransferFormData']['pass']   = "\n";
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
@@ -50,7 +52,9 @@ class uiHandler extends uiBase {
 
         if (!$sessid || PEAR::isError($sessid)){
             $this->_retMsg('Login failed.');
-            $_SESSION['retransferFormData']['login'] = $formdata['login'];
+            $_SESSION['retransferFormData']['login']  = $formdata['login'];
+            $_SESSION['retransferFormData']['langid'] = $formdata['langid'];
+            $_SESSION['retransferFormData']['pass']   = "\n";
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }

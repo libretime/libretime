@@ -149,7 +149,6 @@ $ui_fmask = array(
             'type'      => 'password',
             'label'     => 'Password',
             'required'  => TRUE,
-            'requiredmsg' => "",
             'attributes' => array('size' => 20)
         ),
         array(
