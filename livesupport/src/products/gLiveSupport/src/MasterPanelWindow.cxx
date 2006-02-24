@@ -247,7 +247,7 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     }
 
     try {
-        set_title(*getResourceUstring("windowTitle"));
+        set_title(*getResourceUstring(windowName.c_str(), "windowTitle"));
 
         Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
 

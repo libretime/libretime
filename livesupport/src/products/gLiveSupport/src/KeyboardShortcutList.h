@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_KeyboardShortcutContainer_h
-#define LiveSupport_GLiveSupport_KeyboardShortcutContainer_h
+#ifndef LiveSupport_GLiveSupport_KeyboardShortcutList_h
+#define LiveSupport_GLiveSupport_KeyboardShortcutList_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,11 +41,12 @@
 #endif
 
 #include <map>
+#include <iostream>     // TODO: REMOVE ME
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
 
-#include "KeyboardShortcut.h"
+#include "KeyboardShortcutContainer.h"
 
 
 namespace LiveSupport {
@@ -62,68 +63,49 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Container holding KeyboardShortcut objects.
+ *  A list of KeyboardShortcutContainer objects.
  *
  *  This object has to be configured with an XML configuration element
- *  called keyboardShortcutContainer. This may look like the following:
- *
- *  <pre><code>
- *  &lt;keyboardShortcutContainer&gt;
- *      &lt;windowName&gt;liveModeWindow&lt;/windowName&gt;
- *      &lt;keyboardShortcut&gt; ... &lt;/keyboardShortcut&gt;
- *      &lt;keyboardShortcut&gt; ... &lt;/keyboardShortcut&gt;
- *      ...
- *      &lt;keyboardShortcut&gt; ... &lt;/keyboardShortcut&gt;
- *  &lt;/keyboardShortcutContainer&gt;
- *  </code></pre>
- *
+ *  called keyboardShortcutList.
+ *  
  *  The DTD for the expected XML element is the following:
- *
  *  <pre><code>
- *  <!ELEMENT keyboardShortcutContainer (windowName, keyboardShortcut+) >
- *  <!ELEMENT windowName (CDATA) >
+ *  <!ELEMENT keyboardShortcutList (keyboardShortcutContainer*) >
  *  </code></pre>
  *
- *  WindowName is an arbitrary utf-8 string which identifies the window the
- *  shortcuts are for.
- *  For a description of the keyboardShortcut XML element, see the documentation
- *  of the KeyboardShortcut class.
+ *  For a description of the keyboardShortcutContainer XML element,
+ *  see the documentation of the KeyboardShortcutContainer class.
  *
  *  @author  $Author$
  *  @version $Revision$
  *  @see KeyboardShortcut
  */
-class KeyboardShortcutContainer : public Configurable
+class KeyboardShortcutList : public Configurable
 {
     private:
         /**
          *  The name of the configuration XML element used by
-         *  KeyboardShortcutContainer.
+         *  KeyboardShortcutList.
          */
         static const std::string    configElementName;
 
         /**
-         *  A vector type holding contant KeyboardShortcut references.
+         *  The type for storing the keyboard shortcut containers.
          */
-        typedef std::vector<Ptr<KeyboardShortcut>::Ref>
-                                    ShortcutListType;
+        typedef std::vector<Ptr<KeyboardShortcutContainer>::Ref> 
+                                    ContainerListType;
 
         /**
-         *  The list of all KeyboardShortcut references.
+         *  The list of keyboard shortcut containers for the various windows.
          */
-        ShortcutListType            shortcutList;
-        
-        /**
-         *  The name of the window the shortcuts are for.
-         */
-        Ptr<const Glib::ustring>::Ref   windowName;
+        ContainerListType           containerList;
 
 
     public:
         /**
          *  Constructor.
          */
-        KeyboardShortcutContainer()                                 throw ()
+        KeyboardShortcutList()                                      throw ()
         {
         }
 
@@ -131,7 +113,7 @@ class KeyboardShortcutContainer : public Configurable
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~KeyboardShortcutContainer(void)                            throw ()
+        ~KeyboardShortcutList(void)                                 throw ()
         {
         }
 
@@ -142,7 +124,7 @@ class KeyboardShortcutContainer : public Configurable
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                              throw ()
+        getConfigElementName(void)                                  throw ()
         {
             return configElementName;
         }
@@ -159,34 +141,25 @@ class KeyboardShortcutContainer : public Configurable
                                                 throw (std::invalid_argument);
 
         /**
-         *  Return the action triggered by the given key.
-         *  Scans the keyboard shortcuts in order, and returns the first
-         *  match.
+         *  Find the action triggered by the given key in the given window.
          *
-         *  @param  modifiers   the gdktypes code of the modifiers flag.
-         *  @param  key         the gdkkeysyms code of the key pressed.
-         *  @return the action; or noAction if none is found.
+         *  @param  windowName  a string identifying the window (not localized).
+         *  @param  modifiers   the gdktypes code for the Shift, Ctrl etc.
+         *                          modifier keys which are pressed.
+         *  @param  key         the gdkkeysyms code for the key pressed.
+         *  @return the associated action; or noAction, if none is found.
          */
         KeyboardShortcut::Action
-        findAction(unsigned int modifiers, unsigned int key) const  throw ();
+        findAction(const Glib::ustring &    windowName,
+                   unsigned int             modifiers,
+                   unsigned int             key) const              throw ();
         
         /**
-         *  Return the name of the window the shortcuts are for.
-         *
-         *  @return the name of the window; this may be 0 if (and only if)
-         *          the object has not been configured yet.
+         *  The iterator for cycling through the keyboard shortcut containers.
+         *  Dereference an iterator to get a 
+         *  Ptr<KeyboardShortcutContainer>::Ref.
          */
-        Ptr<const Glib::ustring>::Ref
-        getWindowName(void) const                                   throw ()
-        {
-            return windowName;
-        }
-        
-        /**
-         *  The iterator for cycling through the keyboard shortcuts.
-         *  Dereference an iterator to get a Ptr<KeyboardShortcut>::Ref.
-         */
-        typedef ShortcutListType::const_iterator    iterator;
+        typedef ContainerListType::const_iterator   iterator;
         
         /**
          *  The first item in the list.
@@ -194,7 +167,7 @@ class KeyboardShortcutContainer : public Configurable
         iterator
         begin(void) const                                           throw ()
         {
-            return shortcutList.begin();
+            return containerList.begin();
         }
         
         /**
@@ -203,7 +176,7 @@ class KeyboardShortcutContainer : public Configurable
         iterator
         end(void) const                                             throw ()
         {
-            return shortcutList.end();
+            return containerList.end();
         }
 };
 
@@ -217,5 +190,5 @@ class KeyboardShortcutContainer : public Configurable
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_KeyboardShortcutContainer_h
+#endif // LiveSupport_GLiveSupport_KeyboardShortcutList_h
 

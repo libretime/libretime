@@ -83,11 +83,11 @@ static const unsigned int  modifiersChecked = GDK_SHIFT_MASK
  *  Add a shortcut key for this object.
  *----------------------------------------------------------------------------*/
 void
-KeyboardShortcut :: addKey(const Glib::ustring &    modifiedKeyName)
+KeyboardShortcut :: addKey(Ptr<const Glib::ustring>::Ref    modifiedKeyName)
                                                 throw (std::invalid_argument)
 {
     Ptr<Glib::ustring>::Ref     inputString(new Glib::ustring(
-                                                        modifiedKeyName ));
+                                                        *modifiedKeyName ));
 
     Ptr<Glib::ustring>::Ref     keyName     = getToken(inputString);
     if (!keyName) {
@@ -142,13 +142,13 @@ KeyboardShortcut :: configure(const xmlpp::Element & element)
     }
     const xmlpp::Element*   actionElement = dynamic_cast<const xmlpp::Element*>(
                                                 children.front());
-    const Glib::ustring     actionString  = actionElement->get_child_text()
-                                                         ->get_content();
+    actionString.reset(new Glib::ustring(actionElement->get_child_text()
+                                                      ->get_content() ));
     try {
         action = stringToAction(actionString);
     } catch (std::invalid_argument &e) {
         std::string eMsg = "Invalid action specification ";
-        eMsg += actionString;
+        eMsg += *actionString;
         eMsg += ".";
         throw std::invalid_argument(eMsg);
     }
@@ -159,19 +159,25 @@ KeyboardShortcut :: configure(const xmlpp::Element & element)
         throw std::invalid_argument("missing " 
                                     + keyElementName + " element");
     }
+    bool firstRun = true;
     xmlpp::Node::NodeList::const_iterator   it;
     for (it = children.begin(); it != children.end(); ++it) {
         const xmlpp::Element*   keyElement = 
                                     dynamic_cast<const xmlpp::Element*>(*it);
-        const Glib::ustring     keyString  = keyElement->get_child_text()
-                                                       ->get_content();
+        Ptr<Glib::ustring>::Ref keyString(new Glib::ustring(
+                                                keyElement->get_child_text()
+                                                          ->get_content() ));
+        if (firstRun) {
+            firstKeyString  = keyString;
+            firstRun        = false;
+        }
         try {
             addKey(keyString);
         } catch (std::invalid_argument &e) {
             std::string eMsg = "Invalid key specification ";
-            eMsg += keyString;
+            eMsg += *keyString;
             eMsg += " for action ";
-            eMsg += actionString;
+            eMsg += *actionString;
             eMsg += ".";
             throw std::invalid_argument(eMsg);
         }
@@ -208,24 +214,24 @@ KeyboardShortcut :: isTriggeredBy(unsigned int  modifiers,
  *  Convert an action name string to an enumeration value.
  *----------------------------------------------------------------------------*/
 KeyboardShortcut::Action
-KeyboardShortcut :: stringToAction(const Glib::ustring &    actionName)
+KeyboardShortcut :: stringToAction(Ptr<const Glib::ustring>::Ref    actionName)
                                                 throw (std::invalid_argument)
 {
-    if (actionName == "playAudio") {
+    if (*actionName == "playAudio") {
         return playAudio;
-    } else if (actionName == "pauseAudio") {
+    } else if (*actionName == "pauseAudio") {
         return pauseAudio;
-    } else if (actionName == "stopAudio") {
+    } else if (*actionName == "stopAudio") {
         return stopAudio;
-    } else if (actionName == "nextTrack") {
+    } else if (*actionName == "nextTrack") {
         return nextTrack;
-    } else if (actionName == "fadeOut") {
+    } else if (*actionName == "fadeOut") {
         return fadeOut;
-    } else if (actionName == "moveItemUp") {
+    } else if (*actionName == "moveItemUp") {
         return moveItemUp;
-    } else if (actionName == "moveItemDown") {
+    } else if (*actionName == "moveItemDown") {
         return moveItemDown;
-    } else if (actionName == "removeItem") {
+    } else if (*actionName == "removeItem") {
         return removeItem;
     } else {
         throw std::invalid_argument("");

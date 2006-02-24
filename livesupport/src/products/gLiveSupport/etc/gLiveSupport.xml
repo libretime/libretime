@@ -11,7 +11,7 @@
                                        cuePlayer,
                                        stationLogo,
                                        metadataTypeContainer,
-                                       keyboardShortcutContainer*) >
+                                       keyboardShortcutList) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -98,6 +98,7 @@
 <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
 
+<!ELEMENT keyboardShortcutList          (keyboardShortcutContainer*) >
 <!ELEMENT keyboardShortcutContainer     (windowName, keyboardShortcut+) >
 <!ELEMENT windowName                    (#PCDATA) >
 <!ELEMENT keyboardShortcut              (action, key+) >
@@ -340,79 +341,81 @@
         />
     </metadataTypeContainer>
     
-    <keyboardShortcutContainer>
-        <windowName>masterPanelWindow</windowName>
-        <keyboardShortcut>
-            <action>playAudio</action>
-            <key>X</key>
-            <key>Space</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>pauseAudio</action>
-            <key>V</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>stopAudio</action>
-            <key>C</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>nextTrack</action>
-            <key>B</key>
-        </keyboardShortcut>
-    </keyboardShortcutContainer>
+    <keyboardShortcutList>
+        <keyboardShortcutContainer>
+            <windowName>masterPanelWindow</windowName>
+            <keyboardShortcut>
+                <action>playAudio</action>
+                <key>X</key>
+                <key>Space</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>pauseAudio</action>
+                <key>V</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>stopAudio</action>
+                <key>C</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>nextTrack</action>
+                <key>B</key>
+            </keyboardShortcut>
+        </keyboardShortcutContainer>
 
-    <keyboardShortcutContainer>
-        <windowName>liveModeWindow</windowName>
-        <keyboardShortcut>
-            <action>moveItemUp</action>
-            <key>Alt-Up</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>moveItemDown</action>
-            <key>Alt-Down</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>removeItem</action>
-            <key>Delete</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>playAudio</action>
-            <key>X</key>
-            <key>Space</key>
-        </keyboardShortcut>
-    </keyboardShortcutContainer>
+        <keyboardShortcutContainer>
+            <windowName>liveModeWindow</windowName>
+            <keyboardShortcut>
+                <action>moveItemUp</action>
+                <key>Alt-Up</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>moveItemDown</action>
+                <key>Alt-Down</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>removeItem</action>
+                <key>Delete</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>playAudio</action>
+                <key>X</key>
+                <key>Space</key>
+            </keyboardShortcut>
+        </keyboardShortcutContainer>
 
-    <keyboardShortcutContainer>
-        <windowName>scratchpadWindow</windowName>
-        <keyboardShortcut>
-            <action>moveItemUp</action>
-            <key>Alt-Up</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>moveItemDown</action>
-            <key>Alt-Down</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>removeItem</action>
-            <key>Delete</key>
-        </keyboardShortcut>
-    </keyboardShortcutContainer>
+        <keyboardShortcutContainer>
+            <windowName>scratchpadWindow</windowName>
+            <keyboardShortcut>
+                <action>moveItemUp</action>
+                <key>Alt-Up</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>moveItemDown</action>
+                <key>Alt-Down</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>removeItem</action>
+                <key>Delete</key>
+            </keyboardShortcut>
+        </keyboardShortcutContainer>
 
-    <keyboardShortcutContainer>
-        <windowName>simplePlaylistManagementWindow</windowName>
-        <keyboardShortcut>
-            <action>moveItemUp</action>
-            <key>Alt-Up</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>moveItemDown</action>
-            <key>Alt-Down</key>
-        </keyboardShortcut>
-        <keyboardShortcut>
-            <action>removeItem</action>
-            <key>Delete</key>
-        </keyboardShortcut>
-    </keyboardShortcutContainer>
+        <keyboardShortcutContainer>
+            <windowName>simplePlaylistManagementWindow</windowName>
+            <keyboardShortcut>
+                <action>moveItemUp</action>
+                <key>Alt-Up</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>moveItemDown</action>
+                <key>Alt-Down</key>
+            </keyboardShortcut>
+            <keyboardShortcut>
+                <action>removeItem</action>
+                <key>Delete</key>
+            </keyboardShortcut>
+        </keyboardShortcutContainer>
+    </keyboardShortcutList>
 
 </gLiveSupport>
 

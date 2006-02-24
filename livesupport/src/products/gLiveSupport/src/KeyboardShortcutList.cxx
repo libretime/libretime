@@ -33,7 +33,7 @@
 #include "configure.h"
 #endif
 
-#include "KeyboardShortcutContainer.h"
+#include "KeyboardShortcutList.h"
 
 
 using namespace LiveSupport::Core;
@@ -47,13 +47,8 @@ using namespace LiveSupport::GLiveSupport;
 /**
  *  The name of the config element for this class
  */
-const std::string           KeyboardShortcutContainer::configElementName
-                                                = "keyboardShortcutContainer";
-
-/**
- *  The name of the window name sub-element.
- */
-static const std::string    windowNameElementName = "windowName";
+const std::string           KeyboardShortcutList::configElementName
+                                                = "keyboardShortcutList";
 
 
 /* ===============================================  local function prototypes */
@@ -65,59 +60,41 @@ static const std::string    windowNameElementName = "windowName";
  *  Create a metadata type container element object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
-KeyboardShortcutContainer :: configure(const xmlpp::Element & element)
+KeyboardShortcutList :: configure(const xmlpp::Element & element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != configElementName) {
         throw std::invalid_argument("bad coniguration element "
                                   + element.get_name());
     }
-
-    xmlpp::Node::NodeList childNodes = element.get_children(
-                                    KeyboardShortcut::getConfigElementName());
-    xmlpp::Node::NodeList::const_iterator it = childNodes.begin();
-
-    while (it != childNodes.end()) {
-        const xmlpp::Element *      keyboardShortcutElement 
-                                    = dynamic_cast<const xmlpp::Element*> (*it);
-                                    
-        Ptr<KeyboardShortcut>::Ref  keyboardShortcut(new KeyboardShortcut);
-        keyboardShortcut->configure(*keyboardShortcutElement);
-        
-        shortcutList.push_back(keyboardShortcut);
+    
+    xmlpp::Node::NodeList   nodes = element.get_children(
+                            KeyboardShortcutContainer::getConfigElementName());
+    xmlpp::Node::NodeList::const_iterator   it = nodes.begin();
+    while (it != nodes.end()) {
+        Ptr<KeyboardShortcutContainer>::Ref ksc(new KeyboardShortcutContainer);
+        ksc->configure(*((const xmlpp::Element*) *it));
+        containerList.push_back(ksc);
         ++it;
     }
-    
-    childNodes = element.get_children(windowNameElementName);
-    if (childNodes.size() < 1) {
-        throw std::invalid_argument("no windowName element");
-    } else if (childNodes.size() > 1) {
-        throw std::invalid_argument("more than one windowName element");
-    }
-    const xmlpp::Element *          windowNameElement
-                                    = dynamic_cast<const xmlpp::Element*> (
-                                            childNodes.front() );
-    windowName.reset(new const Glib::ustring(windowNameElement->get_child_text()
-                                                              ->get_content()));
 }
 
 /*------------------------------------------------------------------------------
- *  Return the action triggered by the given key.
+ *  Find the action triggered by the given key in the given window.
  *----------------------------------------------------------------------------*/
 KeyboardShortcut::Action
-KeyboardShortcutContainer :: findAction(unsigned int modifiers, 
-                                        unsigned int key) const     throw ()
+KeyboardShortcutList :: findAction(const Glib::ustring &    windowName,
+                                   unsigned int             modifiers,
+                                   unsigned int             key) const
+                                                                    throw ()
 {
-    ShortcutListType::const_iterator    it = shortcutList.begin();
-    
-    while (it != shortcutList.end()) {
-        Ptr<const KeyboardShortcut>::Ref    shortcut = *it;
-        if (shortcut->isTriggeredBy(modifiers, key)) {
-            return shortcut->getAction();
+    for (iterator it = begin(); it != end(); ++it) {
+        Ptr<const KeyboardShortcutContainer>::Ref     ksc = *it;
+        if (*ksc->getWindowName() == windowName) {
+            return ksc->findAction(modifiers, key);
         }
-        ++it;
     }
-    
+
     return KeyboardShortcut::noAction;
 }
 

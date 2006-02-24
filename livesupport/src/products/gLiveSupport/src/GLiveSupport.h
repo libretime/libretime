@@ -55,7 +55,7 @@
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "KeyboardShortcutContainer.h"
+#include "KeyboardShortcutList.h"
 
 
 namespace LiveSupport {
@@ -288,16 +288,9 @@ class GLiveSupport : public LocalizedConfigurable,
         uncachePlaylist(Ptr<const UniqueId>::Ref  id)           throw ();
         
         /**
-         *  The type for storing the keyboard shortcuts.
-         */
-        typedef std::map<const Glib::ustring, 
-                         Ptr<KeyboardShortcutContainer>::Ref> 
-                                                    KeyboardShortcutListType;
-
-        /**
          *  The list of keyboard shortcuts for the various windows.
          */
-        KeyboardShortcutListType    keyboardShortcutList;
+        Ptr<KeyboardShortcutList>::Ref  keyboardShortcutList;
 
         /**
          *  The type for a single window position.
@@ -986,7 +979,50 @@ class GLiveSupport : public LocalizedConfigurable,
         KeyboardShortcut::Action
         findAction(const Glib::ustring &    windowName,
                    unsigned int             modifiers,
-                   unsigned int             key) const              throw ();
+                   unsigned int             key) const              throw ()
+        {
+            return keyboardShortcutList->findAction(windowName, modifiers, key);
+        }
+
+        /**
+         *  The list of all KeyboardShortcutContainer objects.
+         *  Used in the Key bindings section of the OptionsWindow class.
+         *
+         *  @return a const pointer to the list (implemented as a std::map).
+         */
+        Ptr<const KeyboardShortcutList>::Ref
+        getKeyboardShortcutList(void)                               throw ()
+        {
+            return keyboardShortcutList;
+        }
+        
+        /**
+         *  Get the localized name of the window.
+         *  Used in the Key bindings section of the OptionsWindow class.
+         *
+         *  @param      windowName  the name of the window.
+         *  @return     the localized name.
+         *  @exception  std::invalid_argument   if the resource bundle is
+         *                                      not found
+         */
+        Ptr<const Glib::ustring>::Ref
+        getLocalizedWindowName(Ptr<const Glib::ustring>::Ref    windowName)
+                                                throw (std::invalid_argument);
+        
+        /**
+         *  Get the localized name of the keyboard shortcut action.
+         *  Used in the Key bindings section of the OptionsWindow class.
+         *
+         *  @param  actionName  the name of the action.
+         *  @return the localized name.
+         *  @exception  std::invalid_argument   if the resource bundle is
+         *                                      not found
+         *  @see    KeyboardShortcut::getActionString()
+         */
+        Ptr<const Glib::ustring>::Ref
+        getLocalizedKeyboardActionName(
+                                Ptr<const Glib::ustring>::Ref   actionName)
+                                                throw (std::invalid_argument);
 
         /**
          *  Save the position and size of the window.

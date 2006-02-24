@@ -1,6 +1,5 @@
 root:table
 {
-    windowTitle:string              { "LiveSupport Master Panel" }
     notLoggedInMsg:string           { "Not logged in" }
     loggedInMsg:string              { "Logged in as {0}" }
     loginButtonLabel:string         { "log in" }
@@ -30,19 +29,24 @@ root:table
     audioErrorMsg                   { "Audio player error: " }
     sureToExitMsg:string            { "Are you sure you want to exit?" }
 
+    masterPanelWindow:table
+    {
+        windowTitle:string          { "Master Panel" }
+    }
+        
     loginWindow:table
     {
-        windowTitle:string          { "LOGIN" }
+        windowTitle:string          { "Login" }
 
-        loginLabel:string           { "Login" }
-        passwordLabel:string        { "Password" }
+        loginLabel:string           { "User name:" }
+        passwordLabel:string        { "Password:" }
         okButtonLabel:string        { "OK" }
         cancelButtonLabel:string    { "Cancel" }
     }
 
     audioClipListWindow:table
     {
-        windowTitle:string          { "LiveSupport Audio Clip Window" }
+        windowTitle:string          { "Audio Clip List" }
 
         idColumnLabel:string        { "id" }
         lengthColumnLabel:string    { "length" }
@@ -54,7 +58,7 @@ root:table
 
     scratchpadWindow:table
     {
-        windowTitle:string          { "LiveSupport Scratchpad" }
+        windowTitle:string          { "Scratchpad" }
 
         typeColumnLabel:string      { "Type" }
         titleColumnLabel:string     { "Title" }
@@ -81,7 +85,7 @@ root:table
 
     playlistListWindow:table
     {
-        windowTitle:string          { "LiveSupport Playlist Window" }
+        windowTitle:string          { "Playlist" }
 
         listBoxLabel                { "Playlists" }
         detailBoxLabel              { "Playlist details" }
@@ -124,8 +128,7 @@ root:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string          { "LiveSupport Simple Playlist Management"
-                                      " Window" }
+        windowTitle:string          { "Simple Playlist Management" }
 
         startColumnLabel:string     { "Start" }
         titleColumnLabel:string     { "Title" }
@@ -151,7 +154,7 @@ root:table
 
     schedulerWindow:table
     {
-        windowTitle:string          { "LiveSupport Scheduler Window" }
+        windowTitle:string          { "Scheduler" }
 
         startColumnLabel:string     { "start" }
         titleColumnLabel:string     { "title" }
@@ -164,7 +167,7 @@ root:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string          { "LiveSupport Schedule Playlist Window" }
+        windowTitle:string          { "Schedule Playlist" }
 
         hourLabel:string            { "hour: " }
         minuteLabel:string          { "minute: " }
@@ -174,7 +177,7 @@ root:table
 
     searchWindow:table
     {
-        windowTitle:string          { "LiveSupport Search/Browse Window" }
+        windowTitle:string          { "Search/Browse" }
 
         simpleSearchTab:string      { "Search" }
         advancedSearchTab:string    { "Advanced Search" }
@@ -206,7 +209,7 @@ root:table
 
     liveModeWindow:table
     {
-        windowTitle:string          { "LiveSupport Live Mode Window" }
+        windowTitle:string          { "Live Mode" }
         
         cueMenuItem:string          { "Pre_view" }
         upMenuItem:string           { "Move _Up" }
@@ -219,7 +222,7 @@ root:table
     
     optionsWindow:table
     {
-        windowTitle:string          { "LiveSupport Options Window" }
+        windowTitle:string          { "Options" }
         
         needToRestartMsg:string     { "You will need to restart the "
                                       "application\nfor the new settings "
@@ -227,6 +230,8 @@ root:table
         errorMsg:string             { "Could not save the options: " }
         
         soundSectionLabel:string    { "Sound" }
+        keyBindingsSectionLabel:string
+                                    { "Keyboard Shortcuts" }
         serversSectionLabel:string  { "Servers" }
         aboutSectionLabel:string    { "About" }
 
@@ -289,6 +294,18 @@ root:table
         report_location:string      { "Report location" }
         report_organizations:string { "Report organizations" }
         subject                     { "Subject" }
+    }
+    
+    keyboardShortcuts:table
+    {
+        playAudio:string            { Play }
+        pauseAudio:string           { Pause }
+        stopAudio:string            { Stop }
+        nextTrack:string            { Next track }
+        fadeOut:string              { Fade out }
+        moveItemUp:string           { Move item up }
+        moveItemDown:string         { Move item down }
+        removeItem:string           { Remove item }
     }
 }
 

@@ -63,9 +63,6 @@ using namespace LiveSupport::Core;
 
 /* =============================================================== data types */
 
-// class KeyboardShortcutContainer; // TODO: remove or activate
-
-
 /**
  *  A class for representing a keyboard shortcut.
  *
@@ -140,6 +137,11 @@ class KeyboardShortcut : public Configurable
         Action                      action;
 
         /**
+         *  A string representation of the action.
+         */
+        Ptr<Glib::ustring>::Ref     actionString;
+
+        /**
          *  The type for storing key and modifier values.
          */
         typedef std::vector<unsigned int>
@@ -164,13 +166,18 @@ class KeyboardShortcut : public Configurable
         KeyListType                 keyList;
 
         /**
+         *  A string representation of the first item in the key list.
+         */
+        Ptr<Glib::ustring>::Ref     firstKeyString;
+
+        /**
          *  Convert an action name string to an enumeration value.
          *  If no matching enumeration value is found, noAction is returned.
          *
          *  @param actionName   a string containing the name of the action.
          */
         Action
-        stringToAction(const Glib::ustring &     actionName)
+        stringToAction(Ptr<const Glib::ustring>::Ref    actionName)
                                                 throw(std::invalid_argument);
         
         /**
@@ -238,7 +245,7 @@ class KeyboardShortcut : public Configurable
          *                  key description.
          */
         void
-        addKey(const Glib::ustring &    modifiedKeyName)
+        addKey(Ptr<const Glib::ustring>::Ref        modifiedKeyName)
                                                 throw (std::invalid_argument);
 
         /**
@@ -306,6 +313,29 @@ class KeyboardShortcut : public Configurable
         bool
         isTriggeredBy(unsigned int  modifiers,
                       unsigned int  key) const                      throw ();
+        
+        /**
+         *  Return a string corresponding to the action of this shortcut.
+         *
+         *  @return a string representing the action of this shortcut.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getActionString(void) const                                 throw ()
+        {
+            return actionString;
+        }
+        
+       /**
+        *   Return the first key associated with this shortcut.
+        *
+        *   @return a string representing the first modifier-key pair of
+        *           this shortcut.
+        */
+        Ptr<const Glib::ustring>::Ref
+        getKeyString(void) const                                     throw ()
+        {
+            return firstKeyString;
+        }
 };
 
 

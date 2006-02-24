@@ -170,6 +170,14 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         constructSoundSection(void)                                 throw ();
 
         /**
+         *  Construct the "Key bindings" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructKeyBindingsSection(void)                           throw ();
+
+        /**
          *  Construct the "Servers" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)
@@ -225,6 +233,61 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          */
         virtual void
         onTestButtonClicked(const EntryBin *    entry)              throw ();
+
+        /**
+         *  The columns model containing the data for the Key bindings section.
+         *
+         *  @author $Author$
+         *  @version $Revision$
+         */
+        class ModelColumns : public Gtk::TreeModelColumnRecord
+        {
+            public:
+                /**
+                 *  The column for the name of the action.
+                 *  This contains the name of the window (for parent rows),
+                 *  or the name of the action (for child rows).
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         actionColumn;
+
+                /**
+                 *  The column for the user readable name of the key bound.
+                 *  (Or "Disabled" if no key is bound to this action.)
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         keyNameColumn;
+
+                /**
+                 *  The column for the gdkkeytypes.h code of the modifiers.
+                 */
+                Gtk::TreeModelColumn<unsigned int>          modifiersColumn;
+
+                /**
+                 *  The column for the gdkkeysyms.h code of the key.
+                 */
+                Gtk::TreeModelColumn<unsigned int>          keyValueColumn;
+
+                /**
+                 *  Constructor.
+                 */
+                ModelColumns(void)                              throw ()
+                {
+                    add(actionColumn);
+                    add(keyNameColumn);
+                    add(modifiersColumn);
+                    add(keyValueColumn);
+                }
+        };
+
+
+        /**
+         *  The column model.
+         */
+        ModelColumns                    keyBindingsColumns;
+
+        /**
+         *  The tree model, as a GTK reference.
+         */
+        Glib::RefPtr<Gtk::TreeStore>    keyBindingsModel;
 
 
     public:

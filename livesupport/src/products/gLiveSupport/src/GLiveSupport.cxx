@@ -196,7 +196,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     if (nodes.size() < 1) {
         throw std::invalid_argument("no supportedLanguages element");
     }
-    configSupportedLanguages(*((const xmlpp::Element*) *(nodes.begin())) );
+    configSupportedLanguages(*((const xmlpp::Element*) nodes.front()));
 
     // configure the resource bundle
     nodes = element.get_children(LocalizedObject::getConfigElementName());
@@ -204,7 +204,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("no resourceBundle element");
     }
     LocalizedConfigurable::configure(
-                                  *((const xmlpp::Element*) *(nodes.begin())));
+                                  *((const xmlpp::Element*) nodes.front()));
 
     // configure the AuthenticationClientFactory
     nodes = element.get_children(
@@ -214,7 +214,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     }
     Ptr<AuthenticationClientFactory>::Ref acf
                                 = AuthenticationClientFactory::getInstance();
-    acf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    acf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     authentication = acf->getAuthenticationClient();
 
@@ -224,7 +224,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("no storageClientFactory element");
     }
     Ptr<StorageClientFactory>::Ref stcf = StorageClientFactory::getInstance();
-    stcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    stcf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     storage = stcf->getStorageClient();
 
@@ -234,7 +234,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("no widgetFactory element");
     }
     widgetFactory = WidgetFactory::getInstance();
-    widgetFactory->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    widgetFactory->configure( *((const xmlpp::Element*) nodes.front()) );
 
     // configure the SchedulerClientFactory
     nodes = element.get_children(
@@ -244,7 +244,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     }
     Ptr<SchedulerClientFactory>::Ref schcf
                                         = SchedulerClientFactory::getInstance();
-    schcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    schcf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     scheduler = schcf->getSchedulerClient();
 
@@ -261,7 +261,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("no audioPlayer element");
     }
     apf = AudioPlayerFactory::getInstance();
-    apf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    apf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     outputPlayer = apf->getAudioPlayer();
     outputPlayer->initialize();
@@ -278,7 +278,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("no audioPlayer element");
     }
     apf = AudioPlayerFactory::getInstance();
-    apf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    apf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     cuePlayer = apf->getAudioPlayer();
     cuePlayer->initialize();
@@ -304,26 +304,20 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     if (nodes.size() < 1) {
         throw std::invalid_argument("no metadataTypeContainer element");
     }
-    Ptr<ResourceBundle>::Ref  metadataBundle;
-    try {
-        metadataBundle = getBundle("metadataTypes");
-    } catch (std::invalid_argument &e) {
-        throw std::invalid_argument(e.what());
-    }
+    Ptr<ResourceBundle>::Ref    metadataBundle = getBundle("metadataTypes");
     metadataTypeContainer.reset(new MetadataTypeContainer(metadataBundle));
     metadataTypeContainer->configure( 
-                                *((const xmlpp::Element*) *(nodes.begin())) );
+                                *((const xmlpp::Element*) nodes.front()) );
 
-    // configure the KeyboardShortcutContainer classes
+    // configure the KeyboardShortcutList
     nodes = element.get_children(
-                            KeyboardShortcutContainer::getConfigElementName());
-    xmlpp::Node::NodeList::const_iterator   it = nodes.begin();
-    while (it != nodes.end()) {
-        Ptr<KeyboardShortcutContainer>::Ref ksc(new KeyboardShortcutContainer);
-        ksc->configure(*((const xmlpp::Element*) *it));
-        keyboardShortcutList[*ksc->getWindowName()] = ksc;
-        ++it;
+                            KeyboardShortcutList::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no keyboardShortcutList element");
     }
+    keyboardShortcutList.reset(new KeyboardShortcutList);
+    keyboardShortcutList->configure( 
+                            *((const xmlpp::Element*) nodes.front()) );
     
     // save the configuration so we can modify it later
     // TODO: move configuration code to the OptionsContainer class?
@@ -1333,22 +1327,28 @@ GLiveSupport :: getStationLogoImage(void)       throw()
 
 
 /*------------------------------------------------------------------------------
- *  Find the action triggered by the given key in the given window.
+ *  Get the localized name of the keyboard shortcut action.
  *----------------------------------------------------------------------------*/
-KeyboardShortcut::Action
+Ptr<const Glib::ustring>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: findAction(const Glib::ustring &    windowName,
-                           unsigned int             modifiers,
-                           unsigned int             key) const      throw ()
+GLiveSupport :: getLocalizedKeyboardActionName(
+                            Ptr<const Glib::ustring>::Ref    actionName)
+                                                throw (std::invalid_argument)
 {
-    KeyboardShortcutListType::const_iterator    it  = keyboardShortcutList.find(
-                                                                    windowName);
-    if (it != keyboardShortcutList.end()) {
-        Ptr<KeyboardShortcutContainer>::Ref     ksc = it->second;
-        return ksc->findAction(modifiers, key);
-    } else {
-        return KeyboardShortcut::noAction;
-    }
+    return getResourceUstring("keyboardShortcuts", actionName->c_str());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the localized name of the window.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getLocalizedWindowName(
+                            Ptr<const Glib::ustring>::Ref    windowName)
+                                                throw (std::invalid_argument)
+{
+    return getResourceUstring(windowName->c_str(), "windowTitle");
 }
 
 

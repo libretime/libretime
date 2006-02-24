@@ -89,17 +89,20 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // build up the notepad for the various sections
     mainNotebook = Gtk::manage(new ScrolledNotebook);
-    Gtk::Box *      soundSectionBox     = constructSoundSection();
-    Gtk::Box *      serversSectionBox   = constructServersSection();
-    Gtk::Box *      aboutSectionBox     = constructAboutSection();
+    Gtk::Box *      soundSectionBox         = constructSoundSection();
+    Gtk::Box *      keyBindingsSectionBox   = constructKeyBindingsSection();
+    Gtk::Box *      serversSectionBox       = constructServersSection();
+    Gtk::Box *      aboutSectionBox         = constructAboutSection();
 
     try {
         mainNotebook->appendPage(*soundSectionBox,
-                                 *getResourceUstring("soundSectionLabel"));
+                            *getResourceUstring("soundSectionLabel"));
+        mainNotebook->appendPage(*keyBindingsSectionBox,
+                            *getResourceUstring("keyBindingsSectionLabel"));
         mainNotebook->appendPage(*serversSectionBox,
-                                 *getResourceUstring("serversSectionLabel"));
+                            *getResourceUstring("serversSectionLabel"));
         mainNotebook->appendPage(*aboutSectionBox,
-                                 *getResourceUstring("aboutSectionLabel"));
+                            *getResourceUstring("aboutSectionLabel"));
 
     } catch (std::invalid_argument &e) {
         // TODO: signal error
@@ -379,6 +382,74 @@ OptionsWindow :: constructSoundSection(void)                        throw ()
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
     section->pack_start(*audioDeviceTable,   Gtk::PACK_SHRINK, 5);
+    
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "Key bindings" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
+{
+    // create the TreeView
+    keyBindingsModel = Gtk::TreeStore::create(keyBindingsColumns);
+    Gtk::TreeView *     keyBindingsView = Gtk::manage(new Gtk::TreeView(
+                                                            keyBindingsModel ));
+    
+    keyBindingsView->append_column("", keyBindingsColumns.actionColumn);
+    keyBindingsView->append_column("", keyBindingsColumns.keyNameColumn);
+    
+    // fill in the data
+    Ptr<const KeyboardShortcutList>::Ref
+                            list    = gLiveSupport->getKeyboardShortcutList();
+
+    try {
+        KeyboardShortcutList::iterator it;
+        for (it = list->begin(); it != list->end(); ++it) {
+            Ptr<const KeyboardShortcutContainer>::Ref   
+                            container   = *it;
+            Ptr<const Glib::ustring>::Ref
+                            windowName  = container->getWindowName();
+            Gtk::TreeRow    parent      = *keyBindingsModel->append();
+            parent[keyBindingsColumns.actionColumn]   
+                    = *gLiveSupport->getLocalizedWindowName(windowName);
+            
+            KeyboardShortcutContainer::iterator iter;
+            for (iter = container->begin(); iter != container->end(); ++iter) {
+                Ptr<const KeyboardShortcut>::Ref
+                            shortcut    = *iter;
+                Ptr<const Glib::ustring>::Ref
+                            actionString    = shortcut->getActionString();
+                Ptr<const Glib::ustring>::Ref
+                            keyString       = shortcut->getKeyString();
+                Gtk::TreeRow    child
+                                = *keyBindingsModel->append(parent.children());
+                child[keyBindingsColumns.actionColumn]
+                    = *gLiveSupport->getLocalizedKeyboardActionName(
+                                                                actionString);
+                child[keyBindingsColumns.keyNameColumn]
+                    = *keyString;   // TODO: localize this?
+            }
+        }
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    // set TreeView properties
+    keyBindingsView->set_headers_visible(false);
+    keyBindingsView->set_rules_hint(true);
+    keyBindingsView->columns_autosize();
+    keyBindingsView->expand_all();
+    
+    // connect the callbacks
+    
+    // make a new box and pack the components into it
+    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*keyBindingsView, Gtk::PACK_SHRINK, 5);
     
     return section;
 }
