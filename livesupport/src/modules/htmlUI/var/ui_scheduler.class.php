@@ -7,6 +7,8 @@ class uiScheduler extends uiCalendar
         $this->scheduleAtTime =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAtTime'];
         $this->schedulePrev   =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
         $this->scheduleNext   =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
+        $this->error          =& $_SESSION['SCHEDULER']['error'];
+        $this->error          =& $_SESSION['SCHEDULER']['error'];
 
         if (!is_array($this->curr)) {
             $this->curr['view']      = UI_SCHEDULER_DEFAULT_VIEW;
@@ -550,10 +552,20 @@ class uiScheduler extends uiCalendar
     function _isError($r)
     {
         if (is_array($r['error'])) {
-            $this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
+            $this->setErrorMsg(tra('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message']))));
             return TRUE;
         }
         return FALSE;
+    }
+    
+    function getErrorMsg()
+    {
+        return $this->error;    
+    }
+    
+    function setErrorMSg($msg)
+    {
+        $this->error = $msg;   
     }
 
     ## XML-RPC wrapper methods ############################################################################################
