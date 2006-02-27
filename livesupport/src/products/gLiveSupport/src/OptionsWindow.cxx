@@ -39,6 +39,8 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
+
 #include "OptionsWindow.h"
 
 
@@ -394,18 +396,21 @@ Gtk::VBox*
 OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
 {
     // create the TreeView
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
     keyBindingsModel = Gtk::TreeStore::create(keyBindingsColumns);
-    Gtk::TreeView *     keyBindingsView = Gtk::manage(new Gtk::TreeView(
+    ZebraTreeView * keyBindingsView = Gtk::manage(wf->createTreeView(
                                                             keyBindingsModel ));
     
-    keyBindingsView->append_column("", keyBindingsColumns.actionColumn);
-    keyBindingsView->append_column("", keyBindingsColumns.keyNameColumn);
+    keyBindingsView->appendColumn("", keyBindingsColumns.actionColumn);
+    keyBindingsView->appendColumn("", keyBindingsColumns.keyNameColumn);
     
     // fill in the data
     Ptr<const KeyboardShortcutList>::Ref
                             list    = gLiveSupport->getKeyboardShortcutList();
 
     try {
+        int                 rowNumber   = 0;
         KeyboardShortcutList::iterator it;
         for (it = list->begin(); it != list->end(); ++it) {
             Ptr<const KeyboardShortcutContainer>::Ref   
@@ -415,6 +420,8 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
             Gtk::TreeRow    parent      = *keyBindingsModel->append();
             parent[keyBindingsColumns.actionColumn]   
                     = *gLiveSupport->getLocalizedWindowName(windowName);
+            parent[keyBindingsColumns.rowNumberColumn]   
+                    = rowNumber++;
             
             KeyboardShortcutContainer::iterator iter;
             for (iter = container->begin(); iter != container->end(); ++iter) {
@@ -431,6 +438,8 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
                                                                 actionString);
                 child[keyBindingsColumns.keyNameColumn]
                     = *keyString;   // TODO: localize this?
+                child[keyBindingsColumns.rowNumberColumn]   
+                    = rowNumber++;
             }
         }
     } catch (std::invalid_argument &e) {

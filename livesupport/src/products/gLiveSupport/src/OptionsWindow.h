@@ -56,7 +56,7 @@
 #include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
-
+#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
 
@@ -240,7 +240,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @author $Author$
          *  @version $Revision$
          */
-        class ModelColumns : public Gtk::TreeModelColumnRecord
+        class ModelColumns : public ZebraTreeModelColumnRecord
         {
             public:
                 /**
