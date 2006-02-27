@@ -280,6 +280,11 @@ switch($_REQUEST['act']){
          $uiHandler->SCHEDULER->setReload();
     break;
     
+    case "SCHEDULER.stopDaemon":
+         $uiHandler->SCHEDULER->stopDaemon(TRUE);
+         $uiHandler->SCHEDULER->setReload();
+    break;
+    
     case "SESSION.CLEAR":
         $_SESSION = array();
         die();        

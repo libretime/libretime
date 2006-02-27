@@ -54,8 +54,14 @@ $ui_fmask = array(
             'element'   => 'stationlogo',
             'type'      => 'file',
             'label'     => 'Station logo',
-            'requiredmsg'=> 'please select logo file',
-            'attributes'=> array('multiple' => 'application/pdf')
+            'requiredmsg'=> 'please select logo file'
+        ),
+        array(
+            'element'   => 'schedulerStartupScript',
+            'isPref'    => TRUE,
+            'type'      => 'text',
+            'label'     => 'Scheduler startup script',
+            'required'  => true,
         ),
         array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,

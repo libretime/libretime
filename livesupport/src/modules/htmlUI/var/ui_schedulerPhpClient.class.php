@@ -48,94 +48,7 @@
  */
 $mdefs = array(
     "listMethods"       => array('m'=>"system.listMethods", 'p'=>NULL, 't'=>NULL),
-    "AddAudioClipToPlaylistMethod" => array(
-        'm'=>'addAudioClipToPlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'audioClipId'/*string*/, 'relativeOffset'/*int*/),
-        't'=>array('string', 'string', 'string', 'int'),
-        'r'=>array('playlistElementId'/*string*/),
-        'e'=>array(
-            '301'=>'invalid argument format',
-            '302'=>'missing playlist ID argument',
-            '303'=>'missing audio clip ID argument',
-            '304'=>'missing relative offset argument',
-            '305'=>'playlist not found',
-            '306'=>'playlist has not been opened for editing',
-            '307'=>'audio clip does not exist',
-            '308'=>'two audio clips at the same relative offset',
-            '320'=>'missing session ID argument',
-        )
-    ),
-    "CreatePlaylistMethod" => array(
-        'm'=>'createPlaylist',
-        'p'=>array('sessionId'/*string*/),
-        't'=>array('string'),
-        'r'=>array('playlist'/*string*/),
-        'e'=>array(
-            '201'=>'invalid argument format',
-            '202'=>'could not create playlist',
-            '220'=>'missing session ID argument',
-        )
-    ),
-    "DeletePlaylistMethod" => array(
-        'm'=>'deletePlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array(),
-        'e'=>array(
-            '901'=>'invalid argument format',
-            '902'=>'missing playlist ID argument',
-            '903'=>'playlist not found',
-            '904'=>'playlist is locked',
-            '905'=>'playlist could not be deleted',
-            '920'=>'missing session ID argument',
-        )
-    ),
-    "DisplayAudioClipMethod" => array(
-        'm'=>'displayAudioClip',
-        'p'=>array('sessionId'/*string*/, 'audioClipId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('audioClip'/*string*/),
-        'e'=>array(
-            '601'=>'invalid argument format',
-            '602'=>'argument is not an audio clip ID',
-            '603'=>'audio clip not found',
-            '620'=>'missing session ID argument',
-        )
-    ),
-    "DisplayAudioClipsMethod" => array(
-        'm'=>'displayAudioClips',
-        'p'=>array('sessionId'/*string*/),
-        't'=>array('string'),
-        'r'=>array(array('audioClip'/*string*/)),
-        'e'=>array(
-            '1801'=>'invalid argument format',
-            '1802'=>'XML-RPC error',
-            '1820'=>'missing session ID argument',
-        )
-    ),
-    "DisplayPlaylistMethod" => array(
-        'm'=>'displayPlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('playlist'/*string*/),
-        'e'=>array(
-            '1001'=>'invalid argument format',
-            '1002'=>'argument is not a playlist ID',
-            '1003'=>'playlist not found',
-            '1020'=>'missing session ID argument',
-        )
-    ),
-    "DisplayPlaylistsMethod" => array(
-        'm'=>'displayPlaylists',
-        'p'=>array('sessionId'/*string*/),
-        't'=>array('string'),
-        'r'=>array(array('playlist'/*string*/)),
-        'e'=>array(
-            '1701'=>'invalid argument format',
-            '1702'=>'XML-RPC error',
-            '1720'=>'missing session ID argument',
-        )
-    ),
+
     "DisplayScheduleMethod" => array(
         'm'=>'displaySchedule',
         'p'=>array('sessionId'/*string*/, 'from'/*datetime*/, 'to'/*datetime*/),
@@ -168,63 +81,6 @@ $mdefs = array(
         'e'=>array(
 )
     ),
-    "GetVersionMethod" => array(
-        'm'=>'getVersion',
-        'p'=>array(),
-        't'=>array(),
-        'r'=>array('version'/*string*/),
-        'e'=>array()
-    ),
-    "LoginMethod" => array(
-        'm'=>'login',
-        'p'=>array('login'/*string*/, 'password'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('sessionId'/*string*/),
-        'e'=>array(
-            '2001'=>'invalid argument format',
-            '2002'=>'missing login argument',
-            '2003'=>'missing password argument',
-            '2004'=>'the authentication server reported an error',
-        )
-    ),
-    "LogoutMethod" => array(
-        'm'=>'logout',
-        'p'=>array('sessionId'/*string*/),
-        't'=>array('string'),
-        'r'=>array(),
-        'e'=>array(
-            '2101'=>'invalid argument format',
-            '2120'=>'missing session ID argument',
-            '2104'=>'the authentication server reported an error',
-        )
-    ),
-    "OpenPlaylistForEditingMethod" => array(
-        'm'=>'openPlaylistForEditing',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('playlist'/*string*/),
-        'e'=>array(
-            '101'=>'invalid argument format',
-            '102'=>'argument is not a playlist ID',
-            '104'=>'could not open playlist for editing',
-            '120'=>'missing session ID argument',
-        )
-    ),
-    "RemoveAudioClipFromPlaylistMethod" => array(
-        'm'=>'removeAudioClipFromPlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playlistElementId'/*string*/),
-        't'=>array('string', 'string', 'string'),
-        'r'=>array(),
-        'e'=>array(
-            '401'=>'invalid argument format',
-            '402'=>'missing playlist ID argument',
-            '403'=>'missing relative offset argument',
-            '404'=>'playlist does not exist',
-            '405'=>'playlist has not been opened for editing',
-            '406'=>'no audio clip at the specified relative offset',
-            '420'=>'missing session ID argument',
-        )
-    ),
     "RemoveFromScheduleMethod" => array(
         'm'=>'removeFromSchedule',
         'p'=>array('sessionId'/*string*/, 'scheduleEntryId'/*string*/),
@@ -251,56 +107,6 @@ $mdefs = array(
             '1320'=>'missing session ID argument',
         )
     ),
-    "ResetStorageMethod" => array(
-        'm'=>'resetStorage',
-        'p'=>array(),
-        't'=>array(),
-        'r'=>array(),
-        'e'=>array('3001'=>'storage client reported an error'),
-    ),
-    "RevertEditedPlaylistMethod" => array(
-        'm'=>'revertEditedPlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array(),
-        'e'=>array(
-            '801'=>'invalid argument format',
-            '802'=>'argument is not a playlist ID',
-            '803'=>'playlist not found',
-            '804'=>'could not revert playlist',
-            '820'=>'missing session ID argument',
-        )
-    ),
-    "SavePlaylistMethod" => array(
-        'm'=>'savePlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array(),
-        'e'=>array(
-            '701'=>'invalid argument format',
-            '702'=>'argument is not a playlist ID',
-            '703'=>'playlist not found',
-            '705'=>'could not save playlist',
-            '720'=>'missing session ID argument',
-        )
-    ),
-    "UpdateFadeInFadeOutMethod" => array(
-        'm'=>'updateFadeInFadeOut',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playlistElementId'/*string*/, 'fadeIn'/*int*/, 'fadeOut'/*int*/),
-        't'=>array('string', 'string', 'string', 'int', 'int'),
-        'r'=>array(),
-        'e'=>array(
-            '1601'=>'invalid argument format',
-            '1602'=>'missing playlist ID argument',
-            '1603'=>'missing playlist element ID argument',
-            '1604'=>'missing fade in argument',
-            '1605'=>'missing fade out argument',
-            '1606'=>'playlist does not exist',
-            '1607'=>'playlist has not been opened for editing',
-            '1608'=>'error executing setFadeInfo() method',
-            '1620'=>'missing session ID argument',
-        )
-    ),
     "UploadPlaylistMethod" => array(
         'm'=>'uploadPlaylist',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playtime'/*datetime*/),
@@ -314,43 +120,6 @@ $mdefs = array(
             '1405'=>'timeframe not aaaaavailable',
             '1406'=>'could not schedule playlist',
             '1420'=>'missing session ID argument',
-        )
-    ),
-    "ValidatePlaylistMethod" => array(
-        'm'=>'validatePlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('valid'/*bool*/),
-        'e'=>array(
-            '501'=>'invalid argument format',
-            '502'=>'missing playlist ID argument',
-            '503'=>'playlist does not exist',
-            '504'=>'playlist has not been opened for editing',
-            '520'=>'missing session ID argument',
-        )
-    ),
-    "LoginGB" => array(
-        'm'=>'locstor.login',
-        'p'=>array('login'/*string*/, 'pass'/*string*/),
-        't'=>array('string', 'string'),
-        'r'=>array('sessid'/*string*/),
-        'e'=>array(
-            '2001'=>'invalid argument format',
-            '2002'=>'missing login argument',
-            '2003'=>'missing password argument',
-            '2004'=>'the authentication server reported an error',
-        )
-    ),
-    "LogoutGB" => array(
-        'm'=>'locstor.logout',
-        'p'=>array('sessid'/*string*/),
-        't'=>array('string'),
-        'r'=>array('status'/*boolean*/),
-        'e'=>array(
-            '2001'=>'invalid argument format',
-            '2002'=>'missing login argument',
-            '2003'=>'missing password argument',
-            '2004'=>'the authentication server reported an error',
         )
     ),
 );
@@ -509,33 +278,4 @@ class SchedulerPhpClient{
 }
 
 /* ======================================================== class definitions */
-
-/**
- *  Example of use:
- *
- */
-
-/*
-// db object handling:
-include('conf.php');
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-
-// scheduler client instantiation:
-$spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config);
-#$spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config, 0, TRUE);
-
-// call of chosen function by name according to key values in $mdefs array:
-// (for testing on storageServer XMLRPC I've changes confPrefix in
-//  SchedulerPhpClient constructor from 'scheduler' to 'storage' value)
-#$r = $spc->LoginGB('root', 'q'); var_dump($r);
-#$r = $spc->LogoutGB(''); var_dump($r);
-#$r = $spc->DisplayScheduleMethod($this->Base->sessid, '2005-01-01 00:00:00.000000', '2005-02-01 00:00:00.000000'); var_dump($r);
-$r = $spc->DisplayScheduleMethod($this->Base->sessid, '20040101T00:00:00', '20050401T00:00:00'); var_dump($r);
-#$r = $spc->LoginMethod('root', 'q'); var_dump($r);
-#$r = $spc->LogoutMethod('dummySessionId3-1714636915'); var_dump($r);
-#$r = $spc->listMethods(); var_dump($r);
-#$r = $spc->GetSchedulerTimeMethod(); var_dump($r);
-*/
 ?>

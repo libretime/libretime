@@ -378,7 +378,7 @@ input, select { font-size: 12px;
 
 /*############## SMALL Navigation tabs on top of content box ############*/
 #tabnavsmall {
-    position: absolute;
+    #position: absolute;
     top: 175px;
     left: 20px;
     z-index: 0;

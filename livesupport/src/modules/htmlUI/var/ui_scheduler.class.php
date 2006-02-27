@@ -47,26 +47,61 @@ class uiScheduler extends uiCalendar
 
     function startDaemon($msg=FALSE)
     {
-        if ($this->testDaemon($msg) === TRUE)
+        if ($this->testDaemon($msg) === TRUE) {
             return TRUE;
-
-        exec(UI_SCHEDULER_DAEMON_CMD);
+        }
+        
+        $cmd = "{$this->Base->STATIONPREFS['schedulerStartupScript']} start 1>/tmp/scheduler_startup.log 2>&1"; 
+        exec($cmd);
+        flush();
         sleep(5);
+        $output = file('/tmp/scheduler_startup.log');
+        
+        foreach ($output as $line) {
+            $message .= trim(addslashes($line)).'\n';   
+        }
+        
+        if ($this->testDaemon($msg)===FALSE) { 
+            if ($msg) $this->Base->_retMsg('Scheduler did not start. Returned message:\n$1', $message);
+            return FALSE;
+        }
+    }
+    
 
-        if ($this->testDaemon($msg)===FALSE) {
-            if ($msg) $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
+    function stopDaemon($msg=FALSE)
+    {
+        if ($this->testDaemon($msg) === FALSE) {
+            return TRUE;
+        }
+        
+        $cmd = "{$this->Base->STATIONPREFS['schedulerStartupScript']} stop 1>/tmp/scheduler_startup.log 2>&1"; 
+        exec($cmd);
+        flush();
+        sleep(5);
+        $output = file('/tmp/scheduler_startup.log');
+        
+        foreach ($output as $line) {
+            $message .= trim(addslashes($line)).'\n';   
+        }
+        
+        if ($this->testDaemon($msg)===TRUE) { 
+            if ($msg) $this->Base->_retMsg('Scheduler did not stop. Returned message:\n$1', $message);
             return FALSE;
         }
     }
 
     function testDaemon($msg=FALSE)
     {
-        exec('ps -A', $output);
-        foreach ($output as $l) {
-            if (preg_match("/ ".UI_SCHEDULER_DAEMON_NAME."$/", $l)) {
-                if ($msg) $this->Base->_retMsg('Scheduler is running.');
-                return TRUE;
-            }
+        $cmd = "{$this->Base->STATIONPREFS['schedulerStartupScript']} status";
+        exec($cmd, $output);
+
+        foreach ($output as $line) {
+            $message .= trim(addslashes($line)).'\n';   
+        }
+
+        if (strstr($message, 'is running')) {
+            if ($msg) $this->Base->_retMsg('Scheduler is running.');
+            return TRUE;
         }
 
         return FALSE;

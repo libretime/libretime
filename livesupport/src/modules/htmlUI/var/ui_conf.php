@@ -14,11 +14,6 @@ define('UI_VERSION',                    'LiveSupport 1.0.2');
 define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
-## Scheduler
-define('UI_SCHEDULER_DAEMON_CMD',       '/etc/init.d/livesupport-station start >/tmp/scheduler.log 2>&1 &'); ## adjust the start-command here
-define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                     ## this is name of scheduler process to grep in process list for it
-
-
 ## Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');
 #define('UI_UPLOAD_LANGID',              $_SESSION['langid']);

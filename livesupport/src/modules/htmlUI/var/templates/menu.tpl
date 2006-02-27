@@ -48,6 +48,9 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week');        location.href='{$UI_BROWSER}?act=SCHEDULER'">##Week##</a></li>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day');         location.href='{$UI_BROWSER}?act=SCHEDULER'">##Day##</a></li>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Today##</a></li>
+                {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus')}
+                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status');      location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
+                {/if}
             </ul>
         </li>
 
@@ -57,7 +60,6 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                     <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
                     <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
                     <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
-                    {* <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.startDaemon')">##Start Scheduler##</a></li> *}
                 </ul>
             </li>
         {else}
