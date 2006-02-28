@@ -84,8 +84,8 @@ KeyboardShortcutList :: configure(const xmlpp::Element & element)
  *----------------------------------------------------------------------------*/
 KeyboardShortcut::Action
 KeyboardShortcutList :: findAction(const Glib::ustring &    windowName,
-                                   unsigned int             modifiers,
-                                   unsigned int             key) const
+                                   Gdk::ModifierType        modifiers,
+                                   guint                    key) const
                                                                     throw ()
 {
     for (iterator it = begin(); it != end(); ++it) {

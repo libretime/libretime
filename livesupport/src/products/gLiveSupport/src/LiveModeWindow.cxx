@@ -339,9 +339,9 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
         
         if (iter) {
             KeyboardShortcut::Action    action = gLiveSupport->findAction(
-                                                        windowName,
-                                                        event->state,
-                                                        event->keyval);
+                                            windowName,
+                                            Gdk::ModifierType(event->state),
+                                            event->keyval);
             switch (action) {
                 case KeyboardShortcut::moveItemUp :
                                         treeView->onUpMenuOption();

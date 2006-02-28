@@ -52,70 +52,32 @@ const std::string KeyboardShortcut::configElementName = "keyboardShortcut";
 /**
  *  The name of the attribute of the action element.
  */
-static const std::string    actionElementName   = "action";
+static const std::string    actionAttributeName   = "action";
 
 /**
  *  The name of the attribute of the key element.
  */
-static const std::string    keyElementName      = "key";
+static const std::string    keyAttributeName      = "key";
 
 /*
  *  The modifier keys we check against.
  *  The following modifiers are omitted, hence ignored: 
- *  GDK_LOCK_MASK (caps lock),
- *  GDK_MOD2_MASK (don't know what; always on on my computer),
- *  GDK_MOD3_MASK (don't know what; always off on my computer),
- *  GDK_BUTTONX_MASK (mouse buttons, X = 1..5).
+ *  Gdk::LOCK_MASK (caps lock),
+ *  Gdk::MOD2_MASK (don't know what; always on on my computer),
+ *  Gdk::MOD3_MASK (don't know what; always off on my computer),
+ *  Gdk::BUTTONX_MASK (mouse buttons, X = 1..5).
  */
-static const unsigned int  modifiersChecked = GDK_SHIFT_MASK 
-                                            | GDK_CONTROL_MASK
-                                            | GDK_MOD1_MASK     // Alt
-                                            | GDK_MOD4_MASK     // Windows key
-                                            | GDK_MOD5_MASK;    // AltGr
+static const Gdk::ModifierType  modifiersChecked = Gdk::SHIFT_MASK 
+                                            | Gdk::CONTROL_MASK
+                                            | Gdk::MOD1_MASK     // Alt
+                                            | Gdk::MOD4_MASK     // Windows key
+                                            | Gdk::MOD5_MASK;    // AltGr
 
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
-
-/*------------------------------------------------------------------------------
- *  Add a shortcut key for this object.
- *----------------------------------------------------------------------------*/
-void
-KeyboardShortcut :: addKey(Ptr<const Glib::ustring>::Ref    modifiedKeyName)
-                                                throw (std::invalid_argument)
-{
-    Ptr<Glib::ustring>::Ref     inputString(new Glib::ustring(
-                                                        *modifiedKeyName ));
-
-    Ptr<Glib::ustring>::Ref     keyName     = getToken(inputString);
-    if (!keyName) {
-        throw std::invalid_argument("");
-    }
-    unsigned int                key         = stringToKey(keyName);
-    
-    Ptr<Glib::ustring>::Ref     modifierName;
-    unsigned int                modifiers   = 0;
-    while ((modifierName = getToken(inputString))) {
-        modifiers |= stringToModifier(modifierName);
-    }
-    
-    addKey(modifiers, key);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Add a shortcut key for this object.
- *----------------------------------------------------------------------------*/
-void
-KeyboardShortcut :: addKey(unsigned int     modifiers,
-                           unsigned int     key)                    throw ()
-{
-    modifierList.push_back(modifiers);
-    keyList.push_back(gdk_keyval_to_upper(key));
-}
-
 
 /*------------------------------------------------------------------------------
  *  Create a keyboard shortcut element object based on an XML element.
@@ -129,58 +91,46 @@ KeyboardShortcut :: configure(const xmlpp::Element & element)
                                     + element.get_name());
     }
 
-    xmlpp::Node::NodeList     children;
-
     // set the action
-    children = element.get_children(actionElementName);
-    if (children.size() < 1) {
-        throw std::invalid_argument("missing " 
-                                    + actionElementName + " element");
-    } else if (children.size() > 1) {
-        throw std::invalid_argument("too many " 
-                                    + actionElementName + " elements");
-    }
-    const xmlpp::Element*   actionElement = dynamic_cast<const xmlpp::Element*>(
-                                                children.front());
-    actionString.reset(new Glib::ustring(actionElement->get_child_text()
-                                                      ->get_content() ));
-    try {
-        action = stringToAction(actionString);
-    } catch (std::invalid_argument &e) {
-        std::string eMsg = "Invalid action specification ";
-        eMsg += *actionString;
-        eMsg += ".";
-        throw std::invalid_argument(eMsg);
-    }
-
-    // set the keys
-    children = element.get_children(keyElementName);
-    if (children.size() < 1) {
-        throw std::invalid_argument("missing " 
-                                    + keyElementName + " element");
-    }
-    bool firstRun = true;
-    xmlpp::Node::NodeList::const_iterator   it;
-    for (it = children.begin(); it != children.end(); ++it) {
-        const xmlpp::Element*   keyElement = 
-                                    dynamic_cast<const xmlpp::Element*>(*it);
-        Ptr<Glib::ustring>::Ref keyString(new Glib::ustring(
-                                                keyElement->get_child_text()
-                                                          ->get_content() ));
-        if (firstRun) {
-            firstKeyString  = keyString;
-            firstRun        = false;
-        }
+    xmlpp::Attribute *      actionAttribute = element.get_attribute(
+                                                        actionAttributeName);
+    if (actionAttribute) {
+        actionString.reset(new Glib::ustring(actionAttribute->get_value()));
         try {
-            addKey(keyString);
+            action = stringToAction(actionString);
         } catch (std::invalid_argument &e) {
-            std::string eMsg = "Invalid key specification ";
-            eMsg += *keyString;
-            eMsg += " for action ";
+            std::string eMsg = "Invalid action specification ";
             eMsg += *actionString;
             eMsg += ".";
             throw std::invalid_argument(eMsg);
         }
+    } else {
+        throw std::invalid_argument("missing " 
+                                    + actionAttributeName + " attribute");
+    }
+
+    // set the key
+    xmlpp::Attribute *      keyAttribute = element.get_attribute(
+                                                        keyAttributeName);
+    if (keyAttribute) {
+        setKey(keyAttribute->get_value());
+    } else {
+        throw std::invalid_argument("missing " 
+                                    + keyAttributeName + " attribute");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the shortcut key.
+ *----------------------------------------------------------------------------*/
+void
+KeyboardShortcut :: setKey(const Glib::ustring &    keyName)
+                                                throw (std::invalid_argument)
+{
+    shortcutKey = Gtk::AccelKey(keyName);
+    if (shortcutKey.get_key() == 0) {
+        throw std::invalid_argument("invalid shortcut key name");
     }
 }
 
@@ -189,24 +139,18 @@ KeyboardShortcut :: configure(const xmlpp::Element & element)
  *  Tell whether the given modifier-key pair triggers this action.
  *----------------------------------------------------------------------------*/
 bool
-KeyboardShortcut :: isTriggeredBy(unsigned int  modifiers,
-                                  unsigned int  key) const          throw ()
+KeyboardShortcut :: isTriggeredBy(Gdk::ModifierType     modifiers,
+                                  guint                 key) const
+                                                                    throw ()
 {
-    unsigned int    myKey       = gdk_keyval_to_upper(key);
-    unsigned int    myModifiers = modifiers & modifiersChecked;
-
-    KeyListType::const_iterator modifierIt = modifierList.begin();
-    KeyListType::const_iterator keyIt      = keyList.begin();
+    Gdk::ModifierType   myModifiers = modifiers & modifiersChecked;
     
-    while (keyIt != keyList.end()) {
-        if (*modifierIt == myModifiers && *keyIt == myKey) {
-            return true;
-        }
-        ++modifierIt;
-        ++keyIt;
+    if (shortcutKey.get_mod() == myModifiers 
+                                    && shortcutKey.get_key() == key) {
+        return true;
+    } else {
+        return false;
     }
-    
-    return false;        
 }
 
 
@@ -240,151 +184,15 @@ KeyboardShortcut :: stringToAction(Ptr<const Glib::ustring>::Ref    actionName)
 
 
 /*------------------------------------------------------------------------------
- *  Get the next token in the key description string.
+ *  Convert a modifiers-key code pair to a user-readable string.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-KeyboardShortcut :: getToken(Ptr<Glib::ustring>::Ref    inputString)
+KeyboardShortcut :: modifiedKeyToString(Gdk::ModifierType   modifiers,
+                                        guint               key)
                                                                     throw ()
 {
-    Ptr<Glib::ustring>::Ref     token;
-    
-    if (!inputString || inputString->length() == 0) {
-        return token;                       // initialized to a 0 pointer
-    }
-
-    unsigned int minusPosition = inputString->rfind('-');
-    unsigned int lastPosition  = inputString->length() - 1;
-    
-    if (minusPosition == lastPosition) {
-        if (minusPosition == 0) {
-            token.reset(new Glib::ustring("-"));
-            inputString->erase();
-            return token;
-        } else if (inputString->at(minusPosition - 1) == '-') {
-            token.reset(new Glib::ustring("-"));
-            inputString->erase(minusPosition - 1);
-            return token;
-        } else {
-            return token;
-        }
-    } else if (minusPosition == Glib::ustring::npos) {
-        token.reset(new Glib::ustring(*inputString));
-        inputString->erase();
-        return token;
-    } else {
-        token.reset(new Glib::ustring(*inputString, minusPosition + 1));
-        inputString->erase(minusPosition);
-        return token;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Convert a key name to a gtk+ gdkkeysyms value.
- *----------------------------------------------------------------------------*/
-unsigned int
-KeyboardShortcut :: stringToKey(Ptr<const Glib::ustring>::Ref   keyName)
-                                                throw (std::invalid_argument)
-{
-    if (keyName->length() == 1) {
-        char    c = keyName->at(0);
-        if (c >= '0' && c <= '9') {
-            return GDK_0 + (c - '0');
-        } else if (c >= 'A' && c <= 'Z') {
-            return GDK_A + (c - 'A');
-        } else if (c >= 'a' && c <= 'z') {
-            return GDK_a + (c - 'a');
-        }
-    } else if (*keyName == "Space") {
-        return GDK_space;
-    } else if (*keyName == "Esc") {
-        return GDK_Escape;
-    } else if (*keyName == "Escape") {
-        return GDK_Escape;
-    } else if (*keyName == "Tab") {
-        return GDK_Tab;
-    } else if (*keyName == "Backspace") {
-        return GDK_BackSpace;
-    } else if (*keyName == "Del") {
-        return GDK_Delete;
-    } else if (*keyName == "Delete") {
-        return GDK_Delete;
-    } else if (*keyName == "Home") {
-        return GDK_Home;
-    } else if (*keyName == "End") {
-        return GDK_End;
-    } else if (*keyName == "Up") {
-        return GDK_Up;
-    } else if (*keyName == "Down") {
-        return GDK_Down;
-    } else if (*keyName == "Left") {
-        return GDK_Left;
-    } else if (*keyName == "Right") {
-        return GDK_Right;
-    } else if (*keyName == "PgUp") {
-        return GDK_Page_Up;
-    } else if (*keyName == "PageUp") {
-        return GDK_Page_Up;
-    } else if (*keyName == "PgDn") {
-        return GDK_Page_Down;
-    } else if (*keyName == "PgDown") {
-        return GDK_Page_Down;
-    } else if (*keyName == "PageDown") {
-        return GDK_Page_Down;
-    } else if (*keyName == "F1") {
-        return GDK_F1;
-    } else if (*keyName == "F2") {
-        return GDK_F2;
-    } else if (*keyName == "F3") {
-        return GDK_F3;
-    } else if (*keyName == "F4") {
-        return GDK_F4;
-    } else if (*keyName == "F5") {
-        return GDK_F5;
-    } else if (*keyName == "F6") {
-        return GDK_F6;
-    } else if (*keyName == "F7") {
-        return GDK_F7;
-    } else if (*keyName == "F8") {
-        return GDK_F8;
-    } else if (*keyName == "F9") {
-        return GDK_F9;
-    } else if (*keyName == "F10") {
-        return GDK_F10;
-    } else if (*keyName == "F11") {
-        return GDK_F11;
-    } else if (*keyName == "F12") {
-        return GDK_F12;
-    }
-    
-    // if none of the above:
-    throw std::invalid_argument("");
-}
-
-
-/*------------------------------------------------------------------------------
- *  Convert a mofifier name to a gtk+ gdktypes value.
- *----------------------------------------------------------------------------*/
-unsigned int
-KeyboardShortcut :: stringToModifier(Ptr<const Glib::ustring>::Ref modifierName)
-                                                throw (std::invalid_argument)
-{
-    if (*modifierName == "Shift") {
-        return GDK_SHIFT_MASK;
-    } else if (*modifierName == "Ctrl") {
-        return GDK_CONTROL_MASK;
-    } else if (*modifierName == "Control") {
-        return GDK_CONTROL_MASK;
-    } else if (*modifierName == "Alt") {
-        return GDK_MOD1_MASK;
-    } else if (*modifierName == "AltGr") {
-        return GDK_MOD5_MASK;
-    } else if (*modifierName == "Win") {
-        return GDK_MOD4_MASK;
-    } else if (*modifierName == "Windows") {
-        return GDK_MOD4_MASK;
-    } else {
-        throw std::invalid_argument("");
-    }
+    Gtk::AccelKey            accelKey(key, modifiers & modifiersChecked);
+    Ptr<Glib::ustring>::Ref  keyName(new Glib::ustring(accelKey.get_abbrev()));
+    return keyName;
 }
 

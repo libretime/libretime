@@ -53,7 +53,7 @@ const std::string           KeyboardShortcutContainer::configElementName
 /**
  *  The name of the window name sub-element.
  */
-static const std::string    windowNameElementName = "windowName";
+static const std::string    windowNameAttributeName = "windowName";
 
 
 /* ===============================================  local function prototypes */
@@ -88,25 +88,22 @@ KeyboardShortcutContainer :: configure(const xmlpp::Element & element)
         ++it;
     }
     
-    childNodes = element.get_children(windowNameElementName);
-    if (childNodes.size() < 1) {
-        throw std::invalid_argument("no windowName element");
-    } else if (childNodes.size() > 1) {
-        throw std::invalid_argument("more than one windowName element");
+    xmlpp::Attribute *      windowNameAttr = element.get_attribute(
+                                                    windowNameAttributeName);
+    if (windowNameAttr) {
+        windowName.reset(new const Glib::ustring(windowNameAttr->get_value()));
+    } else {
+        throw std::invalid_argument("missing windowName attribute");
     }
-    const xmlpp::Element *          windowNameElement
-                                    = dynamic_cast<const xmlpp::Element*> (
-                                            childNodes.front() );
-    windowName.reset(new const Glib::ustring(windowNameElement->get_child_text()
-                                                              ->get_content()));
 }
 
 /*------------------------------------------------------------------------------
  *  Return the action triggered by the given key.
  *----------------------------------------------------------------------------*/
 KeyboardShortcut::Action
-KeyboardShortcutContainer :: findAction(unsigned int modifiers, 
-                                        unsigned int key) const     throw ()
+KeyboardShortcutContainer :: findAction(Gdk::ModifierType   modifiers, 
+                                        guint               key) const
+                                                                    throw ()
 {
     ShortcutListType::const_iterator    it = shortcutList.begin();
     

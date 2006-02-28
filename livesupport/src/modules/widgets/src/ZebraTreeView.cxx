@@ -520,12 +520,17 @@ ZebraTreeView :: renumberRows(void)                                 throw ()
     ZebraTreeModelColumnRecord      modelColumns;
     int                             rowNumber = 0;
     Gtk::TreeModel::iterator        iter;
+    Gtk::TreeModel::iterator        it;
 
     for (iter = treeModel->children().begin(); 
                             iter != treeModel->children().end(); ++iter) {
         Gtk::TreeRow    row = *iter;
-        row[modelColumns.rowNumberColumn] = rowNumber;
-        ++rowNumber;
+        row[modelColumns.rowNumberColumn] = rowNumber++;
+
+        for (it = row->children().begin(); it != row->children().end(); ++it) {
+            Gtk::TreeRow    childRow = *it;
+            childRow[modelColumns.rowNumberColumn] = rowNumber++;
+        }
     }
 }
 

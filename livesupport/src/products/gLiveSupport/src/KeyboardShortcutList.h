@@ -151,8 +151,8 @@ class KeyboardShortcutList : public Configurable
          */
         KeyboardShortcut::Action
         findAction(const Glib::ustring &    windowName,
-                   unsigned int             modifiers,
-                   unsigned int             key) const              throw ();
+                   Gdk::ModifierType        modifiers,
+                   guint                    key) const              throw ();
         
         /**
          *  The iterator for cycling through the keyboard shortcut containers.

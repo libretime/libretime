@@ -39,7 +39,6 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/ZebraTreeView.h"
 
 #include "OptionsWindow.h"
 
@@ -166,6 +165,7 @@ void
 OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 {
     resetEntries();
+    resetKeyBindings();
     onCloseButtonClicked(false);
 }
 
@@ -210,6 +210,8 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
             }
         }
     }
+    
+    // TODO: save the changes in keybindings
     
     if (changed) {
         try {
@@ -399,18 +401,48 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     keyBindingsModel = Gtk::TreeStore::create(keyBindingsColumns);
-    ZebraTreeView * keyBindingsView = Gtk::manage(wf->createTreeView(
-                                                            keyBindingsModel ));
+    keyBindingsView  = Gtk::manage(wf->createTreeView(keyBindingsModel));
     
     keyBindingsView->appendColumn("", keyBindingsColumns.actionColumn);
     keyBindingsView->appendColumn("", keyBindingsColumns.keyNameColumn);
     
     // fill in the data
+    fillKeyBindingsModel();
+        
+    // set TreeView properties
+    keyBindingsView->set_headers_visible(false);
+    keyBindingsView->set_enable_search(false);
+    keyBindingsView->columns_autosize();
+    keyBindingsView->expand_all();
+    
+    // connect the callbacks
+    keyBindingsView->signal_row_activated().connect(sigc::mem_fun(*this,
+                                &OptionsWindow::onKeyBindingsRowActivated ));
+    keyBindingsView->signal_key_press_event().connect_notify(sigc::mem_fun(
+                                *this,
+                                &OptionsWindow::onKeyBindingsKeyPressed ));
+    keyBindingsView->signal_focus_out_event().connect_notify(sigc::mem_fun(
+                                *this,
+                                &OptionsWindow::onKeyBindingsFocusOut ));
+    
+    // make a new box and pack the components into it
+    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*keyBindingsView, Gtk::PACK_SHRINK, 5);
+    
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Fill the key bindings model from the KeyboardShortcutList.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: fillKeyBindingsModel(void)                         throw ()
+{
     Ptr<const KeyboardShortcutList>::Ref
                             list    = gLiveSupport->getKeyboardShortcutList();
 
     try {
-        int                 rowNumber   = 0;
         KeyboardShortcutList::iterator it;
         for (it = list->begin(); it != list->end(); ++it) {
             Ptr<const KeyboardShortcutContainer>::Ref   
@@ -420,8 +452,6 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
             Gtk::TreeRow    parent      = *keyBindingsModel->append();
             parent[keyBindingsColumns.actionColumn]   
                     = *gLiveSupport->getLocalizedWindowName(windowName);
-            parent[keyBindingsColumns.rowNumberColumn]   
-                    = rowNumber++;
             
             KeyboardShortcutContainer::iterator iter;
             for (iter = container->begin(); iter != container->end(); ++iter) {
@@ -437,9 +467,8 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
                     = *gLiveSupport->getLocalizedKeyboardActionName(
                                                                 actionString);
                 child[keyBindingsColumns.keyNameColumn]
-                    = *keyString;   // TODO: localize this?
-                child[keyBindingsColumns.rowNumberColumn]   
-                    = rowNumber++;
+                    = Glib::Markup::escape_text(*keyString);
+                    // TODO: localize this?
             }
         }
     } catch (std::invalid_argument &e) {
@@ -447,20 +476,6 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-    
-    // set TreeView properties
-    keyBindingsView->set_headers_visible(false);
-    keyBindingsView->set_rules_hint(true);
-    keyBindingsView->columns_autosize();
-    keyBindingsView->expand_all();
-    
-    // connect the callbacks
-    
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*keyBindingsView, Gtk::PACK_SHRINK, 5);
-    
-    return section;
 }
 
 
@@ -625,6 +640,83 @@ OptionsWindow :: resetEntries()                                     throw ()
             // TODO: signal error?
             entry->set_text("");
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset the key bindings to their saved state.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: resetKeyBindings(void)                             throw ()
+{
+    keyBindingsModel->clear();
+    fillKeyBindingsModel();
+    keyBindingsView->expand_all();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for clicking on a row in the key bindings table.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow ::  onKeyBindingsRowActivated(const Gtk::TreePath &     path,
+                                            Gtk::TreeViewColumn *     column)
+                                                                    throw ()
+{
+    resetEditedKeyBinding();
+    
+    Gtk::TreeIter       iter = keyBindingsModel->get_iter(path);
+    if (iter) {
+        Gtk::TreeRow    row = *iter;
+        editedKeyName.reset(new const Glib::ustring(
+                                        row[keyBindingsColumns.keyNameColumn]));
+        editedKeyRow = row;
+        row[keyBindingsColumns.keyNameColumn] = "Press a key...";
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for clicking outside the key bindings table.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow ::  onKeyBindingsKeyPressed(GdkEventKey *  event)     throw ()
+{
+    if (editedKeyName) {
+        Ptr<const Glib::ustring>::Ref
+            newKeyName = KeyboardShortcut::modifiedKeyToString(
+                                        Gdk::ModifierType(event->state),
+                                        event->keyval);
+        if (newKeyName && *newKeyName != "Escape") {
+            editedKeyName = newKeyName;
+        }
+        resetEditedKeyBinding();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for clicking outside the key bindings table.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow ::  onKeyBindingsFocusOut(GdkEventFocus *     event)
+                                                                    throw ()
+{
+    resetEditedKeyBinding();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset the key binding to its pre-editing value.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow ::  resetEditedKeyBinding(void)                       throw ()
+{
+    if (editedKeyName) {
+        editedKeyRow[keyBindingsColumns.keyNameColumn]
+                            = Glib::Markup::escape_text(*editedKeyName);
+        editedKeyName.reset();
     }
 }
 

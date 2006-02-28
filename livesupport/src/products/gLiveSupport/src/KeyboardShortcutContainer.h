@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
  *  called keyboardShortcutContainer. This may look like the following:
  *
  *  <pre><code>
- *  &lt;keyboardShortcutContainer&gt;
- *      &lt;windowName&gt;liveModeWindow&lt;/windowName&gt;
+ *  &lt;keyboardShortcutContainer
+ *              windowName = "liveModeWindow"&gt;
  *      &lt;keyboardShortcut&gt; ... &lt;/keyboardShortcut&gt;
  *      &lt;keyboardShortcut&gt; ... &lt;/keyboardShortcut&gt;
  *      ...
@@ -80,8 +80,8 @@ using namespace LiveSupport::Core;
  *  The DTD for the expected XML element is the following:
  *
  *  <pre><code>
- *  <!ELEMENT keyboardShortcutContainer (windowName, keyboardShortcut+) >
- *  <!ELEMENT windowName (CDATA) >
+ *  <!ELEMENT keyboardShortcutContainer (keyboardShortcut+) >
+ *  <!ATTLIST keyboardShortcutContainer windowName  CDATA   #REQUIRED >
  *  </code></pre>
  *
  *  WindowName is an arbitrary utf-8 string which identifies the window the
@@ -168,7 +168,8 @@ class KeyboardShortcutContainer : public Configurable
          *  @return the action; or noAction if none is found.
          */
         KeyboardShortcut::Action
-        findAction(unsigned int modifiers, unsigned int key) const  throw ();
+        findAction(Gdk::ModifierType    modifiers,
+                   guint                key) const                  throw ();
         
         /**
          *  Return the name of the window the shortcuts are for.

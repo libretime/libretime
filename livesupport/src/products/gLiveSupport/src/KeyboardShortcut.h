@@ -41,10 +41,7 @@
 #endif
 
 #include <stdexcept>
-#include <vector>
-#include <gdk/gdktypes.h>
-#include <gdk/gdkkeysyms.h>
-#include <gdk/gdkkeys.h>
+#include <gtkmm/accelkey.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
@@ -70,35 +67,30 @@ using namespace LiveSupport::Core;
  *  called keyboardShortcut. This may look like the following:
  *
  *  <pre><code>
- *  &lt;keyboardShortcut&gt;
- *      &lt;action&gt;pauseAudio&lt;/action&gt;
- *      &lt;key&gt;Ctrl-Alt-P&lt;/key&gt;
- *      &lt;key&gt;Space&lt;/key&gt;
- *      &lt;key&gt;F10&lt;/key&gt;
- *  &lt;/keyboardShortcut&gt;
+ *  &lt;keyboardShortcut    action  = "pauseAudio"
+ *                          key     = "&lt;Alt&gt;&lt;Ctrl&gt;P" /&gt;
  *  </code></pre>
  *
  *  The possible action values are the members of the Action enumeration.
  *
- *  The possible key values are the letters A-Z (or a-z; they are not 
- *  case-sensitive), the numbers 0-9,
- *  plus Space, Esc (or Escape), Tab, Backspace, Delete (Del), Home, End,
- *  Up, Down, Left, Right, PgUp (PageUp), PgDown (PageDown, PgDn),
- *  and the function keys F1 through F12.
+ *  The possible key values are zero or more of the modifiers
+ *  &lt;Shift&gt;, &lt;Control&gt; and &lt;Alt&gt;, followed by the 
+ *  name of the key, e.g., the letters A-Z (or a-z; they are not 
+ *  case-sensitive), the numbers 0-9, Space, Tab, etc.
+ *  The key names are the ones defined in Gtk::AccelKey, used in the
+ *  Gnome Keyboard Shortcuts applet, for example.
+ *  (Note: Gtk::AccelKey is a wrapper for the gdk_keyval_name() and
+ *  gdk_keyval_from_name() C functions in GDK.)
  *
- *  The key names can be prefixed with zero or more of the modifiers
- *  Shift, Ctrl (or Control), Alt, AltGr, and Win (or Windows),
- *  separated by '-' characters.
- *
- *  There must be exactly one <code>action</code> attribute, and one or more
- *  <code>key</code> attributes.  (Zero keys is not an error, but pointless.)
+ *  There must be exactly one each of the <code>action</code> 
+ *  <code>key</code> attributes.
  *
  *  The DTD for the expected XML element looks like the following:
  *
  *  <pre><code>
- *  &lt;!ELEMENT keyboardShortcut   (action, key+) &gt;
- *  &lt;!ELEMENT action             (CDATA) &gt;
- *  &lt;!ELEMENT key                (CDATA) &gt;
+ *  &lt;!ELEMENT keyboardShortcut   EMPTY &gt;
+ *  &lt;!ATTLIST keyboardShortcut   action  CDATA   #REQUIRED &gt;
+ *  &lt;!ATTLIST keyboardShortcut   key     CDATA   #REQUIRED &gt;
  *  </code></pre>
  *
  *
@@ -142,33 +134,18 @@ class KeyboardShortcut : public Configurable
         Ptr<Glib::ustring>::Ref     actionString;
 
         /**
-         *  The type for storing key and modifier values.
+         *  The key associated with this keyboard shortcut.
          */
-        typedef std::vector<unsigned int>
-                                    KeyListType;
-        
-        /**
-         *  The list of modifiers to be used with the keys.
-         *  For a list of the possible values, see 
-         *  <code>/usr/include/gtk-2.0/gdk/gdktypes.h</code>.
-         *
-         *  This always has the same length as <code>keys</code>.
-         */
-        KeyListType                 modifierList;
+        Gtk::AccelKey               shortcutKey;
 
         /**
-         *  The list of keys associated with this keyboard shortcut.
-         *  For a list of the possible values, see 
-         *  <code>/usr/include/gtk-2.0/gdk/gdkkeysyms.h</code>.
+         *  Set the shortcut key.
          *
-         *  This always has the same length as <code>modifiers</code>.
+         *  @param  keyName the string representation of the shortcut key.
          */
-        KeyListType                 keyList;
-
-        /**
-         *  A string representation of the first item in the key list.
-         */
-        Ptr<Glib::ustring>::Ref     firstKeyString;
+        void
+        setKey(const Glib::ustring &    keyName)
+                                                throw (std::invalid_argument);
 
         /**
          *  Convert an action name string to an enumeration value.
@@ -180,42 +157,7 @@ class KeyboardShortcut : public Configurable
         stringToAction(Ptr<const Glib::ustring>::Ref    actionName)
                                                 throw(std::invalid_argument);
         
-        /**
-         *  Get the next token in the key description string.
-         *  The tokens are read right-to-left, and the separator is '-'.
-         *
-         *  @param inputString  the string to be parsed; it will be
-         *                      truncated on return.
-         *  @return the token extracted; if the input string was empty,
-         *          a null pointer is returned.
-         */
-        Ptr<Glib::ustring>::Ref
-        getToken(Ptr<Glib::ustring>::Ref    inputString)            throw ();
-
-        /**
-         *  Convert a modifier name to a gtk+ gdktypes value.
-         *
-         *  @param  modifierName    a string containing the modifier's name.
-         *  @return                 the numeric value of the modifier.
-         *  @exception  std::invalid_argument if the string is not a valid
-         *                                    modifier name.
-         */
-        unsigned int
-        stringToModifier(Ptr<const Glib::ustring>::Ref  modifierName)
-                                                throw(std::invalid_argument);
-
-        /**
-         *  Convert a key name to a gtk+ gdkkeysyms value.
-         *
-         *  @param  keyName     a string containing the key's name.
-         *  @return             the numeric value of the key.
-         *  @exception  std::invalid_argument if the string is not a valid
-         *                                    key name.
-         */
-        unsigned int
-        stringToKey(Ptr<const Glib::ustring>::Ref   keyName)
-                                                throw(std::invalid_argument);
-        
+                
     protected:
         /**
          *  Default constructor.
@@ -234,30 +176,6 @@ class KeyboardShortcut : public Configurable
             : action(action)
         {
         }
-
-        /**
-         *  Add a shortcut key for this object.  This will be one of the
-         *  modifier-key pairs which trigger the action.
-         *
-         *  @param modifiedKeyName  a string containing a key name (with
-         *                          some modifiers, optionally).
-         *  @exception std::invalid_argument if the string is not a valid
-         *                  key description.
-         */
-        void
-        addKey(Ptr<const Glib::ustring>::Ref        modifiedKeyName)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Add a shortcut key for this action.  This will be one of the
-         *  modifier-key pairs which trigger the action.
-         *
-         *  @param key        the gtk+ code of the key.
-         *  @param modifiers  the gtk+ modifier bits.
-         */
-        void
-        addKey(unsigned int     modifiers,
-               unsigned int     key)                                throw ();
 
         /**
          *  Return the name of the XML element this object expects
@@ -311,8 +229,8 @@ class KeyboardShortcut : public Configurable
          *          false if not.
          */
         bool
-        isTriggeredBy(unsigned int  modifiers,
-                      unsigned int  key) const                      throw ();
+        isTriggeredBy(Gdk::ModifierType     modifiers,
+                      guint                 key) const              throw ();
         
         /**
          *  Return a string corresponding to the action of this shortcut.
@@ -334,8 +252,19 @@ class KeyboardShortcut : public Configurable
         Ptr<const Glib::ustring>::Ref
         getKeyString(void) const                                     throw ()
         {
-            return firstKeyString;
+            Ptr<const Glib::ustring>::Ref   keyName(new Glib::ustring(
+                                                shortcutKey.get_abbrev() ));
+            return keyName;
         }
+
+       /**
+        *   Convert a modifiers-key code pair to a user-readable string.
+        *
+        *   @return a string representing the modifier-key pair.
+        */
+        static Ptr<Glib::ustring>::Ref
+        modifiedKeyToString(Gdk::ModifierType   modifiers,
+                            guint               key)                throw ();
 };
 
 

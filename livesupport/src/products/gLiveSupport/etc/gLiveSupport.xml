@@ -99,11 +99,12 @@
 <!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
 
 <!ELEMENT keyboardShortcutList          (keyboardShortcutContainer*) >
-<!ELEMENT keyboardShortcutContainer     (windowName, keyboardShortcut+) >
-<!ELEMENT windowName                    (#PCDATA) >
-<!ELEMENT keyboardShortcut              (action, key+) >
-<!ELEMENT action                        (#PCDATA) >
-<!ELEMENT key                           (#PCDATA) >
+<!ELEMENT keyboardShortcutContainer     (keyboardShortcut+)          >
+<!ATTLIST keyboardShortcutContainer windowName  CDATA   #REQUIRED    >
+
+<!ELEMENT keyboardShortcut  EMPTY >
+<!ATTLIST keyboardShortcut  action      CDATA   #REQUIRED >
+<!ATTLIST keyboardShortcut  key         CDATA   #REQUIRED >
 
 ]>
 
@@ -342,78 +343,40 @@
     </metadataTypeContainer>
     
     <keyboardShortcutList>
-        <keyboardShortcutContainer>
-            <windowName>masterPanelWindow</windowName>
-            <keyboardShortcut>
-                <action>playAudio</action>
-                <key>X</key>
-                <key>Space</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>pauseAudio</action>
-                <key>V</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>stopAudio</action>
-                <key>C</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>nextTrack</action>
-                <key>B</key>
-            </keyboardShortcut>
+        <keyboardShortcutContainer
+                    windowName = "masterPanelWindow">
+            <keyboardShortcut   action  = "playAudio"   key = "X" />
+            <keyboardShortcut   action  = "pauseAudio"  key = "V" />
+            <keyboardShortcut   action  = "stopAudio"   key = "C" />
+            <keyboardShortcut   action  = "nextTrack"   key = "B" />
         </keyboardShortcutContainer>
 
-        <keyboardShortcutContainer>
-            <windowName>liveModeWindow</windowName>
-            <keyboardShortcut>
-                <action>moveItemUp</action>
-                <key>Alt-Up</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>moveItemDown</action>
-                <key>Alt-Down</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>removeItem</action>
-                <key>Delete</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>playAudio</action>
-                <key>X</key>
-                <key>Space</key>
-            </keyboardShortcut>
+        <keyboardShortcutContainer
+                    windowName = "liveModeWindow">
+            <keyboardShortcut   action  = "moveItemUp"
+                                key     = "&lt;Alt&gt;Up"   />
+            <keyboardShortcut   action  = "moveItemDown"
+                                key     = "&lt;Alt&gt;Down" />
+            <keyboardShortcut   action  = "removeItem"    key = "Delete" />
+            <keyboardShortcut   action  = "playAudio"     key = "X"      />
         </keyboardShortcutContainer>
 
-        <keyboardShortcutContainer>
-            <windowName>scratchpadWindow</windowName>
-            <keyboardShortcut>
-                <action>moveItemUp</action>
-                <key>Alt-Up</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>moveItemDown</action>
-                <key>Alt-Down</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>removeItem</action>
-                <key>Delete</key>
-            </keyboardShortcut>
+        <keyboardShortcutContainer
+                    windowName = "scratchpadWindow">
+            <keyboardShortcut   action  = "moveItemUp"
+                                key     = "&lt;Alt&gt;Up"   />
+            <keyboardShortcut   action  = "moveItemDown"
+                                key     = "&lt;Alt&gt;Down" />
+            <keyboardShortcut   action  = "removeItem"    key = "Delete" />
         </keyboardShortcutContainer>
 
-        <keyboardShortcutContainer>
-            <windowName>simplePlaylistManagementWindow</windowName>
-            <keyboardShortcut>
-                <action>moveItemUp</action>
-                <key>Alt-Up</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>moveItemDown</action>
-                <key>Alt-Down</key>
-            </keyboardShortcut>
-            <keyboardShortcut>
-                <action>removeItem</action>
-                <key>Delete</key>
-            </keyboardShortcut>
+        <keyboardShortcutContainer
+                    windowName ="simplePlaylistManagementWindow">
+            <keyboardShortcut   action  = "moveItemUp"
+                                key     = "&lt;Alt&gt;Up"   />
+            <keyboardShortcut   action  = "moveItemDown"
+                                key     = "&lt;Alt&gt;Down" />
+            <keyboardShortcut   action  = "removeItem"    key = "Delete" />
         </keyboardShortcutContainer>
     </keyboardShortcutList>
 

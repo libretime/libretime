@@ -495,9 +495,9 @@ ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
         KeyboardShortcut::Action    action = gLiveSupport->findAction(
-                                                    windowName,
-                                                    event->state,
-                                                    event->keyval);
+                                                windowName,
+                                                Gdk::ModifierType(event->state),
+                                                event->keyval);
         switch (action) {
             case KeyboardShortcut::moveItemUp :
                                     if (isSelectionSingle()) {

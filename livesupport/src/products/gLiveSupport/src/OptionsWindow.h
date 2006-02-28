@@ -57,6 +57,7 @@
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
 
@@ -162,6 +163,35 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         resetEntries(void)                                          throw ();
 
         /**
+         *  Reset the key bindings to their saved state.
+         */
+        void
+        resetKeyBindings(void)                                      throw ();
+
+        /**
+         *  Fill the key bindings model from the KeyboardShortcutList.
+         */
+        void
+        fillKeyBindingsModel(void)                                  throw ();
+
+        /**
+         *  The row of the currently edited key binding.
+         */
+        Gtk::TreeRow                    editedKeyRow;
+        
+        /**
+         *  The value of the currently edited key binding
+         *  (as a user-readable modifiers - key name combo).
+         */
+        Ptr<const Glib::ustring>::Ref   editedKeyName;
+        
+        /**
+         *  Reset the key binding to its pre-editing value.
+         */
+        void
+        resetEditedKeyBinding(void)                                 throw ();
+
+        /**
          *  Construct the "Sound" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)
@@ -225,7 +255,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         onCloseButtonClicked(bool   needConfirm = true)             throw ();
 
         /**
-         *  Event handler for the test button
+         *  Event handler for the test button.
          *
          *  @param  entry   the text entry field containing the new device name
          *  @see    GLiveSupport::setCueAudioDevice()
@@ -233,6 +263,33 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          */
         virtual void
         onTestButtonClicked(const EntryBin *    entry)              throw ();
+
+        /**
+         *  Event handler for double-clicking a row in the key bindings table.
+         *
+         *  @param  event   the button event
+         */
+        virtual void
+        onKeyBindingsRowActivated(const Gtk::TreePath &     path,
+                                  Gtk::TreeViewColumn *     column)
+                                                                    throw ();
+
+        /**
+         *  Signal handler for a key pressed in the key bindings table.
+         *
+         *  @param  event the button event received
+         *  @return true if the key press was fully handled, false if not
+         */
+        virtual void
+        onKeyBindingsKeyPressed(GdkEventKey *   event)              throw ();
+
+        /**
+         *  Event handler for clicking outside the key bindings table.
+         *
+         *  @param  event   the focus event
+         */
+        virtual void
+        onKeyBindingsFocusOut(GdkEventFocus *   event)              throw ();
 
         /**
          *  The columns model containing the data for the Key bindings section.
@@ -288,6 +345,11 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  The tree model, as a GTK reference.
          */
         Glib::RefPtr<Gtk::TreeStore>    keyBindingsModel;
+
+        /**
+         *  The tree view.
+         */
+        ZebraTreeView *                 keyBindingsView;
 
 
     public:

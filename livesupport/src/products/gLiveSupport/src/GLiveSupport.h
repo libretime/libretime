@@ -978,8 +978,8 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         KeyboardShortcut::Action
         findAction(const Glib::ustring &    windowName,
-                   unsigned int             modifiers,
-                   unsigned int             key) const              throw ()
+                   Gdk::ModifierType        modifiers,
+                   guint                    key) const              throw ()
         {
             return keyboardShortcutList->findAction(windowName, modifiers, key);
         }
