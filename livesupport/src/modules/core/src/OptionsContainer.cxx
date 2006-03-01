@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "LiveSupport/Core/OptionsContainer.h"
 
@@ -131,6 +132,31 @@ OptionsContainer :: getOptionItem(OptionItemString  optionItem)
 
 
 /*------------------------------------------------------------------------------
+ *  Set a keyboard shortcut type option.
+ *----------------------------------------------------------------------------*/
+void
+OptionsContainer :: setKeyboardShortcutItem(
+                                int                             containerNo,
+                                int                             shortcutNo,
+                                Ptr<const Glib::ustring>::Ref   value)
+                                                throw (std::invalid_argument)
+{
+    xmlpp::Node *     targetNode = selectKeyboardShortcutNode(
+                                                    containerNo, shortcutNo);
+
+    xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
+    if (attr != 0) {
+        attr->set_value(*value);
+        changed = true;
+        return;
+
+    } else {
+        throw std::invalid_argument("keyboard shortcut not found");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Find the node corresponding to an OptionItemString value.
  *----------------------------------------------------------------------------*/
 xmlpp::Node *
@@ -191,6 +217,24 @@ OptionsContainer :: selectNode(OptionItemString     optionItem,
     }
     
     return targetNode;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Find the node corresponding to a keyboard shortcut.
+ *----------------------------------------------------------------------------*/
+xmlpp::Node *
+OptionsContainer :: selectKeyboardShortcutNode(int      containerNo,
+                                               int      shortcutNo)
+                                                throw (std::invalid_argument)
+{
+    std::stringstream   xPathStream;
+    xPathStream << "keyboardShortcutList/keyboardShortcutContainer["
+                << containerNo
+                << "]/keyboardShortcut["
+                << shortcutNo
+                << "]/@key";
+    return getNode(xPathStream.str());
 }
 
 

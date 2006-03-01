@@ -127,6 +127,24 @@ class OptionsContainer
                                                 throw (std::invalid_argument);
         
         /**
+         *  Find the node corresponding to a keyboard shortcut.
+         *
+         *  If there is no matching node, it returns a 0 pointer.
+         *
+         *  @param  containerNo     the number of the KeyboardShortcutContainer
+         *                              (starting with 1, as per XPath)
+         *  @param  shortcutNo      the number of the KeyboardShortcut within
+         *                              this container (also starting with 1)
+         *  @return a pointer to the node found, or 0
+         *  @exception  std::invalid_argument   thrown by getNode() [should
+         *                                      never happen]
+         */
+        xmlpp::Node *
+        selectKeyboardShortcutNode(int  containerNo,
+                                   int  shortcutNo)
+                                                throw (std::invalid_argument);
+        
+        /**
          *  Return the first node matching an XPath string.
          *
          *  If there is no matching node, it returns a 0 pointer.
@@ -188,6 +206,21 @@ class OptionsContainer
         getOptionItem(OptionItemString      optionItem)
                                                  throw (std::invalid_argument);
 
+        /**
+         *  Set a keyboard shortcut type option.
+         *
+         *  @param      containerNo     which container to modify
+         *  @param      shortcutNo      which shortcut to modify within this
+         *                                  container
+         *  @param      value           the name of the new shortcut key
+         *  @exception  std::invalid_argument   if the shortcut is not found
+         */
+        void
+        setKeyboardShortcutItem(int                             containerNo,
+                                int                             shortcutNo,
+                                Ptr<const Glib::ustring>::Ref   value)
+                                                 throw (std::invalid_argument);
+        
         /**
          *  Save the options to a file.
          *

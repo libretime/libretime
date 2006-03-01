@@ -139,15 +139,6 @@ class KeyboardShortcut : public Configurable
         Gtk::AccelKey               shortcutKey;
 
         /**
-         *  Set the shortcut key.
-         *
-         *  @param  keyName the string representation of the shortcut key.
-         */
-        void
-        setKey(const Glib::ustring &    keyName)
-                                                throw (std::invalid_argument);
-
-        /**
          *  Convert an action name string to an enumeration value.
          *  If no matching enumeration value is found, noAction is returned.
          *
@@ -220,6 +211,15 @@ class KeyboardShortcut : public Configurable
         {
             return action;
         }
+
+        /**
+         *  Set the shortcut key.
+         *
+         *  @param  keyName the string representation of the shortcut key.
+         */
+        void
+        setKey(const Glib::ustring &    keyName)
+                                                throw (std::invalid_argument);
 
         /**
          *  Tell whether the given modifier-key pair is one of those

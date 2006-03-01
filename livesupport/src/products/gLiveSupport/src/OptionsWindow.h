@@ -192,6 +192,20 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         resetEditedKeyBinding(void)                                 throw ();
 
         /**
+         *  Save the changes in the string entry fields.
+         *
+         *  @return true if some changes were detected and saved.
+         */
+        bool
+        saveChangesInStringEntryFields(void)                        throw ();
+
+        /**
+         *  Save the changes in the key bindings.
+         */
+        void
+        saveChangesInKeyBindings(void)                              throw ();
+
+        /**
          *  Construct the "Sound" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)
@@ -280,7 +294,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
          *  @param  event the button event received
          *  @return true if the key press was fully handled, false if not
          */
-        virtual void
+        virtual bool
         onKeyBindingsKeyPressed(GdkEventKey *   event)              throw ();
 
         /**
@@ -305,23 +319,29 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
                  *  This contains the name of the window (for parent rows),
                  *  or the name of the action (for child rows).
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         actionColumn;
+                Gtk::TreeModelColumn<Glib::ustring>       actionColumn;
 
                 /**
-                 *  The column for the user readable name of the key bound.
-                 *  (Or "Disabled" if no key is bound to this action.)
+                 *  The column for the user readable name of the key bound
+                 *  (plain version, with '<' and '>').
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         keyNameColumn;
+                Gtk::TreeModelColumn<Glib::ustring>       keyNameColumn;
+
+                /**
+                 *  The column for the user readable name of the key bound
+                 *  (escaped version, with '&lt;' and '&gt;').
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>       keyDisplayColumn;
 
                 /**
                  *  The column for the gdkkeytypes.h code of the modifiers.
                  */
-                Gtk::TreeModelColumn<unsigned int>          modifiersColumn;
+                Gtk::TreeModelColumn<unsigned int>        modifiersColumn;
 
                 /**
                  *  The column for the gdkkeysyms.h code of the key.
                  */
-                Gtk::TreeModelColumn<unsigned int>          keyValueColumn;
+                Gtk::TreeModelColumn<unsigned int>        keyValueColumn;
 
                 /**
                  *  Constructor.
@@ -330,6 +350,7 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
                 {
                     add(actionColumn);
                     add(keyNameColumn);
+                    add(keyDisplayColumn);
                     add(modifiersColumn);
                     add(keyValueColumn);
                 }

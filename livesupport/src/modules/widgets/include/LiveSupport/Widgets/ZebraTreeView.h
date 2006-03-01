@@ -72,13 +72,20 @@ using namespace LiveSupport::Core;
 /**
  *  A table of items, in rows colored alternately gray and light blue.
  *
- *  TreeView's contain TreeViewColumns; these contain a title (a text Label)
- *  and a table column body (a CellRenderer).  The CellRenderer needs to be
- *  connected with a TreeModelColumn using the set_renderer() method of
- *  TreeViewColumn [which, despite its name, does not set the renderer, just
- *  connects it with a tree model column].
+ *  NOTE: the ZebraTreeView works only with models based on a 
+ *  ZebraTreeModelColumRecord column record, because cellDataFunction()
+ *  and renumberRows() refer to the row number column of the model.
+ *  AFAIK there is no way to syntactically enforce this, so you need to
+ *  remember it.
  *
- *  A single TreeViewColumn may contain several CellRenderer's, i.e., 
+ *  General comments about TreeViews:
+ *
+ *  TreeViews contain TreeViewColumns; these contain a title (a text Label)
+ *  and a table column body (a CellRenderer).  The CellRenderer needs to be
+ *  both 'added' to the TreeViewColumn, and 'connected' to a TreeModel
+ *  column.
+ *
+ *  A single TreeViewColumn may contain several CellRenderers, i.e., 
  *  sub-columns.
  *
  *  The standard CellRenderer types (CellRendererText etc) can not be 
@@ -89,7 +96,7 @@ using namespace LiveSupport::Core;
  *
  *  A derived CellRenderer sub-type needs to be 1) instantiated;
  *  2) added to a TreeViewColumn using a constructor or pack_start() etc;
- *  3) connected with a TreeModelColumn using set_renderer(). 
+ *  3) connected with a TreeModelColumn using TreeViewColumn::set_renderer().
  *
  *  @author  $Author$
  *  @version $Revision$

@@ -176,10 +176,34 @@ OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 void
 OptionsWindow :: onApplyButtonClicked(void)                         throw ()
 {
-    Ptr<OptionsContainer>::Ref
-            optionsContainer  = gLiveSupport->getOptionsContainer();
+    bool changed = saveChangesInStringEntryFields();
+    saveChangesInKeyBindings();                     // no need to restart
 
-    bool                                changed = false;
+    if (changed) {
+        try {
+            Ptr<Glib::ustring>::Ref
+                    restartMessage(new Glib::ustring(
+                                *getResourceUstring("needToRestartMsg") ));
+            gLiveSupport->displayMessageWindow(restartMessage);
+        } catch (std::invalid_argument &e) {
+            // TODO: signal error
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the changes in the string entry fields.
+ *----------------------------------------------------------------------------*/
+bool
+OptionsWindow :: saveChangesInStringEntryFields(void)               throw ()
+{
+    Ptr<OptionsContainer>::Ref
+            optionsContainer    = gLiveSupport->getOptionsContainer();
+
+    bool    changed             = false;
     StringEntryListType::const_iterator it;
     for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
     
@@ -203,7 +227,6 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
                     errorMessage->append(e.what());
                     gLiveSupport->displayMessageWindow(errorMessage);
                 } catch (std::invalid_argument &e) {
-                    // TODO: signal error
                     std::cerr << e.what() << std::endl;
                     std::exit(1);
                 }
@@ -211,18 +234,64 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
         }
     }
     
-    // TODO: save the changes in keybindings
-    
-    if (changed) {
-        try {
-            Ptr<Glib::ustring>::Ref
-                    restartMessage(new Glib::ustring(
-                                *getResourceUstring("needToRestartMsg") ));
-            gLiveSupport->displayMessageWindow(restartMessage);
-        } catch (std::invalid_argument &e) {
-            // TODO: signal error
-            std::cerr << e.what() << std::endl;
-            std::exit(1);
+    return changed;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the changes in the key bindings.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: saveChangesInKeyBindings(void)                     throw ()
+{
+    Ptr<OptionsContainer>::Ref
+            optionsContainer    = gLiveSupport->getOptionsContainer();
+    Ptr<const KeyboardShortcutList>::Ref
+            list                = gLiveSupport->getKeyboardShortcutList();
+
+    KeyboardShortcutList::iterator  listIt;
+    Gtk::TreeModel::iterator        modelIt = keyBindingsModel
+                                                        ->children().begin();
+    int                             containerNo = 1;
+    for (listIt = list->begin(); listIt != list->end();
+                                        ++listIt, ++modelIt, ++containerNo) {
+        Ptr<const KeyboardShortcutContainer>::Ref   
+                        container   = *listIt;
+        Gtk::TreeRow    parent      = *modelIt;
+        
+        KeyboardShortcutContainer::iterator     containerIt;
+        Gtk::TreeModel::iterator                childIt = parent.children()
+                                                                    .begin();
+        int                                     shortcutNo = 1;
+        for (containerIt = container->begin(); containerIt != container->end();
+                                    ++containerIt, ++childIt, ++shortcutNo) {
+            Ptr<KeyboardShortcut>::Ref
+                            shortcut        = *containerIt;
+            Ptr<const Glib::ustring>::Ref
+                            oldKeyString    = shortcut->getKeyString();
+            Gtk::TreeRow    child           = *childIt;
+            Ptr<const Glib::ustring>::Ref
+                            newKeyString(new const Glib::ustring(
+                                    child[keyBindingsColumns.keyNameColumn] ));
+            if (*oldKeyString != *newKeyString) {
+                try {
+                    shortcut->setKey(*newKeyString);
+                    optionsContainer->setKeyboardShortcutItem(containerNo,
+                                                              shortcutNo,
+                                                              newKeyString);
+                } catch (std::invalid_argument &e) {
+                    try {
+                        Ptr<Glib::ustring>::Ref
+                                errorMessage(new Glib::ustring(
+                                            *getResourceUstring("errorMsg") ));
+                        errorMessage->append(e.what());
+                        gLiveSupport->displayMessageWindow(errorMessage);
+                    } catch (std::invalid_argument &e) {
+                        std::cerr << e.what() << std::endl;
+                        std::exit(1);
+                    }
+                }
+            }
         }
     }
 }
@@ -404,7 +473,7 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
     keyBindingsView  = Gtk::manage(wf->createTreeView(keyBindingsModel));
     
     keyBindingsView->appendColumn("", keyBindingsColumns.actionColumn);
-    keyBindingsView->appendColumn("", keyBindingsColumns.keyNameColumn);
+    keyBindingsView->appendColumn("", keyBindingsColumns.keyDisplayColumn);
     
     // fill in the data
     fillKeyBindingsModel();
@@ -418,8 +487,7 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
     // connect the callbacks
     keyBindingsView->signal_row_activated().connect(sigc::mem_fun(*this,
                                 &OptionsWindow::onKeyBindingsRowActivated ));
-    keyBindingsView->signal_key_press_event().connect_notify(sigc::mem_fun(
-                                *this,
+    keyBindingsView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                 &OptionsWindow::onKeyBindingsKeyPressed ));
     keyBindingsView->signal_focus_out_event().connect_notify(sigc::mem_fun(
                                 *this,
@@ -467,8 +535,9 @@ OptionsWindow :: fillKeyBindingsModel(void)                         throw ()
                     = *gLiveSupport->getLocalizedKeyboardActionName(
                                                                 actionString);
                 child[keyBindingsColumns.keyNameColumn]
+                    = *keyString;                       // TODO: localize this?
+                child[keyBindingsColumns.keyDisplayColumn]
                     = Glib::Markup::escape_text(*keyString);
-                    // TODO: localize this?
             }
         }
     } catch (std::invalid_argument &e) {
@@ -672,7 +741,7 @@ OptionsWindow ::  onKeyBindingsRowActivated(const Gtk::TreePath &     path,
         editedKeyName.reset(new const Glib::ustring(
                                         row[keyBindingsColumns.keyNameColumn]));
         editedKeyRow = row;
-        row[keyBindingsColumns.keyNameColumn] = "Press a key...";
+        row[keyBindingsColumns.keyDisplayColumn] = "Press a key...";
     }
 }
 
@@ -680,9 +749,21 @@ OptionsWindow ::  onKeyBindingsRowActivated(const Gtk::TreePath &     path,
 /*------------------------------------------------------------------------------
  *  Event handler for clicking outside the key bindings table.
  *----------------------------------------------------------------------------*/
-void
+bool
 OptionsWindow ::  onKeyBindingsKeyPressed(GdkEventKey *  event)     throw ()
 {
+    // TODO: remove this ugly hack
+    switch (event->keyval) {
+        case GDK_Shift_L :              // ignore the event if only
+        case GDK_Shift_R :              // a shift key has been pressed
+        case GDK_Control_L :
+        case GDK_Control_R :
+        case GDK_Alt_L :
+        case GDK_Alt_R :
+        case GDK_Meta_L :
+        case GDK_Meta_R :   return false;
+    }
+        
     if (editedKeyName) {
         Ptr<const Glib::ustring>::Ref
             newKeyName = KeyboardShortcut::modifiedKeyToString(
@@ -692,7 +773,10 @@ OptionsWindow ::  onKeyBindingsKeyPressed(GdkEventKey *  event)     throw ()
             editedKeyName = newKeyName;
         }
         resetEditedKeyBinding();
+        return true;
     }
+    
+    return false;
 }
 
 
@@ -715,6 +799,8 @@ OptionsWindow ::  resetEditedKeyBinding(void)                       throw ()
 {
     if (editedKeyName) {
         editedKeyRow[keyBindingsColumns.keyNameColumn]
+                            = *editedKeyName;
+        editedKeyRow[keyBindingsColumns.keyDisplayColumn]
                             = Glib::Markup::escape_text(*editedKeyName);
         editedKeyName.reset();
     }

@@ -527,7 +527,7 @@ ZebraTreeView :: renumberRows(void)                                 throw ()
         Gtk::TreeRow    row = *iter;
         row[modelColumns.rowNumberColumn] = rowNumber++;
 
-        for (it = row->children().begin(); it != row->children().end(); ++it) {
+        for (it = row.children().begin(); it != row.children().end(); ++it) {
             Gtk::TreeRow    childRow = *it;
             childRow[modelColumns.rowNumberColumn] = rowNumber++;
         }
