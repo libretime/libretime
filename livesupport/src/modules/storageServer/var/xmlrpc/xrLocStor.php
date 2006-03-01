@@ -31,6 +31,7 @@ define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
 
 /* ====================================================== specific PHP config */
 //error_reporting(0);
+ini_set("html_errors", FALSE);
 ini_set("error_prepend_string", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <methodResponse>
 <fault>
@@ -59,12 +60,20 @@ require_once 'XR_LocStor.php';
 
 /* ============================================ setting default error handler */
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
-    if($errno == 8 /*E_NOTICE*/) return;
-    $xr =& new XML_RPC_Response(0, 805,
-        "ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)");
-    header("Content-type: text/xml");
-    echo $xr->serialize();
-    exit($errno);
+    switch($errno){
+        case E_WARNING:
+        case E_NOTICE:
+        case E_USER_WARNING:
+        case E_USER_NOTICE:
+            return;
+            break;
+        default:
+            $xr =& new XML_RPC_Response(0, 805,
+                htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
+            header("Content-type: text/xml");
+            echo $xr->serialize();
+            exit($errno);
+    }
 }
 if(PHP5){
     $old_error_handler = set_error_handler("errHndl", E_ALL);
@@ -123,6 +132,10 @@ $methods = array(
     'existsPlaylist'          => 'Check whether a Playlist exists.',
     'playlistIsAvailable'     => 'Check whether a Playlist is available '.
                                     'for editing.',
+    'exportPlaylistOpen'      => 'Create a tarfile with playlist export.',
+    'exportPlaylistClose'     => 'Close playlist export.',
+    'importPlaylistOpen'      => 'Open writable handle for playlist import.',
+    'importPlaylistClose'     => 'Close import-handle and import playlist.',
 
     'loadPref'                => 'Load user preference value.',
     'savePref'                => 'Save user preference value.',
