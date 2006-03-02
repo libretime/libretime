@@ -138,11 +138,6 @@ class OptionsWindow : public WhiteWindow, public LocalizedObject
         Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
-         *  Signals if any changes have been made.
-         */
-        bool                        isChanged;
-
-        /**
          *  Create a new user entry field item.
          *
          *  This constructs [and Gtk::manage()s] the EntryBin, and

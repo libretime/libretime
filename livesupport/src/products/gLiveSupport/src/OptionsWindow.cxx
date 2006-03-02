@@ -75,8 +75,6 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
             LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    isChanged = false;
-
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     try {

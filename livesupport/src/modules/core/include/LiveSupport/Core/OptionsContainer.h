@@ -97,9 +97,9 @@ class OptionsContainer
         Ptr<const Glib::ustring>::Ref   configFileName;
         
         /**
-         *  Remember if we have been changed.
+         *  Remember if we have been touched.
          */
-        bool                            changed;
+        bool                            touched;
         
         /**
          *  Default constructor.
@@ -172,17 +172,17 @@ class OptionsContainer
                                                                     throw ();
         
         /**
-         *  Report if the object has been changed.
+         *  Report if the object has been touched.
          *
          *  It returns true if there has been any calls to setOptionItem()
          *  since its construction or the last call to writeToFile().
          *
-         *  @return whether the options have been changed
+         *  @return whether the options have been touched
          */
         bool
-        isChanged(void)                                             throw ()
+        isTouched(void)                                             throw ()
         {
-            return changed;
+            return touched;
         }
 
         /**

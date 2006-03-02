@@ -61,7 +61,7 @@ OptionsContainer :: OptionsContainer(
                             Ptr<const Glib::ustring>::Ref   configFileName)
                                                                     throw ()
       : configFileName(configFileName),
-        changed(false)
+        touched(false)
 {
     optionsDocument.create_root_node_by_import(&optionsElement, true);
                                                         // true == recursive
@@ -83,14 +83,14 @@ OptionsContainer :: setOptionItem(OptionItemString                  optionItem,
         xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
         if (attr != 0) {
             attr->set_value(*value);
-            changed = true;
+            touched = true;
             return;
         }
     } else {
         xmlpp::TextNode *   text = dynamic_cast<xmlpp::TextNode*>(targetNode);
         if (text != 0) {
             text->set_content(*value);
-            changed = true;
+            touched = true;
             return;
         }
     }
@@ -147,7 +147,7 @@ OptionsContainer :: setKeyboardShortcutItem(
     xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
     if (attr != 0) {
         attr->set_value(*value);
-        changed = true;
+        touched = true;
         return;
 
     } else {
@@ -274,7 +274,7 @@ OptionsContainer :: writeToFile(void)                               throw ()
         std::ofstream   file(configFileName->c_str());
         if (file.good()) {
             optionsDocument.write_to_stream_formatted(file, "utf-8");
-            changed = false;
+            touched = false;
         }
         file.close();
     }

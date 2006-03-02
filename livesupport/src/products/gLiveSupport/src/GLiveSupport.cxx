@@ -570,7 +570,7 @@ GLiveSupport :: logout(void)                                throw ()
     authentication->logout(sessionId);
     sessionId.reset();
     
-    if (optionsContainer->isChanged()) {
+    if (optionsContainer->isTouched()) {
         optionsContainer->writeToFile();
     }
     
