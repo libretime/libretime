@@ -73,6 +73,8 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
     Gtk::Label *        messageLabel = Gtk::manage(new Gtk::Label(*message,
                                                           Gtk::ALIGN_CENTER,
                                                           Gtk::ALIGN_CENTER ));
+    messageLabel->set_justify(Gtk::JUSTIFY_CENTER);
+    
     Gtk::Box *          messageBox = Gtk::manage(new Gtk::HBox);
     messageBox->pack_start(*messageLabel, true, false, 10);
     
