@@ -243,6 +243,15 @@ root:table
         outputDeviceLabel:string    { "Live Mode audio device:" }
         testButtonLabel:string      { "Test" }
         
+        pressAKeyMsg:string         { "Press a key..." }
+        keyBindingsInstructionsText:string
+                                    { "Double-click on the shortcut you want "
+                                      "to change, \n"
+                                      "then press the key for the new "
+                                      "shortcut\n"
+                                      "(or press the Escape key to cancel "
+                                      "the operation)." }
+        
         authenticationLabel:string  { "Authentication server" }
         storageLabel:string         { "Storage server" }
         serverLabel:string          { "address:" }

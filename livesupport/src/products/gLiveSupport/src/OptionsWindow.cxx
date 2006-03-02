@@ -493,9 +493,25 @@ OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
                                 *this,
                                 &OptionsWindow::onKeyBindingsFocusOut ));
     
+    // add instructions
+    Ptr<const Glib::ustring>::Ref   instructionsText;
+    try {
+        instructionsText = getResourceUstring("keyBindingsInstructionsText");
+        
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::Label *    instructionsLabel = Gtk::manage(new Gtk::Label(
+                                                            *instructionsText,
+                                                            Gtk::ALIGN_CENTER,
+                                                            Gtk::ALIGN_CENTER));
+    instructionsLabel->set_justify(Gtk::JUSTIFY_CENTER);
+    
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*keyBindingsView, Gtk::PACK_SHRINK, 5);
+    section->pack_start(*instructionsLabel, Gtk::PACK_SHRINK, 5);
+    section->pack_start(*keyBindingsView,   Gtk::PACK_SHRINK, 5);
     
     return section;
 }
@@ -741,7 +757,14 @@ OptionsWindow ::  onKeyBindingsRowActivated(const Gtk::TreePath &     path,
         editedKeyName.reset(new const Glib::ustring(
                                         row[keyBindingsColumns.keyNameColumn]));
         editedKeyRow = row;
-        row[keyBindingsColumns.keyDisplayColumn] = "Press a key...";
+        try {
+            row[keyBindingsColumns.keyDisplayColumn]
+                                        = *getResourceUstring("pressAKeyMsg");
+        } catch (std::invalid_argument &e) {
+            // TODO: signal error
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
+        }
     }
 }
 
@@ -760,6 +783,10 @@ OptionsWindow ::  onKeyBindingsKeyPressed(GdkEventKey *  event)     throw ()
         case GDK_Control_R :
         case GDK_Alt_L :
         case GDK_Alt_R :
+        case GDK_Super_L :
+        case GDK_Super_R :
+        case GDK_Hyper_L :
+        case GDK_Hyper_R :
         case GDK_Meta_L :
         case GDK_Meta_R :   return false;
     }
