@@ -69,6 +69,10 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
                                             &ZebraTreeView::onRowDeleted));
     treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
                                             &ZebraTreeView::onRowsReordered));
+    this->signal_row_expanded().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowExpanded));
+    this->signal_row_collapsed().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowCollapsed));
 }
 
 
@@ -511,6 +515,30 @@ ZebraTreeView :: onRowsReordered(const Gtk::TreeModel::Path &      path,
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the row_expanded signal.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRowExpanded(const Gtk::TreeModel::iterator &  iter,
+                               const Gtk::TreeModel::Path &      path)
+                                                                    throw ()
+{
+    renumberRows();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the row_collapsed signal.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRowCollapsed(const Gtk::TreeModel::iterator &  iter,
+                                const Gtk::TreeModel::Path &      path)
+                                                                    throw ()
+{
+    renumberRows();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Renumber the rows after they have changed.
  *----------------------------------------------------------------------------*/
 void
@@ -527,9 +555,12 @@ ZebraTreeView :: renumberRows(void)                                 throw ()
         Gtk::TreeRow    row = *iter;
         row[modelColumns.rowNumberColumn] = rowNumber++;
 
-        for (it = row.children().begin(); it != row.children().end(); ++it) {
-            Gtk::TreeRow    childRow = *it;
-            childRow[modelColumns.rowNumberColumn] = rowNumber++;
+        if (row_expanded(treeModel->get_path(row))) {
+            for (it = row.children().begin(); it != row.children().end();
+                                                                     ++it) {
+                Gtk::TreeRow    childRow = *it;
+                childRow[modelColumns.rowNumberColumn] = rowNumber++;
+            }
         }
     }
 }

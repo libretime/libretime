@@ -217,6 +217,26 @@ class ZebraTreeView : public Gtk::TreeView
                         int*                              mapping)
                                                                 throw ();
 
+        /**
+         *  Event handler for the row_expanded signal.
+         *
+         *  @param  iter    points to the expanded row.
+         *  @param  path    points to the expanded row.
+         */
+        void
+        onRowExpanded(const Gtk::TreeModel::iterator &  iter,
+                      const Gtk::TreeModel::Path &      path)    throw ();
+
+        /**
+         *  Event handler for the row_collapsed signal.
+         *
+         *  @param  iter    points to the collapsed row.
+         *  @param  path    points to the collapsed row.
+         */
+        void
+        onRowCollapsed(const Gtk::TreeModel::iterator &  iter,
+                       const Gtk::TreeModel::Path &      path)   throw ();
+
 
     public:
         /**
