@@ -202,10 +202,8 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 void
 LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
-    int                     rowNumber = treeModel->children().size();
     Gtk::TreeModel::Row     row       = *(treeModel->append());
     
-    row[modelColumns.rowNumberColumn] = rowNumber;
     row[modelColumns.playableColumn]  = playable;
 
     Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);

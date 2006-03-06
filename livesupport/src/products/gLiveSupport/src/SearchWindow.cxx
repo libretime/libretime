@@ -359,15 +359,11 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
 
     std::list<Ptr<Playable>::Ref>::const_iterator it;
     treeModel->clear();
-    int     rowNumber = 0;
     
-    for (it = searchResults->begin(); it != searchResults->end(); 
-                                                        ++it, ++rowNumber) {
+    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<Playable>::Ref      playable = *it;
         Gtk::TreeModel::Row     row = *treeModel->append();
         
-        row[modelColumns.rowNumberColumn]   = rowNumber;
-
         row[modelColumns.playableColumn]    = playable;
         
         switch (playable->getType()) {

@@ -384,14 +384,12 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
     Ptr<Playlist>::Ref          playlist;
     Playlist::const_iterator    it;
     Playlist::const_iterator    end;
-    int                         rowNumber;
 
     playlist = gLiveSupport->getEditedPlaylist();
     
     if (playlist) {
         nameEntry->set_text(*playlist->getTitle());
         entriesModel->clear();
-        rowNumber = 0;
         for (it = playlist->begin(); it != playlist->end(); ++it) {
             Ptr<PlaylistElement>::Ref playlistElement
                                           = it->second;
@@ -400,8 +398,6 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
     
             row[modelColumns.playlistElementColumn]
                         = playlistElement;
-            row[modelColumns.rowNumberColumn]
-                        = rowNumber++;
             row[modelColumns.startColumn]
                         = *TimeConversion::timeDurationToHhMmSsString(
                                         playlistElement->getRelativeOffset());

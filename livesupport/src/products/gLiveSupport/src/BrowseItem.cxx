@@ -148,10 +148,8 @@ BrowseItem :: onShow(void)                                          throw ()
     Ptr<const Glib::ustring>::Ref   metadataKey = metadataEntry->getActiveKey();
     
     treeModel->clear();
-    int rowNumber = 1;
     Gtk::TreeModel::Row     row = *treeModel->append();
     row[modelColumns.column]                = allString;
-    row[modelColumns.rowNumberColumn]       = rowNumber++;
     metadataValues->get_selection()->select(*row);
 
     Ptr<std::vector<Glib::ustring> >::Ref
@@ -161,7 +159,6 @@ BrowseItem :: onShow(void)                                          throw ()
         row = *treeModel->append();
         row[modelColumns.column]            = Glib::Markup::escape_text(
                                                                     *valuesIt);
-        row[modelColumns.rowNumberColumn]   = rowNumber++;
     }
     
     emitSignalSelectionChanged();

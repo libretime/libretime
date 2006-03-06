@@ -568,7 +568,6 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
     
     Gtk::TreeModel::Row     row = *treeModel->prepend();
     
-    row[modelColumns.rowNumberColumn]       = 0;
     row[modelColumns.playableColumn]        = playable;
     
     Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
