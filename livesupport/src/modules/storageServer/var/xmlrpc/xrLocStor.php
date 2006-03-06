@@ -148,9 +148,9 @@ $methods = array(
     'renderPlaylistToRSSCheck'	=> 'Render playlist to RSS file (check results)',
     'renderPlaylistToRSSClose'	=> 'Render playlist to RSS file (close handle)',
 
-    'locstor.createBackupOpen'	=> 'Create backup of storage (open handle)',
-    'locstor.createBackupCheck'	=> 'Create backup of storage (check results)',
-    'locstor.createBackupClose'	=> 'Create backup of storage (close handle)',
+    'createBackupOpen'	=> 'Create backup of storage (open handle)',
+    'createBackupCheck'	=> 'Create backup of storage (check results)',
+    'createBackupClose'	=> 'Create backup of storage (close handle)',
 
     'loadPref'                => 'Load user preference value.',
     'savePref'                => 'Save user preference value.',

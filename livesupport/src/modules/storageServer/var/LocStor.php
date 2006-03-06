@@ -831,21 +831,21 @@ class LocStor extends BasicStor{
 
     /*==================================================storage admin methods */
     /* ------------------------------------------------------- backup methods */
-    function locstor.createBackupOpen($sessid, $criteria)
+    function createBackupOpen($sessid, $criteria)
     {
         return PEAR::raiseError(
             "LocStor::createBackupOpen: not imnplemented"
         );
     }
 
-    function locstor.createBackupCheck($token)
+    function createBackupCheck($token)
     {
         return PEAR::raiseError(
             "LocStor::createBackupCheck: not imnplemented"
         );
     }
 
-    function locstor.createBackupClose($token)
+    function createBackupClose($token)
     {
         return PEAR::raiseError(
             "LocStor::createBackupClose: not imnplemented"
