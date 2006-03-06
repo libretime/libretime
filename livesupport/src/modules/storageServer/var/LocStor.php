@@ -685,6 +685,11 @@ class LocStor extends BasicStor{
      *  @param playlistId string, playlist global unique ID
      *  @param getUid boolean, optional flag for returning editedby uid
      *  @return boolean
+
+
+
+
+
      */
     function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
@@ -699,6 +704,152 @@ class LocStor extends BasicStor{
         if($ie === FALSE) return TRUE;
         if($getUid) return $ie;
         return FALSE;
+    }
+
+    /**
+     *  Create a tarfile with playlist export - playlist and all matching
+     *  sub-playlists and media files (if desired)
+     *
+     *  @param sessid - string, session ID
+     *  @param plid - string, playlist global unique ID
+     *  @param type - string, playlist format, values: lspl | smil | m3u
+     *  @param standalone - boolean, if only playlist should be exported or
+     *          with all related files
+     *  @return hasharray with  fields:
+     *      url string: readable url,
+     *      token srring: access token
+     *      chsum string: md5 checksum,
+     */
+    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
+    {
+        return PEAR::raiseError(
+            "LocStor::exportPlaylistOpen: not imnplemented"
+        );
+    }
+    
+    /**
+     *  Close playlist export previously opened by the exportPlaylistOpen method
+     *
+     *  @param token - string, access token obtained from exportPlaylistOpen
+     *            method call
+     *  @return boolean true or error object
+     */
+    function exportPlaylistClose($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::exportPlaylistClose: not imnplemented"
+        );
+    }
+    
+    /**
+     *  Open writable handle for import playlist in LS Archive format
+     *
+     *  @param sessid string, session id
+     *  @param chsum string, md5 checksum of imported file
+     *  @return hasharray with:
+     *      url string: writable URL
+     *      token string: PUT token
+     */
+    function importPlaylistOpen($sessid, $chsum)
+    {
+        return PEAR::raiseError(
+            "LocStor::importPlaylistOpen: not imnplemented"
+        );
+    }
+    
+    /**
+     *  Close import-handle and import playlist
+     *
+     *  @param token string, import token obtained by importPlaylistOpen method
+     *  @return string, result file global id (or error object)
+     */
+    function importPlaylistClose($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::importPlaylistClose: not imnplemented"
+        );
+    }
+    
+    function renderPlaylistToFileOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToFileOpen: not imnplemented"
+        );
+    }
+
+    function renderPlaylistToFileCheck($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToFileCheck: not imnplemented"
+        );
+    }
+
+    function renderPlaylistToFileClose($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToFileClose: not imnplemented"
+        );
+    }
+
+
+    function renderPlaylistToStorageOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToStorageOpen: not imnplemented"
+        );
+    }
+
+    function renderPlaylistToStorageCheck($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToStorageCheck: not imnplemented"
+        );
+    }
+
+
+    function renderPlaylistToRSSOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToRSSOpen: not imnplemented"
+        );
+    }
+
+    function renderPlaylistToRSSCheck($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToRSSCheck: not imnplemented"
+        );
+    }
+
+    function renderPlaylistToRSSClose($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::renderPlaylistToRSSClose: not imnplemented"
+        );
+    }
+
+
+    /*==================================================storage admin methods */
+    /* ------------------------------------------------------- backup methods */
+    function locstor.createBackupOpen($sessid, $criteria)
+    {
+        return PEAR::raiseError(
+            "LocStor::createBackupOpen: not imnplemented"
+        );
+    }
+
+    function locstor.createBackupCheck($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::createBackupCheck: not imnplemented"
+        );
+    }
+
+    function locstor.createBackupClose($token)
+    {
+        return PEAR::raiseError(
+            "LocStor::createBackupClose: not imnplemented"
+        );
     }
 
     /*===================================================== auxiliary methods */

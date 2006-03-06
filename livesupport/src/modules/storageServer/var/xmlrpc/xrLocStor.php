@@ -137,6 +137,21 @@ $methods = array(
     'importPlaylistOpen'      => 'Open writable handle for playlist import.',
     'importPlaylistClose'     => 'Close import-handle and import playlist.',
 
+    'renderPlaylistToFileOpen'	=> 'Render playlist to ogg file (open handle)',
+    'renderPlaylistToFileCheck'	=> 'Render playlist to ogg file (check results)',
+    'renderPlaylistToFileClose'	=> 'Render playlist to ogg file (close handle)',
+
+    'renderPlaylistToStorageOpen'	=> 'Render playlist to storage media clip (open handle)',
+    'renderPlaylistToStorageCheck'	=> 'Render playlist to storage media clip (check results)',
+
+    'renderPlaylistToRSSOpen'	=> 'Render playlist to RSS file (open handle)',
+    'renderPlaylistToRSSCheck'	=> 'Render playlist to RSS file (check results)',
+    'renderPlaylistToRSSClose'	=> 'Render playlist to RSS file (close handle)',
+
+    'locstor.createBackupOpen'	=> 'Create backup of storage (open handle)',
+    'locstor.createBackupCheck'	=> 'Create backup of storage (check results)',
+    'locstor.createBackupClose'	=> 'Create backup of storage (close handle)',
+
     'loadPref'                => 'Load user preference value.',
     'savePref'                => 'Save user preference value.',
     'delPref'                 => 'Delete user preference record.',
