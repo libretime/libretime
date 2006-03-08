@@ -10,7 +10,7 @@
             <p><input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.stopDaemon');" value="##Stop scheduler##"></p>
         {else}
             <p>##Scheduler is not running##</p>
-            <p><input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.startDaemon');" value="##Start scheduler##"></p>
+            <p><input type="button" class="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.startDaemon');" value="##Start scheduler##"></p>
         {/if}
         </p>
     </div>

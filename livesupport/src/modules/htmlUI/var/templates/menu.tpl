@@ -16,20 +16,21 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 {/literal}
 
 <div class="container_nav">
+{if $USER.userid}
     <ul id="nav">
-        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Add Audio##</a>
+        <li class="nav-main"><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Add Audio##</a>
             <ul>
                 <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Audioclip##</a></li>
                 {* <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li> *}
             </ul>
         </li>
-        <li><a>##Media Library##</a>
+        <li class="nav-main"><a>##Media Library##</a>
             <ul>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Browse##</a></li>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=SEARCH">##Search##</a></li>
             </ul>
         </li>
-        <li><a>##Playlists##</a>
+        <li class="nav-main"><a>##Playlists##</a>
             <ul>
                 {if $PL->getActiveArr()}
                     <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Edit Playlist##</a></li>
@@ -42,20 +43,20 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                 {/if}
             </ul>
         </li>
-        <li><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>
+        <li class="nav-main"><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>
             <ul>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month');       location.href='{$UI_BROWSER}?act=SCHEDULER'">##Month##</a></li>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week');        location.href='{$UI_BROWSER}?act=SCHEDULER'">##Week##</a></li>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day');         location.href='{$UI_BROWSER}?act=SCHEDULER'">##Day##</a></li>
                 <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Today##</a></li>
                 {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus')}
-                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status');      location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
+                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status');  location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
                 {/if}
             </ul>
         </li>
 
         {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'subjects')}
-            <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
+            <li class="nav-main"><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
                 <ul>
                     <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
                     <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
@@ -63,12 +64,14 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                 </ul>
             </li>
         {else}
-            <li><a>##Preferences##</a>
+            <li class="nav-main"><a>##Preferences##</a>
                 <ul>
                     <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
                 </ul>        
         {/if}
         <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Help##</a></li>
     </ul>
-</div>
 
+{/if}
+{include file='userinfo.tpl'}    
+ </div>

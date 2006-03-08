@@ -1,14 +1,9 @@
 {include file="statusbar.tpl"}
-
-{if $showMenuTop}
-    {include file="menu.tpl"}
-{/if}
-
+{include file="menu.tpl"}
 
 {if $USER.userid}    {* somebody logged in? *}
-
+   
     {if $showScheduler}
-
         <table  style="margin:0px;padding:0px;" border="0">
          <tr>
              <td valign="top" style="margin:0px;padding:0px;border:0">
@@ -26,7 +21,6 @@
 
          </tr>
         </table>
-
     {else}
 
         {if $fileList}

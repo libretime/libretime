@@ -89,17 +89,16 @@ function plPrBar_create(jscomRes) {
 }
 
 function plPrBar_show() {
-    document.getElementById("statusbar_indicator").innerHTML      = '<img src="img/el_onair.png" alt="on air">';
-    document.getElementById("statusbar_whatsplaying").className   = 'whatplaying';
+    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="onair">##on air##</div>';
 }
 
 function plPrBar_hide() {
-    document.getElementById("statusbar_indicator").innerHTML    = '<img src="img/el_offair.png" alt="off air">';
-    document.getElementById("statusbar_whatsplaying").innerHTML = "";
+    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="offair">##off air##</div>';
+    document.getElementById("nowplaying").innerHTML             = "";
 }
 {/literal}
 
-{if (is_array($_nowplaying.duration))}
+{if (is_array($_nowplaying.duration))} 
     ppb = new plPrBar  ("{$_nowplaying.title|truncate:33}",
                         {$_nowplaying.elapsed.h|string_format:"%d"}, {$_nowplaying.elapsed.m|string_format:"%d"}, {$_nowplaying.elapsed.s|string_format:"%d"},
                         {$_nowplaying.duration.h|string_format:"%d"}, {$_nowplaying.duration.m|string_format:"%d"}, {$_nowplaying.duration.s|string_format:"%d"},

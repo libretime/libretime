@@ -5,5 +5,19 @@
     {$SCHEDULER->setErrorMsg(false)}
 {/if}
 
+<!-- start navigation tabs -->
+<div id="tabnavsmall">
+    <ul>
+    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day')">##Day##</a></li>
+    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week')">##Week##</a></li>
+    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month')">##Month##</a></li>
+    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1')">##Today##</a></li>
+    {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus')}
+        <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
+    {/if}
+    </ul>
+</div>
+<!-- end navigation tabs -->
+
 {assign var="view" value=$SCHEDULER->curr.view}
 {include file="scheduler/$view.tpl"}

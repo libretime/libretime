@@ -3,16 +3,6 @@
 {$SCHEDULER->buildMonth()}
 {$SCHEDULER->buildWeek()}
 
-<!-- start calendar tabs -->
-        <div id="tabnavsmall">
-            <ul>
-            <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day')">##Day##</a></li>
-            <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week')">##Week##</a></li>
-            <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month')">##Month##</a></li>
-            <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1')">##Today##</a></li>
-            </ul>
-        </div>
-<!-- end calendar tabs -->
 <!-- start calendar navigation -->
 <div class="container_elements">
     <h1>##Scheduler Navigation##</h1>

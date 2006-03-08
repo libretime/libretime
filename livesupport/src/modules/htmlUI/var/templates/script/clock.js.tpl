@@ -11,7 +11,7 @@ function myClock(y, m, d, h, i, s, interval) {
 
 function incClock() {
     clock['time'].setTime(clock['time'].getTime() + clock['interval']);
-    document.getElementById("statusbar_servertime").innerHTML = twoDigit(clock['time'].getHours()) + ":" + twoDigit(clock['time'].getMinutes()) + ":" + twoDigit(clock['time'].getSeconds());
+    document.getElementById("servertime").innerHTML = twoDigit(clock['time'].getHours()) + ":" + twoDigit(clock['time'].getMinutes()) + ":" + twoDigit(clock['time'].getSeconds());
 }
 
 {/literal}

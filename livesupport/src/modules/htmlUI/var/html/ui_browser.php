@@ -138,8 +138,6 @@ if (is_array($_REQUEST['popup'])){
 };
 
 if ($uiBrowser->userid) {
-    $Smarty->assign('showMenuTop',  TRUE);
-
     switch ($_REQUEST['act']){
         case "fileList":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));

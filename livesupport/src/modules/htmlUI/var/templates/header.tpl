@@ -6,7 +6,7 @@
     <title>LIVESUPPORT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <link rel="stylesheet" href="styles.css">
+    {* <link rel="stylesheet" href="styles.css"> *}
     <link href="styles_livesupport.css" rel="stylesheet" type="text/css" />
 
     {include file="script/basics.js.tpl"}

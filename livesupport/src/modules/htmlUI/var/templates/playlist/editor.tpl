@@ -47,7 +47,7 @@
                             </td>
                         </tr>
                     {/foreach}
-                        {if $pos}
+                        {if isset($pos)}
                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: #bbb">
                             <td></td>
