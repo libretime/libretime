@@ -176,6 +176,7 @@ if ($uiBrowser->userid) {
         break;
 
         case "editItem":
+        $uiBrowser->SCRATCHPAD->addItem($_REQUEST['id']);
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
         break;

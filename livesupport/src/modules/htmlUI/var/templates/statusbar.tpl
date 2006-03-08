@@ -31,10 +31,10 @@
                         <div class="right">Remaining: <strong id="now_remaining"></strong></div>
                     </div>
                 {/if}
-                <div class="clearer"></div>
+                <div  style="height:5px"> </div>
                 <div id="next_clip">
                 {if $_nextplaying}
-                    <p class="next">##Playing Next##: <span id="next_title"></span> &nbsp;<span id="next_duration"></span></p>
+                    <p class="next">##Playing Next##: <b><span id="next_title"></span></b> &nbsp;<span id="next_duration"></span></p>
                 {/if}
                 </div>
             </div>  
