@@ -7,7 +7,7 @@ function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
     this.tit        = tit.slice(0, 40);
     this.next       = next;
     this.interval   = 333;
-    this.ntit       = ntit.slice(0, 40);
+    this.ntit       = ntit.slice(0, 35);
     this.nh         = nh;
     this.ni         = ni;
     this.ns         = ns;

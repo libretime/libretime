@@ -890,7 +890,7 @@ table.masterpalette td{
 /*  *************** NOW/NEXT CLIP  ******************  */
 
 .whatplaying .title {
-    //font-weight: bold;
+    font-weight: bold;
     font-size: 15px;
 }
 
@@ -929,7 +929,7 @@ table.masterpalette td{
 
 .whatplaying .next {
     font-size: 11px;
-    //font-weight: bold;
+    font-weight: bold;
     margin: 10px 0 0 0;
     vertical-align: baseline;
 }
