@@ -229,7 +229,7 @@ class uiScheduler extends uiCalendar
         $arr = $this->displayScheduleMethod($thisWeekStart.'T00:00:00', $nextWeekStart.'T00:00:00');
         #print_r($arr);
 
-        if (!count($arr))
+        if (!is_array($arr))
             return FALSE;
 
         foreach ($arr as $key => $val) {
@@ -260,7 +260,7 @@ class uiScheduler extends uiCalendar
         $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
         #print_r($arr);
 
-        if (!count($arr))
+        if (!is_array($arr))
             return FALSE;
 
         foreach ($arr as $key => $val) {
@@ -338,8 +338,10 @@ class uiScheduler extends uiCalendar
         $thisDay = $year.$month.$day;
         $nextDay = strftime("%Y%m%d", strtotime('+1 day', strtotime("$year-$month-$day")));
         $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
-        if (!count($arr))
+        
+        if (!is_array($arr))
             return FALSE;
+            
         foreach ($arr as $key=>$val) {
             $arr[$key]['title']     = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
             $arr[$key]['creator']   = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
