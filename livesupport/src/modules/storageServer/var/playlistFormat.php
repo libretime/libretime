@@ -94,6 +94,10 @@ $playlistFormat = array(
         'area'=>'Music',
         'attrs'=>array('implied'=>array('xml:lang')),
     ),
+    'playlength'=>array(
+        'type'=>'Time',
+        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
+    ),
     'id'=>array(
         'type'=>'Attribute',
         'regexp'=>'^[0-9a-f]{16}$',

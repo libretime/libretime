@@ -508,35 +508,8 @@ class MetaData{
      */
     function &parse($mdata='', $loc='file')
     {
-        switch($loc){
-        case"file":
-            if(!is_file($mdata)){
-                return PEAR::raiseError(
-                    "MetaData::parse: metadata file not found ($mdata)"
-                );
-            }
-            if(!is_readable($mdata)){
-                return PEAR::raiseError(
-                    "MetaData::parse: can't read metadata file ($mdata)"
-                );
-            }
-            $mdata = file_get_contents($mdata);
-        case"string":
-            require_once"XmlParser.php";
-            $parser =& new XmlParser($mdata);
-            if($parser->isError()){
-                return PEAR::raiseError(
-                    "MetaData::parse: ".$parser->getError()
-                );
-            }
-            $tree = $parser->getTree();
-            break;
-        default:
-            return PEAR::raiseError(
-                "MetaData::parse: unsupported metadata location ($loc)"
-            );
-        }
-        return $tree;
+        require_once"XmlParser.php";
+        return XmlParser::parse($mdata, $loc);
     }
     
     /**

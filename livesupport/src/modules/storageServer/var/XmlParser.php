@@ -161,6 +161,46 @@ class XmlParser {
     }
 
     /**
+     *  Parse XML file or string
+     *
+     *  @param data string, local path to XML file or XML string
+     *  @param loc string, location: 'file'|'string'
+     *  @return array reference, parse result tree (or PEAR::error)
+     */
+    function &parse($data='', $loc='file')
+    {
+        switch($loc){
+        case"file":
+            if(!is_file($data)){
+                return PEAR::raiseError(
+                    "XmlParser::parse: file not found ($data)"
+                );
+            }
+            if(!is_readable($data)){
+                return PEAR::raiseError(
+                    "XmlParser::parse: can't read file ($data)"
+                );
+            }
+            $data = file_get_contents($data);
+        case"string":
+            $parser =& new XmlParser($data);
+            if($parser->isError()){
+                return PEAR::raiseError(
+                    "SmilPlaylist::parse: ".$parser->getError()
+                );
+            }
+            $tree = $parser->getTree();
+            break;
+        default:
+            return PEAR::raiseError(
+                "XmlParser::parse: unsupported source location ($loc)"
+            );
+        }
+        return $tree;
+    }
+
+
+    /**
      *  Start tag handler
      *
      *  @param parser resource, reference to parser resource

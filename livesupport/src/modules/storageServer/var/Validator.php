@@ -188,7 +188,7 @@ class Validator{
             if(isset($formTree[$aname]['regexp'])){
                 // echo "XAR {$formTree[$fname]['regexp']} / ".$node->content."\n";
                 if(!preg_match("|{$formTree[$aname]['regexp']}|", $attr->val))
-                    return $this->_err(VAL_ATTRIB, $aname);
+                    return $this->_err(VAL_ATTRIB, "$aname [".var_export($attr->val,TRUE)."]");
             }
         }
         // check if all required attrs are here:

@@ -461,7 +461,7 @@ class Transport{
             return PEAR::raiseError("Transport::downloadFromArchive: ".
                 "invalid session id", GBERR_SESS);
         }
-        $parid = $this->gb->_getHomeDirId($sessid);
+        $parid = $this->gb->_getHomeDirIdFromSess($sessid);
         if(PEAR::isError($parid)) return $parid;
         $trtok = $this->_createTrtok();
         $id = $this->dbc->nextId("{$this->transTable}_id_seq");

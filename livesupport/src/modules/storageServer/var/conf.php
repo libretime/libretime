@@ -33,7 +33,7 @@
  *  storageServer configuration file
  */
 
-define('LS_VERSION', '1.0');
+define('LS_VERSION', '1.1');
 
 /**
  *  configuration structure:

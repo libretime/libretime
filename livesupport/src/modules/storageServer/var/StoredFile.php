@@ -85,9 +85,9 @@ class StoredFile{
      */
     function &insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
-        $gunid=NULL, $ftype=NULL)
+        $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
-        $ac =& new StoredFile($gb, ($gunid ? $gunid : NULL));
+        $ac =& new $className($gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
         $ac->id   = $oid;
         $ac->mime = "unKnown";
@@ -591,8 +591,11 @@ class StoredFile{
     function _getExt()
     {
         $fname = $this->_getFileName();
-        $ext = substr($fname, strrpos($fname, '.')+1);
-        if($ext !== FALSE) return $ext;
+        $pos   = strrpos($fname, '.');
+        if($pos !== FALSE){
+            $ext   = substr($fname, $pos+1);
+            if($ext !== FALSE) return $ext;
+        }
         switch(strtolower($this->mime)){
             case"audio/mpeg":
                 $ext="mp3"; break;
@@ -600,7 +603,6 @@ class StoredFile{
             case"audio/x-wave":
                 $ext="wav"; break;
             case"audio/x-ogg":
-            case"application/x-ogg":
             case"application/x-ogg":
                 $ext="ogg"; break;
             default:
