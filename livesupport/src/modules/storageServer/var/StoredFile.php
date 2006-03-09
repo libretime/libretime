@@ -71,7 +71,7 @@ class StoredFile{
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
-     *  Create instace of StoredFile object and insert new file
+     *  Create instance of StoredFile object and insert new file
      *
      *  @param gb reference to GreenBox object
      *  @param oid int, local object id in the tree
@@ -81,7 +81,7 @@ class StoredFile{
      *  @param mdataLoc string 'file'|'string' (optional)
      *  @param gunid global unique id (optional) - for insert file with gunid
      *  @param ftype string, internal file type
-     *  @return instace of StoredFile object
+     *  @return instance of StoredFile object
      */
     function &insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
@@ -149,14 +149,14 @@ class StoredFile{
     }
 
     /**
-     *  Create instace of StoreFile object and recall existing file.<br>
+     *  Create instance of StoreFile object and recall existing file.<br>
      *  Should be supplied oid XOR gunid - not both ;)
      *
      *  @param gb reference to GreenBox object
      *  @param oid int, optional, local object id in the tree
      *  @param gunid string, optional, global unique id of file
      *  @param className string, optional classname to recall
-     *  @return instace of StoredFile object
+     *  @return instance of StoredFile object
      */
     function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
     {
@@ -185,13 +185,13 @@ class StoredFile{
     }
 
     /**
-     *  Create instace of StoreFile object and recall existing file
+     *  Create instance of StoreFile object and recall existing file
      *	by gunid.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param gunid string, optional, global unique id of file
      *  @param className string, optional classname to recall
-     *  @return instace of StoredFile object
+     *  @return instance of StoredFile object
      */
     function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
     {
@@ -199,13 +199,13 @@ class StoredFile{
     }
 
     /**
-     *  Create instace of StoreFile object and recall existing file
+     *  Create instance of StoreFile object and recall existing file
      *  by access token.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param token string, access token
      *  @param className string, optional classname to recall
-     *  @return instace of StoredFile object
+     *  @return instance of StoredFile object
      */
     function recallByToken(&$gb, $token, $className='StoredFile')
     {
@@ -222,7 +222,7 @@ class StoredFile{
     }
 
     /**
-     *  Create instace of StoredFile object and make copy of existing file
+     *  Create instance of StoredFile object and make copy of existing file
      *
      *  @param src reference to source object
      *  @param nid int, new local id
