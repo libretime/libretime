@@ -669,7 +669,8 @@ class GreenBox extends BasicStor{
      *  sub-playlists and media files (if desired)
      *
      *  @param sessid - string, session ID
-     *  @param plid - string, playlist global unique ID
+     *  @param plids - array of strings, playlist global unique IDs
+     *          (one gunid is accepted too)
      *  @param type - string, playlist format, values: lspl | smil | m3u
      *  @param standalone - boolean, if only playlist should be exported or
      *          with all related files
@@ -677,9 +678,9 @@ class GreenBox extends BasicStor{
      *      fname string: readable fname,
      *      token srring: access token
      */
-    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
+    function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        return $this->bsExportPlaylistOpen($plid, $type, $standalone);
+        return $this->bsExportPlaylistOpen($plids, $type, $standalone);
     }
     
     /**

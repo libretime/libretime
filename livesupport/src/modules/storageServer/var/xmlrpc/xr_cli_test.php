@@ -135,7 +135,7 @@ $infos = array(
         'p'=>array('sessid', 'plid'), 'r'=>array('available', 'ownerid', 'ownerlogin')),
 
     "exportPlaylistOpen"   => array('m'=>"locstor.exportPlaylistOpen",
-        'p'=>array('sessid', 'plid', 'type'),
+        'p'=>array('sessid', 'plids', 'type'),
         'r'=>array('url', 'token')),
     "exportPlaylistClose"   => array('m'=>"locstor.exportPlaylistClose",
         'p'=>array('token'), 'r'=>array('status')),

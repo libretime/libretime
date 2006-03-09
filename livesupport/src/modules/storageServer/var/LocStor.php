@@ -673,7 +673,8 @@ class LocStor extends BasicStor{
      *  sub-playlists and media files (if desired)
      *
      *  @param sessid - string, session ID
-     *  @param plid - string, playlist global unique ID
+     *  @param plids - array of strings, playlist global unique IDs
+     *          (one gunid is accepted too)
      *  @param type - string, playlist format, values: lspl | smil | m3u
      *  @param standalone - boolean, if only playlist should be exported or
      *          with all related files
@@ -682,9 +683,9 @@ class LocStor extends BasicStor{
      *      token srring: access token
      *      chsum string: md5 checksum,
      */
-    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
+    function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        $res = $r =$this->bsExportPlaylistOpen($plid, $type, $standalone);
+        $res = $r =$this->bsExportPlaylistOpen($plids, $type, $standalone);
         if($this->dbc->isError($r)) return $r;
         $url = $this->getUrlPart()."access/".basename($res['fname']);
         $chsum = md5_file($res['fname']);

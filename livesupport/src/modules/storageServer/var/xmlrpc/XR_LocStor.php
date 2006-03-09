@@ -1170,7 +1170,7 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> plid : string  -  global unique id of Playlist</li>
+     *      <li> plids : array of strings  -  global unique IDs of Playlists</li>
      *      <li> type  :  string  -  playlist format, values: lspl | smil </li>
      *      <li> standalone  :  boolean  - if only playlist should be exported or
      *          with all related files  </li>
@@ -1202,7 +1202,7 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         if(!isset($t['standalone'])) $r['standalone']=FALSE;
         $res = $this->exportPlaylistOpen(
-            $r['sessid'], $r['plid'], $r['type'], $r['standalone']
+            $r['sessid'], $r['plids'], $r['type'], $r['standalone']
         );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,

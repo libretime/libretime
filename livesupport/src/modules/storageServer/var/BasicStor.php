@@ -833,7 +833,8 @@ class BasicStor extends Alib{
      *  sub-playlists and media files (if desired)
      *
      *  @param sessid - string, session ID
-     *  @param plid - string, playlist global unique ID
+     *  @param plids - array of strings, playlist global unique IDs
+     *          (one gunid is accepted too)
      *  @param type - string, playlist format,
      *          possible values: lspl | smil
      *  @param standalone - boolean, if only playlist should be exported or
@@ -842,16 +843,21 @@ class BasicStor extends Alib{
      *      fname string: readable fname,
      *      token srring: access token
      */
-    function bsExportPlaylistOpen($plid, $type='lspl', $standalone=FALSE)
+    function bsExportPlaylistOpen($plids, $type='lspl', $standalone=FALSE)
     {
         require_once"Playlist.php";
-        $pl = $r = Playlist::recallByGunid($this, $plid);
-        if(PEAR::isError($r)) return $r;
-        if($standalone){
-            $gunids = array(array('gunid'=>$plid, 'type'=>'playlist'));
-        }else{
-            $gunids = $r = $pl->export();
+        if(!is_array($plids)) $plids=array($plids);
+        $gunids = array();
+        foreach($plids as $plid){
+            $pl = $r = Playlist::recallByGunid($this, $plid);
             if(PEAR::isError($r)) return $r;
+            if($standalone){
+                $gunidsX = array(array('gunid'=>$plid, 'type'=>'playlist'));
+            }else{
+                $gunidsX = $r = $pl->export();
+                if(PEAR::isError($r)) return $r;
+            }
+            $gunids = array_merge($gunids, $gunidsX);
         }
         $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
         $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
@@ -891,7 +897,9 @@ class BasicStor extends Alib{
                 copy($RADfname, "$tmpdc/{$it['gunid']}.$RADext");
             }
         }
-        copy("$tmpdp/$plid.$plExt", "$tmpd/exportedPlaylist.$plExt");
+        if(count($plids)==1){
+            copy("$tmpdp/$plid.$plExt", "$tmpd/exportedPlaylist.$plExt");
+        }
         $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
         @rmdir($tmpdc);  @rmdir($tmpdp); @rmdir($tmpd);
         unlink($tmpn);
