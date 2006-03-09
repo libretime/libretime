@@ -6,6 +6,7 @@ $Smarty->assign_by_ref  ('PL',         $uiBrowser->PLAYLIST);
 $Smarty->assign_by_ref  ('SCHEDULER',  $uiBrowser->SCHEDULER);
 $Smarty->assign_by_ref  ('SCRATCHPAD', $uiBrowser->SCRATCHPAD);
 $Smarty->assign_by_ref  ('SUBJECTS',   $uiBrowser->SUBJECTS);
+$Smarty->assign_by_ref  ('EXCHANGE',   $uiBrowser->EXCHANGE);
 $Smarty->assign_by_ref  ('JSCOM',      $jscom);
 
 

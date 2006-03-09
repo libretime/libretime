@@ -103,7 +103,8 @@ define('UI_PL_ELEM_FADEINFO',           'fadeInfo');
 define('UI_PL_ELEM_FADEIN',             'fadeIn');
 define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
-
+## Export/Import
+define('UI_BACKUPTOKEN_KEY',            'backupToken');
 
 ## LS stuff
 require_once '../../../storageServer/var/conf.php';
@@ -146,6 +147,7 @@ require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';
 require_once dirname(__FILE__).'/ui_subjects.class.php';
 require_once dirname(__FILE__).'/ui_jscom.php';
+require_once dirname(__FILE__).'/ui_exchange.class.php';
 
 ## well known classes
 require_once 'DB.php';

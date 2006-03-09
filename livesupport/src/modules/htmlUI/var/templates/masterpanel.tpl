@@ -51,6 +51,10 @@
             {include file="playlist/main.tpl"}
         {/if}
 
+        {if $showBackup}
+            {include file="backup/main.tpl"}
+        {/if}
+        
         <div class="content">
             {if $simpleSearchForm}
                 {include file="library/simpleSearchForm.tpl"}

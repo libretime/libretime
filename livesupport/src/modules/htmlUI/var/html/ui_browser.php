@@ -237,6 +237,11 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showSubjects', TRUE);
         $Smarty->assign('act', $_REQUEST['act']);
         break;
+        
+        case "BACKUP": 
+        $Smarty->assign('showBackup', TRUE);
+        $Smarty->assign('act', $_REQUEST['act']);
+        break;
     }
 
     if ($_REQUEST['act'] != 'SCHEDULER') {

@@ -154,6 +154,7 @@ class uiBase
         $this->PLAYLIST     =& new uiPlaylist($this);
         $this->SCHEDULER    =& new uiScheduler($this);
         $this->SUBJECTS     =& new uiSubjects($this);
+        $this->EXCHANGE     =& new uiExchange($this);
         $this->_self_       =& $this;
     }
 

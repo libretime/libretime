@@ -61,6 +61,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                     <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
                     <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
                     <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
+                    <li><a href="{$UI_BROWSER}?act=BACKUP"                  >##Database Backup##</a></li>
                 </ul>
             </li>
         {else}
