@@ -78,7 +78,7 @@ class LocStor extends BasicStor{
         }else{
             // gunid doesn't exists - do insert:
             $tmpFname = uniqid('');
-            $parid = $this->_getHomeDirId($sessid);
+            $parid = $this->_getHomeDirIdFromSess($sessid);
             if(PEAR::isError($parid)) return $parid;
             if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
                 { return $res; }
@@ -115,11 +115,13 @@ class LocStor extends BasicStor{
     {
         $ac =& StoredFile::recallByToken($this, $token);
         if(PEAR::isError($ac)){ return $ac; }
-        $tmpFname = $this->bsClosePut($token);
-        if(PEAR::isError($tmpFname)){ $ac->delete(); return $tmpFname; }
-        $res = $ac->replaceRawMediaData($tmpFname);
+        $arr = $r = $this->bsClosePut($token);
+        if(PEAR::isError($r)){ $ac->delete(); return $r; }
+        $fname = $arr['fname'];
+        //$owner = $arr['owner'];
+        $res = $ac->replaceRawMediaData($fname);
         if(PEAR::isError($res)){ return $res; }
-        if(file_exists($tmpFname)) @unlink($tmpFname);
+        if(file_exists($fname)) @unlink($fname);
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;
         return $ac->gunid;
@@ -145,7 +147,7 @@ class LocStor extends BasicStor{
      *  @param fname string, human readable menmonic file name
      *                      with extension corresponding to filetype
      *  @param url string, wewbstream url
-     *  @return
+     *  @return string, gunid
      */
     function storeWebstream($sessid, $gunid, $metadata, $fname, $url)
     {
@@ -426,15 +428,16 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string
      *  @param gunid string
+     *  @param forced boolean, if true don't use trash
      *  @return boolean or PEAR::error
      */
-    function deleteAudioClip($sessid, $gunid)
+    function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        $res = $this->bsDeleteFile($ac->getId());
+        $res = $this->bsDeleteFile($ac->getId(), $forced);
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
@@ -475,7 +478,7 @@ class LocStor extends BasicStor{
             );
         }
         $tmpFname = uniqid('');
-        $parid = $this->_getHomeDirId($sessid);
+        $parid = $this->_getHomeDirIdFromSess($sessid);
         if(PEAR::isError($parid)) return $parid;
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
@@ -585,9 +588,10 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
+     *  @param forced boolean, if true don't use trash
      *  @return boolean
      */
-    function deletePlaylist($sessid, $playlistId)
+    function deletePlaylist($sessid, $playlistId, $forced=FALSE)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if(PEAR::isError($ex)){ return $ex; }
@@ -600,7 +604,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        $res = $this->bsDeleteFile($ac->getId());
+        $res = $this->bsDeleteFile($ac->getId(), $forced);
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
@@ -665,6 +669,88 @@ class LocStor extends BasicStor{
     }
 
     /**
+     *  Create a tarfile with playlist export - playlist and all matching
+     *  sub-playlists and media files (if desired)
+     *
+     *  @param sessid - string, session ID
+     *  @param plid - string, playlist global unique ID
+     *  @param type - string, playlist format, values: lspl | smil | m3u
+     *  @param standalone - boolean, if only playlist should be exported or
+     *          with all related files
+     *  @return hasharray with  fields:
+     *      url string: readable url,
+     *      token srring: access token
+     *      chsum string: md5 checksum,
+     */
+    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
+    {
+        $res = $r =$this->bsExportPlaylistOpen($plid, $type, $standalone);
+        if($this->dbc->isError($r)) return $r;
+        $url = $this->getUrlPart()."access/".basename($res['fname']);
+        $chsum = md5_file($res['fname']);
+        $size = filesize($res['fname']);
+        return array(
+            'url' => $url,
+            'token' => $res['token'],
+            'chsum' => $chsum,
+        );
+    }
+    
+    /**
+     *  Close playlist export previously opened by the exportPlaylistOpen method
+     *
+     *  @param token - string, access token obtained from exportPlaylistOpen
+     *            method call
+     *  @return boolean true or error object
+     */
+    function exportPlaylistClose($token)
+    {
+        return $this->bsExportPlaylistClose($token);
+    }
+    
+    /**
+     *  Open writable handle for import playlist in LS Archive format
+     *
+     *  @param sessid string, session id
+     *  @param chsum string, md5 checksum of imported file
+     *  @return hasharray with:
+     *      url string: writable URL
+     *      token string: PUT token
+     */
+    function importPlaylistOpen($sessid, $chsum)
+    {
+        $userid = $r =$this->getSessUserId($sessid);
+        if($this->dbc->isError($r)) return $r;
+        $r = $this->bsOpenPut($chsum, NULL, $userid);
+        if(PEAR::isError($r)) return $r;
+        return $r;
+    }
+    
+    /**
+     *  Close import-handle and import playlist
+     *
+     *  @param token string, import token obtained by importPlaylistOpen method
+     *  @return string, result file global id (or error object)
+     */
+    function importPlaylistClose($token)
+    {
+        $arr = $r = $this->bsClosePut($token);
+        if(PEAR::isError($r)) return $r;
+        $fname = $arr['fname'];
+        $owner = $arr['owner'];
+        $parid = $r= $this->_getHomeDirId($owner);
+        if(PEAR::isError($r)) {
+            if(file_exists($fname)) @unlink($fname);
+            return $r;
+        }
+        $res = $r = $this->bsImportPlaylist($parid, $fname);
+        if(file_exists($fname)) @unlink($fname);
+        if(PEAR::isError($r)) return $r;
+        return $this->_gunidFromId($res);
+    }
+    
+
+    /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
      *  @param sessid string, session ID
@@ -685,11 +771,6 @@ class LocStor extends BasicStor{
      *  @param playlistId string, playlist global unique ID
      *  @param getUid boolean, optional flag for returning editedby uid
      *  @return boolean
-
-
-
-
-
      */
     function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
@@ -706,149 +787,165 @@ class LocStor extends BasicStor{
         return FALSE;
     }
 
+    /* ------------------------------------------------------- render methods */
     /**
-     *  Create a tarfile with playlist export - playlist and all matching
-     *  sub-playlists and media files (if desired)
+     *  Render playlist to ogg file (open handle)
      *
-     *  @param sessid - string, session ID
-     *  @param plid - string, playlist global unique ID
-     *  @param type - string, playlist format, values: lspl | smil | m3u
-     *  @param standalone - boolean, if only playlist should be exported or
-     *          with all related files
-     *  @return hasharray with  fields:
-     *      url string: readable url,
-     *      token srring: access token
-     *      chsum string: md5 checksum,
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
      */
-    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
-    {
-        return PEAR::raiseError(
-            "LocStor::exportPlaylistOpen: not imnplemented"
-        );
-    }
-    
-    /**
-     *  Close playlist export previously opened by the exportPlaylistOpen method
-     *
-     *  @param token - string, access token obtained from exportPlaylistOpen
-     *            method call
-     *  @return boolean true or error object
-     */
-    function exportPlaylistClose($token)
-    {
-        return PEAR::raiseError(
-            "LocStor::exportPlaylistClose: not imnplemented"
-        );
-    }
-    
-    /**
-     *  Open writable handle for import playlist in LS Archive format
-     *
-     *  @param sessid string, session id
-     *  @param chsum string, md5 checksum of imported file
-     *  @return hasharray with:
-     *      url string: writable URL
-     *      token string: PUT token
-     */
-    function importPlaylistOpen($sessid, $chsum)
-    {
-        return PEAR::raiseError(
-            "LocStor::importPlaylistOpen: not imnplemented"
-        );
-    }
-    
-    /**
-     *  Close import-handle and import playlist
-     *
-     *  @param token string, import token obtained by importPlaylistOpen method
-     *  @return string, result file global id (or error object)
-     */
-    function importPlaylistClose($token)
-    {
-        return PEAR::raiseError(
-            "LocStor::importPlaylistClose: not imnplemented"
-        );
-    }
-    
     function renderPlaylistToFileOpen($sessid, $plid)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileOpen: not imnplemented"
+            "LocStor::renderPlaylistToFileOpen: not implemented"
         );
     }
 
+    /**
+     *  Render playlist to ogg file (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      url : string - readable url
+     */
     function renderPlaylistToFileCheck($token)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileCheck: not imnplemented"
+            "LocStor::renderPlaylistToFileCheck: not implemented"
         );
     }
 
+    /**
+     *  Render playlist to ogg file (close handle)
+     *
+     *  @param token  :  string  -  render token
+     *  @return status : boolean
+     */
     function renderPlaylistToFileClose($token)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileClose: not imnplemented"
+            "LocStor::renderPlaylistToFileClose: not implemented"
         );
     }
 
 
+    /**
+     *  Render playlist to storage media clip (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
+     */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToStorageOpen: not imnplemented"
+            "LocStor::renderPlaylistToStorageOpen: not implemented"
         );
     }
 
+    /**
+     *  Render playlist to storage media clip (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      gunid : string - gunid of result file
+     */
     function renderPlaylistToStorageCheck($token)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToStorageCheck: not imnplemented"
+            "LocStor::renderPlaylistToStorageCheck: not implemented"
         );
     }
 
 
+    /**
+     *  Render playlist to RSS file (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
+     */
     function renderPlaylistToRSSOpen($sessid, $plid)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSOpen: not imnplemented"
+            "LocStor::renderPlaylistToRSSOpen: not implemented"
         );
     }
 
+    /**
+     *  Render playlist to RSS file (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      url : string - readable url
+     */
     function renderPlaylistToRSSCheck($token)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSCheck: not imnplemented"
+            "LocStor::renderPlaylistToRSSCheck: not implemented"
         );
     }
 
+    /**
+     *  Render playlist to RSS file (close handle)
+     *
+     *  @param token  :  string  -  render token
+     *  @return status : boolean
+     */
     function renderPlaylistToRSSClose($token)
     {
         return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSClose: not imnplemented"
+            "LocStor::renderPlaylistToRSSClose: not implemented"
         );
     }
 
 
-    /*==================================================storage admin methods */
+    /*================================================= storage admin methods */
     /* ------------------------------------------------------- backup methods */
+    /**
+     *  Create backup of storage (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param criteria : struct - see search criteria
+     *  @return token : string - backup token
+     */
     function createBackupOpen($sessid, $criteria)
     {
         return PEAR::raiseError(
-            "LocStor::createBackupOpen: not imnplemented"
+            "LocStor::createBackupOpen: not implemented"
         );
     }
 
+    /**
+     *  Create backup of storage (check results)
+     *
+     *  @param token  :  string  -  backup token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      url : string - readable url
+     *      metafile : string - archive metafile in XML format
+     */
     function createBackupCheck($token)
     {
         return PEAR::raiseError(
-            "LocStor::createBackupCheck: not imnplemented"
+            "LocStor::createBackupCheck: not implemented"
         );
     }
 
+    /**
+     *  Create backup of storage (close handle)
+     *
+     *  @param token  :  string  -  backup token
+     *  @return status : boolean
+     */
     function createBackupClose($token)
     {
         return PEAR::raiseError(
-            "LocStor::createBackupClose: not imnplemented"
+            "LocStor::createBackupClose: not implemented"
         );
     }
 

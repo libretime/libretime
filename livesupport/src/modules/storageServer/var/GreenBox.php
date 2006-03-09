@@ -212,14 +212,15 @@ class GreenBox extends BasicStor{
      *
      *  @param id int, virt.file's local id
      *  @param sessid int
+     *  @param forced boolean, if true don't use trash
      *  @return true or PEAR::error
      */
-    function deleteFile($id, $sessid='')
+    function deleteFile($id, $sessid='', $forced=FALSE)
     {
         $parid = $this->getParent($id);
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        return $this->bsDeleteFile($id);
+        return $this->bsDeleteFile($id, $forced);
     }
 
     /* ------------------------------------------------------------- metadata */
@@ -418,7 +419,7 @@ class GreenBox extends BasicStor{
         $id = $this->_idFromGunid($gunid2);
         if(PEAR::isError($id)) return $id;
         // get home dir id:
-        $hdid = $this->_getHomeDirId($sessid);
+        $hdid = $this->_getHomeDirIdFromSess($sessid);
         if(PEAR::isError($hdid)) return $hdid;
         // optionally move it to the destination folder:
         if($parid != $hdid && !is_null($parid)){
@@ -519,14 +520,6 @@ class GreenBox extends BasicStor{
                 " ($type)"
             );
         }
-/*
-        if('playlist' == ($type = $this->getFileType($acId))){
-            return PEAR::raiseError(
-                "GreenBox::addAudioClipToPlaylist: object type not supported".
-                " ($type)"
-            );
-        }
-*/
 //        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
         $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length);
         if(PEAR::isError($res)) return $res;
@@ -672,6 +665,77 @@ class GreenBox extends BasicStor{
     }
     
     /**
+     *  Create a tarfile with playlist export - playlist and all matching
+     *  sub-playlists and media files (if desired)
+     *
+     *  @param sessid - string, session ID
+     *  @param plid - string, playlist global unique ID
+     *  @param type - string, playlist format, values: lspl | smil | m3u
+     *  @param standalone - boolean, if only playlist should be exported or
+     *          with all related files
+     *  @return hasharray with  fields:
+     *      fname string: readable fname,
+     *      token srring: access token
+     */
+    function exportPlaylistOpen($sessid, $plid, $type='lspl', $standalone=FALSE)
+    {
+        return $this->bsExportPlaylistOpen($plid, $type, $standalone);
+    }
+    
+    /**
+     *  Close playlist export previously opened by the exportPlaylistOpen method
+     *
+     *  @param token - string, access token obtained from exportPlaylistOpen
+     *            method call
+     *  @return boolean true or error object
+     */
+    function exportPlaylistClose($token)
+    {
+        return $this->bsExportPlaylistClose($token);
+    }
+    
+    /**
+     *  Open writable handle for import playlist in LS Archive format
+     *
+     *  @param sessid string, session id
+     *  @param chsum string, md5 checksum of imported file (optional)
+     *  @return hasharray with:
+     *      fname string: writable local filename
+     *      token string: put token
+     */
+    function importPlaylistOpen($sessid, $chsum='')
+    {
+        $userid = $r =$this->getSessUserId($sessid);
+        if($this->dbc->isError($r)) return $r;
+        $r = $this->bsOpenPut($chsum, NULL, $userid);
+        if(PEAR::isError($r)) return $r;
+        return $r;
+    }
+    
+    /**
+     *  Close import-handle and import playlist
+     *
+     *  @param token string, import token obtained by importPlaylistOpen method
+     *  @return int, result file local id (or error object)
+     */
+    function importPlaylistClose($token)
+    {
+        $arr = $r = $this->bsClosePut($token);
+        if(PEAR::isError($r)) return $r;
+        $fname = $arr['fname'];
+        $owner = $arr['owner'];
+        $parid = $r= $this->_getHomeDirId($owner);
+        if(PEAR::isError($r)) {
+            if(file_exists($fname)) @unlink($fname);
+            return $r;
+        }
+        $res = $r = $this->bsImportPlaylist($parid, $fname, $owner);
+        if(file_exists($fname)) @unlink($fname);
+        if(PEAR::isError($r)) return $r;
+        return $res;
+    }
+    
+    /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
      *  @param id int, local id
@@ -703,6 +767,7 @@ class GreenBox extends BasicStor{
         return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
     }
 
+    /* ---------------------------------------------- time conversion methods */
     /**
      *  Convert playlist time value to float seconds
      *
@@ -727,6 +792,168 @@ class GreenBox extends BasicStor{
         return Playlist::_secsToPlTime($s0);
     }
     
+    /* ------------------------------------------------------- render methods */
+    /**
+     *  Render playlist to ogg file (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
+     */
+    function renderPlaylistToFileOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToFileOpen: not implemented"
+        );
+    }
+
+    /**
+     *  Render playlist to ogg file (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     */
+    function renderPlaylistToFileCheck($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToFileCheck: not implemented"
+        );
+    }
+
+    /**
+     *  Render playlist to ogg file (close handle)
+     *
+     *  @param token  :  string  -  render token
+     *  @return status : boolean
+     */
+    function renderPlaylistToFileClose($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToFileClose: not implemented"
+        );
+    }
+
+
+    /**
+     *  Render playlist to storage media clip (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
+     */
+    function renderPlaylistToStorageOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToStorageOpen: not implemented"
+        );
+    }
+
+    /**
+     *  Render playlist to storage media clip (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      gunid : string - gunid of result file
+     */
+    function renderPlaylistToStorageCheck($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToStorageCheck: not implemented"
+        );
+    }
+
+
+    /**
+     *  Render playlist to RSS file (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param plid : string  -  playlist gunid
+     *  @return token : string - render token
+     */
+    function renderPlaylistToRSSOpen($sessid, $plid)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToRSSOpen: not implemented"
+        );
+    }
+
+    /**
+     *  Render playlist to RSS file (check results)
+     *
+     *  @param token  :  string  -  render token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     */
+    function renderPlaylistToRSSCheck($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToRSSCheck: not implemented"
+        );
+    }
+
+    /**
+     *  Render playlist to RSS file (close handle)
+     *
+     *  @param token  :  string  -  render token
+     *  @return status : boolean
+     */
+    function renderPlaylistToRSSClose($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::renderPlaylistToRSSClose: not implemented"
+        );
+    }
+
+
+    /*================================================= storage admin methods */
+    /* ------------------------------------------------------- backup methods */
+    /**
+     *  Create backup of storage (open handle)
+     *
+     *  @param sessid  :  string  -  session id
+     *  @param criteria : struct - see search criteria
+     *  @return token : string - backup token
+     */
+    function createBackupOpen($sessid, $criteria)
+    {
+        return PEAR::raiseError(
+            "GreenBox::createBackupOpen: not implemented"
+        );
+    }
+
+    /**
+     *  Create backup of storage (check results)
+     *
+     *  @param token  :  string  -  backup token
+     *  @return hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     *      metafile : string - archive metafile in XML format
+     */
+    function createBackupCheck($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::createBackupCheck: not implemented"
+        );
+    }
+
+    /**
+     *  Create backup of storage (close handle)
+     *
+     *  @param token  :  string  -  backup token
+     *  @return status : boolean
+     */
+    function createBackupClose($token)
+    {
+        return PEAR::raiseError(
+            "GreenBox::createBackupClose: not implemented"
+        );
+    }
+
     /* ============================================== methods for preferences */
 
     /**

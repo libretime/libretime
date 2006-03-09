@@ -36,13 +36,13 @@
 class Playlist extends StoredFile{
     
     /**
-     *  Create instace of Playlist object and recall existing file
+     *  Create instance of Playlist object and recall existing file
      *  by gunid.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param gunid string, global unique id
      *  @param className string, optional classname to recall
-     *  @return instace of Playlist object
+     *  @return instance of Playlist object
      */
     function &recallByGunid(&$gb, $gunid, $className='Playlist')
     {
@@ -50,19 +50,129 @@ class Playlist extends StoredFile{
     }
 
     /**
-     *  Create instace of Playlist object and recall existing file
+     *  Create instance of Playlist object and recall existing file
      *  by access token.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param token string, access token
      *  @param className string, optional classname to recall
-     *  @return instace of Playlist object
+     *  @return instance of Playlist object
      */
     function &recallByToken(&$gb, $token, $className='Playlist')
     {
         return parent::recallByToken($gb, $token, $className);
     }
 
+    /**
+     *  Create instance of Playlist object and insert new file
+     *
+     *  @param gb reference to GreenBox object
+     *  @param oid int, local object id in the tree
+     *  @param fname string, name of new file
+     *  @param mediaFileLP string, ignored
+     *  @param metadata string, local path to playlist XML file or XML string
+     *  @param mdataLoc string 'file'|'string' (optional)
+     *  @param plid global unique id (optional) - for insert file with gunid
+     *  @param ftype string, ignored
+     *  @return instance of Playlist object
+     */
+    function &insert(&$gb, $oid, $fname,
+        $mediaFileLP='', $metadata='', $mdataLoc='file',
+        $plid=NULL, $ftype=NULL)
+    {
+        return parent::insert($gb, $oid, $fname,
+            '', $metadata, $mdataLoc, $plid, 'playlist', 'Playlist');
+    }
+    
+    /**
+     *  Create instance of Playlist object and insert empty file
+     *  
+     *  @param gb reference to GreenBox object
+     *  @param plid global unique id
+     *  @param fname string, name of new file
+     *  @param parid int, local object id of parent folder
+     *  @return instance of Playlist object
+     */
+    function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
+    {
+        $tmpFname = uniqid('');
+        $oid = $this->addObj($tmpFname , 'playlist', $parid);
+        if(PEAR::isError($oid)) return $oid;
+        $pl =&  Playlist::insert($this, $oid, '', '',
+            dirname(__FILE__).'/emptyPlaylist.xml',
+            'file', $plid
+        );
+        if(PEAR::isError($pl)){
+            $res = $this->removeObj($oid);
+            return $pl;
+        }
+        $fname = ($fname == '' || is_null($fname) ? "newFile.xml" : $fname );
+        $res = $this->bsRenameFile($oid, $fname);
+        if(PEAR::isError($res)) return $res;
+        $res = $pl->setState('ready');
+        if(PEAR::isError($res)) return $res;
+        $res = $pl->setMime('application/smil');
+        if(PEAR::isError($res)) return $res;
+        $res = $pl->setAuxMetadata();
+        if(PEAR::isError($res)) return $res;
+        return $pl;
+    }
+
+    /**
+     *  Lock playlist for edit
+     *
+     *  @param gb reference to GreenBox object
+     *  @param subjid int, local subject (user) id
+     *  @param val boolean, if false do unlock
+     *  @return boolean, previous state or error object
+     */
+    function lock(&$gb, $subjid=NULL, $val=TRUE)
+    {
+        if($val && $gb->_isEdited($this->gunid) !== FALSE){
+            return PEAR::raiseError(
+                'Playlist::lock: playlist already locked'
+            );
+        }
+        $r = $gb->_setEditFlag($this->gunid, $val, NULL, $subjid);
+        return $r;
+    }
+    
+    /**
+     *  Unlock playlist (+recalculate and pregenerate XML)
+     *
+     *  @param gb reference to GreenBox object
+     *  @return boolean, previous state or error object
+     */
+    function unLock(&$gb)
+    {
+        $r = $this->recalculateTimes();
+        if(PEAR::isError($r)) return $r;
+        $r = $this->md->regenerateXmlFile();
+        if(PEAR::isError($r)) return $r;
+        $r = $this->lock($gb, $this->gunid, NULL, FALSE);
+        return $r;
+    }
+    
+    /**
+     *  Set values of auxiliary metadata
+     *
+     *  @return boolean true or error object
+     */
+    function setAuxMetadata()
+    {
+        // get info about playlist
+        $plInfo = $r = $this->getPlInfo();
+        if(PEAR::isError($r)){ return $r; }
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
+        // set gunid as id attr in playlist tag:
+        $mid = $r = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        $r = $this->_setValueOrInsert(
+            $mid, $this->gunid, $parid,  'id', 'A');
+        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
+    }
+    
     /**
      *  Get audioClip legth and title
      *
@@ -390,7 +500,7 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Change fadeIn and fadeOut values for plaulist Element
+     *  Change fadeIn and fadeOut values for playlist Element
      *
      *  @param plElGunid string - playlistElement gunid
      *  @param fadeIn string - new value in ss.ssssss or extent format
@@ -463,7 +573,6 @@ class Playlist extends StoredFile{
         if($newPos>count($els)) $newPos = count($els);
         $movedel = array_splice($els, $movedi, 1);
         array_splice($els, $newPos-1, 0, $movedel);
-//        var_dump($els);
         foreach($els as $i=>$el){
             $plElGunid2 = $el['attrs']['id'];
             $fadeIn = NULL;
@@ -530,7 +639,7 @@ class Playlist extends StoredFile{
             $offset = $offArr[0]['value'];
             // get audioClip:
             $acArr = $this->md->getMetadataEl('audioClip', $elId);
-            if(is_array($acArr) && is_null($acArr[0]))
+            if(is_array($acArr) && (!isset($acArr[0]) || is_null($acArr[0])))
                 $acArr = $this->md->getMetadataEl('playlist', $elId);
             if(PEAR::isError($acArr)){ return $acArr; }
             $storedAcMid = $acArr[0]['mid'];
@@ -662,6 +771,51 @@ class Playlist extends StoredFile{
                     break;
                 }
                 $dd++;
+            }
+        }
+        return $res;
+    }
+    
+    /**
+     *  Return array with gunids of all sub-playlists and clips used in
+     *  the playlist
+     *
+     *  @return array with hash elements:
+     *              gunid - global id
+     *              type  - playlist | audioClip
+     */
+    function export()
+    {
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+        if(PEAR::isError($arr)){ return $arr; }
+        $plArr = array('els'=>array());
+        // cycle over playlistElements inside playlist:
+        foreach($arr['children'] as $i=>$plEl){
+            switch($plEl['elementname']){
+            case"playlistElement":  // process playlistElement
+                $plElObj = new PlaylistElement($this, $plEl);
+                $plInfo = $plElObj->analyze();
+                $plArr['els'][] = $plInfo;
+                break;
+            default:
+            }
+        }
+        $res  = array(array('gunid'=>$plGunid, 'type'=>'playlist'));
+        $dd = 0; $found = FALSE;
+        foreach($plArr['els'] as $el){
+            extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
+            switch($el['type']){
+            case"playlist":
+                $pl = Playlist::recallByGunid($this->gb, $acGunid);
+                if(PEAR::isError($pl)) return $pl;
+                $res2 = $pl->export();
+                if(PEAR::isError($res2)) return $res2;
+                $res = array_merge($res, $res2);
+                break;
+            default:
+                $res[]  = array('gunid'=>$acGunid, 'type'=>$el['type']);
+                break;
             }
         }
         return $res;

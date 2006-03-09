@@ -155,7 +155,7 @@ deleteAudioClip() {
     echo -n "# deleteAudioClip: "
 # disabled:
 #    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
-    $XR_CLI deleteAudioClip $SESSID $GUNID
+    $XR_CLI deleteAudioClip $SESSID $GUNID 0
 }
 
 updateAudioClipMetadata() {
@@ -194,6 +194,7 @@ PLID="123456789abcdef8"
 
 createPlaylist() {
     echo -n "# createPlaylist: "
+    $XR_CLI deletePlaylist $SESSID $PLID 1
     $XR_CLI createPlaylist $SESSID $PLID "newPlaylist.xml" || exit $?
 }
 
@@ -219,7 +220,7 @@ accessPlaylist() {
 editPlaylist() {
     DATE=`date '+%H:%M:%S'`
     PLAYLIST="<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<playlist id=\"0000000000000001\" playlength=\"01:30:00.000000\" 
+<playlist id=\"123456789abcdef8\" playlength=\"01:30:00.000000\" 
           title=\"My First Playlist\">
     <playlistElement id=\"0000000000000101\" relativeOffset=\"0\" >
         <audioClip   id=\"0000000000010001\" playlength=\"01:00:00.000000\" 
@@ -268,9 +269,50 @@ deletePlaylist() {
         echo -n "# deletePlaylist (${PLID}): "
 # disabled:
 #        $XR_CLI deletePlaylist $SESSID $PLID || exit $?
-        $XR_CLI deletePlaylist $SESSID $PLID
+        $XR_CLI deletePlaylist $SESSID $PLID 0
         echo "#  status: $?"
     fi
+}
+
+exportPlaylist() {
+    echo -n "# exportPlaylistOpen (${PLID}): "
+#    RES=`$XR_CLI exportPlaylistOpen $SESSID $PLID smil` || \
+    RES=`$XR_CLI exportPlaylistOpen $SESSID $PLID lspl` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    unset URL
+    for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
+    echo $TOKEN
+    echo -n "# curl: "
+    curl -Ifs $URL > /dev/null || { ERN=$?; echo $URL; exit $ERN; }
+    echo "status: $?"
+    echo -n "# exportPlaylistClose (${TOKEN}): "
+    RES=`$XR_CLI exportPlaylistClose $TOKEN` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo $RES
+}
+
+importPlaylist() {
+    echo -n "# importPlaylistOpen: "
+    ARCHIVE=../tests/exportedPl_lspl.tar
+#    ARCHIVE=../tests/exportedPl_smil.tar
+    $XR_CLI deletePlaylist $SESSID 0000000000000001 1
+    $XR_CLI deletePlaylist $SESSID 0000000000000003 1
+    $XR_CLI deleteAudioClip $SESSID 0000000000010001 1
+    $XR_CLI deleteAudioClip $SESSID 0000000000010002 1
+    $XR_CLI deleteAudioClip $SESSID 0000000000010003 1
+    CHSUM=`md5sum $ARCHIVE | cut -d ' ' -f 1 `
+   RES=`$XR_CLI importPlaylistOpen $SESSID $CHSUM` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    unset URL
+    for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
+    echo $TOKEN
+    echo -n "# curl (PUT): "
+    curl -C 0 -T $ARCHIVE $URL || { ERN=$?; echo "curl error"; exit $ERN; }
+    echo "status: $?"
+    echo -n "# importPlaylistClose (${TOKEN}): "
+    RES=`$XR_CLI importPlaylistClose $TOKEN` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo $RES
 }
 
 prefTest() {
@@ -372,6 +414,8 @@ playlistTest(){
     accessPlaylist
     editPlaylist
     accessPlaylist
+    exportPlaylist
+    importPlaylist
     deletePlaylist
     existsPlaylist
     logout

@@ -40,6 +40,7 @@ define('GBERR_PREF', 49);
 define('GBERR_TOKEN', 50);
 define('GBERR_PUT', 51);
 define('GBERR_LOCK', 52);
+define('GBERR_GUNID', 53);
 
 define('GBERR_NOTIMPL', 69);
 
@@ -130,7 +131,15 @@ class BasicStor extends Alib{
         );
         if($this->dbc->isError($ac)){
             $res = $this->removeObj($id);
-            return $ac;
+            // catch constraint violations
+            switch($ac->getCode()){
+                case -3:
+                    return PEAR::raiseError(
+                        "BasicStor::bsPutFile: gunid duplication",
+                        GBERR_GUNID);
+                default:
+                    return $ac;
+            }
         }
         if($ftype == 'playlist') $ac->setMime('application/smil');
         return $id;
@@ -232,7 +241,7 @@ class BasicStor extends Alib{
      *  Delete file
      *
      *  @param id int, virt.file's local id
-     *  @param forced boolean, unconditional delete
+     *  @param forced boolean, if true don't use trash
      *  @return true or PEAR::error
      */
     function bsDeleteFile($id, $forced=FALSE)
@@ -308,8 +317,9 @@ class BasicStor extends Alib{
      *      (NULL for only increase access counter, no symlink)
      *  @param ext string, useful filename extension for accessed file
      *  @param gunid int, global unique id
+     *      (NULL for special files such exported playlists)
      *  @param type string 'access'|'download'
-     *  @param parent int parent token
+     *  @param parent int parent token (recursive access/release)
      *  @return array with: seekable filehandle, access token
      */
     function bsAccess($realFname, $ext, $gunid, $type='access', $parent='0')
@@ -329,20 +339,23 @@ class BasicStor extends Alib{
             }
         }else $linkFname=NULL;
         $this->dbc->query("BEGIN");
+        $gunidSql = (is_null($gunid) ? "NULL" : "x'{$gunid}'::bigint" );
         $res = $this->dbc->query("
             INSERT INTO {$this->accessTable}
                 (gunid, token, ext, type, parent, ts)
             VALUES
-                (x'{$gunid}'::bigint, x'$token'::bigint,
+                ($gunidSql, x'$token'::bigint,
                 '$ext', '$type', x'{$parent}'::bigint, now())
         ");
         if($this->dbc->isError($res)){
             $this->dbc->query("ROLLBACK"); return $res; }
-        $res = $this->dbc->query("
-            UPDATE {$this->filesTable}
-            SET currentlyAccessing=currentlyAccessing+1
-            WHERE gunid=x'{$gunid}'::bigint
-        ");
+        if(!is_null($gunid)){
+            $res = $this->dbc->query("
+                UPDATE {$this->filesTable}
+                SET currentlyAccessing=currentlyAccessing+1
+                WHERE gunid=x'{$gunid}'::bigint
+            ");
+        }
         if($this->dbc->isError($res)){
             $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
@@ -355,7 +368,7 @@ class BasicStor extends Alib{
      *
      *  @param token string, access token
      *  @param type string 'access'|'download'
-     *  @return string, global unique ID
+     *  @return string, global unique ID or real pathname of special file
      */
     function bsRelease($token, $type='access')
     {
@@ -370,21 +383,24 @@ class BasicStor extends Alib{
         ");
         if($this->dbc->isError($acc)){ return $acc; }
         $ext = $acc['ext'];
-        $gunid = StoredFile::_normalizeGunid($acc['gunid']);
         $linkFname = "{$this->accessDir}/$token.$ext";
+        $realFname = readlink($linkFname);
         if(file_exists($linkFname)) if(! @unlink($linkFname)){
             return PEAR::raiseError(
                 "BasicStor::bsRelease: unlink failed ($linkFname)",
                 GBERR_FILEIO);
         }
         $this->dbc->query("BEGIN");
-        $res = $this->dbc->query("
-            UPDATE {$this->filesTable}
-            SET currentlyAccessing=currentlyAccessing-1
-            WHERE gunid=x'{$gunid}'::bigint AND currentlyAccessing>0
-        ");
-        if($this->dbc->isError($res)){
-            $this->dbc->query("ROLLBACK"); return $res; }
+        if(!is_null($acc['gunid'])){
+            $gunid = StoredFile::_normalizeGunid($acc['gunid']);
+            $res = $this->dbc->query("
+                UPDATE {$this->filesTable}
+                SET currentlyAccessing=currentlyAccessing-1
+                WHERE gunid=x'{$gunid}'::bigint AND currentlyAccessing>0
+            ");
+            if($this->dbc->isError($res)){
+                $this->dbc->query("ROLLBACK"); return $res; }
+        }
         $res = $this->dbc->query("
             DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
@@ -392,7 +408,7 @@ class BasicStor extends Alib{
             $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if($this->dbc->isError($res)){ return $res; }
-        return $gunid;
+        return ( is_null($acc['gunid']) ? $realFname : $gunid );
     }
 
     /**
@@ -400,7 +416,7 @@ class BasicStor extends Alib{
      *
      *  @param id int, virt.file's local id
      *  @param part string, 'media'|'metadata'
-     *  @param parent int parent token
+     *  @param parent int parent token (recursive access/release)
      *  @return array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
@@ -459,9 +475,14 @@ class BasicStor extends Alib{
      *
      *  @param chsum string, md5sum of the file having been put
      *  @param gunid string, global unique id
-     *  @return array with: writable URL, PUT token
+     *      (NULL for special files such imported playlists)
+     *  @param owner int, local user id - owner of token
+     *  @return hasharray with:
+     *      url string: writable URL
+     *      fname string: writable local filename
+     *      token string: PUT token
      */
-    function bsOpenPut($chsum, $gunid)
+    function bsOpenPut($chsum, $gunid, $owner=NULL)
     {
         $ext    = '';
         $token  = StoredFile::_createGunid();
@@ -469,18 +490,20 @@ class BasicStor extends Alib{
             DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
         if($this->dbc->isError($res)){ return $res; }
+        $gunidSql = (is_null($gunid) ? "NULL" : "x'{$gunid}'::bigint" );
+        $ownerSql = (is_null($owner) ? "NULL" : "$owner" );
         $res    = $this->dbc->query("
             INSERT INTO {$this->accessTable}
-                (gunid, token, ext, chsum, type, ts)
+                (gunid, token, ext, chsum, type, owner, ts)
             VALUES
-                (x'{$gunid}'::bigint, x'$token'::bigint,
-                    '$ext', '$chsum', 'put', now())
+                ($gunidSql, x'$token'::bigint,
+                    '$ext', '$chsum', 'put', $ownerSql, now())
         ");
         if($this->dbc->isError($res)){ return $res; }
         $fname = "{$this->accessDir}/$token";
         touch($fname);      // is it needed?
         $url = $this->getUrlPart()."xmlrpc/put.php?token=$token";
-        return array('url'=>$url, 'token'=>$token);
+        return array('url'=>$url, 'fname'=>$fname, 'token'=>$token);
     }
 
     /**
@@ -488,7 +511,9 @@ class BasicStor extends Alib{
      *  Caller should move or unlink this file.
      *
      *  @param token string, PUT token
-     *  @return string, local path of the file having been put
+     *  @return hash with fields:
+     *      fname string, local path of the file having been put
+     *      owner int, local subject id - owner of token
      */
     function bsClosePut($token)
     {
@@ -499,24 +524,27 @@ class BasicStor extends Alib{
              GBERR_TOKEN
             );
         }
-        $chsum = $this->dbc->getOne("
-            SELECT chsum FROM {$this->accessTable}
+        $row = $this->dbc->getRow("
+            SELECT chsum, owner FROM {$this->accessTable}
             WHERE token=x'{$token}'::bigint
         ");
+        $chsum = $row['chsum'];
+        $owner = $row['owner'];
         $res = $this->dbc->query("
             DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
         if($this->dbc->isError($res)){ return $res; }
         $fname = "{$this->accessDir}/$token";
         $md5sum = md5_file($fname);
-        if($chsum != $md5sum){
+        if(trim($chsum) !='' && $chsum != $md5sum){
             if(file_exists($fname)) @unlink($fname);
             return PEAR::raiseError(
-             "BasicStor::bsClosePut: md5sum does not match (token=$token)",
+             "BasicStor::bsClosePut: md5sum does not match (token=$token)".
+             " [$chsum/$md5sum]",
              GBERR_PUT
             );
         }
-        return $fname;
+        return array('fname'=>$fname, 'owner'=>$owner);
     }
 
     /**
@@ -534,7 +562,7 @@ class BasicStor extends Alib{
     {
         if(!$this->bsCheckToken($token, 'put')){
             return PEAR::raiseError(
-             "BasicStor::bsClosePut: invalid token ($token)"
+             "BasicStor::bsCheckPut: invalid token ($token)"
             );
         }
         $chsum = $this->dbc->getOne("
@@ -611,7 +639,7 @@ class BasicStor extends Alib{
         );
     }
 
-    /* ------------------------------------------------------------- metadata */
+    /* -------------------------------------------- metadata methods4metadata */
 
     /**
      *  Replace metadata with new XML file or string
@@ -796,6 +824,216 @@ class BasicStor extends Alib{
         require_once "DataEngine.php";
         $de =& new DataEngine($this);
         return $de->browseCategory($category, $limit, $offset, $criteria);
+    }
+
+    /* ---------------------------------------------------- methods4playlists */
+
+    /**
+     *  Create a tarfile with playlist export - playlist and all matching
+     *  sub-playlists and media files (if desired)
+     *
+     *  @param sessid - string, session ID
+     *  @param plid - string, playlist global unique ID
+     *  @param type - string, playlist format,
+     *          possible values: lspl | smil
+     *  @param standalone - boolean, if only playlist should be exported or
+     *          with all related files
+     *  @return hasharray with  fields:
+     *      fname string: readable fname,
+     *      token srring: access token
+     */
+    function bsExportPlaylistOpen($plid, $type='lspl', $standalone=FALSE)
+    {
+        require_once"Playlist.php";
+        $pl = $r = Playlist::recallByGunid($this, $plid);
+        if(PEAR::isError($r)) return $r;
+        if($standalone){
+            $gunids = array(array('gunid'=>$plid, 'type'=>'playlist'));
+        }else{
+            $gunids = $r = $pl->export();
+            if(PEAR::isError($r)) return $r;
+        }
+        $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
+        $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
+        $res = array();
+        $tmpn = tempnam($this->bufferDir, 'plExport_');
+        $tmpf = "$tmpn.tar";
+        $tmpd = "$tmpn.dir";               mkdir($tmpd);
+        $tmpdp = "$tmpn.dir/playlist";    mkdir($tmpdp);
+        if(!$standalone){
+            $tmpdc = "$tmpn.dir/audioClip";        mkdir($tmpdc);
+        }
+        foreach($gunids as $i=>$it){
+            $ac = $r = StoredFile::recallByGunid($this, $it['gunid']);
+            if(PEAR::isError($r)) return $r;
+            $MDfname = $r = $ac->md->getFname();
+            if(PEAR::isError($r)) return $r;
+            if(file_exists($MDfname)){ switch($it['type']){
+                case"playlist":
+                    require_once"LsPlaylist.php";
+                    $ac = $r = LsPlaylist::recallByGunid($this, $it['gunid']);
+                    switch($type){
+                        case"smil": $string = $r = $ac->output2Smil(); break;
+                        case"m3u":  $string = $r = $ac->output2M3U();  break;
+                        default:    $string = $r = $ac->md->genXmlDoc();
+                    }
+                    if(PEAR::isError($r)) return $r;
+                    $r = $this->bsStr2File($string, "$tmpdp/{$it['gunid']}.$plExt");
+                    if(PEAR::isError($r)) return $r;
+                    break;
+                default: copy($MDfname, "$tmpdc/{$it['gunid']}.xml"); break;
+            }}
+            $RADfname = $r =$ac->_getRealRADFname();
+            if(PEAR::isError($r)) return $r;
+            $RADext = $r = $ac->_getExt();
+            if(PEAR::isError($r)) return $r;
+            if(file_exists($RADfname)){
+                copy($RADfname, "$tmpdc/{$it['gunid']}.$RADext");
+            }
+        }
+        copy("$tmpdp/$plid.$plExt", "$tmpd/exportedPlaylist.$plExt");
+        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
+        @rmdir($tmpdc);  @rmdir($tmpdp); @rmdir($tmpd);
+        unlink($tmpn);
+        $acc = $this->bsAccess($tmpf, 'tar', NULL/*gunid*/, 'access');
+        if($this->dbc->isError($acc)){ return $acc; }
+        return $acc;
+    }
+
+    /**
+     *  Close playlist export previously opened by the bsExportPlaylistOpen
+     *  method
+     *
+     *  @param token - string, access token obtained from bsExportPlaylistOpen
+     *            method call
+     *  @return boolean true or error object
+     */
+    function bsExportPlaylistClose($token)
+    {
+        $file = $r = $this->bsRelease($token, 'access');
+        if($this->dbc->isError($r)){ return $r; }
+        if(file_exists($file)) if(! @unlink($file)){
+            return PEAR::raiseError(
+                "BasicStor::bsExportPlaylistClose: unlink failed ($file)",
+                GBERR_FILEIO);
+        }
+        return TRUE;
+    }
+
+    /**
+     *  Import playlist in LS Archive format
+     *
+     *  @param parid int,  destination folder local id
+     *  @param plid string,  playlist gunid
+     *  @param aPath string, absolute path part of imported file
+     *              (e.g. /home/user/livesupport)
+     *  @param rPath string, relative path/filename part of imported file
+     *              (e.g. playlists/playlist_1.smil)
+     *  @param ext string, playlist extension (determines type of import)
+     *  @param gunids hasharray, hash relation from filenames to gunids
+     *  @param subjid int, local subject (user) id (id of user doing the import)
+     *  @return int, result file local id (or error object)
+     */
+    function bsImportPlaylistRaw($parid, $plid, $aPath, $rPath, $ext, &$gunids, $subjid)
+    {
+        $id = $r = $this->_idFromGunid($plid);
+        if(!is_null($r)) return $r;
+        switch($ext){
+            case"xml":
+            case"lspl":
+                $fname = $plid;
+                $res = $this->bsPutFile($parid, $fname,
+                    NULL, "$aPath/$rPath", $plid, 'playlist'
+                );
+                break;
+            case"smil":
+                require_once "SmilPlaylist.php";
+                $res = SmilPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $parid, $subjid);
+                if(PEAR::isError($res)) break;
+                $res = $res->getId();
+                break;
+            case"m3u":
+                require_once "M3uPlaylist.php";
+                $res = M3uPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $parid, $subjid);
+                if(PEAR::isError($res)) break;
+                $res = $res->getId();
+                break;
+            default:
+                $res = PEAR::raiseError(
+                    "BasicStor::importPlaylistRaw: unknown playlist format".
+                    " (gunid:$plid, format:$ext)"
+                );
+                break;
+        }
+        if(!PEAR::isError($res)){ $gunids[basename($rPath)] = $plid; }
+        return $res;
+    }
+
+    /**
+     *  Import playlist in LS Archive format
+     *
+     *  @param parid int,  destination folder local id
+     *  @param fname string, imported file pathname
+     *  @param subjid int, local subject (user) id (id of user doing the import)
+     *  @return int, result file local id (or error object)
+     */
+    function bsImportPlaylist($parid, $fname, $subjid)
+    {
+        // untar:
+        $tmpn = tempnam($this->bufferDir, 'plImport_');
+        $tmpd = "$tmpn.dir";
+        $tmpdc = "$tmpd/audioClip";
+        $tmpdp = "$tmpd/playlist";
+        mkdir($tmpd);
+        $res = `cd $tmpd; tar xf $fname`;
+        // clips:
+        $d = dir($tmpdc);   $entries=array(); $gunids=array();
+        while (false !== ($entry = $d->read())) {
+            if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
+                list(,$gunid, $ext) = $va;
+                switch($ext){
+                    case"xml":
+                        $entries[$gunid]['metadata'] = $entry;
+                        break;
+                    default:
+                        $entries[$gunid]['rawMedia'] = $entry;
+                        $entries[$gunid]['rawMediaExt'] = $ext;
+                        $gunids[$entry] = $gunid;
+                        break;
+                }
+            }
+        }
+        $d->close();
+        $res = TRUE;
+        foreach($entries as $gunid=>$it){
+            $rawMedia = "$tmpdc/{$it['rawMedia']}";
+            if(!file_exists($rawMedia)) $rawMedia = NULL;
+            $metadata = "$tmpdc/{$it['metadata']}";
+            if(!file_exists($metadata)) $metadata = NULL;
+            $res = $this->bsPutFile($parid, $gunid, $rawMedia, $metadata,
+                $gunid, 'audioclip'
+            );
+            if(PEAR::isError($res)) break;
+            unlink("$tmpdc/{$it['rawMedia']}");
+            unlink("$tmpdc/{$it['metadata']}");
+        }
+        // playlists:
+        require_once"Playlist.php";
+        $d = dir($tmpdp);
+        while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
+            if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
+                list(,$gunid, $ext) = $va;
+                $res = $this->bsImportPlaylistRaw($parid, $gunid,
+                    $tmpdp, $entry, $ext, $gunids, $subjid);
+                unlink("$tmpdp/$entry");
+                if(PEAR::isError($res)) break;
+            }       
+        }
+        $d->close();
+        //@rmdir($tmpdc); @rmdir($tmpdp); @rmdir($tmpd);
+        system("rm -rf $tmpdc"); system("rm -rf $tmpdp"); system("rm -rf $tmpd");
+        unlink($tmpn);
+        return $res;
     }
 
     /* --------------------------------------------------------- info methods */
@@ -984,6 +1222,12 @@ class BasicStor extends Alib{
             return $this->dbc->raiseError(
                 "BasicStor::removeSubj: cannot remove system user/group");
         }
+        $uid = $this->getSubjId($login);
+        if($this->dbc->isError($uid)) return $uid;
+        $res = $this->dbc->query("
+            DELETE FROM {$this->accessTable} WHERE owner=$uid
+        ");
+        if($this->dbc->isError($res)) return $res;
         $res = parent::removeSubj($login);
         if($this->dbc->isError($res)) return $res;
         $id = $this->getObjId($login, $this->storId);
@@ -995,6 +1239,22 @@ class BasicStor extends Alib{
         }
         return TRUE;
     }  
+    
+    /**
+     *   Authenticate and create session
+     *
+     *   @param login string
+     *   @param pass string
+     *   @return boolean/sessionId/err
+     */
+    function login($login, $pass)
+    {
+        $r = $this->upgradeDbStructure();
+        if($this->dbc->isError($r)) return $r;
+        $r = parent::login($login, $pass);
+        if($this->dbc->isError($r)) return $r;
+        return $r;
+    }
     
     /* ================================================== "protected" methods */
     /**
@@ -1030,12 +1290,12 @@ class BasicStor extends Alib{
     /**
      *  Return users's home folder local ID
      *
-     *  @param sessid string, session ID
+     *  @param dubjid string, local subject id
      *  @return local folder id
      */
-    function _getHomeDirId($sessid)
+    function _getHomeDirId($subjid)
     {
-        $login = $this->getSessLogin($sessid);
+        $login = $this->getSubjName($subjid);
         if($this->dbc->isError($login)) return $login;
         $parid = $this->getObjId($login, $this->storId);
         if($this->dbc->isError($parid)) return $parid;
@@ -1044,6 +1304,19 @@ class BasicStor extends Alib{
                 "homedir not found", GBERR_NOTF);
         }
         return $parid;
+    }
+    
+    /**
+     *  Return users's home folder local ID
+     *
+     *  @param sessid string, session ID
+     *  @return local folder id
+     */
+    function _getHomeDirIdFromSess($sessid)
+    {
+        $uid = $this->getSessUserId($sessid);
+        if($this->dbc->isError($uid)) return $uid;
+        return $this->_getHomeDirId($uid);
     }
     
     /**
@@ -1127,16 +1400,16 @@ class BasicStor extends Alib{
      *  @param sessid string, session id
      *  @return boolean, previous state
      */
-    function _setEditFlag($playlistId, $val=TRUE, $sessid='')
+    function _setEditFlag($playlistId, $val=TRUE, $sessid=NULL, $subjid=NULL)
     {
-        if($sessid !== ''){
-            $userid = $this->getSessUserId($sessid);
-            if($this->dbc->isError($userid)) return $userid;
-        }else $userid=NULL;
+        if(!is_null($sessid)){
+            $subjid = $this->getSessUserId($sessid);
+            if($this->dbc->isError($subjid)) return $subjid;
+        }
         $ac = StoredFile::recallByGunid($this, $playlistId);
         if($this->dbc->isError($ac)) return $ac;
         $state = $ac->_getState();
-        if($val){ $r = $ac->setState('edited', $userid); }
+        if($val){ $r = $ac->setState('edited', $subjid); }
         else{ $r = $ac->setState('ready', 'NULL'); }
         if($this->dbc->isError($r)) return $r;
         return ($state == 'edited');
@@ -1274,6 +1547,48 @@ class BasicStor extends Alib{
         return TRUE;
     }
 
+    /* ========================================================= misc methods */
+    /**
+     *  Write string to file
+     *
+     *  @param str - string to be written to file
+     *  @param fname - string, pathname to file
+     *  @return TRUE or raise error
+     */
+    function bsStr2File($str, $fname)
+    {
+        $fp = @fopen($fname, "w");
+        if($fp === FALSE){
+            return PEAR::raiseError(
+                "BasicStor::bsStr2File: cannot open file ($fname)"
+            );
+        }
+        fwrite($fp, $str);
+        fclose($fp);
+        return TRUE;
+    }
+    
+    /**
+     *  
+     *
+     *  @return
+     */
+    function upgradeDbStructure()
+    {
+        // 1.1 Leon changes
+        $at = $this->accessTable;
+        $r = $this->dbc->tableInfo($at, DB_TABLEINFO_ORDERTABLE);
+        if($this->dbc->isError($r)) return $r;
+        if(!isset($r['ordertable'][$at]['owner'])){
+            $q = "ALTER table $at ADD owner int REFERENCES {$this->subjTable}";
+            //$q = "ALTER TABLE {$this->accessTable} DROP COLUMN owner";
+            $this->dbc->query($q);
+            if($this->dbc->isError($r)) return $r;
+        }
+        //
+        return TRUE;
+    }
+    
     /* =============================================== test and debug methods */
     /**
      *  Reset storageServer for debugging.
@@ -1342,7 +1657,6 @@ class BasicStor extends Alib{
     {
         if($id=='') $id = $this->storId;
         $arr = $this->getDir($id, 'id,name');
-//        if($this->doDebug){ $this->debug($arr); exit; }
         $arr = array_map(create_function('$o', 'return "'.$format.'";'), $arr);
         return join('', $arr);
     }
@@ -1447,7 +1761,7 @@ class BasicStor extends Alib{
     function test()
     {
         $this->test_log = '';
-//        if($this->dbc->isError($p = parent::test())) return $p;
+        // if($this->dbc->isError($p = parent::test())) return $p;
         $this->deleteData();
         $this->testData();
         if($this->config['useTrash']){
@@ -1564,7 +1878,6 @@ class BasicStor extends Alib{
     function install()
     {
         parent::install();
-        #echo "{$this->filesTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->filesTable} (
             id int not null,
             gunid bigint not null,                      -- global unique ID
@@ -1583,7 +1896,6 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->filesTable}_name_idx
             ON {$this->filesTable} (name)");
 
-        #echo "{$this->mdataTable}\n";
         $this->dbc->createSequence("{$this->mdataTable}_id_seq");
         $r = $this->dbc->query("CREATE TABLE {$this->mdataTable} (
             id int not null,
@@ -1606,14 +1918,14 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->mdataTable}_pred_idx
             ON {$this->mdataTable} (predns, predicate)");
 
-        #echo "{$this->accessTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->accessTable} (
-            gunid bigint,                               -- global unique id
-            token bigint,                               -- access token
-            chsum char(32) not null default'',          -- md5 checksum
-            ext varchar(128) not null default'',        -- extension
-            type varchar(20) not null default'',        -- access type
-            parent bigint,                              -- parent token
+            gunid bigint,                             -- global unique id
+            token bigint,                             -- access token
+            chsum char(32) not null default'',        -- md5 checksum
+            ext varchar(128) not null default'',      -- extension
+            type varchar(20) not null default'',      -- access type
+            parent bigint,                            -- parent token
+            owner int REFERENCES {$this->subjTable},  -- subject have started it
             ts timestamp
         )");
         if($this->dbc->isError($r)) return $r;

@@ -34,6 +34,7 @@ include_once dirname(__FILE__)."/../conf.php";
 $pars = $argv;
 array_shift($pars);
 $verbose = FALSE;
+#$verbose = TRUE;
 if($pars[0] == '-v'){ $verbose = TRUE; array_shift($pars); }
 if($pars[0] == '-s'){
     array_shift($pars);
@@ -97,7 +98,7 @@ $infos = array(
 
     "deleteAudioClip"   =>
         array('m'=>"locstor.deleteAudioClip",
-            'p'=>array('sessid', 'gunid'), 'r'=>'status'),
+            'p'=>array('sessid', 'gunid', 'forced'), 'r'=>'status'),
     "existsAudioClip"   => array('m'=>"locstor.existsAudioClip",
         'p'=>array('sessid', 'gunid'), 'r'=>'exists'),
     "getAudioClip"  => array('m'=>"locstor.getAudioClip",
@@ -123,7 +124,7 @@ $infos = array(
     "revertEditedPlaylist"      => array('m'=>"locstor.revertEditedPlaylist",
         'p'=>array('sessid', 'token'), 'r'=>'plid'),
     "deletePlaylist"    => array('m'=>"locstor.deletePlaylist",
-        'p'=>array('sessid', 'plid'), 'r'=>'status'),
+        'p'=>array('sessid', 'plid', 'forced'), 'r'=>'status'),
     "accessPlaylist"    => array('m'=>"locstor.accessPlaylist",
         'p'=>array('sessid', 'plid'), 'r'=>array('url', 'token')),
     "releasePlaylist"   => array('m'=>"locstor.releasePlaylist",
@@ -132,6 +133,16 @@ $infos = array(
         'p'=>array('sessid', 'plid'), 'r'=>'exists'),
     "playlistIsAvailable"   => array('m'=>"locstor.playlistIsAvailable",
         'p'=>array('sessid', 'plid'), 'r'=>array('available', 'ownerid', 'ownerlogin')),
+
+    "exportPlaylistOpen"   => array('m'=>"locstor.exportPlaylistOpen",
+        'p'=>array('sessid', 'plid', 'type'),
+        'r'=>array('url', 'token')),
+    "exportPlaylistClose"   => array('m'=>"locstor.exportPlaylistClose",
+        'p'=>array('token'), 'r'=>array('status')),
+    "importPlaylistOpen"   => array('m'=>"locstor.importPlaylistOpen",
+        'p'=>array('sessid', 'chsum'), 'r'=>array('url', 'token')),
+    "importPlaylistClose"   => array('m'=>"locstor.importPlaylistClose",
+        'p'=>array('token'), 'r'=>array('gunid')),
 
     "loadPref"      => array('m'=>"locstor.loadPref",
         'p'=>array('sessid', 'key'), 'r'=>'value'),

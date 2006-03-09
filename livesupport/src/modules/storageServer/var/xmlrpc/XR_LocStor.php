@@ -693,8 +693,9 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
-        return new XML_RPC_Response(0, 805,
+        if(!isset($r['forced'])) $r['forced']=FALSE;
+        $res = $this->deleteAudioClip($r['sessid'], $r['gunid'], $r['forced']);
+        if(!$r['forced']) return new XML_RPC_Response(0, 805,
             "xr_deleteAudioClip: method disabled"
         );
         if(PEAR::isError($res)){
@@ -896,6 +897,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('plid'=>$res)));
     }
 
+    /* ------------------------------------------------------- delete playlist*/
     /**
      *  Delete a Playlist metafile - DISABLED now!
      *
@@ -931,8 +933,9 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->deletePlaylist($r['sessid'], $r['plid']);
-        return new XML_RPC_Response(0, 805,
+        if(!isset($r['forced'])) $r['forced']=FALSE;
+        $res = $this->deletePlaylist($r['sessid'], $r['plid'], $r['forced']);
+        if(! $r['forced']) return new XML_RPC_Response(0, 805,
             "xr_deletePlaylist: method disabled"
         );
         if(PEAR::isError($res)){
@@ -944,6 +947,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
     }
 
+    /* ------------------------------------------------------- access playlist*/
     /**
      *  Access (read) a Playlist metafile.
      *
@@ -1054,6 +1058,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('plid'=>$res)));
     }
 
+    /* -------------------------------------------------------- playlist info */
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
@@ -1923,7 +1928,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('exists'=>$res)));
     }
 
-    /* ----------------------------------------------------- metadata methods */
+    /*====================================================== metadata methods */
     /**
      *  Return all file's metadata as XML string
      *
@@ -2705,7 +2710,10 @@ class XR_LocStor extends LocStor{
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('fname'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'fname'=>$res['fname'],
+            'owner'=>$res['owner'],
+        )));
     }
 
     /* ---------------------------------------------------- "private" methods */
