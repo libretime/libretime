@@ -87,6 +87,10 @@ TestWindow :: TestWindow (void)
     button->signal_clicked().connect(sigc::mem_fun(*this,
                                                 &TestWindow::onButtonClicked));
 
+    // and another button
+    disableTestButton = Gtk::manage(widgetFactory->createButton(
+                                                    "Disable test button"));
+
     // create a combo box
     comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
     comboBoxText->append_text("item1");
@@ -111,7 +115,8 @@ TestWindow :: TestWindow (void)
     layout = Gtk::manage(new Gtk::Table());
     layout->attach(*hugeImageButton,    0, 1, 0, 1);
     layout->attach(*cuePlayImageButton, 1, 2, 0, 1);
-    layout->attach(*notebook,           0, 2, 1, 2);
+    layout->attach(*disableTestButton,  1, 2, 1, 2);
+    layout->attach(*notebook,           0, 2, 2, 3);
     blueBin->add(*layout);
     add(*blueBin);
     show_all();
@@ -163,6 +168,7 @@ TestWindow :: onButtonClicked(void)                                 throw ()
 
     DialogWindow   * helloWindow = wf->createDialogWindow(message, bundle);
     helloWindow->run();
+    button->setSelected(false);
     delete helloWindow;
 }
 
@@ -175,6 +181,7 @@ TestWindow :: onPlayButtonClicked(void)                         throw ()
 {
     cuePlayImageButton->hide();
     cueStopImageButton->show();
+    disableTestButton->setDisabled(true);
 }
 
 
@@ -186,6 +193,7 @@ TestWindow :: onStopButtonClicked(void)                         throw ()
 {
     cueStopImageButton->hide();
     cuePlayImageButton->show();
+    disableTestButton->setDisabled(false);
 }
 
 

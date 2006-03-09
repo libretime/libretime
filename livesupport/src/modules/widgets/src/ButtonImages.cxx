@@ -88,6 +88,21 @@ static const std::string    selectedCenterName = "centerSel.png";
  */
 static const std::string    selectedRightName = "rightSel.png";
 
+/**
+ *  The name of the disabled left image
+ */
+static const std::string    disabledLeftName = "leftGray.png";
+
+/**
+ *  The name of the disabled center image
+ */
+static const std::string    disabledCenterName = "centerGray.png";
+
+/**
+ *  The name of the disabled right image
+ */
+static const std::string    disabledRightName = "rightGray.png";
+
 
 /* ===============================================  local function prototypes */
 
@@ -110,6 +125,9 @@ ButtonImages :: ButtonImages(const std::string      path)
         selectedImageLeft   = loadImage(path, selectedLeftName);
         selectedImageCenter = loadImage(path, selectedCenterName);
         selectedImageRight  = loadImage(path, selectedRightName);
+        disabledImageLeft   = loadImage(path, disabledLeftName);
+        disabledImageCenter = loadImage(path, disabledCenterName);
+        disabledImageRight  = loadImage(path, disabledRightName);
     } catch (std::invalid_argument &e) {
         // just ignore, it's not polite to through exceptions from constructors
     }

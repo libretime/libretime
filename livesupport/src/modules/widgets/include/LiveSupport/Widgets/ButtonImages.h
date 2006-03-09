@@ -126,6 +126,21 @@ class ButtonImages
         Glib::RefPtr<Gdk::Pixbuf>   selectedImageRight;
 
         /**
+         *  The disabled left image for the button.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>   disabledImageLeft;
+
+        /**
+         *  The disabled center image for the button.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>   disabledImageCenter;
+
+        /**
+         *  The disabled right image for the button.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>   disabledImageRight;
+
+        /**
          *  The default constructor.
          */
         ButtonImages(void)                  throw ()
@@ -154,7 +169,10 @@ class ButtonImages
                      Glib::RefPtr<Gdk::Pixbuf>   rollImageRight,
                      Glib::RefPtr<Gdk::Pixbuf>   selectedImageLeft,
                      Glib::RefPtr<Gdk::Pixbuf>   selectedImageCenter,
-                     Glib::RefPtr<Gdk::Pixbuf>   selectedImageRight)
+                     Glib::RefPtr<Gdk::Pixbuf>   selectedImageRight,
+                     Glib::RefPtr<Gdk::Pixbuf>   disabledImageLeft,
+                     Glib::RefPtr<Gdk::Pixbuf>   disabledImageCenter,
+                     Glib::RefPtr<Gdk::Pixbuf>   disabledImageRight)
                                                             throw ()
         {
             this->passiveImageLeft      = passiveImageLeft;
@@ -166,6 +184,9 @@ class ButtonImages
             this->selectedImageLeft     = selectedImageLeft;
             this->selectedImageCenter   = selectedImageCenter;
             this->selectedImageRight    = selectedImageRight;
+            this->disabledImageLeft     = disabledImageLeft;
+            this->disabledImageCenter   = disabledImageCenter;
+            this->disabledImageRight    = disabledImageRight;
         }
 
         /**

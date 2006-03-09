@@ -280,7 +280,7 @@ Button :: on_expose_event(GdkEventExpose* event)           throw ()
 {
     if (event->count > 0) {
         return false;
-    }  
+    }
 
     if (gdkWindow) {
         gdkWindow->clear();
@@ -318,6 +318,18 @@ Button :: on_expose_event(GdkEventExpose* event)           throw ()
                                 : buttonImages->passiveImageCenter;
                 rightImage  = buttonImages->selectedImageRight
                                 ? buttonImages->selectedImageRight
+                                : buttonImages->passiveImageRight;
+                break;
+
+            case disabledState:
+                leftImage   = buttonImages->disabledImageLeft
+                                ? buttonImages->disabledImageLeft
+                                : buttonImages->passiveImageLeft;
+                centerImage = buttonImages->disabledImageCenter
+                                ? buttonImages->disabledImageCenter
+                                : buttonImages->passiveImageCenter;
+                rightImage  = buttonImages->disabledImageRight
+                                ? buttonImages->disabledImageRight
                                 : buttonImages->passiveImageRight;
                 break;
         }
@@ -379,8 +391,10 @@ Button :: on_expose_event(GdkEventExpose* event)           throw ()
 void
 Button :: on_enter(void)                                   throw ()
 {
-    state = rollState;
-
+    if (stationaryState == passiveState) {
+        state = rollState;
+    }
+    
     Gtk::Button::on_enter();
 }
 
@@ -391,8 +405,75 @@ Button :: on_enter(void)                                   throw ()
 void
 Button :: on_leave(void)                                   throw ()
 {
-    state = stationaryState;
-
+    if (stationaryState != disabledState) {
+        state = stationaryState;
+    }
+    
     Gtk::Button::on_leave();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Handle the button click event.
+ *----------------------------------------------------------------------------*/
+void
+Button :: on_clicked(void)                                 throw ()
+{
+    switch(stationaryState) {
+        case disabledState:     break;
+        
+        case passiveState:      stationaryState = selectedState;
+                                state           = selectedState;
+                                break;
+                                
+        case selectedState:     stationaryState = passiveState;
+                                state           = rollState;
+                                break;
+                                
+        case rollState:         break; // can't happen, but gcc 4.0 wants it
+    }
+    
+    Gtk::Button::on_clicked();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the state of the button to selected or not.
+ *----------------------------------------------------------------------------*/
+void
+Button :: setSelected(bool    toggle)                      throw ()
+{
+    if (stationaryState != disabledState) {
+        state           = toggle ? selectedState : passiveState;
+        stationaryState = toggle ? selectedState : passiveState;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the state of the button to selected or not.
+ *----------------------------------------------------------------------------*/
+void
+Button :: setDisabled(bool    toggle)                      throw ()
+{
+    state           = toggle ? disabledState : passiveState;
+    stationaryState = toggle ? disabledState : passiveState;
+    requestRedraw();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Mark the button 'dirty' and request a redraw.
+ *----------------------------------------------------------------------------*/
+void
+Button :: requestRedraw(void)                              throw ()
+{
+    Glib::RefPtr<Gdk::Window>   gdkWindow = get_window();
+    
+    if (gdkWindow) {
+        Gdk::Region     region = gdkWindow->get_visible_region();
+        gdkWindow->invalidate_region(region, true /* true == recursive */);
+        gdkWindow->process_updates(true /* true == recursive */);
+    }
 }
 

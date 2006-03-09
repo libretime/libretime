@@ -133,6 +133,11 @@ class TestWindow : public WhiteWindow
         Button                    * button;
 
         /**
+         *  A button which sometimes gets disabled.
+         */
+        Button                    * disableTestButton;
+
+        /**
          *  A combo box.
          */
         ComboBoxText              * comboBoxText;

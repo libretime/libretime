@@ -72,7 +72,10 @@ class Button : public Gtk::Button
         /**
          *  The possible states of the button.
          */
-        typedef enum { passiveState, rollState, selectedState } State;
+        typedef enum { passiveState,
+                       rollState,
+                       selectedState,
+                       disabledState }  State;
 
         /**
          *  The font definition used in the button.
@@ -106,7 +109,7 @@ class Button : public Gtk::Button
 
         /**
          *  The non-interactive state of the button
-         *  (not rollover, either passive or selected)
+         *  (not rollover -- either passive, selected or disabled)
          */
         State                           stationaryState;
 
@@ -118,10 +121,15 @@ class Button : public Gtk::Button
         /**
          *  Default constructor.
          */
-        Button(void)                                   throw ()
+        Button(void)                                        throw ()
         {
         }
 
+        /**
+         *  Mark the button 'dirty' and request a redraw.
+         */
+        void
+        requestRedraw(void)                                 throw ();
 
     protected:
         /**
@@ -132,7 +140,7 @@ class Button : public Gtk::Button
          */
         virtual void
         on_size_request(Gtk::Requisition* requisition)
-                                                                throw ();
+                                                            throw ();
 
         /**
          *  Handle the size allocate event.
@@ -141,7 +149,7 @@ class Button : public Gtk::Button
          */
         virtual void
         on_size_allocate(Gtk::Allocation& allocation)
-                                                                throw ();
+                                                            throw ();
 
         /**
          *  Handle the map event.
@@ -226,6 +234,12 @@ class Button : public Gtk::Button
         virtual void
         on_leave(void)                                      throw ();
 
+        /**
+         *  Handle the event when the button is clicked.
+         */
+        virtual void
+        on_clicked(void)                                    throw ();
+
 
     public:
         /**
@@ -250,7 +264,7 @@ class Button : public Gtk::Button
          *  A virtual destructor.
          */
         virtual
-        ~Button(void)                                  throw ();
+        ~Button(void)                                       throw ();
 
         /**
          *  Set the label of the button.
@@ -282,24 +296,22 @@ class Button : public Gtk::Button
         }
 
         /**
-         *  Change the state of the button to selected.
+         *  Change the state of the button to selected or not.
+         *
+         *  @param  toggle  if 'true' then set to selected,
+         *                  if 'false' then set to unselected (passive).
          */
         void
-        select(void)                                        throw ()
-        {
-            state           = selectedState;
-            stationaryState = selectedState;
-        }
+        setSelected(bool    toggle)                         throw ();
 
         /**
-         *  Change the state of the button to passive.
+         *  Disable the button, or re-enable it.
+         *
+         *  @param  toggle  if 'true' then disable the button,
+         *                  if 'false' then re-enable it (set to passive).
          */
         void
-        unselect(void)                                      throw ()
-        {
-            state           = passiveState;
-            stationaryState = passiveState;
-        }
+        setDisabled(bool    toggle)                         throw ();
 };
 
 
