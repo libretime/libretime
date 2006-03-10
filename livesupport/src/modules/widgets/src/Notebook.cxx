@@ -260,12 +260,12 @@ Notebook :: activatePage(unsigned int   pageNo)         throw ()
         return;
     }
 
-    pageList[activePage]->button->unselect();
+    pageList[activePage]->button->setSelected(false);
     pageList[activePage]->container->hide();
     pageHolder->remove();
     activePage = pageNo;
     pageHolder->add(*(pageList[pageNo]->container));
-    pageList[pageNo]->button->select();
+    pageList[pageNo]->button->setSelected(true);
     show_all();
 }
 

@@ -446,6 +446,7 @@ Button :: setSelected(bool    toggle)                      throw ()
     if (stationaryState != disabledState) {
         state           = toggle ? selectedState : passiveState;
         stationaryState = toggle ? selectedState : passiveState;
+        requestRedraw();
     }
 }
 
@@ -473,7 +474,6 @@ Button :: requestRedraw(void)                              throw ()
     if (gdkWindow) {
         Gdk::Region     region = gdkWindow->get_visible_region();
         gdkWindow->invalidate_region(region, true /* true == recursive */);
-        gdkWindow->process_updates(true /* true == recursive */);
     }
 }
 

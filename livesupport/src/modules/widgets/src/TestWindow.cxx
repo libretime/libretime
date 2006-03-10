@@ -89,7 +89,7 @@ TestWindow :: TestWindow (void)
 
     // and another button
     disableTestButton = Gtk::manage(widgetFactory->createButton(
-                                                    "Disable test button"));
+                                                    "I can be disabled"));
 
     // create a combo box
     comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
@@ -113,7 +113,7 @@ TestWindow :: TestWindow (void)
 
     // create and set up the layout
     layout = Gtk::manage(new Gtk::Table());
-    layout->attach(*hugeImageButton,    0, 1, 0, 1);
+    layout->attach(*hugeImageButton,    0, 1, 0, 2);
     layout->attach(*cuePlayImageButton, 1, 2, 0, 1);
     layout->attach(*disableTestButton,  1, 2, 1, 2);
     layout->attach(*notebook,           0, 2, 2, 3);

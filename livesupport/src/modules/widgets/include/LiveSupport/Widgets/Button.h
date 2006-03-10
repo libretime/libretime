@@ -127,6 +127,8 @@ class Button : public Gtk::Button
 
         /**
          *  Mark the button 'dirty' and request a redraw.
+         *  The button will be redrawn by the wm when it next goes into its
+         *  idle loop (ie, not immediately, but very soon).
          */
         void
         requestRedraw(void)                                 throw ();
