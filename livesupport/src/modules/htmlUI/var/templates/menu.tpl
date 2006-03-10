@@ -55,21 +55,28 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             </ul>
         </li>
 
-        {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'subjects')}
-            <li class="nav-main"><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
-                <ul>
-                    <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
-                    <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>
-                    <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
-                    <li><a href="{$UI_BROWSER}?act=BACKUP"                  >##Database Backup##</a></li>
-                </ul>
-            </li>
-        {else}
-            <li class="nav-main"><a>##Preferences##</a>
-                <ul>
-                    <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
-                </ul>        
-        {/if}
+        <li class="nav-main"><a>##Preferences##</a>
+            <ul>
+            {if $SUBJECTS->isMemberOf('StationPrefs')}
+                <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
+            {/if}
+            {if $SUBJECTS->isMemberOf('Subjects')}
+                <li><a href="{$UI_BROWSER}?act=SUBJECTS">##User/Groups##</a></li>
+            {else}
+                <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
+            {/if}
+            {if $SUBJECTS->isMemberOf('Admin')}
+                <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
+            {/if}
+            {if $SUBJECTS->isMemberOf('Backup')}
+                <li><a href="{$UI_BROWSER}?act=BACKUP">##Database Backup##</a></li>
+            {/if}
+            {if $SUBJECTS->isMemberOf('Restore')}
+                <li><a href="{$UI_BROWSER}?act=RESTORE">##Database Restore##</a></li>
+            {/if}
+            </ul>
+        </li>
+
         <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Help##</a></li>
     </ul>
 

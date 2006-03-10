@@ -6,7 +6,7 @@ class uiSubjects
         $this->Base       =& $uiBase;
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->suRedirUrl = UI_BROWSER.'?act=SUBJECTS';
-        $this->redirUrl   = UI_BROWSER;
+        $this->redirUrl   = UI_BROWSER.'?act=SUBJECTS';
     }
 
     function setReload()
@@ -193,7 +193,7 @@ class uiSubjects
     /**
      *  getGroupMember
      *
-     *  get a list of groups where user is member of
+     *  get a list of members in given group
      *
      *  @parm $id int local user ID
      *  @return array
@@ -302,6 +302,22 @@ class uiSubjects
         }
 
         return TRUE;
+    }
+    
+    
+    function isMemberOf($groupname)
+    {   
+        if ($gid = $this->Base->gb->getSubjId($groupname)) { 
+            $members = $this->getGroupMember($gid);
+            if (is_array($members)) { 
+                foreach($members as $member) {
+                    if ($member['id'] === $this->Base->userid) {
+                        return true;    
+                    }  
+                }
+            }
+        }
+        return false;      
     }
 }
 
