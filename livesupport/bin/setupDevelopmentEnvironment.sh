@@ -90,7 +90,7 @@ done
 #-------------------------------------------------------------------------------
 rm -rf $tmpdir/configure
 $bindir/autogen.sh
-$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var --with-apache-group=www-data
+$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var
 
 
 #-------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ make all
 #-------------------------------------------------------------------------------
 #echo "Setting up user settings..."
 
-$bindir/user_setup.sh -g www-data || exit 1
+$bindir/user_setup.sh || exit 1
 
 
 #-------------------------------------------------------------------------------

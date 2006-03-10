@@ -367,6 +367,10 @@ chgrp $apache_group $modules_dir/htmlUI/var/html/img
 chmod g+sw $modules_dir/htmlUI/var/templates_c
 chmod g+sw $modules_dir/htmlUI/var/html/img
 
+cp $modules_dir/htmlUI/var/redirect.php $modules_dir/index.php
+cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/index.php
+cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/var/index.php
+
 
 #-------------------------------------------------------------------------------
 #  Say goodbye
