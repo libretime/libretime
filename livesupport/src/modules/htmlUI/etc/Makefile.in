@@ -161,7 +161,6 @@ install: configure_apache
 
 	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/index.php
 	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/htmlUI/index.php
-	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/index.php
 	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var
 	${CAT} ${VAR_DIR}/ui_conf.php.template | ${SED} -e ${REPLACE_SED_STRING} > ${USR_VAR_DIR}/LiveSupport/htmlUI/var/ui_conf.php
 	${CP} ${VAR_DIR}/.htaccess ${USR_VAR_DIR}/LiveSupport/htmlUI/var
