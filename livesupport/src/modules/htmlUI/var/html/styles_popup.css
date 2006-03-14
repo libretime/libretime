@@ -125,7 +125,7 @@ table { font-size: 12px;
 
 table td { font-size: 12px;
     padding: 0 6px 0 12px;
-    border-right: 1px solid #333;
+    #border-right: 1px solid #333;
     height: 19px;
     vertical-align: top;
 }
@@ -365,7 +365,7 @@ table { font-size: 12px;
 
 table td { font-size: 12px;
     padding: 0 6px 0 12px;
-    border-right: 1px solid #333;
+    #border-right: 1px solid #333;
     height: 19px;
     vertical-align: top;
 }

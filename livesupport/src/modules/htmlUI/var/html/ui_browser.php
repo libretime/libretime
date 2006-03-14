@@ -132,6 +132,18 @@ if (is_array($_REQUEST['popup'])){
             case "help":
             $Smarty->display('popup/help.tpl');
             break;
+            
+            case "BACKUP.setLocation":
+            if ($_REQUEST['cd']) {
+                $uiBrowser->EXCHANGE->setFolder($_REQUEST['cd']);
+            }
+            $Smarty->display('backup/fileBrowser.tpl');
+            break;
+            
+            case 'BACKUP.setFile':
+            $uiBrowser->EXCHANGE->setFile($_REQUEST['file']);
+            $Smarty->display('backup/fileBrowser.tpl');    
+            break;
         }
     }
     die();
@@ -238,9 +250,14 @@ if ($uiBrowser->userid) {
         $Smarty->assign('act', $_REQUEST['act']);
         break;
         
-        case "BACKUP": 
-        $Smarty->assign('showBackup', TRUE);
+        case "BACKUP":
+        case "RESTORE": 
         $Smarty->assign('act', $_REQUEST['act']);
+        break;
+        
+        case 'BACKUP.setTarget':
+        $Smarty->assign('act', $_REQUEST['act']);
+        $uiBrowser->EXCHANGE->setTarget($_REQUEST['target']);    
         break;
     }
 

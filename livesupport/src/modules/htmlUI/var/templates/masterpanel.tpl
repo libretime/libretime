@@ -54,6 +54,14 @@
         {if $showBackup}
             {include file="backup/backup.tpl"}
         {/if}
+         
+        {if $act === 'BACKUP' || $act === 'BACKUP.setTarget'}
+            {include file="backup/backup.tpl"}
+        {/if}
+        
+        {if $act === 'RESTORE'}
+            {include file="backup/restore.tpl"}
+        {/if}
         
         <div class="content">
             {if $simpleSearchForm}

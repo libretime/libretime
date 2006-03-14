@@ -6,8 +6,25 @@
      {assign var=token' value=$EXCHANGE->getBackupToken()}
      
      {if $token === false}
-        <input type="button" value="##Start backup##" onClick="location.href='{$UI_HANDLER}?act=EXCHANGE.createBackupOpen'">
+        {$EXCHANGE->completeTarget()}
+        {if $EXCHANGE->getPath() !== false}
+            <p>
+                <b>##Backup file:##</b>
+                <br>
+                {$EXCHANGE->getPath()}: 
+                {if $EXCHANGE->checkTarget() === true}
+                    ##OK##
+                {else}
+                    ##Permission denied##    
+                {/if}
+            </p>
+        {/if}
         
+        {if $EXCHANGE->checkTarget() === true} 
+            <p><input type="button" class="button_large" value="##Start backup##" onClick="location.href='{$UI_HANDLER}?act=EXCHANGE.createBackupOpen'"></p>
+        {/if}
+        
+        <p><input type="button" class="button_large" value="##Set backup location##" onClick="popup('{$UI_BROWSER}?popup[]=BACKUP.setLocation', 'BACKUP.selectLocation', 500, 400)"></p>
      {else}
         {assign var='status' value=$EXCHANGE->createBackupCheck()}
         
