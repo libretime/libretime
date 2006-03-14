@@ -12,6 +12,10 @@
         {assign var='status' value=$EXCHANGE->createBackupCheck()}
         
         Backup status: {$status.status}
+        
+        {if $status.status === 'success'}
+            <p><input type="button" class="button" value="##Download##" onCLick="hpopup('{$status.tmpfile}')"></p>
+        {/if}
      
      {/if}
 </div>
