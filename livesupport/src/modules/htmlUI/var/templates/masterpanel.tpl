@@ -52,7 +52,7 @@
         {/if}
 
         {if $showBackup}
-            {include file="backup/main.tpl"}
+            {include file="backup/backup.tpl"}
         {/if}
         
         <div class="content">

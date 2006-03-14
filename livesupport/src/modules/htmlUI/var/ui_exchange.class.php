@@ -39,7 +39,7 @@ class uiExchange
     
     function createBackupCheck()
     {
-        return array('status' => 'susccess', 'tmpfile' => '/tmp/xxx.backup');
+        return array('status' => 'success', 'tmpfile' => '/tmp/xxx.backup');
         
         
         
