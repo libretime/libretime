@@ -67,14 +67,15 @@ static const Glib::ustring  windowName = "scratchpadWindow";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                      Ptr<ResourceBundle>::Ref    bundle)
+ScratchpadWindow :: ScratchpadWindow (
+                        Ptr<GLiveSupport>::Ref      gLiveSupport,
+                        Ptr<ResourceBundle>::Ref    bundle,
+                        Button *                    windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow(WidgetConstants::scratchpadWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      WidgetConstants::scratchpadWindowTitleImage,
+                      windowOpenerButton)
 {
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
@@ -453,6 +454,7 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
     Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
     scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
                                                     bundle,
+                                                    0, /* no button */
                                                     playlist));
 
     Gtk::Main::run(*scheduleWindow);
@@ -543,17 +545,6 @@ ScratchpadWindow :: isSelectionSingle(void)                     throw ()
     } else {
         return false;
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  The event when the close button has been clicked.
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onCloseButtonClicked(void)                  throw ()
-{
-    gLiveSupport->putWindowPosition(shared_from_this());
-    hide();
 }
 
 

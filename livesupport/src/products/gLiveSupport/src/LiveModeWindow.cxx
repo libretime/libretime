@@ -68,14 +68,14 @@ static const Glib::ustring  windowName = "liveModeWindow";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                  Ptr<ResourceBundle>::Ref    bundle)
+LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
+                                  Ptr<ResourceBundle>::Ref  bundle,
+                                  Button *                  windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow(WidgetConstants::liveModeWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      WidgetConstants::liveModeWindowTitleImage,
+                      windowOpenerButton)
 {
     try {
         set_title(*getResourceUstring("windowTitle"));
@@ -363,16 +363,5 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
     }
     
     return false;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the close button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onCloseButtonClicked (void)                       throw ()
-{
-    gLiveSupport->putWindowPosition(shared_from_this());
-    hide();
 }
 

@@ -48,10 +48,10 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "GuiWindow.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
 
@@ -76,7 +76,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LiveModeWindow : public WhiteWindow, public LocalizedObject
+class LiveModeWindow : public GuiWindow
 {
     private:
 
@@ -113,11 +113,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                 }
         };
 
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The column model.
@@ -191,23 +186,22 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         bool
         onKeyPressed(GdkEventKey *          event)              throw ();
 
-        /**
-         *  Function to catch the event of the close button being pressed.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
 
     public:
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
         LiveModeWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                       Ptr<ResourceBundle>::Ref    bundle)      throw ();
+                       Ptr<ResourceBundle>::Ref    bundle,
+                       Button *                    windowOpenerButton)
+                                                                throw ();
 
         /**
          *  Virtual destructor.

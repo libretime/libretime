@@ -50,9 +50,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/Button.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -89,16 +89,10 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulePlaylistWindow : public WhiteWindow,
-                               public LocalizedObject
+class SchedulePlaylistWindow : public GuiWindow
 {
 
     protected:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The playlist to schedule.
@@ -156,24 +150,22 @@ class SchedulePlaylistWindow : public WhiteWindow,
         virtual void
         onScheduleButtonClicked(void)                           throw ();
 
-        /**
-         *  Signal handler for the close button clicked.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
 
     public:
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
-         *  @param playlist the playlist to schedule.
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
+         *  @param  playlist        the playlist to schedule.
          */
         SchedulePlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
                                Ptr<ResourceBundle>::Ref     bundle,
+                               Button *                     windowOpenerButton,
                                Ptr<Playlist>::Ref           playlist)
                                                                     throw ();
 

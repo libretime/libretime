@@ -48,10 +48,10 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/DialogWindow.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -90,8 +90,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class SimplePlaylistManagementWindow : public WhiteWindow,
-                                       public LocalizedObject
+class SimplePlaylistManagementWindow : public GuiWindow
 {
     private:
 
@@ -188,12 +187,6 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          */
         void
         onSaveButtonClicked(void)                               throw ();
-
-        /**
-         *  Signal handler for the close button clicked.
-         */
-        void
-        onCloseButtonClicked(void)                              throw ();
 
         /**
          *  Signal handler for the "lock fades" check button toggled.
@@ -331,12 +324,6 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                 }
         };
 
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
-
         /**
          *  The column model.
          */
@@ -398,13 +385,18 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
-        SimplePlaylistManagementWindow(Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                       Ptr<ResourceBundle>::Ref  bundle)
-                                                                    throw ();
+        SimplePlaylistManagementWindow(
+                            Ptr<GLiveSupport>::Ref      gLiveSupport,
+                            Ptr<ResourceBundle>::Ref    bundle,
+                            Button *                    windowOpenerButton)
+                                                                throw ();
 
         /**
          *  Virtual destructor.

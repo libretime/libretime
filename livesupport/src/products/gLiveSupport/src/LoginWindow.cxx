@@ -61,13 +61,14 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle)
+                            Ptr<ResourceBundle>::Ref    bundle,
+                            Button *                    windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow("",
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        0),
-            LocalizedObject(bundle)
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      "",
+                      windowOpenerButton,
+                      0 /* not resizable */)
 {
     this->gLiveSupport = gLiveSupport;
 

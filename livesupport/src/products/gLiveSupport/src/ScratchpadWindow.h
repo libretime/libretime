@@ -48,9 +48,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "GuiWindow.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
 
@@ -75,8 +75,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class ScratchpadWindow : public WhiteWindow,
-                         public LocalizedObject
+class ScratchpadWindow : public GuiWindow
 {
     private:
         /**
@@ -165,11 +164,6 @@ class ScratchpadWindow : public WhiteWindow,
          *  The model row at the mouse pointer, set by onEntryClicked()
          */
         Gtk::TreeRow                currentRow;
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The main container in the window.
@@ -307,23 +301,22 @@ class ScratchpadWindow : public WhiteWindow,
         virtual void
         onAddToLiveMode(void)                                   throw ();
 
-        /**
-         *  Function to catch the event of the close button being pressed.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
 
     public:
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
-        ScratchpadWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                         Ptr<ResourceBundle>::Ref    bundle)   throw ();
+        ScratchpadWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
+                         Ptr<ResourceBundle>::Ref   bundle,
+                         Button *                   windowOpenerButton)
+                                                                throw ();
 
         /**
          *  Virtual destructor.

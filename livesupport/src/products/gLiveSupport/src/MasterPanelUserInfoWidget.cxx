@@ -150,6 +150,7 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
 
     // change the logout button to a login button
     logInOutButton->set_label(*loginButtonLabel);
+    logInOutButton->setSelected(false);
     logInOutSignalConnection.disconnect();
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -179,7 +180,8 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
     }
 
     Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
-                                                            loginBundle));
+                                                            loginBundle,
+                                                            logInOutButton));
 
     Gtk::Main::run(*loginWindow);
 
@@ -258,6 +260,7 @@ MasterPanelUserInfoWidget :: updateStrings(void)
 
     userInfoLabel->set_label(*loggedInMsg);
     logInOutButton->set_label(*loginButtonLabel);
+    logInOutButton->setSelected(false);
 
     dialogWindow.reset(new DialogWindow(getResourceUstring("sureToExitMsg"),
                                         DialogWindow::noButton |

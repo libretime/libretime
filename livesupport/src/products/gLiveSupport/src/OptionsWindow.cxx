@@ -67,13 +67,13 @@ static const Glib::ustring  windowName = "optionsWindow";
  *  Constructor.
  *----------------------------------------------------------------------------*/
 OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                Ptr<ResourceBundle>::Ref  bundle)
+                                Ptr<ResourceBundle>::Ref  bundle,
+                                Button *                  windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow("",
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      "",
+                      windowOpenerButton)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -316,7 +316,7 @@ OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
         // TODO: add confirmation dialog
         // and either save changes or cancel them
     }
-    gLiveSupport->putWindowPosition(shared_from_this());
+    
     hide();
 }
 

@@ -50,7 +50,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulerWindow : public WhiteWindow, public LocalizedObject
+class SchedulerWindow : public GuiWindow
 {
 
     protected:
@@ -138,11 +138,6 @@ class SchedulerWindow : public WhiteWindow, public LocalizedObject
                 }
         };
 
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The date selected for display.
@@ -211,23 +206,22 @@ class SchedulerWindow : public WhiteWindow, public LocalizedObject
         virtual void
         onDeleteItem(void)                                      throw ();
 
-        /**
-         *  Signal handler for the close button clicked.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
 
     public:
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
         SchedulerWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle)         throw ();
+                        Ptr<ResourceBundle>::Ref    bundle,
+                        Button *                    windowOpenerButton)
+                                                                    throw ();
 
         /**
          *  Virtual destructor.

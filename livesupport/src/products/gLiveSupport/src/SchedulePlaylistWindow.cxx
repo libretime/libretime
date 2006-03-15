@@ -62,15 +62,15 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 SchedulePlaylistWindow :: SchedulePlaylistWindow (
-                                    Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                    Ptr<ResourceBundle>::Ref    bundle,
-                                    Ptr<Playlist>::Ref          playlist)
+                                Ptr<GLiveSupport>::Ref      gLiveSupport,
+                                Ptr<ResourceBundle>::Ref    bundle,
+                                Button *                    windowOpenerButton,
+                                Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
-          : WhiteWindow(WidgetConstants::schedulerWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      WidgetConstants::schedulerWindowTitleImage,
+                      windowOpenerButton),
             playlist(playlist)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
@@ -171,14 +171,4 @@ SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
 
     hide();
 }
-
-/*------------------------------------------------------------------------------
- *  Event handler for the close button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-SchedulePlaylistWindow :: onCloseButtonClicked (void)                  throw ()
-{
-    hide();
-}
-
 

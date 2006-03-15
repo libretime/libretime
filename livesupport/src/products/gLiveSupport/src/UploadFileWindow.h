@@ -53,9 +53,8 @@
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/Notebook.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
-
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
 
@@ -90,7 +89,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class UploadFileWindow : public WhiteWindow, public LocalizedObject
+class UploadFileWindow : public GuiWindow
 {
     protected:
         /**
@@ -179,11 +178,6 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         Gtk::Label                * statusBar;
 
         /**
-         *  The gLiveSupport object, handling the logic of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
-
-        /**
          *  The name of the file to upload.
          */
         Ptr<AudioClip>::Ref         audioClip;
@@ -248,12 +242,16 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the gLiveSupport object, handling the
-         *         logic of the application
-         *  @param bundle the resource bundle holding localized resources
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
         UploadFileWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                         Ptr<ResourceBundle>::Ref   bundle)
+                         Ptr<ResourceBundle>::Ref   bundle,
+                         Button *                   windowOpenerButton)
                                                                 throw ();
 
         /**

@@ -64,14 +64,15 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                      Ptr<ResourceBundle>::Ref  bundle)
+UploadFileWindow :: UploadFileWindow (
+                                Ptr<GLiveSupport>::Ref      gLiveSupport,
+                                Ptr<ResourceBundle>::Ref    bundle,
+                                Button *                    windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow("",
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle,
+                      "",
+                      windowOpenerButton)
 {
     isAudioClipValid = false;
 
@@ -433,7 +434,6 @@ UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
     statusBar->set_text("");
     isAudioClipValid = false;
 
-    gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
 

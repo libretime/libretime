@@ -65,14 +65,15 @@ static const Glib::ustring  windowName = "schedulerWindow";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                    Ptr<ResourceBundle>::Ref    bundle)
+SchedulerWindow :: SchedulerWindow (
+                            Ptr<GLiveSupport>::Ref      gLiveSupport,
+                            Ptr<ResourceBundle>::Ref    bundle,
+                            Button *                    windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow(WidgetConstants::schedulerWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle, 
+                      WidgetConstants::schedulerWindowTitleImage,
+                      windowOpenerButton)
 {
     try {
         set_title(*getResourceUstring("windowTitle"));
@@ -294,16 +295,5 @@ SchedulerWindow :: onDeleteItem(void)                       throw ()
             showContents();
         }
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the close button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-SchedulerWindow :: onCloseButtonClicked (void)                  throw ()
-{
-    gLiveSupport->putWindowPosition(shared_from_this());
-    hide();
 }
 

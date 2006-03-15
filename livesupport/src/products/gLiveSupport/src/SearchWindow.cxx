@@ -67,13 +67,13 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                              Ptr<ResourceBundle>::Ref    bundle)
+                              Ptr<ResourceBundle>::Ref    bundle,
+                              Button *                    windowOpenerButton)
                                                                 throw ()
-          : WhiteWindow(WidgetConstants::searchWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle,
+                      WidgetConstants::searchWindowTitleImage,
+                      windowOpenerButton)
 {
     Gtk::Box *          simpleSearchView = constructSimpleSearchView();
     Gtk::Box *          advancedSearchView = constructAdvancedSearchView();
@@ -489,16 +489,5 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                                                                 throw ()
 {
     onAddToScratchpad();
-}
-
-
-/*------------------------------------------------------------------------------
- *  The event when the close button has been clicked.
- *----------------------------------------------------------------------------*/
-void
-SearchWindow :: onCloseButtonClicked(void)                      throw ()
-{
-    gLiveSupport->putWindowPosition(shared_from_this());
-    hide();
 }
 

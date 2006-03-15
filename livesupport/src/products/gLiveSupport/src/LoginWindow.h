@@ -54,9 +54,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -79,15 +79,10 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LoginWindow : public WhiteWindow, public LocalizedObject
+class LoginWindow : public GuiWindow
 {
 
     protected:
-        /**
-         *  The GLiveSupport object, containing all the vital info.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
-
         /**
          *  The table, which provides the layout for the window.
          */
@@ -175,13 +170,17 @@ class LoginWindow : public WhiteWindow, public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the gLiveSupport object, containing
-         *         all the vital info.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
         LoginWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                    Ptr<ResourceBundle>::Ref    bundle)     throw ();
+                    Ptr<ResourceBundle>::Ref    bundle,
+                    Button *                    windowOpenerButton)
+                                                            throw ();
 
         /**
          *  Virtual destructor.

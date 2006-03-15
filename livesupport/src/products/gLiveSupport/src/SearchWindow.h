@@ -47,9 +47,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "GuiWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
 #include "GLiveSupport.h"
@@ -75,7 +75,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class SearchWindow : public WhiteWindow, public LocalizedObject
+class SearchWindow : public GuiWindow
 {
     private:
 
@@ -250,32 +250,23 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          */
         Gtk::Menu *                     contextMenu;
         
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref          gLiveSupport;
-
-
-    protected:
-
-        /**
-         *  Function to catch the event of the close button being pressed.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
 
     public:
 
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this window
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
+         *  @param  bundle          the resource bundle holding the localized
+         *                          resources for this window.
+         *  @param windowOpenerButton   the button which was pressed to open
+         *                              this window.
          */
         SearchWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                     Ptr<ResourceBundle>::Ref    bundle)        throw ();
+                     Ptr<ResourceBundle>::Ref    bundle,
+                     Button *                    windowOpenerButton)
+                                                                throw ();
 
         /**
          *  Virtual destructor.

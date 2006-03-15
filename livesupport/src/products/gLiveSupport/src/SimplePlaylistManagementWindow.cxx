@@ -67,15 +67,15 @@ static const Glib::ustring  windowName = "simplePlaylistManagementWindow";
  *  Constructor.
  *----------------------------------------------------------------------------*/
 SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
-                                    Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                    Ptr<ResourceBundle>::Ref    bundle)
+                                Ptr<GLiveSupport>::Ref      gLiveSupport,
+                                Ptr<ResourceBundle>::Ref    bundle,
+                                Button *                    windowOpenerButton)
                                                                     throw ()
-          : WhiteWindow(WidgetConstants::playlistsWindowTitleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            isPlaylistModified(false),
-            gLiveSupport(gLiveSupport)
+          : GuiWindow(gLiveSupport,
+                      bundle,
+                      WidgetConstants::playlistsWindowTitleImage,
+                      windowOpenerButton),
+            isPlaylistModified(false)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -299,18 +299,6 @@ void
 SimplePlaylistManagementWindow :: onSaveButtonClicked(void)         throw ()
 {
     savePlaylist(true);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Signal handler for the close button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-SimplePlaylistManagementWindow :: onCloseButtonClicked(void)        throw ()
-{
-    if (cancelPlaylist()) {
-        closeWindow();
-    }
 }
 
 
