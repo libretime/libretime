@@ -114,6 +114,11 @@ class Button : public Gtk::Button
         State                           stationaryState;
 
         /**
+         *  Whether the button can be selected and unselected.
+         */
+        bool                            useSelected;
+
+        /**
          *  The button images.
          */
         Ptr<ButtonImages>::Ref          buttonImages;
@@ -299,12 +304,28 @@ class Button : public Gtk::Button
 
         /**
          *  Change the state of the button to selected or not.
+         *  This only has an effect if selection is enabled by setUseSelected().
          *
          *  @param  toggle  if 'true' then set to selected,
          *                  if 'false' then set to unselected (passive).
+         *  @see    setUseSelected()
          */
         void
         setSelected(bool    toggle)                         throw ();
+
+        /**
+         *  Enable or disable the setSelected() methods.
+         *  The default is "false".
+         *
+         *  @param  toggle  if 'true' then set to selected,
+         *                  if 'false' then set to unselected (passive).
+         *  @see    setSelected()
+         */
+        void
+        setUseSelected(bool toggle)                         throw ()
+        {
+            useSelected = toggle;
+        }
 
         /**
          *  Disable the button, or re-enable it.

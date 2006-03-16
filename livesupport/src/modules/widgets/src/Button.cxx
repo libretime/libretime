@@ -61,12 +61,13 @@ const std::string Button :: fontDefinition = "Bitstream Vera 10";
 Button :: Button(const Glib::ustring          & label,
                  Ptr<ButtonImages>::Ref         buttonImages)
                                                                     throw ()
+          : useSelected(false),
+            buttonImages(buttonImages)
 {
     set_flags(Gtk::NO_WINDOW);
 
     state                    = passiveState;
     stationaryState          = passiveState;
-    this->buttonImages       = buttonImages;
 
     this->child = Gtk::manage(new Gtk::Label(label));
     this->child->modify_font(Pango::FontDescription(fontDefinition));
@@ -80,11 +81,12 @@ Button :: Button(const Glib::ustring          & label,
 Button :: Button(Gtk::Widget                  * child,
                  Ptr<ButtonImages>::Ref         buttonImages)
                                                                     throw ()
+          : useSelected(false),
+            buttonImages(buttonImages)
 {
     set_flags(Gtk::NO_WINDOW);
 
     state                    = passiveState;
-    this->buttonImages       = buttonImages;
 
     this->child = Gtk::manage(child);
     this->child->set_parent(*this);
@@ -419,18 +421,20 @@ Button :: on_leave(void)                                   throw ()
 void
 Button :: on_clicked(void)                                 throw ()
 {
-    switch(stationaryState) {
-        case disabledState:     break;
-        
-        case passiveState:      stationaryState = selectedState;
-                                state           = selectedState;
-                                break;
-                                
-        case selectedState:     stationaryState = passiveState;
-                                state           = rollState;
-                                break;
-                                
-        case rollState:         break; // can't happen, but gcc 4.0 wants it
+    if (useSelected) {
+        switch(stationaryState) {
+            case disabledState:     break;
+            
+            case passiveState:      stationaryState = selectedState;
+                                    state           = selectedState;
+                                    break;
+                                    
+            case selectedState:     stationaryState = passiveState;
+                                    state           = rollState;
+                                    break;
+                                    
+            case rollState:         break; // can't happen, but gcc 4.0 wants it
+        }
     }
     
     Gtk::Button::on_clicked();
@@ -443,7 +447,7 @@ Button :: on_clicked(void)                                 throw ()
 void
 Button :: setSelected(bool    toggle)                      throw ()
 {
-    if (stationaryState != disabledState) {
+    if (useSelected && stationaryState != disabledState) {
         state           = toggle ? selectedState : passiveState;
         stationaryState = toggle ? selectedState : passiveState;
         requestRedraw();

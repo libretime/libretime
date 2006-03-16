@@ -439,16 +439,28 @@ Button *
 WidgetFactory :: createButton(const Glib::ustring &         label,
                               WidgetConstants::ButtonType   type)   throw ()
 {
+    Button *    button = 0;
+    
     switch (type) {
         case WidgetConstants::pushButton:
-            return new Button(label, buttonImages);
+            button = new Button(label, buttonImages);
+            break;
+
+        case WidgetConstants::radioButton:
+            button = new Button(label, buttonImages);
+            button->setUseSelected(true);
+            break;
 
         case WidgetConstants::tabButton:
-            return new Button(label, tabButtonImages);
+            button = new Button(label, tabButtonImages);
+            button->setUseSelected(true);
+            break;
 
         default:
-            return 0;
+            break;
     }
+    
+    return button;
 }
 
 

@@ -252,19 +252,26 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
         Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
 
         liveModeButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("liveModeButtonLabel")));
+                                *getResourceUstring("liveModeButtonLabel"),
+                                WidgetConstants::radioButton));
         uploadFileButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("uploadFileButtonLabel")));
+                                *getResourceUstring("uploadFileButtonLabel"),
+                                WidgetConstants::radioButton));
         scratchpadButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("scratchpadButtonLabel")));
+                                *getResourceUstring("scratchpadButtonLabel"),
+                                WidgetConstants::radioButton));
         simplePlaylistMgmtButton = Gtk::manage(wf->createButton(
-                        *getResourceUstring("simplePlaylistMgmtButtonLabel")));
+                        *getResourceUstring("simplePlaylistMgmtButtonLabel"),
+                        WidgetConstants::radioButton));
         schedulerButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("schedulerButtonLabel")));
+                                *getResourceUstring("schedulerButtonLabel"),
+                                WidgetConstants::radioButton));
         searchButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("searchButtonLabel")));
+                                *getResourceUstring("searchButtonLabel"),
+                                WidgetConstants::radioButton));
         optionsButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("optionsButtonLabel")));
+                                *getResourceUstring("optionsButtonLabel"),
+                                WidgetConstants::radioButton));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);

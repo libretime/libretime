@@ -83,13 +83,16 @@ TestWindow :: TestWindow (void)
                                             &TestWindow::onStopButtonClicked));
 
     // create a button
-    button = Gtk::manage(widgetFactory->createButton("Hello, World!"));
+    button = Gtk::manage(widgetFactory->createButton(
+                                                "Hello, World!",
+                                                WidgetConstants::radioButton));
     button->signal_clicked().connect(sigc::mem_fun(*this,
                                                 &TestWindow::onButtonClicked));
 
     // and another button
     disableTestButton = Gtk::manage(widgetFactory->createButton(
-                                                    "I can be disabled"));
+                                                "I can be disabled",
+                                                WidgetConstants::radioButton));
 
     // create a combo box
     comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());

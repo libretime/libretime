@@ -70,7 +70,9 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    logInOutButton = Gtk::manage(wf->createButton(""));
+    logInOutButton = Gtk::manage(wf->createButton(
+                                            "",
+                                            WidgetConstants::radioButton));
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));

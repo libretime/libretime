@@ -62,8 +62,15 @@ class WidgetConstants
     public:
         /**
          *  The types of available buttons.
+         *
+         *  A pushButton is a button like OK, Cancel, etc.
+         *  A radioButton is a button with an "in" and an "out" state,
+         *  like the window opener buttons on the Master Panel.
+         *  A tabButton is one of selection tabs at the top of a Notebook.
          */
-        typedef enum { pushButton, tabButton }      ButtonType;
+        typedef enum { pushButton,
+                       radioButton,
+                       tabButton }                  ButtonType;
 
         /**
          *  The types of available image buttons.
