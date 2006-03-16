@@ -66,8 +66,8 @@ GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            windowOpenerButton(windowOpenerButton)
+            windowOpenerButton(windowOpenerButton),
+            gLiveSupport(gLiveSupport)
 {
 }
 
@@ -86,8 +86,8 @@ GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
                         properties),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            windowOpenerButton(windowOpenerButton)
+            windowOpenerButton(windowOpenerButton),
+            gLiveSupport(gLiveSupport)
 {
 }
 
@@ -104,8 +104,8 @@ GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            windowOpenerButton(windowOpenerButton)
+            windowOpenerButton(windowOpenerButton),
+            gLiveSupport(gLiveSupport)
 {
 }
 
@@ -124,8 +124,8 @@ GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
                         properties),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            windowOpenerButton(windowOpenerButton)
+            windowOpenerButton(windowOpenerButton),
+            gLiveSupport(gLiveSupport)
 {
 }
 
