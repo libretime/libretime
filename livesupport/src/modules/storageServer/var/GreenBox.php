@@ -803,9 +803,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToFileOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -818,8 +819,15 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileCheck($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToFileCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "GreenBox::renderPlaylistToFileCheck: invalid token ($token)"
+            );
+        }
+        return array(
+            'status'=> 'success',
+            'tmpfile'   => $fakeFile,
         );
     }
 
@@ -831,9 +839,14 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileClose($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToFileClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "GreenBox::renderPlaylistToFileClose: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        unlink($fakeFile);
+        return TRUE;
     }
 
 
@@ -846,9 +859,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToStorageOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -861,8 +875,16 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToStorageCheck($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToStorageCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "GreenBox::renderPlaylistToStorageCheck: invalid token ($token)"
+            );
+        }
+        unlink($fakeFile);
+        return array(
+            'status'=> 'success',
+            'gunid'   => '0000000000010001',
         );
     }
 
@@ -876,9 +898,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToRSSOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToRSSOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -891,8 +914,15 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToRSSCheck($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToRSSCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToRSSCheck: invalid token ($token)"
+            );
+        }
+        return array(
+            'status'=> 'success',
+            'tmpfile'   => $fakeFile,
         );
     }
 
@@ -904,9 +934,14 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToRSSClose($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::renderPlaylistToRSSClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "GreenBox::renderPlaylistToRSSClose: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        unlink($fakeFile);
+        return TRUE;
     }
 
 
@@ -919,11 +954,12 @@ class GreenBox extends BasicStor{
      *  @param criteria : struct - see search criteria
      *  @return token : string - backup token
      */
-    function createBackupOpen($sessid, $criteria)
+    function createBackupOpen($sessid, $criteria='')
     {
-        return PEAR::raiseError(
-            "GreenBox::createBackupOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        file_put_contents($fakeFile, "fake archive file");
+        return array('token'=>$token);
     }
 
     /**
@@ -937,8 +973,16 @@ class GreenBox extends BasicStor{
      */
     function createBackupCheck($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::createBackupCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::createBackupCheck: invalid token ($token)"
+            );
+        }
+        return array(
+            'status'=> 'success',
+            'tmpfile'   => $fakeFile,
+            'metafile' => '',
         );
     }
 
@@ -950,9 +994,14 @@ class GreenBox extends BasicStor{
      */
     function createBackupClose($token)
     {
-        return PEAR::raiseError(
-            "GreenBox::createBackupClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "LocStor::createBackupClose: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        unlink($fakeFile);
+        return TRUE;
     }
 
     /* ============================================== methods for preferences */
