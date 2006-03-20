@@ -34,7 +34,7 @@
         Backup status: {$status.status}
         
         {if $status.status === 'success'}
-            <p><input type="button" class="button" value="##Download##" onCLick="hpopup('{$UI_BROWSER}?popup[]=BACKUP.createBackupDownloadPopup')"></p>
+            <p><input type="button" class="button" value="##Download##" onCLick="location.href='{$UI_BROWSER}?popup[]=BACKUP.createBackupDownload'"></p>
         {/if}
      
      {/if}

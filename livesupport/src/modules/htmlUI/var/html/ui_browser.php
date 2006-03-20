@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once dirname(__FILE__).'/../ui_browser_init.php';
 
 if (UI_DEBUG === TRUE) $Smarty->assign('DEBUG', TRUE);
@@ -172,11 +172,7 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->display('backup/fileBrowser.tpl');    
             break;
             
-            case 'BACKUP.createBackupDownloadPopup': 
-            $Smarty->display('backup/download.tpl');    
-            break;
-            
-            case 'BACKUP.createBackupDownloadNow': 
+            case 'BACKUP.createBackupDownload': 
             $uiBrowser->EXCHANGE->createBackupDownload();    
             break;
         }
