@@ -210,7 +210,7 @@ class uiBase
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
 
             } elseif ($v['type']=='checkbox' || $v['type']=='static') {
-                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']), $v['text'], $v['attributes']);
+                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']), tra($v['text']), $v['attributes']);
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
 
             } elseif (isset($v['type'])) {

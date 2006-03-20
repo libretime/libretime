@@ -59,6 +59,10 @@
             {include file="backup/backup.tpl"}
         {/if}
         
+        {if  $act === 'BACKUP.schedule'}
+            {include file="backup/schedule.tpl"}
+        {/if}
+        
         {if $act === 'RESTORE'}
             {include file="backup/restore.tpl"}
         {/if}

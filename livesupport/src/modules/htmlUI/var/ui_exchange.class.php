@@ -13,6 +13,8 @@ class uiExchange
         $this->test         = false;
     }
     
+    // GB wrapper emthods
+    
     function getBackupToken()
     {
         if ($this->test) return "12345";
@@ -66,6 +68,19 @@ class uiExchange
         return $res;
     }
     
+    // Download the backup
+    
+    function createBackupDownload()
+    {        
+        $check = $this->createBackupCheck();
+        
+        header('Content-Length: '.filesize($check['tmpfile']));
+        header("Content-Transfer-Encoding: binary");
+        header('Content-Disposition: attachment; filename="'.basename($check['tmpfile']).'"');
+        
+        readfile($check['tmpfile']);   
+    }
+    
     function createBackupClose()
     {
         $token  = $token = $this->getBackupToken(); 
@@ -89,16 +104,39 @@ class uiExchange
         return $status;
     }
     
+    // backup schduler methods
+    function getScheduleBackupForm()
+    {
+        include 'formmask/exchange.inc.php';
+        
+        $form = new HTML_QuickForm('BACKUP_Schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $mask['BACKUP.schedule']);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+
+        return $renderer->toArray();    
+    }
+    
+    
+    
+    // file browser methods
     
     function setFolder($subfolder)
     {
         $this->file = false;
+        $newfolder = realpath($this->folder.'/'.$subfolder);
         
-        if (!is_dir($this->folder.'/'.$subfolder)) {
+        if (!is_dir($newfolder)) {
             # F5 pressed
             return false;       
         }
-        $this->folder = realpath($this->folder.'/'.$subfolder);    
+        
+        if (!is_executable($newfolder)) {
+            $this->errorMsg = tra('$1: cd: permission denied', $newfolder);
+            return false;        
+        }
+        
+        $this->folder = $newfolder;    
     }
     
     function setFile($file)
@@ -109,7 +147,7 @@ class uiExchange
             return true;
         }
         $this->file = false;
-        $this->errorMsg = tra('$1: Permission denied', $file);
+        $this->errorMsg = tra('$1: open: permission denied', $file);
         
         return false;   
     }
@@ -154,15 +192,20 @@ class uiExchange
     
     function listFolder()
     {
+        if (!is_readable($this->folder)) { 
+            $this->errorMsg = tra('$1: ls: permission denied', $this->folder);
+            return array('subdirs' => array('..' => array()), 'files' => array());    
+        }
+        
         $d = dir($this->folder); 
    
         while (false !== ($entry = $d->read())) { 
             $loc = $this->folder.'/'.$entry;
             
             if (is_dir($loc)) {
-                $dirs[$entry]  = $this->_getPerm($loc);                
+                $dirs[$entry]  = $this->_getFileProperty($loc);                
             } else {
-                $files[$entry] = $this->_getPerm($loc);    
+                $files[$entry] = $this->_getFileProperty($loc);    
             }   
             
         } 
@@ -173,12 +216,18 @@ class uiExchange
         return array('subdirs' => $dirs, 'files' => $files);
     }
     
-    function _getPerm($loc)
+    function _getFileProperty($loc)
     {
+        $uarr  = posix_getpwuid(fileowner($loc)); 
+        $user  = $uarr['name'];
+        $grarr = posix_getgrgid(filegroup($loc));
+        $group = $grarr['name'];
         return array(
                     'r' => is_readable($loc),
                     'w' => is_writable($loc),
-                    'x' => is_executable($loc),                
+                    'x' => is_executable($loc), 
+                    'u' => $user,
+                    'g' => $group,               
                 );        
         
     }

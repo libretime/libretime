@@ -21,17 +21,20 @@
         {/if}
         
         {if $EXCHANGE->checkTarget() === true} 
-            <p><input type="button" class="button_large" value="##Start backup##" onClick="location.href='{$UI_HANDLER}?act=EXCHANGE.createBackupOpen'"></p>
+            <p><input type="button" class="button_large" value="##Start backup##" onClick="location.href='{$UI_HANDLER}?act=BACKUP.createBackupOpen'"></p>
         {/if}
         
-        <p><input type="button" class="button_large" value="##Set backup location##" onClick="popup('{$UI_BROWSER}?popup[]=BACKUP.setLocation', 'BACKUP.selectLocation', 500, 400)"></p>
+        <p><input type="button" class="button_large" value="##Schedule backup##" onClick="location.href='{$UI_BROWSER}?act=BACKUP.schedule'"></p>
+        
+        <p><input type="button" class="button_large" value="##Set backup location##" onClick="popup('{$UI_BROWSER}?popup[]=BACKUP.setLocation', 'BACKUP.selectLocation', 600, 600)"></p>
+     
      {else}
         {assign var='status' value=$EXCHANGE->createBackupCheck()}
         
         Backup status: {$status.status}
         
         {if $status.status === 'success'}
-            <p><input type="button" class="button" value="##Download##" onCLick="hpopup('{$status.tmpfile}')"></p>
+            <p><input type="button" class="button" value="##Download##" onCLick="hpopup('{$UI_BROWSER}?popup[]=BACKUP.createBackupDownloadPopup')"></p>
         {/if}
      
      {/if}

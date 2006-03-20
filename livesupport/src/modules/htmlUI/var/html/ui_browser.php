@@ -171,6 +171,14 @@ if (is_array($_REQUEST['popup'])){
             $uiBrowser->EXCHANGE->setFile($_REQUEST['file']);
             $Smarty->display('backup/fileBrowser.tpl');    
             break;
+            
+            case 'BACKUP.createBackupDownloadPopup': 
+            $Smarty->display('backup/download.tpl');    
+            break;
+            
+            case 'BACKUP.createBackupDownloadNow': 
+            $uiBrowser->EXCHANGE->createBackupDownload();    
+            break;
         }
     }
     die();
@@ -278,7 +286,8 @@ if ($uiBrowser->userid) {
         break;
         
         case "BACKUP":
-        case "RESTORE": 
+        case "RESTORE":
+        case "BACKUP.schedule": 
         $Smarty->assign('act', $_REQUEST['act']);
         break;
         

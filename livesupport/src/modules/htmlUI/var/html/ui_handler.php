@@ -289,7 +289,7 @@ switch($_REQUEST['act']){
     $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "EXCHANGE.createBackupOpen":
+    case "BACKUP.createBackupOpen":
     $uiHandler->EXCHANGE->createBackupOpen();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
