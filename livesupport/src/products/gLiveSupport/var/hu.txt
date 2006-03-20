@@ -11,6 +11,7 @@ hu:table
     simplePlaylistMgmtButtonLabel:string    { "műsorkezelés" }
     schedulerButtonLabel:string             { "időzítő" }
     searchButtonLabel:string                { "keresés" }
+    optionsButtonLabel:string               { "beállítások" }
 
     cancelButtonLabel:string        { "Mégsem" }
     noButtonLabel:string            { "Nem" }

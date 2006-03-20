@@ -463,6 +463,7 @@ Button :: setDisabled(bool    toggle)                      throw ()
 {
     state           = toggle ? disabledState : passiveState;
     stationaryState = toggle ? disabledState : passiveState;
+    set_sensitive(!toggle);
     requestRedraw();
 }
 

@@ -317,6 +317,21 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         Ptr<OptionsContainer>::Ref  optionsContainer;
 
+        /**
+         *  Whether the authentication component is available.
+         */
+        bool                        authenticationAvailable;
+
+        /**
+         *  Whether the storage component is available.
+         */
+        bool                        storageAvailable;
+
+        /**
+         *  Whether the scheduler component is available.
+         */
+        bool                        schedulerAvailable;
+
 
     protected:
         /**
@@ -1099,6 +1114,32 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
                                                                 throw ();
+        /**
+         *  Return whether the authentication component is available.
+         */
+        bool
+        isAuthenticationAvailable(void)                         throw()
+        {
+            return authenticationAvailable;
+        }
+
+        /**
+         *  Return whether the storage component is available.
+         */
+        bool
+        isStorageAvailable(void)                                throw()
+        {
+            return storageAvailable;
+        }
+
+        /**
+         *  Return whether the scheduler component is available.
+         */
+        bool
+        isSchedulerAvailable(void)                              throw()
+        {
+            return schedulerAvailable;
+        }
 };
 
 /* ================================================= external data structures */

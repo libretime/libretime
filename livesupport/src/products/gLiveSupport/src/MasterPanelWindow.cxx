@@ -593,13 +593,12 @@ void
 MasterPanelWindow :: showAnonymousUI(void)                          throw ()
 {
     show_all();
-    buttonBar->hide();
+    liveModeButton->hide();
     uploadFileButton->hide();
     scratchpadButton->hide();
     simplePlaylistMgmtButton->hide();
     schedulerButton->hide();
     searchButton->hide();
-    optionsButton->hide();
     
     if (liveModeWindow.get()) {
         if (liveModeWindow->is_visible()) {
@@ -668,6 +667,16 @@ void
 MasterPanelWindow :: showLoggedInUI(void)                           throw ()
 {
     show_all();
+    
+    if (!gLiveSupport->isStorageAvailable() 
+                                    || !gLiveSupport->isSchedulerAvailable()) {
+        liveModeButton->setDisabled(true);
+        uploadFileButton->setDisabled(true);
+        scratchpadButton->setDisabled(true);
+        simplePlaylistMgmtButton->setDisabled(true);
+        schedulerButton->setDisabled(true);
+        searchButton->setDisabled(true);
+    }
 }
 
 

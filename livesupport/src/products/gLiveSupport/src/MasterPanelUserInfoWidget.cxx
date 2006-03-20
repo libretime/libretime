@@ -285,6 +285,12 @@ MasterPanelUserInfoWidget :: onCloseButtonClicked (void)            throw ()
 
     gLiveSupport->stopOutputAudio();
 
+    Ptr<OptionsContainer>::Ref  optionsContainer
+                                = gLiveSupport->getOptionsContainer();
+    if (optionsContainer->isTouched()) {
+        optionsContainer->writeToFile();
+    }
+
     // get the topmost container, should be the application window itself
     Gtk::Container    * container = get_parent();
     while (container->get_parent()) {

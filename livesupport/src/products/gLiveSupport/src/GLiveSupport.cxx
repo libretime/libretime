@@ -387,6 +387,8 @@ bool
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: checkConfiguration(void)                    throw ()
 {
+    // === FATAL ERRORS ===
+
     // first, check if resources are available for all configured languages
     LanguageMap::iterator   it  = supportedLanguages->begin();
     try {
@@ -407,21 +409,25 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
         return false;
     }
 
+    // === NON-FATAL ERRORS ===
+
     // check if the authentication server is available
     try {
         authentication->getVersion();
+        authenticationAvailable = true;
     } catch (XmlRpcException &e) {
+        authenticationAvailable = false;
         displayMessageWindow(getResourceUstring(authenticationNotReachableKey));
-        return false;
     }
 
 
     // check if the storage server is available
     try {
         storage->getVersion();
+        storageAvailable = true;
     } catch (XmlRpcException &e) {
+        storageAvailable = false;
         displayMessageWindow(getResourceUstring(storageNotReachableKey));
-        return false;
     }
 
     // no need to check the widget factory
@@ -429,9 +435,10 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
     // check the scheduler client
     try {
         scheduler->getVersion();
+        schedulerAvailable = true;
     } catch (XmlRpcException &e) {
+        schedulerAvailable = false;
         displayMessageWindow(getResourceUstring(schedulerNotReachableKey));
-        return false;
     }
 
     // TODO: check the audio player?
@@ -569,10 +576,6 @@ GLiveSupport :: logout(void)                                throw ()
     
     authentication->logout(sessionId);
     sessionId.reset();
-    
-    if (optionsContainer->isTouched()) {
-        optionsContainer->writeToFile();
-    }
     
     return true;
 }
