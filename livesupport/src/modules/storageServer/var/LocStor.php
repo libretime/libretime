@@ -808,7 +808,7 @@ class LocStor extends BasicStor{
      *
      *  @param token  :  string  -  render token
      *  @return hasharray:
-     *      status : string - susccess | working | fault
+     *      status : string - success | working | fault
      *      url : string - readable url
      */
     function renderPlaylistToFileCheck($token)
@@ -851,7 +851,7 @@ class LocStor extends BasicStor{
      *
      *  @param token  :  string  -  render token
      *  @return hasharray:
-     *      status : string - susccess | working | fault
+     *      status : string - success | working | fault
      *      gunid : string - gunid of result file
      */
     function renderPlaylistToStorageCheck($token)
@@ -881,7 +881,7 @@ class LocStor extends BasicStor{
      *
      *  @param token  :  string  -  render token
      *  @return hasharray:
-     *      status : string - susccess | working | fault
+     *      status : string - success | working | fault
      *      url : string - readable url
      */
     function renderPlaylistToRSSCheck($token)
@@ -916,9 +916,10 @@ class LocStor extends BasicStor{
      */
     function createBackupOpen($sessid, $criteria)
     {
-        return PEAR::raiseError(
-            "LocStor::createBackupOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        file_put_contents($fakeFile, "fake archive file");
+        return array('token'=>$token);
     }
 
     /**
@@ -926,14 +927,23 @@ class LocStor extends BasicStor{
      *
      *  @param token  :  string  -  backup token
      *  @return hasharray:
-     *      status : string - susccess | working | fault
+     *      status : string - success | working | fault
      *      url : string - readable url
      *      metafile : string - archive metafile in XML format
      */
     function createBackupCheck($token)
     {
-        return PEAR::raiseError(
-            "LocStor::createBackupCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::createBackupCheck: invalid token ($token)"
+            );
+        }
+        $fakeFUrl = $this->getUrlPart()."access/$token.tar";
+        return array(
+            'status'=> 'success',
+            'url'   => $fakeFUrl,
+            'metafile' => '',
         );
     }
 
@@ -945,9 +955,14 @@ class LocStor extends BasicStor{
      */
     function createBackupClose($token)
     {
-        return PEAR::raiseError(
-            "LocStor::createBackupClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "LocStor::createBackupCheck: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.tar";
+        unlink($fakeFile);
+        return TRUE;
     }
 
     /*===================================================== auxiliary methods */
