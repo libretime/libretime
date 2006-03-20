@@ -66,6 +66,10 @@ function contextmenu(param) {
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '150')\" "+oF+">&nbsp;##Change Fadeout##&nbsp;</a></li>";
             break;
 
+            case "PL.export":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.export&type=fadeOut&id="+param+"', 'PL', '400', '150')\" "+oF+">&nbsp;##Export Playlist##&nbsp;</a></li>";
+            break;
+
             case "SP.addItem":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to ScratchPad##&nbsp;</a></li>";
             break;

@@ -604,4 +604,16 @@ class uiPlaylist
 
         return FALSE;
     }
+    
+    function exportForm($id,$mask)
+    {
+        $mask['act']['constant']        = 'PL.export';
+        $mask['id']['constant']         = $id;
+        $form = new HTML_QuickForm('PL_exportForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $mask);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
+    }
 }
+?>

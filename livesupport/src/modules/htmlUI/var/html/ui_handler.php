@@ -254,6 +254,10 @@ switch($_REQUEST['act']){
     $uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
     $uiHandler->PLAYLIST->setReload();
     break;
+    
+    case "PL.export":
+   	$uiHandler->redirUrl = UI_BROWSER."?popup[]=PL.redirect2DownloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}";
+    break;
 
     case "SCHEDULER.set":
     $uiHandler->SCHEDULER->set($_REQUEST);

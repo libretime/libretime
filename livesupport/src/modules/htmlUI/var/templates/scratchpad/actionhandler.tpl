@@ -46,6 +46,7 @@ onClick="return contextmenu('{$i.id}'
             , 'PL.activate'
             , 'PL.create'
             , 'delete'
+            , 'PL.export'
         {/if}
     {/if}
 )"

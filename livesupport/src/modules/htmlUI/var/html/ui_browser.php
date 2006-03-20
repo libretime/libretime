@@ -105,6 +105,33 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->assign('dynform', $uiBrowser->PLAYLIST->setItemPlaylengthForm($_REQUEST['id'], $_REQUEST['elemId'], $ui_fmask['PL.setItemPlaylength']));
             $Smarty->display('popup/PLAYLIST.setItemPlaylength.tpl');
             break;
+            
+            case "PL.export":
+            $Smarty->assign('dynform', $uiBrowser->PLAYLIST->exportForm($_REQUEST['id'], $ui_fmask['PL.export']));
+            $Smarty->display('popup/PLAYLIST.export.tpl');
+            break;
+
+            case "PL.redirect2DownloadExportedFile":
+            $Smarty->assign('href', UI_BROWSER."?popup[]=PL.downloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}");
+            $Smarty->display('popup/PLAYLIST.downloadExportedFile.tpl');
+            break;
+
+            case "PL.downloadExportedFile":
+            $exportedPlaylist = $uiBrowser->gb->exportPlaylistOpen($uiBrowser->sessid,
+            			$uiBrowser->gb->_gunidFromId($_REQUEST['id']),
+            			$_REQUEST['playlisttype'],
+            		    $_REQUEST['exporttype']=='playlistOnly'?true:false);
+            $fp=fopen($exportedPlaylist['fname'],'r');
+            if (is_resource($fp)) {
+                header("Content-Type: application/octet-stream");
+                header("Content-Length: " . filesize($exportedPlaylist['fname']));
+                header('Content-Disposition: attachment; filename="playlist.tar"');
+                header("Content-Transfer-Encoding: binary\n");
+                fpassthru($fp);
+                   $uiBrowser->gb->exportPlaylistClose($exportedPlaylist['token']);
+            }
+            //$Smarty->display('popup/PLAYLIST.downloadExportedFile.tpl');
+            break;
 
             case "SCHEDULER.addItem":
             $Smarty->display('popup/SCHEDULER.addItem.tpl');

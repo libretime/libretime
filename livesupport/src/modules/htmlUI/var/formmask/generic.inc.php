@@ -769,5 +769,48 @@ $ui_fmask = array(
         array(
             'group'     => array('cancel', 'reset', 'submitter')
         )
+    ),
+    'PL.export'	=> array(
+        'act'       => array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+        ),
+        'id'        => array(
+            'element'   => 'id',
+            'type'      => 'hidden'
+        ),
+        array(
+            'element'   => 'exporttype',
+            'type'      => 'select',
+            'label'     => 'Type',
+            'options'   => array('allComponents' => 'All components','playlistOnly' => 'Playlist only')
+        ),
+        array(
+            'element'   => 'playlisttype',
+            'type'      => 'select',
+            'label'     => 'File Format',
+            'options'   => array(
+                             'smil' => 'SMIL', 
+                           //  'xspf' => 'XSPF', 
+                             'm3u' => 'M3U'
+                           )
+        ),
+	    array(
+	        'element'   => 'cancel',
+	        'type'      => 'button',
+	        'label'     => 'Cancel',
+	        'attributes'=> array('onClick' => 'window.close()'),
+	        'groupit'   => TRUE
+	    ),
+	    array(
+	        'element'   => 'submitter',
+	        'type'      => 'button',
+	        'label'     => 'OK',
+	        'attributes'=> array('onClick' => 'this.form.submit()'),
+	        'groupit'   => TRUE
+	    ),
+        array(
+            'group'     => array('cancel', 'submitter')
+        )
     )
 );

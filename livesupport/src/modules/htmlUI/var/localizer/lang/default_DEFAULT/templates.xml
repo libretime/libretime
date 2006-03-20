@@ -797,4 +797,8 @@
 		<key>yesterday</key>
 		<value>yesterday</value>
 	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value>Export Playlist</value>
+	</item>
 </translations>
