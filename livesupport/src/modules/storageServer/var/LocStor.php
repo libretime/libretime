@@ -798,9 +798,10 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToFileOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -813,8 +814,16 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToFileCheck($token)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToFileCheck: invalid token ($token)"
+            );
+        }
+        $fakeFUrl = $this->getUrlPart()."access/$token.ogg";
+        return array(
+            'status'=> 'success',
+            'url'   => $fakeFUrl,
         );
     }
 
@@ -826,9 +835,14 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToFileClose($token)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToFileClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToFileClose: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        unlink($fakeFile);
+        return TRUE;
     }
 
 
@@ -841,9 +855,10 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToStorageOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -856,8 +871,16 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToStorageCheck($token)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToStorageCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.ogg";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToStorageCheck: invalid token ($token)"
+            );
+        }
+        unlink($fakeFile);
+        return array(
+            'status'=> 'success',
+            'gunid'   => '0000000000010001',
         );
     }
 
@@ -871,9 +894,10 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToRSSOpen($sessid, $plid)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSOpen: not implemented"
-        );
+        $token = '123456789abcdeff';
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        file_put_contents($fakeFile, "fake renderred file");
+        return array('token'=>$token);
     }
 
     /**
@@ -886,8 +910,16 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToRSSCheck($token)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSCheck: not implemented"
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToRSSCheck: invalid token ($token)"
+            );
+        }
+        $fakeFUrl = $this->getUrlPart()."access/$token.rss";
+        return array(
+            'status'=> 'success',
+            'url'   => $fakeFUrl,
         );
     }
 
@@ -899,9 +931,14 @@ class LocStor extends BasicStor{
      */
     function renderPlaylistToRSSClose($token)
     {
-        return PEAR::raiseError(
-            "LocStor::renderPlaylistToRSSClose: not implemented"
-        );
+        if($token != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "LocStor::renderPlaylistToRSSClose: invalid token"
+            );
+        }
+        $fakeFile = "{$this->accessDir}/$token.rss";
+        unlink($fakeFile);
+        return TRUE;
     }
 
 
@@ -957,7 +994,7 @@ class LocStor extends BasicStor{
     {
         if($token != '123456789abcdeff'){
             return PEAR::raiseError(
-                "LocStor::createBackupCheck: invalid token"
+                "LocStor::createBackupClose: invalid token"
             );
         }
         $fakeFile = "{$this->accessDir}/$token.tar";
