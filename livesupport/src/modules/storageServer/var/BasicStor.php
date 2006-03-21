@@ -320,9 +320,11 @@ class BasicStor extends Alib{
      *      (NULL for special files such exported playlists)
      *  @param type string 'access'|'download'
      *  @param parent int parent token (recursive access/release)
+     *  @param owner int, local user id - owner of token
      *  @return array with: seekable filehandle, access token
      */
-    function bsAccess($realFname, $ext, $gunid, $type='access', $parent='0')
+    function bsAccess($realFname, $ext, $gunid, $type='access',
+        $parent='0', $owner=NULL)
     {
         $token  = StoredFile::_createGunid();
         if(!is_null($realFname)){
@@ -340,12 +342,13 @@ class BasicStor extends Alib{
         }else $linkFname=NULL;
         $this->dbc->query("BEGIN");
         $gunidSql = (is_null($gunid) ? "NULL" : "x'{$gunid}'::bigint" );
+        $ownerSql = (is_null($owner) ? "NULL" : "$owner" );
         $res = $this->dbc->query("
             INSERT INTO {$this->accessTable}
-                (gunid, token, ext, type, parent, ts)
+                (gunid, token, ext, type, parent, owner, ts)
             VALUES
                 ($gunidSql, x'$token'::bigint,
-                '$ext', '$type', x'{$parent}'::bigint, now())
+                '$ext', '$type', x'{$parent}'::bigint, $ownerSql, now())
         ");
         if($this->dbc->isError($res)){
             $this->dbc->query("ROLLBACK"); return $res; }
@@ -368,7 +371,9 @@ class BasicStor extends Alib{
      *
      *  @param token string, access token
      *  @param type string 'access'|'download'
-     *  @return string, global unique ID or real pathname of special file
+     *  @return hasharray
+     *      string, global unique ID or real pathname of special file
+     *      owner, local subject id of token owner
      */
     function bsRelease($token, $type='access')
     {
@@ -378,11 +383,12 @@ class BasicStor extends Alib{
             );
         }
         $acc = $this->dbc->getRow("
-            SELECT to_hex(gunid)as gunid, ext FROM {$this->accessTable}
+            SELECT to_hex(gunid)as gunid, ext, owner FROM {$this->accessTable}
             WHERE token=x'{$token}'::bigint AND type='$type'
         ");
         if($this->dbc->isError($acc)){ return $acc; }
         $ext = $acc['ext'];
+        $owner = $acc['owner'];
         $linkFname = "{$this->accessDir}/$token.$ext";
         $realFname = readlink($linkFname);
         if(file_exists($linkFname)) if(! @unlink($linkFname)){
@@ -408,7 +414,12 @@ class BasicStor extends Alib{
             $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if($this->dbc->isError($res)){ return $res; }
-        return ( is_null($acc['gunid']) ? $realFname : $gunid );
+        $res = array(
+            'gunid' => (isset($gunid) ? $gunid : NULL ),
+            'realFname' => $realFname,
+            'owner' => $owner,
+        );
+        return $res;
     }
 
     /**
@@ -467,7 +478,9 @@ class BasicStor extends Alib{
              "BasicStor::bsCloseDownload: invalid token ($token)"
             );
         }
-        return $this->bsRelease($token, 'download');
+        $r = $this->bsRelease($token, 'download');
+        if($this->dbc->isError($r)){ return $r; }
+        return (is_null($r['gunid']) ? $r['realFname'] : $r['gunid']);
     }
 
     /**
@@ -528,6 +541,7 @@ class BasicStor extends Alib{
             SELECT chsum, owner FROM {$this->accessTable}
             WHERE token=x'{$token}'::bigint
         ");
+        if($this->dbc->isError($row)){ return $row; }
         $chsum = $row['chsum'];
         $owner = $row['owner'];
         $res = $this->dbc->query("
@@ -594,51 +608,22 @@ class BasicStor extends Alib{
         return "http://$host:$port$path/";
     }
     
-    /* ---------------------------------------------- replicas, versions etc. */
     /**
-     *  Create replica.<br>
-     *  <b>TODO: NOT FINISHED</b>
+     *  Return local subject id of token owner
      *
-     *  @param id int, virt.file's local id
-     *  @param did int, destination folder local id
-     *  @param replicaName string, name of new replica
-     *  @return int, local id of new object
+     *  @param token: string - access/put/render etc. token
+     *  @return int - local subject id
      */
-    function bsCreateReplica($id, $did, $replicaName)
+    function getTokenOwner($token)
     {
-        return PEAR::raiseError(
-            'BasicStor::bsCreateReplica: not implemented', GBERR_NOTIMPL
-        );
-        // ---
-        if($this->getObjType($did) !== 'Folder')
-            return PEAR::raiseError(
-                'BasicStor::bsCreateReplica: dest is not folder', GBERR_WRTYPE
-            );
-        if($replicaName=='') $replicaName = $this->getObjName($id);
-        while(($exid = $this->getObjId($replicaName, $did))<>'')
-            { $replicaName.='_R'; }
-        $rid = $this->addObj($replicaName , 'Replica', $did, 0, $id);
-        if($this->dbc->isError($rid)) return $rid;
-#        $this->addMdata($this->_pathFromId($rid), 'isReplOf', $id);
-        return $rid;
+        $row = $this->dbc->getOne("
+            SELECT owner FROM {$this->accessTable}
+            WHERE token=x'{$token}'::bigint
+        ");
+        if($this->dbc->isError($row)){ return $row; }
+        $owner = $row;
     }
-
-    /**
-     *  Create version.<br>
-     *  <b>TODO: NOT FINISHED</b>
-     *
-     *  @param id int, virt.file's local id
-     *  @param did int, destination folder local id
-     *  @param versionLabel string, name of new version
-     *  @return int, local id of new object
-     */
-    function bsCreateVersion($id, $did, $versionLabel)
-    {
-        return PEAR::raiseError(
-            'BasicStor::bsCreateVersion: not implemented', GBERR_NOTIMPL
-        );
-    }
-
+    
     /* -------------------------------------------- metadata methods4metadata */
 
     /**
@@ -836,7 +821,7 @@ class BasicStor extends Alib{
      *  @param plids - array of strings, playlist global unique IDs
      *          (one gunid is accepted too)
      *  @param type - string, playlist format,
-     *          possible values: lspl | smil
+     *          possible values: lspl | smil | m3u
      *  @param standalone - boolean, if only playlist should be exported or
      *          with all related files
      *  @return hasharray with  fields:
@@ -918,8 +903,9 @@ class BasicStor extends Alib{
      */
     function bsExportPlaylistClose($token)
     {
-        $file = $r = $this->bsRelease($token, 'access');
+        $r = $this->bsRelease($token, 'access');
         if($this->dbc->isError($r)){ return $r; }
+        $file = $r['realFname'];
         if(file_exists($file)) if(! @unlink($file)){
             return PEAR::raiseError(
                 "BasicStor::bsExportPlaylistClose: unlink failed ($file)",
@@ -1309,7 +1295,7 @@ class BasicStor extends Alib{
         if($this->dbc->isError($parid)) return $parid;
         if(is_null($parid)){
             return PEAR::raiseError("BasicStor::_getHomeDirId: ".
-                "homedir not found", GBERR_NOTF);
+                "homedir not found ($subjid)", GBERR_NOTF);
         }
         return $parid;
     }

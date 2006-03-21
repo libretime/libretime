@@ -1417,7 +1417,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - susccess | working | fault</li>
+     *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *  </ul>
      *
@@ -1559,7 +1559,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - susccess | working | fault</li>
+     *      <li> status : string - success | working | fault</li>
      *      <li> gunid : string - gunid of result file</li>
      *  </ul>
      *
@@ -1589,8 +1589,8 @@ class XR_LocStor extends LocStor{
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
-            'gunid'=>$res['gunid'],
             'status'=>$res['status'],
+            'gunid'=>$res['gunid'],
         )));
     }
 
@@ -1655,7 +1655,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - susccess | working | fault</li>
+     *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *  </ul>
      *
@@ -1798,7 +1798,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - susccess | working | fault</li>
+     *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *      <li> metafile : string - archive metafile in XML format</li>
      *  </ul>
@@ -2096,7 +2096,7 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->searchMetadata($r['sessid'], $r['criteria']);
         if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 803,
+            return new XML_RPC_Response(0, 805,
                 "xr_searchAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );

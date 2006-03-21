@@ -803,10 +803,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileOpen($sessid, $plid)
     {
-        $token = '123456789abcdeff';
-        $fakeFile = "{$this->accessDir}/$token.ogg";
-        file_put_contents($fakeFile, "fake renderred file");
-        return array('token'=>$token);
+        require_once "Renderer.php";
+        $r = Renderer::rnRender2FileOpen($this, $plid);
+        if(PEAR::isError($r)) return $r;
+        return $r;
     }
 
     /**
@@ -819,16 +819,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileCheck($token)
     {
-        $fakeFile = "{$this->accessDir}/$token.ogg";
-        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
-            return PEAR::raiseError(
-                "GreenBox::renderPlaylistToFileCheck: invalid token ($token)"
-            );
-        }
-        return array(
-            'status'=> 'success',
-            'tmpfile'   => $fakeFile,
-        );
+        require_once "Renderer.php";
+        $r = Renderer::rnRender2FileCheck($this, $token);
+        if(PEAR::isError($r)) return $r;
+        return array('status'=>$r['status'], 'tmpfile'=>$r['tmpfile']);
     }
 
     /**
@@ -839,14 +833,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToFileClose($token)
     {
-        if($token != '123456789abcdeff'){
-            return PEAR::raiseError(
-                "GreenBox::renderPlaylistToFileClose: invalid token"
-            );
-        }
-        $fakeFile = "{$this->accessDir}/$token.ogg";
-        unlink($fakeFile);
-        return TRUE;
+        require_once "Renderer.php";
+        $r = Renderer::rnRender2FileClose($this, $token);
+        if(PEAR::isError($r)) return $r;
+        return array(TRUE);
     }
 
 
@@ -859,10 +849,12 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
-        $token = '123456789abcdeff';
-        $fakeFile = "{$this->accessDir}/$token.ogg";
-        file_put_contents($fakeFile, "fake renderred file");
-        return array('token'=>$token);
+        require_once "Renderer.php";
+        $owner = $this->getSessUserId($sessid);
+        if($this->dbc->isError($owner)) return $owner;
+        $r = Renderer::rnRender2FileOpen($this, $plid, $owner);
+        if(PEAR::isError($r)) return $r;
+        return $r;
     }
 
     /**
@@ -875,17 +867,10 @@ class GreenBox extends BasicStor{
      */
     function renderPlaylistToStorageCheck($token)
     {
-        $fakeFile = "{$this->accessDir}/$token.ogg";
-        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
-            return PEAR::raiseError(
-                "GreenBox::renderPlaylistToStorageCheck: invalid token ($token)"
-            );
-        }
-        unlink($fakeFile);
-        return array(
-            'status'=> 'success',
-            'gunid'   => '0000000000010001',
-        );
+        require_once "Renderer.php";
+        $r = Renderer::rnRender2StorageCheck($this, $token);
+        if(PEAR::isError($r)) return $r;
+        return $r;
     }
 
 
@@ -900,7 +885,7 @@ class GreenBox extends BasicStor{
     {
         $token = '123456789abcdeff';
         $fakeFile = "{$this->accessDir}/$token.rss";
-        file_put_contents($fakeFile, "fake renderred file");
+        file_put_contents($fakeFile, "fake rendered file");
         return array('token'=>$token);
     }
 
@@ -957,8 +942,30 @@ class GreenBox extends BasicStor{
     function createBackupOpen($sessid, $criteria='')
     {
         $token = '123456789abcdeff';
+        $tmpn = tempnam($this->bufferDir, 'backup_');
+        $tmpf = "$tmpn.tar";
+        $tmpd = "$tmpn.dir";           mkdir($tmpd);
+        $tmpdp = "$tmpd/playlist";     mkdir($tmpdp);
+        $tmpdc = "$tmpd/audioClip";    mkdir($tmpdc);
+        $tmpdm = "$tmpd/meta-inf";     mkdir($tmpdm);
+        $ctime = time();
+        // $hostname = $_SERVER['SERVER_NAME'];
+        $hostname = trim(`hostname`);
+        file_put_contents("$tmpdm/storage.xml",
+            "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
+            "<storage\n".
+            " type=\"backup\"\n".
+            " version=\"1.0\"\n".
+            " ctime=\"$ctime\"\n".
+            " hostname=\"$hostname\"\n".
+            "/>\n"
+        );
+        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
         $fakeFile = "{$this->accessDir}/$token.tar";
-        file_put_contents($fakeFile, "fake archive file");
+        rename($tmpf, $fakeFile);
+        //copy($tmpf, $fakeFile);
+        rmdir($tmpdp); rmdir($tmpdc); rmdir($tmpdm);
+        rmdir($tmpd); unlink($tmpn);
         return array('token'=>$token);
     }
 
