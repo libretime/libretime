@@ -28,6 +28,8 @@
 
 ------------------------------------------------------------------------------*/
 
+require_once "Playlist.php";
+
 define('INDCH', ' ');
 define('AC_URL_RELPATH', '../audioClip/');
 define('PL_URL_RELPATH', '../playlist/');

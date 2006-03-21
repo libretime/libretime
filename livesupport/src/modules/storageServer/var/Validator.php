@@ -130,7 +130,7 @@ class Validator{
         if(isset($formTree[$category]['regexp'])){
             // echo "XXX {$formTree[$fname]['regexp']} / ".$node->content."\n";
             if(!preg_match("|{$formTree[$category]['regexp']}|", $value))
-                return $this->_err(VAL_CONTENT, $category);
+                return $this->_err(VAL_CONTENT, "$category/$value");
         }
         
     }
@@ -155,7 +155,7 @@ class Validator{
         if(isset($formTree[$fname]['regexp'])){
             // echo "XXX {$formTree[$fname]['regexp']} / ".$node->content."\n";
             if(!preg_match("|{$formTree[$fname]['regexp']}|", $node->content))
-                return $this->_err(VAL_CONTENT, $fname);
+                return $this->_err(VAL_CONTENT, "$fname/{$node->content}");
         }
         // validate attributes:
         $ra = $this->validateAttributes($node, $fname);
