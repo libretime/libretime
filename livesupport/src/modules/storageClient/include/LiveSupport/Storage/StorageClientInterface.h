@@ -452,6 +452,50 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
+         *  Initiate the creation of a storage backup.
+         *
+         *  @param  criteria    specifies which items should go in the backup.
+         *  @return a token which identifies this backup task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+        
+        /**
+         *  Check the status of a storage backup.
+         *
+         *  @param  token           the identifier of this backup task.
+         *  @param  urlOrErrorMsg   return parameter;
+         *              if the status is "success", it contains the URL of the
+         *                          created backup file; 
+         *              if the status is "fault", it contains the fault string;
+         *              if the status is "working", it is not touched.
+         *  @return the status string: one of "working", "success", or "fault".
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        createBackupCheck(const Glib::ustring &     token,
+                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+        
+        /**
+         *  Close the storage backup process.
+         *
+         *  @param  token           the identifier of this backup task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        createBackupClose(const Glib::ustring &     token)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual

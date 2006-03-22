@@ -2420,3 +2420,38 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
     return audioClips;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Initiate the creation of a storage backup.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of a storage backup.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: createBackupCheck(const Glib::ustring &     token,
+                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
+    return status;
+}
+
+        
+/*------------------------------------------------------------------------------
+ *  Close the storage backup process.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: createBackupClose(const Glib::ustring &     token)
+                                                throw (XmlRpcException)
+{
+}
+

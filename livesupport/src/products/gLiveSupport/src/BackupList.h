@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/XmlRpcException.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
@@ -193,40 +194,46 @@ class BackupList : public Gtk::VBox,
         /**
          *  Add a new item to the list.
          *
-         *  @param  name        the name of the backup.
+         *  @param  title       the title of the backup.
          *  @param  criteria    the search criteria for the backup.
-         *  @exception  std::runtime_error  if the backup could not be added.
+         *  @exception  XmlRpcException     thrown by the storage client.
          */
         void
-        add(Ptr<Glib::ustring>::Ref     name,
+        add(Ptr<Glib::ustring>::Ref     title,
             Ptr<SearchCriteria>::Ref    criteria)
-                                                throw (std::runtime_error);
+                                                throw (XmlRpcException);
         
         /**
          *  Remove the currently selected item from the list.
          *  The createBackupClose storage function is called on the backup task,
          *  and it is removed from the tree model.
+         *
+         *  @exception  XmlRpcException     thrown by the storage client.
          */
         void
-        remove(void)                                                throw ();
+        remove(void)                            throw (XmlRpcException);
 
         /**
          *  Get the URL of the currently selected item.
          *  If the status of the item is 'working', then an update() is
          *  done first.
-         *
-         *  @throw  std::invalid_argument   if the URL is not available.
+         *  If no item is selected, or the URL for the backup is not available
+         *  yet, then a 0 pointer is returned.
          */
         Ptr<Glib::ustring>::Ref
-        getUrl(void)                            throw (std::invalid_argument);
+        getUrl(void)                                                throw ();
         
         /**
          *  Query the storage server about the status of the pending backup.
          *  If there is a backup with status 'working', call createBackupCheck
          *  on it, and change its displayed status, if needed.
+         *
+         *  @return true    if createBackupCheck was called, and it returned
+         *                  'success'; false in all other cases.
+         *  @exception  XmlRpcException     thrown by the storage client.
          */
-        void
-        update(void)                                                throw ();
+        bool
+        update(void)                            throw (XmlRpcException);
 };
 
 /* ================================================= external data structures */

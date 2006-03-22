@@ -136,6 +136,19 @@ TimeConversion :: now(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Return the current time, as a string.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TimeConversion :: nowString(void)
+                                                                    throw ()
+{
+    Ptr<std::string>::Ref   timeString(new std::string(
+                                                to_simple_string(*now()) ));
+    return timeString;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Sleep for the specified duration.
  *----------------------------------------------------------------------------*/
 void

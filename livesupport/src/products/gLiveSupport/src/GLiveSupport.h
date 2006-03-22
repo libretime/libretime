@@ -1140,6 +1140,15 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return schedulerAvailable;
         }
+
+        /**
+         *  Access the StorageClientInterface object.
+         */
+        Ptr<StorageClientInterface>::Ref
+        getStorageClient(void)                                  throw()
+        {
+            return storage;
+        }
 };
 
 /* ================================================= external data structures */

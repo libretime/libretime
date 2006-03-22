@@ -261,6 +261,17 @@ root:table
         reportBugsToText:string     { "Report bugs to: {0}" }
     }
 
+    backupView:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+    
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+    }
+
     metadataTypes:table
     {
         title:string                { "Title" }

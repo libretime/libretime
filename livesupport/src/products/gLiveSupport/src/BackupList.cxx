@@ -33,6 +33,7 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "BackupList.h"
 
 
@@ -48,17 +49,17 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  The localization key for the 'working' status.
  *----------------------------------------------------------------------------*/
-static const std::string   workingStatusKey = "workingStatus";
+static const Glib::ustring      workingStatusKey    = "workingStatus";
 
 /*------------------------------------------------------------------------------
  *  The localization key for the 'success' status.
  *----------------------------------------------------------------------------*/
-static const std::string   successStatusKey = "successStatus";
+static const Glib::ustring      successStatusKey    = "successStatus";
 
 /*------------------------------------------------------------------------------
  *  The localization key for the 'fault' status.
  *----------------------------------------------------------------------------*/
-static const std::string   faultStatusKey = "faultStatus";
+static const Glib::ustring      faultStatusKey      = "faultStatus";
 
 
 /* ===============================================  local function prototypes */
@@ -81,6 +82,22 @@ BackupList :: BackupList (Ptr<GLiveSupport>::Ref    gLiveSupport,
     treeModel = Gtk::ListStore::create(modelColumns);
     treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
     treeView->set_enable_search(false);
+
+    // Add the TreeView's view columns:
+    try {
+        treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
+                               modelColumns.titleColumn, 200);
+        treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
+                               modelColumns.dateColumn, 80);
+        treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
+                               modelColumns.statusDisplayColumn, 50);
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    // add the tree view to this widget
+    Gtk::VBox::add(*treeView);
 }
 
 
@@ -88,10 +105,22 @@ BackupList :: BackupList (Ptr<GLiveSupport>::Ref    gLiveSupport,
  *  Add a new item to the list.
  *----------------------------------------------------------------------------*/
 void
-BackupList :: add(Ptr<Glib::ustring>::Ref     name,
+BackupList :: add(Ptr<Glib::ustring>::Ref     title,
                   Ptr<SearchCriteria>::Ref    criteria)
-                                                throw (std::runtime_error)
+                                                throw (XmlRpcException)
 {
+    Ptr<StorageClientInterface>::Ref 
+                                storage = gLiveSupport->getStorageClient();
+    
+    Ptr<Glib::ustring>::Ref     token = storage->createBackupOpen(criteria);
+    
+    Gtk::TreeRow                row = *treeModel->append();
+    row[modelColumns.titleColumn]   = *title;
+    row[modelColumns.dateColumn]    = *TimeConversion::nowString();
+    row[modelColumns.statusColumn]  = workingStatusKey;
+    row[modelColumns.statusDisplayColumn] 
+                                    = *getResourceUstring(workingStatusKey);
+    row[modelColumns.tokenColumn]   = *token;
 }
 
 
@@ -99,8 +128,19 @@ BackupList :: add(Ptr<Glib::ustring>::Ref     name,
  *  Remove the currently selected item from the list.
  *----------------------------------------------------------------------------*/
 void
-BackupList :: remove(void)                                          throw ()
+BackupList :: remove(void)                      throw (XmlRpcException)
 {
+    Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
+    Gtk::TreeIter                       iter = selection->get_selected();
+    if (!iter) {
+        return;
+    }
+
+    Ptr<StorageClientInterface>::Ref 
+                                storage = gLiveSupport->getStorageClient();
+    storage->createBackupClose(iter->get_value(modelColumns.tokenColumn));
+    
+    treeModel->erase(iter);
 }
 
 
@@ -108,9 +148,24 @@ BackupList :: remove(void)                                          throw ()
  *  Get the URL of the currently selected item.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-BackupList :: getUrl(void)                      throw (std::invalid_argument)
+BackupList :: getUrl(void)                                          throw ()
 {
-    Ptr<Glib::ustring>::Ref     url(new Glib::ustring);
+    Ptr<Glib::ustring>::Ref     url;
+    
+    Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
+    Gtk::TreeIter                       iter = selection->get_selected();
+    if (!iter) {
+        return url;
+    }
+    
+    if (iter->get_value(modelColumns.statusColumn) == workingStatusKey) {
+        update();
+    }
+
+    if (iter->get_value(modelColumns.statusColumn) == successStatusKey) {
+        url.reset(new Glib::ustring(iter->get_value(modelColumns.urlColumn)));
+    }
+    
     return url;
 }
 
@@ -118,8 +173,47 @@ BackupList :: getUrl(void)                      throw (std::invalid_argument)
 /*------------------------------------------------------------------------------
  *  Query the storage server about the status of the pending backup.
  *----------------------------------------------------------------------------*/
-void
-BackupList :: update(void)                                          throw ()
+bool
+BackupList :: update(void)                      throw (XmlRpcException)
 {
+    Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
+    Gtk::TreeIter                       iter = selection->get_selected();
+    if (!iter) {
+        return false;
+    }
+    
+    if (iter->get_value(modelColumns.statusColumn) != workingStatusKey) {
+        return false;
+    }
+    
+    Ptr<StorageClientInterface>::Ref 
+                                storage = gLiveSupport->getStorageClient();
+    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    Ptr<Glib::ustring>::Ref     status = storage->createBackupCheck(
+                                    iter->get_value(modelColumns.tokenColumn),
+                                    urlOrErrorMsg);
+    
+    if (*status == workingStatusKey) {
+        return false;
+    
+    } else if (*status == successStatusKey) {
+        iter->set_value(modelColumns.statusColumn,
+                        successStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *getResourceUstring(successStatusKey));
+        iter->set_value(modelColumns.urlColumn,
+                        *urlOrErrorMsg);
+        return true;
+    
+    } else if (*status == faultStatusKey) {
+        iter->set_value(modelColumns.statusColumn,
+                        faultStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *formatMessage(faultStatusKey, *urlOrErrorMsg));
+        return false;
+    }
+    
+    std::cerr << "Impossible condition in BackupList::update()." << std::endl;
+    return false;
 }
 

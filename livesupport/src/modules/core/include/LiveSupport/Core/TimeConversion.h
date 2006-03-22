@@ -174,6 +174,14 @@ class TimeConversion
         now(void)                                               throw ();
 
         /**
+         *  Return the current time, with microsecond precision, as a string.
+         *
+         *  @return the current time, with microsecond precision.
+         */
+        static Ptr<std::string>::Ref
+        nowString(void)                                         throw ();
+
+        /**
          *  Sleep for the specified time duration, with microsecond precision.
          *
          *  @param duration sleep for this duration.
