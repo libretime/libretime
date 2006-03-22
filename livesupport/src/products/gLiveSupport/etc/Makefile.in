@@ -261,7 +261,9 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/KeyboardShortcut.o \
                      ${TMP_DIR}/KeyboardShortcutContainer.o \
                      ${TMP_DIR}/KeyboardShortcutList.o \
-                     ${TMP_DIR}/OptionsWindow.o
+                     ${TMP_DIR}/OptionsWindow.o \
+                     ${TMP_DIR}/BackupList.o \
+                     ${TMP_DIR}/BackupView.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \
