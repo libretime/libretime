@@ -982,22 +982,24 @@ class BasicStor extends Alib{
         $res = `cd $tmpd; tar xf $fname`;
         // clips:
         $d = dir($tmpdc);   $entries=array(); $gunids=array();
-        while (false !== ($entry = $d->read())) {
-            if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
-                list(,$gunid, $ext) = $va;
-                switch($ext){
-                    case"xml":
-                        $entries[$gunid]['metadata'] = $entry;
-                        break;
-                    default:
-                        $entries[$gunid]['rawMedia'] = $entry;
-                        $entries[$gunid]['rawMediaExt'] = $ext;
-                        $gunids[$entry] = $gunid;
-                        break;
+        if($d !== false){
+            while (false !== ($entry = $d->read())) {
+                if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
+                    list(,$gunid, $ext) = $va;
+                    switch($ext){
+                        case"xml":
+                            $entries[$gunid]['metadata'] = $entry;
+                            break;
+                        default:
+                            $entries[$gunid]['rawMedia'] = $entry;
+                            $entries[$gunid]['rawMediaExt'] = $ext;
+                            $gunids[$entry] = $gunid;
+                            break;
+                    }
                 }
             }
+            $d->close();
         }
-        $d->close();
         $res = TRUE;
         foreach($entries as $gunid=>$it){
             $rawMedia = "$tmpdc/{$it['rawMedia']}";
@@ -1014,19 +1016,21 @@ class BasicStor extends Alib{
         // playlists:
         require_once"Playlist.php";
         $d = dir($tmpdp);
-        while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
-            if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
-                list(,$gunid, $ext) = $va;
-                $res = $this->bsImportPlaylistRaw($parid, $gunid,
-                    $tmpdp, $entry, $ext, $gunids, $subjid);
-                unlink("$tmpdp/$entry");
-                if(PEAR::isError($res)) break;
-            }       
+        if($d !== false){
+            while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
+                if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
+                    list(,$gunid, $ext) = $va;
+                    $res = $this->bsImportPlaylistRaw($parid, $gunid,
+                        $tmpdp, $entry, $ext, $gunids, $subjid);
+                    unlink("$tmpdp/$entry");
+                    if(PEAR::isError($res)) break;
+                }       
+            }
+            $d->close();
         }
-        $d->close();
         //@rmdir($tmpdc); @rmdir($tmpdp); @rmdir($tmpd);
-        system("rm -rf $tmpdc"); system("rm -rf $tmpdp"); system("rm -rf $tmpd");
-        unlink($tmpn);
+        @system("rm -rf $tmpdc"); @system("rm -rf $tmpdp"); @system("rm -rf $tmpd");
+        @unlink($tmpn);
         return $res;
     }
 
