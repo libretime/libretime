@@ -82,10 +82,10 @@ class BasicStor extends Alib{
         $this->filesTable = $config['tblNamePrefix'].'files';
         $this->mdataTable = $config['tblNamePrefix'].'mdata';
         $this->accessTable= $config['tblNamePrefix'].'access';
-        $this->storageDir = $config['storageDir'];
-        $this->bufferDir  = $config['bufferDir'];
-        $this->transDir  = $config['transDir'];
-        $this->accessDir  = $config['accessDir'];
+        $this->storageDir = realpath($config['storageDir']);
+        $this->bufferDir  = realpath($config['bufferDir']);
+        $this->transDir  = realpath($config['transDir']);
+        $this->accessDir  = realpath($config['accessDir']);
         $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
         $this->rootId = $this->getRootNode();
         $this->storId = $this->wd =
@@ -932,12 +932,18 @@ class BasicStor extends Alib{
     {
         $id = $r = $this->_idFromGunid($plid);
         if(!is_null($r)) return $r;
+        $path = realpath("$aPath/$rPath");
+        if(FALSE === $path){
+            return PEAR::raiseError(
+                "BasicStor::bsImportPlaylistRaw: file doesn't exist ($aPath/$rPath)"
+            );
+        }
         switch($ext){
             case"xml":
             case"lspl":
                 $fname = $plid;
                 $res = $this->bsPutFile($parid, $fname,
-                    NULL, "$aPath/$rPath", $plid, 'playlist'
+                    NULL, $path, $plid, 'playlist'
                 );
                 break;
             case"smil":
@@ -981,7 +987,7 @@ class BasicStor extends Alib{
         mkdir($tmpd);
         $res = `cd $tmpd; tar xf $fname`;
         // clips:
-        $d = dir($tmpdc);   $entries=array(); $gunids=array();
+        $d = @dir($tmpdc);   $entries=array(); $gunids=array();
         if($d !== false){
             while (false !== ($entry = $d->read())) {
                 if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){
@@ -1015,7 +1021,7 @@ class BasicStor extends Alib{
         }
         // playlists:
         require_once"Playlist.php";
-        $d = dir($tmpdp);
+        $d = @dir($tmpdp);
         if($d !== false){
             while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
                 if(preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)){

@@ -65,8 +65,14 @@ class SmilPlaylist {
      */
     function &import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL){
         $parr = compact('parid', 'subjid', 'aPath', 'plid', 'rPath');
+        $path = realpath("$aPath/$rPath");
+        if(FALSE === $path){
+            return PEAR::raiseError(
+                "SmilPlaylist::import: file doesn't exist ($aPath/$rPath)"
+            );
+        }
         $lspl = $r = SmilPlaylist::convert2lspl(
-            $gb, "$aPath/$rPath", $gunids, $parr);
+            $gb, $path, $gunids, $parr);
         if(PEAR::isError($r)) return $r;
         require_once "Playlist.php";
         $pl =& Playlist::create($gb, $plid, "imported_SMIL", $parid);
@@ -200,7 +206,7 @@ class SmilPlaylistAudioElement{
                     $type = 'playlist';
                     $acId = $r = $gb->bsImportPlaylistRaw($parid, $gunid,
                         $aPath, $uri, $ext, $gunids, $subjid);
-                    if(PEAR::isError($r)) break;
+                    if(PEAR::isError($r)){ return $r; }
                    //break;
                 default:
                     $ac = $r = StoredFile::recallByGunid($gb, $gunid);

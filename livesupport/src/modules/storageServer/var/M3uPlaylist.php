@@ -89,7 +89,13 @@ class M3uPlaylist {
      *  @return instance of Playlist object
      */
     function import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL){
-        $arr = $r = M3uPlaylist::parse("$aPath/$rPath");
+        $path = realpath("$aPath/$rPath");
+        if(FALSE === $path){
+            return PEAR::raiseError(
+                "M3uPlaylist::import: file doesn't exist ($aPath/$rPath)"
+            );
+        }
+        $arr = $r = M3uPlaylist::parse($path);
         if(PEAR::isError($r)) return $r;
         require_once "Playlist.php";
         $pl = $r =& Playlist::create($gb, $plid, "imported_M3U", $parid);
