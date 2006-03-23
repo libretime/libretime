@@ -656,6 +656,57 @@ static const std::string    releaseAudioClipTokenParamName = "token";
 static const std::string    releaseAudioClipResultParamName = "status";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: createBackupXxxx */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'open' create backup  method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupOpenMethodName 
+                            = "locstor.createBackupOpen";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'check' create backup  method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupCheckMethodName 
+                            = "locstor.createBackupCheck";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'close' create backup  method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupCloseMethodName 
+                            = "locstor.createBackupClose";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the search criteria parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupCriteriaParamName = "criteria";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input or output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupTokenParamName = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the status parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupStatusParamName = "status";
+
+/*------------------------------------------------------------------------------
+ *  The name of the URL parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupUrlParamName = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the faultString parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    createBackupFaultStringParamName = "faultString";
+
+
 /* ===============================================  local function prototypes */
 
 
@@ -734,6 +785,41 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
 
 
 /*------------------------------------------------------------------------------
+ *  Execute an XML-RPC function call.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: execute(const std::string &     methodName,
+                            const XmlRpcValue &     parameters,
+                            XmlRpcValue &           result) const
+                                                throw (XmlRpcException)
+{
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(methodName.c_str(),
+                              parameters,
+                              result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += methodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    xmlRpcClient.close();
+    
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << methodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Return the version string of the test storage.
  *----------------------------------------------------------------------------*/
 Ptr<const Glib::ustring>::Ref
@@ -743,32 +829,12 @@ WebStorageClient :: getVersion(void)
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     // add a dummy parameter, as this is the only way to enforce parameters
     // to be of XML-RPC type struct
     parameters["dummy"] = 0;
-    result.clear();
-    if (!xmlRpcClient.execute(getVersionMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getVersionMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getVersionMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    
+    execute(getVersionMethodName, parameters, result);
     
     if (!result.hasMember(getVersionResultParamName)
             || result[getVersionResultParamName].getType() 
@@ -783,9 +849,6 @@ WebStorageClient :: getVersion(void)
 
     Ptr<Glib::ustring>::Ref     version(new Glib::ustring(
                                             result[getVersionResultParamName]));
-
-    xmlRpcClient.close();
-
     return version;
 }
 
@@ -800,32 +863,11 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[createPlaylistSessionIdParamName] 
             = sessionId->getId();
 
-    result.clear();
-    if (!xmlRpcClient.execute(createPlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += createPlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << createPlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(createPlaylistMethodName, parameters, result);
     
     if (! result.hasMember(createPlaylistResultParamName)
             || result[createPlaylistResultParamName].getType() 
@@ -870,35 +912,14 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref          sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[existsPlaylistSessionIdParamName] 
             = sessionId->getId();
     parameters[existsPlaylistPlaylistIdParamName] 
             = std::string(*id);
     
-    result.clear();
-    if (!xmlRpcClient.execute(existsPlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += existsPlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-    
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << existsPlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-    
+    execute(existsPlaylistMethodName, parameters, result);
+        
     if (! result.hasMember(existsPlaylistResultParamName) 
        || result[existsPlaylistResultParamName].getType() 
                                                 != XmlRpcValue::TypeBoolean) {
@@ -933,32 +954,12 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref          sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[getPlaylistSessionIdParamName]  = sessionId->getId();
     parameters[getPlaylistPlaylistIdParamName] = std::string(*id);
     parameters[getPlaylistRecursiveParamName]  = false;
 
-    result.clear();
-    if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getPlaylistOpenMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getPlaylistOpenMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(getPlaylistOpenMethodName, parameters, result);
     
     if (! result.hasMember(getPlaylistTokenParamName)
             || result[getPlaylistTokenParamName].getType() 
@@ -1065,34 +1066,13 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref          sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[editPlaylistSessionIdParamName] 
             = sessionId->getId();
     parameters[editPlaylistPlaylistIdParamName] 
             = std::string(*id);
     
-    result.clear();
-    if (!xmlRpcClient.execute(editPlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += editPlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << editPlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(editPlaylistMethodName, parameters, result);
     
     if (! result.hasMember(editPlaylistUrlParamName)
             || result[editPlaylistUrlParamName].getType() 
@@ -1138,9 +1118,6 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[savePlaylistSessionIdParamName] 
             = sessionId->getId();
@@ -1149,25 +1126,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     parameters[savePlaylistNewPlaylistParamName] 
             = std::string(*playlist->getXmlDocumentString());
 
-    result.clear();
-    if (!xmlRpcClient.execute(savePlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += savePlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << savePlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(savePlaylistMethodName, parameters, result);
     
     if (! result.hasMember(savePlaylistResultParamName)
             || result[savePlaylistResultParamName].getType() 
@@ -1201,34 +1160,13 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[revertPlaylistSessionIdParamName]        // dummy parameter
             = "";
     parameters[revertPlaylistTokenParamName] 
             = *editToken;
 
-    result.clear();
-    if (!xmlRpcClient.execute(revertPlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += revertPlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << revertPlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(revertPlaylistMethodName, parameters, result);
     
     if (! result.hasMember(revertPlaylistResultParamName)
             || result[revertPlaylistResultParamName].getType() 
@@ -1254,33 +1192,13 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref         sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[getPlaylistSessionIdParamName]  = sessionId->getId();
     parameters[getPlaylistPlaylistIdParamName] = std::string(*id);
     parameters[getPlaylistRecursiveParamName]  = true;
 
-    result.clear();
-    if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getPlaylistOpenMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getPlaylistOpenMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-
+    execute(getPlaylistOpenMethodName, parameters, result);
+    
     if (! result.hasMember(getPlaylistTokenParamName)
             || result[getPlaylistTokenParamName].getType() 
                                                 != XmlRpcValue::TypeString) {
@@ -1527,9 +1445,6 @@ WebStorageClient :: releasePlaylistFromServer(
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[getPlaylistTokenParamName]     = std::string(
                                                         *playlist->getToken());
@@ -1537,26 +1452,8 @@ WebStorageClient :: releasePlaylistFromServer(
     // it is error-prone; should always use the same value as for accessPlaylist
     parameters[getPlaylistRecursiveParamName] = true;
     
-    result.clear();
-    if (!xmlRpcClient.execute(getPlaylistCloseMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getPlaylistCloseMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getPlaylistCloseMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-
+    execute(getPlaylistCloseMethodName, parameters, result);
+    
     if (! result.hasMember(getPlaylistPlaylistIdParamName)
             || result[getPlaylistPlaylistIdParamName].getType() 
                                         != XmlRpcValue::TypeString
@@ -1638,34 +1535,13 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref         sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[existsAudioClipSessionIdParamName] 
             = sessionId->getId();
     parameters[existsAudioClipAudioClipIdParamName] 
             = std::string(*id);
     
-    result.clear();
-    if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += existsAudioClipMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-    
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << existsAudioClipMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(existsAudioClipMethodName, parameters, result);
     
     if (! result.hasMember(existsAudioClipResultParamName) 
        || result[existsAudioClipResultParamName].getType() 
@@ -1693,33 +1569,13 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[getAudioClipSessionIdParamName] 
             = sessionId->getId();
     parameters[getAudioClipAudioClipIdParamName] 
             = std::string(*id);
     
-    result.clear();
-    if (!xmlRpcClient.execute(getAudioClipOpenMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getAudioClipOpenMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getAudioClipOpenMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(getAudioClipOpenMethodName, parameters, result);
     
     if (! result.hasMember(getAudioClipUrlParamName)
             || result[getAudioClipUrlParamName].getType() 
@@ -1763,26 +1619,8 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     parameters[getAudioClipSessionIdParamName] = sessionId->getId();
     parameters[getAudioClipTokenParamName]     = token;
     
-    result.clear();
-    if (!xmlRpcClient.execute(getAudioClipCloseMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getAudioClipCloseMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getAudioClipCloseMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-
+    execute(getAudioClipCloseMethodName, parameters, result);
+    
     if (! result.hasMember(getAudioClipAudioClipIdParamName)
             || result[getAudioClipAudioClipIdParamName].getType() 
                                                     != XmlRpcValue::TypeString
@@ -1827,9 +1665,6 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[storeAudioClipSessionIdParamName] 
             = sessionId->getId();
@@ -1844,24 +1679,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters[storeAudioClipChecksumParamName] 
             = md5string;
 
-    result.clear();
-    if (!xmlRpcClient.execute(storeAudioClipOpenMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += storeAudioClipOpenMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << storeAudioClipOpenMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(storeAudioClipOpenMethodName, parameters, result);
     
     if (! result.hasMember(storeAudioClipUrlParamName)
             || result[storeAudioClipUrlParamName].getType() 
@@ -1921,25 +1739,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters[storeAudioClipTokenParamName] 
             = token;
     
-    result.clear();
-    if (!xmlRpcClient.execute(storeAudioClipCloseMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += storeAudioClipCloseMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << storeAudioClipCloseMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(storeAudioClipCloseMethodName, parameters, result);
     
     if (! result.hasMember(storeAudioClipAudioClipIdParamName)
             || result[storeAudioClipAudioClipIdParamName].getType() 
@@ -1977,34 +1777,13 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[acquireAudioClipSessionIdParamName] 
             = sessionId->getId();
     parameters[acquireAudioClipAudioClipIdParamName] 
             = std::string(*id);
     
-    result.clear();
-    if (!xmlRpcClient.execute(acquireAudioClipMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += acquireAudioClipMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << acquireAudioClipMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(acquireAudioClipMethodName, parameters, result);
     
     if (! result.hasMember(acquireAudioClipUrlParamName)
             || result[acquireAudioClipUrlParamName].getType() 
@@ -2042,32 +1821,11 @@ WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[releaseAudioClipTokenParamName] 
             = *audioClip->getToken();
     
-    result.clear();
-    if (!xmlRpcClient.execute(releaseAudioClipMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += releaseAudioClipMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << releaseAudioClipMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(releaseAudioClipMethodName, parameters, result);
     
     if (! result.hasMember(releaseAudioClipResultParamName)
             || result[releaseAudioClipResultParamName].getType() 
@@ -2104,31 +1862,10 @@ WebStorageClient :: reset(void)
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters["dummy_param"] = "dummy_value"; 
     
-    result.clear();
-    if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += resetStorageMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << resetStorageMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(resetStorageMethodName, parameters, result);
     
     if (! result.hasMember(resetStorageAudioClipResultParamName)
             || result[resetStorageAudioClipResultParamName].getType() 
@@ -2193,34 +1930,13 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[searchSessionIdParamName] 
             = sessionId->getId();
     parameters[searchCriteriaParamName] 
             = *searchCriteria;
 
-    result.clear();
-    if (!xmlRpcClient.execute(searchMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += searchMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << searchMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(searchMethodName, parameters, result);
     
     if (! result.hasMember(searchAudioClipResultParamName)
             || result[searchAudioClipResultParamName].getType() 
@@ -2301,9 +2017,6 @@ WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
     parameters.clear();
     parameters[browseSessionIdParamName] 
             = sessionId->getId();
@@ -2312,25 +2025,7 @@ WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
     parameters[browseCriteriaParamName] 
             = *searchCriteria;
 
-    result.clear();
-    if (!xmlRpcClient.execute(browseMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += browseMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << browseMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
+    execute(browseMethodName, parameters, result);
     
     if (! result.hasMember(browseResultParamName)
             || result[browseResultParamName].getType() 
@@ -2425,10 +2120,35 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
  *  Initiate the creation of a storage backup.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-WebStorageClient :: createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
+WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
+                                     Ptr<SearchCriteria>::Ref   criteria) const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[createBackupSessionIdParamName] 
+            = sessionId->getId();
+    parameters[createBackupCriteriaParamName] 
+            = *criteria;
+
+    execute(createBackupOpenMethodName, parameters, result);
+    
+    if (! result.hasMember(createBackupTokenParamName)
+            || result[createBackupTokenParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << createBackupOpenMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[createBackupTokenParamName] ));
+    
     return token;
 }
 
@@ -2437,11 +2157,67 @@ WebStorageClient :: createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-WebStorageClient :: createBackupCheck(const Glib::ustring &     token,
-                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+WebStorageClient :: createBackupCheck(
+                            const Glib::ustring &       token,
+                            Ptr<Glib::ustring>::Ref     urlOrErrorMsg) const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[createBackupTokenParamName] 
+            = std::string(token);
+
+    execute(createBackupCheckMethodName, parameters, result);
+    
+    Ptr<Glib::ustring>::Ref     status;
+    
+    class   MyLocalException
+    {
+        public:
+            MyLocalException() { }
+    };
+    
+    try {
+        if (! result.hasMember(createBackupStatusParamName)
+                || result[createBackupStatusParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+            throw MyLocalException();
+        }
+        
+        status.reset(new Glib::ustring(result[createBackupStatusParamName]));
+        
+        if (*status == "success") {
+            if (! result.hasMember(createBackupUrlParamName)
+                    || result[createBackupUrlParamName].getType()
+                                                != XmlRpcValue::TypeString) {
+                throw MyLocalException();
+            }
+            
+            *urlOrErrorMsg = std::string(result[createBackupUrlParamName]);
+        }
+        
+        if (*status == "fault") {
+            if (! result.hasMember(createBackupFaultStringParamName)
+                    || result[createBackupFaultStringParamName].getType()
+                                                != XmlRpcValue::TypeString) {
+                throw MyLocalException();
+            }
+            
+            *urlOrErrorMsg = std::string(
+                                    result[createBackupFaultStringParamName]);
+        }
+
+    } catch (MyLocalException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << createBackupCheckMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    
     return status;
 }
 
@@ -2450,8 +2226,18 @@ WebStorageClient :: createBackupCheck(const Glib::ustring &     token,
  *  Close the storage backup process.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: createBackupClose(const Glib::ustring &     token)
+WebStorageClient :: createBackupClose(const Glib::ustring &     token) const
                                                 throw (XmlRpcException)
 {
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[createBackupTokenParamName] 
+            = std::string(token);
+
+    execute(createBackupCloseMethodName, parameters, result);
+
+    // TODO: check the returned status parameter? for what?
 }
 

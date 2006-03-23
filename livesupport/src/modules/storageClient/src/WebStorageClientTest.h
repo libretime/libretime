@@ -79,6 +79,7 @@ class WebStorageClientTest : public BaseTestMethod
     CPPUNIT_TEST(searchTest);
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(browseTest);
+    CPPUNIT_TEST(createBackupTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -165,6 +166,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         browseTest(void)                        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the createBackupXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

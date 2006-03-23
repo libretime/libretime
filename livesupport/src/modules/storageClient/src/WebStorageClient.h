@@ -157,6 +157,21 @@ class WebStorageClient :
         Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
 
         /**
+         *  Execute an XML-RPC function call.
+         *
+         *  @param  methodName  the name of the method to execute.
+         *  @param  parameters  parameters to be passed on to the method.
+         *  @param  result      return parameter.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        void
+        execute(const std::string &     methodName,
+                const XmlRpcValue &     parameters,
+                XmlRpcValue &           result) const
+                                                throw (XmlRpcException);
+
+        /**
          *  Auxilliary method used by editPlaylist() and createPlaylist().
          *  Opens the playlist for editing, and returns its URL.
          *
@@ -640,13 +655,15 @@ class WebStorageClient :
         /**
          *  Initiate the creation of a storage backup.
          *
+         *  @param sessionId    the session ID from the authentication client.
          *  @param  criteria    specifies which items should go in the backup.
          *  @return a token which identifies this backup task.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
+        createBackupOpen(Ptr<SessionId>::Ref        sessionId,
+                         Ptr<SearchCriteria>::Ref   criteria) const
                                                 throw (XmlRpcException);
         
         /**
@@ -664,7 +681,7 @@ class WebStorageClient :
          */
         virtual Ptr<Glib::ustring>::Ref
         createBackupCheck(const Glib::ustring &     token,
-                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg) const
                                                 throw (XmlRpcException);
         
         /**
@@ -675,7 +692,7 @@ class WebStorageClient :
          *                             call.
          */
         virtual void
-        createBackupClose(const Glib::ustring &     token)
+        createBackupClose(const Glib::ustring &     token) const
                                                 throw (XmlRpcException);
 };
 

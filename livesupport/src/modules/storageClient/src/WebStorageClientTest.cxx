@@ -814,3 +814,49 @@ WebStorageClientTest :: getAllTest(void)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Testing the createBackupXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: createBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref         sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q");
+    );
+    CPPUNIT_ASSERT(sessionId);
+    
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = wsc->createBackupOpen(sessionId, criteria);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    Ptr<Glib::ustring>::Ref     status;
+    int     iterations = 100;
+    do {
+        CPPUNIT_ASSERT_NO_THROW(
+            status = wsc->createBackupCheck(*token, urlOrErrorMsg);
+        );
+        CPPUNIT_ASSERT(status);
+        CPPUNIT_ASSERT(*status == "working"
+                         || *status == "success"
+                         || *status == "fault");
+    } while (--iterations && *status == "working");
+    CPPUNIT_ASSERT_EQUAL(std::string(*status), std::string("success"));
+    // TODO: test accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->createBackupClose(*token);
+    );
+    // TODO: test non-accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->logout(sessionId);
+    );
+}
+

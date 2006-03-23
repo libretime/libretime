@@ -468,3 +468,31 @@ TestStorageClientTest :: getAllTest(void)
     CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Testing the createBackupXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: createBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = tsc->createBackupOpen(dummySessionId, criteria);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    Ptr<Glib::ustring>::Ref     status;
+    CPPUNIT_ASSERT_NO_THROW(
+        status = tsc->createBackupCheck(*token, urlOrErrorMsg);
+    );
+    CPPUNIT_ASSERT(status);
+    CPPUNIT_ASSERT_EQUAL(std::string(*status), std::string("working"));
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        tsc->createBackupClose(*token);
+    );
+}
+

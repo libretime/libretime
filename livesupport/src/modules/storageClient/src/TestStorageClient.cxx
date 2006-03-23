@@ -994,7 +994,8 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
  *  Initiate the creation of a storage backup.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-TestStorageClient :: createBackupOpen(Ptr<SearchCriteria>::Ref  criteria)
+TestStorageClient :: createBackupOpen(Ptr<SessionId>::Ref       sessionId,
+                                      Ptr<SearchCriteria>::Ref  criteria) const
                                                 throw (XmlRpcException)
 {
     Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
@@ -1006,8 +1007,9 @@ TestStorageClient :: createBackupOpen(Ptr<SearchCriteria>::Ref  criteria)
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-TestStorageClient :: createBackupCheck(const Glib::ustring &    token,
-                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+TestStorageClient :: createBackupCheck(
+                            const Glib::ustring &       token,
+                            Ptr<Glib::ustring>::Ref     urlOrErrorMsg) const
                                                 throw (XmlRpcException)
 {
     Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
@@ -1019,7 +1021,7 @@ TestStorageClient :: createBackupCheck(const Glib::ustring &    token,
  *  Close the storage backup process.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: createBackupClose(const Glib::ustring &    token)
+TestStorageClient :: createBackupClose(const Glib::ustring &    token) const
                                                 throw (XmlRpcException)
 {
 }

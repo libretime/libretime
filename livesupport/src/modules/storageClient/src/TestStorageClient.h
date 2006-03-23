@@ -597,13 +597,15 @@ class TestStorageClient :
          *  Initiate the creation of a storage backup.
          *  This is a dummy method; it just returns a fake token.
          *
+         *  @param sessionId    the session ID from the authentication client.
          *  @param  criteria    specifies which items should go in the backup.
          *  @return a token which identifies this backup task.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        createBackupOpen(Ptr<SearchCriteria>::Ref   criteria)
+        createBackupOpen(Ptr<SessionId>::Ref        sessionId,
+                         Ptr<SearchCriteria>::Ref   criteria) const
                                                 throw (XmlRpcException);
         
         /**
@@ -622,7 +624,7 @@ class TestStorageClient :
          */
         virtual Ptr<Glib::ustring>::Ref
         createBackupCheck(const Glib::ustring &     token,
-                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg)
+                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg) const
                                                 throw (XmlRpcException);
         
         /**
@@ -634,7 +636,7 @@ class TestStorageClient :
          *                             call.
          */
         virtual void
-        createBackupClose(const Glib::ustring &     token)
+        createBackupClose(const Glib::ustring &     token) const
                                                 throw (XmlRpcException);
 };
 
