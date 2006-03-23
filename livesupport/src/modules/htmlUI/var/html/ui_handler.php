@@ -256,7 +256,16 @@ switch($_REQUEST['act']){
     break;
     
     case "PL.export":
-   	$uiHandler->redirUrl = UI_BROWSER."?popup[]=PL.redirect2DownloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}";
+    $uiHandler->redirUrl = UI_BROWSER."?popup[]=PL.redirect2DownloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}";
+    break;
+
+    case "PL.import":
+    //echo '_FILES:'; print_r($_FILES);
+    $importedPlaylist = $uiHandler->gb->importPlaylistOpen($uiHandler->sessid);
+    //echo 'importPlaylistOpen:'; print_r($importedPlaylist);
+    copy($_FILES['playlist']['tmp_name'],$importedPlaylist['fname']);
+    $uiHandler->gb->importPlaylistClose($importedPlaylist['token']);
+    $uiHandler->redirUrl = UI_BROWSER."?act=PL.import";
     break;
 
     case "SCHEDULER.set":

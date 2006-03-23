@@ -41,6 +41,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                         <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.create')">##New empty Playlist##</a></li>
                     {/if}
                 {/if}
+                <li><a href="{$UI_BROWSER}?act=PL.import">##Import Playlist##</a></li>
             </ul>
         </li>
         <li class="nav-main"><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>

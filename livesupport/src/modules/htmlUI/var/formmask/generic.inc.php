@@ -812,5 +812,35 @@ $ui_fmask = array(
         array(
             'group'     => array('cancel', 'submitter')
         )
+    ),
+    'PL.import'    => array(
+        array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+            'label'     => 'PL.import'
+        ),
+        array(
+            'element'   => 'playlist',
+            'type'      => 'file',
+            'label'     => 'Playlist file',
+            'required'  => TRUE,
+            'requiredmsg'=> 'Please select playlist file'
+        ),
+        array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'attributes'=> array('onClick' => "location.href='".UI_BROWSER."'"),
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'submitter',
+            'type'      => 'submit',
+            'label'     => 'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'submitter')
+        )
     )
 );

@@ -801,4 +801,8 @@
 		<key>Export Playlist</key>
 		<value>Export Playlist</value>
 	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value>Import Playlist</value>
+	</item>
 </translations>

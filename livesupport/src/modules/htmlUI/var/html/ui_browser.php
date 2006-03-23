@@ -107,7 +107,7 @@ if (is_array($_REQUEST['popup'])){
             break;
             
             case "PL.export":
-            $Smarty->assign('dynform', $uiBrowser->PLAYLIST->exportForm($_REQUEST['id'], $ui_fmask['PL.export']));
+            $Smarty->assign('dynform',$uiBrowser->PLAYLIST->exportForm($_REQUEST['id'],$ui_fmask['PL.export']));
             $Smarty->display('popup/PLAYLIST.export.tpl');
             break;
 
@@ -263,6 +263,12 @@ if ($uiBrowser->userid) {
         case "PL.editMetaData":
         $Smarty->assign('PL_editMetaData', TRUE);
         $Smarty->assign('_PL', array('curr_langid' => $_REQUEST['curr_langid']));
+        $Smarty->assign('PL_simpleManagement', TRUE);
+        break;
+
+        case "PL.import":
+        $Smarty->assign('dynform', $uiBrowser->PLAYLIST->importForm($_REQUEST['id'], $ui_fmask['PL.import']));
+        $Smarty->assign('PL_import', TRUE);
         $Smarty->assign('PL_simpleManagement', TRUE);
         break;
 

@@ -615,5 +615,15 @@ class uiPlaylist
         $form->accept($renderer);
         return $renderer->toArray();
     }
+
+    function importForm($id, $mask)
+    {
+        $form = new HTML_QuickForm('PL_importForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        //print_r($mask);
+        $this->Base->_parseArr2Form($form, $mask);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
+    }
 }
 ?>
