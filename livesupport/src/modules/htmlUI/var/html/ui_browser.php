@@ -292,11 +292,6 @@ if ($uiBrowser->userid) {
         case "BACKUP.schedule": 
         $Smarty->assign('act', $_REQUEST['act']);
         break;
-        
-        case 'BACKUP.setTarget':
-        $Smarty->assign('act', $_REQUEST['act']);
-        $uiBrowser->EXCHANGE->setTarget($_REQUEST['target']);    
-        break;
     }
 
     if ($_REQUEST['act'] != 'SCHEDULER') {

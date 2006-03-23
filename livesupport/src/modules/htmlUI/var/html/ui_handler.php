@@ -302,6 +302,16 @@ switch($_REQUEST['act']){
     $uiHandler->EXCHANGE->createBackupOpen();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
+    
+    case 'BACKUP.copy2target':
+    $uiHandler->EXCHANGE->copy2target($_REQUEST['target']);
+    $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';    
+    break;
+    
+    case "BACKUP.createBackupClose":
+    $uiHandler->EXCHANGE->createBackupClose();
+    $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
+    break;
 
     case "SESSION.CLEAR":
     $_SESSION = array();

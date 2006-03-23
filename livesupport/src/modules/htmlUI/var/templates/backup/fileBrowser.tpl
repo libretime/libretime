@@ -17,7 +17,7 @@ if (window.scrollbars.visible == false) {
                     <tr><td colspan=""><h1>##File browser##</h1></td></tr>
                     <tr>
                         <td colspan="6" style="white-space: nowrap;">
-                            <form name="filebrowser" onSubmit="opener.location.href='{$UI_BROWSER}?act=BACKUP.setTarget&target='+filebrowser.target.value; window.close()">
+                            <form name="filebrowser" onSubmit="opener.location.href='{$UI_HANDLER}?act=BACKUP.copy2target&target='+filebrowser.target.value; window.close()">
                                 ##Filename:## <br>
                                 <input type='text' name='target' size='50' value='{$EXCHANGE->getPath()}'>
                                 <input type='submit' class='button' value='##OK##'>
