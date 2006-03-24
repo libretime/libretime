@@ -1801,6 +1801,8 @@ class XR_LocStor extends LocStor{
      *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *      <li> metafile : string - archive metafile in XML format</li>
+     *      <li> faultString : string - error message
+     *                  (use only if status==fault) </li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -1817,22 +1819,22 @@ class XR_LocStor extends LocStor{
      *  @return XMLRPC struct
      *  @see LocStor::createBackupCheck
      */
+     //      <li> 854  -  backup process fault</li>
     function xr_createBackupCheck($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         $res = $this->createBackupCheck($r['token']);
+
         if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 805,
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_BGERR ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
                 "xr_createBackupCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array(
-            'url'=>$res['url'],
-            'status'=>$res['status'],
-            'metafile'=>$res['metafile'],
-        )));
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /**

@@ -676,7 +676,7 @@ class GreenBox extends BasicStor{
      *          with all related files
      *  @return hasharray with  fields:
      *      fname string: readable fname,
-     *      token string: access token
+     *      token srring: access token
      */
     function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
@@ -937,7 +937,7 @@ class GreenBox extends BasicStor{
      *
      *  @param sessid  :  string  -  session id
      *  @param criteria : struct - see search criteria
-     *  @return hasharray with field: token string: backup token
+     *  @return token : string - backup token
      */
     function createBackupOpen($sessid, $criteria='')
     {
@@ -977,6 +977,7 @@ class GreenBox extends BasicStor{
      *      status : string - susccess | working | fault
      *      tmpfile : string - filepath to result temporary file
      *      metafile : string - archive metafile in XML format
+     *      faultString : string - error message (use only if status==fault)
      */
     function createBackupCheck($token)
     {
@@ -986,10 +987,12 @@ class GreenBox extends BasicStor{
                 "LocStor::createBackupCheck: invalid token ($token)"
             );
         }
+        $status = 'success';
         return array(
-            'status'=> 'success',
+            'status'=> $status,
             'tmpfile'   => $fakeFile,
             'metafile' => '',
+            'faultString' => ($status==fault ? 'backup process fault' : ''),
         );
     }
 

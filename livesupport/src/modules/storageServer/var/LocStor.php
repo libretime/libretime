@@ -974,6 +974,7 @@ class LocStor extends BasicStor{
      *      status : string - success | working | fault
      *      url : string - readable url
      *      metafile : string - archive metafile in XML format
+     *      faultString : string - error message (use only if status==fault)
      */
     function createBackupCheck($token)
     {
@@ -984,10 +985,12 @@ class LocStor extends BasicStor{
             );
         }
         $fakeFUrl = $this->getUrlPart()."access/$token.tar";
+        $status = 'success';
         return array(
-            'status'=> 'success',
+            'status'=> $status,
             'url'   => $fakeFUrl,
             'metafile' => '',
+            'faultString' => ($status==fault ? 'backup process fault' : ''),
         );
     }
 
