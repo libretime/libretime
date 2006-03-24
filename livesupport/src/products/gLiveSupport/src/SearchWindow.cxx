@@ -177,10 +177,8 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    // the three main components of the window
-    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(
-                                    gLiveSupport->getMetadataTypeContainer(),
-                                    getBundle() ));
+    // the two main components of the window
+    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(gLiveSupport));
     Gtk::Box *  searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
                                     Gtk::BUTTONBOX_END ));
     

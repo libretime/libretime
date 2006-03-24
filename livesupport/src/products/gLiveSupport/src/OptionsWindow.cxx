@@ -39,6 +39,7 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "BackupView.h"
 
 #include "OptionsWindow.h"
 
@@ -85,12 +86,19 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+    
+    bool    canBackup = (gLiveSupport->getSessionId()
+                            && gLiveSupport->isStorageAvailable());
 
     // build up the notepad for the various sections
     mainNotebook = Gtk::manage(new ScrolledNotebook);
     Gtk::Box *      soundSectionBox         = constructSoundSection();
     Gtk::Box *      keyBindingsSectionBox   = constructKeyBindingsSection();
     Gtk::Box *      serversSectionBox       = constructServersSection();
+    Gtk::Box *      backupSectionBox;
+    if (canBackup) {
+                    backupSectionBox        = constructBackupSection();
+    }
     Gtk::Box *      aboutSectionBox         = constructAboutSection();
 
     try {
@@ -100,6 +108,10 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                             *getResourceUstring("keyBindingsSectionLabel"));
         mainNotebook->appendPage(*serversSectionBox,
                             *getResourceUstring("serversSectionLabel"));
+        if (canBackup) {
+            mainNotebook->appendPage(*backupSectionBox,
+                            *getResourceUstring("backupSectionLabel"));
+        }
         mainNotebook->appendPage(*aboutSectionBox,
                             *getResourceUstring("aboutSectionLabel"));
 
@@ -667,6 +679,28 @@ OptionsWindow :: constructServersSection(void)                      throw ()
     section->pack_start(*authenticationTable,   Gtk::PACK_SHRINK, 10);
     section->pack_start(*storageTable,          Gtk::PACK_SHRINK, 10);
     
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "Backup" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructBackupSection(void)                       throw ()
+{
+    Ptr<ResourceBundle>::Ref    backupBundle;
+    try {
+        backupBundle = gLiveSupport->getBundle("backupView");
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    Gtk::VBox *     section = Gtk::manage(new BackupView(gLiveSupport,
+                                                         backupBundle ));
     return section;
 }
 

@@ -57,13 +57,22 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-AdvancedSearchEntry :: AdvancedSearchEntry(
-                                Ptr<MetadataTypeContainer>::Ref  metadataTypes,
-                                Ptr<ResourceBundle>::Ref         bundle)
+AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            metadataTypes(metadataTypes)
+          : gLiveSupport(gLiveSupport)
 {
+    Ptr<ResourceBundle>::Ref    bundle;
+    try {
+        bundle = gLiveSupport->getBundle("advancedSearchEntry");
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    setBundle(bundle);
+    
+    metadataTypes = gLiveSupport->getMetadataTypeContainer();
+
     AdvancedSearchItem * searchOptionsBox = Gtk::manage(new AdvancedSearchItem(
                                                                 true, 
                                                                 metadataTypes,

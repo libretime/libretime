@@ -46,6 +46,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
+#include "AdvancedSearchEntry.h"
 #include "BackupList.h"
 #include "GLiveSupport.h"
 
@@ -87,6 +88,42 @@ class BackupView : public Gtk::VBox,
                    public LocalizedObject
 {
     private:
+        /**
+         *  The object for entering the backup criteria.
+         */
+        AdvancedSearchEntry *       criteriaEntry;
+        
+        /**
+         *  The list of pending backups.
+         */
+        BackupList *                backupList;
+        
+        /**
+         *  Construct the box for entering the backup criteria.
+         *
+         *  @return the constructed box, already Gtk::manage()'ed.
+         */
+        Gtk::Box *
+        constructCriteriaView(void)                                 throw ();
+    
+        /**
+         *  Construct the box for listing the pending backups.
+         *
+         *  @return the constructed box, already Gtk::manage()'ed.
+         */
+        Gtk::Box *
+        constructBackupListView(void)                               throw ();
+        
+        /**
+         *  Fetch the backup file from an URL and save it to a local file.
+         *
+         *  @param  url         the URL to fetch.
+         *  @param  fileName    the local file to save as.
+         *  @return     the status reported by curl (true if everything is OK).
+         */
+        bool
+        copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
+                      Ptr<Glib::ustring>::Ref   fileName)           throw ();
     
     
     protected:
@@ -94,6 +131,24 @@ class BackupView : public Gtk::VBox,
          *  The GLiveSupport object, holding the state of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
+        
+        /**
+         *  Initiate the creation of a new backup.
+         */
+        void
+        onCreateBackup(void)                                        throw ();
+        
+        /**
+         *  Event handler for the Delete button being clicked.
+         */
+        void
+        onDeleteButtonClicked(void)                                 throw ();
+        
+        /**
+         *  Event handler for the Save button being clicked.
+         */
+        void
+        onSaveButtonClicked(void)                                   throw ();
 
 
     public:

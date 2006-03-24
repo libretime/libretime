@@ -116,7 +116,7 @@ root:table
         closeButtonLabel:string     { "Cancel" }
 
         fileChooserDialogTitle:string
-                                    { "Choose a File" }
+                                    { "Open File" }
         clipUploadedMsg:string      { "Uploaded clip ''{0}''." }
         couldNotOpenFileMsg:string  { "The file could not be opened." }
         couldNotReadLengthMsg:string 
@@ -183,21 +183,12 @@ root:table
         advancedSearchTab:string    { "Advanced Search" }
         browseTab:string            { "Browse" }
         
-        searchByTextLabel:string    { "Search by" }
         searchButtonLabel:string    { "Search" }
         
         typeColumnLabel:string      { "Type" }
         titleColumnLabel:string     { "Title" }
         creatorColumnLabel:string   { "Creator" }
         lengthColumnLabel:string    { "Length" }
-        
-        partialOperatorDisplay:string
-                                    { "contains" }
-        prefixOperatorDisplay:string
-                                    { "starts with" }
-        =OperatorDisplay:string     { "equals" }
-        <=OperatorDisplay:string    { "<=" }
-        >=OperatorDisplay:string    { ">=" }
         
         allStringForBrowse          { "--- all ---" }
         
@@ -206,6 +197,18 @@ root:table
         addToLiveModeMenuItem:string
                                     { "Add To _Live Mode" }
     }
+    
+    advancedSearchEntry:table {
+        searchByTextLabel:string    { "Search by" }
+        
+        partialOperatorDisplay:string
+                                    { "contains" }
+        prefixOperatorDisplay:string
+                                    { "starts with" }
+        =OperatorDisplay:string     { "equals" }
+        <=OperatorDisplay:string    { "<=" }
+        >=OperatorDisplay:string    { ">=" }
+    }    
 
     liveModeWindow:table
     {
@@ -233,6 +236,7 @@ root:table
         keyBindingsSectionLabel:string
                                     { "Keyboard Shortcuts" }
         serversSectionLabel:string  { "Servers" }
+        backupSectionLabel:string   { "Backup" }
         aboutSectionLabel:string    { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
@@ -270,6 +274,12 @@ root:table
         titleColumnLabel:string     { "Title" }
         dateColumnLabel:string      { "Date" }
         statusColumnLabel:string    { "Status" }
+        
+        backupButtonLabel:string    { "Backup" }
+        deleteButtonLabel:string    { "Delete" }
+        saveButtonLabel:string      { "Save" }
+        
+        fileChooserDialogTitle:string   { "Save File" }
     }
 
     metadataTypes:table

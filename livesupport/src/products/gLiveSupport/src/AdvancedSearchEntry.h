@@ -46,7 +46,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
-
+#include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -71,7 +71,11 @@ class AdvancedSearchEntry : public Gtk::VBox,
                             public LocalizedObject
 {
     private:
-    
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref              gLiveSupport;
+        
         /**
          *  A container holding all known metadata types.
          */
@@ -79,14 +83,13 @@ class AdvancedSearchEntry : public Gtk::VBox,
         
         
     public:
-    
         /**
          *  Constructor.
          *
-         *  @param metadataTypes    container holding all known metadata types
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
          */
-        AdvancedSearchEntry(Ptr<MetadataTypeContainer>::Ref metadataTypes,
-                            Ptr<ResourceBundle>::Ref        bundle)
+        AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
                                                                 throw ();
 
         /**

@@ -110,9 +110,11 @@ BackupList :: add(Ptr<Glib::ustring>::Ref     title,
                                                 throw (XmlRpcException)
 {
     Ptr<StorageClientInterface>::Ref 
-                                storage = gLiveSupport->getStorageClient();
+                                storage     = gLiveSupport->getStorageClient();
+    Ptr<SessionId>::Ref         sessionId   = gLiveSupport->getSessionId();
     
-    Ptr<Glib::ustring>::Ref     token = storage->createBackupOpen(criteria);
+    Ptr<Glib::ustring>::Ref     token = storage->createBackupOpen(sessionId,
+                                                                  criteria);
     
     Gtk::TreeRow                row = *treeModel->append();
     row[modelColumns.titleColumn]   = *title;
@@ -193,10 +195,10 @@ BackupList :: update(void)                      throw (XmlRpcException)
                                     iter->get_value(modelColumns.tokenColumn),
                                     urlOrErrorMsg);
     
-    if (*status == workingStatusKey) {
+    if (*status == "working") {
         return false;
     
-    } else if (*status == successStatusKey) {
+    } else if (*status == "success") {
         iter->set_value(modelColumns.statusColumn,
                         successStatusKey);
         iter->set_value(modelColumns.statusDisplayColumn, 
@@ -205,7 +207,7 @@ BackupList :: update(void)                      throw (XmlRpcException)
                         *urlOrErrorMsg);
         return true;
     
-    } else if (*status == faultStatusKey) {
+    } else if (*status == "fault") {
         iter->set_value(modelColumns.statusColumn,
                         faultStatusKey);
         iter->set_value(modelColumns.statusDisplayColumn, 
@@ -213,7 +215,8 @@ BackupList :: update(void)                      throw (XmlRpcException)
         return false;
     }
     
-    std::cerr << "Impossible condition in BackupList::update()." << std::endl;
+    std::cerr << "Impossible status: '" << *status
+              << "' in BackupList::update()." << std::endl;
     return false;
 }
 

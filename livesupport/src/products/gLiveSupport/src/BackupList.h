@@ -74,12 +74,13 @@ using namespace LiveSupport::Widgets;
  *      <ul>
  *      <li>backup title </li>
  *      <li>backup date </li>
- *      <li>backup status (working / success / fault)</li>
+ *      <li>backup status (localized; contains the fault string, if any)</li>
  *      </ul></li>
  *  <li>hidden:
  *      <ul>
  *      <li>token </li>
- *      <li>URL (if the status is 'success') </li>
+ *      <li>backup status (not localized: "working" / "success" / "fault")</li>
+ *      <li>URL (if the status is "success") </li>
  *      </ul></li>
  *  </ul>
  *  

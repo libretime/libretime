@@ -220,6 +220,14 @@ class OptionsWindow : public GuiWindow
         constructServersSection(void)                               throw ();
 
         /**
+         *  Construct the "Backup" section.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructBackupSection(void)                                throw ();
+
+        /**
          *  Construct the "About" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)
