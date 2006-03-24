@@ -680,7 +680,7 @@ class LocStor extends BasicStor{
      *          with all related files
      *  @return hasharray with  fields:
      *      url string: readable url,
-     *      token srring: access token
+     *      token string: access token
      *      chsum string: md5 checksum,
      */
     function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)

@@ -676,7 +676,7 @@ class GreenBox extends BasicStor{
      *          with all related files
      *  @return hasharray with  fields:
      *      fname string: readable fname,
-     *      token srring: access token
+     *      token string: access token
      */
     function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
@@ -937,7 +937,8 @@ class GreenBox extends BasicStor{
      *
      *  @param sessid  :  string  -  session id
      *  @param criteria : struct - see search criteria
-     *  @return token : string - backup token
+     *  @return hasharray:
+     *           token : string - backup token
      */
     function createBackupOpen($sessid, $criteria='')
     {

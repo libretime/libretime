@@ -41,6 +41,7 @@ define('GBERR_TOKEN', 50);
 define('GBERR_PUT', 51);
 define('GBERR_LOCK', 52);
 define('GBERR_GUNID', 53);
+define('GBERR_BGERR', 54);
 
 define('GBERR_NOTIMPL', 69);
 
@@ -826,7 +827,7 @@ class BasicStor extends Alib{
      *          with all related files
      *  @return hasharray with  fields:
      *      fname string: readable fname,
-     *      token srring: access token
+     *      token string: access token
      */
     function bsExportPlaylistOpen($plids, $type='lspl', $standalone=FALSE)
     {

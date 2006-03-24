@@ -271,7 +271,7 @@ class MetaData{
      *  @param parid int, metadata record id of parent element
      *  @param category string, metadata element name
      *  @param value string, new metadata value (NULL for delete)
-     *  @param predxml srring, 'T' | 'A' | 'N' (tag, attr., namespace)
+     *  @param predxml string, 'T' | 'A' | 'N' (tag, attr., namespace)
      *  @return int, new metadata record id
      */
     function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
