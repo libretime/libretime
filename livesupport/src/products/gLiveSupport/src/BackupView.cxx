@@ -38,7 +38,6 @@
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/stock.h>
 #include <gtkmm/paned.h>
-#include <gtkmm/viewport.h>
 
 #include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "BackupView.h"
@@ -173,8 +172,16 @@ BackupView :: onCreateBackup(void)                                  throw ()
 {
     Ptr<Glib::ustring>::Ref     title(new Glib::ustring("new backup"));
     Ptr<SearchCriteria>::Ref    criteria = criteriaEntry->getSearchCriteria();
-
-    backupList->add(title, criteria);
+    
+    try {
+        backupList->add(title, criteria);
+        
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     errorMsg
+                                    = getResourceUstring("backupErrorMsg");
+        errorMsg->append(e.what());
+        gLiveSupport->displayMessageWindow(errorMsg);
+    }
 }
 
 
@@ -184,7 +191,15 @@ BackupView :: onCreateBackup(void)                                  throw ()
 void
 BackupView :: onDeleteButtonClicked(void)                           throw ()
 {
-    backupList->remove();
+    try {
+        backupList->remove();
+        
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     errorMsg
+                                    = getResourceUstring("backupErrorMsg");
+        errorMsg->append(e.what());
+        gLiveSupport->displayMessageWindow(errorMsg);
+    }
 }
 
 
@@ -194,7 +209,17 @@ BackupView :: onDeleteButtonClicked(void)                           throw ()
 void
 BackupView :: onSaveButtonClicked(void)                             throw ()
 {
-    Ptr<Glib::ustring>::Ref     url = backupList->getUrl();
+    Ptr<Glib::ustring>::Ref         url;
+    try {
+        url = backupList->getUrl();
+        
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     errorMsg
+                                    = getResourceUstring("backupErrorMsg");
+        errorMsg->append(e.what());
+        gLiveSupport->displayMessageWindow(errorMsg);
+    }
+    
     if (!url) {
         return;
     }

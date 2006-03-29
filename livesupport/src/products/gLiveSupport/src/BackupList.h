@@ -220,9 +220,11 @@ class BackupList : public Gtk::VBox,
          *  done first.
          *  If no item is selected, or the URL for the backup is not available
          *  yet, then a 0 pointer is returned.
+         *
+         *  @exception  XmlRpcException     can be thrown by update().
          */
         Ptr<Glib::ustring>::Ref
-        getUrl(void)                                                throw ();
+        getUrl(void)                            throw (XmlRpcException);
         
         /**
          *  Query the storage server about the status of the pending backup.

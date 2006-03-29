@@ -150,7 +150,7 @@ BackupList :: remove(void)                      throw (XmlRpcException)
  *  Get the URL of the currently selected item.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-BackupList :: getUrl(void)                                          throw ()
+BackupList :: getUrl(void)                      throw (XmlRpcException)
 {
     Ptr<Glib::ustring>::Ref     url;
     

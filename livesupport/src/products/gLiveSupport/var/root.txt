@@ -280,6 +280,7 @@ root:table
         saveButtonLabel:string      { "Save" }
         
         fileChooserDialogTitle:string   { "Save File" }
+        backupErrorMsg:string       { "Backup error: " }
     }
 
     metadataTypes:table
