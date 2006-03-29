@@ -62,8 +62,8 @@ Notebook :: Notebook(void)                                      throw ()
     tabBox     = Gtk::manage(new Gtk::HBox());
     pageHolder = Gtk::manage(new Gtk::Alignment());
 
-    layout->pack_start(*tabBox, Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*pageHolder, Gtk::PACK_EXPAND_WIDGET, 5);
+    layout->pack_start(*tabBox,     Gtk::PACK_SHRINK,        0);
+    layout->pack_start(*pageHolder, Gtk::PACK_EXPAND_WIDGET, 0);
 
     add(*layout);
 
