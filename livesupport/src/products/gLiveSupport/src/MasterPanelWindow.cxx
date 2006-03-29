@@ -458,7 +458,7 @@ MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
         scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport,
                                                     bundle,
                                                     scratchpadButton));
-        gLiveSupport->loadScratchpadContents(scratchpadWindow);
+        gLiveSupport->loadWindowContents(scratchpadWindow);
     }
 
     if (playable) {
@@ -613,7 +613,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         uploadFileWindow.reset();
     }
     if (scratchpadWindow.get()) {
-        gLiveSupport->storeScratchpadContents(scratchpadWindow);
+        gLiveSupport->storeWindowContents(scratchpadWindow);
         if (scratchpadWindow->is_visible()) {
             scratchpadWindow->hide();
         }

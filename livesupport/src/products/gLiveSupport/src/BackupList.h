@@ -90,11 +90,45 @@ using namespace LiveSupport::Widgets;
  *  @version $Revision$
  */
 class BackupList : public Gtk::VBox,
-                   public LocalizedObject
+                   public LocalizedObject,
+                   public ContentsStorable
 {
     private:
-    
-    
+        /**
+         *  The user preferences key.
+         */
+        Ptr<const Glib::ustring>::Ref       userPreferencesKey;
+
+        /**
+         *  Set the status of the row pointed to by an iterator.
+         *
+         *  @param  iter    points to the row we want to set the status of.
+         *  @param  status  the new status ("working", "success" or "fault").
+         *  @param  urlOrErrorMessage   either the URL (for "success"),
+         *                              or the error message (for "fault").
+         *  @return true    if the status is "success", false otherwise.
+         */
+        bool
+        setStatus(Gtk::TreeIter                   iter,
+                  Ptr<const Glib::ustring>::Ref   status,
+                  Ptr<const Glib::ustring>::Ref   urlOrErrorMsg)
+                                                                throw ();
+
+        /**
+         *  Add an item with an already existing token to the list.
+         *
+         *  @param  title       the title of the backup.
+         *  @param  date        the date of the backup.
+         *  @param  token       the token for this backup.
+         *  @exception  XmlRpcException     thrown by the storage client.
+         */
+        void
+        add(const Glib::ustring &     title,
+            const Glib::ustring &     date,
+            const Glib::ustring &     token)
+                                                throw (XmlRpcException);
+        
+
     protected:
         /**
          *  The GLiveSupport object, holding the state of the application.
@@ -237,6 +271,41 @@ class BackupList : public Gtk::VBox,
          */
         bool
         update(void)                            throw (XmlRpcException);
+
+        /**
+         *  Return the contents of the backup list.
+         *  The format is a space-separated list of backup titles, dates
+         *  and tokens.  E.g.: "title1 date1 token1 title2 date2 token2".
+         *
+         *  @return the contents of the backup list as a string.
+         */
+        Ptr<Glib::ustring>::Ref
+        getContents(void)                                       throw ();
+
+        /**
+         *  Restore the contents of the backup list.
+         *  The current contents are discarded, and replaced with the items
+         *  listed in the 'contents' parameter.
+         *  The format is a space-separated list of backup titles, dates
+         *  and tokens.  E.g.: "title1 date1 token1 title2 date2 token2".
+         *
+         *  @param contents the new contents of the backup list as a string.
+         */
+        void
+        setContents(Ptr<const Glib::ustring>::Ref   contents)   throw ();
+
+        /**
+         *  Return the user preferences key.
+         *  The contents of the window will be stored in the user preferences
+         *  under this key.
+         *
+         *  @return the user preference key.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getUserPreferencesKey(void)                              throw ()
+        {
+            return userPreferencesKey;
+        }
 };
 
 /* ================================================= external data structures */

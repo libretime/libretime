@@ -133,11 +133,6 @@ static const std::string stationLogoConfigElementName = "stationLogo";
 static const std::string testAudioUrlConfigElementName = "testAudioUrl";
 
 /*------------------------------------------------------------------------------
- *  The name of the user preference for storing Scratchpad contents
- *----------------------------------------------------------------------------*/
-static const std::string scratchpadContentsKey = "scratchpadContents";
-
-/*------------------------------------------------------------------------------
  *  The name of the user preference for storing window positions
  *----------------------------------------------------------------------------*/
 static const std::string windowPositionsKey = "windowPositions";
@@ -586,15 +581,18 @@ GLiveSupport :: logout(void)                                throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: storeScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+GLiveSupport :: storeWindowContents(Ptr<ContentsStorable>::Ref  window)
                                                             throw ()
 {
-    Ptr<Glib::ustring>::Ref     scratchpadContents = window->contents();
+    Ptr<const Glib::ustring>::Ref   userPreferencesKey       
+                                            = window->getUserPreferencesKey();
+    Ptr<const Glib::ustring>::Ref   windowContents
+                                            = window->getContents();
     
     try {
         authentication->savePreferencesItem(sessionId,
-                                            scratchpadContentsKey,
-                                            scratchpadContents);
+                                            *userPreferencesKey,
+                                            windowContents);
     } catch (XmlRpcException &e) {
         // TODO: signal error
         std::cerr << "error saving user preferences: " 
@@ -609,15 +607,17 @@ GLiveSupport :: storeScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+GLiveSupport :: loadWindowContents(Ptr<ContentsStorable>::Ref   window)
                                                             throw ()
 {
-    Ptr<Glib::ustring>::Ref     scratchpadContents;
+    Ptr<const Glib::ustring>::Ref   userPreferencesKey       
+                                            = window->getUserPreferencesKey();
+    Ptr<const Glib::ustring>::Ref   windowContents;
 
     try {
-        scratchpadContents = authentication->loadPreferencesItem(
+        windowContents = authentication->loadPreferencesItem(
                                                         sessionId,
-                                                        scratchpadContentsKey);
+                                                        *userPreferencesKey);
     } catch (XmlRpcException &e) {
         // TODO: signal error
         std::cerr << "error loading user preferences: " << e.what()
@@ -628,7 +628,7 @@ GLiveSupport :: loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
         return;
     }
     
-    window->restore(scratchpadContents);
+    window->setContents(windowContents);
 }
 
 

@@ -50,9 +50,9 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
-#include "GuiWindow.h"
 #include "CuePlayer.h"
-#include "GLiveSupport.h"
+#include "GuiWindow.h"
+#include "ContentsStorable.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -75,7 +75,8 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class ScratchpadWindow : public GuiWindow
+class ScratchpadWindow : public GuiWindow,
+                         public ContentsStorable
 {
     private:
         /**
@@ -109,6 +110,11 @@ class ScratchpadWindow : public GuiWindow
          */
         void
         removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
+
+        /**
+         *  The user preferences key.
+         */
+        Ptr<const Glib::ustring>::Ref       userPreferencesKey;
 
 
     protected:
@@ -348,10 +354,9 @@ class ScratchpadWindow : public GuiWindow
          *  Return the contents of the Scratchpad.
          *
          *  @return a space-separated list of the unique IDs, in base 10.
-         *  @see restore()
          */
         Ptr<Glib::ustring>::Ref
-        contents()                                              throw ();
+        getContents(void)                                       throw ();
 
         /**
          *  Restore the contents of the Scratchpad.
@@ -359,10 +364,22 @@ class ScratchpadWindow : public GuiWindow
          *  listed in the 'contents' parameter.
          *
          *  @param contents a space-separated list of unique IDs, in base 10.
-         *  @see contents()
          */
         void
-        restore(Ptr<Glib::ustring>::Ref     contents)           throw ();
+        setContents(Ptr<const Glib::ustring>::Ref   contents)   throw ();
+
+        /**
+         *  Return the user preferences key.
+         *  The contents of the window will be stored in the user preferences
+         *  under this key.
+         *
+         *  @return the user preference key.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getUserPreferencesKey(void)                              throw ()
+        {
+            return userPreferencesKey;
+        }
 };
 
 /* ================================================= external data structures */

@@ -56,12 +56,11 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "KeyboardShortcutList.h"
+#include "ContentsStorable.h"
 
 
 namespace LiveSupport {
 namespace GLiveSupport {
-
-class ScratchpadWindow;     // forward declaration to avoid circularity
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::SchedulerClient;
@@ -1098,21 +1097,21 @@ class GLiveSupport : public LocalizedConfigurable,
         }
 
         /**
-         *  Store the contents of the Scratchpad as a user preference.
+         *  Store the contents of a window as a user preference.
          *
-         *  @param  window  the ScratchpadWindow to query.
+         *  @param  window  the window to get the contents of.
          */
         void
-        storeScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+        storeWindowContents(Ptr<ContentsStorable>::Ref  window)
                                                                 throw ();
 
         /**
-         *  Load the contents of the Scratchpad as a user preference.
+         *  Load the contents of a window as a user preference.
          *
-         *  @param  window  the ScratchpadWindow to restore the contents of.
+         *  @param  window  the window to restore the contents of.
          */
         void
-        loadScratchpadContents(Ptr<ScratchpadWindow>::Ref  window)
+        loadWindowContents(Ptr<ContentsStorable>::Ref   window)
                                                                 throw ();
         /**
          *  Return whether the authentication component is available.

@@ -61,6 +61,11 @@ static const Glib::ustring      successStatusKey    = "successStatus";
  *----------------------------------------------------------------------------*/
 static const Glib::ustring      faultStatusKey      = "faultStatus";
 
+/*------------------------------------------------------------------------------
+ *  The name of the user preference for storing the list of backups
+ *----------------------------------------------------------------------------*/
+static const Glib::ustring      userPreferencesKeyName  = "activeBackups";
+
 
 /* ===============================================  local function prototypes */
 
@@ -98,6 +103,8 @@ BackupList :: BackupList (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // add the tree view to this widget
     Gtk::VBox::add(*treeView);
+
+    userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
 }
 
 
@@ -123,6 +130,32 @@ BackupList :: add(Ptr<Glib::ustring>::Ref     title,
     row[modelColumns.statusDisplayColumn] 
                                     = *getResourceUstring(workingStatusKey);
     row[modelColumns.tokenColumn]   = *token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add an item with an already existing token to the list.
+ *----------------------------------------------------------------------------*/
+void
+BackupList :: add(const Glib::ustring &     title,
+                  const Glib::ustring &     date,
+                  const Glib::ustring &     token)
+                                                throw (XmlRpcException)
+{
+    Ptr<StorageClientInterface>::Ref 
+                                storage     = gLiveSupport->getStorageClient();
+    Ptr<SessionId>::Ref         sessionId   = gLiveSupport->getSessionId();
+    
+    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    Ptr<Glib::ustring>::Ref     status
+                                = storage->createBackupCheck(token,
+                                                             urlOrErrorMsg);
+    
+    Gtk::TreeRow                row = *treeModel->append();
+    row[modelColumns.titleColumn]   = title;
+    row[modelColumns.dateColumn]    = date;
+    row[modelColumns.tokenColumn]   = token;
+    setStatus(row, status, urlOrErrorMsg);
 }
 
 
@@ -195,6 +228,19 @@ BackupList :: update(void)                      throw (XmlRpcException)
                                     iter->get_value(modelColumns.tokenColumn),
                                     urlOrErrorMsg);
     
+    return setStatus(iter, status, urlOrErrorMsg);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the status of the row pointed to by an iterator.
+ *----------------------------------------------------------------------------*/
+bool
+BackupList :: setStatus(Gtk::TreeIter                   iter,
+                        Ptr<const Glib::ustring>::Ref   status,
+                        Ptr<const Glib::ustring>::Ref   urlOrErrorMsg)
+                                                                throw ()
+{
     if (*status == "working") {
         return false;
     
@@ -216,7 +262,65 @@ BackupList :: update(void)                      throw (XmlRpcException)
     }
     
     std::cerr << "Impossible status: '" << *status
-              << "' in BackupList::update()." << std::endl;
+              << "' in BackupList::setStatus()." << std::endl;
     return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the contents of the backup list.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+BackupList :: getContents(void)                                 throw ()
+{
+    std::ostringstream                      contentsStream;
+    Gtk::TreeModel::const_reverse_iterator  it;
+
+    for (it = treeModel->children().rbegin(); 
+                                it != treeModel->children().rend(); ++it) {
+        Gtk::TreeRow        row = *it;
+        contentsStream << row[modelColumns.tokenColumn] << " ";
+    }
+
+    Ptr<Glib::ustring>::Ref         contents(new Glib::ustring(
+                                                    contentsStream.str() ));
+    return contents;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Restore the contents of the backup list.
+ *----------------------------------------------------------------------------*/
+void
+BackupList :: setContents(Ptr<const Glib::ustring>::Ref     contents)
+                                                                throw ()
+{
+    std::istringstream      contentsStream(contents->raw());
+    
+    treeModel->clear();
+    while (!contentsStream.eof()) {
+        Glib::ustring   title;
+        Glib::ustring   date;
+        Glib::ustring   token;
+
+        contentsStream >> title;
+        if (contentsStream.fail()) {
+            break;
+        }
+        contentsStream >> date;
+        if (contentsStream.fail()) {
+            break;
+        }
+        contentsStream >> token;
+        if (contentsStream.fail()) {
+            break;
+        }
+        
+        try {
+            add(title, date, token);
+        
+        } catch (XmlRpcException &e) {
+        }
+    }
 }
 

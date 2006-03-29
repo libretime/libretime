@@ -58,6 +58,11 @@ using namespace LiveSupport::GLiveSupport;
  */
 static const Glib::ustring  windowName = "scratchpadWindow";
 
+/*------------------------------------------------------------------------------
+ *  The name of the user preference for storing Scratchpad contents
+ *----------------------------------------------------------------------------*/
+static const Glib::ustring  userPreferencesKeyName = "scratchpadContents";
+
 
 /* ===============================================  local function prototypes */
 
@@ -239,7 +244,9 @@ ScratchpadWindow :: ScratchpadWindow (
     }
 
     playlistMenu->accelerate(*this);
-
+    
+    userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
+    
     // show
     set_name(windowName);
     set_default_size(300, 330);
@@ -601,7 +608,7 @@ ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
  *  Return the contents of the Scratchpad.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-ScratchpadWindow :: contents(void)                              throw ()
+ScratchpadWindow :: getContents(void)                           throw ()
 {
     std::ostringstream                      contentsStream;
     Gtk::TreeModel::const_reverse_iterator  it;
@@ -623,7 +630,7 @@ ScratchpadWindow :: contents(void)                              throw ()
  *  Restore the contents of the Scratchpad.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: restore(Ptr<Glib::ustring>::Ref     contents)
+ScratchpadWindow :: setContents(Ptr<const Glib::ustring>::Ref       contents)
                                                                 throw ()
 {
     std::istringstream              contentsStream(contents->raw());
