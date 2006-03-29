@@ -65,6 +65,18 @@ namespace Widgets {
  */
 class ScrolledWindow : public Gtk::ScrolledWindow
 {
+    private:
+        /**
+         *  The shadow type of the child widget.
+         */
+        Gtk::ShadowType     shadowType;
+
+        /**
+         *  Whether the shadow type has been manually set on the child widget.
+         */
+        bool                useShadowType;
+
+
     protected:
         /**
          *  Handle the realize event.
@@ -84,6 +96,17 @@ class ScrolledWindow : public Gtk::ScrolledWindow
          */
         virtual
         ~ScrolledWindow(void)                                       throw ();
+
+        /**
+         *  Set the shadow_type of the child widget.
+         *  Must be called before the window is realized.
+         */
+        void
+        setShadowType(Gtk::ShadowType   st)                         throw ()
+        {
+            shadowType      = st;
+            useShadowType   = true;
+        }
 };
 
 

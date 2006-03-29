@@ -34,6 +34,7 @@
 #endif
 
 #include <iostream>
+#include <gtkmm/viewport.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
@@ -57,7 +58,8 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 ScrolledWindow :: ScrolledWindow(void)                              throw ()
-    : Gtk::ScrolledWindow()
+    : Gtk::ScrolledWindow(),
+      useShadowType(false)
 {
 }
 
@@ -79,6 +81,13 @@ ScrolledWindow :: on_realize()                                      throw ()
     Gdk::Color      bgColor = Colors::getColor(Colors::WindowBackground);
     Widget *        child = get_child();    
     child->modify_bg(Gtk::STATE_NORMAL, bgColor);
+    
+    if (useShadowType) {
+        Gtk::Viewport *     viewport = dynamic_cast<Gtk::Viewport*>(child);
+        if (viewport) {
+            viewport->set_shadow_type(shadowType);
+        }
+    }
     
     Gtk::ScrolledWindow::on_realize();
 }

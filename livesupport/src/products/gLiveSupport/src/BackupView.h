@@ -65,7 +65,8 @@ using namespace LiveSupport::Widgets;
 /* =============================================================== data types */
 
 /**
- *  The backup view.  This will be contained in another window, most likely
+ *  The backup view, a subclass of Gtk::VBox.
+ *  This will be contained in another window, most likely
  *  as the contents of a notebook tab.
  *
  *  The layout of the view is roughly the following:

@@ -37,7 +37,10 @@
 #include <curl/easy.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/stock.h>
+#include <gtkmm/paned.h>
+#include <gtkmm/viewport.h>
 
+#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "BackupView.h"
 
 
@@ -65,11 +68,14 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
           : LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Gtk::Box *      criteriaView    = constructCriteriaView();
-    Gtk::Box *      backupListView  = constructBackupListView();
+    Gtk::Box *          criteriaView      = constructCriteriaView();
+    Gtk::Box *          backupListView    = constructBackupListView();
     
-    pack_start(*criteriaView,       Gtk::PACK_EXPAND_WIDGET,    5);
-    pack_start(*backupListView,     Gtk::PACK_EXPAND_WIDGET,    5);
+    Gtk::VPaned *       twoPanedView  = Gtk::manage(new Gtk::VPaned);
+    twoPanedView->pack1(*criteriaView,   Gtk::PACK_EXPAND_WIDGET, 5);
+    twoPanedView->pack2(*backupListView, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    add(*twoPanedView);
 }
 
 
@@ -99,10 +105,16 @@ BackupView :: constructCriteriaView(void)                           throw ()
     Gtk::Box *  criteriaButtonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END ));
     criteriaButtonBox->pack_start(*backupButton, Gtk::PACK_SHRINK, 5);
-
+    
+    ScrolledWindow *    criteriaWindow    = Gtk::manage(new ScrolledWindow);
+    criteriaWindow->add(*criteriaEntry);
+    // NOTE: criteriaWindow->setShadowType() causes Gtk warnings here
+    // TODO: find out why and fix it
+    criteriaWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    
     Gtk::Box *  criteriaView = Gtk::manage(new Gtk::VBox);
-    criteriaView->pack_start(*criteriaEntry,     Gtk::PACK_SHRINK,   5);
-    criteriaView->pack_start(*criteriaButtonBox, Gtk::PACK_SHRINK,   5);
+    criteriaView->pack_start(*criteriaWindow,    Gtk::PACK_EXPAND_WIDGET, 0);
+    criteriaView->pack_start(*criteriaButtonBox, Gtk::PACK_SHRINK,        5);
     
     return criteriaView;
 }
@@ -140,9 +152,14 @@ BackupView :: constructBackupListView(void)                         throw ()
     backupListButtonBox->pack_start(*deleteButton, Gtk::PACK_SHRINK, 5);
     backupListButtonBox->pack_start(*saveButton, Gtk::PACK_SHRINK, 5);
 
+    ScrolledWindow *    backupListWindow  = Gtk::manage(new ScrolledWindow);
+    backupListWindow->add(*backupList);
+    backupListWindow->setShadowType(Gtk::SHADOW_NONE);
+    backupListWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    
     Gtk::Box *  backupListView = Gtk::manage(new Gtk::VBox);
-    backupListView->pack_start(*backupList,          Gtk::PACK_SHRINK,   5);
-    backupListView->pack_start(*backupListButtonBox, Gtk::PACK_SHRINK,   5);
+    backupListView->pack_start(*backupListWindow, Gtk::PACK_EXPAND_WIDGET, 5);
+    backupListView->pack_start(*backupListButtonBox,     Gtk::PACK_SHRINK, 5);
     
     return backupListView;
 }
