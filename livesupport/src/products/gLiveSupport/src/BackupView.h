@@ -173,6 +173,14 @@ class BackupView : public Gtk::VBox,
         {
         }
 
+        /**
+         *  Return the BackupList object shown by the widget.
+         */
+        BackupList *
+        getBackupList(void)                                         throw ()
+        {
+            return backupList;
+        }
 };
 
 /* ================================================= external data structures */

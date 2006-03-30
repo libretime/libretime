@@ -273,13 +273,15 @@ BackupList :: setStatus(Gtk::TreeIter                   iter,
 Ptr<Glib::ustring>::Ref
 BackupList :: getContents(void)                                 throw ()
 {
-    std::ostringstream                      contentsStream;
-    Gtk::TreeModel::const_reverse_iterator  it;
+    std::ostringstream              contentsStream;
+    Gtk::TreeModel::const_iterator  it;
 
-    for (it = treeModel->children().rbegin(); 
-                                it != treeModel->children().rend(); ++it) {
+    for (it = treeModel->children().begin(); 
+                                it != treeModel->children().end(); ++it) {
         Gtk::TreeRow        row = *it;
-        contentsStream << row[modelColumns.tokenColumn] << " ";
+        contentsStream << row[modelColumns.titleColumn] << '\n';
+        contentsStream << row[modelColumns.dateColumn]  << '\n';
+        contentsStream << row[modelColumns.tokenColumn] << '\n';
     }
 
     Ptr<Glib::ustring>::Ref         contents(new Glib::ustring(
@@ -299,19 +301,19 @@ BackupList :: setContents(Ptr<const Glib::ustring>::Ref     contents)
     
     treeModel->clear();
     while (!contentsStream.eof()) {
-        Glib::ustring   title;
-        Glib::ustring   date;
-        Glib::ustring   token;
+        std::string   title;
+        std::string   date;
+        std::string   token;
 
-        contentsStream >> title;
+        std::getline(contentsStream, title);
         if (contentsStream.fail()) {
             break;
         }
-        contentsStream >> date;
+        std::getline(contentsStream, date);
         if (contentsStream.fail()) {
             break;
         }
-        contentsStream >> token;
+        std::getline(contentsStream, token);
         if (contentsStream.fail()) {
             break;
         }

@@ -39,7 +39,6 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
-#include "BackupView.h"
 
 #include "OptionsWindow.h"
 
@@ -74,7 +73,8 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
           : GuiWindow(gLiveSupport,
                       bundle, 
                       "",
-                      windowOpenerButton)
+                      windowOpenerButton),
+            backupView(0)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -698,10 +698,9 @@ OptionsWindow :: constructBackupSection(void)                       throw ()
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-
-    Gtk::VBox *     section = Gtk::manage(new BackupView(gLiveSupport,
-                                                         backupBundle ));
-    return section;
+    
+    backupView = Gtk::manage(new BackupView(gLiveSupport, backupBundle));
+    return backupView;
 }
 
 

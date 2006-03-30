@@ -577,11 +577,11 @@ GLiveSupport :: logout(void)                                throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Store the Scratchpad contents as a user preference
+ *  Store the contents of a window as a user preference
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: storeWindowContents(Ptr<ContentsStorable>::Ref  window)
+GLiveSupport :: storeWindowContents(ContentsStorable *  window)
                                                             throw ()
 {
     Ptr<const Glib::ustring>::Ref   userPreferencesKey       
@@ -603,11 +603,11 @@ GLiveSupport :: storeWindowContents(Ptr<ContentsStorable>::Ref  window)
 
 
 /*------------------------------------------------------------------------------
- *  Load the Scratchpad contents from a user preference
+ *  Load the contents of a window from a user preference
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: loadWindowContents(Ptr<ContentsStorable>::Ref   window)
+GLiveSupport :: loadWindowContents(ContentsStorable *   window)
                                                             throw ()
 {
     Ptr<const Glib::ustring>::Ref   userPreferencesKey       

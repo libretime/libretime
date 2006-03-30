@@ -1103,7 +1103,10 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         storeWindowContents(Ptr<ContentsStorable>::Ref  window)
-                                                                throw ();
+                                                                throw ()
+        {
+            storeWindowContents(window.get());
+        }
 
         /**
          *  Load the contents of a window as a user preference.
@@ -1112,7 +1115,27 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         loadWindowContents(Ptr<ContentsStorable>::Ref   window)
-                                                                throw ();
+                                                                throw ()
+        {
+            loadWindowContents(window.get());
+        }
+
+        /**
+         *  Store the contents of a window as a user preference.
+         *
+         *  @param  window  the window to get the contents of.
+         */
+        void
+        storeWindowContents(ContentsStorable *      window)     throw ();
+
+        /**
+         *  Load the contents of a window as a user preference.
+         *
+         *  @param  window  the window to restore the contents of.
+         */
+        void
+        loadWindowContents(ContentsStorable *       window)     throw ();
+
         /**
          *  Return whether the authentication component is available.
          */

@@ -578,6 +578,10 @@ MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
         optionsWindow.reset(new OptionsWindow(gLiveSupport,
                                               bundle,
                                               optionsButton));
+        ContentsStorable *  backupList = optionsWindow->getBackupList();
+        if (backupList) {
+            gLiveSupport->loadWindowContents(backupList);
+        }
     }
 
     if (!optionsWindow->is_visible()) {
@@ -638,6 +642,10 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         searchWindow.reset();
     }
     if (optionsWindow.get()) {
+        ContentsStorable *  backupList = optionsWindow->getBackupList();
+        if (backupList) {
+            gLiveSupport->storeWindowContents(backupList);
+        }
         if (optionsWindow->is_visible()) {
             optionsWindow->hide();
         }

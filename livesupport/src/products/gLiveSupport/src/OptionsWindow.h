@@ -60,6 +60,7 @@
 #include "GuiWindow.h"
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
+#include "BackupView.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -356,19 +357,24 @@ class OptionsWindow : public GuiWindow
 
 
         /**
-         *  The column model.
+         *  The column model for the key bindings.
          */
         ModelColumns                    keyBindingsColumns;
 
         /**
-         *  The tree model, as a GTK reference.
+         *  The tree model, as a GTK reference, for the key bindings.
          */
         Glib::RefPtr<Gtk::TreeStore>    keyBindingsModel;
 
         /**
-         *  The tree view.
+         *  The tree view for the key bindings.
          */
         ZebraTreeView *                 keyBindingsView;
+
+        /**
+         *  The backup view shown in the backup section.
+         */
+        BackupView *                    backupView;
 
 
     public:
@@ -395,6 +401,14 @@ class OptionsWindow : public GuiWindow
         {
         }
 
+        /**
+         *  Return the BackupList object shown by the widget.
+         */
+        BackupList *
+        getBackupList(void)                                         throw ()
+        {
+            return backupView ? backupView->getBackupList() : 0;
+        }
 };
 
 /* ================================================= external data structures */
