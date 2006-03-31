@@ -51,11 +51,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  This should be 1/4th of MasterPanelWindow::updateTimeConstant.
  */
-static const int    blinkingConstant = 5;
+const int   blinkingConstant = 5;
 
+}
 
 /* ===============================================  local function prototypes */
 

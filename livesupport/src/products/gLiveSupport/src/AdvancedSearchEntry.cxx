@@ -48,41 +48,44 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The localization key for "File type: " before the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    fileTypeLabelKey = "fileTypeTextLabel";
+const std::string    fileTypeLabelKey = "fileTypeTextLabel";
 
 /*------------------------------------------------------------------------------
  *  The localization key for "all" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    allLocalizationKey = "allFileType";
+const std::string    allLocalizationKey = "allFileType";
 
 /*------------------------------------------------------------------------------
  *  The localization key for "playlist" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    playlistLocalizationKey = "playlistFileType";
+const std::string    playlistLocalizationKey = "playlistFileType";
 
 /*------------------------------------------------------------------------------
  *  The localization key for "audioClip" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    audioClipLocalizationKey = "audioClipFileType";
+const std::string    audioClipLocalizationKey = "audioClipFileType";
 
 /*------------------------------------------------------------------------------
  *  The search key for "all" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    allSearchKey = "all";
+const std::string    allSearchKey = "all";
 
 /*------------------------------------------------------------------------------
  *  The search key for "playlist" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    playlistSearchKey = "playlist";
+const std::string    playlistSearchKey = "playlist";
 
 /*------------------------------------------------------------------------------
  *  The search key for "audioClip" in the file type selector box.
  *----------------------------------------------------------------------------*/
-static const std::string    audioClipSearchKey = "audioClip";
+const std::string    audioClipSearchKey = "audioClip";
 
+}
 
 /* ===============================================  local function prototypes */
 

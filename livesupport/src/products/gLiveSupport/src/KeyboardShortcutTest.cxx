@@ -55,11 +55,14 @@ using namespace LiveSupport::GLiveSupport;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(KeyboardShortcutTest);
 
+namespace {
+
 /**
  *  The name of the test keyboard shortcut config file.
  */
-static const std::string    configFileName      = "etc/keyboardShortcut.xml";
+const std::string   configFileName  = "etc/keyboardShortcut.xml";
 
+}
 
 /* ===============================================  local function prototypes */
 

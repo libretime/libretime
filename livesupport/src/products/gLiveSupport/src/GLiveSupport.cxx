@@ -92,77 +92,80 @@ const std::string configFileDirStr = "/.livesupport/";
  *----------------------------------------------------------------------------*/
 const std::string configFileNameStr = "gLiveSupport.xml";
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The name of the config element for the list of supported languages
  *----------------------------------------------------------------------------*/
-static const std::string supportedLanguagesElementName = "supportedLanguages";
+const std::string   supportedLanguagesElementName = "supportedLanguages";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for a supported language.
  *----------------------------------------------------------------------------*/
-static const std::string languageElementName = "language";
+const std::string   languageElementName = "language";
 
 /*------------------------------------------------------------------------------
  *  The name of the attribute for the locale id for a supported language
  *----------------------------------------------------------------------------*/
-static const std::string localeAttrName = "locale";
+const std::string   localeAttrName = "locale";
 
 /*------------------------------------------------------------------------------
  *  The name of the attribute for the name for a supported language
  *----------------------------------------------------------------------------*/
-static const std::string nameAttrName = "name";
+const std::string   nameAttrName = "name";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the sound output player
  *----------------------------------------------------------------------------*/
-static const std::string outputPlayerElementName = "outputPlayer";
+const std::string   outputPlayerElementName = "outputPlayer";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the sound cue player
  *----------------------------------------------------------------------------*/
-static const std::string cuePlayerElementName = "cuePlayer";
+const std::string   cuePlayerElementName = "cuePlayer";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the station logo image
  *----------------------------------------------------------------------------*/
-static const std::string stationLogoConfigElementName = "stationLogo";
+const std::string   stationLogoConfigElementName = "stationLogo";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the test audio file location
  *----------------------------------------------------------------------------*/
-static const std::string testAudioUrlConfigElementName = "testAudioUrl";
+const std::string   testAudioUrlConfigElementName = "testAudioUrl";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing window positions
  *----------------------------------------------------------------------------*/
-static const std::string windowPositionsKey = "windowPositions";
+const std::string   windowPositionsKey = "windowPositions";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing the token of the edited p.l.
  *----------------------------------------------------------------------------*/
-static const std::string editedPlaylistTokenKey = "editedPlaylistToken";
+const std::string   editedPlaylistTokenKey = "editedPlaylistToken";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the scheduler not available key
  *----------------------------------------------------------------------------*/
-static const std::string schedulerNotReachableKey = "schedulerNotReachableMsg";
+const std::string   schedulerNotReachableKey = "schedulerNotReachableMsg";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the storage not available key
  *----------------------------------------------------------------------------*/
-static const std::string storageNotReachableKey = "storageNotReachableMsg";
+const std::string   storageNotReachableKey = "storageNotReachableMsg";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the authentication not available key
  *----------------------------------------------------------------------------*/
-static const std::string authenticationNotReachableKey =
+const std::string   authenticationNotReachableKey =
                                             "authenticationNotReachableMsg";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the locale not available key
  *----------------------------------------------------------------------------*/
-static const std::string localeNotAvailableKey = "localeNotAvailableMsg";
+const std::string   localeNotAvailableKey = "localeNotAvailableMsg";
 
+}
 
 /* ===============================================  local function prototypes */
 

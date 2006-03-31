@@ -54,11 +54,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const Glib::ustring  windowName = "liveModeWindow";
+const Glib::ustring     windowName = "liveModeWindow";
 
+}
 
 /* ===============================================  local function prototypes */
 

@@ -53,16 +53,19 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const Glib::ustring  windowName = "scratchpadWindow";
+const Glib::ustring     windowName = "scratchpadWindow";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing Scratchpad contents
  *----------------------------------------------------------------------------*/
-static const Glib::ustring  userPreferencesKeyName = "scratchpadContents";
+const Glib::ustring     userPreferencesKeyName = "scratchpadContents";
 
+}
 
 /* ===============================================  local function prototypes */
 

@@ -65,52 +65,58 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  Our copyright notice, should be at most 80 columns
  */
-static const char copyrightNotice[] =
+const char              copyrightNotice[] =
         "Copyright (c) 2004 Media Development Loan Fund under the GNU GPL";
 
 /**
  *  String describing the short options.
  */
-static const char   options[] = "ho:s:v";
+const char              options[] = "ho:s:v";
 
 /**
  *  Structure describing the long options
  */
-static const struct option longOptions[] = {
-    { "help", no_argument, 0, 'h' },
-    { "output", required_argument, 0, 'o' },
-    { "stylesheet", required_argument, 0, 's' },
-    { "version", no_argument, 0, 'v' },
-    { 0, 0, 0, 0 }
-};
+const struct option     longOptions[] =
+                        {
+                            { "help", no_argument, 0, 'h' },
+                            { "output", required_argument, 0, 'o' },
+                            { "stylesheet", required_argument, 0, 's' },
+                            { "version", no_argument, 0, 'v' },
+                            { 0, 0, 0, 0 }
+                        };
 
 /**
  *  The encoding to use for the output file.
  */
-static const std::string encoding = "utf-8";
+const std::string       encoding = "utf-8";
 
 /**
  *  The output XML file name.
  */
-static Ptr<std::string>::Ref xmlOutFileName;
+Ptr<std::string>::Ref   xmlOutFileName;
 
 /**
  *  The XSLT attached to the output file.
  */
-static Ptr<std::string>::Ref xsltFileName;
+Ptr<std::string>::Ref   xsltFileName;
 
+}
 
 /* ===============================================  local function prototypes */
+
+namespace {
 
 /**
  *  Print program version.
  *
  *  @param os the std::ostream to print to.
  */
-static void
+void
 printVersion (  std::ostream  & os );
 
 /**
@@ -119,7 +125,7 @@ printVersion (  std::ostream  & os );
  *  @param invocation the command line command used to invoke this program.
  *  @param os the std::ostream to print to.
  */
-static void
+void
 printUsage (    const char      invocation[],
                 std::ostream  & os );
 
@@ -131,9 +137,10 @@ printUsage (    const char      invocation[],
  *  @return true of all went well, false in case the program should exit
  *          after this call.
  */
-static bool
+bool
 processArguments(int argc, char *argv[]);
 
+}
 
 /* =============================================================  module code */
 

@@ -63,27 +63,31 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  Our copyright notice, should be at most 80 columns
  */
-static const char copyrightNotice[] =
+const char              copyrightNotice[] =
         "Copyright (c) 2004 Media Development Loan Fund under the GNU GPL";
 
 /**
  *  String describing the short options.
  */
-static const char   options[] = "c:hv";
+const char              options[] = "c:hv";
 
 /**
  *  Structure describing the long options
  */
-static const struct option longOptions[] = {
-    { "config", required_argument, 0, 'c' },
-    { "help", no_argument, 0, 'h' },
-    { "version", no_argument, 0, 'v' },
-    { 0, 0, 0, 0 }
-};
+const struct option     longOptions[] =
+                        {
+                            { "config", required_argument, 0, 'c' },
+                            { "help", no_argument, 0, 'h' },
+                            { "version", no_argument, 0, 'v' },
+                            { 0, 0, 0, 0 }
+                        };
 
+}
 
 /* ===============================================  local function prototypes */
 

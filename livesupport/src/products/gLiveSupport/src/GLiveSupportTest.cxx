@@ -73,29 +73,32 @@ using namespace LiveSupport::GLiveSupport;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(GLiveSupportTest);
 
+namespace {
+
 /**
  *  The name of the generic configuration file for the GLiveSupport object.
  */
-static const std::string gLiveSupportEtcConfigFileName 
+const std::string   gLiveSupportEtcConfigFileName 
                                             = "etc/gLiveSupport.xml";
 
 /**
  *  The name of the user-specific configuration file for the
  *  GLiveSupport object, relative to the user's home directory.
  */
-static const std::string gLiveSupportUserConfigFileName 
+const std::string   gLiveSupportUserConfigFileName 
                                             = "/.livesupport/gLiveSupport.xml";
 
 /**
  *  The login name.
  */
-static const std::string login = "root";
+const std::string   login = "root";
 
 /**
  *  The password.
  */
-static const std::string password = "q";
+const std::string   password = "q";
 
+}
 
 /* ===============================================  local function prototypes */
 

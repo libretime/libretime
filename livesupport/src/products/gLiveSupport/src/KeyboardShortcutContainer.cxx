@@ -49,12 +49,14 @@ using namespace LiveSupport::GLiveSupport;
  */
 const std::string           KeyboardShortcutContainer::configElementName
                                                 = "keyboardShortcutContainer";
+namespace {
 
 /**
  *  The name of the window name sub-element.
  */
-static const std::string    windowNameAttributeName = "windowName";
+const std::string           windowNameAttributeName = "windowName";
 
+}
 
 /* ===============================================  local function prototypes */
 

@@ -66,24 +66,27 @@ using namespace LiveSupport::gLiveSupport;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AudioPlayerTest);
 
+namespace {
+
 /**
  *  The name of the configuration file for the audio player.
  */
-static const std::string audioPlayerConfigFileName 
+const std::string audioPlayerConfigFileName 
                                             = "etc/audioPlayer.xml";
 
 /**
  *  The name of the configuration file for the local storage.
  */
-static const std::string storageClientConfigFileName
+const std::string storageClientConfigFileName
                                             = "storageClient.xml";
 
 /**
  *  The name of the configuration file for the authentication client.
  */
-static const std::string authenticationClientConfigFileName 
+const std::string authenticationClientConfigFileName 
                                             = "authenticationClient.xml";
 
+}
 
 /* ===============================================  local function prototypes */
 

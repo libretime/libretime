@@ -51,11 +51,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const Glib::ustring  windowName = "schedulerWindow";
+const Glib::ustring     windowName = "schedulerWindow";
 
+}
 
 /* ===============================================  local function prototypes */
 

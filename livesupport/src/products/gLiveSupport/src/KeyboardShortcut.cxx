@@ -49,15 +49,17 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 const std::string KeyboardShortcut::configElementName = "keyboardShortcut";
 
+namespace {
+
 /**
  *  The name of the attribute of the action element.
  */
-static const std::string    actionAttributeName   = "action";
+const std::string           actionAttributeName   = "action";
 
 /**
  *  The name of the attribute of the key element.
  */
-static const std::string    keyAttributeName      = "key";
+const std::string           keyAttributeName      = "key";
 
 /*
  *  The modifier keys we check against.
@@ -67,12 +69,13 @@ static const std::string    keyAttributeName      = "key";
  *  Gdk::MOD3_MASK (don't know what; always off on my computer),
  *  Gdk::BUTTONX_MASK (mouse buttons, X = 1..5).
  */
-static const Gdk::ModifierType  modifiersChecked = Gdk::SHIFT_MASK 
-                                            | Gdk::CONTROL_MASK
-                                            | Gdk::MOD1_MASK     // Alt
-                                            | Gdk::MOD4_MASK     // Windows key
-                                            | Gdk::MOD5_MASK;    // AltGr
+const Gdk::ModifierType     modifiersChecked = Gdk::SHIFT_MASK 
+                                             | Gdk::CONTROL_MASK
+                                             | Gdk::MOD1_MASK     // Alt
+                                             | Gdk::MOD4_MASK     // Windows key
+                                             | Gdk::MOD5_MASK;    // AltGr
 
+}
 
 /* ===============================================  local function prototypes */
 
