@@ -90,6 +90,11 @@ class BackupView : public Gtk::VBox,
 {
     private:
         /**
+         *  The text entry field for entering the title of the backup.
+         */
+        EntryBin *                  backupTitleEntry;
+        
+        /**
          *  The object for entering the backup criteria.
          */
         AdvancedSearchEntry *       criteriaEntry;
@@ -125,6 +130,15 @@ class BackupView : public Gtk::VBox,
         bool
         copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
                       Ptr<Glib::ustring>::Ref   fileName)           throw ();
+        
+        /**
+         *  Read the title of the backup from the entry field.
+         *  If the entry is blank, a default title is used.
+         *
+         *  @return the title.
+         */
+        Ptr<Glib::ustring>::Ref
+        readTitle(void)                                             throw ();
     
     
     protected:

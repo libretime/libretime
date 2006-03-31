@@ -67,12 +67,33 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
           : LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Gtk::Box *          criteriaView      = constructCriteriaView();
-    Gtk::Box *          backupListView    = constructBackupListView();
+    Gtk::Label *        backupTitleLabel;
+    try {
+        backupTitleLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("backupTitleLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
     
-    Gtk::VPaned *       twoPanedView  = Gtk::manage(new Gtk::VPaned);
-    twoPanedView->pack1(*criteriaView,   Gtk::PACK_EXPAND_WIDGET, 5);
-    twoPanedView->pack2(*backupListView, Gtk::PACK_EXPAND_WIDGET, 5);
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    backupTitleEntry = Gtk::manage(wf->createEntryBin());
+    
+    Gtk::Box *          backupTitleBox  = Gtk::manage(new Gtk::HBox);
+    backupTitleBox->pack_start(*backupTitleLabel, Gtk::PACK_SHRINK, 5);
+    backupTitleBox->pack_start(*backupTitleEntry, Gtk::PACK_SHRINK, 5);
+    
+    Gtk::Box *          criteriaView    = constructCriteriaView();
+    
+    Gtk::Box *          topPane         = Gtk::manage(new Gtk::VBox);
+    topPane->pack_start(*backupTitleBox, Gtk::PACK_SHRINK,        5);
+    topPane->pack_start(*criteriaView,   Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::Box *          bottomPane      = constructBackupListView();
+    
+    Gtk::VPaned *       twoPanedView    = Gtk::manage(new Gtk::VPaned);
+    twoPanedView->pack1(*topPane,    Gtk::PACK_EXPAND_WIDGET, 5);
+    twoPanedView->pack2(*bottomPane, Gtk::PACK_EXPAND_WIDGET, 5);
     
     add(*twoPanedView);
 }
@@ -170,7 +191,7 @@ BackupView :: constructBackupListView(void)                         throw ()
 void
 BackupView :: onCreateBackup(void)                                  throw ()
 {
-    Ptr<Glib::ustring>::Ref     title(new Glib::ustring("new backup"));
+    Ptr<Glib::ustring>::Ref     title    = readTitle();
     Ptr<SearchCriteria>::Ref    criteria = criteriaEntry->getSearchCriteria();
     
     try {
@@ -287,5 +308,29 @@ BackupView :: copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
     curl_easy_cleanup(handle);
     fclose(localFile);
     return true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read the title of the backup from the entry field.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+BackupView :: readTitle(void)                                       throw ()
+{
+    Ptr<Glib::ustring>::Ref     title(new Glib::ustring(
+                                                backupTitleEntry->get_text() ));
+    if (*title != "") {
+        return title;
+    }
+    
+    try {
+        title = getResourceUstring("defaultBackupTitle");
+        
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    return title;
 }
 

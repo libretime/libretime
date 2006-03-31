@@ -284,6 +284,9 @@ root:table
         deleteButtonLabel:string    { "Delete" }
         saveButtonLabel:string      { "Save" }
         
+        backupTitleLabel:string     { "Title" }
+        defaultBackupTitle:string   { "new backup" }
+        
         fileChooserDialogTitle:string   { "Save File" }
         backupErrorMsg:string       { "Backup error: " }
     }
