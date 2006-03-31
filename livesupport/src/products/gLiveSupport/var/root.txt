@@ -199,6 +199,11 @@ root:table
     }
     
     advancedSearchEntry:table {
+        fileTypeTextLabel:string    { "File types" }
+        allFileType:string          { "all" }
+        audioClipFileType:string    { "audio clips" }
+        playlistFileType:string     { "playlists" }
+        
         searchByTextLabel:string    { "Search by" }
         
         partialOperatorDisplay:string

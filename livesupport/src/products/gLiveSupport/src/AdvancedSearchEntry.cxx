@@ -48,6 +48,41 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/*------------------------------------------------------------------------------
+ *  The localization key for "File type: " before the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    fileTypeLabelKey = "fileTypeTextLabel";
+
+/*------------------------------------------------------------------------------
+ *  The localization key for "all" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    allLocalizationKey = "allFileType";
+
+/*------------------------------------------------------------------------------
+ *  The localization key for "playlist" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    playlistLocalizationKey = "playlistFileType";
+
+/*------------------------------------------------------------------------------
+ *  The localization key for "audioClip" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    audioClipLocalizationKey = "audioClipFileType";
+
+/*------------------------------------------------------------------------------
+ *  The search key for "all" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    allSearchKey = "all";
+
+/*------------------------------------------------------------------------------
+ *  The search key for "playlist" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    playlistSearchKey = "playlist";
+
+/*------------------------------------------------------------------------------
+ *  The search key for "audioClip" in the file type selector box.
+ *----------------------------------------------------------------------------*/
+static const std::string    audioClipSearchKey = "audioClip";
+
 
 /* ===============================================  local function prototypes */
 
@@ -70,17 +105,48 @@ AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
         std::exit(1);
     }
     setBundle(bundle);
-    
-    metadataTypes = gLiveSupport->getMetadataTypeContainer();
 
-    AdvancedSearchItem * searchOptionsBox = Gtk::manage(new AdvancedSearchItem(
+    metadataTypes = gLiveSupport->getMetadataTypeContainer();
+    Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance(); 
+    
+    Gtk::Label *            fileTypeLabel;
+    try {
+        fileTypeLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring(fileTypeLabelKey) ));
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    fileTypeEntry = Gtk::manage(wf->createComboBoxText());
+    Ptr<Glib::ustring>::Ref allKey(new Glib::ustring(allSearchKey));
+    Ptr<Glib::ustring>::Ref audioClipKey(new Glib::ustring(audioClipSearchKey));
+    Ptr<Glib::ustring>::Ref playlistKey( new Glib::ustring(playlistSearchKey));
+    fileTypeEntry->appendPair(getResourceUstring(allLocalizationKey),
+                              allKey);
+    fileTypeEntry->appendPair(getResourceUstring(audioClipLocalizationKey),
+                              audioClipKey);
+    fileTypeEntry->appendPair(getResourceUstring(playlistLocalizationKey),
+                              playlistKey);
+    fileTypeEntry->set_active(0);
+        
+    AdvancedSearchItem *    searchItem = Gtk::manage(new AdvancedSearchItem(
                                                                 true, 
                                                                 metadataTypes,
                                                                 getBundle() ));
-    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
-
-    searchOptionsBox->signalAddNew().connect(sigc::mem_fun(*this, 
+    searchItem->signalAddNew().connect(sigc::mem_fun(*this, 
                                     &AdvancedSearchEntry::onAddNewCondition ));
+    
+    Gtk::HBox *     fileTypeBox = Gtk::manage(new Gtk::HBox);
+    fileTypeBox->pack_start(*fileTypeLabel, Gtk::PACK_SHRINK, 5);
+    fileTypeBox->pack_start(*fileTypeEntry, Gtk::PACK_SHRINK, 5);
+    
+    searchItemsBox = Gtk::manage(new Gtk::VBox);
+    searchItemsBox->pack_start(*searchItem, Gtk::PACK_SHRINK, 0);
+
+    pack_start(*fileTypeBox,    Gtk::PACK_SHRINK, 5);
+    pack_start(*searchItemsBox, Gtk::PACK_SHRINK, 5);  
 }
 
 
@@ -90,14 +156,14 @@ AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
 void
 AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
 {
-    AdvancedSearchItem *    searchOptionsBox = Gtk::manage(new 
-                                    AdvancedSearchItem(false, 
-                                                       metadataTypes,
-                                                       getBundle() ));
-    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
+    AdvancedSearchItem *    searchItem = Gtk::manage(new AdvancedSearchItem(
+                                                                false, 
+                                                                metadataTypes,
+                                                                getBundle() ));
+    searchItemsBox->pack_start(*searchItem, Gtk::PACK_SHRINK, 5);
 
-    searchOptionsBox->show_all_children();
-    searchOptionsBox->show();
+    searchItem->show_all_children();
+    searchItem->show();
 }
 
 
@@ -107,10 +173,11 @@ AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
 Ptr<SearchCriteria>::Ref
 AdvancedSearchEntry :: getSearchCriteria(void)                      throw ()
 {
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "and"));
+    Ptr<const Glib::ustring>::Ref   fileType = fileTypeEntry->getActiveKey();
+    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria(*fileType));
 
-    Gtk::Box_Helpers::BoxList                       children = this->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
+    Gtk::Box_Helpers::BoxList       children = searchItemsBox->children();
+    Gtk::Box_Helpers::BoxList::type_base::iterator      it;
     
     for (it = children.begin(); it != children.end(); ++it) {
         AdvancedSearchItem *    child = dynamic_cast<AdvancedSearchItem *>(
@@ -129,8 +196,8 @@ void
 AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &  callback)
                                                                     throw ()
 {
-    Gtk::Box_Helpers::BoxList                       children = this->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
+    Gtk::Box_Helpers::BoxList       children = searchItemsBox->children();
+    Gtk::Box_Helpers::BoxList::type_base::iterator      it;
     
     for (it = children.begin(); it != children.end(); ++it) {
         AdvancedSearchItem *    child = dynamic_cast<AdvancedSearchItem *>(

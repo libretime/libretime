@@ -81,6 +81,16 @@ class AdvancedSearchEntry : public Gtk::VBox,
          */
         Ptr<MetadataTypeContainer>::Ref     metadataTypes;
         
+        /**
+         *  The combo box for selecting the file types to search for.
+         */
+        ComboBoxText *                      fileTypeEntry;
+        
+        /**
+         *  The box containing the AdvancedSearchItem widgets.
+         */
+        Gtk::VBox *                         searchItemsBox;
+        
         
     public:
         /**
