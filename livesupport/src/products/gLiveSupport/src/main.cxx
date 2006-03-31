@@ -96,7 +96,7 @@ const struct option     longOptions[] =
  *
  *  @param os the std::ostream to print to.
  */
-static void
+void
 printVersion (  std::ostream  & os );
 
 /**
@@ -105,7 +105,7 @@ printVersion (  std::ostream  & os );
  *  @param invocation the command line command used to invoke this program.
  *  @param os the std::ostream to print to.
  */
-static void
+void
 printUsage (    const char      invocation[],
                 std::ostream  & os );
 
@@ -191,7 +191,7 @@ int main (  int     argc,
 /*------------------------------------------------------------------------------
  *  Print program version.
  *----------------------------------------------------------------------------*/
-static void
+void
 printVersion (  std::ostream  & os )
 {
     os << PACKAGE_NAME << ' ' << PACKAGE_VERSION << std::endl
@@ -202,7 +202,7 @@ printVersion (  std::ostream  & os )
 /*------------------------------------------------------------------------------
  *  Print program usage.
  *----------------------------------------------------------------------------*/
-static void
+void
 printUsage (    const char      invocation[],
                 std::ostream  & os )
 {

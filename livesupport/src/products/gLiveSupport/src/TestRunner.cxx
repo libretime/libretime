@@ -109,8 +109,6 @@ Ptr<std::string>::Ref   xsltFileName;
 
 /* ===============================================  local function prototypes */
 
-namespace {
-
 /**
  *  Print program version.
  *
@@ -140,7 +138,6 @@ printUsage (    const char      invocation[],
 bool
 processArguments(int argc, char *argv[]);
 
-}
 
 /* =============================================================  module code */
 
@@ -194,7 +191,7 @@ main(   int     argc,
 /*------------------------------------------------------------------------------
  *  Process command line arguments.
  *----------------------------------------------------------------------------*/
-static bool
+bool
 processArguments(int argc, char *argv[])
 {
     int     i;
@@ -248,7 +245,7 @@ processArguments(int argc, char *argv[])
 /*------------------------------------------------------------------------------
  *  Print program version.
  *----------------------------------------------------------------------------*/
-static void
+void
 printVersion (  std::ostream  & os )
 {
     os << PACKAGE_NAME << ' ' << PACKAGE_VERSION << std::endl
@@ -260,7 +257,7 @@ printVersion (  std::ostream  & os )
 /*------------------------------------------------------------------------------
  *  Print program usage.
  *----------------------------------------------------------------------------*/
-static void
+void
 printUsage (    const char      invocation[],
                 std::ostream  & os )
 {

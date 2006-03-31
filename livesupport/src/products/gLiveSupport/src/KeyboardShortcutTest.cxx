@@ -73,7 +73,7 @@ const std::string   configFileName  = "etc/keyboardShortcut.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-KeyboardShortcutTest :: setUp(void)                         throw ()
+KeyboardShortcutTest :: setUp(void)             throw (CPPUNIT_NS::Exception)
 {
     std::ifstream   ifs;
     ifs.open(configFileName.c_str());
@@ -97,11 +97,11 @@ KeyboardShortcutTest :: setUp(void)                         throw ()
 
     } catch (std::invalid_argument &e) {
         ifs.close();
-        CPPUNIT_FAIL("semantic error in audio player configuration file: "
+        CPPUNIT_FAIL("semantic error in keyboard shortcuts configuration file: "
                      + std::string(e.what()));
     } catch (xmlpp::exception &e) {
         ifs.close();
-        CPPUNIT_FAIL("syntax error in audio player configuration file: "
+        CPPUNIT_FAIL("syntax error in keyboard shortcuts configuration file: "
                      + std::string(e.what()));
     }
     ifs.close();
@@ -124,25 +124,25 @@ void
 KeyboardShortcutTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    CPPUNIT_ASSERT(ksc->findAction(0, GDK_P)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::ModifierType(0), GDK_p)
                     == KeyboardShortcut::playAudio);
     
-    CPPUNIT_ASSERT(ksc->findAction(GDK_MOD2_MASK|GDK_LOCK_MASK, GDK_P)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::MOD2_MASK | Gdk::LOCK_MASK, GDK_p)
                     == KeyboardShortcut::playAudio);
     
-    CPPUNIT_ASSERT(ksc->findAction(GDK_CONTROL_MASK, GDK_P)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::CONTROL_MASK, GDK_p)
                     == KeyboardShortcut::pauseAudio);
     
-    CPPUNIT_ASSERT(ksc->findAction(0, GDK_space)
-                    == KeyboardShortcut::pauseAudio);
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::ModifierType(0), GDK_space)
+                    == KeyboardShortcut::stopAudio);
     
-    CPPUNIT_ASSERT(ksc->findAction(0, GDK_Q)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::ModifierType(0), GDK_q)
                     == KeyboardShortcut::noAction);
     
-    CPPUNIT_ASSERT(ksc->findAction(GDK_CONTROL_MASK, GDK_W)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::CONTROL_MASK, GDK_w)
                     == KeyboardShortcut::noAction);
     
-    CPPUNIT_ASSERT(ksc->findAction(0xffffff, 0xffffff)
+    CPPUNIT_ASSERT(ksc->findAction(Gdk::ModifierType(0xffffff), 0xffffff)
                     == KeyboardShortcut::noAction);
 }
 

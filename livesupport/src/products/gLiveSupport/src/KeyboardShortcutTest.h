@@ -96,7 +96,7 @@ class KeyboardShortcutTest : public BaseTestMethod
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
