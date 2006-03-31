@@ -51,18 +51,21 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /**
  *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
  */
-static const Glib::ustring  windowName = "masterPanelWindow";
+const Glib::ustring     windowName = "masterPanelWindow";
 
 /**
  *  Number of times per second that onUpdateTime() is called.
  *  It's a good idea to make this a divisor of 1000.
  *  If you change this, then you must change NowPlaying::blinkingConstant, too.
  */
-static const int    updateTimeConstant = 20;
+const int               updateTimeConstant = 20;
 
+}
 
 /* ===============================================  local function prototypes */
 
@@ -374,6 +377,17 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
     }
 
     nowPlayingWidget->onUpdateTime();
+    
+    static int      backupCounter = 0;
+    if (backupCounter++ == updateTimeConstant * 10) {
+        backupCounter = 0;
+    }
+    if (backupCounter == 0 && optionsWindow) {
+        BackupList *    backupList    = optionsWindow->getBackupList();
+        if (backupList) {
+            backupList->updateSilently();
+        }
+    }
 
     return true;
 }

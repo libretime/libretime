@@ -128,6 +128,19 @@ class BackupList : public Gtk::VBox,
             const Glib::ustring &     token)
                                                 throw (XmlRpcException);
         
+        /**
+         *  Query the storage server about the status of the given row.
+         *  If its status is 'working', call createBackupCheck
+         *  on it, and change its displayed status, if needed.
+         *
+         *  @param  iter    points to the row to be updated.
+         *  @return true    if createBackupCheck was called, and it returned
+         *                  'success'; false in all other cases.
+         *  @exception  XmlRpcException     thrown by the storage client.
+         */
+        bool
+        update(Gtk::TreeIter    iter)           throw (XmlRpcException);
+
 
     protected:
         /**
@@ -246,8 +259,15 @@ class BackupList : public Gtk::VBox,
          *  @exception  XmlRpcException     thrown by the storage client.
          */
         void
-        remove(void)                            throw (XmlRpcException);
+        removeSelected(void)                    throw (XmlRpcException);
 
+        /**
+         *  Get the title of the currently selected item.
+         *  If no item is selected, then a 0 pointer is returned.
+         */
+        Ptr<Glib::ustring>::Ref
+        getSelectedTitle(void)                                  throw ();
+        
         /**
          *  Get the URL of the currently selected item.
          *  If the status of the item is 'working', then an update() is
@@ -258,8 +278,20 @@ class BackupList : public Gtk::VBox,
          *  @exception  XmlRpcException     can be thrown by update().
          */
         Ptr<Glib::ustring>::Ref
-        getUrl(void)                            throw (XmlRpcException);
+        getSelectedUrl(void)                    throw (XmlRpcException);
         
+        /**
+         *  Query the storage server about the status of the selected row.
+         *  If its status is 'working', call createBackupCheck
+         *  on it, and change its displayed status, if needed.
+         *
+         *  @return true    if createBackupCheck was called, and it returned
+         *                  'success'; false in all other cases.
+         *  @exception  XmlRpcException     thrown by the storage client.
+         */
+        bool
+        updateSelected(void)                    throw (XmlRpcException);
+
         /**
          *  Query the storage server about the status of the pending backup.
          *  If there is a backup with status 'working', call createBackupCheck
@@ -271,6 +303,19 @@ class BackupList : public Gtk::VBox,
          */
         bool
         update(void)                            throw (XmlRpcException);
+
+        /**
+         *  Query the storage server about the status of the pending backup.
+         *  If there is a backup with status 'working', call createBackupCheck
+         *  on it, and change its displayed status, if needed.
+         *  This is the same as update(), except it does not throw any
+         *  exceptions (just ignores them).
+         *
+         *  @return true    if createBackupCheck was called, and it returned
+         *                  'success'; false in all other cases.
+         */
+        bool
+        updateSilently(void)                                    throw ();
 
         /**
          *  Return the contents of the backup list.

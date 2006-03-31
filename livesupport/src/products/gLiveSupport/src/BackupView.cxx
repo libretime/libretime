@@ -213,7 +213,7 @@ void
 BackupView :: onDeleteButtonClicked(void)                           throw ()
 {
     try {
-        backupList->remove();
+        backupList->removeSelected();
         
     } catch (XmlRpcException &e) {
         Ptr<Glib::ustring>::Ref     errorMsg
@@ -232,7 +232,7 @@ BackupView :: onSaveButtonClicked(void)                             throw ()
 {
     Ptr<Glib::ustring>::Ref         url;
     try {
-        url = backupList->getUrl();
+        url = backupList->getSelectedUrl();
         
     } catch (XmlRpcException &e) {
         Ptr<Glib::ustring>::Ref     errorMsg
@@ -254,7 +254,10 @@ BackupView :: onSaveButtonClicked(void)                             throw ()
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-//    dialog->set_transient_for(*this);
+    
+    Ptr<Glib::ustring>::Ref     fileName = backupList->getSelectedTitle();
+    fileName->append(".tar");
+    dialog->set_current_name(*fileName);
 
     dialog->add_button(Gtk::Stock::CANCEL,  Gtk::RESPONSE_CANCEL);
     dialog->add_button(Gtk::Stock::SAVE,    Gtk::RESPONSE_OK);
@@ -265,8 +268,7 @@ BackupView :: onSaveButtonClicked(void)                             throw ()
         return;
     }
     
-    Ptr<Glib::ustring>::Ref     fileName(new Glib::ustring(
-                                                    dialog->get_filename() ));
+    fileName->assign(dialog->get_filename());
     copyUrlToFile(url, fileName);
 }
 

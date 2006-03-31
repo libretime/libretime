@@ -46,26 +46,29 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The localization key for the 'working' status.
  *----------------------------------------------------------------------------*/
-static const Glib::ustring      workingStatusKey    = "workingStatus";
+const Glib::ustring      workingStatusKey    = "workingStatus";
 
 /*------------------------------------------------------------------------------
  *  The localization key for the 'success' status.
  *----------------------------------------------------------------------------*/
-static const Glib::ustring      successStatusKey    = "successStatus";
+const Glib::ustring      successStatusKey    = "successStatus";
 
 /*------------------------------------------------------------------------------
  *  The localization key for the 'fault' status.
  *----------------------------------------------------------------------------*/
-static const Glib::ustring      faultStatusKey      = "faultStatus";
+const Glib::ustring      faultStatusKey      = "faultStatus";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing the list of backups
  *----------------------------------------------------------------------------*/
-static const Glib::ustring      userPreferencesKeyName  = "activeBackups";
+const Glib::ustring      userPreferencesKeyName  = "activeBackups";
 
+}
 
 /* ===============================================  local function prototypes */
 
@@ -163,7 +166,7 @@ BackupList :: add(const Glib::ustring &     title,
  *  Remove the currently selected item from the list.
  *----------------------------------------------------------------------------*/
 void
-BackupList :: remove(void)                      throw (XmlRpcException)
+BackupList :: removeSelected(void)              throw (XmlRpcException)
 {
     Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
     Gtk::TreeIter                       iter = selection->get_selected();
@@ -180,10 +183,29 @@ BackupList :: remove(void)                      throw (XmlRpcException)
 
 
 /*------------------------------------------------------------------------------
+ *  Get the title of the currently selected item.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+BackupList :: getSelectedTitle(void)                            throw ()
+{
+    Ptr<Glib::ustring>::Ref     title;
+    
+    Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
+    Gtk::TreeIter                       iter = selection->get_selected();
+    if (iter) {
+        Gtk::TreeRow    row = *iter;
+        title.reset(new Glib::ustring(row[modelColumns.titleColumn]));
+    }
+    
+    return title;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Get the URL of the currently selected item.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-BackupList :: getUrl(void)                      throw (XmlRpcException)
+BackupList :: getSelectedUrl(void)              throw (XmlRpcException)
 {
     Ptr<Glib::ustring>::Ref     url;
     
@@ -194,7 +216,7 @@ BackupList :: getUrl(void)                      throw (XmlRpcException)
     }
     
     if (iter->get_value(modelColumns.statusColumn) == workingStatusKey) {
-        update();
+        update(iter);
     }
 
     if (iter->get_value(modelColumns.statusColumn) == successStatusKey) {
@@ -209,14 +231,61 @@ BackupList :: getUrl(void)                      throw (XmlRpcException)
  *  Query the storage server about the status of the pending backup.
  *----------------------------------------------------------------------------*/
 bool
-BackupList :: update(void)                      throw (XmlRpcException)
+BackupList :: updateSelected(void)              throw (XmlRpcException)
 {
     Glib::RefPtr<Gtk::TreeSelection>    selection = treeView->get_selection();
     Gtk::TreeIter                       iter = selection->get_selected();
     if (!iter) {
         return false;
+    } else {
+        return update(iter);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Query the storage server about the status of the pending backup.
+ *----------------------------------------------------------------------------*/
+bool
+BackupList :: update(void)                      throw (XmlRpcException)
+{
+    bool    didSomething = false;
+    
+    for (Gtk::TreeIter  it  = treeModel->children().begin();
+                        it != treeModel->children().end(); ++it) {
+        didSomething |= update(it);
     }
     
+    return didSomething;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Query the storage server about the status of the pending backup.
+ *----------------------------------------------------------------------------*/
+bool
+BackupList :: updateSilently(void)                              throw ()
+{
+    bool    didSomething = false;
+    
+    for (Gtk::TreeIter  it  = treeModel->children().begin();
+                        it != treeModel->children().end(); ++it) {
+        try {
+            didSomething |= update(it);
+        } catch (XmlRpcException &e) {
+        }
+    }
+    
+    return didSomething;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Query the storage server about the status of the pending backup.
+ *----------------------------------------------------------------------------*/
+bool
+BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
+{
     if (iter->get_value(modelColumns.statusColumn) != workingStatusKey) {
         return false;
     }
