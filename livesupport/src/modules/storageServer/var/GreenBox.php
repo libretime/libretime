@@ -40,7 +40,7 @@ require_once "BasicStor.php";
  */
 class GreenBox extends BasicStor{
 
-    /* ======================================================= public methods */
+    /* ====================================================== storage methods */
 
     /**
      *  Create new folder
@@ -1111,8 +1111,216 @@ class GreenBox extends BasicStor{
         $res = $pr->delGroupPref($sessid, $group, $key);
         return $res;
     }
-    /* --------------------------------------------------------- info methods */
 
+    /* =================================================== networking methods */
+    /* ------------------------------------------------------- common methods */
+    /**
+     *  Common "check" method for transports
+     *
+     *  @param trtok: string - transport token
+     *  @return struct/hasharray with fields:
+     *      state: string - transport state
+     *      expectedSize: int - file size in bytes
+     *      realSize: int - currently transported bytes
+     *      expectedChsum: string - orginal file checksum
+     *      realChsum: string - transported file checksum
+     *      ... ?
+     */
+    // DUMMY
+    function getTransportInfo($trtok)
+    {
+        switch($trtok){
+            case'123456789abcdeff';     // upload/download
+                return array(
+                    'state'         =>  'finished',
+                    'expectedSize'  =>  1024,
+                    'realSize'      =>  1024,
+                    'expectedChsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'realChsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
+                );
+            case'123456789abcdefe';     // search
+                return array(
+                    'state'         =>  'finished',
+                );
+            default:
+                return PEAR::raiseError(
+                    "GreenBox::getTransportInfo:".
+                    " invalid transport token ($trtok)"
+                );
+        }
+    }
+    
+    /**
+     *  Turn transports on/off, optionaly return current state.
+     *
+     *  @param onOff: boolean optional (if not used, current state is returned)
+     *  @return boolean - previous state
+     */
+    // DUMMY
+    function turnOnOffTransports($onOff)
+    {
+        return TRUE;
+    }
+
+    /* ------------------------ methods for ls-archive-format file transports */
+    /**
+     *  Open async file transfer from local storageServer to network hub,
+     *  file should be ls-archive-format file.
+     *
+     *  @param filePath string - local path to uploaded file
+     *  @return string - transport token
+     */
+    // DUMMY
+    function uploadFile2Hub($filePath)
+    {
+        if(!file_exists($filePath)){
+            return PEAR::raiseError(
+                "GreenBox::uploadFile2Hub: file not found ($filePath)"
+            );
+        }
+        return '123456789abcdeff';
+    }
+
+    /**
+     *  Get list of prepared transfers initiated by hub
+     *
+     *  @return array of structs/hasharrays with fields:
+     *      trtok: string transport token
+     *      ... ?
+     */
+    // DUMMY
+    function getHubInitiatedTransfers()
+    {
+        return array(
+            array(
+                'trtok' =>  '123456789abcdeff',
+            ),
+        );
+    }
+
+    /**
+     *  Start of download initiated by hub
+     *
+     *  @param trtok: string - transport token obtained from
+     *          the getHubInitiatedTransfers method
+     *  @return string - transport token
+     */
+    // DUMMY
+    function startHubInitiatedTransfer($trtok)
+    {
+        if($trtok != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "GreenBox::startHubInitiatedTransfer:".
+                " invalid transport token ($trtok)"
+            );
+        }
+        return $trtok;
+    }
+
+    /* ------------- special methods for audioClip/webstream object transport */
+
+    /**
+     *  Start upload of audioClip/webstream from local storageServer to hub
+     *
+     *  @param gunid: string - global unique id of object being transported
+     *  @return boolean true - status
+     */
+    // DUMMY
+    function uploadAudioClip2Hub($gunid)
+    {
+        $ac = StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        return TRUE;
+    }
+
+    /**
+     *  Start download of audioClip/webstream from hub to local storageServer
+     *
+     *  @param gunid: string - global unique id of object being transported
+     *  @return boolean true - status
+     */
+    // DUMMY
+    function downloadAudioClipFromHub($gunid)
+    {
+        $ac = StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        return TRUE;
+    }
+
+    /* ------------------------------- special methods for playlist transport */
+    /**
+     *  Start upload of playlist from local storageServer to hub
+     *
+     *  @param plid: string - global unique id of playlist being transported
+     *  @param withContent: boolean - if true, transport playlist content too
+     *  @return boolean true - status
+     */
+    // DUMMY
+    function uploadPlaylist2Hub($plid, $withContent)
+    {
+        $pl = Playlist::recallByGunid($this, $plid);
+        if(PEAR::isError($pl)){ return $pl; }
+        return TRUE;
+    }
+
+    /**
+     *  Start download of playlist from hub to local storageServer
+     *
+     *  @param plid: string - global unique id of playlist being transported
+     *  @param withContent: boolean - if true, transport playlist content too
+     *  @return boolean true - status
+     */
+    // DUMMY
+    function downloadPlaylistFromHub($plid, $withContent)
+    {
+        $pl = Playlist::recallByGunid($this, $plid);
+        if(PEAR::isError($pl)){ return $pl; }
+        return TRUE;
+    }
+
+    /* ------------------------------------------------ global-search methods */
+    /**
+     *  Start search job on network hub
+     *
+     *  @param criteria: LS criteria format (see localSearch)
+     *  @return string - transport token
+     */
+    // DUMMY
+    function globalSearch($criteria)
+    {
+        return '123456789abcdefe';
+    }
+
+    /**
+     *  Get results from search job on network hub
+     *
+     *  @param trtok: string - transport token
+     *  @return : LS search result format (see localSearch)
+     */
+    // DUMMY
+    function getSearchResults($trtok)
+    {
+        if($trtok != '123456789abcdefe'){
+            return PEAR::raiseError(
+                "GreenBox::getSearchResults: invalid transport token ($trtok)"
+            );
+        }
+        return array(
+            'results'   => array('0000000000010001', '0000000000010002'),
+            'cnt'       => 2,
+        );
+    }
+
+    /**
+     *
+     *  @param
+     *  @return
+    function ()
+    {
+    }
+     */
+    
+    /* ========================================================= info methods */
     /**
      *  List files in folder
      *
@@ -1159,8 +1367,7 @@ class GreenBox extends BasicStor{
         return $ex;
     }
 
-    /* ---------------------------------------------------- redefined methods */
-
+    /* ==================================================== redefined methods */
     /**
      *  Get file's path in virtual filesystem
      *
