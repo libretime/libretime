@@ -940,7 +940,7 @@ class GreenBox extends BasicStor{
       foreach ($dummytokens as $token) {
           $r[] = renderPlaylistToRSSCheck($token);
       }
-      return $r
+      return $r;
     }
 
     /**
