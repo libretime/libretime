@@ -281,16 +281,19 @@ class DataEngine{
     function _localGenSearch($criteria, $limit=0, $offset=0,
         $brFldNs=NULL, $brFld=NULL)
     {
-        $filetype = strtolower($criteria['filetype']);
+        $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
+        $filetype = strtolower($filetype);
         if(!array_key_exists($filetype, $this->filetypes)){
             return PEAR::raiseError(
                 'DataEngine::_localGenSearch: unknown filetype in search criteria'
             );
         }
         $filetype   = $this->filetypes[$filetype];
-        $operator   = strtolower($criteria['operator']);
+        $operator   = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
+        $operator   = strtolower($operator);
         $desc       = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
-        $whereArr   = $this->_makeWhereArr($criteria['conditions']);
+        $conditions   = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
+        $whereArr   = $this->_makeWhereArr($conditions);
         $orderbyQn  =
             (isset($criteria['orderby']) ? $criteria['orderby'] : NULL);
         $obSplitQn  = XML_Util::splitQualifiedName($orderbyQn);

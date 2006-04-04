@@ -317,7 +317,7 @@ class Backup {
      */
     function setEnviroment($createDir=false) {
         if ($this->loglevel=='debug') {
-            $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment - createDirs:$createDirs\n");
+            $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment - createDirs:$createDir\n");
         }
         # create a temporary directories
         if (is_null($this->token) && $createDir) {
