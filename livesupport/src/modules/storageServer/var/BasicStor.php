@@ -625,6 +625,23 @@ class BasicStor extends Alib{
         $owner = $row;
     }
     
+    /** 
+     *  Get tokens by type
+     *
+     *  @param type: string - access|put|render etc.
+     *  @return array - array of tokens
+     */
+    function getTokensByType($type)
+    {
+        $res = $this->dbc->query(
+            "SELECT TO_HEX(token) AS token FROM {$this->accessTable} WHERE type=?",
+            array($type));
+        while ($row = $res->fetchRow()) {
+             $r[] = $row['token'];
+        }
+        return $r;
+    }
+    
     /* -------------------------------------------- metadata methods4metadata */
 
     /**

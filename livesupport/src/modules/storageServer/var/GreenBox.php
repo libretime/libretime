@@ -826,6 +826,21 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *  Render playlist to ogg file (list results)
+     *
+     *  @param status  :  string  -  success | working | fault 
+     *      if this parameter is not set, then return with all unclosed
+     *  @return array of hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     */
+    function renderPlaylistToFileList($status='')
+    {
+        require_once "Renderer.php";
+        return Renderer::rnRender2FileList($this, $status);
+    }
+
+    /**
      *  Render playlist to ogg file (close handle)
      *
      *  @param token  :  string  -  render token
@@ -912,6 +927,23 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *  Render playlist to RSS file (list results)
+     *
+     *  @param status  :  string  -  success | working | fault
+     *  @return array of hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     */
+    function renderPlaylistToRSSList($status='')
+    {
+      $dummytokens = array ('123456789abcdeff');
+      foreach ($dummytokens as $token) {
+          $r[] = renderPlaylistToRSSCheck($token);
+      }
+      return $r
+    }
+
+    /**
      *  Render playlist to RSS file (close handle)
      *
      *  @param token  :  string  -  render token
@@ -935,84 +967,66 @@ class GreenBox extends BasicStor{
     /**
      *  Create backup of storage (open handle)
      *
-     *  @param sessid  :  string  -  session id
+     *  @param sessid   :  string  -  session id
      *  @param criteria : struct - see search criteria
      *  @return hasharray:
-     *           token : string - backup token
+     *           token  : string - backup token
      */
     function createBackupOpen($sessid, $criteria='')
     {
-        $token = '123456789abcdeff';
-        $tmpn = tempnam($this->bufferDir, 'backup_');
-        $tmpf = "$tmpn.tar";
-        $tmpd = "$tmpn.dir";           mkdir($tmpd);
-        $tmpdp = "$tmpd/playlist";     mkdir($tmpdp);
-        $tmpdc = "$tmpd/audioClip";    mkdir($tmpdc);
-        $tmpdm = "$tmpd/meta-inf";     mkdir($tmpdm);
-        $ctime = time();
-        // $hostname = $_SERVER['SERVER_NAME'];
-        $hostname = trim(`hostname`);
-        file_put_contents("$tmpdm/storage.xml",
-            "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
-            "<storage\n".
-            " type=\"backup\"\n".
-            " version=\"1.0\"\n".
-            " ctime=\"$ctime\"\n".
-            " hostname=\"$hostname\"\n".
-            "/>\n"
-        );
-        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        rename($tmpf, $fakeFile);
-        //copy($tmpf, $fakeFile);
-        rmdir($tmpdp); rmdir($tmpdc); rmdir($tmpdm);
-        rmdir($tmpd); unlink($tmpn);
-        return array('token'=>$token);
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->openBackup($sessid,$criteria);
     }
 
     /**
      *  Create backup of storage (check results)
      *
      *  @param token  :  string  -  backup token
-     *  @return hasharray:
+     *  @return hasharray with field: 
      *      status : string - susccess | working | fault
-     *      tmpfile : string - filepath to result temporary file
-     *      metafile : string - archive metafile in XML format
-     *      faultString : string - error message (use only if status==fault)
+     *      token  : stirng - backup token
+     *      url    : string - access url
      */
     function createBackupCheck($token)
     {
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
-            return PEAR::raiseError(
-                "LocStor::createBackupCheck: invalid token ($token)"
-            );
-        }
-        $status = 'success';
-        return array(
-            'status'=> $status,
-            'tmpfile'   => $fakeFile,
-            'metafile' => '',
-            'faultString' => ($status==fault ? 'backup process fault' : ''),
-        );
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->checkBackup($token);
+    }
+
+    /**
+     *  Create backup of storage (list results)
+     *
+     *  @param stat : status (optional)
+     *      if this parameter is not set, then return with all unclosed backups
+     *  @return array of hasharray with field: 
+     *      status : string - susccess | working | fault
+     *      token  : stirng - backup token
+     *      url    : string - access url
+     */
+    function createBackupList($sessid,$stat='')
+    {
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->listBackups($stat);
     }
 
     /**
      *  Create backup of storage (close handle)
      *
-     *  @param token  :  string  -  backup token
-     *  @return status : boolean
+     *  @param token   :  string  -  backup token
+     *  @return status :  boolean
      */
     function createBackupClose($token)
     {
-        if($token != '123456789abcdeff'){
-            return PEAR::raiseError(
-                "LocStor::createBackupClose: invalid token"
-            );
-        }
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        unlink($fakeFile);
-        return TRUE;
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->closeBackup($token);
     }
 
     /* ============================================== methods for preferences */

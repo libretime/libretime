@@ -1838,6 +1838,56 @@ class XR_LocStor extends LocStor{
     }
 
     /**
+     *  Create backup of storage (list results)
+     *
+     *  The XML-RPC name of this method is "locstor.createBackupList".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> stat  :  string  -  backup status </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC array of struct with following fields:
+     *  <ul>
+     *      <li> status : string - success | working | fault</li>
+     *      <li> url : string - readable url</li>
+     *      <li> metafile : string - archive metafile in XML format</li>
+     *      <li> faultString : string - error message
+     *                  (use only if status==fault) </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_createBackupCheck:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::createBackupCheck
+     */
+     //      <li> 854  -  backup process fault</li>
+    function xr_createBackupList($stat='')
+    {
+        $res = $this->createBackupList($stat);
+
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_BGERR ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_createBackupCheck: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+
+    /**
      *  Create backup of storage (close handle)
      *
      *  The XML-RPC name of this method is "locstor.createBackupClose".

@@ -41,6 +41,7 @@ require_once "LsPlaylist.php";
  *  @version $Revision: 1949 $
  *  @see LocStor
  */
+ 
 class Renderer
 {
 
@@ -115,6 +116,28 @@ class Renderer
         return array('status'=>$status, 'url'=>$url, 'tmpfile'=>$tmpfile);
     }
 
+    /**
+     *  Render playlist to ogg file (list results)
+     *
+     *  @param gb: greenbox object reference
+     *  @param stat : status (optional)
+     *      if this parameter is not set, then return with all unclosed backups
+     *  @return array of hasharray:
+     *      status : string - success | working | fault
+     *      url : string - readable url
+     */
+    function rnRender2FileList(&$gb,$stat='') {
+        # open temporary dir
+        $tokens = $gb->getTokensByType('render');
+        foreach ($tokens as $token) {
+            $st = Renderer::rnRender2FileCheck($gb, $token);
+            if ($stat=='' || $st['status']==$stat) {
+                $r[] = $st;
+            }
+        }
+        return $r;
+    }
+    
     /**
      *  Render playlist to ogg file (close handle)
      *

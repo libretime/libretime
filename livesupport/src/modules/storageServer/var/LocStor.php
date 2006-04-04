@@ -824,7 +824,7 @@ class LocStor extends BasicStor{
     /**
      *  Render playlist to ogg file (close handle)
      *
-     *  @param token  :  string  -  render token
+     *  @param token   : string  -  render token
      *  @return status : boolean
      */
     function renderPlaylistToFileClose($token)
@@ -839,9 +839,9 @@ class LocStor extends BasicStor{
     /**
      *  Render playlist to storage media clip (open handle)
      *
-     *  @param sessid  :  string  -  session id
-     *  @param plid : string  -  playlist gunid
-     *  @return token : string - render token
+     *  @param sessid  : string  -  session id
+     *  @param plid    : string  -  playlist gunid
+     *  @return token  : string  -  render token
      */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
@@ -859,7 +859,7 @@ class LocStor extends BasicStor{
      *  @param token  :  string  -  render token
      *  @return hasharray:
      *      status : string - success | working | fault
-     *      gunid : string - gunid of result file
+     *      gunid  : string - gunid of result file
      */
     function renderPlaylistToStorageCheck($token)
     {
@@ -873,9 +873,9 @@ class LocStor extends BasicStor{
     /**
      *  Render playlist to RSS file (open handle)
      *
-     *  @param sessid  :  string  -  session id
-     *  @param plid : string  -  playlist gunid
-     *  @return token : string - render token
+     *  @param sessid  : string  -  session id
+     *  @param plid    : string  -  playlist gunid
+     *  @return token  : string  -  render token
      */
     function renderPlaylistToRSSOpen($sessid, $plid)
     {
@@ -888,10 +888,10 @@ class LocStor extends BasicStor{
     /**
      *  Render playlist to RSS file (check results)
      *
-     *  @param token  :  string  -  render token
-     *  @return hasharray:
+     *  @param token      : string  -  render token
+     *  @return hasharray :
      *      status : string - success | working | fault
-     *      url : string - readable url
+     *      url    : string - readable url
      */
     function renderPlaylistToRSSCheck($token)
     {
@@ -911,7 +911,7 @@ class LocStor extends BasicStor{
     /**
      *  Render playlist to RSS file (close handle)
      *
-     *  @param token  :  string  -  render token
+     *  @param token   :  string  -  render token
      *  @return status : boolean
      */
     function renderPlaylistToRSSClose($token)
@@ -932,84 +932,66 @@ class LocStor extends BasicStor{
     /**
      *  Create backup of storage (open handle)
      *
-     *  @param sessid  :  string  -  session id
+     *  @param sessid   :  string  -  session id
      *  @param criteria : struct - see search criteria
-     *  @return token : string - backup token
+     *  @return hasharray:
+     *           token  : string - backup token
      */
-    function createBackupOpen($sessid, $criteria)
+    function createBackupOpen($sessid, $criteria='')
     {
-        $token = '123456789abcdeff';
-        $tmpn = tempnam($this->bufferDir, 'backup_');
-        $tmpf = "$tmpn.tar";
-        $tmpd = "$tmpn.dir";           mkdir($tmpd);
-        $tmpdp = "$tmpd/playlist";     mkdir($tmpdp);
-        $tmpdc = "$tmpd/audioClip";    mkdir($tmpdc);
-        $tmpdm = "$tmpd/meta-inf";     mkdir($tmpdm);
-        $ctime = time();
-        // $hostname = $_SERVER['SERVER_NAME'];
-        $hostname = trim(`hostname`);
-        file_put_contents("$tmpdm/storage.xml",
-            "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
-            "<storage\n".
-            " type=\"backup\"\n".
-            " version=\"1.0\"\n".
-            " ctime=\"$ctime\"\n".
-            " hostname=\"$hostname\"\n".
-            "/>\n"
-        );
-        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        rename($tmpf, $fakeFile);
-        //copy($tmpf, $fakeFile);
-        rmdir($tmpdp); rmdir($tmpdc); rmdir($tmpdm);
-        rmdir($tmpd); unlink($tmpn);
-        return array('token'=>$token);
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->openBackup($sessid,$criteria);
     }
 
     /**
      *  Create backup of storage (check results)
      *
      *  @param token  :  string  -  backup token
-     *  @return hasharray:
-     *      status : string - success | working | fault
-     *      url : string - readable url
-     *      metafile : string - archive metafile in XML format
-     *      faultString : string - error message (use only if status==fault)
+     *  @return hasharray with field: 
+     *      status : string - susccess | working | fault
+     *      token  : stirng - backup token
+     *      url    : string - access url
      */
     function createBackupCheck($token)
     {
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        if($token != '123456789abcdeff' || !file_exists($fakeFile)){
-            return PEAR::raiseError(
-                "LocStor::createBackupCheck: invalid token ($token)"
-            );
-        }
-        $fakeFUrl = $this->getUrlPart()."access/$token.tar";
-        $status = 'success';
-        return array(
-            'status'=> $status,
-            'url'   => $fakeFUrl,
-            'metafile' => '',
-            'faultString' => ($status==fault ? 'backup process fault' : ''),
-        );
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->checkBackup($token);
+    }
+
+    /**
+     *  Create backup of storage (list results)
+     *
+     *  @param stat : status (optional)
+     *      if this parameter is not set, then return with all unclosed backups
+     *  @return array of hasharray with field: 
+     *      status : string - susccess | working | fault
+     *      token  : stirng - backup token
+     *      url    : string - access url
+     */
+    function createBackupList($sessid,$stat='')
+    {
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->listBackups($stat);
     }
 
     /**
      *  Create backup of storage (close handle)
      *
-     *  @param token  :  string  -  backup token
-     *  @return status : boolean
+     *  @param token   :  string  -  backup token
+     *  @return status :  boolean
      */
     function createBackupClose($token)
     {
-        if($token != '123456789abcdeff'){
-            return PEAR::raiseError(
-                "LocStor::createBackupClose: invalid token"
-            );
-        }
-        $fakeFile = "{$this->accessDir}/$token.tar";
-        unlink($fakeFile);
-        return TRUE;
+        require_once "Backup.php";
+        $bu = $r = new Backup($this);
+        if (PEAR::isError($r)) return $r;
+        return $bu->closeBackup($token);
     }
 
     /*===================================================== auxiliary methods */
