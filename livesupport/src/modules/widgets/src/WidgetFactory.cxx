@@ -673,3 +673,14 @@ WidgetFactory :: createDialogWindow(Ptr<Glib::ustring>::Ref     message,
     return new DialogWindow(message, buttons, bundle);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Create a date/time chooser window.
+ *----------------------------------------------------------------------------*/
+DateTimeChooserWindow *
+WidgetFactory :: createDateTimeChooserWindow(Ptr<ResourceBundle>::Ref   bundle)
+                                                                    throw ()
+{
+    return new DateTimeChooserWindow(bundle);
+}
+

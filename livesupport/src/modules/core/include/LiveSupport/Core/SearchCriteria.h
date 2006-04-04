@@ -43,6 +43,7 @@
 #include <stdexcept>
 #include <cctype>
 #include <XmlRpcValue.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
 
@@ -54,6 +55,8 @@ namespace Storage {
 
 namespace LiveSupport {
 namespace Core {
+
+using namespace boost::posix_time;
 
 /* ================================================================ constants */
 
@@ -136,6 +139,16 @@ class SearchCriteria
          *  The vector of search conditions.
          */
         SearchConditionListType             searchConditions;
+
+        /**
+         *  The mtime to use for "ls:mtime".
+         */
+        Ptr<const ptime>::Ref               mtimeValue;
+
+        /**
+         *  The comparison operator to use for "ls:mtime".
+         */
+        std::string                         mtimeComparisonOperator;
 
         /**
          *  The maximum number of conditions to be returned.
@@ -250,6 +263,18 @@ class SearchCriteria
         addCondition(const std::string & key,
                      const std::string & comparisonOperator,
                      const std::string & value)
+                                                throw(std::invalid_argument);
+
+        /**
+         *  Add a search condition specifying the mtime (modified-at time).
+         *
+         *  @param comparisonOperator one of "=", "partial", "prefix",
+         *                            "<", "<=", ">" or ">="
+         *  @param value the value of the mtime to compare to
+         */
+        void
+        addMtimeCondition(const std::string &       comparisonOperator,
+                          Ptr<const ptime>::Ref     value)
                                                 throw(std::invalid_argument);
 
         /**

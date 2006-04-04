@@ -163,7 +163,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // show everything
     set_name(windowName);
-    set_default_size(700, 400);
+    set_default_size(700, 450);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     

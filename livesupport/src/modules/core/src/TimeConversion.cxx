@@ -105,7 +105,8 @@ TimeConversion :: tmToPtime(const struct tm *time)
  *  Convert a boost::ptime to a struct tm
  *----------------------------------------------------------------------------*/
 void
-TimeConversion :: ptimeToTm(Ptr<ptime>::Ref convertFrom, struct tm & convertTo)
+TimeConversion :: ptimeToTm(Ptr<const ptime>::Ref   convertFrom,
+                            struct tm &             convertTo)
                                                                     throw ()
 {
     date            date = convertFrom->date();

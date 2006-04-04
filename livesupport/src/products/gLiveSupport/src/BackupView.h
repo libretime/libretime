@@ -41,11 +41,14 @@
 #endif
 
 #include <gtkmm/box.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
+#include "LiveSupport/Widgets/DateTimeChooserWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BackupList.h"
 #include "GLiveSupport.h"
@@ -55,6 +58,7 @@ namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
+using namespace boost::posix_time;
 
 /* ================================================================ constants */
 
@@ -93,6 +97,21 @@ class BackupView : public Gtk::VBox,
          *  The text entry field for entering the title of the backup.
          */
         EntryBin *                  backupTitleEntry;
+        
+        /**
+         *  The "modified since" time for the backup.
+         */
+        Ptr<const ptime>::Ref      mtime;
+        
+        /**
+         *  The entry field holding the "modified since" time for the backup.
+         */
+        EntryBin *                  mtimeEntry;
+        
+        /**
+         *  The window for entering the "modified since" time.
+         */
+        Ptr<DateTimeChooserWindow>::Ref     dateTimeChooserWindow;
         
         /**
          *  The object for entering the backup criteria.
@@ -139,13 +158,31 @@ class BackupView : public Gtk::VBox,
          */
         Ptr<Glib::ustring>::Ref
         readTitle(void)                                             throw ();
-    
+
+        /**
+         *  Format and write the contents of mtime into the mtimeEntry.
+         */
+        void
+        writeMtimeEntry(void)                                       throw ();
+
     
     protected:
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
+        
+        /**
+         *  Event handler for the time chooser button being clicked.
+         */
+        void
+        onChooseTimeButtonClicked(void)                             throw ();
+        
+        /**
+         *  Event handler for the "reset time" button being clicked.
+         */
+        void
+        onResetTimeButtonClicked(void)                              throw ();
         
         /**
          *  Initiate the creation of a new backup.

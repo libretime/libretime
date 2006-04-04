@@ -162,7 +162,7 @@ class TimeConversion
          *  @return a struct tm, holding the same time.
          */
         static void
-        ptimeToTm(Ptr<ptime>::Ref convertFrom, struct tm & convertTo)
+        ptimeToTm(Ptr<const ptime>::Ref convertFrom, struct tm & convertTo)
                                                                 throw ();
 
         /**

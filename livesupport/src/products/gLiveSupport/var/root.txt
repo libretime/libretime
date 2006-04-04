@@ -280,6 +280,10 @@ root:table
         dateColumnLabel:string      { "Date" }
         statusColumnLabel:string    { "Status" }
         
+        mtimeTextLabel:string       { "Modified since:" }
+        chooseTimeButtonLabel:string    { "Choose time" }
+        resetTimeButtonLabel:string     { "Reset" }
+        
         backupButtonLabel:string    { "Backup" }
         deleteButtonLabel:string    { "Delete" }
         saveButtonLabel:string      { "Save" }
@@ -289,6 +293,17 @@ root:table
         
         fileChooserDialogTitle:string   { "Save File" }
         backupErrorMsg:string       { "Backup error: " }
+    }
+
+    dateTimeChooserWindow:table
+    {
+        windowTitle:string          { "Select the date and time" }
+        
+        cancelButtonLabel:string    { "Cancel" }
+        okButtonLabel:string        { "OK" }
+        
+        hourLabel:string            { "hour:" }
+        minuteLabel:string          { "minute:" }
     }
 
     metadataTypes:table

@@ -39,13 +39,13 @@
 #include <gtkmm/stock.h>
 #include <gtkmm/paned.h>
 
-#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "BackupView.h"
 
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
+using namespace boost::posix_time;
 
 /* ===================================================  local data structures */
 
@@ -67,26 +67,54 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
           : LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
     Gtk::Label *        backupTitleLabel;
+    Gtk::Label *        mtimeLabel;
+    Gtk::Button *       chooseTimeButton;
+    Gtk::Button *       resetTimeButton;
     try {
         backupTitleLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("backupTitleLabel")));
+                                *getResourceUstring("backupTitleLabel")));
+        mtimeLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("mtimeTextLabel")));
+        chooseTimeButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("chooseTimeButtonLabel")));
+        resetTimeButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("resetTimeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
     
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    chooseTimeButton->signal_clicked().connect(sigc::mem_fun(
+                            *this, &BackupView::onChooseTimeButtonClicked ));
+    resetTimeButton->signal_clicked().connect(sigc::mem_fun(
+                            *this, &BackupView::onResetTimeButtonClicked ));
+
     backupTitleEntry = Gtk::manage(wf->createEntryBin());
+    mtimeEntry       = Gtk::manage(wf->createEntryBin());
+    
+    mtimeEntry->getEntry()->set_editable(false);
+    mtimeEntry->getEntry()->set_alignment(0.5);
+    mtimeEntry->getEntry()->set_width_chars(20);
+    writeMtimeEntry();
     
     Gtk::Box *          backupTitleBox  = Gtk::manage(new Gtk::HBox);
     backupTitleBox->pack_start(*backupTitleLabel, Gtk::PACK_SHRINK, 5);
     backupTitleBox->pack_start(*backupTitleEntry, Gtk::PACK_SHRINK, 5);
     
+    Gtk::Box *          mtimeBox        = Gtk::manage(new Gtk::HBox);
+    mtimeBox->pack_start(*mtimeLabel,       Gtk::PACK_SHRINK, 5);
+    mtimeBox->pack_start(*mtimeEntry,       Gtk::PACK_SHRINK, 5);
+    mtimeBox->pack_start(*chooseTimeButton, Gtk::PACK_SHRINK, 5);
+    mtimeBox->pack_start(*resetTimeButton,  Gtk::PACK_SHRINK, 5);
+    
     Gtk::Box *          criteriaView    = constructCriteriaView();
     
     Gtk::Box *          topPane         = Gtk::manage(new Gtk::VBox);
     topPane->pack_start(*backupTitleBox, Gtk::PACK_SHRINK,        5);
+    topPane->pack_start(*mtimeBox,       Gtk::PACK_SHRINK,        5);
     topPane->pack_start(*criteriaView,   Gtk::PACK_EXPAND_WIDGET, 5);
     
     Gtk::Box *          bottomPane      = constructBackupListView();
@@ -96,6 +124,9 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
     twoPanedView->pack2(*bottomPane, Gtk::PACK_EXPAND_WIDGET, 5);
     
     add(*twoPanedView);
+    
+    dateTimeChooserWindow.reset(wf->createDateTimeChooserWindow(
+                            gLiveSupport->getBundle("dateTimeChooserWindow") ));
 }
 
 
@@ -186,6 +217,32 @@ BackupView :: constructBackupListView(void)                         throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the time chooser button being clicked.
+ *----------------------------------------------------------------------------*/
+void
+BackupView :: onChooseTimeButtonClicked(void)                       throw ()
+{
+    Ptr<const ptime>::Ref   userMtime = dateTimeChooserWindow->run();
+    
+    if (userMtime && *userMtime != not_a_date_time) {
+        mtime = userMtime;
+        writeMtimeEntry();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the "reset time" button being clicked.
+ *----------------------------------------------------------------------------*/
+void
+BackupView :: onResetTimeButtonClicked(void)                        throw ()
+{
+    mtime.reset();
+    writeMtimeEntry();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Initiate the creation of a new backup.
  *----------------------------------------------------------------------------*/
 void
@@ -193,6 +250,10 @@ BackupView :: onCreateBackup(void)                                  throw ()
 {
     Ptr<Glib::ustring>::Ref     title    = readTitle();
     Ptr<SearchCriteria>::Ref    criteria = criteriaEntry->getSearchCriteria();
+    
+    if (mtime) {
+        criteria->addMtimeCondition(">=", mtime);
+    }
     
     try {
         backupList->add(title, criteria);
@@ -334,5 +395,19 @@ BackupView :: readTitle(void)                                       throw ()
     }
     
     return title;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format and write the contents of mtime into the mtimeEntry.
+ *----------------------------------------------------------------------------*/
+void
+BackupView :: writeMtimeEntry(void)                                 throw ()
+{
+    if (mtime) {
+        mtimeEntry->set_text(to_simple_string(*mtime));
+    } else {
+        mtimeEntry->set_text("-");
+    }
 }
 

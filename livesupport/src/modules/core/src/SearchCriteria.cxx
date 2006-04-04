@@ -33,9 +33,11 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 
 using namespace LiveSupport::Core;
+using namespace boost::posix_time;
 
 /* ===================================================  local data structures */
 
@@ -87,6 +89,28 @@ SearchCriteria :: addCondition(const std::string & key,
 
 
 /*------------------------------------------------------------------------------
+ *  Add a search condition specifying the mtime (modified-at time).
+ *----------------------------------------------------------------------------*/
+void
+SearchCriteria :: addMtimeCondition(const std::string &     comparisonOperator,
+                                    Ptr<const ptime>::Ref   value)
+                                                throw(std::invalid_argument)
+{
+    std::string     lowerCaseOp = lowerCase(comparisonOperator);
+
+    if (lowerCaseOp == "=" 
+            || lowerCaseOp == "partial" || lowerCaseOp == "prefix"
+            || lowerCaseOp == "<" || lowerCaseOp == "<="
+            || lowerCaseOp == ">" || lowerCaseOp == ">=") {
+        mtimeComparisonOperator = lowerCaseOp;
+        mtimeValue              = value;
+    } else {
+        throw std::invalid_argument("bad comparison operator argument");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Convert to an XmlRpc::XmlRpcValue.
  *----------------------------------------------------------------------------*/
 SearchCriteria :: operator XmlRpc::XmlRpcValue() const
@@ -111,6 +135,19 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
         condition["val"]    = it->value;
         conditionList[i]    = condition;
     }
+    
+    if (mtimeValue) {
+        int             i   = conditionList.size();
+        struct tm *     mtimeStructTm;
+        TimeConversion::ptimeToTm(mtimeValue, *mtimeStructTm);
+                
+        XmlRpc::XmlRpcValue condition;
+        condition["cat"]    = "ls:mtime";
+        condition["op"]     = mtimeComparisonOperator;
+        condition["val"]    = XmlRpc::XmlRpcValue(mtimeStructTm);
+        conditionList[i]    = condition;
+    }
+        
     returnValue["conditions"] = conditionList;
 
     if (limit) {
@@ -121,6 +158,7 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
         returnValue["offset"]   = offset;
     }
     
+std::cerr << returnValue << std::endl;
     return returnValue;
 }
 
