@@ -143,8 +143,9 @@ Ptr<std::string>::Ref
 TimeConversion :: nowString(void)
                                                                     throw ()
 {
-    Ptr<std::string>::Ref   timeString(new std::string(
-                                                to_simple_string(*now()) ));
+    ptime                   now = second_clock::local_time();
+    Ptr<std::string>::Ref   timeString(new std::string(to_simple_string(now)));
+    
     return timeString;
 }
 

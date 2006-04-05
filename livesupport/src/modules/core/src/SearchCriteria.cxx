@@ -138,13 +138,13 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
     
     if (mtimeValue) {
         int             i   = conditionList.size();
-        struct tm *     mtimeStructTm;
-        TimeConversion::ptimeToTm(mtimeValue, *mtimeStructTm);
+        struct tm       mtimeStructTm;
+        TimeConversion::ptimeToTm(mtimeValue, mtimeStructTm);
                 
         XmlRpc::XmlRpcValue condition;
         condition["cat"]    = "ls:mtime";
         condition["op"]     = mtimeComparisonOperator;
-        condition["val"]    = XmlRpc::XmlRpcValue(mtimeStructTm);
+        condition["val"]    = XmlRpc::XmlRpcValue(&mtimeStructTm);
         conditionList[i]    = condition;
     }
         
@@ -158,7 +158,6 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
         returnValue["offset"]   = offset;
     }
     
-std::cerr << returnValue << std::endl;
     return returnValue;
 }
 

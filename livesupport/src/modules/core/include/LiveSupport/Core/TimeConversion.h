@@ -70,6 +70,10 @@ using namespace LiveSupport;
 /**
  *  A helper object holding static time conversion functions.
  *
+ *  TODO: clean this up, and use the boost conversion functions, instead of
+ *  converting stuff manually
+ *  (see http://boost.org/doc/html/date_time/posix_time.html).
+ *
  *  @author  $Author$
  *  @version $Revision$
  */

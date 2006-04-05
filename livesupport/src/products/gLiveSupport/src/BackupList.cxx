@@ -94,9 +94,9 @@ BackupList :: BackupList (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 200);
+                               modelColumns.titleColumn, 300);
         treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
-                               modelColumns.dateColumn, 80);
+                               modelColumns.dateColumn, 180);
         treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
                                modelColumns.statusDisplayColumn, 50);
     } catch (std::invalid_argument &e) {
