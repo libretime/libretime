@@ -90,6 +90,7 @@ $config = array(
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'pearPath'      =>  dirname(__FILE__).'/../../../../usr/lib/pear',
+    'cronDir'       =>  dirname(__FILE__).'/../../storageServer/var/cron',
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
@@ -138,8 +139,14 @@ $config = array(
     ),
 
     /* ============================================== auxiliary configuration */
-    'RootNode'	    => 'RootNode',
+    'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
+    
+    /* =================================================== cron configuration */
+    'cronUserName'      => 'www-data',
+    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
+    'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
+    'paramdir'          => dirname(__FILE__).'/cron/params',
 );
 $config['sysSubjs'] = array(
     'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
