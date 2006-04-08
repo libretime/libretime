@@ -12,7 +12,7 @@ if (UI_DEBUG) error_reporting(E_ALL);
 
 define('UI_VERSION',                    'LiveSupport 1.0.2');
 define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
-define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
+define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
 ## Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');

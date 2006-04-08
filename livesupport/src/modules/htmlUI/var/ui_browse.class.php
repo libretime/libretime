@@ -177,6 +177,11 @@ class uiBrowse
             }
         }
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
+        
+        if (!is_array($results) || !count($results)) {
+            return false;    
+        }
+        
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));

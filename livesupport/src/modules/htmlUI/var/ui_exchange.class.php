@@ -9,23 +9,18 @@ class uiExchange
         if (empty($this->folder)) {
             $this->folder = '/tmp';    
         }
-        
-        $this->test         = false;
     }
     
     // GB wrapper emthods
     
     function getBackupToken()
     {
-        if ($this->test) return "12345";
-        
-        
         $token = $this->Base->gb->loadPref($this->Base->sessid, UI_BACKUPTOKEN_KEY);
         
         if (PEAR::isError($token)) {
             return false;    
         }
-        
+
         return $token;
         
     }
@@ -42,23 +37,20 @@ class uiExchange
         
         $this->createBackupCheck();
         
-        $this->Base->gb->savePref($this->Base->sessid, UI_BACKUPTOKEN_KEY, $token);
+        $this->Base->gb->savePref($this->Base->sessid, UI_BACKUPTOKEN_KEY, $token['token']);
         
         return true;
     }       
     
     function createBackupCheck()
     {
-        if ($this->test) return array('status' => 'success', 'tmpfile' => '/tmp/xxx.backup');   
-        
-        
         $token = $this->getBackupToken();
         
         if ($token === false) {
             return flase;    
         }       
         
-        $res   = $this->Base->gb->createBackupCheck($token);
+        $res = $this->Base->gb->createBackupCheck($token);
         
         if (PEAR::isError($res)) {
             $this->Base->_retMsg('Unable to check backup status: $1', $res->getMessage());
@@ -115,6 +107,39 @@ class uiExchange
         $form->accept($renderer);
 
         return $renderer->toArray();    
+    }
+    
+    function copy2target($target)
+    {    
+        if (is_dir($target)) { 
+            $this->folder = $target;    
+        } else {
+            $pathinfo = pathinfo($target);
+            $this->folder = $pathinfo['dirname']; 
+            $this->file   = $pathinfo['basename'];  
+        } 
+        
+        $this->completeTarget();
+        $target = $this->folder.'/'.$this->file;
+        
+        if ($this->checkTarget() !== true) {
+            $this->Base->_retMsg('$1: open: permission denied', $target);    
+            return false;
+        }
+        
+        
+        $check = $this->createBackupCheck();
+        
+        if ($check['status'] === 'success') {
+            if (@copy($check['tmpfile'], $target)) {
+                $this->Base->_retMsg('Copy backup to $1 successfull', $target);
+                return true;    
+            }
+            $this->Base->_retMsg('Unable to copy backup from $1 to $2', $check['tmpfile'], $target);
+            return false;
+        }
+        $this->Base->_retMsg('Backup status is $1, not ready', $check['status']);
+        return false;
     }
     
     
@@ -178,17 +203,7 @@ class uiExchange
             $this->file = 'ls-backup_'.date('Y-m-d');    
         } 
     }
-    
-    function setTarget($target)
-    {
-        if (is_dir($target)) { 
-            $this->folder = $target;    
-        } else {
-            $pathinfo = pathinfo($target);
-            $this->folder = $pathinfo['dirname']; 
-            $this->file   = $pathinfo['basename'];  
-        } 
-    }
+   
     
     function listFolder()
     {
