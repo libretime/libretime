@@ -1026,3 +1026,30 @@ TestStorageClient :: createBackupClose(const Glib::ustring &    token) const
 {
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Initiate the exporting of a playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: exportPlaylistOpen(Ptr<SessionId>::Ref      sessionId,
+                                        Ptr<UniqueId>::Ref       playlistId,
+                                        ExportFormatType         format,
+                                        Ptr<Glib::ustring>::Ref  url) const
+                                                throw (XmlRpcException)
+{
+    url->assign("http://some/fake/url");
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close the playlist export process.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: exportPlaylistClose(
+                            Ptr<const Glib::ustring>::Ref   token) const
+                                                throw (XmlRpcException)
+{
+}
+

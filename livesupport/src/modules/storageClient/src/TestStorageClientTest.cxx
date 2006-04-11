@@ -496,3 +496,41 @@ TestStorageClientTest :: createBackupTest(void)
     );
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Testing the exportPlaylistXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: exportPlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    exportPlaylistHelper(StorageClientInterface::internalFormat);
+    exportPlaylistHelper(StorageClientInterface::smilFormat);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Auxiliary function for exportPlaylistTest().
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: exportPlaylistHelper(
+                            StorageClientInterface::ExportFormatType    format)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<UniqueId>::Ref          playlistId(new UniqueId(1));
+    Ptr<Glib::ustring>::Ref     url(new Glib::ustring(""));
+    Ptr<Glib::ustring>::Ref     token;
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        token = tsc->exportPlaylistOpen(
+                                dummySessionId, playlistId, format, url);
+    );
+    CPPUNIT_ASSERT(token);
+    CPPUNIT_ASSERT(url);
+    CPPUNIT_ASSERT(*url != "");
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        tsc->exportPlaylistClose(token);
+    );
+}
+

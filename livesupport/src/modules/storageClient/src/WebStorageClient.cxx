@@ -707,6 +707,51 @@ static const std::string    createBackupUrlParamName = "url";
 static const std::string    createBackupFaultStringParamName = "faultString";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: exportPlaylistXxxx */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'open' export playlist  method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistOpenMethodName 
+                            = "locstor.exportPlaylistOpen";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'close' export playlist  method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistCloseMethodName 
+                            = "locstor.exportPlaylistClose";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist ID array parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistPlaylistIdArrayParamName = "plids";
+
+/*------------------------------------------------------------------------------
+ *  The name of the format parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistFormatParamName = "type";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'standalone' parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistStandaloneParamName = "standalone";
+
+/*------------------------------------------------------------------------------
+ *  The name of the URL return parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistUrlParamName = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input and output structures
+ *----------------------------------------------------------------------------*/
+static const std::string    exportPlaylistTokenParamName = "token";
+
+
 /* ===============================================  local function prototypes */
 
 
@@ -2172,7 +2217,79 @@ WebStorageClient :: createBackupClose(const Glib::ustring &     token) const
             = std::string(token);
 
     execute(createBackupCloseMethodName, parameters, result);
+}
 
-    // TODO: check the returned status parameter? for what?
+
+/*------------------------------------------------------------------------------
+ *  Initiate the exporting of a playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: exportPlaylistOpen(Ptr<SessionId>::Ref      sessionId,
+                                       Ptr<UniqueId>::Ref       playlistId,
+                                       ExportFormatType         format,
+                                       Ptr<Glib::ustring>::Ref  url) const
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcValue     playlistIdArray;
+    playlistIdArray.setSize(1);
+    playlistIdArray[0] = std::string(*playlistId);
+    
+    parameters.clear();
+    parameters[exportPlaylistSessionIdParamName] 
+            = sessionId->getId();
+    parameters[exportPlaylistPlaylistIdArrayParamName] 
+            = playlistIdArray;
+    switch (format) {
+        case internalFormat:    parameters[exportPlaylistFormatParamName] 
+                                        = "lspl";
+                                break;
+                                
+        case smilFormat:        parameters[exportPlaylistFormatParamName] 
+                                        = "smil";
+                                break;
+    }
+    parameters[exportPlaylistStandaloneParamName]
+            = false;
+    
+    execute(exportPlaylistOpenMethodName, parameters, result);
+    
+    checkStruct(exportPlaylistOpenMethodName,
+                result,
+                exportPlaylistUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    url->assign(std::string(result[exportPlaylistUrlParamName]));
+    
+    checkStruct(exportPlaylistOpenMethodName,
+                result,
+                exportPlaylistTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[exportPlaylistTokenParamName] ));
+    
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close the playlist export process.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: exportPlaylistClose(
+                            Ptr<const Glib::ustring>::Ref   token) const
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[exportPlaylistTokenParamName] 
+            = std::string(*token);
+
+    execute(exportPlaylistCloseMethodName, parameters, result);
 }
 

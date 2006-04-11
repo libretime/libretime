@@ -860,3 +860,52 @@ WebStorageClientTest :: createBackupTest(void)
     );
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Testing the exportPlaylistXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: exportPlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    exportPlaylistHelper(StorageClientInterface::internalFormat);
+    exportPlaylistHelper(StorageClientInterface::smilFormat);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Auxiliary function for exportPlaylistTest().
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: exportPlaylistHelper(
+                            StorageClientInterface::ExportFormatType    format)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref         sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q");
+    );
+    CPPUNIT_ASSERT(sessionId);
+    
+    Ptr<UniqueId>::Ref          playlistId(new UniqueId(1));
+    Ptr<Glib::ustring>::Ref     url(new Glib::ustring(""));
+    Ptr<Glib::ustring>::Ref     token;
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        token = wsc->exportPlaylistOpen(sessionId, playlistId, format, url);
+    );
+    CPPUNIT_ASSERT(token);
+    CPPUNIT_ASSERT(url);
+    CPPUNIT_ASSERT(*url != "");
+    // TODO: test accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->exportPlaylistClose(token);
+    );
+    // TODO: test non-accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->logout(sessionId);
+    );
+}
+

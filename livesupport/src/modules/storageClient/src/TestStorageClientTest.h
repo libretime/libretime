@@ -74,6 +74,7 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(searchTest);
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(createBackupTest);
+    CPPUNIT_TEST(exportPlaylistTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -86,6 +87,14 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          *  A dummy session ID to pass to the storage client.
          */
         Ptr<SessionId>::Ref             dummySessionId;
+
+        /**
+         *  Auxiliary function for exportPlaylistTest().
+         */
+        void
+        exportPlaylistHelper(StorageClientInterface::ExportFormatType   format)
+                                                throw (CPPUNIT_NS::Exception);
+
 
     protected:
 
@@ -168,6 +177,14 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the exportPlaylistXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        exportPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
 
 
     public:

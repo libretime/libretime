@@ -498,6 +498,44 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
+         *  The possible formats of exported playlists.
+         */
+        typedef enum {  internalFormat,
+                        smilFormat }        ExportFormatType;
+
+        /**
+         *  Initiate the exporting of a playlist.
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param  playlistId  the ID of the playlist to be exported.
+         *  @param  format      the format of the exported playlist.
+         *  @param  url         return parameter: readable URL pointing to the
+         *                      exported playlist.
+         *  @return a token which identifies this export task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        exportPlaylistOpen(Ptr<SessionId>::Ref        sessionId,
+                           Ptr<UniqueId>::Ref         playlistId,
+                           ExportFormatType           format,
+                           Ptr<Glib::ustring>::Ref    url) const
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Close the playlist export process.
+         *
+         *  @param  token           the identifier of this export task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        exportPlaylistClose(Ptr<const Glib::ustring>::Ref   token) const
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
