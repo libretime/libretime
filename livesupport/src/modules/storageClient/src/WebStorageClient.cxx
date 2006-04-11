@@ -820,6 +820,46 @@ WebStorageClient :: execute(const std::string &     methodName,
 
 
 /*------------------------------------------------------------------------------
+ *  Check that an XML-RPC struct contains a member of a given type.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: checkStruct(const std::string &     methodName,
+                                XmlRpcValue &           xmlRpcStruct,
+                                const std::string &     memberName,
+                                XmlRpcValue::Type       memberType) const
+                                                throw (XmlRpcException)
+{
+    if (!xmlRpcStruct.hasMember(memberName)) {
+        std::stringstream eMsg;
+        eMsg << "The return value of the XML-RPC method '" 
+             << methodName
+             << "',\n"
+             << xmlRpcStruct
+             << "\ndoes not contain the expected field '"
+             << memberName
+             << "'." ;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    
+    if (xmlRpcStruct[memberName].getType() != memberType) {
+        std::stringstream eMsg;
+        eMsg << "In the return value of the XML-RPC method '" 
+             << methodName
+             << "',\n"
+             << xmlRpcStruct
+             << "\nthe type of the field '"
+             << memberName
+             << "' is wrong: "
+             << xmlRpcStruct[memberName].getType()
+             << " instead of "
+             << memberType
+             << "." ;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Return the version string of the test storage.
  *----------------------------------------------------------------------------*/
 Ptr<const Glib::ustring>::Ref
@@ -836,16 +876,10 @@ WebStorageClient :: getVersion(void)
     
     execute(getVersionMethodName, parameters, result);
     
-    if (!result.hasMember(getVersionResultParamName)
-            || result[getVersionResultParamName].getType() 
-                                            != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getVersionMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getVersionMethodName,
+                result,
+                getVersionResultParamName,
+                XmlRpcValue::TypeString);
 
     Ptr<Glib::ustring>::Ref     version(new Glib::ustring(
                                             result[getVersionResultParamName]));
@@ -869,17 +903,11 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 
     execute(createPlaylistMethodName, parameters, result);
     
-    if (! result.hasMember(createPlaylistResultParamName)
-            || result[createPlaylistResultParamName].getType() 
-                                            != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << createPlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(createPlaylistMethodName,
+                result,
+                createPlaylistResultParamName,
+                XmlRpcValue::TypeString);
+    
     Ptr<UniqueId>::Ref          newId(new UniqueId(std::string(
                                     result[createPlaylistResultParamName] )));
 
@@ -919,18 +947,12 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref          sessionId,
             = std::string(*id);
     
     execute(existsPlaylistMethodName, parameters, result);
-        
-    if (! result.hasMember(existsPlaylistResultParamName) 
-       || result[existsPlaylistResultParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << existsPlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    
+    checkStruct(existsPlaylistMethodName,
+                result,
+                existsPlaylistResultParamName,
+                XmlRpcValue::TypeBoolean);
+    
     return bool(result[existsPlaylistResultParamName]);
 }
  
@@ -961,29 +983,19 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref          sessionId,
 
     execute(getPlaylistOpenMethodName, parameters, result);
     
-    if (! result.hasMember(getPlaylistTokenParamName)
-            || result[getPlaylistTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-                << getPlaylistOpenMethodName
-                << "' returned unexpected value:\n"
-                << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getPlaylistOpenMethodName,
+                result,
+                getPlaylistTokenParamName,
+                XmlRpcValue::TypeString);
+    
     Ptr<const std::string>::Ref     token(new std::string(
                                         result[getPlaylistTokenParamName] ));
     
-    if (! result.hasMember(getPlaylistUrlParamName)
-            || result[getPlaylistUrlParamName].getType() 
-                                            != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-                << getPlaylistOpenMethodName
-                << "' returned unexpected value:\n"
-                << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getPlaylistOpenMethodName,
+                result,
+                getPlaylistUrlParamName,
+                XmlRpcValue::TypeString);
+    
     const std::string   url     = result[getPlaylistUrlParamName];
 
     Ptr<UniqueId>::Ref  idNotConst(new UniqueId(id->getId()));
@@ -1074,20 +1086,16 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref          sessionId,
     
     execute(editPlaylistMethodName, parameters, result);
     
-    if (! result.hasMember(editPlaylistUrlParamName)
-            || result[editPlaylistUrlParamName].getType() 
-                                                != XmlRpcValue::TypeString
-            || ! result.hasMember(editPlaylistTokenParamName)
-            || result[editPlaylistTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << editPlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(editPlaylistMethodName,
+                result,
+                editPlaylistUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(editPlaylistMethodName,
+                result,
+                editPlaylistTokenParamName,
+                XmlRpcValue::TypeString);
+    
     url.reset(new const std::string(result[getPlaylistUrlParamName]));
     editToken.reset(new const std::string(result[getPlaylistTokenParamName]));
 }
@@ -1128,16 +1136,21 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
 
     execute(savePlaylistMethodName, parameters, result);
     
-    if (! result.hasMember(savePlaylistResultParamName)
-            || result[savePlaylistResultParamName].getType() 
-                                        != XmlRpcValue::TypeString
-            || std::string(result[savePlaylistResultParamName])
+    checkStruct(savePlaylistMethodName,
+                result,
+                savePlaylistResultParamName,
+                XmlRpcValue::TypeString);
+    
+    if (std::string(result[savePlaylistResultParamName])
                                         != std::string(*playlist->getId())) {
         std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
+        eMsg << "Mismatched playlist ID from XML-RPC method '" 
              << savePlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
+             << "': "
+             << result[savePlaylistResultParamName]
+             << " instead of "
+             << std::string(*playlist->getId())
+             << ".";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
 
@@ -1168,16 +1181,10 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
 
     execute(revertPlaylistMethodName, parameters, result);
     
-    if (! result.hasMember(revertPlaylistResultParamName)
-            || result[revertPlaylistResultParamName].getType() 
-                                        != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << revertPlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(revertPlaylistMethodName,
+                result,
+                revertPlaylistResultParamName,
+                XmlRpcValue::TypeString);
 }
 
 
@@ -1199,16 +1206,11 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref         sessionId,
 
     execute(getPlaylistOpenMethodName, parameters, result);
     
-    if (! result.hasMember(getPlaylistTokenParamName)
-            || result[getPlaylistTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-                << getPlaylistOpenMethodName
-                << "' returned unexpected value:\n"
-                << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getPlaylistOpenMethodName,
+                result,
+                getPlaylistTokenParamName,
+                XmlRpcValue::TypeString);
+    
     Ptr<const std::string>::Ref     token(new std::string(
                                         result[getPlaylistTokenParamName] ));
 
@@ -1228,16 +1230,11 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                                                 throw (Core::XmlRpcException)
 {
     // construct the playlist
-    if (! content.hasMember(getPlaylistUrlParamName)
-            || content[getPlaylistUrlParamName].getType() 
-                                            != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-                << getPlaylistOpenMethodName
-                << "' returned unexpected value:\n"
-                << content;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getPlaylistOpenMethodName,
+                content,
+                getPlaylistUrlParamName,
+                XmlRpcValue::TypeString);
+    
     const std::string   url     = content[getPlaylistUrlParamName];
 
     Ptr<UniqueId>::Ref  idNotConst(new UniqueId(id->getId()));
@@ -1259,16 +1256,11 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
     }
 
     // read the content array corresponding to the playlist
-    if (! content.hasMember(getPlaylistContentParamName)
-            || content[getPlaylistContentParamName].getType() 
-                                            != XmlRpcValue::TypeArray) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-                << getPlaylistOpenMethodName
-                << "' returned unexpected value:\n"
-                << content;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(getPlaylistOpenMethodName,
+                content,
+                getPlaylistContentParamName,
+                XmlRpcValue::TypeArray);
+    
     XmlRpcValue         innerContent = content[getPlaylistContentParamName];
 
     // construct the SMIL file
@@ -1454,10 +1446,12 @@ WebStorageClient :: releasePlaylistFromServer(
     
     execute(getPlaylistCloseMethodName, parameters, result);
     
-    if (! result.hasMember(getPlaylistPlaylistIdParamName)
-            || result[getPlaylistPlaylistIdParamName].getType() 
-                                        != XmlRpcValue::TypeString
-            || std::string(result[getPlaylistPlaylistIdParamName])
+    checkStruct(getPlaylistCloseMethodName,
+                result,
+                getPlaylistPlaylistIdParamName,
+                XmlRpcValue::TypeString);
+    
+    if (std::string(result[getPlaylistPlaylistIdParamName])
                                         != std::string(*playlist->getId())) {
         std::stringstream eMsg;
         eMsg << "Mismatched playlist ID from XML-RPC method '" 
@@ -1543,17 +1537,11 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref         sessionId,
     
     execute(existsAudioClipMethodName, parameters, result);
     
-    if (! result.hasMember(existsAudioClipResultParamName) 
-       || result[existsAudioClipResultParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << existsAudioClipMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(existsAudioClipMethodName,
+                result,
+                existsAudioClipResultParamName,
+                XmlRpcValue::TypeBoolean);
+    
     return bool(result[existsAudioClipResultParamName]);
 }
  
@@ -1577,20 +1565,16 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     
     execute(getAudioClipOpenMethodName, parameters, result);
     
-    if (! result.hasMember(getAudioClipUrlParamName)
-            || result[getAudioClipUrlParamName].getType() 
-                                                != XmlRpcValue::TypeString
-            || ! result.hasMember(getAudioClipTokenParamName)
-            || result[getAudioClipTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << getAudioClipOpenMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(getAudioClipOpenMethodName,
+                result,
+                getAudioClipUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(getAudioClipOpenMethodName,
+                result,
+                getAudioClipTokenParamName,
+                XmlRpcValue::TypeString);
+    
     const std::string   url     = result[getAudioClipUrlParamName];
     const std::string   token   = result[getAudioClipTokenParamName];
 
@@ -1621,16 +1605,21 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     
     execute(getAudioClipCloseMethodName, parameters, result);
     
-    if (! result.hasMember(getAudioClipAudioClipIdParamName)
-            || result[getAudioClipAudioClipIdParamName].getType() 
-                                                    != XmlRpcValue::TypeString
-            || std::string(result[getAudioClipAudioClipIdParamName])
+    checkStruct(getAudioClipCloseMethodName,
+                result,
+                getAudioClipAudioClipIdParamName,
+                XmlRpcValue::TypeString);
+    
+    if (std::string(result[getAudioClipAudioClipIdParamName])
                                                     != std::string(*id)) {
         std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
+        eMsg << "Mismatched audio clip ID from XML-RPC method '" 
              << getAudioClipCloseMethodName
-             << "' returned unexpected value:\n"
-             << result;
+             << "': "
+             << result[getAudioClipAudioClipIdParamName]
+             << " instead of "
+             << std::string(*id)
+             << ".";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
 
@@ -1681,21 +1670,16 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
 
     execute(storeAudioClipOpenMethodName, parameters, result);
     
-    if (! result.hasMember(storeAudioClipUrlParamName)
-            || result[storeAudioClipUrlParamName].getType() 
-                                            != XmlRpcValue::TypeString
-            || ! result.hasMember(storeAudioClipTokenParamName)
-            || result[storeAudioClipTokenParamName].getType() 
-                                            != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << storeAudioClipOpenMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
-
+    checkStruct(storeAudioClipOpenMethodName,
+                result,
+                storeAudioClipUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(storeAudioClipOpenMethodName,
+                result,
+                storeAudioClipTokenParamName,
+                XmlRpcValue::TypeString);
+    
     std::string url     = std::string(result[storeAudioClipUrlParamName]);
     std::string token   = std::string(result[storeAudioClipTokenParamName]);
 
@@ -1741,18 +1725,22 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     
     execute(storeAudioClipCloseMethodName, parameters, result);
     
-    if (! result.hasMember(storeAudioClipAudioClipIdParamName)
-            || result[storeAudioClipAudioClipIdParamName].getType() 
-                                        != XmlRpcValue::TypeString
-            || (audioClip->getId()
-               &&
-               std::string(result[storeAudioClipAudioClipIdParamName])
-                                        != std::string(*audioClip->getId()))) {
+    checkStruct(storeAudioClipCloseMethodName,
+                result,
+                storeAudioClipAudioClipIdParamName,
+                XmlRpcValue::TypeString);
+    
+    if (audioClip->getId()
+            && std::string(result[storeAudioClipAudioClipIdParamName])
+                                        != std::string(*audioClip->getId())) {
         std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
+        eMsg << "Mismatched audio clip ID from XML-RPC method '" 
              << storeAudioClipCloseMethodName
-             << "' returned unexpected value:\n"
-             << result;
+             << "': "
+             << result[storeAudioClipAudioClipIdParamName]
+             << " instead of "
+             << std::string(*audioClip->getId())
+             << ".";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
 
@@ -1785,20 +1773,16 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref        sessionId,
     
     execute(acquireAudioClipMethodName, parameters, result);
     
-    if (! result.hasMember(acquireAudioClipUrlParamName)
-            || result[acquireAudioClipUrlParamName].getType() 
-                                                != XmlRpcValue::TypeString
-            || ! result.hasMember(acquireAudioClipTokenParamName)
-            || result[acquireAudioClipTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << acquireAudioClipMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(acquireAudioClipMethodName,
+                result,
+                acquireAudioClipUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(acquireAudioClipMethodName,
+                result,
+                acquireAudioClipTokenParamName,
+                XmlRpcValue::TypeString);
+    
     Ptr<const std::string>::Ref uri(new const std::string(
                                     result[acquireAudioClipUrlParamName] ));
     Ptr<const std::string>::Ref token(new const std::string( 
@@ -1827,17 +1811,11 @@ WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
     
     execute(releaseAudioClipMethodName, parameters, result);
     
-    if (! result.hasMember(releaseAudioClipResultParamName)
-            || result[releaseAudioClipResultParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << releaseAudioClipMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(releaseAudioClipMethodName,
+                result,
+                releaseAudioClipResultParamName,
+                XmlRpcValue::TypeBoolean);
+    
     if (! bool(result[releaseAudioClipResultParamName])) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
@@ -1867,20 +1845,16 @@ WebStorageClient :: reset(void)
     
     execute(resetStorageMethodName, parameters, result);
     
-    if (! result.hasMember(resetStorageAudioClipResultParamName)
-            || result[resetStorageAudioClipResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray
-            || ! result.hasMember(resetStoragePlaylistResultParamName)
-            || result[resetStoragePlaylistResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << resetStorageMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(resetStorageMethodName,
+                result,
+                resetStorageAudioClipResultParamName,
+                XmlRpcValue::TypeArray);
+    
+    checkStruct(resetStorageMethodName,
+                result,
+                resetStoragePlaylistResultParamName,
+                XmlRpcValue::TypeArray);
+    
     editedPlaylists.clear();
 
     XmlRpcValue audioClipArray = result[resetStorageAudioClipResultParamName];
@@ -1938,20 +1912,16 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
 
     execute(searchMethodName, parameters, result);
     
-    if (! result.hasMember(searchAudioClipResultParamName)
-            || result[searchAudioClipResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray
-            || ! result.hasMember(searchPlaylistResultParamName)
-            || result[searchPlaylistResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << searchMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(searchMethodName,
+                result,
+                searchAudioClipResultParamName,
+                XmlRpcValue::TypeArray);
+    
+    checkStruct(searchMethodName,
+                result,
+                searchPlaylistResultParamName,
+                XmlRpcValue::TypeArray);
+    
     XmlRpcValue audioClipArray = result[searchAudioClipResultParamName];
     audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
     
@@ -1986,20 +1956,16 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         playlistIds->push_back(uniqueId);
     }
     
-    if (! result.hasMember(searchAudioClipCountParamName)
-            || result[searchAudioClipCountParamName].getType() 
-                                                != XmlRpcValue::TypeInt
-            || ! result.hasMember(searchPlaylistCountParamName)
-            || result[searchPlaylistCountParamName].getType() 
-                                                != XmlRpcValue::TypeInt) {
-        std::stringstream eMsg;
-        eMsg << "Missing or bad count returned by XML-RPC method '" 
-             << searchMethodName
-             << "':\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(searchMethodName,
+                result,
+                searchAudioClipCountParamName,
+                XmlRpcValue::TypeInt);
+    
+    checkStruct(searchMethodName,
+                result,
+                searchPlaylistCountParamName,
+                XmlRpcValue::TypeInt);
+    
     return int(result[searchAudioClipCountParamName])
            + int(result[searchPlaylistCountParamName]);
 }
@@ -2027,17 +1993,11 @@ WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
 
     execute(browseMethodName, parameters, result);
     
-    if (! result.hasMember(browseResultParamName)
-            || result[browseResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << browseMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-
+    checkStruct(browseMethodName,
+                result,
+                browseResultParamName,
+                XmlRpcValue::TypeArray);
+    
     XmlRpcValue     metadataValues = result[browseResultParamName];
     Ptr<std::vector<Glib::ustring> >::Ref 
                                     results(new std::vector<Glib::ustring>);
@@ -2135,16 +2095,10 @@ WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
 
     execute(createBackupOpenMethodName, parameters, result);
     
-    if (! result.hasMember(createBackupTokenParamName)
-            || result[createBackupTokenParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << createBackupOpenMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
+    checkStruct(createBackupOpenMethodName,
+                result,
+                createBackupTokenParamName,
+                XmlRpcValue::TypeString);
     
     Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[createBackupTokenParamName] ));
@@ -2173,49 +2127,30 @@ WebStorageClient :: createBackupCheck(
     
     Ptr<Glib::ustring>::Ref     status;
     
-    class   MyLocalException
-    {
-        public:
-            MyLocalException() { }
-    };
+    checkStruct(createBackupCheckMethodName,
+                result,
+                createBackupStatusParamName,
+                XmlRpcValue::TypeString);
     
-    try {
-        if (! result.hasMember(createBackupStatusParamName)
-                || result[createBackupStatusParamName].getType() 
-                                                != XmlRpcValue::TypeString) {
-            throw MyLocalException();
-        }
+    status.reset(new Glib::ustring(result[createBackupStatusParamName]));
+    
+    if (*status == "success") {
+        checkStruct(createBackupCheckMethodName,
+                    result,
+                    createBackupUrlParamName,
+                    XmlRpcValue::TypeString);
         
-        status.reset(new Glib::ustring(result[createBackupStatusParamName]));
+        *urlOrErrorMsg = std::string(result[createBackupUrlParamName]);
+    }
+    
+    if (*status == "fault") {
+        checkStruct(createBackupCheckMethodName,
+                    result,
+                    createBackupFaultStringParamName,
+                    XmlRpcValue::TypeString);
         
-        if (*status == "success") {
-            if (! result.hasMember(createBackupUrlParamName)
-                    || result[createBackupUrlParamName].getType()
-                                                != XmlRpcValue::TypeString) {
-                throw MyLocalException();
-            }
-            
-            *urlOrErrorMsg = std::string(result[createBackupUrlParamName]);
-        }
-        
-        if (*status == "fault") {
-            if (! result.hasMember(createBackupFaultStringParamName)
-                    || result[createBackupFaultStringParamName].getType()
-                                                != XmlRpcValue::TypeString) {
-                throw MyLocalException();
-            }
-            
-            *urlOrErrorMsg = std::string(
-                                    result[createBackupFaultStringParamName]);
-        }
-
-    } catch (MyLocalException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << createBackupCheckMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
+        *urlOrErrorMsg = std::string(
+                                result[createBackupFaultStringParamName]);
     }
     
     return status;

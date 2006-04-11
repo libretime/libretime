@@ -172,6 +172,26 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
+         *  Check that an XML-RPC struct contains a member of a given type.
+         *
+         *  NOTE: the xmlRpcStruct parameter is not modified, but it can not
+         *  be declared const, because the << operator only takes non-const
+         *  XmlRpcValue parameters.
+         *
+         *  @param  methodName      the name of the calling method.
+         *  @param  xmlRpcStruct    the XML-RPC struct to be checked.
+         *  @param  memberName      the name of the member we want to exist.
+         *  @param  memberType      the required type of the member.
+         *  @exception XmlRpcException if the given member is not found.
+         */
+        void
+        checkStruct(const std::string &     methodName,
+                    XmlRpcValue &           xmlRpcStruct,
+                    const std::string &     memberName,
+                    XmlRpcValue::Type       memberType) const
+                                                throw (XmlRpcException);
+
+        /**
          *  Auxilliary method used by editPlaylist() and createPlaylist().
          *  Opens the playlist for editing, and returns its URL.
          *
