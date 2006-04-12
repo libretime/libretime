@@ -40,6 +40,8 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
+#include "ExportPlaylistWindow.h"
+
 #include "LiveModeWindow.h"
 
 
@@ -182,6 +184,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                  *getResourceUstring("playMenuItem"),
                                   sigc::mem_fun(*this,
                                         &LiveModeWindow::onOutputPlay)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("exportPlaylistMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onExportPlaylist)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -366,5 +372,29 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
     }
     
     return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for "export playlist" in the context menu.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onExportPlaylist(void)                            throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                                refSelection = treeView->get_selection();
+    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+        if (playlist) {
+            Ptr<ExportPlaylistWindow>::Ref  dialog(new ExportPlaylistWindow(
+                                gLiveSupport,
+                                gLiveSupport->getBundle("exportPlaylistWindow"),
+                                playlist));
+            Gtk::Main::run(*dialog);
+        }
+    }
 }
 

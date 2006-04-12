@@ -125,16 +125,15 @@ ExportPlaylistWindow :: ExportPlaylistWindow (
     Gtk::Label *    statusBar  = Gtk::manage(new Gtk::Label(""));
     
     Gtk::Box *      layout = Gtk::manage(new Gtk::VBox);
-    layout->pack_start(*extraSpace, Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*extraSpace,       Gtk::PACK_SHRINK, 5);
     layout->pack_start(*playlistTitleBox, Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*formatBox,        Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*buttonBox,        Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*statusBar,        Gtk::PACK_SHRINK, 5);
+    layout->pack_start(*formatBox,        Gtk::PACK_SHRINK, 0);
+    layout->pack_start(*statusBar,        Gtk::PACK_SHRINK, 10);
+    layout->pack_start(*buttonBox,        Gtk::PACK_SHRINK, 0);
 
     add(*layout);
     
     set_name(windowName);
-    set_default_size(200, 200);
     show_all();
 }
 

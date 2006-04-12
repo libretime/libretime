@@ -39,6 +39,8 @@
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SchedulePlaylistWindow.h"
+#include "ExportPlaylistWindow.h"
+
 #include "ScratchpadWindow.h"
 
 
@@ -241,6 +243,10 @@ ScratchpadWindow :: ScratchpadWindow (
                                 *getResourceUstring("addToLiveModeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onAddToLiveMode)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("exportPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onExportPlaylist)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -480,6 +486,25 @@ ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     gLiveSupport->addToLiveMode(playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for "export playlist" in the context menu.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onExportPlaylist(void)                      throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+    
+    if (playlist) {
+        Ptr<ExportPlaylistWindow>::Ref  dialog(new ExportPlaylistWindow(
+                                gLiveSupport,
+                                gLiveSupport->getBundle("exportPlaylistWindow"),
+                                playlist));
+        Gtk::Main::run(*dialog);
+    }
 }
 
 

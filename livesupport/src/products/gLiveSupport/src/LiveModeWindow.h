@@ -186,6 +186,13 @@ class LiveModeWindow : public GuiWindow
         bool
         onKeyPressed(GdkEventKey *          event)              throw ();
 
+        /**
+         *  Signal handler for the "export playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onExportPlaylist(void)                                  throw ();
+
 
     public:
         /**

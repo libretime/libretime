@@ -188,6 +188,13 @@ class SearchWindow : public GuiWindow
         onAddToLiveMode(void)                                   throw ();
 
         /**
+         *  Signal handler for the "export playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onExportPlaylist(void)                                  throw ();
+
+        /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *

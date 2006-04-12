@@ -67,17 +67,15 @@ root:table
         clearListButtonLabel:string { "Clear list" }
         removeButtonLabel:string    { "Remove item(s)" }
 
-        upMenuItem:string           { "Move _Up" }
-        downMenuItem:string         { "Move D_own" }
-        removeMenuItem:string       { "_Remove" }
-        editPlaylistMenuItem:string { "_Edit" }
-        addToPlaylistMenuItem:string
-                                    { "_Add To Playlist" }
-        schedulePlaylistMenuItem:string
-                                    { "_Schedule" }
-        cueMenuItem:string          { "Pre_view" }
-        addToLiveModeMenuItem:string
-                                    { "Add To _Live Mode" }
+        upMenuItem:string               { "Move _Up" }
+        downMenuItem:string             { "Move D_own" }
+        removeMenuItem:string           { "_Remove" }
+        editPlaylistMenuItem:string     { "_Edit" }
+        addToPlaylistMenuItem:string    { "_Add To Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule" }
+        cueMenuItem:string              { "Pre_view" }
+        addToLiveModeMenuItem:string    { "Add To _Live Mode" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
         
         cannotEditPlaylistMsg:string
                                     { "Could not open playlist for editing." }
@@ -192,10 +190,9 @@ root:table
         
         allStringForBrowse          { "--- all ---" }
         
-        addToScratchpadMenuItem:string
-                                    { "_Add To Scratchpad" }
-        addToLiveModeMenuItem:string
-                                    { "Add To _Live Mode" }
+        addToScratchpadMenuItem:string  { "_Add To Scratchpad" }
+        addToLiveModeMenuItem:string    { "Add To _Live Mode" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
     }
     
     advancedSearchEntry:table {
@@ -219,11 +216,12 @@ root:table
     {
         windowTitle:string          { "Live Mode" }
         
-        cueMenuItem:string          { "Pre_view" }
-        upMenuItem:string           { "Move _Up" }
-        downMenuItem:string         { "Move D_own" }
-        removeMenuItem:string       { "_Remove" }
-        playMenuItem:string         { "_Play" }
+        cueMenuItem:string              { "Pre_view" }
+        upMenuItem:string               { "Move _Up" }
+        downMenuItem:string             { "Move D_own" }
+        removeMenuItem:string           { "_Remove" }
+        playMenuItem:string             { "_Play" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
         
         cuePlayerLabel:string       { "Preview" }
     }
@@ -304,6 +302,20 @@ root:table
         
         hourLabel:string            { "hour:" }
         minuteLabel:string          { "minute:" }
+    }
+
+    exportPlaylistWindow:table
+    {
+        windowTitle:string          { "Export Playlist" }
+        
+        playlistTitleLabel:string   { "Title:" }
+        formatLabel:string          { "Export as:" }
+        
+        cancelButtonLabel:string    { "Cancel" }
+        saveButtonLabel:string      { "Save" }
+        
+        internalFormatName:string   { "LiveSupport archive" }
+        smilFormatName:string       { "tar containing a SMIL" }
     }
 
     metadataTypes:table
