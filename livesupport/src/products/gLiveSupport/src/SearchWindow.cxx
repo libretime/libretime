@@ -42,7 +42,6 @@
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "ExportPlaylistWindow.h"
 
 #include "SearchWindow.h"
 
@@ -498,11 +497,12 @@ SearchWindow :: onExportPlaylist(void)                      throw ()
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
         Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
         if (playlist) {
-            Ptr<ExportPlaylistWindow>::Ref  dialog(new ExportPlaylistWindow(
+            exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-            Gtk::Main::run(*dialog);
+            exportPlaylistWindow->set_transient_for(*this);
+            Gtk::Main::run(*exportPlaylistWindow);
         }
     }
 }
@@ -517,5 +517,19 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                                                                 throw ()
 {
     onAddToScratchpad();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler called when the the window gets hidden.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: on_hide(void)                                   throw ()
+{
+    if (exportPlaylistWindow) {
+        exportPlaylistWindow->hide();
+    }
+        
+    GuiWindow::on_hide();
 }
 

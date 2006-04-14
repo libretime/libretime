@@ -39,7 +39,6 @@
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SchedulePlaylistWindow.h"
-#include "ExportPlaylistWindow.h"
 
 #include "ScratchpadWindow.h"
 
@@ -499,11 +498,12 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
     if (playlist) {
-        Ptr<ExportPlaylistWindow>::Ref  dialog(new ExportPlaylistWindow(
+        exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-        Gtk::Main::run(*dialog);
+        exportPlaylistWindow->set_transient_for(*this);
+        Gtk::Main::run(*exportPlaylistWindow);
     }
 }
 
@@ -678,5 +678,19 @@ ScratchpadWindow :: setContents(Ptr<const Glib::ustring>::Ref       contents)
             addItem(id);
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler called when the the window gets hidden.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: on_hide(void)                               throw ()
+{
+    if (exportPlaylistWindow) {
+        exportPlaylistWindow->hide();
+    }
+        
+    GuiWindow::on_hide();
 }
 

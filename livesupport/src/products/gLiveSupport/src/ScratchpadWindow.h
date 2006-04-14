@@ -53,6 +53,7 @@
 #include "CuePlayer.h"
 #include "GuiWindow.h"
 #include "ContentsStorable.h"
+#include "ExportPlaylistWindow.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -79,6 +80,11 @@ class ScratchpadWindow : public GuiWindow,
                          public ContentsStorable
 {
     private:
+        /**
+         *  The Export Playlist pop-up window.
+         */
+        Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
+        
         /**
          *  Check whether exactly one row is selected, and if so, set
          *  the currentRow variable to point to it.
@@ -313,6 +319,15 @@ class ScratchpadWindow : public GuiWindow,
          */
         virtual void
         onExportPlaylist(void)                                  throw ();
+        
+        /**
+         *  Event handler called when the the window gets hidden.
+         *
+         *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
+         *  window, if it is still open.
+         */
+        virtual void
+        on_hide(void)                                           throw ();
 
 
     public:

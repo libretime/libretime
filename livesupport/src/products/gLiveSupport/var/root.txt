@@ -316,6 +316,11 @@ root:table
         
         internalFormatName:string   { "LiveSupport archive" }
         smilFormatName:string       { "tar containing a SMIL" }
+        
+        fileChooserDialogTitle:string   { "Save File" }
+        
+        createExportErrorMsg:string { "Could not export the playlist:" }
+        saveExportErrorMsg:string   { "Could not save the exported playlist." }
     }
 
     metadataTypes:table

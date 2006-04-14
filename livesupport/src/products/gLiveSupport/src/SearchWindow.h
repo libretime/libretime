@@ -53,6 +53,7 @@
 #include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
 #include "GLiveSupport.h"
+#include "ExportPlaylistWindow.h"
 
 
 namespace LiveSupport {
@@ -93,6 +94,11 @@ class SearchWindow : public GuiWindow
          *  The box containing the browse input fields.
          */
         BrowseEntry *               browseEntry;
+
+        /**
+         *  The Export Playlist pop-up window.
+         */
+        Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
 
         /**
          *  Construct the simple search view.
@@ -193,7 +199,16 @@ class SearchWindow : public GuiWindow
          */
         virtual void
         onExportPlaylist(void)                                  throw ();
-
+        
+        /**
+         *  Event handler called when the the window gets hidden.
+         *
+         *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
+         *  window, if it is still open.
+         */
+        virtual void
+        on_hide(void)                                           throw ();
+        
         /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.

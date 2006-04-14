@@ -41,6 +41,7 @@
 #endif
 
 #include "LiveSupport/Core/Playlist.h"
+#include "ExportFormatRadioButtons.h"
 
 #include "GuiWindow.h"
 
@@ -69,6 +70,64 @@ using namespace LiveSupport::Widgets;
  */
 class ExportPlaylistWindow : public GuiWindow
 {
+    private:
+        /**
+         *  The playlist to be exported.
+         */
+        Ptr<Playlist>::Ref              playlist;
+        
+        /**
+         *  The playlist to be exported.
+         */
+        Ptr<const Glib::ustring>::Ref   token;
+        
+        /**
+         *  The radio buttons for selecting the export format.
+         */
+        ExportFormatRadioButtons *      formatButtons;
+        
+        /**
+         *  Fetch the exported playlist from a URL and save it to a local file.
+         *
+         *  @param  url         the URL to fetch.
+         *  @param  fileName    the local file to save as.
+         *  @return     the status reported by curl (true if everything is OK).
+         */
+        bool
+        copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
+                      Ptr<Glib::ustring>::Ref   fileName)           throw ();
+        
+        /**
+         *  Cancel the current operation.
+         *  Call exportPlaylistClose() on token, and reset it to 0.
+         */
+        void
+        resetToken(void)                                            throw ();
+
+
+    protected:
+        /**
+         *  Event handler for the Cancel button being clicked.
+         */
+        void
+        onCancelButtonClicked(void)                                 throw ();
+
+        /**
+         *  Event handler for the Save button being clicked.
+         */
+        void
+        onSaveButtonClicked(void)                                   throw ();
+
+        /**
+         *  Event handler called when the the window gets hidden.
+         *
+         *  This overrides GuiWindow::on_hide(), and closes the exporting
+         *  operations, if there is one in progress.
+         */
+        virtual void
+        on_hide(void)                                               throw ();
+
+
     public:
         /**
          *  Constructor.

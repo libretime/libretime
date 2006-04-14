@@ -40,7 +40,6 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
-#include "ExportPlaylistWindow.h"
 
 #include "LiveModeWindow.h"
 
@@ -389,12 +388,27 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
         Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
         if (playlist) {
-            Ptr<ExportPlaylistWindow>::Ref  dialog(new ExportPlaylistWindow(
+            exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-            Gtk::Main::run(*dialog);
+            exportPlaylistWindow->set_transient_for(*this);
+            Gtk::Main::run(*exportPlaylistWindow);
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler called when the the window gets hidden.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: on_hide(void)                                     throw ()
+{
+    if (exportPlaylistWindow) {
+        exportPlaylistWindow->hide();
+    }
+        
+    GuiWindow::on_hide();
 }
 

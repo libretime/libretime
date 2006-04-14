@@ -54,6 +54,7 @@
 #include "GuiWindow.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
+#include "ExportPlaylistWindow.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -79,6 +80,11 @@ using namespace LiveSupport::Widgets;
 class LiveModeWindow : public GuiWindow
 {
     private:
+        /**
+         *  The Export Playlist pop-up window.
+         */
+        Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
+
 
     protected:
 
@@ -192,6 +198,15 @@ class LiveModeWindow : public GuiWindow
          */
         virtual void
         onExportPlaylist(void)                                  throw ();
+        
+        /**
+         *  Event handler called when the the window gets hidden.
+         *
+         *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
+         *  window, if it is still open.
+         */
+        virtual void
+        on_hide(void)                                           throw ();
 
 
     public:
