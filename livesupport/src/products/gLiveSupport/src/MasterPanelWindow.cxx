@@ -359,10 +359,14 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 {
     Ptr<const ptime>::Ref   now;
 
-    try {
-        now = gLiveSupport->getScheduler()->getSchedulerTime();
-    } catch (XmlRpcException &e) {
-        // TODO: handle error
+    if (gLiveSupport->isSchedulerAvailable()) {
+        try {
+            now = gLiveSupport->getScheduler()->getSchedulerTime();
+        } catch (XmlRpcException &e) {
+            // TODO: handle error
+        }
+    } else {
+        now = TimeConversion::now();
     }
 
     if (now.get()) {

@@ -145,23 +145,23 @@ const std::string   windowPositionsKey = "windowPositions";
 const std::string   editedPlaylistTokenKey = "editedPlaylistToken";
 
 /*------------------------------------------------------------------------------
- *  Static constant for the key of the scheduler not available key
+ *  Static constant for the key of the scheduler not available error message
  *----------------------------------------------------------------------------*/
 const std::string   schedulerNotReachableKey = "schedulerNotReachableMsg";
 
 /*------------------------------------------------------------------------------
- *  Static constant for the key of the storage not available key
+ *  Static constant for the key of the storage not available error message
  *----------------------------------------------------------------------------*/
 const std::string   storageNotReachableKey = "storageNotReachableMsg";
 
 /*------------------------------------------------------------------------------
- *  Static constant for the key of the authentication not available key
+ *  Static constant for the key of the authentication not available error msg
  *----------------------------------------------------------------------------*/
 const std::string   authenticationNotReachableKey =
                                             "authenticationNotReachableMsg";
 
 /*------------------------------------------------------------------------------
- *  Static constant for the key of the locale not available key
+ *  Static constant for the key of the locale not available error message
  *----------------------------------------------------------------------------*/
 const std::string   localeNotAvailableKey = "localeNotAvailableMsg";
 
