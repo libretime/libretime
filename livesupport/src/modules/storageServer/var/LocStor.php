@@ -362,6 +362,13 @@ class LocStor extends BasicStor{
         }
         return $res;
     }
+    function localSearch($criteria, $sessid='')
+    {
+        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
+        return $this->bsLocalSearch($criteria, $limit, $offset);
+    }
+
 
     /**
      *  Return values of specified metadata category
@@ -942,6 +949,12 @@ class LocStor extends BasicStor{
         require_once "Backup.php";
         $bu = $r = new Backup($this);
         if (PEAR::isError($r)) return $r;
+        $r = $bu->openBackup($sessid,$criteria);
+        if ($r === FALSE){
+            return PEAR::raiseError(
+                "LocStor::createBackupOpen: false returned from Backup"
+            );
+        }
         return $bu->openBackup($sessid,$criteria);
     }
 

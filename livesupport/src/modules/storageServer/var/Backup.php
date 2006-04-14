@@ -114,6 +114,7 @@ class Backup {
             # save the metafile to tmpdir
             $hostname = trim(`hostname`);
             $ctime      = time();
+            $ctime_f    = date("Ymd-H:i:s");
             file_put_contents("{$this->tmpDirMeta}/storage.xml",
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
                 "<storage\n".
@@ -121,7 +122,7 @@ class Backup {
                 " version=\"1.0\"\n".
                 " ctime=\"$ctime\"\n".
                 " hostname=\"$hostname\"\n".
-                "/>\n"
+                "/><!-- $ctime_f -->\n"
             );
     
             # copy all file to tmpdir
@@ -404,4 +405,3 @@ class Backup {
     }
 }
 ?>
-
