@@ -37,6 +37,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "SchedulerWindow.h"
 
 
@@ -78,15 +79,58 @@ SchedulerWindow :: SchedulerWindow (
                       WidgetConstants::schedulerWindowTitleImage,
                       windowOpenerButton)
 {
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Box *          scheduleView = constructScheduleView();
+    Gtk::Box *          statusView   = constructStatusView();
+    
+    ScrolledNotebook *  notebook = Gtk::manage(new ScrolledNotebook);
     try {
         set_title(*getResourceUstring("windowTitle"));
-        closeButton = Gtk::manage(new Gtk::Button(
-                                    *getResourceUstring("closeButtonLabel")));
+        closeButton = Gtk::manage(wf->createButton(*getResourceUstring(
+                                                        "closeButtonLabel")));
+        notebook->appendPage(*scheduleView, *getResourceUstring(
+                                                        "scheduleTab"));
+        notebook->appendPage(*statusView, *getResourceUstring(
+                                                        "statusTab"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+    
+    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SchedulerWindow::onCloseButtonClicked));
+    
+    Gtk::ButtonBox *    bottomButtonBox = Gtk::manage(new Gtk::HButtonBox(
+                                                        Gtk::BUTTONBOX_END, 5));
+    bottomButtonBox->pack_start(*closeButton);
+    
+    Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
+    bigBox->pack_start(*notebook,        Gtk::PACK_EXPAND_WIDGET);
+    bigBox->pack_start(*bottomButtonBox, Gtk::PACK_SHRINK, 5);
+    
+    add(*bigBox);
+    set_name(windowName);
+    set_default_size(330, 400);
+    showContents();
+    show_all();
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Destructor.
+ *----------------------------------------------------------------------------*/
+SchedulerWindow :: ~SchedulerWindow (void)                          throw ()
+{
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the Schedule view.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox *
+SchedulerWindow :: constructScheduleView(void)                      throw ()
+{
     calendar  = Gtk::manage(new Gtk::Calendar());
     dateLabel = Gtk::manage(new Gtk::Label());
 
@@ -135,32 +179,63 @@ SchedulerWindow :: SchedulerWindow (
     layout->attach(*dateLabel,      0, 1, 1, 2);
     layout->attach(*entriesView,    0, 1, 2, 3);
 
-    // register the signal handler for the button getting clicked.
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &SchedulerWindow::onCloseButtonClicked));
     // register the signal handle for when a date is selected in the calendar
     calendar->signal_day_selected().connect(sigc::mem_fun(*this,
                                     &SchedulerWindow::onDateSelected));
 
     // initialize the selected date for today
     selectedDate.reset(new gregorian::date(TimeConversion::now()->date()));
-
-    Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
-    mainBox->add(*layout);
-    add(*mainBox);
-
-    set_name(windowName);
-    show_all();
-
-    showContents();
+    
+    // make a new box and pack the main components into it
+    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*layout, Gtk::PACK_SHRINK);
+    
+    return view;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Destructor.
+ *  Construct the Status view.
  *----------------------------------------------------------------------------*/
-SchedulerWindow :: ~SchedulerWindow (void)                        throw ()
+Gtk::VBox *
+SchedulerWindow :: constructStatusView(void)                        throw ()
 {
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Label *    statusTextLabel;
+    Button *        startButton;
+    Button *        stopButton;
+    try {
+        statusTextLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                        "statusText")));
+        startButton = Gtk::manage(wf->createButton(*getResourceUstring(
+                                                        "startButtonLabel")));
+        stopButton = Gtk::manage(wf->createButton(*getResourceUstring(
+                                                        "stopButtonLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    startButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SchedulerWindow::onStartButtonClicked));
+    stopButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SchedulerWindow::onStopButtonClicked));
+    
+    Gtk::HBox *         statusReportBox = Gtk::manage(new Gtk::HBox);
+    statusReportBox->pack_start(*statusTextLabel,   Gtk::PACK_SHRINK, 5);
+    statusReportLabel = Gtk::manage(new Gtk::Label);
+    statusReportBox->pack_start(*statusReportLabel, Gtk::PACK_SHRINK, 5);
+    
+    Gtk::ButtonBox *    startStopButtons = Gtk::manage(new Gtk::HButtonBox(
+                                                    Gtk::BUTTONBOX_SPREAD, 20));
+    startStopButtons->pack_start(*startButton);
+    startStopButtons->pack_start(*stopButton);
+
+    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*statusReportBox,  Gtk::PACK_SHRINK, 20);
+    view->pack_start(*startStopButtons, Gtk::PACK_SHRINK);
+    
+    return view;
 }
 
 
@@ -168,7 +243,7 @@ SchedulerWindow :: ~SchedulerWindow (void)                        throw ()
  *  Event handler for a date being selected on the calendar
  *----------------------------------------------------------------------------*/
 void
-SchedulerWindow :: onDateSelected (void)                        throw ()
+SchedulerWindow :: onDateSelected (void)                            throw ()
 {
     guint   year;
     guint   month;
@@ -194,7 +269,7 @@ SchedulerWindow :: onDateSelected (void)                        throw ()
  *----------------------------------------------------------------------------*/
 void
 SchedulerWindow :: setTime(Ptr<boost::posix_time::ptime>::Ref  time)
-                                                                throw ()
+                                                                    throw ()
 {
     selectedDate.reset(new gregorian::date(time->date()));
 }
@@ -205,7 +280,7 @@ SchedulerWindow :: setTime(Ptr<boost::posix_time::ptime>::Ref  time)
  *  date
  *----------------------------------------------------------------------------*/
 void
-SchedulerWindow :: showContents(void)                           throw ()
+SchedulerWindow :: showContents(void)                               throw ()
 {
     calendar->select_month(selectedDate->month() - 1, selectedDate->year());
     calendar->select_day(selectedDate->day());
@@ -253,6 +328,8 @@ SchedulerWindow :: showContents(void)                           throw ()
 
         ++it;
     }
+    
+    updateStatus();
 }
 
 
@@ -260,7 +337,7 @@ SchedulerWindow :: showContents(void)                           throw ()
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
 void
-SchedulerWindow :: onEntryClicked (GdkEventButton * event)      throw ()
+SchedulerWindow :: onEntryClicked (GdkEventButton * event)          throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         // only show the context menu, if something is already selected
@@ -280,7 +357,7 @@ SchedulerWindow :: onEntryClicked (GdkEventButton * event)      throw ()
  *  Event handler for the Delete menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-SchedulerWindow :: onDeleteItem(void)                       throw ()
+SchedulerWindow :: onDeleteItem(void)                               throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                  entriesView->get_selection();
@@ -297,6 +374,45 @@ SchedulerWindow :: onDeleteItem(void)                       throw ()
             }
             showContents();
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the Start button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: onStartButtonClicked(void)                       throw ()
+{
+    // TODO: handle this event
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the Stop button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: onStopButtonClicked(void)                        throw ()
+{
+    // TODO: handle this event
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the status display in the Status tab.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: updateStatus(void)                               throw ()
+{
+    try {
+        if (gLiveSupport->isSchedulerAvailable()) {
+            statusReportLabel->set_text(*getResourceUstring("runningStatus"));
+        } else {
+            statusReportLabel->set_text(*getResourceUstring("stoppedStatus"));
+        }
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 }
 

@@ -68,8 +68,11 @@ using namespace LiveSupport::Core;
 
 /**
  *  The Scheduler window, showing and allowing scheduling of playlists.
- *
- *  The rough layout of the window is:
+ *  
+ *  The window is tabbed, with a main Schedule tab, and a Status tab showing
+ *  the status of the scheduler daemon (running/stopped).
+ *  
+ *  The rough layout of the Schedule tab:
  *  <code><pre>
  *  +--- scheduler window ----------------------------+
  *  | +--- calendar --------------------------------+ |
@@ -93,6 +96,31 @@ using namespace LiveSupport::Core;
  */
 class SchedulerWindow : public GuiWindow
 {
+    private:
+        /**
+         *  Construct the Schedule view.
+         *  This displays the list of scheduled playlists.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructScheduleView(void)                                 throw ();
+
+        /**
+         *  Construct the Status view.
+         *  This shows the status of the scheduler daemon.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructStatusView(void)                                   throw ();
+        
+        /**
+         *  Update the status display in the Status tab.
+         */
+        void
+        updateStatus(void)                                          throw ();
+
 
     protected:
 
@@ -186,6 +214,11 @@ class SchedulerWindow : public GuiWindow
         Gtk::Button                   * closeButton;
 
         /**
+         *  The label showing the current status of the scheduler.
+         */
+        Gtk::Label                    * statusReportLabel;
+        
+        /**
          *  Signal handler for when a date is selected in the calendar.
          */
         virtual void
@@ -205,6 +238,18 @@ class SchedulerWindow : public GuiWindow
          */
         virtual void
         onDeleteItem(void)                                      throw ();
+
+        /**
+         *  Signal handler for the Start button getting clicked.
+         */
+        virtual void
+        onStartButtonClicked(void)                              throw ();
+
+        /**
+         *  Signal handler for the Stop button getting clicked.
+         */
+        virtual void
+        onStopButtonClicked(void)                              throw ();
 
 
     public:

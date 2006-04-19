@@ -153,14 +153,22 @@ root:table
     schedulerWindow:table
     {
         windowTitle:string          { "Scheduler" }
+        
+        scheduleTab:string          { "Schedule" }
+        statusTab:string            { "Status" }
 
         startColumnLabel:string     { "start" }
         titleColumnLabel:string     { "title" }
         endColumnLabel:string       { "end" }
         deleteMenuItem:string       { "_Delete" }
-
-        closeButtonLabel:string     { "close" }
-
+        
+        statusText:string           { "The scheduler is" }
+        runningStatus:string        { "running." }
+        stoppedStatus:string        { "stopped." }
+        
+        startButtonLabel:string     { "Start" }
+        stopButtonLabel:string      { "Stop" }
+        closeButtonLabel:string     { "Close" }
     }
 
     schedulePlaylistWindow:table
