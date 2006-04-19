@@ -182,13 +182,36 @@ $infos = array(
     "saveGroupPref"      => array('m'=>"locstor.saveGroupPref",
         'p'=>array('sessid', 'group', 'key', 'value'), 'r'=>'status'),
 
+    "getTransportInfo"       => array('m'=>"locstor.getTransportInfo",
+        'p'=>array('trtok'), 
+        'r'=>array('state', 'realsize', 'expectedsize', 'realchsum', 'expectedchsum')),
+    "turnOnOffTransports" => array('m'=>"locstor.turnOnOffTransports",
+        'p'=>array('sessid', 'onOff'), 'r'=>array('state')),
+    "uploadFile2Hub" => array('m'=>"locstor.uploadFile2Hub",
+        'p'=>array('sessid', 'filePath'), 'r'=>array('trtok')),
+    "getHubInitiatedTransfers" => array('m'=>"locstor.getHubInitiatedTransfers",
+        'p'=>array('sessid'), 'r'=>array()),
+    "startHubInitiatedTransfer" => array('m'=>"locstor.startHubInitiatedTransfer",
+        'p'=>array('trtok'), 'r'=>array()),
+    "uploadAudioClip2Hub" => array('m'=>"locstor.uploadAudioClip2Hub",
+        'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
+    "downloadAudioClipFromHub" => array('m'=>"locstor.downloadAudioClipFromHub",
+        'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
+    "uploadPlaylist2Hub" => array('m'=>"locstor.uploadPlaylist2Hub",
+        'p'=>array('sessid', 'plid', 'withContent'), 'r'=>array('trtok')),
+    "downloadPlaylistFromHub" => array('m'=>"locstor.downloadPlaylistFromHub",
+        'p'=>array('plid', 'withContent'), 'r'=>array('trtok')),
+    "globalSearch" => array('m'=>"locstor.globalSearch",
+        'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
+    "getSearchResults" => array('m'=>"locstor.getSearchResults",
+        'p'=>array('trtok'), 'r'=>array()),
+
+/*
     "uploadToArchive"       => array('m'=>"locstor.uploadToArchive",
         'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
     "downloadFromArchive"       => array('m'=>"locstor.downloadFromArchive",
         'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
-    "getTransportInfo"       => array('m'=>"locstor.getTransportInfo",
-        'p'=>array('sessid', 'trtok'), 
-        'r'=>array('state', 'realsize', 'realsum', 'expectedsize', 'expectedsum')),
+*/
 
     "openPut"       => array('m'=>"locstor.openPut", 'p'=>array()),
     "closePut"      => array('m'=>"locstor.closePut", 'p'=>array()),
@@ -197,6 +220,7 @@ $infos = array(
 
 switch($method){
 case"searchMetadata":
+case"createBackupOpen":
     $parr = array(
         'sessid'=>$pars[0],
         'criteria'=>array(

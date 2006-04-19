@@ -1133,35 +1133,19 @@ class GreenBox extends BasicStor{
      *
      *  @param trtok: string - transport token
      *  @return struct/hasharray with fields:
+     *      trtype: string - audioclip | playlist | search | file
      *      state: string - transport state
-     *      expectedSize: int - file size in bytes
-     *      realSize: int - currently transported bytes
-     *      expectedChsum: string - orginal file checksum
-     *      realChsum: string - transported file checksum
+     *      direction: string - up | down
+     *      expectedsize: int - file size in bytes
+     *      realsize: int - currently transported bytes
+     *      expectedchsum: string - orginal file checksum
+     *      realchsum: string - transported file checksum
      *      ... ?
      */
-    // DUMMY
-    function getTransportInfo($trtok)
-    {
-        switch($trtok){
-            case'123456789abcdeff';     // upload/download
-                return array(
-                    'state'         =>  'finished',
-                    'expectedSize'  =>  1024,
-                    'realSize'      =>  1024,
-                    'expectedChsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'realChsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
-                );
-            case'123456789abcdefe';     // search
-                return array(
-                    'state'         =>  'finished',
-                );
-            default:
-                return PEAR::raiseError(
-                    "GreenBox::getTransportInfo:".
-                    " invalid transport token ($trtok)"
-                );
-        }
+    function getTransportInfo($trtok)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->getTransportInfo($trtok);
     }
     
     /**
@@ -1170,12 +1154,12 @@ class GreenBox extends BasicStor{
      *  @param onOff: boolean optional (if not used, current state is returned)
      *  @return boolean - previous state
      */
-    // DUMMY
-    function turnOnOffTransports($onOff)
-    {
-        return TRUE;
+    function turnOnOffTransports($onOff)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->turnOnOffTransports($onOff);
     }
-
+    
     /* ------------------------ methods for ls-archive-format file transports */
     /**
      *  Open async file transfer from local storageServer to network hub,
@@ -1184,17 +1168,12 @@ class GreenBox extends BasicStor{
      *  @param filePath string - local path to uploaded file
      *  @return string - transport token
      */
-    // DUMMY
-    function uploadFile2Hub($filePath)
-    {
-        if(!file_exists($filePath)){
-            return PEAR::raiseError(
-                "GreenBox::uploadFile2Hub: file not found ($filePath)"
-            );
-        }
-        return '123456789abcdeff';
+    function uploadFile2Hub($filePath)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->uploadFile2Hub($filePath);
     }
-
+    
     /**
      *  Get list of prepared transfers initiated by hub
      *
@@ -1202,16 +1181,12 @@ class GreenBox extends BasicStor{
      *      trtok: string transport token
      *      ... ?
      */
-    // DUMMY
-    function getHubInitiatedTransfers()
-    {
-        return array(
-            array(
-                'trtok' =>  '123456789abcdeff',
-            ),
-        );
+    function getHubInitiatedTransfers()    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->getHubInitiatedTransfers();
     }
-
+    
     /**
      *  Start of download initiated by hub
      *
@@ -1219,79 +1194,65 @@ class GreenBox extends BasicStor{
      *          the getHubInitiatedTransfers method
      *  @return string - transport token
      */
-    // DUMMY
-    function startHubInitiatedTransfer($trtok)
-    {
-        if($trtok != '123456789abcdeff'){
-            return PEAR::raiseError(
-                "GreenBox::startHubInitiatedTransfer:".
-                " invalid transport token ($trtok)"
-            );
-        }
-        return $trtok;
+    function startHubInitiatedTransfer($trtok)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->startHubInitiatedTransfer($trtok);
     }
-
+    
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
      *  Start upload of audioClip/webstream from local storageServer to hub
      *
      *  @param gunid: string - global unique id of object being transported
-     *  @return boolean true - status
+     *  @return string - transport token
      */
-    // DUMMY
-    function uploadAudioClip2Hub($gunid)
-    {
-        $ac = StoredFile::recallByGunid($this, $gunid);
-        if(PEAR::isError($ac)){ return $ac; }
-        return TRUE;
+    function uploadAudioClip2Hub($gunid)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->uploadAudioClip2Hub($gunid);
     }
-
+    
     /**
      *  Start download of audioClip/webstream from hub to local storageServer
      *
      *  @param gunid: string - global unique id of object being transported
-     *  @return boolean true - status
+     *  @return string - transport token
      */
-    // DUMMY
-    function downloadAudioClipFromHub($gunid)
-    {
-        $ac = StoredFile::recallByGunid($this, $gunid);
-        if(PEAR::isError($ac)){ return $ac; }
-        return TRUE;
+    function downloadAudioClipFromHub($gunid)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->downloadAudioClipFromHub($gunid);
     }
-
+    
     /* ------------------------------- special methods for playlist transport */
     /**
      *  Start upload of playlist from local storageServer to hub
      *
      *  @param plid: string - global unique id of playlist being transported
      *  @param withContent: boolean - if true, transport playlist content too
-     *  @return boolean true - status
+     *  @return string - transport token
      */
-    // DUMMY
-    function uploadPlaylist2Hub($plid, $withContent)
-    {
-        $pl = Playlist::recallByGunid($this, $plid);
-        if(PEAR::isError($pl)){ return $pl; }
-        return TRUE;
+    function uploadPlaylist2Hub($plid, $withContent)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->uploadPlaylist2Hub($plid, $withContent);
     }
-
+    
     /**
      *  Start download of playlist from hub to local storageServer
      *
      *  @param plid: string - global unique id of playlist being transported
      *  @param withContent: boolean - if true, transport playlist content too
-     *  @return boolean true - status
+     *  @return string - transport token
      */
-    // DUMMY
-    function downloadPlaylistFromHub($plid, $withContent)
-    {
-        $pl = Playlist::recallByGunid($this, $plid);
-        if(PEAR::isError($pl)){ return $pl; }
-        return TRUE;
+    function downloadPlaylistFromHub($plid, $withContent)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->downloadPlaylistFromHub($plid, $withContent);
     }
-
+    
     /* ------------------------------------------------ global-search methods */
     /**
      *  Start search job on network hub
@@ -1299,40 +1260,23 @@ class GreenBox extends BasicStor{
      *  @param criteria: LS criteria format (see localSearch)
      *  @return string - transport token
      */
-    // DUMMY
-    function globalSearch($criteria)
-    {
-        return '123456789abcdefe';
+    function globalSearch($criteria)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->globalSearch($criteria);
     }
-
+    
     /**
      *  Get results from search job on network hub
      *
      *  @param trtok: string - transport token
      *  @return : LS search result format (see localSearch)
      */
-    // DUMMY
-    function getSearchResults($trtok)
-    {
-        if($trtok != '123456789abcdefe'){
-            return PEAR::raiseError(
-                "GreenBox::getSearchResults: invalid transport token ($trtok)"
-            );
-        }
-        return array(
-            'results'   => array('0000000000010001', '0000000000010002'),
-            'cnt'       => 2,
-        );
+    function getSearchResults($trtok)    {
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->getSearchResults($trtok);
     }
-
-    /**
-     *
-     *  @param
-     *  @return
-    function ()
-    {
-    }
-     */
     
     /* ========================================================= info methods */
     /**

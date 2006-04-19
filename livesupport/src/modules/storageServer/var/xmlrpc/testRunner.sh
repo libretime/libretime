@@ -301,18 +301,23 @@ importPlaylist() {
     $XR_CLI deleteAudioClip $SESSID 0000000000010002 1
     $XR_CLI deleteAudioClip $SESSID 0000000000010003 1
     CHSUM=`md5sum $ARCHIVE | cut -d ' ' -f 1 `
-   RES=`$XR_CLI importPlaylistOpen $SESSID $CHSUM` || \
+    RES=`$XR_CLI importPlaylistOpen $SESSID $CHSUM` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo -n "# curl (PUT): "
+    echo -n "# curl (PUT $URL): "
     curl -C 0 -T $ARCHIVE $URL || { ERN=$?; echo "curl error"; exit $ERN; }
     echo "status: $?"
     echo -n "# importPlaylistClose (${TOKEN}): "
     RES=`$XR_CLI importPlaylistClose $TOKEN` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     echo $RES
+    GUNID=0000000000010001; existsAudioClip;
+    GUNID=0000000000010002; existsAudioClip;
+    GUNID=0000000000010003; existsAudioClip;
+    PLID=0000000000000001; existsPlaylist;
+    PLID=0000000000000003; existsPlaylist;
 }
 
 prefTest() {

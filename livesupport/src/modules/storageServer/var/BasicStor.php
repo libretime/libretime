@@ -1623,7 +1623,7 @@ class BasicStor extends Alib{
         if($filesOnly) $this->deleteFiles();
         else $this->deleteData();
         if(!$this->config['isArchive']){
-            $tr =& new Transport($this->dbc, $this, $this->config);
+            $tr =& new Transport($this);
             $tr->resetData();
         }
         $res = array(

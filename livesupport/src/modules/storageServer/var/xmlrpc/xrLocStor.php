@@ -157,9 +157,21 @@ $methods = array(
     'loadGroupPref'           => 'Read group preference record.',
     'saveGroupPref'           => 'Delete user preference record.',
 
-    'uploadToArchive'         => 'Starts upload audioclip to remote archive.',
-    'downloadFromArchive'     => 'Starts download audioclip from remote archive.',
-    'getTransportInfo'        => 'Checking status of transported file.',
+    'getTransportInfo'          => 'Common "check" method for transports',
+    'turnOnOffTransports'       => 'Turn transports on/off, optionaly return current state',
+    'uploadFile2Hub'            => 'Open async file transfer from local storageServer to network hub',
+    'getHubInitiatedTransfers'  => 'Get list of prepared transfers initiated by hub',
+    'startHubInitiatedTransfer' => 'Start of download initiated by hub',
+    'uploadAudioClip2Hub'       => 'Common "check" method for transports',
+    'downloadAudioClipFromHub'  => 'Start download of audioClip/webstream from hub to local storageServer',
+    'uploadPlaylist2Hub'        => 'Start upload of playlist from local storageServer to hub',
+    'downloadPlaylistFromHub'   => 'Start download of playlist from hub to local storageServer',
+    'globalSearch'              => 'Start search job on network hub',
+    'getSearchResults'          => 'Get results from search job on network hub',
+
+#    'uploadToArchive'         => 'Starts upload audioclip to remote archive.',
+#    'downloadFromArchive'     => 'Starts download audioclip from remote archive.',
+#    'getTransportInfo'        => 'Checking status of transported file.',
 );
 
 $defs = array();

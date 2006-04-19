@@ -36,12 +36,29 @@ include_once "XML/RPC.php";
 /**
  *  Class for handling file tranport between StorageServer and ArchiveServer<br>
  *  over unreliable network and from behind firewall<br><br>
+ *
+ *  Transport states:<ul>
+ *   <li>init: transport is prepared, but not started
+ *      (e.g. no network connection is present)</li>
+ *   <li>pending: transport is in progress, file is not fully transported to
+ *   target system</li>
+ *   <li>finished: transport is finished, but file processing on target side
+ *   is not completed</li>
+ *   <li>closed: processing on target side is completed without errors</li>
+ *   <li>failed: error - error message stored in errmsg field</li>
+ *  </ul>
  */
-class Transport{
+class Transport
+{
     var $dbc;
-    var $timeout=20;
-    var $waitretry=6;
-    var $retries=6;
+    var $downTimeout    = 20;
+    var $downWaitretry  = 6;
+    var $downRetries    = 6;
+
+    var $upTrMaxTime     = 600;
+    var $upTrSpeedTime   = 20;
+    var $upTrSpeedLimit  = 500;
+    var $upTrConnectTimeout = 20;
 
     /**
      *  Constructor
@@ -50,720 +67,251 @@ class Transport{
      *  @param gb LocStor object reference
      *  @param config config array
      */
-    function Transport(&$dbc, &$gb, $config)
+    function Transport(&$gb)
     {
-        $this->dbc        =& $dbc;
-        $this->config     = $config;
-        $this->transTable = $config['tblNamePrefix'].'trans';
-        $this->transDir   = $config['transDir'];
         $this->gb         =& $gb;
+        $this->dbc        =& $gb->dbc;
+        $this->config     =& $gb->config;
+        $this->transTable =  $gb->config['tblNamePrefix'].'trans';
+        $this->transDir   =  $gb->config['transDir'];
     }
 
-    /* ================================================== status info methods */
-    /**
-     *  Return state of transport job
-     *
-     *  @param trtok string, transport token
-     *  @return string, transport state
-     */
-    function getState($trtok)
-    {
-        $row = $this->dbc->getRow(
-            "SELECT state FROM {$this->transTable} WHERE trtok='$trtok'"
-        );
-        if(PEAR::isError($row)) return $row;
-        if(is_null($row)){
-            return PEAR::raiseError("Transport::getState:".
-                " invalid transport token ($trtok)", TRERR_TOK
-            );
-        }
-        return $row['state'];
-    }
+/*
+    /* ======================================================= public methods * /
+    function getTransportInfo($trtok)   
+    function turnOnOffTransports($onOff)
+    function uploadFile2Hub($filePath) 
+    function getHubInitiatedTransfers()
+    function startHubInitiatedTransfer($trtok)
+    function uploadAudioClip2Hub($gunid)
+    function downloadAudioClipFromHub($gunid)
+    function uploadPlaylist2Hub($plid, $withContent)
+    function downloadPlaylistFromHub($plid, $withContent)
+    function globalSearch($criteria) 
+    function getSearchResults($trtok)
 
+    /* ======================================================== cron methods * /
+    function cronMain()
+    function cronInit($row, $asessid)
+    function cronPending($row, $asessid)
+    function cronFinished($row, $asessid)
+    function cronFailed($row, $asessid)
+?    function cronCheck($pdtoken)
+
+    /* ========================================================= misc methods * /
+    function loginToArchive()
+    function logoutFromArchive($sessid)
+    function pingToArchive()
+    function xmlrpcCall($method, $pars=array())
+*/
+
+    /* =============================== DUMMY ================================ */
+    /* ------------------------------------------------------- common methods */
     /**
-     *  Return hash with useful information about transport
+     *  Common "check" method for transports
      *
-     *  @param trtok string, transport token
-     *  @return hash:
-     *     trtype,
-     *     direction,
-     *     status,
-     *     expectedsize,
-     *     realsize,
-     *     expectedsum,
-     *     realsum
+     *  @param trtok: string - transport token
+     *  @return struct/hasharray with fields:
+     *      trtype: string - audioclip | playlist | search | file
+     *      state: string - transport state
+     *                  init | pending | finished | closed | failed
+     *      direction: string - up | down
+     *      expectedsize: int - file size in bytes
+     *      realsize: int - currently transported bytes
+     *      expectedchsum: string - orginal file checksum
+     *      realchsum: string - transported file checksum
+     *      title: string - dc:title or filename etc.
+     *      errmsg: string - error message for failed transports
+     *      ... ?
      */
     function getTransportInfo($trtok)
     {
-        $row = $this->dbc->getRow("
-            SELECT 
-                trtype, direction, state,
-                expectedsize, realsize,
-                expectedsum, realsum
-            FROM {$this->transTable}
-            WHERE trtok='$trtok'
-        ");
-        if(PEAR::isError($row)){ return $row; }
-        if(is_null($row)){
-            return PEAR::raiseError("Transport::getTransportInfo:".
-                " invalid transport token ($trtok)", TRERR_TOK
-            );
-        }
-        $row['status'] == ($row['state'] == 'closed');
-#        unset($row['state']);
-        return $row;
-    }
-
-    /* ======================================================= upload methods */
-    
-    /**
-     *  
-     */
-    function uploadToArchive($gunid, $sessid='')
-    {
-        $trtype = $this->gb->_getType($gunid);
-        switch($trtype){
-        case"audioclip":
-            $ex = $this->gb->existsAudioClip($sessid, $gunid);
-            break;
-        case"playlist":
-            $ex = $this->gb->existsPlaylist($sessid, $gunid);
-            break;
-        default:
-            return PEAR::raiseError("Transport::uploadToArchive:".
-                " unknown trtype ($trtype)"
-            );
-        }
-        if(PEAR::isError($ex)) return $ex;
-        if(!$ex){
-            return PEAR::raiseError("Transport::uploadToArchive:".
-                " $trtype not found ($gunid)"
-            );
-        }
-        $trtok = $this->_createTrtok();
-        $id = $this->dbc->nextId("{$this->transTable}_id_seq");
-        $res = $this->dbc->query("
-            INSERT INTO {$this->transTable}
-                (id, trtok, direction, state, trtype,
-                    gunid,
-                    expectedsum, realsum, expectedsize, realsize
-                )
-            VALUES
-                ($id, '$trtok', 'up', 'init', '$trtype',
-                    x'$gunid'::bigint,
-                    '?e', '?r', '0', '0'
-                )
-        ");
-        if(PEAR::isError($res)) return $res;
-#??        $this->uploadCron();
-        return $trtok;
-    }
-    
-    /**
-     *  
-     */
-    function uploadCron()
-    {
-        // fetch all opened uploads
-        $rows = $this->dbc->getAll("
-            SELECT
-                id, trtok, state, trtype,
-                to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
-                fname, localfile, expectedsum, expectedsize, url
-            FROM {$this->transTable}
-            WHERE direction='up' AND state<>'closed' 
-        ");
-        if(PEAR::isError($rows)){ $this->trLogPear($rows); return FALSE; }
-        if(count($rows)==0) return TRUE;
-        // login to archive server
-        $r = $this->loginToArchive();
-        if(PEAR::isError($r)){ $this->trLog("Login error"); return FALSE; }
-        $asessid = $r['sessid'];
-        chdir($this->config['transDir']);
-        // for all opened uploads:
-        foreach($rows as $i=>$row){
-            $row['pdtoken'] = StoredFile::_normalizeGunid($row['pdtoken']);
-            $row['gunid'] = StoredFile::_normalizeGunid($row['gunid']);
-            #var_dump($row);
-            switch($row['state']){
-                case"init":     // ------ new uploads
-                    $ret = $this->uploadCronInit($row, $asessid);
-                    if(PEAR::isError($ret)){
-                        $this->trLogPear($ret, $row); break;
-                    }
-                    $row = array_merge($row, $ret);
-                    // break;
-                case"pending":  // ------ pending uploads
-                    $ret = $this->uploadCronPending($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                case"finished": // ------ finished uploads
-                    $ret = $this->uploadCronFinished($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                case"failed":   // ------ failed uploads
-                    $ret = $this->uploadCronFailed($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                default:
-                    $this->trLog("uploadCron: unknown state ".
-                        "({$row['state']}, id={$row['id']})");
-            } // switch state
-        } // foreach opened
-        $r = $this->logoutFromArchive($asessid);
-        if(PEAR::isError($r)) $this->trLog("Logout error");
-        return TRUE;
-    }
-
-    /**
-     *  
-     */
-    function uploadCronInit($row, $asessid)
-    {
-        $this->trLog("INIT UP id={$row['id']}, trtok={$row['trtok']}");
-        switch($row['trtype']){
-            case"audioclip":
-                $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
-                if(PEAR::isError($ac)) return $ac;
-                $fpath = $ac->_getRealRADFname();
-                $fname = $ac->_getFileName();
-                $chsum = $this->_chsum($fpath);
-                $size  = filesize($fpath);
-                $metadata = file_get_contents($ac->_getRealMDFname());
-                $ret = $this->xmlrpcCall( 'archive.storeAudioClipOpen',
-                    array(
-                       'sessid'     => $asessid,
-                       'gunid'      => $row['gunid'],
-                       'metadata'   => $metadata,
-                       'fname'      => $fname,
-                       'chsum'      => $chsum,
-                    )
-                );
-                if(PEAR::isError($ret)) return $ret;
-                $r = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET
-                        state       = 'pending',
-                        fname       = '$fname',
-                        localfile   = '$fpath',
-                        expectedsum = '$chsum',
-                        expectedsize= $size,
-                        url         = '{$ret['url']}',
-                        pdtoken     = x'{$ret['token']}'::bigint
-                    WHERE id={$row['id']}
-                ");
-                if(PEAR::isError($r)) return $r;
+    // DUMMY
+        switch($trtok){
+            case'123456789abcdeff';     // upload/download
                 return array(
-                    'state'=>'pending',
-                    'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
-                    'localfile'=>$fpath, 'fname'=>$fname,
-                    'expectedsum'=>$chsum, 'expectedsize'=>$size,
+                    'state'         =>  'finished',
+                    'direction'     =>  'up',
+                    'trtype'        =>  'audioclip',
+                    'expectedsize'  =>  1024,
+                    'realsize'      =>  1024,
+                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'title'         =>  'DUMMY !',
+                    'errmsg'        =>  '',
                 );
-                break;
-            case"playlist":
-                $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
-                if(PEAR::isError($ac)) return $ac;
-                $fname = $ac->_getFileName();
-                $size  = filesize($fpath);
-                $metadata = file_get_contents($ac->_getRealMDFname());
-                $ret = $this->xmlrpcCall( 'archive.createPlaylist',
-                    array(
-                       'sessid'     => $asessid,
-                       'plid'      => $row['gunid'],
-                       'fname'      => $fname,
-                    )
-                );
-                if(PEAR::isError($ret)) return $ret;
-                $ret = $this->xmlrpcCall( 'archive.editPlaylist',
-                    array(
-                       'sessid'     => $asessid,
-                       'plid'      => $row['gunid'],
-                       'metadata'   => $metadata,
-                    )
-                );
-                if(PEAR::isError($ret)) return $ret;
-#                $this->trLog("INIT UP after edit {$ret['token']}");
-                $r = $this->xmlrpcCall( 'archive.savePlaylist',
-                    array(
-                       'sessid'     => $asessid,
-                       'token'      => $ret['token'],
-                       'newPlaylist'   => $metadata,
-                    )
-                );
-                if(PEAR::isError($r)) return $r;
-#                $this->trLog("INIT UP after save {$r['plid']}");
-                $r = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET
-                        state       = 'closed',
-                        fname       = '$fname',
-                        url         = '{$ret['url']}'
-                    WHERE id={$row['id']}
-                ");
-                if(PEAR::isError($r)) return $r;
+            case'123456789abcdefe';     // search
                 return array(
-                    'state'=>'closed',
-                    'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
-                    'fname'=>$fname,
+                    'state'         =>  'finished',
                 );
-                break;
-            case"searchjob":
-                return array();
             default:
-                return PEAR::raiseError("Transport::uploadCronInit:".
-                    " unknown trtype ({$row['trtype']})"
+                return PEAR::raiseError(
+                    "Transport::getTransportInfo:".
+                    " invalid transport token ($trtok)"
                 );
-        } // switch $row['trtype']
-    }
-    
-    /**
-     *  
-     */
-    function uploadCronPending($row, $asessid)
-    {
-        if($row['trtype'] != 'audioclip') return;
-        $check = $this->uploadCheck($row['pdtoken']);
-        if(PEAR::isError($check)) return $check;
-        #var_dump($row);
-        #var_dump($check);
-        // test filesize
-        if(intval($check['size']) < $row['expectedsize']){
-            // not finished - upload next part
-            $command =
-                "curl -s -C {$check['size']} --max-time 600".
-                " --speed-time 20 --speed-limit 500".
-                " --connect-timeout 20".
-                " -T {$row['localfile']} {$row['url']}";
-#            echo "$command\n";
-            $res = system($command, $status);
-        }else{
-            // hmmm - we are finished? OK - continue
-            $status = 0;
-        }
-        // status 18 - Partial file. Only a part of the file was transported.
-        if($status == 0 || $status == 18){
-            $check = $this->uploadCheck($row['pdtoken']);
-            if(PEAR::isError($check)) return $check;
-            #var_dump($check);
-            // test checksum
-            if($check['status'] == TRUE){
-                // finished
-                $res = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET state   ='finished',
-                        realsum ='{$check['realsum']}',
-                        realsize={$check['size']}
-                    WHERE id='{$row['id']}'
-                ");
-                if(PEAR::isError($res)) return $res;
-            }else{
-                if(intval($check['size']) < $row['expectedsize']){
-                    $res = $this->dbc->query("
-                        UPDATE {$this->transTable}
-                        SET
-                            realsum ='{$check['realsum']}',
-                            realsize={$check['realsize']}
-                        WHERE id='{$row['id']}'
-                    ");
-                    if(PEAR::isError($res)) return $res;
-                }else{
-                    // wrong md5 at finish - TODO: start again
-                    // $this->xmlrpcCall('archive.uploadReset', array());
-                    return PEAR::raiseError("Transport::uploadCron:".
-                        " file uploaded with bad md5 ".
-                        "({$check['realsum']}/{$check['expectedsum']})"
-                    );
-                }
-            }
         }
     }
     
     /**
-     *  
-     */
-    function uploadCronFinished($row, $asessid)
-    {
-        if($row['trtype'] != 'audioclip') return;
-        $res = $this->xmlrpcCall(
-            'archive.storeAudioClipClose',
-            array('sessid'=>$asessid, 'token'=>$row['pdtoken'])
-        );
-//        if(PEAR::isError($res)) return $res;
-        if(PEAR::isError($res)){
-            switch($res->getCode()){
-                case GBERR_PUT:
-                    // mark as failed
-                    $this->dbc->query("
-                        UPDATE {$this->transTable} SET state='failed'
-                        WHERE id='{$row['id']}'
-                    ");
-                    break;
-                    return FALSE;
-                default:
-                    return $res;
-            }
-        }
-        // close upload in db
-        $r = $this->dbc->query("
-            UPDATE {$this->transTable} SET state='closed'
-            WHERE id='{$row['id']}'
-        ");
-        /*
-        $r = $this->dbc->query("
-            DELETE FROM {$this->transTable}
-            WHERE id='{$row['id']}'
-        ");
-        */
-        if(PEAR::isError($r)) return $r;
-        $this->trLog("FIN UP id={$row['id']}, trtok={$row['trtok']}".
-            "\n   ".serialize($row));
-    }
-    
-    /**
-     *  
-     */
-    function uploadCronFailed($row, $asessid)
-    {
-        /*
-        $r = $this->dbc->query("
-            DELETE FROM {$this->transTable}
-            WHERE id='{$row['id']}'
-        ");
-        if(PEAR::isError($r)) return $r;
-        */
-    }
-    
-    /**
-     *  Check state of uploaded file
+     *  Turn transports on/off, optionaly return current state.
      *
-     *  @param pdtoken string, put token
-     *  @return hash: chsum, size, url
+     *  @param onOff: boolean optional (if not used, current state is returned)
+     *  @return boolean - previous state
      */
-    function uploadCheck($pdtoken)
+    // DUMMY
+    function turnOnOffTransports($onOff)
     {
-        $ret = $this->xmlrpcCall(
-            'archive.uploadCheck', 
-            array('token'=>$pdtoken)
-        );
-        return $ret;
-    }
-
-    /* ===================================================== download methods */
-    /**
-     *  
-     */
-    function downloadFromArchive($gunid, $sessid='')
-    {
-        // insert transport record to db
-        $uid = $this->gb->getSessUserId($sessid);
-        if(PEAR::isError($uid)) return $uid;
-        if(is_null($uid)){
-            return PEAR::raiseError("Transport::downloadFromArchive: ".
-                "invalid session id", GBERR_SESS);
-        }
-        $parid = $this->gb->_getHomeDirIdFromSess($sessid);
-        if(PEAR::isError($parid)) return $parid;
-        $trtok = $this->_createTrtok();
-        $id = $this->dbc->nextId("{$this->transTable}_id_seq");
-        if(PEAR::isError($id)) return $id;
-        $res = $this->dbc->query("
-            INSERT INTO {$this->transTable}
-                (id, trtok, direction, state, trtype,
-                    gunid,
-                    expectedsum, realsum, expectedsize, realsize,
-                    uid, parid
-                )
-            VALUES
-                ($id, '$trtok', 'down', 'init', '?',
-                    x'$gunid'::bigint,
-                    '?e', '?r', '0', '0',
-                    $uid, $parid
-                )
-        ");
-        if(PEAR::isError($res)) return $res;
-#??        $this->downloadCron();
-        return $trtok;
-    }
-    
-    /**
-     *  
-     */
-    function downloadCron()
-    {
-        // fetch all opened downloads
-        $rows = $this->dbc->getAll("
-            SELECT
-                id, trtok, state, trtype,
-                to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
-                fname, localfile, expectedsum, expectedsize, url,
-                uid, parid
-            FROM {$this->transTable}
-            WHERE direction='down' AND state<>'closed'
-        ");
-        if(PEAR::isError($rows)){ $this->trLogPear($rows); return FALSE; }
-        if(count($rows)==0) return TRUE;
-        // login to archive server
-        $r = $this->loginToArchive();
-        if(PEAR::isError($r)){ $this->trLog("Login error"); return FALSE; }
-        $asessid = $r['sessid'];
-        chdir($this->config['transDir']);
-        // for all opened downloads:
-        foreach($rows as $i=>$row){
-            $row['pdtoken'] = StoredFile::_normalizeGunid($row['pdtoken']);
-            $row['gunid'] = StoredFile::_normalizeGunid($row['gunid']);
-            switch($row['state']){
-                case"init":     // ------ new downloads
-                    $ret = $this->downloadCronInit($row, $asessid);
-                    if(PEAR::isError($ret)){
-                        $this->trLogPear($ret, $row); break;
-                    }
-                    $row = array_merge($row, $ret);
-                    #break;
-                case"pending":  // ------ pending downloads
-                    $ret = $this->downloadCronPending($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                case"finished": // ------ finished downloads
-                    $ret = $this->downloadCronFinished($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                case"failed": // ------ failed downloads
-                    $ret = $this->downloadCronFailed($row, $asessid);
-                    if(PEAR::isError($ret)){ $this->trLogPear($ret, $row); }
-                    break;
-                default:
-                    $this->trLog("downloadCron: unknown state ".
-                        "({$row['state']}, id={$row['id']})");
-            } // switch state
-        } // foreach opened
-        $r = $this->logoutFromArchive($asessid);
-        if(PEAR::isError($r)) $this->trLog("Logout error");
         return TRUE;
     }
-    
+
+    /* ------------------------ methods for ls-archive-format file transports */
     /**
-     *  
+     *  Open async file transfer from local storageServer to network hub,
+     *  file should be ls-archive-format file.
+     *
+     *  @param filePath string - local path to uploaded file
+     *  @return string - transport token
      */
-    function downloadCronInit($row, $asessid)
+    function uploadFile2Hub($filePath)
     {
-        $ret = $this->xmlrpcCall('archive.downloadRawAudioDataOpen',
-            array('sessid'=>$asessid, 'gunid'=>$row['gunid'])
-        );
-        if(PEAR::isError($ret)){
-            // catch 'not found' exception:
-            if($ret->getCode() != 847) return $ret;
-            else $trtype = '?';
-        }else $trtype = 'audioclip';
-        if($trtype == '?'){
-            $ret = $this->xmlrpcCall('archive.existsPlaylist',
-                array('sessid'=>$asessid, 'plid'=>$row['gunid'])
-            );
-            if(PEAR::isError($ret)){
-                // catch 'not found' exception:
-                if($ret->getCode() != 847) return $ret;
-                else $trtype = '?';
-            }else{
-                $trtype = 'playlist';
-                $r1 = $this->downloadMetadata($row['gunid'], $asessid);
-                if(PEAR::isError($r1)) return $r1;
-                $r2 = $this->gb->bsPutFile($row['parid'], $r1['filename'],
-                    '', $r1['mdata'], $row['gunid'], $trtype, 'string');
-                if(PEAR::isError($r2)) return $r2;
-                $res = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET state='closed',
-                        trtype='$trtype'
-                    WHERE id='{$row['id']}'
-                ");
-                if(PEAR::isError($res)) return $res;
-                return array(
-                    'state'=>'closed', 'trtype'=>$trtype,
-                    'fname'=>$r1['filename'],
-                );
-            }
-        }
-        if($trtype == '?'){
-            return PEAR::raiseError("Transport::downloadCronInit:".
-                " unknown trtype ({$row['trtype']})"
+    // DUMMY
+        if(!file_exists($filePath)){
+            return PEAR::raiseError(
+                "Transport::uploadFile2Hub: file not found ($filePath)"
             );
         }
-        $fpath = $this->transDir."/".basename($ret['url']);     // ***
-        touch($fpath);
-        $res = $this->dbc->query("
-            UPDATE {$this->transTable}
-            SET
-                state       = 'pending',
-                trtype      = '$trtype',
-                fname       = '{$ret['filename']}',
-                localfile   = '$fpath',
-                expectedsum = '{$ret['chsum']}',
-                expectedsize= '{$ret['size']}',
-                url         = '{$ret['url']}',
-                pdtoken     = x'{$ret['token']}'::bigint
-            WHERE id='{$row['id']}'
-        ");
-        if(PEAR::isError($res)) return $res;
-        $this->trLog("INIT DOWN id={$row['id']}, trtok={$row['trtok']}");
-        return array(
-            'state'=>'pending', 'trtype'=>$trtype,
-            'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
-            'localfile'=>$fpath, 'fname'=>$ret['filename'],
-            'expectedsum'=>$ret['chsum'], 'expectedsize'=>$ret['size'],
-        );
-    }
-    
-    /**
-     *  
-     */
-    function downloadCronPending($row, $asessid)
-    {
-        if($row['trtype'] != 'audioclip') return;
-        // wget the file
-        $command =
-            "wget -q -c --timeout={$this->timeout}".
-            " --waitretry={$this->waitretry}".
-            " -t {$this->retries} {$row['url']}";
-#        echo "$command\n";
-        $res = system($command, $status);
-        // check consistency
-        $chsum  = $this->_chsum($row['localfile']);
-        $size   = filesize($row['localfile']);
-        if($status == 0){
-            if($chsum == $row['expectedsum']){
-                // mark download as finished
-                $res = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET state='finished',
-                        realsum ='{$chsum}',
-                        realsize={$size}
-                    WHERE id='{$row['id']}'
-                ");
-                if(PEAR::isError($res)) return $res;
-            }else{
-                @unlink($row['localfile']);
-                $res = $this->dbc->query("
-                    UPDATE {$this->transTable}
-                    SET
-                        realsum ='{$chsum}',
-                        realsize={$size}
-                    WHERE id='{$row['id']}'
-                ");
-                if(PEAR::isError($res)) return $res;
-            }
-        }
-    }
-    
-    /**
-     *  
-     */
-    function downloadCronFinished($row, $asessid)
-    {
-        if($row['trtype'] != 'audioclip') return;
-        // call archive that downloads have been finished OK
-        $res = $this->xmlrpcCall(
-            'archive.downloadRawAudioDataClose',
-            array('sessid'=>$asessid, 'token'=>$row['pdtoken'])
-        );
-        if(PEAR::isError($res)) return $res;
-        $res2 = $this->downloadMetadata($row['gunid'], $asessid);
-        if(PEAR::isError($res2)) return $res2;
-        $mdata = $res2['mdata'];
-        $name   = $row['fname'];
-        $this->trLog("FIN1 DOWN id={$row['id']}, trtok={$row['trtok']}".
-            "\n   ".serialize($row));
-        $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
-        if(!PEAR::isError($ac)){
-            // gunid exists - do replace
-            $id = $ac->getId();
-            $ac->replace(
-                $id, $name, $row['localfile'], $mdata, 'string'
-            );
-            if(PEAR::isError($ac)) return $ac;
-        }else{
-            // gunid doesn't exists - do insert
-            $id = $this->gb->addObj($name , 'File', $row['parid']);
-            if(PEAR::isError($id)) return $id;
-            $ac =&  StoredFile::insert(
-                $this->gb, $id, $name, $row['localfile'], $mdata, 'string',
-                $row['gunid'], 'audioclip'
-            );
-            if(PEAR::isError($ac)) return $ac;
-        }
-        // close download in db
-        $res = $this->dbc->query("
-            UPDATE {$this->transTable}
-            SET state='closed'
-            WHERE id='{$row['id']}'
-        ");
-        /*
-        $res = $this->dbc->query("
-            DELETE FROM {$this->transTable}
-            WHERE id='{$row['id']}'
-        ");
-        */
-        if(PEAR::isError($res)) return $res;
-        $this->trLog("FIN DOWN id={$row['id']}, trtok={$row['trtok']}".
-            "\n   ".serialize($row));
-    }
-    
-    /**
-     *  
-     */
-    function downloadCronFailed($row, $asessid)
-    {
-        /*
-        $r = $this->dbc->query("
-            DELETE FROM {$this->transTable}
-            WHERE id='{$row['id']}'
-        ");
-        if(PEAR::isError($r)) return $r;
-        */
-    }
-    
-    /**
-     *  
-     */
-    function downloadMetadata($gunid, $asessid)
-    {
-        $ret = $this->xmlrpcCall('archive.downloadMetadataOpen',
-            array('sessid'=>$asessid, 'gunid'=>$gunid)
-        );
-        if(PEAR::isError($ret)) return $ret;
-        #echo "{$ret['url']}\n";
-        if(($mdata = file_get_contents($ret['url'])) === FALSE){
-            return PEAR::raiseError("Transport::downloadCronInit: ".
-                "metadata download failed ({$gunid})", TRERR_MD
-            );
-        }
-        $filename = $ret['filename'];
-        $ret = $this->xmlrpcCall('archive.downloadMetadataClose',
-            array('token'=>$ret['token'])
-        );
-        if(PEAR::isError($ret)) return $ret;
-        return array('mdata'=>$mdata, 'filename'=>$filename);
-    }
-    
-    /* ======================================================= search methods */
-    /**
-     *  Start search in archive
-     */
-    function globalSearch()
-    {
-        // create searchJob from searchData
-        // uploadFile searchJob
-        // downloadFile searchResults
-        // not implemented yet
+        return '123456789abcdeff';
     }
 
     /**
-     *  Returns results from archive search
+     *  Get list of prepared transfers initiated by hub
+     *
+     *  @return array of structs/hasharrays with fields:
+     *      trtok: string transport token
+     *      ... ?
      */
-    function getSearchResults()
+    // DUMMY
+    function getHubInitiatedTransfers()
     {
-        // return downloaded file with search results
-        // not implemented yet
+        return array(
+            array(
+                'trtok' =>  '123456789abcdeff',
+            ),
+        );
     }
-    
+
+    /**
+     *  Start of download initiated by hub
+     *
+     *  @param trtok: string - transport token obtained from
+     *          the getHubInitiatedTransfers method
+     *  @return string - transport token
+     */
+    // DUMMY
+    function startHubInitiatedTransfer($trtok)
+    {
+        if($trtok != '123456789abcdeff'){
+            return PEAR::raiseError(
+                "Transport::startHubInitiatedTransfer:".
+                " invalid transport token ($trtok)"
+            );
+        }
+        return $trtok;
+    }
+
+    /* ------------- special methods for audioClip/webstream object transport */
+
+    /**
+     *  Start upload of audioClip/webstream from local storageServer to hub
+     *
+     *  @param gunid: string - global unique id of object being transported
+     *  @return string - transport token
+     */
+    function uploadAudioClip2Hub($gunid)
+    {
+    // DUMMY
+        $ac = StoredFile::recallByGunid($this->gb, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        return '123456789abcdeff';
+    }
+
+    /**
+     *  Start download of audioClip/webstream from hub to local storageServer
+     *
+     *  @param gunid: string - global unique id of object being transported
+     *  @return string - transport token
+     */
+    // DUMMY
+    function downloadAudioClipFromHub($gunid)
+    {
+        return '123456789abcdeff';
+    }
+
+    /* ------------------------------- special methods for playlist transport */
+    /**
+     *  Start upload of playlist from local storageServer to hub
+     *
+     *  @param plid: string - global unique id of playlist being transported
+     *  @param withContent: boolean - if true, transport playlist content too
+     *  @return string - transport token
+     */
+    // DUMMY
+    function uploadPlaylist2Hub($plid, $withContent)
+    {
+        $pl = Playlist::recallByGunid($this->gb, $plid);
+        if(PEAR::isError($pl)){ return $pl; }
+        return TRUE;
+    }
+
+    /**
+     *  Start download of playlist from hub to local storageServer
+     *
+     *  @param plid: string - global unique id of playlist being transported
+     *  @param withContent: boolean - if true, transport playlist content too
+     *  @return string - transport token
+     */
+    // DUMMY
+    function downloadPlaylistFromHub($plid, $withContent)
+    {
+        $pl = Playlist::recallByGunid($this->gb, $plid);
+        if(PEAR::isError($pl)){ return $pl; }
+        return TRUE;
+    }
+
+    /* ------------------------------------------------ global-search methods */
+    /**
+     *  Start search job on network hub
+     *
+     *  @param criteria: LS criteria format (see localSearch)
+     *  @return string - transport token
+     */
+    // DUMMY
+    function globalSearch($criteria)
+    {
+        return '123456789abcdefe';
+    }
+
+    /**
+     *  Get results from search job on network hub
+     *
+     *  @param trtok: string - transport token
+     *  @return : LS search result format (see localSearch)
+     */
+    // DUMMY
+    function getSearchResults($trtok)
+    {
+        if($trtok != '123456789abcdefe'){
+            return PEAR::raiseError(
+                "Transport::getSearchResults: invalid transport token ($trtok)"
+            );
+        }
+        return array(
+            'results'   => array('0000000000010001', '0000000000010002'),
+            'cnt'       => 2,
+        );
+    }
+
+
     /* =============================================== authentication methods */
 
     /**
@@ -800,6 +348,8 @@ class Transport{
         return $res;
     }
         
+    /* ========================================================= cron methods */
+    /* -------------------------------------------------- common cron methods */
     /* ==================================================== auxiliary methods */
     /**
      *  
@@ -814,6 +364,28 @@ class Transport{
         return $res;
     }
     
+    /**
+     *  
+     */
+    function getTransports($direction=NULL)
+    {
+        switch($direction){
+            case 'up':  $dirCond = "direction='up' AND"; break;
+            case 'down':  $dirCond = "direction='down' AND"; break;
+            default: $dirCond = ''; break;
+        }
+        $rows = $this->dbc->getAll("
+            SELECT
+                id, trtok, state, trtype, direction,
+                to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
+                fname, localfile, expectedsum, expectedsize, url
+            FROM {$this->transTable}
+            WHERE $dirCond state<>'closed' 
+        ");
+        if(PEAR::isError($rows)){ $this->trLogPear($rows); return FALSE; }
+        return $rows;
+    }
+
     /**
      *  
      */
@@ -834,7 +406,7 @@ class Transport{
         $res = $this->xmlrpcCall(
             'archive.ping',
             array(
-                'par'=>'testString_'.date('H:i:s')
+                'par'=>'ping_'.date('H:i:s')
             )
         );
         return $res;
@@ -889,7 +461,12 @@ class Transport{
      */
     function trLog($msg)
     {
-        $fp=fopen("{$this->transDir}/log", "a") or die("Can't write to log\n");
+        $logfile = "{$this->transDir}/log";
+        if(FALSE === ($fp = fopen($logfile, "a"))){
+            return PEAR::raiseError(
+                "Transport::trLog: Can't write to log ($logfile)"
+            );
+        }
         fputs($fp, "---".date("H:i:s")."---\n $msg\n");
         fclose($fp);
     }
@@ -908,17 +485,17 @@ class Transport{
      *
      *  direction: up | down
      *  state: init | pending | finished | closed | failed
-     *  trtype: audioclip | playlist | searchjob
+     *  trtype: audioclip | playlist | searchjob | file
      *  
      */
     function install()
     {
         $this->dbc->query("CREATE TABLE {$this->transTable} (
-            id int not null,
+            id int not null,          -- primary key
             trtok char(16) not null,  -- transport token
-            direction varchar(128) not null,
-            state varchar(128) not null,
-            trtype varchar(128) not null,
+            direction varchar(128) not null, -- direction: up|down
+            state varchar(128) not null,     -- state
+            trtype varchar(128) not null,    -- transport type
             gunid bigint,             -- global unique id
             pdtoken bigint,           -- put/download token from archive
             url varchar(255),
@@ -952,3 +529,5 @@ class Transport{
         $this->dbc->dropSequence("{$this->transTable}_id_seq");
     }
 }
+
+?>

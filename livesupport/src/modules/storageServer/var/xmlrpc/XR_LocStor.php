@@ -1773,6 +1773,9 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
+
+#        return new XML_RPC_Response(XML_RPC_encode(var_export($this, TRUE)));
+
         $res = $this->createBackupOpen($r['sessid'], $r['criteria']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
@@ -2210,7 +2213,7 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see Pref::browseCategory
+     *  @see LocStor::browseCategory
      */
     function xr_browseCategory($input)
     {
@@ -2237,7 +2240,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response($xv);
     }
 
-    /* ---------------------------------------------- methods for preferences */
+    /* ============================================== methods for preferences */
     /**
      *  Load user preference value
      *
@@ -2497,8 +2500,586 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
     }
 
-    /* -------------------------------------------- remote repository methods */
+    /* =============================== remote repository (networking) methods */
+    /* ------------------------------------------------------- common methods */
     /**
+     *  Common "check" method for transports
+     *
+     *  The XML-RPC name of this method is "locstor.getTransportInfo".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *     <li>trtype: string - audioclip | playlist | search | file</li>
+     *     <li>direction: string - up | down</li>
+     *     <li>state: string - transport state</li>
+     *     <li>expectedsize: int - expected size</li>
+     *     <li>realsize: int - size of transported  file</li>
+     *     <li>expectedchsum: string - expected checksum</li>
+     *     <li>realchsum: string - checksum of transported file</li>
+     *     <li>title: string - file title</li>
+     *     <li>errmsg: string - error message from failed transports</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getTransportInfo:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::getTransportInfo
+     */
+    function xr_getTransportInfo($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->getTransportInfo($r['trtok']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_getTransportInfo: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+
+    /**
+     *  Turn transports on/off, optionaly return current state.
+     *
+     *  The XML-RPC name of this method is "locstor.turnOnOffTransports".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> onOff: boolean optional
+     *              (if not used, current state is returned)</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> state : boolean - previous state</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_turnOnOffTransports:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::turnOnOffTransports
+     */
+    function xr_turnOnOffTransports($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->turnOnOffTransports($r['onOff']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_turnOnOffTransports: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
+    }
+    
+    /* ------------------------ methods for ls-archive-format file transports */
+    /**
+     *  Open async file transfer from local storageServer to network hub,
+     *  file should be ls-archive-format file.
+     *
+     *  The XML-RPC name of this method is "locstor.uploadFile2Hub".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> filePath string - local path to uploaded file</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_uploadFile2Hub:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::uploadFile2Hub
+     */
+    function xr_uploadFile2Hub($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->uploadFile2Hub($r['filePath']); // local files on XML-RPC :(
+                        // there should be something as uploadFile2storageServer
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_uploadFile2Hub: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /**
+     *  Get list of prepared transfers initiated by hub
+     *
+     *  The XML-RPC name of this method is "locstor.getHubInitiatedTransfers".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> results : array of structs with fields:
+     *          <ul>
+     *              <li> trtok : string - transport token</li>
+     *              <li> ... ? </li>
+     *          </ul>
+     *      </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getHubInitiatedTransfers:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::getHubInitiatedTransfers
+     */
+    function xr_getHubInitiatedTransfers($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->getHubInitiatedTransfers();
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_getHubInitiatedTransfers: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+    
+    /**
+     *  Start of download initiated by hub
+     *
+     *  The XML-RPC name of this method is "locstor.startHubInitiatedTransfer".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> trtok : string - transport token obtained from
+     *          the getHubInitiatedTransfers method</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_startHubInitiatedTransfer:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::startHubInitiatedTransfer
+     */
+    function xr_startHubInitiatedTransfer($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->startHubInitiatedTransfer($r['trtok']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_startHubInitiatedTransfer: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /* ------------- special methods for audioClip/webstream object transport */
+
+    /**
+     *  Common "check" method for transports
+     *
+     *  The XML-RPC name of this method is "locstor.uploadAudioClip2Hub".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid: string - global unique id of object being transported
+     *      </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_uploadAudioClip2Hub:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::uploadAudioClip2Hub
+     */
+    function xr_uploadAudioClip2Hub($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->uploadAudioClip2Hub($r['gunid']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_uploadAudioClip2Hub: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /**
+     *  Start download of audioClip/webstream from hub to local storageServer
+     *
+     *  The XML-RPC name of this method is "locstor.downloadAudioClipFromHub".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid: string - global unique id of object being transported
+     *      </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_downloadAudioClipFromHub:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::downloadAudioClipFromHub
+     */
+    function xr_downloadAudioClipFromHub($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->downloadAudioClipFromHub($r['gunid']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_downloadAudioClipFromHub: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /* ------------------------------- special methods for playlist transport */
+    /**
+     *  Start upload of playlist from local storageServer to hub
+     *
+     *  The XML-RPC name of this method is "locstor.uploadPlaylist2Hub".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid: string - global unique id of playlist being transported
+     *      </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_uploadPlaylist2Hub:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::uploadPlaylist2Hub
+     */
+    function xr_uploadPlaylist2Hub($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->uploadPlaylist2Hub($r['plid'], $r['withContent']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_uploadPlaylist2Hub: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /**
+     *  Start download of playlist from hub to local storageServer
+     *
+     *  The XML-RPC name of this method is "locstor.downloadPlaylistFromHub".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid: string - global unique id of playlist being transported
+     *      </li>
+     *      <li> withContent: boolean - if true, transport playlist content too
+     *      </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_downloadPlaylistFromHub:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::downloadPlaylistFromHub
+     */
+    function xr_downloadPlaylistFromHub($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->downloadPlaylistFromHub($r['plid'], $r['withContent']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_downloadPlaylistFromHub: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /* ------------------------------------------------ global-search methods */
+    /**
+     *  Start search job on network hub
+     *
+     *  The XML-RPC name of this method is "locstor.globalSearch".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> criteria: LS criteria format (see localSearch)</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_globalSearch:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::globalSearch
+     */
+    function xr_globalSearch($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->globalSearch($r['criteria']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_globalSearch: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+    }
+    
+    /**
+     *  Get results from search job on network hub
+     *
+     *  The XML-RPC name of this method is "locstor.getSearchResults".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> trtok : string - transport token</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *   <ul>
+     *      <li>audioClipResults : array with gunid strings
+     *          of audioClips have been found</li>
+     *      <li>audioClipCnt : int - number of audioClips matching
+     *          the criteria</li>
+     *      <li>webstreamResults : array with gunid strings
+     *          of webstreams have been found</li>
+     *      <li>webstreamCnt : int - number of webstreams matching
+     *          the criteria</li>
+     *      <li>playlistResults : array with gunid strings
+     *          of playlists have been found</li>
+     *      <li>playlistCnt : int - number of playlists matching
+     *          the criteria</li>
+     *   </ul>
+     *  (cnt values may be greater than size of arrays - see limit param)
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getSearchResults:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::getSearchResults
+     */
+    function xr_getSearchResults($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->getSearchResults($r['trtok']);      // *** search results format differs between GB and XML_RPC ifaces
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_getSearchResults: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+    
+    /**
+     * OBSOLETE
      *  Starts upload audioclip to remote archive
      *
      *  The XML-RPC name of this method is "locstor.uploadToArchive".
@@ -2528,14 +3109,14 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see Pref::uploadToArchive
+     *  @see Transport::uploadToArchive
      */
     function xr_uploadToArchive($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Transport.php';
-        $tr =& new Transport($this->dbc, $this, $this->config);
+        $tr =& new Transport($this);
         $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2548,6 +3129,7 @@ class XR_LocStor extends LocStor{
     }
 
     /**
+     * OBSOLETE
      *  Starts download audioclip from remote archive
      *
      *  The XML-RPC name of this method is "locstor.downloadFromArchive".
@@ -2577,14 +3159,14 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see Pref::downloadFromArchive
+     *  @see Transport::downloadFromArchive
      */
     function xr_downloadFromArchive($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Transport.php';
-        $tr =& new Transport($this->dbc, $this, $this->config);
+        $tr =& new Transport($this);
         $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2596,64 +3178,7 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
 
-    /**
-     *  Checking status of transported file
-     *
-     *  The XML-RPC name of this method is "locstor.getTransportInfo".
-     *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
-     *      <li> sessid  :  string  -  session id </li>
-     *      <li> trtok : string - transport token</li>
-     *  </ul>
-     *
-     *  On success, returns a XML-RPC struct with the following fields:
-     *  <ul>
-     *     <li>trtype: string - audioclip | playlist</li>
-     *     <li>direction: string - up | down</li>
-     *     <li>status: boolean - true if file have been
-     *              succesfully transported</li>
-     *     <li>expectedsize: int - expected size</li>
-     *     <li>realsize: int - size of transported  file</li>
-     *     <li>expectedsum: string - expected checksum</li>
-     *     <li>realsum: string - checksum of transported file</li>
-     *  </ul>
-     *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
-     *      <li> 3    -  Incorrect parameters passed to method:
-     *                      Wanted ... , got ... at param </li>
-     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_getTransportInfo:
-     *                      &lt;message from lower layer&gt; </li>
-     *      <li> 848  -  invalid session id.</li>
-     *      <li> 872  -  invalid tranport token.</li>
-     *  </ul>
-     *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::getTransportInfo
-     */
-    function xr_getTransportInfo($input)
-    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Transport.php';
-        $tr =& new Transport($this->dbc, $this, $this->config);
-        $res = $tr->getTransportInfo($r['trtok'], $r['sessid']);
-        if(PEAR::isError($res)){
-            $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-    /* ------------------------------------------------ methods for debugging */
+    /* ================================================ methods for debugging */
     /**
      *  Reset storageServer for debugging.
      *
@@ -2768,7 +3293,7 @@ class XR_LocStor extends LocStor{
         )));
     }
 
-    /* ---------------------------------------------------- "private" methods */
+    /* ==================================================== "private" methods */
     /**
      *  Check and convert struct of parameters
      *
