@@ -33,6 +33,12 @@
 #include "configure.h"
 #endif
 
+#ifdef HAVE_PWD_H
+#include <pwd.h>
+#else
+#error need pwd.h
+#endif
+
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <gtkmm/filechooserdialog.h>
@@ -189,6 +195,11 @@ ExportPlaylistWindow :: onSaveButtonClicked(void)                   throw ()
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
+    }
+    
+    struct passwd *             pwd = getpwuid(getuid());
+    if (pwd) {
+        dialog->set_current_folder(pwd->pw_dir);
     }
     
     Ptr<Glib::ustring>::Ref             fileName(new Glib::ustring(
