@@ -47,6 +47,8 @@ tmpdir=$basedir/tmp
 toolsdir=$srcdir/tools
 modules_dir=$srcdir/modules
 products_dir=$srcdir/products
+scheduler_dir=$products_dir/scheduler
+scheduler_bin_dir=$scheduler_dir/bin
 
 usrdir=`cd $basedir/usr; pwd;`
 
@@ -168,6 +170,7 @@ ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
 ls_tmp_dir=$tmpdir
+ls_scheduler_daemon_command="$scheduler_bin_dir/scheduler_devenv.sh"
 
 ls_audio_output_device=$output_device
 ls_audio_cue_device=$cue_device
@@ -185,26 +188,29 @@ ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
 ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
 ls_tmp_dir_s=`echo $ls_tmp_dir | sed -e "s/\//\\\\\\\\\//g"`
+ls_scheduler_daemon_command_s=`echo $ls_scheduler_daemon_command | \
+                                sed -e "s/\//\\\\\\\\\//g"`
 
 replace_sed_string="s/ls_install_dir/$installdir_s/; \
-              s/ls_dbuser/$ls_dbuser/; \
-              s/ls_dbpassword/$ls_dbpassword/; \
-              s/ls_dbserver/$ls_dbserver/; \
-              s/ls_database/$ls_database/; \
-              s/ls_storageUrlPath/\/$ls_php_urlPrefix_s\/storageServer\/var/; \
-              s/ls_php_urlPrefix/$ls_php_urlPrefix_s/; \
-              s/ls_storage_xmlRpcPrefix/$ls_storage_xmlRpcPrefix_s/; \
-              s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
-              s/ls_php_host/$ls_php_host/; \
-              s/ls_php_port/$ls_php_port/; \
-              s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
-              s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
-              s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
-              s/ls_scheduler_host/$ls_scheduler_host/; \
-              s/ls_scheduler_port/$ls_scheduler_port/; \
-              s/ls_audio_output_device/$ls_audio_output_device/; \
-              s/ls_audio_cue_device/$ls_audio_cue_device/; \
-              s/ls_tmp_dir/$ls_tmp_dir_s/;"
+    s/ls_dbuser/$ls_dbuser/; \
+    s/ls_dbpassword/$ls_dbpassword/; \
+    s/ls_dbserver/$ls_dbserver/; \
+    s/ls_database/$ls_database/; \
+    s/ls_storageUrlPath/\/$ls_php_urlPrefix_s\/storageServer\/var/; \
+    s/ls_php_urlPrefix/$ls_php_urlPrefix_s/; \
+    s/ls_storage_xmlRpcPrefix/$ls_storage_xmlRpcPrefix_s/; \
+    s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
+    s/ls_php_host/$ls_php_host/; \
+    s/ls_php_port/$ls_php_port/; \
+    s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
+    s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
+    s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
+    s/ls_scheduler_host/$ls_scheduler_host/; \
+    s/ls_scheduler_port/$ls_scheduler_port/; \
+    s/ls_audio_output_device/$ls_audio_output_device/; \
+    s/ls_audio_cue_device/$ls_audio_cue_device/; \
+    s/ls_tmp_dir/$ls_tmp_dir_s/; \
+    s/ls_scheduler_daemon_command/$ls_scheduler_daemon_command_s/;"
 echo
 echo $replace_sed_string
 echo

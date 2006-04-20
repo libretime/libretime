@@ -45,6 +45,12 @@
 #error need sys/stat.h
 #endif
 
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#else
+#error need stdlib.h
+#endif
+
 #include <stdexcept>
 #include <gtkmm/main.h>
 
@@ -82,17 +88,17 @@ using namespace LiveSupport::GLiveSupport;
 const std::string LiveSupport :: GLiveSupport ::
                   GLiveSupport :: configElementNameStr = "gLiveSupport";
 
-/*------------------------------------------------------------------------------
- *  The name of the configuration file for this class
- *----------------------------------------------------------------------------*/
-const std::string configFileDirStr = "/.livesupport/";
-
-/*------------------------------------------------------------------------------
- *  The name of the configuration file for this class
- *----------------------------------------------------------------------------*/
-const std::string configFileNameStr = "gLiveSupport.xml";
-
 namespace {
+
+/*------------------------------------------------------------------------------
+ *  The name of the configuration file for this class
+ *----------------------------------------------------------------------------*/
+const std::string   configFileDirStr = "/.livesupport/";
+
+/*------------------------------------------------------------------------------
+ *  The name of the configuration file for this class
+ *----------------------------------------------------------------------------*/
+const std::string   configFileNameStr = "gLiveSupport.xml";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the list of supported languages
@@ -113,6 +119,12 @@ const std::string   localeAttrName = "locale";
  *  The name of the attribute for the name for a supported language
  *----------------------------------------------------------------------------*/
 const std::string   nameAttrName = "name";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element for the scheduler daemon start command
+ *----------------------------------------------------------------------------*/
+const std::string   schedulerDaemonCommandsElementName
+                                            = "schedulerDaemonCommands";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the sound output player
@@ -245,6 +257,32 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     schcf->configure( *((const xmlpp::Element*) nodes.front()) );
 
     scheduler = schcf->getSchedulerClient();
+
+    // configure the scheduler daemon start and stop command strings
+    nodes = element.get_children(schedulerDaemonCommandsElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no scheduler daemon commands element");
+    }
+    const xmlpp::Element*  schedulerDaemonCommandsElement
+                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
+    xmlpp::Attribute *     schedulerDaemonStartAttribute
+                           = schedulerDaemonCommandsElement->get_attribute(
+                                                                    "start");
+    xmlpp::Attribute *     schedulerDaemonStopAttribute
+                           = schedulerDaemonCommandsElement->get_attribute(
+                                                                    "stop");
+    if (!schedulerDaemonStartAttribute) {
+        throw std::invalid_argument("missing scheduler start command");
+    }
+    if (!schedulerDaemonStopAttribute) {
+        throw std::invalid_argument("missing scheduler stop command");
+    }
+    
+    schedulerDaemonStartCommand.reset(new Glib::ustring(
+                           schedulerDaemonStartAttribute->get_value()));
+    
+    schedulerDaemonStopCommand.reset(new Glib::ustring(
+                           schedulerDaemonStopAttribute->get_value()));
 
     Ptr<AudioPlayerFactory>::Ref    apf;
     xmlpp::Element                * elem;
@@ -431,11 +469,8 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
     // no need to check the widget factory
 
     // check the scheduler client
-    try {
-        scheduler->getVersion();
-        schedulerAvailable = true;
-    } catch (XmlRpcException &e) {
-        schedulerAvailable = false;
+    checkSchedulerClient();
+    if (!isSchedulerAvailable()) {
         displayMessageWindow(getResourceUstring(schedulerNotReachableKey));
     }
 
@@ -1518,5 +1553,43 @@ GLiveSupport :: playTestSoundOnCue(void)                            throw ()
         // "invalid device" error from open(); do nothing
     }
     cuePlayer->close();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check if the scheduler is available.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: checkSchedulerClient(void)                          throw ()
+{
+    try {
+        scheduler->getVersion();
+        schedulerAvailable = true;
+    } catch (XmlRpcException &e) {
+        schedulerAvailable = false;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Start the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: startSchedulerClient(void)                          throw ()
+{
+    system(schedulerDaemonStartCommand->c_str());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Stop the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: stopSchedulerClient(void)                           throw ()
+{
+    system(schedulerDaemonStopCommand->c_str());
 }
 

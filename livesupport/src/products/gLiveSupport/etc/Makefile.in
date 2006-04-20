@@ -81,29 +81,31 @@ AUDIO_CUE      = "@AUDIO_CUE@"
 PHP_URL_PREFIX=livesupport
 ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
 SCHEDULER_XML_RPC_PREFIX=RC2
+SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/scheduler.sh"
 
 USR_VAR_DIR_S=$(shell ${ECHO} ${USR_VAR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
 PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
 ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
 AUDIO_OUT_S=$(shell ${ECHO} ${AUDIO_OUT} | ${SED} -e "s/\//\\\\\\\\\//g")
 AUDIO_CUE_S=$(shell ${ECHO} ${AUDIO_CUE} | ${SED} -e "s/\//\\\\\\\\\//g")
-
+SCHEDULER_DAEMON_COMMAND_S=$(shell ${ECHO} ${SCHEDULER_DAEMON_COMMAND} \
+                                         | ${SED} -e "s/\//\\\\\\\\\//g")
 
 REPLACE_SED_STRING="s/ls_var_dir/${USR_VAR_DIR_S}/; \
-              s/ls_dbuser/${DB_USER}/; \
-              s/ls_dbpassword/${DB_PASSWORD}/; \
-              s/ls_dbserver/${DB_SERVER}/; \
-              s/ls_database/${DATABASE}/; \
-              s/ls_php_urlPrefix/${PHP_URL_PREFIX_S}/; \
-              s/ls_php_host/${HOSTNAME}/; \
-              s/ls_php_port/${WWW_PORT}/; \
-              s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
-              s/ls_audio_output_device/${AUDIO_OUT_S}/; \
-              s/ls_audio_cue_device/${AUDIO_CUE_S}/; \
-              s/ls_scheduler_host/${HOSTNAME}/; \
-              s/ls_scheduler_port/${SCHEDULER_PORT}/; \
-              s/ls_scheduler_xmlRpcPrefix/${SCHEDULER_XML_RPC_PREFIX}/;"
-
+    s/ls_dbuser/${DB_USER}/; \
+    s/ls_dbpassword/${DB_PASSWORD}/; \
+    s/ls_dbserver/${DB_SERVER}/; \
+    s/ls_database/${DATABASE}/; \
+    s/ls_php_urlPrefix/${PHP_URL_PREFIX_S}/; \
+    s/ls_php_host/${HOSTNAME}/; \
+    s/ls_php_port/${WWW_PORT}/; \
+    s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
+    s/ls_audio_output_device/${AUDIO_OUT_S}/; \
+    s/ls_audio_cue_device/${AUDIO_CUE_S}/; \
+    s/ls_scheduler_host/${HOSTNAME}/; \
+    s/ls_scheduler_port/${SCHEDULER_PORT}/; \
+    s/ls_scheduler_xmlRpcPrefix/${SCHEDULER_XML_RPC_PREFIX}/; \
+    s/ls_scheduler_daemon_command/${SCHEDULER_DAEMON_COMMAND_S}/;"
 
 GENRB     = @GENRB@
 GENRBOPTS = --destdir ${TMP_DIR} \

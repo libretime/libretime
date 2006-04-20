@@ -256,6 +256,16 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<Glib::ustring>::Ref        testAudioUrl;
 
         /**
+         *  The command which starts the scheduler daemon.
+         */
+        Ptr<Glib::ustring>::Ref        schedulerDaemonStartCommand;
+
+        /**
+         *  The command which stops the scheduler daemon.
+         */
+        Ptr<Glib::ustring>::Ref        schedulerDaemonStopCommand;
+
+        /**
          *  Read a supportedLanguages configuration element,
          *  and fill the supportedLanguages map with its contents.
          *
@@ -1171,6 +1181,25 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return storage;
         }
+        
+        /**
+         *  Check if the scheduler is available.
+         *  This updates the schedulerAvailable variable accordingly.
+         */
+        void
+        checkSchedulerClient(void)                              throw();
+        
+        /**
+         *  Start the scheduler client.
+         */
+        void
+        startSchedulerClient(void)                              throw();
+        
+        /**
+         *  Stop the scheduler client.
+         */
+        void
+        stopSchedulerClient(void)                               throw();
 };
 
 /* ================================================= external data structures */

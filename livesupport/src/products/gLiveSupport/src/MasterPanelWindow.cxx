@@ -694,14 +694,16 @@ MasterPanelWindow :: showLoggedInUI(void)                           throw ()
 {
     show_all();
     
-    if (!gLiveSupport->isStorageAvailable() 
-                                    || !gLiveSupport->isSchedulerAvailable()) {
+    if (!gLiveSupport->isStorageAvailable()) { 
         liveModeButton->setDisabled(true);
         uploadFileButton->setDisabled(true);
         scratchpadButton->setDisabled(true);
         simplePlaylistMgmtButton->setDisabled(true);
-        schedulerButton->setDisabled(true);
         searchButton->setDisabled(true);
+    }
+    
+    if (!gLiveSupport->isSchedulerAvailable()) {
+        schedulerButton->setDisabled(true);
     }
 }
 

@@ -287,7 +287,7 @@ MasterPanelUserInfoWidget :: onCloseButtonClicked (void)            throw ()
 
     Ptr<OptionsContainer>::Ref  optionsContainer
                                 = gLiveSupport->getOptionsContainer();
-    if (optionsContainer->isTouched()) {
+    if (optionsContainer && optionsContainer->isTouched()) {
         optionsContainer->writeToFile();
     }
 

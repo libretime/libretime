@@ -7,6 +7,7 @@
                                        authenticationClientFactory,
                                        storageClientFactory,
                                        schedulerClientFactory,
+                                       schedulerDaemonCommands,
                                        outputPlayer,
                                        cuePlayer,
                                        stationLogo,
@@ -75,6 +76,10 @@
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcHost    CDATA       #REQUIRED >
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
+
+<!ELEMENT schedulerDaemonCommands       EMPTY >
+<!ATTLIST schedulerDaemonCommands   start           CDATA       #REQUIRED >
+<!ATTLIST schedulerDaemonCommands   stop            CDATA       #REQUIRED >
 
 <!ELEMENT outputPlayer  (audioPlayer) >
 <!ELEMENT cuePlayer     (audioPlayer) >
@@ -145,6 +150,9 @@
                                        xmlRpcUri  = "/ls_scheduler_xmlRpcPrefix"
         />
     </schedulerClientFactory>
+
+    <schedulerDaemonCommands    start = "ls_scheduler_daemon_command start"
+                                stop  = "ls_scheduler_daemon_command stop" />
 
     <outputPlayer>
         <audioPlayer>

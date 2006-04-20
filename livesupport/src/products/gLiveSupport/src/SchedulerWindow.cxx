@@ -384,7 +384,11 @@ SchedulerWindow :: onDeleteItem(void)                               throw ()
 void
 SchedulerWindow :: onStartButtonClicked(void)                       throw ()
 {
-    // TODO: handle this event
+    gLiveSupport->checkSchedulerClient();
+    if (!gLiveSupport->isSchedulerAvailable()) {
+        gLiveSupport->startSchedulerClient();
+    }
+    updateStatus();
 }
 
 
@@ -394,7 +398,11 @@ SchedulerWindow :: onStartButtonClicked(void)                       throw ()
 void
 SchedulerWindow :: onStopButtonClicked(void)                        throw ()
 {
-    // TODO: handle this event
+    gLiveSupport->checkSchedulerClient();
+    if (gLiveSupport->isSchedulerAvailable()) {
+        gLiveSupport->stopSchedulerClient();
+    }
+    updateStatus();
 }
 
 
@@ -404,6 +412,7 @@ SchedulerWindow :: onStopButtonClicked(void)                        throw ()
 void
 SchedulerWindow :: updateStatus(void)                               throw ()
 {
+    gLiveSupport->checkSchedulerClient();
     try {
         if (gLiveSupport->isSchedulerAvailable()) {
             statusReportLabel->set_text(*getResourceUstring("runningStatus"));
