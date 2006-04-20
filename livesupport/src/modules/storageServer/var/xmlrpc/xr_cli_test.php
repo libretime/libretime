@@ -187,6 +187,8 @@ $infos = array(
         'r'=>array('state', 'realsize', 'expectedsize', 'realchsum', 'expectedchsum')),
     "turnOnOffTransports" => array('m'=>"locstor.turnOnOffTransports",
         'p'=>array('sessid', 'onOff'), 'r'=>array('state')),
+    "doTransportAction" => array('m'=>"locstor.doTransportAction",
+        'p'=>array('sessid', 'trtok', 'action'), 'r'=>array('state')),
     "uploadFile2Hub" => array('m'=>"locstor.uploadFile2Hub",
         'p'=>array('sessid', 'filePath'), 'r'=>array('trtok')),
     "getHubInitiatedTransfers" => array('m'=>"locstor.getHubInitiatedTransfers",

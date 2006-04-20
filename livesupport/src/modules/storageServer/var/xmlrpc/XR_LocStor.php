@@ -2609,6 +2609,60 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
     }
     
+    /**
+     *  Pause, resume or cancel transport
+     *
+     *  The XML-RPC name of this method is "locstor.doTransportAction".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> trtok : string - transport token</li>
+     *      <li> action: string - pause | resume | cancel
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> state : string - resulting transport state</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_doTransportAction:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 872  -  invalid tranport token.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Transport::doTransportAction
+     */
+    function xr_doTransportAction($input)    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        // DUMMY
+        $res = 'pending';
+        /*
+        require_once '../Transport.php';
+        $tr =& new Transport($this);
+        $res = $tr->doTransportAction($r['trtok'], $r['action']);
+        */
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_doTransportAction: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
+    }
+    
     /* ------------------------ methods for ls-archive-format file transports */
     /**
      *  Open async file transfer from local storageServer to network hub,

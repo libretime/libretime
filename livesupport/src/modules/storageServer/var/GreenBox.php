@@ -1160,6 +1160,23 @@ class GreenBox extends BasicStor{
         return $tr->turnOnOffTransports($onOff);
     }
     
+    /**
+     *  Pause, resume or cancel transport
+     *
+     *  @param trtok: string - transport token
+     *  @param action: string - pause | resume | cancel
+     *  @return string - resulting transport state
+     */
+    function doTransportAction($trtok, $action)    {
+        // DUMMY
+        return 'pending';
+        /*
+        require_once"Transport.php";
+        $tr =& new Transport($this);
+        return $tr->setTransportRState($action);
+        */
+    }
+    
     /* ------------------------ methods for ls-archive-format file transports */
     /**
      *  Open async file transfer from local storageServer to network hub,

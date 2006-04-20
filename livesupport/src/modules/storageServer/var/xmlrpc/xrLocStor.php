@@ -159,6 +159,7 @@ $methods = array(
 
     'getTransportInfo'          => 'Common "check" method for transports',
     'turnOnOffTransports'       => 'Turn transports on/off, optionaly return current state',
+    'doTransportAction'         => 'Pause, resume or cancel transport',
     'uploadFile2Hub'            => 'Open async file transfer from local storageServer to network hub',
     'getHubInitiatedTransfers'  => 'Get list of prepared transfers initiated by hub',
     'startHubInitiatedTransfer' => 'Start of download initiated by hub',
