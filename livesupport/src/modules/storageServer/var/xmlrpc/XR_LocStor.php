@@ -2957,6 +2957,7 @@ class XR_LocStor extends LocStor{
     function xr_uploadPlaylist2Hub($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
+        if(!isset($r['withContent'])) $r['withContent']=FALSE;
         require_once '../Transport.php';
         $tr =& new Transport($this);
         $res = $tr->uploadPlaylist2Hub($r['plid'], $r['withContent']);
@@ -3073,7 +3074,8 @@ class XR_LocStor extends LocStor{
     }
     
     /**
-     *  Get results from search job on network hub
+     *  Get results from search job on network hub.
+     *  (returns error if not finished)
      *
      *  The XML-RPC name of this method is "locstor.getSearchResults".
      *
@@ -3110,6 +3112,7 @@ class XR_LocStor extends LocStor{
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
      *      <li> 872  -  invalid tranport token.</li>
+     *      <li> 873  -  not finished.</li>
      *  </ul>
      *
      *  @param input XMLRPC struct
@@ -3124,7 +3127,9 @@ class XR_LocStor extends LocStor{
         $res = $tr->getSearchResults($r['trtok']);      // *** search results format differs between GB and XML_RPC ifaces
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+            $ec  = (
+                $ec0 == GBERR_SESS || $ec0 == TRERR_TOK || $ec0 == TRERR_NOTFIN
+                 ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
                 "xr_getSearchResults: ".$res->getMessage()." ".$res->getUserInfo()
             );
