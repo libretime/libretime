@@ -860,25 +860,6 @@ TestStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref    token)
 
 
 /*------------------------------------------------------------------------------
- *  Check the status of the asynchronous network transport operation.
- *----------------------------------------------------------------------------*/
-StorageClientInterface::TransportState
-TestStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
-                                    Ptr<Glib::ustring>::Ref        errorMessage)
-                                                throw (XmlRpcException)
-{
-    if (token && *token == "fake_token") {
-        return pendingState;
-    } else {
-        if (errorMessage) {
-            errorMessage->assign("bad token");
-        }
-        return failedState;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  See if the Playable instance satisfies the search criteria
  *----------------------------------------------------------------------------*/
 bool 
@@ -1093,6 +1074,36 @@ TestStorageClient :: exportPlaylistOpen(Ptr<SessionId>::Ref      sessionId,
 void
 TestStorageClient :: exportPlaylistClose(
                             Ptr<const Glib::ustring>::Ref   token) const
+                                                throw (XmlRpcException)
+{
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of the asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+StorageClientInterface::TransportState
+TestStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
+                                    Ptr<Glib::ustring>::Ref        errorMessage)
+                                                throw (XmlRpcException)
+{
+    if (token && *token == "fake_token") {
+        return pendingState;
+    } else {
+        if (errorMessage) {
+            errorMessage->assign("bad token");
+        }
+        return failedState;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Cancel an asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: cancelTransport(Ptr<SessionId>::Ref             sessionId,
+                                     Ptr<const Glib::ustring>::Ref   token)
                                                 throw (XmlRpcException)
 {
 }

@@ -570,35 +570,6 @@ class TestStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Check the status of the asynchronous network transport operation.
-         *
-         *  If the return value is
-         *  <ul><li>initState or pendingState, then the operation
-         *  is in progress, and you need to call this function again until
-         *  a different value is returned;</li>
-         *      <li>finishedState, then the asynchronous XML-RPC call has
-         *  completed normally;</li>
-         *      <li>closedState, then the transport has been
-         *  closed or canceled, and the token is no longer valid;</li>
-         *      <li>failedState, then an error has occured (and the token is
-         *  no longer valid); the error message is returned in the (optional)
-         *  errorMessage return parameter.
-         *  </ul>
-         *
-         *  @param token        the transport token of an asynchronous method.
-         *  @param errorMessage return parameter: if the transport has failed,
-         *                      this will contain the error message (optional).
-         *  @return the state of the transport.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual TransportState
-        checkTransport(Ptr<const Glib::ustring>::Ref    token,
-                       Ptr<Glib::ustring>::Ref      errorMessage
-                                                    = Ptr<Glib::ustring>::Ref())
-                                                throw (XmlRpcException);
-
-        /**
          *  Return the list of audio clip IDs found by the search method.
          *
          *  (Or the list of audio clip IDs returned by reset()
@@ -739,6 +710,49 @@ class TestStorageClient :
          */
         virtual void
         exportPlaylistClose(Ptr<const Glib::ustring>::Ref   token) const
+                                                throw (XmlRpcException);
+
+        /**
+         *  Check the status of the asynchronous network transport operation.
+         *
+         *  If the return value is
+         *  <ul><li>initState or pendingState, then the operation
+         *  is in progress, and you need to call this function again until
+         *  a different value is returned;</li>
+         *      <li>finishedState, then the asynchronous XML-RPC call has
+         *  completed normally;</li>
+         *      <li>closedState, then the transport has been
+         *  closed or canceled, and the token is no longer valid;</li>
+         *      <li>failedState, then an error has occured (and the token is
+         *  no longer valid); the error message is returned in the (optional)
+         *  errorMessage return parameter.
+         *  </ul>
+         *
+         *  @param token        the transport token of an asynchronous method.
+         *  @param errorMessage return parameter: if the transport has failed,
+         *                      this will contain the error message (optional).
+         *  @return the state of the transport.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual TransportState
+        checkTransport(Ptr<const Glib::ustring>::Ref    token,
+                       Ptr<Glib::ustring>::Ref      errorMessage
+                                                    = Ptr<Glib::ustring>::Ref())
+                                                throw (XmlRpcException);
+
+        /**
+         *  Cancel an asynchronous network transport operation.
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param token        the transport token of an asynchronous method.
+         *  @return the state of the transport.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        cancelTransport(Ptr<SessionId>::Ref             sessionId,
+                        Ptr<const Glib::ustring>::Ref   token)
                                                 throw (XmlRpcException);
 };
 

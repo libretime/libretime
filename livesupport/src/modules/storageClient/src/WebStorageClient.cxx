@@ -785,7 +785,7 @@ const std::string    remoteSearchTokenParamName      = "trtok";
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: checkTransport */
 
 /*------------------------------------------------------------------------------
- *  The name of the check transport  method on the storage server
+ *  The name of the check transport method on the storage server
  *----------------------------------------------------------------------------*/
 const std::string    checkTransportMethodName = "locstor.getTransportInfo";
 
@@ -803,6 +803,29 @@ const std::string    checkTransportStateParamName           = "state";
  *   The name of the error message parameter in the output structure
  *----------------------------------------------------------------------------*/
 const std::string    checkTransportErrorMessageParamName    = "errmsg";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: doTransportAction */
+
+/*------------------------------------------------------------------------------
+ *  The name of the do transport action method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    doTransportActionMethodName = "locstor.doTransportAction";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    doTransportActionSessionIdParamName    = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    doTransportActionTokenParamName        = "trtok";
+
+/*------------------------------------------------------------------------------
+ *  The name of the action parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    doTransportActionActionParamName       = "action";
 
 }
 
@@ -2181,58 +2204,6 @@ WebStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref     token)
 
 
 /*------------------------------------------------------------------------------
- *  Check the status of the asynchronous network transport operation.
- *----------------------------------------------------------------------------*/
-StorageClientInterface::TransportState
-WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
-                                   Ptr<Glib::ustring>::Ref        errorMessage)
-                                                throw (XmlRpcException)
-{
-    XmlRpcValue     parameters;
-    XmlRpcValue     result;
-
-    parameters.clear();
-    parameters[checkTransportTokenParamName] 
-            = std::string(*token);
-
-    execute(checkTransportMethodName, parameters, result);
-    
-    checkStruct(checkTransportMethodName,
-                result,
-                checkTransportStateParamName,
-                XmlRpcValue::TypeString);
-    
-    std::string     state = result[checkTransportStateParamName];
-    if (state == "init") {
-        return initState;
-    } else if (state == "pending") {
-        return pendingState;
-    } else if (state == "finished") {
-        return finishedState;
-    } else if (state == "closed") {
-        return closedState;
-    } else if (state == "failed") {
-        if (errorMessage) {
-            checkStruct(checkTransportMethodName,
-                        result,
-                        checkTransportErrorMessageParamName,
-                        XmlRpcValue::TypeString);
-            errorMessage->assign(std::string(
-                                result[checkTransportErrorMessageParamName]));
-        }
-        return failedState;
-    } else {
-        std::stringstream eMsg;
-        eMsg << "Unrecognized transport state returned by XML-RPC method '"
-                << checkTransportMethodName
-                << "':\n"
-                << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Return a list of all playlists in the storage.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
@@ -2460,5 +2431,80 @@ WebStorageClient :: exportPlaylistClose(
             = std::string(*token);
 
     execute(exportPlaylistCloseMethodName, parameters, result);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of the asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+StorageClientInterface::TransportState
+WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
+                                   Ptr<Glib::ustring>::Ref        errorMessage)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[checkTransportTokenParamName] 
+            = std::string(*token);
+
+    execute(checkTransportMethodName, parameters, result);
+    
+    checkStruct(checkTransportMethodName,
+                result,
+                checkTransportStateParamName,
+                XmlRpcValue::TypeString);
+    
+    std::string     state = result[checkTransportStateParamName];
+    if (state == "init") {
+        return initState;
+    } else if (state == "pending") {
+        return pendingState;
+    } else if (state == "finished") {
+        return finishedState;
+    } else if (state == "closed") {
+        return closedState;
+    } else if (state == "failed") {
+        if (errorMessage) {
+            checkStruct(checkTransportMethodName,
+                        result,
+                        checkTransportErrorMessageParamName,
+                        XmlRpcValue::TypeString);
+            errorMessage->assign(std::string(
+                                result[checkTransportErrorMessageParamName]));
+        }
+        return failedState;
+    } else {
+        std::stringstream eMsg;
+        eMsg << "Unrecognized transport state returned by XML-RPC method '"
+                << checkTransportMethodName
+                << "':\n"
+                << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Cancel an asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: cancelTransport(Ptr<SessionId>::Ref             sessionId,
+                                    Ptr<const Glib::ustring>::Ref   token)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[doTransportActionSessionIdParamName] 
+            = sessionId->getId();
+    parameters[doTransportActionTokenParamName] 
+            = std::string(*token);
+    parameters[doTransportActionActionParamName] 
+            = "cancel";
+
+    execute(doTransportActionMethodName, parameters, result);
 }
 

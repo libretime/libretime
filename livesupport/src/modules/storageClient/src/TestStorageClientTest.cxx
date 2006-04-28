@@ -560,5 +560,9 @@ TestStorageClientTest :: remoteSearchTest(void)
     CPPUNIT_ASSERT_THROW(
         tsc->remoteSearchClose(token), XmlRpcMethodFaultException
     );
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        tsc->cancelTransport(dummySessionId, token);
+    );
 }
 

@@ -933,6 +933,10 @@ WebStorageClientTest :: remoteSearchTest(void)
     );
     CPPUNIT_ASSERT(token);
     
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->cancelTransport(sessionId, token)
+    );
+    
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
     StorageClientInterface::TransportState  state;
     
@@ -951,7 +955,11 @@ WebStorageClientTest :: remoteSearchTest(void)
     CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
-        wsc->remoteSearchClose(token)
+        wsc->remoteSearchClose(token);
+    );
+    
+    CPPUNIT_ASSERT_THROW(
+        wsc->cancelTransport(sessionId, token), XmlRpcMethodFaultException
     );
     
     CPPUNIT_ASSERT_NO_THROW(
