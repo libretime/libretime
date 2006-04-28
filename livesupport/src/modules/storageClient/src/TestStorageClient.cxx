@@ -45,6 +45,7 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
 #include "LiveSupport/Core/XmlRpcIOException.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
 #include "TestStorageClient.h"
 
 using namespace boost::posix_time;
@@ -831,6 +832,49 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
     }
     
     return counter;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search for audio clips or playlists on a remote network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: remoteSearchOpen(Ptr<SessionId>::Ref       sessionId,
+                                      Ptr<SearchCriteria>::Ref  searchCriteria)
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     fakeToken(new Glib::ustring("fake_token"));
+    return fakeToken;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Download the search results after the remote search has finished.
+ *----------------------------------------------------------------------------*/
+int
+TestStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref    token) 
+                                                throw (XmlRpcException)
+{
+    throw XmlRpcMethodFaultException("search has not finished yet");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of the asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+StorageClientInterface::TransportState
+TestStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
+                                    Ptr<Glib::ustring>::Ref        errorMessage)
+                                                throw (XmlRpcException)
+{
+    if (token && *token == "fake_token") {
+        return pendingState;
+    } else {
+        if (errorMessage) {
+            errorMessage->assign("bad token");
+        }
+        return failedState;
+    }
 }
 
 

@@ -55,7 +55,7 @@ namespace Storage {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the TestStorageClient class.
  *
  *  @author  $Author$
  *  @version $Revision$
@@ -75,6 +75,7 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(createBackupTest);
     CPPUNIT_TEST(exportPlaylistTest);
+    CPPUNIT_TEST(remoteSearchTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -185,6 +186,14 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         exportPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the remoteSearchXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        remoteSearchTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

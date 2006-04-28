@@ -376,6 +376,90 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
+         *  Search for audio clips or playlists on a remote network hub.
+         *
+         *  This starts the asynchronous function call; check the progress
+         *  of the search with checkTransport().
+         *
+         *  Once checkTransport() reports a finishedState, you can call
+         *  remoteSearchClose() to get the search results.
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param  searchCriteria  an object containing the search criteria.
+         *  @return a transport token which identifies this search.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        remoteSearchOpen(Ptr<SessionId>::Ref        sessionId,
+                         Ptr<SearchCriteria>::Ref   searchCriteria) 
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Download the search results after the remote search has finished.
+         *
+         *  If this search is in the finishedState, it will be moved to the
+         *  closedState, the transport token will be invalidated, and the 
+         *  search results can be read using getAudioClipIds() and
+         *  getPlaylistIds().
+         *
+         *  If the search is in any other state, an exception is raised.
+         *
+         *  You can check the state of the search with checkTransport().
+         *
+         *  @param token     the transport token from remoteSearchOpen().
+         *  @return the number of items found; this may not be equal to the 
+         *          number of items returned: see SearchCriteria::setLimit()
+         *          and SearchCriteria::setOffset().
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual int
+        remoteSearchClose(Ptr<const Glib::ustring>::Ref     token) 
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  The possible states of an asynchronous transport process.
+         */
+        typedef enum {  initState,
+                        pendingState,
+                        finishedState,
+                        closedState,
+                        failedState }       TransportState;
+
+        /**
+         *  Check the status of the asynchronous network transport operation.
+         *
+         *  If the return value is
+         *  <ul><li>initState or pendingState, then the operation
+         *  is in progress, and you need to call this function again until
+         *  a different value is returned;</li>
+         *      <li>finishedState, then the asynchronous XML-RPC call has
+         *  completed normally;</li>
+         *      <li>closedState, then the transport has been
+         *  closed or canceled, and the token is no longer valid;</li>
+         *      <li>failedState, then an error has occured (and the token is
+         *  no longer valid); the error message is returned in the (optional)
+         *  errorMessage return parameter.
+         *  </ul>
+         *
+         *  @param token        the transport token of an asynchronous method.
+         *  @param errorMessage return parameter: if the transport has failed,
+         *                      this will contain the error message (optional).
+         *  @return the state of the transport.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual TransportState
+        checkTransport(Ptr<const Glib::ustring>::Ref    token,
+                       Ptr<Glib::ustring>::Ref      errorMessage
+                                                    = Ptr<Glib::ustring>::Ref())
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
          *  Return the list of audio clip IDs found by the search method.
          *
          *  (Or the list of audio clip IDs returned by reset()

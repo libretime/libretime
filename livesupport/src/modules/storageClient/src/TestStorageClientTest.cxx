@@ -44,6 +44,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
 #include "TestStorageClient.h"
 #include "TestStorageClientTest.h"
 
@@ -531,6 +532,33 @@ TestStorageClientTest :: exportPlaylistHelper(
     
     CPPUNIT_ASSERT_NO_THROW(
         tsc->exportPlaylistClose(token);
+    );
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the remoteSearchXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: remoteSearchTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = tsc->remoteSearchOpen(dummySessionId, criteria);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
+    StorageClientInterface::TransportState  state;
+    CPPUNIT_ASSERT_NO_THROW(
+        state = tsc->checkTransport(token, errorMessage);
+    );
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
+    
+    CPPUNIT_ASSERT_THROW(
+        tsc->remoteSearchClose(token), XmlRpcMethodFaultException
     );
 }
 

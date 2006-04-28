@@ -829,6 +829,7 @@ WebStorageClientTest :: createBackupTest(void)
     CPPUNIT_ASSERT(sessionId);
     
     Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    criteria->setLimit(10);
     Ptr<Glib::ustring>::Ref     token;
     CPPUNIT_ASSERT_NO_THROW(
         token = wsc->createBackupOpen(sessionId, criteria);
@@ -837,8 +838,10 @@ WebStorageClientTest :: createBackupTest(void)
     
     Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
     Ptr<Glib::ustring>::Ref     status;
-    int     iterations = 100;
+    int     iterations = 20;
     do {
+        std::cerr << "-/|\\"[iterations%4] << '\b';
+        sleep(1);
         CPPUNIT_ASSERT_NO_THROW(
             status = wsc->createBackupCheck(*token, urlOrErrorMsg);
         );
@@ -847,7 +850,7 @@ WebStorageClientTest :: createBackupTest(void)
                          || *status == "success"
                          || *status == "fault");
     } while (--iterations && *status == "working");
-    CPPUNIT_ASSERT_EQUAL(std::string(*status), std::string("success"));
+    CPPUNIT_ASSERT_EQUAL(std::string("success"), std::string(*status));
     // TODO: test accessibility of the URL?
     
     CPPUNIT_ASSERT_NO_THROW(
@@ -903,6 +906,53 @@ WebStorageClientTest :: exportPlaylistHelper(
         wsc->exportPlaylistClose(token);
     );
     // TODO: test non-accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->logout(sessionId);
+    );
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the remoteSearchXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: remoteSearchTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref         sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q");
+    );
+    CPPUNIT_ASSERT(sessionId);
+    
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = wsc->remoteSearchOpen(sessionId, criteria);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
+    StorageClientInterface::TransportState  state;
+    
+    int     iterations = 20;
+    do {
+        std::cerr << "-/|\\"[iterations%4] << '\b';
+        sleep(1);
+        CPPUNIT_ASSERT_NO_THROW(
+            state = wsc->checkTransport(token, errorMessage);
+        );
+        CPPUNIT_ASSERT(state == StorageClientInterface::initState
+                         || state == StorageClientInterface::pendingState
+                         || state == StorageClientInterface::finishedState);
+    } while (--iterations && state != StorageClientInterface::finishedState);
+    
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->remoteSearchClose(token)
+    );
     
     CPPUNIT_ASSERT_NO_THROW(
         authentication->logout(sessionId);

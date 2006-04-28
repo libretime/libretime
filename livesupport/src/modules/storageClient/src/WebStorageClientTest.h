@@ -61,7 +61,7 @@ using namespace LiveSupport::Authentication;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the WebStorageClient class.
  *
  *  @author  $Author$
  *  @version $Revision$
@@ -81,6 +81,7 @@ class WebStorageClientTest : public BaseTestMethod
     CPPUNIT_TEST(browseTest);
     CPPUNIT_TEST(createBackupTest);
     CPPUNIT_TEST(exportPlaylistTest);
+    CPPUNIT_TEST(remoteSearchTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -190,6 +191,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         exportPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the remoteSearchXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        remoteSearchTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

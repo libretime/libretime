@@ -76,30 +76,32 @@ using namespace LiveSupport::Storage;
  *----------------------------------------------------------------------------*/
 const std::string WebStorageClient::configElementNameStr = "webStorage";
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the temp files
  *----------------------------------------------------------------------------*/
-static const std::string    localTempStorageAttrName = "tempFiles";
+const std::string    localTempStorageAttrName = "tempFiles";
 
 /*------------------------------------------------------------------------------
  *  The name of the config child element for the storage server location
  *----------------------------------------------------------------------------*/
-static const std::string    locationConfigElementName = "location";
+const std::string    locationConfigElementName = "location";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the storage server name
  *----------------------------------------------------------------------------*/
-static const std::string    locationServerAttrName = "server";
+const std::string    locationServerAttrName = "server";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the storage server port
  *----------------------------------------------------------------------------*/
-static const std::string    locationPortAttrName = "port";
+const std::string    locationPortAttrName = "port";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the storage server php page
  *----------------------------------------------------------------------------*/
-static const std::string    locationPathAttrName = "path";
+const std::string    locationPathAttrName = "path";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  constants for the SMIL file */
@@ -107,103 +109,103 @@ static const std::string    locationPathAttrName = "path";
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    xmlVersion = "1.0";
+const std::string    xmlVersion = "1.0";
 
 /*------------------------------------------------------------------------------
  *  The name of the SMIL root node.
  *----------------------------------------------------------------------------*/
-static const std::string    smilRootNodeName = "smil";
+const std::string    smilRootNodeName = "smil";
 
 /*------------------------------------------------------------------------------
  *  The name of the SMIL language description attribute.
  *----------------------------------------------------------------------------*/
-static const std::string    smilLanguageAttrName = "xmlns";
+const std::string    smilLanguageAttrName = "xmlns";
 
 /*------------------------------------------------------------------------------
  *  The value of the SMIL language description attribute.
  *----------------------------------------------------------------------------*/
-static const std::string    smilLanguageAttrValue
+const std::string    smilLanguageAttrValue
                             = "http://www.w3.org/2001/SMIL20/Language";
 
 /*------------------------------------------------------------------------------
  *  The name of the body node in the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    smilBodyNodeName = "body";
+const std::string    smilBodyNodeName = "body";
 
 /*------------------------------------------------------------------------------
  *  The name of the parallel audio clip list node in the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    smilParNodeName = "par";
+const std::string    smilParNodeName = "par";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip or playlist element node in the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    smilPlayableNodeName = "audio";
+const std::string    smilPlayableNodeName = "audio";
 
 /*------------------------------------------------------------------------------
  *  The name of the attribute containing the URI of the Playable element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilPlayableUriAttrName = "src";
+const std::string    smilPlayableUriAttrName = "src";
 
 /*------------------------------------------------------------------------------
  *  The name of the attribute containing the relative offset of the element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilRelativeOffsetAttrName = "begin";
+const std::string    smilRelativeOffsetAttrName = "begin";
 
 /*------------------------------------------------------------------------------
  *  The name of the animation element in the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateNodeName = "animate";
+const std::string    smilAnimateNodeName = "animate";
 
 /*------------------------------------------------------------------------------
  *  The name of the "attribute name" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateNameAttrName = "attributeName";
+const std::string    smilAnimateNameAttrName = "attributeName";
 
 /*------------------------------------------------------------------------------
  *  The value of the "attribute name" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateNameAttrValue = "soundLevel";
+const std::string    smilAnimateNameAttrValue = "soundLevel";
 
 /*------------------------------------------------------------------------------
  *  The name of the starting sound level % attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateFromAttrName = "from";
+const std::string    smilAnimateFromAttrName = "from";
 
 /*------------------------------------------------------------------------------
  *  The name of the ending sound level % attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateToAttrName = "to";
+const std::string    smilAnimateToAttrName = "to";
 
 /*------------------------------------------------------------------------------
  *  The name of the "calculation mode" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateCalcModeAttrName = "calcMode";
+const std::string    smilAnimateCalcModeAttrName = "calcMode";
 
 /*------------------------------------------------------------------------------
  *  The value of the "calculation mode" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateCalcModeAttrValue = "linear";
+const std::string    smilAnimateCalcModeAttrValue = "linear";
 
 /*------------------------------------------------------------------------------
  *  The name of the rel. offset of the start of the animation attribute.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateBeginAttrName = "begin";
+const std::string    smilAnimateBeginAttrName = "begin";
 
 /*------------------------------------------------------------------------------
  *  The name of the rel. offset of the end of the animation attribute.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateEndAttrName = "end";
+const std::string    smilAnimateEndAttrName = "end";
 
 /*------------------------------------------------------------------------------
  *  The name of the "what to do after done" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateFillAttrName = "fill";
+const std::string    smilAnimateFillAttrName = "fill";
 
 /*------------------------------------------------------------------------------
  *  The value of the "what to do after done" attribute of the animation element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilAnimateFillAttrValue = "freeze";
+const std::string    smilAnimateFillAttrValue = "freeze";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: error reports */
@@ -211,12 +213,12 @@ static const std::string    smilAnimateFillAttrValue = "freeze";
 /*------------------------------------------------------------------------------
  *  The name of the error code parameter in the returned struct
  *----------------------------------------------------------------------------*/
-static const std::string    errorCodeParamName = "faultCode";
+const std::string    errorCodeParamName = "faultCode";
 
 /*------------------------------------------------------------------------------
  *  The name of the error message parameter in the returned struct
  *----------------------------------------------------------------------------*/
-static const std::string    errorMessageParamName = "faultString";
+const std::string    errorMessageParamName = "faultString";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: resetStorage */
@@ -224,28 +226,28 @@ static const std::string    errorMessageParamName = "faultString";
 /*------------------------------------------------------------------------------
  *  The name of the get version method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getVersionMethodName = "locstor.getVersion";
+const std::string    getVersionMethodName = "locstor.getVersion";
 
 /*------------------------------------------------------------------------------
  *  The name of version return parameter for getVersion
  *----------------------------------------------------------------------------*/
-static const std::string    getVersionResultParamName = "version";
+const std::string    getVersionResultParamName = "version";
 
 /*------------------------------------------------------------------------------
  *  The name of the reset storage method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    resetStorageMethodName 
+const std::string    resetStorageMethodName 
                             = "locstor.resetStorage";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clips result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    resetStorageAudioClipResultParamName = "audioclips";
+const std::string    resetStorageAudioClipResultParamName = "audioclips";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlists result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    resetStoragePlaylistResultParamName = "playlists";
+const std::string    resetStoragePlaylistResultParamName = "playlists";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: search */
@@ -253,71 +255,71 @@ static const std::string    resetStoragePlaylistResultParamName = "playlists";
 /*------------------------------------------------------------------------------
  *  The name of the search method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    searchMethodName 
+const std::string    searchMethodName 
                             = "locstor.searchMetadata";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    searchSessionIdParamName = "sessid";
+const std::string    searchSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the search criteria parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    searchCriteriaParamName = "criteria";
+const std::string    searchCriteriaParamName = "criteria";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clips result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    searchAudioClipResultParamName = "audioClipResults";
+const std::string    searchAudioClipResultParamName = "audioClipResults";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlists result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    searchPlaylistResultParamName = "playlistResults";
+const std::string    searchPlaylistResultParamName = "playlistResults";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip count parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    searchAudioClipCountParamName = "audioClipCnt";
+const std::string    searchAudioClipCountParamName = "audioClipCnt";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist count parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    searchPlaylistCountParamName = "playlistCnt";
+const std::string    searchPlaylistCountParamName = "playlistCnt";
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: browse */
 
 /*------------------------------------------------------------------------------
  *  The name of the search method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    browseMethodName 
+const std::string    browseMethodName 
                             = "locstor.browseCategory";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    browseSessionIdParamName = "sessid";
+const std::string    browseSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the metadata type parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    browseMetadataParamName = "category";
+const std::string    browseMetadataParamName = "category";
 
 /*------------------------------------------------------------------------------
  *  The name of the search criteria parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    browseCriteriaParamName = "criteria";
+const std::string    browseCriteriaParamName = "criteria";
 
 /*------------------------------------------------------------------------------
  *  The name of the list of metadata values parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    browseResultParamName = "results";
+const std::string    browseResultParamName = "results";
 
 /*------------------------------------------------------------------------------
  *  The name of the count parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    browseResultCountParamName = "cnt";
+const std::string    browseResultCountParamName = "cnt";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ playlist methods */
@@ -327,23 +329,23 @@ static const std::string    browseResultCountParamName = "cnt";
 /*------------------------------------------------------------------------------
  *  The name of the create playlist method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    createPlaylistMethodName 
+const std::string    createPlaylistMethodName 
                             = "locstor.createPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    createPlaylistSessionIdParamName = "sessid";
+const std::string    createPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    createPlaylistPlaylistIdParamName = "plid";
+const std::string    createPlaylistPlaylistIdParamName = "plid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    createPlaylistResultParamName = "plid";
+const std::string    createPlaylistResultParamName = "plid";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsPlaylist */
@@ -351,23 +353,23 @@ static const std::string    createPlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the exists playlist method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    existsPlaylistMethodName 
+const std::string    existsPlaylistMethodName 
                             = "locstor.existsPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    existsPlaylistSessionIdParamName = "sessid";
+const std::string    existsPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    existsPlaylistPlaylistIdParamName = "plid";
+const std::string    existsPlaylistPlaylistIdParamName = "plid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    existsPlaylistResultParamName = "exists";
+const std::string    existsPlaylistResultParamName = "exists";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getPlaylist */
@@ -375,44 +377,44 @@ static const std::string    existsPlaylistResultParamName = "exists";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'get playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistOpenMethodName 
+const std::string    getPlaylistOpenMethodName 
                             = "locstor.accessPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'get playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistCloseMethodName 
+const std::string    getPlaylistCloseMethodName 
                             = "locstor.releasePlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistSessionIdParamName = "sessid";
+const std::string    getPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistPlaylistIdParamName = "plid";
+const std::string    getPlaylistPlaylistIdParamName = "plid";
 
 /*------------------------------------------------------------------------------
  *  The name of the recursive parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistRecursiveParamName = "recursive";
+const std::string    getPlaylistRecursiveParamName = "recursive";
 
 /*------------------------------------------------------------------------------
  *  The name of the result URL parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistUrlParamName = "url";
+const std::string    getPlaylistUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter returned (for open) or input (for close)
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistTokenParamName = "token";
+const std::string    getPlaylistTokenParamName = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the content parameter returned (for open) or input (for close)
  *----------------------------------------------------------------------------*/
-static const std::string    getPlaylistContentParamName = "content";
+const std::string    getPlaylistContentParamName = "content";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: editPlaylist */
@@ -420,28 +422,28 @@ static const std::string    getPlaylistContentParamName = "content";
 /*------------------------------------------------------------------------------
  *  The name of the 'edit playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    editPlaylistMethodName 
+const std::string    editPlaylistMethodName 
                             = "locstor.editPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    editPlaylistSessionIdParamName = "sessid";
+const std::string    editPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    editPlaylistPlaylistIdParamName = "plid";
+const std::string    editPlaylistPlaylistIdParamName = "plid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result URL parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    editPlaylistUrlParamName = "url";
+const std::string    editPlaylistUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    editPlaylistTokenParamName = "token";
+const std::string    editPlaylistTokenParamName = "token";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: savePlaylist */
@@ -449,28 +451,28 @@ static const std::string    editPlaylistTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the 'save playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    savePlaylistMethodName 
+const std::string    savePlaylistMethodName 
                             = "locstor.savePlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    savePlaylistSessionIdParamName = "sessid";
+const std::string    savePlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    savePlaylistTokenParamName = "token";
+const std::string    savePlaylistTokenParamName = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the new playlist parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    savePlaylistNewPlaylistParamName = "newPlaylist";
+const std::string    savePlaylistNewPlaylistParamName = "newPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    savePlaylistResultParamName = "plid";
+const std::string    savePlaylistResultParamName = "plid";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: revertPlaylist */
@@ -478,23 +480,23 @@ static const std::string    savePlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the 'revert playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    revertPlaylistMethodName 
+const std::string    revertPlaylistMethodName 
                             = "locstor.revertEditedPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    revertPlaylistSessionIdParamName = "sessid";
+const std::string    revertPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    revertPlaylistTokenParamName = "token";
+const std::string    revertPlaylistTokenParamName = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    revertPlaylistResultParamName = "plid";
+const std::string    revertPlaylistResultParamName = "plid";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ audio clip methods */
@@ -504,23 +506,23 @@ static const std::string    revertPlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the exists audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    existsAudioClipMethodName 
+const std::string    existsAudioClipMethodName 
                             = "locstor.existsAudioClip";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    existsAudioClipSessionIdParamName = "sessid";
+const std::string    existsAudioClipSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    existsAudioClipAudioClipIdParamName = "gunid";
+const std::string    existsAudioClipAudioClipIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    existsAudioClipResultParamName = "exists";
+const std::string    existsAudioClipResultParamName = "exists";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getAudioClip */
@@ -528,34 +530,34 @@ static const std::string    existsAudioClipResultParamName = "exists";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipOpenMethodName 
+const std::string    getAudioClipOpenMethodName 
                             = "locstor.downloadMetadataOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipCloseMethodName 
+const std::string    getAudioClipCloseMethodName 
                             = "locstor.downloadMetadataClose";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipSessionIdParamName = "sessid";
+const std::string    getAudioClipSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipAudioClipIdParamName = "gunid";
+const std::string    getAudioClipAudioClipIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result URL parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipUrlParamName = "url";
+const std::string    getAudioClipUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter returned (for open) or input (for close)
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipTokenParamName = "token";
+const std::string    getAudioClipTokenParamName = "token";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: storeAudioClip */
@@ -563,49 +565,49 @@ static const std::string    getAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'store audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipOpenMethodName 
+const std::string    storeAudioClipOpenMethodName 
                             = "locstor.storeAudioClipOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'store audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipCloseMethodName 
+const std::string    storeAudioClipCloseMethodName 
                             = "locstor.storeAudioClipClose";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipSessionIdParamName = "sessid";
+const std::string    storeAudioClipSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip unique ID parameter for both 'open' and 'close'
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipAudioClipIdParamName = "gunid";
+const std::string    storeAudioClipAudioClipIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
  *  The name of the metadata file name parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipMetadataParamName = "metadata";
+const std::string    storeAudioClipMetadataParamName = "metadata";
 
 /*------------------------------------------------------------------------------
  *  The name of the binary file name parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipFileNameParamName = "fname";
+const std::string    storeAudioClipFileNameParamName = "fname";
 
 /*------------------------------------------------------------------------------
  *  The name of the checksum of the binary file name in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipChecksumParamName = "chsum";
+const std::string    storeAudioClipChecksumParamName = "chsum";
 
 /*------------------------------------------------------------------------------
  *  The name of the URL parameter returned by the 'open' method
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipUrlParamName = "url";
+const std::string    storeAudioClipUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter for both 'open' and 'close' methods
  *----------------------------------------------------------------------------*/
-static const std::string    storeAudioClipTokenParamName = "token";
+const std::string    storeAudioClipTokenParamName = "token";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: acquireAudioClip */
@@ -613,28 +615,28 @@ static const std::string    storeAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the acquire audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    acquireAudioClipMethodName 
+const std::string    acquireAudioClipMethodName 
                             = "locstor.accessRawAudioData";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    acquireAudioClipSessionIdParamName = "sessid";
+const std::string    acquireAudioClipSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    acquireAudioClipAudioClipIdParamName = "gunid";
+const std::string    acquireAudioClipAudioClipIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
  *  The name of the result URL parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    acquireAudioClipUrlParamName = "url";
+const std::string    acquireAudioClipUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    acquireAudioClipTokenParamName = "token";
+const std::string    acquireAudioClipTokenParamName = "token";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: releaseAudioClip */
@@ -642,18 +644,18 @@ static const std::string    acquireAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the release audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    releaseAudioClipMethodName 
+const std::string    releaseAudioClipMethodName 
                             = "locstor.releaseRawAudioData";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    releaseAudioClipTokenParamName = "token";
+const std::string    releaseAudioClipTokenParamName = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    releaseAudioClipResultParamName = "status";
+const std::string    releaseAudioClipResultParamName = "status";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: createBackupXxxx */
@@ -661,50 +663,50 @@ static const std::string    releaseAudioClipResultParamName = "status";
 /*------------------------------------------------------------------------------
  *  The name of the 'open' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupOpenMethodName 
+const std::string    createBackupOpenMethodName 
                             = "locstor.createBackupOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'check' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupCheckMethodName 
+const std::string    createBackupCheckMethodName 
                             = "locstor.createBackupCheck";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupCloseMethodName 
+const std::string    createBackupCloseMethodName 
                             = "locstor.createBackupClose";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupSessionIdParamName = "sessid";
+const std::string    createBackupSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the search criteria parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupCriteriaParamName = "criteria";
+const std::string    createBackupCriteriaParamName = "criteria";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input or output structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupTokenParamName = "token";
+const std::string    createBackupTokenParamName = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the status parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupStatusParamName = "status";
+const std::string    createBackupStatusParamName = "status";
 
 /*------------------------------------------------------------------------------
  *  The name of the URL parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupUrlParamName = "url";
+const std::string    createBackupUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the faultString parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    createBackupFaultStringParamName = "faultString";
+const std::string    createBackupFaultStringParamName = "faultString";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: exportPlaylistXxxx */
@@ -712,45 +714,97 @@ static const std::string    createBackupFaultStringParamName = "faultString";
 /*------------------------------------------------------------------------------
  *  The name of the 'open' export playlist  method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistOpenMethodName 
+const std::string    exportPlaylistOpenMethodName 
                             = "locstor.exportPlaylistOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close' export playlist  method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistCloseMethodName 
+const std::string    exportPlaylistCloseMethodName 
                             = "locstor.exportPlaylistClose";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistSessionIdParamName = "sessid";
+const std::string    exportPlaylistSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist ID array parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistPlaylistIdArrayParamName = "plids";
+const std::string    exportPlaylistPlaylistIdArrayParamName = "plids";
 
 /*------------------------------------------------------------------------------
  *  The name of the format parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistFormatParamName = "type";
+const std::string    exportPlaylistFormatParamName = "type";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'standalone' parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistStandaloneParamName = "standalone";
+const std::string    exportPlaylistStandaloneParamName = "standalone";
 
 /*------------------------------------------------------------------------------
  *  The name of the URL return parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistUrlParamName = "url";
+const std::string    exportPlaylistUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input and output structures
  *----------------------------------------------------------------------------*/
-static const std::string    exportPlaylistTokenParamName = "token";
+const std::string    exportPlaylistTokenParamName = "token";
 
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: remoteSearchXXXX */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'open' remote search  method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    remoteSearchOpenMethodName  = "locstor.globalSearch";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'close' remote search  method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    remoteSearchCloseMethodName = "locstor.getSearchResults";
+
+/*------------------------------------------------------------------------------
+ *   The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    remoteSearchSessionIdParamName  = "sessid";
+
+/*------------------------------------------------------------------------------
+ *   The name of the criteria parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    remoteSearchCriteriaParamName   = "criteria";
+
+/*------------------------------------------------------------------------------
+ *   The name of the token parameter in the input or output structure
+ *----------------------------------------------------------------------------*/
+const std::string    remoteSearchTokenParamName      = "trtok";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: checkTransport */
+
+/*------------------------------------------------------------------------------
+ *  The name of the check transport  method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    checkTransportMethodName = "locstor.getTransportInfo";
+
+/*------------------------------------------------------------------------------
+ *   The name of the token parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    checkTransportTokenParamName           = "trtok";
+
+/*------------------------------------------------------------------------------
+ *   The name of the state parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    checkTransportStateParamName           = "state";
+
+/*------------------------------------------------------------------------------
+ *   The name of the error message parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    checkTransportErrorMessageParamName    = "errmsg";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -1943,7 +1997,7 @@ WebStorageClient :: reset(void)
  *----------------------------------------------------------------------------*/
 int
 WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
-                           Ptr<SearchCriteria>::Ref searchCriteria) 
+                           Ptr<SearchCriteria>::Ref searchCriteria)
                                                 throw (XmlRpcException)
 {
     XmlRpcValue     parameters;
@@ -1957,26 +2011,38 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
 
     execute(searchMethodName, parameters, result);
     
-    checkStruct(searchMethodName,
-                result,
+    return extractSearchResults(searchMethodName, result);
+}
+
+    
+/*------------------------------------------------------------------------------
+ *  Extract the results returned by search() or remoteSearchClose().
+ *----------------------------------------------------------------------------*/
+int
+WebStorageClient :: extractSearchResults(const std::string &    methodName,
+                                         XmlRpcValue &          xmlRpcStruct)
+                                                throw (XmlRpcException)
+{
+    checkStruct(methodName,
+                xmlRpcStruct,
                 searchAudioClipResultParamName,
                 XmlRpcValue::TypeArray);
     
-    checkStruct(searchMethodName,
-                result,
+    checkStruct(methodName,
+                xmlRpcStruct,
                 searchPlaylistResultParamName,
                 XmlRpcValue::TypeArray);
     
-    XmlRpcValue audioClipArray = result[searchAudioClipResultParamName];
+    XmlRpcValue audioClipArray = xmlRpcStruct[searchAudioClipResultParamName];
     audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
     
     for (int i=0; i < audioClipArray.size(); i++) {
         if (audioClipArray[i].getType() != XmlRpcValue::TypeString) {
             std::stringstream eMsg;
             eMsg << "Non-string audio clip gunid returned by XML-RPC method '"
-                 << searchMethodName
+                 << methodName
                  << "':\n"
-                 << result;
+                 << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
         Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
@@ -1984,16 +2050,16 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         audioClipIds->push_back(uniqueId);
     }
 
-    XmlRpcValue playlistArray = result[searchPlaylistResultParamName];
+    XmlRpcValue playlistArray = xmlRpcStruct[searchPlaylistResultParamName];
     playlistIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
     
     for (int i=0; i < playlistArray.size(); i++) {
         if (playlistArray[i].getType() != XmlRpcValue::TypeString) {
             std::stringstream eMsg;
             eMsg << "Non-string playlist gunid returned by XML-RPC method '"
-                 << searchMethodName
+                 << methodName
                  << "':\n"
-                 << result;
+                 << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
         Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
@@ -2001,18 +2067,18 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         playlistIds->push_back(uniqueId);
     }
     
-    checkStruct(searchMethodName,
-                result,
+    checkStruct(methodName,
+                xmlRpcStruct,
                 searchAudioClipCountParamName,
                 XmlRpcValue::TypeInt);
     
-    checkStruct(searchMethodName,
-                result,
+    checkStruct(methodName,
+                xmlRpcStruct,
                 searchPlaylistCountParamName,
                 XmlRpcValue::TypeInt);
     
-    return int(result[searchAudioClipCountParamName])
-           + int(result[searchPlaylistCountParamName]);
+    return int(xmlRpcStruct[searchAudioClipCountParamName])
+           + int(xmlRpcStruct[searchPlaylistCountParamName]);
 }
 
 
@@ -2060,6 +2126,109 @@ WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
     }
 
     return results;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search for audio clips or playlists on a remote network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: remoteSearchOpen(Ptr<SessionId>::Ref        sessionId,
+                                     Ptr<SearchCriteria>::Ref   searchCriteria)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[remoteSearchSessionIdParamName] 
+            = sessionId->getId();
+    parameters[remoteSearchCriteriaParamName] 
+            = *searchCriteria;
+
+    execute(remoteSearchOpenMethodName, parameters, result);
+    
+    checkStruct(remoteSearchOpenMethodName,
+                result,
+                remoteSearchTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[remoteSearchTokenParamName] ));
+    
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Download the search results after the remote search has finished.
+ *----------------------------------------------------------------------------*/
+int
+WebStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref     token) 
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[remoteSearchTokenParamName] 
+            = std::string(*token);
+
+    execute(remoteSearchCloseMethodName, parameters, result);
+    
+    return extractSearchResults(remoteSearchCloseMethodName, result);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of the asynchronous network transport operation.
+ *----------------------------------------------------------------------------*/
+StorageClientInterface::TransportState
+WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
+                                   Ptr<Glib::ustring>::Ref        errorMessage)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[checkTransportTokenParamName] 
+            = std::string(*token);
+
+    execute(checkTransportMethodName, parameters, result);
+    
+    checkStruct(checkTransportMethodName,
+                result,
+                checkTransportStateParamName,
+                XmlRpcValue::TypeString);
+    
+    std::string     state = result[checkTransportStateParamName];
+    if (state == "init") {
+        return initState;
+    } else if (state == "pending") {
+        return pendingState;
+    } else if (state == "finished") {
+        return finishedState;
+    } else if (state == "closed") {
+        return closedState;
+    } else if (state == "failed") {
+        if (errorMessage) {
+            checkStruct(checkTransportMethodName,
+                        result,
+                        checkTransportErrorMessageParamName,
+                        XmlRpcValue::TypeString);
+            errorMessage->assign(std::string(
+                                result[checkTransportErrorMessageParamName]));
+        }
+        return failedState;
+    } else {
+        std::stringstream eMsg;
+        eMsg << "Unrecognized transport state returned by XML-RPC method '"
+                << checkTransportMethodName
+                << "':\n"
+                << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
 }
 
 
