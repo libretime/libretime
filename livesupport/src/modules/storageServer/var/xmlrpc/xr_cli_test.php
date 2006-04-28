@@ -206,7 +206,7 @@ $infos = array(
     "globalSearch" => array('m'=>"locstor.globalSearch",
         'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
     "getSearchResults" => array('m'=>"locstor.getSearchResults",
-        'p'=>array('trtok'), 'r'=>array()),
+        'p'=>array('trtok')),
 
 /*
     "uploadToArchive"       => array('m'=>"locstor.uploadToArchive",
@@ -222,6 +222,7 @@ $infos = array(
 
 switch($method){
 case"searchMetadata":
+case"globalSearch":
 case"createBackupOpen":
     $parr = array(
         'sessid'=>$pars[0],
@@ -314,6 +315,7 @@ if(isset($infos[$method]['r'])){
 }else{
     switch($method){
     case"searchMetadata":
+    case"getSearchResults":
         echo
             "AC({$resp['audioClipCnt']}): ".
                 join(", ", $resp['audioClipResults']).
