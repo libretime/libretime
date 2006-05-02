@@ -63,12 +63,7 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
                                                                 throw ()
                 : Gtk::TreeView(treeModel)
 {
-    treeModel->signal_row_inserted().connect(sigc::mem_fun(*this,
-                                            &ZebraTreeView::onRowInserted));
-    treeModel->signal_row_deleted().connect(sigc::mem_fun(*this,
-                                            &ZebraTreeView::onRowDeleted));
-    treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
-                                            &ZebraTreeView::onRowsReordered));
+    connectModelSignals(treeModel);
     this->signal_row_expanded().connect(sigc::mem_fun(*this,
                                             &ZebraTreeView::onRowExpanded));
     this->signal_row_collapsed().connect(sigc::mem_fun(*this,
@@ -563,5 +558,21 @@ ZebraTreeView :: renumberRows(void)                                 throw ()
             }
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Manually connect the 'model has changed' signals to the tree view.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: connectModelSignals(Glib::RefPtr<Gtk::TreeModel>  treeModel)
+                                                                    throw ()
+{
+    treeModel->signal_row_inserted().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowInserted));
+    treeModel->signal_row_deleted().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowDeleted));
+    treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
+                                            &ZebraTreeView::onRowsReordered));
 }
 

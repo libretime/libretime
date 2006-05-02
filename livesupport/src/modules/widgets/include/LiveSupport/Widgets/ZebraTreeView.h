@@ -396,6 +396,19 @@ class ZebraTreeView : public Gtk::TreeView
         {
             return signalCellEditedObject;
         }
+
+        /**
+         *  Manually connect the 'model has changed' signals to the tree view.
+         *  This is useful if you want to use the same ZebraTreeView object
+         *  to alternately display two (or more) different tree models.
+         *
+         *  @param  treeModel   the tree model whose changes should trigger
+         *                      a redraw of the tree view object
+         */
+        void
+        connectModelSignals(Glib::RefPtr<Gtk::TreeModel>  treeModel)
+                                                                throw ();
+
 };
 
 

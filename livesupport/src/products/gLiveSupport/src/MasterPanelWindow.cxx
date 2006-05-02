@@ -65,6 +65,12 @@ const Glib::ustring     windowName = "masterPanelWindow";
  */
 const int               updateTimeConstant = 20;
 
+/**
+ *  The delay between two checks on the progress of an asynchronous method
+ *  (in seconds).
+ */
+const int               asyncUpdateFrequency = 10;
+
 }
 
 /* ===============================================  local function prototypes */
@@ -382,17 +388,25 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 
     nowPlayingWidget->onUpdateTime();
     
+    // check on the progress of the async methods
     static int      backupCounter = 0;
-    if (backupCounter++ == updateTimeConstant * 10) {
+    if (backupCounter++ == updateTimeConstant * asyncUpdateFrequency) {
         backupCounter = 0;
     }
-    if (backupCounter == 0 && optionsWindow) {
-        BackupList *    backupList    = optionsWindow->getBackupList();
-        if (backupList) {
-            backupList->updateSilently();
+    
+    if (backupCounter == 0) {
+        if (optionsWindow) {
+            BackupList *    backupList    = optionsWindow->getBackupList();
+            if (backupList) {
+                backupList->updateSilently();
+            }
+        }
+        
+        if (searchWindow) {
+            searchWindow->onTimer();
         }
     }
-
+    
     return true;
 }
 

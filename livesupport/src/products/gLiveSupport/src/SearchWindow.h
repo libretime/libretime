@@ -49,6 +49,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "GuiWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
@@ -81,6 +82,11 @@ class SearchWindow : public GuiWindow
     private:
 
         /**
+         *  The "search where" input field.
+         */
+        ComboBoxText *              searchWhereEntry;
+
+        /**
          *  The simple search input field.
          */
         EntryBin *                  simpleSearchEntry;
@@ -99,6 +105,16 @@ class SearchWindow : public GuiWindow
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
+
+        /**
+         *  Construct the "search where" box.
+         *  This contains a combo box, where the user can choose between
+         *  local search or hub search.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructSearchWhereBox(void)                           throw ();
 
         /**
          *  Construct the simple search view.
@@ -135,7 +151,7 @@ class SearchWindow : public GuiWindow
          *
          *  @return a pointer to the new tree view (already Gtk::manage()'ed)
          */
-        ZebraTreeView *
+        ScrolledWindow *
         constructSearchResultsView(void)                        throw ();
 
         /**
@@ -158,9 +174,51 @@ class SearchWindow : public GuiWindow
 
         /**
          *  Do the searching.
+         *  Calls either localSearch() or remoteSearch().
+         *
+         *  @param  criteria    the search criteria.
          */
         void
-        onSearch(Ptr<SearchCriteria>::Ref   criteria)           throw ();
+        onSearch(Ptr<SearchCriteria>::Ref       criteria)       throw ();
+
+        /**
+         *  Change the displayed search results (local or remote).
+         */
+        void
+        onSearchWhereChanged(void)                              throw ();
+
+        /**
+         *  Search in the local storage.
+         *
+         *  @param  criteria    the search criteria.
+         */
+        void
+        localSearch(Ptr<SearchCriteria>::Ref    criteria)       throw ();
+
+        /**
+         *  Search on the network hub (initiate the async operation).
+         *
+         *  @param  criteria    the search criteria.
+         */
+        void
+        remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)   throw ();
+
+        /**
+         *  Search on the network hub (finish the async operation).
+         */
+        void
+        remoteSearchClose(void)                                 throw ();
+
+        /**
+         *  Display the search results.
+         *  The most important metadata are shown in the rows of the given
+         *  tree model.
+         */
+        void
+        displaySearchResults(
+                    Ptr<std::list<Ptr<Playable>::Ref> >::Ref  searchResults,
+                    Glib::RefPtr<Gtk::ListStore>              treeModel)
+                                                                throw ();
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.
@@ -258,21 +316,42 @@ class SearchWindow : public GuiWindow
         ModelColumns                    modelColumns;
 
         /**
-         *  The tree model, as a GTK reference.
+         *  The tree model, as a GTK reference, for the local search results.
          */
-        Glib::RefPtr<Gtk::ListStore>    treeModel;
+        Glib::RefPtr<Gtk::ListStore>    localSearchResults;
+
+        /**
+         *  The tree model, as a GTK reference, for the remote search results.
+         */
+        Glib::RefPtr<Gtk::ListStore>    remoteSearchResults;
 
         /**
          *  The tree view showing the search results.
          */
-        ZebraTreeView *                 searchResults;
+        ZebraTreeView *                 searchResultsTreeView;
+
+        /**
+         *  The transport token used when a remote search is pending.
+         */
+        Ptr<const Glib::ustring>::Ref   remoteSearchToken;
 
         /**
          *  The pop-up context menu for found items.
          */
         Gtk::Menu *                     contextMenu;
-        
 
+
+        /**
+         *  Display a (usually error) message in the search results tree view.
+         *
+         *  @param  messageKey  the localization key for the message.
+         *  @param  treeModel   the tree model to display the message in.
+         */
+        void
+        displayMessage(const Glib::ustring &          messageKey,
+                       Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ();
+        
     public:
 
         /**
@@ -295,6 +374,14 @@ class SearchWindow : public GuiWindow
          */
         virtual
         ~SearchWindow(void)                                     throw ();
+        
+        /**
+         *  Perform the periodic checks on the asynchronous methods.
+         *  This is called every few seconds by the onUpdateTime() function 
+         *  in the MasterPanelWindow.
+         */
+        void
+        onTimer(void)                                           throw ();
 };
 
 /* ================================================= external data structures */

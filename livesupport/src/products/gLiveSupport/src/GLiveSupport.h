@@ -946,6 +946,16 @@ class GLiveSupport : public LocalizedConfigurable,
                                                 throw (XmlRpcException);
 
         /**
+         *  Return the Playable items found by the latest search.
+         *
+         *  @return the list of audio clips and playlists found.
+         *  @exception XmlRpcException passed on from getAudioClip() or
+         *                             getPlaylist().
+         */
+        Ptr<PlayableList>::Ref
+        readSearchResults(void)                 throw (XmlRpcException);
+
+        /**
          *  Browse in the local storage.
          *
          *  @param metadata the type of metadata to list (e.g., "dc:title").

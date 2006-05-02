@@ -1311,11 +1311,22 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
                                                 throw (XmlRpcException)
 {
+    storage->search(sessionId, criteria);
+    
+    return readSearchResults();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the Playable items found by the latest search (local or remote).
+ *----------------------------------------------------------------------------*/
+Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: readSearchResults(void)         throw (XmlRpcException)
+{
     Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
             results(new PlayableList);
     
-    storage->search(sessionId, criteria);
-
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds = getAudioClipIds();
     std::vector<Ptr<UniqueId>::Ref>::const_iterator it;
     for (it = audioClipIds->begin(); it != audioClipIds->end(); ++it) {

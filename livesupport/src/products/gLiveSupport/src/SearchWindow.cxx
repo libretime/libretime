@@ -58,6 +58,19 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The 'search where' combo box key for local searches.
+ *----------------------------------------------------------------------------*/
+const std::string    searchWhereLocalKey  = "searchWhereLocal";
+
+/*------------------------------------------------------------------------------
+ *  The 'search where' combo box key for remote searches.
+ *----------------------------------------------------------------------------*/
+const std::string    searchWhereRemoteKey = "searchWhereRemote";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -76,9 +89,11 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                       WidgetConstants::searchWindowTitleImage,
                       windowOpenerButton)
 {
-    Gtk::Box *          simpleSearchView = constructSimpleSearchView();
+    Gtk::Box *          searchWhereBox     = constructSearchWhereBox();
+
+    Gtk::Box *          simpleSearchView   = constructSimpleSearchView();
     Gtk::Box *          advancedSearchView = constructAdvancedSearchView();
-    Gtk::Box *          browseView = constructBrowseView();
+    Gtk::Box *          browseView         = constructBrowseView();
 
     ScrolledNotebook *  searchInput = Gtk::manage(new ScrolledNotebook);
     try {
@@ -94,21 +109,18 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         std::exit(1);
     }
 
-    // set up the search results box    
-    ZebraTreeView *       searchResultsView = constructSearchResultsView();
-    Gtk::ScrolledWindow * searchResults = Gtk::manage(
-                                                    new Gtk::ScrolledWindow);
-    searchResults->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    searchResults->add(*searchResultsView);
+    // set up the search results box
+    ScrolledWindow *    searchResultsView = constructSearchResultsView();
 
     // set the sizes of the two parts of the window
-    searchInput  ->set_size_request(750, 240);
-    searchResults->set_size_request(750, 300);
+    searchInput      ->set_size_request(750, 240);
+    searchResultsView->set_size_request(750, 300);
     
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
-    bigBox->pack_start(*searchInput, Gtk::PACK_SHRINK);
-    bigBox->pack_start(*searchResults);
+    bigBox->pack_start(*searchWhereBox, Gtk::PACK_SHRINK);
+    bigBox->pack_start(*searchInput,      Gtk::PACK_SHRINK);
+    bigBox->pack_start(*searchResultsView);
     add(*bigBox);
     
     // show
@@ -126,6 +138,52 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 SearchWindow :: ~SearchWindow (void)                            throw ()
 {
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the transport type selection box.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+SearchWindow :: constructSearchWhereBox(void)                   throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Label *                searchWhereLabel;
+    try {
+        searchWhereLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("searchWhereLabel") ));
+        searchWhereEntry = Gtk::manage(wf->createComboBoxText());
+        
+        Ptr<Glib::ustring>::Ref localKey(new Glib::ustring(
+                                                searchWhereLocalKey));
+        Ptr<Glib::ustring>::Ref remoteKey(new Glib::ustring(
+                                                searchWhereRemoteKey));
+        
+        searchWhereEntry->appendPair(getResourceUstring(searchWhereLocalKey),
+                                     localKey);
+        searchWhereEntry->appendPair(getResourceUstring(searchWhereRemoteKey),
+                                     remoteKey);
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    searchWhereEntry->set_active(0);
+    searchWhereEntry->signalSelectionChanged().connect(sigc::mem_fun(
+                                *this, &SearchWindow::onSearchWhereChanged ));
+    
+    Gtk::HBox *         hBox = Gtk::manage(new Gtk::HBox);
+    hBox->pack_start(*searchWhereLabel, Gtk::PACK_SHRINK, 5);
+    hBox->pack_start(*searchWhereEntry, Gtk::PACK_SHRINK);
+    
+    Gtk::HBox *         padding = Gtk::manage(new Gtk::HBox);
+    
+    Gtk::VBox *         vBox = Gtk::manage(new Gtk::VBox);
+    vBox->pack_start(*hBox,    Gtk::PACK_SHRINK, 5);
+    vBox->pack_start(*padding, Gtk::PACK_SHRINK, 5);
+    
+    return vBox;
+}    
 
 
 /*------------------------------------------------------------------------------
@@ -231,33 +289,41 @@ SearchWindow :: constructBrowseView(void)                       throw ()
 /*------------------------------------------------------------------------------
  *  Construct the search results display.
  *----------------------------------------------------------------------------*/
-ZebraTreeView *
+ScrolledWindow *
 SearchWindow :: constructSearchResultsView(void)                throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
-    treeModel = Gtk::ListStore::create(modelColumns);
-    searchResults = Gtk::manage(wf->createTreeView(treeModel));
+    localSearchResults  = Gtk::ListStore::create(modelColumns);
+    remoteSearchResults = Gtk::ListStore::create(modelColumns);
+    
+    searchResultsTreeView = Gtk::manage(wf->createTreeView(localSearchResults));
+    searchResultsTreeView->connectModelSignals(remoteSearchResults);
 
     // add the TreeView's view columns
     try {
-        searchResults->appendColumn(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn, 20);
-        searchResults->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 360);
-        searchResults->appendColumn(*getResourceUstring("creatorColumnLabel"),
-                               modelColumns.creatorColumn, 260);
-        searchResults->appendColumn(*getResourceUstring("lengthColumnLabel"),
-                               modelColumns.lengthColumn, 50);
+        searchResultsTreeView->appendColumn(
+                                    *getResourceUstring("typeColumnLabel"),
+                                    modelColumns.typeColumn, 20);
+        searchResultsTreeView->appendColumn(
+                                    *getResourceUstring("titleColumnLabel"),
+                                    modelColumns.titleColumn, 360);
+        searchResultsTreeView->appendColumn(
+                                    *getResourceUstring("creatorColumnLabel"),
+                                    modelColumns.creatorColumn, 260);
+        searchResultsTreeView->appendColumn(
+                                    *getResourceUstring("lengthColumnLabel"),
+                                    modelColumns.lengthColumn, 50);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
     
     // register the signal handler for treeview entries being clicked
-    searchResults->signal_button_press_event().connect_notify(sigc::mem_fun(
+    searchResultsTreeView->signal_button_press_event().connect_notify(
+                                sigc::mem_fun(
                                     *this, &SearchWindow::onEntryClicked));
-    searchResults->signal_row_activated().connect(sigc::mem_fun(
+    searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(
                                     *this, &SearchWindow::onDoubleClick));
 
     // create the right-click entry context menu
@@ -284,7 +350,13 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     }
 
     contextMenu->accelerate(*this);
-    return searchResults;
+    
+    // put the tree view inside a scrolled window
+    ScrolledWindow *    view = Gtk::manage(new ScrolledWindow);
+    view->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    view->add(*searchResultsTreeView);
+
+    return view;
 }
 
 
@@ -301,7 +373,7 @@ SearchWindow :: onSimpleSearch(void)                            throw ()
     MetadataTypeContainer::Vector::const_iterator
                                     it = metadataTypes->begin();
     
-    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria("all", "or"));    
+    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria("all", "or"));
     Ptr<const MetadataType>::Ref    metadata;
     
     if (it != metadataTypes->end()) {
@@ -350,6 +422,24 @@ void
 SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
                                                                 throw ()
 {
+    Ptr<const Glib::ustring>::Ref   searchWhere
+                                    = searchWhereEntry->getActiveKey();
+    
+    if (*searchWhere == searchWhereLocalKey) {
+        localSearch(criteria);
+    } else {
+        remoteSearchOpen(criteria);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search in the local storage.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
+                                                                throw ()
+{
     Ptr<std::list<Ptr<Playable>::Ref> >::Ref searchResults;
     try {
         searchResults = gLiveSupport->search(criteria);
@@ -357,11 +447,26 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
         std::cerr << e.what() << std::endl;
         return;
     }
+    
+    displaySearchResults(searchResults, localSearchResults);
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Display the search results.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: displaySearchResults(
+                    Ptr<std::list<Ptr<Playable>::Ref> >::Ref  searchResults,
+                    Glib::RefPtr<Gtk::ListStore>              treeModel)
+                                                                throw ()
+{
+    treeModel->clear();
+    searchResultsTreeView->set_model(treeModel);
+    
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
     std::list<Ptr<Playable>::Ref>::const_iterator it;
-    treeModel->clear();
     
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<Playable>::Ref      playable = *it;
@@ -402,6 +507,126 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
 
 
 /*------------------------------------------------------------------------------
+ *  Search on the network hub (initiate the async operation).
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
+                                                                throw ()
+{
+    displayMessage("pleaseWaitMsg", remoteSearchResults);
+    
+    Ptr<StorageClientInterface>::Ref 
+                                storage   = gLiveSupport->getStorageClient();
+    Ptr<SessionId>::Ref         sessionId = gLiveSupport->getSessionId();
+    
+    if (remoteSearchToken) {
+        try {
+            storage->cancelTransport(sessionId, remoteSearchToken);
+        } catch (XmlRpcException &e) {
+            gLiveSupport->displayMessageWindow(formatMessage(
+                                                    "remoteSearchErrorMsg",
+                                                    e.what() ));
+            return;
+        }
+    }
+    
+    try {
+        remoteSearchToken = storage->remoteSearchOpen(sessionId, criteria);
+    } catch (XmlRpcException &e) {
+        gLiveSupport->displayMessageWindow(formatMessage(
+                                                    "remoteSearchErrorMsg",
+                                                    e.what() ));
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search on the network hub (finish the async operation).
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: remoteSearchClose(void)
+                                                                throw ()
+{
+    if (remoteSearchToken) {
+        Ptr<StorageClientInterface>::Ref 
+                                storage   = gLiveSupport->getStorageClient();
+        Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
+        
+        StorageClientInterface::TransportState      state;
+        Ptr<Glib::ustring>::Ref                     errorMessage;
+        try {
+            state = storage->checkTransport(remoteSearchToken, errorMessage);
+        } catch (XmlRpcException &e) {
+            gLiveSupport->displayMessageWindow(formatMessage(
+                                                    "remoteSearchErrorMsg",
+                                                    e.what() ));
+            return;
+        }
+        
+        Ptr<std::list<Ptr<Playable>::Ref> >::Ref    results;
+        
+        switch (state) {
+            case StorageClientInterface::initState :
+                break;
+
+            case StorageClientInterface::pendingState :
+                break;
+                
+            case StorageClientInterface::finishedState :
+                try {
+                    storage->remoteSearchClose(remoteSearchToken);
+                } catch (XmlRpcException &e) {
+                    gLiveSupport->displayMessageWindow(formatMessage(
+                                                    "remoteSearchErrorMsg",
+                                                    e.what() ));
+                    return;
+                }
+                remoteSearchToken.reset();
+                
+                try {
+                    results = gLiveSupport->readSearchResults();
+                } catch (XmlRpcException &e) {
+                    gLiveSupport->displayMessageWindow(formatMessage(
+                                                    "remoteSearchErrorMsg",
+                                                    e.what() ));
+                    return;
+                }
+                
+                displaySearchResults(results, remoteSearchResults);
+                break;
+                
+            case StorageClientInterface::closedState :
+                remoteSearchToken.reset();
+                displayMessage("remoteSearchErrorMsg", remoteSearchResults);
+                break;
+                
+            case StorageClientInterface::failedState :
+                remoteSearchToken.reset();
+                displayMessage(*errorMessage, remoteSearchResults);
+                break;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display a (usually error) message in the search results tree view.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: displayMessage(const Glib::ustring &          messageKey,
+                               Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ()
+{
+    treeModel->clear();
+    
+    Gtk::TreeModel::Row         row = *treeModel->append();
+    row[modelColumns.titleColumn]   = *getResourceUstring(messageKey);
+
+    searchResultsTreeView->set_model(treeModel);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
 void
@@ -409,7 +634,7 @@ SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                searchResults->get_selection();
+                                        searchResultsTreeView->get_selection();
         if (refSelection) {
             Gtk::TreeModel::iterator iter = refSelection->get_selected();
             
@@ -419,7 +644,7 @@ SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
                 Gtk::TreeViewColumn *   column;
                 int     cell_x,
                         cell_y;
-                if (searchResults->get_path_at_pos(
+                if (searchResultsTreeView->get_path_at_pos(
                                                 int(event->x), int(event->y),
                                                 path, column,
                                                 cell_x, cell_y )) {
@@ -431,18 +656,20 @@ SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
             if (iter) {
                 Ptr<Playable>::Ref  playable =
                                          (*iter)[modelColumns.playableColumn];
+                
+                if (playable) {
+                    switch (playable->getType()) {
+                        case Playable::AudioClipType:
+                            contextMenu->popup(event->button, event->time);
+                            break;
+                            
+                        case Playable::PlaylistType:
+                            contextMenu->popup(event->button, event->time);
+                            break;
 
-                switch (playable->getType()) {
-                    case Playable::AudioClipType:
-                        contextMenu->popup(event->button, event->time);
-                        break;
-                        
-                    case Playable::PlaylistType:
-                        contextMenu->popup(event->button, event->time);
-                        break;
-
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -457,11 +684,14 @@ void
 SearchWindow :: onAddToScratchpad(void)                         throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                searchResults->get_selection();
+                                        searchResultsTreeView->get_selection();
     Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        gLiveSupport->addToScratchpad(playable);
+        if (playable) {
+            gLiveSupport->addToScratchpad(playable);
+        }
     }
 }
 
@@ -473,12 +703,15 @@ void
 SearchWindow :: onAddToLiveMode(void)                           throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                searchResults->get_selection();
+                                        searchResultsTreeView->get_selection();
     Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        gLiveSupport->addToLiveMode(playable);
-        gLiveSupport->addToScratchpad(playable);
+        if (playable) {
+            gLiveSupport->addToLiveMode(playable);
+            gLiveSupport->addToScratchpad(playable);
+        }
     }
 }
 
@@ -490,19 +723,22 @@ void
 SearchWindow :: onExportPlaylist(void)                      throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = searchResults->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+                refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                iter         = refSelection->get_selected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
-        if (playlist) {
-            exportPlaylistWindow.reset(new ExportPlaylistWindow(
+        if (playable) {
+            Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+            if (playlist) {
+                exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-            exportPlaylistWindow->set_transient_for(*this);
-            Gtk::Main::run(*exportPlaylistWindow);
+                exportPlaylistWindow->set_transient_for(*this);
+                Gtk::Main::run(*exportPlaylistWindow);
+            }
         }
     }
 }
@@ -531,5 +767,32 @@ SearchWindow :: on_hide(void)                                   throw ()
     }
         
     GuiWindow::on_hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the displayed search results (local or remote).
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onSearchWhereChanged(void)                      throw ()
+{
+    Ptr<const Glib::ustring>::Ref   searchWhere
+                                    = searchWhereEntry->getActiveKey();
+    
+    if (*searchWhere == searchWhereLocalKey) {
+        searchResultsTreeView->set_model(localSearchResults);
+    } else {
+        searchResultsTreeView->set_model(remoteSearchResults);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Perform the periodic checks on the asynchronous methods.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onTimer(void)                                   throw ()
+{
+    remoteSearchClose();
 }
 

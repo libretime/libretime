@@ -184,6 +184,10 @@ root:table
     searchWindow:table
     {
         windowTitle:string          { "Search/Browse" }
+        
+        searchWhereLabel:string     { "Search or browse on: " }
+        searchWhereLocal:string     { "local storage" }
+        searchWhereRemote:string    { "network hub" }
 
         simpleSearchTab:string      { "Search" }
         advancedSearchTab:string    { "Advanced Search" }
@@ -201,6 +205,9 @@ root:table
         addToScratchpadMenuItem:string  { "_Add To Scratchpad" }
         addToLiveModeMenuItem:string    { "Add To _Live Mode" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        
+        pleaseWaitMsg:string        { "Please wait..." }
+        remoteSearchErrorMsg:string { "Search failed: {0}." }
     }
     
     advancedSearchEntry:table {
