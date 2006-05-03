@@ -332,8 +332,14 @@ class Alib extends Subjects{
      */
     function getSessLogin($sessid)
     {
-        return $this->dbc->getOne("
+        $this->dbc->getOne("
             SELECT login FROM {$this->sessTable} WHERE sessid='$sessid'");
+        if(is_null($r)){ 
+            return PEARraiseError("Alib::getSessLogin:".
+                " invalid session id ($sessid)",
+                ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
+        }
+        return $r;
     }
 
     /**
@@ -344,8 +350,14 @@ class Alib extends Subjects{
      */
     function getSessUserId($sessid)
     {
-        return $this->dbc->getOne("
+        $r = $this->dbc->getOne("
             SELECT userid FROM {$this->sessTable} WHERE sessid='$sessid'");
+        if(is_null($r)){ 
+            return PEAR::raiseError("Alib::getSessUserId:".
+                " invalid session id ($sessid)",
+                ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
+        }
+        return $r;
     }
 
     /* --------------------------------------------------------- info methods */
