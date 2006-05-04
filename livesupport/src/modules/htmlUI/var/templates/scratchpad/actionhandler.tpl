@@ -49,4 +49,6 @@ onClick="return contextmenu('{$i.id}'
             , 'PL.export'
         {/if}
     {/if}
+    
+    , 'TR.upload2Hub'
 )"

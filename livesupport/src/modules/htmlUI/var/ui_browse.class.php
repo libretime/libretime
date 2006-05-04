@@ -4,9 +4,10 @@ class uiBrowse
     function uiBrowse(&$uiBase)
     {
         $this->Base       =& $uiBase;
-        $this->col        =& $_SESSION[UI_BROWSE_SESSNAME]['col'];
-        $this->criteria   =& $_SESSION[UI_BROWSE_SESSNAME]['criteria'];
-        #$this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
+        $this->prefix     = 'BROWSE';
+        $this->col        =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['col'];
+        $this->criteria   =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['criteria'];
+        #$this->results    =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['results'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
@@ -101,7 +102,7 @@ class uiBrowse
         $this->col[$which]['category'] = $this->Base->_formElementDecode($parm['category']);
         $this->col[$which]['values']   = $this->Base->gb->browseCategory($this->col[$which]['category'], $this->col[$which]['criteria'], $this->Base->sessid);
 
-        $this->Base->redirUrl = UI_BROWSER.'?act=BROWSE';
+        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
 
         $this->clearHierarchy($which);
         #print_r($this->col);
@@ -136,9 +137,11 @@ class uiBrowse
         #echo "criteria: "; print_r($this->col[$next]['criteria']);
         #echo "\nvalues: "; print_r($this->col[$next]['values']);
 
+        $this->setCriteria();
         $this->clearHierarchy($next);
         #$this->searchDB();
-        $this->Base->redirUrl = UI_BROWSER.'?act=BROWSE';
+        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+        #$this->setReload();
     }
 
 
@@ -163,19 +166,23 @@ class uiBrowse
             $this->col[$col]['form_value']  = NULL;
         }
     }
+    
+    function setCriteria() {
+        //$this->criteria['conditions'] = array();
+        unset($this->criteria['conditions']);
+        for($col=3; $col>=1; $col--) {
+            if (is_array($this->col[$col]['criteria'])) {
+                $this->criteria = array_merge ($this->col[$col]['criteria'], $this->criteria);
+                break;
+            }
+        }
+    }
 
 
     function searchDB()
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
 
-        $this->criteria['conditions'] = array();
-        for($col=4; $col>=1; $col--) {
-            if (is_array($this->col[$col]['criteria'])) {
-                $this->criteria = array_merge ($this->col[$col]['criteria'], $this->criteria);
-                break;
-            }
-        }
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         
         if (!is_array($results) || !count($results)) {

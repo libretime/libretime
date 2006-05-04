@@ -47,6 +47,9 @@ define('UI_SCRATCHPAD_SESSNAME',        'SCRATCHPAD');
 define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
+define('UI_HUBBROWSE_SESSNAME',         'L_HUBBROWSE');
+define('UI_HUBSEARCH_SESSNAME',         'L_HUBSEARCH');
+define('UI_TRANSFER_SESSNAME',          'L_TRANSFER');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
 define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
 
@@ -85,6 +88,8 @@ define('UI_BROWSE_DEFAULT_KEY_1',       'dc:type');
 define('UI_BROWSE_DEFAULT_KEY_2',       'dc:creator');
 define('UI_BROWSE_DEFAULT_KEY_3',       'dc:source');
 define('UI_BROWSE_DEFAULT_LIMIT',       10);
+
+define('UI_HUB_POLLING_FREQUENCY',      3);
 
 ## Scheduler / Calendar
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
@@ -141,6 +146,9 @@ require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
+require_once dirname(__FILE__).'/ui_hubBrowse.class.php';
+require_once dirname(__FILE__).'/ui_hubSearch.class.php';
+require_once dirname(__FILE__).'/ui_transfers.class.php';
 require_once '../../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';

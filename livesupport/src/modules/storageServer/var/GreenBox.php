@@ -1147,7 +1147,7 @@ class GreenBox extends BasicStor{
         $tr =& new Transport($this);
         return $tr->getTransportInfo($trtok);
     }
-    
+   
     /**
      *  Turn transports on/off, optionaly return current state.
      *

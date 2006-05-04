@@ -1,5 +1,5 @@
 {include file="library/searchForm.js.tpl"}
-    {foreach from=$searchForm item=dynform}
+    {foreach from=$_form item=dynform}
         {include file="sub/dynForm_plain.tpl"}
     <!-- end search -->
     {/foreach}

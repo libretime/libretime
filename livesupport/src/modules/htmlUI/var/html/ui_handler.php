@@ -165,6 +165,79 @@ switch($_REQUEST['act']){
     $uiHandler->BROWSE->setFiletype($_REQUEST['filetype']);
     break;
 
+    case "HUBBROWSE.setCategory":
+    $uiHandler->HUBBROWSE->setCategory($_REQUEST);
+    break;
+
+    case "HUBBROWSE.setValue":
+    $uiHandler->HUBBROWSE->setValue($_REQUEST);
+    break;
+
+    case "HUBBROWSE.reOrder":
+    $uiHandler->HUBBROWSE->reOrder($_REQUEST['by']);
+    break;
+
+    case "HUBBROWSE.setDefaults":
+    $uiHandler->HUBBROWSE->setDefaults(TRUE);
+    break;
+
+    case "HUBBROWSE.setOffset":
+    $uiHandler->HUBBROWSE->setOffset($_REQUEST['page']);
+    break;
+
+    case "HUBBROWSE.setLimit":
+    $uiHandler->HUBBROWSE->setLimit($_REQUEST['limit']);
+    break;
+
+    case "HUBBROWSE.setFiletype":
+    $uiHandler->HUBBROWSE->setFiletype($_REQUEST['filetype']);
+    break;
+    
+    case "HUBSEARCH.newSearch":
+    $uiHandler->HUBSEARCH->newSearch($_REQUEST);
+    break;
+
+    case "HUBSEARCH.reOrder":
+    $uiHandler->HUBSEARCH->reOrder($_REQUEST['by']);
+    break;
+
+    case "HUBSEARCH.clear":
+    $uiHandler->HUBSEARCH->clear();
+    break;
+
+    case "HUBSEARCH.setOffset":
+    $uiHandler->HUBSEARCH->setOffset($_REQUEST['page']);
+    break;
+
+    case "TRANSFERS.reOrder":
+    $uiHandler->TRANSFERS->reOrder($_REQUEST['by']);
+    break;
+
+    case "TRANSFERS.setOffset":
+    $uiHandler->TRANSFERS->setOffset($_REQUEST['page']);
+    break;
+
+    case "TR.pause":
+    case "TR.resume":
+    case "TR.cancel":
+    $ids = '';
+    if (is_array($_REQUEST['id'])) {
+        foreach ($_REQUEST['id'] as $id) {
+            $ids .= '&id[]='.$id; 
+        }
+    } else {
+        $ids = '&id='.$_REQUEST['id'];
+    }
+    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+    $uiHandler->redirUrl = UI_BROWSER."?popup[]={$_REQUEST['act']}{$ids}";
+    break;
+
+    case "TR.cancelConfirm":
+    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+    $uiHandler->TRANSFERS->doTransportAction($_REQUEST['id'],'cancel');
+    $uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+    break;
+
     case "PL.activate":
     if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE)
     $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);

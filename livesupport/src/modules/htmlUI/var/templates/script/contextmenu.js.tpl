@@ -130,6 +130,26 @@ function contextmenu(param) {
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SUBJECTS.confirmRemoveSubj&"+param+"', 'confirmRemoveSubj', 400, 50)\" "+oF+">&nbsp;##Delete##&nbsp;</a></li>";
             break;
 
+            case "TR.upload2Hub":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmUpload2Hub&id="+param+"', 'confirmUpload2Hub', 400, 50)\" "+oF+">&nbsp;##Transfer to the hub##&nbsp;</a></li>";
+            break;
+
+            case "TR.downloadFromHub":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmDownloadFromHub&id="+param+"', 'confirmDownloadFromHub', 400, 50)\" "+oF+">&nbsp;##Transfer from the hub##&nbsp;</a></li>";
+            break;
+
+            case "TR.pause":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.pause&id="+param+"', 'TR', '400', '50')\" "+oF+">&nbsp;##Pause transfer##&nbsp;</a></li>";
+            break;
+
+            case "TR.resume":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.resume&id="+param+"', 'TR', '400', '50')\" "+oF+">&nbsp;##Resume transfer##&nbsp;</a></li>";
+            break;
+
+            case "TR.cancel":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.cancel&id="+param+"', 'TR', '400', '50')\" "+oF+">&nbsp;##Cancel transfer##&nbsp;</a></li>";
+            break;
+
             {literal}
         }
     }

@@ -175,6 +175,72 @@ if (is_array($_REQUEST['popup'])){
             case 'BACKUP.createBackupDownload': 
             $uiBrowser->EXCHANGE->createBackupDownload();    
             break;
+            
+            case 'TR.confirmUpload2Hub':
+            $uiBrowser->TRANSFERS->upload2Hub($_REQUEST['id']);
+            $Smarty->display('popup/TR.confirmTransfer.tpl');
+            break;
+            
+            case 'TR.confirmDownloadFromHub': 
+            $uiBrowser->TRANSFERS->downloadFromHub($_REQUEST['id']);
+            $Smarty->display('popup/TR.confirmTransfer.tpl');
+            break;
+            
+            case 'TR.pause': 
+            $uiBrowser->TRANSFERS->doTransportAction($_REQUEST['id'],'pause');
+            $Smarty->display('popup/TR.pauseTransfer.tpl');
+            break;
+            
+            case 'TR.cancel': 
+            $ids = '';
+            if (is_array($_REQUEST['id'])) {
+                foreach ($_REQUEST['id'] as $id) {
+                    $ids .= '&id[]='.$id; 
+                }
+            } else {
+                $ids = '&id='.$_REQUEST['id'];
+            }
+            $Smarty->assign('tansferIDs',$ids);
+            $Smarty->display('popup/TR.cancelTransfer.tpl');
+            break;
+            
+            case 'TR.resume': 
+            $uiBrowser->TRANSFERS->doTransportAction($_REQUEST['id'],'resume');
+            $Smarty->display('popup/TR.resumeTransfer.tpl');
+            break;
+            
+            case 'HUBBROWSE.getResults':
+            if (isset($_REQUEST['trtokid'])) {
+                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
+                if ($uiBrowser->HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
+                    $Smarty->assign('results',true);
+                } else {
+                    $Smarty->assign('results',false);
+                }
+            } else {
+                $Smarty->assign('trtokid',$uiBrowser->HUBBROWSE->searchDB());
+                $Smarty->assign('results',false);
+            }
+            $Smarty->assign('polling_frequency',UI_HUB_POLLING_FREQUENCY);
+            $Smarty->assign('_prefix','HUBBROWSE');
+            $Smarty->display('popup/HUB.getResults.tpl');
+            break;
+
+            case 'HUBSEARCH.getResults':
+            if (isset($_REQUEST['trtokid']) && $_REQUEST['trtokid']) {
+                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
+                if ($uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'])) {
+                    $Smarty->assign('results',true);
+                } else {
+                    $Smarty->assign('results',false);
+                }
+            } else {
+                $Smarty->assign('trtok',true);
+            }
+            $Smarty->assign('polling_frequency',UI_HUB_POLLING_FREQUENCY);
+            $Smarty->assign('_prefix','HUBSEARCH');
+            $Smarty->display('popup/HUB.getResults.tpl');
+            break;
         }
     }
     die();
@@ -231,7 +297,27 @@ if ($uiBrowser->userid) {
         break;
 
         case "BROWSE":
+        #echo '<XMP>uiBrowser->BROWSE->getResult():'; print_r($uiBrowser->BROWSE->getResult()); echo "</XMP>\n"; 
         $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('showLibrary', TRUE);
+        break;
+
+        case "HUBSEARCH":
+        #echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+        #$Smarty->assign('searchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('hubSearchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('showLibrary', TRUE);
+        $Smarty->assign('isHub', TRUE);
+        break;
+
+        case "HUBBROWSE":
+        $Smarty->assign('hubBrowseForm', $uiBrowser->HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('showLibrary', TRUE);
+        $Smarty->assign('isHub', TRUE);
+        break;
+
+        case "TRANSFERS":
+        $Smarty->assign('transfersForm', TRUE);
         $Smarty->assign('showLibrary', TRUE);
         break;
 

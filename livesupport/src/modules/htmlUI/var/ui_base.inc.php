@@ -151,10 +151,13 @@ class uiBase
         $this->SCRATCHPAD   =& new uiScratchPad($this);
         $this->SEARCH       =& new uiSearch($this);
         $this->BROWSE       =& new uiBrowse($this);
+        $this->HUBBROWSE    =& new uiHubBrowse($this);
+        $this->HUBSEARCH    =& new uiHubSearch($this);
         $this->PLAYLIST     =& new uiPlaylist($this);
         $this->SCHEDULER    =& new uiScheduler($this);
         $this->SUBJECTS     =& new uiSubjects($this);
         $this->EXCHANGE     =& new uiExchange($this);
+        $this->TRANSFERS    =& new uiTransfers($this);
         $this->_self_       =& $this;
     }
 

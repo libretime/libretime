@@ -4,9 +4,11 @@ class uiSearch
     function uiSearch(&$uiBase)
     {
         $this->Base       =& $uiBase;
+        $this->prefix     = 'SEARCH';
         #$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
     }
 
     function setReload()
@@ -77,6 +79,7 @@ class uiSearch
         $form->accept($renderer);
         $output['dynform'] = $renderer->toArray();
         #print_r($output);
+        #echo '<XMP>output:'; print_r($output); echo "</XMP>\n"; 
         return $output;
     }
 
@@ -112,7 +115,7 @@ class uiSearch
                                                       );
             }
         }
-        $this->Base->redirUrl = UI_BROWSER.'?act=SEARCH';
+        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         #$this->searchDB();
     }
 
@@ -154,7 +157,7 @@ class uiSearch
                                                       2     => stripslashes($formdata['criterium'])
                                                );
         }
-        $this->Base->redirUrl = UI_BROWSER.'?act=SEARCH';
+        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         #$this->searchDB();
     }
 

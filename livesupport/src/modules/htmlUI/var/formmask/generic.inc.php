@@ -313,7 +313,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'SEARCH.newSearch'
+            'constant'  => $_REQUEST['act'].'.newSearch'
         ),
         array(
             'element'   => 'id',
@@ -432,7 +432,7 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Category',
             'attributes'=> array(
-                'onChange'  => 'this.form.act.value="BROWSE.setCategory"; this.form.submit()',
+                'onChange'  => 'this.form.act.value="'.$_REQUEST['act'].'.setCategory"; this.form.submit()',
                 'style'     => 'width: 180px;',
                 'id'        => 'category_1'
                 )
@@ -444,7 +444,7 @@ $ui_fmask = array(
             'attributes'=> array(
                 'size'      => 10,
                 'class'     => 'area_browse',
-                'onChange'  => 'this.form.act.value="BROWSE.setValue"; this.form.submit()'
+                'onChange'  => 'this.form.act.value="'.$_REQUEST['act'].'.setValue"; this.form.submit()'
             )
         )
     ),
@@ -464,7 +464,7 @@ $ui_fmask = array(
                             #UI_FILETYPE_WEBSTREAM => '##Webstream##',
                             UI_FILETYPE_PLAYLIST  => '##Playlist##'
                            ),
-            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act=BROWSE.setFiletype&filetype=" + this.form.filetype.value)')
+            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act='.$_REQUEST['act'].'.setFiletype&filetype=" + this.form.filetype.value)')
         ),
         array(
             'element'   => 'limit',
@@ -476,7 +476,7 @@ $ui_fmask = array(
                             50  => 50,
                             100 => 100
                            ),
-            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setLimit&limit=" + this.form.limit.value)')
+            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act='.$_REQUEST['act'].'.setLimit&limit=" + this.form.limit.value)')
         ),
         /*        do we need reset?
         array(
@@ -489,7 +489,7 @@ $ui_fmask = array(
             'element'   => 'reset',
             'type'      => 'button',
             'label'     => 'Reset criteria',
-            'attributes'=> array('class' => 'button_wide', 'onClick' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setDefaults")'),
+            'attributes'=> array('class' => 'button_wide', 'onClick' => 'hpopup("'.UI_HANDLER.'?act='.$_REQUEST['act'].'.setDefaults")'),
             'groupit'   => TRUE
         ),
         array(

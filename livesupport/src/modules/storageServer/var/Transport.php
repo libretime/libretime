@@ -140,6 +140,42 @@ class Transport
                     'title'         =>  'DUMMY !',
                     'errmsg'        =>  '',
                 );
+            case'123456789abcdef2';     // upload/download
+                return array(
+                    'state'         =>  'running',
+                    'direction'     =>  'down',
+                    'trtype'        =>  'playlist',
+                    'expectedsize'  =>  1624,
+                    'realsize'      =>  342,
+                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'title'         =>  'DUMMY playlist - 2',
+                    'errmsg'        =>  '',
+                );
+            case'123456789abcdef3';     // upload/download
+                return array(
+                    'state'         =>  'paused',
+                    'direction'     =>  'up',
+                    'trtype'        =>  'audioclip',
+                    'expectedsize'  =>  1024,
+                    'realsize'      =>  322,
+                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'title'         =>  'kakaoscsiga - 3',
+                    'errmsg'        =>  '',
+                );
+            case'123456789abcdef4';     // upload/download
+                return array(
+                    'state'         =>  'running',
+                    'direction'     =>  'up',
+                    'trtype'        =>  'playlist',
+                    'expectedsize'  =>  233,
+                    'realsize'      =>  23,
+                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
+                    'title'         =>  'ez egy playlist - 4',
+                    'errmsg'        =>  '',
+                );
             case'123456789abcdefe';     // search
                 return array(
                     'state'         =>  'finished',
@@ -196,6 +232,15 @@ class Transport
         return array(
             array(
                 'trtok' =>  '123456789abcdeff',
+            ),
+            array(
+                'trtok' =>  '123456789abcdef2',
+            ),
+            array(
+                'trtok' =>  '123456789abcdef3',
+            ),
+            array(
+                'trtok' =>  '123456789abcdef4',
             ),
         );
     }

@@ -1,7 +1,10 @@
 <?php
 $Smarty->register_object('UIBROWSER',  $uiBrowser);
 $Smarty->register_object('BROWSE',     $uiBrowser->BROWSE);
+$Smarty->register_object('HUBBROWSE',  $uiBrowser->HUBBROWSE);
 $Smarty->register_object('SEARCH',     $uiBrowser->SEARCH);
+$Smarty->register_object('HUBSEARCH',  $uiBrowser->HUBSEARCH);
+$Smarty->register_object('TRANSFERS',  $uiBrowser->TRANSFERS);
 $Smarty->assign_by_ref  ('PL',         $uiBrowser->PLAYLIST);
 $Smarty->assign_by_ref  ('SCHEDULER',  $uiBrowser->SCHEDULER);
 $Smarty->assign_by_ref  ('SCRATCHPAD', $uiBrowser->SCRATCHPAD);

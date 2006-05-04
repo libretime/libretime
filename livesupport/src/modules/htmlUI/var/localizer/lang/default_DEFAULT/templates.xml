@@ -805,4 +805,44 @@
 		<key>Import Playlist</key>
 		<value>Import Playlist</value>
 	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value>Transfer to the hub</value>
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value>Transfer from the hub</value>
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value>The file has been added to the transfer queue!</value>
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value>Hub Browse</value>
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value>Hub Search</value>
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value>Transfers</value>
+	</item>
+	<item>
+		<key>State</key>
+		<value>State</value>
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value>Resuming transfer(s).</value>
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value>Pausing transfer(s).</value>
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value>Are you sure to cancel transfer(s)?</value>
+	</item>
 </translations>

@@ -44,5 +44,10 @@ function SearchForm_dropRow(row)
 
 }
 {/literal}
+{if $ACT === 'BROWSE'}
+  this.form.act.value='BROWSE.setCategory';
+{elseif $ACT==='HUBBROWSE'}
+  this.form.act.value='HUBBROWSE.setCategory';
+{/if}
 </script>
 
