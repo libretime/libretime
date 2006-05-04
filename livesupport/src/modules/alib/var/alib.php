@@ -335,7 +335,7 @@ class Alib extends Subjects{
         $this->dbc->getOne("
             SELECT login FROM {$this->sessTable} WHERE sessid='$sessid'");
         if(is_null($r)){ 
-            return PEARraiseError("Alib::getSessLogin:".
+            return PEAR::raiseError("Alib::getSessLogin:".
                 " invalid session id ($sessid)",
                 ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
         }
