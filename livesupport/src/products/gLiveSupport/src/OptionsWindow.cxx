@@ -98,7 +98,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Gtk::Box *      soundSectionBox         = constructSoundSection();
     Gtk::Box *      keyBindingsSectionBox   = constructKeyBindingsSection();
     Gtk::Box *      serversSectionBox       = constructServersSection();
-    Gtk::Box *      backupSectionBox;
+    Gtk::Box *      backupSectionBox        = 0;
     if (canBackup) {
                     backupSectionBox        = constructBackupSection();
     }
