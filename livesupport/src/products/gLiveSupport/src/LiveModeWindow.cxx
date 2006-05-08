@@ -187,6 +187,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                  *getResourceUstring("exportPlaylistMenuItem"),
                                   sigc::mem_fun(*this,
                                         &LiveModeWindow::onExportPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("uploadToHubMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onUploadToHub)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -395,6 +399,23 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
             exportPlaylistWindow->set_transient_for(*this);
             Gtk::Main::run(*exportPlaylistWindow);
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for "upload to hub" in the context menu.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onUploadToHub(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                                refSelection = treeView->get_selection();
+    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        gLiveSupport->uploadToHub(playable);
     }
 }
 

@@ -72,6 +72,14 @@ class StorageClientInterface
 {
     public:
         /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~StorageClientInterface(void)           throw ()
+        {
+        }
+
+        /**
          *  Return the version string from the storage.
          *
          *  @return the version string of the storage.
@@ -635,12 +643,38 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  A virtual destructor, as this class has virtual functions.
+         *  Upload an audio clip or playlist to the network hub.
+         *  The progress of the upload process can be monitored with
+         *  checkTransport().
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param  id          the ID of the Playable object to be uploaded.
+         *  @return a token which identifies this task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
-        virtual
-        ~StorageClientInterface(void)           throw ()
-        {
-        }
+        virtual Ptr<Glib::ustring>::Ref
+        uploadToHub(Ptr<const SessionId>::Ref       sessionId,
+                    Ptr<const UniqueId>::Ref        id)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Download an audio clip or playlist from the network hub.
+         *  The progress of the upload process can be monitored with
+         *  checkTransport().
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param  id          the ID of the Playable object to be downloaded.
+         *  @return a token which identifies this task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        downloadFromHub(Ptr<const SessionId>::Ref       sessionId,
+                        Ptr<const UniqueId>::Ref        id)
+                                                throw (XmlRpcException)
+                                                                        = 0;
 };
 
 

@@ -197,6 +197,10 @@ ScratchpadWindow :: ScratchpadWindow (
                                 *getResourceUstring("addToLiveModeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onAddToLiveMode)));
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("uploadToHubMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onUploadToHub)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -246,6 +250,10 @@ ScratchpadWindow :: ScratchpadWindow (
                                 *getResourceUstring("exportPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onExportPlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("uploadToHubMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onUploadToHub)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -505,6 +513,17 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
         exportPlaylistWindow->set_transient_for(*this);
         Gtk::Main::run(*exportPlaylistWindow);
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for "upload to hub" in the context menu.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onUploadToHub(void)                         throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    gLiveSupport->uploadToHub(playable);
 }
 
 

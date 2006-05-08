@@ -50,11 +50,13 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
+#include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "GuiWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
 #include "GLiveSupport.h"
 #include "ExportPlaylistWindow.h"
+#include "TransportList.h"
 
 
 namespace LiveSupport {
@@ -102,6 +104,11 @@ class SearchWindow : public GuiWindow
         BrowseEntry *               browseEntry;
 
         /**
+         *  The list of transports in progress.
+         */
+        TransportList *             transportList;
+
+        /**
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
@@ -147,12 +154,39 @@ class SearchWindow : public GuiWindow
         constructBrowseView(void)                               throw ();
 
         /**
+         *  Construct the advanced search view.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructTransportsView(void)                           throw ();
+
+        /**
          *  Construct the search results display.
          *
          *  @return a pointer to the new tree view (already Gtk::manage()'ed)
          */
         ScrolledWindow *
         constructSearchResultsView(void)                        throw ();
+
+        /**
+         *  Construct the right-click context menu for local audio clips.
+         */
+        void
+        constructAudioClipContextMenu(void)                     throw ();
+
+        /**
+         *  Construct the right-click context menu for local playlists.
+         */
+        void
+        constructPlaylistContextMenu(void)                      throw ();
+
+        /**
+         *  Construct the right-click context menu for remote audio clips
+         *  and playlists.
+         */
+        void
+        constructRemoteContextMenu(void)                        throw ();
 
         /**
          *  Event handler for the simple Search button getting clicked.
@@ -180,6 +214,12 @@ class SearchWindow : public GuiWindow
          */
         void
         onSearch(Ptr<SearchCriteria>::Ref       criteria)       throw ();
+
+        /**
+         *  Check the status of the "search where" input box.
+         */
+        bool
+        searchIsLocal(void)                                     throw ();
 
         /**
          *  Change the displayed search results (local or remote).
@@ -259,6 +299,18 @@ class SearchWindow : public GuiWindow
         onExportPlaylist(void)                                  throw ();
         
         /**
+         *  Signal handler for "upload to hub" in the context menu.
+         */
+        virtual void
+        onUploadToHub(void)                                     throw ();
+        
+        /**
+         *  Signal handler for "download from hub" in the context menu.
+         */
+        virtual void
+        onDownloadFromHub(void)                                 throw ();
+        
+        /**
          *  Event handler called when the the window gets hidden.
          *
          *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
@@ -331,15 +383,29 @@ class SearchWindow : public GuiWindow
         ZebraTreeView *                 searchResultsTreeView;
 
         /**
+         *  The notebook for the various tabs in the window.
+         */
+        ScrolledNotebook *              searchInput;
+
+        /**
          *  The transport token used when a remote search is pending.
          */
         Ptr<const Glib::ustring>::Ref   remoteSearchToken;
 
         /**
-         *  The pop-up context menu for found items.
+         *  The pop-up context menu for local audio clips.
          */
-        Gtk::Menu *                     contextMenu;
+        Gtk::Menu *                     audioClipContextMenu;
 
+        /**
+         *  The pop-up context menu for local playlists.
+         */
+        Gtk::Menu *                     playlistContextMenu;
+
+        /**
+         *  The pop-up context menu for remote audio clips and playlists.
+         */
+        Gtk::Menu *                     remoteContextMenu;
 
         /**
          *  Display a (usually error) message in the search results tree view.
@@ -382,6 +448,16 @@ class SearchWindow : public GuiWindow
          */
         void
         onTimer(void)                                           throw ();
+        
+        /**
+         *  Add the Playable object to the list of pending "upload to hub"
+         *  tasks displayed in the Transports tab.
+         *
+         *  @param  playable    the object to be uploaded to the hub.
+         *  @return true        on success.
+         */
+        bool
+        uploadToHub(Ptr<Playable>::Ref  playable)               throw ();
 };
 
 /* ================================================= external data structures */

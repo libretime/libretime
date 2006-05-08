@@ -460,6 +460,9 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 
         /**
          *  Update the Live Mode window.
+         *
+         *  @param  playable    (optional) add this item to the bottom of
+         *                      the live mode window.
          */
         void
         updateLiveModeWindow(Ptr<Playable>::Ref     playable
@@ -491,10 +494,15 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                                                                 throw ();
 
         /**
-         *  Update the Search Window
+         *  Update the Search Window.
+         *
+         *  @param  playable    (optional) add this item to the pending "upload
+         *                      to hub" tasks displayed in the Transports tab.
          */
         void
-        updateSearchWindow(void)                                throw ();
+        updateSearchWindow(Ptr<Playable>::Ref       playable
+                                                    = Ptr<Playable>::Ref())
+                                                                throw ();
 
         /**
          *  Update the Options Window

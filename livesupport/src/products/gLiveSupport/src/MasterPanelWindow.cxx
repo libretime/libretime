@@ -570,7 +570,8 @@ MasterPanelWindow :: updateSchedulerWindow(
  *  The event when the Search button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateSearchWindow(void)                       throw ()
+MasterPanelWindow :: updateSearchWindow(Ptr<Playable>::Ref    playable)
+                                                                    throw ()
 {
     if (!searchWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -585,8 +586,13 @@ MasterPanelWindow :: updateSearchWindow(void)                       throw ()
                                             bundle,
                                             searchButton));
     }
-
-    if (!searchWindow->is_visible()) {
+    
+    bool    dontWantUploadOrItWasOK = true;
+    if (playable) {
+        dontWantUploadOrItWasOK = searchWindow->uploadToHub(playable);
+    }
+    
+    if (dontWantUploadOrItWasOK && !searchWindow->is_visible()) {
         searchWindow->show();
     }
 }

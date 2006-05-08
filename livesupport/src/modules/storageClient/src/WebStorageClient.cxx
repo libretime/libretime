@@ -827,6 +827,62 @@ const std::string    doTransportActionTokenParamName        = "trtok";
  *----------------------------------------------------------------------------*/
 const std::string    doTransportActionActionParamName       = "action";
 
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: uploadToHub */
+
+/*------------------------------------------------------------------------------
+ *  The name of the upload to hub method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    uploadToHubMethodName = "locstor.upload2Hub";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    uploadToHubSessionIdParamName    = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    uploadToHubUniqueIdParamName     = "gunid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'with or without content' parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    uploadToHubWithContentParamName  = "withContent";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    uploadToHubTokenParamName        = "trtok";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: downloadFromHub */
+
+/*------------------------------------------------------------------------------
+ *  The name of the download from hub method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    downloadFromHubMethodName = "locstor.downloadFromHub";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    downloadFromHubSessionIdParamName    = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    downloadFromHubUniqueIdParamName     = "gunid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'with or without content' parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    downloadFromHubWithContentParamName  = "withContent";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    downloadFromHubTokenParamName        = "trtok";
+
 }
 
 /* ===============================================  local function prototypes */
@@ -2506,5 +2562,71 @@ WebStorageClient :: cancelTransport(Ptr<SessionId>::Ref             sessionId,
             = "cancel";
 
     execute(doTransportActionMethodName, parameters, result);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Upload an audio clip or playlist to the network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: uploadToHub(Ptr<const SessionId>::Ref       sessionId,
+                                Ptr<const UniqueId>::Ref        id)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[uploadToHubSessionIdParamName] 
+            = sessionId->getId();
+    parameters[uploadToHubUniqueIdParamName] 
+            = std::string(*id);
+    parameters[uploadToHubWithContentParamName] 
+            = true;
+    
+    execute(uploadToHubMethodName, parameters, result);
+    
+    checkStruct(uploadToHubMethodName,
+                result,
+                uploadToHubTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[uploadToHubTokenParamName] ));
+    
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Download an audio clip or playlist from the network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebStorageClient :: downloadFromHub(Ptr<const SessionId>::Ref       sessionId,
+                                    Ptr<const UniqueId>::Ref        id)
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[downloadFromHubSessionIdParamName] 
+            = sessionId->getId();
+    parameters[downloadFromHubUniqueIdParamName] 
+            = std::string(*id);
+    parameters[downloadFromHubWithContentParamName] 
+            = true;
+    
+    execute(downloadFromHubMethodName, parameters, result);
+    
+    checkStruct(downloadFromHubMethodName,
+                result,
+                downloadFromHubTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[downloadFromHubTokenParamName] ));
+    
+    return token;
 }
 

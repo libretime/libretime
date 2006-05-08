@@ -281,14 +281,6 @@ class Notebook : public Gtk::Alignment
         virtual void
         pagesAdded(void)                                    throw ();
 
-        /**
-         *  Make a specific page active.
-         *
-         *  @param pageNo the index of the page to make active.
-         */
-        virtual void
-        activatePage(unsigned int   pageNo)                 throw ();
-
 
     public:
         /**
@@ -311,6 +303,14 @@ class Notebook : public Gtk::Alignment
         virtual void
         appendPage(Gtk::Widget            & widget,
                    const Glib::ustring    & label)          throw ();
+
+        /**
+         *  Make a specific page active.
+         *
+         *  @param pageNo the index of the page to make active.
+         */
+        virtual void
+        activatePage(unsigned int   pageNo)                 throw ();
 };
 
 

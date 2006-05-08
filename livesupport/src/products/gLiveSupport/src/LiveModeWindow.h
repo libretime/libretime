@@ -200,6 +200,13 @@ class LiveModeWindow : public GuiWindow
         onExportPlaylist(void)                                  throw ();
         
         /**
+         *  Signal handler for the "upload to hub" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onUploadToHub(void)                                     throw ();
+        
+        /**
          *  Event handler called when the the window gets hidden.
          *
          *  This overrides GuiWindow::on_hide(), and closes the Export Playlist

@@ -1210,6 +1210,17 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         stopSchedulerClient(void)                               throw();
+
+        /**
+         *  Upload a Playable object to the network hub.
+         *
+         *  This opens the Transports tab in the Search window, and adds the
+         *  new upload task to it.
+         *
+         *  @param playable the audio clip or playlist to be uploaded.
+         */
+        void
+        uploadToHub(Ptr<Playable>::Ref  playable)               throw ();
 };
 
 /* ================================================= external data structures */

@@ -1604,3 +1604,16 @@ GLiveSupport :: stopSchedulerClient(void)                           throw ()
     system(schedulerDaemonStopCommand->c_str());
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Upload a Playable object to the network hub.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: uploadToHub(Ptr<Playable>::Ref      playable)
+                                                            throw ()
+{
+    masterPanel->updateSearchWindow(playable);
+}
+
+

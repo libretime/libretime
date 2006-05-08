@@ -138,6 +138,10 @@ GuiWindow :: on_show (void)                                         throw ()
 {
     gLiveSupport->getWindowPosition(shared_from_this());
     
+    if (windowOpenerButton) {
+        windowOpenerButton->setSelected(true);
+    }
+    
     WhiteWindow::on_show();
 }
 

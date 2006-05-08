@@ -1108,3 +1108,29 @@ TestStorageClient :: cancelTransport(Ptr<SessionId>::Ref             sessionId,
 {
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Upload an audio clip or playlist to the network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: uploadToHub(Ptr<const SessionId>::Ref      sessionId,
+                                 Ptr<const UniqueId>::Ref       id)
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Download an audio clip or playlist from the network hub.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: downloadFromHub(Ptr<const SessionId>::Ref      sessionId,
+                                     Ptr<const UniqueId>::Ref       id)
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    return token;
+}
+

@@ -76,6 +76,7 @@ root:table
         cueMenuItem:string              { "Pre_view" }
         addToLiveModeMenuItem:string    { "Add To _Live Mode" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to the network hub" }
         
         cannotEditPlaylistMsg:string
                                     { "Could not open playlist for editing." }
@@ -192,6 +193,7 @@ root:table
         simpleSearchTab:string      { "Search" }
         advancedSearchTab:string    { "Advanced Search" }
         browseTab:string            { "Browse" }
+        transportsTab:string        { "Transfers" }
         
         searchButtonLabel:string    { "Search" }
         
@@ -205,9 +207,13 @@ root:table
         addToScratchpadMenuItem:string  { "_Add To Scratchpad" }
         addToLiveModeMenuItem:string    { "Add To _Live Mode" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to the network hub" }
+        downloadFromHubMenuItem:string  { "Download from the network hub" }
         
         pleaseWaitMsg:string        { "Please wait..." }
         remoteSearchErrorMsg:string { "Search failed: {0}." }
+        uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
+        downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
     }
     
     advancedSearchEntry:table {
@@ -237,6 +243,7 @@ root:table
         removeMenuItem:string           { "_Remove" }
         playMenuItem:string             { "_Play" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to the network hub" }
         
         cuePlayerLabel:string       { "Preview" }
     }
@@ -336,6 +343,22 @@ root:table
         
         createExportErrorMsg:string { "Could not export the playlist:" }
         saveExportErrorMsg:string   { "Could not save the exported playlist." }
+    }
+
+    transportList:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+    
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+        
+        cancelUploadMenuItem:string     { "Cancel upload" }
+        cancelDownloadMenuItem:string   { "Cancel download" }
+        
+        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
     }
 
     metadataTypes:table
