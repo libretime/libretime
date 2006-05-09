@@ -62,7 +62,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestAuthenticationClientTest);
 /**
  *  The name of the configuration file for the authentication client factory.
  */
-static const std::string configFileName = "testAuthentication.xml";
+static const std::string configFileName = "../etc/testAuthentication.xml";
 
 
 /* ===============================================  local function prototypes */
