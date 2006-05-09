@@ -68,7 +68,8 @@ class uiExchange
         
         header('Content-Length: '.filesize($check['tmpfile']));
         header("Content-Transfer-Encoding: binary");
-        header('Content-Disposition: attachment; filename="'.basename($check['tmpfile']).'"');
+        $newname='backup_'.date("Ymd", filectime($check['tmpfile'])).'.tar';
+        header('Content-Disposition: attachment; filename="'.$newname.'"');
         
         readfile($check['tmpfile']);   
     }

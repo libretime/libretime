@@ -140,9 +140,10 @@ class Backup {
      *
      *  @param token : token
      *  @return hasharray with field: 
-     *      status : string - susccess | working | fault
-     *      token  : stirng - backup token
-     *      url    : string - access url
+     *      status  : string - susccess | working | fault
+     *      token   : stirng - backup token
+     *      url     : string - access url
+     *      tmpfile : string - access filename
      */
     function checkBackup($token) {
         if ($this->loglevel=='debug') {
@@ -154,6 +155,7 @@ class Backup {
         switch ($status) {
             case 'success':
                 $r['url']       = $this->gb->getUrlPart()."access/$token.".BACKUP_EXT;
+                $r['tmpfile']   = $this->gb->accessDir."/$token.".BACKUP_EXT;
             case 'working':
             case 'fault':
                 $r['status']    = $status;

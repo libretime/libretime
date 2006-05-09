@@ -69,7 +69,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             {else}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
             {/if}
-            {if $SUBJECTS->isMemberOf('Admin')}
+            {if $SUBJECTS->isMemberOf('Admins')}
                 <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
             {/if}
             {if $SUBJECTS->isMemberOf('Backup')}
