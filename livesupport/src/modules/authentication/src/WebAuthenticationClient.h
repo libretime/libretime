@@ -272,11 +272,13 @@ class WebAuthenticationClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Reset the list of preferences to its initial (empty) state.
+         *  Reset the authentication client.
+         *  Invalidates all active session IDs, and resets the list of 
+         *  preferences to its initial (empty) state.
          *
          *  @exception XmlRpcException if the server returns an error.
          */
-        void
+        virtual void
         reset(void)
                                                 throw (XmlRpcException);
 };

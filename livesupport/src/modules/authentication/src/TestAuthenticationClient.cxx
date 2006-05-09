@@ -280,3 +280,17 @@ TestAuthenticationClient :: deletePreferencesItem(
     preferences.erase(it);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Reset the list of preferences to its initial (empty) state.
+ *----------------------------------------------------------------------------*/
+void
+TestAuthenticationClient :: reset(void)
+                                                throw (XmlRpcException)
+{
+    sessionIdList.clear();
+    sessionCounter = 0;
+    
+    preferences.clear();
+}
+

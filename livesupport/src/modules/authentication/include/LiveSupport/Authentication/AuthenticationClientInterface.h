@@ -204,6 +204,18 @@ class AuthenticationClientInterface
                                                                         = 0;
 
         /**
+         *  Reset the authentication client.
+         *  Invalidates all active session IDs, and resets the list of 
+         *  preferences to its initial (empty) state.
+         *
+         *  @exception XmlRpcException if the server returns an error.
+         */
+        virtual void
+        reset(void)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual

@@ -113,6 +113,10 @@ AuthenticationClientFactoryTest :: firstTest(void)
                             acf = AuthenticationClientFactory::getInstance();
     Ptr<AuthenticationClientInterface>::Ref
                             authentication = acf->getAuthenticationClient();
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->reset()
+    );
 
     Ptr<SessionId>::Ref     sessionId;
     
@@ -143,6 +147,10 @@ AuthenticationClientFactoryTest :: preferencesTest(void)
                             acf = AuthenticationClientFactory::getInstance();
     Ptr<AuthenticationClientInterface>::Ref
                             authentication = acf->getAuthenticationClient();
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->reset()
+    );
 
     Ptr<SessionId>::Ref             sessionId;
     Ptr<const Glib::ustring>::Ref   prefValue;

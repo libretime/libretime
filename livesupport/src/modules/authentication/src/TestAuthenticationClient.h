@@ -261,6 +261,17 @@ class TestAuthenticationClient :
         deletePreferencesItem(Ptr<SessionId>::Ref           sessionId,
                               const Glib::ustring &         key)
                                                 throw (XmlRpcException);
+
+        /**
+         *  Reset the authentication client.
+         *  Invalidates all active session IDs, and resets the list of 
+         *  preferences to its initial (empty) state.
+         *
+         *  @exception XmlRpcException if the server returns an error.
+         */
+        virtual void
+        reset(void)
+                                                throw (XmlRpcException);
 };
 
 
