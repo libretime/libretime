@@ -116,7 +116,7 @@ root:table
 
         fileChooserDialogTitle:string
                                     { "Open File" }
-        clipUploadedMsg:string      { "Uploaded clip ''{0}''." }
+        fileUploadedMsg:string      { "Uploaded ''{0}''." }
         couldNotOpenFileMsg:string  { "The file could not be opened." }
         couldNotReadLengthMsg:string 
                                     { "Could not determine audio clip length." }

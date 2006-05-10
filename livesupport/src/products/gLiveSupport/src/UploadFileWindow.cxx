@@ -72,10 +72,9 @@ UploadFileWindow :: UploadFileWindow (
           : GuiWindow(gLiveSupport,
                       bundle,
                       "",
-                      windowOpenerButton)
+                      windowOpenerButton),
+            fileType(invalidType)
 {
-    isAudioClipValid = false;
-
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     try {
@@ -302,19 +301,43 @@ void
 UploadFileWindow :: updateFileInfo(void)                        throw ()
 {
     std::string             fileName = fileNameEntry->get_text().raw();
-    Ptr<std::string>::Ref   newUri(new std::string("file://"));
-    newUri->append(fileName);
 
     // see if the file exists, and is readable
     std::ifstream   file(fileName.c_str());
     if (!file.good()) {
         file.close();
         statusBar->set_text(*getResourceUstring("couldNotOpenFileMsg"));
-        isAudioClipValid = false;
+        fileType = invalidType;
         return;
     }
     file.close();
+    
+    fileType = determineFileType(fileName);
+    
+    switch (fileType) {
+        case audioClipType:         readAudioClipInfo(fileName);
+                                    break;
+        
+        case playlistArchiveType:   statusBar->set_text("");
+                                    break;
+        
+        case invalidType:           statusBar->set_text(*getResourceUstring(
+                                                    "unsupportedFileTypeMsg"));
+                                    break;
+    }
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Read the playlength and metadata info from the binary audio file.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: readAudioClipInfo(const std::string &   fileName)
+                                                                throw ()
+{
+    Ptr<std::string>::Ref   newUri(new std::string("file://"));
+    newUri->append(fileName);
+    
     Ptr<time_duration>::Ref     playlength;
     try {
         playlength = readPlaylength(fileName);
@@ -341,7 +364,7 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
     } catch (std::invalid_argument &e) {
         statusBar->set_text(e.what());
-        isAudioClipValid = false;
+        fileType = invalidType;
         return;
     }
 
@@ -357,7 +380,6 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
     }
 
     statusBar->set_text("");
-    isAudioClipValid = true;
 }
 
 
@@ -379,10 +401,24 @@ UploadFileWindow :: onFileNameEntryLeave(GdkEventFocus    * event)
 void
 UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 {
-    if (!isAudioClipValid) {
-        return;
+    switch (fileType) {
+        case audioClipType:         uploadAudioClip();
+                                    break;
+        
+        case playlistArchiveType:   uploadPlaylistArchive();
+                                    break;
+        
+        case invalidType:           break;
     }
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Upload an audio clip to the storage.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: uploadAudioClip(void)                       throw ()
+{
     for (unsigned int i=0; i < metadataKeys.size(); ++i) {
         Ptr<const Glib::ustring>::Ref   metadataKey   = metadataKeys[i];
         Gtk::Entry *                    metadataEntry = metadataEntries[i];
@@ -401,22 +437,38 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
     }
 
     try {
-        gLiveSupport->uploadFile(audioClip);
+        gLiveSupport->uploadAudioClip(audioClip);
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
         return;
     }
 
-    statusBar->set_text(*formatMessage("clipUploadedMsg",
+    clearEverything();
+    statusBar->set_text(*formatMessage("fileUploadedMsg",
                                        *audioClip->getTitle() ));
+}
 
-    fileNameEntry->set_text("");
-    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
-        Gtk::Entry *    metadataEntry = metadataEntries[i];
-        metadataEntry->set_text("");
+
+/*------------------------------------------------------------------------------
+ *  Upload a playlist archive to the storage.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: uploadPlaylistArchive(void)                 throw ()
+{
+    Ptr<const Glib::ustring>::Ref   path(new const Glib::ustring(
+                                                fileNameEntry->get_text() ));
+    
+    Ptr<Playlist>::Ref              playlist;
+    try {
+        playlist = gLiveSupport->uploadPlaylistArchive(path);
+    } catch (XmlRpcException &e) {
+        statusBar->set_text(e.what());
+        return;
     }
-
-    isAudioClipValid = false;
+    
+    clearEverything();
+    statusBar->set_text(*formatMessage("fileUploadedMsg",
+                                       *playlist->getTitle() ));
 }
 
 
@@ -426,14 +478,7 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 void
 UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
 {
-    fileNameEntry->set_text("");
-    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
-        Gtk::Entry *    metadataEntry = metadataEntries[i];
-        metadataEntry->set_text("");
-    }
-    statusBar->set_text("");
-    isAudioClipValid = false;
-
+    clearEverything();
     hide();
 }
 
@@ -445,8 +490,8 @@ Ptr<time_duration>::Ref
 UploadFileWindow :: readPlaylength(const std::string &   fileName)
                                                 throw (std::invalid_argument)
 {
-    // TODO: replace this with mime-type detection (gnomevfs?) and
-    // the appropriate TagLib::X::File subclass constructors
+    // TODO: use the appropriate TagLib::X::File subclass constructors,
+    // once we find some way of determining the MIME type.
     TagLib::FileRef             fileRef(fileName.c_str());
     if (fileRef.isNull()) {
         throw std::invalid_argument("unsupported file type");
@@ -460,5 +505,46 @@ UploadFileWindow :: readPlaylength(const std::string &   fileName)
                     + microseconds(audioProperties->length_microseconds()) ));
     }
     return length;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Determine the type of the given file.
+ *----------------------------------------------------------------------------*/
+UploadFileWindow::FileType
+UploadFileWindow :: determineFileType(const std::string &   fileName)
+                                                                throw ()
+{
+    unsigned int    dotPosition = fileName.find('.');
+    if (dotPosition == std::string::npos) {
+        return invalidType;
+    }
+    
+    std::string     extension   = fileName.substr(dotPosition);
+    if (extension == ".mp3" || extension == ".ogg") {
+        return audioClipType;
+        
+    } else if (extension == ".tar") {
+        return playlistArchiveType;
+        
+    } else {
+        return invalidType;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Clear all the input fields and set the fileType to 'invalidType'.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: clearEverything(void)                       throw ()
+{
+    fileNameEntry->set_text("");
+    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
+        Gtk::Entry *    metadataEntry = metadataEntries[i];
+        metadataEntry->set_text("");
+    }
+    statusBar->set_text("");
+    fileType = invalidType;
 }
 

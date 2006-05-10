@@ -178,15 +178,83 @@ class UploadFileWindow : public GuiWindow
         Gtk::Label                * statusBar;
 
         /**
-         *  The name of the file to upload.
+         *  The audio clip to be uploaded.
          */
         Ptr<AudioClip>::Ref         audioClip;
 
         /**
-         *  Signals if the audio clip is valid.
+         *  The possible file types.
          */
-        bool                        isAudioClipValid;
+        typedef enum { audioClipType, playlistArchiveType, invalidType }
+                                    FileType;
 
+        /**
+         *  The type of the currently selected file.
+         */
+        FileType                    fileType;
+
+        /**
+         *  Update the information for the file to upload, based on the
+         *  value of the fileNameEntry text entry field.
+         */
+        void
+        updateFileInfo(void)                                throw ();
+
+        /**
+         *  Read the playlength and metadata info from the binary audio file.
+         *
+         *  @param  fileName    the local file name (with path) for the 
+         *                      binary audio file.
+         */
+        void
+        readAudioClipInfo(const std::string &   fileName)   throw ();
+
+        /**
+         *  Determine the length of an audio file on disk.
+         *
+         *  @param fileName     a binary audio file (e.g., /tmp/some_clip.mp3)
+         *  @return             the length of the file; a null pointer if the
+         *                      length could not be read (see bug #1426)
+         *  @exception std::invalid_argument if the file is not found, or its
+         *                                   format is not supported by TagLib
+         */
+        Ptr<time_duration>::Ref
+        readPlaylength(const std::string &  fileName)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Upload an audio clip to the storage.
+         */
+        void
+        uploadAudioClip(void)                               throw ();
+
+        /**
+         *  Upload a playlist archive to the storage.
+         */
+        void
+        uploadPlaylistArchive(void)                         throw ();
+
+        /**
+         *  Determine the type of the given file.
+         *
+         *  This method looks at the extension only.
+         *  TODO: replace this with proper mime-type detection
+         *  (gnomevfs, system("file fileName"), or ...?)
+         *
+         *  @param  fileName    the name (with path) of the local file.
+         *  @return the type of the file.
+         */
+        FileType
+        determineFileType(const std::string &   fileName)   throw ();
+
+        /**
+         *  Clear all the input fields and set the fileType to 'invalidType'.
+         */
+        void
+        clearEverything(void)                               throw ();
+
+
+    protected:
         /**
          *  Function to catch the event of the choose file button being
          *  pressed.
@@ -208,7 +276,7 @@ class UploadFileWindow : public GuiWindow
          *  @param event the event recieved.
          *  @return true if the event has been processed, false otherwise.
          */
-        bool
+        virtual bool
         onFileNameEntryLeave(GdkEventFocus    * event)      throw ();
 
         /**
@@ -216,26 +284,6 @@ class UploadFileWindow : public GuiWindow
          */
         virtual void
         onCloseButtonClicked(void)                          throw ();
-
-        /**
-         *  Update the information for the file to upload, based on the
-         *  value of the fileNameEntry text entry field.
-         */
-        void
-        updateFileInfo(void)                                throw ();
-
-        /**
-         *  Determine the length of an audio file on disk.
-         *
-         *  @param fileName     a binary audio file (e.g., /tmp/some_clip.mp3)
-         *  @return             the length of the file; a null pointer if the
-         *                      length could not be read (see bug #1426)
-         *  @exception std::invalid_argument if the file is not found, or its
-         *                                   format is not supported by TagLib
-         */
-        Ptr<time_duration>::Ref
-        readPlaylength(const std::string &  fileName)
-                                                throw (std::invalid_argument);
 
 
     public:

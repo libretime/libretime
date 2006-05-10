@@ -713,6 +713,27 @@ class TestStorageClient :
                                                 throw (XmlRpcException);
 
         /**
+         *  Import a playlist archive to the local storage.
+         *  This must be a tar file, in the LS Archive format, as produced
+         *  by exportPlaylistOpen/Close() when called with the internalFormat
+         *  parameter.
+         *
+         *  The size of the tar file must be less than 2 GB, because 
+         *  the storage server can not deal with larger files.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param path      the path for the playlist archive file.
+         *  @return          on success, the unique ID of the imported playlist.
+         *
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or we have not logged in yet.
+         */
+        virtual Ptr<UniqueId>::Ref
+        importPlaylist(Ptr<SessionId>::Ref              sessionId,
+                       Ptr<const Glib::ustring>::Ref    path)       const
+                                                throw (XmlRpcException);
+
+        /**
          *  Check the status of the asynchronous network transport operation.
          *
          *  If the return value is

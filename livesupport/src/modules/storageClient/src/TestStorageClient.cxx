@@ -1080,6 +1080,19 @@ TestStorageClient :: exportPlaylistClose(
 
 
 /*------------------------------------------------------------------------------
+ *  Import a playlist archive to the local storage.
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+TestStorageClient :: importPlaylist(
+                            Ptr<SessionId>::Ref             sessionId,
+                            Ptr<const Glib::ustring>::Ref   path)       const
+                                                throw (XmlRpcException)
+{
+    throw XmlRpcException("Method not implemented.");
+}
+
+
+/*------------------------------------------------------------------------------
  *  Check the status of the asynchronous network transport operation.
  *----------------------------------------------------------------------------*/
 StorageClientInterface::TransportState

@@ -532,13 +532,23 @@ class GLiveSupport : public LocalizedConfigurable,
         showLoggedInUI(void)                                    throw ();
 
         /**
-         *  Upload a file to the storage.
+         *  Upload an audio clip to the storage.
          *
-         *  @param audioClip the file to upload
+         *  @param  audioClip   the audio clip to upload.
          *  @exception XmlRpcException on upload failures.
          */
         void
-        uploadFile(Ptr<AudioClip>::Ref      audioClip)
+        uploadAudioClip(Ptr<AudioClip>::Ref     audioClip)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Upload a playlist archive to the storage.
+         *
+         *  @param  path        the path of the file to upload.
+         *  @exception XmlRpcException on upload failures.
+         */
+        Ptr<Playlist>::Ref
+        uploadPlaylistArchive(Ptr<const Glib::ustring>::Ref     path)
                                                     throw (XmlRpcException);
 
         /**

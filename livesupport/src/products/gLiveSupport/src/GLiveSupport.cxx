@@ -873,17 +873,35 @@ GLiveSupport :: releaseOpennedPlaylists(void)               throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Upload a file to the server.
+ *  Upload an audio clip to the local storage.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref  audioClip)
+GLiveSupport :: uploadAudioClip(Ptr<AudioClip>::Ref     audioClip)
                                                     throw (XmlRpcException)
 {
     storage->storeAudioClip(sessionId, audioClip);
 
     // this will also add it to the local cache
     addToScratchpad(audioClip);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Upload a playlist archive to the local storage.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: uploadPlaylistArchive(Ptr<const Glib::ustring>::Ref     path)
+                                                    throw (XmlRpcException)
+{
+    Ptr<UniqueId>::Ref  id = storage->importPlaylist(sessionId, path);
+    Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id);
+    
+    // this will also add it to the local cache
+    addToScratchpad(playlist);
+    
+    return playlist;
 }
 
 

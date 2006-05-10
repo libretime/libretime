@@ -754,6 +754,46 @@ const std::string    exportPlaylistUrlParamName = "url";
 const std::string    exportPlaylistTokenParamName = "token";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: importPlaylist */
+
+/*------------------------------------------------------------------------------
+ *  The name of the opening 'import playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistOpenMethodName 
+                            = "locstor.importPlaylistOpen";
+
+/*------------------------------------------------------------------------------
+ *  The name of the closing 'import playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistCloseMethodName 
+                            = "locstor.importPlaylistClose";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistSessionIdParamName   = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the checksum parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistChecksumParamName    = "chsum";
+
+/*------------------------------------------------------------------------------
+ *  The name of the writable URL parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistUrlParamName         = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter for both 'open' and 'close'
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistTokenParamName       = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the unique ID parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    importPlaylistUniqueIdParamName    = "gunid";
+
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: remoteSearchXXXX */
 
 /*------------------------------------------------------------------------------
@@ -2487,6 +2527,96 @@ WebStorageClient :: exportPlaylistClose(
             = std::string(*token);
 
     execute(exportPlaylistCloseMethodName, parameters, result);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Import a playlist archive to the local storage.
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+WebStorageClient :: importPlaylist(
+                            Ptr<SessionId>::Ref             sessionId,
+                            Ptr<const Glib::ustring>::Ref   path)       const
+                                                throw (XmlRpcException)
+{
+    std::ifstream   ifs(path->c_str());
+    if (!ifs) {
+        ifs.close();
+        throw XmlRpcIOException("Could not read the playlist archive file.");
+    }
+    std::string     md5string = Md5(ifs);
+    ifs.close();
+
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[importPlaylistSessionIdParamName] 
+            = sessionId->getId();
+    parameters[importPlaylistChecksumParamName] 
+            = md5string;
+
+    execute(importPlaylistOpenMethodName, parameters, result);
+    
+    checkStruct(importPlaylistOpenMethodName,
+                result,
+                importPlaylistUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(importPlaylistOpenMethodName,
+                result,
+                importPlaylistTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    std::string url     = std::string(result[importPlaylistUrlParamName]);
+    std::string token   = std::string(result[importPlaylistTokenParamName]);
+
+    FILE*   binaryFile  = fopen(path->c_str(), "rb");
+    if (!binaryFile) {
+        throw XmlRpcIOException("The playlist archive file disappeared.");
+    }
+    fseek(binaryFile, 0, SEEK_END);
+    long    binaryFileSize  = ftell(binaryFile);
+    rewind(binaryFile);
+
+    CURL*    handle     = curl_easy_init();
+    if (!handle) {
+        throw XmlRpcCommunicationException("Could not obtain curl handle.");
+    }
+    
+    int    status = curl_easy_setopt(handle, CURLOPT_READDATA, binaryFile);
+    status |=   curl_easy_setopt(handle, CURLOPT_INFILESIZE, binaryFileSize); 
+                                         // works for files of size up to 2 GB
+    status |=   curl_easy_setopt(handle, CURLOPT_PUT, 1); 
+    status |=   curl_easy_setopt(handle, CURLOPT_URL, url.c_str()); 
+
+    if (status) {
+        throw XmlRpcCommunicationException("Could not set curl options.");
+    }
+
+    status =    curl_easy_perform(handle);
+
+    if (status) {
+        throw XmlRpcCommunicationException("Error uploading file.");
+    }
+
+    curl_easy_cleanup(handle);
+    fclose(binaryFile);
+    
+    parameters.clear();
+    parameters[importPlaylistTokenParamName] 
+            = token;
+    
+    execute(importPlaylistCloseMethodName, parameters, result);
+    
+    checkStruct(importPlaylistCloseMethodName,
+                result,
+                importPlaylistUniqueIdParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<UniqueId>::Ref  id(new UniqueId(std::string(
+                                result[importPlaylistUniqueIdParamName] )));
+    return id;
 }
 
 
