@@ -81,6 +81,7 @@ class WebStorageClientTest : public BaseTestMethod
     CPPUNIT_TEST(browseTest);
     CPPUNIT_TEST(createBackupTest);
     CPPUNIT_TEST(exportPlaylistTest);
+    CPPUNIT_TEST(importPlaylistTest);
     CPPUNIT_TEST(remoteSearchTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -99,7 +100,9 @@ class WebStorageClientTest : public BaseTestMethod
          *  Auxiliary function for exportPlaylistTest().
          */
         void
-        exportPlaylistHelper(StorageClientInterface::ExportFormatType   format)
+        exportPlaylistHelper(
+                        Ptr<UniqueId>::Ref                          playlistId,
+                        StorageClientInterface::ExportFormatType    format)
                                                 throw (CPPUNIT_NS::Exception);
 
     protected:
@@ -191,6 +194,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         exportPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the importPlaylist() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        importPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the remoteSearchXxxx() functions.

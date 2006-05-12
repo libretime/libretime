@@ -46,17 +46,19 @@
 
 #include "WebStorageClient.h"
 #include "LiveSupport/Core/SessionId.h"
-
 #include "LiveSupport/Core/XmlRpcException.h"
 #include "LiveSupport/Core/XmlRpcCommunicationException.h"
 #include "LiveSupport/Core/XmlRpcMethodFaultException.h"
 #include "LiveSupport/Core/XmlRpcMethodResponseException.h"
 #include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
 #include "LiveSupport/Core/XmlRpcIOException.h"
+#include "LiveSupport/Core/FileTools.h"
 
 #include "WebStorageClientTest.h"
 
 using namespace std;
+using namespace boost::posix_time;
+
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Storage;
@@ -871,8 +873,10 @@ void
 WebStorageClientTest :: exportPlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    exportPlaylistHelper(StorageClientInterface::internalFormat);
-    exportPlaylistHelper(StorageClientInterface::smilFormat);
+    Ptr<UniqueId>::Ref          playlistId(new UniqueId(1));
+    
+    exportPlaylistHelper(playlistId, StorageClientInterface::internalFormat);
+    exportPlaylistHelper(playlistId, StorageClientInterface::smilFormat);
 }
 
 
@@ -881,7 +885,8 @@ WebStorageClientTest :: exportPlaylistTest(void)
  *----------------------------------------------------------------------------*/
 void
 WebStorageClientTest :: exportPlaylistHelper(
-                            StorageClientInterface::ExportFormatType    format)
+                    Ptr<UniqueId>::Ref                          playlistId,
+                    StorageClientInterface::ExportFormatType    format)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<SessionId>::Ref         sessionId;
@@ -890,7 +895,6 @@ WebStorageClientTest :: exportPlaylistHelper(
     );
     CPPUNIT_ASSERT(sessionId);
     
-    Ptr<UniqueId>::Ref          playlistId(new UniqueId(1));
     Ptr<Glib::ustring>::Ref     url(new Glib::ustring(""));
     Ptr<Glib::ustring>::Ref     token;
     
@@ -899,13 +903,83 @@ WebStorageClientTest :: exportPlaylistHelper(
     );
     CPPUNIT_ASSERT(token);
     CPPUNIT_ASSERT(url);
-    CPPUNIT_ASSERT(*url != "");
-    // TODO: test accessibility of the URL?
+    CPPUNIT_ASSERT_NO_THROW(
+        FileTools::copyUrlToFile(*url, "tmp/testExportedPlaylist.tar")
+    );
     
     CPPUNIT_ASSERT_NO_THROW(
         wsc->exportPlaylistClose(token);
     );
-    // TODO: test non-accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->logout(sessionId);
+    );
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the importPlaylist() function.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: importPlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref         sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q")
+    );
+    CPPUNIT_ASSERT(sessionId);
+        
+    Ptr<UniqueId>::Ref          playlistId;
+    CPPUNIT_ASSERT_NO_THROW(
+        playlistId = wsc->createPlaylist(sessionId)
+    );
+    
+    Ptr<Playlist>::Ref          playlist;
+    CPPUNIT_ASSERT_NO_THROW(
+        playlist = wsc->editPlaylist(sessionId, playlistId)
+    );
+    
+    Ptr<UniqueId>::Ref          audioClipId(new UniqueId(0x10001));
+    Ptr<AudioClip>::Ref         audioClip;
+    CPPUNIT_ASSERT_NO_THROW(
+        audioClip = wsc->getAudioClip(sessionId, audioClipId)
+    );
+    
+    Ptr<time_duration>::Ref     relativeOffset(new time_duration(0,0,0,0));
+    CPPUNIT_ASSERT_NO_THROW(
+        playlist->addAudioClip(audioClip, relativeOffset)
+    );
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->savePlaylist(sessionId, playlist)
+    );
+    
+    exportPlaylistHelper(playlistId, StorageClientInterface::internalFormat);
+    
+    // importing a playlist already in the storage: error
+    Ptr<Glib::ustring>::Ref     path(new Glib::ustring(
+                                            "tmp/testExportedPlaylist.tar"));
+    CPPUNIT_ASSERT_THROW(
+        wsc->importPlaylist(sessionId, path),
+        XmlRpcMethodFaultException
+    );
+    
+    // deleting the playlist from the storage...
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->reset()
+    );
+    
+    sessionId.reset();
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q")
+    );
+    CPPUNIT_ASSERT(sessionId);
+    
+    // ... and then importing it: this should be OK
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->importPlaylist(sessionId, path)
+    );
     
     CPPUNIT_ASSERT_NO_THROW(
         authentication->logout(sessionId);
