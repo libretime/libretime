@@ -39,11 +39,11 @@
 #error need pwd.h
 #endif
 
-#include <curl/curl.h>
-#include <curl/easy.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/stock.h>
 #include <gtkmm/paned.h>
+
+#include "LiveSupport/Core/FileTools.h"
 
 #include "BackupView.h"
 
@@ -341,47 +341,12 @@ BackupView :: onSaveButtonClicked(void)                             throw ()
     }
     
     fileName->assign(dialog->get_filename());
-    copyUrlToFile(url, fileName);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Fetch the backup file from an URL and save it to a local file.
- *----------------------------------------------------------------------------*/
-bool
-BackupView :: copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
-                            Ptr<Glib::ustring>::Ref   fileName)     throw ()
-{
-    FILE*   localFile      = fopen(fileName->c_str(), "wb");
-    if (!localFile) {
-        return false;
-    }
-
-    CURL*    handle     = curl_easy_init();
-    if (!handle) {
-        fclose(localFile);
-        return false;
-    }
+    try {
+        FileTools::copyUrlToFile(*url, *fileName);
     
-    int    status =   curl_easy_setopt(handle, CURLOPT_URL, url->c_str()); 
-    status |=   curl_easy_setopt(handle, CURLOPT_WRITEDATA, localFile);
-    status |=   curl_easy_setopt(handle, CURLOPT_HTTPGET);
-
-    if (status) {
-        fclose(localFile);
-        return false;
+    } catch (std::runtime_error &e) {
+        // TODO: handle error
     }
-
-    status =    curl_easy_perform(handle);
-
-    if (status) {
-        fclose(localFile);
-        return false;
-    }
-
-    curl_easy_cleanup(handle);
-    fclose(localFile);
-    return true;
 }
 
 

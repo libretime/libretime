@@ -40,12 +40,9 @@
 #endif
 
 #include <iostream>
-#include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcClient.h>
 #include <XmlRpcUtil.h>
-#include <curl/curl.h>
-#include <curl/easy.h>
 
 #include "LiveSupport/Core/Md5.h"
 #include "LiveSupport/Core/XmlRpcCommunicationException.h"
@@ -55,6 +52,8 @@
 #include "LiveSupport/Core/XmlRpcIOException.h"
 #include "LiveSupport/Core/XmlRpcInvalidDataException.h"
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/FileTools.h"
+
 #include "WebStorageClient.h"
 
 using namespace boost::posix_time;
@@ -1900,40 +1899,13 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     
     std::string url     = std::string(result[storeAudioClipUrlParamName]);
     std::string token   = std::string(result[storeAudioClipTokenParamName]);
-
-    FILE*   binaryFile      = fopen(binaryFileName.c_str(), "rb");
-    if (!binaryFile) {
-        throw XmlRpcIOException("Binary audio clip file not found.");
-    }
-    fseek(binaryFile, 0, SEEK_END);
-    long    binaryFileSize  = ftell(binaryFile);
-    rewind(binaryFile);
-
-    CURL*    handle     = curl_easy_init();
-    if (!handle) {
-        throw XmlRpcCommunicationException("Could not obtain curl handle.");
-    }
     
-    int    status = curl_easy_setopt(handle, CURLOPT_READDATA, binaryFile);
-    status |=   curl_easy_setopt(handle, CURLOPT_INFILESIZE, binaryFileSize); 
-                                         // works for files of size up to 2 GB
-    status |=   curl_easy_setopt(handle, CURLOPT_PUT, 1); 
-    status |=   curl_easy_setopt(handle, CURLOPT_URL, url.c_str()); 
-//  status |=   curl_easy_setopt(handle, CURLOPT_HEADER, 1);
-//  status |=   curl_easy_setopt(handle, CURLOPT_ENCODING, "deflate");
-
-    if (status) {
-        throw XmlRpcCommunicationException("Could not set curl options.");
+    try {
+        FileTools::copyFileToUrl(binaryFileName, url);
+        
+    } catch (std::runtime_error &e) {
+        throw XmlRpcCommunicationException(e.what());
     }
-
-    status =    curl_easy_perform(handle);
-
-    if (status) {
-        throw XmlRpcCommunicationException("Error uploading file.");
-    }
-
-    curl_easy_cleanup(handle);
-    fclose(binaryFile);
     
     parameters.clear();
     parameters[storeAudioClipSessionIdParamName] 
@@ -2570,38 +2542,13 @@ WebStorageClient :: importPlaylist(
     
     std::string url     = std::string(result[importPlaylistUrlParamName]);
     std::string token   = std::string(result[importPlaylistTokenParamName]);
-
-    FILE*   binaryFile  = fopen(path->c_str(), "rb");
-    if (!binaryFile) {
-        throw XmlRpcIOException("The playlist archive file disappeared.");
-    }
-    fseek(binaryFile, 0, SEEK_END);
-    long    binaryFileSize  = ftell(binaryFile);
-    rewind(binaryFile);
-
-    CURL*    handle     = curl_easy_init();
-    if (!handle) {
-        throw XmlRpcCommunicationException("Could not obtain curl handle.");
-    }
     
-    int    status = curl_easy_setopt(handle, CURLOPT_READDATA, binaryFile);
-    status |=   curl_easy_setopt(handle, CURLOPT_INFILESIZE, binaryFileSize); 
-                                         // works for files of size up to 2 GB
-    status |=   curl_easy_setopt(handle, CURLOPT_PUT, 1); 
-    status |=   curl_easy_setopt(handle, CURLOPT_URL, url.c_str()); 
-
-    if (status) {
-        throw XmlRpcCommunicationException("Could not set curl options.");
+    try {
+        FileTools::copyFileToUrl(*path, url);
+        
+    } catch (std::runtime_error &e) {
+        throw XmlRpcCommunicationException(e.what());
     }
-
-    status =    curl_easy_perform(handle);
-
-    if (status) {
-        throw XmlRpcCommunicationException("Error uploading file.");
-    }
-
-    curl_easy_cleanup(handle);
-    fclose(binaryFile);
     
     parameters.clear();
     parameters[importPlaylistTokenParamName] 

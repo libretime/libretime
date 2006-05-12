@@ -39,11 +39,10 @@
 #error need pwd.h
 #endif
 
-#include <curl/curl.h>
-#include <curl/easy.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/stock.h>
 
+#include "LiveSupport/Core/FileTools.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
 #include "ExportPlaylistWindow.h"
@@ -215,8 +214,10 @@ ExportPlaylistWindow :: onSaveButtonClicked(void)                   throw ()
     // save the exported playlist as a local file
     if (result == Gtk::RESPONSE_OK) {
         fileName->assign(dialog->get_filename());
-        bool success = copyUrlToFile(url, fileName);
-        if (!success) {
+        try {
+            FileTools::copyUrlToFile(*url, *fileName);
+            
+        } catch (std::runtime_error &e) {
             Ptr<Glib::ustring>::Ref errorMsg = getResourceUstring(
                                                     "saveExportErrorMsg");
             gLiveSupport->displayMessageWindow(errorMsg);
@@ -227,47 +228,6 @@ ExportPlaylistWindow :: onSaveButtonClicked(void)                   throw ()
     resetToken();
     
     hide();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Fetch the exported playlist from a URL and save it to a local file.
- *----------------------------------------------------------------------------*/
-bool
-ExportPlaylistWindow :: copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
-                                      Ptr<Glib::ustring>::Ref   fileName)
-                                                                    throw ()
-{
-    FILE*   localFile      = fopen(fileName->c_str(), "wb");
-    if (!localFile) {
-        return false;
-    }
-
-    CURL*    handle     = curl_easy_init();
-    if (!handle) {
-        fclose(localFile);
-        return false;
-    }
-    
-    int    status =   curl_easy_setopt(handle, CURLOPT_URL, url->c_str()); 
-    status |=   curl_easy_setopt(handle, CURLOPT_WRITEDATA, localFile);
-    status |=   curl_easy_setopt(handle, CURLOPT_HTTPGET);
-
-    if (status) {
-        fclose(localFile);
-        return false;
-    }
-
-    status =    curl_easy_perform(handle);
-
-    if (status) {
-        fclose(localFile);
-        return false;
-    }
-
-    curl_easy_cleanup(handle);
-    fclose(localFile);
-    return true;
 }
 
 

@@ -140,17 +140,6 @@ class BackupView : public Gtk::VBox,
         constructBackupListView(void)                               throw ();
         
         /**
-         *  Fetch the backup file from an URL and save it to a local file.
-         *
-         *  @param  url         the URL to fetch.
-         *  @param  fileName    the local file to save as.
-         *  @return     the status reported by curl (true if everything is OK).
-         */
-        bool
-        copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
-                      Ptr<Glib::ustring>::Ref   fileName)           throw ();
-        
-        /**
          *  Read the title of the backup from the entry field.
          *  If the entry is blank, a default title is used.
          *

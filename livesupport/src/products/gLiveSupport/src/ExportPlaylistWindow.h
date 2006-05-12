@@ -87,17 +87,6 @@ class ExportPlaylistWindow : public GuiWindow
         ExportFormatRadioButtons *      formatButtons;
         
         /**
-         *  Fetch the exported playlist from a URL and save it to a local file.
-         *
-         *  @param  url         the URL to fetch.
-         *  @param  fileName    the local file to save as.
-         *  @return     the status reported by curl (true if everything is OK).
-         */
-        bool
-        copyUrlToFile(Ptr<Glib::ustring>::Ref   url,
-                      Ptr<Glib::ustring>::Ref   fileName)           throw ();
-        
-        /**
          *  Cancel the current operation.
          *  Call exportPlaylistClose() on token, and reset it to 0.
          */
