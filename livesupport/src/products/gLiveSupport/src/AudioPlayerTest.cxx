@@ -45,7 +45,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Core/AudioClip.h"
 #include "LiveSupport/Core/Playlist.h"
@@ -55,7 +55,7 @@
 
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::gLiveSupport;
 

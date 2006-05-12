@@ -45,7 +45,7 @@
 #include <XmlRpcValue.h>
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 #include "SchedulerDaemon.h"
@@ -54,7 +54,7 @@
 
 
 using namespace LiveSupport::Db;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::Authentication;
 

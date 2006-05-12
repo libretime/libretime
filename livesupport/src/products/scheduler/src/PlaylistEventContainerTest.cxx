@@ -44,7 +44,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "PlayLogFactory.h"
@@ -58,7 +58,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Db;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::Authentication;

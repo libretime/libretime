@@ -42,7 +42,7 @@
 
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/ScheduleEntry.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
 
@@ -58,7 +58,7 @@ using namespace LiveSupport::Core;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::EventScheduler;
 using namespace LiveSupport::Scheduler;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 /* ================================================================ constants */
 

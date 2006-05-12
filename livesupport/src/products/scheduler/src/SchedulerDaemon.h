@@ -62,7 +62,7 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Db/ConnectionManagerInterface.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
@@ -100,7 +100,7 @@ using namespace LiveSupport;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Db;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::PlaylistExecutor;
 

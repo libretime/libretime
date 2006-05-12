@@ -55,7 +55,7 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
 #include "PlayLogFactory.h"
@@ -67,7 +67,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Db;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
 
 /* ===================================================  local data structures */

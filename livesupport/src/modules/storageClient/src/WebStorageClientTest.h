@@ -47,7 +47,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
@@ -234,7 +234,7 @@ class WebStorageClientTest : public BaseTestMethod
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace StorageClient
 } // namespace LiveSupport
 
 #endif // WebStorageClientTest_h

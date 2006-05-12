@@ -51,7 +51,7 @@
 using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 /* ===================================================  local data structures */
 
@@ -940,10 +940,11 @@ TestStorageClient :: satisfiesCondition(
  *  Separate a key into the metadata name and its namespace
  *----------------------------------------------------------------------------*/
 void
-LiveSupport::Storage :: separateNameAndNameSpace(const std::string & key,
-                                                 std::string &       name,
-                                                 std::string &       prefix)
-                                                            throw ()
+LiveSupport::StorageClient :: separateNameAndNameSpace(
+                                                const std::string &     key,
+                                                std::string &           name,
+                                                std::string &           prefix)
+                                                           throw ()
 {
     unsigned int    colonPosition = key.find(':');
 

@@ -33,14 +33,14 @@
 #include "configure.h"
 #endif
 
-#include "LiveSupport/Storage/StorageClientInterface.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/Core/XmlRpcTools.h"
 
 #include "ResetStorageMethod.h"
 
 
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
 
 /* ===================================================  local data structures */

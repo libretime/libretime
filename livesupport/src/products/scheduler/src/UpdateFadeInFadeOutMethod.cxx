@@ -42,8 +42,8 @@
 
 #include <string>
 
-#include "LiveSupport/Storage/StorageClientInterface.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/FadeInfo.h"
 #include "ScheduleInterface.h"
@@ -58,7 +58,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 using namespace LiveSupport::Scheduler;
 

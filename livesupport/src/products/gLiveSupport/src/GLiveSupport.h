@@ -51,7 +51,7 @@
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/OptionsContainer.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
@@ -65,7 +65,7 @@ namespace GLiveSupport {
 using namespace LiveSupport::Core;
 using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Widgets;
 

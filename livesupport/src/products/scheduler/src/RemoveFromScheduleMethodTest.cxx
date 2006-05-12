@@ -47,7 +47,7 @@
 #include "ScheduleFactory.h"
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 
 #include "SchedulerDaemon.h"
 #include "UploadPlaylistMethod.h"
@@ -58,7 +58,7 @@
 using namespace boost::posix_time;
 
 using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
 
 

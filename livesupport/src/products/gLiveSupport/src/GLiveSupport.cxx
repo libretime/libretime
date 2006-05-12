@@ -56,7 +56,7 @@
 
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "LiveSupport/Core/TimeConversion.h"
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;

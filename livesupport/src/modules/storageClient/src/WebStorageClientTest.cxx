@@ -61,7 +61,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 /* ===================================================  local data structures */
 

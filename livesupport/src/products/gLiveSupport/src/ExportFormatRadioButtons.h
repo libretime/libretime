@@ -37,7 +37,7 @@
 /* ============================================================ include files */
 
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "LiveSupport/Widgets/RadioButtons.h"
 
 
@@ -45,7 +45,7 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */

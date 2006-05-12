@@ -37,7 +37,7 @@
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 

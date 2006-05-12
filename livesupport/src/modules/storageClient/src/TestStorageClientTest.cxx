@@ -51,7 +51,7 @@
 
 using namespace std;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 /* ===================================================  local data structures */
 

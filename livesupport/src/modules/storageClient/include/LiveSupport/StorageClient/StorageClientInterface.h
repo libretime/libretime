@@ -50,7 +50,7 @@
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
 
 using namespace Core;
 
@@ -706,7 +706,7 @@ class StorageClientInterface
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace StorageClient
 } // namespace LiveSupport
 
 #endif // LiveSupport_Storage_StorageClientInterface_h

@@ -46,7 +46,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 #include "SchedulerDaemon.h"

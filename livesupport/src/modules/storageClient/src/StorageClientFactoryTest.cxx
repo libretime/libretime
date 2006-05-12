@@ -46,15 +46,15 @@
 
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientFactory.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "StorageClientFactoryTest.h"
 
 
 using namespace std;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 /* ===================================================  local data structures */
 

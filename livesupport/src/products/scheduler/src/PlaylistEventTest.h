@@ -43,7 +43,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "PlayLogInterface.h"
 

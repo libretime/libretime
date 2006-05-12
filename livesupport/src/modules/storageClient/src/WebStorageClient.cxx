@@ -60,7 +60,7 @@ using namespace boost::posix_time;
 using namespace XmlRpc;
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::StorageClient;
 
 
 /* ===================================================  local data structures */

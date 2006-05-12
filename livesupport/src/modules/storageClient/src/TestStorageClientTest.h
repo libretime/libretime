@@ -44,7 +44,7 @@
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
 
 /* ================================================================ constants */
 
@@ -218,7 +218,7 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace StorageClient
 } // namespace LiveSupport
 
 #endif // TestStorageClientTest_h

@@ -46,11 +46,11 @@
 
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
 
 using namespace XmlRpc;
 
@@ -908,7 +908,7 @@ class WebStorageClient :
 /* ====================================================== function prototypes */
 
 
-} // namespace Core
+} // namespace StorageClient
 } // namespace LiveSupport
 
 #endif // WebStorageClient_h

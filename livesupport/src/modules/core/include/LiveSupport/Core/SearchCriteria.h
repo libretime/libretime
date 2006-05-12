@@ -49,7 +49,7 @@
 
 // forward declaration of friend class
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
     class TestStorageClient;
 } }
 
@@ -178,7 +178,7 @@ class SearchCriteria
         /**
          *  Give access of private members to the TestStorageClient.
          */
-        friend class LiveSupport::Storage::TestStorageClient;
+        friend class LiveSupport::StorageClient::TestStorageClient;
 
 
     public:

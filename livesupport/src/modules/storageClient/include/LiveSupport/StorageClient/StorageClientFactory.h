@@ -43,11 +43,11 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Storage/StorageClientInterface.h"
+#include "LiveSupport/StorageClient/StorageClientInterface.h"
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace StorageClient {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
@@ -193,7 +193,7 @@ class StorageClientFactory :
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace StorageClient
 } // namespace LiveSupport
 
 #endif // LiveSupport_Storage_StorageClientFactory_h
