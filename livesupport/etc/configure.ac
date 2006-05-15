@@ -483,7 +483,7 @@ AC_MSG_NOTICE(
 [compiling the following external libraries that are needed
 by LiveSupport:
 
-    boost 1.31                 ${COMPILE_BOOST}
+    boost 1.33.1               ${COMPILE_BOOST}
     cppunit 1.10.2             yes
     curl 7.12.3                yes
     gstreamer 0.8.10           yes

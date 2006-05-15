@@ -99,7 +99,7 @@ FLAWFINDER_FILE  = ${DOC_DIR}/flawfinderReport.html
 TOOLS_DIR  = ${SRC_DIR}/tools
 
 BOOST_DIR         = ${TOOLS_DIR}/boost
-BOOST_VERSION     = boost-1.31
+BOOST_VERSION     = boost-1.33.1
 LIBXMLXX_DIR      = ${TOOLS_DIR}/libxml++
 LIBXMLXX_VERSION  = libxml++-2.8.1
 CXXUNIT_DIR       = ${TOOLS_DIR}/cppunit
