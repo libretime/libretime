@@ -653,6 +653,7 @@ class TestStorageClient :
         
         /**
          *  Check the status of a storage backup.
+         *  This is a dummy method; it always returns the status "working".
          *
          *  @param  token   the identifier of this backup task.
          *  @param  url     return parameter;
