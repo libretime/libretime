@@ -838,14 +838,16 @@ WebStorageClientTest :: createBackupTest(void)
     );
     CPPUNIT_ASSERT(token);
     
-    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
-    Ptr<Glib::ustring>::Ref     status;
+    Ptr<const Glib::ustring>::Ref   url;
+    Ptr<const Glib::ustring>::Ref   path;
+    Ptr<const Glib::ustring>::Ref   errorMessage;
+    Ptr<Glib::ustring>::Ref         status;
     int     iterations = 20;
     do {
         std::cerr << "-/|\\"[iterations%4] << '\b';
         sleep(1);
         CPPUNIT_ASSERT_NO_THROW(
-            status = wsc->createBackupCheck(*token, urlOrErrorMsg);
+            status = wsc->createBackupCheck(*token, url, path, errorMessage);
         );
         CPPUNIT_ASSERT(status);
         CPPUNIT_ASSERT(*status == "working"

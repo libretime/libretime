@@ -104,14 +104,15 @@ class BackupList : public Gtk::VBox,
          *
          *  @param  iter    points to the row we want to set the status of.
          *  @param  status  the new status ("working", "success" or "fault").
-         *  @param  urlOrErrorMessage   either the URL (for "success"),
-         *                              or the error message (for "fault").
+         *  @param  url     must be non-0 if the status is "success".
+         *  @param  errorMessage    must be non-0 if the status is "fault".
          *  @return true    if the status is "success", false otherwise.
          */
         bool
         setStatus(Gtk::TreeIter                   iter,
                   Ptr<const Glib::ustring>::Ref   status,
-                  Ptr<const Glib::ustring>::Ref   urlOrErrorMsg)
+                  Ptr<const Glib::ustring>::Ref   url,
+                  Ptr<const Glib::ustring>::Ref   errorMessage)
                                                                 throw ();
 
         /**

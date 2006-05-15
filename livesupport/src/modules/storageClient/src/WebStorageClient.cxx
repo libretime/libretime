@@ -703,6 +703,11 @@ const std::string    createBackupStatusParamName = "status";
 const std::string    createBackupUrlParamName = "url";
 
 /*------------------------------------------------------------------------------
+ *  The name of the 'temporary file' parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    createBackupTmpFileParamName = "tmpfile";
+
+/*------------------------------------------------------------------------------
  *  The name of the faultString parameter in the output structure
  *----------------------------------------------------------------------------*/
 const std::string    createBackupFaultStringParamName = "faultString";
@@ -2365,8 +2370,10 @@ WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
 WebStorageClient :: createBackupCheck(
-                            const Glib::ustring &       token,
-                            Ptr<Glib::ustring>::Ref     urlOrErrorMsg) const
+                          const Glib::ustring &             token,
+                          Ptr<const Glib::ustring>::Ref &   url,
+                          Ptr<const Glib::ustring>::Ref &   path,
+                          Ptr<const Glib::ustring>::Ref &   errorMessage) const
                                                 throw (XmlRpcException)
 {
     XmlRpcValue     parameters;
@@ -2393,7 +2400,16 @@ WebStorageClient :: createBackupCheck(
                     createBackupUrlParamName,
                     XmlRpcValue::TypeString);
         
-        *urlOrErrorMsg = std::string(result[createBackupUrlParamName]);
+        url.reset(new const Glib::ustring(
+                        std::string(result[createBackupUrlParamName]) ));
+        
+        checkStruct(createBackupCheckMethodName,
+                    result,
+                    createBackupTmpFileParamName,
+                    XmlRpcValue::TypeString);
+        
+        path.reset(new const Glib::ustring(
+                        std::string(result[createBackupTmpFileParamName]) ));
     }
     
     if (*status == "fault") {
@@ -2402,8 +2418,8 @@ WebStorageClient :: createBackupCheck(
                     createBackupFaultStringParamName,
                     XmlRpcValue::TypeString);
         
-        *urlOrErrorMsg = std::string(
-                                result[createBackupFaultStringParamName]);
+        errorMessage.reset(new Glib::ustring(
+                        std::string(result[createBackupFaultStringParamName])));
     }
     
     return status;

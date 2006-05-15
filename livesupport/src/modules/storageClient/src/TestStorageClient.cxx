@@ -1034,8 +1034,10 @@ TestStorageClient :: createBackupOpen(Ptr<SessionId>::Ref       sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
 TestStorageClient :: createBackupCheck(
-                            const Glib::ustring &       token,
-                            Ptr<Glib::ustring>::Ref     urlOrErrorMsg) const
+                          const Glib::ustring &             token,
+                          Ptr<const Glib::ustring>::Ref &   url,
+                          Ptr<const Glib::ustring>::Ref &   path,
+                          Ptr<const Glib::ustring>::Ref &   errorMessage) const
                                                 throw (XmlRpcException)
 {
     Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));

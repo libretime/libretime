@@ -149,16 +149,21 @@ BackupList :: add(const Glib::ustring &     title,
                                 storage     = gLiveSupport->getStorageClient();
     Ptr<SessionId>::Ref         sessionId   = gLiveSupport->getSessionId();
     
-    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    Ptr<const Glib::ustring>::Ref   url;
+    Ptr<const Glib::ustring>::Ref   path;
+    Ptr<const Glib::ustring>::Ref   errorMessage;
+    
     Ptr<Glib::ustring>::Ref     status
-                                = storage->createBackupCheck(token,
-                                                             urlOrErrorMsg);
+                                    = storage->createBackupCheck(token,
+                                                                 url,
+                                                                 path,
+                                                                 errorMessage);
     
     Gtk::TreeRow                row = *treeModel->append();
     row[modelColumns.titleColumn]   = title;
     row[modelColumns.dateColumn]    = date;
     row[modelColumns.tokenColumn]   = token;
-    setStatus(row, status, urlOrErrorMsg);
+    setStatus(row, status, url, errorMessage);
 }
 
 
@@ -292,12 +297,18 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
     
     Ptr<StorageClientInterface>::Ref 
                                 storage = gLiveSupport->getStorageClient();
-    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
+    
+    Ptr<const Glib::ustring>::Ref   url;
+    Ptr<const Glib::ustring>::Ref   path;
+    Ptr<const Glib::ustring>::Ref   errorMessage;
+    
     Ptr<Glib::ustring>::Ref     status = storage->createBackupCheck(
                                     iter->get_value(modelColumns.tokenColumn),
-                                    urlOrErrorMsg);
+                                    url,
+                                    path,
+                                    errorMessage);
     
-    return setStatus(iter, status, urlOrErrorMsg);
+    return setStatus(iter, status, url, errorMessage);
 }
 
 
@@ -307,7 +318,8 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
 bool
 BackupList :: setStatus(Gtk::TreeIter                   iter,
                         Ptr<const Glib::ustring>::Ref   status,
-                        Ptr<const Glib::ustring>::Ref   urlOrErrorMsg)
+                        Ptr<const Glib::ustring>::Ref   url,
+                        Ptr<const Glib::ustring>::Ref   errorMessage)
                                                                 throw ()
 {
     if (*status == "working") {
@@ -319,14 +331,14 @@ BackupList :: setStatus(Gtk::TreeIter                   iter,
         iter->set_value(modelColumns.statusDisplayColumn, 
                         *getResourceUstring(successStatusKey));
         iter->set_value(modelColumns.urlColumn,
-                        *urlOrErrorMsg);
+                        *url);
         return true;
     
     } else if (*status == "fault") {
         iter->set_value(modelColumns.statusColumn,
                         faultStatusKey);
         iter->set_value(modelColumns.statusDisplayColumn, 
-                        *formatMessage(faultStatusKey, *urlOrErrorMsg));
+                        *formatMessage(faultStatusKey, *errorMessage));
         return false;
     }
     

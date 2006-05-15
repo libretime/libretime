@@ -748,19 +748,25 @@ class WebStorageClient :
         /**
          *  Check the status of a storage backup.
          *
-         *  @param  token           the identifier of this backup task.
-         *  @param  urlOrErrorMsg   return parameter;
-         *              if the status is "success", it contains the URL of the
-         *                          created backup file; 
-         *              if the status is "fault", it contains the fault string;
-         *              if the status is "working", it is not touched.
+         *  @param  token   the identifier of this backup task.
+         *  @param  url     return parameter;
+         *                      if the status is "success", it contains the 
+         *                      URL of the created backup file.
+         *  @param  path    return parameter;
+         *                      if the status is "success", it contains the
+         *                      local access path of the created backup file.
+         *  @param  errorMessage    return parameter;
+         *                      if the status is "fault", it contains the
+         *                      fault string.
          *  @return the status string: one of "working", "success", or "fault".
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        createBackupCheck(const Glib::ustring &     token,
-                          Ptr<Glib::ustring>::Ref   urlOrErrorMsg) const
+        createBackupCheck(const Glib::ustring &             token,
+                          Ptr<const Glib::ustring>::Ref &   url,
+                          Ptr<const Glib::ustring>::Ref &   path,
+                          Ptr<const Glib::ustring>::Ref &   errorMessage) const
                                                 throw (XmlRpcException);
         
         /**

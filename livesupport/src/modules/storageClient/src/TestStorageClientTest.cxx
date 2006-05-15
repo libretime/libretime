@@ -484,10 +484,12 @@ TestStorageClientTest :: createBackupTest(void)
     );
     CPPUNIT_ASSERT(token);
     
-    Ptr<Glib::ustring>::Ref     urlOrErrorMsg(new Glib::ustring);
-    Ptr<Glib::ustring>::Ref     status;
+    Ptr<const Glib::ustring>::Ref   url;
+    Ptr<const Glib::ustring>::Ref   path;
+    Ptr<const Glib::ustring>::Ref   errorMessage;
+    Ptr<Glib::ustring>::Ref         status;
     CPPUNIT_ASSERT_NO_THROW(
-        status = tsc->createBackupCheck(*token, urlOrErrorMsg);
+        status = tsc->createBackupCheck(*token, url, path, errorMessage);
     );
     CPPUNIT_ASSERT(status);
     CPPUNIT_ASSERT_EQUAL(std::string(*status), std::string("working"));
