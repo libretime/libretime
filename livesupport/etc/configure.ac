@@ -328,6 +328,12 @@ AC_ARG_WITH([check-libxmlpp],
 AC_MSG_RESULT([checking for xml++ library on system: ${CHECK_XMLPP_LIB}])
 
 
+dnl-----------------------------------------------------------------------------
+dnl  determine which optional packages will be compiled
+dnl-----------------------------------------------------------------------------
+
+AC_SUBST(COMPILE_BOOST)
+
 dnl check for the boost library
 AX_BOOST_DATE_TIME()
 
@@ -342,6 +348,8 @@ else
     COMPILE_BOOST="yes"
 fi
 
+
+AC_SUBST(COMPILE_GTK)
 
 if test "$CHECK_GTK_LIB" = "yes" ; then
     dnl check for gtk+ 2.6.10 or more recent
@@ -359,6 +367,8 @@ else
 fi
 
 
+AC_SUBST(COMPILE_GTKMM)
+
 if test "$CHECK_GTKMM_LIB" = "yes" ; then
     dnl check for gtk-- 2.6.5 or more recent
     PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.6.5],
@@ -375,6 +385,8 @@ else
 fi
 
 
+AC_SUBST(COMPILE_ICU)
+
 if test "$CHECK_ICU_LIB" = "yes" ; then
     dnl check for ICU 3.0 or more recent
     AC_CHECK_ICU(3.0,
@@ -390,6 +402,8 @@ else
     COMPILE_ICU="yes"
 fi
 
+
+AC_SUBST(COMPILE_LIBXMLPP)
 
 if test "$CHECK_XMLPP_LIB" = "yes" ; then
     dnl check for libxml++ 2.8.1 or more recent

@@ -215,7 +215,7 @@ ${TMP_DIR}/tools_setup.stamp:
 	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} install
 
-ifeq ("@BOOST_DATE_TIME_LIB@","")
+ifeq ("@COMPILE_BOOST@","yes")
 	cd ${BOOST_DIR}/${BOOST_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${BOOST_DIR}/${BOOST_VERSION} install
 endif
@@ -229,12 +229,12 @@ endif
 	cd ${LCOV_DIR}/${LCOV_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LCOV_DIR}/${LCOV_VERSION} install
 
-ifeq ("@GTK_CFLAGS@","")
+ifeq ("@COMPILE_GTK@","yes")
 	cd ${GTK_DIR}/${GTK_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GTK_DIR}/${GTK_VERSION} install
 endif
 
-ifeq ("@GTKMM_CFLAGS@","")
+ifeq ("@COMPILE_GTKMM@","yes")
 	cd ${GTKMM_DIR}/${GTKMM_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GTKMM_DIR}/${GTKMM_VERSION} install
 endif
@@ -242,12 +242,12 @@ endif
 	cd ${GSTREAMER_DIR}/${GSTREAMER_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} install
 
-ifeq ("@LIBXMLPP_CFLAGS@","")
+ifeq ("@COMPILE_LIBXMLPP@","yes")
 	cd ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} install
 endif
 
-ifeq ("@ICU_CFLAGS@","")
+ifeq ("@COMPILE_ICU@","yes")
 	cd ${ICU_DIR}/${ICU_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${ICU_DIR}/${ICU_VERSION} install
 endif
@@ -265,24 +265,24 @@ endif
 
 tools_distclean:
 	-${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} distclean
-ifeq ("@BOOST_DATE_TIME_LIB@","")
+ifeq ("@COMPILE_BOOST@","yes")
 	-${MAKE} -C ${BOOST_DIR}/${BOOST_VERSION} distclean
 endif
 	-${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} distclean
 	-${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} distclean
 	-${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} distclean
 	-${MAKE} -C ${LCOV_DIR}/${LCOV_VERSION} distclean
-ifeq ("@GTK_CFLAGS@","")
+ifeq ("@COMPILE_GTK@","yes")
 	-${MAKE} -C ${GTK_DIR}/${GTK_VERSION} distclean
 endif
-ifeq ("@GTKMM_CFLAGS@","")
+ifeq ("@COMPILE_GTKMM@","yes")
 	-${MAKE} -C ${GTKMM_DIR}/${GTKMM_VERSION} distclean
 endif
 	-${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} distclean
-ifeq ("@LIBXMLPP_CFLAGS@","")
+ifeq ("@COMPILE_LIBXMLPP@","yes")
 	-${MAKE} -C ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} distclean
 endif
-ifeq ("@ICU_CFLAGS@","")
+ifeq ("@COMPILE_ICU@","yes")
 	-${MAKE} -C ${ICU_DIR}/${ICU_VERSION} distclean
 endif
 	-${MAKE} -C ${CURL_DIR}/${CURL_VERSION} distclean
