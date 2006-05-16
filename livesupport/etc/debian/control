@@ -52,7 +52,7 @@ Depends: ${shlibs:Depends},
          libmad0,
          libogg0,
          libvorbis0a,
-         libboost-date-time1.33.1 (>= 1.33.1)
+         libboost-date-time1.33.0 | libboost-date-time1.33.1
 Description: A radio program automation and support tool.
  This package contains the libraries used by LiveSupport.
 
