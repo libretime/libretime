@@ -39,7 +39,7 @@ diff -Naur livesupport-1.0/modules/authentication/etc/Makefile.in livesupport-1.
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/core/etc/Makefile.in livesupport-1.0-gentoo/modules/core/etc/Makefile.in
 --- livesupport-1.0/modules/core/etc/Makefile.in	2005-09-21 11:57:28.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/core/etc/Makefile.in	2005-09-21 11:55:38.000000000 +0200
@@ -67,7 +67,7 @@ diff -Naur livesupport-1.0/modules/db/etc/Makefile.in livesupport-1.0-gentoo/mod
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/eventScheduler/etc/Makefile.in livesupport-1.0-gentoo/modules/eventScheduler/etc/Makefile.in
 --- livesupport-1.0/modules/eventScheduler/etc/Makefile.in	2005-08-08 13:57:53.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/eventScheduler/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
@@ -81,7 +81,7 @@ diff -Naur livesupport-1.0/modules/eventScheduler/etc/Makefile.in livesupport-1.
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/getid3/etc/Makefile.in livesupport-1.0-gentoo/modules/getid3/etc/Makefile.in
 --- livesupport-1.0/modules/getid3/etc/Makefile.in	2005-08-01 21:25:59.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/getid3/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
@@ -137,7 +137,7 @@ diff -Naur livesupport-1.0/modules/playlistExecutor/etc/Makefile.in livesupport-
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/schedulerClient/etc/Makefile.in livesupport-1.0-gentoo/modules/schedulerClient/etc/Makefile.in
 --- livesupport-1.0/modules/schedulerClient/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/schedulerClient/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
@@ -151,7 +151,7 @@ diff -Naur livesupport-1.0/modules/schedulerClient/etc/Makefile.in livesupport-1
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/storage/etc/Makefile.in livesupport-1.0-gentoo/modules/storage/etc/Makefile.in
 --- livesupport-1.0/modules/storage/etc/Makefile.in	2005-09-21 11:57:29.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/storage/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
@@ -165,7 +165,7 @@ diff -Naur livesupport-1.0/modules/storage/etc/Makefile.in livesupport-1.0-gento
 +USR_DIR         = ${prefix}
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_LIB_DIR     = ${USR_DIR}/lib
- BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+ BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 diff -Naur livesupport-1.0/modules/storageAdmin/etc/Makefile.in livesupport-1.0-gentoo/modules/storageAdmin/etc/Makefile.in
 --- livesupport-1.0/modules/storageAdmin/etc/Makefile.in	2005-08-11 02:41:22.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/storageAdmin/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
