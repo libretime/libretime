@@ -13,5 +13,6 @@ touch $2 || { echo -n "fail" > $3; exit 1; }
 #sleep 120
 cd $1
 tar cf $2 * || { echo -n "fail" > $3; exit 1; }
+chmod 666 $2
 
 echo -n "success" > $3
