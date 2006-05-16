@@ -134,7 +134,15 @@ function GetAllFileInfo($filename, $assumedFormat='', $MD5file=false, $MD5data=f
 			// break if ID3/APE tags found on illegal format
 			if (!$DeterminedFormat['allowtags'] && ($ThisFileInfo['avdataoffset'] > 0) && ($ThisFileInfo['avdataend'] != $ThisFileInfo['filesize'])) {
 				$ThisFileInfo['error'] .= "\n".'Illegal ID3 and/or APE tag found on non multimedia file.';
-				break;
+				// *** changed by TH - not very sure - related to LiveSupport ticket #1678: ***
+				//break;
+				// --- ---
+				// remove unneeded/meaningless keys
+				CleanUpGetAllMP3info($ThisFileInfo);
+				// close & remove local filepointer
+				CloseRemoveFilepointer($localfilepointer);
+				return $ThisFileInfo;
+				// *** ***
 			}
 
 			// set mime type
