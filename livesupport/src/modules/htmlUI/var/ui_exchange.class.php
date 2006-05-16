@@ -133,6 +133,7 @@ class uiExchange
         
         if ($check['status'] === 'success') {
             if (@copy($check['tmpfile'], $target)) {
+                @chmod($target,0666);
                 $this->Base->_retMsg('Copy backup to $1 successfull', $target);
                 return true;    
             }
@@ -246,6 +247,12 @@ class uiExchange
                     'g' => $group,               
                 );        
         
+    }
+    
+    // restore methods
+    function restore($filename) {
+        $filename='/tmp/backup_20060508.tar';
+        $this->Base->gb->doRestore($this->Base->sessid,$filename);
     }
 }
 ?>
