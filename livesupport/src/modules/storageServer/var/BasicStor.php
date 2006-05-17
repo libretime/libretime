@@ -239,6 +239,32 @@ class BasicStor extends Alib{
     }
 
     /**
+     *  Replace file. Doesn't change filetype!
+     *
+     *  @param id int, virt.file's local id
+     *  @param mediaFileLP string, local path of media file
+     *  @param mdataFileLP string, local path of metadata file
+     *  @param mdataLoc string 'file'|'string' (optional)
+     *  @return true or PEAR::error
+     *  @exception PEAR::error
+     */
+    function bsReplaceFile($id, $mediaFileLP, $mdataFileLP, $mdataLoc='file')
+    {
+        $ac = StoredFile::recall($this, $id);
+        if($this->dbc->isError($ac)) return $ac;
+        if(!empty($mdataFileLP) &&
+                ($mdataLoc!='file' || file_exists($mdataFileLP))){
+            $r = $ac->replaceMetaData($mdataFileLP, $mdataLoc);
+            if($this->dbc->isError($r)) return $r;
+        }
+        if(!empty($mediaFileLP) && file_exists($mediaFileLP)){
+            $r = $ac->replaceRawMediaData($mediaFileLP);
+            if($this->dbc->isError($r)) return $r;
+        }
+        return TRUE;
+    }
+
+    /**
      *  Delete file
      *
      *  @param id int, virt.file's local id

@@ -208,6 +208,22 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *  Replace file. Doesn't change filetype!
+     *
+     *  @param id int, virt.file's local id
+     *  @param mediaFileLP string, local path of media file
+     *  @param mdataFileLP string, local path of metadata file
+     *  @param sessid string, session id
+     *  @return true or PEAR::error
+     */
+    function replaceFile($id, $mediaFileLP, $mdataFileLP, $sessid='')
+    {
+        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsReplaceFile($id, $mediaFileLP, $mdataFileLP);
+    }
+
+    /**
      *  Delete file
      *
      *  @param id int, virt.file's local id
