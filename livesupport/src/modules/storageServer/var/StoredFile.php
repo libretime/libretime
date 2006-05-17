@@ -338,10 +338,12 @@ class StoredFile{
     function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
     {
         $this->dbc->query("BEGIN");
-        $res = $this->md->replace($metadata, $mdataLoc, $format);
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $res = $this->dbc->query("COMMIT");
-        if(PEAR::isError($res)) return $res;
+        $res = $r = $this->md->replace($metadata, $mdataLoc, $format);
+        if(PEAR::isError($r)){ $this->dbc->query("ROLLBACK"); return $r; }
+        $r = $this->md->regenerateXmlFile();
+        if(PEAR::isError($r)){ $this->dbc->query("ROLLBACK"); return $r; }
+        $res = $r = $this->dbc->query("COMMIT");
+        if(PEAR::isError($r)) return $r;
         return TRUE;
     }
 
