@@ -91,6 +91,43 @@ class FileTools
         copyFileToUrl(const std::string &   path,
                       const std::string &   url)
                                                 throw (std::runtime_error);
+
+        /**
+         *  Generate a temporary file name.
+         *
+         *  @return a temporary file name.
+         */
+        static const std::string
+        tempnam(void)                                           throw ();
+
+        /**
+         *  Append a file to an existing tarball.
+         *
+         *  @param tarFileName the name of the existing tar file
+         *  @param newFileRealName the name of the new file to append
+         *  @param newFileInTarball the name of the new file in the tarball
+         *  @throws std::runtime_error on file / tarball handling issues.
+         */
+        static void
+        appendFileToTarball(const std::string & tarFileName,
+                            const std::string & newFileRealName,
+                            const std::string & newFileInTarball)
+                                                    throw (std::runtime_error);
+
+        /**
+         *  Check if a file exists in a given tarball.
+         *
+         *  @param tarFileName the name of the existing tar file
+         *  @param fileName the name of the file to check in the traball.
+         *  @return true if a file named fileName exists in the tarball,
+         *          false otherwise.
+         *  @throws std::runtime_error on file / tarball handling issues.
+         */
+        static bool
+        existsInTarball(const std::string & tarFileName,
+                        const std::string & fileName)
+                                                    throw (std::runtime_error);
+
 };
 
 /* ================================================= external data structures */

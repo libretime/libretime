@@ -43,6 +43,7 @@
 #include <stdexcept>
 #include <string>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <libxml++/libxml++.h>
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 
@@ -72,6 +73,36 @@ using namespace LiveSupport;
 class ScheduleEntry
 {
     private:
+        /**
+         *  The name of the schedule entry element
+         */
+        static const std::string scheduleEntryElementName;
+
+        /**
+         *  The name of the id attribute in the schedule entry element
+         */
+        static const std::string idAttrName;
+
+        /**
+         *  The name of the playlist attribute in the schedule entry element
+         */
+        static const std::string playlistIdAttrName;
+
+        /**
+         *  The name of the startTime attribute in the schedule entry element
+         */
+        static const std::string startTimeAttrName;
+
+        /**
+         *  The name of the endTime attribute in the schedule entry element
+         */
+        static const std::string endTimeAttrName;
+
+        /**
+         *  The name of the playlength attribute in the schedule entry element
+         */
+        static const std::string playlengthAttrName;
+
         /**
          *  The id of the schedule entry.
          */
@@ -130,6 +161,30 @@ class ScheduleEntry
         }
 
         /**
+         *  A constructor based on a DOM element
+         *
+         *  @param element a DOM element returned earlier by a
+         *         getDom() call from another schedule entry.
+         *  @throws std::invalid_argument in case of a bad DOM element
+         *  @see #getElementName
+         *  @see #getDom
+         */
+        ScheduleEntry(xmlpp::Element      * element)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Return the name of the DOM element used to export / import
+         *  a schedule entry.
+         *
+         *  @return the DOM element name used at export / import.
+         */
+        static const std::string
+        getElementName(void)                                throw ()
+        {
+            return scheduleEntryElementName;
+        }
+        
+        /**
          *  Return the id of the entry.
          *
          *  @return the id of the entry.
@@ -182,6 +237,33 @@ class ScheduleEntry
         getPlaylength(void) const                       throw ()
         {
             return playlength;
+        }
+
+        /**
+         *  Return a DOM representation of this object.
+         *  Can be used to serialize or generate another object with
+         *  a DOM-based constructor.
+         *
+         *  @param element the new DOM node will be a new child of this
+         *         element.
+         *  @see #getElementName
+         */
+        void
+        toDom(xmlpp::Element  * element) const                  throw ();
+
+        /**
+         *  Compare a schedule entry to another one.
+         *
+         *  @param other the other entry to compare to.
+         */
+        bool
+        operator==(const ScheduleEntry & other) const           throw ()
+        {
+            return *id == *other.id
+                && *playlistId == *other.playlistId
+                && *startTime == *other.startTime
+                && *endTime == *other.endTime
+                && *playlength == *other.playlength;
         }
 };
 

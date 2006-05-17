@@ -40,6 +40,8 @@
 #include "configure.h"
 #endif
 
+#include <iostream>
+
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -64,11 +66,18 @@ namespace Core {
  */
 class UniqueId
 {
+    public:
+        /**
+         *  The type for the numeric value the unique id is represented in.
+         *  This is set to 'long long int', i.e., 32-bit signed integers.
+         */
+        typedef long long int   IdType;
+
     private:
         /**
          *  The value of the id.
          */
-        long long int   id;
+        IdType   id;
 
         /**
          *  A string representation of the id, in hexadecimal notation.
@@ -84,12 +93,6 @@ class UniqueId
 
 
     public:
-        /**
-         *  The type for the numeric value the unique id is represented in.
-         *  This is set to 'long long int', i.e., 32-bit signed integers.
-         */
-        typedef long long int   IdType;
-
         /**
          *  Constructor to create a UniqueId with a specific integer value.
          *  The argument is expected to be between 0 and 2^31-1 (inclusive).
@@ -110,7 +113,8 @@ class UniqueId
          *  2^31-1 (inclusive), the integer value of the UniqueId will be 
          *  bogus.
          *
-         *  @param idAsString the string value of the created id object.
+         *  @param idAsString the string value of the created id object,
+         *         in hexadecimal notation.
          */
         UniqueId(const std::string    idAsString)           throw ()
         {

@@ -74,6 +74,9 @@ BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
+CURL_CFLAGS=@CURL_CFLAGS@
+CURL_LIBS=@CURL_LIBS@
+
 ICU_CFLAGS=@ICU_CFLAGS@
 ICU_CXXFLAGS=@ICU_CXXFLAGS@
 ICU_LIBS=@ICU_LIBS@
@@ -106,6 +109,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
+					 ${CURL_LIBS} \
                      ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
                      ${LIBXMLPP_LIBS} \
@@ -121,6 +125,7 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/Playable.o \
                 ${TMP_DIR}/AudioClip.o \
                 ${TMP_DIR}/FadeInfo.o \
+                ${TMP_DIR}/ScheduleEntry.o \
                 ${TMP_DIR}/PlaylistElement.o \
                 ${TMP_DIR}/Playlist.o \
                 ${TMP_DIR}/TimeConversion.o \
@@ -138,9 +143,11 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
 				${TMP_DIR}/FileTools.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/FileToolsTest.o \
                    ${TMP_DIR}/UuidTest.o \
                    ${TMP_DIR}/UniqueIdTest.o \
                    ${TMP_DIR}/AudioClipTest.o \
+                   ${TMP_DIR}/ScheduleEntryTest.o \
                    ${TMP_DIR}/FadeInfoTest.o \
                    ${TMP_DIR}/PlaylistElementTest.o \
                    ${TMP_DIR}/PlaylistTest.o \
@@ -160,7 +167,7 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} \
-                   -l${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lxmlrpc++
+                   -l${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lxmlrpc++ -ltar
 
 
 #-------------------------------------------------------------------------------

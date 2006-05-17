@@ -39,6 +39,17 @@
 #error need time.h
 #endif
 
+#ifdef HAVE_TIME_H
+#include <stdio.h>
+#else
+#error need stdio.h
+#endif
+
+
+#include <fcntl.h>
+#include <libtar.h>
+
+#include <iostream>
 
 #include <fstream>
 #include <curl/curl.h>
@@ -142,5 +153,125 @@ FileTools :: copyFileToUrl(const std::string &      path,
 
     curl_easy_cleanup(handle);
     fclose(file);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a temporary file name
+ *----------------------------------------------------------------------------*/
+const std::string
+FileTools :: tempnam(void)                                      throw ()
+{
+    std::string     fileName(::tempnam(NULL, NULL));
+
+    return fileName;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Append a file to an existing tarball
+ *----------------------------------------------------------------------------*/
+void
+FileTools :: appendFileToTarball(const std::string & tarFileName,
+                                 const std::string & newFileRealName,
+                                 const std::string & newFileInTarball)
+                                                    throw (std::runtime_error)
+{
+    TAR   * tar;
+    off_t   tarFileEnd; // keeps read position it tarball
+
+    // first chop off the existing EOF from the tarball
+
+    // open for reading first to determine where EOT block begins  
+    if (tar_open(&tar,
+                 (char*) tarFileName.c_str(),
+                 NULL,
+                 O_RDONLY,
+                 0,
+                 0) == -1) {
+        throw std::runtime_error("can't open tarball");
+    }
+
+    // go through all files in tarball and record end position
+    // of the last file read
+    tarFileEnd = 0;
+    while (th_read(tar) == 0) {
+        if (TH_ISREG(tar)) {
+            tar_skip_regfile(tar);
+        }
+        tarFileEnd = lseek(tar->fd, 0, SEEK_CUR);
+    }
+
+    // at this point, tarFileEnd is position where EOT block begins
+    tar_close(tar); // close for reading
+
+    //truncate EOT from the tarball
+    if (truncate(tarFileName.c_str(), tarFileEnd) == -1) {
+        throw std::runtime_error("can't truncate tarball");
+    }
+
+    // and now append the new file, and put an EOF at the end
+    
+    // open truncated tarball (without EOT block) for writing and append
+    if (tar_open(&tar,
+                 (char*) tarFileName.c_str(),
+                 NULL,
+                 O_WRONLY | O_APPEND,
+                 0666,
+                 0) == -1) {
+        throw std::runtime_error("can't open tarball");
+    }
+
+    // add the new file
+    if (tar_append_file(tar,
+                        (char*) newFileRealName.c_str(),
+                        (char*) newFileInTarball.c_str()) == -1) {
+        tar_close(tar);
+        throw std::runtime_error("can't append file to tarball");
+    }
+
+    // add EOT at the end and close tarball
+    tar_append_eof(tar);
+    tar_close(tar);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check if a file is in the tarball
+ *----------------------------------------------------------------------------*/
+bool
+FileTools :: existsInTarball(const std::string & tarFileName,
+                             const std::string & fileName)
+                                                    throw (std::runtime_error)
+{
+    TAR   * tar;
+    bool    result = false;
+
+    if (tar_open(&tar,
+                 (char*) tarFileName.c_str(),
+                 NULL,
+                 O_RDONLY,
+                 0,
+                 0) == -1) {
+        throw std::runtime_error("can't open tarball");
+    }
+
+    while (th_read(tar) == 0) {
+        if (TH_ISREG(tar)) {
+            char  * path = th_get_pathname(tar);
+
+            if (fileName == path) {
+                result = true;
+                break;
+            }
+
+            tar_skip_regfile(tar);
+        }
+    }
+
+    // at this point, tarFileEnd is position where EOT block begins
+    tar_close(tar); // close for reading
+
+    return result;
 }
 
