@@ -156,3 +156,40 @@ SearchCriteriaTest :: firstTest(void)
     CPPUNIT_ASSERT(condition0["val"] == "X");
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test the conversion to/from an XmlRpcValue.
+ *----------------------------------------------------------------------------*/
+void
+SearchCriteriaTest :: marshalingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SearchCriteria>::Ref    criteria;
+    CPPUNIT_ASSERT_NO_THROW(
+        criteria.reset(new SearchCriteria("playlist", "Or"));
+        criteria->setLimit(50);
+        criteria->setOffset(100);
+        criteria->addCondition("dc:title", "PREFIX", "My ");
+        criteria->addCondition("DcTerms:Extent", "<", "180");
+    );
+    
+    XmlRpc::XmlRpcValue         xmlRpcValue;
+    CPPUNIT_ASSERT_NO_THROW(
+        xmlRpcValue = *criteria;
+    );
+    
+    Ptr<SearchCriteria>::Ref    copyCriteria;
+    CPPUNIT_ASSERT_NO_THROW(
+        copyCriteria.reset(new SearchCriteria(xmlRpcValue));
+    );
+    
+    CPPUNIT_ASSERT(*criteria == *copyCriteria);
+    
+    XmlRpc::XmlRpcValue         copyXmlRpcValue;
+    CPPUNIT_ASSERT_NO_THROW(
+        copyXmlRpcValue = *copyCriteria;
+    );
+    
+    CPPUNIT_ASSERT(xmlRpcValue == copyXmlRpcValue);
+}
+

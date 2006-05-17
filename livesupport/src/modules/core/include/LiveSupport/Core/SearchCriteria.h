@@ -180,6 +180,16 @@ class SearchCriteria
          */
         friend class LiveSupport::StorageClient::TestStorageClient;
 
+        /**
+         *  Add a search condition.
+         *
+         *  @param xmlRpcValue  the condition to add.
+         *  @exception  std::invalid_argument   on syntax errors.
+         */
+        void
+        addCondition(const XmlRpc::XmlRpcValue &    xmlRpcValue)
+                                                throw(std::invalid_argument);
+
 
     public:
 
@@ -189,6 +199,7 @@ class SearchCriteria
          *
          *  @param type one of "audioClip" (default), "playlist" or "all"
          *  @param logicalOperator either "and" (default) or "or"
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         SearchCriteria(const std::string & type = "all", 
                        const std::string & logicalOperator = "and")
@@ -207,6 +218,7 @@ class SearchCriteria
          *  @param comparisonOperator one of "=", "partial", "prefix",
          *                            "<", "<=", ">" or ">="
          *  @param value the value to compare to
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         SearchCriteria(const std::string & type, 
                        const std::string & key,
@@ -215,9 +227,20 @@ class SearchCriteria
                                                 throw(std::invalid_argument);
 
         /**
+         *  Construct a SearchCriteria object from an XmlRpcValue.
+         *
+         *  @param xmlRpcValue  an XmlRpcValue struct, containing
+         *                      the search criteria.
+         *  @exception  std::invalid_argument   on syntax errors.
+         */
+        SearchCriteria(const XmlRpc::XmlRpcValue &      xmlRpcValue)
+                                                throw(std::invalid_argument);
+
+        /**
          *  Set the type field.
          *
          *  @param type one of "audioClip", "playlist" or "all"
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         setType(const std::string & type)
@@ -238,6 +261,7 @@ class SearchCriteria
          *  Set the logical operator field.
          *
          *  @param logicalOperator either "and" or "or"
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         setLogicalOperator(const std::string & logicalOperator)
@@ -258,6 +282,7 @@ class SearchCriteria
          *  @param comparisonOperator one of "=", "partial", "prefix",
          *                            "<", "<=", ">" or ">="
          *  @param value the value to compare to
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         addCondition(const std::string & key,
@@ -271,6 +296,7 @@ class SearchCriteria
          *  @param comparisonOperator one of "=", "partial", "prefix",
          *                            "<", "<=", ">" or ">="
          *  @param value the value of the mtime to compare to
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         addMtimeCondition(const std::string &       comparisonOperator,
@@ -281,6 +307,7 @@ class SearchCriteria
          *  Add a search condition.
          *
          *  @param condition the search condition to add
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         addCondition(const Ptr<SearchConditionType>::Ref  condition)
@@ -295,6 +322,7 @@ class SearchCriteria
          *  Set the limit field.
          *
          *  @param limit the maximum number of search results to be returned
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         setLimit(const int limit)
@@ -312,6 +340,7 @@ class SearchCriteria
          *
          *  @param offset   the index of the first matching condition 
          *                  to be returned (first = 0)
+         *  @exception  std::invalid_argument   on syntax errors.
          */
         void
         setOffset(const int offset)
@@ -327,7 +356,13 @@ class SearchCriteria
         /**
          *  Convert to an XmlRpc::XmlRpcValue.
          */
-        operator XmlRpc::XmlRpcValue() const     throw();
+        operator XmlRpc::XmlRpcValue() const                        throw();
+        
+        /**
+         *  Check two SearchCriteria objects for equality.
+         */
+        bool
+        operator ==(const SearchCriteria &  other) const            throw();
 };
 
 

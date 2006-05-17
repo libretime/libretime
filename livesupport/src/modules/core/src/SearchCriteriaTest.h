@@ -65,6 +65,7 @@ class SearchCriteriaTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SearchCriteriaTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(marshalingTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -76,6 +77,14 @@ class SearchCriteriaTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the conversion to/from an XmlRpcValue.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        marshalingTest(void)                    throw (CPPUNIT_NS::Exception);
 
 
     public:
