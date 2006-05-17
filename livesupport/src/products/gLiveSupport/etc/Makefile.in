@@ -291,7 +291,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
                          -l${BOOST_DATE_TIME_LIB} \
-                         -lxmlrpc++ -lssl
+                         -lxmlrpc++ -lssl -ltar
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \
                    ${TMP_DIR}/TestRunner.o \
