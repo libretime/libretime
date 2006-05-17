@@ -1007,6 +1007,48 @@ class LocStor extends BasicStor{
         return $bu->closeBackup($token);
     }
 
+    /* ------------------------------------------------------ restore methods */
+    /**
+     *  Restore a beckup file
+     *
+     *  @param  sessid   :  string - session id
+     *  @param  filename :  string - backup file path
+     *  @return token    :  string - restore token
+     */
+    function doRestore($sessid, $filename)
+    {
+        #require_once 'Restore.php';
+        #$rs = new Restore($this);
+        #if (PEAR::isError($rs)) return $rs;
+        return array('token' => '123456789abcde00');
+    }
+
+    /**
+     *  Check status of backup restore
+     *
+     *  @param token   :  string    -  restore token
+     *  @return status :  hasharray - fields:
+     * 							token:  string - restore token
+     *                          status: string - working | fault | success
+     */
+    function checkRestore($token)
+    {
+        #require_once 'Restore.php';
+        #$rs = new Restore($this);
+        #if (PEAR::isError($rs)) return $rs;
+        if ($token=='123456789abcde00') {
+        	return array(
+        			'token'  => $token,
+        			'status' => 'working'
+        		);
+        } else {
+  			return PEAR::raiseError(
+                    "GreenBox::checkRestore:".
+                    " invalid restore token ($token)"
+                );
+        }
+    }
+
     /*===================================================== auxiliary methods */
     /**
      *  Dummy method - only returns livesupport version
