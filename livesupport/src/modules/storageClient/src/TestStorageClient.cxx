@@ -967,7 +967,8 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref    sessionId,
                                      int                    offset)
                                                 throw (XmlRpcException)
 {
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("playlist"));
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
+                                                std::string("playlist")));
     criteria->setLimit(limit);
     criteria->setOffset(offset);
     search(sessionId, criteria);
@@ -996,7 +997,8 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
                                       int                   offset)
                                                 throw (XmlRpcException)
 {
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("audioClip"));
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
+                                                std::string("audioClip")));
     criteria->setLimit(limit);
     criteria->setOffset(offset);
     search(sessionId, criteria);
@@ -1052,6 +1054,34 @@ void
 TestStorageClient :: createBackupClose(const Glib::ustring &    token) const
                                                 throw (XmlRpcException)
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Initiate the uploading of a storage backup to the local storage.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: restoreBackup(
+                        Ptr<SessionId>::Ref             sessionId,
+                        Ptr<const Glib::ustring>::Ref   path)           const
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the status of a backup restore.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestStorageClient :: restoreBackupCheck(
+                        Ptr<const Glib::ustring>::Ref   token,
+                        Ptr<const Glib::ustring>::Ref & errorMessage)   const
+                                                throw (XmlRpcException)
+{
+    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
+    return status;
 }
 
 

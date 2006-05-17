@@ -139,7 +139,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${STORAGE_CLIENT_LIB} -l${CORE_LIB} \
                    -l${AUTHENTICATION_LIB} \
                    -l${BOOST_DATE_TIME_LIB} \
-                   -lcppunit -ldl -lxmlrpc++ -lssl
+                   -lcppunit -ldl -lxmlrpc++ -lssl -ltar
 
 
 #-------------------------------------------------------------------------------

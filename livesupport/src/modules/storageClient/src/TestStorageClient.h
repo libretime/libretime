@@ -689,6 +689,36 @@ class TestStorageClient :
                                                 throw (XmlRpcException);
 
         /**
+         *  Initiate the uploading of a storage backup to the local storage.
+         *
+         *  @param  sessionId   the session ID from the authentication client.
+         *  @param  path        the location of the archive file to upload.
+         *  @return a token which identifies this task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        restoreBackup(Ptr<SessionId>::Ref               sessionId,
+                      Ptr<const Glib::ustring>::Ref     path) const
+                                                throw (XmlRpcException);
+        
+        /**
+         *  Check the status of a backup restore.
+         *
+         *  @param  token       the identifier of this backup task.
+         *  @param  errorMessage    return parameter;
+         *                      if the status is "fault", it contains the
+         *                      fault string.
+         *  @return the status string: one of "working", "success", or "fault".
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        restoreBackupCheck(Ptr<const Glib::ustring>::Ref    token,
+                           Ptr<const Glib::ustring>::Ref &  errorMessage) const
+                                                throw (XmlRpcException);
+        
+        /**
          *  Initiate the exporting of a playlist.
          *
          *  @param  sessionId   the session ID from the authentication client.
