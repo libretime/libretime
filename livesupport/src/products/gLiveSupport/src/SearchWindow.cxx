@@ -702,7 +702,12 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
-            gLiveSupport->addToScratchpad(playable);
+            try {
+                gLiveSupport->addToScratchpad(playable);
+            } catch (XmlRpcException &e) {
+                std::cerr << "error in SearchWindow::onAddToScratchpad(): "
+                          << e.what() << std::endl;
+            }
         }
     }
 }
@@ -722,7 +727,12 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
             gLiveSupport->addToLiveMode(playable);
-            gLiveSupport->addToScratchpad(playable);
+            try {
+                gLiveSupport->addToScratchpad(playable);
+            } catch (XmlRpcException &e) {
+                std::cerr << "error in SearchWindow::onAddToLiveMode(): "
+                          << e.what() << std::endl;
+            }
         }
     }
 }
@@ -744,10 +754,15 @@ SearchWindow :: onExportPlaylist(void)                          throw ()
         if (playable) {
             Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
             if (playlist) {
-                exportPlaylistWindow.reset(new ExportPlaylistWindow(
+                try {
+                    exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
+                } catch (XmlRpcException &e) {
+                    std::cerr << e.what() << std::endl;
+                    return;
+                }
                 exportPlaylistWindow->set_transient_for(*this);
                 Gtk::Main::run(*exportPlaylistWindow);
             }

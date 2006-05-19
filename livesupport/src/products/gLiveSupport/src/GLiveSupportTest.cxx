@@ -109,7 +109,7 @@ const std::string   password = "q";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-GLiveSupportTest :: setUp(void)                         throw ()
+GLiveSupportTest :: setUp(void)                 throw (CPPUNIT_NS::Exception)
 {
     Gtk::Main kit(0, 0);
 
@@ -146,7 +146,9 @@ GLiveSupportTest :: setUp(void)                         throw ()
     }
     ifs.close();
 
-    gLiveSupport->resetStorage();
+    CPPUNIT_ASSERT_NO_THROW(
+        gLiveSupport->resetStorage();
+    );
 
     if (!gLiveSupport->login(login, password)) {
         std::cerr << "gLiveSupport unable to log in" << std::endl;

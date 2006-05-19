@@ -495,14 +495,9 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 
         /**
          *  Update the Search Window.
-         *
-         *  @param  playable    (optional) add this item to the pending "upload
-         *                      to hub" tasks displayed in the Transports tab.
          */
         void
-        updateSearchWindow(Ptr<Playable>::Ref       playable
-                                                    = Ptr<Playable>::Ref())
-                                                                throw ();
+        updateSearchWindow(void)                                throw ();
 
         /**
          *  Update the Options Window
@@ -525,6 +520,16 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         setNowPlaying(Ptr<Playable>::Ref    playable)           throw ();
+
+        /**
+         *  Upload a Playable object to the network hub.
+         *  And display it in the Transports tab of the Search Window.
+         *
+         *  @param  playable    the audio clip or playlist to be uploaded.
+         */
+        void
+        uploadToHub(Ptr<Playable>::Ref      playable)           throw ();
+
 };
 
 /* ================================================= external data structures */

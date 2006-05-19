@@ -318,7 +318,12 @@ SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
             DialogWindow::ButtonType    result = dialogWindow->run();
             switch (result) {
                 case DialogWindow::noButton:
-                                gLiveSupport->cancelEditedPlaylist();
+                                try {
+                                    gLiveSupport->cancelEditedPlaylist();
+                                } catch (XmlRpcException &e) {
+                                    std::cerr << e.what() << std::endl;
+                                    return false;
+                                }
                                 break;
 
                 case DialogWindow::yesButton:
@@ -425,7 +430,14 @@ SimplePlaylistManagementWindow :: onTitleEdited(void)               throw()
 {
     Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
     if (!playlist) {
-        playlist = gLiveSupport->openPlaylistForEditing();
+        try {
+            playlist = gLiveSupport->openPlaylistForEditing();
+        } catch (XmlRpcException &e) {
+            std::cerr << "error in SimplePlaylistManagementWindow::"
+                         "onTitleEdited(): "
+                      << e.what() << std::endl;
+            return;
+        }
     }
     Ptr<Glib::ustring>::Ref     title(new Glib::ustring(
                                                     nameEntry->get_text()));

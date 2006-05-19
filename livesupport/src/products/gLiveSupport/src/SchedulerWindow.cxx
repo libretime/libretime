@@ -73,7 +73,7 @@ SchedulerWindow :: SchedulerWindow (
                             Ptr<GLiveSupport>::Ref      gLiveSupport,
                             Ptr<ResourceBundle>::Ref    bundle,
                             Button *                    windowOpenerButton)
-                                                                    throw ()
+                                                    throw (XmlRpcException)
           : GuiWindow(gLiveSupport,
                       bundle, 
                       WidgetConstants::schedulerWindowTitleImage,
@@ -258,7 +258,10 @@ SchedulerWindow :: onDateSelected (void)                            throw ()
             showContents();
         }
     } catch (std::out_of_range &e) {
-        // TODO: report error
+        // TODO: report date out of range error
+        std::cerr << e.what() << std::endl;
+    } catch (std::out_of_range &e) {
+        // TODO: report storage server error
         std::cerr << e.what() << std::endl;
     }
 }
@@ -280,7 +283,7 @@ SchedulerWindow :: setTime(Ptr<boost::posix_time::ptime>::Ref  time)
  *  date
  *----------------------------------------------------------------------------*/
 void
-SchedulerWindow :: showContents(void)                               throw ()
+SchedulerWindow :: showContents(void)               throw (XmlRpcException)
 {
     calendar->select_month(selectedDate->month() - 1, selectedDate->year());
     calendar->select_day(selectedDate->day());
@@ -372,7 +375,12 @@ SchedulerWindow :: onDeleteItem(void)                               throw ()
             } catch (XmlRpcException &e) {
                 // TODO: signal error here
             }
-            showContents();
+            
+            try {
+                showContents();
+            } catch (XmlRpcException &e) {
+                // TODO: signal error here
+            }
         }
     }
 }

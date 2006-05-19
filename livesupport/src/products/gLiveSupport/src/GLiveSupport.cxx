@@ -807,7 +807,7 @@ GLiveSupport :: acquirePlayable(Ptr<const UniqueId>::Ref  id)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: uncachePlaylist(Ptr<const UniqueId>::Ref  id)
-                                                        throw ()
+                                                        throw (XmlRpcException)
 {
     Ptr<Playlist>::Ref      playlist;
     PlaylistMap::iterator   it;
@@ -829,7 +829,7 @@ GLiveSupport :: uncachePlaylist(Ptr<const UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseOpennedAudioClips(void)              throw ()
+GLiveSupport :: releaseOpennedAudioClips(void)          throw (XmlRpcException)
 {
     AudioClipMap::iterator   it  = opennedAudioClips->begin();
     AudioClipMap::iterator   end = opennedAudioClips->end();
@@ -853,7 +853,7 @@ GLiveSupport :: releaseOpennedAudioClips(void)              throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseOpennedPlaylists(void)               throw ()
+GLiveSupport :: releaseOpennedPlaylists(void)           throw (XmlRpcException)
 {
     PlaylistMap::iterator   it  = opennedPlaylists->begin();
     PlaylistMap::iterator   end = opennedPlaylists->end();
@@ -911,7 +911,7 @@ GLiveSupport :: uploadPlaylistArchive(Ptr<const Glib::ustring>::Ref     path)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
-                                                            throw ()
+                                                    throw (XmlRpcException)
 {
     if (playable->getType() == Playable::AudioClipType) {
         acquireAudioClip(playable->getId());
@@ -1631,7 +1631,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadToHub(Ptr<Playable>::Ref      playable)
                                                             throw ()
 {
-    masterPanel->updateSearchWindow(playable);
+    masterPanel->uploadToHub(playable);
 }
 
 

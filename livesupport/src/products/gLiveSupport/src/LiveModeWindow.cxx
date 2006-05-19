@@ -287,7 +287,12 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         gLiveSupport->setNowPlaying(playable);
         treeView->removeItem(iter);
-        gLiveSupport->playOutputAudio(playable);
+        try {
+            gLiveSupport->playOutputAudio(playable);
+        } catch (std::logic_error &e) {
+            std::cerr << "cannot play on live mode output device: "
+                      << e.what() << std::endl;
+        }
     }
 }
 

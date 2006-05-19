@@ -289,7 +289,14 @@ ScratchpadWindow :: onAddToPlaylistButtonClicked (void)         throw ()
         Gtk::TreeIter   ti = treeModel->get_iter(*iter);
         if (ti) {
             Ptr<Playable>::Ref  playable = (*ti)[modelColumns.playableColumn];
-            gLiveSupport->addToPlaylist(playable->getId());
+            try {
+                gLiveSupport->addToPlaylist(playable->getId());
+            } catch (XmlRpcException &e) {
+                // just ignore the bad items
+                std::cerr << "error in ScratchpadWindow::"
+                             "onAddToPlaylistButtonClicked(): "
+                          << e.what() << std::endl;
+            }
         }
     }
 }
@@ -445,7 +452,13 @@ void
 ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    gLiveSupport->addToPlaylist(playable->getId());
+    try {
+        gLiveSupport->addToPlaylist(playable->getId());
+    } catch (XmlRpcException &e) {
+        std::cerr << "error in ScratchpadWindow::onAddToPlaylist(): "
+                    << e.what() << std::endl;
+        return;
+    }
 }
 
 
@@ -458,21 +471,28 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<UniqueId>::Ref  uid      = playable->getId();
-
-    if (!gLiveSupport->existsPlaylist(uid)) {
-        return;
-    }
-
-    Ptr<Playlist>::Ref  playlist = gLiveSupport->getPlaylist(uid);
-
+    
     Ptr<ResourceBundle>::Ref    bundle;
+    Ptr<Playlist>::Ref          playlist;
+    
     try {
-        bundle = gLiveSupport->getBundle("schedulePlaylistWindow");
+        if (!gLiveSupport->existsPlaylist(uid)) {
+            return;
+        }
+
+        playlist    = gLiveSupport->getPlaylist(uid);
+
+        bundle      = gLiveSupport->getBundle("schedulePlaylistWindow");
+
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         return;
+    } catch (XmlRpcException &e) {
+        std::cerr << "error in ScratchpadWindow::onSchedulePlaylist(): "
+                  << e.what() << std::endl;
+        return;
     }
-
+    
     // TODO: this should be somewhere else; figure out where
     Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
     scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
@@ -505,13 +525,17 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
-    if (playlist) {
-        exportPlaylistWindow.reset(new ExportPlaylistWindow(
+    try {
+        if (playlist) {
+            exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-        exportPlaylistWindow->set_transient_for(*this);
-        Gtk::Main::run(*exportPlaylistWindow);
+            exportPlaylistWindow->set_transient_for(*this);
+            Gtk::Main::run(*exportPlaylistWindow);
+        }
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
     }
 }
 
@@ -609,6 +633,17 @@ void
 ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
                                                                 throw ()
 {
+    // cache the item if it hasn't been cached yet
+    if (!playable->getToken()) {
+        try {
+            gLiveSupport->acquirePlayable(playable->getId());
+        } catch (XmlRpcException &e) {
+            std::cerr << "could not acquire playable in ScratchpadWindow: "
+                      << e.what() << std::endl;
+            return;
+        }
+    }
+    
     removeItem(playable->getId());
     
     Gtk::TreeModel::Row     row = *treeModel->prepend();
@@ -631,11 +666,6 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
     
     row[modelColumns.titleColumn]         = Glib::Markup::escape_text(
                                                         *playable->getTitle());
-    
-    // cache the item if it hasn't been cached yet
-    if (!playable->getToken()) {
-        gLiveSupport->acquirePlayable(playable->getId());
-    }
 }
 
 
@@ -646,7 +676,15 @@ void
 ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
                                                                 throw ()
 {
-    Ptr<Playable>::Ref  playable = gLiveSupport->acquirePlayable(id);
+    Ptr<Playable>::Ref  playable;
+    try {
+        playable = gLiveSupport->acquirePlayable(id);
+    } catch (XmlRpcException &e) {
+        std::cerr << "could not acquire playable in ScratchpadWindow: "
+                    << e.what() << std::endl;
+        return;
+    }
+    
     addItem(playable);
 }
 

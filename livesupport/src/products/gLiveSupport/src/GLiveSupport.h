@@ -294,7 +294,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param id the id of the playlist to remove.
          */
         void
-        uncachePlaylist(Ptr<const UniqueId>::Ref  id)           throw ();
+        uncachePlaylist(Ptr<const UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
         
         /**
          *  The list of keyboard shortcuts for the various windows.
@@ -373,8 +374,14 @@ class GLiveSupport : public LocalizedConfigurable,
             if (cuePlayer.get()) {
                 cuePlayer->deInitialize();
             }
-            releaseOpennedAudioClips();
-            releaseOpennedPlaylists();
+            try {
+                releaseOpennedAudioClips();
+            } catch (XmlRpcException &e) {
+            }
+            try {
+                releaseOpennedPlaylists();
+            } catch(XmlRpcException &e) {
+            }
         }
 
         /**
@@ -558,7 +565,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param playable the audio clip or playlist to be added
          */
         void
-        addToScratchpad(Ptr<Playable>::Ref  playable)           throw ();
+        addToScratchpad(Ptr<Playable>::Ref  playable)
+                                                    throw (XmlRpcException);
 
         /**
          *  Reset the storage behind GLiveSupport.
@@ -706,13 +714,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Release all openned audio clips.
          */
         void
-        releaseOpennedAudioClips(void)                          throw ();
+        releaseOpennedAudioClips(void)              throw (XmlRpcException);
 
         /**
          *  Release all openned playlists.
          */
         void
-        releaseOpennedPlaylists(void)                           throw ();
+        releaseOpennedPlaylists(void)               throw (XmlRpcException);
 
         /**
          *  Add a file to the Live Mode, and update it.

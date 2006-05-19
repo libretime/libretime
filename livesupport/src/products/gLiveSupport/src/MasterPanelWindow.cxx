@@ -548,17 +548,27 @@ MasterPanelWindow :: updateSchedulerWindow(
             std::cerr << e.what() << std::endl;
             return;
         }
-
-        schedulerWindow.reset(new SchedulerWindow(gLiveSupport,
-                                                  bundle,
-                                                  schedulerButton));
+        
+        try {
+            schedulerWindow.reset(new SchedulerWindow(gLiveSupport,
+                                                      bundle,
+                                                      schedulerButton));
+        } catch (XmlRpcException &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
     }
     
     if (time.get()) {
         schedulerWindow->setTime(time);
     }
     
-    schedulerWindow->showContents();
+    try {
+        schedulerWindow->showContents();
+    } catch (XmlRpcException &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
 
     if (!schedulerWindow->is_visible()) {
         schedulerWindow->show();
@@ -570,8 +580,7 @@ MasterPanelWindow :: updateSchedulerWindow(
  *  The event when the Search button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateSearchWindow(Ptr<Playable>::Ref    playable)
-                                                                    throw ()
+MasterPanelWindow :: updateSearchWindow(void)                       throw ()
 {
     if (!searchWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -587,12 +596,7 @@ MasterPanelWindow :: updateSearchWindow(Ptr<Playable>::Ref    playable)
                                             searchButton));
     }
     
-    bool    dontWantUploadOrItWasOK = true;
-    if (playable) {
-        dontWantUploadOrItWasOK = searchWindow->uploadToHub(playable);
-    }
-    
-    if (dontWantUploadOrItWasOK && !searchWindow->is_visible()) {
+    if (!searchWindow->is_visible()) {
         searchWindow->show();
     }
 }
@@ -816,4 +820,34 @@ MasterPanelWindow :: onKeyPressed(GdkEventKey *    event)           throw ()
     
     return false;
 }
+
+
+/*------------------------------------------------------------------------------
+ *  The event when the Search button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
+                                                                    throw ()
+{
+    if (!searchWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("searchWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        searchWindow.reset(new SearchWindow(gLiveSupport,
+                                            bundle,
+                                            searchButton));
+    }
+    
+    bool    success = searchWindow->uploadToHub(playable);
+    
+    if (success && !searchWindow->is_visible()) {
+        searchWindow->show();
+    }
+}
+
 

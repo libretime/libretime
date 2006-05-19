@@ -266,7 +266,7 @@ class SchedulerWindow : public GuiWindow
         SchedulerWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Ptr<ResourceBundle>::Ref    bundle,
                         Button *                    windowOpenerButton)
-                                                                    throw ();
+                                                    throw (XmlRpcException);
 
         /**
          *  Virtual destructor.
@@ -288,7 +288,7 @@ class SchedulerWindow : public GuiWindow
          *  Update the display, with regards to the currently selected day.
          */
         virtual void
-        showContents(void)                                          throw ();
+        showContents(void)                          throw (XmlRpcException);
 
 };
 
