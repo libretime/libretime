@@ -759,7 +759,7 @@ SearchWindow :: onExportPlaylist(void)                          throw ()
                                 gLiveSupport,
                                 gLiveSupport->getBundle("exportPlaylistWindow"),
                                 playlist));
-                } catch (XmlRpcException &e) {
+                } catch (std::invalid_argument &e) {
                     std::cerr << e.what() << std::endl;
                     return;
                 }
