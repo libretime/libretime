@@ -515,7 +515,7 @@ UploadFileWindow::FileType
 UploadFileWindow :: determineFileType(const std::string &   fileName)
                                                                 throw ()
 {
-    unsigned int    dotPosition = fileName.find('.');
+    unsigned int    dotPosition = fileName.rfind('.');
     if (dotPosition == std::string::npos) {
         return invalidType;
     }
