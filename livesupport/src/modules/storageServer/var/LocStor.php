@@ -1009,44 +1009,49 @@ class LocStor extends BasicStor{
 
     /* ------------------------------------------------------ restore methods */
     /**
-     *  Restore a beckup file
+     *  Restore a beckup file (open handle)
      *
      *  @param  sessid   :  string - session id
      *  @param  filename :  string - backup file path
      *  @return token    :  string - restore token
      */
-    function doRestore($sessid, $filename)
+    function backupRestoreOpen($sessid, $filename)
     {
-        #require_once 'Restore.php';
-        #$rs = new Restore($this);
-        #if (PEAR::isError($rs)) return $rs;
-        return array('token' => '123456789abcde00');
+        require_once 'Restore.php';
+        $rs = new Restore($this);
+        if (PEAR::isError($rs)) return $rs;
+        return $rs->openRestore($sessid,$filename);
     }
 
     /**
-     *  Check status of backup restore
+     *  Restore a beckup file (check state)
      *
      *  @param token   :  string    -  restore token
      *  @return status :  hasharray - fields:
      * 							token:  string - restore token
      *                          status: string - working | fault | success
      */
-    function checkRestore($token)
+    function backupRestoreCheck($token)
     {
-        #require_once 'Restore.php';
-        #$rs = new Restore($this);
-        #if (PEAR::isError($rs)) return $rs;
-        if ($token=='123456789abcde00') {
-        	return array(
-        			'token'  => $token,
-        			'status' => 'working'
-        		);
-        } else {
-  			return PEAR::raiseError(
-                    "GreenBox::checkRestore:".
-                    " invalid restore token ($token)"
-                );
-        }
+        require_once 'Restore.php';
+        $rs = new Restore($this);
+        if (PEAR::isError($rs)) return $rs;
+        return $rs->checkRestore($token);
+    }
+    
+    /**
+     *  Restore a beckup file (close handle)
+     *
+     *  @param token   :  string    -  restore token
+     *  @return status :  hasharray - fields:
+     * 							token:  string - restore token
+     *                          status: string - working | fault | success
+     */
+    function backupRestoreClose($token) {
+    	require_once 'Restore.php';
+    	$rs = new Restore($this);
+    	if (PEAR::isError($rs)) return $rs;
+    	return $rs->closeRestore($token);
     }
 
     /*===================================================== auxiliary methods */

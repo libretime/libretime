@@ -62,7 +62,7 @@ class Backup {
     /**
      *  string - loglevel
      */
-    var $loglevel = 'debug';  # 'debug';
+    var $loglevel = 'warn';  # 'debug';
     
     /**
      *  greenbox object reference
@@ -270,14 +270,14 @@ class Backup {
     }
     
     /**
-     *  Create the trackball - call the shell script
+     *  Create the tarball - call the shell script
      *
      */
     function doIt() {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt\n");
         }
-        $command = dirname(__FILE__)."/../bin/backup.sh".
+        $command = dirname(__FILE__).'/../bin/backup.sh'.
             " {$this->tmpDir}".
             " {$this->tmpFile}".
             " {$this->statusFile}".
@@ -298,18 +298,20 @@ class Backup {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." copyAllFiles\n");
         }
         //echo '<XMP>this->filenames:'; print_r($this->filenames); echo '</XMP>';   
-        foreach ($this->filenames as $v) {
-            # get the filename from full path
-            $fn = substr($v['filename'],strrpos($v['filename'],'/'));
-            switch (strtolower($v['format'])) {
-                case 'playlist':
-                    # if playlist then copy to the playlist dir
-                    copy($v['filename'],$this->tmpDirPlaylist.$fn);
-                    break;
-                case 'audioclip':
-                    # if audioclip then copy to the audioclip dir
-                    copy($v['filename'],$this->tmpDirClip.$fn);
-                    break;
+        if (is_array($this->filenames)) {
+            foreach ($this->filenames as $v) {
+                # get the filename from full path
+                $fn = substr($v['filename'],strrpos($v['filename'],'/'));
+                switch (strtolower($v['format'])) {
+                    case 'playlist':
+                        # if playlist then copy to the playlist dir
+                        copy($v['filename'],$this->tmpDirPlaylist.$fn);
+                        break;
+                    case 'audioclip':
+                        # if audioclip then copy to the audioclip dir
+                        copy($v['filename'],$this->tmpDirClip.$fn);
+                        break;
+                }
             }
         }
     }

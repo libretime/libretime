@@ -1053,12 +1053,12 @@ class GreenBox extends BasicStor{
      *  @param  filename :  string - backup file path
      *  @return token    :  string - restore token
      */
-    function doRestore($sessid, $filename)
+    function backupRestoreOpen($sessid, $filename)
     {
         require_once 'Restore.php';
         $rs = new Restore($this);
         if (PEAR::isError($rs)) return $rs;
-        return $rs->doRestore($sessid,$filename);
+        return $rs->openRestore($sessid,$filename);
     }
 
     /**
@@ -1069,22 +1069,27 @@ class GreenBox extends BasicStor{
      * 							token:  string - restore token
      *                          status: string - working | fault | success
      */
-    function checkRestore($token)
+    function backupRestoreCheck($token)
     {
-        #require_once 'Restore.php';
-        #$rs = new Restore($this);
-        #if (PEAR::isError($rs)) return $rs;
-        if ($token=='123456789abcde00') {
-        	return array(
-        			'token'  => $token,
-        			'status' => 'working'
-        		);
-        } else {
-  			return PEAR::raiseError(
-                    "GreenBox::checkRestore:".
-                    " invalid restore token ($token)"
-                );
-        }
+        require_once 'Restore.php';
+        $rs = new Restore($this);
+        if (PEAR::isError($rs)) return $rs;
+        return $rs->checkRestore($token);
+    }
+    
+    /**
+     *  Close a restore procedure
+     *
+     *  @param token   :  string    -  restore token
+     *  @return status :  hasharray - fields:
+     * 							token:  string - restore token
+     *                          status: string - working | fault | success
+     */
+    function backupRestoreClose($token) {
+    	require_once 'Restore.php';
+    	$rs = new Restore($this);
+    	if (PEAR::isError($rs)) return $rs;
+    	return $rs->closeRestore($token);
     }
 
     /* ============================================== methods for preferences */

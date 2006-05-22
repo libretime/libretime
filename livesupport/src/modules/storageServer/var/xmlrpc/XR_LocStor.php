@@ -1937,67 +1937,21 @@ class XR_LocStor extends LocStor{
     }
     /* ------------------------------------------------------ restore methods */
     /**
-     *  Restore a backup file.
+     *  Open writable URL for restore a backup file
      *
-     *  The XML-RPC name of this method is "locstor.doRestore".
-     *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
-     *      <li> sessid    :  string  -  session id </li>
-     *      <li> filename  :  string  -  name of backupfile </li>
-     *  </ul>
-     *
-     *  On success, returns a XML-RPC array of struct with following fields:
-     *  <ul>
-     *      <li> token : string - restore token</li>
-     *  </ul>
-     *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
-     *      <li> 3    -  Incorrect parameters passed to method:
-     *                      Wanted ... , got ... at param </li>
-     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_doRestore:
-     *                      &lt;message from lower layer&gt; </li>
-     *  </ul>
-     *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::doRestore
-     */
-    function xr_doRestore($input)
-    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        $res = $this->doRestore($r['sessid'],$r['filename']);
-        if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 805,
-                "xr_doRestore: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array(
-            'status'=>$res['status'],
-        )));
-    }
-
-    /**
-     *  Check status of backup restore
-     *
-     *  The XML-RPC name of this method is "locstor.checkRestore".
+     *  The XML-RPC name of this method is "locstor.restoreBackupOpen".
      *
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
-     *      <li> token  :  string  -  restore token </li>
+     *      <li> sessid  : string  -  session id </li>
+     *      <li> chsum   : string  -  md5 checksum of backup file</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - success | working | fault</li>
-     *      <li> token  : string - restore token </li>
+     *      <li> url : string - writable url</li>
+     *      <li> token : string - PUT token</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -2006,28 +1960,120 @@ class XR_LocStor extends LocStor{
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_checkRestore:
+     *      <li> 805  -  xr_restoreBackupOpen:
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see LocStor::checkRestore
+     *  @see LocStor::restoreBackupOpen
      */
-    function xr_checkRestore($input)
+    function xr_restoreBackupOpen($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->checkRestore($r['token']);
+        $res = $this->restoreBackupOpen($r['sessid'], $r['chsum']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
-                "xr_checkRestore: ".$res->getMessage().
+                "xr_restoreBackupOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
-            'status'=>$res['status'],
-            'token' =>$res['token'],
+            'url'=>$res['url'],
+            'token'=>$res['token'],
+        )));
+    }
+
+    /**
+     *  Check the state of restore procedure
+     *
+     *  The XML-RPC name of this method is "locstor.restoreBackupCheck".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  access token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status : string - status</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupCheck:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::restoreBackupCheck
+     */
+    function restoreBackupCheck($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->restoreBackupCheck($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_restoreBackupCheck: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'gunid'=>$res,
+        )));
+    }
+
+    /**
+     *  Close writable URL for restore a backup file and restore the backup file
+     *
+     *  The XML-RPC name of this method is "locstor.restoreBackupClose".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  access token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status : string - status</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupClose:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::restoreBackupClose
+     */
+    function xr_restoreBackupClose($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->restoreBackupClose($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_restoreBackupClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'gunid'=>$res,
         )));
     }
 
