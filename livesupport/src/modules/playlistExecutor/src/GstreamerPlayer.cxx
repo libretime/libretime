@@ -357,7 +357,15 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
     }
 
     ns = ls_gst_autoplug_get_position(decoder);
-    length.reset(new time_duration(microsec(ns / 1000LL)));
+    
+    // this is necessary for boost version < 1.33.0
+    gint64      us      = ns / 1000LL;
+    long        s       = us / 1000000LL;
+    long        frac_s  = us % 1000000LL;
+    length.reset(new time_duration(seconds(s) + microseconds(frac_s)));
+    
+    // if we can be sure that boost >= 1.33.0, then we can write this instead:
+    // length.reset(new time_duration(microseconds(ns / 1000LL)));
 
     return length;
 }
