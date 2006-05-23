@@ -113,7 +113,8 @@ SchedulerWindow :: SchedulerWindow (
     set_name(windowName);
     set_default_size(330, 400);
     showContents();
-    show_all();
+    
+    show_all_children();
 }
 
 

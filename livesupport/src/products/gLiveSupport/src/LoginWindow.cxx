@@ -202,7 +202,8 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // add the table to the window, and show everything
     add(*table);
     loginEntry->grab_focus();
-    show_all();
+    
+    show_all_children();
 }
 
 

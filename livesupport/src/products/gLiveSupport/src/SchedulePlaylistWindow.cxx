@@ -114,8 +114,8 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                               &SchedulePlaylistWindow::onCloseButtonClicked));
 
     add(*layout);
-
-    show_all();
+    
+    show_all_children();
 }
 
 

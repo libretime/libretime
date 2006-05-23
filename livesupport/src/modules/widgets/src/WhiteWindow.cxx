@@ -189,11 +189,6 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     blueBin->add(*layout);
     Gtk::Window::add(*blueBin);
 
-    // show all
-    if (!(properties & isBornHidden)) {
-        show_all();
-    }
-
     // register signal handlers
     this->add_events(Gdk::BUTTON_PRESS_MASK);
     this->signal_button_press_event().connect(sigc::mem_fun(*this,

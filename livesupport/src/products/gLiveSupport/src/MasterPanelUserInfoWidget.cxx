@@ -163,7 +163,7 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
            Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
            5, 0);
 
-    show_all();
+    show_all_children();
 }
 
 
@@ -184,7 +184,6 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
     Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
                                                             loginBundle,
                                                             logInOutButton));
-
     Gtk::Main::run(*loginWindow);
 
     Ptr<const Glib::ustring>::Ref     password = loginWindow->getPassword();

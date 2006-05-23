@@ -61,7 +61,7 @@ DateTimeChooserWindow :: DateTimeChooserWindow(Ptr<ResourceBundle>::Ref  bundle)
           : WhiteWindow("",
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        WhiteWindow::isModal | WhiteWindow::isBornHidden),
+                        WhiteWindow::isModal),
             LocalizedObject(bundle)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();

@@ -142,7 +142,8 @@ ExportPlaylistWindow :: ExportPlaylistWindow(
     add(*layout);
     
     set_name(windowName);
-    show_all();
+    
+    show_all_children();
 }
 
 

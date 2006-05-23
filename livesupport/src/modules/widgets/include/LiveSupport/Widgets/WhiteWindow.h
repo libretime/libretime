@@ -399,8 +399,7 @@ class WhiteWindow : public Gtk::Window,
          *  properties parameter to the constructors.
          */
         typedef enum  { isResizable     = 1,
-                        isModal         = 2,
-                        isBornHidden    = 4 }       WindowProperties;
+                        isModal         = 2 }       WindowProperties;
 };
 
 

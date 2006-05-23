@@ -223,9 +223,10 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     set_default_size(480, 350);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
-
-    show_all();
-
+    
+    show_all_children();
+    
+    // set up the dialog windows
     Ptr<Glib::ustring>::Ref     confirmationMessage;
     try {
         confirmationMessage.reset(new Glib::ustring(

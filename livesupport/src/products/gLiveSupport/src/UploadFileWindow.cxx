@@ -258,7 +258,7 @@ UploadFileWindow :: UploadFileWindow (
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
-    show_all();
+    show_all_children();
 }
 
 
