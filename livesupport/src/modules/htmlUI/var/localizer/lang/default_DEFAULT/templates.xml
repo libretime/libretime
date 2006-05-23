@@ -845,4 +845,8 @@
 		<key>Are you sure to cancel transfer(s)?</key>
 		<value>Are you sure to cancel transfer(s)?</value>
 	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value>AChoose a backup file</value>
+	</item>
 </translations>

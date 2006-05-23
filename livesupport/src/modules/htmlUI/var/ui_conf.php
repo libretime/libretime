@@ -110,6 +110,7 @@ define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
 ## Export/Import
 define('UI_BACKUPTOKEN_KEY',            'backupToken');
+define('UI_RESTORETOKEN_KEY',           'restoreToken');
 
 ## LS stuff
 require_once '../../../storageServer/var/conf.php';

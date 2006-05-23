@@ -371,7 +371,7 @@ switch($_REQUEST['act']){
     $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "BACKUP.createBackupOpen":
+    case 'BACKUP.createBackupOpen':
     $uiHandler->EXCHANGE->createBackupOpen();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
@@ -381,12 +381,22 @@ switch($_REQUEST['act']){
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';    
     break;
     
-    case "BACKUP.createBackupClose":
+    case 'BACKUP.createBackupClose':
     $uiHandler->EXCHANGE->createBackupClose();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
 
-    case "SESSION.CLEAR":
+    case 'RESTORE.setBackupFileToRestore':
+    $uiHandler->EXCHANGE->backupRestoreOpen($_REQUEST['target']);
+    $uiHandler->redirUrl = UI_BROWSER.'?act=RESTORE';
+    break;
+    
+    case 'RESTORE.backupRestoreClose':
+    $uiHandler->EXCHANGE->backupRestoreClose();
+    $uiHandler->redirUrl = UI_BROWSER.'?act=RESTORE';
+    break;
+
+    case 'SESSION.CLEAR':
     $_SESSION = array();
     die();
     break;

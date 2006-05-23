@@ -160,15 +160,17 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->display('popup/help.tpl');
             break;
             
-            case "BACKUP.setLocation":
+            case 'BACKUP.setLocation':
             if ($_REQUEST['cd']) {
                 $uiBrowser->EXCHANGE->setFolder($_REQUEST['cd']);
             }
+            $Smarty->assign('isRestore',$_REQUEST['isRestore']);
             $Smarty->display('backup/fileBrowser.tpl');
             break;
             
             case 'BACKUP.setFile':
-            $uiBrowser->EXCHANGE->setFile($_REQUEST['file']);
+            $Smarty->assign('isFile',$uiBrowser->EXCHANGE->setFile($_REQUEST['file']));
+            $Smarty->assign('isRestore',$_REQUEST['isRestore']);
             $Smarty->display('backup/fileBrowser.tpl');    
             break;
             

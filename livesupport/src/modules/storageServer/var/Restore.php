@@ -294,7 +294,7 @@ class Restore {
                 if(!is_dir($dirname."/".$file))
                     unlink ($dirname."/".$file);
                 else
-                    Backup::rRmDir($dirname."/".$file);
+                    Restore::rRmDir($dirname."/".$file);
             }
         }
         closedir($dir_handle);

@@ -11,7 +11,7 @@ class uiExchange
         }
     }
     
-    // GB wrapper emthods
+    // GB wrapper methods
     
     function getBackupToken()
     {
@@ -47,7 +47,7 @@ class uiExchange
         $token = $this->getBackupToken();
         
         if ($token === false) {
-            return flase;    
+            return false;    
         }       
         
         $res = $this->Base->gb->createBackupCheck($token);
@@ -76,8 +76,8 @@ class uiExchange
     
     function createBackupClose()
     {
-        $token  = $token = $this->getBackupToken(); 
-        
+        $token = $this->getBackupToken(); 
+        	
         if ($token === false) {
             $this->Base->_retMsg('Token not available');
             return false;    
@@ -144,8 +144,80 @@ class uiExchange
         return false;
     }
     
+    // Restore methods
+    function getRestoreToken()
+    {
+    	$token = $this->Base->gb->loadPref($this->Base->sessid, UI_RESTORETOKEN_KEY);
+        if (PEAR::isError($token)) {
+            return false;    
+        }
+        return $token;
+    }
     
+    function restore($filename) {
+        $filename='/tmp/backup_20060508.tar';
+    }
     
+    function backupRestoreOpen($backupFile)
+    {
+        $token = $this->Base->gb->backupRestoreOpen($this->Base->sessid,$backupFile);
+       
+        if (PEAR::isError($token)) {
+            $this->Base->_retMsg('Error initializing backup restore: $1', $token->getMessage());
+            return false;    
+        }
+        
+        #$this->backupRestoreCheck();  //?
+        
+        $this->Base->gb->savePref($this->Base->sessid, UI_RESTORETOKEN_KEY, $token['token']);
+        
+        return true;
+    }       
+    
+    function backupRestoreCheck()
+    {
+        $token = $this->getRestoreToken();
+        
+        if ($token === false) {
+            return false;    
+        }       
+        
+        $res = $this->Base->gb->backupRestoreCheck($token);
+        
+        if (PEAR::isError($res)) {
+            $this->Base->_retMsg('Unable to check backup restore status: $1', $res->getMessage());
+            return false;    
+        }
+        
+        return $res;
+    }
+    
+    function backupRestoreClose()
+    {
+        $token = $this->getRestoreToken(); 
+        
+        if ($token === false) {
+            $this->Base->_retMsg('Backup restore token is not available');
+            return false;    
+        } 
+        
+        $status = $this->Base->gb->backupRestoreClose($token);   
+        
+        if (PEAR::isError($status)) {
+            $this->Base->_retMsg('Error closing restore backup: $1', $status->getMessage());
+            return false;    
+        }
+        
+        if ($status === true) {
+            $this->Base->gb->delPref($this->Base->sessid, UI_RESTORETOKEN_KEY);        
+        }
+        
+        return $status;
+    }
+    
+    function setBackupFileToRestore($filename) {
+    }
+
     // file browser methods
     
     function setFolder($subfolder)
@@ -247,12 +319,6 @@ class uiExchange
                     'g' => $group,               
                 );        
         
-    }
-    
-    // restore methods
-    function restore($filename) {
-        $filename='/tmp/backup_20060508.tar';
-        $this->Base->gb->doRestore($this->Base->sessid,$filename);
     }
 }
 ?>

@@ -17,10 +17,18 @@ if (window.scrollbars.visible == false) {
                     <tr><td colspan=""><h1>##File browser##</h1></td></tr>
                     <tr>
                         <td colspan="6" style="white-space: nowrap;">
-                            <form name="filebrowser" onSubmit="opener.location.href='{$UI_HANDLER}?act=BACKUP.copy2target&target='+filebrowser.target.value; window.close()">
+                            <form name="filebrowser" 
+                            {if !$isRestore}
+                            	onSubmit="opener.location.href='{$UI_HANDLER}?act=BACKUP.copy2target&target='+filebrowser.target.value; window.close()"
+                            {else}
+                            	onSubmit="opener.location.href='{$UI_HANDLER}?act=RESTORE.setBackupFileToRestore&target='+filebrowser.target.value; window.close()"
+                            {/if}
+                           	>
                                 ##Filename:## <br>
                                 <input type='text' name='target' size='50' value='{$EXCHANGE->getPath()}'>
+                                {if ($isRestore && $isFile) || !$isRestore}
                                 <input type='submit' class='button' value='##OK##'>
+                                {/if}
                             </form>
                         </td>
                     </tr> 
@@ -28,7 +36,7 @@ if (window.scrollbars.visible == false) {
 
 {foreach from=$currdir.subdirs item=entry key=name}
     <tr class="{cycle values='blue1, blue2'}">
-        <td style="border-right: 1px solid #333;"><b><a href="{$UI_BROWSER}?popup[]=BACKUP.setLocation&cd={$name|escape:"url"}">{$name|truncate:50:"...":true}</b></td>
+        <td style="border-right: 1px solid #333;"><b><a href="{$UI_BROWSER}?popup[]=BACKUP.setLocation{if $isRestore}&isRestore=1{/if}&cd={$name|escape:"url"}">{$name|truncate:50:"...":true}</b></td>
         <td style="border-right: 1px solid #333;">{$entry.u|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{$entry.g|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{if $entry.r}r{/if}</td>
@@ -40,7 +48,7 @@ if (window.scrollbars.visible == false) {
 
 {foreach from=$currdir.files item=entry key=name}
     <tr class="{cycle values='blue1, blue2'}">
-        <td style="border-right: 1px solid #333;"><a href="{$UI_BROWSER}?popup[]=BACKUP.setFile&file={$name|escape:"url"}">{$name|truncate:50:"...":true}</td>
+        <td style="border-right: 1px solid #333;"><a href="{$UI_BROWSER}?popup[]=BACKUP.setFile{if $isRestore}&isRestore=1{/if}&file={$name|escape:"url"}">{$name|truncate:50:"...":true}</td>
         <td style="border-right: 1px solid #333;">{$entry.u|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{$entry.g|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{if $entry.r}r{/if}</td>
