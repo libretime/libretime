@@ -57,6 +57,8 @@ printUsage()
     echo "LiveSupport development environment setup script.";
     echo "parameters";
     echo "";
+    echo "  -g, --apache-group  The group the apache daemon runs as.";
+    echo "                      [default: apache]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -71,6 +73,9 @@ opts=$(getopt -o h -l help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
+        -g|--apache-group)
+            apache_group=$2;
+            shift; shift;;
         -h|--help)
             printUsage;
             exit 0;;
@@ -84,13 +89,18 @@ while true; do
     esac
 done
 
+if [ "x$apache_group" == "x" ]; then
+    apache_group=apache;
+fi
+
 
 #-------------------------------------------------------------------------------
 #  Create the configure script
 #-------------------------------------------------------------------------------
 rm -rf $tmpdir/configure
 $bindir/autogen.sh
-$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var
+$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
+                   --with-apache-group=$apache_group
 
 
 #-------------------------------------------------------------------------------
@@ -104,7 +114,7 @@ make all
 #-------------------------------------------------------------------------------
 #echo "Setting up user settings..."
 
-$bindir/user_setup.sh || exit 1
+$bindir/user_setup.sh --apache-group=$apache_group || exit 1
 
 
 #-------------------------------------------------------------------------------
