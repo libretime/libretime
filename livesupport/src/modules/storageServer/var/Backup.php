@@ -125,6 +125,8 @@ class Backup {
                 "/><!-- $ctime_f -->\n"
             );
     
+            file_put_contents("{$this->tmpDirMeta}/subjects.xml",$this->getSubjects());
+
             # copy all file to tmpdir
             $this->copyAllFiles();
             
@@ -373,6 +375,35 @@ class Backup {
         $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
         if($this->gb->dbc->isError($acc)){ return $acc; }
         $this->token = $acc['token'];
+    }
+    
+    /**
+     *  generate XML with subjects
+     * 
+     *  @return string : XML content
+     *
+     */
+    function getSubjects() {
+    	$subjs = $this->gb->getSubjects('id, login, pass, type, realname');
+    	$ret = "<subjects>\n";
+    	for ($i=0; $i<sizeof($subjs);$i++) {
+    		$tag = (strtolower($subjs[$i]['type'])=='g')?'group':'user';
+			$ret .= "    <{$tag}".
+				" id=\"{$subjs[$i]['id']}\"" .
+				" login=\"{$subjs[$i]['login']}\"" .
+				" pass=\"{$subjs[$i]['pass']}\"" .
+				" type=\"{$subjs[$i]['type']}\"" .
+				" realname=\"{$subjs[$i]['realname']}\"" .
+				">\n";
+			$membof = $this->gb->_listRMemb($subjs[$i]['id']);
+			$membs='';
+			for ($j=0;$j<sizeof($membof);$j++) {
+				$ret.="        <memberof id=\"{$membof[$j]['gid']}\" gid=\"{$membof[$j]['gid']}\" level=\"{$membof[$j]['gid']}\" />\n";
+			}
+			$ret .= "    </{$tag}>\n";
+        }
+        $ret .= "</subjects>\n";
+    	return $ret;
     }
 
     /**
