@@ -300,10 +300,11 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 void
 UploadFileWindow :: updateFileInfo(void)                        throw ()
 {
-    std::string             fileName = fileNameEntry->get_text().raw();
+    Ptr<Glib::ustring>::Ref fileName(new Glib::ustring(
+                                        fileNameEntry->get_text() ));
 
     // see if the file exists, and is readable
-    std::ifstream   file(fileName.c_str());
+    std::ifstream   file(fileName->c_str());
     if (!file.good()) {
         file.close();
         statusBar->set_text(*getResourceUstring("couldNotOpenFileMsg"));
@@ -332,11 +333,11 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
  *  Read the playlength and metadata info from the binary audio file.
  *----------------------------------------------------------------------------*/
 void
-UploadFileWindow :: readAudioClipInfo(const std::string &   fileName)
+UploadFileWindow :: readAudioClipInfo(Ptr<const Glib::ustring>::Ref   fileName)
                                                                 throw ()
 {
     Ptr<std::string>::Ref   newUri(new std::string("file://"));
-    newUri->append(fileName);
+    newUri->append(*fileName);
     
     Ptr<time_duration>::Ref     playlength;
     try {
@@ -487,12 +488,12 @@ UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
  *  Determine the length of an audio file
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
-UploadFileWindow :: readPlaylength(const std::string &   fileName)
+UploadFileWindow :: readPlaylength(Ptr<const Glib::ustring>::Ref    fileName)
                                                 throw (std::invalid_argument)
 {
     // TODO: use the appropriate TagLib::X::File subclass constructors,
     // once we find some way of determining the MIME type.
-    TagLib::FileRef             fileRef(fileName.c_str());
+    TagLib::FileRef             fileRef(fileName->c_str());
     if (fileRef.isNull()) {
         throw std::invalid_argument("unsupported file type");
     }
@@ -512,15 +513,15 @@ UploadFileWindow :: readPlaylength(const std::string &   fileName)
  *  Determine the type of the given file.
  *----------------------------------------------------------------------------*/
 UploadFileWindow::FileType
-UploadFileWindow :: determineFileType(const std::string &   fileName)
+UploadFileWindow :: determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
                                                                 throw ()
 {
-    unsigned int    dotPosition = fileName.rfind('.');
+    unsigned int    dotPosition = fileName->rfind('.');
     if (dotPosition == std::string::npos) {
         return invalidType;
     }
     
-    std::string     extension   = fileName.substr(dotPosition);
+    std::string     extension   = fileName->substr(dotPosition);
     if (extension == ".mp3" || extension == ".ogg") {
         return audioClipType;
         

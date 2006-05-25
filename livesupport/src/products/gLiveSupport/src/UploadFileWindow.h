@@ -207,7 +207,8 @@ class UploadFileWindow : public GuiWindow
          *                      binary audio file.
          */
         void
-        readAudioClipInfo(const std::string &   fileName)   throw ();
+        readAudioClipInfo(Ptr<const Glib::ustring>::Ref fileName)
+                                                            throw ();
 
         /**
          *  Determine the length of an audio file on disk.
@@ -219,7 +220,7 @@ class UploadFileWindow : public GuiWindow
          *                                   format is not supported by TagLib
          */
         Ptr<time_duration>::Ref
-        readPlaylength(const std::string &  fileName)
+        readPlaylength(Ptr<const Glib::ustring>::Ref    fileName)
                                                 throw (std::invalid_argument);
 
         /**
@@ -245,7 +246,8 @@ class UploadFileWindow : public GuiWindow
          *  @return the type of the file.
          */
         FileType
-        determineFileType(const std::string &   fileName)   throw ();
+        determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
+                                                            throw ();
 
         /**
          *  Clear all the input fields and set the fileType to 'invalidType'.
