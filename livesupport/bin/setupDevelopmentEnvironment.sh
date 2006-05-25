@@ -69,7 +69,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o h -l help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o g:h -l apache-group:,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
