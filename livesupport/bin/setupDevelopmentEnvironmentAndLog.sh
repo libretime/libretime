@@ -62,6 +62,8 @@ printUsage()
     echo "LiveSupport development environment setup script.";
     echo "parameters";
     echo "";
+    echo "  -g, --apache-group  The group the apache daemon runs as.";
+    echo "                      [default: apache]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -72,10 +74,13 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o h -l help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o g:h -l apache-group:,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
+        -g|--apache-group)
+            apache_group=$2;
+            shift; shift;;
         -h|--help)
             printUsage;
             exit 0;;
@@ -88,6 +93,11 @@ while true; do
             exit 1;
     esac
 done
+
+if [ "x$apache_group" == "x" ]; then
+    apache_group=apache;
+fi
+
 
 #------------------------------------------------------------------------------
 #  All steps are being logged
@@ -107,7 +117,7 @@ ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean
 #  Create the configure script, using setup parameters
 #-------------------------------------------------------------------------------
 # --prefix=$usrdir                 --with-www-docroot=$usrdir/var =/var/www
-# --with-hostname=localhost        --with-apache-group=www-data =apache
+# --with-hostname=localhost        --with-apache-group=$apache_group
 #
 # --with-check-boost=no =yes       --with-check-gtk=yes =no
 # --with-check-gtkmm=yes =no       --with-check-icu=yes =no
@@ -123,7 +133,12 @@ ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";
 $bindir/autogen.sh >& $tmpdir/configure_development_environment.log
-$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var --with-hostname=localhost --with-apache-group=www-data --with-check-boost=yes --with-check-gtk=yes --with-check-gtkmm=yes --with-check-icu=yes --with-check-libxmlpp=yes --with-station-audio-out=default --with-studio-audio-out=default --with-studio-audio-cue=default >> $tmpdir/configure_development_environment.log
+$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
+                   --with-hostname=localhost --with-apache-group=$apache_group \
+                   --with-check-boost=yes --with-check-gtk=yes \
+                   --with-check-gtkmm=yes --with-check-icu=yes \
+                   --with-check-libxmlpp=yes --with-station-audio-out=default \
+                   --with-studio-audio-out=default --with-studio-audio-cue=default >> $tmpdir/configure_development_environment.log
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
@@ -167,9 +182,9 @@ echo "";
 #-------------------------------------------------------------------------------
 #  User setup
 #-------------------------------------------------------------------------------
-echo "Setting up user settings..."
+echo "Setting up user settings ..."
 
-$bindir/user_setup.sh || exit 1
+$bindir/user_setup.sh --apache-group=$apache_group || exit 1
 
 
 #-------------------------------------------------------------------------------
