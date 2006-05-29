@@ -7,11 +7,11 @@
  * This class lets you manipulate the crontab. It lets you add delete update entries easily.
  **/
 
-define(CRON_COMMENT, 0);
-define(CRON_ASSIGN,  1);
-define(CRON_CMD,     2);
-define(CRON_SPECIAL, 3);
-define(CRON_EMPTY,   4);
+define('CRON_COMMENT', 0);
+define('CRON_ASSIGN',  1);
+define('CRON_CMD',     2);
+define('CRON_SPECIAL', 3);
+define('CRON_EMPTY',   4);
 
 class Crontab
 {
@@ -135,7 +135,7 @@ class Crontab
                 case CRON_SPECIAL :
                     $line = implode(" ", $this->crontabs[$i]);
                     break;
-                CASE CRON_EMPTYLINE :
+                case CRON_EMPTY :
                     $line = "\n"; // an empty line in the crontab-file
                     break;
                 default :
@@ -258,6 +258,3 @@ class Crontab
     }
 }
 ?>
-
-
-
