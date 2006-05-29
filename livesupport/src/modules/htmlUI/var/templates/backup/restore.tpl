@@ -11,9 +11,9 @@
      {else}
         {assign var='status' value=$EXCHANGE->backupRestoreCheck()}
         
-        Backup status: {$status.status}
+        ##Restore status##: {if $status.status=='fault'}<b style="font-color:red">{$status.status}!!!</b>{else}{$status.status}{/if}
         
-        {if $status.status === 'success'}
+        {if $status.status !== 'working'}
             <p><input type="button" class="button" value="##Close Backup Restore##" onCLick="location.href='{$UI_HANDLER}?act=RESTORE.backupRestoreClose'"></p>
         {/if}
      

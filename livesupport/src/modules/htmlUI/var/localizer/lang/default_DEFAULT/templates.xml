@@ -847,6 +847,10 @@
 	</item>
 	<item>
 		<key>Choose a backup file</key>
-		<value>AChoose a backup file</value>
+		<value>Choose a backup file</value>
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value>Restore status</value>
 	</item>
 </translations>

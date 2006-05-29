@@ -2,7 +2,8 @@
 define('BACKUP_EXT', 'tar');
 define('ACCESS_TYPE', 'backup');
 
-class Backup {
+class Backup 
+{
     /**
      *  string - name of logfile
      */
@@ -74,7 +75,8 @@ class Backup {
      *
      *  @param gb: greenbox object reference
      */
-    function Backup (&$gb) {
+    function Backup (&$gb)
+    {
         $this->gb       =& $gb;
         $this->token    = null;
         $this->logFile  = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
@@ -90,7 +92,8 @@ class Backup {
      *  @return hasharray with field: 
      *      token string: backup token
      */
-    function openBackup($sessid,$criteria='') {
+    function openBackup($sessid,$criteria='')
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." openBackup - sessid:$sessid\n");
         }
@@ -125,8 +128,6 @@ class Backup {
                 "/><!-- $ctime_f -->\n"
             );
     
-            file_put_contents("{$this->tmpDirMeta}/subjects.xml",$this->getSubjects());
-
             # copy all file to tmpdir
             $this->copyAllFiles();
             
@@ -147,7 +148,8 @@ class Backup {
      *      url     : string - access url
      *      tmpfile : string - access filename
      */
-    function checkBackup($token) {
+    function checkBackup($token)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." checkBackup - token:$token\n");
         }
@@ -173,7 +175,8 @@ class Backup {
      *  @param token   : token
      *  @return status : boolean
      */
-    function closeBackup($token) {
+    function closeBackup($token)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." closeBackup - token:$token\n");
         }
@@ -198,7 +201,8 @@ class Backup {
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function listBackups($stat='') {
+    function listBackups($stat='')
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." listBackups - stat:$stat\n");
         }
@@ -219,7 +223,8 @@ class Backup {
      *
      *  @param searchResult : array of gunids
      */
-    function setIDs($searchResult) {
+    function setIDs($searchResult)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setIDs\n");
         }
@@ -235,7 +240,8 @@ class Backup {
      *  set the filenames from ids
      *
      */
-    function setFilenames () {
+    function setFilenames ()
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
         }
@@ -275,7 +281,8 @@ class Backup {
      *  Create the tarball - call the shell script
      *
      */
-    function doIt() {
+    function doIt()
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt\n");
         }
@@ -295,7 +302,8 @@ class Backup {
      *  Copy the real files into the tmp dirs to tar they.
      *
      */
-    function copyAllFiles() {
+    function copyAllFiles()
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." copyAllFiles\n");
         }
@@ -322,7 +330,8 @@ class Backup {
      *  Figure out the enviroment to the backup
      *
      */
-    function setEnviroment($createDir=false) {
+    function setEnviroment($createDir=false)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment - createDirs:$createDir\n");
         }
@@ -371,47 +380,20 @@ class Backup {
      *  generate a new token.
      *
      */
-    function genToken() {
+    function genToken()
+    {
         $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
         if($this->gb->dbc->isError($acc)){ return $acc; }
         $this->token = $acc['token'];
     }
     
     /**
-     *  generate XML with subjects
-     * 
-     *  @return string : XML content
-     *
-     */
-    function getSubjects() {
-    	$subjs = $this->gb->getSubjects('id, login, pass, type, realname');
-    	$ret = "<subjects>\n";
-    	for ($i=0; $i<sizeof($subjs);$i++) {
-    		$tag = (strtolower($subjs[$i]['type'])=='g')?'group':'user';
-			$ret .= "    <{$tag}".
-				" id=\"{$subjs[$i]['id']}\"" .
-				" login=\"{$subjs[$i]['login']}\"" .
-				" pass=\"{$subjs[$i]['pass']}\"" .
-				" type=\"{$subjs[$i]['type']}\"" .
-				" realname=\"{$subjs[$i]['realname']}\"" .
-				">\n";
-			$membof = $this->gb->_listRMemb($subjs[$i]['id']);
-			$membs='';
-			for ($j=0;$j<sizeof($membof);$j++) {
-				$ret.="        <memberof id=\"{$membof[$j]['gid']}\" gid=\"{$membof[$j]['gid']}\" level=\"{$membof[$j]['gid']}\" />\n";
-			}
-			$ret .= "    </{$tag}>\n";
-        }
-        $ret .= "</subjects>\n";
-    	return $ret;
-    }
-
-    /**
      *  Add a line to the logfile.
      *
      *  @param item : string - the new row of log file
      */
-    function addLogItem($item) {
+    function addLogItem($item)
+    {
         $f = fopen ($this->logFile,'a');
         fwrite($f,$item);
         fclose($f);
@@ -423,7 +405,8 @@ class Backup {
      *
      *  @param dirname : string - path of dir.
      */
-    function rRmDir($dirname) {
+    function rRmDir($dirname)
+    {
         if(is_dir($dirname))
             $dir_handle = opendir($dirname);
         while($file = readdir($dir_handle)) {
