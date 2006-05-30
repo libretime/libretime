@@ -65,7 +65,11 @@ class Crontab
      */
     function readCrontab()
     {
-        exec("crontab -u {$this->user} -l", $crons, $return);
+        @exec("crontab -u {$this->user} -l", $crons, $return);
+        if($return != 0){
+            return PEAR::raiseError("*** Can't read crontab ***\n".
+                "    Set crontab manually!\n");
+        }
 
         foreach ($crons as $line)
         {
@@ -146,8 +150,13 @@ class Crontab
 
             // echo "line $i : $line\n";
 
-            if ($line)
-                fwrite($file, $line."\n");
+            if ($line){
+                $r = @fwrite($file, $line."\n");
+                if($r === FALSE){
+                    return PEAR::raiseError("*** Can't write crontab ***\n".
+                        "    Set crontab manually!\n");
+                }
+            }
         }
         fclose($file);
 
