@@ -167,9 +167,11 @@ if(!is_null($this_file)){
     $fileowner_id      = fileowner($this_file);
     $fileowner_array   = posix_getpwuid($fileowner_id);
     $fileowner_homedir = $fileowner_array['dir'];
+    $fileowner_name    = $fileowner_array['name'];
     $home_conf         = $fileowner_homedir . '/.livesupport/storageServer.conf.php';
     if (file_exists($home_conf)) {
         $default_config = $config;
+        $developer_name    = $fileowner_name;
         include $home_conf;
         $user_config = $config;
         $config = $user_config + $default_config;

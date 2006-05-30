@@ -88,5 +88,9 @@ $config = array(
     'schedulerUrlHost'        => 'ls_scheduler_host',
     'schedulerUrlPort'        => ls_scheduler_port,
 
+    /* =================================================== cron configuration */
+    //'cronUserName'      => 'www-data',
+    'cronUserName'      => $developer_name,
+
 );
 ?>
