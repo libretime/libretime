@@ -51,8 +51,8 @@ usrdir=`cd $basedir/usr; pwd;`
 #------------------------------------------------------------------------------
 #  Extra settings to use gcc and g++ 3.4 instead of version 4.0
 #------------------------------------------------------------------------------
-export CC=/usr/bin/gcc-3.4
-export CXX=/usr/bin/g++-3.4
+# export CC=/usr/bin/gcc-3.4
+# export CXX=/usr/bin/g++-3.4
 
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.
