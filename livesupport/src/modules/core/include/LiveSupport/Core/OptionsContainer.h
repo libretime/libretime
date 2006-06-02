@@ -82,7 +82,10 @@ class OptionsContainer
                        authenticationPath,
                        storageServer,
                        storagePort,
-                       storagePath }    OptionItemString;
+                       storagePath,
+                       schedulerServer,
+                       schedulerPort,
+                       schedulerPath }  OptionItemString;
         
 
     private:

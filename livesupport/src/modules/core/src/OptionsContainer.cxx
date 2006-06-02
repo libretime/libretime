@@ -214,6 +214,24 @@ OptionsContainer :: selectNode(OptionItemString     optionItem,
                                   "webStorage/location/@path");
             isAttribute = true;
             break;
+        
+        case schedulerServer :
+            targetNode  = getNode("schedulerClientFactory/"
+                                  "schedulerDaemonXmlRpcClient/@xmlRpcHost");
+            isAttribute = true;
+            break;
+        
+        case schedulerPort :
+            targetNode  = getNode("schedulerClientFactory/"
+                                  "schedulerDaemonXmlRpcClient/@xmlRpcPort");
+            isAttribute = true;
+            break;
+        
+        case schedulerPath :
+            targetNode  = getNode("schedulerClientFactory/"
+                                  "schedulerDaemonXmlRpcClient/@xmlRpcUri");
+            isAttribute = true;
+            break;
     }
     
     return targetNode;

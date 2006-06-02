@@ -163,9 +163,8 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // show everything
     set_name(windowName);
-    set_default_size(700, 450);
+    set_default_size(700, 500);
     set_modal(false);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
     
     show_all_children();
 }
@@ -677,10 +676,56 @@ OptionsWindow :: constructServersSection(void)                      throw ()
     storageTable->attach(*storagePortEntry,   2, 3, 1, 2);
     storageTable->attach(*storagePathEntry,   2, 3, 2, 3);
     
+    // the settings for the scheduler
+    Gtk::Table *    schedulerTable = Gtk::manage(new Gtk::Table);
+    schedulerTable->set_row_spacings(5);
+    schedulerTable->set_col_spacings(5);
+    
+    Gtk::Label *    schedulerLabel;
+    Gtk::Label *    schedulerServerLabel;
+    Gtk::Label *    schedulerPortLabel;
+    Gtk::Label *    schedulerPathLabel;
+    try {
+        schedulerLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("schedulerLabel") ));
+        schedulerServerLabel = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("serverLabel") ));
+        schedulerPortLabel   = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("portLabel") ));
+        schedulerPathLabel   = Gtk::manage(new Gtk::Label(
+                            *getResourceUstring("pathLabel") ));
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    schedulerTable->attach(*schedulerLabel,
+                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
+    schedulerTable->attach(*schedulerServerLabel,
+                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+    schedulerTable->attach(*schedulerPortLabel,
+                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
+    schedulerTable->attach(*schedulerPathLabel,
+                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
+    
+    EntryBin *  schedulerServerEntry = createEntry(
+                                            OptionsContainer::schedulerServer);
+    EntryBin *  schedulerPortEntry   = createEntry(
+                                            OptionsContainer::schedulerPort);
+    EntryBin *  schedulerPathEntry   = createEntry(
+                                            OptionsContainer::schedulerPath);
+    
+    schedulerTable->attach(*schedulerServerEntry, 2, 3, 0, 1);
+    schedulerTable->attach(*schedulerPortEntry,   2, 3, 1, 2);
+    schedulerTable->attach(*schedulerPathEntry,   2, 3, 2, 3);
+    
     // make a new box and pack the components into it
     Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
     section->pack_start(*authenticationTable,   Gtk::PACK_SHRINK, 10);
     section->pack_start(*storageTable,          Gtk::PACK_SHRINK, 10);
+    section->pack_start(*schedulerTable,        Gtk::PACK_SHRINK, 10);
     
     return section;
 }
@@ -865,5 +910,18 @@ OptionsWindow ::  resetEditedKeyBinding(void)                       throw ()
                             = Glib::Markup::escape_text(*editedKeyName);
         editedKeyName.reset();
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show the window and return when the user hides it.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: run(void)                                          throw ()
+{
+    mainNotebook->activatePage(2);      // "Servers"
+    property_window_position().set_value(Gtk::WIN_POS_CENTER_ALWAYS);
+    show_all();
+    Gtk::Main::run(*this);
 }
 

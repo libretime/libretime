@@ -445,17 +445,15 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
         return false;
     }
 
-    // === NON-FATAL ERRORS ===
-
     // check if the authentication server is available
     try {
         authentication->getVersion();
-        authenticationAvailable = true;
     } catch (XmlRpcException &e) {
-        authenticationAvailable = false;
-        displayMessageWindow(getResourceUstring(authenticationNotReachableKey));
+        displayAuthenticationServerMissingMessage();
+        return false;
     }
 
+    // === NON-FATAL ERRORS ===
 
     // check if the storage server is available
     try {
@@ -488,10 +486,10 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
                                                                     throw ()
 {
-    DialogWindow   * window = widgetFactory->createDialogWindow(message,
-                                                                getBundle());
+    Ptr<DialogWindow>::Ref  window(widgetFactory->createDialogWindow(
+                                                                message,
+                                                                getBundle()));
     window->run();
-    delete window;
 }
 
 
@@ -1629,9 +1627,53 @@ GLiveSupport :: stopSchedulerClient(void)                           throw ()
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadToHub(Ptr<Playable>::Ref      playable)
-                                                            throw ()
+                                                                    throw ()
 {
     masterPanel->uploadToHub(playable);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Display a message that the authentication server is not available.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: displayAuthenticationServerMissingMessage(void)     throw ()
+{
+    Ptr<Glib::ustring>::Ref     message;
+    try {
+        message = getResourceUstring("authenticationNotReachableMsg");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    // "authentication not available -- would you like to edit the options?"
+    Ptr<DialogWindow>::Ref      question(widgetFactory->createDialogWindow(
+                                                message,
+                                                getBundle(),
+                                                DialogWindow::noButton
+                                                | DialogWindow::yesButton ));
+    DialogWindow::ButtonType    answer = question->run();
+    
+    if (answer == DialogWindow::yesButton) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle  = getBundle("optionsWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        Ptr<OptionsWindow>::Ref     optionsWindow(new OptionsWindow(
+                                                            shared_from_this(),
+                                                            bundle,
+                                                            0));
+        optionsWindow->run();
+        
+        if (optionsContainer->isTouched()) {
+            optionsContainer->writeToFile();
+        }
+    }
+}
 

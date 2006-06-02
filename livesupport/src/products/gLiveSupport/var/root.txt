@@ -21,11 +21,14 @@ root:table
     elapsedTimeLabel:string         { "elapsed" }
     remainingTimeLabel:string       { "remaining" }
     
-    localeNotAvailableMsg:string    { "Locale {0} not available" }
-    schedulerNotReachableMsg:string { "Scheduler server not available" }
-    storageNotReachableMsg:string   { "Storage server not available" }
+    localeNotAvailableMsg:string    { "Locale {0} is not available." }
+    schedulerNotReachableMsg:string { "The scheduler server is not available." }
+    storageNotReachableMsg:string   { "The storage server is not available." }
     authenticationNotReachableMsg:string
-                                    { "Authentication server not available" }
+                                    { "The authentication server is not "
+                                      "available.\n"
+                                      "Would you like to edit the server "
+                                      "settings?" }
     audioErrorMsg                   { "Audio player error: " }
     sureToExitMsg:string            { "Are you sure you want to exit?" }
 
@@ -283,6 +286,7 @@ root:table
         
         authenticationLabel:string  { "Authentication server" }
         storageLabel:string         { "Storage server" }
+        schedulerLabel:string       { "Scheduler server" }
         serverLabel:string          { "address:" }
         portLabel:string            { "port:" }
         pathLabel:string            { "path:" }

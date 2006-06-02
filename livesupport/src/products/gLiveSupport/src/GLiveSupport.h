@@ -328,11 +328,6 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<OptionsContainer>::Ref  optionsContainer;
 
         /**
-         *  Whether the authentication component is available.
-         */
-        bool                        authenticationAvailable;
-
-        /**
          *  Whether the storage component is available.
          */
         bool                        storageAvailable;
@@ -341,6 +336,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Whether the scheduler component is available.
          */
         bool                        schedulerAvailable;
+
+        /**
+         *  Display a message that the authentication server is not available.
+         *  And offer a chance to edit the options to fix it.
+         */
+        void
+        displayAuthenticationServerMissingMessage(void)         throw ();
 
 
     protected:
@@ -1173,15 +1175,6 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         loadWindowContents(ContentsStorable *       window)     throw ();
-
-        /**
-         *  Return whether the authentication component is available.
-         */
-        bool
-        isAuthenticationAvailable(void)                         throw()
-        {
-            return authenticationAvailable;
-        }
 
         /**
          *  Return whether the storage component is available.

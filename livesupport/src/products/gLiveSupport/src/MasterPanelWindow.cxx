@@ -311,22 +311,33 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
 
-    // re-bind events to the buttons
-    liveModeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onLiveModeButtonClicked));
-    uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onUploadFileButtonClicked));
-    scratchpadButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onScratchpadButtonClicked));
-    simplePlaylistMgmtButton->signal_clicked().connect(
-            sigc::mem_fun(*this,
-                 &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
-    schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onSchedulerButtonClicked));
-    searchButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onSearchButtonClicked));
+    if (gLiveSupport->isStorageAvailable()) {
+        // re-bind events to the buttons
+        liveModeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &MasterPanelWindow::onLiveModeButtonClicked));
+        uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &MasterPanelWindow::onUploadFileButtonClicked));
+        scratchpadButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &MasterPanelWindow::onScratchpadButtonClicked));
+        simplePlaylistMgmtButton->signal_clicked().connect(
+                sigc::mem_fun(*this,
+                     &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
+        schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &MasterPanelWindow::onSchedulerButtonClicked));
+        searchButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &MasterPanelWindow::onSearchButtonClicked));
+    } else {
+        // gray out all the buttons except Options
+        liveModeButton->set_sensitive(false);
+        uploadFileButton->set_sensitive(false);
+        scratchpadButton->set_sensitive(false);
+        simplePlaylistMgmtButton->set_sensitive(false);
+        schedulerButton->set_sensitive(false);
+        searchButton->set_sensitive(false);
+    }
+
     optionsButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onOptionsButtonClicked));
+                                &MasterPanelWindow::onOptionsButtonClicked));
 }
 
 
@@ -645,6 +656,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     simplePlaylistMgmtButton->hide();
     schedulerButton->hide();
     searchButton->hide();
+    optionsButton->hide();
     
     if (liveModeWindow.get()) {
         if (liveModeWindow->is_visible()) {

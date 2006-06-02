@@ -409,6 +409,14 @@ class OptionsWindow : public GuiWindow
         {
             return backupView ? backupView->getBackupList() : 0;
         }
+        
+        /**
+         *  Show the window and return when the user hides it.
+         *  This is used by GLiveSupport when the authentication server
+         *  address is wrong.  It opens the window to the "Servers" tab.
+         */
+        void
+        run(void)                                                   throw ();
 };
 
 /* ================================================= external data structures */
