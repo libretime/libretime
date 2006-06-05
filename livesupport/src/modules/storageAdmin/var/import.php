@@ -51,9 +51,11 @@ $testonly = (isset($argv[1]) && $argv[1] == '-n');
 
 $errors=0;
 $filecount=0;
-function _err($r, $fn){
+function _err($r, $fn, $txt=''){
     global $errors;
-    echo "ERROR\n ".$r->getMessage()." ".$r->getUserInfo()."\n";
+    if(PEAR::isError($r)) $msg = $r->getMessage()." ".$r->getUserInfo();
+    else $msg = $txt;
+    echo "ERROR\n $msg\n";
     $errors++;
 }
 
@@ -137,7 +139,8 @@ while($filename = fgets($stdin, 2048)){
     //$getID3 = new getID3;
     //$infoFromFile = $getID3->analyze("$filename");
     if(PEAR::isError($infoFromFile)){ _err($infoFromFile, $filename); continue; }
-    if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
+    if(isset($infoFromFile['error'])){ _err(NULL, $filename, $infoFromFile['error']); continue; }
+    #if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
     if(!$infoFromFile['bitrate']){ echo "not audio?\n"; continue; }
     
     $mdata = array();
