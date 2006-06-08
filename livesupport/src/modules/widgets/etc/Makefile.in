@@ -149,7 +149,8 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
 				   ${TMP_DIR}/ScrolledWindow.o \
 				   ${TMP_DIR}/ScrolledNotebook.o \
 				   ${TMP_DIR}/DateTimeChooserWindow.o \
-				   ${TMP_DIR}/RadioButtons.o
+				   ${TMP_DIR}/RadioButtons.o \
+				   ${TMP_DIR}/MasterPanelBin.o \
 				   
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o

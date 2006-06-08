@@ -40,6 +40,8 @@
 #include <gdkmm/pixbuf.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Widgets/MasterPanelBin.h"
+
 #include "MasterPanelWindow.h"
 
 
@@ -125,6 +127,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
     vuMeterBin->set_size_request(200, 40);
+    
     // set up the next playing widget
     nextPlayingWidget = Gtk::manage(new Gtk::Label(""));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
@@ -133,6 +136,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // create the bottom bar
     bottomBar = Gtk::manage(new Gtk::Table());
+    bottomBar->set_border_width(20);
     bottomBar->set_size_request(-1, 30);
     buttonBar = Gtk::manage(new Gtk::Table());
     buttonBar->set_homogeneous();
@@ -147,34 +151,41 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                                        0, 0));
     userInfoAlignment->add(*userInfoWidget);
     bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1,
-                      Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
                       5, 0);
     bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1,
-                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      Gtk::SHRINK, Gtk::SHRINK,
                       5, 0);
     
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
-    set_border_width(10);
+    layout->set_border_width(10);
     layout->attach(*timeBin,            0, 1, 0, 2,
-                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    Gtk::SHRINK, Gtk::SHRINK,
                     0, 0);
     layout->attach(*nowPlayingBin,      1, 2, 0, 2,
-                   Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                   Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
                    5, 0);
     layout->attach(*vuMeterBin,         2, 3, 0, 1,
-                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    Gtk::SHRINK, Gtk::SHRINK,
                     0, 0);
     layout->attach(*nextPlayingBin,     2, 3, 1, 2,
-                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    Gtk::SHRINK, Gtk::SHRINK,
                     0, 0);
     layout->attach(*radioLogoWidget,    3, 4, 0, 2,
-                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    Gtk::SHRINK, Gtk::SHRINK,
                     5, 0);
     layout->attach(*bottomBar,          0, 4, 2, 3,
-                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
                     0, 0);
-    add(*layout);
+    
+    // add the bottom border
+    MasterPanelBin *    bin = Gtk::manage(new MasterPanelBin(
+                                    Colors::White,
+                                    widgetFactory->getWhiteWindowCorners(),
+                                    true));
+    bin->add(*layout);
+    this->add(*bin);
 
     // register the signal handler for keyboard key presses
     this->signal_key_press_event().connect(sigc::mem_fun(*this,
@@ -186,11 +197,8 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // set the size and location of the window, according to the screen size
     Glib::RefPtr<Gdk::Screen>   screen = get_screen();
-    int                         width;
-    int                         height;
-    get_size(width, height);
-    width = screen->get_width();
-    set_default_size(width, height);
+    int                         width  = screen->get_width();
+    set_default_size(width, -1);
     move(0, 0);
     set_decorated(false);
     set_name(windowName);

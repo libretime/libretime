@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  */
 class BlueBin : public Gtk::Bin
 {
-    private:
+    protected:
         /**
          *  Flag to indicate if the bin should try to make its border
          *  transparent (only where the border images are transparent,
@@ -126,8 +126,6 @@ class BlueBin : public Gtk::Bin
                     int                         x,
                     int                         y)          throw ();
 
-
-    protected:
         /**
          *  Return the background color.
          */
