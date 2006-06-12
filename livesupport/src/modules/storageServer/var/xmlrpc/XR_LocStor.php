@@ -1937,7 +1937,7 @@ class XR_LocStor extends LocStor{
     }
     /* ------------------------------------------------------ restore methods */
     /**
-     *  Open writable URL for restore a backup file
+     *  Open restore a backup file
      *
      *  The XML-RPC name of this method is "locstor.restoreBackupOpen".
      *
@@ -1950,7 +1950,6 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> url : string - writable url</li>
      *      <li> token : string - PUT token</li>
      *  </ul>
      *
@@ -1980,7 +1979,6 @@ class XR_LocStor extends LocStor{
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
-            'url'=>$res['url'],
             'token'=>$res['token'],
         )));
     }
@@ -1998,7 +1996,9 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status : string - status</li>
+     *      <li> status :  hasharray - fields:
+     *                          token:  string - restore token
+     *                          status: string - working | fault | success</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -2015,7 +2015,7 @@ class XR_LocStor extends LocStor{
      *  @return XMLRPC struct
      *  @see LocStor::restoreBackupCheck
      */
-    function restoreBackupCheck($input)
+    function xr_restoreBackupCheck($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
@@ -2027,7 +2027,7 @@ class XR_LocStor extends LocStor{
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
-            'gunid'=>$res,
+            'status'=>$res,
         )));
     }
 
@@ -2074,6 +2074,292 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
             'gunid'=>$res,
+        )));
+    }
+
+    /*===================================================== scheduler methods */
+    /**
+     *  Open import a schedule export file
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleImportOpen".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  : string  -  session id </li>
+     *      <li> chsum   : string  -  md5 checksum of backup file</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> token : string - PUT token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupOpen:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleImportOpen
+     */
+    function xr_scheduleImportOpen($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleImportOpen($r['sessid'], $r['chsum']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_scheduleImportOpen: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'token'=>$res['token'],
+        )));
+    }
+
+    /**
+     *  Check the state of schedule importing
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleImportCheck".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  access token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status :  hasharray - fields:
+     *                          token:  string - schedule import token
+     *                          status: string - working | fault | success</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupCheck:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleImportCheck
+     */
+    function xr_scheduleImportCheck($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleImportCheck($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_scheduleImportCheck: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'status'=>$res,
+        )));
+    }
+
+    /**
+     *  Close import schedule
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleImportClose".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  access token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status : string - status</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupClose:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleImportClose
+     */
+    function xr_scheduleImportClose($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleImportClose($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_restoreBackupClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'gunid'=>$res,
+        )));
+    }
+
+    /**
+     *  Open export schedule
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleExportOpen".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid   : string  - session id </li>
+     *      <li> criteria : struct  - see search criteria</li>
+     *      <li> fromTime : time    - begining time of schedule export</li>
+     *      <li> toTime   : time    - ending time of schedule export</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> hasharray - fields:
+     *                token:  string - schedule export token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupOpen:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleExportOpen
+     */
+    function xr_scheduleExportOpen($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleImportOpen($r['sessid'], $r['criteria'], $r['fromTime'], $r['toTime']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_scheduleImportOpen: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'token'=>$res['token'],
+        )));
+    }
+
+    /**
+     *  Check the state of schedule export
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleExportCheck".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  schedule export token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status:  hasharray - fields:
+     *                  token:  string - schedule export token
+     *                  status: string - working | fault | success</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupCheck:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleExportCheck
+     */
+    function xr_scheduleExportCheck($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleExportCheck($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_scheduleExportCheck: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'status'=>$res,
+        )));
+    }
+
+    /**
+     *  Close export schedule
+     *
+     *  The XML-RPC name of this method is "locstor.scheduleExportClose".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> token  :  string  -  access token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> status : string - status</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupClose:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::scheduleExportClose
+     */
+    function xr_scheduleExportClose($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->scheduleExportClose($r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_restoreBackupClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'status'=>$res,
         )));
     }
 

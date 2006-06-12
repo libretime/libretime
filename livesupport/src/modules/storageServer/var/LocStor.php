@@ -1054,6 +1054,97 @@ class LocStor extends BasicStor{
     	return $rs->closeRestore($token);
     }
 
+    /*===================================================== scheduler methods */
+
+    /**
+     *  Open schedule import
+     *
+     *  @param filename : string    - import file
+     *  @return status  : hasharray - fields:
+     *                          token:  string - schedule import token
+     */
+    function scheduleImportOpen($sessid,$filename) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->openImport($sessid,$filename);
+    }
+
+    /**
+     *  Check status of schedule import
+     *
+     *  @param token   :  string    -  schedule import token
+     *  @return status :  hasharray - fields:
+     *                          token:  string - schedule import token
+     *                          status: string - working | fault | success
+     */
+    function scheduleImportCheck($token) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->checkImport($token);
+    }
+    
+    /**
+     *  Close schedule import
+     *
+     *  @param token   :  string    -  schedule import token
+     *  @return hasharray - fields:
+     *              token:  string - schedule import token
+     */
+    function scheduleImportClose($token) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->closeImport($token);
+    }
+
+    /**
+     *  Open schedule export
+     *
+     *  @param sessid   :  string    - schedule import token
+     *  @param criteria :  struct    - see search criteria
+     *  @param fromTime :  time      - begining time of schedule export 
+     *  @param toTime   :  time      - ending time of schedule export
+     *  @return status  : hasharray - fields:
+     *                          token:  string - schedule export token
+     */
+    function scheduleExportOpen($sessid,$criteria,$fromTime,$toTime) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->openExport($sessid,$criteria,$fromTime,$toTime);
+    }
+
+    /**
+     *  Check status of schedule export
+     *
+     *  @param token   :  string    -  schedule export token
+     *  @return status :  hasharray - fields:
+     *                          token:  string - schedule export token
+     *                          status: string - working | fault | success
+     */
+    function scheduleExportCheck($token) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->checkExport($token);
+    }
+
+    /**
+     *  Close schedule export
+     *
+     *  @param token   :  string    -  schedule export token
+     *  @return status :  hasharray - fields:
+     *                          token:  string - schedule export token
+     */
+    function scheduleExportClose($token) {
+        require_once 'Schedule.php';
+        $sc = new Schedule($this);
+        if (PEAR::isError($sc)) return $sc; 
+        return $sc->closeExport($token);
+    }
+
     /*===================================================== auxiliary methods */
     /**
      *  Dummy method - only returns livesupport version
