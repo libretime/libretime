@@ -67,11 +67,6 @@ class MasterPanelBin : public BlueBin
 {
     protected:
         /**
-         *  The transparency mask for the bottom border image.
-         */
-        Glib::RefPtr<Gdk::Bitmap>       bottomBitmap;
-
-        /**
          *  Handle the size request event.
          *
          *  @param requisition the size request, also being the ouptut
@@ -102,18 +97,8 @@ class MasterPanelBin : public BlueBin
         /**
          *  Constructor, with only one state.
          *  This simply calls the BlueBin constructor.
-         *
-         *  @param backgroundColor the RGB value for the background color.
-         *  @param cornerImages the corner images.
-         *  @param transparentBorder flag to indicate if the widget should
-         *         make its border transparent, where the border images
-         *         are transparent themselves
          */
-        MasterPanelBin(
-                Colors::ColorName           backgroundColor,
-                Ptr<CornerImages>::Ref      cornerImages,
-                bool                        transparentBorder = false)
-                                                                    throw ();
+        MasterPanelBin(void)                                        throw ();
 
         /**
          *  A virtual destructor.

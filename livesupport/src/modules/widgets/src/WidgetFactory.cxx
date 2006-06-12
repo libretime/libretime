@@ -403,8 +403,6 @@ WidgetFactory :: configure(const xmlpp::Element & element)
                                     = loadImage(audioClipIconImageName);
     imageTypePixbufs[WidgetConstants::playlistIconImage]
                                     = loadImage(playlistIconImageName);
-    imageTypePixbufs[WidgetConstants::bottomLineImage]
-                                    = whiteWindowImages->bottomImage;
 }
 
 

@@ -180,10 +180,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                     0, 0);
     
     // add the bottom border
-    MasterPanelBin *    bin = Gtk::manage(new MasterPanelBin(
-                                    Colors::White,
-                                    widgetFactory->getWhiteWindowCorners(),
-                                    true));
+    MasterPanelBin *    bin = Gtk::manage(new MasterPanelBin());
     bin->add(*layout);
     this->add(*bin);
 

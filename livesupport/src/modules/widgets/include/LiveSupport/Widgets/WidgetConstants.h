@@ -94,9 +94,7 @@ class WidgetConstants
                        playlistsWindowTitleImage,
                        schedulerWindowTitleImage,
                        audioClipIconImage,
-                       playlistIconImage,
-                       bottomLineImage }
-                                                    ImageType;
+                       playlistIconImage }          ImageType;
 };
 
 

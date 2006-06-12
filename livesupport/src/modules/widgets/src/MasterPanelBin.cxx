@@ -34,6 +34,8 @@
 #endif
 
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
+
 #include "LiveSupport/Widgets/MasterPanelBin.h"
 
 
@@ -54,18 +56,12 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-MasterPanelBin :: MasterPanelBin(
-                        Colors::ColorName            backgroundColor,
-                        Ptr<CornerImages>::Ref       cornerImages,
-                        bool                         transparentBorder)
+MasterPanelBin :: MasterPanelBin(void)
                                                                     throw ()
-      : BlueBin(backgroundColor, cornerImages, transparentBorder)
+      : BlueBin(Colors::White,
+                WidgetFactory::getInstance()->getWhiteWindowCorners(),
+                false /*transparent corners*/)
 {
-    // generate the transparency mask bitmap for the bottom border
-    Glib::RefPtr<Gdk::Pixmap>       pixmap;
-    cornerImages->bottomImage->render_pixmap_and_mask(pixmap,
-                                                      bottomBitmap,
-                                                      100);
 }
 
 
@@ -146,37 +142,6 @@ MasterPanelBin :: on_expose_event(GdkEventExpose* event)           throw ()
 
     int width  = get_width();
     int height = get_height();
-
-    if (transparentBorder) {
-        unsigned int    bitmapSize = 1 + (width * height);
-
-        char  * bitmapData = new char[bitmapSize];
-        memset(bitmapData, 0xff, bitmapSize);
-
-        Glib::RefPtr<Gdk::Bitmap>    mask = Gdk::Bitmap::create(bitmapData,
-                                                                width,
-                                                                height);
-        delete[] bitmapData;
-
-        Glib::RefPtr<Gdk::GC>       gc = Gdk::GC::create(mask);
-        Glib::RefPtr<Gdk::Bitmap>   borderMask;
-
-        mask->draw_drawable(gc, cornerBitmaps->topLeftBitmap, 0, 0, 0, 0);
-
-        mask->draw_drawable(gc, cornerBitmaps->topRightBitmap, 0, 0,
-                            width - cornerImages->topRightImage->get_width(),
-                            0);
-
-        mask->draw_drawable(gc, cornerBitmaps->bottomLeftBitmap, 0, 0,
-                          0,
-                          height - cornerImages->bottomLeftImage->get_height());
-
-        mask->draw_drawable(gc, cornerBitmaps->bottomRightBitmap, 0, 0,
-                         width - cornerImages->bottomRightImage->get_width(),
-                         height - cornerImages->bottomRightImage->get_height());
-
-        get_parent_window()->shape_combine_mask(mask, 0, 0);
-    }
 
     if (gdkWindow) {
         gdkWindow->clear();
