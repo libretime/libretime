@@ -172,7 +172,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The bottom bar.
          */
-        Gtk::Table                * bottomBar;
+        Gtk::HBox                 * bottomBar;
 
         /**
          *  The button bar alignment helper

@@ -135,11 +135,9 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     nextPlayingBin->set_size_request(200, 59);
 
     // create the bottom bar
-    bottomBar = Gtk::manage(new Gtk::Table());
-    bottomBar->set_border_width(20);
-    bottomBar->set_size_request(-1, 30);
+    bottomBar = Gtk::manage(new Gtk::HBox());
     buttonBar = Gtk::manage(new Gtk::Table());
-    buttonBar->set_homogeneous();
+    buttonBar->set_homogeneous(true);
     buttonBarAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                         Gtk::ALIGN_CENTER,
                                                         0, 0));
@@ -150,22 +148,21 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                                        Gtk::ALIGN_CENTER,
                                                        0, 0));
     userInfoAlignment->add(*userInfoWidget);
-    bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1,
-                      Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
-                      5, 0);
-    bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1,
-                      Gtk::SHRINK, Gtk::SHRINK,
-                      5, 0);
+    bottomBar->pack_start(*buttonBarAlignment, Gtk::PACK_EXPAND_WIDGET, 0);
+    bottomBar->pack_start(*userInfoAlignment,  Gtk::PACK_EXPAND_WIDGET, 0);
+    
+    // a bit of extra vertical space above the buttons
+    Gtk::HBox *     extraSpace = Gtk::manage(new Gtk::HBox());
     
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
-    layout->set_border_width(10);
+    layout->set_border_width(5);
     layout->attach(*timeBin,            0, 1, 0, 2,
                     Gtk::SHRINK, Gtk::SHRINK,
                     0, 0);
     layout->attach(*nowPlayingBin,      1, 2, 0, 2,
-                   Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
-                   5, 0);
+                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
+                    5, 0);
     layout->attach(*vuMeterBin,         2, 3, 0, 1,
                     Gtk::SHRINK, Gtk::SHRINK,
                     0, 0);
@@ -175,8 +172,11 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*radioLogoWidget,    3, 4, 0, 2,
                     Gtk::SHRINK, Gtk::SHRINK,
                     5, 0);
-    layout->attach(*bottomBar,          0, 4, 2, 3,
-                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
+    layout->attach(*extraSpace,         0, 4, 2, 3,
+                    Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL,
+                    0, 2);
+    layout->attach(*bottomBar,          0, 4, 3, 4,
+                    Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL,
                     0, 0);
     
     // add the bottom border
@@ -296,25 +296,25 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     // re-attach the localized widgets to the layout
     buttonBar->attach(*liveModeButton,             0, 1, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
-                      5, 0);
+                      0, 0);
     buttonBar->attach(*uploadFileButton,           1, 2, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
     buttonBar->attach(*scratchpadButton,           2, 3, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
-                      5, 0);
+                      0, 0);
     buttonBar->attach(*simplePlaylistMgmtButton,   3, 4, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
     buttonBar->attach(*schedulerButton,            4, 5, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
-                      5, 0);
+                      0, 0);
     buttonBar->attach(*searchButton,               5, 6, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
     buttonBar->attach(*optionsButton,              6, 7, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
-                      5, 0);
+                      0, 0);
 
     if (gLiveSupport->isStorageAvailable()) {
         // re-bind events to the buttons
