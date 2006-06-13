@@ -74,6 +74,7 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(searchTest);
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(createBackupTest);
+    CPPUNIT_TEST(restoreBackupTest);
     CPPUNIT_TEST(exportPlaylistTest);
     CPPUNIT_TEST(remoteSearchTest);
     CPPUNIT_TEST_SUITE_END();
@@ -178,6 +179,14 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the restoreBackupXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        restoreBackupTest(void)                 throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the exportPlaylistXxxx() functions.

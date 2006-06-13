@@ -80,6 +80,7 @@ class WebStorageClientTest : public BaseTestMethod
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(browseTest);
     CPPUNIT_TEST(createBackupTest);
+    CPPUNIT_TEST(restoreBackupTest);
     CPPUNIT_TEST(exportPlaylistTest);
     CPPUNIT_TEST(importPlaylistTest);
     CPPUNIT_TEST(remoteSearchTest);
@@ -186,6 +187,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the restoreBackupXxxx() functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        restoreBackupTest(void)                 throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the exportPlaylistXxxx() functions.

@@ -80,6 +80,18 @@ class StorageClientInterface
         }
 
         /**
+         *  The possible states of an asynchronous process.
+         *  This is used by the asynchronous (groups of) methods:
+         *  remoteSearch, createBackup, restoreBackup,
+         *  uploadToHub, downloadFromHub.
+         */
+        typedef enum {  initState,
+                        pendingState,
+                        finishedState,
+                        closedState,
+                        failedState }       AsyncState;
+
+        /**
          *  Return the version string from the storage.
          *
          *  @return the version string of the storage.
@@ -520,23 +532,24 @@ class StorageClientInterface
                                                                         = 0;
         
         /**
-         *  Check the status of a storage backup.
+         *  Check the state of a storage backup.
          *
          *  @param  token   the identifier of this backup task.
          *  @param  url     return parameter;
-         *                      if the status is "success", it contains the 
+         *                      if a finishedState is returned, it contains the
          *                      URL of the created backup file.
          *  @param  path    return parameter;
-         *                      if the status is "success", it contains the
+         *                      if a finishedState is returned, it contains the
          *                      local access path of the created backup file.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the backup process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual AsyncState
         createBackupCheck(const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
                           Ptr<const Glib::ustring>::Ref &   path,
@@ -566,8 +579,8 @@ class StorageClientInterface
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        restoreBackup(Ptr<SessionId>::Ref               sessionId,
-                      Ptr<const Glib::ustring>::Ref     path) const
+        restoreBackupOpen(Ptr<SessionId>::Ref               sessionId,
+                          Ptr<const Glib::ustring>::Ref     path) const
                                                 throw (XmlRpcException)
                                                                         = 0;
         
@@ -576,15 +589,28 @@ class StorageClientInterface
          *
          *  @param  token       the identifier of this backup task.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the restore process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
-        restoreBackupCheck(Ptr<const Glib::ustring>::Ref    token,
+        virtual AsyncState
+        restoreBackupCheck(const Glib::ustring &            token,
                            Ptr<const Glib::ustring>::Ref &  errorMessage) const
+                                                throw (XmlRpcException)
+                                                                        = 0;
+        
+        /**
+         *  Close the backup restore process.
+         *
+         *  @param  token       the identifier of this backup task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        restoreBackupClose(const Glib::ustring &            token) const
                                                 throw (XmlRpcException)
                                                                         = 0;
         
@@ -649,15 +675,6 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  The possible states of an asynchronous transport process.
-         */
-        typedef enum {  initState,
-                        pendingState,
-                        finishedState,
-                        closedState,
-                        failedState }       TransportState;
-
-        /**
          *  Check the status of the asynchronous network transport operation.
          *
          *  If the return value is
@@ -680,7 +697,7 @@ class StorageClientInterface
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual TransportState
+        virtual AsyncState
         checkTransport(Ptr<const Glib::ustring>::Ref    token,
                        Ptr<Glib::ustring>::Ref      errorMessage
                                                     = Ptr<Glib::ustring>::Ref())

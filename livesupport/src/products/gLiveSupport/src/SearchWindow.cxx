@@ -558,7 +558,7 @@ SearchWindow :: remoteSearchClose(void)
                                 storage   = gLiveSupport->getStorageClient();
         Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
         
-        StorageClientInterface::TransportState      state;
+        StorageClientInterface::AsyncState          state;
         Ptr<Glib::ustring>::Ref                     errorMessage;
         try {
             state = storage->checkTransport(remoteSearchToken, errorMessage);

@@ -713,6 +713,52 @@ const std::string    createBackupTmpFileParamName = "tmpfile";
 const std::string    createBackupFaultStringParamName = "faultString";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: restoreBackupXxxx */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'open' restore backup method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupOpenMethodName 
+                            = "locstor.restoreBackupOpen";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'check' restore backup method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupCheckMethodName 
+                            = "locstor.restoreBackupCheck";
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'close' restore backup method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupCloseMethodName 
+                            = "locstor.restoreBackupClose";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupSessionIdParamName    = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the search criteria parameter in the input structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupFileNameParamName     = "filename";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input or output structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupTokenParamName        = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the status parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupStatusParamName       = "status";
+
+/*------------------------------------------------------------------------------
+ *  The name of the faultString parameter in the output structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupFaultStringParamName  = "faultString";
+
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: exportPlaylistXxxx */
 
 /*------------------------------------------------------------------------------
@@ -2370,7 +2416,7 @@ WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
 /*------------------------------------------------------------------------------
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
-Ptr<Glib::ustring>::Ref
+WebStorageClient :: AsyncState
 WebStorageClient :: createBackupCheck(
                           const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
@@ -2387,16 +2433,18 @@ WebStorageClient :: createBackupCheck(
 
     execute(createBackupCheckMethodName, parameters, result);
     
-    Ptr<Glib::ustring>::Ref     status;
-    
     checkStruct(createBackupCheckMethodName,
                 result,
                 createBackupStatusParamName,
                 XmlRpcValue::TypeString);
     
-    status.reset(new Glib::ustring(result[createBackupStatusParamName]));
+    Ptr<Glib::ustring>::Ref     status(new Glib::ustring(
+                                    result[createBackupStatusParamName] ));
     
-    if (*status == "success") {
+    if (*status == "working") {
+        return pendingState;
+    
+    } else if (*status == "success") {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupUrlParamName,
@@ -2412,9 +2460,10 @@ WebStorageClient :: createBackupCheck(
         
         path.reset(new const Glib::ustring(
                         std::string(result[createBackupTmpFileParamName]) ));
-    }
+        
+        return finishedState;
     
-    if (*status == "fault") {
+    } else if (*status == "fault") {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupFaultStringParamName,
@@ -2422,9 +2471,18 @@ WebStorageClient :: createBackupCheck(
         
         errorMessage.reset(new Glib::ustring(
                         std::string(result[createBackupFaultStringParamName])));
-    }
+        
+        return failedState;
     
-    return status;
+    } else {
+        std::stringstream eMsg;
+        eMsg << "Incorrect value '"
+             << *status
+             << "' returned by the XML-RPC method '" 
+             << createBackupCheckMethodName
+             << "; expected one of 'working', 'success' or 'fault'.";
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
 }
 
         
@@ -2450,12 +2508,30 @@ WebStorageClient :: createBackupClose(const Glib::ustring &     token) const
  *  Initiate the uploading of a storage backup to the local storage.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-WebStorageClient :: restoreBackup(
+WebStorageClient :: restoreBackupOpen(
                         Ptr<SessionId>::Ref             sessionId,
                         Ptr<const Glib::ustring>::Ref   path)           const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("fake token"));
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[restoreBackupSessionIdParamName] 
+            = sessionId->getId();
+    parameters[restoreBackupFileNameParamName] 
+            = std::string(*path);
+
+    execute(restoreBackupOpenMethodName, parameters, result);
+    
+    checkStruct(restoreBackupOpenMethodName,
+                result,
+                restoreBackupTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
+                                    result[createBackupTokenParamName] ));
+    
     return token;
 }
 
@@ -2463,14 +2539,73 @@ WebStorageClient :: restoreBackup(
 /*------------------------------------------------------------------------------
  *  Check the status of a backup restore.
  *----------------------------------------------------------------------------*/
-Ptr<Glib::ustring>::Ref
+WebStorageClient :: AsyncState
 WebStorageClient :: restoreBackupCheck(
-                        Ptr<const Glib::ustring>::Ref   token,
+                        const Glib::ustring &           token,
                         Ptr<const Glib::ustring>::Ref & errorMessage)   const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
-    return status;
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[restoreBackupTokenParamName] 
+            = std::string(token);
+
+    execute(restoreBackupCheckMethodName, parameters, result);
+    
+    checkStruct(restoreBackupCheckMethodName,
+                result,
+                restoreBackupStatusParamName,
+                XmlRpcValue::TypeString);
+    
+    Ptr<Glib::ustring>::Ref     status(new Glib::ustring(
+                                    result[restoreBackupStatusParamName] ));
+    
+    if (*status == "working") {
+        return pendingState;
+    
+    } else if (*status == "success") {
+        return finishedState;
+    
+    } else if (*status == "fault") {
+        checkStruct(restoreBackupCheckMethodName,
+                    result,
+                    restoreBackupFaultStringParamName,
+                    XmlRpcValue::TypeString);
+        
+        errorMessage.reset(new Glib::ustring(
+                    std::string(result[restoreBackupFaultStringParamName])));
+        
+        return failedState;
+    
+    } else {
+        std::stringstream eMsg;
+        eMsg << "Incorrect value '"
+             << *status
+             << "' returned by the XML-RPC method '" 
+             << restoreBackupCheckMethodName
+             << "; expected one of 'working', 'success' or 'fault'.";
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close the backup restore process.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: restoreBackupClose(const Glib::ustring &    token) const
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    parameters.clear();
+    parameters[restoreBackupTokenParamName] 
+            = std::string(token);
+
+    execute(restoreBackupCloseMethodName, parameters, result);
 }
 
 
@@ -2616,7 +2751,7 @@ WebStorageClient :: importPlaylist(
 /*------------------------------------------------------------------------------
  *  Check the status of the asynchronous network transport operation.
  *----------------------------------------------------------------------------*/
-StorageClientInterface::TransportState
+WebStorageClient :: AsyncState
 WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                                    Ptr<Glib::ustring>::Ref        errorMessage)
                                                 throw (XmlRpcException)

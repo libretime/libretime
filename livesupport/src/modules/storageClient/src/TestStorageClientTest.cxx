@@ -484,18 +484,45 @@ TestStorageClientTest :: createBackupTest(void)
     );
     CPPUNIT_ASSERT(token);
     
-    Ptr<const Glib::ustring>::Ref   url;
-    Ptr<const Glib::ustring>::Ref   path;
-    Ptr<const Glib::ustring>::Ref   errorMessage;
-    Ptr<Glib::ustring>::Ref         status;
+    Ptr<const Glib::ustring>::Ref       url;
+    Ptr<const Glib::ustring>::Ref       path;
+    Ptr<const Glib::ustring>::Ref       errorMessage;
+    StorageClientInterface::AsyncState  state;
     CPPUNIT_ASSERT_NO_THROW(
-        status = tsc->createBackupCheck(*token, url, path, errorMessage);
+        state = tsc->createBackupCheck(*token, url, path, errorMessage);
     );
-    CPPUNIT_ASSERT(status);
-    CPPUNIT_ASSERT_EQUAL(std::string(*status), std::string("working"));
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
         tsc->createBackupClose(*token);
+    );
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the restoreBackupXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: restoreBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Glib::ustring>::Ref     path(new Glib::ustring(
+                                                "var/cowbell_backup.tar"));
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = tsc->restoreBackupOpen(dummySessionId, path);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<const Glib::ustring>::Ref       errorMessage;
+    StorageClientInterface::AsyncState  state;
+    CPPUNIT_ASSERT_NO_THROW(
+        state = tsc->restoreBackupCheck(*token, errorMessage);
+    );
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        tsc->restoreBackupClose(*token);
     );
 }
 
@@ -553,7 +580,7 @@ TestStorageClientTest :: remoteSearchTest(void)
     CPPUNIT_ASSERT(token);
     
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
-    StorageClientInterface::TransportState  state;
+    StorageClientInterface::AsyncState      state;
     CPPUNIT_ASSERT_NO_THROW(
         state = tsc->checkTransport(token, errorMessage);
     );

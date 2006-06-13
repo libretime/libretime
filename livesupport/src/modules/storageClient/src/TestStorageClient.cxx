@@ -1034,7 +1034,7 @@ TestStorageClient :: createBackupOpen(Ptr<SessionId>::Ref       sessionId,
 /*------------------------------------------------------------------------------
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
-Ptr<Glib::ustring>::Ref
+TestStorageClient :: AsyncState
 TestStorageClient :: createBackupCheck(
                           const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
@@ -1042,8 +1042,7 @@ TestStorageClient :: createBackupCheck(
                           Ptr<const Glib::ustring>::Ref &   errorMessage) const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
-    return status;
+    return pendingState;
 }
 
         
@@ -1061,7 +1060,7 @@ TestStorageClient :: createBackupClose(const Glib::ustring &    token) const
  *  Initiate the uploading of a storage backup to the local storage.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-TestStorageClient :: restoreBackup(
+TestStorageClient :: restoreBackupOpen(
                         Ptr<SessionId>::Ref             sessionId,
                         Ptr<const Glib::ustring>::Ref   path)           const
                                                 throw (XmlRpcException)
@@ -1074,14 +1073,23 @@ TestStorageClient :: restoreBackup(
 /*------------------------------------------------------------------------------
  *  Check the status of a backup restore.
  *----------------------------------------------------------------------------*/
-Ptr<Glib::ustring>::Ref
+TestStorageClient :: AsyncState
 TestStorageClient :: restoreBackupCheck(
-                        Ptr<const Glib::ustring>::Ref   token,
+                        const Glib::ustring &           token,
                         Ptr<const Glib::ustring>::Ref & errorMessage)   const
                                                 throw (XmlRpcException)
 {
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring("working"));
-    return status;
+    return pendingState;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close the backup restore process.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: restoreBackupClose(const Glib::ustring &   token) const
+                                                throw (XmlRpcException)
+{
 }
 
 
@@ -1128,7 +1136,7 @@ TestStorageClient :: importPlaylist(
 /*------------------------------------------------------------------------------
  *  Check the status of the asynchronous network transport operation.
  *----------------------------------------------------------------------------*/
-StorageClientInterface::TransportState
+TestStorageClient :: AsyncState
 TestStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                                     Ptr<Glib::ustring>::Ref        errorMessage)
                                                 throw (XmlRpcException)

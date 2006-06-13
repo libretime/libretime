@@ -218,7 +218,7 @@ TransportList :: add(const Glib::ustring &          title,
     
     Ptr<Glib::ustring>::Ref     tokenPtr(new Glib::ustring(token));
     Ptr<Glib::ustring>::Ref     errorMsg(new Glib::ustring);
-    StorageClientInterface::TransportState
+    StorageClientInterface::AsyncState
                                 state = storage->checkTransport(tokenPtr,
                                                                 errorMsg);
     
@@ -321,7 +321,7 @@ TransportList :: update(Gtk::TreeIter   iter)           throw (XmlRpcException)
     Ptr<StorageClientInterface>::Ref 
                                 storage = gLiveSupport->getStorageClient();
     Ptr<Glib::ustring>::Ref     errorMsg(new Glib::ustring);
-    StorageClientInterface::TransportState
+    StorageClientInterface::AsyncState
                                 status = storage->checkTransport(
                                     iter->get_value(modelColumns.tokenColumn),
                                     errorMsg);
@@ -334,9 +334,9 @@ TransportList :: update(Gtk::TreeIter   iter)           throw (XmlRpcException)
  *  Set the status of the row pointed to by an iterator.
  *----------------------------------------------------------------------------*/
 bool
-TransportList :: setStatus(Gtk::TreeIter                            iter,
-                           StorageClientInterface::TransportState   status,
-                           Ptr<const Glib::ustring>::Ref            errorMsg)
+TransportList :: setStatus(Gtk::TreeIter                        iter,
+                           StorageClientInterface::AsyncState   status,
+                           Ptr<const Glib::ustring>::Ref        errorMsg)
                                                                     throw ()
 {
     switch (status) {

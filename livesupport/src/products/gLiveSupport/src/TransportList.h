@@ -111,9 +111,9 @@ class TransportList : public Gtk::VBox,
          *  @return true    if the status is "success", false otherwise.
          */
         bool
-        setStatus(Gtk::TreeIter                             iter,
-                  StorageClientInterface::TransportState    status,
-                  Ptr<const Glib::ustring>::Ref             errorMsg
+        setStatus(Gtk::TreeIter                         iter,
+                  StorageClientInterface::AsyncState    status,
+                  Ptr<const Glib::ustring>::Ref         errorMsg
                                             = Ptr<const Glib::ustring>::Ref())
                                                                 throw ();
 

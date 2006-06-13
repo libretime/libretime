@@ -750,19 +750,20 @@ class WebStorageClient :
          *
          *  @param  token   the identifier of this backup task.
          *  @param  url     return parameter;
-         *                      if the status is "success", it contains the 
+         *                      if a finishedState is returned, it contains the
          *                      URL of the created backup file.
          *  @param  path    return parameter;
-         *                      if the status is "success", it contains the
+         *                      if a finishedState is returned, it contains the
          *                      local access path of the created backup file.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the backup process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual AsyncState
         createBackupCheck(const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
                           Ptr<const Glib::ustring>::Ref &   path,
@@ -790,8 +791,8 @@ class WebStorageClient :
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        restoreBackup(Ptr<SessionId>::Ref               sessionId,
-                      Ptr<const Glib::ustring>::Ref     path) const
+        restoreBackupOpen(Ptr<SessionId>::Ref               sessionId,
+                          Ptr<const Glib::ustring>::Ref     path) const
                                                 throw (XmlRpcException);
         
         /**
@@ -799,15 +800,27 @@ class WebStorageClient :
          *
          *  @param  token       the identifier of this backup task.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the restore process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
-        restoreBackupCheck(Ptr<const Glib::ustring>::Ref    token,
+        virtual AsyncState
+        restoreBackupCheck(const Glib::ustring &            token,
                            Ptr<const Glib::ustring>::Ref &  errorMessage) const
+                                                throw (XmlRpcException);
+        
+        /**
+         *  Close the backup restore process.
+         *
+         *  @param  token       the identifier of this backup task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        restoreBackupClose(const Glib::ustring &            token) const
                                                 throw (XmlRpcException);
         
         /**
@@ -884,7 +897,7 @@ class WebStorageClient :
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual TransportState
+        virtual AsyncState
         checkTransport(Ptr<const Glib::ustring>::Ref    token,
                        Ptr<Glib::ustring>::Ref      errorMessage
                                                     = Ptr<Glib::ustring>::Ref())

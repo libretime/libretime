@@ -653,23 +653,23 @@ class TestStorageClient :
         
         /**
          *  Check the status of a storage backup.
-         *  This is a dummy method; it always returns the status "working".
+         *  This is a dummy method; it always returns a pendingState.
          *
-         *  @param  token   the identifier of this backup task.
          *  @param  url     return parameter;
-         *                      if the status is "success", it contains the 
+         *                      if a finishedState is returned, it contains the
          *                      URL of the created backup file.
          *  @param  path    return parameter;
-         *                      if the status is "success", it contains the
+         *                      if a finishedState is returned, it contains the
          *                      local access path of the created backup file.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the backup process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual AsyncState
         createBackupCheck(const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
                           Ptr<const Glib::ustring>::Ref &   path,
@@ -690,6 +690,7 @@ class TestStorageClient :
 
         /**
          *  Initiate the uploading of a storage backup to the local storage.
+         *  This is a dummy method; it just returns a fake token.
          *
          *  @param  sessionId   the session ID from the authentication client.
          *  @param  path        the location of the archive file to upload.
@@ -698,24 +699,37 @@ class TestStorageClient :
          *                             call.
          */
         virtual Ptr<Glib::ustring>::Ref
-        restoreBackup(Ptr<SessionId>::Ref               sessionId,
-                      Ptr<const Glib::ustring>::Ref     path) const
+        restoreBackupOpen(Ptr<SessionId>::Ref               sessionId,
+                          Ptr<const Glib::ustring>::Ref     path) const
                                                 throw (XmlRpcException);
         
         /**
          *  Check the status of a backup restore.
+         *  This is a dummy method; it always returns a pendingState.
          *
          *  @param  token       the identifier of this backup task.
          *  @param  errorMessage    return parameter;
-         *                      if the status is "fault", it contains the
+         *                      if a failedState is returned, it contains the
          *                      fault string.
-         *  @return the status string: one of "working", "success", or "fault".
+         *  @return the state of the restore process: one of pendingState,
+         *                      finishedState, or failedState.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Glib::ustring>::Ref
-        restoreBackupCheck(Ptr<const Glib::ustring>::Ref    token,
+        virtual AsyncState
+        restoreBackupCheck(const Glib::ustring &            token,
                            Ptr<const Glib::ustring>::Ref &  errorMessage) const
+                                                throw (XmlRpcException);
+        
+        /**
+         *  Close the backup restore process.
+         *
+         *  @param  token       the identifier of this backup task.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        restoreBackupClose(const Glib::ustring &            token) const
                                                 throw (XmlRpcException);
         
         /**
@@ -792,7 +806,7 @@ class TestStorageClient :
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual TransportState
+        virtual AsyncState
         checkTransport(Ptr<const Glib::ustring>::Ref    token,
                        Ptr<Glib::ustring>::Ref      errorMessage
                                                     = Ptr<Glib::ustring>::Ref())

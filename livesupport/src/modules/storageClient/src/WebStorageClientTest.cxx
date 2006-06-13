@@ -838,29 +838,92 @@ WebStorageClientTest :: createBackupTest(void)
     );
     CPPUNIT_ASSERT(token);
     
-    Ptr<const Glib::ustring>::Ref   url;
-    Ptr<const Glib::ustring>::Ref   path;
-    Ptr<const Glib::ustring>::Ref   errorMessage;
-    Ptr<Glib::ustring>::Ref         status;
+    Ptr<const Glib::ustring>::Ref           url;
+    Ptr<const Glib::ustring>::Ref           path;
+    Ptr<const Glib::ustring>::Ref           errorMessage;
+    StorageClientInterface::AsyncState      state;
+    
     int     iterations = 20;
     do {
         std::cerr << "-/|\\"[iterations%4] << '\b';
         sleep(1);
         CPPUNIT_ASSERT_NO_THROW(
-            status = wsc->createBackupCheck(*token, url, path, errorMessage);
+            state = wsc->createBackupCheck(*token, url, path, errorMessage);
         );
-        CPPUNIT_ASSERT(status);
-        CPPUNIT_ASSERT(*status == "working"
-                         || *status == "success"
-                         || *status == "fault");
-    } while (--iterations && *status == "working");
-    CPPUNIT_ASSERT_EQUAL(std::string("success"), std::string(*status));
+        CPPUNIT_ASSERT(state == StorageClientInterface::pendingState
+                         || state == StorageClientInterface::finishedState
+                         || state == StorageClientInterface::failedState);
+    } while (--iterations && state == StorageClientInterface::pendingState);
+    
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
     // TODO: test accessibility of the URL?
     
     CPPUNIT_ASSERT_NO_THROW(
         wsc->createBackupClose(*token);
     );
     // TODO: test non-accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        authentication->logout(sessionId);
+    );
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the restoreBackupXxxx() functions.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: restoreBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref         sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q");
+    );
+    CPPUNIT_ASSERT(sessionId);
+    
+    Ptr<UniqueId>::Ref      oldAudioClipId(new UniqueId("0000000000010001"));
+    CPPUNIT_ASSERT(
+        wsc->existsAudioClip(sessionId, oldAudioClipId)
+    );
+    
+    Ptr<Glib::ustring>::Ref     path(new Glib::ustring(
+                                                "var/cowbell_backup.tar"));
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = wsc->restoreBackupOpen(sessionId, path);
+    );
+    CPPUNIT_ASSERT(token);
+    
+    Ptr<const Glib::ustring>::Ref           errorMessage;
+    StorageClientInterface::AsyncState      state;
+    
+    int     iterations = 20;
+    do {
+        std::cerr << "-/|\\"[iterations%4] << '\b';
+        sleep(1);
+        CPPUNIT_ASSERT_NO_THROW(
+            state = wsc->restoreBackupCheck(*token, errorMessage);
+        );
+        CPPUNIT_ASSERT(state == StorageClientInterface::pendingState
+                         || state == StorageClientInterface::finishedState
+                         || state == StorageClientInterface::failedState);
+    } while (--iterations && state == StorageClientInterface::pendingState);
+    
+    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->createBackupClose(*token);
+    );
+    
+    CPPUNIT_ASSERT(
+        !wsc->existsAudioClip(sessionId, oldAudioClipId)
+    );
+    
+    Ptr<UniqueId>::Ref      newAudioClipId(new UniqueId("7c215b48a9c827e6"));
+    CPPUNIT_ASSERT(
+        wsc->existsAudioClip(sessionId, newAudioClipId)
+    );
     
     CPPUNIT_ASSERT_NO_THROW(
         authentication->logout(sessionId);
@@ -1014,7 +1077,7 @@ WebStorageClientTest :: remoteSearchTest(void)
     );
     
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
-    StorageClientInterface::TransportState  state;
+    StorageClientInterface::AsyncState      state;
     
     int     iterations = 20;
     do {
