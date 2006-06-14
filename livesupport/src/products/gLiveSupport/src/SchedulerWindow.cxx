@@ -261,7 +261,7 @@ SchedulerWindow :: onDateSelected (void)                            throw ()
     } catch (std::out_of_range &e) {
         // TODO: report date out of range error
         std::cerr << e.what() << std::endl;
-    } catch (std::out_of_range &e) {
+    } catch (XmlRpcException &e) {
         // TODO: report storage server error
         std::cerr << e.what() << std::endl;
     }

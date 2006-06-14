@@ -153,7 +153,7 @@ BackupList :: add(const Glib::ustring &     title,
     Ptr<const Glib::ustring>::Ref   path;
     Ptr<const Glib::ustring>::Ref   errorMessage;
     
-    Ptr<Glib::ustring>::Ref     status
+    StorageClientInterface::AsyncState  status
                                     = storage->createBackupCheck(token,
                                                                  url,
                                                                  path,
@@ -302,7 +302,7 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
     Ptr<const Glib::ustring>::Ref   path;
     Ptr<const Glib::ustring>::Ref   errorMessage;
     
-    Ptr<Glib::ustring>::Ref     status = storage->createBackupCheck(
+    StorageClientInterface::AsyncState  status = storage->createBackupCheck(
                                     iter->get_value(modelColumns.tokenColumn),
                                     url,
                                     path,
@@ -316,35 +316,37 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
  *  Set the status of the row pointed to by an iterator.
  *----------------------------------------------------------------------------*/
 bool
-BackupList :: setStatus(Gtk::TreeIter                   iter,
-                        Ptr<const Glib::ustring>::Ref   status,
-                        Ptr<const Glib::ustring>::Ref   url,
-                        Ptr<const Glib::ustring>::Ref   errorMessage)
+BackupList :: setStatus(Gtk::TreeIter                       iter,
+                        StorageClientInterface::AsyncState  status,
+                        Ptr<const Glib::ustring>::Ref       url,
+                        Ptr<const Glib::ustring>::Ref       errorMessage)
                                                                 throw ()
 {
-    if (*status == "working") {
-        return false;
-    
-    } else if (*status == "success") {
-        iter->set_value(modelColumns.statusColumn,
-                        successStatusKey);
-        iter->set_value(modelColumns.statusDisplayColumn, 
-                        *getResourceUstring(successStatusKey));
-        iter->set_value(modelColumns.urlColumn,
-                        *url);
-        return true;
-    
-    } else if (*status == "fault") {
-        iter->set_value(modelColumns.statusColumn,
-                        faultStatusKey);
-        iter->set_value(modelColumns.statusDisplayColumn, 
-                        *formatMessage(faultStatusKey, *errorMessage));
-        return false;
+    switch (status) {
+        case StorageClientInterface::pendingState:
+                return false;
+        
+        case StorageClientInterface::finishedState:
+                iter->set_value(modelColumns.statusColumn,
+                                successStatusKey);
+                iter->set_value(modelColumns.statusDisplayColumn, 
+                                *getResourceUstring(successStatusKey));
+                iter->set_value(modelColumns.urlColumn,
+                                *url);
+                return true;
+        
+        case StorageClientInterface::failedState:
+                iter->set_value(modelColumns.statusColumn,
+                                faultStatusKey);
+                iter->set_value(modelColumns.statusDisplayColumn, 
+                                *formatMessage(faultStatusKey, *errorMessage));
+                return false;
+        
+        default:
+                std::cerr << "Impossible status: '" << status
+                          << "' in BackupList::setStatus()." << std::endl;
+                return false;
     }
-    
-    std::cerr << "Impossible status: '" << *status
-              << "' in BackupList::setStatus()." << std::endl;
-    return false;
 }
 
 

@@ -109,10 +109,10 @@ class BackupList : public Gtk::VBox,
          *  @return true    if the status is "success", false otherwise.
          */
         bool
-        setStatus(Gtk::TreeIter                   iter,
-                  Ptr<const Glib::ustring>::Ref   status,
-                  Ptr<const Glib::ustring>::Ref   url,
-                  Ptr<const Glib::ustring>::Ref   errorMessage)
+        setStatus(Gtk::TreeIter                         iter,
+                  StorageClientInterface::AsyncState    status,
+                  Ptr<const Glib::ustring>::Ref         url,
+                  Ptr<const Glib::ustring>::Ref         errorMessage)
                                                                 throw ();
 
         /**
