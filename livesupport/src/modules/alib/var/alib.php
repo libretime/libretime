@@ -225,7 +225,7 @@ class Alib extends Subjects{
     function checkPerm($sid, $action, $oid=NULL)
     {
         if(!is_numeric($sid)) return FALSE;
-        if(is_null($oid) or $oid=='') $oid = $this->getObjId($this->RootNode);
+        if(is_null($oid) or $oid=='') $oid = $this->getRootNode();
         if(PEAR::isError($oid)) return $oid;
         if(!is_numeric($oid)) return FALSE;
         // query construction
