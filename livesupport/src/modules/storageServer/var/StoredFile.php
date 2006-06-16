@@ -81,6 +81,7 @@ class StoredFile{
      *  @param mdataLoc string 'file'|'string' (optional)
      *  @param gunid global unique id (optional) - for insert file with gunid
      *  @param ftype string, internal file type
+     *  @param className string, class to be constructed (opt.)
      *  @return instance of StoredFile object
      */
     function &insert(&$gb, $oid, $name,
@@ -96,10 +97,10 @@ class StoredFile{
         $ac->dbc->query("BEGIN");
         $res = $ac->dbc->query("
             INSERT INTO {$ac->filesTable}
-                (id, name, gunid, mime, state, ftype)
+                (id, name, gunid, mime, state, ftype, mtime)
             VALUES
                 ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
-                    '{$ac->mime}', 'incomplete', '$ftype')
+                    '{$ac->mime}', 'incomplete', '$ftype', now())
         ");
         if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
@@ -323,6 +324,8 @@ class StoredFile{
             $res = $this->setMime($mime);
             if(PEAR::isError($res)){ return $res; }
         }
+        $r = $this->md->regenerateXmlFile();
+        if(PEAR::isError($r)){ return $r; }
     }
 
     /**
@@ -381,7 +384,7 @@ class StoredFile{
     function rename($newname)
     {
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET name='$newname'
+            UPDATE {$this->filesTable} SET name='$newname', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)) return $res;
@@ -401,7 +404,7 @@ class StoredFile{
         $eb = (!is_null($editedby) ? ", editedBy=$editedby" : '');
         $res = $this->dbc->query("
             UPDATE {$this->filesTable}
-            SET state='$state'$eb
+            SET state='$state'$eb, mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
@@ -417,7 +420,7 @@ class StoredFile{
     function setMime($mime)
     {
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET mime='$mime'
+            UPDATE {$this->filesTable} SET mime='$mime', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }

@@ -111,6 +111,15 @@ class DataEngine{
                 $catNs  = $splittedQn['namespace'];
                 $cat    = $splittedQn['localPart'];
                 $opVal  = sprintf($ops[$op], addslashes($value));
+                // retype for timestamp value
+                if($cat == 'mtime'){
+                    switch($op){
+                        case'partial':  case'prefix':   break;
+                        default:
+                            $retype = "::timestamp with time zone";
+                            $opVal = "$retype $opVal$retype";
+                    }
+                }
                 // escape % for sprintf in whereArr construction:
                 $cat    = str_replace("%", "%%", $cat);
                 $opVal  = str_replace("%", "%%", $opVal);
@@ -273,10 +282,17 @@ class DataEngine{
      *  @param offset int, starting point (0 means without offset)
      *  @param brFldNs string - namespace prefix of category for browse
      *  @param brFld string, metadata category identifier for browse
-     *  @return hash, fields:
-     *       results : array with gunid strings
+     *  @return arrays of hashes, fields:
      *       cnt : integer - number of matching gunids 
      *              of files have been found
+     *       results : array of hashes:
+     *          gunid: string
+     *          type: string - audioclip | playlist | webstream
+     *          title: string - dc:title from metadata
+     *          creator: string - dc:creator from metadata
+     *          length: string - dcterms:extent in extent format
+     *     OR (in browse mode)
+     *       results: array of strings - browsed values
      */
     function _localGenSearch($criteria, $limit=0, $offset=0,
         $brFldNs=NULL, $brFld=NULL)
@@ -302,12 +318,12 @@ class DataEngine{
         $browse     = !is_null($brFld);
         if(!$browse){
             if(!$orderby){
-                $fldsPart = "DISTINCT to_hex(f.gunid)as gunid";
+                $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id";
             }else{
-                $fldsPart = "DISTINCT f.gunid";
+                $fldsPart = "DISTINCT f.gunid, f.ftype, f.id";
             }
         }else{
-            $fldsPart = "DISTINCT br.object";
+            $fldsPart = "DISTINCT br.object as txt";
         }
         $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
             ($offset != 0 ? " OFFSET $offset" : '' );
@@ -321,25 +337,50 @@ class DataEngine{
                 $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
         if(!$browse && $orderby){
+            $retype = ($orderby == 'mtime' ? '::timestamp with time zone' : '' );
             $sql =
-                "SELECT to_hex(sq2.gunid)as gunid, m.object\n".
+                "SELECT to_hex(sq2.gunid)as gunid, m.object, sql2.ftype, sql2.id\n".
                 "FROM (\n$sql\n)sq2\n".
                 "LEFT JOIN ls_mdata m\n".
                 "  ON m.gunid = sq2.gunid AND m.predicate='$orderby'".
                 " AND m.objns='_L' AND m.predxml='T'".
                 (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
-                "ORDER BY m.object".($desc? ' DESC':'')."\n";
+                "ORDER BY m.object".$retype.($desc? ' DESC':'')."\n";
         }
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
         if(PEAR::isError($cnt)) return $cnt;
-        $res = $this->dbc->getCol($sql.$limitPart);
+        $res = $this->dbc->getAll($sql.$limitPart);
         if(PEAR::isError($res)) return $res;
         if(!is_array($res)) $res = array();
-        if(!$browse){
-            $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
+#        if(!$browse){
+#            $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
+#        }
+        $eres = array();
+        foreach($res as $it){
+            if(!$browse){
+                $gunid    = StoredFile::_normalizeGunid($it['gunid']);
+                $titleA   = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:title');
+                if(PEAR::isError($r)) return $r;
+                $title    = (isset($titleA[0]['value']) ? $titleA[0]['value'] : '');
+                $creatorA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:creator');
+                if(PEAR::isError($r)) return $r;
+                $creator  = (isset($creatorA[0]['value']) ? $creatorA[0]['value'] : '');
+                $lengthA  = $r = $this->gb->bsGetMetadataValue($it['id'], 'dcterms:extent');
+                if(PEAR::isError($r)) return $r;
+                $length   = (isset($lengthA[0]['value']) ? $lengthA[0]['value'] : '');
+                $eres[] = array(
+                    'gunid'   => $gunid,
+                    'type'    => $it['ftype'],
+                    'title'   => $title,
+                    'creator' => $creator,
+                    'length'  => $length,
+                );
+            }else{
+                $eres[] = $it['txt'];
+            }
         }
-        return array('results'=>$res, 'cnt'=>$cnt);
+        return array('results'=>$eres, 'cnt'=>$cnt);
     }
 
     /**
@@ -351,7 +392,7 @@ class DataEngine{
      *  @param offset int, starting point (0 means without offset)
      *  @param criteria hash
      *  @return hash, fields:
-     *       results : array with gunid strings
+     *       results : array with found values
      *       cnt : integer - number of matching values 
      */
     function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)

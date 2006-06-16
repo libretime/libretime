@@ -40,6 +40,9 @@ echo "#Transport test: URL: $WWW_ROOT"
 cd $reldir/var/xmlrpc
 XR_CLI="php -q xr_cli_test.php -s $WWW_ROOT/xmlrpc/xrLocStor.php"
 
+#-------------------------------------------------------------------------------
+# storage related functions
+#-------------------------------------------------------------------------------
 login() {
     echo -n "# login: "
     SESSID=`$XR_CLI login root q` || \
@@ -47,16 +50,19 @@ login() {
     echo "sessid: $SESSID"
 }
 
-storeOpen() {
-    echo "# store: "
-    METADATA="<?xml version=\"1.0\"?>
+storeOpenClose() {
+    GUNID=$1 ; shift
+    [[ "x$1" != "x" ]] && MEDIA="$1" || MEDIA="../tests/ex1.mp3"
+    shift
+    [[ "x$1" != "x" ]] && METADATA=`cat "$1"` || METADATA="<?xml version=\"1.0\"?>
     <audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
      xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
      xmlns:dcterms=\"http://purl.org/dc/terms/\">
      <dcterms:extent>00:00:11.000000</dcterms:extent>
      <dc:title>Transport test file 1</dc:title>
     </metadata></audioClip>"
-    MEDIA=../tests/ex1.mp3
+    #echo "# store: gunid=$GUNID mediafile=$MEDIA metadata=$METADATA"
+    echo "# store: "
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     RES=`$XR_CLI storeAudioClipOpen "$SESSID" "$GUNID" "$METADATA" "stored_file.mp3" "$MD5"` || \
         { ERN=$?; echo $RES; exit $ERN; }
@@ -64,9 +70,6 @@ storeOpen() {
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo "  URL   = $URL"
     echo "  TOKEN = $TOKEN"
-}
-
-storeClose() {
     echo -n "# curl (PUT): "
     curl -C 0 -T $MEDIA $URL || exit $?
     echo "status: $?"
@@ -77,30 +80,58 @@ storeClose() {
 }
 
 deleteAudioClip() {
+    GUNID=$1 ; shift
     echo -n "# deleteAudioClip: "
-# disabled:
-#    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
-    $XR_CLI deleteAudioClip $SESSID $GUNID
+    $XR_CLI deleteAudioClip $SESSID $GUNID 1
 }
 
-uploadToArchive() {
-    echo -n "# uploadToArchive: "
-    TRTOK=`$XR_CLI uploadToArchive $SESSID $GUNID` || \
-        { ERN=$?; echo $TRTOK; exit $ERN; }
-    echo $TRTOK
-}
-
-downloadFromArchive() {
-    echo -n "# downloadFromArchive: "
-    TRTOK=`$XR_CLI downloadFromArchive $SESSID $GUNID` || \
-        { ERN=$?; echo $TRTOK; exit $ERN; }
-    echo $TRTOK
-}
-
+#-------------------------------------------------------------------------------
+# transport related functions
+#-------------------------------------------------------------------------------
 getTransportInfo() {
+    TRTOK=$1 ; shift
     echo "# getTransportInfo:"
-    $XR_CLI getTransportInfo $SESSID $TRTOK
+    $XR_CLI getTransportInfo $TRTOK
     echo "#  status: $?"
+}
+
+upload2Hub() {
+    GUNID=$1 ; shift
+    echo -n "# upload2Hub: ($GUNID)"
+    TRTOK=`$XR_CLI upload2Hub $SESSID $GUNID` || \
+        { ERN=$?; echo $TRTOK; exit $ERN; }
+    echo $TRTOK
+}
+
+downloadFromHub() {
+    GUNID=$1 ; shift
+    echo -n "# downloadFromHub: ($GUNID)"
+    TRTOK=`$XR_CLI downloadFromHub $SESSID $GUNID` || \
+        { ERN=$?; echo $TRTOK; exit $ERN; }
+    echo $TRTOK
+}
+
+uploadFile2Hub() {
+    FILE=$1 ; shift
+    echo -n "# uploadFile2Hub: "
+    TRTOK=`$XR_CLI uploadFile2Hub $SESSID $FILE` || \
+        { ERN=$?; echo $TRTOK; exit $ERN; }
+    echo $TRTOK
+}
+
+getHubInitiatedTransfers() {
+    echo -n "# getHubInitiatedTransfers: "
+    TRTOK=`$XR_CLI getHubInitiatedTransfers $SESSID` || \
+        { ERN=$?; echo $TRTOK; exit $ERN; }
+    echo $TRTOK
+}
+
+startHubInitiatedTransfer() {
+    TRTOK=$1 ; shift
+    echo -n "# startHubInitiatedTransfer: "
+    RES=`$XR_CLI startHubInitiatedTransfer $TRTOK` || \
+        { ERN=$?; echo $TRTOK; exit $ERN; }
+    echo $RES
 }
 
 transportCron() {
@@ -114,24 +145,29 @@ logout() {
     $XR_CLI logout $SESSID || exit $?
 }
 
+#-------------------------------------------------------------------------------
+# playlist related functions
+#-------------------------------------------------------------------------------
 PLID="123456789abcdef8"
 
-createPlaylist() {
+createPlaylistAndEdit() {
+    PLID=$1 ; shift
     echo -n "# createPlaylist: "
     $XR_CLI createPlaylist $SESSID $PLID "newPlaylist.xml" || exit $?
-}
-
-editPlaylist() {
     DATE=`date '+%H:%M:%S'`
-    PLAYLIST="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<smil><head><metadata>
- <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/metadata/dublin_core#\">
+    [[ "x$1" != "x" ]] && PLAYLIST=`cat "$1"` || PLAYLIST="<?xml
+ version=\"1.0\"  encoding=\"UTF-8\"?>
+<playlist id=\"123456789abcdea1\"><metadata>
   <dc:title>XY $DATE</dc:title>
- </rdf:RDF>
-</metadata></head><body><seq>
-   <audio src=\"123456789abcdefa\"/>
-   <audio src=\"123456789abcdefb\"/>
-</seq></body></smil>"
+  <dcterms:extent>00:00:01.000000</dcterms:extent>
+</metadata>
+<playlistElement id=\"123456789abcdef1\" relativeOffset=\"0\">
+   <audioClip id=\"123456789abcdefa\"/>
+</playlistElement>
+<playlistElement id=\"123456789abcdef2\" relativeOffset=\"12\">
+   <audioClip id=\"123456789abcdefb\"/>
+</playlistElement>
+</playlist>"
     echo -n "# editPlaylist: "
     RES=`$XR_CLI editPlaylist $SESSID $PLID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
@@ -147,53 +183,43 @@ editPlaylist() {
 }
 
 deletePlaylist() {
+    PLID=$1 ; shift
     echo -n "# deletePlaylist (${PLID}): "
-    $XR_CLI deletePlaylist $SESSID $PLID
+    $XR_CLI deletePlaylist $SESSID $PLID 1
     # || exit $?
     echo "#  status: $?"
 }
 
-testPrint(){
-    ls -l ../stor/a23
-    md5sum ../stor/a23/a23456789abcdef2
-}
 
-#PLID="a23456789abcdef3"
-#GUNID=$PLID
+#-------------------------------------------------------------------------------
+# executable part
+#-------------------------------------------------------------------------------
+GUNID_="a23456789abcdef3"
+PLID_=$GUNID_
+MEDIA_="../tests/ex1.mp3"
 
-
-#GUNID="a23456789abcdef2"
 login
-storeOpen
-storeClose
+for i in 0000000000010001 0000000000010002; do echo $i
+    storeOpenClose $i "../tests/$i" "../tests/$i.xml"
+done
 
-#createPlaylist
-#editPlaylist
+deletePlaylist $PLID_
+deletePlaylist $PLID_
+createPlaylistAndEdit $PLID_ "../tests/0000000000000001.xml"
 
-#testPrint
+upload2Hub $PLID_
+for i in 1 2 3 4 5; do getTransportInfo $TRTOK; sleep 1; done
 
-uploadToArchive
-#TRTOK="99ce8d099fc10ac5"
-getTransportInfo
-transportCron
-getTransportInfo
-transportCron
-getTransportInfo
+#sleep 10
+for i in 0000000000010001 0000000000010002; do echo $i
+#    deleteAudioClip $i
+done
+deletePlaylist $PLID_
 
-deleteAudioClip
-#deletePlaylist
+echo "STOP - press ENTER"; read key
 
-#testPrint
-
-downloadFromArchive
-#TRTOK="72bbe5eaa3ce7165"
-getTransportInfo
-transportCron
-getTransportInfo
-transportCron
-getTransportInfo
-
-#testPrint
+downloadFromHub $PLID_
+for i in 1 2 3 4 5; do getTransportInfo $TRTOK; sleep 1; done
 
 logout
 

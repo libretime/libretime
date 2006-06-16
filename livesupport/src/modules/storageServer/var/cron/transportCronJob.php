@@ -17,7 +17,7 @@ if(TR_LOG_LEVEL>1){ $tr->trLog("transportCronJob start ($trtok)"); }
 
 // 4-pass on job:
 $cnt = 4;
-for($i=0; $i<$cnt; $i++){
+for($i=0; $i<$cnt; $i++, sleep(1)){
     // run the action:
     $r = $tr->cronCallMethod($trtok);
     if(PEAR::isError($r)){
@@ -27,7 +27,7 @@ for($i=0; $i<$cnt; $i++){
         if($r!==TRUE) $tr->trLog("transportCronJob: ($trtok): nonTRUE returned");
     }
     #if(!$r) exit(1);
-    #sleep(10);
+    #sleep(2);
 }
 
 if(TR_LOG_LEVEL>1){ $tr->trLog("transportCronJob end ($trtok)"); }

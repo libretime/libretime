@@ -316,20 +316,19 @@ class LocStor extends BasicStor{
      *       </ul>
      *     </li>
      *   </ul>
-     *  @return hash, with fields:
+     *  @return array of hashes, fields:
      *   <ul>
-     *      <li>audioClipResults : array with gunid strings
-     *          of audioClips have been found</li>
-     *      <li>audioClipCnt : int - number of audioClips matching
-     *          the criteria</li>
-     *      <li>webstreamResults : array with gunid strings
-     *          of webstreams have been found</li>
-     *      <li>webstreamCnt : int - number of webstreams matching
-     *          the criteria</li>
-     *      <li>playlistResults : array with gunid strings
-     *          of playlists have been found</li>
-     *      <li>playlistCnt : int - number of playlists matching
-     *          the criteria</li>
+     *       <li>cnt : integer - number of matching gunids 
+     *              of files have been found</li>
+     *       <li>results : array of hashes:
+     *          <ul>
+     *           <li>gunid: string</li>
+     *           <li>type: string - audioclip | playlist | webstream</li>
+     *           <li>title: string - dc:title from metadata</li>
+     *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>length: string - dcterms:extent in extent format</li>
+     *          </ul>
+     *      </li>
      *   </ul>
      *  @see BasicStor::localSearch
       */
@@ -337,36 +336,17 @@ class LocStor extends BasicStor{
     {
         if(($res = $this->_authorize('read', $this->storId, $sessid)) !== TRUE)
             return $res;
-        $filetype = strtolower($criteria['filetype']);
-        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
-        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        $filetypes = array(
-            'audioclip' => 'audioClip',
-            'webstream' => 'webstream',
-            'playlist'  => 'playlist',
-        );
-        $cri = array(); $res = array();
-        // cycle over all possible filetypes:
-        foreach($filetypes as $ft=>$ftn){
-            $cri[$ft] = $criteria;
-            $cri[$ft]['filetype'] = $ft;
-            // search only required filetypes:
-            if($filetype == 'all' || $filetype == $ft){
-                $r = $this->bsLocalSearch($cri[$ft], $limit, $offset);
-            }else{
-                // empty results for non-required filetypes:
-                $r = array('results'=>array(), 'cnt'=>0);
-            }
-            $res["{$ftn}Results"]   = $r['results'];
-            $res["{$ftn}Cnt"]       = $r['cnt'];
-        }
+        $criteria['resultMode'] = 'xmlrpc';
+        $res = $this->localSearch($criteria, $sessid);
         return $res;
     }
     function localSearch($criteria, $sessid='')
     {
         $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        return $this->bsLocalSearch($criteria, $limit, $offset);
+        $res = $r = $this->bsLocalSearch($criteria, $limit, $offset);
+        if(PEAR::isError($r)){ return $r; }
+        return $res;
     }
 
 
@@ -378,7 +358,7 @@ class LocStor extends BasicStor{
      *  @param criteria hash, see searchMetadata method
      *  @param sessid string
      *  @return hash, fields:
-     *       results : array with gunid strings
+     *       results : array with found values
      *       cnt : integer - number of matching values 
      *  @see BasicStor::bsBrowseCategory
      */
@@ -441,7 +421,10 @@ class LocStor extends BasicStor{
     function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
-        if(PEAR::isError($ac)) return $ac;
+        if(PEAR::isError($ac)){
+            if($ac->getCode()==GBERR_FOBJNEX && $forced) return TRUE;
+            return $ac;
+        }
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
         $res = $this->bsDeleteFile($ac->getId(), $forced);
@@ -603,8 +586,10 @@ class LocStor extends BasicStor{
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
+            if($forced) return TRUE;
             return PEAR::raiseError(
-                'LocStor::deletePlaylist: playlist not exists'
+                'LocStor::deletePlaylist: playlist not exists',
+                GBERR_FILENEX
             );
         }
         $ac =& StoredFile::recallByGunid($this, $playlistId);
@@ -629,6 +614,7 @@ class LocStor extends BasicStor{
      *      token: access token,
      *      chsum: checksum,
      *      content: array of structs - recursive access (optional)
+     *      filename: string mnemonic filename
      *  }
      */
     function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
@@ -651,7 +637,7 @@ class LocStor extends BasicStor{
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
         $res = $this->bsOpenDownload($id, 'metadata', $parent);
-        unset($res['filename']);
+        #unset($res['filename']);
         return $res;
     }
 
@@ -692,7 +678,7 @@ class LocStor extends BasicStor{
      */
     function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        $res = $r =$this->bsExportPlaylistOpen($plids, $type, $standalone);
+        $res = $r =$this->bsExportPlaylistOpen($plids, $type, !$standalone);
         if($this->dbc->isError($r)) return $r;
         $url = $this->getUrlPart()."access/".basename($res['fname']);
         $chsum = md5_file($res['fname']);
@@ -978,6 +964,7 @@ class LocStor extends BasicStor{
     /**
      *  Create backup of storage (list results)
      *
+     *  @param sessid : string - session id
      *  @param stat : status (optional)
      *      if this parameter is not set, then return with all unclosed backups
      *  @return array of hasharray with field: 
@@ -985,7 +972,7 @@ class LocStor extends BasicStor{
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function createBackupList($sessid,$stat='')
+    function createBackupList($sessid, $stat='')
     {
         require_once "Backup.php";
         $bu = $r = new Backup($this);

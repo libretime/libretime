@@ -135,7 +135,7 @@ $infos = array(
         'p'=>array('sessid', 'plid'), 'r'=>array('available', 'ownerid', 'ownerlogin')),
 
     "exportPlaylistOpen"   => array('m'=>"locstor.exportPlaylistOpen",
-        'p'=>array('sessid', 'plids', 'type'),
+        'p'=>array('sessid', 'plids', 'type', 'standalone'),
         'r'=>array('url', 'token')),
     "exportPlaylistClose"   => array('m'=>"locstor.exportPlaylistClose",
         'p'=>array('token'), 'r'=>array('status')),
@@ -195,14 +195,10 @@ $infos = array(
         'p'=>array('sessid'), 'r'=>array()),
     "startHubInitiatedTransfer" => array('m'=>"locstor.startHubInitiatedTransfer",
         'p'=>array('trtok'), 'r'=>array()),
-    "uploadAudioClip2Hub" => array('m'=>"locstor.uploadAudioClip2Hub",
+    "upload2Hub" => array('m'=>"locstor.upload2Hub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
-    "downloadAudioClipFromHub" => array('m'=>"locstor.downloadAudioClipFromHub",
+    "downloadFromHub" => array('m'=>"locstor.downloadFromHub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
-    "uploadPlaylist2Hub" => array('m'=>"locstor.uploadPlaylist2Hub",
-        'p'=>array('sessid', 'plid', 'withContent'), 'r'=>array('trtok')),
-    "downloadPlaylistFromHub" => array('m'=>"locstor.downloadPlaylistFromHub",
-        'p'=>array('plid', 'withContent'), 'r'=>array('trtok')),
     "globalSearch" => array('m'=>"locstor.globalSearch",
         'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
     "getSearchResults" => array('m'=>"locstor.getSearchResults",
@@ -270,7 +266,8 @@ default:
     }else{
         $parr = array(); $i=0;
         foreach($pinfo as $it){
-            $parr[$it] = $pars[$i++];
+            if(isset($pars[$i])) $parr[$it] = $pars[$i];
+            $i++;
         }
     }
 } // switch
@@ -316,11 +313,21 @@ if(isset($infos[$method]['r'])){
     switch($method){
     case"searchMetadata":
     case"getSearchResults":
+        $acCnt = 0; $acGunids = array();
+        $plCnt = 0; $plGunids = array();
+        foreach($resp['results'] as $k=>$v){
+            if($v['type']=='audioclip'){ $acCnt++;
+                $acGunids[] = $v['gunid'];
+            }
+            if($v['type']=='playlist'){ $plCnt++;
+                $plGunids[] = $v['gunid'];
+            }
+        }
         echo
-            "AC({$resp['audioClipCnt']}): ".
-                join(", ", $resp['audioClipResults']).
-            " | PL({$resp['playlistCnt']}): ".
-                join(", ", $resp['playlistResults']).
+            "AC({$acCnt}): ".
+                join(", ", $acGunids).
+            " | PL({$plCnt}): ".
+                join(", ", $plGunids).
             "\n";
         break;
     case"browseCategory":

@@ -87,6 +87,7 @@ class MetaData{
         if(PEAR::isError($res)) return $res;
         $res = $this->storeDoc($tree);
         if(PEAR::isError($res)) return $res;
+/* obsolete by regenerateXmlFile()
         switch($loc){
         case"file":
             if(! @copy($mdata, $this->fname)){
@@ -113,7 +114,10 @@ class MetaData{
                 "MetaData::insert: unsupported metadata location ($loc)"
             );
         }
+*/
         $this->exists = TRUE;
+        $r = $this->regenerateXmlFile();
+        if(PEAR::isError($r)) return $r;
         return TRUE;
     }
 
@@ -177,8 +181,7 @@ class MetaData{
             //$fmt = new XML_Beautifier();
             //$res = $fmt->formatString($res);
             return $res;
-        }else
-            return file_get_contents(dirname(__FILE__).'/emptyMdata.xml');
+        }else{ return file_get_contents(dirname(__FILE__).'/emptyMdata.xml'); }
     }
 
     /**
@@ -435,6 +438,8 @@ class MetaData{
      */
     function regenerateXmlFile()
     {
+        $r = $this->setMetadataValue('ls:mtime', date('c'));
+        if(PEAR::isError($r)) return $r;
         $fn = $this->fname;
         $xml = $this->genXMLDoc();
         if(PEAR::isError($xml)) return $xml;
@@ -758,7 +763,7 @@ class MetaData{
         $res .= $node;
         require_once "XML/Beautifier.php";
         $fmt = new XML_Beautifier();
-        $res = $fmt->formatString($res);
+#        $res = $fmt->formatString($res);
         return $res;
     }
 

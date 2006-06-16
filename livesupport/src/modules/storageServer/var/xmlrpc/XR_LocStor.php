@@ -939,7 +939,9 @@ class XR_LocStor extends LocStor{
             "xr_deletePlaylist: method disabled"
         );
         if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 805,
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0 == GBERR_FILENEX ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
                 "xr_deletePlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -1200,7 +1202,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        if(!isset($t['standalone'])) $r['standalone']=FALSE;
+        if(!isset($r['standalone']) || empty($r['standalone'])) $r['standalone']=FALSE;
         $res = $this->exportPlaylistOpen(
             $r['sessid'], $r['plids'], $r['type'], $r['standalone']
         );
@@ -1875,10 +1877,12 @@ class XR_LocStor extends LocStor{
      *  @see LocStor::createBackupCheck
      */
      //      <li> 854  -  backup process fault</li>
-    function xr_createBackupList($stat='')
+    function xr_createBackupList($input)
     {
-        $res = $this->createBackupList($stat);
-
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        if(!isset($r['stat']) || is_null($r['stat'])) $r['stat']='';
+        $res = $this->createBackupList($r['stat']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_BGERR ? 800+$ec0 : 805 );
@@ -2539,23 +2543,21 @@ class XR_LocStor extends LocStor{
      *   </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following
-     *  fields:
+     *  On success, returns a XML-RPC array of structs with fields:
      *   <ul>
-     *      <li>audioClipResults : array with gunid strings
-     *          of audioClips have been found</li>
-     *      <li>audioClipCnt : int - number of audioClips matching
-     *          the criteria</li>
-     *      <li>webstreamResults : array with gunid strings
-     *          of webstreams have been found</li>
-     *      <li>webstreamCnt : int - number of webstreams matching
-     *          the criteria</li>
-     *      <li>playlistResults : array with gunid strings
-     *          of playlists have been found</li>
-     *      <li>playlistCnt : int - number of playlists matching
-     *          the criteria</li>
+     *       <li>cnt : integer - number of matching gunids 
+     *              of files have been found</li>
+     *       <li>results : array of hashes:
+     *          <ul>
+     *           <li>gunid: string</li>
+     *           <li>type: string - audioclip | playlist | webstream</li>
+     *           <li>title: string - dc:title from metadata</li>
+     *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>length: string - dcterms:extent in extent format</li>
+     *          </ul>
+     *      </li>
      *   </ul>
-     *  (cnt values may be greater than size of arrays - see limit param)
+     *  (cnt value may be greater than size of result array - see limit param)
      *
      *  On errors, returns an XML-RPC error response.
      *  The possible error codes and error message are:
@@ -2586,23 +2588,11 @@ class XR_LocStor extends LocStor{
 #        return new XML_RPC_Response(XML_RPC_encode($res));
         $xv = new XML_RPC_Value;
         $xv->addStruct(array(
-            'audioClipCnt'      => XML_RPC_encode($res['audioClipCnt']),
-            'webstreamCnt'      => XML_RPC_encode($res['webstreamCnt']),
-            'playlistCnt'       => XML_RPC_encode($res['playlistCnt']),
-            'audioClipResults'  =>
-                (count($res['audioClipResults'])==0
+            'cnt'      => XML_RPC_encode($res['cnt']),
+            'results'  =>
+                (count($res['results'])==0
                     ? new XML_RPC_Value(array(), 'array')
-                    : XML_RPC_encode($res['audioClipResults'])
-                ),
-            'webstreamResults'  =>
-                (count($res['webstreamResults'])==0
-                    ? new XML_RPC_Value(array(), 'array')
-                    : XML_RPC_encode($res['webstreamResults'])
-                ),
-            'playlistResults'   =>
-                (count($res['playlistResults'])==0
-                    ? new XML_RPC_Value(array(), 'array')
-                    : XML_RPC_encode($res['playlistResults'])
+                    : XML_RPC_encode($res['results'])
                 ),
         ));
         return new XML_RPC_Response($xv);
@@ -2624,7 +2614,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with the following fields:
      *  <ul>
-     *      <li> results : array with values having been found </li>
+     *      <li> results : array with found values </li>
      *      <li> cnt : integer - number of matching values </li>
      *  </ul>
      *
@@ -3247,59 +3237,9 @@ class XR_LocStor extends LocStor{
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
-     *  Common "check" method for transports
+     *  Start upload of audioclip or playlist from local storageServer to hub
      *
-     *  The XML-RPC name of this method is "locstor.uploadAudioClip2Hub".
-     *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
-     *      <li> sessid  :  string  -  session id </li>
-     *      <li> gunid: string - global unique id of object being transported
-     *      </li>
-     *  </ul>
-     *
-     *  On success, returns a XML-RPC struct with the following fields:
-     *  <ul>
-     *      <li> trtok : string - transport token</li>
-     *  </ul>
-     *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
-     *      <li> 3    -  Incorrect parameters passed to method:
-     *                      Wanted ... , got ... at param </li>
-     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_uploadAudioClip2Hub:
-     *                      &lt;message from lower layer&gt; </li>
-     *      <li> 848  -  invalid session id.</li>
-     *      <li> 872  -  invalid tranport token.</li>
-     *  </ul>
-     *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::uploadAudioClip2Hub
-     */
-    function xr_uploadAudioClip2Hub($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
-        $tr =& new Transport($this);
-        $res = $tr->uploadAudioClip2Hub($r['gunid']);
-        if(PEAR::isError($res)){
-            $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_uploadAudioClip2Hub: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
-    }
-    
-    /**
-     *  Start download of audioClip/webstream from hub to local storageServer
-     *
-     *  The XML-RPC name of this method is "locstor.downloadAudioClipFromHub".
+     *  The XML-RPC name of this method is "locstor.upload2Hub".
      *
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
@@ -3320,7 +3260,7 @@ class XR_LocStor extends LocStor{
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_downloadAudioClipFromHub:
+     *      <li> 805  -  xr_upload2Hub:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
      *      <li> 872  -  invalid tranport token.</li>
@@ -3328,35 +3268,34 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see Transport::downloadAudioClipFromHub
+     *  @see Transport::upload2Hub
      */
-    function xr_downloadAudioClipFromHub($input)    {
+    function xr_upload2Hub($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
         $tr =& new Transport($this);
-        $res = $tr->downloadAudioClipFromHub($r['gunid']);
+        $res = $tr->upload2Hub($r['gunid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_downloadAudioClipFromHub: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_upload2Hub: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
     
-    /* ------------------------------- special methods for playlist transport */
     /**
-     *  Start upload of playlist from local storageServer to hub
+     *  Start download of audioclip or playlist from hub to local storageServer
      *
-     *  The XML-RPC name of this method is "locstor.uploadPlaylist2Hub".
+     *  The XML-RPC name of this method is "locstor.downloadFromHub".
      *
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> plid: string - global unique id of playlist being transported
+     *      <li> gunid: string - global unique id of object being transported
      *      </li>
      *  </ul>
      *
@@ -3371,7 +3310,7 @@ class XR_LocStor extends LocStor{
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_uploadPlaylist2Hub:
+     *      <li> 805  -  xr_downloadFromHub:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
      *      <li> 872  -  invalid tranport token.</li>
@@ -3379,72 +3318,20 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see Transport::uploadPlaylist2Hub
+     *  @see Transport::downloadFromHub
      */
-    function xr_uploadPlaylist2Hub($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['withContent'])) $r['withContent']=FALSE;
+    function xr_downloadFromHub($input)    {
+        list($ok, $par) = $this->_xr_getPars($input);
+        if(!$ok) return $par;
         require_once '../Transport.php';
         $tr =& new Transport($this);
-        $res = $tr->uploadPlaylist2Hub($r['plid'], $r['withContent']);
+        $uid = $r = $this->getSessUserId($par['sessid']); // ###
+        $res = $tr->downloadFromHub($uid, $par['gunid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_uploadPlaylist2Hub: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
-    }
-    
-    /**
-     *  Start download of playlist from hub to local storageServer
-     *
-     *  The XML-RPC name of this method is "locstor.downloadPlaylistFromHub".
-     *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
-     *      <li> sessid  :  string  -  session id </li>
-     *      <li> plid: string - global unique id of playlist being transported
-     *      </li>
-     *      <li> withContent: boolean - if true, transport playlist content too
-     *      </li>
-     *  </ul>
-     *
-     *  On success, returns a XML-RPC struct with the following fields:
-     *  <ul>
-     *      <li> trtok : string - transport token</li>
-     *  </ul>
-     *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
-     *      <li> 3    -  Incorrect parameters passed to method:
-     *                      Wanted ... , got ... at param </li>
-     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_downloadPlaylistFromHub:
-     *                      &lt;message from lower layer&gt; </li>
-     *      <li> 848  -  invalid session id.</li>
-     *      <li> 872  -  invalid tranport token.</li>
-     *  </ul>
-     *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::downloadPlaylistFromHub
-     */
-    function xr_downloadPlaylistFromHub($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
-        $tr =& new Transport($this);
-        $res = $tr->downloadPlaylistFromHub($r['plid'], $r['withContent']);
-        if(PEAR::isError($res)){
-            $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_downloadPlaylistFromHub: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_downloadFromHub: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
@@ -3549,6 +3436,7 @@ class XR_LocStor extends LocStor{
     function xr_getSearchResults($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
+/*
         // DUMMY
         $trtok = $r['trtok'];
         if($trtok != '123456789abcdefe'){
@@ -3565,11 +3453,10 @@ class XR_LocStor extends LocStor{
             'playlistResults'   => array('0000000000000001'),
             'playlistCnt'       => 1,
         );
-        /*
+*/
         require_once '../Transport.php';
         $tr =& new Transport($this);
-        $res = $tr->getSearchResults($r['trtok']);      // *** search results format differs between GB and XML_RPC ifaces
-        */
+        $res = $tr->getSearchResults($r['trtok']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = (

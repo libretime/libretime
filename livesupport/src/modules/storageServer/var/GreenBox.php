@@ -384,8 +384,20 @@ class GreenBox extends BasicStor{
      *     </li>
      *   </ul>
      *  @param sessid string, session id
-     *  @return hash, field 'results' is an array with gunid strings
-     *  of files have been found
+     *  @return array of hashes, fields:
+     *   <ul>
+     *       <li>cnt : integer - number of matching gunids 
+     *              of files have been found</li>
+     *       <li>results : array of hashes:
+     *          <ul>
+     *           <li>gunid: string</li>
+     *           <li>type: string - audioclip | playlist | webstream</li>
+     *           <li>title: string - dc:title from metadata</li>
+     *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>length: string - dcterms:extent in extent format</li>
+     *          </ul>
+     *      </li>
+     *   </ul>
      *  @see BasicStor::bsLocalSearch
      */
     function localSearch($criteria, $sessid='')
@@ -403,7 +415,7 @@ class GreenBox extends BasicStor{
      *  @param criteria hash, see localSearch method
      *  @param sessid string
      *  @return hash, fields:
-     *       results : array with gunid strings
+     *       results : array with found values
      *       cnt : integer - number of matching values
      *  @see BasicStor::bsBrowseCategory
      */
@@ -1016,6 +1028,7 @@ class GreenBox extends BasicStor{
     /**
      *  Create backup of storage (list results)
      *
+     *  @param sessid : string - session id
      *  @param stat : status (optional)
      *      if this parameter is not set, then return with all unclosed backups
      *  @return array of hasharray with field: 
@@ -1023,7 +1036,7 @@ class GreenBox extends BasicStor{
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function createBackupList($sessid,$stat='')
+    function createBackupList($sessid, $stat='')
     {
         require_once "Backup.php";
         $bu = $r = new Backup($this);
@@ -1294,22 +1307,25 @@ class GreenBox extends BasicStor{
      *      realchsum: string - transported file checksum
      *      ... ?
      */
-    function getTransportInfo($trtok)    {
+    function getTransportInfo($trtok)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->getTransportInfo($trtok);
     }
-   
+    
     /**
      *  Turn transports on/off, optionaly return current state.
      *
+     *  @param sessid string: session id
      *  @param onOff: boolean optional (if not used, current state is returned)
      *  @return boolean - previous state
      */
-    function turnOnOffTransports($onOff)    {
+    function turnOnOffTransports($sessid, $onOff=NULL)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
-        return $tr->turnOnOffTransports($onOff);
+        return $tr->turnOnOffTransports($sessid, $onOff);
     }
     
     /**
@@ -1319,7 +1335,8 @@ class GreenBox extends BasicStor{
      *  @param action: string - pause | resume | cancel
      *  @return string - resulting transport state
      */
-    function doTransportAction($trtok, $action)    {
+    function doTransportAction($trtok, $action)
+    {
         // DUMMY
         return 'pending';
         /*
@@ -1337,7 +1354,8 @@ class GreenBox extends BasicStor{
      *  @param filePath string - local path to uploaded file
      *  @return string - transport token
      */
-    function uploadFile2Hub($filePath)    {
+    function uploadFile2Hub($filePath)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->uploadFile2Hub($filePath);
@@ -1350,7 +1368,8 @@ class GreenBox extends BasicStor{
      *      trtok: string transport token
      *      ... ?
      */
-    function getHubInitiatedTransfers()    {
+    function getHubInitiatedTransfers()
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->getHubInitiatedTransfers();
@@ -1363,7 +1382,8 @@ class GreenBox extends BasicStor{
      *          the getHubInitiatedTransfers method
      *  @return string - transport token
      */
-    function startHubInitiatedTransfer($trtok)    {
+    function startHubInitiatedTransfer($trtok)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->startHubInitiatedTransfer($trtok);
@@ -1372,56 +1392,38 @@ class GreenBox extends BasicStor{
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
-     *  Start upload of audioClip/webstream from local storageServer to hub
+     *  Start upload of audioClip/webstream/playlist from local storageServer
+     *  to hub
      *
      *  @param gunid: string - global unique id of object being transported
-     *  @return string - transport token
-     */
-    function uploadAudioClip2Hub($gunid)    {
-        require_once"Transport.php";
-        $tr =& new Transport($this);
-        return $tr->uploadAudioClip2Hub($gunid);
-    }
-    
-    /**
-     *  Start download of audioClip/webstream from hub to local storageServer
-     *
-     *  @param gunid: string - global unique id of object being transported
-     *  @return string - transport token
-     */
-    function downloadAudioClipFromHub($gunid)    {
-        require_once"Transport.php";
-        $tr =& new Transport($this);
-        return $tr->downloadAudioClipFromHub($gunid);
-    }
-    
-    /* ------------------------------- special methods for playlist transport */
-    /**
-     *  Start upload of playlist from local storageServer to hub
-     *
-     *  @param plid: string - global unique id of playlist being transported
      *  @param withContent: boolean - if true, transport playlist content too
      *  @return string - transport token
      */
-    function uploadPlaylist2Hub($plid, $withContent)    {
+    function upload2Hub($gunid, $withContent=FALSE)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
-        return $tr->uploadPlaylist2Hub($plid, $withContent);
+        return $tr->upload2Hub($gunid, $withContent);
     }
     
     /**
-     *  Start download of playlist from hub to local storageServer
+     *  Start download of audioClip/webstream/playlist from hub to local
+     *  storageServer
      *
-     *  @param plid: string - global unique id of playlist being transported
+     *  @param sessid string: session id
+     *  @param gunid: string - global unique id of playlist being transported
      *  @param withContent: boolean - if true, transport playlist content too
      *  @return string - transport token
      */
-    function downloadPlaylistFromHub($plid, $withContent)    {
+    function downloadFromHub($sessid, $gunid, $withContent=TRUE){
+        $uid = $r = $this->getSessUserId($sessid);
+        if($this->dbc->isError($r)) return $r;
         require_once"Transport.php";
         $tr =& new Transport($this);
-        return $tr->downloadPlaylistFromHub($plid, $withContent);
+        return $tr->downloadFromHub($uid, $gunid, $withContent);
     }
-    
+
+
     /* ------------------------------------------------ global-search methods */
     /**
      *  Start search job on network hub
@@ -1429,7 +1431,8 @@ class GreenBox extends BasicStor{
      *  @param criteria: LS criteria format (see localSearch)
      *  @return string - transport token
      */
-    function globalSearch($criteria)    {
+    function globalSearch($criteria)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->globalSearch($criteria);
@@ -1441,7 +1444,8 @@ class GreenBox extends BasicStor{
      *  @param trtok: string - transport token
      *  @return : LS search result format (see localSearch)
      */
-    function getSearchResults($trtok)    {
+    function getSearchResults($trtok)
+    {
         require_once"Transport.php";
         $tr =& new Transport($this);
         return $tr->getSearchResults($trtok);
