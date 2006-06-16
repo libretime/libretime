@@ -137,6 +137,7 @@ class Prefs{
      */
     function loadGroupPref($sessid, $group, $key)
     {
+        // if sessid is would be used here fix Transport::cronCallMethod !
         $subjid = $this->gb->getSubjId($group);
         if(PEAR::isError($subjid)) return $subjid;
         if(is_null($subjid)){

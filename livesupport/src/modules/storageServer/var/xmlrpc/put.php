@@ -79,13 +79,12 @@ if(preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['token'])){
 
 $tc = $gb->bsCheckToken($token, 'put');
 if(PEAR::isError($tc)){ http_error(500, $ex->getMessage()); }
-if(!$tc){ http_error(403, "Token not valid."); }
+if(!$tc){ http_error(403, "put.php: Token not valid ($token)."); }
 #var_dump($tc); exit;
 
 header("Content-type: text/plain");
 #var_dump($_SERVER); var_dump($_REQUEST); exit;
 
-#$destfile = $_SERVER['PATH_TRANSLATED'];
 $destfile = "{$config['accessDir']}/{$token}";
 
 /* PUT data comes in on the input stream */

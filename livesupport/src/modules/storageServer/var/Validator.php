@@ -73,6 +73,7 @@ class Validator{
      */
     function Validator($format, $gunid)
     {
+        $format   = strtolower($format);
         $this->format   = $format;
         $this->gunid        = $gunid;
         $formats = array(
