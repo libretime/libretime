@@ -59,7 +59,7 @@ $webstreamFormat = array(
                 'dcterms:isPartOf', 'dc:date',
                 'dc:publisher',
                 // extra
-                'dcterms:alternative',
+                'dcterms:alternative', 'ls:filename', 'ls:mtime',
                 // added lately by sebastian
                 'ls:mood',
             ),
@@ -344,6 +344,14 @@ $webstreamFormat = array(
         'type'=>'Text',
         'area'=>'Talk',
         'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'ls:filename'=>array(
+        'type'=>'Text',
+        'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'ls:mtime'=>array(
+        'type'=>'Int',
+//        'regexp'=>'^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2}\.\d+)?(Z)|([\+\-]?\d{2}:\d{2}))?)?)?$',
     ),
 /*
     ''=>array(

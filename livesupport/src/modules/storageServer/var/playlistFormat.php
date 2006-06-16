@@ -66,6 +66,7 @@ $playlistFormat = array(
         'childs'=>array(
             'optional'=>array(
                 'dc:title', 'dcterms:extent', 'dc:creator', 'dc:description',
+                'dcterms:alternative', 'ls:filename', 'ls:mtime',
             ),
         ),
         'namespaces'=>array(
@@ -77,6 +78,10 @@ $playlistFormat = array(
         ),
     ),
     'dc:title'=>array(
+        'type'=>'Text',
+        'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'dcterms:alternative'=>array(
         'type'=>'Text',
         'attrs'=>array('implied'=>array('xml:lang')),
     ),
@@ -109,6 +114,14 @@ $playlistFormat = array(
     'fadeOut'=>array(
         'type'=>'Attribute',
         'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
+    ),
+    'ls:filename'=>array(
+        'type'=>'Text',
+        'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'ls:mtime'=>array(
+        'type'=>'Int',
+//        'regexp'=>'^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2}\.\d+)?(Z)|([\+\-]?\d{2}:\d{2}))?)?)?$',
     ),
 /*
     ''=>array(
