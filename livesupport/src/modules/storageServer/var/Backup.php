@@ -33,7 +33,7 @@ class Backup
     /**
      *  array - array of affected filenames
      */
-    var $filenames;
+    var $filenames  = array();
     
     /**
      *  string - base tmp name
@@ -101,12 +101,14 @@ class Backup
         $this->criteria = $criteria;
         
         # get ids (and real filenames) which files match with criteria
-        $this->setIDs($this->gb->localSearch($this->criteria,$this->sessid));
+        $srch = $r = $this->gb->localSearch($this->criteria,$this->sessid);
+        if(PEAR::isError($r)){ return $r; }
+        $this->setIDs($srch);
         #echo '<XMP>this->ids:'; print_r($this->ids); echo '</XMP>';
         
         # get real filenames
         if (is_array($this->ids)) {
-            $this->setFileNames();
+            $this->setFilenames();
             #echo '<XMP>this->filenames:'; print_r($this->filenames); echo '</XMP>';
                
             $this->setEnviroment(true);
@@ -246,7 +248,8 @@ class Backup
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
         }
         if (is_array($this->ids)) {
-            foreach ($this->ids as $gunid) {
+            foreach ($this->ids as $i=>$item) {
+                $gunid = $item['gunid'];
                 # get a stored file object of this gunid
                 $sf = $r = StoredFile::recallByGunid($this->gb, $gunid);
                 if(PEAR::isError($r)) return $r;

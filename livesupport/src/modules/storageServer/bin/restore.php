@@ -17,6 +17,7 @@
     require_once dirname(__FILE__).'/../var/Restore.php';
     include_once 'DB.php';
     
+    PEAR::setErrorHandling(PEAR_ERROR_RETURN);
     $dbc = DB::connect($config['dsn'], TRUE);
     if (DB::isError($dbc)) {
         die($dbc->getMessage());

@@ -28,7 +28,8 @@ class Restore {
     /**
      *  string - loglevel
      */
-    var $loglevel = 'warn';  # 'debug';
+    var $loglevel = 'warn';
+    #var $loglevel = 'debug';
     
     /**
      *  greenbox object reference
@@ -73,7 +74,8 @@ class Restore {
         
         //call the restore script in background
         $command = dirname(__FILE__).'/../bin/restore.php';
-        $params = "{$backup_file} {$this->statusFile} {$this->token} {$sessid}>> /dev/null &";
+        $runLog = "/dev/null";
+        $params = "{$backup_file} {$this->statusFile} {$this->token} {$sessid}>> $runLog &";
         system("$command $params");
         
         return array('token'=>$this->token);
@@ -115,7 +117,7 @@ class Restore {
         $this->setEnviroment();
         $this->rRmDir($this->tmpDir);
         unlink($this->statusFile);
-        return !is_file($this->stausFile);
+        return !is_file($this->statusFile);
     }
     
     /**
@@ -151,11 +153,20 @@ class Restore {
             #$this->addLogItem('metafiles:'.print_r($this->metafiles,true));
             //add to storage server
             foreach ($this->metafiles as $info) {
-                $this->addFileToStorage($info['file'],$info['type'],$info['id']);
+                $r = $this->addFileToStorage($info['file'],$info['type'],$info['id']);
+                if(PEAR::isError($r)){
+                    $this->addLogItem("-E- ".date("Ymd-H:i:s").
+                        " startRestore - addFileToStorage \n".
+                        "(".$put->getMessage()."/".$put->getUserInfo().")\n"
+                    );
+                 	file_put_contents($this->statusFile, 'fault');
+                    return;
+                }
             }
         } else {
             $this->addLogItem("-E- ".date("Ymd-H:i:s")." startRestore - invalid archive format\n");
           	file_put_contents($this->statusFile, 'fault');
+          	return;
         }
         file_put_contents($this->statusFile, 'success');
     }
@@ -204,18 +215,28 @@ class Restore {
         }
         require_once "XmlParser.php";
         $tree = XmlParser::parse($file);
-        $id = $this->gb->_idFromGunid($gunid);
         $mediaFileLP = str_replace('.xml','',$file);
         $mediaFileLP = ($type=='audioClip' && is_file($mediaFileLP))?$mediaFileLP:'';
-        if (!PEAR::isError($this->gb->existsFile($this->sessid,$gunid))) { // file is exists in storage server
+        $ex = $r = $this->gb->existsFile($this->sessid,$gunid);
+        if (PEAR::isError($r)) {
+            $this->addLogItem("-E- ".date("Ymd-H:i:s").
+                " addFileToStorage - existsFile($gunid) ".
+                "(".$r->getMessage()."/".$r->getUserInfo().")\n"
+            );
+        }
+        if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
             //replace it
+            $id = $this->gb->_idFromGunid($gunid);
             $replace = $this->gb->replaceFile(
                 $id,   				# id int, virt.file's local id
                 $mediaFileLP,       # mediaFileLP string, local path of media file
                 $file,              # mdataFileLP string, local path of metadata file
                 $this->sessid);     # sessid string, session id
             if (PEAR::isError($replace)) {
-            	$this->addLogItem("-E- ".date("Ymd-H:i:s")." addFileToStorage - replaceFile Error\n");
+            	$this->addLogItem("-E- ".date("Ymd-H:i:s").
+            	    " addFileToStorage - replaceFile Error ".
+                    "(".$replace->getMessage()."/".$replace->getUserInfo().")\n"
+                );
         	  	file_put_contents($this->statusFile, 'fault');
             	return $replace;
             }
@@ -225,6 +246,13 @@ class Restore {
             $parid = $this->gb->_getHomeDirIdFromSess($this->sessid);
             #$this->addLogItem("Parid:$parid\n");
             $name = $tree->children[0]->children[0]->content;
+            if(empty($name)) $name = $tree->attrs['title']->val;
+            if(empty($name)) $name = '???';
+            if ($this->loglevel=='debug') {
+                $this->addLogItem("-I- ".date("Ymd-H:i:s")." putFile\n".
+                    "$parid, $name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
+                );
+            }
             $put = $this->gb->putFile(
                 $parid,             # parent id
                 $name,              # name of original file
@@ -232,23 +260,24 @@ class Restore {
                 $file,              # meta file
                 $this->sessid,      # sessid
                 $gunid,             # gunid
-                $type);             # type
+                $type               # type
+            );
          #   $this->addLogItem("add as new \n");
             if (PEAR::isError($put)) {
-                $this->addLogItem("-E- ".date("Ymd-H:i:s")." addFileToStorage - putFile Error\n");
+                $this->addLogItem("-E- ".date("Ymd-H:i:s").
+                    " addFileToStorage - putFile Error ".
+                    "(".$put->getMessage()."/".$put->getUserInfo().")\n"
+                    ."\n---\n".file_get_contents($file)."\n---\n"
+                );
            		file_put_contents($this->statusFile, 'fault');
                 //$this->addLogItem("Error Object: ".print_r($put,true)."\n");
                 return $put;
             }
         }
-        $ac = StoredFile::recall($this->gb, $id);
-        $res = $ac->setState('ready');
-      	#$this->addLogItem("setReadyState - res:".print_r($res,true)."\n");
-      	$r = $this->gb->dbc->isError($res);
-        if ($r) {
-        	$this->addLogItem("-E- ".date("Ymd-H:i:s")." addFileToStorage - setReadyState Error\n");
-        	return $res;
-        }
+        $ac = $r = StoredFile::recallByGunid($this->gb, $gunid);
+        if (PEAR::isError($r)) { return $r; }
+        $res = $r = $ac->setState('ready');
+        if (PEAR::isError($r)) { return $r; }
         return true;
     }
     
@@ -274,7 +303,9 @@ class Restore {
      */
     function addLogItem($item) {
         $f = fopen ($this->logFile,'a');
+        flock($f,LOCK_SH);                                                                                                                                       
         fwrite($f,$item);
+        flock($f,LOCK_UN);                                                                                                                                       
         fclose($f);
         //echo file_get_contents($this->logFile)."<BR><BR>\n\n";
     }
