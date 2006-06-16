@@ -117,7 +117,26 @@ $r = $pr->install();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
 echo "\n";
 
-echo "#storageServer submodules: OK\n";
-echo "\n";
+echo "# submodules: OK\n";
+
+//------------------------------------------------------------------------------
+// Cron configuration
+//------------------------------------------------------------------------------
+
+echo "# Cron configuration ...";
+require_once dirname(__FILE__).'/../cron/Cron.php';
+$cron = new Cron();
+$access = $r = $cron->openCrontab('write');
+if ($access != 'write') {
+    do {
+       $r = $this->forceWriteable();
+    } while ($r);
+}
+$cron->ct->addCron('*/2', '*', '*', '*', '*', realpath("{$config['cronDir']}/transportCron.php"));
+$r = $cron->closeCrontab();
+echo "# cron config: OK\n";
+
+echo "#storageServer:  OK\n\n";
+
 $dbc->disconnect();
 ?>
