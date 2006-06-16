@@ -10,6 +10,8 @@
     <playlistElement id="0000000000000102" relativeOffset="01:00:00.000000" >
         <audioClip   id="0000000000010002" playlength="00:30:00.000000" 
                                            title="two"/>
+        <fadeInfo fadeIn="03.000000" fadeOut="00.000000"
+            id="15015b4b70a054f2" />
     </playlistElement>
     <metadata
        xmlns="http://mdlf.org/livesupport/elements/1.0/"
