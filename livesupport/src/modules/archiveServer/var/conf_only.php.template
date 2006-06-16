@@ -66,7 +66,7 @@ $config = array(
 
     /* ==================================================== URL configuration */
     // on central archive side: archive is the storage !
-    'storageUrlPath'        => 'ls_storageUrlPath',
+    'storageUrlPath'        => 'ls_archiveUrlPath',
     'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
     'storageUrlHost'        => 'ls_php_host',
     'storageUrlPort'        => ls_php_port,

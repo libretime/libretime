@@ -36,11 +36,42 @@ GUNID=$1
 
 #METADATA="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 #<metadata><title>ěščřžé</title></metadata>"
+XMETADATA="<?xml version=\"1.0\"?>
+<audioClip>
+ <metadata xmlns=\"http://www.streamonthefly.org/\"
+  xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
+  xmlns:dcterms=\"http://purl.org/dc/terms/\">
+  <dc:title>clip 1</dc:title>
+  <dcterms:extent>00:00:11</dcterms:extent>
+ </metadata>
+</audioClip>"
 METADATA="<?xml version=\"1.0\"?>
-<audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
- xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
- xmlns:dcterms=\"http://purl.org/dc/terms/\">
-<dcterms:extent>00:00:11</dcterms:extent></metadata></audioClip>"
+<audioClip>
+<metadata
+   xmlns=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns:ls=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
+   xmlns:dcterms=\"http://purl.org/dc/terms/\"
+   xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"
+>
+ <dc:title>Media title testRunner</dc:title>
+ <dcterms:extent>00:00:03.000000</dcterms:extent>
+</metadata>
+</audioClip>"
+METAREGEX="(<\\?xml version=\"1\\.0\"( encoding=\"UTF-8\")?\\?> )?\
+<audioClip>\
+<metadata\
+ xmlns=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns:dc=\"http://purl\\.org/dc/elements/1\\.1/\"\
+ xmlns:dcterms=\"http://purl\\.org/dc/terms/\"\
+ xmlns:ls=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns:xml=\"http://www\\.w3\\.org/XML/1998/namespace\"\
+>\
+<dc:title>Media title testRunner</dc:title>\
+ <dcterms:extent>00:00:03\\.000000</dcterms:extent>\
+ <ls:mtime>[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([-+][0-9]{1,2}:[0-9]{2})?</ls:mtime>\
+</metadata>\
+</audioClip>"
 
 echo ""
 XRDIR=`dirname $0`
@@ -133,13 +164,14 @@ downloadMeta() {
     echo "OK"
     if [ $DEBUG_I ]; then echo $METAOUT; echo -n "Press enter ..."; read KEY; fi
     echo -n "#  metadata check:"
-    if [ "x$METAOUT" != "x$METADATA" ] ; then
-        echo " NOT MATCH"
-        echo " Expected:"; echo $METADATA
+    METAOUT=`echo $METAOUT | sed -e 's/\\n/ /g'`
+    if [[ "x$METAOUT" =~ "x$METAREGEX" ]]; then
+        echo " OK"
+    else
+        echo " NOT MATCH ($?)"
+        echo " Expected match to regex:"; echo $METAREGEX
         echo " Downloaded:"; echo $METAOUT
         exit 1
-    else
-        echo " OK"
     fi
     echo -n "# downloadMetadataClose: "
     $XR_CLI downloadMetadataClose $SESSID $TOKEN || exit $?
@@ -147,7 +179,9 @@ downloadMeta() {
 
 deleteAudioClip() {
     echo -n "# deleteAudioClip: "
-    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
+# disabled:
+#    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
+    $XR_CLI deleteAudioClip $SESSID $GUNID 0
 }
 
 updateAudioClipMetadata() {

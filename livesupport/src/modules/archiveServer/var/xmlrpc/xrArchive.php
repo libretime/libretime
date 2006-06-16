@@ -27,8 +27,11 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
+define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
+
 /* ====================================================== specific PHP config */
 //error_reporting(0);
+ini_set("html_errors", FALSE);
 ini_set("error_prepend_string", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <methodResponse>
 <fault>
@@ -50,21 +53,33 @@ ini_set("error_append_string", "</string></value>
 header("Content-type: text/xml");
 
 /* ================================================================= includes */
-require_once 'DB.php';
-require_once dirname(__FILE__)."/../../../storageServer/var/xmlrpc/XML/RPC/Server.php";
 require_once dirname(__FILE__).'/../conf.php';
+require_once 'DB.php';
+require_once "XML/RPC/Server.php";
 require_once 'XR_Archive.php';
 
 /* ============================================ setting default error handler */
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
-    if($errno == 8 /*E_NOTICE*/) return;
-    $xr =& new XML_RPC_Response(0, 805,
-        "ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)");
-    header("Content-type: text/xml");
-    echo $xr->serialize();
-    exit($errno);
+    switch($errno){
+        case E_WARNING:
+        case E_NOTICE: 
+        case E_USER_WARNING:
+        case E_USER_NOTICE: 
+            return;
+            break; 
+        default:   
+            $xr =& new XML_RPC_Response(0, 805,
+                htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
+            header("Content-type: text/xml");
+            echo $xr->serialize();
+            exit($errno);
+    }
 }
-$old_error_handler = set_error_handler("errHndl");
+if(PHP5){
+    $old_error_handler = set_error_handler("errHndl", E_ALL);
+}else{
+    $old_error_handler = set_error_handler("errHndl");
+}
 
 
 /* ============================================================= runable code */
@@ -114,15 +129,23 @@ $methods = array(
     'playlistIsAvailable'     => 'Check whether a Playlist is available '.
                                     'for editing.',
 
+    'uploadOpen'              => 'Open file-layer upload',
     'uploadCheck'             => 'Check the checksum of uploaded file',
+    'uploadClose'             => 'Close file-layer upload',
+    'downloadOpen'            => 'Open file-layer download',
+//    'downloadCheck'           => 'Check the checksum of downloaded file',
+    'downloadClose'           => 'Close file-layer download',
+    'prepareHubInitiatedTransfer'   => 'Prepare hub initiated transfer',
+    'listHubInitiatedTransfers'     => 'List hub initiated transfers',
+    'setHubInitiatedTransfer'       => 'Set state of hub initiated transfers',
     'ping'                    => 'Echo request',
 );
 
 $defs = array();
 foreach($methods as $method=>$description){
     $defs["archive.$method"] = array(
-#            "function" => array(&$archive, "xr_$method"),
-            "function" => "\$GLOBALS['archive']->xr_$method",
+            "function" => array(&$archive, "xr_$method"),
+#            "function" => "\$GLOBALS['archive']->xr_$method",
             "signature" => array(
                 array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
             ),

@@ -33,13 +33,15 @@ include_once "XML/RPC.php";
 $pars = $argv;
 array_shift($pars);
 $verbose = FALSE;
+#$verbose = TRUE;
 if($pars[0] == '-v'){ $verbose = TRUE; array_shift($pars); }
 if($pars[0] == '-s'){
     array_shift($pars);
     $serverPath = array_shift($pars);
-}else $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrArchive.php';
-
-#$serverPath = "http://localhost:80/livesupportArchiveServerCVS/xmlrpc/xrLocStor.php";
+}else{
+    $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrArchive.php';
+}
+$serverPath = "http://localhost:80/~tomash/livesupport/archiveServer/var/xmlrpc/xrArchive.php";
 
 $url = parse_url($serverPath);
 $client = new XML_RPC_Client($url['path'], $url['host']);
@@ -126,6 +128,8 @@ $infos = array(
         'p'=>array('sessid', 'key'), 'r'=>'status'),
     "openPut"       => array('m'=>"archive.openPut", 'p'=>array()),
     "closePut"      => array('m'=>"archive.closePut", 'p'=>array()),
+
+    "ping"      => array('m'=>"archive.ping", 'p'=>array('par')),
 );
 
 
@@ -144,19 +148,27 @@ if(is_null($pinfo)){
         $parr[$it] = $pars[$i++];
     }
 }
-if($method == 'searchMetadata'){
-    $parr = array(
-        'sessid'=>$pars[0],
-        'criteria'=>array(
-            'filetype'=>'audioclip',
-            'operator'=>'and',
-            'limit'=> 0,
-            'offset'=> 0,
-            'conditions'=>array(
-                array('cat'=>$pars[1], 'op'=>'partial', 'val'=>$pars[2])
-            )
-        ),
-    );
+switch($method){
+    case 'searchMetadata':
+        $parr = array(
+            'sessid'=>$pars[0],
+            'criteria'=>array(
+                'filetype'=>'audioclip',
+                'operator'=>'and',
+                'limit'=> 0,
+                'offset'=> 0,
+                'conditions'=>array(
+                    array('cat'=>$pars[1], 'op'=>'partial', 'val'=>$pars[2])
+                )
+            ),
+        );
+        break;
+    case 'resetStorage':
+        $parr = array(
+            'loadSampleData'=>(boolean)$pars[0],
+            'filesOnly'=>(boolean)$pars[1],
+        );
+        break;
 }
 $msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($parr)));
 

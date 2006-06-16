@@ -55,7 +55,13 @@ if(PEAR::isError($dbc)){
 echo "#ArchiveServer uninstall:\n";
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new Archive($dbc, $config);
+$tr = &new Transport($gb);
 
+
+echo "# Uninstall Transport submodule ...";
+$r = $tr->uninstall();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+echo "\n";
 
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $gb->uninstall();
