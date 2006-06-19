@@ -1,6 +1,5 @@
 {include file="statusbar.tpl"}
 {include file="menu.tpl"}
-
 {if $USER.userid}    {* somebody logged in? *}
    
     {if $showScheduler}
@@ -22,7 +21,6 @@
          </tr>
         </table>
     {else}
-
         {if $fileList}
             {include file="file/list.tpl"}
         {/if}
@@ -65,6 +63,14 @@
         
         {if $act === 'RESTORE'}
             {include file="backup/restore.tpl"}
+        {/if}
+        
+        {if $act === 'SCHEDULER.export'}
+            {include file="scheduler/export.tpl"}
+        {/if}
+        
+        {if $act === 'SCHEDULER.import'}
+            {include file="scheduler/import.tpl"}
         {/if}
         
         <div class="content">

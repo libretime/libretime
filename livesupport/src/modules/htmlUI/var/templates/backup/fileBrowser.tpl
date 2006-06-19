@@ -20,6 +20,8 @@ if (window.scrollbars.visible == false) {
                             <form name="filebrowser" 
                             {if !$isRestore}
                             	onSubmit="opener.location.href='{$UI_HANDLER}?act=BACKUP.copy2target&target='+filebrowser.target.value; window.close()"
+                            {elseif $isRestore=="scheduler"}
+                            	onSubmit="opener.location.href='{$UI_HANDLER}?act=SCHEDULER.setImportFile&target='+filebrowser.target.value; window.close()"
                             {else}
                             	onSubmit="opener.location.href='{$UI_HANDLER}?act=RESTORE.setBackupFileToRestore&target='+filebrowser.target.value; window.close()"
                             {/if}
@@ -36,7 +38,7 @@ if (window.scrollbars.visible == false) {
 
 {foreach from=$currdir.subdirs item=entry key=name}
     <tr class="{cycle values='blue1, blue2'}">
-        <td style="border-right: 1px solid #333;"><b><a href="{$UI_BROWSER}?popup[]=BACKUP.setLocation{if $isRestore}&isRestore=1{/if}&cd={$name|escape:"url"}">{$name|truncate:50:"...":true}</b></td>
+        <td style="border-right: 1px solid #333;"><b><a href="{$UI_BROWSER}?popup[]=BACKUP.setLocation{if $isRestore}&isRestore={$isRestore}{/if}&cd={$name|escape:"url"}">{$name|truncate:50:"...":true}</b></td>
         <td style="border-right: 1px solid #333;">{$entry.u|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{$entry.g|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{if $entry.r}r{/if}</td>
@@ -48,7 +50,7 @@ if (window.scrollbars.visible == false) {
 
 {foreach from=$currdir.files item=entry key=name}
     <tr class="{cycle values='blue1, blue2'}">
-        <td style="border-right: 1px solid #333;"><a href="{$UI_BROWSER}?popup[]=BACKUP.setFile{if $isRestore}&isRestore=1{/if}&file={$name|escape:"url"}">{$name|truncate:50:"...":true}</td>
+        <td style="border-right: 1px solid #333;"><a href="{$UI_BROWSER}?popup[]=BACKUP.setFile{if $isRestore}&isRestore={$isRestore}{/if}&file={$name|escape:"url"}">{$name|truncate:50:"...":true}</td>
         <td style="border-right: 1px solid #333;">{$entry.u|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{$entry.g|truncate:10:'...':true}</td>
         <td style="border-right: 1px solid #333;">{if $entry.r}r{/if}</td>

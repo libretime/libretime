@@ -18,7 +18,7 @@ class uiExchange
         $token = $this->Base->gb->loadPref($this->Base->sessid, UI_BACKUPTOKEN_KEY);
         
         if (PEAR::isError($token)) {
-            return false;    
+            return false;
         }
 
         return $token;
@@ -154,10 +154,6 @@ class uiExchange
         return $token;
     }
     
-    function restore($filename) {
-        $filename='/tmp/backup_20060508.tar';
-    }
-    
     function backupRestoreOpen($backupFile)
     {
         $token = $this->Base->gb->backupRestoreOpen($this->Base->sessid,$backupFile);
@@ -215,9 +211,6 @@ class uiExchange
         return $status;
     }
     
-    function setBackupFileToRestore($filename) {
-    }
-
     // file browser methods
     
     function setFolder($subfolder)

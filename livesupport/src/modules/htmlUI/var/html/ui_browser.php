@@ -364,7 +364,6 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showScheduler', TRUE);
         break;
 
-
         case "SUBJECTS":
         case "SUBJECTS.manageGroupMember":
         case "SUBJECTS.addUser":
@@ -378,6 +377,8 @@ if ($uiBrowser->userid) {
         case "BACKUP":
         case "RESTORE":
         case "BACKUP.schedule": 
+        case "SCHEDULER.import":
+        case "SCHEDULER.export":
         $Smarty->assign('act', $_REQUEST['act']);
         break;
     }

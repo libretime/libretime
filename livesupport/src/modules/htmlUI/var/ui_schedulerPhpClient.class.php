@@ -78,8 +78,7 @@ $mdefs = array(
         'p'=>array(),
         't'=>array(),
         'r'=>array('schedulerTime'/*datetime*/),
-        'e'=>array(
-)
+        'e'=>array()
     ),
     "RemoveFromScheduleMethod" => array(
         'm'=>'removeFromSchedule',
@@ -120,6 +119,74 @@ $mdefs = array(
             '1405'=>'timeframe not aaaaavailable',
             '1406'=>'could not schedule playlist',
             '1420'=>'missing session ID argument',
+        )
+    ),
+    "ExportOpenMethod" => array(
+        'm'=>'exportOpen',
+        'p'=>array('sessionId'/*string*/, 'from'/*datetime*/, 'to'/*datetime*/, 'criteria'/*struct*/),
+        't'=>array('string', 'dateTime.iso8601', 'dateTime.iso8601', 'struct'),
+        'r'=>array('schedulerExportToken'/*string*/),
+        'e'=>array(
+            '1601'=>'invalid argument format',
+            '1602'=>"missing or invalid 'from' argument",
+            '1603'=>"missing or invalid 'to' argument",
+            '1604'=>"missing or invalid 'criteria' argument",
+            '1620'=>'missing session ID argument',
+        )
+    ),
+    "ExportCheckMethod" => array(
+        'm'=>'exportCheck',
+        'p'=>array('sessionId'/*string*/, 'token'/*string*/),
+        't'=>array('string', 'string'),
+        'r'=>array('status'/*string*/),
+        'e'=>array(
+            '1701'=>'invalid argument format',
+            '1702'=>"missing or invalid 'token' argument",
+            '1720'=>'missing session ID argument',
+        )
+    ),
+    "ExportCloseMethod" => array(
+        'm'=>'exportClose',
+        'p'=>array('sessionId'/*string*/, 'token'/*string*/),
+        't'=>array('string', 'string'),
+        'r'=>array('status'/*boolean*/),
+        'e'=>array(
+            '1801'=>'invalid argument format',
+            '1802'=>"missing or invalid 'token' argument",
+            '1820'=>'missing session ID argument',
+        )
+    ),
+    "ImportOpenMethod" => array(
+        'm'=>'importOpen',
+        'p'=>array('sessionId'/*string*/, 'filename'/*string*/),
+        't'=>array('string', 'string'),
+        'r'=>array('schedulerImportToken'/*string*/),
+        'e'=>array(
+            '1901'=>'invalid argument format',
+            '1902'=>"missing or invalid 'filename' argument",
+            '1920'=>'missing session ID argument',
+        )
+    ),
+    "ImportCheckMethod" => array(
+        'm'=>'importCheck',
+        'p'=>array('sessionId'/*string*/, 'token'/*string*/),
+        't'=>array('string', 'string'),
+        'r'=>array('status'/*string*/),
+        'e'=>array(
+            '2001'=>'invalid argument format',
+            '2002'=>"missing or invalid 'token' argument",
+            '2020'=>'missing session ID argument',
+        )
+    ),
+    "ImportCloseMethod" => array(
+        'm'=>'importClose',
+        'p'=>array('sessionId'/*string*/, 'token'/*string*/),
+        't'=>array('string', 'string'),
+        'r'=>array('status'/*boolean*/),
+        'e'=>array(
+            '2101'=>'invalid argument format',
+            '2102'=>"missing or invalid 'token' argument",
+            '2120'=>'missing session ID argument',
         )
     ),
 );
@@ -233,7 +300,19 @@ class SchedulerPhpClient{
         $XML_RPC_val = new XML_RPC_Value;
         foreach($this->mdefs[$method]['p'] as $i=>$p){
             $parr[$p] = new XML_RPC_Value;
-            $parr[$p]->addScalar($gettedPars[$i], $this->mdefs[$method]['t'][$i]);
+            switch ($this->mdefs[$method]['t'][$i]) { // switch ($parr[$p]->kindOf($gettedPars[$i])) {
+                /* array type: normal array */
+                case 'array':
+                    $parr[$p]->addArray($gettedPars[$i]);
+                    break;
+                /* stuct type: assoc. array */
+                case 'struct':
+                    $parr[$p]->addStruct($gettedPars[$i]);
+                    break;
+                /* scalar types: 'int' | 'boolean' | 'string' | 'double' | 'dateTime.iso8601' | 'base64'*/
+                default: 
+                    $parr[$p]->addScalar($gettedPars[$i], $this->mdefs[$method]['t'][$i]);
+            } 
         }
         $XML_RPC_val->addStruct($parr);
         $fullmethod = $this->mdefs[$method]['m'];
@@ -251,7 +330,7 @@ class SchedulerPhpClient{
         if($res->faultCode() > 0) {
             return array('error' => array('code' => $res->faultCode(), 'message' => $res->faultString()));   ## changed by sebastian
             /*
-            tomas´ orig. method
+            tomasï¿½ orig. method
             return $this->dbc->raiseError(
                 "SchedulerPhpClient::$method:".$res->faultString()." ".
                 $res->faultCode()."\n", $res->faultCode()

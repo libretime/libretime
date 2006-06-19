@@ -370,7 +370,22 @@ switch($_REQUEST['act']){
     $uiHandler->SCHEDULER->stopDaemon(TRUE);
     $uiHandler->SCHEDULER->setReload();
     break;
+    
+    case 'SCHEDULER.scheduleExportOpen':
+    $_REQUEST['fromDay'] = strlen($_REQUEST['fromDay'])>1?$_REQUEST['fromDay']:'0'.$_REQUEST['fromDay'];
+    $_REQUEST['toDay'] = strlen($_REQUEST['toDay'])>1?$_REQUEST['toDay']:'0'.$_REQUEST['toDay'];
+    $fromTime=$_REQUEST['fromYear'].'-'.$_REQUEST['fromMonth'].'-'.$_REQUEST['fromDay'].' '.$_REQUEST['fromHour'].':'.$_REQUEST['fromMinute'].':00';
+    $toTime=$_REQUEST['toYear'].'-'.$_REQUEST['toMonth'].'-'.$_REQUEST['toDay'].' '.$_REQUEST['toHour'].':'.$_REQUEST['toMinute'].':00';
+    //íecho '<XMP style="background:yellow;">';echo "fromTime:$fromTime | toTime:$toTime";echo'</XMP>'."\n";
+    $uiHandler->SCHEDULER->scheduleExportOpen($fromTime, $toTime);
+    $uiHandler->redirUrl = UI_BROWSER.'?act=SCHEDULER';
+    break;
 
+    case 'SCHEDULER.setImportFile':
+    $uiHandler->SCHEDULER->scheduleImportOpen($_REQUEST['target']);
+    $uiHandler->redirUrl = UI_BROWSER.'?act=SCHEDULER';
+    break;
+    
     case 'BACKUP.createBackupOpen':
     $uiHandler->EXCHANGE->createBackupOpen();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';

@@ -95,6 +95,8 @@ define('UI_HUB_POLLING_FREQUENCY',      3);
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
 define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '0 seconds');
+define('UI_SCHEDULER_IMPORTTOKEN_KEY',  'schedulerImportToken');
+define('UI_SCHEDULER_EXPORTTOKEN_KEY',  'schedulerExportToken');
 
 ## File types
 define('UI_FILETYPE_ANY',               'all');

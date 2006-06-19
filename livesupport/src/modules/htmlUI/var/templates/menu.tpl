@@ -28,9 +28,9 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             <ul>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Browse##</a></li>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=SEARCH">##Search##</a></li>
-				<li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li>	
-				<li><a href="{$UI_BROWSER}?id={$START.id}&act=HUBSEARCH">##Hub Search##</a></li>	
-				<li><a href="{$UI_BROWSER}?id={$START.id}&act=TRANSFERS">##Transfers##</a></li>	
+                <li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li>    
+                <li><a href="{$UI_BROWSER}?id={$START.id}&act=HUBSEARCH">##Hub Search##</a></li>    
+                <li><a href="{$UI_BROWSER}?id={$START.id}&act=TRANSFERS">##Transfers##</a></li>    
             </ul>
         </li>
         <li class="nav-main"><a>##Playlists##</a>
@@ -56,6 +56,13 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                 {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus')}
                     <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status');  location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
                 {/if}
+                {if $SUBJECTS->isMemberOf('Backup')}
+                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=export'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Export##</a></li>
+                {/if}
+                {if $SUBJECTS->isMemberOf('Restore')}
+                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=import'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Import##</a></li>
+                {/if}
+
             </ul>
         </li>
 

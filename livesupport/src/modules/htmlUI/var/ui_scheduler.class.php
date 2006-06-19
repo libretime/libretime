@@ -650,5 +650,148 @@ class uiScheduler extends uiCalendar
             return FALSE;
         return $r;
     }
+
+    // export methods
+
+    function getExportToken()
+    {
+        $token = $this->Base->gb->loadPref($this->Base->sessid, UI_SCHEDULER_EXPORTTOKEN_KEY);
+        
+        if (PEAR::isError($token)) {
+            return false;    
+        }
+
+        return $token;
+        
+    }
+    
+    function scheduleExportOpen($from,$to)
+    {
+        $criteria = array('filetype' => UI_FILETYPE_ANY);
+        $token = $this->spc->exportOpenMethod($this->Base->sessid, $criteria,$from, $to);
+        
+        if (PEAR::isError($token)) {
+            $this->Base->_retMsg('Error initializing scheduler export: $1', $token->getMessage());
+            return false;    
+        }
+        
+        $this->scheduleExportCheck();
+        
+        $this->Base->gb->savePref($this->Base->sessid, UI_SCHEDULER_EXPORTTOKEN_KEY, $token['token']);
+        
+        return true;
+    }       
+    
+    function scheduleExportCheck()
+    {
+        $token = $this->getExportToken();
+        
+        if ($token === false) {
+            return false;
+        }
+        
+        $res = $this->spc->exportCheckMethod($token);
+        
+        if (PEAR::isError($res)) {
+            $this->Base->_retMsg('Unable to check scheduler export status: $1', $res->getMessage());
+            return false;    
+        }
+        
+        return $res;
+    }
+    
+    function scheduleExportClose()
+    {
+        $token = $this->getExportToken(); 
+            
+        if ($token === false) {
+            $this->Base->_retMsg('Token not available');
+            return false;    
+        } 
+        
+        $status = $this->spc->exportCloseMethod($token);   
+        
+        if (PEAR::isError($status)) {
+            $this->Base->_retMsg('Error closing scheduler export: $1', $status->getMessage());
+            return false;    
+        }
+        
+        if ($status === true) {
+            $this->Base->gb->delPref($this->Base->sessid, UI_SCHEDULER_EXPORTTOKEN_KEY);        
+        }
+        
+        return $status;
+    }
+    
+    // import methods
+
+    function getImportToken()
+    {
+        $token = $this->Base->gb->loadPref($this->Base->sessid, UI_SCHEDULER_IMPORTTOKEN_KEY);
+        
+        if (PEAR::isError($token)) {
+            return false;    
+        }
+
+        return $token;
+        
+    }
+    
+    function scheduleImportOpen($filename)
+    {
+        $token = $this->spc->importOpenMethod($this->Base->sessid, $filename);
+        
+        if (PEAR::isError($token)) {
+            $this->Base->_retMsg('Error initializing scheduler import: $1', $token->getMessage());
+            return false;    
+        }
+        
+        $this->scheduleImportCheck();
+        
+        $this->Base->gb->savePref($this->Base->sessid, UI_SCHEDULER_IMPORTTOKEN_KEY, $token['token']);
+        
+        return true;
+    }       
+    
+    function scheduleImportCheck()
+    {
+        $token = $this->getImportToken();
+        
+        if ($token === false) {
+            return false;    
+        }       
+        
+        $res = $this->spc->importCheckMethod($token);
+        //echo '<XMP style="background:yellow;">'; var_dump($res); echo "</XMP>\n";
+        if (PEAR::isError($res)) {
+            $this->Base->_retMsg('Unable to check scheduler import status: $1', $res->getMessage());
+            return false;    
+        }
+        
+        return $res;
+    }
+    
+    function scheduleImportClose()
+    {
+        $token = $this->getImportToken(); 
+            
+        if ($token === false) {
+            $this->Base->_retMsg('Token not available');
+            return false;    
+        } 
+        
+        $status = $this->spc->importCloseMethod($token);   
+        
+        if (PEAR::isError($status)) {
+            $this->Base->_retMsg('Error closing scheduler import: $1', $status->getMessage());
+            return false;    
+        }
+        
+        if ($status === true) {
+            $this->Base->gb->delPref($this->Base->sessid, UI_SCHEDULER_IMPORTTOKEN_KEY);        
+        }
+        
+        return $status;
+    }
 }
 ?>
