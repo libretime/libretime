@@ -1711,7 +1711,7 @@ class BasicStor extends Alib{
             $tr->resetData();
         }
         $res = array(
-            'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
+            'cnt'=>0, 'results'=>array(),
         );
         if(!$loadSampleData) return $res;
         $rootHD = $this->getObjId('root', $this->storId);
@@ -1740,9 +1740,14 @@ class BasicStor extends Alib{
                 $media, $xml, $gunid, $type
             );
             if(PEAR::isError($r)){ return $r; }
-            $res["{$type}s"][] = $this->_gunidFromId($r);
+            #$gunid = $this->_gunidFromId($r);
+            #$res['results'][] = array('gunid' => $gunid, 'type' => $type);
+            #$res['cnt']++;
         }
-        return $res;
+        return $this->bsLocalSearch(
+            array('filetype'=>'all', 'conditions'=>array())
+        );
+        #return $res;
     }
 
     /**
