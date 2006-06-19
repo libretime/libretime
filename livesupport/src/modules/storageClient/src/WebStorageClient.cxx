@@ -268,29 +268,45 @@ const std::string    searchSessionIdParamName = "sessid";
 const std::string    searchCriteriaParamName = "criteria";
 
 /*------------------------------------------------------------------------------
- *  The name of the audio clips result parameter returned by the method
+ *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
-const std::string    searchAudioClipResultParamName = "audioClipResults";
+const std::string    searchResultParamName = "results";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlists result parameter returned by the method
+ *  The name of the result's unique ID parameter returned by the method
  *----------------------------------------------------------------------------*/
-const std::string    searchPlaylistResultParamName = "playlistResults";
+const std::string    searchResultUniqueIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
- *  The name of the audio clip count parameter returned by the method
+ *  The name of the result's type parameter returned by the method
  *----------------------------------------------------------------------------*/
-const std::string    searchAudioClipCountParamName = "audioClipCnt";
+const std::string    searchResultTypeParamName = "type";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlist count parameter returned by the method
+ *  The value of the 'type' parameter when an audio clip is returned
  *----------------------------------------------------------------------------*/
-const std::string    searchPlaylistCountParamName = "playlistCnt";
+const std::string    searchResultAudioClipTypeValue = "audioclip";
+
+/*------------------------------------------------------------------------------
+ *  The value of the 'type' parameter when a playlist is returned
+ *----------------------------------------------------------------------------*/
+const std::string    searchResultPlaylistTypeValue = "playlist";
+
+/*------------------------------------------------------------------------------
+ *  The value of the 'type' parameter when a web stream is returned
+ *----------------------------------------------------------------------------*/
+const std::string    searchResultWebStreamTypeValue = "webstream";
+
+/*------------------------------------------------------------------------------
+ *  The name of the count parameter returned by the method
+ *----------------------------------------------------------------------------*/
+const std::string    searchCountParamName = "cnt";
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: browse */
 
 /*------------------------------------------------------------------------------
- *  The name of the search method on the storage server
+ *  The name of the browse method on the storage server
  *----------------------------------------------------------------------------*/
 const std::string    browseMethodName 
                             = "locstor.browseCategory";
@@ -739,7 +755,7 @@ const std::string    restoreBackupCloseMethodName
 const std::string    restoreBackupSessionIdParamName    = "sessid";
 
 /*------------------------------------------------------------------------------
- *  The name of the search criteria parameter in the input structure
+ *  The name of the file name parameter in the input structure
  *----------------------------------------------------------------------------*/
 const std::string    restoreBackupFileNameParamName     = "filename";
 
@@ -2167,60 +2183,63 @@ WebStorageClient :: extractSearchResults(const std::string &    methodName,
 {
     checkStruct(methodName,
                 xmlRpcStruct,
-                searchAudioClipResultParamName,
+                searchResultParamName,
                 XmlRpcValue::TypeArray);
     
-    checkStruct(methodName,
-                xmlRpcStruct,
-                searchPlaylistResultParamName,
-                XmlRpcValue::TypeArray);
+    XmlRpcValue resultArray = xmlRpcStruct[searchResultParamName];
     
-    XmlRpcValue audioClipArray = xmlRpcStruct[searchAudioClipResultParamName];
     audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
+    playlistIds. reset(new std::vector<Ptr<UniqueId>::Ref>);
     
-    for (int i=0; i < audioClipArray.size(); i++) {
-        if (audioClipArray[i].getType() != XmlRpcValue::TypeString) {
+    for (int i=0; i < resultArray.size(); i++) {
+        if (resultArray[i].getType() != XmlRpcValue::TypeStruct) {
             std::stringstream eMsg;
-            eMsg << "Non-string audio clip gunid returned by XML-RPC method '"
+            eMsg << "The 'results' parameter returned by XML-RPC method '"
+                 << methodName
+                 << "' is expected to be an array of structs, but it isn't:\n"
+                 << xmlRpcStruct;
+            throw XmlRpcMethodResponseException(eMsg.str());
+        }
+        
+        XmlRpcValue         resultItem = resultArray[i];
+        
+        checkStruct(methodName, 
+                    resultItem, 
+                    searchResultUniqueIdParamName, 
+                    XmlRpcValue::TypeString);
+        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
+                                resultItem[searchResultUniqueIdParamName])));
+        
+        checkStruct(methodName, 
+                    resultItem, 
+                    searchResultTypeParamName, 
+                    XmlRpcValue::TypeString);
+        std::string         typeString = resultItem[searchResultTypeParamName];
+        
+        if (typeString == searchResultAudioClipTypeValue) {
+            audioClipIds->push_back(uniqueId);
+        } else if (typeString == searchResultPlaylistTypeValue) {
+            playlistIds->push_back(uniqueId);
+        } else if (typeString == searchResultWebStreamTypeValue) {
+            // ignore for now
+        } else {
+            std::stringstream eMsg;
+            eMsg << "Unexpected '"
+                 << searchResultTypeParamName
+                 << "' parameter returned by the XML-RPC method '"
                  << methodName
                  << "':\n"
                  << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
-                                                        audioClipArray[i])));
-        audioClipIds->push_back(uniqueId);
-    }
-
-    XmlRpcValue playlistArray = xmlRpcStruct[searchPlaylistResultParamName];
-    playlistIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
-    
-    for (int i=0; i < playlistArray.size(); i++) {
-        if (playlistArray[i].getType() != XmlRpcValue::TypeString) {
-            std::stringstream eMsg;
-            eMsg << "Non-string playlist gunid returned by XML-RPC method '"
-                 << methodName
-                 << "':\n"
-                 << xmlRpcStruct;
-            throw XmlRpcMethodResponseException(eMsg.str());
-        }
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
-                                                        playlistArray[i])));
-        playlistIds->push_back(uniqueId);
     }
     
     checkStruct(methodName,
                 xmlRpcStruct,
-                searchAudioClipCountParamName,
+                searchCountParamName,
                 XmlRpcValue::TypeInt);
     
-    checkStruct(methodName,
-                xmlRpcStruct,
-                searchPlaylistCountParamName,
-                XmlRpcValue::TypeInt);
-    
-    return int(xmlRpcStruct[searchAudioClipCountParamName])
-           + int(xmlRpcStruct[searchPlaylistCountParamName]);
+    return int(xmlRpcStruct[searchCountParamName]);
 }
 
 

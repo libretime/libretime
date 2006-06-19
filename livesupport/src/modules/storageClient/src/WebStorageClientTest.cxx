@@ -713,8 +713,8 @@ WebStorageClientTest :: searchTest(void)
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound >= 5);
         CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0)  == *audioClip4);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1)  == *audioClip5);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0)  == *audioClip3);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1)  == *audioClip4);
         CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 0);
 
     } catch (std::invalid_argument &e) {
