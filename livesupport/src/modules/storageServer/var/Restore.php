@@ -97,9 +97,13 @@ class Restore {
         }
         $this->token = $token;
         $this->setEnviroment();
-        $r['status']    = file_get_contents($this->statusFile);
-        $r['token']     = $token;
-        return $r;
+        if (is_file($this->statusFile)) {
+            $r['status']    = file_get_contents($this->statusFile);
+            $r['token']     = $token;
+            return $r;
+        } else {
+            return PEAR::raiseError('Restore::checkRestore: invalid token!');
+        }
     }
     
     /**
