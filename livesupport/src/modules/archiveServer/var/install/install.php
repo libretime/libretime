@@ -72,6 +72,7 @@ $tr =& new Transport($gb);
 echo "# archiveServer step 2:\n# trying uninstall ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $gb->uninstall();
+$tr->uninstall();
 
 echo "# Install ...\n";
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
