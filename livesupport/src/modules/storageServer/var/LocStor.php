@@ -1002,7 +1002,7 @@ class LocStor extends BasicStor{
      *  @param  filename :  string - backup file path
      *  @return token    :  string - restore token
      */
-    function backupRestoreOpen($sessid, $filename)
+    function restoreBackupOpen($sessid, $filename)
     {
         require_once 'Restore.php';
         $rs = new Restore($this);
@@ -1018,7 +1018,7 @@ class LocStor extends BasicStor{
      * 							token:  string - restore token
      *                          status: string - working | fault | success
      */
-    function backupRestoreCheck($token)
+    function restoreBackupCheck($token)
     {
         require_once 'Restore.php';
         $rs = new Restore($this);
@@ -1034,7 +1034,7 @@ class LocStor extends BasicStor{
      * 							token:  string - restore token
      *                          status: string - working | fault | success
      */
-    function backupRestoreClose($token) {
+    function restoreBackupClose($token) {
     	require_once 'Restore.php';
     	$rs = new Restore($this);
     	if (PEAR::isError($rs)) return $rs;

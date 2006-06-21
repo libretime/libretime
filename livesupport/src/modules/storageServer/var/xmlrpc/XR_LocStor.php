@@ -1975,7 +1975,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->backupRestoreOpen($r['sessid'], $r['filename']);
+        $res = $this->restoreBackupOpen($r['sessid'], $r['filename']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupOpen: ".$res->getMessage().
@@ -2023,7 +2023,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->backupRestoreCheck($r['token']);
+        $res = $this->restoreBackupCheck($r['token']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupCheck: ".$res->getMessage().
@@ -2069,7 +2069,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->backupRestoreClose($r['token']);
+        $res = $this->restoreBackupClose($r['token']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupClose: ".$res->getMessage().
