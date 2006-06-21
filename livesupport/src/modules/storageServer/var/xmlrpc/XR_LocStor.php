@@ -2002,7 +2002,8 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> status :  hasharray - fields:
      *                          token:  string - restore token
-     *                          status: string - working | fault | success</li>
+     *                          status: string - working | fault | success
+     *                          faultString: string - description of fault</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.

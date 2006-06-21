@@ -1014,6 +1014,7 @@ class GreenBox extends BasicStor{
      *  @param token  :  string  -  backup token
      *  @return hasharray with field: 
      *      status : string - susccess | working | fault
+     *      faultString: string - description of fault
      *      token  : stirng - backup token
      *      url    : string - access url
      */
@@ -1081,6 +1082,7 @@ class GreenBox extends BasicStor{
      *  @return status :  hasharray - fields:
      * 							token:  string - restore token
      *                          status: string - working | fault | success
+     *                          faultString: string - description of fault 
      */
     function backupRestoreCheck($token)
     {

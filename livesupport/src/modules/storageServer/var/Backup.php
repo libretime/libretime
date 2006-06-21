@@ -146,6 +146,7 @@ class Backup
      *  @param token : token
      *  @return hasharray with field: 
      *      status  : string - susccess | working | fault
+     *      faultString: string - description of fault
      *      token   : stirng - backup token
      *      url     : string - access url
      *      tmpfile : string - access filename
@@ -158,6 +159,9 @@ class Backup
         $this->token = $token;
         $this->setEnviroment();
         $status = file_get_contents($this->statusFile);
+        if (strpos($status,'fault')!==false) {
+            list($status,$faultString) = explode('|',$status); 
+        }
         switch ($status) {
             case 'success':
                 $r['url']       = $this->gb->getUrlPart()."access/$token.".BACKUP_EXT;
@@ -165,6 +169,7 @@ class Backup
             case 'working':
             case 'fault':
                 $r['status']    = $status;
+                $r['faultString'] = $faultString;
                 $r['token']     = $token;
             break;
         }

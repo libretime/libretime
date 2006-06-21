@@ -87,6 +87,7 @@ class Restore {
      *  @param token : token
      *  @return hasharray with field: 
      *      status  : string - susccess | working | fault
+     *      faultString : string - description of fault
      *      token   : stirng - backup token
      *      url     : string - access url
      *      tmpfile : string - access filename
@@ -98,7 +99,12 @@ class Restore {
         $this->token = $token;
         $this->setEnviroment();
         if (is_file($this->statusFile)) {
-            $r['status']    = file_get_contents($this->statusFile);
+            $stat = file_get_contents($this->statusFile);
+            if (strpos($stat,'fault|')!==false) {
+                list($stat,$message) = explode('|',$stat);
+            }
+            $r['status']    = $stat;
+            if ($stat=='fault') $r['faultString'] = $message;
             $r['token']     = $token;
             return $r;
         } else {
@@ -163,13 +169,13 @@ class Restore {
                         " startRestore - addFileToStorage \n".
                         "(".$put->getMessage()."/".$put->getUserInfo().")\n"
                     );
-                 	file_put_contents($this->statusFile, 'fault');
+                 	file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
                     return;
                 }
             }
         } else {
             $this->addLogItem("-E- ".date("Ymd-H:i:s")." startRestore - invalid archive format\n");
-          	file_put_contents($this->statusFile, 'fault');
+          	file_put_contents($this->statusFile, 'fault|invalid archive format');
           	return;
         }
         file_put_contents($this->statusFile, 'success');
@@ -241,7 +247,7 @@ class Restore {
             	    " addFileToStorage - replaceFile Error ".
                     "(".$replace->getMessage()."/".$replace->getUserInfo().")\n"
                 );
-        	  	file_put_contents($this->statusFile, 'fault');
+        	  	file_put_contents($this->statusFile, 'fault|'.$replace->getMessage()."/".$replace->getUserInfo());
             	return $replace;
             }
             #$this->addLogItem("replace it \n");
@@ -273,7 +279,7 @@ class Restore {
                     "(".$put->getMessage()."/".$put->getUserInfo().")\n"
                     ."\n---\n".file_get_contents($file)."\n---\n"
                 );
-           		file_put_contents($this->statusFile, 'fault');
+           		file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
                 //$this->addLogItem("Error Object: ".print_r($put,true)."\n");
                 return $put;
             }
