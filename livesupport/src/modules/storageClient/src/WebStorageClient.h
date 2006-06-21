@@ -145,16 +145,9 @@ class WebStorageClient :
         EditedPlaylistsType         editedPlaylists;
 
         /**
-         *  A vector containing the unique IDs of the audio clips returned 
-         *  by reset() (for testing) or by search().
+         *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
-
-        /**
-         *  A vector containing the unique IDs of the playlists returned 
-         *  by reset() (for testing) or by search().
-         */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults;
 
         /**
          *  Execute an XML-RPC function call.
@@ -272,6 +265,25 @@ class WebStorageClient :
         void
         releasePlaylistTempFile(Ptr<Playlist>::Ref   playlist) const
                                                 throw (XmlRpcException);
+
+        /**
+         *  Create a new Playable object.
+         *  Takes the { unique ID, title, creator, playlength } data returned
+         *  by search() or reset(), and creates a new minimal Playable object
+         *  containing these bits of data only.
+         *
+         *  The 'type' field of the argument is expected to be one of
+         *  "audioclip" or "playlist".
+         *  TODO: implement webstream objects, as well.  For now, webstream
+         *  data does not throw an exception, but returns a 0 pointer.
+         *
+         *  @param  data    a struct { gunid, type, title, creator, playlength }
+         *  @return the new Playable object.
+         *  @exception  std::invalid_argument   if the argument is invalid.
+         *  
+         */
+        Ptr<Playable>::Ref
+        createPlayable(XmlRpcValue  data)       throw (XmlRpcException);
 
 
     public:
@@ -577,8 +589,8 @@ class WebStorageClient :
 
         /**
          *  Reset the storage to its initial state.  
-         *  Calls locstor.resetStorage; the audio clip and playlist IDs
-         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  Calls locstor.resetStorage; the new contents of the storage
+         *  can be read using getSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
@@ -590,7 +602,7 @@ class WebStorageClient :
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getAudioClipIds() and getPlaylistIds().
+         *  using getSearchResults().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
@@ -646,8 +658,7 @@ class WebStorageClient :
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getAudioClipIds() and
-         *  getPlaylistIds().
+         *  search results can be read using getSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -665,32 +676,16 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return the list of playlist IDs found by the search method.
+         *  Return the list of items found by the search method.
          *
-         *  (Or the list of playlist IDs returned by reset()
-         *  -- used for testing.)
+         *  (Or the list of items returned by reset() -- used for testing.)
          *
-         *  @return a vector of UniqueId objects.
+         *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getPlaylistIds(void)                    throw ()
+        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+        getSearchResults(void)                   throw ()
         {
-            return playlistIds;
-        }
-
-
-        /**
-         *  Return the list of audio clip IDs found by the search method.
-         *
-         *  (Or the list of audio clip IDs returned by reset()
-         *  -- used for testing.)
-         *
-         *  @return a vector of UniqueId objects.
-         */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getAudioClipIds(void)                   throw ()
-        {
-            return audioClipIds;
+            return searchResults;
         }
 
 

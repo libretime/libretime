@@ -158,16 +158,9 @@ class TestStorageClient :
         std::string                 localTempStorage;
 
         /**
-         *  A vector containing the unique IDs of the audio clips returned 
-         *  by search().
+         *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
-
-        /**
-         *  A vector containing the unique IDs of the playlists returned 
-         *  by search().
-         */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults;
 
         /**
          *  Auxilliary method used by search().
@@ -473,8 +466,8 @@ class TestStorageClient :
         /**
          *  Reset the storage to its initial state.  
          *  Re-initializes the storage based on the xml element which was
-         *  passed to configure() earlier; the audio clip and playlist IDs
-         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  passed to configure() earlier; the new contents of the storage
+         *  can be read using getSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
@@ -486,7 +479,7 @@ class TestStorageClient :
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getAudioClipIds() and getPlaylistIds().
+         *  using getSearchResults().
          *  
          *  If an audio clip or playlist does not have a metadata field X,
          *  it does not match any condition about field X.  In particular,
@@ -551,8 +544,7 @@ class TestStorageClient :
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getAudioClipIds() and
-         *  getPlaylistIds().
+         *  search results can be read using getSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -570,32 +562,16 @@ class TestStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return the list of audio clip IDs found by the search method.
+         *  Return the list of items found by the search method.
          *
-         *  (Or the list of audio clip IDs returned by reset()
-         *  -- used for testing.)
+         *  (Or the list of items returned by reset() -- used for testing.)
          *
-         *  @return a vector of UniqueId objects.
+         *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getAudioClipIds(void)                   throw ()
+        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+        getSearchResults(void)                   throw ()
         {
-            return audioClipIds;
-        }
-
-
-        /**
-         *  Return the list of playlist IDs found by the search method.
-         *
-         *  (Or the list of playlist IDs returned by reset()
-         *  -- used for testing.)
-         *
-         *  @return a vector of UniqueId objects.
-         */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getPlaylistIds(void)                    throw ()
-        {
-            return playlistIds;
+            return searchResults;
         }
 
 

@@ -362,7 +362,7 @@ class StorageClientInterface
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getAudioClipIds() and getPlaylistIds().
+         *  using getSearchResults().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
@@ -421,8 +421,7 @@ class StorageClientInterface
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getAudioClipIds() and
-         *  getPlaylistIds().
+         *  search results can be read using getSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -441,41 +440,24 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return the list of audio clip IDs found by the search method.
+         *  Return the list of items found by the latest search.
          *
-         *  (Or the list of audio clip IDs returned by reset()
-         *  -- used for testing.)
+         *  (Or the list of items returned by reset() -- used for testing.)
          *
-         *  @return a vector of UniqueId objects.
+         *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getAudioClipIds(void)                   throw ()                = 0;
-
-
-        /**
-         *  Return the list of playlist IDs found by the search method.
-         *
-         *  (Or the list of playlist IDs returned by reset()
-         *  -- used for testing.)
-         *
-         *  @return a vector of UniqueId objects.
-         */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getPlaylistIds(void)                    throw ()                = 0;
-
-
+        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+        getSearchResults(void)                  throw ()                = 0;
 
         /**
          *  Reset the storage to its initial state.  
-         *  The audio clip and playlist IDs
-         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  The contents of the storage can be read using getSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
          */
         virtual void
-        reset(void)
-                                                throw (XmlRpcException)
+        reset(void)                             throw (XmlRpcException)
                                                                         = 0;
 
         /**

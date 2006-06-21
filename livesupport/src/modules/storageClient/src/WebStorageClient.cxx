@@ -2102,51 +2102,9 @@ WebStorageClient :: reset(void)
     
     execute(resetStorageMethodName, parameters, result);
     
-    checkStruct(resetStorageMethodName,
-                result,
-                resetStorageAudioClipResultParamName,
-                XmlRpcValue::TypeArray);
-    
-    checkStruct(resetStorageMethodName,
-                result,
-                resetStoragePlaylistResultParamName,
-                XmlRpcValue::TypeArray);
+    extractSearchResults(resetStorageMethodName, result);
     
     editedPlaylists.clear();
-
-    XmlRpcValue audioClipArray = result[resetStorageAudioClipResultParamName];
-    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
-    
-    for (int i=0; i < audioClipArray.size(); i++) {
-        if (audioClipArray[i].getType() != XmlRpcValue::TypeString) {
-            std::stringstream eMsg;
-            eMsg << "Non-string audio clip gunid returned by XML-RPC method '"
-                 << resetStorageMethodName
-                 << "':\n"
-                 << result;
-            throw XmlRpcMethodResponseException(eMsg.str());
-        }
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
-                                                        audioClipArray[i])));
-        audioClipIds->push_back(uniqueId);
-    }
-
-    XmlRpcValue playlistArray = result[resetStoragePlaylistResultParamName];
-    playlistIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
-    
-    for (int i=0; i < playlistArray.size(); i++) {
-        if (playlistArray[i].getType() != XmlRpcValue::TypeString) {
-            std::stringstream eMsg;
-            eMsg << "Non-string playlist gunid returned by XML-RPC method '"
-                 << resetStorageMethodName
-                 << "':\n"
-                 << result;
-            throw XmlRpcMethodResponseException(eMsg.str());
-        }
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
-                                                        playlistArray[i])));
-        playlistIds->push_back(uniqueId);
-    }
 }
 
 
@@ -2188,8 +2146,8 @@ WebStorageClient :: extractSearchResults(const std::string &    methodName,
     
     XmlRpcValue resultArray = xmlRpcStruct[searchResultParamName];
     
-    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
-    playlistIds. reset(new std::vector<Ptr<UniqueId>::Ref>);
+    searchResults.reset(new std::vector<Ptr<Playable>::Ref>);
+    Ptr<Playable>::Ref      playable;
     
     for (int i=0; i < resultArray.size(); i++) {
         if (resultArray[i].getType() != XmlRpcValue::TypeStruct) {
@@ -2201,38 +2159,55 @@ WebStorageClient :: extractSearchResults(const std::string &    methodName,
             throw XmlRpcMethodResponseException(eMsg.str());
         }
         
-        XmlRpcValue         resultItem = resultArray[i];
-        
-        checkStruct(methodName, 
-                    resultItem, 
-                    searchResultUniqueIdParamName, 
-                    XmlRpcValue::TypeString);
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(
-                                resultItem[searchResultUniqueIdParamName])));
-        
-        checkStruct(methodName, 
-                    resultItem, 
-                    searchResultTypeParamName, 
-                    XmlRpcValue::TypeString);
-        std::string         typeString = resultItem[searchResultTypeParamName];
-        
-        if (typeString == searchResultAudioClipTypeValue) {
-            audioClipIds->push_back(uniqueId);
-        } else if (typeString == searchResultPlaylistTypeValue) {
-            playlistIds->push_back(uniqueId);
-        } else if (typeString == searchResultWebStreamTypeValue) {
-            // ignore for now
-        } else {
+        try {
+            playable = createPlayable(resultArray[i]);
+            
+        } catch (std::invalid_argument &e) {
             std::stringstream eMsg;
-            eMsg << "Unexpected '"
-                 << searchResultTypeParamName
-                 << "' parameter returned by the XML-RPC method '"
+            eMsg << "Malformed item returned by XML-RPC method '"
                  << methodName
-                 << "':\n"
+                 << "': "
+                 << resultArray[i];
+            throw XmlRpcMethodResponseException(eMsg.str());
+        }
+        
+        if (playable && playable->getPlaylist()) {
+                                                    // can be 0 if a web stream
+            searchResults->push_back(playable);     // is found
+        }
+    }
+    
+    // TODO: REMOVE STARTING HERE (see ticket #1701)
+    // <<<
+    for (int i=0; i < resultArray.size(); i++) {
+        if (resultArray[i].getType() != XmlRpcValue::TypeStruct) {
+            std::stringstream eMsg;
+            eMsg << "The 'results' parameter returned by XML-RPC method '"
+                 << methodName
+                 << "' is expected to be an array of structs, but it isn't:\n"
                  << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
+        
+        try {
+            playable = createPlayable(resultArray[i]);
+            
+        } catch (std::invalid_argument &e) {
+            std::stringstream eMsg;
+            eMsg << "Malformed item returned by XML-RPC method '"
+                 << methodName
+                 << "': "
+                 << resultArray[i];
+            throw XmlRpcMethodResponseException(eMsg.str());
+        }
+        
+        if (playable && playable->getAudioClip()) {
+                                                    // can be 0 if a web stream
+            searchResults->push_back(playable);     // is found
+        }
     }
+    // >>>
+    // TODO: REMOVE UNTIL HERE (and fix line x-36)
     
     checkStruct(methodName,
                 xmlRpcStruct,
@@ -2359,12 +2334,12 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
                                         new std::vector<Ptr<Playlist>::Ref>);
     
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
-    it  = getPlaylistIds()->begin();
-    end = getPlaylistIds()->end();
-    while (it != end) {
-        playlists->push_back(getPlaylist(sessionId, *it));
-        ++it;
+    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+        Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
+        if (playlist) {
+            playlists->push_back(playlist);
+        }
     }
 
     return playlists;
@@ -2389,12 +2364,12 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
-    it  = getAudioClipIds()->begin();
-    end = getAudioClipIds()->end();
-    while (it != end) {
-        audioClips->push_back(getAudioClip(sessionId, *it));
-        ++it;
+    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+        Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
+        if (audioClip) {
+            audioClips->push_back(audioClip);
+        }
     }
 
     return audioClips;
@@ -2905,5 +2880,75 @@ WebStorageClient :: downloadFromHub(Ptr<const SessionId>::Ref       sessionId,
                                     result[downloadFromHubTokenParamName] ));
     
     return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ * Create a new Playable object.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+WebStorageClient :: createPlayable(XmlRpcValue  data)
+                                                throw (XmlRpcException)
+{
+    checkStruct("private:createPlayable",
+                data,
+                "gunid",
+                XmlRpcValue::TypeString);
+    Ptr<UniqueId>::Ref              uniqueId(new UniqueId(std::string(
+                                                            data["gunid"])));
+    
+    checkStruct("private:createPlayable",
+                data,
+                "title",
+                XmlRpcValue::TypeString);
+    Ptr<const Glib::ustring>::Ref   title(new const Glib::ustring(std::string(
+                                                            data["title"] )));
+    
+    checkStruct("private:createPlayable",
+                data,
+                "creator",
+                XmlRpcValue::TypeString);
+    Ptr<const Glib::ustring>::Ref   creator(new const Glib::ustring(std::string(
+                                                            data["creator"] )));
+    
+    checkStruct("private:createPlayable",
+                data,
+                "length",
+                XmlRpcValue::TypeString);
+    Ptr<const std::string>::Ref     playlengthString(new const std::string(
+                                                            data["length"] ));
+    Ptr<time_duration>::Ref         playlength
+                                    = TimeConversion::parseTimeDuration(
+                                                            playlengthString);
+    
+    checkStruct("private:createPlayable",
+                data,
+                "type",
+                XmlRpcValue::TypeString);
+    std::string         type = data["type"];
+    
+    Ptr<Playable>::Ref  playable;
+    
+    if (type == "audioclip") {
+        playable.reset(new AudioClip(uniqueId, title, playlength));
+        playable->setMetadata(creator, "dc:creator");
+    
+    } else if (type == "playlist") {
+        playable.reset(new Playlist(uniqueId, title, playlength));
+        playable->setMetadata(creator, "dc:creator");
+    
+    } else if (type == "webstream") {
+        // TODO: handle this case
+    
+    } else {
+        std::stringstream   eMsg;
+        eMsg << "Invalid Playable type '" 
+             << type
+             << "' found in StorageClient::createPlayable():\n"
+             << data;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+    
+    return playable;
 }
 

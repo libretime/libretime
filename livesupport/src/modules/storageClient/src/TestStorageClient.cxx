@@ -250,7 +250,7 @@ TestStorageClient :: reset(void)
                                      = nodes.begin();
     playlistMap.clear();
     editedPlaylists.clear();
-    playlistIds.reset(new  std::vector<Ptr<UniqueId>::Ref>);
+    searchResults.reset(new  std::vector<Ptr<Playable>::Ref>);
 
     while (it != nodes.end()) {
         Ptr<Playlist>::Ref      playlist(new Playlist);
@@ -258,7 +258,7 @@ TestStorageClient :: reset(void)
                                     dynamic_cast<const xmlpp::Element*> (*it);
         playlist->configure(*element);
         playlistMap[playlist->getId()->getId()] = playlist;
-        playlistIds->push_back(playlist->getId());
+        searchResults->push_back(playlist);
         ++it;
     }
 
@@ -267,7 +267,6 @@ TestStorageClient :: reset(void)
     it    = nodes.begin();
     audioClipMap.clear();
     audioClipUris.clear();
-    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
 
     while (it != nodes.end()) {
         Ptr<AudioClip>::Ref     audioClip(new AudioClip);
@@ -280,7 +279,7 @@ TestStorageClient :: reset(void)
             audioClip->setUri(nullPointer);
         }
         audioClipMap[audioClip->getId()->getId()] = audioClip;
-        audioClipIds->push_back(audioClip->getId());
+        searchResults->push_back(audioClip);
         ++it;
     }
 }
@@ -802,15 +801,14 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         last = 0;
     }
 
-    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
-    playlistIds.reset(new  std::vector<Ptr<UniqueId>::Ref>);
+    searchResults.reset(new std::vector<Ptr<Playable>::Ref>);
 
     if (searchCriteria->type == "audioclip" || searchCriteria->type == "all") {
         AudioClipMapType::const_iterator    it = audioClipMap.begin();
         while (it != audioClipMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
                 if (counter >= first && (!last || counter < last)) {
-                    audioClipIds->push_back(it->second->getId());
+                    searchResults->push_back(it->second);
                 }
                 ++counter;
             }
@@ -823,7 +821,7 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         while (it != playlistMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
                 if (counter >= first && (!last || counter < last)) {
-                    playlistIds->push_back(it->second->getId());
+                    searchResults->push_back(it->second);
                 }
                 ++counter;
             }
@@ -976,12 +974,12 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref    sessionId,
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
                                         new std::vector<Ptr<Playlist>::Ref>);
     
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
-    it  = getPlaylistIds()->begin();
-    end = getPlaylistIds()->end();
-    while (it != end) {
-        playlists->push_back(getPlaylist(sessionId, *it));
-        ++it;
+    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+        Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
+        if (playlist) {
+            playlists->push_back(playlist);
+        }
     }
     
     return playlists;
@@ -1006,12 +1004,12 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
-    it  = getAudioClipIds()->begin();
-    end = getAudioClipIds()->end();
-    while (it != end) {
-        audioClips->push_back(getAudioClip(sessionId, *it));
-        ++it;
+    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+        Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
+        if (audioClip) {
+            audioClips->push_back(audioClip);
+        }
     }
     
     return audioClips;
