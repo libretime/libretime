@@ -1722,11 +1722,7 @@ WebStorageClient :: releasePlaylistFromServer(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[getPlaylistTokenParamName]     = std::string(
-                                                        *playlist->getToken());
-    // TODO: remove the 'recursive' param from locstor.releasePlaylist because
-    // it is error-prone; should always use the same value as for accessPlaylist
-    parameters[getPlaylistRecursiveParamName] = true;
+    parameters[getPlaylistTokenParamName] = std::string(*playlist->getToken());
     
     execute(getPlaylistCloseMethodName, parameters, result);
     
