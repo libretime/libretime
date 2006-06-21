@@ -636,14 +636,15 @@ WebStorageClientTest :: searchTest(void)
     Ptr<AudioClip>::Ref     audioClip4 = searchResults->at(7)->getAudioClip();
     Ptr<AudioClip>::Ref     audioClip5 = searchResults->at(8)->getAudioClip();
     
+    CPPUNIT_ASSERT(playlist0);
+    CPPUNIT_ASSERT(playlist1);
+    CPPUNIT_ASSERT(playlist2);
     CPPUNIT_ASSERT(audioClip0);
     CPPUNIT_ASSERT(audioClip1);
     CPPUNIT_ASSERT(audioClip2);
     CPPUNIT_ASSERT(audioClip3);
     CPPUNIT_ASSERT(audioClip4);
     CPPUNIT_ASSERT(audioClip5);
-    CPPUNIT_ASSERT(playlist0);
-    CPPUNIT_ASSERT(playlist1);
     
     Ptr<SessionId>::Ref sessionId;
     try {
