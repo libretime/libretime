@@ -446,7 +446,7 @@ void
 SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
                                                                 throw ()
 {
-    Ptr<std::list<Ptr<Playable>::Ref> >::Ref searchResults;
+    Ptr<GLiveSupport::PlayableList>::Ref    searchResults;
     try {
         searchResults = gLiveSupport->search(criteria);
     } catch (XmlRpcException &e) {
@@ -463,8 +463,8 @@ SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: displaySearchResults(
-                    Ptr<std::list<Ptr<Playable>::Ref> >::Ref  searchResults,
-                    Glib::RefPtr<Gtk::ListStore>              treeModel)
+                    Ptr<GLiveSupport::PlayableList>::Ref    searchResults,
+                    Glib::RefPtr<Gtk::ListStore>            treeModel)
                                                                 throw ()
 {
     treeModel->clear();
@@ -472,7 +472,7 @@ SearchWindow :: displaySearchResults(
     
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
-    std::list<Ptr<Playable>::Ref>::const_iterator it;
+    GLiveSupport::PlayableList::const_iterator it;
     
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<Playable>::Ref      playable = *it;
@@ -569,7 +569,7 @@ SearchWindow :: remoteSearchClose(void)
             return;
         }
         
-        Ptr<std::list<Ptr<Playable>::Ref> >::Ref    results;
+        Ptr<GLiveSupport::PlayableList>::Ref        results;
         
         switch (state) {
             case StorageClientInterface::initState :
@@ -590,7 +590,7 @@ SearchWindow :: remoteSearchClose(void)
                 remoteSearchToken.reset();
                 
                 try {
-                    results = gLiveSupport->readSearchResults();
+                    results = gLiveSupport->getSearchResults();
                 } catch (XmlRpcException &e) {
                     gLiveSupport->displayMessageWindow(formatMessage(
                                                     "remoteSearchErrorMsg",

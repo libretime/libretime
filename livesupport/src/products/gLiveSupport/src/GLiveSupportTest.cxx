@@ -192,8 +192,8 @@ GLiveSupportTest :: openAudioClipTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      clip;
 
-    CPPUNIT_ASSERT(gLiveSupport->getAudioClipIds()->size() >= 4);
-    id = gLiveSupport->getAudioClipIds()->at(3);
+    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 7);
+    id = gLiveSupport->getSearchResults()->at(6)->getId();
 
     try {
         clip = gLiveSupport->getAudioClip(id);
@@ -226,8 +226,8 @@ GLiveSupportTest :: acquireAudioClipTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      clip;
 
-    CPPUNIT_ASSERT(gLiveSupport->getAudioClipIds()->size() >= 4);
-    id = gLiveSupport->getAudioClipIds()->at(3);
+    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 7);
+    id = gLiveSupport->getSearchResults()->at(6)->getId();
 
     try {
         clip = gLiveSupport->acquireAudioClip(id);
@@ -263,8 +263,8 @@ GLiveSupportTest :: openPlaylistTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      playlist;
 
-    CPPUNIT_ASSERT(gLiveSupport->getPlaylistIds()->size() >= 2);
-    id = gLiveSupport->getPlaylistIds()->at(1);
+    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 2);
+    id = gLiveSupport->getSearchResults()->at(1)->getId();
 
     try {
         playlist = gLiveSupport->getPlaylist(id);
@@ -297,8 +297,8 @@ GLiveSupportTest :: acquirePlaylistTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      playlist;
 
-    CPPUNIT_ASSERT(gLiveSupport->getPlaylistIds()->size() >= 2);
-    id = gLiveSupport->getPlaylistIds()->at(1);
+    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 2);
+    id = gLiveSupport->getSearchResults()->at(1)->getId();
 
     try {
         playlist = gLiveSupport->acquirePlaylist(id);

@@ -147,7 +147,7 @@ class WebStorageClient :
         /**
          *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults;
+        Ptr<SearchResultsType>::Ref searchResults;
 
         /**
          *  Execute an XML-RPC function call.
@@ -682,8 +682,8 @@ class WebStorageClient :
          *
          *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
-        getSearchResults(void)                   throw ()
+        virtual Ptr<SearchResultsType>::Ref
+        getSearchResults(void)                  throw ()
         {
             return searchResults;
         }

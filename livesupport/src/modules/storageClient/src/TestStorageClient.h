@@ -160,7 +160,7 @@ class TestStorageClient :
         /**
          *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults;
+        Ptr<SearchResultsType>::Ref searchResults;
 
         /**
          *  Auxilliary method used by search().
@@ -568,7 +568,7 @@ class TestStorageClient :
          *
          *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+        virtual Ptr<SearchResultsType>::Ref
         getSearchResults(void)                   throw ()
         {
             return searchResults;

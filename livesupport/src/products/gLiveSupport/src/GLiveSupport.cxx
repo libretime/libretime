@@ -1329,7 +1329,7 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
 {
     storage->search(sessionId, criteria);
     
-    return readSearchResults();
+    return getSearchResults();
 }
 
 
@@ -1338,35 +1338,9 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
  *----------------------------------------------------------------------------*/
 Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: readSearchResults(void)         throw (XmlRpcException)
+GLiveSupport :: getSearchResults(void)          throw (XmlRpcException)
 {
-    Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
-            results(new PlayableList);
-    
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds = getAudioClipIds();
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it;
-    for (it = audioClipIds->begin(); it != audioClipIds->end(); ++it) {
-        try {
-            Ptr<AudioClip>::Ref     audioClip = getAudioClip(*it);
-            results->push_back(audioClip);
-        } catch (XmlRpcInvalidDataException &e) {
-            std::cerr << "invalid audio clip in search(): " << e.what()
-                      << std::endl;
-        }
-    }
-    
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref playlistIds = getPlaylistIds();
-    for (it = playlistIds->begin(); it != playlistIds->end(); ++it) {
-        try {
-            Ptr<Playlist>::Ref     playlist = getPlaylist(*it);
-            results->push_back(playlist);
-        } catch (XmlRpcInvalidDataException &e) {
-            std::cerr << "invalid playlist in search(): " << e.what()
-                      << std::endl;
-        }
-    }
-    
-    return results;
+    return storage->getSearchResults();
 }
 
 

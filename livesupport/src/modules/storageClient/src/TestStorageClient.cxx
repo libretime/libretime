@@ -250,7 +250,7 @@ TestStorageClient :: reset(void)
                                      = nodes.begin();
     playlistMap.clear();
     editedPlaylists.clear();
-    searchResults.reset(new  std::vector<Ptr<Playable>::Ref>);
+    searchResults.reset(new SearchResultsType);
 
     while (it != nodes.end()) {
         Ptr<Playlist>::Ref      playlist(new Playlist);
@@ -801,7 +801,7 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         last = 0;
     }
 
-    searchResults.reset(new std::vector<Ptr<Playable>::Ref>);
+    searchResults.reset(new SearchResultsType);
 
     if (searchCriteria->type == "audioclip" || searchCriteria->type == "all") {
         AudioClipMapType::const_iterator    it = audioClipMap.begin();
@@ -974,7 +974,7 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref    sessionId,
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
                                         new std::vector<Ptr<Playlist>::Ref>);
     
-    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    SearchResultsType::const_iterator it;
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
         if (playlist) {
@@ -1004,7 +1004,7 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
-    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    SearchResultsType::const_iterator it;
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
         if (audioClip) {

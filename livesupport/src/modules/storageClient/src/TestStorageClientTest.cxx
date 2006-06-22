@@ -298,8 +298,10 @@ TestStorageClientTest :: acquireAudioClipTest(void)
         CPPUNIT_FAIL(eMsg);
     }
     string  audioClipUri("file://");
-    audioClipUri += get_current_dir_name();
+    char *  currentDirName = get_current_dir_name();
+    audioClipUri += currentDirName;
     audioClipUri += "/var/test10002.mp3";
+    free(currentDirName);
     CPPUNIT_ASSERT(*(audioClip->getUri()) == audioClipUri);
     
     try {

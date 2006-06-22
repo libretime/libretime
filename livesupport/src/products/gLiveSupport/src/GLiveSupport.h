@@ -131,9 +131,9 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  The type of the list of search results.
-         *  This is a list holding Ptr<Playable>::Ref references.
          */
-        typedef std::list<Ptr<Playable>::Ref>       PlayableList;
+        typedef StorageClientInterface::SearchResultsType
+                                                    PlayableList;
 
         /**
          *  A type for having a map of AudioClip objects, with using
@@ -583,18 +583,6 @@ class GLiveSupport : public LocalizedConfigurable,
         }
 
         /**
-         *  Return the full range of audio clip ids in the storage.
-         *  Mostly used for testing.
-         *
-         *  @return a vector of UniqueId object references.
-         */
-         Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-         getAudioClipIds(void)                                  throw ()
-         {
-             return storage->getAudioClipIds();
-         }
-
-        /**
          *  Tell if an audio clip specified by an id exists.
          *
          *  @param id the id of the audio clip to check for.
@@ -638,18 +626,6 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<AudioClip>::Ref
         acquireAudioClip(Ptr<const UniqueId>::Ref  id)
                                                     throw (XmlRpcException);
-
-        /**
-         *  Return the full range of playlist ids in the storage.
-         *  Mostly used for testing.
-         *
-         *  @return a vector of UniqueId object references.
-         */
-         Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-         getPlaylistIds(void)                                   throw ()
-         {
-             return storage->getPlaylistIds();
-         }
 
         /**
          *  Tell if a playlist specified by an id exists.
@@ -973,7 +949,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *                             getPlaylist().
          */
         Ptr<PlayableList>::Ref
-        readSearchResults(void)                 throw (XmlRpcException);
+        getSearchResults(void)                  throw (XmlRpcException);
 
         /**
          *  Browse in the local storage.

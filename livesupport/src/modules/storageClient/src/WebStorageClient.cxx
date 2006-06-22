@@ -2142,7 +2142,7 @@ WebStorageClient :: extractSearchResults(const std::string &    methodName,
     
     XmlRpcValue resultArray = xmlRpcStruct[searchResultParamName];
     
-    searchResults.reset(new std::vector<Ptr<Playable>::Ref>);
+    searchResults.reset(new SearchResultsType);
     Ptr<Playable>::Ref      playable;
     
     for (int i=0; i < resultArray.size(); i++) {
@@ -2330,7 +2330,7 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
                                         new std::vector<Ptr<Playlist>::Ref>);
     
-    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    SearchResultsType::const_iterator it;
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
         if (playlist) {
@@ -2360,7 +2360,7 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
-    std::vector<Ptr<Playable>::Ref>::const_iterator it;
+    SearchResultsType::const_iterator it;
     for (it = searchResults->begin(); it != searchResults->end(); ++it) {
         Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
         if (audioClip) {

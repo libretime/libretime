@@ -906,8 +906,12 @@ WebStorageClientTest :: restoreBackupTest(void)
         wsc->existsAudioClip(sessionId, oldAudioClipId)
     );
     
-    Ptr<Glib::ustring>::Ref     path(new Glib::ustring(
-                                                "var/cowbell_backup.tar"));
+    Ptr<Glib::ustring>::Ref     path(new Glib::ustring());
+    char *                      currentDirName = get_current_dir_name();
+    path->append(currentDirName);
+    path->append("var/cowbell_backup.tar");
+    free(currentDirName);
+    
     Ptr<Glib::ustring>::Ref     token;
     CPPUNIT_ASSERT_NO_THROW(
         token = wsc->restoreBackupOpen(sessionId, path);

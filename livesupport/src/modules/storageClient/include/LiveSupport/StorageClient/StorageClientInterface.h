@@ -440,13 +440,19 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
+         *  The type for the list of playlists returned by the search method
+         */
+        typedef std::vector<Ptr<Playable>::Ref>
+                                    SearchResultsType;
+
+        /**
          *  Return the list of items found by the latest search.
          *
          *  (Or the list of items returned by reset() -- used for testing.)
          *
          *  @return a vector of Playable objects.
          */
-        virtual Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+        virtual Ptr<SearchResultsType>::Ref
         getSearchResults(void)                  throw ()                = 0;
 
         /**

@@ -256,8 +256,8 @@ class SearchWindow : public GuiWindow
          */
         void
         displaySearchResults(
-                    Ptr<std::list<Ptr<Playable>::Ref> >::Ref  searchResults,
-                    Glib::RefPtr<Gtk::ListStore>              treeModel)
+                    Ptr<GLiveSupport::PlayableList>::Ref    searchResults,
+                    Glib::RefPtr<Gtk::ListStore>            treeModel)
                                                                 throw ();
 
         /**
