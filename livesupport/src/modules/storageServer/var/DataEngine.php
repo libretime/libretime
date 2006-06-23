@@ -310,8 +310,8 @@ class DataEngine{
         $desc       = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $conditions   = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
         $whereArr   = $this->_makeWhereArr($conditions);
-        $orderbyQn  =
-            (isset($criteria['orderby']) ? $criteria['orderby'] : NULL);
+        $orderbyQn  =       // default is dc:title
+            (isset($criteria['orderby']) ? $criteria['orderby'] : 'dc:title' /*NULL*/);
         $obSplitQn  = XML_Util::splitQualifiedName($orderbyQn);
         $obNs       = $obSplitQn['namespace'];
         $orderby    = $obSplitQn['localPart'];
@@ -339,13 +339,13 @@ class DataEngine{
         if(!$browse && $orderby){
             $retype = ($orderby == 'mtime' ? '::timestamp with time zone' : '' );
             $sql =
-                "SELECT to_hex(sq2.gunid)as gunid, m.object, sql2.ftype, sql2.id\n".
+                "SELECT to_hex(sq2.gunid)as gunid, m.object, sq2.ftype, sq2.id\n".
                 "FROM (\n$sql\n)sq2\n".
                 "LEFT JOIN ls_mdata m\n".
                 "  ON m.gunid = sq2.gunid AND m.predicate='$orderby'".
                 " AND m.objns='_L' AND m.predxml='T'".
                 (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
-                "ORDER BY m.object".$retype.($desc? ' DESC':'')."\n";
+                "ORDER BY sq2.ftype, m.object".$retype.($desc? ' DESC':'')."\n";
         }
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
