@@ -207,6 +207,8 @@ class Archive extends XR_LocStor{
                 );
                 break;
             case"searchjob":
+                $res = $pars;
+                break;
             case"file":
                 $res = $r = array();
                 break;
