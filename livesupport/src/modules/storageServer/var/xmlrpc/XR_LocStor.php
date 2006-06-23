@@ -3114,22 +3114,21 @@ class XR_LocStor extends LocStor{
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     *  On success, returns a XML-RPC array of structs with fields:
      *   <ul>
-     *      <li>audioClipResults : array with gunid strings
-     *          of audioClips have been found</li>
-     *      <li>audioClipCnt : int - number of audioClips matching
-     *          the criteria</li>
-     *      <li>webstreamResults : array with gunid strings
-     *          of webstreams have been found</li>
-     *      <li>webstreamCnt : int - number of webstreams matching
-     *          the criteria</li>
-     *      <li>playlistResults : array with gunid strings
-     *          of playlists have been found</li>
-     *      <li>playlistCnt : int - number of playlists matching
-     *          the criteria</li>
+     *       <li>cnt : integer - number of matching gunids 
+     *              of files have been found</li>
+     *       <li>results : array of hashes:
+     *          <ul>
+     *           <li>gunid: string</li>
+     *           <li>type: string - audioclip | playlist | webstream</li>
+     *           <li>title: string - dc:title from metadata</li>
+     *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>length: string - dcterms:extent in extent format</li>
+     *          </ul>
+     *      </li>
      *   </ul>
-     *  (cnt values may be greater than size of arrays - see limit param)
+     *  (cnt value may be greater than size of result array - see limit param)
      *
      *  On errors, returns an XML-RPC error response.
      *  The possible error codes and error message are:
@@ -3300,14 +3299,21 @@ class XR_LocStor extends LocStor{
      *      </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following
-     *  fields:
-     *  <ul>
-     *      <li> audioclips : array -
-     *              array with gunids of inserted audioclips </li>
-     *      <li> playlists : array -
-     *              array with gunids of inserted playlists </li>
-     *  </ul>
+     *  On success, returns the same result as searchMetadata with filetype
+     *  'all' and no conditions,
+     *  i.e. XML-RPC array of structs with fields:
+     *   <ul>
+     *       <li>cnt : integer - number of inserted files</li>
+     *       <li>results : array of hashes:
+     *          <ul>
+     *           <li>gunid: string</li>
+     *           <li>type: string - audioclip | playlist | webstream</li>
+     *           <li>title: string - dc:title from metadata</li>
+     *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>length: string - dcterms:extent in extent format</li>
+     *          </ul>
+     *      </li>
+     *   </ul>
      *
      *  On errors, returns an XML-RPC error response.
      *  The possible error codes and error message are:

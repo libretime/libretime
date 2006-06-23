@@ -1701,6 +1701,15 @@ class BasicStor extends Alib{
      *
      *  @param loadSampleData boolean - flag for allow sample data loading
      *  @param filesOnly boolean - flag for operate only on files in storage
+     *  @return result of localSearch with filetype 'all' and no conditions,
+     *      i.e. array of hashes, fields:
+     *       cnt : integer - number of inserted files
+     *       results : array of hashes:
+     *          gunid: string
+     *          type: string - audioclip | playlist | webstream
+     *          title: string - dc:title from metadata
+     *          creator: string - dc:creator from metadata
+     *          length: string - dcterms:extent in extent format
      */
     function resetStorage($loadSampleData=TRUE, $filesOnly=FALSE)
     {
