@@ -375,11 +375,12 @@ class Transport
     function globalSearch($criteria, $resultMode='php', $pars=array())
     {
         $criteria['resultMode'] = $resultMode;
-        $fname = tempnam($this->transDir, 'searchjob_');
+        $localfile = tempnam($this->transDir, 'searchjob_');
         @chmod($localfile, 0660);
         $len = $r = file_put_contents($localfile, serialize($criteria));
         $trec = $r = $this->_uploadGenFile2Hub($localfile, 'searchjob', $pars);
         if(PEAR::isError($r)){ return $r; }
+        $this->startCronJobProcess($trec->trtok);
         return $trec->trtok;
     }
 
@@ -394,9 +395,7 @@ class Transport
         $trec = $r = TransportRecord::recall($this, $trtok);
         if(PEAR::isError($r)){ return $r; }
         $row = $trec->row;
-        switch($trec->getState()){
-            case"finished":
-                break;
+        switch($st = $trec->getState()){
             case"failed":
                 return PEAR::raiseError(
                     "Transport::getSearchResults:".
@@ -410,9 +409,13 @@ class Transport
                     " invalid transport token ($trtok)", TRERR_TOK
                 );
                 break;
+            case"finished":
+                if($row['direction']=='down') break;    // really finished
+                                    // otherwise only request upload finished
             default:
                 return PEAR::raiseError(
-                    "Transport::getSearchResults: not finished", TRERR_NOTFIN
+                    "Transport::getSearchResults: not finished ($st)",
+                    TRERR_NOTFIN
                 );
         }
         $res = file_get_contents($row['localfile']);
@@ -441,6 +444,7 @@ class Transport
         }
         $trec = $r = $this->_uploadGenFile2Hub($filePath, 'file', $pars);
         if(PEAR::isError($r)){ return $r; }
+        $this->startCronJobProcess($trec->trtok);
         return $trec->trtok;
     }
 
@@ -468,6 +472,7 @@ class Transport
             ), $pars)
         );
         if(PEAR::isError($r)){ return $r; }
+        $this->startCronJobProcess($trec->trtok);
         return array('trtok'=>$trec->trtok, 'localfile'=>$tmpn);
     }
 
@@ -581,6 +586,7 @@ class Transport
             )
         );
         if(PEAR::isError($r)){ return $r; }
+        $this->startCronJobProcess($trtok);
         return $trtok;
     }
 
@@ -838,6 +844,8 @@ class Transport
         $pars = array();
         switch($trtype){
         case"searchjob":
+            $r = $trec->setState('waiting', $pars);
+            break;
         case"file":
             $r = $trec->setState('waiting',array_merge($pars, array(
                 'trtype'=>$trtype,
@@ -1038,7 +1046,12 @@ class Transport
                 ),
             )
         );
-        if(PEAR::isError($r)){ return $r; }
+        if(PEAR::isError($r)){
+            if($row['trtype'] == 'audioclip'){
+                $r2 = $mdtrec->close();
+            }
+            return $r;
+        }
 
         if($row['trtype'] == 'searchjob'){
             @unlink($row['localfile']);
@@ -1050,6 +1063,7 @@ class Transport
                 'url'           => $ret['url'],
                 'realsize'      => 0,
             ));
+            $this->startCronJobProcess($trec->trtok);
         }else{
             $r = $trec->close();
         }

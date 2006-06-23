@@ -78,8 +78,9 @@ class TransportRecord
         $names  = "id, trtok, direction, state, trtype, start, ts";
         $values = "$id, '$trtok', '$direction', 'init', '$trtype', now(), now()";
         foreach($defaults as $k=>$v){
+            $sqlVal = $trec->_getSqlVal($k, $v);
             $names  .= ", $k";
-            $values .= ", ".$trec->_getSqlVal($k, $v);
+            $values .= ", $sqlVal";
         }
         $res = $r = $trec->dbc->query("
             INSERT INTO {$trec->transTable}
@@ -283,7 +284,7 @@ class TransportRecord
             case 'realsize':
             case 'expectedsize':
             case 'uid':
-                return "$fldVal";
+                return ("$fldVal"!='' ? "$fldVal" : "NULL");
                 break;
             case 'gunid':
             case 'pdtoken':
