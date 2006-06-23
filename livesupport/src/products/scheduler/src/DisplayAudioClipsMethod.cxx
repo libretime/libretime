@@ -113,11 +113,11 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
 
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds;
+    Ptr<StorageClientInterface::SearchResultsType>::Ref     searchResults;
     try {
-        audioClipIds = storage->getAudioClipIds();
+        searchResults = storage->getSearchResults();
     } catch (Core::XmlRpcException &e) {
-        std::string eMsg = "getAudioClipIds returned error:\n";
+        std::string eMsg = "getSearchResults returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+2, eMsg, returnValue);
         return;
@@ -125,15 +125,12 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref 
                               audioClips(new std::vector<Ptr<AudioClip>::Ref>);
-    std::vector<Ptr<UniqueId>::Ref>::const_iterator it = audioClipIds->begin();
-    while (it != audioClipIds->end()) {
-        try {
-            audioClips->push_back(storage->getAudioClip(sessionId, *it));
-        } catch (Core::XmlRpcException &e) {
-            std::string eMsg = "audio clip not found:\n";
-            eMsg += e.what();
-            XmlRpcTools::markError(errorId+3, eMsg, returnValue);
-            return;
+    StorageClientInterface::SearchResultsType::const_iterator
+                              it = searchResults->begin();
+    while (it != searchResults->end()) {
+        Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
+        if (audioClip) {
+            audioClips->push_back(audioClip);
         }
         ++it;
     }
