@@ -2763,7 +2763,7 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
     std::string     state = result[checkTransportStateParamName];
     if (state == "init") {
         return initState;
-    } else if (state == "pending") {
+    } else if (state == "pending" || state == "waiting") {
         return pendingState;
     } else if (state == "finished") {
         return finishedState;

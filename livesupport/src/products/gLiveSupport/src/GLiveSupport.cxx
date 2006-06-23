@@ -486,6 +486,8 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
                                                                     throw ()
 {
+    std::cerr << "gLiveSupport: " << *message;
+    
     Ptr<DialogWindow>::Ref  window(widgetFactory->createDialogWindow(
                                                                 message,
                                                                 getBundle()));
