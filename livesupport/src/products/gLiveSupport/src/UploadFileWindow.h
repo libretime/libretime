@@ -54,6 +54,7 @@
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/ScrolledWindow.h"
+#include "RestoreBackupWindow.h"
 #include "GuiWindow.h"
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
@@ -91,7 +92,7 @@ using namespace LiveSupport::Widgets;
  */
 class UploadFileWindow : public GuiWindow
 {
-    protected:
+    private:
         /**
          *  The layout used in the window.
          */
@@ -183,9 +184,18 @@ class UploadFileWindow : public GuiWindow
         Ptr<AudioClip>::Ref         audioClip;
 
         /**
+         *  The restore backup windows opened by this window.
+         */
+        std::vector<Ptr<RestoreBackupWindow>::Ref>
+                                    restoreBackupWindowList;
+
+        /**
          *  The possible file types.
          */
-        typedef enum { audioClipType, playlistArchiveType, invalidType }
+        typedef enum { audioClipType, 
+                       playlistArchiveType, 
+                       storageArchiveType, 
+                       invalidType }
                                     FileType;
 
         /**
@@ -234,6 +244,12 @@ class UploadFileWindow : public GuiWindow
          */
         void
         uploadPlaylistArchive(void)                         throw ();
+
+        /**
+         *  Upload a storage archive to the storage.
+         */
+        void
+        uploadStorageArchive(void)                          throw ();
 
         /**
          *  Determine the type of the given file.

@@ -44,6 +44,8 @@
 #include <audioproperties.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/FileTools.h"
+
 #include "UploadFileWindow.h"
 
 
@@ -322,6 +324,9 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         case playlistArchiveType:   statusBar->set_text("");
                                     break;
         
+        case storageArchiveType:    statusBar->set_text("");
+                                    break;
+        
         case invalidType:           statusBar->set_text(*getResourceUstring(
                                                     "unsupportedFileTypeMsg"));
                                     break;
@@ -409,6 +414,9 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         case playlistArchiveType:   uploadPlaylistArchive();
                                     break;
         
+        case storageArchiveType:    uploadStorageArchive();
+                                    break;
+        
         case invalidType:           break;
     }
 }
@@ -447,6 +455,7 @@ UploadFileWindow :: uploadAudioClip(void)                       throw ()
     clearEverything();
     statusBar->set_text(*formatMessage("fileUploadedMsg",
                                        *audioClip->getTitle() ));
+    hide();
 }
 
 
@@ -470,6 +479,37 @@ UploadFileWindow :: uploadPlaylistArchive(void)                 throw ()
     clearEverything();
     statusBar->set_text(*formatMessage("fileUploadedMsg",
                                        *playlist->getTitle() ));
+    hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Upload a storage archive to the storage.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: uploadStorageArchive(void)                  throw ()
+{
+    Ptr<const Glib::ustring>::Ref   path(new const Glib::ustring(
+                                                fileNameEntry->get_text() ));
+    
+    Ptr<ResourceBundle>::Ref        restoreBackupBundle;
+    try {
+        restoreBackupBundle = gLiveSupport->getBundle("restoreBackupWindow");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    Ptr<RestoreBackupWindow>::Ref   restoreBackupWindow(
+                                                new RestoreBackupWindow(
+                                                        gLiveSupport,
+                                                        restoreBackupBundle,
+                                                        path));
+    restoreBackupWindow->show();
+    restoreBackupWindowList.push_back(restoreBackupWindow);
+    
+    clearEverything();
+    hide();
 }
 
 
@@ -526,7 +566,14 @@ UploadFileWindow :: determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
         return audioClipType;
         
     } else if (extension == ".tar") {
-        return playlistArchiveType;
+        if (FileTools::existsInTarball(*fileName, "exportedPlaylist.lspl")) {
+            return playlistArchiveType;
+        } else if (FileTools::existsInTarball(
+                                       *fileName, "meta-inf/storage.xml")) {
+            return storageArchiveType;
+        } else {
+            return invalidType;
+        }
         
     } else {
         return invalidType;

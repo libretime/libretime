@@ -364,6 +364,15 @@ root:table
         
         cannotCancelTransportMsg:string { "Canceling failed: {0}." }
     }
+    
+    restoreBackupWindow:table
+    {
+        windowTitle:string          { "Restore Backup" }
+        errorMessage:string         { "Error: {0}" }
+        pendingMessage:string       { "Uploading backup file\n''{0}''.\n"
+                                      "Please wait..." }
+        finishedMessage:string      { "Upload finished." }
+    }
 
     metadataTypes:table
     {
