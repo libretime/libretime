@@ -2243,7 +2243,10 @@ class XR_LocStor extends LocStor{
      *     </li>
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
-     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)
+     *         default sorting by dc:title (+ primary sorting by filetype -
+     *         audioclips, playlists, webstreams ...)
+     *     </li>
      *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions : array of struct with fields:
      *       <ul>
@@ -3062,7 +3065,8 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> criteria: LS criteria format (see localSearch)</li>
+     *      <li> criteria : hash, LS criteria format - see searchMetadata method
+     *      </li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with the following fields:
@@ -3300,7 +3304,7 @@ class XR_LocStor extends LocStor{
      *  </ul>
      *
      *  On success, returns the same result as searchMetadata with filetype
-     *  'all' and no conditions,
+     *  'all' and no conditions, ordered by filetype and dc:title
      *  i.e. XML-RPC array of structs with fields:
      *   <ul>
      *       <li>cnt : integer - number of inserted files</li>

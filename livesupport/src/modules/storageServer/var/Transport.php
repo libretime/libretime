@@ -161,67 +161,6 @@ class Transport
             'expectedchsum', 'realchsum', 'title', 'errmsg'               
         ) as $k){
             $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
-/*  merged:
-    // DUMMY
-        switch($trtok){
-            case'123456789abcdeff';     // upload/download
-                return array(
-                    'state'         =>  'finished',
-                    'direction'     =>  'up',
-                    'trtype'        =>  'audioclip',
-                    'expectedsize'  =>  1024,
-                    'realsize'      =>  1024,
-                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'title'         =>  'DUMMY !',
-                    'errmsg'        =>  '',
-                );
-            case'123456789abcdef2';     // upload/download
-                return array(
-                    'state'         =>  'running',
-                    'direction'     =>  'down',
-                    'trtype'        =>  'playlist',
-                    'expectedsize'  =>  1624,
-                    'realsize'      =>  342,
-                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'title'         =>  'DUMMY playlist - 2',
-                    'errmsg'        =>  '',
-                );
-            case'123456789abcdef3';     // upload/download
-                return array(
-                    'state'         =>  'paused',
-                    'direction'     =>  'up',
-                    'trtype'        =>  'audioclip',
-                    'expectedsize'  =>  1024,
-                    'realsize'      =>  322,
-                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'title'         =>  'kakaoscsiga - 3',
-                    'errmsg'        =>  '',
-                );
-            case'123456789abcdef4';     // upload/download
-                return array(
-                    'state'         =>  'running',
-                    'direction'     =>  'up',
-                    'trtype'        =>  'playlist',
-                    'expectedsize'  =>  233,
-                    'realsize'      =>  23,
-                    'expectedchsum' =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'realchsum'     =>  '12dd9137a855cf600881dd6d3ffa7517',
-                    'title'         =>  'ez egy playlist - 4',
-                    'errmsg'        =>  '',
-                );
-            case'123456789abcdefe';     // search
-                return array(
-                    'state'         =>  'finished',
-                );
-            default:
-                return PEAR::raiseError(
-                    "Transport::getTransportInfo:".
-                    " invalid transport token ($trtok)"
-                );
-*/
         }
         return $res;
     }
@@ -252,6 +191,33 @@ class Transport
         return $state;
     }
 
+    /**
+     *  Pause, resume or cancel transport
+     *
+     *  @param trtok: string - transport token
+     *  @param action: string - pause | resume | cancel
+     *  @return string - resulting transport state
+     */
+    function doTransportAction($trtok, $action)
+    {
+        $trec = $r = TransportRecord::recall($this, $trtok);
+        if(PEAR::isError($r)){ return $r; }
+        switch($action){
+            case'pause';
+                $newState = 'paused';
+                break;
+            case'resume';
+                $newState = 'waiting';
+                break;
+            case'cancel';
+                $newState = 'closed';
+                break;
+            default:
+        }
+        $res = $trec->setState($newState);
+        return $res;
+    }
+    
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
@@ -722,6 +688,7 @@ class Transport
             case'closed':   // excluded in SQL query too, but let check it here
             case'failed':   // -"-
             case'pending':
+            case'paused':
                 return TRUE;
                 break;
             case'waiting':
@@ -1282,7 +1249,8 @@ class Transport
                 fname, localfile, expectedsum, expectedsize, url,
                 uid, target
             FROM {$this->transTable}
-            WHERE $dirCond $targetCond $trtokCond state not in ('closed', 'failed')
+            WHERE $dirCond $targetCond $trtokCond
+                    state not in ('closed', 'failed', 'paused')
             ORDER BY start DESC
         ");
         if(PEAR::isError($rows)){ return $rows; }

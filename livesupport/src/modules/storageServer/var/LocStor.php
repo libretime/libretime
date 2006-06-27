@@ -304,7 +304,10 @@ class LocStor extends BasicStor{
      *     </li>
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
-     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)
+     *         default sorting by dc:title (+ primary sorting by filetype -
+     *         audioclips, playlists, webstreams ...)
+     *     </li>
      *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>

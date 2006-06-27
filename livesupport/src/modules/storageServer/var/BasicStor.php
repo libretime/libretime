@@ -834,7 +834,10 @@ class BasicStor extends Alib{
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
      *     </li>
-     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)
+     *         default sorting by dc:title (+ primary sorting by filetype -
+     *         audioclips, playlists, webstreams ...)
+     *     </li>
      *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
