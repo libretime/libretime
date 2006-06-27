@@ -118,7 +118,6 @@ RestoreBackupWindow :: RestoreBackupWindow (
     
     // set name, size, etc. and show the widgets (not the window itself yet)
     set_name("restoreBackupWindow");
-    set_default_size(150, 50);
     show_all_children();
 }
 

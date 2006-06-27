@@ -2544,6 +2544,12 @@ WebStorageClient :: restoreBackupCheck(
 
     execute(restoreBackupCheckMethodName, parameters, result);
     
+// <<<
+// TODO: remove this hack after bug #1708 has been fixed
+XmlRpcValue oldResult = result;
+result.clear();
+result = oldResult["status"];
+// >>>
     checkStruct(restoreBackupCheckMethodName,
                 result,
                 restoreBackupStatusParamName,

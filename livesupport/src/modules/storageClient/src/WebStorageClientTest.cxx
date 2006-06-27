@@ -285,7 +285,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref 
                             searchResults = wsc->getSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 7);
-    Ptr<AudioClip>::Ref     audioClip = searchResults->at(6)->getAudioClip();
+    Ptr<AudioClip>::Ref     audioClip = searchResults->at(4)->getAudioClip();
     CPPUNIT_ASSERT(audioClip);
 
     Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,0,0));    
@@ -662,7 +662,7 @@ WebStorageClientTest :: searchTest(void)
         CPPUNIT_ASSERT(numberFound == 1);
         searchResults = wsc->getSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 1);
-        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip3->getId());
+        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip1->getId());
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -698,7 +698,7 @@ WebStorageClientTest :: searchTest(void)
         CPPUNIT_ASSERT(numberFound == 1);
         searchResults = wsc->getSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 1);
-        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip4->getId());
+        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip0->getId());
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -715,7 +715,7 @@ WebStorageClientTest :: searchTest(void)
         searchResults = wsc->getSearchResults();
         CPPUNIT_ASSERT(searchResults->size() >= 5);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *playlist0->getId());
-        CPPUNIT_ASSERT(*searchResults->at(3)->getId() == *audioClip4->getId());
+        CPPUNIT_ASSERT(*searchResults->at(3)->getId() == *audioClip0->getId());
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -733,8 +733,8 @@ WebStorageClientTest :: searchTest(void)
         CPPUNIT_ASSERT(numberFound >= 5);
         searchResults = wsc->getSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 2);
-        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip3->getId());
-        CPPUNIT_ASSERT(*searchResults->at(1)->getId() == *audioClip4->getId());
+        CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip4->getId());
+        CPPUNIT_ASSERT(*searchResults->at(1)->getId() == *audioClip5->getId());
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -812,21 +812,21 @@ WebStorageClientTest :: getAllTest(void)
     Ptr<Playlist>::Ref  playlist = playlists->at(0);
     CPPUNIT_ASSERT(playlist);
     CPPUNIT_ASSERT(playlist->getId());
-    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 3);
     
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref 
                 audioClips = wsc->getAllAudioClips(sessionId);
     CPPUNIT_ASSERT(audioClips);
     CPPUNIT_ASSERT(audioClips->size() >= 5);
     
-    audioClips = wsc->getAllAudioClips(sessionId, 2, 1);
+    audioClips = wsc->getAllAudioClips(sessionId, 2, 4);
     CPPUNIT_ASSERT(audioClips);
     CPPUNIT_ASSERT(audioClips->size() == 2);
 
     Ptr<AudioClip>::Ref audioClip = audioClips->at(0);
     CPPUNIT_ASSERT(audioClip);
     CPPUNIT_ASSERT(audioClip->getId());
-    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10003);
 
     try{
         authentication->logout(sessionId);
@@ -901,15 +901,15 @@ WebStorageClientTest :: restoreBackupTest(void)
     );
     CPPUNIT_ASSERT(sessionId);
     
-    Ptr<UniqueId>::Ref      oldAudioClipId(new UniqueId("0000000000010001"));
+    Ptr<UniqueId>::Ref          audioClipId(new UniqueId("7c215b48a9c827e6"));
     CPPUNIT_ASSERT(
-        wsc->existsAudioClip(sessionId, oldAudioClipId)
+        !wsc->existsAudioClip(sessionId, audioClipId)
     );
     
     Ptr<Glib::ustring>::Ref     path(new Glib::ustring());
     char *                      currentDirName = get_current_dir_name();
     path->append(currentDirName);
-    path->append("var/cowbell_backup.tar");
+    path->append("/var/cowbell_backup.tar");
     free(currentDirName);
     
     Ptr<Glib::ustring>::Ref     token;
@@ -940,12 +940,7 @@ WebStorageClientTest :: restoreBackupTest(void)
     );
     
     CPPUNIT_ASSERT(
-        !wsc->existsAudioClip(sessionId, oldAudioClipId)
-    );
-    
-    Ptr<UniqueId>::Ref      newAudioClipId(new UniqueId("7c215b48a9c827e6"));
-    CPPUNIT_ASSERT(
-        wsc->existsAudioClip(sessionId, newAudioClipId)
+        wsc->existsAudioClip(sessionId, audioClipId)
     );
     
     CPPUNIT_ASSERT_NO_THROW(
@@ -1045,26 +1040,8 @@ WebStorageClientTest :: importPlaylistTest(void)
     
     exportPlaylistHelper(playlistId, StorageClientInterface::internalFormat);
     
-    // importing a playlist already in the storage: error
     Ptr<Glib::ustring>::Ref     path(new Glib::ustring(
                                             "tmp/testExportedPlaylist.tar"));
-    CPPUNIT_ASSERT_THROW(
-        wsc->importPlaylist(sessionId, path),
-        XmlRpcMethodFaultException
-    );
-    
-    // deleting the playlist from the storage...
-    CPPUNIT_ASSERT_NO_THROW(
-        wsc->reset()
-    );
-    
-    sessionId.reset();
-    CPPUNIT_ASSERT_NO_THROW(
-        sessionId = authentication->login("root", "q")
-    );
-    CPPUNIT_ASSERT(sessionId);
-    
-    // ... and then importing it: this should be OK
     CPPUNIT_ASSERT_NO_THROW(
         wsc->importPlaylist(sessionId, path)
     );
