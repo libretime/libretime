@@ -311,8 +311,8 @@ class AudioClip : public Configurable,
          *                                              //   storage client
          *  </code></pre>
          *
-         *  @see Storage::StorageClientFactory
-         *  @see Storage::StorageClientInterface
+         *  @see StorageClient::StorageClientFactory
+         *  @see StorageClient::StorageClientInterface
          *
          *  @param playlength the playing length of the audio clip.
          *  @param title      the title of the audio clip.

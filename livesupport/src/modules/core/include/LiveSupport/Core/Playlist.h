@@ -353,8 +353,8 @@ class Playlist : public Configurable,
          *          playlist = storageClient->createPlaylist(sessionId);
          *  </code></pre>
          *
-         *  @see Storage::StorageClientFactory
-         *  @see Storage::StorageClientInterface
+         *  @see StorageClient::StorageClientFactory
+         *  @see StorageClient::StorageClientInterface
          */
         Playlist(void)                          throw ()
                         : Playable(PlaylistType)

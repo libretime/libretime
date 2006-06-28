@@ -119,7 +119,7 @@ class AdvancedSearchEntry : public Gtk::VBox,
         /**
          *  Return the current state of the search fields.
          *
-         *  @return a new LiveSupport::Storage::SearchCriteria instance,
+         *  @return a new LiveSupport::StorageClient::SearchCriteria instance,
          *          which contains the data entered by the user
          */
         Ptr<SearchCriteria>::Ref

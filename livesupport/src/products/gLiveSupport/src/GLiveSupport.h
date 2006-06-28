@@ -935,7 +935,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *
          *  @param criteria the search conditions to use.
          *  @return the list of audio clips and playlists found.
-         *  @exception XmlRpcException passed on from Storage::search()
+         *  @exception XmlRpcException thrown by 
+         *                             StorageClientInterface::search()
          */
         Ptr<PlayableList>::Ref
         search(Ptr<SearchCriteria>::Ref     criteria)
@@ -957,7 +958,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param metadata the type of metadata to list (e.g., "dc:title").
          *  @param criteria the search conditions to use.
          *  @return the list of metadata values found.
-         *  @exception XmlRpcException passed on from Storage::browse()
+         *  @exception XmlRpcException thrown by
+         *                             StorageClientInterface::browse()
          */
         Ptr<std::vector<Glib::ustring> >::Ref
         browse(Ptr<const Glib::ustring>::Ref        metadata,

@@ -206,7 +206,7 @@ class BrowseItem : public Gtk::VBox,
          *  with the search condition showing the current selection added
          *  (if any).
          *
-         *  @return a new LiveSupport::Storage::SearchCriteria instance,
+         *  @return a new LiveSupport::StorageClient::SearchCriteria instance,
          *          which contains the data entered by the user
          */
         Ptr<SearchCriteria>::Ref
