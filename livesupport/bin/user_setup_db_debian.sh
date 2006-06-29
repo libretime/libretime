@@ -167,7 +167,7 @@ su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
 #-------------------------------------------------------------------------------
 echo "Creating ODBC data source and driver...";
 
-odbcinst_template=$products_dir/scheduler/etc/odbcinst_template
+odbcinst_template=$products_dir/scheduler/etc/odbcinst_debian_template
 odbc_template=$products_dir/scheduler/etc/odbc_template
 odbc_template_tmp=/tmp/odbc_template.$$
 
