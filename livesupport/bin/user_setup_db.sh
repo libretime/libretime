@@ -104,6 +104,17 @@ echo ""
 
 
 #-------------------------------------------------------------------------------
+#   The details of installation
+#-------------------------------------------------------------------------------
+postgres_user=postgres
+
+ls_database=LiveSupport-$user
+ls_dbuser=test
+ls_dbpassword=test
+ls_dbserver=localhost
+
+
+#-------------------------------------------------------------------------------
 #  Function to check for the existence of an executable on the PATH
 #
 #  @param $1 the name of the exectuable
@@ -143,8 +154,6 @@ check_exe "odbcinst" || exit 1;
 #-------------------------------------------------------------------------------
 echo "Creating database and database user...";
 
-postgres_user=postgres
-
 # FIXME: the below might not work for remote databases
 
 su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
@@ -170,6 +179,9 @@ echo "Creating ODBC data source and driver...";
 odbcinst_template=$products_dir/scheduler/etc/odbcinst_template
 odbc_template=$products_dir/scheduler/etc/odbc_template
 odbc_template_tmp=/tmp/odbc_template.$$
+
+replace_sed_string="s/ls_database/$ls_database/; \
+                    s/ls_dbserver/$ls_dbserver/;"
 
 # check for an existing PostgreSQL ODBC driver, and only install if necessary
 odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
