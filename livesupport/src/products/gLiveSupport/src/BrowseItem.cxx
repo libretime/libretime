@@ -147,13 +147,20 @@ BrowseItem :: onShow(void)                                          throw ()
 {
     Ptr<const Glib::ustring>::Ref   metadataKey = metadataEntry->getActiveKey();
     
+    Ptr<std::vector<Glib::ustring> >::Ref   values;
+    try {
+        values = gLiveSupport->browse(metadataKey, parentCriteria);
+    } catch (XmlRpcException &e) {
+        std::cerr << "Error in BrowseItem::onShow(): " 
+                  << e.what() << std::endl;
+        return;
+    }
+    
     treeModel->clear();
     Gtk::TreeModel::Row     row = *treeModel->append();
     row[modelColumns.column]                = allString;
     metadataValues->get_selection()->select(*row);
 
-    Ptr<std::vector<Glib::ustring> >::Ref
-            values = gLiveSupport->browse(metadataKey, parentCriteria);
     std::vector<Glib::ustring>::const_iterator valuesIt;
     for (valuesIt = values->begin(); valuesIt != values->end(); ++valuesIt) {
         row = *treeModel->append();
