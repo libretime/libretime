@@ -355,7 +355,7 @@ class BasicStor extends Alib{
         $parent='0', $owner=NULL)
     {
         if(!is_null($gunid)){
-            $gunid = StoredFile::_normalizeGunid($acc['gunid']);
+            $gunid = StoredFile::_normalizeGunid($gunid);
         }
         foreach(array('ext', 'type') as $v) $$v = addslashes($$v);
         $token  = StoredFile::_createGunid();
@@ -531,7 +531,7 @@ class BasicStor extends Alib{
     function bsOpenPut($chsum, $gunid, $owner=NULL)
     {
         if(!is_null($gunid)){
-            $gunid = StoredFile::_normalizeGunid($acc['gunid']);
+            $gunid = StoredFile::_normalizeGunid($gunid);
         }
         foreach(array('chsum') as $v) $$v = addslashes($$v);
         $ext    = '';
