@@ -69,7 +69,8 @@ class UniqueId
     public:
         /**
          *  The type for the numeric value the unique id is represented in.
-         *  This is set to 'long long int', i.e., 32-bit signed integers.
+         *  This is set to 'long long int', i.e., 64-bit signed integers.
+         *  TODO: change this into something not quite as non-portable.
          */
         typedef long long int   IdType;
 
