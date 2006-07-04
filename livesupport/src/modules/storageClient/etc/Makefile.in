@@ -114,7 +114,6 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
-					 -l${BOOST_DATE_TIME_LIB} \
                      ${LIBXMLPP_LIBS} \
                      ${ICU_LIBS} \
                      ${CURL_LIBS} \
