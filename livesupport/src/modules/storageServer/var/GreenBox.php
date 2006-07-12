@@ -1423,6 +1423,26 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *   Get user id from session id
+     *
+     *	 This redefinition only simulate old (bad) behaviour - returns NULL
+     *	 for wrong sessid (code ALIBERR_NOTEXISTS).
+     *   HtmlUI depends on it.
+     *
+     *   @param sessid string
+     *   @return int/error
+     */
+    function getSessUserId($sessid)
+    {
+        $r = parent::getSessUserId($sessid);
+        if(PEAR::isError($r)){
+            if($r->getCode()==ALIBERR_NOTEXISTS) return NULL;
+            else return $r;
+        }
+        return $r;
+    }
+
+    /**
      *   Change user password.
      *
      *   ('superuser mode'= superuser is changing some password without
