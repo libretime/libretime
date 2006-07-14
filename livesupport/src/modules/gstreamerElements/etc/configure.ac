@@ -60,6 +60,12 @@ export PKG_CONFIG_PATH
 
 export PATH=${prefix}/bin:${PATH}
 
+AX_BOOST_DATE_TIME()
+if test "$BOOST_DATE_TIME_LIB" = "" ; then
+    BOOST_DATE_TIME_LIB=boost_date_time-gcc
+    AC_SUBST(BOOST_DATE_TIME_LIB)
+fi
+AC_MSG_RESULT([checking BOOST_DATE_TIME_LIB... ${BOOST_DATE_TIME_LIB}])
 
 PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
 AC_SUBST(GSTREAMER_CFLAGS)

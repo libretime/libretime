@@ -71,7 +71,7 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
-GENRB     = ${USR_BIN_DIR}/genrb
+GENRB     = @GENRB@
 GENRBOPTS = --destdir ${TMP_DIR} \
             --encoding utf-8 \
             --package-name ${PACKAGE_NAME} \
@@ -84,9 +84,9 @@ BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-# TODO: move ICU flag determination to configure script
-ICU_CFLAGS=
-ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
+ICU_CFLAGS=@ICU_CFLAGS@
+ICU_CXXFLAGS=@ICU_CXXFLAGS@
+ICU_LIBS=@ICU_LIBS@
 
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@

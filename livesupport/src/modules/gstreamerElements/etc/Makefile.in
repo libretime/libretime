@@ -74,6 +74,8 @@ CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
 VPATH    = ${SRC_DIR}
 
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 GST_REGISTER=@GST_REGISTER@
@@ -157,6 +159,7 @@ DONT_TEST=         ${TMP_DIR}/AutoplugTest.o \
 				   ${TMP_DIR}/MinimalAudioSmilTest.o 
 
 TEST_RUNNER_LIBS = -l${GSTREAMER_ELEMENTS_LIB} -l${CORE_LIB} \
+                   -l${BOOST_DATE_TIME_LIB} \
                    -lcppunit -ldl -lxmlrpc++
 
 PLAY_OBJS = ${TMP_DIR}/play.o
