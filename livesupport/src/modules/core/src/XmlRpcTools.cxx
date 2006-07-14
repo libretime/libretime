@@ -1067,6 +1067,25 @@ XmlRpcTools :: pathToXmlRpcValue(
 
 
 /*------------------------------------------------------------------------------
+ *  Extract a fault string from the XML-RPC parameters.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+XmlRpcTools :: extractFaultString(XmlRpc::XmlRpcValue &     xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(faultStringName)
+        || xmlRpcValue[faultStringName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad faultString argument");
+    }
+    
+    Ptr<Glib::ustring>::Ref     faultString(new Glib::ustring(
+                                                xmlRpcValue[faultStringName] ));
+    return faultString;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Convert a fault string to an XmlRpcValue.
  *----------------------------------------------------------------------------*/
 void

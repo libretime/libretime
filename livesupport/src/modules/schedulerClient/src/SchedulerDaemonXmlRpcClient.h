@@ -252,6 +252,67 @@ class SchedulerDaemonXmlRpcClient :
         removeFromSchedule(Ptr<SessionId>::Ref  sessionId,
                            Ptr<UniqueId>::Ref   scheduleEntryId)
                                                     throw (XmlRpcException);
+
+        /**
+         *  Start the schedule backup creation process.
+         *  This will produce a combined backup, including a storage portion.
+         *  The scheduler daemon first calls the storage server, and gets
+         *  a storage backup archive file from it; then it adds the schedule
+         *  backup to this archive file.
+         *
+         *  @param  sessionId   a valid, authenticated session id.
+         *  @param  criteria    the search criteria for the storage portion
+         *                      of the backup.
+         *  @param  fromTime    entries are included in the schedule backup
+         *                      starting from this time.
+         *  @param  toTime      entries are included in the schedule backup
+         *                      up to but not including this time.
+         *  @return a token which can be used to query the backup process.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        createBackupOpen(Ptr<SessionId>::Ref            sessionId,
+                         Ptr<SearchCriteria>::Ref       criteria,
+                         Ptr<ptime>::Ref                fromTime,
+                         Ptr<ptime>::Ref                toTime) const
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Check on the progress of the schedule backup creation process.
+         *
+         *  @param  token       the token obtained from createBackupOpen().
+         *  @param  url     return parameter;
+         *                      if a finishedState is returned, it contains the
+         *                      URL of the created backup file.
+         *  @param  path    return parameter;
+         *                      if a finishedState is returned, it contains the
+         *                      local access path of the created backup file.
+         *  @param  errorMessage    return parameter;
+         *                      if a failedState is returned, it contains the
+         *                      fault string.
+         *  @return the state of the backup process: one of pendingState,
+         *                      finishedState, or failedState.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual AsyncState
+        createBackupCheck(const Glib::ustring &             token,
+                          Ptr<const Glib::ustring>::Ref &   url,
+                          Ptr<const Glib::ustring>::Ref &   path,
+                          Ptr<const Glib::ustring>::Ref &   errorMessage) const
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Close the schedule backup creation process.
+         *
+         *  @param  token       the token obtained from createBackupOpen().
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual void
+        createBackupClose(const Glib::ustring &         token) const
+                                                    throw (XmlRpcException);
 };
 
 

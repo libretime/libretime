@@ -682,6 +682,18 @@ class XmlRpcTools
                                                                     throw ();
 
         /**
+         *  Extract a fault string from the XML-RPC parameters.
+         *
+         *  @param  xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a fault string that was found in the XML-RPC parameter.
+         *  @exception  std::invalid_argument   if there was no "faultString"
+         *                                      member in xmlRpcValue.
+         */
+        static Ptr<Glib::ustring>::Ref
+        extractFaultString(XmlRpc::XmlRpcValue &    xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Convert a fault string to an XmlRpcValue.
          *
          *  @param  path        the fault string to convert.

@@ -366,3 +366,154 @@ SchedulerDaemonXmlRpcClient :: removeFromSchedule(
     xmlRpcClient.close();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Start the schedule backup creation process.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+SchedulerDaemonXmlRpcClient :: createBackupOpen(
+                                    Ptr<SessionId>::Ref         sessionId,
+                                    Ptr<SearchCriteria>::Ref    criteria,
+                                    Ptr<ptime>::Ref             fromTime,
+                                    Ptr<ptime>::Ref             toTime) const
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::searchCriteriaToXmlRpcValue(criteria, xmlRpcParams);
+    XmlRpcTools::fromTimeToXmlRpcValue(fromTime, xmlRpcParams);
+    XmlRpcTools::toTimeToXmlRpcValue(toTime, xmlRpcParams);
+
+    if (!xmlRpcClient.execute("createBackupOpen", 
+                              xmlRpcParams, 
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                        "cannot execute XML-RPC method 'createBackupOpen'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'createBackupOpen' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<Glib::ustring>::Ref     token;
+    try {
+        token = XmlRpcTools::extractToken(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcMethodResponseException(e);
+    }
+
+    return token;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check on the progress of the schedule backup creation process.
+ *----------------------------------------------------------------------------*/
+AsyncState
+SchedulerDaemonXmlRpcClient :: createBackupCheck(
+                        const Glib::ustring &             token,
+                        Ptr<const Glib::ustring>::Ref &   url,
+                        Ptr<const Glib::ustring>::Ref &   path,
+                        Ptr<const Glib::ustring>::Ref &   errorMessage) const
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    Ptr<const Glib::ustring>::Ref   tokenPtr(new const Glib::ustring(token));
+    XmlRpcTools::tokenToXmlRpcValue(tokenPtr, xmlRpcParams);
+
+    if (!xmlRpcClient.execute("createBackupCheck",
+                              xmlRpcParams, 
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                        "cannot execute XML-RPC method 'createBackupCheck'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'createBackupCheck' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    AsyncState      state;
+    try {
+        state = XmlRpcTools::extractBackupStatus(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcMethodResponseException(e);
+    }
+    
+    if (state == AsyncState::finishedState) {
+        try {
+            url  = XmlRpcTools::extractUrl(xmlRpcResult);
+            path = XmlRpcTools::extractPath(xmlRpcResult);
+        } catch (std::invalid_argument &e) {
+            throw Core::XmlRpcMethodResponseException(e);
+        }
+    } else if (state == AsyncState::failedState) {
+        try {
+            errorMessage = XmlRpcTools::extractFaultString(xmlRpcResult);
+        } catch (std::invalid_argument &e) {
+            throw Core::XmlRpcMethodResponseException(e);
+        }
+    }
+    
+    return state;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClient :: createBackupClose(
+                                    const Glib::ustring &       token) const
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+    
+    Ptr<const Glib::ustring>::Ref   tokenPtr(new const Glib::ustring(token));
+    XmlRpcTools::tokenToXmlRpcValue(tokenPtr, xmlRpcParams);
+
+    if (!xmlRpcClient.execute("createBackupClose",
+                              xmlRpcParams, 
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                        "cannot execute XML-RPC method 'createBackupClose'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'createBackupClose' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+}

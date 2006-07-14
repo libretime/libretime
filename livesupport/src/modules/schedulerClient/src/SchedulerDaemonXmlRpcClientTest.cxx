@@ -332,3 +332,53 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
     CPPUNIT_ASSERT(gotException);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test the create backup functions.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: createBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    criteria->setLimit(10);
+    Ptr<ptime>::Ref from(new ptime(time_from_string("2004-07-23 10:00:00")));
+    Ptr<ptime>::Ref to(new ptime(time_from_string("2004-07-23 11:00:00")));
+
+    Ptr<Glib::ustring>::Ref     token;
+    CPPUNIT_ASSERT_NO_THROW(
+        token = schedulerClient->createBackupOpen(sessionId, 
+                                                  criteria, 
+                                                  from, 
+                                                  to);
+    );
+    CPPUNIT_ASSERT(token);
+
+    Ptr<const Glib::ustring>::Ref       url;
+    Ptr<const Glib::ustring>::Ref       path;
+    Ptr<const Glib::ustring>::Ref       errorMessage;
+    AsyncState                          status;
+    int     iterations = 20;
+    do {
+        std::cerr << "-/|\\"[iterations%4] << '\b';
+        sleep(1);
+        CPPUNIT_ASSERT_NO_THROW(
+            status = schedulerClient->createBackupCheck(*token, 
+                                                        url, 
+                                                        path, 
+                                                        errorMessage);
+        );
+        CPPUNIT_ASSERT(status == AsyncState::pendingState
+                         || status == AsyncState::finishedState
+                         || status == AsyncState::failedState);
+    } while (--iterations && status == AsyncState::pendingState);
+    
+    CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, status);
+    // TODO: test accessibility of the URL?
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        schedulerClient->createBackupClose(*token);
+    );
+    // TODO: test existence of schedule backup in tarball
+}
+

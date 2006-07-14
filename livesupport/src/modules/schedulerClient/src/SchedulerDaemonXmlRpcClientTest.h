@@ -75,6 +75,7 @@ class SchedulerDaemonXmlRpcClientTest : public BaseTestMethod
     CPPUNIT_TEST(displayScheduleEmptyTest);
     CPPUNIT_TEST(playlistMgmtTest);
     CPPUNIT_TEST(xmlRpcErrorTest);
+    CPPUNIT_TEST(createBackupTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -131,6 +132,14 @@ class SchedulerDaemonXmlRpcClientTest : public BaseTestMethod
          */
         void
         xmlRpcErrorTest(void)                   throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the create backup functions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:
