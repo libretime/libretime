@@ -1461,24 +1461,24 @@ class Transport
             start timestamp,          -- starttime
             ts timestamp              -- mtime
         )");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->createSequence("{$this->transTable}_id_seq");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_id_idx
             ON {$this->transTable} (id)");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_trtok_idx
             ON {$this->transTable} (trtok)");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_token_idx
             ON {$this->transTable} (pdtoken)");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->query("CREATE INDEX {$this->transTable}_gunid_idx
             ON {$this->transTable} (gunid)");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
         $r = $this->dbc->query("CREATE INDEX {$this->transTable}_state_idx
             ON {$this->transTable} (state)");
-        if(PEAR::isError($r)){ echo "{$r->getMessage()} {$r->getUserInfo()}"; }
+        if(PEAR::isError($r)){ echo $r->getMessage()." ".$r->getUserInfo(); }
     }
 
     /**
