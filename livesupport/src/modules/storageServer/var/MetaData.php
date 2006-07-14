@@ -438,7 +438,13 @@ class MetaData{
      */
     function regenerateXmlFile()
     {
-        $r = $this->setMetadataValue('ls:mtime', date('c'));
+        $atime = date('c');
+        // php4 fix:
+        if($atime=='c'){
+          $tz=preg_replace("|00$|",":00",trim(`date +%z`));
+          $atime=trim(`date +%Y-%m-%dT%H:%M:%S`).$tz;
+        }
+        $r = $this->setMetadataValue('ls:mtime', $atime);
         if(PEAR::isError($r)) return $r;
         $fn = $this->fname;
         $xml = $this->genXMLDoc();
