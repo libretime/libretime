@@ -47,6 +47,7 @@
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/XmlRpcException.h"
 #include "LiveSupport/Core/SearchCriteria.h"
+#include "LiveSupport/Core/AsyncState.h"
 
 
 namespace LiveSupport {
@@ -78,18 +79,6 @@ class StorageClientInterface
         ~StorageClientInterface(void)           throw ()
         {
         }
-
-        /**
-         *  The possible states of an asynchronous process.
-         *  This is used by the asynchronous (groups of) methods:
-         *  remoteSearch, createBackup, restoreBackup,
-         *  uploadToHub, downloadFromHub.
-         */
-        typedef enum {  initState,
-                        pendingState,
-                        finishedState,
-                        closedState,
-                        failedState }       AsyncState;
 
         /**
          *  Return the version string from the storage.

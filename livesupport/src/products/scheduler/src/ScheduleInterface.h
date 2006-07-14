@@ -76,6 +76,12 @@ class ScheduleInterface : virtual public Installable
 {
     public:
         /**
+         *  A vector of ScheduleEntry objects.
+         */
+        typedef std::vector<Ptr<ScheduleEntry>::Ref>    ScheduleEntryList;
+
+
+        /**
          *  Check if a timeframe is available for scheduling.
          *
          *  @param from the start time of the timeframe.
@@ -111,11 +117,44 @@ class ScheduleInterface : virtual public Installable
          *  @param toTime to end of the time of the interval queried
          *  @return a vector of the scheduled entries for the time region.
          */
-        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        virtual Ptr<ScheduleEntryList>::Ref
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
                                                             throw ()
                                                                     = 0;
+
+        /**
+         *  Export schedule entries to a DOM tree.
+         *
+         *  @param element a new DOM element will be added as a child to
+         *         this element, which will contain the export.
+         *  @param fromTime entries are included in the export starting
+         *         from this time.
+         *  @param toTime entries as included in the export up to
+         *         but not including this time.
+         *  @return a DOM element, which is the export.
+         *          it is the responsibility of the caller to free up the
+         *          returned element.
+         *  @see #importScheduleEntries
+         */
+        virtual void
+        exportScheduleEntries(xmlpp::Element      * element,
+                              Ptr<ptime>::Ref       fromTime,
+                              Ptr<ptime>::Ref       toTime)
+                                                            throw ()  = 0;
+
+        /**
+         *  Import schedule entries from a DOM tree.
+         *
+         *  @param domTree the DOM tree containing schedule entries, to import.
+         *  @exception std::invalid_argument if the supplied DOM tree
+         *             is not valid.
+         *  @see #exportScheduleEntries
+         */
+        virtual void
+        importScheduleEntries(xmlpp::Element      * domTree)
+                                                throw (std::invalid_argument)
+                                                                        = 0;
 
         /**
          *  Return the schedule entry that is being played at the moment.

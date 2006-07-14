@@ -59,6 +59,7 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
 #include "PlayLogFactory.h"
+#include "BackupFactory.h"
 #include "PlaylistEventContainer.h"
 
 #include "SchedulerDaemon.h"
@@ -66,6 +67,7 @@
 using namespace boost::posix_time;
 
 using namespace LiveSupport;
+using namespace LiveSupport::Core;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::StorageClient;
 using namespace LiveSupport::Scheduler;
@@ -80,31 +82,34 @@ using namespace LiveSupport::Scheduler;
  */
 Ptr<SchedulerDaemon>::Ref   SchedulerDaemon::schedulerDaemon;
 
+namespace {
+
 /**
  *  The name of the XML configuration element for the Scheduler daemon.
  */
-static const std::string confElement = "scheduler";
+const std::string confElement = "scheduler";
 
 /**
  *  The name of the XML configuration element for the XmlRpcDaemon inside.
  */
-static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
+const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 
 /**
  *  The name of the config child element for the login and password
  */
-static const std::string    userConfigElementName = "user";
+const std::string    userConfigElementName = "user";
 
 /**
  *  The name of the config element attribute for the login
  */
-static const std::string    userLoginAttrName = "login";
+const std::string    userLoginAttrName = "login";
 
 /**
  *  The name of the config element attribute for the password
  */
-static const std::string    userPasswordAttrName = "password";
+const std::string    userPasswordAttrName = "password";
 
+}
 
 /* ===============================================  local function prototypes */
 
@@ -117,29 +122,19 @@ static const std::string    userPasswordAttrName = "password";
 SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
                         : XmlRpcDaemon()
 {
-    addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
-    createPlaylistMethod.reset(new CreatePlaylistMethod());
-    displayAudioClipMethod.reset(new DisplayAudioClipMethod());
-    displayAudioClipsMethod.reset(new DisplayAudioClipsMethod());
-    displayPlaylistMethod.reset(new DisplayPlaylistMethod());
-    displayPlaylistsMethod.reset(new DisplayPlaylistsMethod());
     displayScheduleMethod.reset(new DisplayScheduleMethod());
     generatePlayReportMethod.reset(new GeneratePlayReportMethod());
     getSchedulerTimeMethod.reset(new GetSchedulerTimeMethod());
     getVersionMethod.reset(new GetVersionMethod());
-    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
-    removeAudioClipFromPlaylistMethod.reset(new 
-                                        RemoveAudioClipFromPlaylistMethod());
     removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
     rescheduleMethod.reset(new RescheduleMethod());
-    revertEditedPlaylistMethod.reset(new RevertEditedPlaylistMethod());
-    savePlaylistMethod.reset(new SavePlaylistMethod());
-    updateFadeInFadeOutMethod.reset(new UpdateFadeInFadeOutMethod());
     uploadPlaylistMethod.reset(new UploadPlaylistMethod());
-    validatePlaylistMethod.reset(new ValidatePlaylistMethod());
     loginMethod.reset(new LoginMethod());
     logoutMethod.reset(new LogoutMethod());
     resetStorageMethod.reset(new ResetStorageMethod());
+    createBackupOpenMethod.reset(new CreateBackupOpenMethod());
+    createBackupCheckMethod.reset(new CreateBackupCheckMethod());
+    createBackupCloseMethod.reset(new CreateBackupCloseMethod());
 }
 
 
@@ -243,6 +238,14 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     Ptr<PlayLogFactory>::Ref   plf = PlayLogFactory::getInstance();
     plf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
+    // configure the BackupFactory
+    nodes = element.get_children(BackupFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no backupFactory element");
+    }
+    Ptr<BackupFactory>::Ref     bf = BackupFactory::getInstance();
+    bf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
     // configure the XmlRpcDaemon
     nodes = element.get_children(XmlRpcDaemon::getConfigElementName());
     if (nodes.size() < 1) {
@@ -255,8 +258,8 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     connectionManager = cmf->getConnectionManager();
     storage           = scf->getStorageClient();
     audioPlayer       = apf->getAudioPlayer();
-    playLog           = plf->getPlayLog();
     schedule          = sf->getSchedule();
+    playLog           = plf->getPlayLog();
 }
 
 
@@ -279,28 +282,19 @@ SchedulerDaemon :: registerXmlRpcFunctions(
                             Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
                                                     throw (std::logic_error)
 {
-    xmlRpcServer->addMethod(addAudioClipToPlaylistMethod.get());
-    xmlRpcServer->addMethod(createPlaylistMethod.get());
-    xmlRpcServer->addMethod(displayAudioClipMethod.get());
-    xmlRpcServer->addMethod(displayAudioClipsMethod.get());
-    xmlRpcServer->addMethod(displayPlaylistMethod.get());
-    xmlRpcServer->addMethod(displayPlaylistsMethod.get());
     xmlRpcServer->addMethod(displayScheduleMethod.get());
     xmlRpcServer->addMethod(generatePlayReportMethod.get());
     xmlRpcServer->addMethod(getSchedulerTimeMethod.get());
     xmlRpcServer->addMethod(getVersionMethod.get());
-    xmlRpcServer->addMethod(openPlaylistForEditingMethod.get());
-    xmlRpcServer->addMethod(removeAudioClipFromPlaylistMethod.get());
     xmlRpcServer->addMethod(removeFromScheduleMethod.get());
     xmlRpcServer->addMethod(rescheduleMethod.get());
-    xmlRpcServer->addMethod(revertEditedPlaylistMethod.get());
-    xmlRpcServer->addMethod(savePlaylistMethod.get());
-    xmlRpcServer->addMethod(updateFadeInFadeOutMethod.get());
     xmlRpcServer->addMethod(uploadPlaylistMethod.get());
-    xmlRpcServer->addMethod(validatePlaylistMethod.get());
     xmlRpcServer->addMethod(loginMethod.get());
     xmlRpcServer->addMethod(logoutMethod.get());
     xmlRpcServer->addMethod(resetStorageMethod.get());
+    xmlRpcServer->addMethod(createBackupOpenMethod.get());
+    xmlRpcServer->addMethod(createBackupCheckMethod.get());
+    xmlRpcServer->addMethod(createBackupCloseMethod.get());
 }
 
 
@@ -310,11 +304,15 @@ SchedulerDaemon :: registerXmlRpcFunctions(
 void
 SchedulerDaemon :: install(void)                throw (std::exception)
 {
-    // TODO: check if we have already been configured
-    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-    sf->install();
-    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
-    plf->install();
+    if (!isInstalled()) {
+        // TODO: check if we have already been configured
+        Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
+        sf->install();
+        Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+        plf->install();
+        Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
+        bf->install();
+    }
 }
 
 
@@ -325,14 +323,15 @@ bool
 SchedulerDaemon :: isInstalled(void)            throw (std::exception)
 {
     // TODO: check if we have already been configured
-    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+    Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
 
-    if (!sf.get() || !plf.get()) {
-        throw std::logic_error("coudln't initialize factories");
+    if (!sf || !plf || !bf) {
+        throw std::logic_error("couldn't initialize factories");
     }
     
-    return sf->isInstalled() && plf->isInstalled();
+    return sf->isInstalled() && plf->isInstalled() && bf->isInstalled();
 }
 
 
@@ -343,16 +342,41 @@ void
 SchedulerDaemon :: uninstall(void)              throw (std::exception)
 {
     // TODO: check if we have already been configured
+    Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+    Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
+
+    if (!bf || !plf || !sf) {
+        throw std::logic_error("couldn't initialize factories");
+    }
+
+    bool                isOK = true;
+    std::stringstream   errorMessage("error uninstalling factories:\n");
+    
+    try {
+        bf->uninstall();
+    } catch (std::exception &e) {
+        isOK = false;
+        errorMessage << e.what() << std::endl;
+    }
+    
     try {
         plf->uninstall();
     } catch (std::exception &e) {
-        // TODO: don't print but throw it instead
-        std::cerr << e.what() << std::endl;
+        isOK = false;
+        errorMessage << e.what() << std::endl;
     }
     
-    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-    sf->uninstall();
+    try {
+        sf->uninstall();
+    } catch (std::exception &e) {
+        isOK = false;
+        errorMessage << e.what() << std::endl;
+    }
+    
+    if (!isOK) {
+        throw std::logic_error(errorMessage.str());
+    }
 }
 
 

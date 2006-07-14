@@ -7,6 +7,7 @@
                      storageClientFactory,
                      scheduleFactory,
                      playLogFactory,
+                     backupFactory,
                      audioPlayer,
                      xmlRpcDaemon) >
 
@@ -62,6 +63,9 @@
 
 <!ELEMENT playLogFactory (postgresqlPlayLog) >
 <!ELEMENT postgresqlPlayLog EMPTY >
+
+<!ELEMENT backupFactory (postgresqlBackup) >
+<!ELEMENT postgresqlBackup EMPTY >
 
 <!ELEMENT audioPlayer   (gstreamerPlayer) >
 
@@ -124,6 +128,10 @@
     <playLogFactory>
         <postgresqlPlayLog/>
     </playLogFactory>
+
+    <backupFactory>
+        <postgresqlBackup/>
+    </backupFactory>
 
     <audioPlayer>
         <gstreamerPlayer audioDevice = "plughw:0,0" />

@@ -76,7 +76,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UploadPlaylistMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: setUp(void)                         throw ()
+UploadPlaylistMethodTest :: setUp(void)         throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -111,7 +111,7 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: tearDown(void)                      throw ()
+UploadPlaylistMethodTest :: tearDown(void)      throw (CPPUNIT_NS::Exception)
 {
     schedule->uninstall();
 

@@ -45,6 +45,9 @@ AC_PROG_CXX()
 AC_CHECK_HEADERS(sys/types.h unistd.h getopt.h signal.h sys/stat.h time.h)
 AC_CHECK_HEADERS(stdio.h fcntl.h sys/time.h)
 
+AC_CHECK_HEADERS(libtar.h)
+
+
 dnl-----------------------------------------------------------------------------
 dnl  specify the pkg-config path
 dnl-----------------------------------------------------------------------------

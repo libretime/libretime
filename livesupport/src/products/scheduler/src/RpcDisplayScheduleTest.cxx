@@ -67,7 +67,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayScheduleTest :: setUp(void)                        throw ()
+RpcDisplayScheduleTest :: setUp(void)           throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -116,8 +116,13 @@ RpcDisplayScheduleTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayScheduleTest :: tearDown(void)                     throw ()
+RpcDisplayScheduleTest :: tearDown(void)        throw (CPPUNIT_NS::Exception)
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    daemon->uninstall();
+    
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -131,9 +136,6 @@ RpcDisplayScheduleTest :: tearDown(void)                     throw ()
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
 }
 
 
@@ -144,6 +146,8 @@ void
 RpcDisplayScheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
     struct tm                   time;
@@ -187,6 +191,8 @@ void
 RpcDisplayScheduleTest :: faultTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
 

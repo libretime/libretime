@@ -79,7 +79,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RemoveFromScheduleMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RemoveFromScheduleMethodTest :: setUp(void)                         throw ()
+RemoveFromScheduleMethodTest :: setUp(void)     throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -112,7 +112,7 @@ RemoveFromScheduleMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RemoveFromScheduleMethodTest :: tearDown(void)                      throw ()
+RemoveFromScheduleMethodTest :: tearDown(void)  throw (CPPUNIT_NS::Exception)
 {
     schedule->uninstall();
 

@@ -92,7 +92,7 @@ class RestoreBackupWindow : public GuiWindow
         /**
          *  The current state of the upload task.
          */
-        StorageClientInterface::AsyncState      currentState;
+        AsyncState                              currentState;
 
         /**
          *  The token of the upload task.

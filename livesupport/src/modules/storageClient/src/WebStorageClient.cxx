@@ -2406,7 +2406,7 @@ WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
 /*------------------------------------------------------------------------------
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
-WebStorageClient :: AsyncState
+AsyncState
 WebStorageClient :: createBackupCheck(
                           const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
@@ -2428,13 +2428,10 @@ WebStorageClient :: createBackupCheck(
                 createBackupStatusParamName,
                 XmlRpcValue::TypeString);
     
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring(
-                                    result[createBackupStatusParamName] ));
+    std::string     stateString = result[createBackupStatusParamName];    
+    AsyncState      state       = AsyncState::fromBackupString(stateString);
     
-    if (*status == "working") {
-        return pendingState;
-    
-    } else if (*status == "success") {
+    if (state == AsyncState::finishedState) {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupUrlParamName,
@@ -2450,10 +2447,8 @@ WebStorageClient :: createBackupCheck(
         
         path.reset(new const Glib::ustring(
                         std::string(result[createBackupTmpFileParamName]) ));
-        
-        return finishedState;
-    
-    } else if (*status == "fault") {
+            
+    } else if (state == AsyncState::failedState) {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupFaultStringParamName,
@@ -2462,17 +2457,17 @@ WebStorageClient :: createBackupCheck(
         errorMessage.reset(new Glib::ustring(
                         std::string(result[createBackupFaultStringParamName])));
         
-        return failedState;
-    
-    } else {
+    } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Incorrect value '"
-             << *status
+             << stateString
              << "' returned by the XML-RPC method '" 
              << createBackupCheckMethodName
              << "; expected one of 'working', 'success' or 'fault'.";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
+    
+    return state;
 }
 
         
@@ -2529,7 +2524,7 @@ WebStorageClient :: restoreBackupOpen(
 /*------------------------------------------------------------------------------
  *  Check the status of a backup restore.
  *----------------------------------------------------------------------------*/
-WebStorageClient :: AsyncState
+AsyncState
 WebStorageClient :: restoreBackupCheck(
                         const Glib::ustring &           token,
                         Ptr<const Glib::ustring>::Ref & errorMessage)   const
@@ -2554,17 +2549,11 @@ result = oldResult["status"];
                 result,
                 restoreBackupStatusParamName,
                 XmlRpcValue::TypeString);
+       
+    std::string     stateString = result[restoreBackupStatusParamName];    
+    AsyncState      state       = AsyncState::fromBackupString(stateString);
     
-    Ptr<Glib::ustring>::Ref     status(new Glib::ustring(
-                                    result[restoreBackupStatusParamName] ));
-    
-    if (*status == "working") {
-        return pendingState;
-    
-    } else if (*status == "success") {
-        return finishedState;
-    
-    } else if (*status == "fault") {
+    if (state == AsyncState::failedState) {
         checkStruct(restoreBackupCheckMethodName,
                     result,
                     restoreBackupFaultStringParamName,
@@ -2572,18 +2561,18 @@ result = oldResult["status"];
         
         errorMessage.reset(new Glib::ustring(
                     std::string(result[restoreBackupFaultStringParamName])));
-        
-        return failedState;
     
-    } else {
+    } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Incorrect value '"
-             << *status
+             << stateString
              << "' returned by the XML-RPC method '" 
              << restoreBackupCheckMethodName
              << "; expected one of 'working', 'success' or 'fault'.";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
+    
+    return state;
 }
 
 
@@ -2747,7 +2736,7 @@ WebStorageClient :: importPlaylist(
 /*------------------------------------------------------------------------------
  *  Check the status of the asynchronous network transport operation.
  *----------------------------------------------------------------------------*/
-WebStorageClient :: AsyncState
+AsyncState
 WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                                    Ptr<Glib::ustring>::Ref        errorMessage)
                                                 throw (XmlRpcException)
@@ -2766,16 +2755,10 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                 checkTransportStateParamName,
                 XmlRpcValue::TypeString);
     
-    std::string     state = result[checkTransportStateParamName];
-    if (state == "init") {
-        return initState;
-    } else if (state == "pending" || state == "waiting") {
-        return pendingState;
-    } else if (state == "finished") {
-        return finishedState;
-    } else if (state == "closed") {
-        return closedState;
-    } else if (state == "failed") {
+    std::string     stateString = result[checkTransportStateParamName];    
+    AsyncState      state       = AsyncState::fromTransportString(stateString);
+
+    if (state == AsyncState::failedState) {
         if (errorMessage) {
             checkStruct(checkTransportMethodName,
                         result,
@@ -2784,8 +2767,8 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
             errorMessage->assign(std::string(
                                 result[checkTransportErrorMessageParamName]));
         }
-        return failedState;
-    } else {
+        
+    } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Unrecognized transport state returned by XML-RPC method '"
                 << checkTransportMethodName
@@ -2793,6 +2776,8 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                 << result;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
+    
+    return state;
 }
 
 

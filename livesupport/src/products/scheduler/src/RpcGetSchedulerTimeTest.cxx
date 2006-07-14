@@ -63,7 +63,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGetSchedulerTimeTest :: setUp(void)                        throw ()
+RpcGetSchedulerTimeTest :: setUp(void)          throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -91,7 +91,7 @@ RpcGetSchedulerTimeTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGetSchedulerTimeTest :: tearDown(void)                     throw ()
+RpcGetSchedulerTimeTest :: tearDown(void)       throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
     daemon->uninstall();

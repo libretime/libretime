@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef PostresqlPlayLog_h
-#define PostresqlPlayLog_h
+#ifndef PostgresqlPlayLog_h
+#define PostgresqlPlayLog_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -252,5 +252,5 @@ class PostgresqlPlayLog : public Configurable,
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // PostresqlPlayLog_h
+#endif // PostgresqlPlayLog_h
 

@@ -112,7 +112,7 @@ class TransportList : public Gtk::VBox,
          */
         bool
         setStatus(Gtk::TreeIter                         iter,
-                  StorageClientInterface::AsyncState    status,
+                  AsyncState                            status,
                   Ptr<const Glib::ustring>::Ref         errorMsg
                                             = Ptr<const Glib::ustring>::Ref())
                                                                 throw ();

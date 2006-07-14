@@ -53,7 +53,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-// CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
 
 
 /* ===============================================  local function prototypes */
@@ -65,9 +65,29 @@ using namespace LiveSupport::Scheduler;
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonTest :: setUp(void)                              throw ()
+SchedulerDaemonTest :: setUp(void)              throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    try {
+        Ptr<StorageClientInterface>::Ref    storage = daemon->getStorage();
+        storage->reset();
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in configuration file");
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL("error parsing configuration file");
+    } catch (std::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    authentication = daemon->getAuthentication();
+    try {
+        sessionId = authentication->login("root", "q");
+    } catch (XmlRpcException &e) {
+        std::string eMsg = "could not log in:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
 }
 
 
@@ -75,8 +95,11 @@ SchedulerDaemonTest :: setUp(void)                              throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonTest :: tearDown(void)                           throw ()
+SchedulerDaemonTest :: tearDown(void)           throw (CPPUNIT_NS::Exception)
 {
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -109,5 +132,4 @@ SchedulerDaemonTest :: testStartStop(void)      throw (CPPUNIT_NS::Exception)
     sleep(3);
     CPPUNIT_ASSERT( !(daemon->isRunning()) );
 }
-
 

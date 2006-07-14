@@ -63,7 +63,7 @@ static const std::string versionPrefix = "LiveSupport Scheduler Daemon";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGetVersionTest :: setUp(void)                        throw ()
+RpcGetVersionTest :: setUp(void)                throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
     daemon->install();
@@ -74,7 +74,7 @@ RpcGetVersionTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGetVersionTest :: tearDown(void)                     throw ()
+RpcGetVersionTest :: tearDown(void)             throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
     daemon->uninstall();

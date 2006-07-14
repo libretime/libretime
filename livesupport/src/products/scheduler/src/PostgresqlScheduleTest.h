@@ -72,6 +72,7 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(PostgresqlScheduleTest);
     CPPUNIT_TEST(firstTest);
+    /*
     CPPUNIT_TEST(simpleScheduleTest);
     CPPUNIT_TEST(scheduleAndQueryTest);
     CPPUNIT_TEST(getScheduleEntriesTest);
@@ -80,6 +81,8 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(removeFromScheduleTest);
     CPPUNIT_TEST(rescheduleTest);
     CPPUNIT_TEST(currentlyPlayingTest);
+    */
+    CPPUNIT_TEST(exportImportTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -171,19 +174,27 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
         void
         currentlyPlayingTest(void)              throw (CPPUNIT_NS::Exception);
 
+        /**
+         *  Test XML export / import.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        exportImportTest(void)                  throw (CPPUNIT_NS::Exception);
+
     public:
         
         /**
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

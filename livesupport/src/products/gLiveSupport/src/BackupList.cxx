@@ -153,11 +153,10 @@ BackupList :: add(const Glib::ustring &     title,
     Ptr<const Glib::ustring>::Ref   path;
     Ptr<const Glib::ustring>::Ref   errorMessage;
     
-    StorageClientInterface::AsyncState  status
-                                    = storage->createBackupCheck(token,
-                                                                 url,
-                                                                 path,
-                                                                 errorMessage);
+    AsyncState  status = storage->createBackupCheck(token,
+                                                    url,
+                                                    path,
+                                                    errorMessage);
     
     Gtk::TreeRow                row = *treeModel->append();
     row[modelColumns.titleColumn]   = title;
@@ -302,7 +301,7 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
     Ptr<const Glib::ustring>::Ref   path;
     Ptr<const Glib::ustring>::Ref   errorMessage;
     
-    StorageClientInterface::AsyncState  status = storage->createBackupCheck(
+    AsyncState  status = storage->createBackupCheck(
                                     iter->get_value(modelColumns.tokenColumn),
                                     url,
                                     path,
@@ -317,36 +316,36 @@ BackupList :: update(Gtk::TreeIter   iter)      throw (XmlRpcException)
  *----------------------------------------------------------------------------*/
 bool
 BackupList :: setStatus(Gtk::TreeIter                       iter,
-                        StorageClientInterface::AsyncState  status,
+                        AsyncState                          status,
                         Ptr<const Glib::ustring>::Ref       url,
                         Ptr<const Glib::ustring>::Ref       errorMessage)
                                                                 throw ()
 {
-    switch (status) {
-        case StorageClientInterface::pendingState:
-                return false;
+    if (status == AsyncState::pendingState) {
+        return false;
         
-        case StorageClientInterface::finishedState:
-                iter->set_value(modelColumns.statusColumn,
-                                successStatusKey);
-                iter->set_value(modelColumns.statusDisplayColumn, 
-                                *getResourceUstring(successStatusKey));
-                iter->set_value(modelColumns.urlColumn,
-                                *url);
-                return true;
+    } else if (status == AsyncState::finishedState) {
+        iter->set_value(modelColumns.statusColumn,
+                        successStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *getResourceUstring(successStatusKey));
+        iter->set_value(modelColumns.urlColumn,
+                        *url);
+        return true;
         
-        case StorageClientInterface::failedState:
-                iter->set_value(modelColumns.statusColumn,
-                                faultStatusKey);
-                iter->set_value(modelColumns.statusDisplayColumn, 
-                                *formatMessage(faultStatusKey, *errorMessage));
-                return false;
+    } else if (status == AsyncState::failedState) {
+        iter->set_value(modelColumns.statusColumn,
+                        faultStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *formatMessage(faultStatusKey, *errorMessage));
+        return false;
         
-        default:
-                std::cerr << "Impossible status: '" << status
-                          << "' in BackupList::setStatus()." << std::endl;
-                return false;
+    } else {
+        std::cerr << "Impossible status: '" << status
+                    << "' in BackupList::setStatus()." << std::endl;
     }
+    
+    return false;
 }
 
 

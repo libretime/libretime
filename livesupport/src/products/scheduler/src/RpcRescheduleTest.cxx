@@ -64,7 +64,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcRescheduleTest :: setUp(void)                        throw ()
+RpcRescheduleTest :: setUp(void)                throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -113,8 +113,13 @@ RpcRescheduleTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcRescheduleTest :: tearDown(void)                     throw ()
+RpcRescheduleTest :: tearDown(void)             throw (CPPUNIT_NS::Exception)
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    daemon->uninstall();
+    
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -128,9 +133,6 @@ RpcRescheduleTest :: tearDown(void)                     throw ()
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
 }
 
 
@@ -141,6 +143,8 @@ void
 RpcRescheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
     struct tm               time;
@@ -211,6 +215,8 @@ void
 RpcRescheduleTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -237,6 +243,8 @@ void
 RpcRescheduleTest :: currentlyPlayingTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue         parameters;
     XmlRpc::XmlRpcValue         result;
     Ptr<ptime>::Ref             now;

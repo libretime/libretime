@@ -51,6 +51,7 @@
 
 
 using namespace boost::posix_time;
+using namespace xmlpp;
 
 using namespace LiveSupport::Scheduler;
 
@@ -71,7 +72,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PostgresqlScheduleTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PostgresqlScheduleTest :: setUp(void)                         throw ()
+PostgresqlScheduleTest :: setUp(void)           throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -92,7 +93,7 @@ PostgresqlScheduleTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PostgresqlScheduleTest :: tearDown(void)                      throw ()
+PostgresqlScheduleTest :: tearDown(void)        throw (CPPUNIT_NS::Exception)
 {
     schedule->uninstall();
     schedule.reset();
@@ -538,6 +539,64 @@ PostgresqlScheduleTest :: currentlyPlayingTest(void)
     entry = schedule->getCurrentlyPlaying();
     CPPUNIT_ASSERT(entry.get());
     CPPUNIT_ASSERT(entry->getId()->getId() == entryId->getId());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test export / import
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: exportImportTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref             now;
+    Ptr<ptime>::Ref             from;
+    Ptr<ptime>::Ref             to;
+    Ptr<time_duration>::Ref     duration;
+
+    Ptr<UniqueId>::Ref          entryId;
+
+    Ptr<ScheduleEntry>::Ref                             entry;
+    Ptr<ScheduleEntry>::Ref                             eentry;
+    Ptr<ScheduleInterface::ScheduleEntryList>::Ref      entries;
+
+    Element       * element;
+
+    now    = TimeConversion::now();
+
+    // schedule our playlist for 10 seconds from now
+    from.reset(new ptime(*now));
+    *from += seconds(10);
+    entryId = schedule->schedulePlaylist(playlist, from);
+    entry   = schedule->getScheduleEntry(entryId);
+
+    // export the schedule
+    Ptr<Document>::Ref      document(new Document());
+    Element               * root = document->create_root_node("root");
+
+    from.reset(new ptime(*now));
+    to.reset(new ptime(*now));
+    *to += minutes(1);
+    schedule->exportScheduleEntries(root, from, to);
+
+    // remove the scheduled entry from the schedule
+    schedule->removeFromSchedule(entryId);
+    CPPUNIT_ASSERT(schedule->getScheduleEntries(from, to)->size() == 0);
+
+    // import the exported schedule
+    element = dynamic_cast<Element*> (*(root->get_children().begin()));
+    schedule->importScheduleEntries(element);
+
+    // check on the timeframe, and see that its the same as it should be
+    entries = schedule->getScheduleEntries(from, to);
+    CPPUNIT_ASSERT(entries->size() == 1);
+    eentry = *(entries->begin());
+    CPPUNIT_ASSERT(*entry == *eentry);
 }
 
 

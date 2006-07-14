@@ -117,7 +117,7 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  Create a playlist event for testing purposes.
          */
         Ptr<PlaylistEvent>::Ref
-        createTestEvent(void)                       throw ();
+        createTestEvent(void)                   throw (CPPUNIT_NS::Exception);
 
 
     protected:
@@ -128,7 +128,7 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
         /**
          *  A test to see if the playlist event can be initialized.
@@ -136,7 +136,7 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        initializeTest(void)                throw (CPPUNIT_NS::Exception);
+        initializeTest(void)                    throw (CPPUNIT_NS::Exception);
 
         /**
          *  A test to see if the playlist event can be played.
@@ -144,7 +144,7 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        playTest(void)                      throw (CPPUNIT_NS::Exception);
+        playTest(void)                          throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -153,13 +153,13 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

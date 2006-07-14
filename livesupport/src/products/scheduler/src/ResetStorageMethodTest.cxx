@@ -54,7 +54,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ResetStorageMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-ResetStorageMethodTest :: setUp(void)                         throw ()
+ResetStorageMethodTest :: setUp(void)           throw (CPPUNIT_NS::Exception)
 {
 }
 
@@ -63,7 +63,7 @@ ResetStorageMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-ResetStorageMethodTest :: tearDown(void)                      throw ()
+ResetStorageMethodTest :: tearDown(void)        throw (CPPUNIT_NS::Exception)
 {
 }
 
@@ -84,67 +84,7 @@ ResetStorageMethodTest :: firstTest(void)
 
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
-    parameters.clear();
-    parameters["login"]         = "root";
-    parameters["password"]      = "q";
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("login", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("sessionId"));
-
-    std::string     sessionId = std::string(result["sessionId"]);
     
-    parameters.clear();
-    parameters["sessionId"]     = sessionId;
-    parameters["playlistId"]    = "0000000000000001";
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("playlist"));
-/*    
-    parameters.clear();
-    parameters["sessionId"]     = sessionId;
-    parameters["playlistId"]    = "0000000000000001";
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("deletePlaylist", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    
-    parameters.clear();
-    parameters["sessionId"]     = sessionId;
-    parameters["playlistId"]    = "0000000000000001";
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("faultCode"));
-    CPPUNIT_ASSERT(int(result["faultCode"]) == 1003);
-*/    
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
-    parameters["login"]         = "root";
-    parameters["password"]      = "q";
-    CPPUNIT_ASSERT(xmlRpcClient.execute("login", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("sessionId"));
-
-    sessionId = std::string(result["sessionId"]);
-
-    parameters.clear();
-    parameters["sessionId"]     = sessionId;
-    parameters["playlistId"]    = "0000000000000001";
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("playlist"));
-
-    parameters.clear();
-    parameters["sessionId"]     = sessionId;
-    result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
     xmlRpcClient.close();
 }
 

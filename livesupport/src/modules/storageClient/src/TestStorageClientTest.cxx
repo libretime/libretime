@@ -491,11 +491,11 @@ TestStorageClientTest :: createBackupTest(void)
     Ptr<const Glib::ustring>::Ref       url;
     Ptr<const Glib::ustring>::Ref       path;
     Ptr<const Glib::ustring>::Ref       errorMessage;
-    StorageClientInterface::AsyncState  state;
+    AsyncState                          state;
     CPPUNIT_ASSERT_NO_THROW(
         state = tsc->createBackupCheck(*token, url, path, errorMessage);
     );
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::pendingState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
         tsc->createBackupClose(*token);
@@ -519,11 +519,11 @@ TestStorageClientTest :: restoreBackupTest(void)
     CPPUNIT_ASSERT(token);
     
     Ptr<const Glib::ustring>::Ref       errorMessage;
-    StorageClientInterface::AsyncState  state;
+    AsyncState                          state;
     CPPUNIT_ASSERT_NO_THROW(
         state = tsc->restoreBackupCheck(*token, errorMessage);
     );
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::pendingState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
         tsc->restoreBackupClose(*token);
@@ -584,11 +584,11 @@ TestStorageClientTest :: remoteSearchTest(void)
     CPPUNIT_ASSERT(token);
     
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
-    StorageClientInterface::AsyncState      state;
+    AsyncState                              state;
     CPPUNIT_ASSERT_NO_THROW(
         state = tsc->checkTransport(token, errorMessage);
     );
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::pendingState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::pendingState, state);
     
     CPPUNIT_ASSERT_THROW(
         tsc->remoteSearchClose(token), XmlRpcMethodFaultException

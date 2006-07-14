@@ -96,7 +96,7 @@ class DisplayScheduleMethodTest : public CPPUNIT_NS::TestFixture
          *  Insert some entries into the schedule to provide test data.
          */
         void
-        insertEntries(void)                                 throw ();
+        insertEntries(void)                     throw (CPPUNIT_NS::Exception);
 
 
     protected:
@@ -123,13 +123,13 @@ class DisplayScheduleMethodTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

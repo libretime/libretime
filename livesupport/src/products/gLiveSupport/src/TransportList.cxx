@@ -218,8 +218,7 @@ TransportList :: add(const Glib::ustring &          title,
     
     Ptr<Glib::ustring>::Ref     tokenPtr(new Glib::ustring(token));
     Ptr<Glib::ustring>::Ref     errorMsg(new Glib::ustring);
-    StorageClientInterface::AsyncState
-                                state = storage->checkTransport(tokenPtr,
+    AsyncState                  state = storage->checkTransport(tokenPtr,
                                                                 errorMsg);
     
     Gtk::TreeRow    row = *treeModel->append();
@@ -321,8 +320,7 @@ TransportList :: update(Gtk::TreeIter   iter)           throw (XmlRpcException)
     Ptr<StorageClientInterface>::Ref 
                                 storage = gLiveSupport->getStorageClient();
     Ptr<Glib::ustring>::Ref     errorMsg(new Glib::ustring);
-    StorageClientInterface::AsyncState
-                                status = storage->checkTransport(
+    AsyncState                  status = storage->checkTransport(
                                     iter->get_value(modelColumns.tokenColumn),
                                     errorMsg);
     
@@ -335,41 +333,39 @@ TransportList :: update(Gtk::TreeIter   iter)           throw (XmlRpcException)
  *----------------------------------------------------------------------------*/
 bool
 TransportList :: setStatus(Gtk::TreeIter                        iter,
-                           StorageClientInterface::AsyncState   status,
+                           AsyncState                           status,
                            Ptr<const Glib::ustring>::Ref        errorMsg)
                                                                     throw ()
 {
-    switch (status) {
-        case StorageClientInterface::initState:
+    if (status == AsyncState::pendingState) {
+        iter->set_value(modelColumns.statusColumn,
+                        workingStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *getResourceUstring(workingStatusKey));
+        return false;
         
-        case StorageClientInterface::pendingState:
-                    iter->set_value(modelColumns.statusColumn,
-                                    workingStatusKey);
-                    iter->set_value(modelColumns.statusDisplayColumn, 
-                                    *getResourceUstring(workingStatusKey));
-                    return false;
+    } else if (status == AsyncState::finishedState
+                    || status == AsyncState::closedState) {
+        iter->set_value(modelColumns.statusColumn,
+                        successStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *getResourceUstring(successStatusKey));
+        return true;
         
-        case StorageClientInterface::finishedState:
+    } else if (status == AsyncState::failedState) {
+        iter->set_value(modelColumns.statusColumn,
+                        faultStatusKey);
+        iter->set_value(modelColumns.statusDisplayColumn, 
+                        *formatMessage(faultStatusKey, *errorMsg));
+        return false;
         
-        case StorageClientInterface::closedState:
-                    iter->set_value(modelColumns.statusColumn,
-                                    successStatusKey);
-                    iter->set_value(modelColumns.statusDisplayColumn, 
-                                    *getResourceUstring(successStatusKey));
-                    return true;
-        
-        case StorageClientInterface::failedState:
-                    iter->set_value(modelColumns.statusColumn,
-                                    faultStatusKey);
-                    iter->set_value(modelColumns.statusDisplayColumn, 
-                                    *formatMessage(faultStatusKey, *errorMsg));
-                    return false;
-        
-        default:    std::cerr << "Impossible status: '" << status
-                              << "' in TransportList::setStatus()."
-                              << std::endl;
-                    return false;
+    } else {
+        std::cerr << "Impossible status: '" << status
+                  << "' in TransportList::setStatus()."
+                  << std::endl;
     }
+    
+    return false;
 }
 
 

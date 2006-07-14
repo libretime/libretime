@@ -80,7 +80,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(DisplayScheduleMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-DisplayScheduleMethodTest :: setUp(void)                         throw ()
+DisplayScheduleMethodTest :: setUp(void)        throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -115,7 +115,7 @@ DisplayScheduleMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-DisplayScheduleMethodTest :: tearDown(void)                      throw ()
+DisplayScheduleMethodTest :: tearDown(void)     throw (CPPUNIT_NS::Exception)
 {
     schedule->uninstall();
 
@@ -175,7 +175,7 @@ DisplayScheduleMethodTest :: firstTest(void)
  *----------------------------------------------------------------------------*/
 void
 DisplayScheduleMethodTest :: insertEntries(void)
-                                                            throw ()
+                                                throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
     XmlRpcValue     parameters;

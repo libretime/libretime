@@ -68,8 +68,21 @@ class SchedulerDaemonTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SchedulerDaemonTest);
     CPPUNIT_TEST(getSingleton);
-    CPPUNIT_TEST(testStartStop);
+    //CPPUNIT_TEST(testStartStop);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        /**
+         *  The authentication client produced by the factory.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
+
 
     protected:
 
@@ -95,13 +108,13 @@ class SchedulerDaemonTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

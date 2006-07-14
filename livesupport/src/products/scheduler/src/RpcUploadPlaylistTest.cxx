@@ -63,7 +63,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcUploadPlaylistTest :: setUp(void)                        throw ()
+RpcUploadPlaylistTest :: setUp(void)            throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -112,8 +112,13 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcUploadPlaylistTest :: tearDown(void)                     throw ()
+RpcUploadPlaylistTest :: tearDown(void)         throw (CPPUNIT_NS::Exception)
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    daemon->uninstall();
+    
+    CPPUNIT_ASSERT(sessionId);
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -127,9 +132,6 @@ RpcUploadPlaylistTest :: tearDown(void)                     throw ()
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
 }
 
 
@@ -140,6 +142,8 @@ void
 RpcUploadPlaylistTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
     struct tm               time;
@@ -179,6 +183,8 @@ void
 RpcUploadPlaylistTest :: postInitTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
     struct tm               time;

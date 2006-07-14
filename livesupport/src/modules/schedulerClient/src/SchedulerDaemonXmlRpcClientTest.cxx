@@ -206,60 +206,6 @@ SchedulerDaemonXmlRpcClientTest :: displayScheduleEmptyTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test some simple playlist operations.
- *----------------------------------------------------------------------------*/
-void
-SchedulerDaemonXmlRpcClientTest :: displayPlaylistTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<Playlist>::Ref      playlist;
-    Ptr<UniqueId>::Ref      playlistId;
-
-    // the test assumes that 
-    //  * there is a playlist with the id of 1
-    //  * there is no playlist with the id of 9999
-    // in the storage accessed by the scheduler daemon
-
-    playlistId.reset(new UniqueId(1));
-    CPPUNIT_ASSERT_NO_THROW(
-        playlist = schedulerClient->displayPlaylist(sessionId, playlistId)
-    );
-    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
-    
-    playlistId.reset(new UniqueId(9999));
-    CPPUNIT_ASSERT_THROW(
-        playlist = schedulerClient->displayPlaylist(sessionId, playlistId),
-        Core::XmlRpcMethodFaultException
-    );
-    
-    CPPUNIT_ASSERT_NO_THROW(
-        playlist = schedulerClient->createPlaylist(sessionId)
-    );
-    CPPUNIT_ASSERT(playlistId->getId() >= 0);
-
-    playlistId = playlist->getId();
-    CPPUNIT_ASSERT_NO_THROW(
-        playlist = schedulerClient->displayPlaylist(sessionId, playlistId)
-    );
-    CPPUNIT_ASSERT(*playlist->getId() == *playlistId);
-    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 0);
-
-// This doesn't work yet: createPlaylist() opens the playlist for editing,
-// and so far we have no way of saving it.
-/*
-    CPPUNIT_ASSERT_NO_THROW(
-        schedulerClient->deletePlaylist(sessionId, playlistId)
-    );
-
-    CPPUNIT_ASSERT_THROW(
-        playlist = schedulerClient->displayPlaylist(sessionId, playlistId),
-        Core::XmlRpcMethodFaultException
-    );
-*/
-}
-
-
-/*------------------------------------------------------------------------------
  *  Test playlist management functions.
  *----------------------------------------------------------------------------*/
 void

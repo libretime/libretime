@@ -60,7 +60,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcRemoveFromScheduleTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcRemoveFromScheduleTest :: setUp(void)                        throw ()
+RpcRemoveFromScheduleTest :: setUp(void)        throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
     daemon->install();
@@ -92,8 +92,13 @@ RpcRemoveFromScheduleTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcRemoveFromScheduleTest :: tearDown(void)                     throw ()
+RpcRemoveFromScheduleTest :: tearDown(void)     throw (CPPUNIT_NS::Exception)
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    daemon->uninstall();
+    
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -107,10 +112,6 @@ RpcRemoveFromScheduleTest :: tearDown(void)                     throw ()
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
-
 }
 
 
@@ -121,6 +122,8 @@ void
 RpcRemoveFromScheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
     struct tm                   time;
@@ -166,6 +169,8 @@ void
 RpcRemoveFromScheduleTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
 
@@ -192,6 +197,8 @@ void
 RpcRemoveFromScheduleTest :: currentlyPlayingTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
     Ptr<ptime>::Ref             now;

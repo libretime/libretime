@@ -73,7 +73,6 @@ class SchedulerDaemonXmlRpcClientTest : public BaseTestMethod
     CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(getSchedulerTimeTest);
     CPPUNIT_TEST(displayScheduleEmptyTest);
-    CPPUNIT_TEST(displayPlaylistTest);
     CPPUNIT_TEST(playlistMgmtTest);
     CPPUNIT_TEST(xmlRpcErrorTest);
     CPPUNIT_TEST_SUITE_END();
@@ -116,14 +115,6 @@ class SchedulerDaemonXmlRpcClientTest : public BaseTestMethod
          */
         void
         displayScheduleEmptyTest(void)          throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Test some simple playlist operations.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        displayPlaylistTest(void)               throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test playlist management.

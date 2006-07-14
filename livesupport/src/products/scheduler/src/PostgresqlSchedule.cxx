@@ -42,10 +42,12 @@
 #include "PostgresqlSchedule.h"
 
 using namespace odbc;
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Scheduler;
+
 
 /* ===================================================  local data structures */
 
@@ -57,6 +59,25 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::configElementNameStr =
                                                         "postgresqlSchedule";
+
+/*------------------------------------------------------------------------------
+ *  The name of the schedule export element
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::scheduleExportElementName
+                                                            = "scheduleExport";
+
+
+/*------------------------------------------------------------------------------
+ *  The name of the fromTime attribute
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::fromTimeAttrName = "fromTime";
+
+
+/*------------------------------------------------------------------------------
+ *  The name of the toTime attribute
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::toTimeAttrName = "toTime";
+
 
 /*------------------------------------------------------------------------------
  *  A statement to check if the database can be accessed.
@@ -244,8 +265,8 @@ PostgresqlSchedule :: isInstalled(void)                 throw (std::exception)
             stmt->execute(scheduleCountStmt);
             res = stmt->getResultSet();
             if (!res->next() || (res->getInt(1) < 0)) {
-                return false;
                 cm->returnConnection(conn);
+                return false;
             }
         } catch (std::exception &e) {
             cm->returnConnection(conn);
@@ -375,6 +396,49 @@ PostgresqlSchedule :: schedulePlaylist(
 
 
 /*------------------------------------------------------------------------------
+ *  Insert a schedule entry into the database
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlSchedule :: storeScheduleEntry(
+                        Ptr<ScheduleEntry>::Ref     scheduleEntry)
+                                                throw (std::invalid_argument)
+{
+    Ptr<Connection>::Ref    conn;
+    bool                    result = false;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<ptime>::Ref             ends;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                                        schedulePlaylistStmt));
+
+        pstmt->setLong(1, scheduleEntry->getId()->getId());
+        pstmt->setLong(2, scheduleEntry->getPlaylistId()->getId());
+ 
+        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getStartTime());
+        pstmt->setTimestamp(3, *timestamp);
+
+        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getEndTime());
+        pstmt->setTimestamp(4, *timestamp);
+
+        result = pstmt->executeUpdate() == 1;
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        throw std::invalid_argument(e.what());
+    }
+
+    if (!result) {
+        throw std::invalid_argument("couldn't insert into database");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Get the scheduled entries for a given timepoint
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
@@ -425,6 +489,64 @@ PostgresqlSchedule :: getScheduleEntries(
     }
 
     return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Export schedule entries to an XML file.
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlSchedule :: exportScheduleEntries(
+                                    xmlpp::Element    * element,
+                                    Ptr<ptime>::Ref     fromTime,
+                                    Ptr<ptime>::Ref     toTime)
+                                                                throw ()
+{
+    xmlpp::Element                                    * scheduleExport;
+    Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
+    std::vector<Ptr<ScheduleEntry>::Ref>::iterator      it;
+
+    scheduleExport = element->add_child(scheduleExportElementName);
+    scheduleExport->set_attribute(fromTimeAttrName, to_iso_string(*fromTime));
+    scheduleExport->set_attribute(toTimeAttrName,   to_iso_string(*toTime));
+
+    entries = getScheduleEntries(fromTime, toTime);
+    it      = entries->begin();
+    while (it != entries->end()) {
+        Ptr<ScheduleEntry>::Ref     entry = *it;
+
+        entry->toDom(scheduleExport);
+
+        ++it;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Import schedule entries to an XML file.
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlSchedule :: importScheduleEntries(xmlpp::Element    * element)
+                                                throw (std::invalid_argument)
+{
+    if (element->get_name() != scheduleExportElementName) {
+        std::string eMsg = "bad configuration element ";
+        eMsg += element->get_name();
+        throw std::invalid_argument(eMsg);
+    }
+
+    xmlpp::Node::NodeList               children =
+                        element->get_children(ScheduleEntry::getElementName());
+    xmlpp::Node::NodeList::iterator     it       = children.begin();
+    while (it != children.end()) {
+        xmlpp::Element            * node = dynamic_cast<xmlpp::Element*> (*it);
+        Ptr<ScheduleEntry>::Ref     scheduleEntry;
+
+        scheduleEntry.reset(new ScheduleEntry(node));
+        storeScheduleEntry(scheduleEntry);
+
+        ++it;
+    }
 }
 
 

@@ -558,7 +558,7 @@ SearchWindow :: remoteSearchClose(void)
                                 storage   = gLiveSupport->getStorageClient();
         Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
         
-        StorageClientInterface::AsyncState          state;
+        AsyncState                                  state;
         Ptr<Glib::ustring>::Ref                     errorMessage;
         try {
             state = storage->checkTransport(remoteSearchToken, errorMessage);
@@ -571,45 +571,35 @@ SearchWindow :: remoteSearchClose(void)
         
         Ptr<GLiveSupport::PlayableList>::Ref        results;
         
-        switch (state) {
-            case StorageClientInterface::initState :
-                break;
-
-            case StorageClientInterface::pendingState :
-                break;
-                
-            case StorageClientInterface::finishedState :
-                try {
-                    storage->remoteSearchClose(remoteSearchToken);
-                } catch (XmlRpcException &e) {
-                    gLiveSupport->displayMessageWindow(formatMessage(
-                                                    "remoteSearchErrorMsg",
-                                                    e.what() ));
-                    return;
-                }
-                remoteSearchToken.reset();
-                
-                try {
-                    results = gLiveSupport->getSearchResults();
-                } catch (XmlRpcException &e) {
-                    gLiveSupport->displayMessageWindow(formatMessage(
-                                                    "remoteSearchErrorMsg",
-                                                    e.what() ));
-                    return;
-                }
-                
-                displaySearchResults(results, remoteSearchResults);
-                break;
-                
-            case StorageClientInterface::closedState :
-                remoteSearchToken.reset();
-                displayMessage("remoteSearchErrorMsg", remoteSearchResults);
-                break;
-                
-            case StorageClientInterface::failedState :
+        if (state == AsyncState::finishedState) {
+            try {
+                storage->remoteSearchClose(remoteSearchToken);
+            } catch (XmlRpcException &e) {
+                gLiveSupport->displayMessageWindow(formatMessage(
+                                                "remoteSearchErrorMsg",
+                                                e.what() ));
+                return;
+            }
+            remoteSearchToken.reset();
+            
+            try {
+                results = gLiveSupport->getSearchResults();
+            } catch (XmlRpcException &e) {
+                gLiveSupport->displayMessageWindow(formatMessage(
+                                                "remoteSearchErrorMsg",
+                                                e.what() ));
+                return;
+            }
+            
+            displaySearchResults(results, remoteSearchResults);
+            
+        } else if (state == AsyncState::closedState) {
+            remoteSearchToken.reset();
+            displayMessage("remoteSearchErrorMsg", remoteSearchResults);
+            
+        } else if (state == AsyncState::failedState) {
                 remoteSearchToken.reset();
                 displayMessage(*errorMessage, remoteSearchResults);
-                break;
         }
     }
 }

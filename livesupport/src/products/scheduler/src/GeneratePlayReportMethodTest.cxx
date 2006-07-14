@@ -79,7 +79,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(GeneratePlayReportMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-GeneratePlayReportMethodTest :: setUp(void)                         throw ()
+GeneratePlayReportMethodTest :: setUp(void)     throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -114,7 +114,7 @@ GeneratePlayReportMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-GeneratePlayReportMethodTest :: tearDown(void)                      throw ()
+GeneratePlayReportMethodTest :: tearDown(void)  throw (CPPUNIT_NS::Exception)
 {
     playLog->uninstall();
 
@@ -174,7 +174,7 @@ GeneratePlayReportMethodTest :: firstTest(void)
  *----------------------------------------------------------------------------*/
 void
 GeneratePlayReportMethodTest :: insertEntries(void)
-                                                            throw ()
+                                                throw (CPPUNIT_NS::Exception)
 {
     Ptr<const UniqueId>::Ref    audioClipId(new UniqueId(10001));
     Ptr<const ptime>::Ref       timestamp(new ptime(time_from_string(

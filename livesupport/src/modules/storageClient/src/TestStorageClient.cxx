@@ -1032,7 +1032,7 @@ TestStorageClient :: createBackupOpen(Ptr<SessionId>::Ref       sessionId,
 /*------------------------------------------------------------------------------
  *  Check the status of a storage backup.
  *----------------------------------------------------------------------------*/
-TestStorageClient :: AsyncState
+AsyncState
 TestStorageClient :: createBackupCheck(
                           const Glib::ustring &             token,
                           Ptr<const Glib::ustring>::Ref &   url,
@@ -1040,7 +1040,7 @@ TestStorageClient :: createBackupCheck(
                           Ptr<const Glib::ustring>::Ref &   errorMessage) const
                                                 throw (XmlRpcException)
 {
-    return pendingState;
+    return AsyncState::pendingState;
 }
 
         
@@ -1071,13 +1071,13 @@ TestStorageClient :: restoreBackupOpen(
 /*------------------------------------------------------------------------------
  *  Check the status of a backup restore.
  *----------------------------------------------------------------------------*/
-TestStorageClient :: AsyncState
+AsyncState
 TestStorageClient :: restoreBackupCheck(
                         const Glib::ustring &           token,
                         Ptr<const Glib::ustring>::Ref & errorMessage)   const
                                                 throw (XmlRpcException)
 {
-    return pendingState;
+    return AsyncState::pendingState;
 }
 
 
@@ -1134,18 +1134,18 @@ TestStorageClient :: importPlaylist(
 /*------------------------------------------------------------------------------
  *  Check the status of the asynchronous network transport operation.
  *----------------------------------------------------------------------------*/
-TestStorageClient :: AsyncState
+AsyncState
 TestStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                                     Ptr<Glib::ustring>::Ref        errorMessage)
                                                 throw (XmlRpcException)
 {
     if (token && *token == "fake_token") {
-        return pendingState;
+        return AsyncState::pendingState;
     } else {
         if (errorMessage) {
             errorMessage->assign("bad token");
         }
-        return failedState;
+        return AsyncState::failedState;
     }
 }
 

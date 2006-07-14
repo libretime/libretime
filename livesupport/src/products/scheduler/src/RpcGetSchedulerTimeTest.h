@@ -78,7 +78,7 @@ class RpcGetSchedulerTimeTest : public BaseTestMethod
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
     public:
         
@@ -86,13 +86,13 @@ class RpcGetSchedulerTimeTest : public BaseTestMethod
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

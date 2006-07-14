@@ -66,31 +66,23 @@
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
-#include "AddAudioClipToPlaylistMethod.h"
-#include "CreatePlaylistMethod.h"
-#include "DisplayAudioClipMethod.h"
-#include "DisplayAudioClipsMethod.h"
-#include "DisplayPlaylistMethod.h"
-#include "DisplayPlaylistsMethod.h"
+#include "PlayLogInterface.h"
+
 #include "DisplayScheduleMethod.h"
 #include "GeneratePlayReportMethod.h"
 #include "GetSchedulerTimeMethod.h"
 #include "GetVersionMethod.h"
-#include "OpenPlaylistForEditingMethod.h"
-#include "RemoveAudioClipFromPlaylistMethod.h"
 #include "RemoveFromScheduleMethod.h"
 #include "RescheduleMethod.h"
-#include "RevertEditedPlaylistMethod.h"
 #include "ScheduleInterface.h"
-#include "SavePlaylistMethod.h"
-#include "UpdateFadeInFadeOutMethod.h"
 #include "UploadPlaylistMethod.h"
-#include "ValidatePlaylistMethod.h"
 #include "XmlRpcDaemon.h"
 #include "LoginMethod.h"
 #include "LogoutMethod.h"
 #include "ResetStorageMethod.h"
-#include "PlayLogInterface.h"
+#include "CreateBackupOpenMethod.h"
+#include "CreateBackupCheckMethod.h"
+#include "CreateBackupCloseMethod.h"
 
 
 namespace LiveSupport {
@@ -140,6 +132,9 @@ using namespace LiveSupport::PlaylistExecutor;
  *      &lt;playLogFactory&gt;
  *          ...
  *      &lt;/playLogFactory&gt;
+ *      &lt;backupFactory&gt;
+ *          ...
+ *      &lt;/backupFactory&gt;
  *      &lt;xmlRpcDaemon&gt;
  *          ...
  *      &lt;/xmlRpcDaemon&gt;
@@ -162,6 +157,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *                       storageClientFactory,
  *                       scheduleFactory,
  *                       playLogFactory,
+ *                       backupFactory,
  *                       audioPlayer,
  *                       xmlRpcDaemon) &gt;
  *  </code></pre>
@@ -179,6 +175,21 @@ class SchedulerDaemon : public Installable,
                         public XmlRpcDaemon
 {
     private:
+
+        /**
+         *  The SQL create statement used in the installation step.
+         */
+        static const std::string    createStmt;
+
+        /**
+         *  The SQL drop statement used in the uninstallation step.
+         */
+        static const std::string    dropStmt;
+
+        /**
+         *  A SQL statement to check if the database can be accessed.
+         */
+        static const std::string    check1Stmt;
 
         /**
          *  The singleton instance of the scheduler daemon.
@@ -227,36 +238,6 @@ class SchedulerDaemon : public Installable,
         Ptr<PlayLogInterface>::Ref                  playLog;
 
         /**
-         *  The addAudioClipToPlaylistMethod the daemon is providing.
-         */
-        Ptr<AddAudioClipToPlaylistMethod>::Ref  addAudioClipToPlaylistMethod;
-
-        /**
-         *  The createPlaylistMethod the daemon is providing.
-         */
-        Ptr<CreatePlaylistMethod>::Ref          createPlaylistMethod;
-
-        /**
-         *  The displayAudioClipMethod the daemon is providing.
-         */
-        Ptr<DisplayAudioClipMethod>::Ref        displayAudioClipMethod;
-
-        /**
-         *  The displayAudioClipsMethod the daemon is providing.
-         */
-        Ptr<DisplayAudioClipsMethod>::Ref       displayAudioClipsMethod;
-
-        /**
-         *  The displayPlaylistMethod the daemon is providing.
-         */
-        Ptr<DisplayPlaylistMethod>::Ref         displayPlaylistMethod;
-
-        /**
-         *  The displayPlaylistsMethod the daemon is providing.
-         */
-        Ptr<DisplayPlaylistsMethod>::Ref        displayPlaylistsMethod;
-
-        /**
          *  The displayScheduleMethod the daemon is providing.
          */
         Ptr<DisplayScheduleMethod>::Ref         displayScheduleMethod;
@@ -277,17 +258,6 @@ class SchedulerDaemon : public Installable,
         Ptr<GetVersionMethod>::Ref              getVersionMethod;
 
         /**
-         *  The openPlaylistForEditingMethod the daemon is providing.
-         */
-        Ptr<OpenPlaylistForEditingMethod>::Ref  openPlaylistForEditingMethod;
-
-        /**
-         *  The removeAudioClipFromPlaylistMethod the daemon is providing.
-         */
-        Ptr<RemoveAudioClipFromPlaylistMethod>::Ref 
-                                        removeAudioClipFromPlaylistMethod;
-
-        /**
          *  The removeFromScheduleMethod the daemon is providing.
          */
         Ptr<RemoveFromScheduleMethod>::Ref      removeFromScheduleMethod;
@@ -298,29 +268,9 @@ class SchedulerDaemon : public Installable,
         Ptr<RescheduleMethod>::Ref              rescheduleMethod;
 
         /**
-         *  The revertEditedPlaylistMethod the daemon is providing.
-         */
-        Ptr<RevertEditedPlaylistMethod>::Ref    revertEditedPlaylistMethod;
-
-        /**
-         *  The savePlaylistMethod the daemon is providing.
-         */
-        Ptr<SavePlaylistMethod>::Ref            savePlaylistMethod;
-
-        /**
-         *  The updateFadeInFadeOutMethod the daemon is providing.
-         */
-        Ptr<UpdateFadeInFadeOutMethod>::Ref     updateFadeInFadeOutMethod;
-
-        /**
          *  The uploadPlaylistMethod the daemon is providing.
          */
         Ptr<UploadPlaylistMethod>::Ref          uploadPlaylistMethod;
-
-        /**
-         *  The validatePlaylistMethod the daemon is providing.
-         */
-        Ptr<ValidatePlaylistMethod>::Ref        validatePlaylistMethod;
 
         /**
          *  The loginMethod the daemon is providing.
@@ -338,6 +288,21 @@ class SchedulerDaemon : public Installable,
         Ptr<ResetStorageMethod>::Ref            resetStorageMethod;
 
         /**
+         *  The createBackupOpenMethod the daemon is providing.
+         */
+        Ptr<CreateBackupOpenMethod>::Ref        createBackupOpenMethod;
+
+        /**
+         *  The createBackupCheckMethod the daemon is providing.
+         */
+        Ptr<CreateBackupCheckMethod>::Ref       createBackupCheckMethod;
+
+        /**
+         *  The createBackupCloseMethod the daemon is providing.
+         */
+        Ptr<CreateBackupCloseMethod>::Ref       createBackupCloseMethod;
+
+        /**
          *  The login to the authentication system.
          */
         std::string                             login;
@@ -350,7 +315,7 @@ class SchedulerDaemon : public Installable,
         /**
          *  Default constructor.
          */
-        SchedulerDaemon (void)                          throw ();
+        SchedulerDaemon (void)                                      throw ();
 
 
     protected:
@@ -523,6 +488,7 @@ class SchedulerDaemon : public Installable,
          */
         virtual void
         update(void)                                throw (std::logic_error);
+
 };
 
 

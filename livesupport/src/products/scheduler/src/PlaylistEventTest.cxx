@@ -78,7 +78,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PlaylistEventTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistEventTest :: setUp(void)                        throw ()
+PlaylistEventTest :: setUp(void)                throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -111,7 +111,7 @@ PlaylistEventTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistEventTest :: tearDown(void)                     throw ()
+PlaylistEventTest :: tearDown(void)             throw (CPPUNIT_NS::Exception)
 {
     playLog->uninstall();
     audioPlayer->deInitialize();
@@ -131,7 +131,7 @@ PlaylistEventTest :: tearDown(void)                     throw ()
  *  Create a sample playlist event
  *----------------------------------------------------------------------------*/
 Ptr<PlaylistEvent>::Ref
-PlaylistEventTest :: createTestEvent(void)              throw ()
+PlaylistEventTest :: createTestEvent(void)      throw (CPPUNIT_NS::Exception)
 {
     // create a fake schedule entry, with id 1 for playlist 1, starting
     // 10 seconds from now, and lasting 30 seconds

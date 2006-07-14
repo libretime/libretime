@@ -104,7 +104,7 @@ class PostgresqlPlayLogTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        getPlayLogEntriesTest(void)            throw (CPPUNIT_NS::Exception);
+        getPlayLogEntriesTest(void)             throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -113,13 +113,13 @@ class PostgresqlPlayLogTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

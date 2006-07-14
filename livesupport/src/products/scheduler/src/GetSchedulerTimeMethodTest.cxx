@@ -71,7 +71,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(GetSchedulerTimeMethodTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-GetSchedulerTimeMethodTest :: setUp(void)                        throw ()
+GetSchedulerTimeMethodTest :: setUp(void)       throw (CPPUNIT_NS::Exception)
 {
 }
 
@@ -80,7 +80,7 @@ GetSchedulerTimeMethodTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-GetSchedulerTimeMethodTest :: tearDown(void)                     throw ()
+GetSchedulerTimeMethodTest :: tearDown(void)    throw (CPPUNIT_NS::Exception)
 {
 }
 

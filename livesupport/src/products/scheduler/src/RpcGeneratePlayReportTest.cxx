@@ -65,7 +65,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGeneratePlayReportTest :: setUp(void)                         throw ()
+RpcGeneratePlayReportTest :: setUp(void)        throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -115,8 +115,13 @@ RpcGeneratePlayReportTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcGeneratePlayReportTest :: tearDown(void)                      throw ()
+RpcGeneratePlayReportTest :: tearDown(void)     throw (CPPUNIT_NS::Exception)
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    daemon->uninstall();
+    
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -130,9 +135,6 @@ RpcGeneratePlayReportTest :: tearDown(void)                      throw ()
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
 }
 
 
@@ -141,7 +143,7 @@ RpcGeneratePlayReportTest :: tearDown(void)                      throw ()
  *----------------------------------------------------------------------------*/
 void
 RpcGeneratePlayReportTest :: insertEntries(void)
-                                                            throw ()
+                                                throw (CPPUNIT_NS::Exception)
 {
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
     Ptr<PlayLogInterface>::Ref  playLog = plf->getPlayLog();
@@ -168,6 +170,8 @@ void
 RpcGeneratePlayReportTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
@@ -210,6 +214,8 @@ void
 RpcGeneratePlayReportTest :: intervalTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(sessionId);
+    
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;

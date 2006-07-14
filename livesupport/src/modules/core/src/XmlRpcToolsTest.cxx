@@ -185,6 +185,129 @@ XmlRpcToolsTest :: firstTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Testing the search criteria marshaling/demarshaling.
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcToolsTest :: secondTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring("this is a token"));
+    XmlRpcValue                 xmlRpcToken;
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        XmlRpcTools::tokenToXmlRpcValue(token, xmlRpcToken)
+    );
+    
+    Ptr<Glib::ustring>::Ref     otherToken;
+    CPPUNIT_ASSERT_NO_THROW(
+        otherToken = XmlRpcTools::extractToken(xmlRpcToken)
+    );
+    CPPUNIT_ASSERT(otherToken);
+    
+    CPPUNIT_ASSERT(*token == *otherToken);
+    
+    XmlRpcValue                 otherXmlRpcToken;
+    CPPUNIT_ASSERT_NO_THROW(
+        XmlRpcTools::tokenToXmlRpcValue(otherToken, otherXmlRpcToken)
+    );
+    
+    CPPUNIT_ASSERT(xmlRpcToken == otherXmlRpcToken);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the search criteria marshaling/demarshaling.
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcToolsTest :: searchCriteriaTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    std::string         xmlStringCriteria =
+"<value><struct>"
+"<member>"
+"<name>criteria</name>"
+"<value><struct>"
+"   <member>"
+"       <name>filetype</name>"
+"       <value>audioClip</value>"
+"   </member>"
+"   <member>"
+"       <name>operator</name>"
+"       <value>or</value>"
+"   </member>"
+"   <member>"
+"       <name>limit</name>"
+"       <value><int>5</int></value>"
+"   </member>"
+"   <member>"
+"       <name>offset</name>"
+"       <value><int>100</int></value>"
+"   </member>"
+"   <member>"
+"       <name>conditions</name>"
+"       <value><array><data>"
+"           <value><struct>"
+"               <member>"
+"                   <name>cat</name>"
+"                   <value><string>dc:title</string></value>"
+"               </member>"
+"               <member>"
+"                   <name>op</name>"
+"                   <value><string>partial</string></value>"
+"               </member>"
+"               <member>"
+"                   <name>val</name>"
+"                   <value>abcdef</value>"
+"               </member>"
+"           </struct></value>"
+"           <value><struct>"
+"               <member>"
+"                   <name>cat</name>"
+"                   <value><string>dc:creator</string></value>"
+"               </member>"
+"               <member>"
+"                   <name>op</name>"
+"                   <value><string>=</string></value>"
+"               </member>"
+"               <member>"
+"                   <name>val</name>"
+"                   <value>ABCDEF</value>"
+"               </member>"
+"           </struct></value>"
+"       </data></array></value>"
+"   </member>"
+"</struct></value>"
+"</member>"
+"</struct></value>";
+
+    XmlRpcValue         xmlRpcCriteria;
+    int                 offset = 0;
+    xmlRpcCriteria.fromXml(xmlStringCriteria, &offset);
+    
+    Ptr<SearchCriteria>::Ref    criteria;
+    CPPUNIT_ASSERT_NO_THROW(
+        criteria = XmlRpcTools::extractSearchCriteria(xmlRpcCriteria)
+    );
+    CPPUNIT_ASSERT(criteria);
+    
+    XmlRpcValue         otherXmlRpcCriteria;
+    CPPUNIT_ASSERT_NO_THROW(
+        XmlRpcTools::searchCriteriaToXmlRpcValue(criteria, otherXmlRpcCriteria)
+    );
+    
+    CPPUNIT_ASSERT(xmlRpcCriteria == otherXmlRpcCriteria);
+    
+    Ptr<SearchCriteria>::Ref    otherCriteria;
+    CPPUNIT_ASSERT_NO_THROW(
+        otherCriteria = XmlRpcTools::extractSearchCriteria(otherXmlRpcCriteria)
+    );
+    CPPUNIT_ASSERT(otherCriteria);
+    
+    CPPUNIT_ASSERT(*criteria == *otherCriteria);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Testing markError()
  *----------------------------------------------------------------------------*/
 void

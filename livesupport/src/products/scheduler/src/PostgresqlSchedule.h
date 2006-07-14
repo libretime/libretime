@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef PostresqlSchedule_h
-#define PostresqlSchedule_h
+#ifndef PostgresqlSchedule_h
+#define PostgresqlSchedule_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -91,6 +91,21 @@ class PostgresqlSchedule : public Configurable,
          *  The name of the configuration XML elmenent used by this object.
          */
         static const std::string    configElementNameStr;
+
+        /**
+         *  The name of the schedule export element
+         */
+        static const std::string    scheduleExportElementName;
+
+        /**
+         *  The name of the fromTime attribute
+         */
+        static const std::string    fromTimeAttrName;
+
+        /**
+         *  The name of the toTime attribute
+         */
+        static const std::string    toTimeAttrName;
 
         /**
          *  A SQL statement to check if the database can be accessed.
@@ -286,10 +301,43 @@ class PostgresqlSchedule : public Configurable,
          *  @param toTime to end of the time of the interval queried
          *  @return a vector of the scheduled entries for the time region.
          */
-        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        virtual Ptr<ScheduleEntryList>::Ref
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
                                                             throw ();
+
+        /**
+         *  Export schedule entries to a DOM tree.
+         *
+         *  @param element a new DOM element will be added as a child to
+         *         this element, which will contain the export.
+         *  @param fromTime entries are included in the export starting
+         *         from this time.
+         *  @param toTime entries as included in the export up to
+         *         but not including this time.
+         *  @return a DOM element, which is the export.
+         *          it is the responsibility of the caller to free up the
+         *          returned element.
+         *  @see #importScheduleEntries
+         */
+        virtual void
+        exportScheduleEntries(xmlpp::Element      * element,
+                              Ptr<ptime>::Ref       fromTime,
+                              Ptr<ptime>::Ref       toTime)
+                                                            throw ();
+
+        /**
+         *  Import schedule entries from a DOM tree.
+         *
+         *  @param element the DOM element containing schedule entries
+         *         to import.
+         *  @exception std::invalid_argument if the supplied DOM tree
+         *             is not valid.
+         *  @see #exportScheduleEntries
+         */
+        virtual void
+        importScheduleEntries(xmlpp::Element      * element)
+                                                throw (std::invalid_argument);
 
         /**
          *  Return the schedule entry that is being played at the moment.
@@ -347,6 +395,17 @@ class PostgresqlSchedule : public Configurable,
                                             throw (std::invalid_argument);
 
         /**
+         *  Insert a schedule entry into the database.
+         *
+         *  @param scheduleEntry the schedule entry to process.
+         *  @exception std::invalid_argument if the there is something
+         *             already scheduled for the duration of the playlist.
+         */
+        virtual void
+        storeScheduleEntry(Ptr<ScheduleEntry>::Ref      scheduleEntry)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Reschedule an event to a different time.
          *
          *  @param entryId the id of the entry to reschedule.
@@ -370,5 +429,5 @@ class PostgresqlSchedule : public Configurable,
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // PostresqlSchedule_h
+#endif // PostgresqlSchedule_h
 

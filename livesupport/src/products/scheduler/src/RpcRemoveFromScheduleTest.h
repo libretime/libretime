@@ -90,7 +90,7 @@ class RpcRemoveFromScheduleTest : public BaseTestMethod
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
         /**
          *  Simple negative test.
@@ -98,7 +98,7 @@ class RpcRemoveFromScheduleTest : public BaseTestMethod
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        negativeTest(void)                  throw (CPPUNIT_NS::Exception);
+        negativeTest(void)                      throw (CPPUNIT_NS::Exception);
 
         /**
          *  A test to see if removing the currently playing entry works
@@ -106,7 +106,7 @@ class RpcRemoveFromScheduleTest : public BaseTestMethod
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        currentlyPlayingTest(void)          throw (CPPUNIT_NS::Exception);
+        currentlyPlayingTest(void)              throw (CPPUNIT_NS::Exception);
 
     public:
         
@@ -114,13 +114,13 @@ class RpcRemoveFromScheduleTest : public BaseTestMethod
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 

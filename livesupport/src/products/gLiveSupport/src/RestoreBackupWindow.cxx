@@ -66,7 +66,7 @@ RestoreBackupWindow :: RestoreBackupWindow (
                       bundle,
                       ""),
             fileName(fileName),
-            currentState(StorageClientInterface::pendingState)
+            currentState(AsyncState::pendingState)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -183,7 +183,7 @@ inline void
 RestoreBackupWindow :: signalError(const Glib::ustring &    errorMessage)
                                                                     throw ()
 {
-    currentState = StorageClientInterface::failedState;
+    currentState = AsyncState::failedState;
     displayMessage("errorMessage", errorMessage);
     restoreBackupClose();
 }
@@ -207,7 +207,7 @@ RestoreBackupWindow :: restoreBackupOpen(void)                      throw ()
         return;
     }
     
-    currentState = StorageClientInterface::pendingState;
+    currentState = AsyncState::pendingState;
     displayMessage("pendingMessage", *fileName);
     setTimer();
 }
@@ -232,19 +232,14 @@ RestoreBackupWindow :: restoreBackupCheck(void)                     throw ()
         return;
     }
     
-    switch (currentState) {
-        case StorageClientInterface::finishedState:
-                                displayMessage("finishedMessage");
-                                restoreBackupClose();
-                                break;
+    if (currentState == AsyncState::finishedState) {
+        displayMessage("finishedMessage");
+        restoreBackupClose();
         
-        case StorageClientInterface::failedState:
-                                displayMessage("errorMessage",
-                                                *errorMessage);
-                                restoreBackupClose();
-                                break;
-        
-        default:                break;
+    } else if (currentState == AsyncState::failedState) {
+        displayMessage("errorMessage",
+                        *errorMessage);
+        restoreBackupClose();
     }
 }
 
@@ -280,7 +275,7 @@ RestoreBackupWindow :: restoreBackupClose(void)                     throw ()
 bool
 RestoreBackupWindow :: onUpdateTime(void)                           throw ()
 {
-    if (currentState == StorageClientInterface::pendingState) {
+    if (currentState == AsyncState::pendingState) {
         restoreBackupCheck();
     }
     return true;

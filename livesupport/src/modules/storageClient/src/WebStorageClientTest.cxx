@@ -860,7 +860,7 @@ WebStorageClientTest :: createBackupTest(void)
     Ptr<const Glib::ustring>::Ref           url;
     Ptr<const Glib::ustring>::Ref           path;
     Ptr<const Glib::ustring>::Ref           errorMessage;
-    StorageClientInterface::AsyncState      state;
+    AsyncState                              state;
     
     int     iterations = 20;
     do {
@@ -869,12 +869,12 @@ WebStorageClientTest :: createBackupTest(void)
         CPPUNIT_ASSERT_NO_THROW(
             state = wsc->createBackupCheck(*token, url, path, errorMessage);
         );
-        CPPUNIT_ASSERT(state == StorageClientInterface::pendingState
-                         || state == StorageClientInterface::finishedState
-                         || state == StorageClientInterface::failedState);
-    } while (--iterations && state == StorageClientInterface::pendingState);
+        CPPUNIT_ASSERT(state == AsyncState::pendingState
+                         || state == AsyncState::finishedState
+                         || state == AsyncState::failedState);
+    } while (--iterations && state == AsyncState::pendingState);
     
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, state);
     // TODO: test accessibility of the URL?
     
     CPPUNIT_ASSERT_NO_THROW(
@@ -919,7 +919,7 @@ WebStorageClientTest :: restoreBackupTest(void)
     CPPUNIT_ASSERT(token);
     
     Ptr<const Glib::ustring>::Ref           errorMessage;
-    StorageClientInterface::AsyncState      state;
+    AsyncState                              state;
     
     int     iterations = 20;
     do {
@@ -928,12 +928,12 @@ WebStorageClientTest :: restoreBackupTest(void)
         CPPUNIT_ASSERT_NO_THROW(
             state = wsc->restoreBackupCheck(*token, errorMessage);
         );
-        CPPUNIT_ASSERT(state == StorageClientInterface::pendingState
-                         || state == StorageClientInterface::finishedState
-                         || state == StorageClientInterface::failedState);
-    } while (--iterations && state == StorageClientInterface::pendingState);
+        CPPUNIT_ASSERT(state == AsyncState::pendingState
+                         || state == AsyncState::finishedState
+                         || state == AsyncState::failedState);
+    } while (--iterations && state == AsyncState::pendingState);
     
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
         wsc->createBackupClose(*token);
@@ -1077,7 +1077,7 @@ WebStorageClientTest :: remoteSearchTest(void)
     );
     
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
-    StorageClientInterface::AsyncState      state;
+    AsyncState                              state;
     
     int     iterations = 20;
     do {
@@ -1086,12 +1086,12 @@ WebStorageClientTest :: remoteSearchTest(void)
         CPPUNIT_ASSERT_NO_THROW(
             state = wsc->checkTransport(token, errorMessage);
         );
-        CPPUNIT_ASSERT(state == StorageClientInterface::initState
-                         || state == StorageClientInterface::pendingState
-                         || state == StorageClientInterface::finishedState);
-    } while (--iterations && state != StorageClientInterface::finishedState);
+        CPPUNIT_ASSERT(state == AsyncState::initState
+                         || state == AsyncState::pendingState
+                         || state == AsyncState::finishedState);
+    } while (--iterations && state != AsyncState::finishedState);
     
-    CPPUNIT_ASSERT_EQUAL(StorageClientInterface::finishedState, state);
+    CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, state);
     
     CPPUNIT_ASSERT_NO_THROW(
         wsc->remoteSearchClose(token);

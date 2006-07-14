@@ -68,6 +68,8 @@ class XmlRpcToolsTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(XmlRpcToolsTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(secondTest);
+    CPPUNIT_TEST(searchCriteriaTest);
     CPPUNIT_TEST(errorTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -94,6 +96,22 @@ class XmlRpcToolsTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Another simple test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        secondTest(void)                        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the search criteria marshaling/demarshaling.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        searchCriteriaTest(void)                throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the method for error message packaging.

@@ -110,7 +110,7 @@ class BackupList : public Gtk::VBox,
          */
         bool
         setStatus(Gtk::TreeIter                         iter,
-                  StorageClientInterface::AsyncState    status,
+                  AsyncState                            status,
                   Ptr<const Glib::ustring>::Ref         url,
                   Ptr<const Glib::ustring>::Ref         errorMessage)
                                                                 throw ();

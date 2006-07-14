@@ -70,7 +70,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PostgresqlPlayLogTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PostgresqlPlayLogTest :: setUp(void)            throw ()
+PostgresqlPlayLogTest :: setUp(void)            throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -90,7 +90,7 @@ PostgresqlPlayLogTest :: setUp(void)            throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PostgresqlPlayLogTest :: tearDown(void)         throw ()
+PostgresqlPlayLogTest :: tearDown(void)         throw (CPPUNIT_NS::Exception)
 {
     try {
         playLog->uninstall();

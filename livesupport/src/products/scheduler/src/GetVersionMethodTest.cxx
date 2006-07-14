@@ -72,7 +72,7 @@ static const std::string versionPrefix = "LiveSupport Scheduler Daemon";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-GetVersionMethodTest :: setUp(void)                         throw ()
+GetVersionMethodTest :: setUp(void)             throw (CPPUNIT_NS::Exception)
 {
 }
 
@@ -81,7 +81,7 @@ GetVersionMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-GetVersionMethodTest :: tearDown(void)                      throw ()
+GetVersionMethodTest :: tearDown(void)          throw (CPPUNIT_NS::Exception)
 {
 }
 

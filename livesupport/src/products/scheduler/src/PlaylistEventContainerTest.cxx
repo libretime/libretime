@@ -81,7 +81,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PlaylistEventContainerTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistEventContainerTest :: setUp(void)                        throw ()
+PlaylistEventContainerTest :: setUp(void)       throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
@@ -118,7 +118,7 @@ PlaylistEventContainerTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistEventContainerTest :: tearDown(void)                     throw ()
+PlaylistEventContainerTest :: tearDown(void)    throw (CPPUNIT_NS::Exception)
 {
     audioPlayer->deInitialize();
     schedule->uninstall();

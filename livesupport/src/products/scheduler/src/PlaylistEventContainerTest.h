@@ -127,7 +127,7 @@ class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test to see if we can get back a scheduled event.
@@ -135,7 +135,7 @@ class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        scheduleTest(void)                  throw (CPPUNIT_NS::Exception);
+        scheduleTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -144,13 +144,13 @@ class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 
