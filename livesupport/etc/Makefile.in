@@ -145,12 +145,15 @@ PRODUCTS_DIR     = ${SRC_DIR}/products
 SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
 GLIVESUPPORT_DIR = ${PRODUCTS_DIR}/gLiveSupport
 
+SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
+GLIVESUPPORT_EXE = ${GLIVESUPPORT_DIR}/tmp/gLiveSupport
 
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all doc clean docclean depclean distclean doxygen testresults
 .PHONY: setup tools_setup doxytag_setup modules_setup products_setup
+.PHONY: start stop status run
 
 all: setup compile
 
@@ -426,6 +429,19 @@ check:
 #	-${MAKE} -C ${GLIVESUPPORT_DIR} check
 #	-${MAKE} -C ${ARCHIVE_SERVER_DIR} check
 #	-${MAKE} -C ${STORAGE_SERVER_DIR} check
+
+
+start: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} start
+
+stop: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} stop
+
+status: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} status
+
+run: ${GLIVESUPPORT_EXE}
+	${MAKE} -C ${GLIVESUPPORT_DIR} run
 
 
 #-------------------------------------------------------------------------------
