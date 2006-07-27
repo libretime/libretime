@@ -8,7 +8,7 @@ sr_CS_CYRILLIC:table
     liveModeButtonLabel:string              { "Програм Уживо" }
     uploadFileButtonLabel:string            { "Аплоуд фајла" }
     scratchpadButtonLabel:string            { "Припрема" }
-    simplePlaylistMgmtButtonLabel:string    { "Обрада плеј листе" }
+    simplePlaylistMgmtButtonLabel:string    { "Обрада п.л." }
     schedulerButtonLabel:string             { "Распоред" }
     searchButtonLabel:string                { "Претрага" }
 
