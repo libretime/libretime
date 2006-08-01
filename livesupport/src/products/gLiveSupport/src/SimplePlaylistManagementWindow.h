@@ -183,10 +183,21 @@ class SimplePlaylistManagementWindow : public GuiWindow
         selectRow(int   rowNumber)                              throw ();
 
         /**
-         *  Signal handler for the save button clicked.
+         *  Signal handler for a click on the save button.
          */
         void
         onSaveButtonClicked(void)                               throw ();
+
+        /**
+         *  Signal handler for a click on the close button at the bottom
+         *  right corner.
+         *  This cancels the edited playlist; the normal close button (X)
+         *  at the upper right corner hides the window only.
+         *  If the playlist has been modified, a confirmation message will
+         *  be displayed.
+         */
+        void
+        onBottomCloseButtonClicked(void)                        throw ();
 
         /**
          *  Signal handler for the "lock fades" check button toggled.

@@ -724,7 +724,16 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Create a new playlist or Open a playlist for editing.
          *  The opened playlist can be later accessed by getEditedPlaylist().
          *  Always release the opened playlist by calling
-         *  releaseEditedPlaylist()
+         *  releaseEditedPlaylist().
+         *
+         *  If the argument is 0, a new playlist is created in the storage.
+         *
+         *  After a call to this function, getEditedPlaylist() is guaranteed
+         *  to return a non-0 value.
+         *
+         *  If there is a playlist being edited, the
+         *  SimplePlaylistManagementWindow's confirmation message is displayed.
+         *  If the user presses "Cancel", then this function does nothing.
          *
          *  @param playlistId the id of the playlist to open for editing.
          *         if a reference to 0, create a new playlist.
@@ -733,7 +742,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #getEditedPlaylist
          *  @see #releaseEditedPlaylist
          */
-        Ptr<Playlist>::Ref
+        void
         openPlaylistForEditing(
                     Ptr<const UniqueId>::Ref    playlistId
                                                 = Ptr<const UniqueId>::Ref())

@@ -214,9 +214,9 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     // Register the signal handlers for the buttons
     saveButton->signal_clicked().connect(sigc::mem_fun(*this,
-                        &SimplePlaylistManagementWindow::onSaveButtonClicked));
+                &SimplePlaylistManagementWindow::onSaveButtonClicked));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                        &SimplePlaylistManagementWindow::onCloseButtonClicked));
+                &SimplePlaylistManagementWindow::onBottomCloseButtonClicked));
 
     // show
     set_name(windowName);
@@ -325,6 +325,7 @@ SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
                                     std::cerr << e.what() << std::endl;
                                     return false;
                                 }
+                                isPlaylistModified = false;
                                 break;
 
                 case DialogWindow::yesButton:
@@ -358,6 +359,18 @@ SimplePlaylistManagementWindow :: closeWindow(void)                 throw ()
     isPlaylistModified = false;
     gLiveSupport->putWindowPosition(shared_from_this());
     hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the save button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onBottomCloseButtonClicked(void)  throw ()
+{
+    if (cancelPlaylist()) {
+        closeWindow();
+    }
 }
 
 
@@ -432,7 +445,9 @@ SimplePlaylistManagementWindow :: onTitleEdited(void)               throw()
     Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
     if (!playlist) {
         try {
-            playlist = gLiveSupport->openPlaylistForEditing();
+            gLiveSupport->openPlaylistForEditing();
+            playlist = gLiveSupport->getEditedPlaylist();
+            
         } catch (XmlRpcException &e) {
             std::cerr << "error in SimplePlaylistManagementWindow::"
                          "onTitleEdited(): "

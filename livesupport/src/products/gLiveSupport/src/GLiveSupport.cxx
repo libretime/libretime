@@ -951,13 +951,15 @@ GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
 /*------------------------------------------------------------------------------
  *  Open a  playlist for editing.
  *----------------------------------------------------------------------------*/
-Ptr<Playlist>::Ref
+void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: openPlaylistForEditing(Ptr<const UniqueId>::Ref   playlistId)
                                                     throw (XmlRpcException)
 {
-    cancelEditedPlaylist();
-
+    if (masterPanel->cancelEditedPlaylist() == false) {
+        return;                 // the user canceled the operation
+    }
+    
     if (!playlistId.get()) {
         playlistId     = storage->createPlaylist(sessionId);
     } else {
@@ -983,8 +985,6 @@ GLiveSupport :: openPlaylistForEditing(Ptr<const UniqueId>::Ref   playlistId)
     editedPlaylist->createSavedCopy();
 
     masterPanel->updateSimplePlaylistMgmtWindow();
-    
-    return editedPlaylist;
 }
 
 
