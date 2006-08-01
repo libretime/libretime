@@ -223,6 +223,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     set_default_size(480, 350);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
+    saveButton->set_sensitive(false);
     
     show_all_children();
     
@@ -281,7 +282,7 @@ SimplePlaylistManagementWindow :: savePlaylist(bool reopen)         throw ()
         if (reopen) {
             gLiveSupport->openPlaylistForEditing(playlist->getId());
         }
-        isPlaylistModified = false;
+        setPlaylistModified(false);
 
         Ptr<Glib::ustring>::Ref statusText = formatMessage(
                                                     "playlistSavedMsg",
@@ -325,7 +326,7 @@ SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
                                     std::cerr << e.what() << std::endl;
                                     return false;
                                 }
-                                isPlaylistModified = false;
+                                setPlaylistModified(false);
                                 break;
 
                 case DialogWindow::yesButton:
@@ -356,7 +357,7 @@ SimplePlaylistManagementWindow :: closeWindow(void)                 throw ()
     statusBar->set_text("");
     nameEntry->set_text("");
     entriesModel->clear();
-    isPlaylistModified = false;
+    setPlaylistModified(false);
     gLiveSupport->putWindowPosition(shared_from_this());
     hide();
 }
@@ -459,7 +460,7 @@ SimplePlaylistManagementWindow :: onTitleEdited(void)               throw()
                                                     nameEntry->get_text()));
     if (*title != *playlist->getTitle()) {
         playlist->setTitle(title);
-        isPlaylistModified = true;
+        setPlaylistModified(true);
     }
     
     showContents();
@@ -543,7 +544,7 @@ SimplePlaylistManagementWindow :: setFadeIn(
                                                 newFadeIn, oldFadeOut ));
     if (isLengthOkay(playlistElement, newFadeInfo)) {
         playlistElement->setFadeInfo(newFadeInfo);
-        isPlaylistModified = true;
+        setPlaylistModified(true);
     }
 }
 
@@ -571,7 +572,7 @@ SimplePlaylistManagementWindow :: setFadeOut(
                                                     oldFadeIn, newFadeOut ));
     if (isLengthOkay(playlistElement, newFadeInfo)) {
         playlistElement->setFadeInfo(newFadeInfo);
-        isPlaylistModified = true;
+        setPlaylistModified(true);
     }
 }
 
@@ -597,7 +598,7 @@ SimplePlaylistManagementWindow :: isLengthOkay(
 void
 SimplePlaylistManagementWindow :: onPlaylistModified(void)          throw()
 {
-    isPlaylistModified = true;
+    setPlaylistModified(true);
 }
 
 
@@ -640,7 +641,7 @@ SimplePlaylistManagementWindow :: onUpItem(void)                    throw()
         Gtk::TreeIter   previousItem = currentItem;
         --previousItem;
         swapPlaylistElements(previousItem, currentItem);
-        isPlaylistModified = true;
+        setPlaylistModified(true);
         showContents();
         selectRow(--rowNumber);
     }
@@ -660,7 +661,7 @@ SimplePlaylistManagementWindow :: onDownItem(void)                  throw()
             int         rowNumber = (*currentItem)
                                             [modelColumns.rowNumberColumn];
             swapPlaylistElements(currentItem, nextItem);
-            isPlaylistModified = true;
+            setPlaylistModified(true);
             showContents();
             selectRow(++rowNumber);
         }
@@ -762,7 +763,7 @@ SimplePlaylistManagementWindow :: onRemoveItem(void)                throw()
         playlist->removePlaylistElement(playlistElement->getId());
         playlist->eliminateGaps();
 
-        isPlaylistModified = true;
+        setPlaylistModified(true);
         showContents();
     }
 }
@@ -831,5 +832,17 @@ SimplePlaylistManagementWindow :: selectRow(int rowNumber)          throw ()
                                                 = entriesView->get_selection();
         selection->select(iter);
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of the isPlaylistModified variable.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: setPlaylistModified(bool  newValue)
+                                                                    throw ()
+{
+    isPlaylistModified = newValue;
+    saveButton->set_sensitive(newValue);
 }
 

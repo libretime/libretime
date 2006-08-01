@@ -234,7 +234,7 @@ class SimplePlaylistManagementWindow : public GuiWindow
          *  Signal handler for the "remove" menu item selected from
          *  the right-click context menu.
          */
-        virtual void
+        void
         onRemoveItem(void)                                      throw ();
         
         /**
@@ -274,8 +274,14 @@ class SimplePlaylistManagementWindow : public GuiWindow
          *                  editing again after saving it.
          *  @return true if the playlist was saved successully.
          */
-        virtual bool
+        bool
         savePlaylist(bool   reopen)                             throw ();
+        
+        /**
+         *  Set the value of the isPlaylistModified variable.
+         */
+        void
+        setPlaylistModified(bool    newValue)                   throw ();
 
 
     protected:
@@ -432,7 +438,7 @@ class SimplePlaylistManagementWindow : public GuiWindow
          *  @see GLiveSupport::cancelEditedPlaylist()
          *  @see closeWindow()
          */
-        bool
+        virtual bool
         cancelPlaylist(void)                                    throw();
 };
 
