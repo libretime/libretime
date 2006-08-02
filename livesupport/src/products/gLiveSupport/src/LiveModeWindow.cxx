@@ -283,6 +283,10 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
                                                     treeView->get_selection();
     Gtk::TreeModel::iterator        iter = refSelection->get_selected();
 
+    if (!iter) {
+        iter = treeModel->children().begin();
+    }
+    
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         gLiveSupport->setNowPlaying(playable);
