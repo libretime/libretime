@@ -470,6 +470,12 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                                                                 throw ();
 
         /**
+         *  Create the Scratchpad window.
+         */
+        void
+        createScratchpadWindow(void)                            throw ();
+
+        /**
          *  Update the Scratchpad window.
          */
         void

@@ -55,12 +55,12 @@
 #include <gtkmm/main.h>
 
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/XmlRpcInvalidDataException.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/StorageClient/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
-#include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/Core/XmlRpcInvalidDataException.h"
 
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
@@ -550,7 +550,7 @@ GLiveSupport :: login(const std::string & login,
                                                     sessionId,
                                                     editedPlaylistTokenKey);
         editedPlaylistTokenString.reset(new const std::string(
-                                                *editedPlaylistToken ));
+                                                    *editedPlaylistToken ));
     } catch (std::invalid_argument &e) {
         // no stuck playlist token found; that's OK
     } catch (XmlRpcException &e) {
@@ -581,6 +581,8 @@ GLiveSupport :: login(const std::string & login,
     }
 
     loadWindowPositions();
+    
+    masterPanel->createScratchpadWindow();
     
     return true;
 }

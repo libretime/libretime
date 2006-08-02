@@ -489,10 +489,10 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
 
 
 /*------------------------------------------------------------------------------
- *  The event when the Scratchpad button has been clicked.
+ *  Create the Scratchpad window.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
+MasterPanelWindow :: createScratchpadWindow(void)
                                                                      throw ()
 {
     if (!scratchpadWindow.get()) {
@@ -508,7 +508,18 @@ MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
                                                     scratchpadButton));
         gLiveSupport->loadWindowContents(scratchpadWindow);
     }
+}
 
+
+/*------------------------------------------------------------------------------
+ *  The event when the Scratchpad button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
+                                                                     throw ()
+{
+    createScratchpadWindow();
+    
     if (playable) {
         scratchpadWindow->addItem(playable);
     }
