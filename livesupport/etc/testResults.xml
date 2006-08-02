@@ -2,19 +2,25 @@
 <?xml-stylesheet type="text/xsl" href="testResultToHtml.xsl"?>
 <!DOCTYPE TestResults [
 
-<!ENTITY coreResults SYSTEM "../modules/core/doc/testResults.xml" >
-<!ENTITY dbResults SYSTEM "../modules/db/doc/testResults.xml" >
-<!ENTITY storageResults SYSTEM "../modules/storage/doc/testResults.xml" >
-<!ENTITY playlistExecutorResults SYSTEM "../modules/playlistExecutor/doc/testResults.xml" >
-<!ENTITY eventSchedulerResults SYSTEM "../modules/eventScheduler/doc/testResults.xml" >
-<!ENTITY schedulerResults SYSTEM "../products/scheduler/doc/testResults.xml" >
+<!ENTITY coreResults SYSTEM "../src/modules/core/doc/testResults.xml" >
+<!ENTITY dbResults SYSTEM "../src/modules/db/doc/testResults.xml" >
+<!ENTITY eventSchedulerResults SYSTEM "../src/modules/eventScheduler/doc/testResults.xml" >
+<!ENTITY gstreamerElementsResults SYSTEM "../src/modules/gstreamerElements/doc/testResults.xml" >
+<!ENTITY playlistExecutorResults SYSTEM "../src/modules/playlistExecutor/doc/testResults.xml" >
+<!ENTITY schedulerClientResults SYSTEM "../src/modules/schedulerClient/doc/testResults.xml" >
+<!ENTITY storageClientResults SYSTEM "../src/modules/storageClient/doc/testResults.xml" >
+<!ENTITY schedulerResults SYSTEM "../src/products/scheduler/doc/testResults.xml" >
+<!ENTITY gLiveSupportResults SYSTEM "../src/products/scheduler/doc/testResults.xml" >
 
 ]>
 <TestResults>
 &coreResults;
 &dbResults;
-&storageResults;
-&playlistExecutorResults;
 &eventSchedulerResults;
+&gstreamerElementsResults;
+&playlistExecutorResults;
+&schedulerClientResults;
+&storageClientResults;
 &schedulerResults;
+&gLiveSupportResults;
 </TestResults>
