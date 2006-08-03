@@ -139,6 +139,11 @@ class LoginWindow : public GuiWindow
         Button                * cancelButton;
 
         /**
+         *  The status bar.
+         */
+        Gtk::Label            * statusBar;
+
+        /**
          *  The login text, that was entered by the user.
          */
         Ptr<Glib::ustring>::Ref     loginText;
@@ -154,6 +159,11 @@ class LoginWindow : public GuiWindow
         Ptr<std::string>::Ref       selectedLocale;
 
         /**
+         *  Flag to show that the user has successfully logged in.
+         */
+        bool                        loggedIn;
+
+        /**
          *  Signal handler for the ok button clicked.
          */
         virtual void
@@ -164,6 +174,13 @@ class LoginWindow : public GuiWindow
          */
         virtual void
         onCancelButtonClicked(void)                         throw ();
+
+        /**
+         *  Set the text of the status bar.
+         */
+        virtual void
+        setStatusBarText(Ptr<const Glib::ustring>::Ref  text)
+                                                            throw ();
 
 
     public:
@@ -221,6 +238,14 @@ class LoginWindow : public GuiWindow
         {
             return selectedLocale;
         }
+
+        /**
+         *  Show the window, and return whether the login was successful.
+         *
+         *  @return true if the login was successful.
+         */
+        bool
+        run(void)                                           throw ();
 };
 
 /* ================================================= external data structures */

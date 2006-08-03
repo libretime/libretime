@@ -45,6 +45,8 @@ root:table
         passwordLabel:string        { "Password:" }
         okButtonLabel:string        { "OK" }
         cancelButtonLabel:string    { "Cancel" }
+        
+        pleaseWaitMsg:string        { "Logging in, please wait." }
     }
 
     audioClipListWindow:table

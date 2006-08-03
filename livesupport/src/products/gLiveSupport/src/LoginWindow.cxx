@@ -68,7 +68,8 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                       bundle, 
                       "",
                       windowOpenerButton,
-                      0 /* not resizable */)
+                      0 /* not resizable */),
+            loggedIn(false)
 {
     this->gLiveSupport = gLiveSupport;
 
@@ -92,7 +93,7 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         cancelButton = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("cancelButtonLabel")));
     } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;\
+        std::cerr << e.what() << std::endl;
         std::exit(1);
     }
 
@@ -166,9 +167,12 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     buttonBox->add(*cancelButton);
     buttonBox->add(*okButton);
     
+    // set up the status bar
+    statusBar = Gtk::manage(new Gtk::Label());
+    
     // set up the table, which provides the layout, and place the widgets
     // inside the table
-    table = Gtk::manage(new Gtk::Table(8, 9, false));
+    table = Gtk::manage(new Gtk::Table(8, 10, false));
     table->set_name("table");
     table->set_row_spacings(5);
     table->set_col_spacings(0);
@@ -190,6 +194,9 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     table->attach(*buttonBox,
                   0, 8, 8, 9,
                   Gtk::FILL, Gtk::AttachOptions(), 0, 10);
+    table->attach(*statusBar,
+                  0, 8, 9, 10,
+                  Gtk::FILL, Gtk::AttachOptions(), 0, 0);
 
     // set up the window itself
     set_name("loginWindow");
@@ -219,8 +226,20 @@ LoginWindow :: ~LoginWindow (void)                        throw ()
  *  Event handler for the OK button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-LoginWindow :: onOkButtonClicked (void)                  throw ()
+LoginWindow :: onOkButtonClicked (void)                             throw ()
 {
+    Ptr<Glib::ustring>::Ref     pleaseWaitMessage;
+    try {
+        pleaseWaitMessage.reset(new Glib::ustring(
+                                *getResourceUstring("pleaseWaitMsg")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    setStatusBarText(pleaseWaitMessage);
+    this->set_sensitive(false);
+    gLiveSupport->runMainLoop();    // redraw the window
+    
     loginText.reset(new Glib::ustring(loginEntry->get_text()));
     passwordText.reset(new Glib::ustring(passwordEntry->get_text()));
     
@@ -235,7 +254,8 @@ LoginWindow :: onOkButtonClicked (void)                  throw ()
     } else {
         selectedLocale.reset(new std::string(""));
     }
-
+    
+    loggedIn = gLiveSupport->login(*getLogin(), *getPassword());
     hide();
 }
 
@@ -247,5 +267,27 @@ void
 LoginWindow :: onCancelButtonClicked (void)                  throw ()
 {
     hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show the window, and return whether the login was successful.
+ *----------------------------------------------------------------------------*/
+bool
+LoginWindow :: run(void)                                            throw ()
+{
+    Gtk::Main::run(*this);
+    return loggedIn;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the text of the status bar.
+ *----------------------------------------------------------------------------*/
+void
+LoginWindow :: setStatusBarText(Ptr<const Glib::ustring>::Ref   text)
+                                                                    throw ()
+{
+    statusBar->set_text(*text);
 }
 

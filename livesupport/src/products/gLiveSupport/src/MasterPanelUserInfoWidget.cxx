@@ -184,16 +184,11 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
     Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
                                                             loginBundle,
                                                             logInOutButton));
-    Gtk::Main::run(*loginWindow);
-
-    Ptr<const Glib::ustring>::Ref     password = loginWindow->getPassword();
-
-    login    = loginWindow->getLogin();
-    if (login.get() && password.get()) {
-        loggedIn = gLiveSupport->login(login->raw(), password->raw());
-    }
+    loggedIn = loginWindow->run();
 
     if (loggedIn) {
+        login = loginWindow->getLogin();
+        
         try {
             updateStrings();
         } catch (std::invalid_argument &e) {

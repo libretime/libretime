@@ -1219,6 +1219,21 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         uploadToHub(Ptr<Playable>::Ref  playable)               throw ();
+        
+        /**
+         *  Take a break.
+         *  This will perform all pending redraws, by giving the control back
+         *  to the main loop for a while.
+         *  Call this occasionally in the middle of long computations, to
+         *  make sure your window gets redrawn.
+         */
+        void
+        runMainLoop(void)                                       throw ()
+        {
+            while (Gtk::Main::events_pending()) {
+                Gtk::Main::iteration();
+            }
+        }
 };
 
 /* ================================================= external data structures */
