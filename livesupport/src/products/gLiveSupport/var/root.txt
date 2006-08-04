@@ -219,6 +219,7 @@ root:table
         remoteSearchErrorMsg:string { "Search failed: {0}." }
         uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
         downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
+        nothingFoundMsg:string      { "No files found." }
     }
     
     advancedSearchEntry:table {

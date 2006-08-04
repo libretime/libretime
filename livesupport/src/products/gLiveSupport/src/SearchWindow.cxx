@@ -446,6 +446,9 @@ void
 SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
                                                                 throw ()
 {
+    displayMessage("pleaseWaitMsg", localSearchResults);
+    gLiveSupport->runMainLoop();
+
     Ptr<GLiveSupport::PlayableList>::Ref    searchResults;
     try {
         searchResults = gLiveSupport->search(criteria);
@@ -472,9 +475,14 @@ SearchWindow :: displaySearchResults(
     
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
-    GLiveSupport::PlayableList::const_iterator it;
+    GLiveSupport::PlayableList::const_iterator it = searchResults->begin();
     
-    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+    if (it == searchResults->end()) {
+        displayMessage("nothingFoundMsg", treeModel);
+        return;
+    }
+    
+    for ( ; it != searchResults->end(); ++it) {
         Ptr<Playable>::Ref      playable = *it;
         Gtk::TreeModel::Row     row = *treeModel->append();
         
