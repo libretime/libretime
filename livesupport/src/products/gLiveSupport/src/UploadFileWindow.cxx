@@ -290,6 +290,7 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
     int result = dialog->run();
 
     if (result == Gtk::RESPONSE_OK) {
+        clearEverything();
         fileNameEntry->set_text(dialog->get_filename());
         updateFileInfo();
     }
