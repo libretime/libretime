@@ -168,12 +168,6 @@ root:table
         endColumnLabel:string       { "end" }
         deleteMenuItem:string       { "_Delete" }
         
-        statusText:string           { "The scheduler is" }
-        runningStatus:string        { "running." }
-        stoppedStatus:string        { "stopped." }
-        
-        startButtonLabel:string     { "Start" }
-        stopButtonLabel:string      { "Stop" }
         closeButtonLabel:string     { "Close" }
     }
 
@@ -263,12 +257,12 @@ root:table
                                       "to take effect." }
         errorMsg:string             { "Could not save the options: " }
         
-        soundSectionLabel:string    { "Sound" }
-        keyBindingsSectionLabel:string
-                                    { "Keyboard Shortcuts" }
-        serversSectionLabel:string  { "Servers" }
-        backupSectionLabel:string   { "Backup" }
-        aboutSectionLabel:string    { "About" }
+        soundSectionLabel:string        { "Sound" }
+        keyBindingsSectionLabel:string  { "Keyboard Shortcuts" }
+        serversSectionLabel:string      { "Servers" }
+        schedulerSectionLabel:string    { "Scheduler" }
+        backupSectionLabel:string       { "Backup" }
+        aboutSectionLabel:string        { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
         applyButtonLabel:string     { "Apply" }
@@ -293,6 +287,12 @@ root:table
         serverLabel:string          { "address:" }
         portLabel:string            { "port:" }
         pathLabel:string            { "path:" }
+        
+        schedulerStatusText:string          { "The scheduler is" }
+        schedulerRunningStatus:string       { "running." }
+        schedulerStoppedStatus:string       { "stopped." }
+        schedulerStartButtonLabel:string    { "Start" }
+        schedulerStopButtonLabel:string     { "Stop" }
         
         reportBugsToText:string     { "Report bugs to: {0}" }
     }

@@ -115,12 +115,6 @@ class SchedulerWindow : public GuiWindow
         Gtk::VBox*
         constructStatusView(void)                                   throw ();
         
-        /**
-         *  Update the status display in the Status tab.
-         */
-        void
-        updateStatus(void)                                          throw ();
-
 
     protected:
 
@@ -214,11 +208,6 @@ class SchedulerWindow : public GuiWindow
         Gtk::Button                   * closeButton;
 
         /**
-         *  The label showing the current status of the scheduler.
-         */
-        Gtk::Label                    * statusReportLabel;
-        
-        /**
          *  Signal handler for when a date is selected in the calendar.
          */
         virtual void
@@ -238,18 +227,6 @@ class SchedulerWindow : public GuiWindow
          */
         virtual void
         onDeleteItem(void)                                      throw ();
-
-        /**
-         *  Signal handler for the Start button getting clicked.
-         */
-        virtual void
-        onStartButtonClicked(void)                              throw ();
-
-        /**
-         *  Signal handler for the Stop button getting clicked.
-         */
-        virtual void
-        onStopButtonClicked(void)                              throw ();
 
 
     public:

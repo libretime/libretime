@@ -98,6 +98,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Gtk::Box *      soundSectionBox         = constructSoundSection();
     Gtk::Box *      keyBindingsSectionBox   = constructKeyBindingsSection();
     Gtk::Box *      serversSectionBox       = constructServersSection();
+    Gtk::Box *      schedulerSectionBox     = constructSchedulerSection();
     Gtk::Box *      backupSectionBox        = 0;
     if (canBackup) {
                     backupSectionBox        = constructBackupSection();
@@ -111,6 +112,8 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                             *getResourceUstring("keyBindingsSectionLabel"));
         mainNotebook->appendPage(*serversSectionBox,
                             *getResourceUstring("serversSectionLabel"));
+        mainNotebook->appendPage(*schedulerSectionBox,
+                            *getResourceUstring("schedulerSectionLabel"));
         if (canBackup) {
             mainNotebook->appendPage(*backupSectionBox,
                             *getResourceUstring("backupSectionLabel"));
@@ -732,6 +735,52 @@ OptionsWindow :: constructServersSection(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Construct the "Scheduler" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructSchedulerSection(void)                    throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Label *    statusTextLabel;
+    Button *        startButton;
+    Button *        stopButton;
+    try {
+        statusTextLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                "schedulerStatusText")));
+        startButton = Gtk::manage(wf->createButton(*getResourceUstring(
+                                                "schedulerStartButtonLabel")));
+        stopButton = Gtk::manage(wf->createButton(*getResourceUstring(
+                                                "schedulerStopButtonLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    startButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &OptionsWindow::onSchedulerStartButtonClicked));
+    stopButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &OptionsWindow::onSchedulerStopButtonClicked));
+    
+    Gtk::HBox *         statusReportBox = Gtk::manage(new Gtk::HBox);
+    statusReportBox->pack_start(*statusTextLabel,      Gtk::PACK_SHRINK, 5);
+    schedulerStatusLabel = Gtk::manage(new Gtk::Label);
+    statusReportBox->pack_start(*schedulerStatusLabel, Gtk::PACK_SHRINK, 5);
+    
+    Gtk::ButtonBox *    startStopButtons = Gtk::manage(new Gtk::HButtonBox(
+                                                    Gtk::BUTTONBOX_SPREAD, 20));
+    startStopButtons->pack_start(*startButton);
+    startStopButtons->pack_start(*stopButton);
+
+    Gtk::VBox *         section = Gtk::manage(new Gtk::VBox);
+    section->pack_start(*statusReportBox,  Gtk::PACK_SHRINK, 20);
+    section->pack_start(*startStopButtons, Gtk::PACK_SHRINK);
+    
+    updateSchedulerStatus();
+    return section;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Construct the "Backup" section.
  *----------------------------------------------------------------------------*/
 Gtk::VBox*
@@ -923,5 +972,55 @@ OptionsWindow :: run(void)                                          throw ()
     property_window_position().set_value(Gtk::WIN_POS_CENTER_ALWAYS);
     show_all();
     Gtk::Main::run(*this);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the scheduler Start button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: onSchedulerStartButtonClicked(void)                throw ()
+{
+    gLiveSupport->checkSchedulerClient();
+    if (!gLiveSupport->isSchedulerAvailable()) {
+        gLiveSupport->startSchedulerClient();
+    }
+    updateSchedulerStatus();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the scheduler Stop button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: onSchedulerStopButtonClicked(void)                 throw ()
+{
+    gLiveSupport->checkSchedulerClient();
+    if (gLiveSupport->isSchedulerAvailable()) {
+        gLiveSupport->stopSchedulerClient();
+    }
+    updateSchedulerStatus();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the status display in the Status tab.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: updateSchedulerStatus(void)                        throw ()
+{
+    gLiveSupport->checkSchedulerClient();
+    try {
+        if (gLiveSupport->isSchedulerAvailable()) {
+            schedulerStatusLabel->set_text(
+                                *getResourceUstring("schedulerRunningStatus"));
+        } else {
+            schedulerStatusLabel->set_text(
+                                *getResourceUstring("schedulerStoppedStatus"));
+        }
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
 }
 

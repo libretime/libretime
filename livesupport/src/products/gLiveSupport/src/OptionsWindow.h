@@ -123,6 +123,11 @@ class OptionsWindow : public GuiWindow
         Gtk::Button               * okButton;
 
         /**
+         *  The label showing the current status of the scheduler.
+         */
+        Gtk::Label                * schedulerStatusLabel;
+        
+        /**
          *  The type for the list of user entry fields of string type.
          */
         typedef std::vector<std::pair<OptionsContainer::OptionItemString,
@@ -221,6 +226,15 @@ class OptionsWindow : public GuiWindow
         constructServersSection(void)                               throw ();
 
         /**
+         *  Construct the "Scheduler" section.
+         *  This section contains the scheduler start and stop buttons.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructSchedulerSection(void)                             throw ();
+
+        /**
          *  Construct the "Backup" section.
          *
          *  @return a pointer to the new box (already Gtk::manage()'ed)
@@ -235,6 +249,12 @@ class OptionsWindow : public GuiWindow
          */
         Gtk::VBox*
         constructAboutSection(void)                                 throw ();
+
+        /**
+         *  Update the scheduler status display in the Scheduler tab.
+         */
+        void
+        updateSchedulerStatus(void)                                 throw ();
 
 
     protected:
@@ -303,6 +323,18 @@ class OptionsWindow : public GuiWindow
          */
         virtual void
         onKeyBindingsFocusOut(GdkEventFocus *   event)              throw ();
+
+        /**
+         *  Signal handler for the scheduler Start button getting clicked.
+         */
+        virtual void
+        onSchedulerStartButtonClicked(void)                         throw ();
+
+        /**
+         *  Signal handler for the scheduler Stop button getting clicked.
+         */
+        virtual void
+        onSchedulerStopButtonClicked(void)                          throw ();
 
         /**
          *  The columns model containing the data for the Key bindings section.

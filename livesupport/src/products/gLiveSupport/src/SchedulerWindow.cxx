@@ -201,40 +201,7 @@ SchedulerWindow :: constructScheduleView(void)                      throw ()
 Gtk::VBox *
 SchedulerWindow :: constructStatusView(void)                        throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    Gtk::Label *    statusTextLabel;
-    Button *        startButton;
-    Button *        stopButton;
-    try {
-        statusTextLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                        "statusText")));
-        startButton = Gtk::manage(wf->createButton(*getResourceUstring(
-                                                        "startButtonLabel")));
-        stopButton = Gtk::manage(wf->createButton(*getResourceUstring(
-                                                        "stopButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    startButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &SchedulerWindow::onStartButtonClicked));
-    stopButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &SchedulerWindow::onStopButtonClicked));
-    
-    Gtk::HBox *         statusReportBox = Gtk::manage(new Gtk::HBox);
-    statusReportBox->pack_start(*statusTextLabel,   Gtk::PACK_SHRINK, 5);
-    statusReportLabel = Gtk::manage(new Gtk::Label);
-    statusReportBox->pack_start(*statusReportLabel, Gtk::PACK_SHRINK, 5);
-    
-    Gtk::ButtonBox *    startStopButtons = Gtk::manage(new Gtk::HButtonBox(
-                                                    Gtk::BUTTONBOX_SPREAD, 20));
-    startStopButtons->pack_start(*startButton);
-    startStopButtons->pack_start(*stopButton);
-
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*statusReportBox,  Gtk::PACK_SHRINK, 20);
-    view->pack_start(*startStopButtons, Gtk::PACK_SHRINK);
     
     return view;
 }
@@ -332,8 +299,6 @@ SchedulerWindow :: showContents(void)               throw (XmlRpcException)
 
         ++it;
     }
-    
-    updateStatus();
 }
 
 
@@ -383,54 +348,6 @@ SchedulerWindow :: onDeleteItem(void)                               throw ()
                 // TODO: signal error here
             }
         }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Signal handler for the Start button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-SchedulerWindow :: onStartButtonClicked(void)                       throw ()
-{
-    gLiveSupport->checkSchedulerClient();
-    if (!gLiveSupport->isSchedulerAvailable()) {
-        gLiveSupport->startSchedulerClient();
-    }
-    updateStatus();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Signal handler for the Stop button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-SchedulerWindow :: onStopButtonClicked(void)                        throw ()
-{
-    gLiveSupport->checkSchedulerClient();
-    if (gLiveSupport->isSchedulerAvailable()) {
-        gLiveSupport->stopSchedulerClient();
-    }
-    updateStatus();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Update the status display in the Status tab.
- *----------------------------------------------------------------------------*/
-void
-SchedulerWindow :: updateStatus(void)                               throw ()
-{
-    gLiveSupport->checkSchedulerClient();
-    try {
-        if (gLiveSupport->isSchedulerAvailable()) {
-            statusReportLabel->set_text(*getResourceUstring("runningStatus"));
-        } else {
-            statusReportLabel->set_text(*getResourceUstring("stoppedStatus"));
-        }
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
     }
 }
 
