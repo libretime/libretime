@@ -636,7 +636,7 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
     // cache the item if it hasn't been cached yet
     if (!playable->getToken()) {
         try {
-            gLiveSupport->acquirePlayable(playable->getId());
+            playable = gLiveSupport->acquirePlayable(playable->getId());
         } catch (XmlRpcException &e) {
             std::cerr << "could not acquire playable in ScratchpadWindow: "
                       << e.what() << std::endl;

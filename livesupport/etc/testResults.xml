@@ -10,7 +10,7 @@
 <!ENTITY schedulerClientResults SYSTEM "../src/modules/schedulerClient/doc/testResults.xml" >
 <!ENTITY storageClientResults SYSTEM "../src/modules/storageClient/doc/testResults.xml" >
 <!ENTITY schedulerResults SYSTEM "../src/products/scheduler/doc/testResults.xml" >
-<!ENTITY gLiveSupportResults SYSTEM "../src/products/scheduler/doc/testResults.xml" >
+<!ENTITY gLiveSupportResults SYSTEM "../src/products/gLiveSupport/doc/testResults.xml" >
 
 ]>
 <TestResults>

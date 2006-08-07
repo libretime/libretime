@@ -582,7 +582,9 @@ GLiveSupport :: login(const std::string & login,
 
     loadWindowPositions();
     
-    masterPanel->createScratchpadWindow();
+    if (masterPanel) {
+        masterPanel->createScratchpadWindow();
+    }
     
     return true;
 }
