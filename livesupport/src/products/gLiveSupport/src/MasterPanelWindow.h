@@ -536,6 +536,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         void
         uploadToHub(Ptr<Playable>::Ref      playable)           throw ();
 
+        /**
+         *  Show or hide the Scheduler button.
+         *
+         *  @param  status  true means show the button, false means hide.
+         */
+        void
+        setSchedulerAvailable(bool  status)                     throw ();
 };
 
 /* ================================================= external data structures */

@@ -1571,8 +1571,14 @@ GLiveSupport :: checkSchedulerClient(void)                          throw ()
     try {
         scheduler->getVersion();
         schedulerAvailable = true;
+        if (masterPanel) {
+            masterPanel->setSchedulerAvailable(true);
+        }
     } catch (XmlRpcException &e) {
         schedulerAvailable = false;
+        if (masterPanel) {
+            masterPanel->setSchedulerAvailable(false);
+        }
     }
 }
 

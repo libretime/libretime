@@ -333,12 +333,12 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                                 &MasterPanelWindow::onSearchButtonClicked));
     } else {
         // gray out all the buttons except Options
-        liveModeButton->set_sensitive(false);
-        uploadFileButton->set_sensitive(false);
-        scratchpadButton->set_sensitive(false);
-        simplePlaylistMgmtButton->set_sensitive(false);
-        schedulerButton->set_sensitive(false);
-        searchButton->set_sensitive(false);
+        liveModeButton->setDisabled(true);
+        uploadFileButton->setDisabled(true);
+        scratchpadButton->setDisabled(true);
+        simplePlaylistMgmtButton->setDisabled(true);
+        schedulerButton->setDisabled(true);
+        searchButton->setDisabled(true);
     }
 
     optionsButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -754,9 +754,7 @@ MasterPanelWindow :: showLoggedInUI(void)                           throw ()
         searchButton->setDisabled(true);
     }
     
-    if (!gLiveSupport->isSchedulerAvailable()) {
-        schedulerButton->setDisabled(true);
-    }
+    setSchedulerAvailable(gLiveSupport->isSchedulerAvailable());
 }
 
 
@@ -878,4 +876,21 @@ MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Show or hide the Scheduler button.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: setSchedulerAvailable(bool  status)            throw ()
+{
+    if (status == false) {
+        if (schedulerWindow && schedulerWindow->is_visible()) {
+            schedulerWindow->hide();
+        }
+    }
+    
+    if (schedulerButton) {
+        schedulerButton->setDisabled(!status);
+    }
+}
 
