@@ -48,6 +48,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/XmlRpcMethodFaultException.h"
+#include "LiveSupport/Core/FileTools.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "SchedulerDaemonXmlRpcClientTest.h"
 
@@ -65,10 +66,19 @@ using namespace LiveSupport::SchedulerClient;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonXmlRpcClientTest);
 
+namespace {
+
 /**
  *  The name of the configuration file for the scheduler client.
  */
-static const std::string configFileName = "schedulerDaemonXmlRpcClient.xml";
+const std::string   configFileName = "schedulerDaemonXmlRpcClient.xml";
+
+/**
+ *  The location of the temporary backup file
+ */
+const std::string   tempBackupTarFileName = "tmp/scheduleBackup.tar";
+
+}
 
 
 /* ===============================================  local function prototypes */
@@ -334,18 +344,18 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test the create backup functions.
+ *  Create the backup.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonXmlRpcClientTest :: createBackupTest(void)
+SchedulerDaemonXmlRpcClientTest :: createBackup(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria);
     criteria->setLimit(10);
     Ptr<ptime>::Ref from(new ptime(time_from_string("2004-07-23 10:00:00")));
     Ptr<ptime>::Ref to(new ptime(time_from_string("2004-07-23 11:00:00")));
 
-    Ptr<Glib::ustring>::Ref     token;
+    Ptr<const Glib::ustring>::Ref   token;
     CPPUNIT_ASSERT_NO_THROW(
         token = schedulerClient->createBackupOpen(sessionId, 
                                                   criteria, 
@@ -354,10 +364,10 @@ SchedulerDaemonXmlRpcClientTest :: createBackupTest(void)
     );
     CPPUNIT_ASSERT(token);
 
-    Ptr<const Glib::ustring>::Ref       url;
-    Ptr<const Glib::ustring>::Ref       path;
-    Ptr<const Glib::ustring>::Ref       errorMessage;
-    AsyncState                          status;
+    Ptr<const Glib::ustring>::Ref   url;
+    Ptr<const Glib::ustring>::Ref   path;
+    Ptr<const Glib::ustring>::Ref   errorMessage;
+    AsyncState                      status;
     int     iterations = 20;
     do {
         std::cerr << "-/|\\"[iterations%4] << '\b';
@@ -374,11 +384,86 @@ SchedulerDaemonXmlRpcClientTest :: createBackupTest(void)
     } while (--iterations && status == AsyncState::pendingState);
     
     CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, status);
-    // TODO: test accessibility of the URL?
+    CPPUNIT_ASSERT(url);
+    CPPUNIT_ASSERT(path);
+    
+    // copy the backup file
+    CPPUNIT_ASSERT_NO_THROW(
+        remove(tempBackupTarFileName.c_str());
+        std::ifstream   ifs(path->c_str(),                  std::ios::binary);
+        std::ofstream   ofs(tempBackupTarFileName.c_str(),  std::ios::binary);
+        ofs << ifs.rdbuf();
+    );
     
     CPPUNIT_ASSERT_NO_THROW(
         schedulerClient->createBackupClose(*token);
     );
-    // TODO: test existence of schedule backup in tarball
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the backup functions.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: createBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    CPPUNIT_ASSERT_NO_THROW(
+        createBackup()
+    );
+    
+    bool    exists;
+    std::string     schedulerBackupInTarball = "meta-inf/scheduler.xml";
+    CPPUNIT_ASSERT_NO_THROW(
+        exists = FileTools::existsInTarball(tempBackupTarFileName,
+                                            schedulerBackupInTarball)
+    );
+    CPPUNIT_ASSERT(exists);
+    
+    std::string     extractedTempFileName = "tmp/scheduler.tmp.xml";
+    FILE *          file;
+    
+    remove(extractedTempFileName.c_str());
+    file = fopen(extractedTempFileName.c_str(), "r");
+    CPPUNIT_ASSERT(file == 0);
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        FileTools::extractFileFromTarball(tempBackupTarFileName,
+                                          schedulerBackupInTarball,
+                                          extractedTempFileName)
+    );
+    
+    file = fopen(extractedTempFileName.c_str(), "r");
+    CPPUNIT_ASSERT(file != 0);
+    CPPUNIT_ASSERT(fclose(file) == 0);
+    
+    CPPUNIT_ASSERT(remove(extractedTempFileName.c_str()) == 0);
+    file = fopen(extractedTempFileName.c_str(), "r");
+    CPPUNIT_ASSERT(file == 0);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if we can restore backups.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: restoreBackupTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    CPPUNIT_ASSERT_NO_THROW(
+        createBackup()
+    );
+    
+    Ptr<Glib::ustring>::Ref     backupFile(new Glib::ustring());
+    char *                      currentDirName = get_current_dir_name();
+    backupFile->append(currentDirName);
+    backupFile->append("/");
+    backupFile->append(tempBackupTarFileName);
+    free(currentDirName);
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        schedulerClient->restoreBackup(sessionId, backupFile)
+    );
+    // TODO: try this with a non-empty backup file, too
 }
 

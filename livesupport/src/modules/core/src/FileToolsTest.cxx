@@ -58,16 +58,24 @@ using namespace LiveSupport::Core;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(FileToolsTest);
 
+namespace {
+
 /**
  *  The name of the test tar file
  */
-static const std::string tarFileName = "var/hello.tar";
+const std::string tarFileName = "var/hello.tar";
 
 /**
  *  The name of the test file in the tar file
  */
-static const std::string fileInTarName = "hello";
+const std::string fileInTarName = "hello";
 
+/**
+ *  The name of the test file after extraction
+ */
+const std::string fileExtracted = "tmp/hello.txt";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -93,7 +101,7 @@ FileToolsTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the singleton Hello object is accessible
+ *  Test to see if the sample hello tarfile is accessible
  *----------------------------------------------------------------------------*/
 void
 FileToolsTest :: existsInTarTest(void)
@@ -101,5 +109,41 @@ FileToolsTest :: existsInTarTest(void)
 {
     CPPUNIT_ASSERT(FileTools::existsInTarball(tarFileName, fileInTarName));
     CPPUNIT_ASSERT(!FileTools::existsInTarball(tarFileName, "foobar"));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if the sample hello tarfile is accessible
+ *----------------------------------------------------------------------------*/
+void
+FileToolsTest :: extractFileFromTarballTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    FILE *      file;
+    
+    remove(fileExtracted.c_str());
+    file = fopen(fileExtracted.c_str(), "r");
+    CPPUNIT_ASSERT(file == 0);
+
+    CPPUNIT_ASSERT_NO_THROW(
+        FileTools::extractFileFromTarball(tarFileName,
+                                          fileInTarName,
+                                          fileExtracted)
+    );
+    
+    file = fopen(fileExtracted.c_str(), "r");
+    CPPUNIT_ASSERT(file != 0);
+    CPPUNIT_ASSERT(fclose(file) == 0);
+    
+    CPPUNIT_ASSERT(remove(fileExtracted.c_str()) == 0);
+    file = fopen(fileExtracted.c_str(), "r");
+    CPPUNIT_ASSERT(file == 0);
+    
+    CPPUNIT_ASSERT_THROW(
+        FileTools::extractFileFromTarball(tarFileName,
+                                          "foobar",
+                                          fileExtracted),
+        std::runtime_error
+    );
 }
 

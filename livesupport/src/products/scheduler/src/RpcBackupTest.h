@@ -71,6 +71,7 @@ class RpcBackupTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcBackupTest);
     CPPUNIT_TEST(createBackupTest);
+    CPPUNIT_TEST(restoreBackupTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -79,6 +80,13 @@ class RpcBackupTest : public BaseTestMethod
          *  A session ID from the authentication client login() method.
          */
         Ptr<SessionId>::Ref                     sessionId;
+
+        /**
+         *  Auxiliary method: create the backup file.  Used by both tests.
+         */
+        void
+        createBackup(void)                      throw (CPPUNIT_NS::Exception);
+
 
     protected:
 
@@ -89,6 +97,15 @@ class RpcBackupTest : public BaseTestMethod
          */
         void
         createBackupTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the restoreBackup method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        restoreBackupTest(void)                 throw (CPPUNIT_NS::Exception);
+
 
     public:
         

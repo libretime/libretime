@@ -21,13 +21,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: fgerlits $
     Version  : $Revision$
-    Location : $URL$
+    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/branches/scheduler_export/livesupport/src/products/scheduler/src/RpcStopCurrentlyPlayingTest.h $
 
 ------------------------------------------------------------------------------*/
-#ifndef FileToolsTest_h
-#define FileToolsTest_h
+#ifndef RpcStopCurrentlyPlayingTest_h
+#define RpcStopCurrentlyPlayingTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,11 +41,16 @@
 #endif
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "LiveSupport/Core/FileTools.h"
 
+#include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/SessionId.h"
+
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
-namespace Core {
+namespace Scheduler {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -56,38 +61,52 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the FileTools class.
+ *  Unit test to test the removeFromSchedule XML-RPC call.
  *
- *  @author  $Author$
+ *  @author  $Author: fgerlits $
  *  @version $Revision$
- *  @see FileTools
+ *  @see SchedulerDaemon
  */
-class FileToolsTest : public CPPUNIT_NS::TestFixture
+class RpcStopCurrentlyPlayingTest : public BaseTestMethod
 {
-    CPPUNIT_TEST_SUITE(FileToolsTest);
-    CPPUNIT_TEST(existsInTarTest);
-    CPPUNIT_TEST(extractFileFromTarballTest);
+    CPPUNIT_TEST_SUITE(RpcStopCurrentlyPlayingTest);
+    CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
 
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
+
+        /**
+         *  Schedule a playlist, so we can stop it.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        schedulePlaylistToPlayNow(void)         throw (CPPUNIT_NS::Exception);
+
+
     protected:
 
         /**
-         *  Test the existsInTarball() function.
+         *  Simple smoke test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        existsInTarTest(void)                   throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Test the extractFileFromTarball() function.
+         *  Simple negative test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        extractFileFromTarballTest(void)        throw (CPPUNIT_NS::Exception);
+        negativeTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -96,13 +115,13 @@ class FileToolsTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.
          */
         void
-        tearDown(void)                                  throw ();
+        tearDown(void)                          throw (CPPUNIT_NS::Exception);
 };
 
 
@@ -112,8 +131,8 @@ class FileToolsTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Core
+} // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // FileToolsTest_h
+#endif // RpcStopCurrentlyPlayingTest_h
 

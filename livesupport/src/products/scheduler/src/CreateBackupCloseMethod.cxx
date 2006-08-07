@@ -43,6 +43,7 @@
 #include <string>
 
 #include "LiveSupport/Core/XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcException.h"
 #include "BackupFactory.h"
 
 #include "CreateBackupCloseMethod.h"
@@ -118,7 +119,7 @@ CreateBackupCloseMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
     try {
         backup->createBackupClose(*token);
         
-    } catch (std::invalid_argument &e) {
+    } catch (Core::XmlRpcException &e) {
         XmlRpcTools::markError(errorId+10, e.what(), returnValue);
         return;
     }

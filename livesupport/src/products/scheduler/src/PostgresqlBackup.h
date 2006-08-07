@@ -65,7 +65,10 @@ using namespace LiveSupport::StorageClient;
 /* =============================================================== data types */
 
 /**
- *  An object containing the schedule of events in a PostreSQL database.
+ *  An object for creating and restoring combined schedule and storage backups.
+ *
+ *  This an implementation of the BackupInterface type.  It stores the token
+ *  used for the createBackupXxxx() functions in a PostgreSQL database.
  *
  *  This object has to be configured with a simple empty element, as
  *  the following:
@@ -307,6 +310,23 @@ class PostgresqlBackup : public Configurable,
          */
         virtual void
         createBackupClose(const Glib::ustring &     token)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Restore a schedule backup.
+         *
+         *  All playlist IDs contained in the backup should already be in the
+         *  storage.  If this is a combined backup, with both storage and 
+         *  schedule components, then restore this backup to the storage
+         *  first, and then call this function.
+         *  
+         *  @param  sessionId   a valid session ID to identify the user.
+         *  @param  path        the location of the archive to upload.
+         *  @exception  XmlRpcException     if there is an error.
+         */
+        virtual void
+        restoreBackup(Ptr<SessionId>::Ref               sessionId,
+                      Ptr<const Glib::ustring>::Ref     path)
                                                 throw (XmlRpcException);
 };
 

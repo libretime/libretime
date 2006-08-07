@@ -32,6 +32,7 @@
 #include <string>
 
 #include "LiveSupport/Core/XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcException.h"
 #include "BackupFactory.h"
 
 #include "CreateBackupCheckMethod.h"
@@ -111,7 +112,7 @@ CreateBackupCheckMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
     try {
         state = backup->createBackupCheck(*token, url, path, errorMessage);
         
-    } catch (std::invalid_argument &e) {
+    } catch (Core::XmlRpcException &e) {
         XmlRpcTools::markError(errorId+10, e.what(), returnValue);
         return;
     }
@@ -121,7 +122,7 @@ CreateBackupCheckMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
     if (state == AsyncState::finishedState) {
         if (url && path) {
             XmlRpcTools::urlToXmlRpcValue(url, returnValue);
-            XmlRpcTools::pathToXmlRpcValue(url, returnValue);
+            XmlRpcTools::pathToXmlRpcValue(path, returnValue);
         } else {
             XmlRpcTools::markError(errorId+11, 
                                    "missing url or path return value",

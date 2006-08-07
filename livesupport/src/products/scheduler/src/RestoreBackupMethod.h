@@ -21,13 +21,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: fgerlits $
     Version  : $Revision$
-    Location : $URL$
+    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/branches/scheduler_export/livesupport/src/products/scheduler/src/RestoreBackupMethod.h $
 
 ------------------------------------------------------------------------------*/
-#ifndef CreateBackupCheckMethod_h
-#define CreateBackupCheckMethod_h
+#ifndef RestoreBackupMethod_h
+#define RestoreBackupMethod_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,22 +40,13 @@
 #include "configure.h"
 #endif
 
-#include <stdexcept>
 #include <string>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
-#include <XmlRpcValue.h>
 #include <XmlRpcException.h>
-
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/UniqueId.h"
 
 
 namespace LiveSupport {
 namespace Scheduler {
-
-using namespace LiveSupport;
-using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -66,42 +57,32 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An XML-RPC method object to check the progress of a backup creation process.
+ *  An XML-RPC method object to restore a schedule backup.
  *
- *  The name of the method when called through XML-RPC is "createBackupCheck".
+ *  The name of the method when called through XML-RPC is "restoreBackup".
  *
- *  The expected parameter is an XML-RPC structure with a single member:
+ *  The expected parameter is an XML-RPC structure with these members:
  *  <ul>
- *      <li>token   - string -  the token obtained from createBackupOpen </li>
- *  </ul>
- *
- *  On success, returns an XML-RPC struct, with the following members:
- *  <ul>
- *      <li>status  - string -  on of "success", "working" or "fault" </li>
- *      <li>url     - string -  if the status is "success", this contains
- *                              a readable URL of the new backup archive </li>
- *      <li>path    - string -  if the status is "success", this contains
- *                              the local access path of the new backup
- *                              archive </li>
- *      <li>faultString - string -  if the status is "fault", this contains
- *                                  the error message. </li>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client; </li>
+ *      <li>path       - string - the local path and filename of the backup
+ *                                archive to be restored.</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
  *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
  *  possible errors are:
  *  <ul>
- *     <li>4101 - invalid argument format </li>
- *     <li>4102 - missing token argument </li>
- *     <li>4110 - error reported by the scheduler daemon </li>
- *     <li>4111 - syntax error in the values returned by 
- *                the scheduler daemon </li>
+ *     <li>4501 - invalid argument format </li>
+ *     <li>4502 - missing path argument </li>
+ *     <li>4510 - error reported by the scheduler daemon </li>
+ *     <li>4520 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author$
+ *  @author  $Author: fgerlits $
  *  @version $Revision$
  */
-class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
+class RestoreBackupMethod : public XmlRpc::XmlRpcServerMethod
 {
     private:
         /**
@@ -120,7 +101,7 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        CreateBackupCheckMethod(void)                                throw ()
+        RestoreBackupMethod(void)                                throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -130,7 +111,7 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
          *
          *  @param xmlRpcServer the XML-RPC server to register with.
          */
-        CreateBackupCheckMethod(
+        RestoreBackupMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
                                                                     throw ();
 
@@ -156,5 +137,5 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // CreateBackupCheckMethod_h
+#endif // RestoreBackupMethod_h
 

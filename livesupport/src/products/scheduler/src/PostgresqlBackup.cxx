@@ -36,6 +36,9 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/FileTools.h"
+#include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
+#include "LiveSupport/Core/XmlRpcIOException.h"
 #include "LiveSupport/Db/Conversion.h"
 #include "PostgresqlBackup.h"
 
@@ -320,11 +323,11 @@ PostgresqlBackup ::createBackupOpen(Ptr<SessionId>::Ref        sessionId,
         if (conn) {
             connectionManager->returnConnection(conn);
         }
-        throw std::invalid_argument(e.what());
+        throw XmlRpcMethodFaultException(e.what());
     }
 
     if (!result) {
-        throw std::invalid_argument("couldn't insert into database");
+        throw XmlRpcMethodFaultException("couldn't insert into database");
     }
 
     return token;
@@ -402,11 +405,11 @@ PostgresqlBackup ::createBackupCheck(
         if (conn) {
             connectionManager->returnConnection(conn);
         }
-        throw std::invalid_argument(e.what());
+        throw XmlRpcMethodFaultException(e.what());
     }
 
     if (!result) {
-        throw std::invalid_argument("couldn't insert into database");
+        throw XmlRpcMethodFaultException("couldn't insert into database");
     }
 
     return status;
@@ -424,7 +427,7 @@ PostgresqlBackup ::putScheduleExportIntoTar(
                                                     throw (std::runtime_error)
 {
     Ptr<Document>::Ref      document(new Document());
-    Element               * root = document->create_root_node("scheduler");
+    Element *               root = document->create_root_node("scheduler");
     std::string             tmpFileName = FileTools::tempnam();
 
     // create the export, and write it to a temporary file
@@ -471,11 +474,11 @@ PostgresqlBackup ::createBackupClose(const Glib::ustring &    token)
         if (conn) {
             connectionManager->returnConnection(conn);
         }
-        throw std::invalid_argument(e.what());
+        throw XmlRpcInvalidArgumentException(e.what());
     }
 
     if (!result) {
-        throw std::invalid_argument("couldn't insert into database");
+        throw XmlRpcMethodFaultException("couldn't insert into database");
     }
 }
 
@@ -499,5 +502,45 @@ PostgresqlBackup ::asyncStateToString(AsyncState    status)
                                                                     throw ()
 {
     return *status.toBackupString();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Restore a schedule backup.
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlBackup :: restoreBackup(Ptr<SessionId>::Ref               sessionId,
+                                  Ptr<const Glib::ustring>::Ref     path)
+                                                        throw (XmlRpcException)
+{
+    //TODO: check the session ID
+    
+    std::string             tmpFileName = FileTools::tempnam();
+    try {
+        FileTools::extractFileFromTarball(*path,
+                                          scheduleExportFileName,
+                                          tmpFileName);
+    } catch (std::runtime_error &e) {
+        remove(tmpFileName.c_str());
+        std::string     errorMsg = "error opening the schedule backup file:\n";
+        errorMsg += e.what();
+        throw XmlRpcIOException(errorMsg);
+    }
+    
+    Ptr<DomParser>::Ref parser(new DomParser(tmpFileName,
+                                             false /* do not expect a DTD */));
+    const Document *        document    = parser->get_document();
+    const Element *         xmlSchedule = document->get_root_node();
+    const Node::NodeList    children    = xmlSchedule->get_children(
+                                                            "scheduleExport");
+    const Element *         xmlScheduleExport
+                                        = (const Element *) children.front();
+    try {
+        schedule->importScheduleEntries(xmlScheduleExport);
+    } catch (std::invalid_argument &e) {
+        std::string     errorMsg = "error restoring the schedule backup:\n";
+        errorMsg += e.what();
+        throw XmlRpcMethodFaultException(errorMsg);
+    }
 }
 

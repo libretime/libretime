@@ -523,10 +523,10 @@ PostgresqlSchedule :: exportScheduleEntries(
 
 
 /*------------------------------------------------------------------------------
- *  Import schedule entries to an XML file.
+ *  Import schedule entries from an XML file.
  *----------------------------------------------------------------------------*/
 void
-PostgresqlSchedule :: importScheduleEntries(xmlpp::Element    * element)
+PostgresqlSchedule :: importScheduleEntries(const xmlpp::Element    * element)
                                                 throw (std::invalid_argument)
 {
     if (element->get_name() != scheduleExportElementName) {

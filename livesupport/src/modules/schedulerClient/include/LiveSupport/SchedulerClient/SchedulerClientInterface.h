@@ -52,6 +52,8 @@
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "LiveSupport/Core/AsyncState.h"
+#include "LiveSupport/Core/SearchCriteria.h"
+#include "LiveSupport/Core/AsyncState.h"
 
 namespace LiveSupport {
 namespace SchedulerClient {
@@ -232,6 +234,24 @@ class SchedulerClientInterface
                                                     throw (XmlRpcException)
                                                                         = 0;
 
+        /**
+         *  Restore a schedule backup.
+         *
+         *  All playlist IDs contained in the backup should already be in the
+         *  storage.  If this is a combined backup, with both storage and 
+         *  schedule components, then restore this backup to the storage
+         *  first, and then call this function.
+         *  
+         *  @param  sessionId   a valid session ID to identify the user.
+         *  @param  path        the location of the archive to upload.
+         *  @exception  XmlRpcException     if there is an error.
+         */
+        virtual void
+        restoreBackup(Ptr<SessionId>::Ref               sessionId,
+                      Ptr<const Glib::ustring>::Ref     path)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+        
         /**
          *  A virtual destructor, as this class has virtual functions.
          */

@@ -241,7 +241,6 @@ SchedulerDaemonXmlRpcClient :: uploadPlaylist(
 
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
-    Ptr<const ptime>::Ref   result;
 
     XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
                                          xmlRpcPort,
@@ -291,7 +290,6 @@ SchedulerDaemonXmlRpcClient :: displaySchedule(
 
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
-    Ptr<const ptime>::Ref   result;
 
     XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
                                          xmlRpcPort,
@@ -338,7 +336,6 @@ SchedulerDaemonXmlRpcClient :: removeFromSchedule(
 {
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
-    Ptr<const ptime>::Ref   result;
 
     XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
                                          xmlRpcPort,
@@ -517,3 +514,43 @@ SchedulerDaemonXmlRpcClient :: createBackupClose(
 
     xmlRpcClient.close();
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Restore a schedule backup.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClient :: restoreBackup(
+                                    Ptr<SessionId>::Ref             sessionId,
+                                    Ptr<const Glib::ustring>::Ref   path)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::pathToXmlRpcValue(path, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("restoreBackup",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                        "cannot execute XML-RPC method 'restoreBackup'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'restoreBackup' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+}
+

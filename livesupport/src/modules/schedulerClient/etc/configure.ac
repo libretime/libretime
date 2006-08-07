@@ -44,6 +44,9 @@ AC_PROG_CXX()
 
 AC_CHECK_HEADERS(getopt.h sys/time.h)
 
+AC_CHECK_HEADERS(libtar.h)
+
+
 dnl-----------------------------------------------------------------------------
 dnl  specify the pkg-config path
 dnl-----------------------------------------------------------------------------
@@ -70,6 +73,10 @@ AC_MSG_RESULT([checking BOOST_DATE_TIME_LIB... ${BOOST_DATE_TIME_LIB}])
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
+
+AC_CHECK_CURL(7.12.3)
+AC_SUBST(CURL_CFLAGS)
+AC_SUBST(CURL_LIBS)
 
 AC_CHECK_TAGLIB(1.3.1)
 AC_SUBST(TAGLIB_CFLAGS)

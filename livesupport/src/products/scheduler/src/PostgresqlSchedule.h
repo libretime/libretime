@@ -336,7 +336,7 @@ class PostgresqlSchedule : public Configurable,
          *  @see #exportScheduleEntries
          */
         virtual void
-        importScheduleEntries(xmlpp::Element      * element)
+        importScheduleEntries(const xmlpp::Element      * element)
                                                 throw (std::invalid_argument);
 
         /**

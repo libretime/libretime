@@ -67,6 +67,14 @@ using namespace LiveSupport::StorageClient;
 /**
  *  The generic interface for creating and restoring schedule backups.
  *
+ *  There is a singleton instance of this type, which is manufactured by the 
+ *  BackupFactory class.
+ *
+ *  There are separate xxxxMethod classes which perform these
+ *  functions via XML-RPC, by delegating them to this singleton object.
+ *  The xxxxMethod classes are registered in the SchedulerDaemon
+ *  object, which calls them when an XML-RPC request is received.
+ *
  *  @author  $Author$
  *  @version $Revision$
  */
@@ -140,6 +148,24 @@ class BackupInterface : virtual public Installable
          */
         virtual void
         createBackupClose(const Glib::ustring &     token)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Restore a schedule backup.
+         *
+         *  All playlist IDs contained in the backup should already be in the
+         *  storage.  If this is a combined backup, with both storage and 
+         *  schedule components, then restore this backup to the storage
+         *  first, and then call this function.
+         *  
+         *  @param  sessionId   a valid session ID to identify the user.
+         *  @param  path        the location of the archive to upload.
+         *  @exception  XmlRpcException     if there is an error.
+         */
+        virtual void
+        restoreBackup(Ptr<SessionId>::Ref               sessionId,
+                      Ptr<const Glib::ustring>::Ref     path)
                                                 throw (XmlRpcException)
                                                                         = 0;
 

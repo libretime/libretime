@@ -21,13 +21,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: fgerlits $
     Version  : $Revision$
-    Location : $URL$
+    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/scheduler/src/StopCurrentlyPlayingMethod.h $
 
 ------------------------------------------------------------------------------*/
-#ifndef CreateBackupCheckMethod_h
-#define CreateBackupCheckMethod_h
+#ifndef StopCurrentlyPlayingMethod_h
+#define StopCurrentlyPlayingMethod_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,9 +40,7 @@
 #include "configure.h"
 #endif
 
-#include <stdexcept>
 #include <string>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
 #include <XmlRpcException.h>
@@ -66,42 +64,30 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An XML-RPC method object to check the progress of a backup creation process.
+ *  An XML-RPC method object to stop the scheduler's audio player.
  *
- *  The name of the method when called through XML-RPC is "createBackupCheck".
+ *  The name of the method when called through XML-RPC is "stopCurrenlyPlaying".
  *
- *  The expected parameter is an XML-RPC structure with a single member:
+ *  The expected parameter is an XML-RPC structure, with the following
+ *  member:
  *  <ul>
- *      <li>token   - string -  the token obtained from createBackupOpen </li>
- *  </ul>
- *
- *  On success, returns an XML-RPC struct, with the following members:
- *  <ul>
- *      <li>status  - string -  on of "success", "working" or "fault" </li>
- *      <li>url     - string -  if the status is "success", this contains
- *                              a readable URL of the new backup archive </li>
- *      <li>path    - string -  if the status is "success", this contains
- *                              the local access path of the new backup
- *                              archive </li>
- *      <li>faultString - string -  if the status is "fault", this contains
- *                                  the error message. </li>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
  *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
  *  possible errors are:
  *  <ul>
- *     <li>4101 - invalid argument format </li>
- *     <li>4102 - missing token argument </li>
- *     <li>4110 - error reported by the scheduler daemon </li>
- *     <li>4111 - syntax error in the values returned by 
- *                the scheduler daemon </li>
+ *     <li>5001 - invalid argument format </li>
+ *     <li>5010 - error reported by the audio player component </li>
+ *     <li>5020 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author$
+ *  @author  $Author: fgerlits $
  *  @version $Revision$
  */
-class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
+class StopCurrentlyPlayingMethod : public XmlRpc::XmlRpcServerMethod
 {
     private:
         /**
@@ -120,7 +106,7 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        CreateBackupCheckMethod(void)                                throw ()
+        StopCurrentlyPlayingMethod(void)                          throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -130,12 +116,12 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
          *
          *  @param xmlRpcServer the XML-RPC server to register with.
          */
-        CreateBackupCheckMethod(
+        StopCurrentlyPlayingMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
-                                                                    throw ();
+                                                                throw ();
 
         /**
-         *  Execute the createBackupOpen command on the Scheduler daemon.
+         *  Execute the remove from schedule command on the Scheduler daemon.
          *
          *  @param parameters XML-RPC function call parameters
          *  @param returnValue the return value of the call (out parameter)
@@ -156,5 +142,5 @@ class CreateBackupCheckMethod : public XmlRpc::XmlRpcServerMethod
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // CreateBackupCheckMethod_h
+#endif // StopCurrentlyPlayingMethod_h
 

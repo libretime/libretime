@@ -253,7 +253,9 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/PostgresqlBackup.o \
                  ${TMP_DIR}/CreateBackupOpenMethod.o \
                  ${TMP_DIR}/CreateBackupCheckMethod.o \
-                 ${TMP_DIR}/CreateBackupCloseMethod.o
+                 ${TMP_DIR}/CreateBackupCloseMethod.o \
+                 ${TMP_DIR}/RestoreBackupMethod.o \
+                 ${TMP_DIR}/StopCurrentlyPlayingMethod.o
 
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
@@ -290,7 +292,9 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/PlaylistEventContainerTest.o \
                    ${TMP_DIR}/PlaylistEventTest.o \
                    ${TMP_DIR}/PostgresqlBackupTest.o \
-                   ${TMP_DIR}/RpcBackupTest.o
+                   ${TMP_DIR}/RpcBackupTest.o \
+                   ${TMP_DIR}/RpcStopCurrentlyPlayingTest.o
+
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 
 

@@ -152,7 +152,7 @@ class ScheduleInterface : virtual public Installable
          *  @see #exportScheduleEntries
          */
         virtual void
-        importScheduleEntries(xmlpp::Element      * domTree)
+        importScheduleEntries(const xmlpp::Element      * domTree)
                                                 throw (std::invalid_argument)
                                                                         = 0;
 

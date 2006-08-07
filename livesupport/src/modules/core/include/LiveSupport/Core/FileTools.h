@@ -106,7 +106,7 @@ class FileTools
          *  @param tarFileName the name of the existing tar file
          *  @param newFileRealName the name of the new file to append
          *  @param newFileInTarball the name of the new file in the tarball
-         *  @throws std::runtime_error on file / tarball handling issues.
+         *  @exception std::runtime_error on file / tarball handling issues.
          */
         static void
         appendFileToTarball(const std::string & tarFileName,
@@ -121,13 +121,27 @@ class FileTools
          *  @param fileName the name of the file to check in the traball.
          *  @return true if a file named fileName exists in the tarball,
          *          false otherwise.
-         *  @throws std::runtime_error on file / tarball handling issues.
+         *  @exception std::runtime_error on file / tarball handling issues.
          */
         static bool
         existsInTarball(const std::string & tarFileName,
                         const std::string & fileName)
                                                     throw (std::runtime_error);
 
+        /**
+         *  Extract a file from a tarball.
+         *
+         *  @param  tarFileName     the name of the existing tar file.
+         *  @param  fileInTarball   the name of the file to be extracted
+         *                              in the tarball.
+         *  @param  fileExtracted   the name of the new file to create.
+         *  @exception std::runtime_error on file / tarball handling issues.
+         */
+        static void
+        extractFileFromTarball(const std::string &      tarFileName,
+                               const std::string &      fileInTarball,
+                               const std::string &      fileExtracted)
+                                                    throw (std::runtime_error);
 };
 
 /* ================================================= external data structures */

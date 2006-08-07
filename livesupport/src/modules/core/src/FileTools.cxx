@@ -275,3 +275,58 @@ FileTools :: existsInTarball(const std::string & tarFileName,
     return result;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Extract a file from a tarball.
+ *----------------------------------------------------------------------------*/
+void
+FileTools :: extractFileFromTarball(const std::string &     tarFileName,
+                                    const std::string &     fileInTarball,
+                                    const std::string &     fileExtracted)
+                                                    throw (std::runtime_error)
+{
+    TAR   * tar;
+    bool    found = false;
+
+    if (tar_open(&tar,
+                 (char*) tarFileName.c_str(),
+                 NULL,
+                 O_RDONLY,
+                 0,
+                 0) == -1) {
+        throw std::runtime_error("can't open tarball");
+    }
+
+    while (th_read(tar) == 0) {
+        if (TH_ISREG(tar)) {
+            char  * path = th_get_pathname(tar);
+
+            if (fileInTarball == path) {
+                found = true;
+                if (tar_extract_file(tar,
+                                     (char *) fileExtracted.c_str()) != 0) {
+                    std::string     errorMsg = "can't extract file ";
+                    errorMsg += fileInTarball;
+                    errorMsg += " from tarball ";
+                    errorMsg += tarFileName;
+                    throw std::runtime_error(errorMsg);
+                }
+                break;
+            }
+
+            tar_skip_regfile(tar);
+        }
+    }
+
+    // at this point, tarFileEnd is position where EOT block begins
+    tar_close(tar); // close for reading
+    
+    if (!found) {
+        std::string     errorMsg = "could not find file ";
+        errorMsg += fileInTarball;
+        errorMsg += " in the tarball ";
+        errorMsg += tarFileName;
+        throw std::runtime_error(errorMsg);
+    }
+}
+

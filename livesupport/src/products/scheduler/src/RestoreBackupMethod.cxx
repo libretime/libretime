@@ -21,36 +21,20 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: fgerlits $
     Version  : $Revision$
-    Location : $URL$
+    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/branches/scheduler_export/livesupport/src/products/scheduler/src/RestoreBackupMethod.cxx $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
-#ifdef HAVE_CONFIG_H
-#include "configure.h"
-#endif
-
-#ifdef HAVE_TIME_H
-#include <time.h>
-#else
-#error need time.h
-#endif
-
-
-#include <string>
-
 #include "LiveSupport/Core/XmlRpcTools.h"
 #include "LiveSupport/Core/XmlRpcException.h"
 #include "BackupFactory.h"
 
-#include "CreateBackupOpenMethod.h"
+#include "RestoreBackupMethod.h"
 
-
-using namespace boost;
-using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
@@ -65,12 +49,12 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string   CreateBackupOpenMethod::methodName = "createBackupOpen";
+const std::string   RestoreBackupMethod::methodName = "restoreBackup";
 
 /*------------------------------------------------------------------------------
  *  The ID of this method for error reporting purposes.
  *----------------------------------------------------------------------------*/
-const int           CreateBackupOpenMethod::errorId = 4000;
+const int           RestoreBackupMethod::errorId    = 4500;
 
 
 /* ===============================================  local function prototypes */
@@ -81,7 +65,7 @@ const int           CreateBackupOpenMethod::errorId = 4000;
 /*------------------------------------------------------------------------------
  *  Construct the method and register it right away.
  *----------------------------------------------------------------------------*/
-CreateBackupOpenMethod :: CreateBackupOpenMethod(
+RestoreBackupMethod :: RestoreBackupMethod (
                                 Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
                                                                     throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
@@ -93,7 +77,7 @@ CreateBackupOpenMethod :: CreateBackupOpenMethod(
  *  Execute the upload playlist method XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-CreateBackupOpenMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
+RestoreBackupMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
                                   XmlRpc::XmlRpcValue &     returnValue)
                                                 throw (XmlRpc::XmlRpcException)
 {
@@ -114,45 +98,26 @@ CreateBackupOpenMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
                                 returnValue);
         return;
     }
-
-    Ptr<SearchCriteria>::Ref    criteria;
-    try {
-        criteria = XmlRpcTools::extractSearchCriteria(parameters);
+    
+    Ptr<Glib::ustring>::Ref     path;
+    try{
+        path = XmlRpcTools::extractPath(parameters);
+        
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+2, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+2, 
+                               "missing path argument",
+                               returnValue);
         return;
     }
-
-    Ptr<ptime>::Ref             fromTime;
-    try {
-        fromTime = XmlRpcTools::extractFromTime(parameters);
-    } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, e.what(), returnValue);
-        return;
-    }
-
-    Ptr<ptime>::Ref             toTime;
-    try {
-        toTime = XmlRpcTools::extractToTime(parameters);
-    } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, e.what(), returnValue);
-        return;
-    }
-
+    
     Ptr<BackupFactory>::Ref     bf      = BackupFactory::getInstance();
     Ptr<BackupInterface>::Ref   backup  = bf->getBackup();
-    
-    Ptr<Glib::ustring>::Ref     token;
     try {
-        token = backup->createBackupOpen(sessionId,
-                                         criteria,
-                                         fromTime,
-                                         toTime);
+        backup->restoreBackup(sessionId, path);
+        
     } catch (Core::XmlRpcException &e) {
-        XmlRpcTools::markError(errorId+5, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+10, e.what(), returnValue);
         return;
     }
-    
-    XmlRpcTools::tokenToXmlRpcValue(token, returnValue);
 }
 

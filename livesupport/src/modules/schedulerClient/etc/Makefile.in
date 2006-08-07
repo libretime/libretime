@@ -84,6 +84,9 @@ BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
+CURL_CFLAGS=@CURL_CFLAGS@
+CURL_LIBS=@CURL_LIBS@
+
 ICU_CFLAGS=@ICU_CFLAGS@
 ICU_CXXFLAGS=@ICU_CXXFLAGS@
 ICU_LIBS=@ICU_LIBS@
@@ -111,6 +114,7 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
+                             ${LIBTAR_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
@@ -118,8 +122,10 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+                     ${CURL_LIBS} \
                      ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
+                     ${LIBTAR_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
@@ -140,7 +146,7 @@ TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} \
                    -l${CORE_LIB} \
                    -l${AUTHENTICATION_LIB} \
                    -l${BOOST_DATE_TIME_LIB} \
-                   -lcppunit -ldl -lxmlrpc++ -lssl
+                   -lcppunit -ldl -lxmlrpc++ -lssl -ltar
 
 
 #-------------------------------------------------------------------------------
