@@ -304,7 +304,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                     liveModeWindow && !liveModeWindow->is_visible()) {
                 updateLiveModeWindow();
             } else {
-                gLiveSupport->putWindowPosition(liveModeWindow);
                 liveModeWindow->hide();
             }
         }
@@ -320,7 +319,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                     scratchpadWindow && !scratchpadWindow->is_visible()) {
                 updateScratchpadWindow();
             } else {
-                gLiveSupport->putWindowPosition(scratchpadWindow);
                 scratchpadWindow->hide();
             }
         }
@@ -337,7 +335,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                                  !simplePlaylistMgmtWindow->is_visible()) {
                 updateSimplePlaylistMgmtWindow();
             } else {
-                gLiveSupport->putWindowPosition(simplePlaylistMgmtWindow);
                 simplePlaylistMgmtWindow->hide();
             }
         }
@@ -353,7 +350,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                     schedulerWindow && !schedulerWindow->is_visible()) {
                 updateSchedulerWindow();
             } else {
-                gLiveSupport->putWindowPosition(schedulerWindow);
                 schedulerWindow->hide();
             }
         }
@@ -369,7 +365,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                     searchWindow && !searchWindow->is_visible()) {
                 updateSearchWindow();
             } else {
-                gLiveSupport->putWindowPosition(searchWindow);
                 searchWindow->hide();
             }
         }
@@ -385,7 +380,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                     optionsWindow && !optionsWindow->is_visible()) {
                 updateOptionsWindow();
             } else {
-                gLiveSupport->putWindowPosition(optionsWindow);
                 optionsWindow->hide();
             }
         }
