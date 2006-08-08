@@ -426,7 +426,7 @@ check:
 	-${MAKE} -C ${SCHEDULER_CLIENT_DIR} check
 	-${MAKE} -C ${WIDGETS_DIR} check
 	-${MAKE} -C ${SCHEDULER_DIR} check
-	-${MAKE} -C ${GLIVESUPPORT_DIR} check
+#	-${MAKE} -C ${GLIVESUPPORT_DIR} check
 #	-${MAKE} -C ${ARCHIVE_SERVER_DIR} check
 #	-${MAKE} -C ${STORAGE_SERVER_DIR} check
 
