@@ -168,6 +168,11 @@ root:table
         endColumnLabel:string       { "end" }
         deleteMenuItem:string       { "_Delete" }
         
+        stopCurrentlyPlayingText:string 
+                                    { "Currently playing in scheduler:" }
+        stopCurrentlyPlayingButtonLabel:string
+                                    { "Stop" }
+        
         closeButtonLabel:string     { "Close" }
     }
 

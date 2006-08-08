@@ -228,6 +228,13 @@ class SchedulerWindow : public GuiWindow
         virtual void
         onDeleteItem(void)                                      throw ();
 
+        /**
+         *  Signal handler for the "stop currently playing" button
+         *  getting clicked.
+         */
+        virtual void
+        onStopCurrentlyPlayingButtonClicked(void)               throw ();
+
 
     public:
         /**

@@ -66,7 +66,8 @@ using namespace LiveSupport::Core;
 /**
  *  An XML-RPC method object to stop the scheduler's audio player.
  *
- *  The name of the method when called through XML-RPC is "stopCurrenlyPlaying".
+ *  The name of the method when called through XML-RPC is 
+ *  "stopCurrentlyPlaying".
  *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:

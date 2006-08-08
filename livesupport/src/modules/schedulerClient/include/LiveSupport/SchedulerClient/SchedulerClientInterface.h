@@ -253,6 +253,16 @@ class SchedulerClientInterface
                                                                         = 0;
         
         /**
+         *  Stop the scheduler's audio player.
+         *
+         *  @param  sessionId   a valid session ID to identify the user.
+         *  @exception  XmlRpcException     if there is an error.
+         */
+        virtual void
+        stopCurrentlyPlaying(Ptr<SessionId>::Ref        sessionId)
+                                                throw (XmlRpcException) = 0;
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual

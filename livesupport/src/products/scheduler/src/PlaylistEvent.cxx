@@ -170,6 +170,8 @@ PlaylistEvent :: stop(void)                        throw ()
         audioPlayer->close();
     } catch (std::logic_error &e) {
         // TODO: handle error
+        // NOTE: this may not be an error, because the user may have stopped
+        // the playback manually (see Scheduler::StopCurrentlyPlayingMethod)
         std::cerr << "PlaylistEvent::stop error: " << std::endl;
         std::cerr << e.what() << std::endl;
     }

@@ -201,7 +201,31 @@ SchedulerWindow :: constructScheduleView(void)                      throw ()
 Gtk::VBox *
 SchedulerWindow :: constructStatusView(void)                        throw ()
 {
-    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    Gtk::Label *    stopCurrentlyPlayingLabel;
+    Button *        stopCurrentlyPlayingButton;
+    try {
+        stopCurrentlyPlayingLabel = Gtk::manage(new Gtk::Label(
+                    *getResourceUstring("stopCurrentlyPlayingText")));
+        stopCurrentlyPlayingButton = Gtk::manage(wf->createButton(
+                    *getResourceUstring("stopCurrentlyPlayingButtonLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    stopCurrentlyPlayingButton->signal_clicked().connect(sigc::mem_fun(
+                    *this,
+                    &SchedulerWindow::onStopCurrentlyPlayingButtonClicked));
+    
+    Gtk::HBox *     stopCurrentlyPlayingBox = Gtk::manage(new Gtk::HBox);
+    stopCurrentlyPlayingBox->pack_start(*stopCurrentlyPlayingLabel,
+                                        Gtk::PACK_SHRINK, 5);
+    stopCurrentlyPlayingBox->pack_start(*stopCurrentlyPlayingButton, 
+                                        Gtk::PACK_SHRINK, 5);
+    
+    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*stopCurrentlyPlayingBox, Gtk::PACK_SHRINK, 20);
     
     return view;
 }
@@ -348,6 +372,25 @@ SchedulerWindow :: onDeleteItem(void)                               throw ()
                 // TODO: signal error here
             }
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the "stop currently playing" button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: onStopCurrentlyPlayingButtonClicked(void)        throw ()
+{
+    Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
+    Ptr<SchedulerClientInterface>::Ref
+                            scheduler = gLiveSupport->getScheduler();
+    
+    try {
+        scheduler->stopCurrentlyPlaying(sessionId);
+        
+    } catch (XmlRpcException &e) {
+        // TODO: signal error here
     }
 }
 

@@ -330,6 +330,16 @@ class SchedulerDaemonXmlRpcClient :
         restoreBackup(Ptr<SessionId>::Ref               sessionId,
                       Ptr<const Glib::ustring>::Ref     path)
                                                 throw (XmlRpcException);
+
+        /**
+         *  Stop the scheduler's audio player.
+         *
+         *  @param  sessionId   a valid session ID to identify the user.
+         *  @exception  XmlRpcException     if there is an error.
+         */
+        virtual void
+        stopCurrentlyPlaying(Ptr<SessionId>::Ref        sessionId)
+                                                throw (XmlRpcException);
 };
 
 
