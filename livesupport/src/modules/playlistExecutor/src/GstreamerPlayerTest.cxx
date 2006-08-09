@@ -110,13 +110,11 @@ void
 GstreamerPlayerTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         player->initialize();
-        CPPUNIT_ASSERT(!player->isPlaying());
-        player->deInitialize();
-    } catch (std::exception &e) {
-        CPPUNIT_FAIL("failed to initialize or de-initialize GstreamerPlayer");
-    }
+    );
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->deInitialize();
 }
 
 
@@ -129,16 +127,16 @@ GstreamerPlayerTest :: simplePlayTest(void)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
@@ -165,22 +163,25 @@ GstreamerPlayerTest :: getPositionTest(void)
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(100)));
     Ptr<ptime>::Ref             start;
 
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
     start = TimeConversion::now();
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         Ptr<ptime>::Ref         now = TimeConversion::now();
         Ptr<time_duration>::Ref offset(new time_duration(*now - *start));
-        Ptr<time_duration>::Ref position = player->getPosition();
+        Ptr<time_duration>::Ref position;
+        CPPUNIT_ASSERT_NO_THROW(
+            position = player->getPosition()
+        );
 
         TimeConversion::sleep(sleepT);
         // TODO: check here for abs(position - offset) < epsilon
@@ -209,39 +210,39 @@ GstreamerPlayerTest :: setDeviceTest(void)
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
     Ptr<time_duration>::Ref     playlength;
 
-    player->initialize();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
 
     // check on an ALSA device
     CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test-short.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
     }
-    playlength = player->getPlaylength();
+    CPPUNIT_ASSERT_NO_THROW(
+        playlength = player->getPlaylength();
+    );
     CPPUNIT_ASSERT(playlength.get());
     CPPUNIT_ASSERT(playlength->seconds() == 2);
     CPPUNIT_ASSERT(!player->isPlaying());
 
     // check on an OSS DSP device
     CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test-short.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
@@ -253,21 +254,21 @@ GstreamerPlayerTest :: setDeviceTest(void)
 
     // check changing from ALSA to OSS after opening
     CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test-short.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
     }
-    playlength = player->getPlaylength();
+    CPPUNIT_ASSERT_NO_THROW(
+        playlength = player->getPlaylength();
+    );
     CPPUNIT_ASSERT(playlength.get());
     CPPUNIT_ASSERT(playlength->seconds() == 2);
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -278,7 +279,9 @@ GstreamerPlayerTest :: setDeviceTest(void)
     CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test-short.mp3")
     );
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
     }
@@ -298,14 +301,12 @@ GstreamerPlayerTest :: simpleSmilTest(void)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/simpleSmil.smil");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
         player->start();
@@ -329,14 +330,12 @@ GstreamerPlayerTest :: secondSmilTest(void)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/sequentialSmil.smil");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
         player->start();
@@ -360,17 +359,17 @@ GstreamerPlayerTest :: animatedSmilTest(void)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    player->initialize();
-
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/animatedSmil.smil");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
@@ -389,7 +388,9 @@ void
 GstreamerPlayerTest :: checkErrorConditions(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    player->initialize();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
 
     bool    gotException;
 
@@ -610,7 +611,9 @@ GstreamerPlayerTest :: eventListenerOnStopTest(void)
     CPPUNIT_ASSERT(!player->isPlaying());
     player->close();
 
-    player->detachListener(this);
+    CPPUNIT_ASSERT_NO_THROW(
+        player->detachListener(this);
+    );
     player->deInitialize();
 }
 
@@ -663,13 +666,9 @@ GstreamerPlayerTest :: timeSteps(const std::string  fileName)
     Ptr<time_duration>::Ref     closeTime;
 
     start = TimeConversion::now();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         player->open(fileName);
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     end = TimeConversion::now();
     openTime.reset(new time_duration(*end - *start));
 
@@ -684,7 +683,9 @@ GstreamerPlayerTest :: timeSteps(const std::string  fileName)
     CPPUNIT_ASSERT(player->isPlaying());
 
     start = TimeConversion::now();
-    player->stop();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->stop();
+    );
     end = TimeConversion::now();
     stopTime.reset(new time_duration(*end - *start));
 
@@ -706,7 +707,9 @@ void
 GstreamerPlayerTest :: openTimeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    player->initialize();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
 
     timeSteps("file:var/test.mp3");
 
@@ -727,29 +730,33 @@ GstreamerPlayerTest :: pauseResumeTest(void)
 {
     Ptr<time_duration>::Ref     sleepT;
 
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test10001.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
     
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     
     sleepT.reset(new time_duration(seconds(2)));
     TimeConversion::sleep(sleepT);
-    player->pause();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->pause();
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
     
     sleepT.reset(new time_duration(seconds(10)));
     TimeConversion::sleep(sleepT);
     CPPUNIT_ASSERT(!player->isPlaying());
 
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     
     sleepT.reset(new time_duration(seconds(1)));
@@ -794,20 +801,22 @@ GstreamerPlayerTest :: openSoundcardTwiceTest(void)
     }
 
     // initialize & start playing on the first player
-    player->initialize();
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
+        player->initialize();
+    );
+    CPPUNIT_ASSERT_NO_THROW(
         player->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (std::runtime_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!player->isPlaying());
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
 
     // now open the same again in the second one
-    player2->initialize();
+    CPPUNIT_ASSERT_NO_THROW(
+        player2->initialize();
+    );
     try {
         player2->open("file:var/test.mp3");
     } catch (std::invalid_argument &e) {
@@ -825,5 +834,4 @@ GstreamerPlayerTest :: openSoundcardTwiceTest(void)
     player->close();
     player->deInitialize();
 }
-
 

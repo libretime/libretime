@@ -152,28 +152,36 @@ AudioPlayerFactoryGstreamerTest :: simplePlayTest(void)
     audioPlayerFactory = AudioPlayerFactory::getInstance();
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
 
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         audioPlayer->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
-    audioPlayer->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->start();
+    );
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
     
     sleepT.reset(new time_duration(seconds(5)));
     TimeConversion::sleep(sleepT);
-    audioPlayer->pause();
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->pause();
+    );
     sleepT.reset(new time_duration(seconds(1)));
     TimeConversion::sleep(sleepT);
-    audioPlayer->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->start();
+    );
     sleepT.reset(new time_duration(seconds(2)));
     TimeConversion::sleep(sleepT);
-    audioPlayer->pause();
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->pause();
+    );
     sleepT.reset(new time_duration(seconds(1)));
     TimeConversion::sleep(sleepT);
-    audioPlayer->start();
-
+    CPPUNIT_ASSERT_NO_THROW(
+        audioPlayer->start();
+    );
+    
     sleepT.reset(new time_duration(microseconds(10)));
     while (audioPlayer->isPlaying()) {
         TimeConversion::sleep(sleepT);
