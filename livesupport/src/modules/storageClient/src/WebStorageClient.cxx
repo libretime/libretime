@@ -220,7 +220,7 @@ const std::string    errorCodeParamName = "faultCode";
 const std::string    errorMessageParamName = "faultString";
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: resetStorage */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getVersion */
 
 /*------------------------------------------------------------------------------
  *  The name of the get version method on the storage server
@@ -232,21 +232,14 @@ const std::string    getVersionMethodName = "locstor.getVersion";
  *----------------------------------------------------------------------------*/
 const std::string    getVersionResultParamName = "version";
 
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: resetStorage */
+
 /*------------------------------------------------------------------------------
  *  The name of the reset storage method on the storage server
  *----------------------------------------------------------------------------*/
 const std::string    resetStorageMethodName 
                             = "locstor.resetStorage";
-
-/*------------------------------------------------------------------------------
- *  The name of the audio clips result parameter returned by the method
- *----------------------------------------------------------------------------*/
-const std::string    resetStorageAudioClipResultParamName = "audioclips";
-
-/*------------------------------------------------------------------------------
- *  The name of the playlists result parameter returned by the method
- *----------------------------------------------------------------------------*/
-const std::string    resetStoragePlaylistResultParamName = "playlists";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: search */

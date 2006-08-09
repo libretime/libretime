@@ -65,31 +65,34 @@ using namespace LiveSupport::Authentication;
 const std::string TestAuthenticationClient::configElementNameStr 
                                            = "testAuthentication";
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The name of the config child element for the login and password
  *----------------------------------------------------------------------------*/
-static const std::string    userConfigElementName = "user";
+const std::string    userConfigElementName = "user";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the login
  *----------------------------------------------------------------------------*/
-static const std::string    userLoginAttrName = "login";
+const std::string    userLoginAttrName = "login";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the password
  *----------------------------------------------------------------------------*/
-static const std::string    userPasswordAttrName = "password";
+const std::string    userPasswordAttrName = "password";
 
 /*------------------------------------------------------------------------------
  *  The dummy sessionId string returned by this authentication client
  *----------------------------------------------------------------------------*/
-static const std::string    dummySessionIdString = "dummySessionId";
+const std::string    dummySessionIdString = "dummySessionId";
 
 /*------------------------------------------------------------------------------
  *  The version string, returned by getVersion
  *----------------------------------------------------------------------------*/
-static const std::string    versionStr = "TestAuthentication";
+const std::string    versionStr = "TestAuthentication";
 
+}
 
 /* ===============================================  local function prototypes */
 

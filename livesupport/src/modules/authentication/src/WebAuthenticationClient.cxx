@@ -65,25 +65,27 @@ using namespace LiveSupport::Authentication;
 const std::string WebAuthenticationClient::configElementNameStr 
                                            = "webAuthentication";
 
+namespace {
+
 /*------------------------------------------------------------------------------
  *  The name of the config child element for the authentication server location
  *----------------------------------------------------------------------------*/
-static const std::string    locationConfigElementName = "location";
+const std::string    locationConfigElementName = "location";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the server name
  *----------------------------------------------------------------------------*/
-static const std::string    locationServerAttrName = "server";
+const std::string    locationServerAttrName = "server";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the server port
  *----------------------------------------------------------------------------*/
-static const std::string    locationPortAttrName = "port";
+const std::string    locationPortAttrName = "port";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the server php page
  *----------------------------------------------------------------------------*/
-static const std::string    locationPathAttrName = "path";
+const std::string    locationPathAttrName = "path";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: login */
@@ -91,32 +93,32 @@ static const std::string    locationPathAttrName = "path";
 /*------------------------------------------------------------------------------
  *  The name of the get version method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getVersionMethodName = "locstor.getVersion";
+const std::string    getVersionMethodName = "locstor.getVersion";
 
 /*------------------------------------------------------------------------------
  *  The name of version return parameter for getVersion
  *----------------------------------------------------------------------------*/
-static const std::string    getVersionResultParamName = "version";
+const std::string    getVersionResultParamName = "version";
 
 /*------------------------------------------------------------------------------
  *  The name of the login method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    loginMethodName = "locstor.login";
+const std::string    loginMethodName = "locstor.login";
 
 /*------------------------------------------------------------------------------
  *  The name of the login parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    loginParamName = "login";
+const std::string    loginParamName = "login";
 
 /*------------------------------------------------------------------------------
  *  The name of the password parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    passwordParamName = "pass";
+const std::string    passwordParamName = "pass";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    outputSessionIdParamName = "sessid";
+const std::string    outputSessionIdParamName = "sessid";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: logout */
@@ -124,17 +126,17 @@ static const std::string    outputSessionIdParamName = "sessid";
 /*------------------------------------------------------------------------------
  *  The name of the logout method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    logoutMethodName = "locstor.logout";
+const std::string    logoutMethodName = "locstor.logout";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    inputSessionIdParamName = "sessid";
+const std::string    inputSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the status parameter in the output structure
  *----------------------------------------------------------------------------*/
-static const std::string    statusParamName = "status";
+const std::string    statusParamName = "status";
 
 
 /* ~~~~~~~~~~~~~~~~~~  authentication server constants: load/save preferences */
@@ -142,47 +144,47 @@ static const std::string    statusParamName = "status";
 /*------------------------------------------------------------------------------
  *  The name of the load preferences method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    loadPreferencesMethodName = "locstor.loadPref";
+const std::string    loadPreferencesMethodName = "locstor.loadPref";
 
 /*------------------------------------------------------------------------------
  *  The name of the save preferences method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    savePreferencesMethodName = "locstor.savePref";
+const std::string    savePreferencesMethodName = "locstor.savePref";
 
 /*------------------------------------------------------------------------------
  *  The name of the delete preferences method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    deletePreferencesMethodName = "locstor.delPref";
+const std::string    deletePreferencesMethodName = "locstor.delPref";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    preferencesSessionIdParamName = "sessid";
+const std::string    preferencesSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the key parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    preferencesKeyParamName = "key";
+const std::string    preferencesKeyParamName = "key";
 
 /*------------------------------------------------------------------------------
  *  The name of the value parameter for both save and load methods
  *----------------------------------------------------------------------------*/
-static const std::string    preferencesValueParamName = "value";
+const std::string    preferencesValueParamName = "value";
 
 /*------------------------------------------------------------------------------
  *  The name of the return parameter for the save method
  *----------------------------------------------------------------------------*/
-static const std::string    preferencesStatusParamName = "status";
+const std::string    preferencesStatusParamName = "status";
 
 /*------------------------------------------------------------------------------
  *  The name of the fault code parameter
  *----------------------------------------------------------------------------*/
-static const std::string    faultCodeParamName = "faultCode";
+const std::string    faultCodeParamName = "faultCode";
 
 /*------------------------------------------------------------------------------
  *  The fault code for the "invalid preference key" error
  *----------------------------------------------------------------------------*/
-static const int            invalidPreferenceKeyFaultCode = 849;
+const int            invalidPreferenceKeyFaultCode = 849;
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: resetStorage */
@@ -190,18 +192,19 @@ static const int            invalidPreferenceKeyFaultCode = 849;
 /*------------------------------------------------------------------------------
  *  The name of the reset storage method on the server
  *----------------------------------------------------------------------------*/
-static const std::string    resetStorageMethodName = "locstor.resetStorage";
+const std::string    resetStorageMethodName = "locstor.resetStorage";
 
 /*------------------------------------------------------------------------------
- *  The name of the list of audio clips parameter returned (ignored here)
+ *  The name of the result parameter returned by the method (ignored here)
  *----------------------------------------------------------------------------*/
-static const std::string    resetStorageAudioClipResultParamName = "audioclips";
+const std::string    resetStorageResultParamName = "results";
 
 /*------------------------------------------------------------------------------
- *  The name of the list of playlists parameter returned (ignored here)
+ *  The name of the count parameter returned by the method (ignored here)
  *----------------------------------------------------------------------------*/
-static const std::string    resetStoragePlaylistResultParamName = "playlists";
+const std::string    resetStorageCountParamName = "cnt";
 
+}
 
 /* ===============================================  local function prototypes */
 
@@ -643,12 +646,12 @@ WebAuthenticationClient :: reset(void)
         throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
-    if (! result.hasMember(resetStorageAudioClipResultParamName)
-            || result[resetStorageAudioClipResultParamName].getType() 
+    if (! result.hasMember(resetStorageResultParamName)
+            || result[resetStorageResultParamName].getType() 
                                                 != XmlRpcValue::TypeArray
-            || ! result.hasMember(resetStoragePlaylistResultParamName)
-            || result[resetStoragePlaylistResultParamName].getType() 
-                                                != XmlRpcValue::TypeArray) {
+            || ! result.hasMember(resetStorageCountParamName)
+            || result[resetStorageCountParamName].getType() 
+                                                != XmlRpcValue::TypeInt) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << resetStorageMethodName
