@@ -10,8 +10,8 @@ define('UI_ERROR',                      TRUE);
 if (UI_DEBUG) error_reporting(E_ALL);
 
 
-define('UI_VERSION',                    'LiveSupport 1.0.2');
-define('UI_VERSION_FULLNAME',           'LiveSupport 1.0.2');
+define('UI_VERSION',                    'LiveSupport 1.1.0');
+define('UI_VERSION_FULLNAME',           'LiveSupport 1.1.0');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler
