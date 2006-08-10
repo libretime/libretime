@@ -109,7 +109,7 @@ $infos = array(
     "browseCategory"    => array('m'=>"locstor.browseCategory", 'p'=>NULL),
     "resetStorage"  => array('m'=>"locstor.resetStorage",
         'p'=>array()),
-#        'p'=>array('loadSampleData', 'filesOnly')),
+#        'p'=>array('loadSampleData', 'invalidateSessionIds')),
     "storeWebstream"    => array('m'=>"locstor.storeWebstream",
         'p'=>array('sessid', 'gunid', 'metadata', 'fname', 'url'),
         'r'=>array('gunid')
@@ -251,7 +251,7 @@ case"browseCategory":
 case"resetStorage":
     $parr = array(
         'loadSampleData'=>(boolean)$pars[0],
-        'filesOnly'=>(boolean)$pars[1],
+        'invalidateSessionIds'=>(boolean)$pars[1],
     );
     break;
 default:

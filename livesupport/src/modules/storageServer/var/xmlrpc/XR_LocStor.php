@@ -3298,9 +3298,8 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> loadSampleData : boolean - flag for allow sample data loading
      *      </li>
-     *      <li> filesOnly : boolean - flag for files cleanup only,
-     *            no sampleData insert
-     *      </li>
+     *      <li> invalidateSessionIds : boolean - flag for complete cleanup,
+     *      (if false: does not cleanup of sessions </li>
      *  </ul>
      *
      *  On success, returns the same result as searchMetadata with filetype
@@ -3339,7 +3338,7 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->resetStorage(
             isset($r['loadSampleData']) ? $r['loadSampleData'] : TRUE,
-            isset($r['filesOnly']) ? $r['filesOnly'] : FALSE
+            !(isset($r['invalidateSessionIds']) ? $r['invalidateSessionIds'] : FALSE)
         );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
