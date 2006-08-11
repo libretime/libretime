@@ -8,7 +8,9 @@ class uiSearch
         #$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        if (empty($this->criteria['limit'])) {
+            $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        }
     }
 
     function setReload()
@@ -164,19 +166,21 @@ class uiSearch
 
     function searchDB()
     {
-        if (count($this->criteria) === 0)
+        if (count($this->criteria) === 0) {
             return FALSE;
+        }
 
         $this->results = array('page' => $this->criteria['offset'] / $this->criteria['limit']);
 
-        #print_r($this->criteria);
+        //print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         if (PEAR::isError($results)) {
-            #print_r($results);
+            //print_r($results);
             return FALSE;
         }
         foreach ($results['results'] as $rec) {
-            $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
+            $this->results['items'][] = $this->Base->_getMetaInfo($tmpId);
         }
         $this->results['cnt'] = $results['cnt'];
 

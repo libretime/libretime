@@ -191,7 +191,8 @@ class uiBrowse
         
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
-            $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
+            $this->results['items'][] = $this->Base->_getMetaInfo($tmpId);
         }
 
         /*
