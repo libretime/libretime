@@ -695,11 +695,11 @@ ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
 Ptr<Glib::ustring>::Ref
 ScratchpadWindow :: getContents(void)                           throw ()
 {
-    std::ostringstream                      contentsStream;
-    Gtk::TreeModel::const_reverse_iterator  it;
+    std::ostringstream              contentsStream;
+    Gtk::TreeModel::const_iterator  it;
 
-    for (it = treeModel->children().rbegin(); 
-                                it != treeModel->children().rend(); ++it) {
+    for (it = treeModel->children().begin(); 
+                                it != treeModel->children().end(); ++it) {
         Gtk::TreeRow        row = *it;
         Ptr<Playable>::Ref  playable = row[modelColumns.playableColumn];
         contentsStream << playable->getId()->getId() << " ";
@@ -718,22 +718,25 @@ void
 ScratchpadWindow :: setContents(Ptr<const Glib::ustring>::Ref       contents)
                                                                 throw ()
 {
-    std::istringstream              contentsStream(contents->raw());
-    Ptr<Playable>::Ref              playable;
+    std::vector<UniqueId::IdType>   contentsVector;
+    std::istringstream              contentsStream(*contents);
+    while (!contentsStream.eof()) {
+        UniqueId::IdType            nextItem;
+        contentsStream >> nextItem;
+        if (contentsStream.fail()) {
+            contentsStream.clear();
+            contentsStream.ignore();
+        } else {
+            contentsVector.push_back(nextItem);
+        }
+    }
     
     treeModel->clear();
+    std::vector<UniqueId::IdType>::reverse_iterator     it;
     
-    while (!contentsStream.eof()) {
-        UniqueId::IdType            idValue;
-        Ptr<const UniqueId>::Ref    id;
-
-        contentsStream >> idValue;
-        if (contentsStream.fail()) {
-            break;
-        } else {
-            id.reset(new const UniqueId(idValue));
-            addItem(id);
-        }
+    for (it = contentsVector.rbegin(); it != contentsVector.rend(); ++it) {
+        Ptr<const UniqueId>::Ref    id(new const UniqueId(*it));
+        addItem(id);
     }
 }
 
