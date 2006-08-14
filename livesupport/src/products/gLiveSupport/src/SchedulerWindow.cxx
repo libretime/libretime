@@ -115,6 +115,21 @@ SchedulerWindow :: SchedulerWindow (
     showContents();
     
     show_all_children();
+    
+    // set up the dialog window
+    Ptr<Glib::ustring>::Ref     confirmationMessage;
+    try {
+        confirmationMessage.reset(new Glib::ustring(
+                        *getResourceUstring("stopCurrentlyPlayingDialogMsg") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    dialogWindow.reset(new DialogWindow(confirmationMessage,
+                                        DialogWindow::noButton |
+                                        DialogWindow::yesButton,
+                                        gLiveSupport->getBundle() ));
 }
 
 
@@ -382,6 +397,18 @@ SchedulerWindow :: onDeleteItem(void)                               throw ()
 void
 SchedulerWindow :: onStopCurrentlyPlayingButtonClicked(void)        throw ()
 {
+    DialogWindow::ButtonType    result = dialogWindow->run();
+    switch (result) {
+        case DialogWindow::yesButton:       break;
+
+        case DialogWindow::noButton:        return;
+                                            break;
+
+        // can happen if the window is closed with Alt-F4 -- treated as No
+        default :                           return;
+                                            break;
+    }
+
     Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
     Ptr<SchedulerClientInterface>::Ref
                             scheduler = gLiveSupport->getScheduler();
@@ -390,7 +417,8 @@ SchedulerWindow :: onStopCurrentlyPlayingButtonClicked(void)        throw ()
         scheduler->stopCurrentlyPlaying(sessionId);
         
     } catch (XmlRpcException &e) {
-        // TODO: signal error here
+        Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(e.what()));
+        gLiveSupport->displayMessageWindow(errorMessage);
     }
 }
 

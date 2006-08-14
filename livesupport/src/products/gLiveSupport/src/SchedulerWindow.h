@@ -50,6 +50,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/DialogWindow.h"
 #include "GuiWindow.h"
 #include "GLiveSupport.h"
 
@@ -206,6 +207,12 @@ class SchedulerWindow : public GuiWindow
          *  The close button.
          */
         Gtk::Button                   * closeButton;
+
+        /**
+         *  The "are you sure you want to stop the currently playing item?"
+         *  dialog window.
+         */
+        Ptr<DialogWindow>::Ref          dialogWindow;
 
         /**
          *  Signal handler for when a date is selected in the calendar.

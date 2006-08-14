@@ -170,8 +170,8 @@ root:table
         
         stopCurrentlyPlayingText:string 
                                     { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string
-                                    { "Stop" }
+        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
+        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
         
         closeButtonLabel:string     { "Close" }
     }
