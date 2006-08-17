@@ -423,6 +423,9 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
         }
     }
     
+    // refresh all windows
+    gLiveSupport->runMainLoop();
+    
     return true;
 }
 

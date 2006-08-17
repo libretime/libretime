@@ -252,6 +252,7 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
     infoString->append("</span>");
 
     row[modelColumns.infoColumn] = *infoString;
+    gLiveSupport->runMainLoop();
 }
 
 
@@ -268,6 +269,7 @@ LiveModeWindow :: popTop(void)                                      throw ()
         playable = (*iter)[modelColumns.playableColumn];
         treeModel->erase(iter);
     }
+    gLiveSupport->runMainLoop();
 
     return playable;
 }
@@ -297,6 +299,7 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
             std::cerr << "cannot play on live mode output device: "
                       << e.what() << std::endl;
         }
+        gLiveSupport->runMainLoop();
     }
 }
 

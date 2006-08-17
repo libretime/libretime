@@ -136,6 +136,7 @@ CuePlayer :: onPlayItem(void)                                       throw ()
         remove(*playButton);
         pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
         pauseButton->show();
+        gLiveSupport->runMainLoop();
     }
 }
 
@@ -157,6 +158,7 @@ CuePlayer :: onPlayButtonClicked(void)                              throw ()
                 remove(*playButton);
                 pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
                 pauseButton->show();
+                gLiveSupport->runMainLoop();
             } catch (std::logic_error &e) {
                 std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
                             << e.what() << std::endl;
@@ -183,6 +185,7 @@ CuePlayer :: onPauseButtonClicked(void)                             throw ()
         remove(*pauseButton);
         pack_end(*playButton, Gtk::PACK_SHRINK, 3);
         playButton->show();
+        gLiveSupport->runMainLoop();
     } catch (std::logic_error &e) {
         std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
                     << e.what() << std::endl;
@@ -227,5 +230,6 @@ CuePlayer :: onStop(void)                                           throw ()
     audioState = waitingState;
     pack_end(*playButton, Gtk::PACK_SHRINK, 3);
     playButton->show();
+    gLiveSupport->runMainLoop();
 }
 
