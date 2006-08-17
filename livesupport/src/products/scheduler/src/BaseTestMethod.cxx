@@ -87,6 +87,7 @@ BaseTestMethod :: configure(std::string configFileName)
 
         xmlRpcHost = scheduler->getXmlRpcHost();
         xmlRpcPort = scheduler->getXmlRpcPort();
+        configured = true;
     }
 }
 
