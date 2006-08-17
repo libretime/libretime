@@ -799,8 +799,12 @@ GLiveSupport :: acquirePlayable(Ptr<const UniqueId>::Ref  id)
 
     } else if (existsAudioClip(id)) {
         playable = acquireAudioClip(id);
-    }
 
+    } else {
+        throw XmlRpcInvalidArgumentException(
+                                "invalid ID in GLiveSupport::acquirePlayable");
+    }
+    
     return playable;
 }
 
