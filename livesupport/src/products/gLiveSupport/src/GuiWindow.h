@@ -184,6 +184,18 @@ class GuiWindow : public WhiteWindow,
         ~GuiWindow(void)                                            throw ()
         {
         }
+
+        /**
+         *  Set the title of the window.
+         *
+         *  Overrides WhiteWindow::set_title() (inherited from Gtk::Window).
+         *  Adds " - LiveSupport" to the title of the window shown on the
+         *  task bar.
+         *
+         *  @param  title   the title of the window.
+         */
+        virtual void
+        set_title(const Glib::ustring &     title)                  throw ();
 };
 
 /* ================================================= external data structures */

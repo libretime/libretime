@@ -48,6 +48,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/**
+ *  The name of the application, shown on the task bar.
+ */
+const Glib::ustring     applicationTitleSuffix = " - LiveSupport";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -159,5 +167,16 @@ GuiWindow :: on_hide (void)                                         throw ()
     }
 
     WhiteWindow::on_hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the title of the window.
+ *----------------------------------------------------------------------------*/
+void
+GuiWindow :: set_title (const Glib::ustring &   title)              throw ()
+{
+    Glib::ustring       completeTitle = title + applicationTitleSuffix;
+    WhiteWindow::set_title(completeTitle);
 }
 

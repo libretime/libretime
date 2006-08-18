@@ -61,6 +61,11 @@ namespace {
 const Glib::ustring     windowName = "masterPanelWindow";
 
 /**
+ *  The name of the application, shown on the task bar.
+ */
+const Glib::ustring     applicationTitleSuffix = " - LiveSupport";
+
+/**
  *  Number of times per second that onUpdateTime() is called.
  *  It's a good idea to make this a divisor of 1000.
  *  If you change this, then you must change NowPlaying::blinkingConstant, too.
@@ -261,7 +266,11 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     }
 
     try {
-        set_title(*getResourceUstring(windowName.c_str(), "windowTitle"));
+        Ptr<Glib::ustring>::Ref     title = getResourceUstring(
+                                                    windowName.c_str(),
+                                                    "windowTitle");
+        title->append(applicationTitleSuffix);
+        set_title(*title);
 
         Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
 
