@@ -611,7 +611,12 @@ GLiveSupport :: logout(void)                                throw ()
     storeWindowPositions();
     windowPositions.clear();
     
-    authentication->logout(sessionId);
+    try {
+        authentication->logout(sessionId);
+    } catch (XmlRpcException &e) {
+        std::cerr << "error in GLiveSupport::logout: " 
+                  << e.what() << std::endl;
+    }
     sessionId.reset();
     
     return true;
