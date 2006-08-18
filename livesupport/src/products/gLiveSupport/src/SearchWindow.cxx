@@ -703,8 +703,10 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
             try {
                 gLiveSupport->addToScratchpad(playable);
             } catch (XmlRpcException &e) {
-                std::cerr << "error in SearchWindow::onAddToScratchpad(): "
-                          << e.what() << std::endl;
+                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                            "error in SearchWindow::onAddToScratchpad(): "));
+                errorMessage->append(e.what());
+                gLiveSupport->displayMessageWindow(errorMessage);
             }
         }
     }
@@ -724,12 +726,14 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
-            gLiveSupport->addToLiveMode(playable);
             try {
                 gLiveSupport->addToScratchpad(playable);
+                gLiveSupport->addToLiveMode(playable);
             } catch (XmlRpcException &e) {
-                std::cerr << "error in SearchWindow::onAddToLiveMode(): "
-                          << e.what() << std::endl;
+                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                            "error in SearchWindow::onAddToLiveMode(): "));
+                errorMessage->append(e.what());
+                gLiveSupport->displayMessageWindow(errorMessage);
             }
         }
     }
