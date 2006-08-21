@@ -98,15 +98,15 @@ fi
 #  Create the configure script
 #-------------------------------------------------------------------------------
 rm -rf $tmpdir/configure
-$bindir/autogen.sh
+$bindir/autogen.sh || exit 1
 $basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
-                   --with-apache-group=$apache_group
+                   --with-apache-group=$apache_group || exit 1
 
 
 #-------------------------------------------------------------------------------
 #  Compile everything at once, including the tools
 #-------------------------------------------------------------------------------
-make -C $basedir all
+make -C $basedir all || exit 1
 
 
 #-------------------------------------------------------------------------------
