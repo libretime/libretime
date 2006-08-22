@@ -78,11 +78,11 @@ export PKG_CONFIG_PATH=${USR_LIB_DIR}/pkgconfig
 #-------------------------------------------------------------------------------
 all: ${TMP_DIR}/all.stamp
 ${TMP_DIR}/all.stamp:
+	cd ${GSTREAMER_DIR} && autoconf
 	cd ${GSTREAMER_DIR} && \
         ./configure --prefix=${prefix} \
                     --with-pkg-config-path=${pkg_config_path}
 	${MAKE} -C ${GSTREAMER_DIR}
-	${MAKE} -C ${GSTREAMER_DIR} install
 	cd ${GST_PLUGINS_DIR} && \
 		./configure --prefix=${prefix} \
                     --with-pkg-config-path=${pkg_config_path} \
@@ -90,18 +90,22 @@ ${TMP_DIR}/all.stamp:
 					--disable-gconf --disable-gconftool \
 					--disable-opengl 
 	${MAKE} -C ${GST_PLUGINS_DIR}
-	${MAKE} -C ${GST_PLUGINS_DIR} install
+	touch ${TMP_DIR}/all.stamp
 
-install: all
+install: all ${TMP_DIR}/install.stamp
+${TMP_DIR}/install.stamp:
+	${MAKE} -C ${GSTREAMER_DIR} install
+	${MAKE} -C ${GST_PLUGINS_DIR} install
+	touch ${TMP_DIR}/install.stamp
 
 clean:
+	${RM} ${TMP_DIR}/*.stamp
 	${MAKE} -C ${GSTREAMER_DIR} clean
 	${MAKE} -C ${GST_PLUGINS_DIR} clean
-	rm ${TMP_DIR}/all.stamp
 
 distclean:
+	${RM} ${TMP_DIR}/*.stamp
 	${RMDIR} ${GSTREAMER_DIR}
 	${RMDIR} ${GST_PLUGINS_DIR}
 	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
-
 
