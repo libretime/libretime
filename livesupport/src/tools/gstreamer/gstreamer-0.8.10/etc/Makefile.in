@@ -79,7 +79,9 @@ export PKG_CONFIG_PATH=${USR_LIB_DIR}/pkgconfig
 all: ${TMP_DIR}/all.stamp
 ${TMP_DIR}/all.stamp:
 	cd ${GSTREAMER_DIR} && \
-        ./configure --prefix=${prefix} --with-pkg-config-path=${pkg_config_path}
+        ./configure --prefix=${prefix} \
+                    --with-pkg-config-path=${pkg_config_path} \
+                    --disable-valgrind
 	${MAKE} -C ${GSTREAMER_DIR}
 	${MAKE} -C ${GSTREAMER_DIR} install
 	cd ${GST_PLUGINS_DIR} && \
