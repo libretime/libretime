@@ -50,7 +50,9 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${gstreamer_tar}
     cd ${product}
-    # patch here
+    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=330308
+    # for details of the following patch
+    patch -p1 < ${etcdir}/valgrind.patch
 fi
 
 cd ${tmpdir}

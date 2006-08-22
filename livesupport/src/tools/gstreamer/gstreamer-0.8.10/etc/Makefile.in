@@ -80,8 +80,7 @@ all: ${TMP_DIR}/all.stamp
 ${TMP_DIR}/all.stamp:
 	cd ${GSTREAMER_DIR} && \
         ./configure --prefix=${prefix} \
-                    --with-pkg-config-path=${pkg_config_path} \
-                    --disable-valgrind
+                    --with-pkg-config-path=${pkg_config_path}
 	${MAKE} -C ${GSTREAMER_DIR}
 	${MAKE} -C ${GSTREAMER_DIR} install
 	cd ${GST_PLUGINS_DIR} && \
