@@ -215,7 +215,8 @@ root:table
         downloadFromHubMenuItem:string  { "Download from the network hub" }
         
         pleaseWaitMsg:string        { "Please wait..." }
-        remoteSearchErrorMsg:string { "Search failed: {0}." }
+        shortErrorMsg:string        { "Search failed." }
+        longErrorMsg:string         { "Search failed: {0}." }
         uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
         downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
         nothingFoundMsg:string      { "No files found." }

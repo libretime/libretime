@@ -418,6 +418,36 @@ class SearchWindow : public GuiWindow
                        Glib::RefPtr<Gtk::ListStore>   treeModel)
                                                                 throw ();
         
+        /**
+         *  Display an error message which occurred during a search.
+         *
+         *  @param  error       the error which occurred.
+         *  @param  treeModel   the tree model to display the message in.
+         */
+        void
+        displayError(const XmlRpcException &        error,
+                     Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ();
+        
+        /**
+         *  Display an error message which occurred during a local search.
+         *
+         *  @param  error       the error which occurred.
+         */
+        void
+        displayLocalSearchError(const XmlRpcException &     error)
+                                                                throw ();
+        
+        /**
+         *  Display an error message which occurred during a remote search.
+         *
+         *  @param  error       the error which occurred.
+         */
+        void
+        displayRemoteSearchError(const XmlRpcException &    error)
+                                                                throw ();
+
+
     public:
 
         /**

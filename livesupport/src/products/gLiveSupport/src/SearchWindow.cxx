@@ -453,7 +453,7 @@ SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
     try {
         searchResults = gLiveSupport->search(criteria);
     } catch (XmlRpcException &e) {
-        std::cerr << e.what() << std::endl;
+        displayLocalSearchError(e);
         return;
     }
     
@@ -537,9 +537,7 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
         try {
             storage->cancelTransport(sessionId, remoteSearchToken);
         } catch (XmlRpcException &e) {
-            gLiveSupport->displayMessageWindow(formatMessage(
-                                                    "remoteSearchErrorMsg",
-                                                    e.what() ));
+            displayRemoteSearchError(e);
             return;
         }
     }
@@ -547,9 +545,7 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
     try {
         remoteSearchToken = storage->remoteSearchOpen(sessionId, criteria);
     } catch (XmlRpcException &e) {
-        gLiveSupport->displayMessageWindow(formatMessage(
-                                                    "remoteSearchErrorMsg",
-                                                    e.what() ));
+        displayRemoteSearchError(e);
     }
 }
 
@@ -571,9 +567,7 @@ SearchWindow :: remoteSearchClose(void)
         try {
             state = storage->checkTransport(remoteSearchToken, errorMessage);
         } catch (XmlRpcException &e) {
-            gLiveSupport->displayMessageWindow(formatMessage(
-                                                    "remoteSearchErrorMsg",
-                                                    e.what() ));
+            displayRemoteSearchError(e);
             return;
         }
         
@@ -583,9 +577,7 @@ SearchWindow :: remoteSearchClose(void)
             try {
                 storage->remoteSearchClose(remoteSearchToken);
             } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(formatMessage(
-                                                "remoteSearchErrorMsg",
-                                                e.what() ));
+                displayRemoteSearchError(e);
                 return;
             }
             remoteSearchToken.reset();
@@ -593,9 +585,7 @@ SearchWindow :: remoteSearchClose(void)
             try {
                 results = gLiveSupport->getSearchResults();
             } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(formatMessage(
-                                                "remoteSearchErrorMsg",
-                                                e.what() ));
+                displayRemoteSearchError(e);
                 return;
             }
             
@@ -603,11 +593,11 @@ SearchWindow :: remoteSearchClose(void)
             
         } else if (state == AsyncState::closedState) {
             remoteSearchToken.reset();
-            displayMessage("remoteSearchErrorMsg", remoteSearchResults);
+            displayMessage("shortErrorMsg", remoteSearchResults);
             
         } else if (state == AsyncState::failedState) {
-                remoteSearchToken.reset();
-                displayMessage(*errorMessage, remoteSearchResults);
+            remoteSearchToken.reset();
+            displayMessage(*errorMessage, remoteSearchResults);
         }
     }
 }
@@ -627,6 +617,42 @@ SearchWindow :: displayMessage(const Glib::ustring &          messageKey,
     row[modelColumns.titleColumn]   = *getResourceUstring(messageKey);
 
     searchResultsTreeView->set_model(treeModel);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display an error message which occurred during a search.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: displayError(const XmlRpcException &        error,
+                             Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ()
+{
+    gLiveSupport->displayMessageWindow(formatMessage("longErrorMsg",
+                                                     error.what() ));
+    displayMessage("shortErrorMsg", treeModel);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display an error message which occurred during a local search.
+ *----------------------------------------------------------------------------*/
+inline void
+SearchWindow :: displayLocalSearchError(const XmlRpcException &     error)
+                                                                throw ()
+{
+    displayError(error, localSearchResults);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display an error message which occurred during a remote search.
+ *----------------------------------------------------------------------------*/
+inline void
+SearchWindow :: displayRemoteSearchError(const XmlRpcException &    error)
+                                                                throw ()
+{
+    displayError(error, remoteSearchResults);
 }
 
 
