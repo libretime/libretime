@@ -788,13 +788,13 @@ class MetaData{
         $arr = $this->getSubrows($id, $genXML);
         if(PEAR::isError($arr)) return $arr;
         if(DEBUG) var_dump($arr);
-        extract($arr);
+        extract($arr);  // attr, children, nSpaces
         if($genXML){
             $node = XML_Util::createTagFromArray(array(
                 'namespace' => $predns,
                 'localPart' => $predicate,
                 'attributes'=> $attrs,
-                'content'   => (is_null($object) ? $children : $object),
+                'content'   => (is_null($object) ? $children : htmlspecialchars($object)),
             ), FALSE);
 //                'content'   => (is_null($object) ? $children : htmlentities($object, ENT_COMPAT, 'UTF-8')),
         }else{
