@@ -132,6 +132,10 @@ function addMdata($key, $val, $iEnc='iso-8859-1'){
 $stdin = fopen('php://stdin', 'r');
 while($filename = fgets($stdin, 2048)){
     $filename = rtrim($filename);
+    if(!preg_match('/\.(ogg|wav|mp3|mpg|mpeg)$/', strtolower($filename), $var)){
+        // echo "File extension not supported - skipping file\n";
+        continue;
+    }
     echo "$filename:   ";
     set_time_limit(30);
     $infoFromFile = GetAllFileInfo("$filename", 'mp3');

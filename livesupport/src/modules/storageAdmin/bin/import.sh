@@ -55,20 +55,25 @@ printUsage()
     echo "                       will be readed recursively.";
     echo "  -l, --list          The filename with list of absolute filepaths";
     echo "                       (newline-separated).";
+    echo "  -f, --file          The filename - import of one file";
     echo "  -h, --help          Print this message and exit.";
     echo "";
     echo "Usage:";
     echo " $0 -d <directory>";
     echo " $0 -l <listfile>";
+    echo " $0 -f <filename>";
     echo " $0 -h";
 }
 
 #-------------------------------------------------------------------------------
 #  Process command line parameters
 #-------------------------------------------------------------------------------
+unset srcabsdir
+unset filelistpathname
+unset filepathname
 CMD=${0##*/}
 
-opts=$(getopt -o d:l:h -l directory:,list:,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:l:f:h -l directory:,list:,file:,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -85,6 +90,14 @@ while true; do
             filelistabsdir=`cd "$filelistdir"; pwd`
             filelistpathname="$filelistabsdir/$filelistbasename"
             shift; shift;;
+        -f|--file)
+            file=$2;
+            test -f "$file" || { echo "File not found ($file)."; exit 1;  }
+            filebasename=`basename "$file"`
+            filedir=`dirname "$file"`
+            fileabsdir=`cd "$filedir"; pwd`
+            filepathname="$fileabsdir/$filebasename"
+            shift; shift;;
         -h|--help)
             printUsage;
             exit 0;;
@@ -98,8 +111,8 @@ while true; do
     esac
 done
 
-if [ "x$srcabsdir" == "x" -a "x$filelist" == "x" ]; then
-    echo "Directory or filelist option required.";
+if [ "x$srcabsdir" == "x" -a "x$filelist" == "x" -a "x$file" == "x" ]; then
+    echo "Directory, filelist or file required.";
     printUsage;
     exit 1;
 fi
@@ -112,10 +125,10 @@ cd $phpdir
 
 if [ -f "$filelistpathname" ]; then
     cat "$filelistpathname" | php -q import.php || exit 1
-fi
-
-if [ -d "$srcabsdir" ]; then
+elif [ -d "$srcabsdir" ]; then
     find "$srcabsdir" -type f | php -q import.php || exit 1
+elif [ -f "$filepathname" ]; then
+    echo "$filepathname" | php -q import.php || exit 1
 else
     echo "Warning: not a directory: $srcabsdir"
 fi
