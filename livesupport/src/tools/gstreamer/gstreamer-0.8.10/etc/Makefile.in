@@ -65,6 +65,7 @@ pkg_config_path=${libdir}/pkgconfig
 USR_DIR=${prefix}
 USR_BIN_DIR=${USR_DIR}/bin
 USR_LIB_DIR=${libdir}
+USR_INCLUDE_DIR=${USR_DIR}/include
 
 export PATH:=${USR_BIN_DIR}:${PATH}
 export CPPFLAGS=-I${USR_DIR}/include
@@ -83,6 +84,7 @@ ${TMP_DIR}/all.stamp:
         ./configure --prefix=${prefix} \
                     --with-pkg-config-path=${pkg_config_path}
 	${MAKE} -C ${GSTREAMER_DIR}
+	${MAKE} -C ${GSTREAMER_DIR} install
 	cd ${GST_PLUGINS_DIR} && \
 		./configure --prefix=${prefix} \
                     --with-pkg-config-path=${pkg_config_path} \
@@ -90,13 +92,16 @@ ${TMP_DIR}/all.stamp:
 					--disable-gconf --disable-gconftool \
 					--disable-opengl 
 	${MAKE} -C ${GST_PLUGINS_DIR}
+	${MAKE} -C ${GST_PLUGINS_DIR} install
 	touch ${TMP_DIR}/all.stamp
 
-install: all ${TMP_DIR}/install.stamp
-${TMP_DIR}/install.stamp:
-	${MAKE} -C ${GSTREAMER_DIR} install
-	${MAKE} -C ${GST_PLUGINS_DIR} install
-	touch ${TMP_DIR}/install.stamp
+install: all
+
+uninstall:
+	${RM} ${USR_BIN_DIR}/gst-*
+	${RMDIR} ${USR_LIB_DIR}/gstreamer*
+	${RM} ${USR_LIB_DIR}/libgst*
+	${RMDIR} ${USR_INCLUDE_DIR}/gstreamer*
 
 clean:
 	${RM} ${TMP_DIR}/*.stamp
