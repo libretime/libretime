@@ -562,7 +562,7 @@ UploadFileWindow :: determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
         return invalidType;
     }
     
-    std::string     extension   = fileName->substr(dotPosition);
+    Glib::ustring   extension = fileName->substr(dotPosition).lowercase();
     if (extension == ".mp3" || extension == ".ogg") {
         return audioClipType;
         
