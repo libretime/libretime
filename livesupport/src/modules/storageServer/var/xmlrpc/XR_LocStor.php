@@ -3296,10 +3296,11 @@ class XR_LocStor extends LocStor{
      *  The input parameters are an empty XML-RPC struct,
      *  or struct with the following <b>optional</b> fields:
      *  <ul>
-     *      <li> loadSampleData : boolean - flag for allow sample data loading
+     *      <li> loadSampleData : boolean - load sample data? (default: true)
      *      </li>
-     *      <li> invalidateSessionIds : boolean - flag for complete cleanup,
-     *      (if false: does not cleanup of sessions </li>
+     *      <li> invalidateSessionIds : boolean - invalidate active session IDs?
+     *                                            (default: false)
+     *      </li>
      *  </ul>
      *
      *  On success, returns the same result as searchMetadata with filetype
