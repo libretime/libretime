@@ -162,6 +162,10 @@ class Transport
         ) as $k){
             $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
         }
+        // do not return finished on finished search job upload
+        // - whole search is NOT finished 
+        if($res['trtype'] == "searchjob" && $res['direction'] == "up" &&
+            $res['state'] == "finished"){ $res['state'] = "waiting"; }
         return $res;
     }
     
