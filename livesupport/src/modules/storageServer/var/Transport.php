@@ -206,6 +206,12 @@ class Transport
     {
         $trec = $r = TransportRecord::recall($this, $trtok);
         if(PEAR::isError($r)){ return $r; }
+        if($trec->getState() == 'closed'){
+            return PEAR::raiseError(
+                "Transport::doTransportAction:".
+                " closed transport token ($trtok)", TRERR_TOK
+            );
+        }
         switch($action){
             case'pause';
                 $newState = 'paused';
@@ -217,6 +223,10 @@ class Transport
                 $newState = 'closed';
                 break;
             default:
+                return PEAR::raiseError(
+                    "Transport::doTransportAction:".
+                    " unknown action ($action)"
+                );
         }
         $res = $trec->setState($newState);
         return $res;
@@ -376,7 +386,7 @@ class Transport
             case"closed":
                 return PEAR::raiseError(
                     "Transport::getSearchResults:".
-                    " invalid transport token ($trtok)", TRERR_TOK
+                    " closed transport token ($trtok)", TRERR_TOK
                 );
                 break;
             case"finished":
