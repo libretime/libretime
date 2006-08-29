@@ -2781,13 +2781,9 @@ class XR_LocStor extends LocStor{
     function xr_doTransportAction($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        // DUMMY
-        $res = 'pending';
-        /*
         require_once '../Transport.php';
         $tr =& new Transport($this);
         $res = $tr->doTransportAction($r['trtok'], $r['action']);
-        */
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
@@ -3154,24 +3150,6 @@ class XR_LocStor extends LocStor{
     function xr_getSearchResults($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-/*
-        // DUMMY
-        $trtok = $r['trtok'];
-        if($trtok != '123456789abcdefe'){
-            $res = PEAR::raiseError(
-                "Transport::getSearchResults:".
-                " invalid transport token ($trtok)", TRERR_TOK
-            );
-        }
-        $res = array(
-            'audioClipResults'   => array('0000000000010001', '0000000000010002'),
-            'audioClipCnt'       => 2,
-            'webstreamResults'   => array(),
-            'webstreamCnt'       => 0,
-            'playlistResults'   => array('0000000000000001'),
-            'playlistCnt'       => 1,
-        );
-*/
         require_once '../Transport.php';
         $tr =& new Transport($this);
         $res = $tr->getSearchResults($r['trtok']);
