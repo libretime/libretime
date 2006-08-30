@@ -269,7 +269,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/ExportPlaylistWindow.o \
                      ${TMP_DIR}/ExportFormatRadioButtons.o \
                      ${TMP_DIR}/TransportList.o \
-                     ${TMP_DIR}/RestoreBackupWindow.o
+                     ${TMP_DIR}/RestoreBackupWindow.o \
+                     ${TMP_DIR}/TaskbarIcons.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \
@@ -352,6 +353,7 @@ install: all
 	${CP} ${TMP_DIR}/*.res ${USR_VAR_DIR}/LiveSupport
 	${CP} ${VAR_DIR}/livesupport.png \
 	      ${VAR_DIR}/stationLogo.png \
+	      ${VAR_DIR}/icon*.png \
 	      ${VAR_DIR}/testAudio.ogg \
 	      ${VAR_DIR}/testAudio.ogg.license ${USR_VAR_DIR}/LiveSupport
 	${CP} ${BIN_DIR}/gLiveSupport.sh ${USR_BIN_DIR}

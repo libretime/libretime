@@ -142,6 +142,11 @@ const std::string   cuePlayerElementName = "cuePlayer";
 const std::string   stationLogoConfigElementName = "stationLogo";
 
 /*------------------------------------------------------------------------------
+ *  The name of the config element for the taskbar icon images
+ *----------------------------------------------------------------------------*/
+const std::string   taskbarIconsConfigElementName = "taskbarIcons";
+
+/*------------------------------------------------------------------------------
  *  The name of the config element for the test audio file location
  *----------------------------------------------------------------------------*/
 const std::string   testAudioUrlConfigElementName = "testAudioUrl";
@@ -335,6 +340,15 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument("could not open station logo image file");
     }
 
+    // configure the taskbar icon images
+    nodes = element.get_children(taskbarIconsConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no taskbar icons element");
+    }
+    taskbarIcons.reset(new TaskbarIcons());
+    taskbarIcons->configure(
+                        *dynamic_cast<const xmlpp::Element*>(nodes.front()) );
+
     // configure the MetadataTypeContainer
     nodes = element.get_children(MetadataTypeContainer::getConfigElementName());
     if (nodes.size() < 1) {
@@ -503,6 +517,9 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                              throw ()
 {
     masterPanel.reset(new MasterPanelWindow(shared_from_this(), getBundle()));
+
+    masterPanel->set_icon_list(taskbarIcons->getIconList());
+    masterPanel->set_default_icon_list(taskbarIcons->getIconList());
 
     // Shows the window and returns when it is closed.
     Gtk::Main::run(*masterPanel);

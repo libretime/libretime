@@ -169,6 +169,12 @@
 
     <stationLogo    path = "var/stationLogo.png" />
 
+    <taskbarIcons>
+        <icon       path = "var/icon16.png" />
+        <icon       path = "var/icon32.png" />
+        <icon       path = "var/icon48.png" />
+    </taskbarIcons>
+
     <testAudioUrl   path = "file://var/testAudio.ogg" />
 
     <metadataTypeContainer>

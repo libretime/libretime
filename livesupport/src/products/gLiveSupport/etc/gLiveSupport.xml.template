@@ -168,6 +168,12 @@
 
     <stationLogo    path = "ls_var_dir/LiveSupport/stationLogo.png" />
 
+    <taskbarIcons>
+        <icon       path = "ls_var_dir/LiveSupport/icon16.png" />
+        <icon       path = "ls_var_dir/LiveSupport/icon32.png" />
+        <icon       path = "ls_var_dir/LiveSupport/icon48.png" />
+    </taskbarIcons>
+
     <testAudioUrl   path = "file://ls_var_dir/LiveSupport/testAudio.ogg" />
 
     <metadataTypeContainer>

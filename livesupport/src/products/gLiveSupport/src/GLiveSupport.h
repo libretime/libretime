@@ -56,6 +56,7 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "KeyboardShortcutList.h"
+#include "TaskbarIcons.h"
 #include "ContentsStorable.h"
 
 
@@ -249,6 +250,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The raw image containing the station logo.
          */
         Glib::RefPtr<Gdk::Pixbuf>       stationLogoPixbuf;
+
+        /**
+         *  The wrapper class containing the taskbar icon images.
+         */
+        Ptr<TaskbarIcons>::Ref          taskbarIcons;
 
         /**
          *  The location of the test audio file.
