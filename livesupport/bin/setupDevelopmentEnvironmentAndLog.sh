@@ -110,7 +110,7 @@ echo "";
 #------------------------------------------------------------------------------
 #  Cleaning the setup
 #------------------------------------------------------------------------------
-make -C $basedir modprod_distclean >& $tmpdir/make_modprod_distclean_setup.log
+make -C $basedir modprod_distclean > $tmpdir/make_modprod_distclean_setup.log 2>&1
 ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean_setup.log
 
 #-------------------------------------------------------------------------------
@@ -126,19 +126,23 @@ ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean
 # --with-create-database=no =yes   --with-create-odbc-data-source=no =yes
 # --with-init-database=no =yes     --with-configure-apache=no =yes
 #
+# --with-database=LiveSupport =LiveSupport-test
+# --with-database-user=LiveSupport =test
+# --with-database-password=LiveSupport =test
+#
 # --with-station-audio-out=default =plughw:0
 # --with-studio-audio-out=default =plughw:0
 # --with-studio-audio-cue=default =plughw:0
 
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";
-$bindir/autogen.sh >& $tmpdir/configure_development_environment.log
+$bindir/autogen.sh > $tmpdir/configure_development_environment_autogen.log 2>&1
 $basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
                    --with-hostname=localhost --with-apache-group=$apache_group \
                    --with-check-boost=yes --with-check-gtk=yes \
                    --with-check-gtkmm=yes --with-check-icu=yes \
                    --with-check-libxmlpp=yes --with-station-audio-out=default \
-                   --with-studio-audio-out=default --with-studio-audio-cue=default >> $tmpdir/configure_development_environment.log
+                   --with-studio-audio-out=default --with-studio-audio-cue=default >& $tmpdir/configure_development_environment.log
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
@@ -147,25 +151,25 @@ echo "";
 #  Compile step by step, including the tools
 #-------------------------------------------------------------------------------
 echo "Now Compiling ... Tools";
-make -C $basedir tools_setup >& $tmpdir/make_install_tools_setup.log
+make -C $basedir tools_setup > $tmpdir/make_install_tools_setup.log 2>&1
 ls -l $tmpdir/make_install_tools_setup.log >> $tmpdir/make_install_tools_setup.log
 echo "Done Tools Setup, make_install_tools_setup.log is created";
 echo "";
 echo "Now Compiling ... Doxytag";
-make -C $basedir doxytag_setup >& $tmpdir/make_doxytag_setup.log
+make -C $basedir doxytag_setup > $tmpdir/make_doxytag_setup.log 2>&1
 ls -l $tmpdir/make_doxytag_setup.log >> $tmpdir/make_doxytag_setup.log
 echo "Done Doxytag Setup, make_doxytag_setup.log is created";
 echo "";
 echo "Now Configure ... Modules ... Products";
-make -C $basedir modules_setup >& $tmpdir/make_configure_modules_setup.log
+make -C $basedir modules_setup > $tmpdir/make_configure_modules_setup.log 2>&1
 ls -l $tmpdir/make_configure_modules_setup.log >> $tmpdir/make_configure_modules_setup.log
 echo "Configure the Modules is done, make_configure_modules_setup.log is created";
-make -C $basedir products_setup >& $tmpdir/make_configure_products_setup.log
+make -C $basedir products_setup > $tmpdir/make_configure_products_setup.log 2>&1
 ls -l $tmpdir/make_configure_products_setup.log >> $tmpdir/make_configure_products_setup.log
 echo "Configure the Products is done, make_configure_products_setup.log is created";
 echo "";
 echo "Now Compiling ...";
-make -C $basedir compile >& $tmpdir/make_compile_setup.log 
+make -C $basedir compile > $tmpdir/make_compile_setup.log 2>&1
 ls -l $tmpdir/make_compile_setup.log >> $tmpdir/make_compile_setup.log
 echo "Compiling is done, make_compile_setup.log is created";
 echo "";
@@ -174,7 +178,7 @@ echo "";
 #  Checking what we have done
 #-------------------------------------------------------------------------------
 echo "Now Checking ...";
-make -C $basedir check >& $tmpdir/make_check_setup.log
+make -C $basedir check > $tmpdir/make_check_setup.log 2>&1
 ls -l $tmpdir/make_check_setup.log >> $tmpdir/make_check_setup.log
 echo "Checking is be done, make_check_setup.log is created";
 echo "";
