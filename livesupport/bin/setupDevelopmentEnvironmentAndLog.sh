@@ -137,12 +137,14 @@ ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";
 $bindir/autogen.sh > $tmpdir/configure_development_environment_autogen.log 2>&1
-$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
-                   --with-hostname=localhost --with-apache-group=$apache_group \
+$basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
+                   --prefix=$usrdir --with-apache-group=$apache_group \
                    --with-check-boost=yes --with-check-gtk=yes \
                    --with-check-gtkmm=yes --with-check-icu=yes \
-                   --with-check-libxmlpp=yes --with-station-audio-out=default \
-                   --with-studio-audio-out=default --with-studio-audio-cue=default >& $tmpdir/configure_development_environment.log
+                   --with-check-libxmlpp=yes \
+                   --with-station-audio-out=default \
+                   --with-studio-audio-out=default \ 
+                   --with-studio-audio-cue=default > $tmpdir/configure_development_environment.log 2>&1
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
