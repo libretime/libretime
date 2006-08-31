@@ -138,6 +138,7 @@ $pearcmd config-set doc_dir $peardir/docs || exit 1
 $pearcmd config-set data_dir $peardir/data || exit 1
 $pearcmd config-set cache_dir $peardir/cache || exit 1
 $pearcmd config-set test_dir $peardir/tests || exit 1
+$pearcmd channel-update pear.php.net
 #$pearcmd config-show; exit
 
 #-------------------------------------------------------------------------------
