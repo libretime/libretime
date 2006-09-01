@@ -22,85 +22,123 @@ $Smarty->register_function('niceTime',          'S_niceTime');
 
 // --- Smarty Extensions ---
 /**
- *  str_repeat
+ *  Repeat given string.
  *
- *  Repeate given string.
- *
- *  @param str string, string to repeate
- *  @param count numeric, how often to repeate (converted to type integer)
+ *  @param array $param - must have the key values "str" and "count"
  *  @return string, repeated string
  */
 function S_str_repeat($param)
 {
     extract($param);
     return str_repeat($str, intval($count));
+} // fn S_str_repeat
 
-}
 
 /**
- *  tra
+ * Translate given string.
  *
- *  Translate given string.
- *
- *  @param void array, array of strings to be outputted translated
+ * @param array $in, array of strings to be outputted translated
+ * @return string
  */
 function S_tra($in)
 {
-    global $uiBrowser;
-    foreach($in as $val) $param[] = $val;
+	echo call_user_func_array('tra', $in);
+} // fn S_tra
 
-    echo tra($param[0], $param[1], $param[2], $param[3], $param[4], $param[5], $param[6], $param[7], $param[8], $param[9]);
-}
 
+/**
+ * @param array $param
+ *      An array with key values named "time" and "pause".
+ * @return string
+ */
 function S_getHour($param)
 {
     ## input format is HH:MM:SS.dddddd
-    extract ($param);
+    extract($param);
+    if (!isset($time) || !is_string($time)) {
+        return 0;
+    }
     list ($h, $m, $s) = explode (':', $time);
     $curr = mktime($h, $m ,$s);
-    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
-
+    if ($pause) {
+        $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+    }
     return strftime("%H", $curr);
-}
+} // fn S_getHour
 
+
+/**
+ * @param array $param
+ *      An array with key values named "time" and "pause".
+ * @return string
+ */
 function S_getMinute($param)
 {
     ## input format is HH:MM:SS.dddddd
     extract ($param);
+    if (!isset($time) || !is_string($time)) {
+        return 0;
+    }
     list ($h, $m, $s) = explode (':', $time);
     $curr = mktime($h, $m ,$s);
-    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
-
+    if ($pause) {
+        $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+    }
     return strftime("%M", $curr);
-}
+} // fn S_getMinute
 
+
+/**
+ * @param array $param
+ *      An array with key values named "time" and "pause".
+ * @return string
+ */
 function S_getSecond($param)
 {
     ## input format is HH:MM:SS.dddddd
     extract ($param);
+    if (!isset($time) || !is_string($time)) {
+        return 0;
+    }
     list ($h, $m, $s) = explode (':', $time);
     $curr = mktime($h, $m ,$s);
-    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
-
+    if ($pause) {
+        $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+    }
     return strftime("%S", $curr);
-}
+} // fn S_getSecond
 
+
+/**
+ * @param array $param
+ *      Array with a key value "in".
+ * @return string
+ */
 function S_niceTime($param)
 {
     extract($param);
 
-    if (strpos($in, '.')) list ($in, $lost) = explode('.', $in);
+    if (strpos($in, '.')) {
+        list ($in, $lost) = explode('.', $in);
+    }
     $in = str_replace('&nbsp;', '', $in);
 
-    if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))    list($h, $i, $s) = explode(':', $in);
-    elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s)     = explode(':', $in);
-    else                                                            $s = $in;
+    if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
+        list($h, $i, $s) = explode(':', $in);
+    } elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
+        list($i, $s)     = explode(':', $in);
+    } else {
+        $s = $in;
+    }
 
-    if ($all || $h > 0) $H = sprintf('%02d', $h).':';
-    else        $H = '&nbsp;&nbsp;&nbsp;';
+    if ((isset($all) && $all) || ($h > 0) ) {
+        $H = sprintf('%02d', $h).':';
+    } else {
+        $H = '&nbsp;&nbsp;&nbsp;';
+    }
     $I = sprintf('%02d', $i).':';
     $S = sprintf('%02d', $s);
 
     return $H.$I.$S;
-}
+} // fn S_niceTime
 ?>
