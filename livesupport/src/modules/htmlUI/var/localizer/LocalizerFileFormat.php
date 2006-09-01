@@ -6,10 +6,10 @@
 /**
  * Abstract interface for the localizer to access data from different sources.
  * @package Campware
- * @abstract 
+ * @abstract
  */
 class LocalizerFileFormat {
-	function load(&$p_localizerLanguage) { }	
+	function load(&$p_localizerLanguage) { }
 	function save(&$p_localizerLanguage) { }
 	function getFilePath($p_localizerLanguage) { }
 } // class LocalizerFileFormat
@@ -27,17 +27,17 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
      *
      * @return boolean
      */
-	function load(&$p_localizerLanguage) 
+	function load(&$p_localizerLanguage)
 	{
 	    global $g_localizerConfig;
     	$p_localizerLanguage->setMode('gs');
-        $filePath = LocalizerFileFormat_GS::GetFilePath($p_localizerLanguage);     
+        $filePath = LocalizerFileFormat_GS::GetFilePath($p_localizerLanguage);
         //echo "Loading $filePath<br>";
         if (file_exists($filePath)) {
 	        $lines = file($filePath);
 	        foreach ($lines as $line) {
 	        	if (strstr($line, "regGS")) {
-			        $line = preg_replace('/regGS/', '$p_localizerLanguage->registerString', $line);			    
+			        $line = preg_replace('/regGS/', '$p_localizerLanguage->registerString', $line);
 	        		$success = eval($line);
 	        		if ($success === FALSE) {
 	        			echo "Error evaluating: ".htmlspecialchars($line)."<br>";
@@ -48,10 +48,10 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
         }
         else {
         	return false;
-        }	
+        }
 	} // fn load
-	    
-	
+
+
     /**
      * Save the translation table to a PHP-GS file.
      *
@@ -61,7 +61,7 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
      * @return string
      *		File contents
      */
-	function save(&$p_localizerLanguage) 
+	function save(&$p_localizerLanguage)
 	{
 	    global $g_localizerConfig;
     	$data = "<?php\n";
@@ -76,42 +76,42 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
         $filePath = LocalizerFileFormat_GS::GetFilePath($p_localizerLanguage);
         //echo $filePath;
         $p_localizerLanguage->_setSourceFile($filePath);
-        
+
         // Create the language directory if it doesnt exist.
         $dirName = $g_localizerConfig['TRANSLATION_DIR'].'/'.$p_localizerLanguage->getLanguageCode();
         if (!file_exists($dirName)) {
             mkdir($dirName);
         }
-        
-        // write data to file        
+
+        // write data to file
         if (PEAR::isError(File::write($filePath, $data, FILE_MODE_WRITE))) {
         	echo "<br>error writing file<br>";
             return FALSE;
         }
         File::close($filePath, FILE_MODE_WRITE);
-        return $data;    	
+        return $data;
     } // fn save
-    
-	
+
+
 	/**
 	 * Get the full path to the translation file.
 	 * @param LocalizerLanguage $p_localizerLanguage
 	 * @return string
 	 */
-	function getFilePath($p_localizerLanguage) 
+	function getFilePath($p_localizerLanguage)
 	{
 	    global $g_localizerConfig;
        	return $g_localizerConfig['TRANSLATION_DIR'].'/'.$p_localizerLanguage->getLanguageCode()
-       	    .'/'.$p_localizerLanguage->getPrefix().'.php';	    
+       	    .'/'.$p_localizerLanguage->getPrefix().'.php';
 	} // fn getFilePath
-	
-	
+
+
 	/**
 	 * Get all supported languages as an array of LanguageMetadata objects.
 	 * @return array
 	 *     An array of LanguageMetadata
 	 */
-	function getLanguages() 
+	function getLanguages()
 	{
 	    /*
     	global $Campsite;
@@ -125,7 +125,7 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
         }
         */
 	    global $languages;
-	    
+
         $metadata = array();
         foreach ($languages as $language) {
             $tmpMetadata =& new LanguageMetadata();
@@ -138,7 +138,7 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
         }
         return $metadata;
 	} // fn getLanguages
-	
+
 } // class LocalizerFileFormat_GS
 
 
@@ -150,46 +150,46 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
     var $m_unserializeOptions   = array();
     var $l_serializeOptions     = array();
     var $l_unserializeOptions   = array();
-    
-    function LocalizerFileFormat_XML() 
+
+    function LocalizerFileFormat_XML()
     {
         global $g_localizerConfig;
         $this->m_serializeOptions = array(
 				// indent with tabs
-           	"indent"           => "\t",       
+           	"indent"           => "\t",
            	// root tag
-           	"rootName"         => "translations",  
-           	// tag for values with numeric keys 
-           	"defaultTagName"   => "item", 
+           	"rootName"         => "translations",
+           	// tag for values with numeric keys
+           	"defaultTagName"   => "item",
            	"keyAttribute"     => "position",
            	"addDecl"          => true,
            	"encoding"         => $g_localizerConfig['FILE_ENCODING'],
            	"indentAttributes" => true
-		);  
+		);
         $this->l_serializeOptions = array(
 				// indent with tabs
-           	"indent"           => "\t",       
+           	"indent"           => "\t",
            	// root tag
-           	"rootName"         => "languages",  
-           	// tag for values with numeric keys 
-           	"defaultTagName"   => "item", 
+           	"rootName"         => "languages",
+           	// tag for values with numeric keys
+           	"defaultTagName"   => "item",
            	"keyAttribute"     => "position",
            	"addDecl"          => true,
            	"encoding"         => $g_localizerConfig['FILE_ENCODING'],
            	"indentAttributes" => true
-		);        
+		);
     }
-    
-    
+
+
     /**
      * Read an XML-format translation file into the translation table.
      * @param LocalizerLanguage $p_localizerLanguage
      * @return boolean
      */
-	function load(&$p_localizerLanguage) 
+	function load(&$p_localizerLanguage)
 	{
 	    global $g_localizerConfig;
-	    
+
     	$p_localizerLanguage->setMode('xml');
         $filePath = LocalizerFileFormat_XML::GetFilePath($p_localizerLanguage);
         if (file_exists($filePath)) {
@@ -200,7 +200,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 	        $translationArray = $unserializer->getUnserializedData();
 
 	        if ($g_localizerConfig['ORDER_KEYS']) $translationArray['item'] = $this->_xSortArray($translationArray['item'], 'key');
-	            	
+
 	        $p_localizerLanguage->clearValues();
 	        if (isset($translationArray['item'])) {
 		        foreach ($translationArray['item'] as $translationPair) {
@@ -208,13 +208,13 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 		        }
 	        }
 	        return true;
-        }    	
+        }
         else {
         	return false;
         }
 	} // fn load
-	
-	
+
+
     /**
      * Write a XML-format translation file.
      * @param LocalizerLanguage $p_localizerLanguage
@@ -222,7 +222,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
      *      The XML that was written on success,
      *      FALSE on error.
      */
-	function save(&$p_localizerLanguage) 
+	function save(&$p_localizerLanguage)
 	{
     	$saveData = array();
     	$saveData["Id"] = $p_localizerLanguage->getLanguageId();
@@ -232,36 +232,36 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 			$saveTranslationTable[] = array('key' => $key, 'value' => $value);
 		}
     	$saveData = array_merge($saveData, $saveTranslationTable);
-    	
+
         $serializer =& new XML_Serializer($this->m_serializeOptions);
         $serializer->serialize($saveData);
         $xml = $serializer->getSerializedData();
-        
+
         if (PEAR::isError($xml)) {
         	echo "<br>error serializing data<br>";
             return FALSE;
         }
-        
+
         $filePath = LocalizerFileFormat_XML::GetFilePath($p_localizerLanguage);
         //echo "Saving as ".$this->m_filePath."<Br>";
-        // write data to file        
+        // write data to file
         if (PEAR::isError(File::write($filePath, $xml, FILE_MODE_WRITE))) {
         	echo "<br>error writing file $filePath<br>";
             return FALSE;
-        }        
-        
+        }
+
         File::close($filePath, FILE_MODE_WRITE);
-        
-        return $xml;		
+
+        return $xml;
 	} // fn save
-	
-	
+
+
 	/**
 	 * Get the full path to the translation file.
 	 * @param LocalizerLanguage $p_localizerLanguage
 	 * @return string
 	 */
-	function getFilePath($p_localizerLanguage) 
+	function getFilePath($p_localizerLanguage)
 	{
 	    global $g_localizerConfig;
        	return $g_localizerConfig['TRANSLATION_DIR'].'/'
@@ -270,36 +270,36 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
        	    .'/'.$p_localizerLanguage->getPrefix().'.xml';
 	} // fn getFilePath
 
-	
+
 	/**
 	 * Get all supported languages as an array of LanguageMetadata objects.
 	 * @return array
 	 */
-	function getLanguages($p_default=TRUE, $p_completed_only=FALSE) 
+	function getLanguages($p_default=TRUE, $p_completed_only=FALSE)
 	{
-	    global $g_localizerConfig; 
-	    
+	    global $g_localizerConfig;
+
 	    $fileName = $g_localizerConfig['TRANSLATION_DIR']
 	               .$g_localizerConfig['LANGUAGE_METADATA_FILENAME'];
-	               
-    	if (!file_exists($fileName)) { 
-    	   echo "Connot read ".$g_localizerConfig['LANGUAGE_METADATA_FILENAME'];   
-    	   return FALSE; 
+
+    	if (!file_exists($fileName)) {
+    	   echo "Connot read ".$g_localizerConfig['LANGUAGE_METADATA_FILENAME'];
+    	   return FALSE;
     	}
-    	
+
 		$xml = File::readAll($fileName);
-		File::rewind($fileName, FILE_MODE_READ);                
+		File::rewind($fileName, FILE_MODE_READ);
 		$handle =& new XML_Unserializer($this->l_unserializeOptions);
     	$handle->unserialize($xml);
     	$arr = $handle->getUnserializedData();
-    	
+
     	if (array_key_exists(0, $arr['item'])) {
             $languages = $arr['item'];
     	} else {
-    	   $languages[0] = $arr['item'];    
+    	   $languages[0] = $arr['item'];
     	}
         foreach ($languages as $language) {
-            if(!$p_completed_only || $language['Completed']) {
+            if (!$p_completed_only || (isset($language['Completed']) && $language['Completed'])) {
                 // just display default language in maintainance mode
                 if ($p_default || $language['Id'] !== $g_localizerConfig['DEFAULT_LANGUAGE']) {
                     list ($langCode, $countryCode) = explode('_', $language['Id']);
@@ -315,77 +315,77 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
         }
         return $return;
 	} // fn getLanguages
-	
-	
+
+
 	function addLanguage($new)
 	{
-	    global $g_localizerConfig; 
+	    global $g_localizerConfig;
 	    $fileName = $g_localizerConfig['TRANSLATION_DIR']
-	               .$g_localizerConfig['LANGUAGE_METADATA_FILENAME'];	
-	                   
-    	if (!file_exists($fileName)) { 
+	               .$g_localizerConfig['LANGUAGE_METADATA_FILENAME'];
+
+    	if (!file_exists($fileName)) {
     	    echo "$fileName not found";
-    	    return FALSE;    
+    	    return FALSE;
     	}
-    	
+
 		$xml = File::readAll($fileName);
-		File::rewind($fileName, FILE_MODE_READ);                
+		File::rewind($fileName, FILE_MODE_READ);
 		$handle =& new XML_Unserializer($this->l_unserializeOptions);
-    	$handle->unserialize($xml);	
+    	$handle->unserialize($xml);
     	$arr = $handle->getUnserializedData();
-    	
+
     	if (array_key_exists(0, $arr['item'])) {
             $languages = $arr['item'];
     	} else {
-    	   $languages[0] = $arr['item'];    
+    	   $languages[0] = $arr['item'];
     	}
-    	
+
     	$languages[] = array(
     	   'Id'            => $new['Id'],
            'Name'          => $new['Name'],
            'NativeName'    => $new['NativeName']
         );
         $languages = $this->_xSortArray($languages, 'Id');
-    	$handle =& new XML_Serializer($this->l_serializeOptions);  
+    	$handle =& new XML_Serializer($this->l_serializeOptions);
     	$handle->serialize($languages);
-    	
+
     	if (!$xml = $handle->getSerializedData()) {
     	    echo "Cannot serialize date";
-    	    return FALSE;    
+    	    return FALSE;
     	}
-    	
+
     	if (!File::write($fileName, $xml, FILE_MODE_WRITE)) {
     	    echo "Cannot add langauge to file $fileName";
-    	    return FALSE;    
+    	    return FALSE;
     	}
-    	
+
     	// create the path/file to stor translations in
     	if (!mkdir($g_localizerConfig['TRANSLATION_DIR'].'/'.$new['Id'])) {
     	    echo "Cannot create path ".$g_localizerConfig['TRANSLATION_DIR'].'/'.$new['Id'];
-    	    return FALSE;   
+    	    return FALSE;
     	}
-    	
-    	return TRUE;  
+
+    	return TRUE;
 	}
-	
+
 	function _xSortArray($array, $key)
 	{
 	   if (!is_array($array) || !count($array)) {
-	       return;    
+	       return;
 	   }
-	   
+
 	   foreach($array as $k=>$v) {
-	       $trans[$v[$key]] = $v;    
-	   } 
-	   
+	       $trans[$v[$key]] = $v;
+	   }
+
 	   ksort($trans);
 
 	   foreach ($trans as $v) {
-	       $ret[] = $v;   
-	   } 
-	   
-	   return $ret;  
+	       $ret[] = $v;
+	   }
+
+	   return $ret;
 	}
-	
+
 } // class LocalizerFileFormat_XML
 ?>
