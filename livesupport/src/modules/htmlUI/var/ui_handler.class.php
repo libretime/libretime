@@ -258,13 +258,13 @@ class uiHandler extends uiBase {
 
         $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
         if (UI_VERBOSE) $this->_retMsg('Stream data saved.');
-        
+
         return TRUE;
     }
 
 
     function editMetaData($formdata)
-    {                     
+    {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         $id             = $formdata['id'];
         $curr_langid    = $formdata['curr_langid'];
@@ -278,7 +278,7 @@ class uiHandler extends uiBase {
 
         if (!count($mData)) return;
 
-        foreach ($mData as $key=>$val) { 
+        foreach ($mData as $key=>$val) {
             $r = $this->_setMDataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
@@ -392,13 +392,13 @@ class uiHandler extends uiBase {
             } else {
                 $r = $this->gb->deleteFile($id, $this->sessid);
             }
-            
+
             if(PEAR::isError($r)) {
                 $this->_retMsg($r->getMessage());
                 return FALSE;
             }
         }
-        
+
         return TRUE;
     }
 
@@ -477,6 +477,13 @@ class uiHandler extends uiBase {
     }
 
 
+    /**
+     * Enter description here...
+     *
+     * @param unknown_type $formdata
+     * @param array $mask
+     * @return boolean
+     */
     function _validateForm($formdata, $mask)
     {
         $form = new HTML_QuickForm('validation', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -485,16 +492,31 @@ class uiHandler extends uiBase {
             $_SESSION['retransferFormData'] = $_REQUEST;
             return FALSE;
         }
-        ## test for uploadet files bacause HTMLQuickForm::validate() ignores them ####
+        // test for uploaded files bacause HTMLQuickForm::validate() ignores them
         if (is_array($form->_submitFiles)) {
+            $was_error = FALSE;
             foreach ($form->_submitFiles as $key => $val) {
                 if ($val['error']) {
 
                     switch ($val['error']) {
-                        case 1: $was_error = TRUE; $this->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.'); break;
-                        case 2: $was_error = TRUE; $this->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.'); break;
-                        case 3: $was_error = TRUE; $this->_retMsg('Upload of file "$1" was incomplete.', $mask[$key]['label']); break;
-                        case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File "$1" has not been uploaded.', $mask[$key]['label']);} break;
+                        case 1:
+                            $was_error = TRUE;
+                            $this->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.');
+                            break;
+                        case 2:
+                            $was_error = TRUE;
+                            $this->_retMsg('The uploaded filer is bigger than allowed in system settings. See "Help", chapter "Troubleshooting" for more information.');
+                            break;
+                        case 3:
+                            $was_error = TRUE;
+                            $this->_retMsg('Upload of file "$1" was incomplete.', $mask[$key]['label']);
+                            break;
+                        case 4:
+                            if ($mask[$key]['required']) {
+                                $was_error = TRUE;
+                                $this->_retMsg('File "$1" has not been uploaded.', $mask[$key]['label']);
+                            }
+                            break;
                     }
                 }
             }
@@ -526,7 +548,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         foreach($mask as $key=>$val) {
-            if ($val['isPref']) {
+            if (isset($val['isPref']) && $val['isPref']) {
                 if (strlen($formdata[$val['element']])) {
                     if (PEAR::isError($this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']])))
                         $this->_retMsg('Error while saving settings.');
@@ -534,16 +556,34 @@ class uiHandler extends uiBase {
                     $this->gb->delGroupPref($this->sessid,  'StationPrefs', $val['element']);
                 }
             }
-            if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
-                if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
-                    $this->_retMsg('Error while uploading logo.');
+            if (isset($val['type']) && ($val['type'] == 'file') && $formdata[$val['element']]['name']) {
+                $stationLogoPath = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath');
+                $filePath = $formdata[$val['element']]['tmp_name'];
+                if (function_exists("getimagesize")) {
+                    $size = @getimagesize($filePath);
+                    if ($size === FALSE) {
+                        $this->_retMsg('Error while uploading logo: the file uploaded is not an image.');
+                        return FALSE;
+                    }
+                    if ( ($size[0] > 128) || ($size[1] > 128) ) {
+                        $this->_retMsg('Error uploading logo: the logo can be no larger than 128x128.');
+                        return FALSE;
+                    }
+                }
+                $success = @move_uploaded_file($filePath, $stationLogoPath);
+                if (!$success) {
+                    $this->_retMsg('Error while uploading logo: could not move the file to the destination directory.');
                     return FALSE;
+                }
             }
         }
         $this->loadStationPrefs($mask, TRUE);
-        if (UI_VERBOSE) $this->_retMsg('Settings saved.');
-        
+        if (UI_VERBOSE) {
+            $this->_retMsg('Settings saved.');
+        }
+
         return TRUE;
-    }
-}
+    } // fn changeStationPrefs
+
+} // class uiHandler
 ?>
