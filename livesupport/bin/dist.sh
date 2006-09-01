@@ -24,7 +24,7 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
+#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #  This script creates a distribution tarball for livesupport.
 #  Creates two tarballs:
@@ -231,7 +231,8 @@ cp -pPR README INSTALL configure $ls_tmpdir
 #-------------------------------------------------------------------------------
 #  Get rid of the remnants of the subversion system
 #-------------------------------------------------------------------------------
-rm -rf `find $ls_tmpdir -name .svn -type d`
+# Paul Baranowski: you dont need to do this when you export from SVN.
+#rm -rf `find $ls_tmpdir -name .svn -type d`
 
 
 #-------------------------------------------------------------------------------
