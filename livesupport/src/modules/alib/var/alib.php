@@ -2,26 +2,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the LiveSupport project.
     http://livesupport.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     LiveSupport is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     LiveSupport is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with LiveSupport; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -50,95 +50,106 @@ class Alib extends Subjects{
     var $login=NULL;
     var $userid=NULL;
     var $sessid=NULL;
+
     /**
-     *   Constructor
+     * Constructor
      *
-     *   @param dbc object, DB
-     *   @param config array
-     *   @return this
+     * @param object $dbc DB
+     * @param array $config
      */
     function Alib(&$dbc, $config)
     {
         parent::Subjects($dbc, $config);
         $this->permTable = $config['tblNamePrefix'].'perms';
         $this->sessTable = $config['tblNamePrefix'].'sess';
-    }
+    } // constructor
+
 
     /* ======================================================= public methods */
 
     /* ----------------------------------------------- session/authentication */
 
     /**
-     *   Authenticate and create session
+     * Authenticate and create session
      *
-     *   @param login string
-     *   @param pass string
-     *   @return boolean/sessionId/err
+     * @param string $login
+     * @param string $pass
+     * @return boolean/sessionId/err
      */
     function login($login, $pass)
     {
-        if(FALSE === $this->authenticate($login, $pass)){
+        if (FALSE === $this->authenticate($login, $pass)) {
             $this->setTimeStamp($login, TRUE);
             return FALSE;
         }
         $sessid = $this->_createSessid();
-        if(PEAR::isError($sessid)) return $sessid;
+        if (PEAR::isError($sessid)) {
+            return $sessid;
+        }
         $userid = $this->getSubjId($login);
-        $r = $this->dbc->query("INSERT INTO {$this->sessTable}
-                (sessid, userid, login, ts)
-            VALUES
-                ('$sessid', '$userid', '$login', now())");
-        if(PEAR::isError($r)) return $r;
+        $sql = "INSERT INTO {$this->sessTable} (sessid, userid, login, ts)
+            VALUES('$sessid', '$userid', '$login', now())";
+        $r = $this->dbc->query($sql);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         $this->login = $login;
         $this->userid = $userid;
         $this->sessid = $sessid;
         $this->setTimeStamp($login, FALSE);
         return $sessid;
-    }
-    
+    } // fn login
+
+
     /**
-     *   Logout and destroy session
+     * Logout and destroy session
      *
-     *   @param sessid string
-     *   @return true/err
+     * @param string $sessid
+     * @return true/err
      */
     function logout($sessid)
     {
         $ct = $this->checkAuthToken($sessid);
-        if($ct === FALSE)
+        if($ct === FALSE) {
             return PEAR::raiseError('Alib::logout: not logged ($ct)',
                 ALIBERR_NOTLOGGED, PEAR_ERROR_RETURN);
-        elseif(PEAR::isError($ct))
+        } elseif (PEAR::isError($ct)) {
             return $ct;
-        else{
-            $r = $this->dbc->query("DELETE FROM {$this->sessTable}
-                WHERE sessid='$sessid'");
-            if(PEAR::isError($r)) return $r;
+        } else {
+            $sql = "DELETE FROM {$this->sessTable}
+                WHERE sessid='$sessid'";
+            $r = $this->dbc->query($sql);
+            if (PEAR::isError($r)) {
+                return $r;
+            }
             $this->login = NULL;
             $this->userid = NULL;
             $this->sessid = NULL;
             return TRUE;
         }
-    }
-    
+    } // fn logout
+
+
     /**
-     *   Return true if the token is valid
+     * Return true if the token is valid
      *
-     *   @param sessid string
-     *   @return boolean/err
+     * @param string $sessid
+     * @return boolean/err
      */
     function checkAuthToken($sessid)
     {
-        $c = $this->dbc->getOne("SELECT count(*) as cnt FROM {$this->sessTable}
-            WHERE sessid='$sessid'");
+        $sql = "SELECT count(*) as cnt FROM {$this->sessTable}
+            WHERE sessid='$sessid'";
+        $c = $this->dbc->getOne($sql);
         return ($c == 1 ? TRUE : (PEAR::isError($c) ? $c : FALSE ));
-    }
-    
+    } //fn checkAuthToken
+
+
     /**
-     *   Set valid token in alib object
+     * Set valid token in alib object
      *
-     *   @param sessid string
-     *   @return boolean/err
+     * @param string $sessid
+     * @return boolean/err
      */
     function setAuthToken($sessid)
     {
@@ -148,89 +159,111 @@ class Alib extends Subjects{
             return PEAR::raiseError("ALib::setAuthToken: invalid token ($sessid)");
         $this->sessid = $sessid;
         return TRUE;
-    }
-    
+    } // fn setAuthToken
+
+
     /* -------------------------------------------------------- authorization */
     /**
-     *   Insert permission record
+     * Insert permission record
      *
-     *   @param sid int - local user/group id
-     *   @param action string
-     *   @param oid int - local object id
-     *   @param type char - 'A'|'D' (allow/deny)
-     *   @return int - local permission id
+     * @param int $sid - local user/group id
+     * @param string $action
+     * @param int $oid - local object id
+     * @param string $type - 'A'|'D' (allow/deny)
+     * @return int - local permission id
      */
     function addPerm($sid, $action, $oid, $type='A')
     {
         $permid = $this->dbc->nextId("{$this->permTable}_id_seq");
-        $r = $this->dbc->query($q = "
-            INSERT INTO {$this->permTable} (permid, subj, action, obj, type)
-            VALUES ($permid, $sid, '$action', $oid, '$type')
-        ");
-        if(PEAR::isError($r)) return($r);
+        $sql = "INSERT INTO {$this->permTable} (permid, subj, action, obj, type)
+            VALUES ($permid, $sid, '$action', $oid, '$type')";
+        $r = $this->dbc->query($sql);
+        if (PEAR::isError($r)) {
+            return($r);
+        }
         return $permid;
-    }
+    } // fn addPerm
+
 
     /**
-     *   Remove permission record
+     * Remove permission record
      *
-     *   @param permid int OPT - local permission id
-     *   @param subj int OPT - local user/group id
-     *   @param obj int OPT - local object id
-     *   @return boolean/error
+     * @param int $permid OPT - local permission id
+     * @param int $subj OPT - local user/group id
+     * @param int $obj OPT - local object id
+     * @return boolean/error
      */
     function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
     {
         $ca = array();
-        if($permid) $ca[] = "permid=$permid";
-        if($subj) $ca[] = "subj=$subj";
-        if($obj) $ca[] = "obj=$obj";
+        if ($permid) {
+            $ca[] = "permid=$permid";
+        }
+        if ($subj) {
+            $ca[] = "subj=$subj";
+        }
+        if ($obj) {
+            $ca[] = "obj=$obj";
+        }
         $cond = join(" AND ", $ca);
-        if(!$cond) return TRUE;
-        return $this->dbc->query("DELETE FROM {$this->permTable} WHERE $cond");
-    }
+        if (!$cond) {
+            return TRUE;
+        }
+        $sql = "DELETE FROM {$this->permTable} WHERE $cond";
+        return $this->dbc->query($sql);
+    } // fn removePerm
+
 
     /**
-     *   Return object related with permission record
+     * Return object related with permission record
      *
-     *   @param permid int - local permission id
-     *   @return int - local object id
+     * @param int $permid - local permission id
+     * @return int - local object id
      */
     function _getPermOid($permid)
     {
-        $res = $this->dbc->getOne(
-            "SELECT obj FROM {$this->permTable} WHERE permid=$permid");
+        $sql = "SELECT obj FROM {$this->permTable} WHERE permid=$permid";
+        $res = $this->dbc->getOne($sql);
         return $res;
-    }
+    } // fn _getPermOid
+
 
     /**
-     *  Check if specified subject have permission to specified action
-     *  on specified object
+     * Check if specified subject have permission to specified action
+     * on specified object
      *
-     *  Look for sequence of correnponding permissions and order it by
-     *  relevence, then test the most relevant for result.
-     *  High relevence have direct permission (directly for specified subject
-     *  and object. Relevance order is done by level distance in the object
-     *  tree, level distance in subjects (user/group system).
-     *  Similar way is used for permissions related to object classes.
-     *  But class-related permissions have lower priority then
-     *  object-tree-related.
-     *  Support for object classes can be disabled by USE_ALIB_CLASSES const.
+     * Look for sequence of correnponding permissions and order it by
+     * relevence, then test the most relevant for result.
+     * High relevence have direct permission (directly for specified subject
+     * and object. Relevance order is done by level distance in the object
+     * tree, level distance in subjects (user/group system).
+     * Similar way is used for permissions related to object classes.
+     * But class-related permissions have lower priority then
+     * object-tree-related.
+     * Support for object classes can be disabled by USE_ALIB_CLASSES const.
      *
-     *  @param sid int, subject id (user or group id)
-     *  @param action string, from set defined in config
-     *  @param oid int, object id, optional (default: root node)
-     *  @return boolean/err
+     * @param int $sid, subject id (user or group id)
+     * @param string $action, from set defined in config
+     * @param int $oid, object id, optional (default: root node)
+     * @return boolean/err
      */
     function checkPerm($sid, $action, $oid=NULL)
     {
-        if(!is_numeric($sid)) return FALSE;
-        if(is_null($oid) or $oid=='') $oid = $this->getRootNode();
-        if(PEAR::isError($oid)) return $oid;
-        if(!is_numeric($oid)) return FALSE;
+        if (!is_numeric($sid)) {
+            return FALSE;
+        }
+        if (is_null($oid) or $oid=='') {
+            $oid = $this->getRootNode();
+        }
+        if (PEAR::isError($oid)) {
+            return $oid;
+        }
+        if (!is_numeric($oid)) {
+            return FALSE;
+        }
         // query construction
         //      shortcuts:
-        //          p: permTable, 
+        //          p: permTable,
         //          s: subjTable, m smembTable,
         //          t: treeTable ts: structTable,
         //          c: classTable, cm: cmembTable
@@ -260,15 +293,19 @@ class Alib extends Subjects{
         // query by tree:
         $query1 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
         $r1 = $this->dbc->getAll($query1);
-        if(PEAR::isError($r1)) return($r1);
+        if (PEAR::isError($r1)) {
+            return($r1);
+        }
         //  if there is row with type='A' on the top => permit
         $AllowedByTree =
             (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
         $DeniedByTree =
             (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
-        
-        if(!USE_ALIB_CLASSES) return $AllowedbyTree;
-        
+
+        if (!USE_ALIB_CLASSES) {
+            return $AllowedbyTree;
+        }
+
         // joins for solving object classes:
         $q_flds = $q_flds0.", c.cname ";
         $q_join = $q_join0."LEFT JOIN {$this->classTable} c ON c.id=p.obj ";
@@ -278,7 +315,9 @@ class Alib extends Subjects{
         // query by class:
         $query2 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
         $r2 = $this->dbc->getAll($query2);
-        if(PEAR::isError($r2)) return($r2);
+        if (PEAR::isError($r2)) {
+            return($r2);
+        }
         $AllowedByClass =
             (is_array($r2) && count($r2)>0 && $r2[0]['type']=='A');
         // not used now:
@@ -287,169 +326,198 @@ class Alib extends Subjects{
         $res = ($AllowedByTree || (!$DeniedByTree && $AllowedByClass));
 #        echo"<pre>\nsid=$sid, action=$action, oid=$oid\n"; var_dump($r1); echo"\n---\n$query1\n---\n\n"; var_dump($r2); echo"\n---\n$query2\n---\n\n"; exit;
         return $res;
-    }
+    } // fn checkPerm
+
 
     /* ---------------------------------------------------------- object tree */
 
     /**
-     *   Remove all permissions on object and then remove object itself
+     * Remove all permissions on object and then remove object itself
      *
-     *   @param id int
-     *   @return void/error
+     * @param int $id
+     * @return void/error
      */
     function removeObj($id)
     {
         $r = $this->removePerm(NULL, NULL, $id);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         return parent::removeObj($id);
-    }
+    } // fn removeObj
 
     /* --------------------------------------------------------- users/groups */
 
     /**
-     *   Remove all permissions of subject and then remove subject itself
+     * Remove all permissions of subject and then remove subject itself
      *
-     *   @param login string
-     *   @return void/error
+     * @param string $login
+     * @return void/error
      */
     function removeSubj($login)
     {
-        $uid = $this->getSubjId($login);    if(PEAR::isError($uid)) return $uid;
-        if(is_null($uid)){
+        $uid = $this->getSubjId($login);
+        if (PEAR::isError($uid)) {
+            return $uid;
+        }
+        if (is_null($uid)){
             return $this->dbc->raiseError("Alib::removeSubj: Subj not found ($login)",
                 ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
         }
-        $r = $this->removePerm(NULL, $uid); if(PEAR::isError($r)) return $r;
+        $r = $this->removePerm(NULL, $uid);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         return parent::removeSubj($login, $uid);
-    }
-    
+    } // fn removeSubj
+
     /* ------------------------------------------------------------- sessions */
     /**
-     *   Get login from session id (token)
+     * Get login from session id (token)
      *
-     *   @param sessid string
-     *   @return string/error
+     * @param string $sessid
+     * @return string/error
      */
     function getSessLogin($sessid)
     {
-        $r = $this->dbc->getOne("
-            SELECT login FROM {$this->sessTable} WHERE sessid='$sessid'");
-        if(PEAR::isError($r)) return $r;
-        if(is_null($r)){ 
+        $sql = "SELECT login FROM {$this->sessTable} WHERE sessid='$sessid'";
+        $r = $this->dbc->getOne($sql);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
+        if (is_null($r)){
             return PEAR::raiseError("Alib::getSessLogin:".
                 " invalid session id ($sessid)",
                 ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
         }
         return $r;
-    }
+    } // fn getSessLogin
+
 
     /**
-     *   Get user id from session id
+     * Get user id from session id.
      *
-     *   @param sessid string
-     *   @return int/error
+     * @param string $sessid
+     * @return int/error
      */
     function getSessUserId($sessid)
     {
-        $r = $this->dbc->getOne("
-            SELECT userid FROM {$this->sessTable} WHERE sessid='$sessid'");
-        if(PEAR::isError($r)) return $r;
-        if(is_null($r)){ 
+        $sql = "SELECT userid FROM {$this->sessTable} WHERE sessid='$sessid'";
+        $r = $this->dbc->getOne($sql);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
+        if (is_null($r)){
             return PEAR::raiseError("Alib::getSessUserId:".
                 " invalid session id ($sessid)",
                 ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
         }
         return $r;
-    }
+    } // fn getSessUserId
+
 
     /* --------------------------------------------------------- info methods */
     /**
-     *   Get all permissions on object
+     * Get all permissions on object.
      *
-     *   @param id int
-     *   @return array/null/err
+     * @param int $id
+     * @return array/null/err
      */
     function getObjPerms($id)
     {
-        return $this->dbc->getAll("
-            SELECT s.login, p.* FROM {$this->permTable} p, {$this->subjTable} s
-            WHERE s.id=p.subj AND p.obj=$id");
-    }
+        $sql = "SELECT s.login, p.* FROM {$this->permTable} p, {$this->subjTable} s
+            WHERE s.id=p.subj AND p.obj=$id";
+        return $this->dbc->getAll($sql);
+    } // fn getObjPerms
+
 
     /**
-     *   Get all permissions of subject
+     * Get all permissions of subject.
      *
-     *   @param sid int
-     *   @return array
+     * @param int $sid
+     * @return array
      */
     function getSubjPerms($sid)
     {
-        $a1 = $this->dbc->getAll("
+        $sql = "
             SELECT t.name, t.type as otype , p.*
             FROM {$this->permTable} p, {$this->treeTable} t
-            WHERE t.id=p.obj AND p.subj=$sid");
-        if(PEAR::isError($a1)) return $a1;
-        $a2 = $this->dbc->getAll("
+            WHERE t.id=p.obj AND p.subj=$sid";
+        $a1 = $this->dbc->getAll($sql);
+        if (PEAR::isError($a1)) {
+            return $a1;
+        }
+        $sql2 = "
             SELECT c.cname as name, 'C'as otype, p.*
             FROM {$this->permTable} p, {$this->classTable} c
-            WHERE c.id=p.obj AND p.subj=$sid");
-        if(PEAR::isError($a2)) return $a2;
+            WHERE c.id=p.obj AND p.subj=$sid";
+        $a2 = $this->dbc->getAll($sql2);
+        if (PEAR::isError($a2)) {
+            return $a2;
+        }
         return array_merge($a1, $a2);
-    }
+    } // fn getSubjPerms
+
 
     /* ------------------------ info methods related to application structure */
     /* (this part should be added/rewritten to allow defining/modifying/using
      * application structure)
      * (only very simple structure definition - in $config - supported now)
      */
-    
+
     /**
-     *   Get all actions
+     * Get all actions
      *
-     *   @return array
+     * @return array
      */
     function getAllActions()
     {
         return $this->config['allActions'];
-    }
+    } // fn getAllActions
+
 
     /**
-     *   Get all allowed actions on specified object type
+     * Get all allowed actions on specified object type.
      *
-     *   @param type string
-     *   @return array
+     * @param string $type
+     * @return array
      */
     function getAllowedActions($type)
     {
         return $this->config['allowedActions'][$type];
-    }
+    } // fn getAllowedActions
+
 
     /* ====================================================== private methods */
-    
+
     /**
-     *   Create new session id
+     * Create new session id.  Return the new session ID.
      *
-     *   @return string sessid
+     * @return string
      */
     function _createSessid()
     {
-        for($c=1; $c>0;){
+        for ($c=1; $c>0;){
             $sessid = md5(uniqid(rand()));
-            $c = $this->dbc->getOne("SELECT count(*) FROM {$this->sessTable}
-                WHERE sessid='$sessid'");
-            if(PEAR::isError($c)) return $c;
+            $sql = "SELECT count(*) FROM {$this->sessTable}
+                WHERE sessid='$sessid'";
+            $c = $this->dbc->getOne($sql);
+            if (PEAR::isError($c)) {
+                return $c;
+            }
         }
         return $sessid;
-    }
-    
+    } // fn _createSessid
+
+
     /* =============================================== test and debug methods */
 
     /**
-     *   Dump all permissions for debug
+     * Dump all permissions for debug
      *
-     *   @param indstr string    // indentation string
-     *   @param ind string       // aktual indentation
-     *   @return string
+     * @param string $indstr   // indentation string
+     * @param string $ind      // actual indentation
+     * @return string
      */
     function dumpPerms($indstr='    ', $ind='')
     {
@@ -459,30 +527,35 @@ class Alib extends Subjects{
             WHERE s.id=p.subj
             ORDER BY p.permid
         ");
-        if(PEAR::isError($arr)) return $arr;
+        if (PEAR::isError($arr)) {
+            return $arr;
+        }
         $r = $ind.join(', ', array_map(create_function('$v',
                 'return "{$v[\'login\']}/{$v[\'action\']}/{$v[\'type\']}";'
             ),
             $arr
         ))."\n";
         return $r;
-    }
-    
+    } // fn dumpPerms
+
+
     /**
-     *   deleteData
+     * Delete everything form the permission table and session table.
      *
-     *   @return void
+     * @return void
      */
     function deleteData()
     {
         $this->dbc->query("DELETE FROM {$this->permTable}");
         $this->dbc->query("DELETE FROM {$this->sessTable}");
         parent::deleteData();
-    }
+    } // fn deleteData
+
+
     /**
-     *   Insert test permissions
+     * Insert test permissions
      *
-     *   @return array
+     * @return array
      */
     function testData()
     {
@@ -503,38 +576,47 @@ class Alib extends Subjects{
             array($s['gr2'], 'addChilds', $t['i2'], 'A'),
             array($s['test3'], '_all', $t['t1'], 'D'),
         );
-        if(USE_ALIB_CLASSES){
+        if (USE_ALIB_CLASSES){
             $perms[] = array($s['test3'], 'read', $c['cl_sa'], 'D');
             $perms[] = array($s['test4'], 'editPerms', $c['cl2'], 'A');
         }
-        foreach($perms as $p){
+        foreach ($perms as $p){
             $o[] = $r = $this->addPerm($p[0], $p[1], $p[2], $p[3]);
-            if(PEAR::isError($r)) return $r;
+            if (PEAR::isError($r)) {
+                return $r;
+            }
         }
         $this->tdata['perms'] = $o;
-    }
-    
+    } // fn testData
+
+
     /**
-     *   Make basic test
+     * Make basic test
      *
-     *   @return boolean/error
+     * @return boolean/error
      */
     function test()
     {
-        if(PEAR::isError($p = parent::test())) return $p;
+        if (PEAR::isError($p = parent::test())) {
+            return $p;
+        }
         $this->deleteData();
         $r = $this->testData();
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         $this->test_correct = "root/_all/A, test1/_all/A, test1/read/D,".
             " test2/addChilds/D, test2/read/A, test2/edit/A,".
             " test1/addChilds/D, test1/addChilds/D, gr2/addChilds/A,".
             " test3/_all/D";
-        if(USE_ALIB_CLASSES){
+        if (USE_ALIB_CLASSES){
             $this->test_correct .= ", test3/read/D, test4/editPerms/A";
         }
         $this->test_correct .= "\nno, yes\n";
         $r = $this->dumpPerms();
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         $this->test_dump = $r.
             ($this->checkPerm(
                 $this->tdata['subjects']['test1'], 'read',
@@ -551,23 +633,26 @@ class Alib extends Subjects{
             " test2/read/A, test2/edit/A,".
             " test1/addChilds/D, test1/addChilds/D, gr2/addChilds/A,".
             " test3/_all/D";
-        if(USE_ALIB_CLASSES){
+        if (USE_ALIB_CLASSES){
             $this->test_correct .= ", test3/read/D, test4/editPerms/A";
         }
         $this->test_correct .= "\n";
         $this->test_dump .= $this->dumpPerms();
         $this->deleteData();
-        if($this->test_dump==$this->test_correct)
-        { $this->test_log.="alib: OK\n"; return TRUE;
-        }else return PEAR::raiseError('Alib::test', 1, PEAR_ERROR_DIE, '%s'.
+        if ($this->test_dump==$this->test_correct) {
+            $this->test_log.="alib: OK\n"; return TRUE;
+        } else {
+            return PEAR::raiseError('Alib::test', 1, PEAR_ERROR_DIE, '%s'.
             "<pre>\ncorrect:\n{$this->test_correct}\n".
             "dump:\n{$this->test_dump}\n</pre>\n");
-    }
+        }
+    } // fn test
+
 
     /**
-     *   Create tables + initialize
+     * Create tables + initialize
      *
-     *   @return void
+     * @return void
      */
     function install()
     {
@@ -599,7 +684,8 @@ class Alib extends Subjects{
             ON {$this->sessTable} (userid)");
         $this->dbc->query("CREATE INDEX {$this->sessTable}_login_idx
             ON {$this->sessTable} (login)");
-    }
+    } // fn install
+
 
     /**
      *   Drop tables etc.
@@ -612,6 +698,7 @@ class Alib extends Subjects{
         $this->dbc->dropSequence("{$this->permTable}_id_seq");
         $this->dbc->query("DROP TABLE {$this->sessTable}");
         parent::uninstall();
-    }
-}
+    } // fn uninstall
+
+} // class Alib
 ?>
