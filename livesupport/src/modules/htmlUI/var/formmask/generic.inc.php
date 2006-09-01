@@ -1,4 +1,10 @@
 <?php
+//
+// This file contains a list of all the HTML forms in the system,
+// encoded as arrays.
+//
+$tmpAct = isset($_REQUEST['act']) ? $_REQUEST['act'] : '';
+
 $ui_fmask = array(
     /* ===================== list of system preferences which can be adjusted */
     'stationPrefs'   => array(
@@ -53,15 +59,15 @@ $ui_fmask = array(
         array(
             'element'   => 'stationlogo',
             'type'      => 'file',
-            'label'     => 'Station logo',
+            'label'     => 'Station logo (maximum 128x128)',
             'requiredmsg'=> 'please select logo file'
         ),
         array(
             'element'   => 'schedulerStartupScript',
             'isPref'    => TRUE,
-            'type'      => 'text',
+            'type'      => 'hidden',
             'label'     => 'Scheduler startup script',
-            'required'  => true,
+            'required'  => false,
         ),
         array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
@@ -82,7 +88,7 @@ $ui_fmask = array(
             'type'      =>'button',
             'label'     =>'Cancel',
             'attributes'=>array('onclick' => 'location.href="'.UI_BROWSER.'"'),
-            'groupit'   => TRUE            
+            'groupit'   => TRUE
         ),
         array(
             'element'   =>'Submit',
@@ -313,7 +319,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => $_REQUEST['act'].'.newSearch'
+            'constant'  => "$tmpAct.newSearch"
         ),
         array(
             'element'   => 'id',
@@ -432,7 +438,7 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Category',
             'attributes'=> array(
-                'onChange'  => 'this.form.act.value="'.$_REQUEST['act'].'.setCategory"; this.form.submit()',
+                'onChange'  => 'this.form.act.value="'.$tmpAct.'.setCategory"; this.form.submit()',
                 'style'     => 'width: 180px;',
                 'id'        => 'category_1'
                 )
@@ -444,7 +450,7 @@ $ui_fmask = array(
             'attributes'=> array(
                 'size'      => 10,
                 'class'     => 'area_browse',
-                'onChange'  => 'this.form.act.value="'.$_REQUEST['act'].'.setValue"; this.form.submit()'
+                'onChange'  => 'this.form.act.value="'.$tmpAct.'.setValue"; this.form.submit()'
             )
         )
     ),
@@ -464,7 +470,7 @@ $ui_fmask = array(
                             #UI_FILETYPE_WEBSTREAM => '##Webstream##',
                             UI_FILETYPE_PLAYLIST  => '##Playlist##'
                            ),
-            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act='.$_REQUEST['act'].'.setFiletype&filetype=" + this.form.filetype.value)')
+            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act='.$tmpAct.'.setFiletype&filetype=" + this.form.filetype.value)')
         ),
         array(
             'element'   => 'limit',
@@ -476,7 +482,7 @@ $ui_fmask = array(
                             50  => 50,
                             100 => 100
                            ),
-            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act='.$_REQUEST['act'].'.setLimit&limit=" + this.form.limit.value)')
+            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act='.$tmpAct.'.setLimit&limit=" + this.form.limit.value)')
         ),
         /*        do we need reset?
         array(
@@ -790,8 +796,8 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'File Format',
             'options'   => array(
-                             'smil' => 'SMIL', 
-                           //  'xspf' => 'XSPF', 
+                             'smil' => 'SMIL',
+                           //  'xspf' => 'XSPF',
                              'm3u' => 'M3U'
                            )
         ),
