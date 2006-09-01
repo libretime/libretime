@@ -18,12 +18,12 @@ class uiSubjects
     {
          $this->Base->redirUrl = $this->suRedirUrl;
     }
-    
+
     function setRedir()
     {
          $this->Base->redirUrl = $this->redirUrl;
     }
-    
+
     /**
      *  getAddSubjectForm
      *
@@ -78,7 +78,7 @@ class uiSubjects
             } else {
                 $this->Base->_retMsg('Group "$1" added.', $request['login']);
             }
-        }    
+        }
         return TRUE;
     }
 
@@ -122,7 +122,7 @@ class uiSubjects
             $mask['chgPasswd']['cancel']['attributes'] = array('onClick' => 'location.href="'.UI_BROWSER.'?act=SUBJECTS"');
             unset ($mask['chgPasswd']['oldpasswd']);
         } else {
-            $mask['chgPasswd']['cancel']['attributes'] = array('onClick' => 'location.href="'.UI_BROWSER.'"');   
+            $mask['chgPasswd']['cancel']['attributes'] = array('onClick' => 'location.href="'.UI_BROWSER.'"');
         }
         $this->Base->_parseArr2Form($form, $mask['chgPasswd']);
         $form->setConstants(array('login' => $login));
@@ -148,13 +148,13 @@ class uiSubjects
             $this->Base->_retMsg("Passwords did not match.");
             $this->Base->redirUrl = $_SERVER['HTTP_REFERER'];
             return FALSE;
-        }   
-              
+        }
+
         if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects')) {
-            $this->setSuRedir();    
+            $this->setSuRedir();
         } else {
             $this->setRedir();
-            
+
             if ($this->Base->login !== $request['login']){
                 $this->Base->_retMsg('Access denied.');
                 return FALSE;
@@ -166,14 +166,14 @@ class uiSubjects
             }
         }
 
-        if (PEAR::isError($ret = $this->Base->gb->passwd($request['login'], $request['oldpasswd'], $request['passwd'], $this->Base->sessid))) { 
-            $this->Base->_retMsg($ret->getMessage()); 
+        if (PEAR::isError($ret = $this->Base->gb->passwd($request['login'], $request['oldpasswd'], $request['passwd'], $this->Base->sessid))) {
+            $this->Base->_retMsg($ret->getMessage());
             return FALSE;
         }
         if (UI_VERBOSE) {
             $this->Base->_retMsg('Password changed.');
         }
-            
+
         return TRUE;
     }
 
@@ -303,21 +303,21 @@ class uiSubjects
 
         return TRUE;
     }
-    
-    
+
+
     function isMemberOf($groupname)
-    {   
-        if ($gid = $this->Base->gb->getSubjId($groupname)) { 
+    {
+        if ($gid = $this->Base->gb->getSubjId($groupname)) {
             $members = $this->getGroupMember($gid);
-            if (is_array($members)) { 
+            if (is_array($members)) {
                 foreach($members as $member) {
                     if ($member['id'] === $this->Base->userid) {
-                        return true;    
-                    }  
+                        return true;
+                    }
                 }
             }
         }
-        return false;      
+        return false;
     }
 }
 
