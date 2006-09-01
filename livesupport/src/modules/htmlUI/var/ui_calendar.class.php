@@ -1,6 +1,12 @@
 <?php
 class uiCalendar
 {
+    var $Decade;
+    var $Year;
+    var $Month;
+    var $Week;
+    var $Day;
+    var $Hour;
 
     function uiCalendar()
     {
@@ -102,7 +108,9 @@ class uiCalendar
 
     function buildDay()
     {
-        if (is_array($this->Day)) return;
+        if (is_array($this->Day)) {
+            return;
+        }
 
         require_once 'Calendar/Day.php';
 
