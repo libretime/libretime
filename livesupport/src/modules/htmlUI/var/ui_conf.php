@@ -52,6 +52,7 @@ define('UI_HUBSEARCH_SESSNAME',         'L_HUBSEARCH');
 define('UI_TRANSFER_SESSNAME',          'L_TRANSFER');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
 define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
+define('UI_CALENDAR_SESSNAME',          'CALENDAR');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
