@@ -310,9 +310,9 @@ class SchedulerPhpClient{
                     $parr[$p]->addStruct($gettedPars[$i]);
                     break;
                 /* scalar types: 'int' | 'boolean' | 'string' | 'double' | 'dateTime.iso8601' | 'base64'*/
-                default: 
+                default:
                     $parr[$p]->addScalar($gettedPars[$i], $this->mdefs[$method]['t'][$i]);
-            } 
+            }
         }
         $XML_RPC_val->addStruct($parr);
         $fullmethod = $this->mdefs[$method]['m'];

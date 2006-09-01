@@ -8,7 +8,7 @@ class uiHubSearch extends uiSearch
         #$this->results    =& $_SESSION[UI_HUBSEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_HUBSEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        
+
         if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
     }
 
@@ -21,7 +21,7 @@ class uiHubSearch extends uiSearch
         }
         return false;
     }
-    
+
     function newSearch(&$formdata)
     {
         $this->results                  = NULL;
@@ -51,10 +51,10 @@ class uiHubSearch extends uiSearch
                                                       );
             }
         }
-        
-        //echo '<XMP>this->criteria:'; print_r($this->criteria); echo "</XMP>\n"; 
+
+        //echo '<XMP>this->criteria:'; print_r($this->criteria); echo "</XMP>\n";
         $trtokid = $this->Base->gb->globalSearch($this->criteria);
-        
+
         $this->Base->redirUrl = UI_BROWSER.'?popup[]='.$this->prefix.'.getResults&trtokid='.$trtokid;
     }
 
@@ -80,15 +80,15 @@ class uiHubSearch extends uiSearch
 
         #print_r($this->results);
         $this->pagination($results);
-        
+
         return TRUE;
     }
-    
+
     function getSearchResults($trtokid) {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
         $results = $this->Base->gb->getSearchResults($trtokid);
         if (!is_array($results) || !count($results)) {
-            return false;    
+            return false;
         }
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
@@ -97,7 +97,7 @@ class uiHubSearch extends uiSearch
         }
         $this->pagination($results);
         //echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";
-        //echo '<XMP>results:'; print_r($results); echo "</XMP>\n"; 
+        //echo '<XMP>results:'; print_r($results); echo "</XMP>\n";
         return is_array($results);
     }
 

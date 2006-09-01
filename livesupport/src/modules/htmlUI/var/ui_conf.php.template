@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit', '64M'); 
+ini_set('memory_limit', '64M');
 
 ## Warning/Error level
 define('UI_DEBUG',                      FALSE);
