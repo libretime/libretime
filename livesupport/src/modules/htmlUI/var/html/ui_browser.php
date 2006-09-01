@@ -1,9 +1,9 @@
-<?php 
+<?php
 require_once dirname(__FILE__).'/../ui_browser_init.php';
 
 if (UI_DEBUG === TRUE) $Smarty->assign('DEBUG', TRUE);
 
-if (is_array($_REQUEST['popup'])){
+if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
     foreach ($_REQUEST['popup'] as $val) {
         switch ($val) {
             case "jscom":
@@ -105,7 +105,7 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->assign('dynform', $uiBrowser->PLAYLIST->setItemPlaylengthForm($_REQUEST['id'], $_REQUEST['elemId'], $ui_fmask['PL.setItemPlaylength']));
             $Smarty->display('popup/PLAYLIST.setItemPlaylength.tpl');
             break;
-            
+
             case "PL.export":
             $Smarty->assign('dynform',$uiBrowser->PLAYLIST->exportForm($_REQUEST['id'],$ui_fmask['PL.export']));
             $Smarty->display('popup/PLAYLIST.export.tpl');
@@ -159,7 +159,7 @@ if (is_array($_REQUEST['popup'])){
             case "help":
             $Smarty->display('popup/help.tpl');
             break;
-            
+
             case 'BACKUP.setLocation':
             if ($_REQUEST['cd']) {
                 $uiBrowser->EXCHANGE->setFolder($_REQUEST['cd']);
@@ -167,37 +167,37 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->assign('isRestore',$_REQUEST['isRestore']);
             $Smarty->display('backup/fileBrowser.tpl');
             break;
-            
+
             case 'BACKUP.setFile':
             $Smarty->assign('isFile',$uiBrowser->EXCHANGE->setFile($_REQUEST['file']));
             $Smarty->assign('isRestore',$_REQUEST['isRestore']);
-            $Smarty->display('backup/fileBrowser.tpl');    
+            $Smarty->display('backup/fileBrowser.tpl');
             break;
-            
-            case 'BACKUP.createBackupDownload': 
-            $uiBrowser->EXCHANGE->createBackupDownload();    
+
+            case 'BACKUP.createBackupDownload':
+            $uiBrowser->EXCHANGE->createBackupDownload();
             break;
-            
+
             case 'TR.confirmUpload2Hub':
             $uiBrowser->TRANSFERS->upload2Hub($_REQUEST['id']);
             $Smarty->display('popup/TR.confirmTransfer.tpl');
             break;
-            
-            case 'TR.confirmDownloadFromHub': 
+
+            case 'TR.confirmDownloadFromHub':
             $uiBrowser->TRANSFERS->downloadFromHub($_REQUEST['id']);
             $Smarty->display('popup/TR.confirmTransfer.tpl');
             break;
-            
-            case 'TR.pause': 
+
+            case 'TR.pause':
             $uiBrowser->TRANSFERS->doTransportAction($_REQUEST['id'],'pause');
             $Smarty->display('popup/TR.pauseTransfer.tpl');
             break;
-            
-            case 'TR.cancel': 
+
+            case 'TR.cancel':
             $ids = '';
             if (is_array($_REQUEST['id'])) {
                 foreach ($_REQUEST['id'] as $id) {
-                    $ids .= '&id[]='.$id; 
+                    $ids .= '&id[]='.$id;
                 }
             } else {
                 $ids = '&id='.$_REQUEST['id'];
@@ -205,12 +205,12 @@ if (is_array($_REQUEST['popup'])){
             $Smarty->assign('tansferIDs',$ids);
             $Smarty->display('popup/TR.cancelTransfer.tpl');
             break;
-            
-            case 'TR.resume': 
+
+            case 'TR.resume':
             $uiBrowser->TRANSFERS->doTransportAction($_REQUEST['id'],'resume');
             $Smarty->display('popup/TR.resumeTransfer.tpl');
             break;
-            
+
             case 'HUBBROWSE.getResults':
             if (isset($_REQUEST['trtokid'])) {
                 $Smarty->assign('trtokid',$_REQUEST['trtokid']);
@@ -249,7 +249,8 @@ if (is_array($_REQUEST['popup'])){
 };
 
 if ($uiBrowser->userid) {
-    switch ($_REQUEST['act']){
+    $action = isset($_REQUEST['act']) ? $_REQUEST['act'] : null;
+    switch ($action) {
         case "fileList":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
         $Smarty->assign('fileList', TRUE);
@@ -277,7 +278,12 @@ if ($uiBrowser->userid) {
         case "addFileData":
         case "addFileMData":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => 'audioclip', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
+        $langId = isset($_REQUEST['curr_langid']) ? $_REQUEST['curr_langid'] : null;
+        $Smarty->assign('editItem', array('type' => 'audioclip',
+                                          'id' => $id,
+                                          'folderId' => $uiBrowser->fid,
+                                          'curr_langid' => $langId));
         break;
 
         case "addWebstreamData":
@@ -299,13 +305,13 @@ if ($uiBrowser->userid) {
         break;
 
         case "BROWSE":
-        #echo '<XMP>uiBrowser->BROWSE->getResult():'; print_r($uiBrowser->BROWSE->getResult()); echo "</XMP>\n"; 
+        #echo '<XMP>uiBrowser->BROWSE->getResult():'; print_r($uiBrowser->BROWSE->getResult()); echo "</XMP>\n";
         $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
         break;
 
         case "HUBSEARCH":
-        #echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+        #echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n";
         #$Smarty->assign('searchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('hubSearchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
@@ -371,19 +377,19 @@ if ($uiBrowser->userid) {
         case "SUBJECTS.remSubj":
         case "SUBJECTS.chgPasswd":
         $Smarty->assign('showSubjects', TRUE);
-        $Smarty->assign('act', $_REQUEST['act']);
+        $Smarty->assign('act', $action);
         break;
-        
+
         case "BACKUP":
         case "RESTORE":
-        case "BACKUP.schedule": 
+        case "BACKUP.schedule":
         case "SCHEDULER.import":
         case "SCHEDULER.export":
-        $Smarty->assign('act', $_REQUEST['act']);
+        $Smarty->assign('act', $action);
         break;
     }
 
-    if ($_REQUEST['act'] != 'SCHEDULER') {
+    if ($action != 'SCHEDULER') {
         $Smarty->assign('simpleSearchForm',   $uiBrowser->SEARCH->simpleSearchForm($ui_fmask['simplesearch']));
     }
 }
