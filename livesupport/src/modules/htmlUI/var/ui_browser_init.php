@@ -31,7 +31,7 @@ foreach (get_defined_constants() as $k=>$v) {
     $Smarty->assign($k, $v);
 }
 
-$Smarty->assign('ACT',    $_REQUEST['act']);
+$Smarty->assign('ACT',    isset($_REQUEST['act'])?$_REQUEST['act']:null);
 $Smarty->assign('CONFIG', $config);
 $Smarty->assign('START',  array(
                             'id'        => &$uiBrowser->id,
@@ -49,7 +49,7 @@ $Smarty->assign('STATIONPREFS', $uiBrowser->STATIONPREFS);
 $Smarty->assign_by_ref('_REQUEST', &$_REQUEST);
 
 ## retransfer incomplete formdata from SESSION to POST-data #########
-if (is_array($_SESSION['retransferFormData'])){
+if (isset($_SESSION['retransferFormData']) && is_array($_SESSION['retransferFormData'])) {
     foreach($_SESSION['retransferFormData'] as $k=>$v){
         $_POST[$k] = $v;
     }
