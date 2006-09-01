@@ -4,71 +4,60 @@ class uiBrowser extends uiBase {
 
     // --- class constructor ---
     /**
-     *  uiBrowser
-     *
-     *  Initialize a new Browser Class
-     *  Call uiBase constructor
+     *  Initialize a new Browser Class.
+     *  Call uiBase constructor.
      *
      *  @param $config array, configurartion data
      */
     function uiBrowser(&$config)
     {
         $this->uiBase($config);
-    }
+    } // constructor
 
-      /**
-     *  performAction
+
+    /**
+     *  Perform a frontend action.
+     *  Map to a function called action_<actionName>.inc.php
      *
-     *  Perform a frontend action
-     *  map to a function called action_<actionName>.inc.php
-     *
-     *  @param actionName string, name of a action
-     *  @param params  array[], request vars
+     *  @param string $actionName - name of an action
+     *  @param array $params - request vars
      */
     function performAction( $actionName, $params )
     {
         $actionFunctionName = 'action_' . $actionName ;
         $actionFunctionFileName = ACTION_BASE . '/action_' . $actionName . '.inc.php' ;
-        if ( file_exists( $actionFunctionFileName ) )
-        {
+        if ( file_exists( $actionFunctionFileName ) ) {
             include ( $actionFunctionFileName ) ;
-            if ( method_exists( $actionFunctionName ) )
-            {
+            if ( method_exists( $actionFunctionName ) ) {
                 $actionFunctionName( $this, $params ) ;
             }
         }
-    }
+    } // fn performAction
+
 
     // --- error handling ---
     /**
-     *  getAlertMsg
-     *
-     *  extractes error message from session var
+     *  Extracts the error message from the session var.
      *
      *  @return string
      */
-
-
     function getAlertMsg()
     {
-        if ($_SESSION['alertMsg']) {
+        if (isset($_SESSION['alertMsg']) && !empty($_SESSION['alertMsg'])) {
             $this->alertMsg = $_SESSION['alertMsg'];
             unset($_SESSION['alertMsg']);
-
             return $this->alertMsg;
         }
         return false;
-    }
+    } // fn getAlertMsg
 
 
     // --- template feed ---
     /**
-     *  login
+     *  Create a login-form.
      *
-     *  create a login-form
-     *
-     *  @param string $faillogin login name of failed login process
-     *  @return string (html)
+     *  @param array $mask - an array of all webforms in the system
+     *  @return array
      */
     function login($mask)
     {
@@ -80,33 +69,26 @@ class uiBrowser extends uiBase {
         $form->accept($renderer);
 
         return $renderer->toArray();
-    }
-
-
+    }  // fn login
 
 
     /**
-     *  getUserInfo
+     *  Get info about logged in user.
      *
-     *  get info about logged in user
-     *
-     *  @return array uname=>user Name, uid=>user ID
+     *  @return array (uname=>user_name, uid=>user_id)
      */
     function getUserInfo()
     {
         return array('uname'=>$this->gb->getSessLogin($this->sessid),
                      'uid'  =>$this->gb->getSessUserId($this->sessid));
-    }
+    } // fn getUserInfo
+
 
     /**
-     *  getStructure
+     * Get directory-structure
      *
-     *  get directory-structure
-     *
-     *  @param int local ID of start-directory
-     *  @param boolean $homedir TRUE: get homedir of current user
-
-     *  @eturn array tree of directory with subs
+     * @param int $id - local ID of start-directory
+     * @return array - tree of directory with subs
      */
     function getStructure($id)
     {
@@ -114,46 +96,48 @@ class uiBrowser extends uiBase {
                     'pathdata'  => $this->gb->getPath($id, $this->sessid),
                     'listdata'  => $this->gb->getObjType($id)=='Folder' ? $this->gb->listFolder($id, $this->sessid) : array(),
                 );
-        if($_REQUEST['tree']=='Y'){
+        $tree = isset($_REQUEST['tree']) ? $_REQUEST['tree'] : null;
+        if ($tree == 'Y') {
             $tmp = $this->gb->getSubTree($id, $this->sessid);
             foreach ($tmp as $key=>$val) {
                 $val['type'] = $this->gb->getFileType($val['id']);
                 $data['treedata'][$key] = $val;
             }
         }
-        if(PEAR::isError($data['listdata'])){
+        if (PEAR::isError($data['listdata'])) {
             $data['msg'] = $data['listdata']->getMessage();
             $data['listdata'] = array();
             return FALSE;
         }
         foreach ($data['listdata'] as $key=>$val) {
-            if ($val['type'] != 'Folder')
+            if ($val['type'] != 'Folder') {
                 $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], UI_MDATA_KEY_TITLE);
-            else
+            } else {
                 $data['listdata'][$key]['title'] = $val['name'];
+            }
         }
         #print_r($data);
         return $data;
-    }
+    } // fn getStructure
 
 
     /**
-     *  fileForm
+     *  Create a form for file-upload.
      *
-     *  create a form for file-upload
-     *
-     *  @param int local $id of directory to store file
-     *
-     *  @eturn string  (html)
+     *  @param array $params
+     *  @return array
      */
     function fileForm($parms)
     {
-        extract ($parms);
+        extract($parms);
         $mask =& $GLOBALS['ui_fmask']['file'];
 
         $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        if (!$this->STATIONPREFS['stationMaxfilesize']) $form->setMaxFileSize(strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000')));
-        else											$form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
+        if (!isset($this->STATIONPREFS['stationMaxfilesize'])) {
+            $form->setMaxFileSize(strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000')));
+        } else {
+            $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
+        }
         $form->setConstants(array('folderId' => $folderId,
                                   'id'  => $id,
                                   'act' => $id ? 'editItem' : 'addFileData'));
@@ -161,13 +145,11 @@ class uiBrowser extends uiBase {
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn fileForm
 
 
     /**
-     *  webstreamForm
-     *
-     *  create a form to add Webstream
+     *  Create a form to add a Webstream.
      *
      *  @param int local $id of directory to store stream
      *
@@ -209,13 +191,11 @@ class uiBrowser extends uiBase {
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn webstreamForm
 
 
     /**
-     *  getPermissions
-     *
-     *  get permissions for local object ID
+     *  Get permissions for local object ID.
      *
      *  @param $id int local ID (file/folder)
      *
@@ -234,8 +214,6 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  getFile
-     *
      *  Call access method and show access path.
      *  Example only - not really useable.
      *  TODO: resource should be released by release method call
@@ -245,13 +223,15 @@ class uiBrowser extends uiBase {
     function getFile($id)
     {
         $r = $this->gb->access($id, $this->sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
-        else print_r($r);
-    }
+        if (PEAR::isError($r)) {
+            $_SESSION['alertMsg'] = $r->getMessage();
+        } else {
+            print_r($r);
+        }
+    } // fn getFile
+
 
     /**
-     *  getMdata
-     *
      *  Get file's metadata as XML
      *
      *  Note: this does not work right with multiple languages
@@ -261,8 +241,8 @@ class uiBrowser extends uiBase {
      */
     function getMdata($id)
     {
-        return($this->gb->getMdata($id, $this->sessid));
-    }
+        return ($this->gb->getMdata($id, $this->sessid));
+    } // getMdata
 
 
     function getMDataArr($param)
@@ -271,20 +251,29 @@ class uiBrowser extends uiBase {
         static $records, $relations;
         $arr =& $records[$id];
 
-        if (is_array($arr))        return array('metadata' => $arr);
+        if (is_array($arr)) {
+            return array('metadata' => $arr);
+        }
 
-        if (!is_array($relations)) include dirname(__FILE__).'/formmask/mdata_relations.inc.php';
+        if (!is_array($relations)) {
+            include dirname(__FILE__).'/formmask/mdata_relations.inc.php';
+        }
 
         $mdata = $this->gb->getMDataArray($id, $this->sessid);
-        if (!is_array($mdata)) return FALSE;
+        if (!is_array($mdata)) {
+            return FALSE;
+        }
 
         foreach ($mdata as $key=>$val) {
             if (is_array($val)) {
-                if ($val[$this->langid]) $val = $val[$this->langid];
-                else                     $val = $val[UI_DEFAULT_LANGID];
+                if ($val[$this->langid]) {
+                    $val = $val[$this->langid];
+                } else {
+                    $val = $val[UI_DEFAULT_LANGID];
+                }
             }
 
-            if ($relations[$key]) {
+            if (isset($relations[$key]) && !empty($relations[$key])) {
                 $arr[tra($relations[$key])]   = $val;
             } else {
                 $arr[tra($key)] = $val;
@@ -294,22 +283,20 @@ class uiBrowser extends uiBase {
         ksort($arr);
 
         return array('metadata' => $arr);
-    }
+    } // fn getMDataArr
 
 
     /**
-     *  metaDataForm
+     *  Create a form to edit Metadata.
      *
-     *  create a form to edit Metadata
-     *
-     *  @param id int
+     *  @param array $parms
      *  @return string (html)
      */
     function metaDataForm($parms)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
-        extract ($parms);
+        extract($parms);
         $langid = $langid ? $langid : UI_DEFAULT_LANGID;
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
@@ -327,8 +314,10 @@ class uiBrowser extends uiBase {
                             )
         );
 
-        ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
-        foreach ($mask['pages'] as $key=>$val) {
+        // Convert element names to be unique over different forms-parts,
+        // add javascript to spread values over parts, add existing
+        // values from database.
+        foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if (!is_array($mask['pages'][$key][$k]['attributes'])) $mask['pages'][$key][$k]['attributes'] = array();
                 $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
@@ -349,26 +338,27 @@ class uiBrowser extends uiBase {
         $output['pages'][] = $renderer->toArray();
         #print_r($output);
         return $output;
-    }
+    } // fn metaDataForm
 
 
     function changeStationPrefs(&$mask)
     {
         $form = new HTML_QuickForm('changeStationPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        foreach($mask as $key=>$val) {
-            $p = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']);
-            if (is_string($p)) $mask[$key]['default'] = $p;
-        };
+        foreach($mask as $key => $val) {
+            $element = isset($val['element']) ? $val['element'] : null;
+            $p = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $element);
+            if (is_string($p)) {
+                $mask[$key]['default'] = $p;
+            }
+        }
         $this->_parseArr2Form($form, $mask);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn changeStationPrefs
 
 
     /**
-     *  testStream
-     *
      *  Test if URL seems to be valid
      *
      *  @param url string, full URL to test
@@ -430,25 +420,30 @@ class uiBrowser extends uiBase {
                      'host'     => $host,
                      'port'     => $port,
         );
-    }
-    
+    } // fn testStream
+
+
+    /**
+     * Create M3U file for the given clip.
+     *
+     * @param int $clipid
+     * @return void
+     */
     function listen2Audio($clipid)
-    { 
+    {
         $id   = $this->gb->_idFromGunid($clipid);
-        $type = $this->gb->getFileType($id); 
+        $type = $this->gb->getFileType($id);
 
         if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
-            $m3u = "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n"; 
+            $m3u = "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n";
         } else {
             $m3u = $this->_getMDataValue($id, UI_MDATA_KEY_URL);
         }
         touch(UI_TESTSTREAM_MU3_TMP);
         $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
         fwrite($handle, $m3u);
-        fclose($handle);       
-    }  
-    
- 
- 
-}
+        fclose($handle);
+    } // fn listen2Audio
+
+} // class uiBrowser
 ?>
