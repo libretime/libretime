@@ -100,6 +100,7 @@ switch($_REQUEST['act']){
 
     case "changeStationPrefs":
     $uiHandler->changeStationPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["stationPrefs"]);
+    $uiHandler->redirUrl = UI_BROWSER."?act=changeStationPrefs";
     break;
 
     case "SP.addItem":
@@ -192,7 +193,7 @@ switch($_REQUEST['act']){
     case "HUBBROWSE.setFiletype":
     $uiHandler->HUBBROWSE->setFiletype($_REQUEST['filetype']);
     break;
-    
+
     case "HUBSEARCH.newSearch":
     $uiHandler->HUBSEARCH->newSearch($_REQUEST);
     break;
@@ -223,17 +224,17 @@ switch($_REQUEST['act']){
     $ids = '';
     if (is_array($_REQUEST['id'])) {
         foreach ($_REQUEST['id'] as $id) {
-            $ids .= '&id[]='.$id; 
+            $ids .= '&id[]='.$id;
         }
     } else {
         $ids = '&id='.$_REQUEST['id'];
     }
-    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n";
     $uiHandler->redirUrl = UI_BROWSER."?popup[]={$_REQUEST['act']}{$ids}";
     break;
 
     case "TR.cancelConfirm":
-    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n"; 
+    //echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n";
     $uiHandler->TRANSFERS->doTransportAction($_REQUEST['id'],'cancel');
     $uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     break;
@@ -327,7 +328,7 @@ switch($_REQUEST['act']){
     $uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
     $uiHandler->PLAYLIST->setReload();
     break;
-    
+
     case "PL.export":
     $uiHandler->redirUrl = UI_BROWSER."?popup[]=PL.redirect2DownloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}";
     break;
@@ -370,7 +371,7 @@ switch($_REQUEST['act']){
     $uiHandler->SCHEDULER->stopDaemon(TRUE);
     $uiHandler->SCHEDULER->setReload();
     break;
-    
+
     case 'SCHEDULER.scheduleExportOpen':
     $_REQUEST['fromDay'] = strlen($_REQUEST['fromDay'])>1?$_REQUEST['fromDay']:'0'.$_REQUEST['fromDay'];
     $_REQUEST['toDay'] = strlen($_REQUEST['toDay'])>1?$_REQUEST['toDay']:'0'.$_REQUEST['toDay'];
@@ -385,17 +386,17 @@ switch($_REQUEST['act']){
     $uiHandler->SCHEDULER->scheduleImportOpen($_REQUEST['target']);
     $uiHandler->redirUrl = UI_BROWSER.'?act=SCHEDULER';
     break;
-    
+
     case 'BACKUP.createBackupOpen':
     $uiHandler->EXCHANGE->createBackupOpen();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
-    
+
     case 'BACKUP.copy2target':
     $uiHandler->EXCHANGE->copy2target($_REQUEST['target']);
-    $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';    
+    $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
     break;
-    
+
     case 'BACKUP.createBackupClose':
     $uiHandler->EXCHANGE->createBackupClose();
     $uiHandler->redirUrl = UI_BROWSER.'?act=BACKUP';
@@ -405,7 +406,7 @@ switch($_REQUEST['act']){
     $uiHandler->EXCHANGE->backupRestoreOpen($_REQUEST['target']);
     $uiHandler->redirUrl = UI_BROWSER.'?act=RESTORE';
     break;
-    
+
     case 'RESTORE.backupRestoreClose':
     $uiHandler->EXCHANGE->backupRestoreClose();
     $uiHandler->redirUrl = UI_BROWSER.'?act=RESTORE';
@@ -435,10 +436,11 @@ switch($_REQUEST['act']){
 if ($uiHandler->alertMsg) {
     $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 }
+$ui_wait = 0;
 if (ob_get_contents()) {
     $ui_wait = 10;
 }
-ob_end_clean;
+ob_end_clean();
 ?>
 <meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">
 </body>
