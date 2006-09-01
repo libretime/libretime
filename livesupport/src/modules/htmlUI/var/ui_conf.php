@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit', '64M'); 
+ini_set('memory_limit', '64M');
 
 ## Warning/Error level
 define('UI_DEBUG',                      FALSE);
@@ -25,7 +25,7 @@ define('UI_HANDLER',                    'ui_handler.php');
 define('UI_BROWSER',                    'ui_browser.php');
 
 ## HTML Form stuff
-define('UI_FORM_STANDARD_METHOD',       'POST');
+define('UI_STANDARD_FORM_METHOD',       'POST');
 define('UI_INPUT_STANDARD_SIZE',        50);
 define('UI_INPUT_STANDARD_MAXLENGTH',   255);
 define('UI_TEXTAREA_STANDART_ROWS',     5);
