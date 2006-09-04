@@ -73,7 +73,7 @@ using namespace LiveSupport::Core;
  *
  *  <pre><code>
  *  &lt;audioPlayer&gt;
-        <gstreamerPlayer audioDevice = "plughw:0,0" />
+        <gstreamerPlayer audioDevice = "default" />
  *  &lt;/audioPlayer&gt;
  *  </code></pre>
  *

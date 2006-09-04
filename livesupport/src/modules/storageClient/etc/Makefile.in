@@ -173,9 +173,9 @@ check: all ${TEST_RUNNER} storage_server_init
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 install: all
-	${MKDIR} ${USR_INCLUDE_DIR}/LiveSupport/Storage
-	${CP} ${INCLUDE_DIR}/LiveSupport/Storage/*.h \
-          ${USR_INCLUDE_DIR}/LiveSupport/Storage
+	${MKDIR} ${USR_INCLUDE_DIR}/LiveSupport/StorageClient
+	${CP} ${INCLUDE_DIR}/LiveSupport/StorageClient/*.h \
+          ${USR_INCLUDE_DIR}/LiveSupport/StorageClient
 	${CP} ${STORAGE_CLIENT_LIB_FILE} ${USR_LIB_DIR}
 
 

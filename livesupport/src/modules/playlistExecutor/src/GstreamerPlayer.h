@@ -72,7 +72,7 @@ using namespace LiveSupport::Core;
  *  This class can be configured with the following XML element.
  *
  *  <pre><code>
- *  <gstreamerPlayer    audioDevice = "plughw:0,0" />
+ *  <gstreamerPlayer    audioDevice = "default" />
  *  </code></pre>
  *
  *  where the optional audioDevice argument specifies the audio device

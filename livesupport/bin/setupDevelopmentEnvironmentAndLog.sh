@@ -130,9 +130,9 @@ ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean
 # --with-database-user=LiveSupport =test
 # --with-database-password=LiveSupport =test
 #
-# --with-station-audio-out=default =plughw:0
-# --with-studio-audio-out=default =plughw:0
-# --with-studio-audio-cue=default =plughw:0
+# --with-station-audio-out=default =default
+# --with-studio-audio-out=default =default
+# --with-studio-audio-cue=default =default
 
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";

@@ -259,8 +259,8 @@ AC_SUBST(AUDIO_OUT)
 AC_ARG_WITH([audio-out],
             AC_HELP_STRING([--with-audio-out],
                [use the specified audio output device, either ALSA or OSS
-                (plughw:0)]),
-            [AUDIO_OUT=${withval}], [AUDIO_OUT=plughw:0])
+                (default)]),
+            [AUDIO_OUT=${withval}], [AUDIO_OUT=default])
 
 AC_MSG_RESULT([using audio output device: ${AUDIO_OUT}])
 

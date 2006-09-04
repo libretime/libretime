@@ -157,13 +157,13 @@
 
     <outputPlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "plughw:0,0" />
+            <gstreamerPlayer audioDevice = "default" />
         </audioPlayer>
     </outputPlayer>
 
     <cuePlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "plughw:0,0" />
+            <gstreamerPlayer audioDevice = "default" />
         </audioPlayer>
     </cuePlayer>
 

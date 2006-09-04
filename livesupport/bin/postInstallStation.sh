@@ -65,7 +65,9 @@ printUsage()
     echo "  -w, --dbpassword    The database user password.";
     echo "                      [default: livesupport]";
     echo "  -p, --postgresql-dir    The postgresql data directory, containing"
-    echo "                          pg_hba.conf [default: /etc/postgresql]"
+    echo "                      pg_hba.conf [default: /etc/postgresql]"
+    echo "  -i, --postgresql-init-script    The name of the postgresql init
+    echo "                      script in /etc/init.d [default: postgresql]"
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -76,7 +78,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:hp:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,help,postgresql-dir:,www-root: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:D:g:hi:p:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,help,postgresql-dir:,postgresql-init-script:,www-root: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -92,6 +94,9 @@ while true; do
         -h|--help)
             printUsage;
             exit 0;;
+        -i|--postgresql-init-script)
+            postgresql_init_script=$2;
+            shift; shift;;
         -p|--postgresql-dir)
             postgresql_dir=$2;
             shift; shift;;
@@ -145,6 +150,10 @@ fi
 
 if [ "x$postgresql_dir" == "x" ]; then
     postgresql_dir=/etc/postgresql;
+fi
+
+if [ "x$postgresql_init_script" == "x" ]; then
+    postgresql_init_script=postgresql;
 fi
 
 if [ "x$www_root" == "x" ]; then
@@ -252,8 +261,8 @@ chown root:$postgres_user $pg_config_dir/$pg_config_file
 
 # don't use restart for the init script, as it might return prematurely
 # and in the later call to psql we wouldn't be able to connect
-/etc/init.d/postgresql stop
-/etc/init.d/postgresql start
+/etc/init.d/${postgresql_init_script} stop
+/etc/init.d/${postgresql_init_script} start
 
 
 #-------------------------------------------------------------------------------
@@ -299,13 +308,22 @@ fi
 #-------------------------------------------------------------------------------
 echo "Creating ODBC data source and driver...";
 
-odbcinst_template=$install_etc/odbcinst_template
+if [ -f /usr/lib/libodbcpsql.so ]; then
+    odbcinst_template=$install_etc/odbcinst_template
+elif [ -f /usr/lib/odbc/psqlodbc.so ]; then
+    odbcinst_template=$install_etc/odbcinst_debian_template
+else
+    echo "###############################"
+    echo "Postgresql driver for unixODBC not found;"
+    echo "please register the PostgreSQL ODBC driver manually."
+    echo "###############################"
+fi
 odbc_template=$install_etc/odbc_template
 odbc_template_tmp=/tmp/odbc_template.$$
 
 # check for an existing PostgreSQL ODBC driver, and only install if necessary
 odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
-if [ "x$odbcinst_res" == "x" ]; then
+if [ "x$odbcinst_template" != "x" && "x$odbcinst_res" == "x" ]; then
     echo "Registering ODBC PostgreSQL driver...";
     odbcinst -i -d -v -f $odbcinst_template || exit 1;
 fi
@@ -361,13 +379,15 @@ echo "Configuring apache ..."
 CONFFILE=90_php_livesupport.conf
 AP_DDIR_FOUND=no
 for APACHE_DDIR in \
-    /etc/apache/conf.d /etc/apache2/conf/modules.d /etc/httpd/conf.d
+    /etc/apache/conf.d /etc/apache2/conf.d /etc/apache2/conf/modules.d \
+    /etc/httpd/conf.d
 do
     echo -n "$APACHE_DDIR "
     if [ -d $APACHE_DDIR ]; then
         echo "Y"
         AP_DDIR_FOUND=yes
         cp $basedir/etc/apache/$CONFFILE $APACHE_DDIR
+        break
     else
         echo "N"
     fi
@@ -424,7 +444,7 @@ cd -
 
 # create scheduler-related database tables
 cd $installdir
-$bindir/scheduler.sh install || exit 1;
+./bin/scheduler.sh install || exit 1;
 cd -
 
 

@@ -228,8 +228,8 @@ AC_SUBST(STATION_AUDIO_OUT)
 AC_ARG_WITH([station-audio-out],
             AC_HELP_STRING([--with-station-audio-out],
                [use the specified audio output device for the station,
-                either ALSA or OSS (plughw:0)]),
-            [STATION_AUDIO_OUT=${withval}], [STATION_AUDIO_OUT=plughw:0])
+                either ALSA or OSS (default)]),
+            [STATION_AUDIO_OUT=${withval}], [STATION_AUDIO_OUT=default])
 
 AC_MSG_RESULT([using audio output device for the station: ${STAITON_AUDIO_OUT}])
 
@@ -242,8 +242,8 @@ AC_SUBST(STUDIO_AUDIO_OUT)
 AC_ARG_WITH([studio-audio-out],
             AC_HELP_STRING([--with-studio-audio-out],
                [use the specified audio output device for the studio,
-                either ALSA or OSS (plughw:0)]),
-            [STUDIO_AUDIO_OUT=${withval}], [STUDIO_AUDIO_OUT=plughw:0])
+                either ALSA or OSS (default)]),
+            [STUDIO_AUDIO_OUT=${withval}], [STUDIO_AUDIO_OUT=default])
 
 AC_MSG_RESULT([using audio output device for studio: ${STUDIO_AUDIO_OUT}])
 
@@ -256,8 +256,8 @@ AC_SUBST(STUDIO_AUDIO_CUE)
 AC_ARG_WITH([studio-audio-cue],
             AC_HELP_STRING([--with-studio-audio-cue],
                [use the specified audio cue device for the studio,
-                either ALSA or OSS (plughw:0)]),
-            [STUDIO_AUDIO_CUE=${withval}], [STUDIO_AUDIO_CUE=plughw:0])
+                either ALSA or OSS (default)]),
+            [STUDIO_AUDIO_CUE=${withval}], [STUDIO_AUDIO_CUE=default])
 
 AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
 

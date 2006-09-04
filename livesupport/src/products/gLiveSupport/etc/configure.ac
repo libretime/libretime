@@ -213,8 +213,8 @@ AC_SUBST(AUDIO_OUT)
 AC_ARG_WITH([audio-out],
             AC_HELP_STRING([--with-audio-out],
                [use the specified audio output device, either ALSA or OSS
-                (plughw:0)]),
-            [AUDIO_OUT=${withval}], [AUDIO_OUT=plughw:0])
+                (default)]),
+            [AUDIO_OUT=${withval}], [AUDIO_OUT=default])
 
 AC_MSG_RESULT([using audio output device: ${AUDIO_OUT}])
 
@@ -227,8 +227,8 @@ AC_SUBST(AUDIO_CUE)
 AC_ARG_WITH([audio-cue],
             AC_HELP_STRING([--with-audio-cue],
                [use the specified audio cue device, either ALSA or OSS
-                (plughw:0)]),
-            [AUDIO_CUE=${withval}], [AUDIO_CUE=plughw:0])
+                (default)]),
+            [AUDIO_CUE=${withval}], [AUDIO_CUE=default])
 
 AC_MSG_RESULT([using audio cue device: ${AUDIO_CUE}])
 

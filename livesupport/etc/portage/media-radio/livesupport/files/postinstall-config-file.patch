@@ -24,7 +24,7 @@
  
 +php_url_prefix=livesupport
 +alib_xml_rpc_prefix=xmlrpc/xrLocStor.php
-+audio_out=plughw:0
++audio_out=default
 +scheduler_port=3344
 +
  

@@ -134,7 +134,7 @@
     </backupFactory>
 
     <audioPlayer>
-        <gstreamerPlayer audioDevice = "plughw:0,0" />
+        <gstreamerPlayer audioDevice = "default" />
     </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "localhost"

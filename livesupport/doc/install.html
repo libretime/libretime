@@ -33,11 +33,25 @@ steps:<br>
 </ul>
 <h2>For the impatient</h2>
 Those who think they know everything, the quick steps to install
-LiveSupport are the following.  (To run <code>make</code>, you need write permissions in the <code>prefix</code> directory; to run <code>make install</code>, you need to be root.)
-<br>
-<pre><code>wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-&lt;version&gt;.tar.bz2</code><code><br></code><code>wget </code><code>http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-&lt;version&gt;.tar.bz2</code><code><br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www</code><code><br>make<br>make install<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
+LiveSupport are the following.  (To run <code>make</code>, you need write
+permissions in the <code>prefix</code> directory; to run
+<code>make install</code> and <code>postInstallStation.sh</code>,
+you need to be root.)
 
-Then try the URL <code>http://localhost/livesupport/ </code>,
+<pre><code>
+wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-&lt;version&gt;.tar.bz2
+wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-&lt;version&gt;.tar.bz2
+tar xfj livesupport-&lt;version&gt;.tar.bz2
+tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2
+cd livesupport-&lt;version&gt;
+./configure --prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www
+make
+make install
+./bin/postInstallStation.sh -d /usr/local/livesupport -g apache -r /var/www
+/usr/local/livesupport/bin/scheduler.sh start
+<br></code></pre>
+
+Then try the URL <code>http://localhost/livesupport/</code>
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
 <br>
 Everyone else, please read the lines below carefully.<br>

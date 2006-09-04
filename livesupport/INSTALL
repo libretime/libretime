@@ -32,18 +32,19 @@ For detailed installation instructions, see the doc/install.html document.
 For the impatient, do the following (make sure to run at least the
 bin/install.sh script as root):
 
-wget http://livesupport.campware.org/look/campware/download/livesupport-<version>.tar.bz2
-wget http://livesupport.campware.org/look/campware/download/livesupport-libraries-<version>.tar.bz2
+wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-<version>.tar.bz2
+wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-<version>.tar.bz2
 tar xfj livesupport-<version>.tar.bz2
 tar xfj livesupport-libraries-<version>.tar.bz2
 cd livesupport-<version>
-./configure
-make setup && make compile
-./bin/install.sh -d /usr/local/livesupport -g apache -r /var/www
+./configure --prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www
+make
+make install
+./bin/postInstallStation.sh -d /usr/local/livesupport -g apache -r /var/www
 /usr/local/livesupport/bin/scheduler.sh start
 
 
-Then try the URL http://localhost/livesupport/htmlUI/var/html/ ,
+Then try the URL http://localhost/livesupport/htmlUI/var/html/
 and log in using username: root, password: q.
 
 

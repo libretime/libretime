@@ -111,8 +111,8 @@ dbpassword=test
 homedir=$HOME
 configdir=$homedir/.livesupport
 htmldir=$homedir/public_html
-output_device=plughw:0,0
-cue_device=plughw:0,0
+output_device=default
+cue_device=default
 
 
 echo "Configuring LiveSupport development environment for user $user.";

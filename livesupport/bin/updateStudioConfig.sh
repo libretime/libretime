@@ -60,9 +60,9 @@ printUsage()
     echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
     echo "                          [default: 3344]";
     echo "  -o, --output-device The audio device of live-mode broadcast";
-    echo "                          [default: plughw:0,0]";
+    echo "                          [default: default]";
     echo "  -c, --cue-device    The audio device of preview listening";
-    echo "                          [default: plughw:0,0]";
+    echo "                          [default: default]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -127,11 +127,11 @@ if [ "x$scheduler_port" == "x" ]; then
 fi
 
 if [ "x$output_alsa_device" == "x" ]; then
-    output_alsa_device="plughw:0,0";
+    output_alsa_device="default";
 fi
 
 if [ "x$cue_alsa_device" == "x" ]; then
-    cue_alsa_device="plughw:0,0";
+    cue_alsa_device="default";
 fi
 
 echo "Making post-install steps for GLiveSupport.";
