@@ -64,10 +64,10 @@ printUsage()
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
     echo "                      [default: livesupport]";
-    echo "  -p, --postgresql-dir    The postgresql data directory, containing"
-    echo "                      pg_hba.conf [default: /etc/postgresql]"
-    echo "  -i, --postgresql-init-script    The name of the postgresql init
-    echo "                      script in /etc/init.d [default: postgresql]"
+    echo "  -p, --postgresql-dir    The postgresql data directory, containing";
+    echo "                      pg_hba.conf [default: /etc/postgresql]";
+    echo "  -i, --postgresql-init-script    The name of the postgresql init";
+    echo "                      script [default: /etc/init.d/postgresql]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -153,7 +153,7 @@ if [ "x$postgresql_dir" == "x" ]; then
 fi
 
 if [ "x$postgresql_init_script" == "x" ]; then
-    postgresql_init_script=postgresql;
+    postgresql_init_script=/etc/init.d/postgresql;
 fi
 
 if [ "x$www_root" == "x" ]; then
@@ -172,6 +172,7 @@ echo "  database user password:     $dbpassword";
 echo "  apache daemon group:        $apache_group";
 echo "  apache document root:       $www_root";
 echo "  postgresql data directory:  $postgresql_dir";
+echo "  postgresql init script:     $postgresql_init_script";
 echo ""
 
 #-------------------------------------------------------------------------------
@@ -261,8 +262,8 @@ chown root:$postgres_user $pg_config_dir/$pg_config_file
 
 # don't use restart for the init script, as it might return prematurely
 # and in the later call to psql we wouldn't be able to connect
-/etc/init.d/${postgresql_init_script} stop
-/etc/init.d/${postgresql_init_script} start
+${postgresql_init_script} stop
+${postgresql_init_script} start
 
 
 #-------------------------------------------------------------------------------
@@ -323,7 +324,7 @@ odbc_template_tmp=/tmp/odbc_template.$$
 
 # check for an existing PostgreSQL ODBC driver, and only install if necessary
 odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
-if [ "x$odbcinst_template" != "x" && "x$odbcinst_res" == "x" ]; then
+if [ "x$odbcinst_template" != "x" ] && [ "x$odbcinst_res" == "x" ]; then
     echo "Registering ODBC PostgreSQL driver...";
     odbcinst -i -d -v -f $odbcinst_template || exit 1;
 fi
