@@ -169,11 +169,11 @@ lcov_version=lcov-1.3
 lcov_tmpdir=$tools_tmpdir/lcov
 
 gtk_dir=$toolsdir/gtk+
-gtk_version=gtk+-2.6.1
+gtk_version=gtk+-2.6.10
 gtk_tmpdir=$tools_tmpdir/gtk+
 
 gtkmm_dir=$toolsdir/gtkmm
-gtkmm_version=gtkmm-2.5.5
+gtkmm_version=gtkmm-2.6.5
 gtkmm_tmpdir=$tools_tmpdir/gtkmm
 
 gstreamer_dir=$toolsdir/gstreamer
