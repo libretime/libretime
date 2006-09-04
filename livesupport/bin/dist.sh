@@ -145,7 +145,7 @@ etc_tmpdir=$ls_tmpdir/etc
 tmp_tmpdir=$ls_tmpdir/tmp
 
 boost_dir=$toolsdir/boost
-boost_version=boost-1.31
+boost_version=boost-1.33.1
 boost_tmpdir=$tools_tmpdir/boost
 
 libxmlxx_dir=$toolsdir/libxml++
