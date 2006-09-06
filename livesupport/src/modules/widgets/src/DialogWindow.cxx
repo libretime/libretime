@@ -132,6 +132,7 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
 
     set_default_size(100*buttonCount + 50, 120);
     property_window_position().set_value(Gtk::WIN_POS_CENTER);
+    set_skip_taskbar_hint(true);    // do not show in the task bar
 
     add(*layout);
 }
