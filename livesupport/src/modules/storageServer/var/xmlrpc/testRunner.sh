@@ -30,9 +30,11 @@
 #DEBUG=yes
 #DEBUG_I=yes
 
-COMM=$1
-shift
-GUNID=$1
+if [ "x$1" != "x" ]; then
+    COMM=$1
+    shift
+    GUNID=$1
+fi
 
 METADATA="<?xml version=\"1.0\"?>
 <audioClip>
