@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
@@ -482,50 +482,50 @@ usage(){
     echo -e " preferences\n playlists\n storage\n"
 }
 
-if [ "$COMM" == "test" ]; then
+if [ "$COMM" = "test" ]; then
     login
     test
     logout
-elif [ "$COMM" == "existsAudioClip" ]; then
+elif [ "$COMM" = "existsAudioClip" ]; then
     login
     existsAudioClip
     logout
-elif [ "$COMM" == "accessRawAudioData" ]; then
+elif [ "$COMM" = "accessRawAudioData" ]; then
     login
     accessRawAudioData
     logout
-elif [ "$COMM" == "storeAudioClip" ]; then
+elif [ "$COMM" = "storeAudioClip" ]; then
     login
     storeAudioClip
     logout
-elif [ "$COMM" == "deleteAudioClip" ]; then
+elif [ "$COMM" = "deleteAudioClip" ]; then
     login
     deleteAudioClip
     logout
-elif [ "$COMM" == "updateAudioClipMetadata" ]; then
+elif [ "$COMM" = "updateAudioClipMetadata" ]; then
     login
     updateAudioClipMetadata
     logout
-elif [ "$COMM" == "getAudioClip" ]; then
+elif [ "$COMM" = "getAudioClip" ]; then
     login
     getAudioClip
     logout
-elif [ "$COMM" == "searchMetadata" ]; then
+elif [ "$COMM" = "searchMetadata" ]; then
     searchTest
-elif [ "$COMM" == "preferences" ]; then
+elif [ "$COMM" = "preferences" ]; then
     preferenceTest
-elif [ "$COMM" == "playlists" ]; then
+elif [ "$COMM" = "playlists" ]; then
     playlistTest
-elif [ "$COMM" == "webstream" ]; then
+elif [ "$COMM" = "webstream" ]; then
     webstreamTest
-elif [ "$COMM" == "storage" ]; then
+elif [ "$COMM" = "storage" ]; then
     storageTest
-elif [ "x$COMM" == "x" ]; then
+elif [ "x$COMM" = "x" ]; then
     storageTest
     playlistTest
     preferenceTest
     searchTest
-elif [ "$COMM" == "help" ]; then
+elif [ "$COMM" = "help" ]; then
     usage
 else
     echo "Unknown command"
