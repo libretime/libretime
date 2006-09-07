@@ -48,12 +48,6 @@ products_dir=$srcdir/products
 
 usrdir=`cd $basedir/usr; pwd;`
 
-#------------------------------------------------------------------------------
-#  Extra settings to use gcc and g++ 3.4 instead of version 4.0
-#------------------------------------------------------------------------------
-# export CC=/usr/bin/gcc-3.4
-# export CXX=/usr/bin/g++-3.4
-
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.
 #-------------------------------------------------------------------------------
@@ -94,7 +88,7 @@ while true; do
     esac
 done
 
-if [ "x$apache_group" == "x" ]; then
+if [ "x$apache_group" = "x" ]; then
     apache_group=apache;
 fi
 
@@ -141,10 +135,7 @@ $basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
                    --prefix=$usrdir --with-apache-group=$apache_group \
                    --with-check-boost=yes --with-check-gtk=yes \
                    --with-check-gtkmm=yes --with-check-icu=yes \
-                   --with-check-libxmlpp=yes \
-                   --with-station-audio-out=default \
-                   --with-studio-audio-out=default \ 
-                   --with-studio-audio-cue=default > $tmpdir/configure_development_environment.log 2>&1
+                   --with-check-libxmlpp=yes > $tmpdir/configure_development_environment.log 2>&1
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
