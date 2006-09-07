@@ -12,12 +12,11 @@ if (UI_DEBUG) error_reporting(E_ALL);
 
 define('UI_VERSION',                    'LiveSupport 1.1.0');
 define('UI_VERSION_FULLNAME',           'LiveSupport 1.1.0');
-define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
+define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
 ## Scheduler
 define('UI_SCHEDULER_DAEMON_CMD',       '/etc/init.d/livesupport-station start >/tmp/scheduler.log 2>&1 &'); ## adjust the start-command here
 define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                     ## this is name of scheduler process to grep in process list for it
-
 
 ## Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');
@@ -30,7 +29,7 @@ define('UI_HANDLER',                    'ui_handler.php');
 define('UI_BROWSER',                    'ui_browser.php');
 
 ## HTML Form stuff
-define('UI_FORM_STANDARD_METHOD',       'POST');
+define('UI_STANDARD_FORM_METHOD',       'POST');
 define('UI_INPUT_STANDARD_SIZE',        50);
 define('UI_INPUT_STANDARD_MAXLENGTH',   255);
 define('UI_TEXTAREA_STANDART_ROWS',     5);
@@ -52,8 +51,12 @@ define('UI_SCRATCHPAD_SESSNAME',        'SCRATCHPAD');
 define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
+define('UI_HUBBROWSE_SESSNAME',         'L_HUBBROWSE');
+define('UI_HUBSEARCH_SESSNAME',         'L_HUBSEARCH');
+define('UI_TRANSFER_SESSNAME',          'L_TRANSFER');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
 define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
+define('UI_CALENDAR_SESSNAME',          'CALENDAR');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
@@ -91,10 +94,14 @@ define('UI_BROWSE_DEFAULT_KEY_2',       'dc:creator');
 define('UI_BROWSE_DEFAULT_KEY_3',       'dc:source');
 define('UI_BROWSE_DEFAULT_LIMIT',       10);
 
+define('UI_HUB_POLLING_FREQUENCY',      3);
+
 ## Scheduler / Calendar
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
 define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '0 seconds');
+define('UI_SCHEDULER_IMPORTTOKEN_KEY',  'schedulerImportToken');
+define('UI_SCHEDULER_EXPORTTOKEN_KEY',  'schedulerExportToken');
 
 ## File types
 define('UI_FILETYPE_ANY',               'all');
@@ -108,7 +115,9 @@ define('UI_PL_ELEM_FADEINFO',           'fadeInfo');
 define('UI_PL_ELEM_FADEIN',             'fadeIn');
 define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
-
+## Export/Import
+define('UI_BACKUPTOKEN_KEY',            'backupToken');
+define('UI_RESTORETOKEN_KEY',           'restoreToken');
 
 ## LS stuff
 require_once 'storage_server/var/conf.php';
@@ -122,7 +131,8 @@ $config = array_merge($config,
         ),
         'stream_types'  => array(
                             'application/ogg',
-                            'audio/mpeg'
+                            'audio/mpeg',
+                            'audio/x-mpegurl'
         ),
         'languages'     => array(
                             'ar_JO'        => 'Arabic(JO)',
@@ -144,6 +154,9 @@ require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
+require_once dirname(__FILE__).'/ui_hubBrowse.class.php';
+require_once dirname(__FILE__).'/ui_hubSearch.class.php';
+require_once dirname(__FILE__).'/ui_transfers.class.php';
 require_once 'storage_server/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
