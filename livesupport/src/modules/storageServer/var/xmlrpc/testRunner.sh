@@ -91,11 +91,12 @@ existsAudioClip() {
 }
 
 storeAudioClip() {
-    MEDIA=../tests/ex1.mp3
+    if [ "x$1" = "x" ]; then MEDIA=../tests/ex1.mp3; else MEDIA=$1; fi
+    if [ "x$2" = "x" ]; then GUNID=""; else GUNID=$2; fi
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     if [ $DEBUG_I ]; then echo "md5=$MD5"; fi
     echo -n "# storeAudioClipOpen: "
-    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' "$METADATA" "stored file.mp3" "$MD5"` || \
+    RES=`$XR_CLI storeAudioClipOpen "$SESSID" "$GUNID" "$METADATA" "stored file.mp3" "$MD5"` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
@@ -292,6 +293,8 @@ deletePlaylist() {
 }
 
 exportPlaylist() {
+    storeAudioClip ../tests/0000000000010001 0000000000010001
+    storeAudioClip ../tests/0000000000010002 0000000000010002
     echo -n "# exportPlaylistOpen (${PLID}): "
 #    RES=`$XR_CLI exportPlaylistOpen $SESSID $PLID smil` || \
     RES=`$XR_CLI exportPlaylistOpen $SESSID $PLID lspl` || \
