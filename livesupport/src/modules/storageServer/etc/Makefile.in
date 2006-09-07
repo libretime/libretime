@@ -108,6 +108,7 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
               s/ls_dbpassword/${DB_PASSWORD}/; \
               s/ls_dbserver/${DB_SERVER}/; \
               s/ls_database/${DATABASE}/; \
+              s/ls_apache_group/${APACHE_GROUP}/; \
               s/ls_storageUrlPath/\/${PHP_URL_PREFIX_S}\/storageServer\/var/; \
               s/ls_php_host/${HOSTNAME}/; \
               s/ls_php_port/${WWW_PORT}/; \

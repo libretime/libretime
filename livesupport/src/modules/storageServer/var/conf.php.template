@@ -33,7 +33,8 @@
  *  storageServer configuration file
  */
 
-define('LS_VERSION', '1.0');
+define('LS_VERSION', '1.1');
+define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
 
 /**
  *  configuration structure:
@@ -84,11 +85,12 @@ $config = array(
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
     'TrashName'     => 'trash_',
-    'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
-    'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
-    'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
-    'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
+    'storageDir'    =>  realpath(dirname(__FILE__).'/../../storageServer/var/stor'),
+    'bufferDir'     =>  realpath(dirname(__FILE__).'/../../storageServer/var/stor/buffer'),
+    'transDir'      =>  realpath(dirname(__FILE__).'/../../storageServer/var/trans'),
+    'accessDir'     =>  realpath(dirname(__FILE__).'/../../storageServer/var/access'),
     'pearPath'      =>  'ls_lib_dir/pear',
+    'cronDir'       =>  realpath(dirname(__FILE__).'/../../storageServer/var/cron'),
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
@@ -139,10 +141,27 @@ $config = array(
     /* ============================================== auxiliary configuration */
     'RootNode'	    => 'RootNode',
     'tmpRootPass'   => 'q',
+
+    /* =================================================== cron configuration */
+    'cronUserName'      => 'ls_apache_group',
+    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
+    'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
+    'paramdir'          => dirname(__FILE__).'/cron/params',
 );
 $config['sysSubjs'] = array(
     'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
 );
 $old_ip = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
+
+if(!PHP5){
+ eval('
+    define("FILE_APPEND", TRUE);
+    function file_put_contents($f, $s, $ap=FALSE){
+        $fp=fopen($f, $ap==FILE_APPEND ? "a" : "w");
+        fwrite($fp,$s);
+        fclose($fp);
+    }
+');
+}
 ?>
