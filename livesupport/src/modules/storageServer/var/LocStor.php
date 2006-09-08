@@ -944,7 +944,7 @@ class LocStor extends BasicStor{
                 "LocStor::createBackupOpen: false returned from Backup"
             );
         }
-        return $bu->openBackup($sessid,$criteria);
+        return $r;
     }
 
     /**
