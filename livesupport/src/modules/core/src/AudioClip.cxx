@@ -478,7 +478,9 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                          const std::string &key)
                                                 throw (std::invalid_argument)
 {
-    std::string name, prefix;
+    std::string     name;
+    std::string     prefix;
+    
     separateNameAndNameSpace(key, name, prefix);
     setMetadata(value, name, prefix);
 }
@@ -657,7 +659,7 @@ AudioClip :: readTag(Ptr<MetadataTypeContainer>::Ref  metadataTypes)
                 TagLib::ID3v2::FrameList frameList = it->second;
                 if (!frameList.isEmpty()) {
                     value.reset(new const Glib::ustring(
-                                frameList.front()->toString().to8Bit(false)));
+                                frameList.front()->toString().to8Bit(true)));
                     setMetadata(value, *metadata->getDcName());
                 }
             } catch (std::invalid_argument &e) {
