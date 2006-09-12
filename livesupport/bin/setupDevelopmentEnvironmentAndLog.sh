@@ -135,7 +135,8 @@ $basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
                    --prefix=$usrdir --with-apache-group=$apache_group \
                    --with-check-boost=yes --with-check-gtk=yes \
                    --with-check-gtkmm=yes --with-check-icu=yes \
-                   --with-check-libxmlpp=yes > $tmpdir/configure_development_environment.log 2>&1
+                   --with-check-libxmlpp=yes --enable-debug \
+                   > $tmpdir/configure_development_environment.log 2>&1
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
