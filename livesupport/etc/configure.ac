@@ -44,13 +44,13 @@ AC_PROG_CXX()
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database and user should be created
+dnl  specify whether the LiveSupport database and user should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_LS_DATABASE)
 
 AC_ARG_WITH([create-database],
             AC_HELP_STRING([--with-create-database],
-               [specify wether the LiveSupport database and database user
+               [specify whether the LiveSupport database and database user
                 should be created (no)]),
             [CREATE_LS_DATABASE=${withval}],
             [CREATE_LS_DATABASE=no])
@@ -59,13 +59,13 @@ AC_MSG_RESULT([creating LiveSupport database: ${CREATE_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the ODBC data source should be created
+dnl  specify whether the ODBC data source should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_ODBC_DATA_SOURCE)
 
 AC_ARG_WITH([create-odbc-data-source],
             AC_HELP_STRING([--with-create-odbc-data-source],
-               [specify wether the ODBC data source for LiveSupport should be
+               [specify whether the ODBC data source for LiveSupport should be
                 created (no)]),
             [CREATE_ODBC_DATA_SOURCE=${withval}],
             [CREATE_ODBC_DATA_SOURCE=no])
@@ -74,13 +74,13 @@ AC_MSG_RESULT([creating ODBC data source: ${CREATE_ODBC_DATA_SOURCE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database tables should be initialized
+dnl  specify whether the LiveSupport database tables should be initialized
 dnl-----------------------------------------------------------------------------
 AC_SUBST(INIT_LS_DATABASE)
 
 AC_ARG_WITH([init-database],
             AC_HELP_STRING([--with-init-database],
-               [specify wether the LiveSupport database tables should be
+               [specify whether the LiveSupport database tables should be
                 initialized (no)]),
             [INIT_LS_DATABASE=${withval}],
             [INIT_LS_DATABASE=no])
@@ -89,13 +89,13 @@ AC_MSG_RESULT([initializing LiveSupport database: ${INIT_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether apache should be configured through it's conf.d directory
+dnl  specify whether apache should be configured through it's conf.d directory
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CONFIGURE_APACHE)
 
 AC_ARG_WITH([configure-apache],
             AC_HELP_STRING([--with-configure-apache],
-               [specify wether apache should be configured for LiveSupport
+               [specify whether apache should be configured for LiveSupport
                 through its conf.d directory (no)]),
             [CONFIGURE_APACHE=${withval}],
             [CONFIGURE_APACHE=no])
