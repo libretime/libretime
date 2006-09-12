@@ -44,6 +44,26 @@ AC_PROG_CXX()
 
 AC_CHECK_HEADERS(getopt.h sys/time.h)
 
+
+dnl-----------------------------------------------------------------------------
+dnl  specify whether debug info should be compiled into the executable
+dnl-----------------------------------------------------------------------------
+AC_SUBST(CXXFLAGS)
+
+AC_ARG_ENABLE([debug],
+            AC_HELP_STRING([--enable-debug], [compile with debug info (no)]),
+            [],
+            [enable_debug=no])
+
+if test "x${enable_debug}" = "xyes"; then
+    CXXFLAGS="-g -O0"
+else
+    CXXFLAGS="-O3"
+fi
+
+AC_MSG_RESULT([using compiler options: ${CXXFLAGS}])
+
+
 dnl-----------------------------------------------------------------------------
 dnl  specify the pkg-config path
 dnl-----------------------------------------------------------------------------

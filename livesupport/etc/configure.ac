@@ -44,6 +44,19 @@ AC_PROG_CXX()
 
 
 dnl-----------------------------------------------------------------------------
+dnl  specify whether debug info should be compiled into the executable
+dnl-----------------------------------------------------------------------------
+AC_SUBST(DEBUG)
+
+AC_ARG_ENABLE([debug],
+            AC_HELP_STRING([--enable-debug], [compile with debug info (no)]),
+            [DEBUG=${enable_debug}],
+            [DEBUG=no])
+
+AC_MSG_RESULT([compiling with debug info: ${DEBUG}])
+
+
+dnl-----------------------------------------------------------------------------
 dnl  specify whether the LiveSupport database and user should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_LS_DATABASE)
@@ -231,7 +244,7 @@ AC_ARG_WITH([station-audio-out],
                 either ALSA or OSS (default)]),
             [STATION_AUDIO_OUT=${withval}], [STATION_AUDIO_OUT=default])
 
-AC_MSG_RESULT([using audio output device for the station: ${STAITON_AUDIO_OUT}])
+AC_MSG_RESULT([using audio output device for the station: ${STATION_AUDIO_OUT}])
 
 
 dnl-----------------------------------------------------------------------------

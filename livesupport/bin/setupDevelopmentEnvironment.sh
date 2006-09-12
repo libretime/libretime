@@ -99,8 +99,10 @@ fi
 #-------------------------------------------------------------------------------
 rm -rf $tmpdir/configure
 $bindir/autogen.sh || exit 1
-$basedir/configure --prefix=$usrdir --with-www-docroot=$usrdir/var \
-                   --with-apache-group=$apache_group || exit 1
+$basedir/configure --prefix=$usrdir \
+                   --with-www-docroot=$usrdir/var \
+                   --with-apache-group=$apache_group \
+                   --enable-debug || exit 1
 
 
 #-------------------------------------------------------------------------------

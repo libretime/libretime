@@ -81,6 +81,8 @@ STUDIO_AUDIO_CUE  		= "@STUDIO_AUDIO_CUE@"
 export LD_LIBRARY_PATH:=${prefix}/lib:${LD_LIBRARY_PATH}
 export PKG_CONFIG_PATH=${prefix}/lib/pkgconfig
 
+DEBUG = @DEBUG@
+
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 XMLRPC-DOXYGEN_CONFIG = ${ETC_DIR}/xmlrpc-doxygen.config
 
@@ -310,13 +312,13 @@ ${TMP_DIR}/modules_setup.stamp:
 					--with-database-password=${DB_PASSWORD}
 	cd ${GETID3_DIR} && ./configure --prefix=${prefix}
 	cd ${HTML_UI_DIR} && ./configure --prefix=${prefix} \
-                                         --with-apache-group=${APACHE_GROUP} \
-                                         --with-www-docroot=${WWW_DOCROOT} \
-                                         --with-configure-apache=${CONFIGURE_APACHE} \
-	                                 --with-storage-server=${prefix}/var/LiveSupport/storageServer
+            --with-apache-group=${APACHE_GROUP} \
+            --with-www-docroot=${WWW_DOCROOT} \
+            --with-configure-apache=${CONFIGURE_APACHE} \
+            --with-storage-server=${prefix}/var/LiveSupport/storageServer
 	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix} \
-	                --with-storage-server=${prefix}/var/LiveSupport/storageServer \
-	                --with-phppart-dir=${prefix}/var/LiveSupport/storageAdmin
+            --with-storage-server=${prefix}/var/LiveSupport/storageServer \
+            --with-phppart-dir=${prefix}/var/LiveSupport/storageAdmin
 	cd ${STORAGE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-apache-group=${APACHE_GROUP} \
@@ -329,21 +331,31 @@ ${TMP_DIR}/modules_setup.stamp:
 					--with-database-user=${DB_USER} \
 					--with-database-password=${DB_PASSWORD} \
 					--with-init-database=${INIT_LS_DATABASE}
-	cd ${CORE_DIR} && ./configure --prefix=${prefix}
-	cd ${AUTHENTICATION_DIR} && ./configure --prefix=${prefix}
-	cd ${DB_DIR} && ./configure --prefix=${prefix}
-	cd ${STORAGE_CLIENT_DIR} && ./configure --prefix=${prefix}
-	cd ${GSTREAMER_ELEMENTS_DIR} && ./configure --prefix=${prefix}
-	cd ${PLAYLIST_EXECUTOR_DIR} && ./configure --prefix=${prefix}
-	cd ${EVENT_SCHEDULER_DIR} && ./configure --prefix=${prefix}
-	cd ${SCHEDULER_CLIENT_DIR} && ./configure --prefix=${prefix}
-	cd ${WIDGETS_DIR} && ./configure --prefix=${prefix}
+	cd ${CORE_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${AUTHENTICATION_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${DB_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${STORAGE_CLIENT_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${GSTREAMER_ELEMENTS_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${PLAYLIST_EXECUTOR_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${EVENT_SCHEDULER_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${SCHEDULER_CLIENT_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	cd ${WIDGETS_DIR} && \
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
 	touch ${TMP_DIR}/modules_setup.stamp
 
 products_setup: ${TMP_DIR}/products_setup.stamp
 ${TMP_DIR}/products_setup.stamp:
 	cd ${SCHEDULER_DIR} && \
 		./configure --prefix=${prefix} \
+		            --enable-debug=${DEBUG} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
@@ -356,6 +368,7 @@ ${TMP_DIR}/products_setup.stamp:
 					--with-init-database=${INIT_LS_DATABASE}
 	cd ${GLIVESUPPORT_DIR} && \
 		./configure --prefix=${prefix} \
+		            --enable-debug=${DEBUG} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
