@@ -147,10 +147,10 @@ class RawMediaData{
     function analyze()
     {
         if(!$this->exists) return FALSE;
-            $ia = @GetAllFileinfo($this->fname, 'mp3');
-            //prepared for getid3 upgrade:
-            //$getID3 = new getID3;
-            //$ia = $getID3->analyze($this->fname);
+        //$ia = @GetAllFileinfo($this->fname, 'mp3');
+        //prepared for getid3 upgrade:
+        $getID3 = new getID3;
+        $ia = $getID3->analyze($this->fname);
         return $ia;
     }
 

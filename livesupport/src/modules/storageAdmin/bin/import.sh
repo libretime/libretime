@@ -56,6 +56,7 @@ printUsage()
     echo "  -l, --list          The filename with list of absolute filepaths";
     echo "                       (newline-separated).";
     echo "  -f, --file          The filename - import of one file";
+    echo "  -t, --test          Test only - co not import, show analyze";
     echo "  -h, --help          Print this message and exit.";
     echo "";
     echo "Usage:";
@@ -71,9 +72,10 @@ printUsage()
 unset srcabsdir
 unset filelistpathname
 unset filepathname
+unset phpSw
 CMD=${0##*/}
 
-opts=$(getopt -o d:l:f:h -l directory:,list:,file:,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:l:f:th -l directory:,list:,file:,test,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -98,6 +100,9 @@ while true; do
             fileabsdir=`cd "$filedir"; pwd`
             filepathname="$fileabsdir/$filebasename"
             shift; shift;;
+        -t|--test)
+            phpSw="-t"
+            shift;;
         -h|--help)
             printUsage;
             exit 0;;
@@ -124,11 +129,11 @@ fi
 cd $phpdir
 
 if [ -f "$filelistpathname" ]; then
-    cat "$filelistpathname" | php -q import.php || exit 1
+    cat "$filelistpathname" | php -q import.php $phpSw || exit 1
 elif [ -d "$srcabsdir" ]; then
-    find "$srcabsdir" -type f | php -q import.php || exit 1
+    find "$srcabsdir" -type f | php -q import.php $phpSw || exit 1
 elif [ -f "$filepathname" ]; then
-    echo "$filepathname" | php -q import.php || exit 1
+    echo "$filepathname" | php -q import.php $phpSw || exit 1
 else
     echo "Warning: not a directory: $srcabsdir"
 fi
