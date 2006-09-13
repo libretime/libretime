@@ -254,6 +254,9 @@ UploadFileWindow :: UploadFileWindow (
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                 &UploadFileWindow::onCloseButtonClicked));
 
+    // set the file chooser's default folder to the user's home directory
+    fileChooserFolder = Glib::get_home_dir();
+
     // show everything
     set_name("uploadFileWindow");
     set_default_size(350, 500);
@@ -281,11 +284,15 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
         std::exit(1);
     }
 
+    dialog->set_name("uploadFileChooserDialog");
+    gLiveSupport->getWindowPosition(dialog);
+
+    dialog->set_current_folder(fileChooserFolder);
     dialog->set_transient_for(*this);
 
     //Add response buttons the the dialog:
     dialog->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
+    dialog->add_button(Gtk::Stock::OPEN,   Gtk::RESPONSE_OK);
 
     int result = dialog->run();
 
@@ -293,6 +300,8 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
         clearEverything();
         fileNameEntry->set_text(dialog->get_filename());
         updateFileInfo();
+        fileChooserFolder = dialog->get_current_folder();
+        gLiveSupport->putWindowPosition(dialog);
     }
 }
 

@@ -204,6 +204,11 @@ class UploadFileWindow : public GuiWindow
         FileType                    fileType;
 
         /**
+         *  The starting folder for the file chooser dialog.
+         */
+        Glib::ustring               fileChooserFolder;
+
+        /**
          *  Update the information for the file to upload, based on the
          *  value of the fileNameEntry text entry field.
          */

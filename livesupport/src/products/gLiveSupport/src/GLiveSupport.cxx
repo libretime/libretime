@@ -374,12 +374,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     // save the configuration so we can modify it later
     // TODO: move configuration code to the OptionsContainer class?
     Ptr<Glib::ustring>::Ref     configFileName(new Glib::ustring);
-    struct passwd *             pwd = getpwuid(getuid());
-    if (pwd) {
-        configFileName->append(pwd->pw_dir);
-    } else {
-        throw std::logic_error("this never happens: getpwuid() returned 0");
-    }
+    configFileName->append(Glib::get_home_dir());
     configFileName->append(configFileDirStr);
     mkdir(configFileName->c_str(), 0700);   // create dir if does not exist
     configFileName->append(configFileNameStr);
