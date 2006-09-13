@@ -764,7 +764,7 @@ OptionsWindow :: constructSchedulerSection(void)                    throw ()
     Gtk::HBox *         statusReportBox = Gtk::manage(new Gtk::HBox);
     statusReportBox->pack_start(*statusTextLabel,      Gtk::PACK_SHRINK, 5);
     schedulerStatusLabel = Gtk::manage(new Gtk::Label);
-    statusReportBox->pack_start(*schedulerStatusLabel, Gtk::PACK_SHRINK, 5);
+    statusReportBox->pack_start(*schedulerStatusLabel, Gtk::PACK_SHRINK, 0);
     
     Gtk::ButtonBox *    startStopButtons = Gtk::manage(new Gtk::HButtonBox(
                                                     Gtk::BUTTONBOX_SPREAD, 20));
