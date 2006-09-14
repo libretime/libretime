@@ -37,7 +37,7 @@ AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../var/getid3.check.php)
+AC_CONFIG_SRCDIR(../var/getid3.php)
 
 
 AC_CONFIG_FILES(../Makefile:../etc/Makefile.in)
