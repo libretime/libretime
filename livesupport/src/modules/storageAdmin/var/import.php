@@ -128,7 +128,10 @@ function addMdata($key, $val, $iEnc='iso-8859-1'){
         $oEnc = 'UTF-8';
         if(function_exists('iconv') && $iEnc != $oEnc){
             $data = $r = @iconv($iEnc, $oEnc, $data);
-            if($r === FALSE) die("Recoding metadata to unicode failed.");
+            if($r === FALSE){
+                echo "Warning: convert $key data to unicode failed\n";
+                $data = $val;  // fallback
+            }
         }
         if($key == $titleKey) $titleHaveSet = TRUE;
         $mdata[$key] = trim($data);
