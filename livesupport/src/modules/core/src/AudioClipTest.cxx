@@ -84,7 +84,7 @@ static const std::string metadataConfigFileName
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-AudioClipTest :: setUp(void)                         throw ()
+AudioClipTest :: setUp(void)                    throw (CPPUNIT_NS::Exception)
 {
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(

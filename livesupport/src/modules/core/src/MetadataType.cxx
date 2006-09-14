@@ -113,7 +113,7 @@ MetadataType :: configure(const xmlpp::Element & element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        throw std::invalid_argument("bad coniguration element "
+        throw std::invalid_argument("bad configuration element "
                                   + element.get_name());
     }
 
@@ -149,6 +149,20 @@ MetadataType :: configure(const xmlpp::Element & element)
             tab = voiceTab;
         }
     }
+    
+    // get the constraint, optional
+    xmlpp::Node::NodeList   childNodes = element.get_children(
+                                    MetadataConstraint::getConfigElementName());
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
+
+    if (it != childNodes.end()) {
+        const xmlpp::Element *  constraintElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+        if (constraintElement) {
+            constraint.reset(new MetadataConstraint());
+            constraint->configure(*constraintElement);
+        }
+    }
 }
 
 
@@ -160,5 +174,28 @@ MetadataType :: getLocalizedName(void) const
                                                 throw (std::invalid_argument)
 {
     return container->getResourceUstring(*localizationKey);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check that the given value satisfies the constraint.
+ *----------------------------------------------------------------------------*/
+bool
+MetadataType :: check(Ptr<const Glib::ustring>::Ref     value) const
+                                                                    throw ()
+{
+    if (!value) {
+        return false;
+    }
+    
+    if (constraint) {
+        try {
+            return constraint->check(value);
+        } catch (std::logic_error &e) {
+            return false;
+        }
+    } else {
+        return true;
+    }
 }
 

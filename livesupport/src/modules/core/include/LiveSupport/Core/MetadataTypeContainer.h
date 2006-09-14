@@ -241,6 +241,23 @@ class MetadataTypeContainer : public Configurable,
         Ptr<const MetadataType>::Ref
         getById3Tag(const Glib::ustring     id3Tag)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Check that the given value satisfies the constraint of a metadata
+         *  type.
+         *  If the metadata type has no constraints, it returns true.
+         *  If the constraint throws an exception, it returns false.
+         *
+         *  @param  dcName  the metadata type, by its Dublin Core name.
+         *  @param  value   the value to be checked against the constraint.
+         *  @return true    if the value satisfies the constraint.
+         *  @exception  std::invalid_argument   if no metadata type exists
+         *                                      with the suplied name.
+         */
+        bool
+        check(const Glib::ustring &           dcName,
+              Ptr<const Glib::ustring>::Ref   value)
+                                                throw (std::invalid_argument);
 };
 
 

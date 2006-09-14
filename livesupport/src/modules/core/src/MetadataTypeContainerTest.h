@@ -67,6 +67,7 @@ class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(iteratorTest);
     CPPUNIT_TEST(localizedTest);
+    CPPUNIT_TEST(constraintTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -105,6 +106,14 @@ class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
         void
         localizedTest(void)                     throw (CPPUNIT_NS::Exception);
 
+        /**
+         *  Test to see if the constraints work.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        constraintTest(void)                    throw (CPPUNIT_NS::Exception);
+
 
     public:
         
@@ -112,7 +121,7 @@ class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
          *  Set up the environment for the test case.
          */
         void
-        setUp(void)                                     throw ();
+        setUp(void)                             throw (CPPUNIT_NS::Exception);
 
         /**
          *  Clean up the environment after the test case.

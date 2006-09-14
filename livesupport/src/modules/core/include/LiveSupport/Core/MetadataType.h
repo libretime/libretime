@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/MetadataConstraint.h"
 
 
 namespace LiveSupport {
@@ -71,8 +72,12 @@ class MetadataTypeContainer;
  *  <metadataType dcName          = "dc:creator"
  *                id3Tag          = "TPE2"
  *                localizationKey = "dc_creator"
- *                tab             = "main"
- *  />
+ *                tab             = "main" >
+ *      <constraint     type = "numericRange" >
+ *          <value>1</value>
+ *          <value>12</value>
+ *      </constraint>
+ *  </metadataType>
  *  </code></pre>
  *
  *  The tab attribute (if present) must be one of "main", "music" or "voice"
@@ -81,10 +86,14 @@ class MetadataTypeContainer;
  *  the Main, Music, or Voice tab.  If the attribute is omitted, the metadata
  *  field will appear in none of the tabs.
  *
+ *  The optional constraint sub-element can give restrictions on the acceptable
+ *  values for this type of metadata.  See the MetadataConstraint class for
+ *  more information, including the DTD of the "constraint" element.
+ *
  *  The DTD for the expected XML element looks like the following:
  *
  *  <pre><code>
- *  <!ELEMENT metadataType  EMPTY >
+ *  <!ELEMENT metadataType  (constraint?) >
  *  <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
  *  <!ATTLIST metadataType  id3Tag            NMTOKEN     #IMPLIED  >
  *  <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
@@ -140,6 +149,11 @@ class MetadataType : public Configurable
          *  The localization key for this metadata type.
          */
         TabType                     tab;
+
+        /**
+         *  The constraint object, if any.
+         */
+        Ptr<MetadataConstraint>::Ref        constraint;
 
 
     protected:
@@ -255,6 +269,17 @@ class MetadataType : public Configurable
         {
             return tab;
         }
+
+        /**
+         *  Check that the given value satisfies the constraint.
+         *  If the metadata type has no constraints, it returns true.
+         *  If the constraint throws an exception, it returns false.
+         *
+         *  @param  value   the value to be checked against the constraint.
+         *  @return true if the value satisfies the constraint.
+         */
+        bool
+        check(Ptr<const Glib::ustring>::Ref     value) const        throw ();
 };
 
 

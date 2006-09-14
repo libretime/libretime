@@ -63,7 +63,7 @@ MetadataTypeContainer :: configure(const xmlpp::Element & element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        throw std::invalid_argument("bad coniguration element "
+        throw std::invalid_argument("bad configuration element "
                                   + element.get_name());
     }
 
@@ -154,5 +154,18 @@ MetadataTypeContainer :: getById3Tag(const Glib::ustring    id3Tag)
     }
 
     return id3TagMap[id3Tag];
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check that the given value satisfies the constraint of a metadata type.
+ *----------------------------------------------------------------------------*/
+bool
+MetadataTypeContainer :: check(const Glib::ustring &            dcName,
+                               Ptr<const Glib::ustring>::Ref    value)
+                                                throw (std::invalid_argument)
+{
+    Ptr<const MetadataType>::Ref    metadataType = getByDcName(dcName);
+    return metadataType->check(value);
 }
 

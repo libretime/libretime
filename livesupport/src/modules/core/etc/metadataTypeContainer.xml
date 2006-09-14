@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE metadataTypeContainer [
 
-<!ELEMENT metadataType EMPTY >
+<!ELEMENT metadataTypeContainer           (metadataType+)       >
+
+<!ELEMENT metadataType                    (constraint?)         >
 <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
 <!ATTLIST metadataType  localizationKey   CDATA       #REQUIRED >
 <!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
 
-<!ELEMENT metadataTypeContainer (metadataType+) >
+<!ELEMENT constraint                      (value*)              >
+<!ATTLIST constraint    type              NMTOKEN     #REQUIRED >
+
+<!ELEMENT value                           (CDATA)               >
 
 ]>
 
@@ -27,8 +32,9 @@
     />
     <metadataType dcName          = "ls:year"
                   id3Tag          = "TYER"
-                  localizationKey = "year"
-    />
+                  localizationKey = "year" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "dc:type"
                   id3Tag          = "TCON"
                   localizationKey = "genre"
@@ -42,8 +48,9 @@
     />
     <metadataType dcName          = "ls:bpm"
                   id3Tag          = "TBPM"
-                  localizationKey = "bpm"
-    />
+                  localizationKey = "bpm" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "ls:rating"
                   id3Tag          = "POPM"
                   localizationKey = "rating"
@@ -57,12 +64,14 @@
     />
     <metadataType dcName          = "ls:track_num"
                   id3Tag          = "TRCK"
-                  localizationKey = "track_number"
-    />
+                  localizationKey = "track_number" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "ls:disc_num"
                   id3Tag          = "TPOS"
-                  localizationKey = "disc_number"
-    />
+                  localizationKey = "disc_number" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "ls:mood"
                   id3Tag          = "TMOO"
                   localizationKey = "mood"
@@ -79,11 +88,13 @@
                   localizationKey = "bitrate"
     />
     <metadataType dcName          = "ls:channels"
-                  localizationKey = "channels"
-    />
+                  localizationKey = "channels" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "ls:samplerate"
-                  localizationKey = "sample_rate"
-    />
+                  localizationKey = "sample_rate" >
+        <constraint          type = "numeric" />
+    </metadataType>
     <metadataType dcName          = "ls:encoder"
                   id3Tag          = "TSSE"
                   localizationKey = "encoding_software"

@@ -81,7 +81,7 @@ static const std::string configFileName = "etc/metadataTypeContainer.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-MetadataTypeContainerTest :: setUp(void)                             throw ()
+MetadataTypeContainerTest :: setUp(void)        throw (CPPUNIT_NS::Exception)
 {
     Ptr<ResourceBundle>::Ref    rootBundle;
     try {
@@ -302,5 +302,28 @@ MetadataTypeContainerTest :: localizedTest(void)
     CPPUNIT_ASSERT((*ustr)[3] == 0x30fc);  // katakana '-'
     CPPUNIT_ASSERT((*ustr)[4] == 0x30bf);  // katakana ta
     CPPUNIT_ASSERT((*ustr)[5] == 0x30fc);  // katakana '-'
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if the constraints work.
+ *----------------------------------------------------------------------------*/
+void
+MetadataTypeContainerTest :: constraintTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // test the case of no constraint; everything is OK
+    Ptr<Glib::ustring>::Ref     title;
+    CPPUNIT_ASSERT(!container->check("dc:title", title)); // except a 0 pointer
+    title.reset(new Glib::ustring("Some title"));
+    CPPUNIT_ASSERT(container->check("dc:title", title));
+
+    // test the numeric constraint; [0-9]+ required
+    Ptr<Glib::ustring>::Ref     year(new Glib::ustring ("1000"));
+    CPPUNIT_ASSERT(container->check("ls:bpm", year));
+    year->assign("2000 or more");
+    CPPUNIT_ASSERT(!container->check("ls:bpm", year));
+    year->assign("");
+    CPPUNIT_ASSERT(!container->check("ls:bpm", year));
 }
 
