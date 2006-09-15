@@ -29,11 +29,7 @@
 
 /* ============================================================ include files */
 
-#include "NumericConstraint.h"
-#include "NumericRangeConstraint.h"
 #include "EnumerationConstraint.h"
-
-#include "LiveSupport/Core/MetadataConstraint.h"
 
 
 using namespace LiveSupport::Core;
@@ -43,20 +39,14 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
-/*------------------------------------------------------------------------------
- *  The name of the config element for this class
- *----------------------------------------------------------------------------*/
-const std::string   MetadataConstraint::configElementNameStr    = "constraint";
+namespace {
 
 /*------------------------------------------------------------------------------
- *  The name of the type attribute.
+ *  The value of the type attribute for this class.
  *----------------------------------------------------------------------------*/
-const std::string   MetadataConstraint::typeAttributeName       = "type";
+const std::string       typeAttributeValue = "enumeration";
 
-/*------------------------------------------------------------------------------
- *  The name of the configuration element for the constraint values.
- *----------------------------------------------------------------------------*/
-const std::string   MetadataConstraint::valueElementName        = "value";
+}
 
 
 /* ===============================================  local function prototypes */
@@ -68,10 +58,10 @@ const std::string   MetadataConstraint::valueElementName        = "value";
  *  Create a constraint element object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
-MetadataConstraint :: configure(const xmlpp::Element &      element)
+EnumerationConstraint :: configure(const xmlpp::Element &      element)
                                                 throw (std::invalid_argument)
 {
-    if (element.get_name() != configElementNameStr) {
+    if (element.get_name() != getConfigElementName()) {
         throw std::invalid_argument("bad configuration element "
                                     + element.get_name());
     }
@@ -82,20 +72,40 @@ MetadataConstraint :: configure(const xmlpp::Element &      element)
     }
     std::string                 type = typeAttribute->get_value();
 
-    if (type == "numeric") {
-        concreteConstraint.reset(new NumericConstraint());
-        concreteConstraint->configure(element);
+    if (type != typeAttributeValue) {
+        throw std::invalid_argument(typeAttributeValue
+                                    + " constraint configured with a"
+                                    + " constraint element of type "
+                                    + type);
+    }
+
+    xmlpp::Node::NodeList   childNodes = element.get_children(valueElementName);
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
     
-    } else if (type == "numericRange") {
-        concreteConstraint.reset(new NumericRangeConstraint());
-        concreteConstraint->configure(element);
+    if (it == childNodes.end()) {
+        throw std::invalid_argument("empty enumeration constraint");
+    }
     
-    } else if (type == "enumeration") {
-        concreteConstraint.reset(new EnumerationConstraint());
-        concreteConstraint->configure(element);
-    
+    for (; it != childNodes.end(); ++it) {
+        readValue(*it);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read an enumeration value from an XML node.
+ *----------------------------------------------------------------------------*/
+void
+EnumerationConstraint :: readValue(const xmlpp::Node *      node)
+                                                throw (std::invalid_argument)
+{
+    const xmlpp::Element *      valueElement 
+                                = dynamic_cast<const xmlpp::Element*> (node);
+    if (valueElement) {
+        allowedValues.push_back(valueElement->get_child_text()
+                                            ->get_content() );
     } else {
-        throw std::invalid_argument("unknown metadata constraint" + type);
+        throw std::invalid_argument("bad sub-element found in constraint");
     }
 }
 
@@ -103,14 +113,22 @@ MetadataConstraint :: configure(const xmlpp::Element &      element)
 /*------------------------------------------------------------------------------
  *  Check that the given value satisfies the constraint.
  *----------------------------------------------------------------------------*/
-inline bool
-MetadataConstraint :: check(Ptr<const Glib::ustring>::Ref   value) const
+bool
+EnumerationConstraint :: check(Ptr<const Glib::ustring>::Ref   value) const
                                                 throw (std::logic_error)
 {
-    if (concreteConstraint) {
-        return concreteConstraint->check(value);
-    } else {
-        throw std::logic_error("MetadataConstraint not configured yet");
+    if (!value) {
+        throw std::logic_error("EnumerationConstraint::check() called with "
+                               "a 0 pointer value");
     }
+    
+    ListType::const_iterator    it;
+    for (it = allowedValues.begin(); it != allowedValues.end(); ++it) {
+        if (*it == *value) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 

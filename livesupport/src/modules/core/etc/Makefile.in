@@ -143,7 +143,9 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
 				${TMP_DIR}/FileTools.o \
 				${TMP_DIR}/AsyncState.o \
 				${TMP_DIR}/MetadataConstraint.o \
-				${TMP_DIR}/NumericConstraint.o
+				${TMP_DIR}/NumericConstraint.o \
+				${TMP_DIR}/NumericRangeConstraint.o \
+				${TMP_DIR}/EnumerationConstraint.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/FileToolsTest.o \

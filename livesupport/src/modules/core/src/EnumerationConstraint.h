@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Core_NumericConstraint_h
-#define LiveSupport_Core_NumericConstraint_h
+#ifndef LiveSupport_Core_EnumerationConstraint_h
+#define LiveSupport_Core_EnumerationConstraint_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -52,7 +52,8 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  A class for representing a numeric metadata constraint.
+ *  A class for representing a metadata constraint allowing only strings from
+ *  a given list of values.
  *
  *  This is a concrete subclass of MetadataConstraint.  Do not explicitly
  *  instantiate this class; create a MetadataConstraint object instead, and
@@ -62,30 +63,57 @@ namespace Core {
  *  called constraint.  This may look like the following:
  *
  *  <pre><code>
- *  <constraint     type = "numeric"/>
+ *  <constraint     type = "enumeration">
+ *      <value>Monday</value>
+ *      ...
+ *      <value>Sunday</value>
+ *  </constraint>
  *  </code></pre>
  *
- *  A metadata type with this kind of constraint can only accept (decimal, 
- *  non-negative) integer values, i.e., [0-9]+.
+ *  A metadata type with this kind of constraint can only accept one of the
+ *  strings listed in the value elements (in a case-sensitive way).
  *
  *  The DTD for the expected XML element looks like the following:
  *
  *  <pre><code>
- *  <!ELEMENT constraint            EMPTY               >
- *  <!ATTLIST constraint    type    "numeric"   #FIXED  >
+ *  <!ELEMENT constraint            (value+)                >
+ *  <!ATTLIST constraint    type    "enumeration"   #FIXED  >
+ *  <!ELEMENT value                 (#PCDATA)               >
  *  </code></pre>
  *
  *  @author  $Author$
  *  @version $Revision$
- *  @see NumericConstraintContainer
+ *  @see EnumerationConstraintContainer
  */
-class NumericConstraint : public MetadataConstraint
+class EnumerationConstraint : public MetadataConstraint
 {
+    private:
+        /**
+         *  The type for storing the enumeration values.
+         */
+        typedef std::vector<Glib::ustring>      ListType;
+        
+        /**
+         *  The list of allowed enumeration values.
+         */
+        ListType                                allowedValues;
+        
+        /**
+         *  Read an enumeration value from an XML node.
+         *
+         *  @param  node        the node containing the value.
+         *  @exception  std::invalid_argument   if the XML node is not 
+         *                                      of the expected form.
+         */
+        void
+        readValue(const xmlpp::Node *   node)   throw (std::invalid_argument);
+
+
     public:
         /**
          *  Constructor.
          */
-        NumericConstraint()                                        throw ()
+        EnumerationConstraint()                                     throw ()
         {
         }
 
@@ -93,7 +121,7 @@ class NumericConstraint : public MetadataConstraint
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~NumericConstraint(void)                                   throw ()
+        ~EnumerationConstraint(void)                                throw ()
         {
         }
 
@@ -104,7 +132,7 @@ class NumericConstraint : public MetadataConstraint
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                              throw ()
+        getConfigElementName(void)                                  throw ()
         {
             return MetadataConstraint::getConfigElementName();
         }
@@ -142,5 +170,5 @@ class NumericConstraint : public MetadataConstraint
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_Core_NumericConstraint_h
+#endif // LiveSupport_Core_EnumerationConstraint_h
 

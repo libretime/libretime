@@ -29,7 +29,11 @@
 
 /* ============================================================ include files */
 
+#include <sstream>
+
 #include "NumericConstraint.h"
+
+#include "NumericRangeConstraint.h"
 
 
 using namespace LiveSupport::Core;
@@ -44,7 +48,7 @@ namespace {
 /*------------------------------------------------------------------------------
  *  The value of the type attribute for this class.
  *----------------------------------------------------------------------------*/
-const std::string       typeAttributeValue = "numeric";
+const std::string       typeAttributeValue = "numericRange";
 
 }
 
@@ -58,7 +62,7 @@ const std::string       typeAttributeValue = "numeric";
  *  Create a constraint element object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
-NumericConstraint :: configure(const xmlpp::Element &      element)
+NumericRangeConstraint :: configure(const xmlpp::Element &      element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != getConfigElementName()) {
@@ -78,6 +82,64 @@ NumericConstraint :: configure(const xmlpp::Element &      element)
                                     + " constraint element of type "
                                     + type);
     }
+
+    xmlpp::Node::NodeList   childNodes = element.get_children(valueElementName);
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
+
+    if (it != childNodes.end()) {
+        minValue = readNumberFromNode(*it);
+    } else {
+        throw std::invalid_argument("sub-element not found in constraint");
+    }
+        
+    ++it;
+    if (it != childNodes.end()) {
+        maxValue = readNumberFromNode(*it);
+    } else {
+        throw std::invalid_argument("sub-element not found in constraint");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read a number from an xml element.
+ *----------------------------------------------------------------------------*/
+NumericRangeConstraint :: ValueType
+NumericRangeConstraint :: readNumberFromNode(
+                                const xmlpp::Node *     node) const
+                                                throw (std::invalid_argument)
+{
+    const xmlpp::Element *      valueElement 
+                                = dynamic_cast<const xmlpp::Element*> (node);
+    if (valueElement) {
+        Ptr<Glib::ustring>::Ref value(new Glib::ustring(
+                                        valueElement->get_child_text()
+                                                    ->get_content() ));
+        return readNumber(value);
+    } else {
+        throw std::invalid_argument("bad sub-element found in constraint");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read a number from a string.
+ *----------------------------------------------------------------------------*/
+NumericRangeConstraint :: ValueType
+NumericRangeConstraint :: readNumber(
+                                Ptr<const Glib::ustring>::Ref   value) const
+                                                throw (std::invalid_argument)
+{
+    NumericConstraint   numericConstraint;
+    if (!numericConstraint.check(value)) {
+        throw std::invalid_argument("bad number found in constraint");
+    }
+    
+    std::istringstream  valueStream(*value);
+    ValueType           valueNumber;
+    valueStream >> valueNumber;
+    
+    return valueNumber;
 }
 
 
@@ -85,26 +147,15 @@ NumericConstraint :: configure(const xmlpp::Element &      element)
  *  Check that the given value satisfies the constraint.
  *----------------------------------------------------------------------------*/
 bool
-NumericConstraint :: check(Ptr<const Glib::ustring>::Ref   value) const
+NumericRangeConstraint :: check(Ptr<const Glib::ustring>::Ref   value) const
                                                 throw (std::logic_error)
 {
-    if (!value) {
-        throw std::logic_error("NumericConstraint::check() called with "
-                               "a 0 pointer value");
-    }
-    
-    Glib::ustring::const_iterator   it = value->begin();
-    
-    if (it == value->end()) {       // the empty string is not a number
+    ValueType   valueNumber = readNumber(value);
+        
+    if (valueNumber >= minValue && valueNumber <= maxValue) {
+        return true;
+    } else {
         return false;
     }
-    
-    for (; it != value->end(); ++it) {
-        if (*it < '0' || *it > '9') {
-            return false;
-        }
-    }
-    
-    return true;
 }
 

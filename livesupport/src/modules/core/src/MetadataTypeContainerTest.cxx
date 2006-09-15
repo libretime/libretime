@@ -314,16 +314,30 @@ MetadataTypeContainerTest :: constraintTest(void)
 {
     // test the case of no constraint; everything is OK
     Ptr<Glib::ustring>::Ref     title;
-    CPPUNIT_ASSERT(!container->check("dc:title", title)); // except a 0 pointer
+    CPPUNIT_ASSERT(!container->check(title, "dc:title")); // except a 0 pointer
     title.reset(new Glib::ustring("Some title"));
-    CPPUNIT_ASSERT(container->check("dc:title", title));
+    CPPUNIT_ASSERT(container->check(title, "dc:title"));
 
     // test the numeric constraint; [0-9]+ required
+    Ptr<Glib::ustring>::Ref     bpm(new Glib::ustring ("1000"));
+    CPPUNIT_ASSERT(container->check(bpm, "ls:bpm"));
+    bpm->assign("2000 or more");
+    CPPUNIT_ASSERT(!container->check(bpm, "ls:bpm"));
+    bpm->assign("");
+    CPPUNIT_ASSERT(!container->check(bpm, "ls:bpm"));
+
+    // test the numeric range constraint; [0-9]+ required, between 0 and 3000
     Ptr<Glib::ustring>::Ref     year(new Glib::ustring ("1000"));
-    CPPUNIT_ASSERT(container->check("ls:bpm", year));
-    year->assign("2000 or more");
-    CPPUNIT_ASSERT(!container->check("ls:bpm", year));
-    year->assign("");
-    CPPUNIT_ASSERT(!container->check("ls:bpm", year));
+    CPPUNIT_ASSERT(container->check(year, "ls:year"));
+    year->assign("1066 AD");
+    CPPUNIT_ASSERT(!container->check(year, "ls:year"));
+    year->assign("20066");
+    CPPUNIT_ASSERT(!container->check(year, "ls:year"));
+
+    // test the enumeration constraint; "mp3", "mpeg" or "ogg" are allowed
+    Ptr<Glib::ustring>::Ref     format(new Glib::ustring ("mp3"));
+    CPPUNIT_ASSERT(container->check(format, "dc:format"));
+    format->assign("wma");
+    CPPUNIT_ASSERT(!container->check(format, "dc:format"));
 }
 

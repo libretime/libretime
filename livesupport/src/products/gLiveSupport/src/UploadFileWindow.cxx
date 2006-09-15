@@ -438,6 +438,9 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 void
 UploadFileWindow :: uploadAudioClip(void)                       throw ()
 {
+    Ptr<MetadataTypeContainer>::Ref
+                metadataTypes = gLiveSupport->getMetadataTypeContainer();
+
     for (unsigned int i=0; i < metadataKeys.size(); ++i) {
         Ptr<const Glib::ustring>::Ref   metadataKey   = metadataKeys[i];
         Gtk::Entry *                    metadataEntry = metadataEntries[i];
@@ -445,7 +448,17 @@ UploadFileWindow :: uploadAudioClip(void)                       throw ()
         Ptr<const Glib::ustring>::Ref   metadataValue(new Glib::ustring(
                                             metadataEntry->get_text() ));
         if (*metadataValue != "") {
-            audioClip->setMetadata(metadataValue, *metadataKey);
+            if (metadataTypes->check(metadataValue, *metadataKey)) {
+                audioClip->setMetadata(metadataValue, *metadataKey);
+            } else {
+                Ptr<const MetadataType>::Ref
+                        metadata = metadataTypes->getByDcName(*metadataKey);
+                Ptr<const Glib::ustring>::Ref
+                        localizedName = metadata->getLocalizedName();
+                statusBar->set_text(*formatMessage("badMetadataMsg",
+                                                   *localizedName));
+                return;
+            }
         }
     }
     
@@ -459,6 +472,7 @@ UploadFileWindow :: uploadAudioClip(void)                       throw ()
         gLiveSupport->uploadAudioClip(audioClip);
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
+        std::cerr << e.what();
         return;
     }
 

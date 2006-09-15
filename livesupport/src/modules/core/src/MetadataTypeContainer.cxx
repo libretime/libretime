@@ -161,8 +161,8 @@ MetadataTypeContainer :: getById3Tag(const Glib::ustring    id3Tag)
  *  Check that the given value satisfies the constraint of a metadata type.
  *----------------------------------------------------------------------------*/
 bool
-MetadataTypeContainer :: check(const Glib::ustring &            dcName,
-                               Ptr<const Glib::ustring>::Ref    value)
+MetadataTypeContainer :: check(Ptr<const Glib::ustring>::Ref    value,
+                               const Glib::ustring &            dcName)
                                                 throw (std::invalid_argument)
 {
     Ptr<const MetadataType>::Ref    metadataType = getByDcName(dcName);

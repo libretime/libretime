@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Core_NumericConstraint_h
-#define LiveSupport_Core_NumericConstraint_h
+#ifndef LiveSupport_Core_NumericRangeConstraint_h
+#define LiveSupport_Core_NumericRangeConstraint_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -52,7 +52,8 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  A class for representing a numeric metadata constraint.
+ *  A class for representing a metadata constraint which allows numbers between
+ *  two given values (inclusive).
  *
  *  This is a concrete subclass of MetadataConstraint.  Do not explicitly
  *  instantiate this class; create a MetadataConstraint object instead, and
@@ -62,30 +63,77 @@ namespace Core {
  *  called constraint.  This may look like the following:
  *
  *  <pre><code>
- *  <constraint     type = "numeric"/>
+ *  <constraint     type = "numericRange">
+ *      <value>1</value>
+ *      <value>12</value>
+ *  </constraint>
  *  </code></pre>
  *
  *  A metadata type with this kind of constraint can only accept (decimal, 
- *  non-negative) integer values, i.e., [0-9]+.
+ *  non-negative) integer values, i.e., [0-9]+, which are greater than or
+ *  equal to the first value given, and less than or equal to the second
+ *  value given.
  *
  *  The DTD for the expected XML element looks like the following:
  *
  *  <pre><code>
- *  <!ELEMENT constraint            EMPTY               >
- *  <!ATTLIST constraint    type    "numeric"   #FIXED  >
+ *  <!ELEMENT constraint            (value, value)          >
+ *  <!ATTLIST constraint    type    "numericRange"  #FIXED  >
+ *  <!ELEMENT value                 (#PCDATA)               >
  *  </code></pre>
  *
  *  @author  $Author$
  *  @version $Revision$
- *  @see NumericConstraintContainer
+ *  @see NumericRangeConstraintContainer
  */
-class NumericConstraint : public MetadataConstraint
+class NumericRangeConstraint : public MetadataConstraint
 {
+    private:
+        /**
+         *  The integer type used by the constraint.
+         */
+        typedef unsigned long long      ValueType;
+
+        /**
+         *  The smallest value allowed by the constraint.
+         */
+        ValueType                       minValue;
+        
+        /**
+         *  The largest value allowed by the constraint.
+         */
+        ValueType                       maxValue;
+
+        /**
+         *  Read a number from an XML node.
+         *
+         *  @param  node        the node containing the number.
+         *  @return             the number read from the node.
+         *  @exception  std::invalid_argument   if the XML node is not 
+         *                                      of the expected form.
+         */
+        ValueType
+        readNumberFromNode(const xmlpp::Node *      node) const
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Read a number from a string.
+         *
+         *  @param  value       the string containing the number.
+         *  @return             the number read from the string.
+         *  @exception  std::invalid_argument   if the string does not contain
+         *                                      a number.
+         */
+        ValueType
+        readNumber(Ptr<const Glib::ustring>::Ref    value) const
+                                                throw (std::invalid_argument);
+
+
     public:
         /**
          *  Constructor.
          */
-        NumericConstraint()                                        throw ()
+        NumericRangeConstraint()                                    throw ()
         {
         }
 
@@ -93,7 +141,7 @@ class NumericConstraint : public MetadataConstraint
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~NumericConstraint(void)                                   throw ()
+        ~NumericRangeConstraint(void)                               throw ()
         {
         }
 
@@ -104,7 +152,7 @@ class NumericConstraint : public MetadataConstraint
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                              throw ()
+        getConfigElementName(void)                                  throw ()
         {
             return MetadataConstraint::getConfigElementName();
         }
@@ -142,5 +190,5 @@ class NumericConstraint : public MetadataConstraint
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_Core_NumericConstraint_h
+#endif // LiveSupport_Core_NumericRangeConstraint_h
 

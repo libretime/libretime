@@ -248,15 +248,15 @@ class MetadataTypeContainer : public Configurable,
          *  If the metadata type has no constraints, it returns true.
          *  If the constraint throws an exception, it returns false.
          *
-         *  @param  dcName  the metadata type, by its Dublin Core name.
          *  @param  value   the value to be checked against the constraint.
+         *  @param  dcName  the metadata type, by its Dublin Core name.
          *  @return true    if the value satisfies the constraint.
          *  @exception  std::invalid_argument   if no metadata type exists
          *                                      with the suplied name.
          */
         bool
-        check(const Glib::ustring &           dcName,
-              Ptr<const Glib::ustring>::Ref   value)
+        check(Ptr<const Glib::ustring>::Ref   value,
+              const Glib::ustring &           dcName)
                                                 throw (std::invalid_argument);
 };
 
