@@ -254,7 +254,7 @@ class MetaData{
         $r = $this->validateOneValue($parname, $category, $predxml, $value);
         if(PEAR::isError($r)) return $r;
         if(!is_null($value)){
-            foreach(array('value') as $v) $$v = addslashes($$v);
+            foreach(array('value') as $v) $$v = pg_escape_string($$v);
             $sql = "
                 UPDATE {$this->mdataTable}
                 SET object='$value', objns='_L'
@@ -635,7 +635,7 @@ class MetaData{
     function updateRecord($mdid, $object, $objns='_L')
     {
         foreach(array('objns', 'object') as $v){
-            ${$v."_sql"}  = (is_null($$v) ? "NULL" : "'".addslashes($$v)."'" );
+            ${$v."_sql"}  = (is_null($$v) ? "NULL" : "'".pg_escape_string($$v)."'" );
         }
         $res = $this->dbc->query("UPDATE {$this->mdataTable}
             SET objns  = $objns_sql,  object    = $object_sql
@@ -669,7 +669,7 @@ class MetaData{
         foreach(array(
             'subjns', 'subject', 'predns', 'predicate', 'objns', 'object',
         ) as $v){
-            ${$v."_sql"}  = (is_null($$v) ? "NULL" : "'".addslashes($$v)."'" );
+            ${$v."_sql"}  = (is_null($$v) ? "NULL" : "'".pg_escape_string($$v)."'" );
         }
         $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
         if(PEAR::isError($id)) return $id;

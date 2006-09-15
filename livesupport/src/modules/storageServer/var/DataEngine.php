@@ -110,7 +110,7 @@ class DataEngine{
                 $splittedQn = XML_Util::splitQualifiedName($catQn);
                 $catNs  = $splittedQn['namespace'];
                 $cat    = $splittedQn['localPart'];
-                $opVal  = sprintf($ops[$op], addslashes($value));
+                $opVal  = sprintf($ops[$op], pg_escape_string($value));
                 // retype for timestamp value
                 if($cat == 'mtime'){
                     switch($op){

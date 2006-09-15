@@ -90,7 +90,7 @@ class BasicStor extends Alib{
         $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
         $this->rootId = $this->getRootNode();
         $this->storId = $this->wd =
-            $this->getObjId('StorageRoot', $this->rootId);
+        $this->getObjId('StorageRoot', $this->rootId);
         $this->dbc->setErrorHandling();
     }
 
@@ -123,7 +123,7 @@ class BasicStor extends Alib{
     function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
         $gunid=NULL, $ftype='unKnown', $mdataLoc='file')
     {
-        $name   = addslashes("$fileName");
+        $name = $fileName;
         $ftype  = strtolower($ftype);
         $id = $this->addObj($name , $ftype, $parid);
         if($this->dbc->isError($id)) return $id;
@@ -357,7 +357,7 @@ class BasicStor extends Alib{
         if(!is_null($gunid)){
             $gunid = StoredFile::_normalizeGunid($gunid);
         }
-        foreach(array('ext', 'type') as $v) $$v = addslashes($$v);
+        foreach(array('ext', 'type') as $v) $$v = pg_escape_string($$v);
         $token  = StoredFile::_createGunid();
         if(!is_null($realFname)){
             $linkFname = "{$this->accessDir}/$token.$ext";
@@ -533,7 +533,7 @@ class BasicStor extends Alib{
         if(!is_null($gunid)){
             $gunid = StoredFile::_normalizeGunid($gunid);
         }
-        foreach(array('chsum') as $v) $$v = addslashes($$v);
+        foreach(array('chsum') as $v) $$v = pg_escape_string($$v);
         $ext    = '';
         $token  = StoredFile::_createGunid();
         $res    = $this->dbc->query("
@@ -1588,6 +1588,7 @@ class BasicStor extends Alib{
      */
     function addObj($name, $type, $parid=1, $aftid=NULL, $param='')
     {
+        $name   = pg_escape_string($name);
         $exid = $this->getObjId($name, $parid);
         if($this->dbc->isError($exid)) return $exid;
         //if(!is_null($exid)){ $this->removeObj($exid); }

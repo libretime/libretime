@@ -88,7 +88,7 @@ class StoredFile{
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
-        foreach(array('name', 'ftype') as $v) $$v = addslashes($$v);
+        foreach(array('name', 'ftype') as $v) $$v = pg_escape_string($$v);
         $ac =& new $className($gb, ($gunid ? $gunid : NULL));
         if(PEAR::isError($ac)) return $ac;
         $ac->name = $name;
@@ -385,7 +385,7 @@ class StoredFile{
      */
     function rename($newname)
     {
-        foreach(array('newname') as $v) $$v = addslashes($$v);
+        foreach(array('newname') as $v) $$v = pg_escape_string($$v);
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET name='$newname', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
@@ -404,7 +404,7 @@ class StoredFile{
      */
     function setState($state, $editedby=NULL)
     {
-        foreach(array('state') as $v) $$v = addslashes($$v);
+        foreach(array('state') as $v) $$v = pg_escape_string($$v);
         $eb = (!is_null($editedby) ? ", editedBy=$editedby" : '');
         $res = $this->dbc->query("
             UPDATE {$this->filesTable}
@@ -423,7 +423,7 @@ class StoredFile{
      */
     function setMime($mime)
     {
-        foreach(array('mime') as $v) $$v = addslashes($$v);
+        foreach(array('mime') as $v) $$v = pg_escape_string($$v);
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET mime='$mime', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
