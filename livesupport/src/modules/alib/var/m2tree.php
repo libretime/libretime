@@ -323,6 +323,7 @@ class M2tree{
         if ($this->dbc->isError($xid)) {
             return $xid;
         }
+        $newName = pg_escape_string($newName);
         $r = $this->dbc->query("
             UPDATE {$this->treeTable}
             SET name='$newName'
@@ -348,6 +349,7 @@ class M2tree{
         if ( ($name == '') && is_null($parId)) {
             $name = $this->rootNodeName;
         }
+        $name = pg_escape_string($name);
         $parcond = (is_null($parId) ? "parid is null" :
             "parid='$parId' AND level=1");
         $r = $this->dbc->getOne("

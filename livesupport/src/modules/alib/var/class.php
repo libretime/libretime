@@ -2,26 +2,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the LiveSupport project.
     http://livesupport.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     LiveSupport is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     LiveSupport is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with LiveSupport; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -161,6 +161,7 @@ class ObjClasses extends M2tree{
      */
     function getClassId($cname)
     {
+        $cname = pg_escape_string($cname);
         return $this->dbc->getOne($query = "SELECT id FROM {$this->classTable}
             WHERE cname='$cname'");
     }
@@ -235,7 +236,7 @@ class ObjClasses extends M2tree{
         ))."\n";
         return $r;
     }
-    
+
     /**
      *   Delete all classes and membeship records
      *
@@ -261,7 +262,7 @@ class ObjClasses extends M2tree{
         $this->addObj2Class($o['cl2'], $this->tdata['tree']['pb']);
         $this->tdata['classes'] = $o;
     }
-    
+
     /**
      *   Make basic test
      *
@@ -280,7 +281,7 @@ class ObjClasses extends M2tree{
         $this->test_dump .= $this->dumpClasses();
         $this->deleteData();
         if($this->test_dump==$this->test_correct){
-            $this->test_log.="class: OK\n"; return TRUE; 
+            $this->test_log.="class: OK\n"; return TRUE;
         }else return PEAR::raiseError(
             'ObjClasses::test:', 1, PEAR_ERROR_DIE, '%s'.
             "<pre>\ncorrect:\n{$this->test_correct}\n".
