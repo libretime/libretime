@@ -161,7 +161,9 @@ echo "Creating ODBC data source and driver...";
 if [ -f /usr/lib/libodbcpsql.so ]; then
     odbcinst_template=$etcdir/odbcinst_template
 elif [ -f /usr/lib/odbc/psqlodbc.so ]; then
-    odbcinst_template=$etcdir/odbcinst_debian_template
+    odbcinst_template=$etcdir/odbcinst_old_debian_template
+elif [ -f /usr/lib/odbc/psqlodbcw.so ]; then
+    odbcinst_template=$etcdir/odbcinst_new_debian_template
 else
     echo "can't find ODBC driver for PostgreSQL neither at /usr/lib";
     echo "nor at /usr/lib/odbc. please install proper ODBC drivers";
