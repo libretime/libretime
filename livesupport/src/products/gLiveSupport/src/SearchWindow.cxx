@@ -754,6 +754,7 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
         if (playable) {
             try {
                 gLiveSupport->addToScratchpad(playable);
+                playable = gLiveSupport->getPlayable(playable->getId());
                 gLiveSupport->addToLiveMode(playable);
             } catch (XmlRpcException &e) {
                 Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(

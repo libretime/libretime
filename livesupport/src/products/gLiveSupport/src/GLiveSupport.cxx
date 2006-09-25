@@ -804,7 +804,32 @@ GLiveSupport :: acquirePlaylist(Ptr<const UniqueId>::Ref  id)
 
 
 /*------------------------------------------------------------------------------
- *  Acquire an Playable object.
+ *  Open a Playable object.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getPlayable(Ptr<const UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<Playable>::Ref  playable;
+    
+    if (existsPlaylist(id)) {
+        playable = getPlaylist(id);
+
+    } else if (existsAudioClip(id)) {
+        playable = getAudioClip(id);
+
+    } else {
+        throw XmlRpcInvalidArgumentException(
+                                "invalid ID in GLiveSupport::acquirePlayable");
+    }
+    
+    return playable;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Acquire a Playable object.
  *----------------------------------------------------------------------------*/
 Ptr<Playable>::Ref
 LiveSupport :: GLiveSupport ::

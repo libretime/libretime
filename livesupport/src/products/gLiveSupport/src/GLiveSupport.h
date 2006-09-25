@@ -679,6 +679,20 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
+         *  Open a playable object, for reading only.
+         *  Calls either getAudioClip() or getPlaylist().
+         *  You do not need to release the returned Playable object.
+         *
+         *  @param id the id of the playable object.
+         *  @return the playable object opened.
+         *  @exception XmlRpcException if no Playable with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<Playable>::Ref
+        getPlayable(Ptr<const UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
          *  Acquire a playable object.
          *  Calls either acquireAudioClip() or acquirePlaylist().
          *
