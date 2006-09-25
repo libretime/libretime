@@ -751,6 +751,35 @@ WebStorageClientTest :: searchTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Another search test.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: searchUnicodeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        wsc->reset();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
+                                                = wsc->getSearchResults();
+    CPPUNIT_ASSERT(searchResults->size() >= 9);
+    Ptr<AudioClip>::Ref     audioClip1 = searchResults->at(4)->getAudioClip();
+    
+    CPPUNIT_ASSERT(audioClip1);
+
+    Ptr<Glib::ustring>::Ref     creator;
+    CPPUNIT_ASSERT_NO_THROW(
+        creator = audioClip1->getMetadata("dc:creator")
+    );
+    CPPUNIT_ASSERT(
+        *creator == "János Kőbor"
+    );
+}
+
+
+/*------------------------------------------------------------------------------
  *  Browse test.
  *----------------------------------------------------------------------------*/
 void

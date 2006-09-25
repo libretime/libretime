@@ -77,6 +77,7 @@ class WebStorageClientTest : public BaseTestMethod
     CPPUNIT_TEST(embeddedPlaylistTest);
     CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST(searchTest);
+    CPPUNIT_TEST(searchUnicodeTest);
     CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST(browseTest);
     CPPUNIT_TEST(createBackupTest);
@@ -163,6 +164,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         searchTest(void)                        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the search operations.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        searchUnicodeTest(void)                 throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing getAllPlaylists() and getAllAudioClips().
