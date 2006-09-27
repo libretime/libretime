@@ -38,13 +38,8 @@
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
-etcdir=$basedir/etc
-docdir=$basedir/doc
-srcdir=$basedir/src
 tmpdir=$basedir/tmp
-toolsdir=$srcdir/tools
-modules_dir=$srcdir/modules
-products_dir=$srcdir/products
+logdir=$basedir/tmp
 
 usrdir=`cd $basedir/usr; pwd;`
 
@@ -98,45 +93,54 @@ fi
 #------------------------------------------------------------------------------
 echo "";
 echo "The compile process will be started. All steps are being logged in"; 
-echo "$tmpdir ";
+echo "$logdir ";
 echo "";
 
 #------------------------------------------------------------------------------
 #  Cleaning the setup
 #------------------------------------------------------------------------------
-make -C $basedir modprod_distclean > $tmpdir/make_modprod_distclean_setup.log 2>&1
-ls -l $tmpdir/make_modprod_distclean_setup.log >> $tmpdir/make_modprod_distclean_setup.log
+mv -f $logdir/make_modprod_distclean_setup.log \ 
+      $logdir/make_modprod_distclean_setup.log~
+make -C $basedir modprod_distclean \ 
+    > $logdir/make_modprod_distclean_setup.log 2>&1
+ls -l $logdir/make_modprod_distclean_setup.log \
+   >> $logdir/make_modprod_distclean_setup.log
 
 #-------------------------------------------------------------------------------
 #  Create the configure script, using setup parameters
 #-------------------------------------------------------------------------------
-# --prefix=$usrdir                 --with-www-docroot=$usrdir/var =/var/www
-# --with-hostname=localhost        --with-apache-group=$apache_group
+#  --prefix=$usrdir                 --with-www-docroot=$usrdir/var =/var/www
+#  --with-hostname=localhost        --with-apache-group=$apache_group
 #
-# --with-check-boost=no =yes       --with-check-gtk=yes =no
-# --with-check-gtkmm=yes =no       --with-check-icu=yes =no
-# --with-check-libxmlpp=yes =no
+#  --with-check-boost=no =yes       --with-check-gtk=yes =no
+#  --with-check-gtkmm=yes =no       --with-check-icu=yes =no
+#  --with-check-libxmlpp=yes =no
 #
-# --with-create-database=no =yes   --with-create-odbc-data-source=no =yes
-# --with-init-database=no =yes     --with-configure-apache=no =yes
+#  --with-create-database=no =yes   --with-create-odbc-data-source=no =yes
+#  --with-init-database=no =yes     --with-configure-apache=no =yes
 #
-# --with-database=LiveSupport =LiveSupport-test
-# --with-database-user=LiveSupport =test
-# --with-database-password=LiveSupport =test
+#  --with-database=LiveSupport =LiveSupport-test
+#  --with-database-user=livesupport =test
+#  --with-database-password=livesupport =test
 #
-# --with-station-audio-out=default =default
-# --with-studio-audio-out=default =default
-# --with-studio-audio-cue=default =default
+#  --with-station-audio-out=default
+#  --with-studio-audio-out=default
+#  --with-studio-audio-cue=default
 
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";
-$bindir/autogen.sh > $tmpdir/configure_development_environment_autogen.log 2>&1
+mv -f $logdir/configure_development_environment_autogen.log \ 
+      $logdir/configure_development_environment_autogen.log~
+mv -f $logdir/configure_development_environment.log \ 
+      $logdir/configure_development_environment.log~
+$bindir/autogen.sh \
+    > $logdir/configure_development_environment_autogen.log 2>&1
 $basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
                    --prefix=$usrdir --with-apache-group=$apache_group \
                    --with-check-boost=yes --with-check-gtk=yes \
                    --with-check-gtkmm=yes --with-check-icu=yes \
                    --with-check-libxmlpp=yes --enable-debug \
-                   > $tmpdir/configure_development_environment.log 2>&1
+                   > $logdir/configure_development_environment.log 2>&1
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
@@ -145,26 +149,46 @@ echo "";
 #  Compile step by step, including the tools
 #-------------------------------------------------------------------------------
 echo "Now Compiling ... Tools";
-make -C $basedir tools_setup > $tmpdir/make_install_tools_setup.log 2>&1
-ls -l $tmpdir/make_install_tools_setup.log >> $tmpdir/make_install_tools_setup.log
+mv -f $logdir/make_install_tools_setup.log \ 
+      $logdir/make_install_tools_setup.log~
+make -C $basedir tools_setup \
+    > $logdir/make_install_tools_setup.log 2>&1
+ls -l $logdir/make_install_tools_setup.log \
+   >> $logdir/make_install_tools_setup.log
 echo "Done Tools Setup, make_install_tools_setup.log is created";
 echo "";
 echo "Now Compiling ... Doxytag";
-make -C $basedir doxytag_setup > $tmpdir/make_doxytag_setup.log 2>&1
-ls -l $tmpdir/make_doxytag_setup.log >> $tmpdir/make_doxytag_setup.log
+mv -f $logdir/make_doxytag_setup.log \ 
+      $logdir/make_doxytag_setup.log~
+make -C $basedir doxytag_setup \
+    > $logdir/make_doxytag_setup.log 2>&1
+ls -l $logdir/make_doxytag_setup.log \
+   >> $logdir/make_doxytag_setup.log
 echo "Done Doxytag Setup, make_doxytag_setup.log is created";
 echo "";
 echo "Now Configure ... Modules ... Products";
-make -C $basedir modules_setup > $tmpdir/make_configure_modules_setup.log 2>&1
-ls -l $tmpdir/make_configure_modules_setup.log >> $tmpdir/make_configure_modules_setup.log
+mv -f $logdir/make_configure_modules_setup.log \ 
+      $logdir/make_configure_modules_setup.log~
+make -C $basedir modules_setup \
+    > $logdir/make_configure_modules_setup.log 2>&1
+ls -l $logdir/make_configure_modules_setup.log \
+   >> $logdir/make_configure_modules_setup.log
 echo "Configure the Modules is done, make_configure_modules_setup.log is created";
-make -C $basedir products_setup > $tmpdir/make_configure_products_setup.log 2>&1
-ls -l $tmpdir/make_configure_products_setup.log >> $tmpdir/make_configure_products_setup.log
+mv -f $logdir/make_configure_products_setup.log \ 
+      $logdir/make_configure_products_setup.log~
+make -C $basedir products_setup \
+    > $logdir/make_configure_products_setup.log 2>&1
+ls -l $logdir/make_configure_products_setup.log \
+   >> $logdir/make_configure_products_setup.log
 echo "Configure the Products is done, make_configure_products_setup.log is created";
 echo "";
 echo "Now Compiling ...";
-make -C $basedir compile > $tmpdir/make_compile_setup.log 2>&1
-ls -l $tmpdir/make_compile_setup.log >> $tmpdir/make_compile_setup.log
+mv -f $logdir/make_compile_setup.log \ 
+      $logdir/make_compile_setup.log~
+make -C $basedir compile \
+    > $logdir/make_compile_setup.log 2>&1
+ls -l $logdir/make_compile_setup.log \
+   >> $logdir/make_compile_setup.log
 echo "Compiling is done, make_compile_setup.log is created";
 echo "";
 
@@ -172,15 +196,19 @@ echo "";
 #  Checking what we have done
 #-------------------------------------------------------------------------------
 echo "Now Checking ...";
-make -C $basedir check > $tmpdir/make_check_setup.log 2>&1
-ls -l $tmpdir/make_check_setup.log >> $tmpdir/make_check_setup.log
+mv -f $logdir/make_check_setup.log \ 
+      $logdir/make_check_setup.log~
+make -C $basedir check \
+    > $logdir/make_check_setup.log 2>&1
+ls -l $logdir/make_check_setup.log \
+   >> $logdir/make_check_setup.log
 echo "Checking is be done, make_check_setup.log is created";
 echo "";
 
 #-------------------------------------------------------------------------------
 #  User setup
 #-------------------------------------------------------------------------------
-echo "Setting up user settings ..."
+echo "Setting up user settings ...";
 
 $bindir/user_setup.sh --apache-group=$apache_group || exit 1
 
