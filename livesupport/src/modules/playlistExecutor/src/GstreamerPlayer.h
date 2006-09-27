@@ -113,6 +113,11 @@ class GstreamerPlayer : virtual public Configurable,
         GstElement            * decoder;
 
         /**
+         *  The volume element.
+         */
+        GstElement            * volume;
+
+        /**
          *  The desired capabilities of the audio sink.
          */
         GstCaps               * sinkCaps;

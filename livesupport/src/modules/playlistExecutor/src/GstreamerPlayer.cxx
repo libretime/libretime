@@ -289,9 +289,16 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     gst_element_unlink(decoder, fakesink);
     gst_object_unref(GST_OBJECT(pipe));
 
-    // connect the decoder to the real audio sink
-    gst_element_link(decoder, audiosink);
-    gst_bin_add_many(GST_BIN(pipeline), filesrc, decoder, audiosink, NULL);
+    // reduce the volume to 80%
+    volume = gst_element_factory_make("volume", NULL);
+    g_object_set(G_OBJECT(volume), "volume", gdouble(0.8), NULL);
+    
+    // connect the decoder to the real audio sink, through the volume element
+    gst_element_link_many(decoder, volume, audiosink);
+    gst_bin_add_many(GST_BIN(pipeline), filesrc, 
+                                        decoder, 
+                                        volume, 
+                                        audiosink, NULL);
     // connect the eos signal handler
     g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
@@ -440,8 +447,11 @@ GstreamerPlayer :: close(void)                       throw ()
     if (filesrc && decoder) {
         gst_element_unlink(filesrc, decoder);
     }
-    if (decoder && audiosink) {
-        gst_element_unlink(decoder, audiosink);
+    if (decoder && volume) {
+        gst_element_unlink(decoder, volume);
+    }
+    if (volume && audiosink) {
+        gst_element_unlink(volume, audiosink);
     }
     if (decoder) {
         gst_bin_remove(GST_BIN(pipeline), decoder);
@@ -451,6 +461,7 @@ GstreamerPlayer :: close(void)                       throw ()
     }
     filesrc = 0;
     decoder = 0;
+    volume  = 0;
 }
 
 
