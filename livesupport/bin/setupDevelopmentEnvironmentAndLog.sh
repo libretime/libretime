@@ -99,9 +99,9 @@ echo "";
 #------------------------------------------------------------------------------
 #  Cleaning the setup
 #------------------------------------------------------------------------------
-mv -f $logdir/make_modprod_distclean_setup.log \ 
+mv -f $logdir/make_modprod_distclean_setup.log \
       $logdir/make_modprod_distclean_setup.log~
-make -C $basedir modprod_distclean \ 
+make -C $basedir modprod_distclean \
     > $logdir/make_modprod_distclean_setup.log 2>&1
 ls -l $logdir/make_modprod_distclean_setup.log \
    >> $logdir/make_modprod_distclean_setup.log
@@ -111,13 +111,14 @@ ls -l $logdir/make_modprod_distclean_setup.log \
 #-------------------------------------------------------------------------------
 #  --prefix=$usrdir                 --with-www-docroot=$usrdir/var =/var/www
 #  --with-hostname=localhost        --with-apache-group=$apache_group
+#  --enable-debug                   --with-configure-apache=no =yes
 #
 #  --with-check-boost=no =yes       --with-check-gtk=yes =no
 #  --with-check-gtkmm=yes =no       --with-check-icu=yes =no
 #  --with-check-libxmlpp=yes =no
 #
 #  --with-create-database=no =yes   --with-create-odbc-data-source=no =yes
-#  --with-init-database=no =yes     --with-configure-apache=no =yes
+#  --with-init-database=no =yes
 #
 #  --with-database=LiveSupport =LiveSupport-test
 #  --with-database-user=livesupport =test
@@ -129,9 +130,9 @@ ls -l $logdir/make_modprod_distclean_setup.log \
 
 rm -rf $tmpdir/configure
 echo "Now Configure ... ";
-mv -f $logdir/configure_development_environment_autogen.log \ 
+mv -f $logdir/configure_development_environment_autogen.log \
       $logdir/configure_development_environment_autogen.log~
-mv -f $logdir/configure_development_environment.log \ 
+mv -f $logdir/configure_development_environment.log \
       $logdir/configure_development_environment.log~
 $bindir/autogen.sh \
     > $logdir/configure_development_environment_autogen.log 2>&1
@@ -141,6 +142,7 @@ $basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
                    --with-check-gtkmm=yes --with-check-icu=yes \
                    --with-check-libxmlpp=yes --enable-debug \
                    > $logdir/configure_development_environment.log 2>&1
+echo "";
 echo "Configure is done, configure_development_environment.log is created";
 echo "";
 
@@ -149,7 +151,7 @@ echo "";
 #  Compile step by step, including the tools
 #-------------------------------------------------------------------------------
 echo "Now Compiling ... Tools";
-mv -f $logdir/make_install_tools_setup.log \ 
+mv -f $logdir/make_install_tools_setup.log \
       $logdir/make_install_tools_setup.log~
 make -C $basedir tools_setup \
     > $logdir/make_install_tools_setup.log 2>&1
@@ -158,7 +160,7 @@ ls -l $logdir/make_install_tools_setup.log \
 echo "Done Tools Setup, make_install_tools_setup.log is created";
 echo "";
 echo "Now Compiling ... Doxytag";
-mv -f $logdir/make_doxytag_setup.log \ 
+mv -f $logdir/make_doxytag_setup.log \
       $logdir/make_doxytag_setup.log~
 make -C $basedir doxytag_setup \
     > $logdir/make_doxytag_setup.log 2>&1
@@ -167,14 +169,14 @@ ls -l $logdir/make_doxytag_setup.log \
 echo "Done Doxytag Setup, make_doxytag_setup.log is created";
 echo "";
 echo "Now Configure ... Modules ... Products";
-mv -f $logdir/make_configure_modules_setup.log \ 
+mv -f $logdir/make_configure_modules_setup.log \
       $logdir/make_configure_modules_setup.log~
 make -C $basedir modules_setup \
     > $logdir/make_configure_modules_setup.log 2>&1
 ls -l $logdir/make_configure_modules_setup.log \
    >> $logdir/make_configure_modules_setup.log
 echo "Configure the Modules is done, make_configure_modules_setup.log is created";
-mv -f $logdir/make_configure_products_setup.log \ 
+mv -f $logdir/make_configure_products_setup.log \
       $logdir/make_configure_products_setup.log~
 make -C $basedir products_setup \
     > $logdir/make_configure_products_setup.log 2>&1
@@ -183,7 +185,7 @@ ls -l $logdir/make_configure_products_setup.log \
 echo "Configure the Products is done, make_configure_products_setup.log is created";
 echo "";
 echo "Now Compiling ...";
-mv -f $logdir/make_compile_setup.log \ 
+mv -f $logdir/make_compile_setup.log \
       $logdir/make_compile_setup.log~
 make -C $basedir compile \
     > $logdir/make_compile_setup.log 2>&1
@@ -196,7 +198,7 @@ echo "";
 #  Checking what we have done
 #-------------------------------------------------------------------------------
 echo "Now Checking ...";
-mv -f $logdir/make_check_setup.log \ 
+mv -f $logdir/make_check_setup.log \
       $logdir/make_check_setup.log~
 make -C $basedir check \
     > $logdir/make_check_setup.log 2>&1
