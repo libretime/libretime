@@ -1674,8 +1674,14 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
     fileName << localTempStorage << std::string(*playlist->getId())
              << "-" << std::rand() << ".smil";
 
-    smilDocument->write_to_file_formatted(fileName.str(), "UTF-8");
-   
+    try {
+        smilDocument->write_to_file_formatted(fileName.str(), "UTF-8");
+    } catch (xmlpp::exception &e) {
+        std::string     errorMessage = "could not write the temp file in "
+                                       "WebStorageClient::acquirePlaylist: ";
+        errorMessage += e.what();
+        throw XmlRpcIOException(errorMessage);
+    }
     Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
     playlist->setUri(playlistUri);
 

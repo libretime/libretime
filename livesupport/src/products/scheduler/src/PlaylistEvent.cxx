@@ -100,7 +100,13 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
     // some ugliness because getPlaylistId() returns a const pointer
     Ptr<UniqueId>::Ref    playlistId(new UniqueId(scheduleEntry->getPlaylistId()
                                                                ->getId()));
-    playlist = storage->acquirePlaylist(sessionId, playlistId);
+    try {
+        playlist = storage->acquirePlaylist(sessionId, playlistId);
+    } catch (Core::XmlRpcException &e) {
+        std::string     errorMessage = "storage server error: ";
+        errorMessage += e.what();
+        throw std::logic_error(errorMessage);
+    }
     state = initialized;
 }
 

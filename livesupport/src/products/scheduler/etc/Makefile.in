@@ -348,6 +348,7 @@ copy_files:
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} install
 	${MKDIR} ${USR_BIN_DIR}
 	${MKDIR} ${USR_ETC_DIR}
+	${MKDIR} ${USR_TMP_DIR}
 	${CP} ${BIN_DIR}/scheduler.sh ${USR_BIN_DIR}
 	${CP} ${SCHEDULER_EXE} ${USR_BIN_DIR}
 	${CP} ${ETC_DIR}/odbcinst_debian_template \

@@ -394,7 +394,9 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
         try {
             now = gLiveSupport->getScheduler()->getSchedulerTime();
         } catch (XmlRpcException &e) {
-            // TODO: handle error
+            std::cerr << "Scheduler time is not available; "
+                      << "switching to local time." << std::endl;
+            gLiveSupport->checkSchedulerClient();
         }
     } else {
         now = TimeConversion::now();
