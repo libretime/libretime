@@ -29,8 +29,8 @@
 # Run this script to prepare gstreamer to be configured and compiled.
 # To read more about gstreamer, see http://gstreamer.freedesktop.org/
 #-------------------------------------------------------------------------------
-product=gstreamer-0.8.10
-plugins=gst-plugins-0.8.10
+product=gstreamer-0.8.12
+plugins=gst-plugins-0.8.12
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
@@ -50,9 +50,7 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${gstreamer_tar}
     cd ${product}
-    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=330308
-    # for details of the following patch
-    patch -p1 < ${etcdir}/valgrind.patch
+    # patch here
 fi
 
 cd ${tmpdir}
@@ -64,18 +62,15 @@ if [ ! -d $plugins ]; then
     patch -p1 < ${etcdir}/adder-caps-property.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
     # for details on the following patch
-    patch -p1 < ${etcdir}/adder-duration-fix.patch
-    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=315457
-    # for details on the following patch
-    patch -p1 < ${etcdir}/adder-query.patch
+    # the patch was applied to 0.8.12, but in a slightly different form;
+    # this reverts it to Akos's original version
+    # TODO: figure out if this is needed, and remove it if it isn't
+    patch -p1 < ${etcdir}/adder-duration-fix-revert-to-original.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
     # for details on the following patch
     patch -p1 < ${etcdir}/switch-fix.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308619
     # for details on the following patch
     patch -p1 < ${etcdir}/id3demuxbin-pad-free-fix.patch
-    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308663
-    # for details on the following patch
-    patch -p1 < ${etcdir}/typefind-smil.patch
 fi
 

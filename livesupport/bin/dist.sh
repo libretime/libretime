@@ -177,7 +177,7 @@ gtkmm_version=gtkmm-2.6.5
 gtkmm_tmpdir=$tools_tmpdir/gtkmm
 
 gstreamer_dir=$toolsdir/gstreamer
-gstreamer_version=gstreamer-0.8.10
+gstreamer_version=gstreamer-0.8.12
 gstreamer_tmpdir=$tools_tmpdir/gstreamer
 
 icu_dir=$toolsdir/icu

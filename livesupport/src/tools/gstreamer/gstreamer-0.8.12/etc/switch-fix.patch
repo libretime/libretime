@@ -1,5 +1,5 @@
---- gst-plugins-0.8.9/gst/switch/gstswitch.c	2005-04-14 18:26:47.000000000 +0200
-+++ gst-plugins-0.8.9-livesupport/gst/switch/gstswitch.c	2005-06-18 11:26:19.000000000 +0200
+--- gst-plugins-0.8.12/gst/switch/gstswitch.c	2005-04-14 10:45:59.000000000 +0200
++++ gst-plugins-0.8.12-livesupport/gst/switch/gstswitch.c	2006-09-29 13:21:30.000000000 +0200
 @@ -241,15 +241,23 @@
        GstEvent *event = GST_EVENT (data);
  

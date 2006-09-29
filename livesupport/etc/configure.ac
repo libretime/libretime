@@ -513,7 +513,7 @@ by LiveSupport:
     boost 1.33.1               ${COMPILE_BOOST}
     cppunit 1.10.2             yes
     curl 7.12.3                yes
-    gstreamer 0.8.10           yes
+    gstreamer 0.8.12           yes
     gtk+ 2.6.10                ${COMPILE_GTK}
     gtk-- 2.6.5                ${COMPILE_GTKMM}
     icu 3.0                    ${COMPILE_ICU}
