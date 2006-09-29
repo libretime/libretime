@@ -228,8 +228,14 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
-     *      <li> metadata  : string -  metadata XML string</li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip,
+     *          if gunid is empty string, new one is generated
+     *          (returned by subsequent storeAudioClipClose call)
+     *      </li>
+     *      <li> metadata  : string -  metadata XML string
+     *          (as defined in LiveSupport::Core::AudioClip Class Reference,
+     *          examples are in storageServer/var/tests/*.xml)
+     *      </li>
      *      <li> fname :  string - human readable mnemonic file name
      *                      with extension corresponding to filetype</li>
      *      <li> chsum :  string - md5 checksum of media file</li>
@@ -274,7 +280,7 @@ class XR_LocStor extends LocStor{
     /**
      *  Close writable URL for store new AudioClip or replace existing one.
      *
-     *  The XML-RPC name of this method is "locstor.storeAudioClip".
+     *  The XML-RPC name of this method is "locstor.storeAudioClipClose".
      *
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
