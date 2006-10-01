@@ -245,11 +245,13 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         close();
     }
 
-    if (fileUrl.find("file:") == 0) {
-        filePath = fileUrl.substr(5, fileUrl.size());
-    } else if (fileUrl.find("file://") == 0) {
+    if (fileUrl.find("file://") == 0) {
         filePath = fileUrl.substr(7, fileUrl.size());
-    } else {
+    }
+    else if (fileUrl.find("file:") == 0) {
+        filePath = fileUrl.substr(5, fileUrl.size());
+    }
+    else {
         throw std::invalid_argument("badly formed URL or unsupported protocol");
     }
 
@@ -293,8 +295,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     volume = gst_element_factory_make("volume", NULL);
     g_object_set(G_OBJECT(volume), "volume", gdouble(0.8), NULL);
     
-    // connect the decoder to the real audio sink, through the volume element
-    gst_element_link_many(decoder, volume, audiosink);
+    gst_element_link_many(decoder, volume, audiosink, NULL);
     gst_bin_add_many(GST_BIN(pipeline), filesrc, 
                                         decoder, 
                                         volume, 
