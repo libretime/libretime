@@ -520,7 +520,7 @@ by LiveSupport:
     lcov 1.3                   yes
     libodbc++ 0.2.3            yes
     libxml++ 2.8.1             ${COMPILE_LIBXMLPP}
-    taglib 1.3.1               yes
+    taglib 1.4                 yes
     xmlrpc++ 2004-07-13        yes
 
 

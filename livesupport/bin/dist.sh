@@ -189,7 +189,7 @@ curl_version=curl-7.12.3
 curl_tmpdir=$tools_tmpdir/curl
 
 taglib_dir=$toolsdir/taglib
-taglib_version=taglib-1.3.1
+taglib_version=taglib-1.4
 taglib_tmpdir=$tools_tmpdir/taglib
 
 pear_dir=$toolsdir/pear
