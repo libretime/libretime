@@ -515,9 +515,8 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     }
 
     if (!audiosink) {
-        audiosink = oss
-                  ? gst_element_factory_make("osssink", "osssink")
-                  : gst_element_factory_make("alsasink", "alsasink");
+        audiosink = (oss ? gst_element_factory_make("osssink", "osssink")
+                         : gst_element_factory_make("alsasink", "alsasink"));
         relink = true;
     }
     if (!audiosink) {
