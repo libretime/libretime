@@ -29,6 +29,7 @@
 ------------------------------------------------------------------------------*/
 
 /* ====================================================== specific PHP config */
+ini_set("mbstring.internal_encoding", 'UTF-8');
 //error_reporting(0);
 ini_set("html_errors", FALSE);
 ini_set("error_prepend_string", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
