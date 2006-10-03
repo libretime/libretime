@@ -72,5 +72,8 @@ if [ ! -d $plugins ]; then
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308619
     # for details on the following patch
     patch -p1 < ${etcdir}/id3demuxbin-pad-free-fix.patch
+    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=359237
+    # for details on the following patch
+    patch -p1 < ${etcdir}/xml-buffer-size.patch
 fi
 
