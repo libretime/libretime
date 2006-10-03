@@ -98,10 +98,19 @@ ${TMP_DIR}/all.stamp:
 install: all
 
 uninstall:
-	${RM} ${USR_BIN_DIR}/gst-*
+	${RM}    ${USR_BIN_DIR}/gst-*
 	${RMDIR} ${USR_LIB_DIR}/gstreamer*
-	${RM} ${USR_LIB_DIR}/libgst*
+	${RM}    ${USR_LIB_DIR}/libgst*
+	${RM}    ${USR_LIB_DIR}/pkgconfig/gstreamer-*
 	${RMDIR} ${USR_INCLUDE_DIR}/gstreamer*
+	${RM}    ${USR_DIR}/share/aclocal/gst-*
+	${RMDIR} ${USR_DIR}/share/doc/gstreamer-*
+	${RM}    `find ${USR_DIR}/share/locale -name 'gstreamer-*'`
+	${RM}    `find ${USR_DIR}/share/locale -name 'gst-plugins-*'`
+	${RMDIR} ${USR_DIR}/share/gtk-doc/html/gstreamer-*
+	${RMDIR} ${USR_DIR}/share/gtk-doc/html/gstreamer-libs-*
+	${RM}    ${USR_DIR}/man/man1/gst-*
+	${RMDIR} ${USR_DIR}/var/cache/gstreamer-*
 
 clean:
 	${RM} ${TMP_DIR}/*.stamp
