@@ -21,9 +21,6 @@ installdir=/opt/livesupport
 
 case "$1" in
     configure)
-        # replace the odbcinst.ini template with the debian-specific version
-        cp -f $installdir/etc/odbcinst_debian_template \
-              $installdir/etc/odbcinst_template
         # do post-installation configuration
         $installdir/bin/postInstallStation.sh --directory $installdir
 
