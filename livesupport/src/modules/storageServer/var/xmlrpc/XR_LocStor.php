@@ -115,7 +115,10 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->authenticate($r['login'], $r['pass']);
         if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 804,"xr_authenticate: database error");
+            return new XML_RPC_Response(0, 804,
+                "xr_authenticate: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
         }
         $retval = ($res !== FALSE);
         return new XML_RPC_Response(
@@ -164,7 +167,10 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->login($r['login'], $r['pass']);
         if(PEAR::isError($res)){
-            return new XML_RPC_Response(0, 804,"xr_login: database error");
+            return new XML_RPC_Response(0, 804,
+                "xr_login: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
         }
         if($res === FALSE)
             return new XML_RPC_Response(0, 802,
@@ -210,7 +216,8 @@ class XR_LocStor extends LocStor{
         $res = $this->logout($r['sessid']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 803,
-                "xr_logout: logout failed - not logged."
+                "xr_logout: ".$res->getMessage().
+                " ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
