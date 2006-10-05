@@ -1,5 +1,5 @@
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/preparedstatement.cpp	2001-06-12 05:38:32.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/preparedstatement.cpp	2006-10-04 11:06:36.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/preparedstatement.cpp	2001-06-12 05:38:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/preparedstatement.cpp	2006-10-04 11:06:36.000000000 -0500
 @@ -161,7 +161,7 @@
    numParams_=np;
    
@@ -18,8 +18,8 @@
  
  	assert(dh->isStreamed_);
  	
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/resultset.cpp	2003-06-17 05:10:32.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/resultset.cpp	2006-10-04 18:08:03.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/resultset.cpp	2003-06-17 05:10:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/resultset.cpp	2006-10-04 18:08:03.000000000 -0500
 @@ -528,7 +528,7 @@
        r=SQLParamData(hstmt_,&currentCol);
        this->_checkStmtError(hstmt_,r,"SQLParamData failure");
@@ -41,8 +41,8 @@
      dh->setStream(s);
    }
    lastWasNull_=dh->isNull();
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/resultsetmetadata.cpp	2001-06-12 05:38:35.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/resultsetmetadata.cpp	2006-10-04 12:05:45.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/resultsetmetadata.cpp	2001-06-12 05:38:35.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/resultsetmetadata.cpp	2006-10-04 12:05:45.000000000 -0500
 @@ -39,7 +39,7 @@
  int ResultSetMetaData::_getNumericAttribute(unsigned int col,
  					   SQLUSMALLINT attr)
@@ -61,8 +61,8 @@
    SQLSMALLINT len=0;
  
    SQLRETURN r=
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/statement.cpp	2003-03-28 08:26:02.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/statement.cpp	2006-10-04 12:06:54.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/statement.cpp	2003-03-28 08:26:02.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/statement.cpp	2006-10-04 12:06:54.000000000 -0500
 @@ -672,7 +672,7 @@
  
    if(lastExecute_!=ODBC3_C(SQL_NO_DATA,SQL_NO_DATA_FOUND)) {
@@ -72,8 +72,8 @@
      SQLRETURN r=SQLRowCount(hstmt_,&res);
      this->_checkStmtError(hstmt_,r,"Error fetching update count");
      return res;
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/datahandler.cpp	2006-10-04 17:37:32.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/datahandler.cpp	2006-10-04 12:07:52.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/datahandler.cpp	2006-10-04 17:37:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/datahandler.cpp	2006-10-04 12:07:52.000000000 -0500
 @@ -269,7 +269,7 @@
    };
    this->setupBuffer(bs);
@@ -83,8 +83,8 @@
  
    //set everything to NULL
    for(unsigned int i=0; i<rows_; i++) {
---- /home/holman/devel/campware/livesupport/trunk/livesupport/src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/datahandler.h	2001-07-27 12:04:49.000000000 -0500
-+++ src/tools/libodbc++/libodbc++-0.2.3-20050404/tmp/libodbc++-0.2.3-20050404/src/datahandler.h	2006-10-04 12:08:14.000000000 -0500
+--- libodbc++-0.2.3-20050404/src/datahandler.h	2001-07-27 12:04:49.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/datahandler.h	2006-10-04 12:08:14.000000000 -0500
 @@ -48,7 +48,7 @@
      size_t rows_;
      char* buffer_;
