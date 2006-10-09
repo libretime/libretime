@@ -65,7 +65,7 @@ if(PEAR::isError($dbc)){
 
 echo "#StorageServer uninstall:\n";
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox($dbc, $config);
+$gb = &new GreenBox($dbc, $config, TRUE);
 $tr =& new Transport($gb);
 $pr =& new Prefs($gb);
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);

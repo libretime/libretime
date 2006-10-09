@@ -76,9 +76,10 @@ class BasicStor extends Alib {
      *  @param config $config array from conf.php
      *  @return class instance
      */
-    function BasicStor(&$dbc, $config)
+    function BasicStor(&$dbc, $config, $install=FALSE)
     {
         parent::Alib($dbc, $config);
+        $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
         $this->config = $config;
         $this->filesTable = $config['tblNamePrefix'].'files';
         $this->mdataTable = $config['tblNamePrefix'].'mdata';
@@ -87,11 +88,19 @@ class BasicStor extends Alib {
         $this->bufferDir  = realpath($config['bufferDir']);
         $this->transDir  = realpath($config['transDir']);
         $this->accessDir  = realpath($config['accessDir']);
-        $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
-        $this->rootId = $this->getRootNode();
-        $this->storId = $this->wd =
-        $this->getObjId('StorageRoot', $this->rootId);
-        $this->dbc->setErrorHandling();
+        if(!$install){
+            $this->rootId = $r = $this->getRootNode();
+            if ($this->dbc->isError($r)){
+                trigger_error("BasicStor: ".
+                    $r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
+            }
+            $this->storId = $this->wd =
+                $r = $this->getObjId('StorageRoot', $this->getRootNode());
+            if ($this->dbc->isError($r)){
+                trigger_error("BasicStor: ".
+                    $r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
+            }
+        }
     }
 
 
