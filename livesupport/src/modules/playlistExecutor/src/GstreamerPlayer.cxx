@@ -291,15 +291,29 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     gst_element_unlink(decoder, fakesink);
     gst_object_unref(GST_OBJECT(pipe));
 
+    // not sure what this does, but it seems important
+    audioconvert    = gst_element_factory_make("audioconvert", NULL);
+
     // reduce the volume to 80%
-    volume = gst_element_factory_make("volume", NULL);
+    volume          = gst_element_factory_make("volume", NULL);
     g_object_set(G_OBJECT(volume), "volume", gdouble(0.8), NULL);
-    
-    gst_element_link_many(decoder, volume, audiosink, NULL);
-    gst_bin_add_many(GST_BIN(pipeline), filesrc, 
-                                        decoder, 
-                                        volume, 
-                                        audiosink, NULL);
+
+    // scale the sampling rate, if necessary
+    audioscale      = gst_element_factory_make("audioscale", NULL);
+
+    gst_element_link_many(decoder,
+                          audioconvert,
+                          volume,
+                          audioscale,
+                          audiosink,
+                          NULL);
+    gst_bin_add_many(GST_BIN(pipeline), filesrc,
+                                        decoder,
+                                        audioconvert,
+                                        volume,
+                                        audioscale,
+                                        audiosink,
+                                        NULL);
     // connect the eos signal handler
     g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
@@ -445,14 +459,31 @@ GstreamerPlayer :: close(void)                       throw ()
     }
 
     gst_element_set_state(pipeline, GST_STATE_NULL);
+
     if (filesrc && decoder) {
         gst_element_unlink(filesrc, decoder);
     }
-    if (decoder && volume) {
-        gst_element_unlink(decoder, volume);
+    if (decoder && audioconvert) {
+        gst_element_unlink(decoder, audioconvert);
     }
-    if (volume && audiosink) {
-        gst_element_unlink(volume, audiosink);
+    if (audioconvert && volume) {
+        gst_element_unlink(audioconvert, volume);
+    }
+    if (volume && audioscale) {
+        gst_element_unlink(volume, audioscale);
+    }
+    if (audioscale && audiosink) {
+        gst_element_unlink(audioscale, audiosink);
+    }
+
+    if (audioscale) {
+        gst_bin_remove(GST_BIN(pipeline), audioscale);
+    }
+    if (volume) {
+        gst_bin_remove(GST_BIN(pipeline), volume);
+    }
+    if (audioconvert) {
+        gst_bin_remove(GST_BIN(pipeline), audioconvert);
     }
     if (decoder) {
         gst_bin_remove(GST_BIN(pipeline), decoder);
@@ -460,9 +491,12 @@ GstreamerPlayer :: close(void)                       throw ()
     if (filesrc) {
         gst_bin_remove(GST_BIN(pipeline), filesrc);
     }
-    filesrc = 0;
-    decoder = 0;
-    volume  = 0;
+
+    filesrc         = 0;
+    decoder         = 0;
+    audioconvert    = 0;
+    volume          = 0;
+    audioscale      = 0;
 }
 
 
