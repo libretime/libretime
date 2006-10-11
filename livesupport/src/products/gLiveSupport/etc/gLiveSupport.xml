@@ -176,6 +176,7 @@
 
     <taskbarIcons>
         <icon       path = "var/icon16.png" />
+        <icon       path = "var/icon22.png" />
         <icon       path = "var/icon32.png" />
         <icon       path = "var/icon48.png" />
     </taskbarIcons>

@@ -175,6 +175,7 @@
 
     <taskbarIcons>
         <icon       path = "ls_var_dir/LiveSupport/icon16.png" />
+        <icon       path = "ls_var_dir/LiveSupport/icon22.png" />
         <icon       path = "ls_var_dir/LiveSupport/icon32.png" />
         <icon       path = "ls_var_dir/LiveSupport/icon48.png" />
     </taskbarIcons>
