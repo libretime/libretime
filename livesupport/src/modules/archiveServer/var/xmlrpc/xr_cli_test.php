@@ -41,7 +41,6 @@ if($pars[0] == '-s'){
 }else{
     $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrArchive.php';
 }
-$serverPath = "http://localhost:80/~tomash/livesupport/archiveServer/var/xmlrpc/xrArchive.php";
 
 $url = parse_url($serverPath);
 $client = new XML_RPC_Client($url['path'], $url['host']);

@@ -881,7 +881,7 @@ class Transport
         $localfile  = escapeshellarg($row['localfile']);
         $url        = escapeshellarg($row['url']);
         $command =
-            "curl -s -C $size --max-time {$this->upTrMaxTime}".
+            "curl -f -s -C $size --max-time {$this->upTrMaxTime}".
             " --speed-time {$this->upTrSpeedTime}".
             " --speed-limit {$this->upTrSpeedLimit}".
             " --connect-timeout {$this->upTrConnectTimeout}".
@@ -895,6 +895,8 @@ class Transport
         $res = system($command, $status);
         // status 18 - Partial file. Only a part of the file was transported.
         if($status == 0 || $status == 18){
+        // status 28 - timeout
+        // if($status == 0 || $status == 18 || $status == 28){
             $check = $this->uploadCheck($row['pdtoken']);
             if(PEAR::isError($check)) return $check;
             // test checksum
