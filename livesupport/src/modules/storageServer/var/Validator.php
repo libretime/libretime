@@ -1,32 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 define('VAL_ROOT', 110);
 define('VAL_NOREQE', 111);
 define('VAL_NOONEOF', 112);
@@ -50,8 +22,13 @@ define('VAL_PREDXML', 121);
  *      <li>playlistFormat.php</li>
  *  </ul>
  *  It probably should be replaced by XML schema validation in the future.
+ *
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
  */
-class Validator{
+class Validator {
     /**
      *  string - format type of validated document
      */
@@ -64,12 +41,15 @@ class Validator{
      *  string - gunid of validated file for identification in mass input
      */
     var $gunid = NULL;
+
+
     /**
-     *  Constructor
+     * Constructor
      *
-     *  @param format string - format type of validated document
-     *  @param gunid string - gunid of validated file for identification
-     *          in mass input
+     * @param string $format
+     * 		format type of validated document
+     * @param string $gunid
+     * 		gunid of validated file for identification in mass input
      */
     function Validator($format, $gunid)
     {
@@ -81,19 +61,26 @@ class Validator{
             'playlist'  => "playlistFormat",
             'webstream' => "webstreamFormat",
         );
-        if(!isset($formats[$format])) return $this->_err(VAL_FORMAT);
+        if (!isset($formats[$format])) {
+        	return $this->_err(VAL_FORMAT);
+        }
         $formatName = $formats[$format];
         $formatFile = dirname(__FILE__)."/$formatName.php";
-        if(!file_exists($formatFile)) return $this->_err(VAL_FORMAT);
+        if (!file_exists($formatFile)) {
+        	return $this->_err(VAL_FORMAT);
+        }
         require $formatFile;
         $this->formTree = $$formatName;
     }
 
+
     /**
-     *  Validate document - only wrapper for validateNode method
+     * Validate document - only wrapper for validateNode method
      *
-     *  @param data object, validated object tree
-     *  @return TRUE or PEAR::error
+     * @param object $data
+     * 		validated object tree
+     * @return mixed
+     * 		TRUE or PEAR::error
      */
     function validate(&$data)
     {
@@ -101,162 +88,205 @@ class Validator{
         return $r;
     }
 
+
     /**
-     *  Validate one metadata value (on insert/update)
+     * Validate one metadata value (on insert/update)
      *
-     *  @param fname string - parent element name
-     *  @param category string - qualif.category name
-     *  @param predxml string - 'A' | 'T' (attr or tag)
-     *  @param value string - validated element value
-     *  @return TRUE or PEAR::error
+     * @param string $fname
+     * 		parent element name
+     * @param string $category
+     * 		qualif.category name
+     * @param string $predxml
+     * 		'A' | 'T' (attr or tag)
+     * @param string $value
+     * 		validated element value
+     * @return mixed
+     * 		TRUE or PEAR::error
      */
     function validateOneValue($fname, $category, $predxml, $value)
     {
         $formTree =& $this->formTree;
-        switch($predxml){
-            case'T':
-                if(!$this->isChildInFormat($fname, $category))
+        switch ($predxml) {
+            case 'T':
+                if (!$this->isChildInFormat($fname, $category)) {
                     return $this->_err(VAL_UNKNOWNE, "$category in $fname");
+                }
                 break;
-            case'A':
-                if(!$this->isAttrInFormat($fname, $category))
+            case 'A':
+                if (!$this->isAttrInFormat($fname, $category)) {
                     return $this->_err(VAL_UNKNOWNA, "$category in $fname");
+                }
                 break;
-            case'N':
+            case 'N':
                 return TRUE;
                 break;
             default:
                 return $this->_err(VAL_PREDXML, $predxml);
         }
-        if(isset($formTree[$category]['regexp'])){
+        if (isset($formTree[$category]['regexp'])) {
             // echo "XXX {$formTree[$fname]['regexp']} / ".$node->content."\n";
-            if(!preg_match("|{$formTree[$category]['regexp']}|", $value))
+            if (!preg_match("|{$formTree[$category]['regexp']}|", $value)) {
                 return $this->_err(VAL_CONTENT, "$category/$value");
+            }
         }
-        
     }
 
+
     /**
-     *  Validation of one element node from object tree
+     * Validation of one element node from object tree
      *
-     *  @param node object - validated node
-     *  @param fname string - aktual name in format structure
-     *  @return TRUE or PEAR::error
+     * @param object $node
+     * 		validated node
+     * @param string $fname
+     * 		actual name in format structure
+     * @return mixed
+     * 		TRUE or PEAR::error
      */
     function validateNode(&$node, $fname)
     {
         $dname = (($node->ns? $node->ns.":" : '').$node->name);
         $formTree =& $this->formTree;
-        if(DEBUG) echo"\nVAL::validateNode: 1 $dname/$fname\n";
+        if (DEBUG) {
+        	echo"\nVAL::validateNode: 1 $dname/$fname\n";
+        }
         // check root node name:
-        if($dname != $fname) return $this->_err(VAL_ROOT, $fname);
+        if ($dname != $fname) {
+        	return $this->_err(VAL_ROOT, $fname);
+        }
         // check if this element is defined in format:
-        if(!isset($formTree[$fname])) return $this->_err(VAL_NOTDEF, $fname);
+        if (!isset($formTree[$fname])) {
+        	return $this->_err(VAL_NOTDEF, $fname);
+        }
         // check element content
-        if(isset($formTree[$fname]['regexp'])){
+        if (isset($formTree[$fname]['regexp'])) {
             // echo "XXX {$formTree[$fname]['regexp']} / ".$node->content."\n";
-            if(!preg_match("|{$formTree[$fname]['regexp']}|", $node->content))
+            if (!preg_match("|{$formTree[$fname]['regexp']}|", $node->content)) {
                 return $this->_err(VAL_CONTENT, "$fname/{$node->content}");
+            }
         }
         // validate attributes:
         $ra = $this->validateAttributes($node, $fname);
-        if(PEAR::isError($ra)) return $ra;
+        if (PEAR::isError($ra)) {
+        	return $ra;
+        }
         // validate children:
         $r = $this->validateChildren($node, $fname);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         return TRUE;
     }
 
+
     /**
-     *  Validation of attributes
+     * Validation of attributes
      *
-     *  @param node object - validated node
-     *  @param fname string - aktual name in format structure
-     *  @return TRUE or PEAR::error
+     * @param object $node
+     * 		validated node
+     * @param string $fname
+     * 		actual name in format structure
+     * @return mixed
+     * 		TRUE or PEAR::error
      */
     function validateAttributes(&$node, $fname)
     {
         $formTree =& $this->formTree;
         $attrs = array();
         // check if all attrs are permitted here:
-        foreach($node->attrs as $i=>$attr){
+        foreach ($node->attrs as $i => $attr) {
             $aname = (($attr->ns? $attr->ns.":" : '').$attr->name);
             $attrs[$aname] =& $node->attrs[$i];
-            if(!$this->isAttrInFormat($fname, $aname))
+            if (!$this->isAttrInFormat($fname, $aname)) {
                 return $this->_err(VAL_UNKNOWNA, $aname);
+            }
             // check attribute format
             // echo "XXA $aname\n";
-            if(isset($formTree[$aname]['regexp'])){
+            if (isset($formTree[$aname]['regexp'])) {
                 // echo "XAR {$formTree[$fname]['regexp']} / ".$node->content."\n";
-                if(!preg_match("|{$formTree[$aname]['regexp']}|", $attr->val))
+                if (!preg_match("|{$formTree[$aname]['regexp']}|", $attr->val)) {
                     return $this->_err(VAL_ATTRIB, "$aname [".var_export($attr->val,TRUE)."]");
+                }
             }
         }
         // check if all required attrs are here:
-        if(isset($formTree[$fname]['attrs'])){
+        if (isset($formTree[$fname]['attrs'])) {
             $fattrs =& $formTree[$fname]['attrs'];
-            if(isset($fattrs['required'])){
-                foreach($fattrs['required'] as $i=>$attr){
-                    if(!isset($attrs[$attr]))
+            if (isset($fattrs['required'])) {
+                foreach ($fattrs['required'] as $i => $attr) {
+                    if (!isset($attrs[$attr])) {
                         return $this->_err(VAL_NOREQA, $attr);
+                    }
                 }
             }
         }
         return TRUE;
     }
 
+
     /**
-     *  Validation children nodes
+     * Validation children nodes
      *
-     *  @param node object - validated node
-     *  @param fname string - aktual name in format structure
-     *  @return TRUE or PEAR::error
+     * @param object $node
+     * 		validated node
+     * @param string $fname
+     * 		actual name in format structure
+     * @return mixed
+     * 		TRUE or PEAR::error
      */
     function validateChildren(&$node, $fname)
     {
         $formTree =& $this->formTree;
         $childs = array();
         // check if all children are permitted here:
-        foreach($node->children as $i=>$ch){
+        foreach ($node->children as $i => $ch) {
             $chname = (($ch->ns? $ch->ns.":" : '').$ch->name);
             // echo "XXE $chname\n";
-            if(!$this->isChildInFormat($fname, $chname))
+            if (!$this->isChildInFormat($fname, $chname)) {
                 return $this->_err(VAL_UNKNOWNE, $chname);
+            }
             // call children recursive:
             $r = $this->validateNode($node->children[$i], $chname);
-            if(PEAR::isError($r)) return $r;
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
             $childs[$chname] = TRUE;
         }
         // check if all required children are here:
-        if(isset($formTree[$fname]['childs'])){
+        if (isset($formTree[$fname]['childs'])) {
             $fchilds =& $formTree[$fname]['childs'];
-            if(isset($fchilds['required'])){
-                foreach($fchilds['required'] as $i=>$ch){
-                    if(!isset($childs[$ch])) return $this->_err(VAL_NOREQE, $ch);
+            if (isset($fchilds['required'])) {
+                foreach ($fchilds['required'] as $i => $ch) {
+                    if (!isset($childs[$ch])) return $this->_err(VAL_NOREQE, $ch);
                 }
             }
             // required one from set
-            if(isset($fchilds['oneof'])){
+            if (isset($fchilds['oneof'])) {
                 $one = FALSE;
-                foreach($fchilds['oneof'] as $i=>$ch){
-                    if(isset($childs[$ch])){
-                        if($one) return $this->_err(
-                            VAL_UNEXPONEOF, "$ch in $fname");
+                foreach ($fchilds['oneof'] as $i => $ch) {
+                    if (isset($childs[$ch])) {
+                        if ($one) {
+                        	return $this->_err(VAL_UNEXPONEOF, "$ch in $fname");
+                        }
                         $one = TRUE;
                     }
                 }
-                if(!$one) return $this->_err(VAL_NOONEOF);
+                if (!$one) {
+                	return $this->_err(VAL_NOONEOF);
+                }
             }
         }
         return TRUE;
     }
 
+
     /**
-     *  Test if child is presented in format structure
+     * Test if child is presented in format structure
      *
-     *  @param fname string - node name in format structure
-     *  @param chname string - child node name
-     *  @return boolean
+     * @param string $fname
+     * 		node name in format structure
+     * @param string $chname
+     * 		child node name
+     * @return boolean
      */
     function isChildInFormat($fname, $chname)
     {
@@ -266,12 +296,15 @@ class Validator{
         return ($listo!==FALSE || $listr!==FALSE || $list1!==FALSE);
     }
 
+
     /**
-     *  Test if attribute is presented in format structure
+     * Test if attribute is presented in format structure
      *
-     *  @param fname string - node name in format structure
-     *  @param aname string - attribute name
-     *  @return boolean
+     * @param string $fname
+     * 		node name in format structure
+     * @param string $aname
+     * 		attribute name
+     * @return boolean
      */
     function isAttrInFormat($fname, $aname)
     {
@@ -281,17 +314,23 @@ class Validator{
         return ($listr!==FALSE || $listi!==FALSE || $listn!==FALSE);
     }
 
+
     /**
-     *  Check if node/attribute is presented in format structure
+     * Check if node/attribute is presented in format structure
      *
-     *  @param fname string - node name in format structure
-     *  @param chname string - node/attribute name
-     *  @param nType string - 'childs' | 'attrs'
-     *  @param reqType string - <ul>
+     * @param string $fname
+     * 		node name in format structure
+     * @param string $chname
+     * 		node/attribute name
+     * @param string $nType
+     * 		'childs' | 'attrs'
+     * @param string $reqType
+     * 		<ul>
      *          <li>for elements: 'required' | 'optional' | 'oneof'</li>
      *          <li>for attributes: 'required' | 'implied' | 'normal'</li>
      *      </ul>
-     *  @return boolean/int (index int format array returned if found)
+     * @return mixed
+     * 		boolean/int (index int format array returned if found)
      */
     function isInFormatAs($fname, $chname, $nType='childs', $reqType='required')
     {
@@ -304,12 +343,15 @@ class Validator{
         return $listed;
     }
 
+
     /**
-     *  Error exception generator
+     * Error exception generator
      *
-     *  @param errno int - erron code
-     *  @param par string - optional string for more descriptive  error messages
-     *  @return PEAR::error
+     * @param int $errno
+     * 		erron code
+     * @param string $par
+     * 		optional string for more descriptive  error messages
+     * @return PEAR_Error
      */
     function _err($errno, $par='')
     {
@@ -333,16 +375,7 @@ class Validator{
         );
     }
 
-    /**
-     *
-     *
-     *  @param
-     *  @return
-     * /
-    function ()
-    {
-    }
-    */
-}
+
+} // class Validator
 
 ?>

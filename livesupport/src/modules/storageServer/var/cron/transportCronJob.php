@@ -13,16 +13,18 @@ $gb =& new LocStor($dbc, $config);
 $tr =& new Transport($gb);
 
 list(, $trtok) = $_SERVER['argv'];
-if(TR_LOG_LEVEL>1){ $tr->trLog("transportCronJob start ($trtok)"); }
+if (TR_LOG_LEVEL>1) {
+	$tr->trLog("transportCronJob start ($trtok)");
+}
 
 // 4-pass on job:
 $cnt = 4;
-for($i=0; $i<$cnt; $i++, sleep(1)){
+for ($i = 0; $i < $cnt; $i++, sleep(1)){
     // run the action:
     $r = $tr->cronCallMethod($trtok);
-    if(PEAR::isError($r)){
+    if (PEAR::isError($r)) {
         $tr->trLogPear("transportCronJob: ($trtok): ", $r);
-    }else{
+    } else {
 #        $tr->trLog("X transportCronJob: ".var_export($r, TRUE));
         if($r!==TRUE) $tr->trLog("transportCronJob: ($trtok): nonTRUE returned");
     }
@@ -30,6 +32,8 @@ for($i=0; $i<$cnt; $i++, sleep(1)){
     #sleep(2);
 }
 
-if(TR_LOG_LEVEL>1){ $tr->trLog("transportCronJob end ($trtok)"); }
+if (TR_LOG_LEVEL>1) {
+	$tr->trLog("transportCronJob end ($trtok)");
+}
 exit(0);
 ?>

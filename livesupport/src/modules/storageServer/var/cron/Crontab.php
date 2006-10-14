@@ -1,31 +1,32 @@
 <?php
-
-
-/** 
- * A class that interfaces with the crontab. (cjpa@audiophile.com)
- *
- * This class lets you manipulate the crontab. It lets you add delete update entries easily.
- **/
-
 define('CRON_COMMENT', 0);
 define('CRON_ASSIGN',  1);
 define('CRON_CMD',     2);
 define('CRON_SPECIAL', 3);
 define('CRON_EMPTY',   4);
 
+/**
+ * A class that interfaces with the crontab. (cjpa@audiophile.com)
+ *
+ * This class lets you manipulate the crontab. It lets you add delete update entries easily.
+ * @author $Author: $
+ * @version $Revision: $
+ * @package Campcaster
+ * @subpackage StorageServer.Cron
+ */
 class Crontab
 {
     // {{{ properties
     /**
-     * @var array holds all the different lines. 
-     *     Lines are associative arrays with the following fields: 
+     * @var array holds all the different lines.
+     *     Lines are associative arrays with the following fields:
      *       "minute"     : holds the minutes (0-59)
      *       "hour"       : holds the hour (0-23)
      *       "dayofmonth" : holds the day of the month (1-31)
      *       "month"      : the month (1-12 or the names)
      *       "dayofweek"  : 0-7 (or the names)
      *
-     *   or a line can be a 2-value array that represents an assignment: 
+     *   or a line can be a 2-value array that represents an assignment:
      *           "name" => "value"
      *   or a line can be a comment (string beginning with #)
      *   or it can be a special command (beginning with an @)
@@ -38,19 +39,19 @@ class Crontab
     var $user;
 
     /**
-     * @var string Lists the type of line of each line in $crontabs. 
-     *   can be: any of the CRON_* constants. 
-     *   so $linetype[5] is the type of $crontabs[5].  
+     * @var string Lists the type of line of each line in $crontabs.
+     *   can be: any of the CRON_* constants.
+     *   so $linetype[5] is the type of $crontabs[5].
      */
     var $linetypes;
 
-    // }}} 
+    // }}}
 
     /**
      * Constructor
-     * 
+     *
      * Initialises $this->crontabs
-     * 
+     *
      * @param string $user the user for whom the crontab will be manipulated
      */
     function Crontab($user)
@@ -61,7 +62,7 @@ class Crontab
 
     /**
      * This reads the crontab of $this->user and parses it in $this->crontabs
-     * 
+     *
      */
     function readCrontab()
     {
@@ -91,7 +92,7 @@ class Crontab
                 continue;
             }
 
-            // Checking if this is an assignment 
+            // Checking if this is an assignment
             if (ereg("(.*)=(.*)", $line, $assign))
             {
                 $this->crontabs[] = array ("name" => $assign[1], "value" => $assign[2]);
@@ -175,7 +176,7 @@ class Crontab
     /**
      * Add a item of type CRON_CMD to the end of $this->crontabs
      *
-     * @param string    $m     minute 
+     * @param string    $m     minute
      * @param string    $h     hour
      * @param string    $dom   day of month
      * @param string    $mo    month
@@ -191,7 +192,7 @@ class Crontab
 
     /**
      * Add a comment to the cron to the end of $this->crontabs
-     * 
+     *
      * @param string $comment comment
      */
     function addComment($comment)
@@ -202,7 +203,7 @@ class Crontab
 
     /**
      * Add a special command (check man 5 crontab for more information)
-     * 
+     *
      * @param string $sdate special date
      *         string         meaning
      *         ------         -------
@@ -224,7 +225,7 @@ class Crontab
 
     /**
      * Add an assignment (name = value)
-     * 
+     *
      * @param string $name  name of assingation
      * @param string $value value
      */
@@ -236,7 +237,7 @@ class Crontab
 
     /**
      * Delete a line from the arrays.
-     * 
+     *
      * @param int $index the index in $this->crontabs
      */
     function delEntry($index)
@@ -247,7 +248,7 @@ class Crontab
 
     /**
      * Get all the lines of a certain type in an array
-     * 
+     *
      * @param string $type linetype
      */
     function getByType($type)

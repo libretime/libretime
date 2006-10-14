@@ -1,8 +1,12 @@
 <?php
 /**
  * Cron jobs handling abstract class
+ *
+ * @author $Author: $
+ * @version $Revision: $
+ * @package Campcaster
+ * @subpackage StorageServer.Cron
  */
-
 class CronJob
 {
     /**
@@ -13,10 +17,3 @@ class CronJob
     }
 }
 ?>
-
-
-
-
-
-
-

@@ -1,38 +1,13 @@
 <?
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author: tomash $
-    Version  : $Revision: 1848 $
-    Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/modules/storageServer/var/AccessRecur.php $
-
-------------------------------------------------------------------------------*/
-
 define('INDCH', ' ');
 
 /**
- *  M3uPlaylist class
+ * M3uPlaylist class
  *
+ * @author $Author: tomash $
+ * @version  : $Revision: 1848 $
+ * @package Campcaster
+ * @subpackage StorageServer
  */
 class M3uPlaylist {
     /**
@@ -79,7 +54,7 @@ class M3uPlaylist {
      *
      *  @param gb reference to GreenBox object
      *  @param aPath string, absolute path part of imported file
-     *              (e.g. /home/user/livesupport)
+     *              (e.g. /home/user/campcaster)
      *  @param rPath string, relative path/filename part of imported file
      *              (e.g. playlists/playlist_1.smil)
      *  @param gunids hasharray, hash relation from filenames to gunids
@@ -135,13 +110,13 @@ class M3uPlaylist {
         if(PEAR::isError($r)) return $r;
         return $pl;
     }
-        
+
     /**
      *  Import M3U file to storage
      *
      *  @param gb reference to GreenBox object
      *  @param data string, local path to M3U file
-     *  @return XML string - playlist in Livesupport playlist format
+     *  @return XML string - playlist in Campcaster playlist format
      */
     function convert2lspl(&$gb, $data){
         $arr = $r = M3uPlaylist::parse($data);

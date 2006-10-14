@@ -1,32 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
-
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
-
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 require_once "RawMediaData.php";
 require_once "MetaData.php";
 require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
@@ -34,40 +6,46 @@ require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
 /**
  *  StoredFile class
  *
- *  LiveSupport file storage support class.<br>
+ *  Campcaster file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
  *      <li>metada in database - represented by MetaData class</li>
  *      <li>binary media data in real file
  *          - represented by RawMediaData class</li>
  *  </ul>
- *  @see GreenBox
- *  @see MetaData
- *  @see RawMediaData
+ *
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @see GreenBox
+ * @see MetaData
+ * @see RawMediaData
  */
 class StoredFile {
     /* ========================================================== constructor */
     /**
      *  Constructor, but shouldn't be externally called
      *
-     *  @param reference $gb to GreenBox object
-     *  @param string $gunid, optional, globally unique id of file
+     *  @param GreenBox $gb
+     *  @param string $gunid
+     * 		optional, globally unique id of file
      *  @return this
      */
     function StoredFile(&$gb, $gunid=NULL)
     {
-        $this->gb         =& $gb;
-        $this->dbc        =& $gb->dbc;
-        $this->filesTable =  $gb->filesTable;
-        $this->accessTable=  $gb->accessTable;
-        $this->gunid      =  $gunid;
+        $this->gb =& $gb;
+        $this->dbc =& $gb->dbc;
+        $this->filesTable = $gb->filesTable;
+        $this->accessTable= $gb->accessTable;
+        $this->gunid = $gunid;
         if (is_null($this->gunid)) {
             $this->gunid = $this->_createGunid();
         }
-        $this->resDir     =  $this->_getResDir($this->gunid);
-        $this->accessDir  =  $this->gb->accessDir;
-        $this->rmd        =& new RawMediaData($this->gunid, $this->resDir);
-        $this->md         =& new MetaData($gb, $this->gunid, $this->resDir);
+        $this->resDir = $this->_getResDir($this->gunid);
+        $this->accessDir = $this->gb->accessDir;
+        $this->rmd =& new RawMediaData($this->gunid, $this->resDir);
+        $this->md =& new MetaData($gb, $this->gunid, $this->resDir);
 #        return $this->gunid;
     }
 
@@ -76,16 +54,24 @@ class StoredFile {
     /**
      *  Create instance of StoredFile object and insert new file
      *
-     *  @param reference $gb to GreenBox object
-     *  @param int $oid, local object id in the tree
-     *  @param string $name, name of new file
-     *  @param string $mediaFileLP, local path to media file
-     *  @param string $metadata, local path to metadata XML file or XML string
-     *  @param string $mdataLoc 'file'|'string' (optional)
-     *  @param global $gunid unique id (optional) - for insert file with gunid
-     *  @param string $ftype, internal file type
-     *  @param string $className, class to be constructed (opt.)
-     *  @return instance of StoredFile object
+     *  @param GreenBox $gb
+     *  @param int $oid
+     * 		local object id in the tree
+     *  @param string $name
+     * 		name of new file
+     *  @param string $mediaFileLP
+     * 		local path to media file
+     *  @param string $metadata
+     * 		local path to metadata XML file or XML string
+     *  @param string $mdataLoc
+     * 		'file'|'string' (optional)
+     *  @param global $gunid
+     * 		unique id (optional) - for insert file with gunid
+     *  @param string $ftype
+     * 		internal file type
+     *  @param string $className
+     * 		class to be constructed (opt.)
+     *  @return StoredFile
      */
     function &insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
@@ -171,14 +157,17 @@ class StoredFile {
 
 
     /**
-     *  Create instance of StoreFile object and recall existing file.<br>
-     *  Should be supplied oid XOR gunid - not both ;)
+     * Create instance of StoreFile object and recall existing file.<br>
+     * Should be supplied oid XOR gunid - not both ;)
      *
-     *  @param reference $gb to GreenBox object
-     *  @param int $oid, optional, local object id in the tree
-     *  @param string $gunid, optional, global unique id of file
-     *  @param string $className, optional classname to recall
-     *  @return instance of StoredFile object
+     * @param GreenBox $gb
+     * @param int $oid
+     * 		optional, local object id in the tree
+     * @param string $gunid
+     * 		optional, global unique id of file
+     * @param string $className
+     * 		optional classname to recall
+     * @return StoredFile
      */
     function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
     {
@@ -210,13 +199,15 @@ class StoredFile {
 
 
     /**
-     *  Create instance of StoreFile object and recall existing file
-     *	by gunid.<br/>
+     * Create instance of StoreFile object and recall existing file
+     * by gunid.
      *
-     *  @param reference $gb to GreenBox object
-     *  @param string $gunid, optional, global unique id of file
-     *  @param string $className, optional classname to recall
-     *  @return instance of StoredFile object
+     * @param GreenBox $gb
+     * @param string $gunid
+     * 		optional, global unique id of file
+     * @param string $className
+     * 		optional classname to recall
+     * @return StoredFile
      */
     function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
     {
@@ -225,13 +216,15 @@ class StoredFile {
 
 
     /**
-     *  Create instance of StoreFile object and recall existing file
-     *  by access token.<br/>
+     * Create instance of StoreFile object and recall existing file
+     * by access token.
      *
-     *  @param reference $gb to GreenBox object
-     *  @param string $token, access token
-     *  @param string $className, optional classname to recall
-     *  @return instance of StoredFile object
+     * @param GreenBox $gb
+     * @param string $token
+     * 		access token
+     * @param string $className
+     * 		optional classname to recall
+     * @return StoredFile
      */
     function recallByToken(&$gb, $token, $className='StoredFile')
     {
@@ -253,10 +246,12 @@ class StoredFile {
 
 
     /**
-     *  Create instance of StoredFile object and make copy of existing file
+     * Create instance of StoredFile object and make copy of existing file
      *
-     *  @param reference $src to source object
-     *  @param int $nid, new local id
+     * @param reference $src to source object
+     * @param int $nid
+     * 		new local id
+     * @return unknown
      */
     function &copyOf(&$src, $nid)
     {
@@ -276,11 +271,16 @@ class StoredFile {
     /**
      *  Replace existing file with new data
      *
-     *  @param int $oid, local id
-     *  @param string $name, name of file
-     *  @param string $mediaFileLP, local path to media file
-     *  @param string $metadata, local path to metadata XML file or XML string
-     *  @param string $mdataLoc 'file'|'string'
+     *  @param int $oid
+     * 		local id
+     *  @param string $name
+     * 		name of file
+     *  @param string $mediaFileLP
+     * 		local path to media file
+     *  @param string $metadata
+     * 		local path to metadata XML file or XML string
+     *  @param string $mdataLoc
+     * 		'file'|'string'
      */
     function replace($oid, $name, $mediaFileLP='', $metadata='',
         $mdataLoc='file')
@@ -319,16 +319,18 @@ class StoredFile {
 
 
     /**
-     *  Increase access counter, create access token, insert access record,
-     *  call access method of RawMediaData
+     * Increase access counter, create access token, insert access record,
+     * call access method of RawMediaData
      *
-     *  @param int $parent parent token
-     *  @return array with: access URL, access token
+     * @param int $parent
+     * 		parent token
+     * @return array
+     * 		array with: access URL, access token
      */
     function accessRawMediaData($parent='0')
     {
-        $realFname  = $this->_getRealRADFname();
-        $ext        = $this->_getExt();
+        $realFname = $this->_getRealRADFname();
+        $ext = $this->_getExt();
         $res = $this->gb->bsAccess($realFname, $ext, $this->gunid, 'access', $parent);
         if (PEAR::isError($res)) {
             return $res;
@@ -340,11 +342,12 @@ class StoredFile {
 
 
     /**
-     *  Decrease access couter, delete access record,
-     *  call release method of RawMediaData
+     * Decrease access couter, delete access record,
+     * call release method of RawMediaData
      *
-     *  @param string $token, access token
-     *  @return boolean
+     * @param string $token
+     * 		access token
+     * @return boolean
      */
     function releaseRawMediaData($token)
     {
@@ -357,9 +360,10 @@ class StoredFile {
 
 
     /**
-     *  Replace media file only with new binary file
+     * Replace media file only with new binary file
      *
-     *  @param string $mediaFileLP, local path to media file
+     * @param string $mediaFileLP
+     * 		local path to media file
      */
     function replaceRawMediaData($mediaFileLP)
     {
@@ -382,14 +386,17 @@ class StoredFile {
 
 
     /**
-     *  Replace metadata with new XML file
+     * Replace metadata with new XML file
      *
-     *  @param string $metadata, local path to metadata XML file or XML string
-     *  @param string $mdataLoc 'file'|'string'
-     *  @param string $format, metadata format for validation
+     * @param string $metadata
+     * 		local path to metadata XML file or XML string
+     * @param string $mdataLoc
+     * 		'file'|'string'
+     * @param string $format
+     * 		metadata format for validation
      *      ('audioclip' | 'playlist' | 'webstream' | NULL)
      *      (NULL = no validation)
-     *  @return boolean
+     * @return boolean
      */
     function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
     {
@@ -413,10 +420,10 @@ class StoredFile {
 
 
     /**
-     *  Get metadata as XML string
+     * Get metadata as XML string
      *
-     *  @return XML string
-     *  @see MetaData
+     * @return XML string
+     * @see MetaData
      */
     function getMetaData()
     {
@@ -425,12 +432,12 @@ class StoredFile {
 
 
     /**
-     *  Analyze file with getid3 module.<br>
-     *  Obtain some metadata stored in media file.<br>
-     *  This method should be used for prefilling metadata input form.
+     * Analyze file with getid3 module.<br>
+     * Obtain some metadata stored in media file.<br>
+     * This method should be used for prefilling metadata input form.
      *
-     *  @return array
-     *  @see MetaData
+     * @return array
+     * @see MetaData
      */
     function analyzeMediaFile()
     {
@@ -440,10 +447,11 @@ class StoredFile {
 
 
     /**
-     *  Rename stored virtual file
+     * Rename stored virtual file
      *
-     *  @param string $newname
-     *  @return true or PEAR::error
+     * @param string $newname
+     * @return mixed
+     * 		true or PEAR::error
      */
     function rename($newname)
     {
@@ -460,12 +468,14 @@ class StoredFile {
 
 
     /**
-     *  Set state of virtual file
+     * Set state of virtual file
      *
-     *  @param string $state, 'empty'|'incomplete'|'ready'|'edited'
-     *  @param int $editedby, user id | 'NULL' for clear editedBy field
+     * @param string $state
+     * 		'empty'|'incomplete'|'ready'|'edited'
+     * @param int $editedby
+     * 		 user id | 'NULL' for clear editedBy field
      *      (optional)
-     *  @return boolean or error
+     * @return boolean or error
      */
     function setState($state, $editedby=NULL)
     {
@@ -484,10 +494,11 @@ class StoredFile {
 
 
     /**
-     *  Set mime-type of virtual file
+     * Set mime-type of virtual file
      *
-     *  @param string $mime, mime-type
-     *  @return boolean or error
+     * @param string $mime
+     * 		mime-type
+     * @return boolean or error
      */
     function setMime($mime)
     {
@@ -504,10 +515,10 @@ class StoredFile {
 
 
     /**
-     *  Delete stored virtual file
+     * Delete stored virtual file
      *
-     *  @see RawMediaData
-     *  @see MetaData
+     * @see RawMediaData
+     * @see MetaData
      */
     function delete()
     {
@@ -550,10 +561,11 @@ class StoredFile {
 
 
     /**
-     *  Returns true if virtual file is accessed.<br>
-     *  Static or dynamic call is possible.
+     * Returns true if virtual file is accessed.<br>
+     * Static or dynamic call is possible.
      *
-     *  @param string $gunid, optional (for static call), global unique id
+     * @param string $gunid
+     * 		optional (for static call), global unique id
      */
     function isAccessed($gunid=NULL)
     {
@@ -575,10 +587,11 @@ class StoredFile {
 
 
     /**
-     *  Returns true if virtual file is edited
+     * Returns true if virtual file is edited
      *
-     *  @param string $playlistId, playlist global unique ID
-     *  @return boolean
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @return boolean
      */
     function isEdited($playlistId=NULL)
     {
@@ -594,10 +607,12 @@ class StoredFile {
 
 
     /**
-     *  Returns id of user editing playlist
+     * Returns id of user editing playlist
      *
-     *  @param string $playlistId, playlist global unique ID
-     *  @return null or int, id of user editing it
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @return null or int
+     * 		id of user editing it
      */
     function isEditedBy($playlistId=NULL)
     {
@@ -660,7 +675,7 @@ class StoredFile {
     {
         $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
         $initString =
-            microtime().$ip.rand()."org.mdlf.livesupport";
+            microtime().$ip.rand()."org.mdlf.campcaster";
         $hash = md5($initString);
         // non-negative int8
         $hsd = substr($hash, 0, 1);
@@ -680,11 +695,11 @@ class StoredFile {
 
 
     /**
-     *  Get local id from global id.
-     *  Static or dynamic call is possible.
+     * Get local id from global id.
+     * Static or dynamic call is possible.
      *
-     *  @param string $gunid, optional (for static call),
-     *      global unique id of file
+     * @param string $gunid
+     * 		optional (for static call), global unique id of file
      */
     function _idFromGunid($gunid=NULL)
     {
@@ -705,10 +720,12 @@ class StoredFile {
 
 
     /**
-     *  Return suitable extension.<br>
-     *  <b>TODO: make it general - is any tool for it?</b>
+     * Return suitable extension.
      *
-     *  @return string file extension without a dot
+     * @todo make it general - is any tool for it?
+     *
+     * @return string
+     * 		file extension without a dot
      */
     function _getExt()
     {
@@ -741,10 +758,12 @@ class StoredFile {
 
 
     /**
-     *  Get mime-type from global id
+     * Get mime-type from global id
      *
-     *  @param string $gunid, optional, global unique id of file
-     *  @return string, mime-type
+     * @param string $gunid
+     * 		optional, global unique id of file
+     * @return string
+     * 		mime-type
      */
     function _getMime($gunid=NULL)
     {
@@ -759,10 +778,12 @@ class StoredFile {
 
 
     /**
-     *  Get storage-internal file state
+     * Get storage-internal file state
      *
-     *  @param string $gunid, optional, global unique id of file
-     *  @return string, see install()
+     * @param string $gunid
+     * 		optional, global unique id of file
+     * @return string
+     * 		see install()
      */
     function _getState($gunid=NULL)
     {
@@ -777,10 +798,12 @@ class StoredFile {
 
 
     /**
-     *  Get mnemonic file name
+     * Get mnemonic file name
      *
-     *  @param string $gunid, optional, global unique id of file
-     *  @return string, see install()
+     * @param string $gunid
+     * 		optional, global unique id of file
+     * @return string
+     * 		see install()
      */
     function _getFileName($gunid=NULL)
     {
@@ -795,8 +818,8 @@ class StoredFile {
 
 
     /**
-     *  Get and optionaly create subdirectory in real filesystem for storing
-     *  raw media data
+     * Get and optionaly create subdirectory in real filesystem for storing
+     * raw media data
      *
      */
     function _getResDir()
@@ -813,9 +836,9 @@ class StoredFile {
 
 
     /**
-     *  Get real filename of raw media data
+     * Get real filename of raw media data
      *
-     *  @see RawMediaData
+     * @see RawMediaData
      */
     function _getRealRADFname()
     {
@@ -824,9 +847,9 @@ class StoredFile {
 
 
     /**
-     *  Get real filename of metadata file
+     * Get real filename of metadata file
      *
-     *  @see MetaData
+     * @see MetaData
      */
     function _getRealMDFname()
     {
@@ -835,9 +858,9 @@ class StoredFile {
 
 
     /**
-     *  Create and return name for temporary symlink.<br>
-     *  <b>TODO: Should be more unique</b>
+     * Create and return name for temporary symlink.
      *
+     * @todo Should be more unique
      */
     function _getAccessFname($token, $ext='EXT')
     {

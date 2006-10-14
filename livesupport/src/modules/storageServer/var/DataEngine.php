@@ -1,32 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 define('USE_INTERSECT', TRUE);
 
 require_once "XML/Util.php";
@@ -39,7 +11,7 @@ require_once "XML/Util.php";
  *     <li>filetype - string, type of searched files,
  *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
  *     <li>operator - string, type of conditions join
- *       (any condition matches / all conditions match), 
+ *       (any condition matches / all conditions match),
  *       meaningful values: 'and', 'or', ''
  *       (may be empty or ommited only with less then 2 items in
  *       &quot;conditions&quot; field)
@@ -63,8 +35,12 @@ require_once "XML/Util.php";
  *      <li>cnt : integer - number of matching items</li>
  *   </ul>
  *
- *  @see MetaData
- *  @see StoredFile
+ * @Author $Author$
+ * @version  $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @see MetaData
+ * @see StoredFile
  */
 class DataEngine{
 
@@ -136,7 +112,7 @@ class DataEngine{
         }
         return $whereArr;
     }
-    
+
     /**
      *  Method returning SQL query for search/browse with AND operator
      *  (without using INTERSECT command)
@@ -156,7 +132,7 @@ class DataEngine{
         foreach($whereArr as $i=>$v){
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $lastTbl = ($i==0 ? "f" : "md".($i-1));
-            $innerBlocks[] = 
+            $innerBlocks[] =
                 "INNER JOIN {$this->mdataTable} md$i ON md$i.gunid = $lastTbl.gunid\n";
         }
         // query construcion:
@@ -173,7 +149,7 @@ class DataEngine{
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
-    
+
     /**
      *  Method returning SQL query for search/browse with AND operator
      *  (using INTERSECT command)
@@ -194,13 +170,13 @@ class DataEngine{
         $isectBlocks = array();
         foreach($whereArr as $i=>$v){
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
-            $isectBlocks[] = 
+            $isectBlocks[] =
                 " SELECT gunid FROM {$this->mdataTable} md$i\n".
                 " WHERE\n {$whereArr[$i]}";
         }
         // query construcion:
         if(count($isectBlocks)>0){
-            $isectBlock = 
+            $isectBlock =
                 "FROM\n(\n".join("INTERSECT\n", $isectBlocks).") sq\n".
                 "INNER JOIN {$this->filesTable} f ON f.gunid = sq.gunid";
         }else{
@@ -218,7 +194,7 @@ class DataEngine{
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
-    
+
     /**
      *  Method returning SQL query for search/browse with OR operator
      *
@@ -255,7 +231,7 @@ class DataEngine{
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
-    
+
     /**
      *  Search in local metadata database.
      *
@@ -264,7 +240,7 @@ class DataEngine{
      *  @param offset int, starting point (0 means without offset)
      *  @return hash, fields:
      *       results : array with gunid strings
-     *       cnt : integer - number of matching gunids 
+     *       cnt : integer - number of matching gunids
      *              of files have been found
      */
     function localSearch($cri, $limit=0, $offset=0)
@@ -273,7 +249,7 @@ class DataEngine{
         // if(PEAR::isError($res)) return $res;
         return $res;
     }
-    
+
     /**
      *  Search in local metadata database, more general version.
      *
@@ -283,7 +259,7 @@ class DataEngine{
      *  @param brFldNs string - namespace prefix of category for browse
      *  @param brFld string, metadata category identifier for browse
      *  @return arrays of hashes, fields:
-     *       cnt : integer - number of matching gunids 
+     *       cnt : integer - number of matching gunids
      *              of files have been found
      *       results : array of hashes:
      *          gunid: string
@@ -393,7 +369,7 @@ class DataEngine{
      *  @param criteria hash
      *  @return hash, fields:
      *       results : array with found values
-     *       cnt : integer - number of matching values 
+     *       cnt : integer - number of matching values
      */
     function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
@@ -421,7 +397,7 @@ class DataEngine{
         if(!is_array($res)) $res = array();
         return array('results'=>$res, 'cnt'=>$cnt);
     }
-    
+
     /**
      *  Get number of rows in query result
      *
@@ -437,7 +413,7 @@ class DataEngine{
         $rh->free();
         return $cnt;
     }
-    
+
 }
 
 ?>

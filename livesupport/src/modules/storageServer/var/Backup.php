@@ -2,7 +2,13 @@
 define('BACKUP_EXT', 'tar');
 define('ACCESS_TYPE', 'backup');
 
-class Backup 
+/**
+ * @author $Author:  $
+ * @version $Revision:  $
+ * @package Campcaster
+ * @subpackage StorageServer
+ */
+class Backup
 {
     /**
      *  string - name of logfile
@@ -34,7 +40,7 @@ class Backup
      *  array - array of affected filenames
      */
     var $filenames  = array();
-    
+
     /**
      *  string - base tmp name
      */
@@ -46,25 +52,25 @@ class Backup
     /**
      *  string - name of temporary directory
      */
-    var $tmpDir;        
+    var $tmpDir;
     /**
      *  string - name of temporary playlist directory
      */
-    var $tmpDirPlaylist;    
+    var $tmpDirPlaylist;
     /**
      *  string - name of temporary audioclip directory
      */
-    var $tmpDirClip;   
+    var $tmpDirClip;
     /**
      *  string - name of temporary metafile directory
      */
-    var $tmpDirMeta;    
-    
+    var $tmpDirMeta;
+
     /**
      *  string - loglevel
      */
     var $loglevel = 'warn';  # 'debug';
-    
+
     /**
      *  greenbox object reference
      */
@@ -82,14 +88,15 @@ class Backup
         $this->logFile  = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
         $this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
     }
-    
+
+
     /**
      *  Open a backup
      *      Create a backup file (tarball)
      *
      *  @param sessid  :  string  -  session id
      *  @param criteria : struct - see search criteria
-     *  @return hasharray with field: 
+     *  @return hasharray with field:
      *      token string: backup token
      */
     function openBackup($sessid,$criteria='')
@@ -99,23 +106,25 @@ class Backup
         }
         $this->sessid   = $sessid;
         $this->criteria = $criteria;
-        
+
         # get ids (and real filenames) which files match with criteria
         $srch = $r = $this->gb->localSearch($this->criteria,$this->sessid);
-        if(PEAR::isError($r)){ return $r; }
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $this->setIDs($srch);
         #echo '<XMP>this->ids:'; print_r($this->ids); echo '</XMP>';
-        
+
         # get real filenames
         if (is_array($this->ids)) {
             $this->setFilenames();
             #echo '<XMP>this->filenames:'; print_r($this->filenames); echo '</XMP>';
-               
+
             $this->setEnviroment(true);
-            
+
             # write a status file
             file_put_contents($this->statusFile, 'working');
-    
+
             # save the metafile to tmpdir
             $hostname = trim(`hostname`);
             $ctime      = time();
@@ -129,22 +138,25 @@ class Backup
                 " hostname=\"$hostname\"\n".
                 "/><!-- $ctime_f -->\n"
             );
-    
+
             # copy all file to tmpdir
             $this->copyAllFiles();
-            
+
             # do everything
             $this->doIt();
-            
+
             return array('token'=>$this->token);
-        } else return false;
+        } else {
+        	return false;
+        }
     }
-    
+
+
     /**
-     *  check the status of backup
+     * Check the status of backup.
      *
-     *  @param token : token
-     *  @return hasharray with field: 
+     * @param unknown $token
+     * @return array
      *      status  : string - susccess | working | fault
      *      faultString: string - description of fault
      *      token   : stirng - backup token
@@ -160,7 +172,7 @@ class Backup
         $this->setEnviroment();
         $status = file_get_contents($this->statusFile);
         if (strpos($status,'fault')!==false) {
-            list($status,$faultString) = explode('|',$status); 
+            list($status,$faultString) = explode('|',$status);
         }
         switch ($status) {
             case 'success':
@@ -175,12 +187,13 @@ class Backup
         }
         return $r;
     }
-    
+
+
     /**
-     *  Close a backup
+     * Close a backup
      *
-     *  @param token   : token
-     *  @return status : boolean
+     * @param unknown $token
+     * @return boolean
      */
     function closeBackup($token)
     {
@@ -194,16 +207,19 @@ class Backup
         Backup::rRmDir($this->tmpDir);
         unlink($this->statusFile);
         unlink($this->tmpFile);
-        if (is_file($this->tmpName)) unlink($this->tmpName);
+        if (is_file($this->tmpName)) {
+        	unlink($this->tmpName);
+        }
         return !is_file($this->tmpFile);
     }
-    
+
+
     /**
      *  list of unclosed backups
      *
-     *  @param stat : status (optional)
+     *  @param string $stat (optional)
      *      if this parameter is not set, then return with all unclosed backups
-     *  @return array of hasharray with field: 
+     *  @return array of hasharray with field:
      *      status : string - susccess | working | fault
      *      token  : stirng - backup token
      *      url    : string - access url
@@ -224,11 +240,12 @@ class Backup
         }
         return $r;
     }
-    
+
+
     /**
-     *  set the ids from searchResult
+     * Aet the ids from searchResult
      *
-     *  @param searchResult : array of gunids
+     * @param array $searchResult : array of gunids
      */
     function setIDs($searchResult)
     {
@@ -242,12 +259,13 @@ class Backup
             return PEAR::raiseError('The IDs variable isn\'t array.');
         }
     }
-    
+
+
     /**
-     *  set the filenames from ids
+     * Set the filenames from ids.
      *
      */
-    function setFilenames ()
+    function setFilenames()
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
@@ -257,9 +275,11 @@ class Backup
                 $gunid = $item['gunid'];
                 # get a stored file object of this gunid
                 $sf = $r = StoredFile::recallByGunid($this->gb, $gunid);
-                if(PEAR::isError($r)) return $r;
+                if (PEAR::isError($r)) {
+                	return $r;
+                }
                 $lid = $this->gb->_idFromGunid($gunid);
-                if(($res = $this->gb->_authorize('read', $lid, $this->sessid)) !== TRUE){
+                if (($res = $this->gb->_authorize('read', $lid, $this->sessid)) !== TRUE) {
                     $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
                     return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
                 }
@@ -284,9 +304,10 @@ class Backup
             return PEAR::raiseError('Backup::setFilenames : The IDs variable isn\'t array.');
         }
     }
-    
+
+
     /**
-     *  Create the tarball - call the shell script
+     * Create the tarball - call the shell script
      *
      */
     function doIt()
@@ -305,7 +326,8 @@ class Backup
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt - command:$command\n");
         }
     }
-    
+
+
     /**
      *  Copy the real files into the tmp dirs to tar they.
      *
@@ -315,7 +337,7 @@ class Backup
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." copyAllFiles\n");
         }
-        //echo '<XMP>this->filenames:'; print_r($this->filenames); echo '</XMP>';   
+        //echo '<XMP>this->filenames:'; print_r($this->filenames); echo '</XMP>';
         if (is_array($this->filenames)) {
             foreach ($this->filenames as $v) {
                 # get the filename from full path
@@ -333,7 +355,8 @@ class Backup
             }
         }
     }
-    
+
+
     /**
      *  Figure out the enviroment to the backup
      *
@@ -347,9 +370,9 @@ class Backup
         if (is_null($this->token) && $createDir) {
             $this->tmpName          = tempnam($this->gb->bufferDir, ACCESS_TYPE.'_');
             $this->tmpFile          = $this->tmpName.'.'.BACKUP_EXT;
-            $this->tmpDir           = $this->tmpName.'.dir';        
-            $this->tmpDirPlaylist   = $this->tmpDir. '/playlist';    
-            $this->tmpDirClip       = $this->tmpDir. '/audioClip';   
+            $this->tmpDir           = $this->tmpName.'.dir';
+            $this->tmpDirPlaylist   = $this->tmpDir. '/playlist';
+            $this->tmpDirClip       = $this->tmpDir. '/audioClip';
             $this->tmpDirMeta       = $this->tmpDir. '/meta-inf';
             touch($this->tmpFile);
             mkdir($this->tmpDir);
@@ -362,13 +385,13 @@ class Backup
             if (is_link($symlink) && is_file(readlink($symlink))) {
                 $this->tmpName          = str_replace('.tar','',readlink($symlink));
                 $this->tmpFile          = $this->tmpName.'.'.BACKUP_EXT;
-                $this->tmpDir           = $this->tmpName.'.dir';        
-                $this->tmpDirPlaylist   = $this->tmpDir. '/playlist';    
-                $this->tmpDirClip       = $this->tmpDir. '/audioClip';   
+                $this->tmpDir           = $this->tmpName.'.dir';
+                $this->tmpDirPlaylist   = $this->tmpDir. '/playlist';
+                $this->tmpDirClip       = $this->tmpDir. '/audioClip';
                 $this->tmpDirMeta       = $this->tmpDir. '/meta-inf';
             } else {
                 $this->addLogItem("-E- ".date("Ymd-H:i:s")." setEnviroment - Corrupt symbolic link.\n");
-                return false;                 
+                return false;
             }
         }
         $this->statusFile       = $this->gb->accessDir.'/'.$this->token.'.'.BACKUP_EXT.'.status';
@@ -383,22 +406,26 @@ class Backup
             $this->addLogItem("this->statusFile: $this->statusFile\n");
         }
     }
-    
+
+
     /**
-     *  generate a new token.
-     *
+     * Generate a new token.
+     * @return void
      */
     function genToken()
     {
         $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
-        if($this->gb->dbc->isError($acc)){ return $acc; }
+        if ($this->gb->dbc->isError($acc)) {
+        	return $acc;
+        }
         $this->token = $acc['token'];
     }
-    
+
+
     /**
-     *  Add a line to the logfile.
+     * Add a line to the logfile.
      *
-     *  @param item : string - the new row of log file
+     * @param string $item - the new row of log file
      */
     function addLogItem($item)
     {
@@ -407,27 +434,31 @@ class Backup
         fclose($f);
         //echo file_get_contents($this->logFile)."<BR><BR>\n\n";
     }
-    
+
+
     /**
      * Delete a directory recursive
      *
-     *  @param dirname : string - path of dir.
+     * @param string $dirname - path of dir.
      */
     function rRmDir($dirname)
     {
-        if(is_dir($dirname))
+        if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);
-        while($file = readdir($dir_handle)) {
-            if($file!="." && $file!="..") {
-                if(!is_dir($dirname."/".$file))
+        }
+        while ($file = readdir($dir_handle)) {
+            if ( ($file != ".") && ($file != "..") ) {
+                if (!is_dir($dirname."/".$file)) {
                     unlink ($dirname."/".$file);
-                else 
+                } else {
                     Backup::rRmDir($dirname."/".$file);
+                }
             }
         }
         closedir($dir_handle);
         rmdir($dirname);
         return true;
     }
-}
+
+} // classs Backup
 ?>

@@ -1,37 +1,11 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
-
 /**
- *  \file conf.php
- *  storageServer configuration file
+ * StorageServer configuration file
+ *
+ * @author $Author$
+ * @version  $Revision$
  */
+
 
 define('LS_VERSION', '1.1');
 define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
@@ -75,7 +49,7 @@ $config = array(
         'password'      => 'test',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'LiveSupport-test',
+        'database'      => 'Campcaster-test',
     ),
     'tblNamePrefix' => 'ls_',
 
@@ -96,13 +70,13 @@ $config = array(
     'useTrash'      =>  TRUE,
 
     /* ==================================================== URL configuration */
-    'storageUrlPath'        => '/livesupportStorageServer',
+    'storageUrlPath'        => '/campcasterStorageServer',
     'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
 
     /* ================================================ archive configuration */
-    'archiveUrlPath'        => '/livesupportArchiveServer',
+    'archiveUrlPath'        => '/campcasterArchiveServer',
     'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
     'archiveUrlHost'        => 'localhost',
     'archiveUrlPort'        => 80,
@@ -141,7 +115,7 @@ $config = array(
     /* ============================================== auxiliary configuration */
     'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
-    
+
     /* =================================================== cron configuration */
     'cronUserName'      => 'www-data',
     'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
@@ -154,7 +128,7 @@ $config['sysSubjs'] = array(
 $old_ip = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
 
-// see if a ~/.livesupport/storageServer.conf.php exists, and
+// see if a ~/.campcaster/storageServer.conf.php exists, and
 // overwrite the settings from there if any
 
 $this_file         = null;
@@ -168,7 +142,7 @@ if(!is_null($this_file)){
     $fileowner_array   = posix_getpwuid($fileowner_id);
     $fileowner_homedir = $fileowner_array['dir'];
     $fileowner_name    = $fileowner_array['name'];
-    $home_conf         = $fileowner_homedir . '/.livesupport/storageServer.conf.php';
+    $home_conf         = $fileowner_homedir . '/.campcaster/storageServer.conf.php';
     if (file_exists($home_conf)) {
         $default_config = $config;
         $developer_name    = $fileowner_name;

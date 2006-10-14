@@ -1,32 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
-
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
-
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 define('GBERR_DENY', 40);
 define('GBERR_FILEIO', 41);
 define('GBERR_FILENEX', 42);
@@ -50,13 +22,15 @@ require_once "StoredFile.php";
 require_once "Transport.php";
 
 /**
- *  BasicStor class
+ * BasicStor class
  *
- *  Core of LiveSupport file storage module
+ * Core of Campcaster file storage module
  *
- *  @author  $Author$
- *  @version $Revision$
- *  @see Alib
+ * @author  $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @see Alib
  */
 class BasicStor extends Alib {
     var $filesTable;
@@ -88,15 +62,15 @@ class BasicStor extends Alib {
         $this->bufferDir  = realpath($config['bufferDir']);
         $this->transDir  = realpath($config['transDir']);
         $this->accessDir  = realpath($config['accessDir']);
-        if(!$install){
+        if (!$install) {
             $this->rootId = $r = $this->getRootNode();
-            if ($this->dbc->isError($r)){
+            if ($this->dbc->isError($r)) {
                 trigger_error("BasicStor: ".
                     $r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
             }
             $this->storId = $this->wd =
                 $r = $this->getObjId('StorageRoot', $this->getRootNode());
-            if ($this->dbc->isError($r)){
+            if ($this->dbc->isError($r)) {
                 trigger_error("BasicStor: ".
                     $r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
             }
@@ -147,7 +121,7 @@ class BasicStor extends Alib {
         if ($this->dbc->isError($ac)){
             $res = $this->removeObj($id);
             // catch constraint violations
-            switch($ac->getCode()){
+            switch ($ac->getCode()){
                 case -3:
                     return PEAR::raiseError(
                         "BasicStor::bsPutFile: gunid duplication",
@@ -1173,7 +1147,7 @@ class BasicStor extends Alib {
      *  @param int $parid,  destination folder local id
      *  @param string $plid,  playlist gunid
      *  @param string $aPath, absolute path part of imported file
-     *              (e.g. /home/user/livesupport)
+     *              (e.g. /home/user/campcaster)
      *  @param string $rPath, relative path/filename part of imported file
      *              (e.g. playlists/playlist_1.smil)
      *  @param string $ext, playlist extension (determines type of import)

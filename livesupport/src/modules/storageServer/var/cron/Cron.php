@@ -3,8 +3,8 @@ require_once (dirname(__FILE__).'/Crontab.php');
 require_once (dirname(__FILE__).'/../conf.php');
 /**
  * This class can call a PHP function from crontab.
- * 
  * Example:
+ * <pre>
  *    $cron = new Cron();
  *    $access = $cron->openCrontab('write');
  *    if ($access != 'write') {
@@ -17,7 +17,9 @@ require_once (dirname(__FILE__).'/../conf.php');
  *              array('first','secound','third')
  *    );
  *    $cron->closeCrontab();
- *
+ * </pre>
+ * @package Campcaster
+ * @subpackage StorageServer.Cron
  */
 class Cron {
     /**
@@ -35,7 +37,7 @@ class Cron {
      * @var string available values: read | write
      */
     var $ctAccess = 'read';
-    
+
     /**
      * Constructor
      */
@@ -47,13 +49,13 @@ class Cron {
         $this->cronUserName = $config['cronUserName'];
     }
 
-    
+
     /* ==================================================== Cronjob functions */
     /**
      * Add a cronjob to the crontab
      *
      * @access public
-     * @param string    $m          minute 
+     * @param string    $m          minute
      * @param string    $h          hour
      * @param string    $dom        day of month
      * @param string    $mo         month
@@ -65,7 +67,7 @@ class Cron {
     function addCronJob($m, $h, $dom, $mo, $dow, $className, $params)
     {
         if ($this->ctAccess == 'write') {
-            $this->ct->addCron($m, $h, $dom, $mo, $dow, 
+            $this->ct->addCron($m, $h, $dom, $mo, $dow,
                 $this->getCommand($className, $params));
             return true;
         } else {
@@ -76,7 +78,7 @@ class Cron {
 
     /**
      * This function return with the active cronjobs
-     * 
+     *
      * @access public
      * @return array array of cronjob struct
      */
@@ -87,7 +89,7 @@ class Cron {
 
     /**
      * Remove a cronjob.
-     * 
+     *
      * @access public
      * @param  int  $index index of the cronjobs' array.
      * @return bool true if success else PEAR error.
@@ -106,17 +108,17 @@ class Cron {
     /* ==================================================== Crontab functions */
     /**
      * Open the crontab
-     * 
+     *
      * @access public
-     * @param string $access only for listing 'read', for add and delete 'write' 
+     * @param string $access only for listing 'read', for add and delete 'write'
      * @return string sucessed access - available values read | write
      */
     function openCrontab($access = 'read')
     {
         $access = strtolower($access);
         $this->ct = new Crontab($this->cronUserName);
-        if ($access == 'write' && 
-            $this->isCrontabWritable() && 
+        if ($access == 'write' &&
+            $this->isCrontabWritable() &&
             $this->lockCrontab()) {
                 $this->ctAccess = $access;
         } else {
@@ -127,7 +129,7 @@ class Cron {
 
     /**
      * Close the crontab
-     * 
+     *
      * @access public
      * @return bool true if everything is ok, false is the lock file can't delete
      */
@@ -141,7 +143,7 @@ class Cron {
 
     /**
      * Check the crontab is writable
-     * 
+     *
      * @access private
      * @return bool
      */
@@ -152,18 +154,18 @@ class Cron {
 
     /**
      * Try to lock the crontab
-     * 
+     *
      * @access private
      * @return bool true if the locking is success
-     */ 
+     */
     function lockCrontab()
-    {   
+    {
         return touch($this->lockfile);
     }
 
     /**
      * Try to unlock the crontab
-     * 
+     *
      * @access private
      * @return bool true if the unlocking is success
      */
@@ -173,9 +175,9 @@ class Cron {
     }
 
     /**
-     * If the crontab opened with read access. This function force set 
+     * If the crontab opened with read access. This function force set
      * the access to write.
-     * 
+     *
      * @access public
      * @return bool true if the setting is success
      */
@@ -191,7 +193,7 @@ class Cron {
     /* ======================================================= Misc functions */
     /**
      * Get the shell command for the cronjob
-     * 
+     *
      * @param string $className name of the class what is called by croncall.php
      * @param mixed $params with this parameter could be called the execute() of class
      * @return string shell command
@@ -199,7 +201,7 @@ class Cron {
     function getCommand($className, $params)
     {
         $this->params = array (
-            'class' => $className, 
+            'class' => $className,
             'params' => $params
         );
         return $this->cronfile.' "'.str_replace('"','\"',serialize($this->params)).'"';

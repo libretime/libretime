@@ -1,39 +1,22 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
+/**
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ */
 require_once "XML/Util.php";
 
 /* ================================================================== Element */
+
 /**
- *  Object representation of one XML element
+ * Object representation of one XML element
  *
- *  @see MetaData
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @see MetaData
  */
 class XmlElement {
     /**
@@ -47,27 +30,31 @@ class XmlElement {
     /**
      *  Attributes
      */
-    var $attrs      = array();
+    var $attrs = array();
     /**
      *  Namespace definitions
      */
-    var $nSpaces    = array();
+    var $nSpaces = array();
     /**
      *  Child nodes
      */
-    var $children   = array();
+    var $children = array();
     /**
      *  Text content of element
      */
-    var $content    = '';
+    var $content = '';
 
     /**
      *  Constructor
      *
-     *  @param fullname string, fully qualified name of element
-     *  @param attrs hash of attributes
-     *  @param nSpaces hash of namespace definitions
-     *  @param children hash of child nodes
+     *  @param string $fullname
+     * 		Fully qualified name of element
+     *  @param array $attrs
+     * 		hash of attributes
+     *  @param array $nSpaces
+     * 		hash of namespace definitions
+     *  @param array $children
+     * 		hash of child nodes
      *  @return this
      */
     function XmlElement($fullname, $attrs, $nSpaces=array(), $children=array())
@@ -79,13 +66,16 @@ class XmlElement {
         $this->nSpaces  = $nSpaces;
         $this->children = $children;
     }
-}
+} // class XmlElement
+
 
 /* ================================================================ Attribute */
 /**
- *  Object representation of one XML attribute
+ * Object representation of one XML attribute
  *
- *  @see MetaData
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @see MetaData
  */
 class XmlAttrib {
     /**
@@ -103,9 +93,12 @@ class XmlAttrib {
     /**
      *  Constructor
      *
-     *  @param atns string, namespace prefix
-     *  @param atnm string, attribute name
-     *  @param atv string, attribute value
+     *  @param string $atns
+     * 		namespace prefix
+     *  @param string $atnm
+     * 		attribute name
+     *  @param string $atv
+     * 		attribute value
      *  @return this
      */
     function XmlAttrib($atns, $atnm, $atv)
@@ -114,12 +107,15 @@ class XmlAttrib {
         $this->name = $atnm;
         $this->val  = $atv;
     }
-}
+} // fn XmlAttrib
+
 
 /* =================================================================== Parser */
 /**
  *  XML parser object encapsulation
  *
+ * @package Campcaster
+ * @subpackage StorageServer
  *  @see MetaData
  */
 class XmlParser {
@@ -135,10 +131,12 @@ class XmlParser {
      *  Error structure
      */
     var $err = array(FALSE, '');
+
     /**
      *  Constructor
      *
-     *  @param data string, XML string to be parsed
+     *  @param string $data
+     * 		XML string to be parsed
      *  @return this
      */
     function XmlParser($data){
@@ -148,7 +146,7 @@ class XmlParser {
         xml_set_element_handler($xml_parser, "startTag", "endTag");
         xml_set_character_data_handler($xml_parser, 'characterData');
         $res = xml_parse($xml_parser, $data, TRUE);
-        if(!$res) {
+        if (!$res) {
             $this->err = array(TRUE,
                 sprintf("XML error: %s at line %d\n",
                     xml_error_string(xml_get_error_code($xml_parser)),
@@ -160,65 +158,73 @@ class XmlParser {
         xml_parser_free($xml_parser);
     }
 
+
     /**
      *  Parse XML file or string
      *
-     *  @param data string, local path to XML file or XML string
-     *  @param loc string, location: 'file'|'string'
-     *  @return array reference, parse result tree (or PEAR::error)
+     *  @param string $data
+     * 		local path to XML file or XML string
+     *  @param string $loc
+     * 		location: 'file'|'string'
+     *  @return array
+     * 		reference, parse result tree (or PEAR::error)
      */
     function &parse($data='', $loc='file')
     {
-        switch($loc){
-        case"file":
-            if(!is_file($data)){
-                return PEAR::raiseError(
-                    "XmlParser::parse: file not found ($data)"
-                );
-            }
-            if(!is_readable($data)){
-                return PEAR::raiseError(
-                    "XmlParser::parse: can't read file ($data)"
-                );
-            }
-            $data = file_get_contents($data);
-        case"string":
-            $parser =& new XmlParser($data);
-            if($parser->isError()){
-                return PEAR::raiseError(
-                    "SmilPlaylist::parse: ".$parser->getError()
-                );
-            }
-            $tree = $parser->getTree();
-            break;
-        default:
-            return PEAR::raiseError(
-                "XmlParser::parse: unsupported source location ($loc)"
-            );
+        switch ($loc) {
+	        case "file":
+	            if (!is_file($data)) {
+	                return PEAR::raiseError(
+	                    "XmlParser::parse: file not found ($data)"
+	                );
+	            }
+	            if (!is_readable($data)) {
+	                return PEAR::raiseError(
+	                    "XmlParser::parse: can't read file ($data)"
+	                );
+	            }
+	            $data = file_get_contents($data);
+	        case "string":
+	            $parser =& new XmlParser($data);
+	            if ($parser->isError()) {
+	                return PEAR::raiseError(
+	                    "SmilPlaylist::parse: ".$parser->getError()
+	                );
+	            }
+	            $tree = $parser->getTree();
+	            break;
+	        default:
+	            return PEAR::raiseError(
+	                "XmlParser::parse: unsupported source location ($loc)"
+	            );
         }
         return $tree;
     }
 
 
     /**
-     *  Start tag handler
+     * Start tag handler
      *
-     *  @param parser resource, reference to parser resource
-     *  @param fullname string element name
-     *  @param attrs array of attributes
-     *  @return none
+     * @param resource $parser
+     * 		reference to parser resource
+     * @param string $fullname
+     * 		element name
+     * @param array $attrs
+     * 		array of attributes
+     * @return none
      */
     function startTag($parser, $fullname, $attrs) {
         $nSpaces = array();
-        foreach($attrs as $atn=>$atv){
+        foreach ($attrs as $atn => $atv) {
             $a    = XML_Util::splitQualifiedName($atn);
             $atns = $a['namespace'];
             $atnm = $a['localPart'];
             unset($attrs[$atn]);
-            if($atns == 'xmlns') $nSpaces[$atnm] = $atv;
-            else if ($atns == NULL && $atnm == 'xmlns'){
+            if ($atns == 'xmlns') {
+            	$nSpaces[$atnm] = $atv;
+            } else if ($atns == NULL && $atnm == 'xmlns') {
                 $nSpaces[''] = $atv;
-            }else{
+            } else {
                 $attrs[$atn] = new XmlAttrib($atns, $atnm, $atv);
             }
         }
@@ -226,41 +232,50 @@ class XmlParser {
         array_push($this->stack, $el);
     }
 
+
     /**
      *  End tag handler
      *
-     *  @param parser resource, reference to parser resource
-     *  @param fullname string element name
+     *  @param resource $parser
+     * 		reference to parser resource
+     *  @param string $fullname
+     * 		element name
      *  @return none
      */
     function endTag($parser, $fullname) {
         $cnt = count($this->stack);
-        if($cnt>1){
+        if ($cnt > 1) {
             $this->stack[$cnt-2]->children[] = $this->stack[$cnt-1];
             $lastEl = array_pop($this->stack);
-        }else{
+        } else {
             $this->tree = $this->stack[0];
         }
     }
 
+
     /**
-     *  Character data handler
+     * Character data handler
      *
-     *  @param parser resource, reference to parser resource
-     *  @param data string
-     *  @return none
+     * @param resource $parser
+     * 		reference to parser resource
+     * @param string $data
+     * @return none
      */
     function characterData($parser, $data) {
         $cnt = count($this->stack);
-        if(trim($data)!=''){ $this->stack[$cnt-1]->content .= $data; }
+        if (trim($data)!='') {
+        	$this->stack[$cnt-1]->content .= $data;
+        }
     }
 
+
     /**
-     *  Default handler
+     * Default handler
      *
-     *  @param parser resource, reference to parser resource
-     *  @param data string
-     *  @return none
+     * @param resource $parser
+     * 		reference to parser resource
+     * @param string $data
+     * @return none
      */
     function defaultHandler($parser, $data)
     {
@@ -272,32 +287,42 @@ class XmlParser {
         //}
     }
 
+
     /**
      *  Return result tree
      *
-     *  @return hash, tree structure
+     *  @return array
+     * 		tree structure
      */
-    function getTree(){
+    function getTree()
+    {
         return $this->tree;
     }
 
-    /**
-     *  Return error string
-     *
-     *  @return boolean if error occured
-     */
-    function isError(){
-        return $this->err[0];
-    }
 
     /**
      *  Return error string
      *
-     *  @return string, error message
+     *  @return boolean
+     * 		whether error occured
      */
-    function getError(){
+    function isError()
+    {
+        return $this->err[0];
+    }
+
+
+    /**
+     * Return error string
+     *
+     * @return string
+     * 		error message
+     */
+    function getError()
+    {
         return $this->err[1];
     }
+
 
     /* ----------------------------------- auxiliary methos for serialization */
     /**
@@ -305,12 +330,14 @@ class XmlParser {
      *
      *  @return string, serialized XML
      */
-    function serialize(){
+    function serialize()
+    {
         $res  = '<?xml version="1.0" encoding="utf-8"?>';
         $res .= $this->serializeEl($this->tree);
         $res .= "\n";
         return $res;
     }
+
 
     /**
      *  Serialize one metadata element
@@ -319,7 +346,8 @@ class XmlParser {
      *  @param lvl int, level for indentation
      *  @return string, serialized XML
      */
-    function serializeEl($el, $lvl=0){
+    function serializeEl($el, $lvl=0)
+    {
         $ind    = str_repeat(" ", $lvl);
         $elNs   = $el->ns;
         $elName = $el->name;
@@ -327,14 +355,17 @@ class XmlParser {
         $fullName   = ($elNs=='' ? '' : "$elNs:")."$elName";
         $res  = "\n{$ind}<{$fullName}{$attrs}>";
         $haveCh = (count($el->children)>0);
-        foreach($el->children as $ch){
+        foreach ($el->children as $ch) {
             $res .= $this->serializeEl($ch, $lvl+1);
         }
         $res .= XML_Util::replaceEntities("{$el->content}");
-        if($haveCh) $res .= "\n{$ind}";
+        if ($haveCh) {
+        	$res .= "\n{$ind}";
+        }
         $res .= "</{$fullName}>";
         return $res;
     }
+
 
     /* -------------------------------------------------------- debug methods */
     /**
@@ -342,7 +373,8 @@ class XmlParser {
      *
      *  @return hash, tree structure
      */
-    function dump(){
+    function dump()
+    {
         var_dump($this->tree);
     }
 

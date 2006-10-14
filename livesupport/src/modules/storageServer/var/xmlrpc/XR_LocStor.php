@@ -1,44 +1,17 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
-
 require_once dirname(__FILE__).'/../LocStor.php';
 
 /**
- *  XML-RPC interface for LocStor class 
- *  
+ *  XML-RPC interface for LocStor class
+ * @author $Author$
+ * @version $Revision$
+ *
  */
 class XR_LocStor extends LocStor{
 
     /* ----------------------------------------------------------- getVersion */
     /**
-     *  Dummy method - only returns livesupport version
+     *  Dummy method - only returns Campcaster version
      *
      *  The XML-RPC name of this method is "locstor.getVersion".
      *
@@ -240,7 +213,7 @@ class XR_LocStor extends LocStor{
      *          (returned by subsequent storeAudioClipClose call)
      *      </li>
      *      <li> metadata  : string -  metadata XML string
-     *          (as defined in LiveSupport::Core::AudioClip Class Reference,
+     *          (as defined in Campcaster::Core::AudioClip Class Reference,
      *          examples are in storageServer/var/tests/*.xml)
      *      </li>
      *      <li> fname :  string - human readable mnemonic file name
@@ -333,7 +306,7 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Store audio stream identified by URL - no raw audio data 
+     *  Store audio stream identified by URL - no raw audio data
      *
      *  The XML-RPC name of this method is "locstor.storeWebstream".
      *
@@ -2249,7 +2222,7 @@ class XR_LocStor extends LocStor{
      *     <li>filetype : string - type of searched files,
      *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
      *     <li>operator : string - type of conditions join
-     *       (any condition matches / all conditions match), 
+     *       (any condition matches / all conditions match),
      *       meaningful values: 'and', 'or', ''
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
@@ -2276,7 +2249,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC array of structs with fields:
      *   <ul>
-     *       <li>cnt : integer - number of matching gunids 
+     *       <li>cnt : integer - number of matching gunids
      *              of files have been found</li>
      *       <li>results : array of hashes:
      *          <ul>
@@ -2373,7 +2346,7 @@ class XR_LocStor extends LocStor{
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-                
+
             );
         }
         $xv = new XML_RPC_Value;
@@ -2434,7 +2407,7 @@ class XR_LocStor extends LocStor{
             $ec  = ($ec0 == GBERR_SESS || $ec0 == GBERR_PREF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-                
+
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('value'=>$res)));
@@ -2586,11 +2559,11 @@ class XR_LocStor extends LocStor{
             $ec0 = intval($res->getCode());
             $ec  = (
                 $ec0 == GBERR_SESS || $ec0 == GBERR_PREF || $ec0==ALIBERR_NOTGR
-                ? 800+$ec0 : 805 
+                ? 800+$ec0 : 805
             );
             return new XML_RPC_Response(0, $ec,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-                
+
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('value'=>$res)));
@@ -2756,7 +2729,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
     }
-    
+
     /**
      *  Pause, resume or cancel transport
      *
@@ -2806,7 +2779,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
     }
-    
+
     /* ------------------------ methods for ls-archive-format file transports */
     /**
      *  Open async file transfer from local storageServer to network hub,
@@ -2858,7 +2831,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
-    
+
     /**
      *  Get list of prepared transfers initiated by hub
      *
@@ -2911,7 +2884,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode($res));
     }
-    
+
     /**
      *  Start of download initiated by hub
      *
@@ -2960,7 +2933,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
-    
+
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
@@ -3012,7 +2985,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
-    
+
     /**
      *  Start download of audioclip or playlist from hub to local storageServer
      *
@@ -3063,7 +3036,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
-    
+
     /* ------------------------------------------------ global-search methods */
     /**
      *  Start search job on network hub
@@ -3114,7 +3087,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
     }
-    
+
     /**
      *  Get results from search job on network hub.
      *  (returns error if not finished)
@@ -3129,7 +3102,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC array of structs with fields:
      *   <ul>
-     *       <li>cnt : integer - number of matching gunids 
+     *       <li>cnt : integer - number of matching gunids
      *              of files have been found</li>
      *       <li>results : array of hashes:
      *          <ul>
@@ -3177,7 +3150,7 @@ class XR_LocStor extends LocStor{
         }
         return new XML_RPC_Response(XML_RPC_encode($res));
     }
-    
+
     /**
      * OBSOLETE
      *  Starts upload audioclip to remote archive

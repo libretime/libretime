@@ -1,33 +1,4 @@
 <?
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author: tomash $
-    Version  : $Revision: 1848 $
-    Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/modules/storageServer/var/AccessRecur.php $
-
-------------------------------------------------------------------------------*/
-
 require_once "Playlist.php";
 
 define('INDCH', ' ');
@@ -35,9 +6,15 @@ define('AC_URL_RELPATH', '../audioClip/');
 define('PL_URL_RELPATH', '../playlist/');
 
 /**
- *  LsPlaylist class
+ * LsPlaylist class
  *
- *  Livesupport internal playlist format helper
+ * Internal playlist format helper.
+ *
+ * @author $Author: tomash $
+ * @version $Revision: 1848 $
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class
  */
 class LsPlaylist extends Playlist
 {
@@ -45,9 +22,9 @@ class LsPlaylist extends Playlist
      *  Create instance of LsPlaylist object and recall existing file
      *  by gunid.<br/>
      *
-     *  @param gb reference to GreenBox object
-     *  @param gunid string, global unique id
-     *  @param className string, optional classname to recall
+     *  @param Greenbox $gb, reference to GreenBox object
+     *  @param string $gunid, global unique id
+     *  @param string $className, optional classname to recall
      *  @return instance of LsPlaylist object
      */
     function &recallByGunid(&$gb, $gunid, $className='LsPlaylist')
@@ -55,13 +32,14 @@ class LsPlaylist extends Playlist
         return parent::recallByGunid($gb, $gunid, $className);
     }
 
+
     /**
      *  Create instance of LsPlaylist object and recall existing file
      *  by access token.<br/>
      *
-     *  @param gb reference to GreenBox object
-     *  @param token string, access token
-     *  @param className string, optional classname to recall
+     *  @param GreenBox $gb, reference to GreenBox object
+     *  @param string $token, access token
+     *  @param string $className, optional classname to recall
      *  @return instance of LsPlaylist object
      */
     function &recallByToken(&$gb, $token, $className='LsPlaylist')
@@ -69,23 +47,30 @@ class LsPlaylist extends Playlist
         return parent::recallByToken($gb, $token, $className);
     }
 
+
     /**
      *  Export playlist as simplified SMIL XML file
      *
-     *  @param toString boolean, if false don't real export,
-     *        return misc info about playlist only
-     *  @return XML string or hasharray with misc info
+     *  @param boolean $toString
+     *		if false don't real export,
+     *      return misc info about playlist only
+     *  @return string
+     * 		XML string or hasharray with misc info
      */
     function output2Smil($toString=TRUE)
     {
         $plGunid = $this->gunid;
         $arr = $r = $this->md->genPhpArray();
-        if(PEAR::isError($r)){ return $r; }
-        if($toString){
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if ($toString) {
             $r = LsPlaylistTag::output2Smil($this, $arr);
-            if(PEAR::isError($r)){ return $r; }
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
             return $r;
-        }else{
+        } else {
             return array(
                 'type'       => 'playlist',
                 'gunid'      => $plGunid,
@@ -94,6 +79,7 @@ class LsPlaylist extends Playlist
             );
         }
     }
+
 
     /**
      *  Export playlist as M3U file
@@ -106,12 +92,16 @@ class LsPlaylist extends Playlist
     {
         $plGunid = $this->gunid;
         $arr = $r = $this->md->genPhpArray();
-        if(PEAR::isError($r)){ return $r; }
-        if($toString){
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if ($toString) {
             $r = LsPlaylistTag::output2m3u($this, $arr);
-            if(PEAR::isError($r)){ return $r; }
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
             return $r;
-        }else{
+        } else {
             return array(
                 'type'       => 'playlist',
                 'gunid'      => $plGunid,
@@ -122,23 +112,30 @@ class LsPlaylist extends Playlist
         }
     }
 
+
     /**
-     *  Export playlist as RSS XML file
+     * Export playlist as RSS XML file
      *
-     *  @param toString boolean, if false don't real export,
-     *        return misc info about playlist only
-     *  @return XML string or hasharray with misc info
+     * @param boolean $toString
+     * 		if false don't really export,
+     *      return misc info about playlist only
+     * @return mixed
+     * 		XML string or hasharray with misc info
      */
     function output2RSS($toString=TRUE)
     {
         $plGunid = $this->gunid;
         $arr = $r = $this->md->genPhpArray();
-        if(PEAR::isError($r)){ return $r; }
-        if($toString){
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if ($toString) {
             $r = LsPlaylistTag::output2RSS($this, $arr);
-            if(PEAR::isError($r)){ return $r; }
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
             return $r;
-        }else{
+        } else {
             return array(
                 'type'       => 'playlist',
                 'gunid'      => $plGunid,
@@ -147,28 +144,43 @@ class LsPlaylist extends Playlist
             );
         }
     }
-}
+
+} // class LsPlaylist
+
 
 /**
- *  Several auxiliary classes follows
+ * Several auxiliary classes follows
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class PlaylistTag
  */
 class LsPlaylistTag
 {
     function output2Smil(&$pl, $plt, $ind='')
     {
-        $ind2 = $ind.INDCH; $ind3 = $ind2.INDCH; $ind4 = $ind3.INDCH;
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
+        $ind4 = $ind3.INDCH;
         $res = "";
-        foreach($plt['children'] as $ple){
-            switch($ple['elementname']){
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
                 case"playlistElement":
                     $r = LsPlaylistElement::output2Smil($pl, $ple, $ind4);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $res .= $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
                 break;
                 case"metadata":
                     $r = LsPlaylistMetadata::output2Smil($pl, $ple, $ind4);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $res .= $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
                 break;
                 default:
             }
@@ -183,36 +195,53 @@ class LsPlaylistTag
             "$ind</smil>\n";
         return $res;
     }
+
+
     function output2m3u(&$pl, $plt, $ind='')
     {
         $res = "";
-        foreach($plt['children'] as $ple){
-            switch($ple['elementname']){
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
                 case"playlistElement":
                     $r = LsPlaylistElement::output2m3u($pl, $ple);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $res .= $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
                 break;
             }
         }
         $res = "#EXTM3U\n$res";
         return $res;
     }
+
+
     function output2RSS(&$pl, $plt, $ind='')
     {
-        $ind2 = $ind.INDCH; $ind3 = $ind2.INDCH;
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
         $res = "";
-        foreach($plt['children'] as $ple){
-            switch($ple['elementname']){
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
                 case"playlistElement":
                     $r = LsPlaylistElement::output2RSS($pl, $ple, $ind3);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $res .= $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
                 break;
                 case"metadata":
                     $r = LsPlaylistMetadata::output2RSS($pl, $ple, $ind3);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $res .= $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
                 break;
                 default:
             }
@@ -225,32 +254,57 @@ class LsPlaylistTag
             "$ind</rss>\n";
         return $res;
     }
-}
-class LsPlaylistElement{
+} // class LsPlaylistTag
+
+
+/**
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class "PlaylistElement"
+ */
+class LsPlaylistElement {
+
+
     function output2Smil(&$pl, $ple, $ind='')
     {
-        $acOrPl = NULL; $finfo = array('fi'=>0, 'fo'=>0);
-        $ind2 = $ind.INDCH; $ind3 = $ind2.INDCH;
+        $acOrPl = NULL;
+        $finfo = array('fi'=>0, 'fo'=>0);
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
         $anim = '';
-        foreach($ple['children'] as $ac){
-            switch($ac['elementname']){
-                case"audioClip":
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
                     $r = LsPlaylistAudioClip::output2Smil($pl, $ac, $ind2);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
-                case"playlist":
+                case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = $r = LsPlaylist::recallByGunid($pl->gb, $gunid);
-                    if(PEAR::isError($r)) return $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
                     $r = $pl2->output2Smil(FALSE);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
                 case"fadeInfo":
                     $r = LsPlaylistFadeInfo::output2Smil($pl, $ac, $ind2);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $finfo = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$finfo = $r;
+                    }
                 break;
                 default:
                     return PEAR::raiseError(
@@ -266,8 +320,8 @@ class LsPlaylistElement{
         $fiEndS      = $pl->_plTimeToSecs($finfo['fi']);
         $foBeginS    = ($playlengthS - $fadeOutS);
         $foEndS      = $pl->_plTimeToSecs($acOrPl['playlength']);
-        foreach(array('fi','fo') as $ff){
-            if(${$ff."EndS"} - ${$ff."BeginS"} > 0){
+        foreach (array('fi','fo') as $ff) {
+            if (${$ff."EndS"} - ${$ff."BeginS"} > 0) {
                 $anim .= "{$ind2}<animate attributeName = \"soundLevel\"\n".
                     "{$ind3}from = \"".($ff == 'fi' ? 0 : 100)."%\"\n".
                     "{$ind3}to = \"".($ff == 'fi' ? 100 : 0)."%\"\n".
@@ -277,7 +331,6 @@ class LsPlaylistElement{
                     "{$ind3}fill = \"freeze\"\n".
                     "{$ind2}/>\n"
                 ;
-            }else{
             }
         }
         $src = $acOrPl['src'];
@@ -287,27 +340,41 @@ class LsPlaylistElement{
             "\n";
         return $str;
     }
+
+
     function output2m3u(&$pl, $ple, $ind='')
     {
         $acOrPl = NULL;
-        foreach($ple['children'] as $ac){
-            switch($ac['elementname']){
-                case"audioClip":
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
                     $r = LsPlaylistAudioClip::output2m3u($pl, $ac);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
-                case"playlist":
+                case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = $r = LsPlaylist::recallByGunid($pl->gb, $gunid);
-                    if(PEAR::isError($r)) return $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
                     $r = $pl2->output2m3u(FALSE);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
             }
         }
-        if(is_null($acOrPl)) return '';
+        if (is_null($acOrPl)) {
+        	return '';
+        }
         $playlength = ceil($pl->_plTimeToSecs($acOrPl['playlength']));
         $title = $acOrPl['title'];
         $uri = (isset($acOrPl['uri']) ? $acOrPl['uri'] : '???' );
@@ -315,25 +382,37 @@ class LsPlaylistElement{
         $res .= "$uri\n";
         return $res;
     }
+
+
     function output2RSS(&$pl, $ple, $ind='')
     {
         $acOrPl = NULL;
         $ind2 = $ind.INDCH;
         $anim = '';
-        foreach($ple['children'] as $ac){
-            switch($ac['elementname']){
-                case"audioClip":
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
                     $r = LsPlaylistAudioClip::output2RSS($pl, $ac, $ind2);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
                 case"playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = $r = LsPlaylist::recallByGunid($pl->gb, $gunid);
-                    if(PEAR::isError($r)) return $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
                     $r = $pl2->output2RSS(FALSE);
-                    if(PEAR::isError($r)) return $r;
-                    if(!is_null($r)) $acOrPl = $r;
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
                 break;
                 case"fadeInfo":
                 break;
@@ -356,15 +435,27 @@ class LsPlaylistElement{
         return $str;
     }
 }
+
+
+/**
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class to PlaylistAudioClip (notice the caps)
+ */
 class LsPLaylistAudioClip
 {
+
     function output2Smil(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
         $ac = $r = StoredFile::recallByGunid($pl->gb, $gunid);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $RADext = $r =$ac->_getExt();
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         return array(
             'type'       => 'audioclip',
             'gunid'      => $gunid,
@@ -372,31 +463,47 @@ class LsPLaylistAudioClip
             'playlength' => $plac['attrs']['playlength'],
         );
     }
+
+
     function output2m3u(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
         $ac = $r = StoredFile::recallByGunid($pl->gb, $gunid);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $RADext = $r =$ac->_getExt();
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         return array(
             'playlength' => $plac['attrs']['playlength'],
             'title'      => $plac['attrs']['title'],
             'uri'        => AC_URL_RELPATH."$gunid.$RADext",
         );
     }
+
+
     function output2RSS(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
         $ac = $r = StoredFile::recallByGunid($pl->gb, $gunid);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $RADext = $r =$ac->_getExt();
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $r = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $title = ( isset($r[0]) ? $r[0]['value'] : '' );
         $r = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
         $desc = ( isset($r[0]) ? $r[0]['value'] : '' );
         return array(
             'type'       => 'audioclip',
@@ -407,10 +514,17 @@ class LsPLaylistAudioClip
             'desc'      => $desc,
         );
     }
-}
+} // class LsPlaylistAudioClip
 
+
+/**
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
+ */
 class LsPLaylistFadeInfo
 {
+
     function output2Smil(&$pl, $plfi, $ind='')
     {
         $r = array(
@@ -419,14 +533,44 @@ class LsPLaylistFadeInfo
         );
         return $r;
     }
-    function output2m3u(&$pl, $plfa, $ind=''){ return ''; }
-    function output2RSS(&$pl, $plfa, $ind=''){ return ''; }
-}
 
+
+    function output2m3u(&$pl, $plfa, $ind='')
+    {
+    	return '';
+    }
+
+
+    function output2RSS(&$pl, $plfa, $ind='')
+    {
+    	return '';
+    }
+
+} // class LsPlaylistFadeInfo
+
+
+/**
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @todo Rename this class to PlaylistMetadata (notive the caps)
+ */
 class LsPLaylistMetadata
 {
-    function output2Smil(&$pl, $md, $ind=''){ return NULL; }
-    function output2m3u(&$pl, $md, $ind=''){  return NULL; }
-    function output2RSS(&$pl, $md, $ind=''){  return NULL; }
-}
+    function output2Smil(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+
+
+    function output2m3u(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+
+
+    function output2RSS(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+} // class PlaylistMetadata
 ?>
