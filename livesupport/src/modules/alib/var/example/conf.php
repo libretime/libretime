@@ -34,7 +34,7 @@ $config = array(
         'password' => 'test',
         'hostspec' => 'localhost',
         'phptype'  => 'pgsql',
-        'database' => 'LiveSupport-test'
+        'database' => 'Campcaster-test'
     ),
     'tblNamePrefix'     => 'al_',
 #    'tblNamePrefix'     => 'gb_',

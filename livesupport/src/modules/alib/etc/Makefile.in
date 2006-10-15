@@ -2,20 +2,20 @@
 #   Alib - authentication and authorizaction component
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
+#   This file is part of the Campcaster project.
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -118,16 +118,16 @@ distclean: clean docclean
 check: all
 
 install: all
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/alib/var
-#	${MKDIR} ${USR_VAR_DIR}/LiveSupport/alib/var/xmlrpc
-	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/LiveSupport/alib/var
-#	${CP} ${VAR_DIR}/xmlrpc/*.php ${USR_VAR_DIR}/LiveSupport/alib/var/xmlrpc
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/alib/var
+#	${MKDIR} ${USR_VAR_DIR}/Campcaster/alib/var/xmlrpc
+	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/Campcaster/alib/var
+#	${CP} ${VAR_DIR}/xmlrpc/*.php ${USR_VAR_DIR}/Campcaster/alib/var/xmlrpc
 
 
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-# IMPORTANT: db_init and db_clean are commented out only for Livesupport,
+# IMPORTANT: db_init and db_clean are commented out only for Campcaster,
 # where alib is initialized through storageServer module
 
 db_init:
