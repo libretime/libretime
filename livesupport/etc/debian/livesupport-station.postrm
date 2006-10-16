@@ -1,5 +1,5 @@
 #! /bin/sh
-# postrm script for livesupport
+# postrm script for campcaster
 #
 # see: dh_installdeb(1)
 
@@ -17,14 +17,14 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-installdir=/opt/livesupport
+installdir=/opt/campcaster
 apache_docroot=/var/www
 
 postgres_user=postgres
 
 ls_dbserver=localhost
-ls_database=LiveSupport
-ls_dbuser=livesupport
+ls_database=Campcaster
+ls_dbuser=campcaster
 
 
 #-------------------------------------------------------------------------------
@@ -47,18 +47,18 @@ check_exe() {
 case "$1" in
         remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
             # remove the init script
-            rm -f /etc/init.d/livesupport-station
-            update-rc.d livesupport-station remove
+            rm -f /etc/init.d/campcaster-station
+            update-rc.d campcaster-station remove
             
-            # remove the symlink to the livesupport web pages
-            rm -f $apache_docroot/livesupport
+            # remove the symlink to the campcaster web pages
+            rm -f $apache_docroot/campcaster
             
             # restore the old pg_hba.conf file
             if [ -f /etc/postgresql/pg_hba.conf ] \
-               && [ -f /etc/postgresql/pg_hba.conf.before-livesupport ] ; then
+               && [ -f /etc/postgresql/pg_hba.conf.before-campcaster ] ; then
                 mv -f /etc/postgresql/pg_hba.conf \
-                      /etc/postgresql/pg_hba.conf.livesupport ;
-                mv -f /etc/postgresql/pg_hba.conf.before-livesupport \
+                      /etc/postgresql/pg_hba.conf.campcaster ;
+                mv -f /etc/postgresql/pg_hba.conf.before-campcaster \
                       /etc/postgresql/pg_hba.conf ;
             fi
         ;;
@@ -75,14 +75,14 @@ case "$1" in
             rm -rf $installdir/etc/scheduler.xml
             rm -rf $installdir/etc/gst-registry.xml
             rm -rf $installdir/etc/pear.conf
-            rm -rf $installdir/var/LiveSupport/htmlUI/var/html/img/*
-            rm -rf $installdir/var/LiveSupport/htmlUI/var/templates_c/*
-            rm -rf $installdir/var/LiveSupport/storageServer/var/stor/*
-            rm -rf $installdir/var/LiveSupport/storageServer/var/access/*
-            rm -rf $installdir/var/LiveSupport/storageServer/var/trans/*
-            rm -rf $installdir/var/LiveSupport/archiveServer/var/stor/*
-            rm -rf $installdir/var/LiveSupport/archiveServer/var/access/*
-            rm -rf $installdir/var/LiveSupport/archiveServer/var/trans/*
+            rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*
+            rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
+            rm -rf $installdir/var/Campcaster/storageServer/var/stor/*
+            rm -rf $installdir/var/Campcaster/storageServer/var/access/*
+            rm -rf $installdir/var/Campcaster/storageServer/var/trans/*
+            rm -rf $installdir/var/Campcaster/archiveServer/var/stor/*
+            rm -rf $installdir/var/Campcaster/archiveServer/var/access/*
+            rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
 
 
             echo "Removing ODBC data source and driver...";
@@ -90,7 +90,7 @@ case "$1" in
             # kill active connections to LiveSuport database
             /etc/init.d/postgresql restart
 
-            echo "Removing LiveSupport ODBC data source...";
+            echo "Removing Campcaster ODBC data source...";
             odbcinst -u -s -l -n $ls_database || exit 1;
 
             echo "De-registering ODBC PostgreSQL driver...";

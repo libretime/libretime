@@ -5,7 +5,7 @@ define('ACTION_BASE', '/actions' ) ;
 /**
  *  uiHandler class
  *
- *  LiveSupport HTML User Interface module
+ *  Campcaster HTML User Interface module
  */
 class uiHandler extends uiBase {
 #    var $redirUrl;
@@ -131,7 +131,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
+        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.campcaster");
         $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
         chmod($ntmp, 0664);

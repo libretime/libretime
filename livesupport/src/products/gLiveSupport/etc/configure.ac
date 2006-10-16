@@ -32,7 +32,7 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(gLiveSupport, 1.1, bugs@campware.org)
+AC_INIT(Campcaster-Studio, 1.1, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
@@ -187,14 +187,14 @@ AC_MSG_RESULT([using database server: ${DB_SERVER}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl get the name of the LiveSupport database
+dnl get the name of the Campcaster database
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DATABASE)
 
 AC_ARG_WITH([database],
             AC_HELP_STRING([--with-database],
-                    [the name of the postgresql database to use (LiveSupport)]),
-            [DATABASE=${withval}], [DATABASE=LiveSupport])
+                    [the name of the postgresql database to use (Campcaster)]),
+            [DATABASE=${withval}], [DATABASE=Campcaster])
 
 AC_MSG_RESULT([using database: ${DATABASE}])
 
@@ -206,8 +206,8 @@ AC_SUBST(DB_USER)
 
 AC_ARG_WITH([database-user],
             AC_HELP_STRING([--with-database-user],
-                       [use the specified database server user (livesupport)]),
-            [DB_USER=${withval}], [DB_USER=livesupport])
+                       [use the specified database server user (campcaster)]),
+            [DB_USER=${withval}], [DB_USER=campcaster])
 
 AC_MSG_RESULT([using database server user: ${DB_USER}])
 
@@ -219,8 +219,8 @@ AC_SUBST(DB_PASSWORD)
 
 AC_ARG_WITH([database-password],
             AC_HELP_STRING([--with-database-password],
-               [use the specified database server user password (livesupport)]),
-            [DB_PASSWORD=${withval}], [DB_PASSWORD=livesupport])
+               [use the specified database server user password (campcaster)]),
+            [DB_PASSWORD=${withval}], [DB_PASSWORD=campcaster])
 
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 

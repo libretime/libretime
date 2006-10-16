@@ -119,7 +119,7 @@
 ]>
 
 <gLiveSupport>
-    <resourceBundle path   = "./tmp/gLiveSupport"
+    <resourceBundle path   = "./tmp/campcaster-studio"
                     locale = "en"
     />
 
@@ -138,14 +138,14 @@
     <authenticationClientFactory>
         <webAuthentication>
             <location server="localhost" port="80"
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+                      path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
         </webAuthentication>
     </authenticationClientFactory>
 
     <storageClientFactory>
         <webStorage tempFiles="file:///tmp/webStorageClient" >
             <location server="localhost" port="80" 
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+                      path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
         </webStorage>
     </storageClientFactory>
 

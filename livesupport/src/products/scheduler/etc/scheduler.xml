@@ -86,7 +86,7 @@
     <user login="root" password="q" />
 
     <connectionManagerFactory>
-        <simpleConnectionManager    dsn      = "LiveSupport-test"
+        <simpleConnectionManager    dsn      = "Campcaster-test"
                                     userName = "test"
                                     password = "test"
         />
@@ -95,14 +95,14 @@
     <authenticationClientFactory>
         <webAuthentication>
             <location server="localhost" port="80"
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+                      path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
         </webAuthentication>
     </authenticationClientFactory>
 
     <storageClientFactory>
         <webStorage tempFiles="file:///tmp/webStorageClient" >
             <location server="localhost" port="80" 
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+                      path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
         </webStorage>
     </storageClientFactory>
 

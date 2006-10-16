@@ -61,7 +61,7 @@ namespace Core {
  *  A base class for the test methods.
  *  Subclass this class for the methods that use configuration files.
  *  This class gives helpers to access the configuration files
- *  from various locations (~/.livesupport, ./etc)
+ *  from various locations (~/.campcaster, ./etc)
  *
  *  @author  $Author$
  *  @version $Revision$

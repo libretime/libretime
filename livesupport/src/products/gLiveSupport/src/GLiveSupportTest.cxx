@@ -79,14 +79,14 @@ namespace {
  *  The name of the generic configuration file for the GLiveSupport object.
  */
 const std::string   gLiveSupportEtcConfigFileName 
-                                            = "etc/gLiveSupport.xml";
+                                        = "etc/campcaster-studio.xml";
 
 /**
  *  The name of the user-specific configuration file for the
  *  GLiveSupport object, relative to the user's home directory.
  */
 const std::string   gLiveSupportUserConfigFileName 
-                                            = "/.livesupport/gLiveSupport.xml";
+                                        = "/.campcaster/campcaster-studio.xml";
 
 /**
  *  The login name.

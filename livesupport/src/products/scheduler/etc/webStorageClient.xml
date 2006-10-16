@@ -15,6 +15,6 @@
 <storageClientFactory>
     <webStorage tempFiles="file:///tmp/webStorageClient" >
         <location server="localhost" port="80" 
-                  path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+                  path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
     </webStorage>
 </storageClientFactory>

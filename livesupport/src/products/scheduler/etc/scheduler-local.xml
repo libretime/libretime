@@ -83,7 +83,7 @@
     <user login="root" password="q" />
 
     <connectionManagerFactory>
-        <simpleConnectionManager    dsn      = "LiveSupport-test"
+        <simpleConnectionManager    dsn      = "Campcaster-test"
                                     userName = "test"
                                     password = "test"
         />

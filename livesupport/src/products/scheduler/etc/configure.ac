@@ -135,18 +135,18 @@ fi
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database and user should be created
+dnl  specify wether the Campcaster database and user should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_LS_DATABASE)
 
 AC_ARG_WITH([create-database],
             AC_HELP_STRING([--with-create-database],
-               [specify wether the LiveSupport database and database user
+               [specify wether the Campcaster database and database user
                 should be created (no)]),
             [CREATE_LS_DATABASE=${withval}],
             [CREATE_LS_DATABASE=no])
 
-AC_MSG_RESULT([creating LiveSupport database: ${CREATE_LS_DATABASE}])
+AC_MSG_RESULT([creating Campcaster database: ${CREATE_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ AC_SUBST(CREATE_ODBC_DATA_SOURCE)
 
 AC_ARG_WITH([create-odbc-data-source],
             AC_HELP_STRING([--with-create-odbc-data-source],
-               [specify wether the ODBC data source for LiveSupport should be
+               [specify wether the ODBC data source for Campcaster should be
                 created (no)]),
             [CREATE_ODBC_DATA_SOURCE=${withval}],
             [CREATE_ODBC_DATA_SOURCE=no])
@@ -165,18 +165,18 @@ AC_MSG_RESULT([creating ODBC data source: ${CREATE_ODBC_DATA_SOURCE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database tables should be initialized
+dnl  specify wether the Campcaster database tables should be initialized
 dnl-----------------------------------------------------------------------------
 AC_SUBST(INIT_LS_DATABASE)
 
 AC_ARG_WITH([init-database],
             AC_HELP_STRING([--with-init-database],
-               [specify wether the LiveSupport database tables should be
+               [specify wether the Campcaster database tables should be
                 initialized (no)]),
             [INIT_LS_DATABASE=${withval}],
             [INIT_LS_DATABASE=no])
 
-AC_MSG_RESULT([initializing LiveSupport database: ${INIT_LS_DATABASE}])
+AC_MSG_RESULT([initializing Campcaster database: ${INIT_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -232,14 +232,14 @@ AC_MSG_RESULT([using database server: ${DB_SERVER}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl get the name of the LiveSupport database
+dnl get the name of the Campcaster database
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DATABASE)
 
 AC_ARG_WITH([database],
             AC_HELP_STRING([--with-database],
-                    [the name of the postgresql database to use (LiveSupport)]),
-            [DATABASE=${withval}], [DATABASE=LiveSupport])
+                    [the name of the postgresql database to use (Campcaster)]),
+            [DATABASE=${withval}], [DATABASE=Campcaster])
 
 AC_MSG_RESULT([using database: ${DATABASE}])
 
@@ -251,8 +251,8 @@ AC_SUBST(DB_USER)
 
 AC_ARG_WITH([database-user],
             AC_HELP_STRING([--with-database-user],
-                       [use the specified database server user (livesupport)]),
-            [DB_USER=${withval}], [DB_USER=livesupport])
+                       [use the specified database server user (campcaster)]),
+            [DB_USER=${withval}], [DB_USER=campcaster])
 
 AC_MSG_RESULT([using database server user: ${DB_USER}])
 
@@ -264,8 +264,8 @@ AC_SUBST(DB_PASSWORD)
 
 AC_ARG_WITH([database-password],
             AC_HELP_STRING([--with-database-password],
-               [use the specified database server user password (livesupport)]),
-            [DB_PASSWORD=${withval}], [DB_PASSWORD=livesupport])
+               [use the specified database server user password (campcaster)]),
+            [DB_PASSWORD=${withval}], [DB_PASSWORD=campcaster])
 
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 
@@ -297,9 +297,9 @@ AC_MSG_NOTICE(
     database user:                   ${DB_USER}
     database user password:          ${DB_PASSWORD}
     audio output device:             ${AUDIO_OUT}
-    creating LiveSupport database:   ${CREATE_LS_DATABASE}
+    creating Campcaster database:    ${CREATE_LS_DATABASE}
     creating ODBC data source:       ${CREATE_ODBC_DATA_SOURCE}
-    initialize LiveSupport database: ${INIT_LS_DATABASE}
+    initialize Campcaster database:  ${INIT_LS_DATABASE}
 
 ])
 

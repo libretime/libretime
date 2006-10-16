@@ -54,8 +54,8 @@ else
     echo "Can't find testRunner executable.";
 fi
 
-if [ -f ~/.livesupport/scheduler.xml ]; then
-    config_file=~/.livesupport/scheduler.xml
+if [ -f ~/.campcaster/scheduler.xml ]; then
+    config_file=~/.campcaster/scheduler.xml
 elif [ -f $etcdir/scheduler.xml ]; then
     config_file=$etcdir/scheduler.xml
 else

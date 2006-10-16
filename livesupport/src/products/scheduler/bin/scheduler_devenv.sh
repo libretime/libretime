@@ -26,8 +26,8 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  System V runlevel style invoke script for the LiveSupport Scheduler
-#  This script is only used in the LiveSupport development environment
+#  System V runlevel style invoke script for the Campcaster Scheduler
+#  This script is only used in the Campcaster development environment
 #-------------------------------------------------------------------------------
 
 
@@ -57,8 +57,8 @@ else
     echo "Can't find scheduler executable.";
 fi
 
-if [ -f ~/.livesupport/scheduler.xml ]; then
-    config_file=~/.livesupport/scheduler.xml
+if [ -f ~/.campcaster/scheduler.xml ]; then
+    config_file=~/.campcaster/scheduler.xml
 elif [ -f $etcdir/scheduler.xml ]; then
     config_file=$etcdir/scheduler.xml
 else
@@ -76,56 +76,56 @@ mode=$1
 #-------------------------------------------------------------------------------
 case "$mode" in
     'start')
-        echo "Starting the LiveSupport scheduler..."
+        echo "Starting the Campcaster scheduler..."
         $scheduler_exe -c $config_file start
         sleep 2
         ;;
 
     'run')
-        echo "Running the LiveSupport scheduler..."
+        echo "Running the Campcaster scheduler..."
         $scheduler_exe -c $config_file --debug start
         sleep 2
         ;;
 
     'stop')
-        echo "Stopping the LiveSupport scheduler..."
+        echo "Stopping the Campcaster scheduler..."
         $scheduler_exe -c $config_file stop
         sleep 2
         ;;
 
     'restart')
-        echo "Stopping the LiveSupport scheduler..."
+        echo "Stopping the Campcaster scheduler..."
         $scheduler_exe -c $config_file stop
         sleep 2
-        echo "Starting the LiveSupport scheduler..."
+        echo "Starting the Campcaster scheduler..."
         $scheduler_exe -c $config_file start
         sleep 2
         ;;
 
     'status')
-        echo "Checking LiveSupport scheduler status..."
+        echo "Checking Campcaster scheduler status..."
         $scheduler_exe -c $config_file status
         ;;
 
     'install')
-        echo "Installing LiveSupport scheduler database tables..."
+        echo "Installing Campcaster scheduler database tables..."
         $scheduler_exe -c $config_file install
         ;;
 
     'uninstall')
-        echo "Uninstalling LiveSupport scheduler database tables..."
+        echo "Uninstalling Campcaster scheduler database tables..."
         $scheduler_exe -c $config_file uninstall
         ;;
 
     'kill')
-        echo "Killing all LiveSupport scheduler processes..."
+        echo "Killing all Campcaster scheduler processes..."
         killall scheduler
         sleep 2
         killall -9 scheduler
         ;;
 
     *)
-        echo "LiveSupport scheduler System V runlevel init script."
+        echo "Campcaster scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
         echo "  $0 start|run|stop|restart|status|install|uninstall|kill"

@@ -106,11 +106,11 @@ BaseTestMethod :: getConfigFile(const std::string   configFileName)
     std::string     fileName;
     std::ifstream   file;
 
-    // first, try with ~/.livesupport/configFileName
+    // first, try with ~/.campcaster/configFileName
     struct passwd  * pwd = getpwuid(getuid());
     if (pwd) {
         fileName += pwd->pw_dir;
-        fileName += "/.livesupport/" + configFileName;
+        fileName += "/.campcaster/" + configFileName;
         file.open(fileName.c_str());
         if (file.good()) {
             file.close();

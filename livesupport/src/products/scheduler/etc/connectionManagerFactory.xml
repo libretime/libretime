@@ -9,7 +9,7 @@
 <!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
 ]>
 <connectionManagerFactory>
-    <simpleConnectionManager    dsn      = "LiveSupport-test"
+    <simpleConnectionManager    dsn      = "Campcaster-test"
                                 userName = "test"
                                 password = "test"
     />

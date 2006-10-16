@@ -119,7 +119,7 @@
 ]>
 
 <gLiveSupport>
-    <resourceBundle path   = "./tmp/gLiveSupport"
+    <resourceBundle path   = "./tmp/campcaster-studio"
                     locale = "en"
     />
 

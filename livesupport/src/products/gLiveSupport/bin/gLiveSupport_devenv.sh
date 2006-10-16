@@ -27,8 +27,8 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  System V runlevel style invoke script for the LiveSupport Scheduler
-#  This script is only used in the LiveSupport development environment
+#  Invoke script for Campcaster Studio.
+#  This script is only used in the Campcaster development environment.
 #-------------------------------------------------------------------------------
 
 
@@ -50,22 +50,22 @@ usrdir=`cd $basedir/../../../usr; pwd;`
 #-------------------------------------------------------------------------------
 export LD_LIBRARY_PATH=$usrdir/lib:$LD_LIBRARY_PATH
 
-if [ -x $tmpdir/gLiveSupport ]; then
-    gLiveSupport_exe=$tmpdir/gLiveSupport
+if [ -x $tmpdir/campcaster-studio ]; then
+    studio_exe=$tmpdir/campcaster-studio
 else
     echo "Can't find scheduler executable.";
 fi
 
-if [ -f ~/.livesupport/gLiveSupport.xml ]; then
-    config_file=~/.livesupport/gLiveSupport.xml
-elif [ -f $etcdir/gLiveSupport.xml ]; then
-    config_file=$etcdir/gLiveSupport.xml
+if [ -f ~/.campcaster/campcaster-studio.xml ]; then
+    config_file=~/.campcaster/campcaster-studio.xml
+elif [ -f $etcdir/campcaster-studio.xml ]; then
+    config_file=$etcdir/campcaster-studio.xml
 else
     echo "Can't find configuration file.";
 fi
 
-mode=$1
+$studio_exe --version
 
 echo "using configuration file:  $config_file";
 
-$gLiveSupport_exe -c $config_file
+$studio_exe -c $config_file

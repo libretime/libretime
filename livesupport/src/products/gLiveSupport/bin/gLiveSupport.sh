@@ -27,7 +27,7 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Invoke script for the LiveSupport gui.
+#  Invoke script for Campcaster Studio.
 #-------------------------------------------------------------------------------
 
 
@@ -48,18 +48,18 @@ tmpdir=$basedir/tmp
 gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
 
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
-gLiveSupport_exe=$bindir/gLiveSupport
+studio_exe=$bindir/campcaster-studio
 
-if [ -f ~/.livesupport/gLiveSupport.xml ]; then
-    config_file=~/.livesupport/gLiveSupport.xml
-elif [ -f $etcdir/gLiveSupport.xml ]; then
-    config_file=$etcdir/gLiveSupport.xml
+if [ -f ~/.campcaster/campcaster-studio.xml ]; then
+    config_file=~/.campcaster/campcaster-studio.xml
+elif [ -f $etcdir/campcaster-studio.xml ]; then
+    config_file=$etcdir/campcaster-studio.xml
 else
     echo "Can't find configuration file.";
 fi
 
-$gLiveSupport_exe --version
+$studio_exe --version
 
 echo "using configuration file:  $config_file";
 
-$gLiveSupport_exe -c $config_file
+$studio_exe -c $config_file

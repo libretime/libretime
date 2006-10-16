@@ -78,7 +78,7 @@ DB_PASSWORD    = @DB_PASSWORD@
 AUDIO_OUT      = "@AUDIO_OUT@"
 AUDIO_CUE      = "@AUDIO_CUE@"
 
-PHP_URL_PREFIX=livesupport
+PHP_URL_PREFIX=campcaster
 ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
 SCHEDULER_XML_RPC_PREFIX=RC2
 SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/scheduler.sh"
@@ -191,9 +191,9 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
-G_LIVESUPPORT_EXE = ${TMP_DIR}/gLiveSupport
-G_LIVESUPPORT_SH  = ${BIN_DIR}/gLiveSupport_devenv.sh
-G_LIVESUPPORT_CFG = ${ETC_DIR}/gLiveSupport.xml
+G_LIVESUPPORT_EXE = ${TMP_DIR}/campcaster-studio
+G_LIVESUPPORT_SH  = ${BIN_DIR}/campcaster-studio_devenv.sh
+G_LIVESUPPORT_CFG = ${ETC_DIR}/campcaster-studio.xml
 TEST_RUNNER   = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
@@ -351,7 +351,7 @@ install: all
 	${MKDIR} ${USR_ETC_DIR}
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport
 	${CP} ${TMP_DIR}/*.res ${USR_VAR_DIR}/LiveSupport
-	${CP} ${VAR_DIR}/livesupport.png \
+	${CP} ${VAR_DIR}/campcaster.png \
 	      ${VAR_DIR}/stationLogo.png \
 	      ${VAR_DIR}/icon*.png \
 	      ${VAR_DIR}/testAudio.ogg \
