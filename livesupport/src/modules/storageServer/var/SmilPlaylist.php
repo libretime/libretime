@@ -122,7 +122,10 @@ class SmilPlaylist {
 
 
 /**
- *  Several auxiliary classes follows
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
  */
 class SmilPlaylistBodyElement {
 
@@ -157,6 +160,12 @@ class SmilPlaylistBodyElement {
 } // class SmilPlaylistBodyElement
 
 
+/**
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ */
 class SmilPlaylistParElement {
 
 	function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
@@ -179,6 +188,13 @@ class SmilPlaylistParElement {
     }
 }
 
+
+/**
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ */
 class SmilPlaylistAudioElement {
     function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
     {
@@ -256,6 +272,12 @@ class SmilPlaylistAudioElement {
 } // class SmilPlaylistAudioElement
 
 
+/**
+ * @author $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ */
 class SmilPlaylistAnimateElement {
 
 	function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
