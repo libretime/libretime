@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiCalendar
 {
     var $Decade;
@@ -86,7 +91,7 @@ class uiCalendar
 
         require_once 'Calendar/Week.php';
 
-        $Week = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], UI_SCHEDULER_FIRSTWEEKDAY);
+        $Week = new Calendar_Week($this->curr['year'], $this->curr['month'], $this->curr['day'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Week->build($this->_scheduledDays('week'));
         while ($Day = $Week->fetch()) {
             $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';           ## due to bug in
@@ -112,7 +117,7 @@ class uiCalendar
             return;
         }
 
-        require_once 'Calendar/Day.php';
+        require_once('Calendar/Day.php');
 
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
@@ -138,9 +143,9 @@ class uiCalendar
     {
         if (is_array($this->Hour)) return;
 
-        require_once 'Calendar/Hour.php';
+        require_once('Calendar/Hour.php');
 
-        $Hour = new Calendar_Hour ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->curr['hour']);
+        $Hour = new Calendar_Hour($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->curr['hour']);
         $Hour->build();
         while ($Min = $Hour->fetch()) {
             $this->Hour[] = array(

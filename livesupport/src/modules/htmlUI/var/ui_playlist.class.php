@@ -1,41 +1,62 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiPlaylist
 {
+	var $Base;
+	var $activeId;
+	var $changed;
+	var $title;
+	var $duration;
+	var $token;
+	var $reloadUrl;
+	var $redirectUrl;
+	var $returnUrl;
+
     function uiPlaylist(&$uiBase)
     {
-        $this->Base         =& $uiBase;
-        $this->activeId     =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
-        $this->changed      =& $_SESSION[UI_PLAYLIST_SESSNAME]['changed']; 
-        $this->title        = $this->Base->_getMDataValue($this->activeId, UI_MDATA_KEY_TITLE);
-        $this->duration     = $this->Base->_getMDataValue($this->activeId, UI_MDATA_KEY_DURATION);
-        $this->token        =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
-        $this->reloadUrl    = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        $this->redirectUrl  = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
-        $this->returnUrl    = UI_BROWSER.'?act=PL.simpleManagement';
-    }
+        $this->Base =& $uiBase;
+        $this->activeId =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
+        $this->changed =& $_SESSION[UI_PLAYLIST_SESSNAME]['changed'];
+        $this->title = $this->Base->_getMDataValue($this->activeId, UI_MDATA_KEY_TITLE);
+        $this->duration = $this->Base->_getMDataValue($this->activeId, UI_MDATA_KEY_DURATION);
+        $this->token =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
+        $this->returnUrl = UI_BROWSER.'?act=PL.simpleManagement';
+    } // constructor
+
 
     function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
-    }
+    } // fn setReload
+
 
     function setRedirect($target=FALSE)
     {
-        if ($target!==FALSE)
+        if ($target !== FALSE) {
             $this->Base->redirUrl = UI_BROWSER."?popup[]=$target&popup[]=_close";
-        else
+        } else {
             $this->Base->redirUrl = $this->redirectUrl;
-    }
+        }
+    } // fn setRedirect
+
 
     function setReturn()
     {
         $this->Base->redirUrl = $this->returnUrl;
-    }
+    } // fn setReturn
+
 
     function getPLArray($id)
     {
         return $this->Base->gb->getPlaylistArray($id, $this->Base->sessid);
-    }
+    } // fn getPLArray
+
 
     function getActiveArr()
     {
@@ -44,7 +65,8 @@ class uiPlaylist
         }
         #echo '<pre><div align="left">'; print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid)); echo '</div></pre>';
         return $this->getPLArray($this->activeId);
-    }
+    } // fn getActiveArr
+
 
     function getActiveId()
     {
@@ -52,7 +74,8 @@ class uiPlaylist
             return FALSE;
         }
         return $this->activeId;
-    }
+    } // fn getActiveId
+
 
     function activate($plid, $msg=TRUE)
     {
@@ -61,26 +84,35 @@ class uiPlaylist
         # store access token to ls_pref abd session
         # load PL into session
         if ($this->token) {
-            if (UI_WARNING) $this->Base->_retMsg('You already have an open playlist. Close it first.');
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('You already have an open playlist. Close it first.');
+            }
             return FALSE;
         }
-        if(($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
-             if (UI_WARNING) $this->Base->_retMsg('Playlist has been locked by "$1".', $this->Base->gb->getSubjName($userid));
+        if (($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
+             if (UI_WARNING) {
+             	$this->Base->_retMsg('Playlist has been locked by "$1".', $this->Base->gb->getSubjName($userid));
+             }
             return FALSE;
         }
-        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid); 
+        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         if (PEAR::isError($token)) {
-            if (UI_VERBOSE === TRUE) print_r($token);
+            if (UI_VERBOSE === TRUE) {
+            	print_r($token);
+            }
             $this->Base->_retMsg('Unable to open playlist "$1".', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
             return FALSE;
         }
         $this->token = $token;
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
         $this->activeId = $plid;
-        if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" opened.', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+        if ($msg && UI_VERBOSE) {
+        	$this->Base->_retMsg('Playlist "$1" opened.', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+        }
 
         return TRUE;
     }
+
 
     function release($msg=TRUE)
     {
@@ -88,24 +120,32 @@ class uiPlaylist
         # release PL
         # delete PL from session
         # remove token from ls_pref
-        if(!$this->token) {
-             if (UI_WARNING) $this->Base->_retMsg('There is no playlist available to unlock.');
+        if (!$this->token) {
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('There is no playlist available to unlock.');
+            }
             return FALSE;
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            if (UI_VERBOSE === TRUE) print_r($plgunid);
-            if (UI_WARNING) $this->Base->_retMsg('Unable to release playlist.');
+            if (UI_VERBOSE === TRUE) {
+            	print_r($plgunid);
+            }
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('Unable to release playlist.');
+            }
             return FALSE;
         }
-        if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" released.', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        if ($msg && UI_VERBOSE) {
+        	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        }
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
-        
+
         $this->changed = FALSE;
         return TRUE;
-    }
+    } // fn release
 
 
     function save()
@@ -114,77 +154,95 @@ class uiPlaylist
         $this->release(FALSE);
         $this->activate($tmpid, FALSE);
         $this->changed = FALSE;
-        if (UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" saved.', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
+        if (UI_VERBOSE) {
+        	$this->Base->_retMsg('Playlist "$1" saved.', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
+        }
 
         return $this->activeId;
-    }
+    } // fn save
 
 
     function revert()
-    {        
-        if(!$this->token) {
-            if (UI_WARNING) $this->Base->_retMsg('No playlists have been locked by you.');
+    {
+        if (!$this->token) {
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('No playlists have been locked by you.');
+            }
             return FALSE;
         }
         $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            if (UI_VERBOSE === TRUE) print_r($plgunid);
-            if (UI_WARNING) $this->Base->_retMsg('Unable to revert to locked state.');
+            if (UI_VERBOSE === TRUE) {
+            	print_r($plgunid);
+            }
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('Unable to revert to locked state.');
+            }
             return FALSE;
         }
-        if (UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        if (UI_VERBOSE) {
+        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        }
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
 
-        if ($this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE) !== TRUE)
+        if ($this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE) !== TRUE) {
             return FALSE;
-            
-        $this->changed  = FALSE;
-        
+        }
+
+        $this->changed = FALSE;
+
         return $this->activeId;
-    }
+    } // fn revert
+
 
     function reportLookedPL($setMsg=FALSE)
     {
-        if(is_string($this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            if ($setMsg == TRUE) $this->Base->_retMsg('Found locked playlist.');
+        if (is_string($this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
+            if ($setMsg == TRUE) {
+            	$this->Base->_retMsg('Found locked playlist.');
+            }
             return TRUE;
         }
         return FALSE;
-    }
+    } // fn reportLookedPL
+
 
     function loadLookedFromPref()
     {
-        $this->changed  = TRUE;
-        
-        if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
+        $this->changed = TRUE;
+
+        if (is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
             list ($plid, $token) = explode (':', $saved);
-            
-            if (!$this->Base->gb->existsPlaylist($plid, $this->Base->sessid)) { 
-                $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY); 
+
+            if (!$this->Base->gb->existsPlaylist($plid, $this->Base->sessid)) {
+                $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
                 $this->Base->_retMsg('Playlist not found in database.');
                 $this->Base->redirUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
-                return FALSE;          
+                return FALSE;
             }
             $this->activeId = $plid;
-            $this->token    = $token;
-            
+            $this->token = $token;
+
             $this->Base->redirUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
             return TRUE;
         }
         return FALSE;
-    }
+    } // fn loadLookedFromPref
+
 
     function addItem($elemIds, $duration=null)
     {
-        $this->changed  = TRUE;
-        $fadeIn         = null;
-        $fadeOut        = null;
-        $pause          = null;        
-        
+        $this->changed = TRUE;
+        $fadeIn = null;
+        $fadeOut = null;
+        $pause = null;
+
         if (!$elemIds) {
-            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('No item(s) selected.');
+            }
             return FALSE;
         }
         if (!is_array($elemIds)) {
@@ -193,23 +251,28 @@ class uiPlaylist
         if (isset($duration)) {
             $length = sprintf('%02d', $duration['H']).':'.sprintf('%02d', $duration['i']).':'.sprintf('%02d', $duration['s']).'.000000';
         }
-        foreach ($elemIds as $elemId) { 
+        foreach ($elemIds as $elemId) {
             $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid, $fadeIn, $fadeOut, $length, $pause);
             if (PEAR::isError($r)) {
-                if (UI_VERBOSE === TRUE) print_r($r);
+                if (UI_VERBOSE === TRUE) {
+                	print_r($r);
+                }
                 $this->Base->_retMsg('Error while trying to add item to playlist.');
                 return FALSE;
             }
-        }        
+        }
         return TRUE;
-    }
+    } // fn addItem
+
 
     function removeItem($elemIds)
     {
         $this->changed = TRUE;
-        
+
         if (!$elemIds) {
-            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('No item(s) selected.');
+            }
             return FALSE;
         }
         if (!is_array($elemIds))
@@ -222,7 +285,8 @@ class uiPlaylist
             }
         }
         return TRUE;
-    }
+    } // fn removeItem
+
 
     function create($ids)
     {
@@ -230,7 +294,7 @@ class uiPlaylist
         # activate
         # add clip if $id is set
         $this->changed = TRUE;
-        
+
         if (is_array($this->activeId)) {
             $this->Base->_retMsg('A playlist is already opened.');
             return FALSE;
@@ -256,26 +320,26 @@ class uiPlaylist
         #$this->redirUrl = UI_BRWOSER.'?popup=_2PL.simpleManagement';<br>
 
         return $plid;
-    }
+    } // fn create
 
 
     function getFlat($id)
     {
         unset($this->flat);
         $this->_plwalk($this->getPLArray($id));
-        
+
         if (is_Array($this->flat)) {
             reset($this->flat);
             $this->flat[key($this->flat)]['firstInList'] = true;
             end($this->flat);
-            $this->flat[key($this->flat)]['lastInList'] = true; 
+            $this->flat[key($this->flat)]['lastInList'] = true;
             reset($this->flat);
 
             return $this->flat;
         } else {
-            return array();    
+            return array();
         }
-    }
+    } // fn getFlat
 
 
     function _plwalk($arr, $parent=0, $attrs=0)
@@ -298,7 +362,7 @@ class uiPlaylist
                 $this->flat[$parent]['fadeout_ms'] = $sub['attrs'][UI_PL_ELEM_FADEOUT] ? GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEOUT]) * 1000 : 0;
             }
         }
-    }
+    } // fn _plwalk
 
 
     function changeTransition($id, $type, $duration)
@@ -348,7 +412,9 @@ class uiPlaylist
                 $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
                 #print_r($r);
                 if (PEAR::isError($r)) {
-                    if (UI_VERBOSE === TRUE) print_r($r);
+                    if (UI_VERBOSE === TRUE) {
+                    	print_r($r);
+                    }
                     $this->Base->_retMsg('Changing fade information failed.');
                     return FALSE;
                 }
@@ -359,47 +425,55 @@ class uiPlaylist
                 $r = $this->Base->gb->changeFadeInfo($this->token, $v['attrs']['id'], $type==='pause'?$pause:$xfade, $type==='pause'?$pause:$xfade, $this->Base->sessid);
                 #print_r($r);
                 if (PEAR::isError($r)) {
-                    if (UI_VERBOSE === TRUE) print_r($r);
+                    if (UI_VERBOSE === TRUE) {
+                    	print_r($r);
+                    }
                     $this->Base->_retMsg('Changing fade information failed.');
                     return FALSE;
                 }
             }
         }
         return TRUE;
-    }
+    } // fn changeTransition
 
 
     function moveItem($id, $pos)
     {
         $this->changed = TRUE;
-        
+
         $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
         if (PEAR::isError($r)) {
-            if (UI_VERBOSE === TRUE) print_r($r);
+            if (UI_VERBOSE === TRUE) {
+            	print_r($r);
+            }
             $this->Base->_retMsg('Cannot move item.');
             return FALSE;
         }
         return TRUE;
-    }
+    } // fn moveItem
 
 
     function reOrder($items)
     {
         $this->changed  = TRUE;
-                
-        asort($items);      # just to be sure items are in right order
+
+        // just to be sure items are in right order
+        asort($items);
         $pos = 0;
-        foreach($items as $id=>$v) { 
+        foreach ($items as $id => $v) {
             $pos++;
             $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
             if (PEAR::isError($r)) {
-                if (UI_VERBOSE === TRUE) print_r($r);
+                if (UI_VERBOSE === TRUE) {
+                	print_r($r);
+                }
                 $this->Base->_retMsg('Cannot move item.');
                 return FALSE;
             }
         }
         return TRUE;
-    }
+    } // fn reorder
+
 
     function getCurrElement($id)
     {
@@ -410,7 +484,7 @@ class uiPlaylist
             }
             next($arr);
         }
-    }
+    } // fn getCurrElement
 
 
     function getPrevElement($id)
@@ -422,7 +496,7 @@ class uiPlaylist
             }
             next($arr);
         }
-    }
+    } // fn getPrevElement
 
 
     function getNextElement($id)
@@ -434,7 +508,7 @@ class uiPlaylist
             }
             next($arr);
         }
-    }
+    } // fn getNextElement
 
 
     function changeTransitionForm($id, $type, $mask)
@@ -466,7 +540,7 @@ class uiPlaylist
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn changeTransitionForm
 
 
     function changeAllTransitionsForm($mask)
@@ -477,29 +551,30 @@ class uiPlaylist
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
-    
+    } // fn changeAllTransitionsForm
+
+
     function setItemPlaylengthForm($id, $elemId, $mask)
     {
-        if (isset($elemId)) { 
+        if (isset($elemId)) {
             $mask['act']['constant']        = 'PL.setItemPlaylength';
-            $mask['elemId']['constant']     = $elemId;    
+            $mask['elemId']['constant']     = $elemId;
             $element                        = $this->getCurrElement($elemId);
             $mask['playlength']['default']  = substr($element['playlength'], 0, 8);
-            $mask['duration']['constant']   = substr($element['duration'], 0, 8); 
+            $mask['duration']['constant']   = substr($element['duration'], 0, 8);
         } else {
             $mask['act']['constant']        = 'PL.addItem';
             $mask['id']['constant']         = $id;
-            $mask['playlength']['default']  = substr($this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION), 0, 8); 
+            $mask['playlength']['default']  = substr($this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
             $mask['duration']['constant']   = $mask['playlength']['default'];
         }
-        
+
         $form = new HTML_QuickForm('PL_setItemPlaylengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn setItemPlaylengthForm
 
 
     function metaDataForm($langid)
@@ -537,74 +612,88 @@ class uiPlaylist
 
         #print_r($output);
         return $output;
-    }
+    } // fn metadataForm
 
 
     function editMetaData($formdata)
     {
-        $this->changed  = TRUE;
-                
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        $this->changed = TRUE;
+
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
 
         $id             = $this->activeId;
         $curr_langid    = $formdata['curr_langid'];
 
         ## if language switched stay on metadataform ##
-        if ($curr_langid === $formdata['target_langid'])
+        if ($curr_langid === $formdata['target_langid']) {
             $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement";
-        else
+        } else {
             $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
+        }
 
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
         }
 
-        if (!count($mData)) return;
+        if (!count($mData)) {
+        	return;
+        }
 
-        foreach ($mData as $key=>$val) {
+        foreach ($mData as $key => $val) {
             $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
-                if (UI_VERBOSE === TRUE) print_r($r);
+                if (UI_VERBOSE === TRUE) {
+                	print_r($r);
+                }
                 $this->Base->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
-        if (UI_VERBOSE) $this->Base->_retMsg('Metadata saved.');
-    }
+        if (UI_VERBOSE) {
+        	$this->Base->_retMsg('Metadata saved.');
+        }
+    } // fn editMetadata
 
 
     function deleteActive()
     {
         $id = $this->activeId;
         $this->release(FALSE);
-        if ($this->Base->delete($id))
+        if ($this->Base->delete($id)) {
             return $id;
+        }
         $this->Base->_retMsg('Cannot delete this playlist.');
         return FALSE;
-    }
+    } // fn deleteActive
 
 
     function isAvailable($id)
     {
-        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST)
+        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
             return TRUE;
+        }
 
-        if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE)
+        if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE) {
             return TRUE;
+        }
 
         return FALSE;
-    }
+    } // fn isAvailable
+
 
     function isUsedBy($id)
     {
-        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST)
+        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
             return FALSE;
+        }
 
-        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE)
+        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
              return $this->Base->gb->getSubjName($userid);
+        }
 
         return FALSE;
-    }
-    
+    } // fn isUsedBy
+
+
     function exportForm($id,$mask)
     {
         $mask['act']['constant']        = 'PL.export';
@@ -614,7 +703,8 @@ class uiPlaylist
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
+    } // fn exportForm
+
 
     function importForm($id, $mask)
     {
@@ -624,6 +714,7 @@ class uiPlaylist
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    }
-}
+    } // fn importForm
+
+} // class uiPlaylist
 ?>

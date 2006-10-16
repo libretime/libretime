@@ -1,10 +1,9 @@
 <?php
 function login(&$data)
-{ 
-    
-    include dirname(__FILE__).'/../../../storageServer/var/conf.php';
-    include_once dirname(__FILE__).'/../../../storageServer/var/GreenBox.php';
-    include_once 'DB.php';
+{
+    include(dirname(__FILE__).'/../../../storageServer/var/conf.php');
+    include_once(dirname(__FILE__).'/../../../storageServer/var/GreenBox.php');
+    include_once('DB.php');
 
     $dbc = DB::connect($config['dsn'], TRUE);
 
@@ -14,7 +13,6 @@ function login(&$data)
 
     $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
     $gb =& new GreenBox($dbc, $config);
-
 
     if (!$data['PHP_AUTH_USER'] || !$data['PHP_AUTH_PW']) {
         return FALSE;
@@ -34,7 +32,7 @@ function login(&$data)
 
     $id = $gb->getObjId($data['PHP_AUTH_USER'], $gb->storId);
 
-    if(PEAR::isError($id)) {
+    if (PEAR::isError($id)) {
         return FALSE;
     }
 
@@ -52,7 +50,7 @@ function authenticate()
 
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     authenticate();
-} elseif (login($_SERVER) !== TRUE) { 
+} elseif (login($_SERVER) !== TRUE) {
     authenticate();
 }
 ?>

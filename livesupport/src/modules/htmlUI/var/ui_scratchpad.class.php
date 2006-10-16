@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiScratchPad
 {
+	var $Base;
+	var $items;
+	var $order;
+	var $reloadUrl;
+
     function uiScratchPad(&$uiBase)
     {
         $this->Base  =& $uiBase;
@@ -9,73 +19,71 @@ class uiScratchPad
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     }
 
+
     function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
+
     function &get()
     {
-        if (!is_array($this->items))
+        if (!is_array($this->items)) {
             $this->_load();
-        #print_r($this->items);
+        }
+        //print_r($this->items);
         return $this->items;
     }
+
 
     function _load()
     {
         $this->items = array();
         $spData = $this->Base->gb->loadPref($this->Base->sessid, UI_SCRATCHPAD_KEY);
         if (!PEAR::isError($spData)) {
-            ## ScratchPad found in DB
+            // ScratchPad found in DB
             $arr = explode(' ', $spData);
-            /*
-            ## Akos old format #####################################
-            foreach($arr as $val) {
-                if (preg_match(UI_SCRATCHPAD_REGEX, $val)) {
-                    list ($gunid, $date) = explode(':', $val);
-                    if ($this->Base->gb->_idFromGunid($gunid) != FALSE) {
-                        $res[] = array_merge($this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($gunid)), array('added' => $date));
-                    }
-                }
-            }
-            */
 
-            ## new format ##########################################
-            foreach($arr as $gunid) {
+            foreach ($arr as $gunid) {
                 if (preg_match('/[0-9]{1,20}/', $gunid)) {
                     if ($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)) != FALSE) {
-                        if ($i = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid))))
+                        if ($i = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)))) {
                             $this->items[] = $i;
+                        }
                     }
                 }
             }
         }
-    }
+    } // fn _load
 
 
     function save()
     {
-        foreach($this->items as $val) {
-            #$str .= $val['gunid'].':'.$val['added'].' ';         ## new format ###
-            $str .= $this->Base->_toInt8($val['gunid']).' ';      ## Akos´ old format ###
+        foreach ($this->items as $val) {
+            //$str .= $val['gunid'].':'.$val['added'].' ';         ## new format ###
+            $str .= $this->Base->_toInt8($val['gunid']).' ';      ## Akosï¿½ old format ###
         }
         $this->Base->gb->savePref($this->Base->sessid, UI_SCRATCHPAD_KEY, $str);
-    }
+    } // fn save
 
 
     function addItem($ids)
     {
-        if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
-            if (UI_WARNING) $this->Base->_retMsg('The scratchpad length is not set in system preferences, so it cannot be used.');
+        if (!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('The scratchpad length is not set in system preferences, so it cannot be used.');
+            }
             return false;
         }
         if (!$ids) {
-            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('No item(s) selected.');
+            }
             return FALSE;
         }
-        if (!is_array($ids))
+        if (!is_array($ids)) {
             $ids = array($ids);
+        }
 
         $sp   = $this->get();
         foreach ($ids as $id) {
@@ -84,7 +92,9 @@ class uiScratchPad
             foreach ($sp as $key=>$val) {
                 if ($val['id'] == $item['id']) {
                     unset($sp[$key]);
-                    if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 is already on the scratchpad. It has been moved to the top of the list.', $item['title'], $val['added']);
+                    if (UI_VERBOSE) {
+                    	$this->Base->_retMsg('Entry $1 is already on the scratchpad. It has been moved to the top of the list.', $item['title'], $val['added']);
+                    }
                 } else {
                     #$this->Base->incAccessCounter($id);
                 }
@@ -92,21 +102,26 @@ class uiScratchPad
             $sp = array_merge(array($item), is_array($sp) ? $sp : NULL);
         }
 
-        for ($n=0; $n<$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
-            if (is_array($sp[$n])) $this->items[$n] = $sp[$n];
+        for ($n=0; $n < $this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
+            if (is_array($sp[$n])) {
+            	$this->items[$n] = $sp[$n];
+            }
         }
         ksort($this->items);
-    }
+    } // fn addItem
 
 
     function removeItems($ids)
     {
         if (!$ids) {
-            if (UI_WARNING) $this->Base->_retMsg('No item(s) selected.');
+            if (UI_WARNING) {
+            	$this->Base->_retMsg('No item(s) selected.');
+            }
             return FALSE;
         }
-        if (!is_array($ids))
+        if (!is_array($ids)) {
             $ids = array($ids);
+        }
 
         foreach ($ids as $id) {
             $sp =& $this->get();
@@ -119,21 +134,26 @@ class uiScratchPad
         }
 
         return TRUE;
-    }
+    } // fn removeItems
 
 
     function reOrder($by)
     {
-        if (count($this->items) == 0)
+        if (count($this->items) == 0) {
             return FALSE;
+        }
 
         foreach ($this->items as $key=>$val) {
             $s[$key] = $val[$by];
         }
         $curr =  $this->order[$by];
         $this->order = array();
-        (is_null($curr) || $curr=='DESC') ? $this->order[$by] = 'ASC' : $this->order[$by] = 'DESC';
-        switch($this->order[$by]) {
+        if (is_null($curr) || $curr=='DESC') {
+        	$this->order[$by] = 'ASC';
+        } else {
+        	$this->order[$by] = 'DESC';
+        }
+        switch ($this->order[$by]) {
             case "ASC":   asort($s); break;
             case "DESC": arsort($s); break;
         }
@@ -146,8 +166,9 @@ class uiScratchPad
 
     function reLoadM()
     {
-        foreach($this->items as $key=>$val)
+        foreach($this->items as $key=>$val) {
             $this->items[$key] = $this->Base->_getMetaInfo($val['id']);
+        }
     }
-}
+} // class uiScratchPad
 ?>

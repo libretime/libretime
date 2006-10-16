@@ -1,6 +1,11 @@
 <?php
-class uiHubSearch extends uiSearch
-{
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
+class uiHubSearch extends uiSearch {
+
     function uiHubSearch(&$uiBase)
     {
         $this->Base       =& $uiBase;
@@ -9,8 +14,11 @@ class uiHubSearch extends uiSearch
         $this->criteria   =& $_SESSION[UI_HUBSEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
-        if (empty($this->criteria['limit']))     $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
-    }
+        if (empty($this->criteria['limit'])) {
+        	$this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        }
+    } // constructor
+
 
     function getResult()
     {
@@ -20,7 +28,8 @@ class uiHubSearch extends uiSearch
             return $this->results;
         }
         return false;
-    }
+    } // fn getResult
+
 
     function newSearch(&$formdata)
     {
@@ -33,8 +42,8 @@ class uiHubSearch extends uiSearch
         $this->criteria['limit']        = $formdata['limit'];
         $this->criteria['counter']      = 0;
 
-
-        $this->criteria['form']['operator'] = $formdata['operator'];    ## $criteria['form'] is used for retransfer to form ##
+        // $criteria['form'] is used for retransfer to form
+        $this->criteria['form']['operator'] = $formdata['operator'];
         $this->criteria['form']['filetype'] = $formdata['filetype'];
         $this->criteria['form']['limit']    = $formdata['limit'];
 
@@ -56,17 +65,17 @@ class uiHubSearch extends uiSearch
         $trtokid = $this->Base->gb->globalSearch($this->criteria);
 
         $this->Base->redirUrl = UI_BROWSER.'?popup[]='.$this->prefix.'.getResults&trtokid='.$trtokid;
-    }
+    } // fn newSearch
 
 
     function searchDB()
     {
-        if (count($this->criteria) === 0)
+        if (count($this->criteria) === 0) {
             return FALSE;
-
+        }
         $this->results = array('page' => $this->criteria['offset'] / $this->criteria['limit']);
 
-        #print_r($this->criteria);
+        //print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         if (PEAR::isError($results)) {
             #print_r($results);
@@ -78,11 +87,12 @@ class uiHubSearch extends uiSearch
         }
         $this->results['cnt'] = $results['cnt'];
 
-        #print_r($this->results);
+        //print_r($this->results);
         $this->pagination($results);
 
         return TRUE;
-    }
+    } // fn searchDB
+
 
     function getSearchResults($trtokid) {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
@@ -99,7 +109,7 @@ class uiHubSearch extends uiSearch
         //echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";
         //echo '<XMP>results:'; print_r($results); echo "</XMP>\n";
         return is_array($results);
-    }
+    } // fn getSearchResults
 
-}
+} // class uiHubSearch
 ?>

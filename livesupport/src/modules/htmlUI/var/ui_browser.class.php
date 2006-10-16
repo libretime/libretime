@@ -1,13 +1,19 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiBrowser extends uiBase {
     var $alertMsg;
 
     // --- class constructor ---
     /**
-     *  Initialize a new Browser Class.
-     *  Call uiBase constructor.
+     * Initialize a new Browser Class.
+     * Call uiBase constructor.
      *
-     *  @param $config array, configurartion data
+     * @param array $config
+     * 		configurartion data
      */
     function uiBrowser(&$config)
     {
@@ -16,11 +22,13 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Perform a frontend action.
-     *  Map to a function called action_<actionName>.inc.php
+     * Perform a frontend action.
+     * Map to a function called action_<actionName>.inc.php
      *
-     *  @param string $actionName - name of an action
-     *  @param array $params - request vars
+     * @param string $actionName
+     * 		name of an action
+     * @param array $params
+     * 		request vars
      */
     function performAction( $actionName, $params )
     {
@@ -37,9 +45,9 @@ class uiBrowser extends uiBase {
 
     // --- error handling ---
     /**
-     *  Extracts the error message from the session var.
+     * Extracts the error message from the session var.
      *
-     *  @return string
+     * @return string
      */
     function getAlertMsg()
     {
@@ -54,10 +62,11 @@ class uiBrowser extends uiBase {
 
     // --- template feed ---
     /**
-     *  Create a login-form.
+     * Create a login-form.
      *
-     *  @param array $mask - an array of all webforms in the system
-     *  @return array
+     * @param array $mask
+     * 		an array of all webforms in the system
+     * @return array
      */
     function login($mask)
     {
@@ -73,9 +82,10 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Get info about logged in user.
+     * Get info about logged in user.
      *
-     *  @return array (uname=>user_name, uid=>user_id)
+     * @return array
+     * 		(uname=>user_name, uid=>user_id)
      */
     function getUserInfo()
     {
@@ -87,8 +97,10 @@ class uiBrowser extends uiBase {
     /**
      * Get directory-structure
      *
-     * @param int $id - local ID of start-directory
-     * @return array - tree of directory with subs
+     * @param int $id
+     * 		local ID of start-directory
+     * @return array
+     * 		tree of directory with subs
      */
     function getStructure($id)
     {
@@ -122,10 +134,10 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Create a form for file-upload.
+     * Create a form for file-upload.
      *
-     *  @param array $params
-     *  @return array
+     * @param array $params
+     * @return array
      */
     function fileForm($parms)
     {
@@ -149,11 +161,12 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Create a form to add a Webstream.
+     * Create a form to add a Webstream.
      *
-     *  @param int local $id of directory to store stream
-     *
-     *  @eturn string  (html)
+     * @param int $id
+     * 		local of directory to store stream
+     * @return string
+     * 		HTML string
      */
     function webstreamForm($parms)
     {
@@ -195,11 +208,11 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Get permissions for local object ID.
+     * Get permissions for local object ID.
      *
-     *  @param $id int local ID (file/folder)
-     *
-     *  @return array
+     * @param int $id
+     * 		local ID (file/folder)
+     * @return array
      */
     function permissions($id)
     {
@@ -214,11 +227,12 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Call access method and show access path.
-     *  Example only - not really useable.
-     *  TODO: resource should be released by release method call
+     * Call access method and show access path.
+     * Example only - not really useable.
+     * TODO: resource should be released by release method call
      *
-     *  @param id int, local id of accessed file
+     * @param id int
+     * 		local id of accessed file
      */
     function getFile($id)
     {
@@ -232,12 +246,13 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Get file's metadata as XML
+     * Get file's metadata as XML
      *
-     *  Note: this does not work right with multiple languages
+     * Note: this does not work right with multiple languages
      *
-     *  @param id int, local id of stored file
-     *  @return array
+     * @param id int
+     * 		local id of stored file
+     * @return array
      */
     function getMdata($id)
     {
@@ -287,10 +302,11 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Create a form to edit Metadata.
+     * Create a form to edit Metadata.
      *
-     *  @param array $parms
-     *  @return string (html)
+     * @param array $parms
+     * @return string
+     * 		HTML string
      */
     function metaDataForm($parms)
     {
@@ -319,7 +335,9 @@ class uiBrowser extends uiBase {
         // values from database.
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
-                if (!is_array($mask['pages'][$key][$k]['attributes'])) $mask['pages'][$key][$k]['attributes'] = array();
+                if (!is_array($mask['pages'][$key][$k]['attributes'])) {
+                	$mask['pages'][$key][$k]['attributes'] = array();
+                }
                 $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
                 $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));
                 ## load data from GreenBox
@@ -359,10 +377,11 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  Test if URL seems to be valid
+     * Test if URL seems to be valid
      *
-     *  @param url string, full URL to test
-     *  @return array()
+     * @param url string
+     * 		full URL to test
+     * @return array()
      */
     function testStream($url)
     {

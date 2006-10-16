@@ -3,38 +3,32 @@
 define('ACTION_BASE', '/actions' ) ;
 
 /**
- *  uiHandler class
- *
- *  Campcaster HTML User Interface module
+ * HTML User Interface module
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
  */
 class uiHandler extends uiBase {
-#    var $redirUrl;
-#    var $alertMsg;
+	var $uiBase;
+	var $redirUrl;
 
-    // --- class constructor ---
     /**
-     *  uiBrowser
+     * Initialize a new Browser Class
+     * Call uiBase constructor
      *
-     *  Initialize a new Browser Class
-     *  Call uiBase constructor
-     *
-     *  @param $config array, configurartion data
+     * @param array $config
+     * 		configurartion data
      */
     function uiHandler($config)
     {
         $this->uiBase($config);
-    }
+    } // constructor
 
 
     // --- authentication ---
     /**
-     *  login
-     *
-     *  Login to the storageServer.
-     *  It set sessid to the cookie with name defined in ../conf.php
-     *
-     *  @param login string, username
-     *  @param pass  string, password
+     * Login to the storageServer.
+     * It set sessid to the cookie with name defined in ../conf.php
      */
     function login($formdata, $mask)
     {
@@ -77,15 +71,14 @@ class uiHandler extends uiBase {
         $this->redirUrl = UI_BROWSER.'?popup[]=_2SCHEDULER&popup[]=_close';
 
         return TRUE;
-     }
+     } // fn login
+
 
     /**
-     *  logout
+     * Logut from storageServer, takes sessid from cookie
      *
-     *  Logut from storageServer, takes sessid from cookie
-     *
-     *  @param $trigger_login boolean, trigger login popup after logout
-     *
+     * @param boolean $trigger_login
+     * 		trigger login popup after logout
      */
     function logout($trigger_login = FALSE)
     {
@@ -95,24 +88,27 @@ class uiHandler extends uiBase {
         ob_clean();
         session_destroy();
 
-        if ($trigger_login)
+        if ($trigger_login) {
              $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=login';
-        else $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
-    }
+        } else {
+        	$this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
+        }
+    } // fn logout
+
 
     // --- files ---
     /**
-     *  uploadFile
+     * Provides file upload and store it to the storage
      *
-     *  Provides file upload and store it to the storage
-     *
-     *  @param formdata array, submitted text and file
-     *  @param id int, destination folder id
+     * @param array $formdata
+     * 		submitted text and file
      */
     function uploadFile($formdata, $mask, $replace=NULL)
     {
         if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
-            if (UI_ERROR) $this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
+            if (UI_ERROR) {
+            	$this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
+            }
             $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
             return FALSE;
         }
@@ -148,28 +144,37 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
         $this->transMData($r);
 
-        if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {           // set records in default language too
+		// set records in default language too
+        if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {
             $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
             $this->transMData($r, UI_UPLOAD_LANGID);
         }
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=$r";
-        if (UI_VERBOSE) $this->_retMsg('Data of audiclip saved.');
+        if (UI_VERBOSE) {
+        	$this->_retMsg('Data of audiclip saved.');
+        }
         return $r;
-    }
+    } // fn uploadFile
 
 
     function test4audioType($filename)
     {
         foreach ($this->config['file_types'] as $t) {
-            if (preg_match('/'.str_replace('/', '\/', $t).'$/i', $filename))
+            if (preg_match('/'.str_replace('/', '\/', $t).'$/i', $filename)) {
                 return TRUE;
+            }
         }
-
         return FALSE;
-    }
+    } // fn test4AudioType
 
 
+    /**
+     * @todo Rename this function.
+     * @param unknown_type $id
+     * @param unknown_type $langid
+     * @return void
+     */
     function transMData($id, $langid=UI_DEFAULT_LANGID)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
@@ -179,10 +184,18 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
-        if ($ia['audio']['channels'])   $this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS,   $ia['audio']['channels']);
-        if ($ia['audio']['sample_rate'])$this->_setMDataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
-        if ($ia['audio']['bitrate'])    $this->_setMDataValue($id, UI_MDATA_KEY_BITRATE,    $ia['audio']['bitrate']);
-        if ($ia['audio']['codec'])      $this->_setMDataValue($id, UI_MDATA_KEY_ENCODER,    $ia['audio']['codec']);
+        if ($ia['audio']['channels']) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS,   $ia['audio']['channels']);
+        }
+        if ($ia['audio']['sample_rate']) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+        }
+        if ($ia['audio']['bitrate']) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_BITRATE,    $ia['audio']['bitrate']);
+        }
+        if ($ia['audio']['codec']) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_ENCODER,    $ia['audio']['codec']);
+        }
 
         // from id3 Tags
         foreach ($mask['pages'] as $key=>$val) {                   ## loop main, music, talk
@@ -201,12 +214,10 @@ class uiHandler extends uiBase {
 
 
     /**
-     *  addWebstream
+     * Provides file upload and store it to the storage
      *
-     *  Provides file upload and store it to the storage
-     *
-     *  @param formdata array, submitted text and file
-     *  @param id int, destination folder id
+     * @param array $formdata, submitted text and file
+     * @param unknown $mask
      */
     function addWebstream($formdata, $mask)
     {
@@ -225,7 +236,7 @@ class uiHandler extends uiBase {
 
         $r = $this->gb->storeWebstream($folderId, $formdata['title'], NULL, $this->sessid, NULL, $formdata['url']);
 
-        if(PEAR::isError($r)) {
+        if (PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
@@ -238,9 +249,11 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($r, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_STREAM);
 
         $this->redirUrl = UI_BROWSER."?act=addWebstreamMData&id=$r";
-        if (UI_VERBOSE) $this->_retMsg('Stream data saved.');
+        if (UI_VERBOSE) {
+        	$this->_retMsg('Stream data saved.');
+        }
         return $r;
-    }
+    } // fn addWebstream
 
 
     function editWebstream($formdata, $mask)
@@ -257,118 +270,140 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($id, UI_MDATA_KEY_DURATION, $extent);
 
         $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
-        if (UI_VERBOSE) $this->_retMsg('Stream data saved.');
-
+        if (UI_VERBOSE) {
+        	$this->_retMsg('Stream data saved.');
+        }
         return TRUE;
-    }
+    } // fn editWebstream
 
 
+    /**
+     * @todo Rename this function to "editMetadata".
+     * @param unknown_type $formdata
+     */
     function editMetaData($formdata)
     {
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
         $id             = $formdata['id'];
         $curr_langid    = $formdata['curr_langid'];
         $this->redirUrl = UI_BROWSER."?act=editItem&id=$id&curr_langid=".$formdata['target_langid'];
 
-        foreach ($mask['pages'] as $key=>$val) {
-            foreach ($mask['pages'][$key] as $k=>$v) {
+        foreach ($mask['pages'] as $key => $val) {
+            foreach ($mask['pages'][$key] as $k => $v) {
                 $formdata[$key.'___'.$this->_formElementEncode($v['element'])] ? $mData[$this->_formElementDecode($v['element'])] = $formdata[$key.'___'.$this->_formElementEncode($v['element'])] : NULL;
             }
         }
 
-        if (!count($mData)) return;
+        if (!count($mData)) {
+        	return;
+        }
 
-        foreach ($mData as $key=>$val) {
+        foreach ($mData as $key => $val) {
             $r = $this->_setMDataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
 
-        if (UI_VERBOSE) $this->_retMsg('Metadata saved.');
-    }
+        if (UI_VERBOSE) {
+        	$this->_retMsg('Metadata saved.');
+        }
+    } // fn editMetadata
 
 
     /**
-     *  newFolder
+     * Create new folder in the storage
      *
-     *  Create new folder in the storage
-     *
-     *  @param newname string, name for the new folder
-     *  @param id int, local id to create folder in
+     * @param string $name
+     * 		name for the new folder
+     * @param int $id
+     * 		local id to create folder in
      */
     function newFolder($name, $id)
     {
         $r = $this->gb->createFolder($id, $name, $this->sessid);
-        if(PEAR::isError($r))
+        if (PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
+        }
         $this->redirUrl = UI_BROWSER.'?act=fileList&id='.$this->id;
-    }
+    } // fn newFolder
+
 
     /**
-     *  rename
+     * Change the name of file or folder
      *
-     *  Change the name of file or folder
-     *
-     *  @param newname string, new name for the file or folder
-     *  @param id int, destination folder id
+     * @param string $newname
+     * 		new name for the file or folder
+     * @param int $id
+     * 		destination folder id
      */
     function rename($newname, $id)
     {
         $r = $this->gb->renameFile($id, $newname, $this->sessid);
-        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
+        if (PEAR::isError($r)) {
+        	$this->_retMsg($r->getMessage());
+        }
         $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
-    }
+    } // fn rename
+
 
     /**
-     *  move
+     * Move file to another folder
      *
-     *  Move file to another folder
-     *  TODO: format of destinantion path should be properly defined
+     * @todo format of destination path should be properly defined
      *
-     *  @param newPath string, destination relative path
-     *  @param id int, destination folder id
+     * @param string $newPath
+     * 		destination relative path
+     * @param int $id
+     * 		destination folder id
      */
     function move($newPath, $id)
     {
         $newPath = urldecode($newPath);
         $did = $this->gb->getObjIdFromRelPath($id, $newPath);
         $r = $this->gb->moveFile($id, $did, $this->sessid);
-        if(PEAR::isError($r)){
+        if (PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl  = UI_BROWSER."?act=fileList&id=".$this->pid;
+        } else {
+        	$this->redirUrl = UI_BROWSER."?act=fileList&id=".$did;
         }
-        else $this->redirUrl = UI_BROWSER."?act=fileList&id=".$did;
-    }
+    } // fn move
+
 
     /**
-     *  copy
-     *
      *  Copy file to another folder
-     *  TODO: format of destinantion path should be properly defined
      *
-     *  @param newPath string, destination relative path
-     *  @param id int, destination folder id
+     *  @todo format of destinantion path should be properly defined
+     *
+     *  @param string $newPath
+     * 		destination relative path
+     *  @param int $id
+     * 		destination folder id
      */
     function copy($newPath, $id)
     {
         $newPath = urldecode($newPath);
         $did = $this->gb->getObjIdFromRelPath($id, $newPath);
         $r = $this->gb->copyFile($id, $did, $this->sessid);
-        if(PEAR::isError($r)){
+        if (PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl  = UI_BROWSER."?act=fileList&id=".$this->pid;
+        } else {
+        	$this->redirUrl = UI_BROWSER."?act=fileList&id=".$did;
         }
-        else $this->redirUrl = UI_BROWSER."?act=fileList&id=".$did;
-    }
+    } // fn copy
+
 
     /**
-     *  delete
+     * Delete a stored file.
      *
-     *  Delete of stored file
-     *
-     *  @param id int, local id of deleted file or folder
-     *  @param delOverride int, local id od folder which can deleted if not empty
+     * @param mixed $id
+     * 		either an int or an array of ints which are
+     * 		IDs of files or folders to delete.
+     * @param boolean $delOverride
+     * 		this parameter is not used
+     * @return boolean
      */
     function delete($id, $delOverride=FALSE)
     {
@@ -383,8 +418,11 @@ class uiHandler extends uiBase {
         }
         */
 
-        if (is_array($id))  $ids   = $id;
-        else                $ids[] = $id;
+        if (is_array($id)) {
+        	$ids = $id;
+        } else {
+        	$ids[] = $id;
+        }
 
         foreach ($ids as $id) {
             if ($this->gb->getFileType($id) == 'playlist') {
@@ -393,38 +431,40 @@ class uiHandler extends uiBase {
                 $r = $this->gb->deleteFile($id, $this->sessid);
             }
 
-            if(PEAR::isError($r)) {
+            if (PEAR::isError($r)) {
                 $this->_retMsg($r->getMessage());
                 return FALSE;
             }
         }
 
         return TRUE;
-    }
+    } // fn delete
 
 
     /**
-     *  getFile
+     * Call access method and show access path.
+     * Example only - not really useable.
+     * @todo resource should be released by release method call
      *
-     *  Call access method and show access path.
-     *  Example only - not really useable.
-     *  TODO: resource should be released by release method call
-     *
-     *  @param id int, local id of accessed file
+     * @param int $id
+     * 		local id of accessed file
      */
     function getFile($id)
     {
         $r = $this->gb->access($id, $this->sessid);
-        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-        else echo $r;
-    }
+        if (PEAR::isError($r)) {
+        	$this->_retMsg($r->getMessage());
+        } else {
+        	echo $r;
+        }
+    } // fn getFile
+
 
     /**
-     *  getMdata
+     * Show file's metadata as XML
      *
-     *  Show file's metadata as XML
-     *
-     *  @param id int, local id of stored file
+     * @param int $id
+     * 		local id of stored file
      */
     function getMdata($id)
     {
@@ -433,16 +473,20 @@ class uiHandler extends uiBase {
         print_r($r);
     }
 
+
     // --- perms ---
     /**
-     *  addPerm
+     * Add new permission record
      *
-     *  Add new permission record
-     *
-     *  @param subj int, local user/group id
-     *  @param permAction string, type of action from set predefined in conf.php
-     *  @param id int, local id of file/object
-     *  @param allowDeny char, A or D
+     * @param int $subj
+     * 		local user/group id
+     * @param string $permAction
+     * 		type of action from set predefined in conf.php
+     * @param int $id
+     * 		local id of file/object
+     * @param char $allowDeny
+     * 		'A' or 'D'
+     * @return boolean
      */
     function addPerm($subj, $permAction, $id, $allowDeny)
     {
@@ -456,15 +500,16 @@ class uiHandler extends uiBase {
         }
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$id;
         return TRUE;
-    }
+    } // fn addPerm
+
 
     /**
-     *  removePerm
+     * Remove permission record
      *
-     *  Remove permission record
-     *
-     *  @param permid int, local id of permission record
-     *  @param oid int, local id of object to handle
+     * @param int $permid
+     * 		local id of permission record
+     * @param int $oid
+     * 		local id of object to handle
      */
     function removePerm($permid, $oid)
     {
@@ -474,12 +519,10 @@ class uiHandler extends uiBase {
         }
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$oid;
         return TRUE;
-    }
+    } // fn removePerm
 
 
     /**
-     * Enter description here...
-     *
      * @param unknown_type $formdata
      * @param array $mask
      * @return boolean
@@ -536,9 +579,14 @@ class uiHandler extends uiBase {
             }
         }  */
         return TRUE;
-    }
+    } // fn _validateForm
 
 
+    /**
+     * @param unknown_type $formdata
+     * @param unknown_type $mask
+     * @return boolean
+     */
     function changeStationPrefs($formdata, $mask)
     {
         $this->redirUrl = UI_BROWSER;
@@ -547,7 +595,7 @@ class uiHandler extends uiBase {
             $this->_retMsg('Error while saving settings.');
             return FALSE;
         }
-        foreach($mask as $key=>$val) {
+        foreach ($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
                 if (strlen($formdata[$val['element']])) {
                     if (PEAR::isError($this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']])))

@@ -60,3 +60,4 @@ $relations = array(
 
 'ls:url'    => 'Stream URL'
 );
+?>

@@ -1,6 +1,17 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiSubjects
 {
+
+	var $Base;
+	var $reloadUrl;
+	var $suRedirUrl;
+	var $redirUrl;
+
     function uiSubjects(&$uiBase)
     {
         $this->Base       =& $uiBase;
@@ -9,31 +20,34 @@ class uiSubjects
         $this->redirUrl   = UI_BROWSER.'?act=SUBJECTS';
     }
 
+
     function setReload()
     {
          $this->Base->redirUrl = $this->reloadUrl;
     }
+
 
     function setSuRedir()
     {
          $this->Base->redirUrl = $this->suRedirUrl;
     }
 
+
     function setRedir()
     {
          $this->Base->redirUrl = $this->redirUrl;
     }
 
+
     /**
-     *  getAddSubjectForm
+     * Create a form to add GreenBox subjects (users/groups).
      *
-     *  create a form to add GreenBox subjects (users/groups)
-     *
-     *  @return string (html)
+     * @param unknown $type
+     * @return string (html)
      */
     function getAddSubjForm($type)
     {
-        include dirname(__FILE__). '/formmask/subjects.inc.php';
+        include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
         $form = new HTML_QuickForm('addSubject', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask[$type]);
@@ -44,11 +58,13 @@ class uiSubjects
 
 
    /**
-    *  addSubj
+    * Create a new user or group (empty password => create group).
     *
-    *  Create new user or group (empty pass => create group)
-    *
-    *  @param formdata array('login', 'pass')
+    * @param array $request
+    * 		Must have keys -> value:
+    * 		login - string
+    * 		passwd - string
+    * @return string
     */
     function addSubj($request)
     {
@@ -82,12 +98,15 @@ class uiSubjects
         return TRUE;
     }
 
+
     /**
-     *  removeSubj
+     * Remove an existing user or group.
      *
-     *  Remove existing user or group
-     *
-     *  @param login string, login name of removed user
+     * @todo Renamed this function to "removeSubject".
+     * @param array $request
+     * 		must contain the "login" key,
+     * 		a string, the login name of removed user
+     * @return boolean
      */
     function removeSubj($request)
     {
@@ -107,15 +126,17 @@ class uiSubjects
 
 
     /**
-     *  getChgPasswdForm
+     * Create a form to change user-passwords in GreenBox.
      *
-     *  create a form to change user-passwords in GreenBox
-     *
-     *  @return string (html)
+     * @param string $login
+     * @param boolean $su
+     * 		this parameter isnt used
+     * @return string
+     * 		HTML string
      */
-    function getChgPasswdForm($login, $su=FALSE)
+    function getChgPasswdForm($login, $su = FALSE)
     {
-        include dirname(__FILE__). '/formmask/subjects.inc.php';
+        include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
         $form = new HTML_QuickForm('chgPasswd', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') === TRUE) {
@@ -133,14 +154,12 @@ class uiSubjects
 
 
     /**
-     *  chgPasswd
+     * Change password for specified user.
      *
-     *  Change password for specified user
-     *
-     *  @param uid int, local user id
-     *  @param oldpass string, old user password
-     *  @param pass string, new password
-     *  @param pass2 string, retype of new password
+     * @todo Rename this function to "changePassword".
+     * @param array $request
+     * 		Required array keys: passwd, passwd2, login, oldpasswd
+     * @return boolean
      */
     function chgPasswd($request)
     {
@@ -155,7 +174,7 @@ class uiSubjects
         } else {
             $this->setRedir();
 
-            if ($this->Base->login !== $request['login']){
+            if ($this->Base->login !== $request['login']) {
                 $this->Base->_retMsg('Access denied.');
                 return FALSE;
             }
@@ -179,61 +198,64 @@ class uiSubjects
 
 
     /**
-     *  getSubjects
+     * Get all GreenBox subjects (users/groups)
      *
-     *  get all GreenBox subjects (users/groups)
-     *
-     *  @return array subj=>unique id of subject, loggedAs=>corresponding login name
+     * @todo Rename this function.
+     * @return array
+     * 		subj=>unique id of subject
+     * 		loggedAs=>corresponding login name
      */
     function getSubjectsWCnt()
     {
         return $this->Base->gb->getSubjectsWCnt();
     }
 
+
     /**
-     *  getGroupMember
+     * Get a list of groups that the user belongs to.
      *
-     *  get a list of members in given group
-     *
-     *  @parm $id int local user ID
-     *  @return array
+     * @todo Rename this function to "getGroupMembers"
+     * @param int $id
+     * 		local user ID
+     * @return array
      */
     function getGroupMember($id)
     {
         return $this->Base->gb->listGroup($id);
-    }
+    } // fn getGroupMember
+
 
     /**
-     *  getNonGroupMember
+     * Get a list of groups that the user does not belong to.
      *
-     *  get a list of groups where user is member of
-     *
-     *  @parm $id int local user ID
-     *  @return array
+     * @param int $id
+     * 		Local user ID
+     * @return array
      */
     function getNonGroupMember($id)
     {
-        foreach($this->Base->gb->listGroup($id) as $val1)
+        foreach ($this->Base->gb->listGroup($id) as $val1) {
             $members[$val1['id']] = TRUE;
+        }
 
         $all = $this->Base->gb->getSubjectsWCnt();
-        foreach($all as $key2=>$val2)
-            if($members[$val2['id']])
+        foreach ($all as $key2=>$val2) {
+            if ($members[$val2['id']]) {
                 unset($all[$key2]);
+            }
+        }
 
         return $all;
-    }
+    } // fn getNonGroupMember
 
 
     /**
-     *   addSubj2Group
+     * Add a subject to a group.
      *
-     *   Add {login} and direct/indirect members to {gname} and to groups,
-     *   where {gname} is [in]direct member
-     *
-     *   @param login string
-     *   @param gname string
-     *   @param reid string, local id of managed group, just needed for redirect
+     * @todo Rename this function to "addSubjectToGroup"
+     * @param array $request
+     * 		Required array keys: login, id, gname
+     * @return boolean
      */
     function addSubj2Gr(&$request)
     {
@@ -244,7 +266,7 @@ class uiSubjects
             return FALSE;
         }
 
-        ## loop for multiple action
+        // loop for multiple action
         if (is_array($request['id'])) {
             foreach ($request['id'] as $val) {
                 $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
@@ -265,14 +287,13 @@ class uiSubjects
         return TRUE;
     }
 
+
     /**
-     *   removeGroupMember
+     * Remove a subject from a group.
      *
-     *   Remove subject from group
-     *
-     *   @param login string
-     *   @param gname string
-     *   @param reid string, local id of managed group, just needed for redirect
+     * @param array $request
+     * 		Required keys: login, id, gname
+     * @return boolean
      */
     function removeSubjFromGr(&$request)
     {
@@ -283,7 +304,7 @@ class uiSubjects
             return FALSE;
         }
 
-        ## loop for multiple action
+        // loop for multiple action
         if (is_array($request['id'])) {
             foreach ($request['id'] as $val) {
                 $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
@@ -305,6 +326,12 @@ class uiSubjects
     }
 
 
+    /**
+     * Return true if the subject is a member of the given group.
+     *
+     * @param string $groupname
+     * @return boolean
+     */
     function isMemberOf($groupname)
     {
         if ($gid = $this->Base->gb->getSubjId($groupname)) {
@@ -318,8 +345,8 @@ class uiSubjects
             }
         }
         return false;
-    }
-}
+    } // fn isMemberOf
 
+} // class uiSubjects
 
 ?>

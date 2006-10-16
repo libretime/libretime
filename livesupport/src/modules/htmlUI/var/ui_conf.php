@@ -7,11 +7,13 @@ define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
 
-if (UI_DEBUG) error_reporting(E_ALL);
+if (UI_DEBUG) {
+	error_reporting(E_ALL);
+}
 
 
-define('UI_VERSION',                    'LiveSupport 1.1.0');
-define('UI_VERSION_FULLNAME',           'LiveSupport 1.1.0');
+define('UI_VERSION',                    'Campcaster 1.1.0');
+define('UI_VERSION_FULLNAME',           'Campcaster 1.1.0');
 define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
 ## Local settings

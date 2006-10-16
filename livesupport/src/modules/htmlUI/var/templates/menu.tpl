@@ -28,9 +28,9 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             <ul>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Browse##</a></li>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=SEARCH">##Search##</a></li>
-                <li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li>    
-                <li><a href="{$UI_BROWSER}?id={$START.id}&act=HUBSEARCH">##Hub Search##</a></li>    
-                <li><a href="{$UI_BROWSER}?id={$START.id}&act=TRANSFERS">##Transfers##</a></li>    
+                <li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li>
+                <li><a href="{$UI_BROWSER}?id={$START.id}&act=HUBSEARCH">##Hub Search##</a></li>
+                <li><a href="{$UI_BROWSER}?id={$START.id}&act=TRANSFERS">##Transfers##</a></li>
             </ul>
         </li>
         <li class="nav-main"><a>##Playlists##</a>
@@ -71,11 +71,11 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             {if $SUBJECTS->isMemberOf('StationPrefs')}
                 <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
             {/if}
-            {if $SUBJECTS->isMemberOf('Subjects')}
+            {*if $SUBJECTS->isMemberOf('Subjects')*}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS">##User/Groups##</a></li>
-            {else}
+            {*else*}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
-            {/if}
+            {*/if*}
             {if $SUBJECTS->isMemberOf('Admins')}
                 <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
             {/if}
@@ -92,5 +92,5 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     </ul>
 
 {/if}
-{include file='userinfo.tpl'}    
+{include file='userinfo.tpl'}
  </div>

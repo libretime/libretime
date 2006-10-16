@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiBrowse
 {
     var $Base; // uiBase object
@@ -6,6 +11,7 @@ class uiBrowse
     var $col;
     var $criteria;
     var $reloadUrl;
+
 
     function uiBrowse(&$uiBase)
     {
@@ -135,8 +141,6 @@ class uiBrowse
 
 
     /**
-     * Enter description here...
-     *
      * @param array $parm
      */
     function setValue($parm)

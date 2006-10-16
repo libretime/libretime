@@ -48,7 +48,7 @@ $mask = array(
             'label'     => 'Sun',
             'groupit'   => true
         ),
-        array( 
+        array(
             'group'     => array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'),
             'label'     => 'Weeksdays'
         ),
@@ -57,7 +57,7 @@ $mask = array(
             'type'      => 'date',
             'label'     => 'Month/Day',
             'options'   => array(
-                'format'            => 'md', 
+                'format'            => 'md',
                 'addEmptyOption'    => true,
                 'emptyOptionValue'  => '*',
                 'emptyOptionText'   => '*'
@@ -68,7 +68,7 @@ $mask = array(
             'type'      => 'date',
             'label'     => 'Hour/Minute',
             'options'   => array(
-                'format'            => 'Hi', 
+                'format'            => 'Hi',
              )
         ),
         array(
@@ -76,7 +76,7 @@ $mask = array(
             'type'      =>'button',
             'label'     =>'Cancel',
             'attributes'=>array('onclick' => 'location.href="'.UI_BROWSER.'?act=BACKUP"'),
-            'groupit'   => TRUE            
+            'groupit'   => TRUE
         ),
         array(
             'element'   =>'Submit',
@@ -90,5 +90,4 @@ $mask = array(
         ),
     )
 );
-?> 
-    
+?>

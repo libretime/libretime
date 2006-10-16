@@ -7,6 +7,7 @@ function jscom_wrapper($object, $parent, $method) {
     return call_user_func_array(array(&$GLOBALS[$object]->$parent, "$method"), $args);
 }
 
+
 function errCallBack($err)
 {
     echo "<pre>gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo()."\nui:\n".$err->getUserInfo()."\n";
@@ -32,11 +33,14 @@ function _getLanguages()
     return $languages;
 }
 
+
 /**
- *  Translate the given string using localisation files.
+ * Translate the given string using localization files.
  *
- *  @param string $input - string to translate
- *  @return string, translated string
+ * @param string $input
+ * 		string to translate
+ * @return string
+ * 		translated string
  */
 function tra($input)
 {
@@ -104,23 +108,13 @@ function _getNumArr($start, $end, $step=1)
 
 
 /**
- *  uiBase class
- *
- *  LiveSupport HTML User Interface module
- *
+ * HTML User Interface module
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
  */
 class uiBase
 {
-    // --- class constructor ---
-    /**
-     *  uiBase
-     *
-     *  Initialize a new Basis Class including:
-     *  - database  initialation
-     *  - GreenBox initialation
-     *
-     *  @param $config array, configurartion data
-     */
     var $redirUrl;
     var $alertMsg;
     var $dbc;
@@ -149,6 +143,16 @@ class uiBase
     var $TRANSFERS;
     var $_self_;
 
+    /**
+     *  uiBase
+     *
+     *  Initialize a new Basis Class including:
+     *  - database  initialation
+     *  - GreenBox initialation
+     *
+     *  @param array $config
+     * 		configurartion data
+     */
     function uiBase(&$config)
     {
         $this->dbc = DB::connect($config['dsn'], TRUE);
@@ -230,9 +234,12 @@ class uiBase
      *
      *  Add elements/rules/groups to an given HTML_QuickForm object
      *
-     *  @param HTML_Quickform $form - reference to HTML_QuickForm object
-     *  @param array $mask - reference to array defining the form elements
-     *  @param string $side - can be 'client' or 'server' - this is where the form validation occurs.
+     *  @param HTML_Quickform $form
+     * 		reference to HTML_QuickForm object
+     *  @param array $mask
+     * 		reference to array defining the form elements
+     *  @param string $side
+     * 		can be 'client' or 'server' - this is where the form validation occurs.
      */
     function _parseArr2Form(&$form, &$mask, $side='client')
     {
@@ -346,7 +353,8 @@ class uiBase
     /**
      * Converts date-array from form into string
      *
-     * @param array $input - array of form-elements
+     * @param array $input
+     * 		array of form-elements
      */
     function _dateArr2Str(&$input)
     {
@@ -366,10 +374,11 @@ class uiBase
 
 
     /**
-     *  Call getid3 library to analyze media file and show some results
+     * Call getid3 library to analyze media file and show some results
      *
-     *  @param int $id local ID of file
-     *  @param string $format
+     * @param int $id
+     * 		local ID of file
+     * @param string $format
      */
     function _analyzeFile($id, $format)
     {
@@ -387,7 +396,7 @@ class uiBase
                       xmlns:dc="http://purl.org/dc/elements/1.1/"
                       xmlns:dcterms="http://purl.org/dc/terms/"
                       xmlns:xml="http://www.w3.org/XML/1998/namespace"
-                      xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+                      xmlns:ls="http://mdlf.org/campcaster/elements/1.0/"
                      >
                    <dc:title>'.$this->_getFileTitle($id).'</dc:title>
                    <dcterms:extent>'.$extent.'</dcterms:extent>
@@ -416,6 +425,7 @@ class uiBase
 
     /**
      * Add an alert message to the session var.
+     * @todo Fix this to use call_user_func()
      *
      * @param string $msg
      * @param string $p1

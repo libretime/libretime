@@ -1,61 +1,70 @@
 <?php
 
-class uiTransfers 
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
+class uiTransfers
 {
     var $Base;
     var $allItems;
     var $rows;
     var $trShowInfo;
     var $reloadUrl;
-    
-    
+
+
     function uiTransfers(&$uiBase)
     {
-        $this->Base                     =& $uiBase;
-        $this->reloadUrl                = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        $this->trShowInfo               =& $_SESSION[UI_TRANSFER_SESSNAME]['trShowInfo'];
-        $this->trShowInfo['limit']      = UI_BROWSE_DEFAULT_LIMIT;
-        $this->trShowInfo['offset']     = 0;
-        $this->trShowInfo['desc']       = FALSE;
-        $this->trShowInfo['orderby']    = FALSE;
+        $this->Base =& $uiBase;
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->trShowInfo =& $_SESSION[UI_TRANSFER_SESSNAME]['trShowInfo'];
+        $this->trShowInfo['limit'] = UI_BROWSE_DEFAULT_LIMIT;
+        $this->trShowInfo['offset'] = 0;
+        $this->trShowInfo['desc'] = FALSE;
+        $this->trShowInfo['orderby'] = FALSE;
     }
+
 
     function reOrder($by)
     {
         $this->trShowInfo['offset'] = NULL;
 
-        if ($this->trShowInfo['orderby'] == $by && !$this->trShowInfo['desc'])
+        if ($this->trShowInfo['orderby'] == $by && !$this->trShowInfo['desc']) {
             $this->trShowInfo['desc'] = TRUE;
-        else
+        } else {
             $this->trShowInfo['desc'] = FALSE;
-
+        }
         $this->trShowInfo['orderby'] = $by;
         $this->setReload();
-        //echo '<XMP>this:'; print_r($this); echo "</XMP>\n"; 
+        //echo '<XMP>this:'; print_r($this); echo "</XMP>\n";
     }
-    
-    function getTransfers() 
+
+
+    function getTransfers()
     {
         $this->buildList();
         return $this->rows;
     }
-    
+
+
     function buildList() {
-        # set items
+        // set items
         $transfers = $this->Base->gb->getHubInitiatedTransfers();
         foreach ($transfers as $transfer) {
             $token = $transfer['trtok'];
-            $data=$this->Base->gb->getTransportInfo($token);
+            $data = $this->Base->gb->getTransportInfo($token);
             if ($data['state']!='finished') {
-            	$this->allItems[]=array_merge($data,array('id' => $token));
+            	$this->allItems[] = array_merge($data,array('id' => $token));
             }
         }
-        $this->rows['cnt'] =count($this->allItems);
+        $this->rows['cnt'] = count($this->allItems);
         $this->pagination();
         $this->showItems();
-        //echo '<XMP>this'; print_r($this); echo "</XMP>\n"; 
+        //echo '<XMP>this'; print_r($this); echo "</XMP>\n";
     }
-    
+
+
     function pagination()
     {
         if (sizeof($this->allItems) == 0) {
@@ -70,11 +79,16 @@ class uiTransfers
         $deltaUpper = UI_BROWSERESULTS_DELTA;
         $start = $currp;
 
-        if ($start+$delta-$maxp > 0) $deltaLower += $start+$delta-$maxp;  ## correct lower boarder if page is near end
+        if ($start+$delta-$maxp > 0) {
+        	$deltaLower += $start+$delta-$maxp;  ## correct lower boarder if page is near end
+        }
 
         for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
-            if ($n <= 0)            $deltaUpper++;                        ## correct upper boarder if page is near zero
-            elseif ($n <= $maxp)    $this->rows['pagination'][$n] = $n;
+            if ($n <= 0) {
+            	$deltaUpper++;                        ## correct upper boarder if page is near zero
+            } elseif ($n <= $maxp) {
+            	$this->rows['pagination'][$n] = $n;
+            }
         }
 
         $this->rows['pagination'][1] ? NULL : $this->rows['pagination'][1] = '|<<';
@@ -82,16 +96,18 @@ class uiTransfers
         $this->rows['next']  = $this->rows['cnt'] > $this->trShowInfo['offset'] + $this->trShowInfo['limit'] ? TRUE : FALSE;
         $this->rows['prev']  = $this->trShowInfo['offset'] > 0 ? TRUE : FALSE;
         ksort($this->rows['pagination']);
-    }
+    } // fn pagination
+
 
     function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
     }
-    
+
+
     function setOffset($page)
     {
-        #echo '<XMP>page:'; print_r($page); echo "</XMP>\n"; 
+        //echo '<XMP>page:'; print_r($page); echo "</XMP>\n";
         $o =& $this->trShowInfo['offset'];
         $l =& $this->trShowInfo['limit'];
 
@@ -104,39 +120,44 @@ class uiTransfers
         }
         $this->setReload();
     }
-    
-    function cmp($a,$b) 
+
+
+    function cmp($a, $b)
     {
-        #echo '<XMP>cmp:'; echo($a[$this->trShowInfo['orderby']].' - '.$b[$this->trShowInfo['orderby']]); echo "</XMP>\n";
-        if ($a[$this->trShowInfo['orderby']] == $b[$this->trShowInfo['orderby']]) return 0;
+        //echo '<XMP>cmp:'; echo($a[$this->trShowInfo['orderby']].' - '.$b[$this->trShowInfo['orderby']]); echo "</XMP>\n";
+        if ($a[$this->trShowInfo['orderby']] == $b[$this->trShowInfo['orderby']]) {
+        	return 0;
+        }
         if ($a[$this->trShowInfo['orderby']] < $b[$this->trShowInfo['orderby']]) {
             return $this->trShowInfo['desc'] ? 1 : -1;
         } else {
             return $this->trShowInfo['desc'] ? -1 : 1;
         }
     }
-    
+
+
     function showItems()
     {
-        # array sort
+        // array sort
         if (is_array($this->allItems) && $this->trShowInfo['orderby']!==FALSE) {
             usort($this->allItems,array($this,'cmp'));
-        }            
-        
-        # pagination
+        }
+
+        // pagination
         for ($i=$this->trShowInfo['offset'];$i<$this->trShowInfo['offset']+$this->trShowInfo['limit'];$i++) {
             if (!is_null($this->allItems[$i])) {
-                $this->rows['items'][]=$this->allItems[$i];  
+                $this->rows['items'][]=$this->allItems[$i];
             }
         }
-        #$this->rows['page'] = $this->trShowInfo['offset'] % $this->trShowInfo['limit'];
+        //$this->rows['page'] = $this->trShowInfo['offset'] % $this->trShowInfo['limit'];
     }
-    
+
+
     function upload2Hub($id)
     {
         $gunid = $this->Base->gb->_gunidFromId($id);
         $type = $this->Base->gb->_getType($gunid);
-         
+
         switch ($type) {
             case 'audioClip':
                 $this->Base->gb->uploadAudioClip2Hub($gunid);
@@ -145,12 +166,13 @@ class uiTransfers
                 $this->Base->gb->uploadPlaylist2Hub($gunid);
             break;
             default:
-                // TODO: it is not implemented in gb, and this way maybe impossible 
+                // TODO: it is not implemented in gb, and this way maybe impossible
                 //$this->Base->gb->uploadFile2Hub($gunid);
                 return false;
         }
     }
-    
+
+
     function downloadFromHub($id,$type)
     {
          switch ($type) {
@@ -161,14 +183,15 @@ class uiTransfers
                 $this->Base->gb->downloadPlaylistFromHub($id,false);
             break;
             default:
-                // TODO: it is not implemented in gb, and this way maybe impossible 
+                // TODO: it is not implemented in gb, and this way maybe impossible
                 //$this->Base->gb->downloadFileFromHub($gunid);
                 return false;
         }
     }
-    
+
+
     function doTransportAction($trtokens,$action) {
-        //echo '<XMP>ids:'; print_r($trtokens); echo "</XMP>\n"; 
+        //echo '<XMP>ids:'; print_r($trtokens); echo "</XMP>\n";
         if (!is_array($trtokens)) {
             $trtokens = array ($trtokens);
         }

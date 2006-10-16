@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ */
 class uiSearch
 {
     var $Base;
@@ -11,7 +16,7 @@ class uiSearch
     {
         $this->Base       =& $uiBase;
         $this->prefix     = 'SEARCH';
-        #$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
+        //$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         if (empty($this->criteria['limit'])) {
@@ -19,10 +24,12 @@ class uiSearch
         }
     }
 
+
     function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
     }
+
 
     function getResult()
     {
@@ -30,14 +37,16 @@ class uiSearch
         return $this->results;
     }
 
+
     function getCriteria()
     {
         return $this->criteria;
     }
 
+
     function searchForm($id, $mask2)
     {
-        #print_r($this->criteria['form']);
+        //print_r($this->criteria['form']);
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $counter = isset($this->criteria['counter']) ? $this->criteria['counter'] : 1;
@@ -99,8 +108,8 @@ class uiSearch
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['dynform'] = $renderer->toArray();
-        #print_r($output);
-        #echo '<XMP>output:'; print_r($output); echo "</XMP>\n";
+        //print_r($output);
+        //echo '<XMP>output:'; print_r($output); echo "</XMP>\n";
         return $output;
     }
 
@@ -117,7 +126,8 @@ class uiSearch
         $this->criteria['limit']        = $formdata['limit'];
         $this->criteria['counter']      = 0;
 
-        $this->criteria['form']['operator'] = $formdata['operator'];    ## $criteria['form'] is used for retransfer to form ##
+        // $criteria['form'] is used for retransfer to form
+        $this->criteria['form']['operator'] = $formdata['operator'];
         $this->criteria['form']['filetype'] = $formdata['filetype'];
         $this->criteria['form']['limit']    = $formdata['limit'];
 
@@ -128,14 +138,14 @@ class uiSearch
                                                             'op'  => $val[1],
                                                             'val' => stripslashes($val[2])
                                                       );
-                $this->criteria['form'][$key]       = array(0     => $val[0],
-                                                            1     => $val[1],
-                                                            2     => stripslashes($val[2])
+                $this->criteria['form'][$key] = array(0 => $val[0],
+                                                      1 => $val[1],
+                                                      2 => stripslashes($val[2])
                                                       );
             }
         }
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
-        #$this->searchDB();
+        //$this->searchDB();
     }
 
 
@@ -146,7 +156,7 @@ class uiSearch
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output = $renderer->toArray();
-        #print_r($output);
+        //print_r($output);
         return $output;
     }
 
@@ -164,7 +174,7 @@ class uiSearch
         $this->criteria['form']['filetype'] = UI_SIMPLESEARCH_FILETYPE;
         $this->criteria['form']['limit']    = UI_SIMPLESEARCH_LIMIT;
 
-        for ($n = 1; $n<=UI_SIMPLESEARCH_ROWS; $n++) {
+        for ($n = 1; $n <= UI_SIMPLESEARCH_ROWS; $n++) {
             $this->criteria['conditions'][$n] = array('cat'     => constant('UI_SIMPLESEARCH_CAT'.$n),
                                                       'op'      => constant('UI_SIMPLESEARCH_OP'.$n),
                                                       'val'     => stripslashes($formdata['criterium'])
@@ -218,7 +228,7 @@ class uiSearch
         ## end test
         */
 
-        #print_r($this->results);
+        //print_r($this->results);
         $this->pagination($results);
 
         return TRUE;
@@ -231,8 +241,8 @@ class uiSearch
             return FALSE;
         }
         $offset = isset($this->criteria['offset']) ? $this->criteria['offset'] : 0;
-        $currp = ($offset / $this->criteria['limit']) + 1;   # current page
-        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);             # maximum page
+        $currp = ($offset / $this->criteria['limit']) + 1;   // current page
+        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);  // maximum page
 
         /*
         for ($n = 1; $n <= $maxp; $n = $n+$width) {
@@ -246,12 +256,12 @@ class uiSearch
         $start      = $currp;
 
         if ($start + $maxp > 0) {
-            $deltaLower += $start - $maxp;  ## correct lower boarder if page is near end
+            $deltaLower += $start - $maxp;  // correct lower boarder if page is near end
         }
 
         for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
             if ($n <= 0) {
-                $deltaUpper++;                        ## correct upper boarder if page is near zero
+                $deltaUpper++;  // correct upper boarder if page is near zero
             } elseif ($n <= $maxp) {
                 $this->results['pagination'][$n] = $n;
             }
@@ -279,17 +289,18 @@ class uiSearch
         }
         $this->criteria['orderby'] = $by;
         $this->setReload();
-        #$this->searchDB();
+        //$this->searchDB();
     }
 
 
     function clear()
     {
-        #$this->results    = NULL;
+        //$this->results    = NULL;
         $this->criteria['form']    = NULL;
         $this->criteria['counter'] = NULL;
         $this->setReload();
     }
+
 
     function setOffset($page)
     {
@@ -304,7 +315,8 @@ class uiSearch
             $o = $l * ($page-1);
         }
         $this->setReload();
-        #$this->searchDB();
+        //$this->searchDB();
     }
-}
+
+} // class uiSearch
 ?>

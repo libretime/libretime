@@ -1,3 +1,3 @@
 <?php
-header('LOCATION: /livesupport/htmlUI/var/html/ui_browser.php');
+header('LOCATION: /campcaster/htmlUI/var/html/ui_browser.php');
 ?>

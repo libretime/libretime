@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>LIVESUPPORT</title>
+    <title>Campcaster</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="styles_popup.css" rel="stylesheet" type="text/css" />
 

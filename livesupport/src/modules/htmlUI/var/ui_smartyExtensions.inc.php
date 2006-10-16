@@ -22,10 +22,12 @@ $Smarty->register_function('niceTime',          'S_niceTime');
 
 // --- Smarty Extensions ---
 /**
- *  Repeat given string.
+ * Repeat given string.
  *
- *  @param array $param - must have the key values "str" and "count"
- *  @return string, repeated string
+ * @param array $param
+ * 		must have the key values "str" and "count"
+ * @return string
+ * 		repeated string
  */
 function S_str_repeat($param)
 {
@@ -37,7 +39,8 @@ function S_str_repeat($param)
 /**
  * Translate given string.
  *
- * @param array $in, array of strings to be outputted translated
+ * @param array $in
+ * 		array of strings to be outputted translated
  * @return string
  */
 function S_tra($in)
@@ -58,7 +61,7 @@ function S_getHour($param)
     if (!isset($time) || !is_string($time)) {
         return 0;
     }
-    list ($h, $m, $s) = explode (':', $time);
+    list($h, $m, $s) = explode (':', $time);
     $curr = mktime($h, $m ,$s);
     if ($pause) {
         $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
