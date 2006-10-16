@@ -28,7 +28,7 @@
 #-------------------------------------------------------------------------------
 # This script generates code coverage data for the module
 #-------------------------------------------------------------------------------
-module="LiveSupport Scheduler Client"
+module="Campcaster SchedulerClient"
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`

@@ -32,7 +32,7 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(LiveSupport, 1.0, bugs@campware.org)
+AC_INIT(Campcaster, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
@@ -57,18 +57,18 @@ AC_MSG_RESULT([compiling with debug info: ${DEBUG}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify whether the LiveSupport database and user should be created
+dnl  specify whether the Campcaster database and user should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_LS_DATABASE)
 
 AC_ARG_WITH([create-database],
             AC_HELP_STRING([--with-create-database],
-               [specify whether the LiveSupport database and database user
+               [specify whether the Campcaster database and database user
                 should be created (no)]),
             [CREATE_LS_DATABASE=${withval}],
             [CREATE_LS_DATABASE=no])
 
-AC_MSG_RESULT([creating LiveSupport database: ${CREATE_LS_DATABASE}])
+AC_MSG_RESULT([creating Campcaster database: ${CREATE_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -78,7 +78,7 @@ AC_SUBST(CREATE_ODBC_DATA_SOURCE)
 
 AC_ARG_WITH([create-odbc-data-source],
             AC_HELP_STRING([--with-create-odbc-data-source],
-               [specify whether the ODBC data source for LiveSupport should be
+               [specify whether the ODBC data source for Campcaster should be
                 created (no)]),
             [CREATE_ODBC_DATA_SOURCE=${withval}],
             [CREATE_ODBC_DATA_SOURCE=no])
@@ -87,18 +87,18 @@ AC_MSG_RESULT([creating ODBC data source: ${CREATE_ODBC_DATA_SOURCE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify whether the LiveSupport database tables should be initialized
+dnl  specify whether the Campcaster database tables should be initialized
 dnl-----------------------------------------------------------------------------
 AC_SUBST(INIT_LS_DATABASE)
 
 AC_ARG_WITH([init-database],
             AC_HELP_STRING([--with-init-database],
-               [specify whether the LiveSupport database tables should be
+               [specify whether the Campcaster database tables should be
                 initialized (no)]),
             [INIT_LS_DATABASE=${withval}],
             [INIT_LS_DATABASE=no])
 
-AC_MSG_RESULT([initializing LiveSupport database: ${INIT_LS_DATABASE}])
+AC_MSG_RESULT([initializing Campcaster database: ${INIT_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ AC_SUBST(CONFIGURE_APACHE)
 
 AC_ARG_WITH([configure-apache],
             AC_HELP_STRING([--with-configure-apache],
-               [specify whether apache should be configured for LiveSupport
+               [specify whether apache should be configured for Campcaster
                 through its conf.d directory (no)]),
             [CONFIGURE_APACHE=${withval}],
             [CONFIGURE_APACHE=no])
@@ -149,7 +149,7 @@ AC_SUBST(WWW_DOCROOT)
 
 AC_ARG_WITH([www-docroot],
             AC_HELP_STRING([--with-www-docroot],
-                   [deploy LiveSupport under the specified docroot (/var/www)]),
+                   [deploy Campcaster under the specified docroot (/var/www)]),
             [WWW_DOCROOT=${withval}], [WWW_DOCROOT=/var/www])
 
 AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
@@ -195,14 +195,14 @@ AC_MSG_RESULT([using database server: ${DB_SERVER}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl get the name of the LiveSupport database
+dnl get the name of the Campcaster database
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DATABASE)
 
 AC_ARG_WITH([database],
             AC_HELP_STRING([--with-database],
-                    [the name of the postgresql database to use (LiveSupport)]),
-            [DATABASE=${withval}], [DATABASE=LiveSupport])
+                    [the name of the postgresql database to use (Campcaster)]),
+            [DATABASE=${withval}], [DATABASE=Campcaster])
 
 AC_MSG_RESULT([using database: ${DATABASE}])
 
@@ -214,8 +214,8 @@ AC_SUBST(DB_USER)
 
 AC_ARG_WITH([database-user],
             AC_HELP_STRING([--with-database-user],
-                       [use the specified database server user (livesupport)]),
-            [DB_USER=${withval}], [DB_USER=livesupport])
+                       [use the specified database server user (campcaster)]),
+            [DB_USER=${withval}], [DB_USER=campcaster])
 
 AC_MSG_RESULT([using database server user: ${DB_USER}])
 
@@ -227,8 +227,8 @@ AC_SUBST(DB_PASSWORD)
 
 AC_ARG_WITH([database-password],
             AC_HELP_STRING([--with-database-password],
-               [use the specified database server user password (livesupport)]),
-            [DB_PASSWORD=${withval}], [DB_PASSWORD=livesupport])
+               [use the specified database server user password (campcaster)]),
+            [DB_PASSWORD=${withval}], [DB_PASSWORD=campcaster])
 
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 
@@ -508,7 +508,7 @@ dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
 [compiling the following external libraries that are needed
-by LiveSupport:
+by Campcaster:
 
     boost 1.33.1               ${COMPILE_BOOST}
     cppunit 1.10.2             yes
@@ -538,9 +538,9 @@ using the following configuration settings:
     station audio output device:     ${STATION_AUDIO_OUT}
     studio audio output device:      ${STUDIO_AUDIO_OUT}
     studio audio cue device:         ${STUDIO_AUDIO_CUE}
-    creating LiveSupport database:   ${CREATE_LS_DATABASE}
+    creating Campcaster database:   ${CREATE_LS_DATABASE}
     creating ODBC data source:       ${CREATE_ODBC_DATA_SOURCE}
-    initialize LiveSupport database: ${INIT_LS_DATABASE}
+    initialize Campcaster database: ${INIT_LS_DATABASE}
     configuring apache:              ${CONFIGURE_APACHE}
 
 ])
