@@ -57,7 +57,7 @@ printUsage()
     echo "";
     echo "  -d, --directory     The installation directory, required.";
     echo "  -D, --database      The name of the Campcaster database.";
-    echo "                      [default: Campcaster]";
+    echo "                      [default: CampcasterHub]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
     echo "                      [default: www-data]";
     echo "  -r, --www-root      The root directory for web documents served";
