@@ -39,7 +39,7 @@ if($pars[0] == '-s'){
     array_shift($pars);
     $serverPath = array_shift($pars);
 }else{
-    $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrArchive.php';
+    $serverPath = 'http://localhost:80/campcasterArchiveServer/xmlrpc/xrArchive.php';
 }
 
 $url = parse_url($serverPath);

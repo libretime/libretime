@@ -1,22 +1,22 @@
 dnl-----------------------------------------------------------------------------
 dnl Copyright (c) 2004 Media Development Loan Fund
 dnl
-dnl This file is part of the LiveSupport project.
-dnl http://livesupport.campware.org/
+dnl This file is part of the Campcaster project.
+dnl http://campcaster.campware.org/
 dnl To report bugs, send an e-mail to bugs@campware.org
 dnl
-dnl LiveSupport is free software; you can redistribute it and/or modify
+dnl Campcaster is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
 dnl the Free Software Foundation; either version 2 of the License, or
 dnl (at your option) any later version.
 dnl
-dnl LiveSupport is distributed in the hope that it will be useful,
+dnl Campcaster is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU General Public License
-dnl along with LiveSupport; if not, write to the Free Software
+dnl along with Campcaster; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
@@ -40,33 +40,33 @@ AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(../var/BasicStor.php)
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database and user should be created
+dnl  specify wether the Campcaster database and user should be created
 dnl-----------------------------------------------------------------------------
 AC_SUBST(CREATE_LS_DATABASE)
 
 AC_ARG_WITH([create-database],
             AC_HELP_STRING([--with-create-database],
-               [specify wether the LiveSupport database and database user
+               [specify wether the Campcaster database and database user
                 should be created (no)]),
             [CREATE_LS_DATABASE=${withval}],
             [CREATE_LS_DATABASE=no])
 
-AC_MSG_RESULT([creating LiveSupport database: ${CREATE_LS_DATABASE}])
+AC_MSG_RESULT([creating Campcaster database: ${CREATE_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify wether the LiveSupport database tables should be initialized
+dnl  specify wether the Campcaster database tables should be initialized
 dnl-----------------------------------------------------------------------------
 AC_SUBST(INIT_LS_DATABASE)
 
 AC_ARG_WITH([init-database],
             AC_HELP_STRING([--with-init-database],
-               [specify wether the LiveSupport database tables should be
+               [specify wether the Campcaster database tables should be
                 initialized (no)]),
             [INIT_LS_DATABASE=${withval}],
             [INIT_LS_DATABASE=no])
 
-AC_MSG_RESULT([initializing LiveSupport database: ${INIT_LS_DATABASE}])
+AC_MSG_RESULT([initializing Campcaster database: ${INIT_LS_DATABASE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -135,14 +135,14 @@ AC_MSG_RESULT([using database server: ${DB_SERVER}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl get the name of the LiveSupport database
+dnl get the name of the Campcaster database
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DATABASE)
 
 AC_ARG_WITH([database],
             AC_HELP_STRING([--with-database],
-                    [the name of the postgresql database to use (LiveSupport)]),
-            [DATABASE=${withval}], [DATABASE=LiveSupport])
+                    [the name of the postgresql database to use (Campcaster)]),
+            [DATABASE=${withval}], [DATABASE=Campcaster])
 
 AC_MSG_RESULT([using database: ${DATABASE}])
 
@@ -154,8 +154,8 @@ AC_SUBST(DB_USER)
 
 AC_ARG_WITH([database-user],
             AC_HELP_STRING([--with-database-user],
-                       [use the specified database server user (livesupport)]),
-            [DB_USER=${withval}], [DB_USER=livesupport])
+                       [use the specified database server user (campcaster)]),
+            [DB_USER=${withval}], [DB_USER=campcaster])
 
 AC_MSG_RESULT([using database server user: ${DB_USER}])
 
@@ -167,8 +167,8 @@ AC_SUBST(DB_PASSWORD)
 
 AC_ARG_WITH([database-password],
             AC_HELP_STRING([--with-database-password],
-               [use the specified database server user password (livesupport)]),
-            [DB_PASSWORD=${withval}], [DB_PASSWORD=livesupport])
+               [use the specified database server user password (campcaster)]),
+            [DB_PASSWORD=${withval}], [DB_PASSWORD=campcaster])
 
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 
@@ -180,7 +180,7 @@ AC_SUBST(WWW_DOCROOT)
 
 AC_ARG_WITH([www-docroot],
             AC_HELP_STRING([--with-www-docroot],
-                   [deploy LiveSupport under the specified docroot (/var/www)]),
+                   [deploy Campcaster under the specified docroot (/var/www)]),
             [WWW_DOCROOT=${withval}], [WWW_DOCROOT=/var/www])
 
 AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
@@ -198,8 +198,8 @@ AC_MSG_NOTICE(
     database name:                   ${DATABASE}
     database user:                   ${DB_USER}
     database user password:          ${DB_PASSWORD}
-    creating LiveSupport database:   ${CREATE_LS_DATABASE}
-    initialize LiveSupport database: ${INIT_LS_DATABASE}
+    creating Campcaster database:   ${CREATE_LS_DATABASE}
+    initialize Campcaster database: ${INIT_LS_DATABASE}
     www document root:               ${WWW_DOCROOT}
 
 ])

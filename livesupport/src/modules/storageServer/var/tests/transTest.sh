@@ -208,18 +208,18 @@ deletePlaylist $PLID_
 createPlaylistAndEdit $PLID_ "../tests/0000000000000001.xml"
 
 upload2Hub $PLID_
-for i in 1 2 3 4 5; do getTransportInfo $TRTOK; sleep 1; done
+for i in $(seq 5); do getTransportInfo $TRTOK; sleep 1; done
 
 #sleep 10
 for i in 0000000000010001 0000000000010002; do echo $i
-#    deleteAudioClip $i
+    deleteAudioClip $i
 done
 deletePlaylist $PLID_
 
 echo "STOP - press ENTER"; read key
 
 downloadFromHub $PLID_
-for i in 1 2 3 4 5; do getTransportInfo $TRTOK; sleep 1; done
+for i in $(seq 5); do getTransportInfo $TRTOK; sleep 1; done
 
 logout
 

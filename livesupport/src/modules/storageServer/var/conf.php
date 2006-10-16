@@ -117,8 +117,10 @@ $config = array(
     'tmpRootPass'   => 'q',
 
     /* =================================================== cron configuration */
-    'cronUserName'      => 'www-data',
-    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
+#    'cronUserName'      => 'www-data',
+    'cronUserName'      => 'apache',
+#    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
+    'lockfile'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer/cron.lock',
     'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
     'paramdir'          => dirname(__FILE__).'/cron/params',
 );

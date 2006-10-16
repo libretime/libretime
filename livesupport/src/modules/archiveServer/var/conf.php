@@ -3,22 +3,22 @@
 
     Copyright (c) 2004 Media Development Loan Fund
  
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
+    This file is part of the Campcaster project.
+    http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
  
-    LiveSupport is free software; you can redistribute it and/or modify
+    Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
   
-    LiveSupport is distributed in the hope that it will be useful,
+    Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
  
     You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
+    along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
@@ -69,7 +69,7 @@ $config = array(
         'password'      => 'test',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'LiveSupport-test',
+        'database'      => 'Campcaster-test',
     ),
     'tblNamePrefix' => 'as_',
 
@@ -89,12 +89,12 @@ $config = array(
 
     /* ==================================================== URL configuration */
     // on central archive side: archive is the storage !
-    'storageUrlPath'        => '/livesupportArchiveServer',
+    'storageUrlPath'        => '/campcasterArchiveServer',
     'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
     'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
     // have to be another remote archive:
-    #'archiveUrlPath'        => '/livesupportArchiveServer',
+    #'archiveUrlPath'        => '/campcasterArchiveServer',
     #'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
     #'archiveUrlHost'        => 'localhost',
     #'archiveUrlPort'        => 80,
@@ -132,7 +132,7 @@ $config['sysSubjs'] = array(
 $old_ip = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
 
-// see if a ~/.livesupport/archiveServer.conf.php exists, and
+// see if a ~/.campcaster/archiveServer.conf.php exists, and
 // overwrite the settings from there if any
 
 $this_file         = null;
@@ -145,7 +145,7 @@ if(!is_null($this_file)){
     $fileowner_id      = fileowner($this_file);
     $fileowner_array   = posix_getpwuid($fileowner_id);
     $fileowner_homedir = $fileowner_array['dir'];
-    $home_conf         = $fileowner_homedir . '/.livesupport/archiveServer.conf.php';
+    $home_conf         = $fileowner_homedir . '/.campcaster/archiveServer.conf.php';
     if (file_exists($home_conf)) {
         $default_config = $config;
         include $home_conf;

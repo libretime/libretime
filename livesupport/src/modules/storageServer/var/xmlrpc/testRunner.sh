@@ -3,22 +3,22 @@
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
-#   http://livesupport.campware.org/
+#   This file is part of the Campcaster project.
+#   http://campcaster.campware.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -39,8 +39,8 @@ fi
 METADATA="<?xml version=\"1.0\"?>
 <audioClip>
 <metadata
-   xmlns=\"http://mdlf.org/livesupport/elements/1.0/\"
-   xmlns:ls=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns=\"http://mdlf.org/campcaster/elements/1.0/\"
+   xmlns:ls=\"http://mdlf.org/campcaster/elements/1.0/\"
    xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
    xmlns:dcterms=\"http://purl.org/dc/terms/\"
    xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"
@@ -52,10 +52,10 @@ METADATA="<?xml version=\"1.0\"?>
 METAREGEX="(<\\?xml version=\"1\\.0\"( encoding=\"UTF-8\")?\\?> )?\
 <audioClip>\
 <metadata\
- xmlns=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns=\"http://mdlf\\.org/campcaster/elements/1\\.0/\"\
  xmlns:dc=\"http://purl\\.org/dc/elements/1\\.1/\"\
  xmlns:dcterms=\"http://purl\\.org/dc/terms/\"\
- xmlns:ls=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns:ls=\"http://mdlf\\.org/campcaster/elements/1\\.0/\"\
  xmlns:xml=\"http://www\\.w3\\.org/XML/1998/namespace\"\
 >\
 <dc:title>Media title testRunner</dc:title>\

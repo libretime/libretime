@@ -2,22 +2,22 @@
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
-#   http://livesupport.campware.org/
+#   This file is part of the Campcaster project.
+#   http://campcaster.campware.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -26,7 +26,7 @@
 #   Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/bin/postInstallStation.sh $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script makes installation steps for the LiveSupport network hub.
+#  This script makes installation steps for the Campcaster network hub.
 #
 #  Invoke as:
 #  ./bin/archiveServerSetup.sh
@@ -52,12 +52,12 @@ modules_dir=$srcdir/modules
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport network hub install script.";
+    echo "Campcaster network hub install script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
     echo "                      [default: www-data]";
     echo "  -r, --www-root      The root directory for web documents served";
@@ -65,9 +65,9 @@ printUsage()
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
+    echo "                      database. [default: campcaster]";
     echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
+    echo "                      [default: campcaster]";
     echo "  -p, --postgresql-dir    The postgresql data directory, containing";
     echo "                      pg_hba.conf [default: /etc/postgresql]";
     echo "  -i, --postgresql-init-script    The name of the postgresql init";
@@ -137,15 +137,15 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupportHub;
+    database=CampcasterHub;
 fi
 
 if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
+    dbuser=campcaster;
 fi
 
 if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
+    dbpassword=campcaster;
 fi
 
 if [ "x$apache_group" == "x" ]; then
@@ -167,7 +167,7 @@ fi
 hostname=`hostname -f`
 www_port=80
 
-echo "Installing LiveSupport network hub (archiveServer).";
+echo "Installing Campcaster network hub (archiveServer).";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -198,7 +198,7 @@ install_bin=$installdir/bin
 install_etc=$installdir/etc
 install_lib=$installdir/lib
 install_usr=$installdir/usr
-install_var_ls=$installdir/var/LiveSupport
+install_var_ls=$installdir/var/Campcaster
 
 
 #-------------------------------------------------------------------------------
@@ -260,7 +260,7 @@ echo "Modifying postgresql access permissions...";
 
 pg_config_dir=$postgresql_dir
 pg_config_file=pg_hba.conf
-pg_config_file_saved=pg_hba.conf.before-livesupport
+pg_config_file_saved=pg_hba.conf.before-campcaster
 
 if [ -f $pg_config_dir/$pg_config_file ] ; then
     mv -vf $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
@@ -278,7 +278,7 @@ ${postgresql_init_script} start
 #  Configuring Apache
 #-------------------------------------------------------------------------------
 echo "Configuring apache ..."
-CONFFILE=90_php_livesupport.conf
+CONFFILE=90_php_campcaster.conf
 AP_DDIR_FOUND=no
 for APACHE_DDIR in \
     /etc/apache/conf.d /etc/apache2/conf.d /etc/apache2/conf/modules.d \
@@ -380,10 +380,10 @@ cd $modules_dir/getid3 && ./configure --prefix=$installdir
 #cd $modules_dir/htmlUI && ./configure --prefix=$installdir \
 #    --with-apache-group=$apache_group \
 #    --with-www-docroot=$www_root \
-#    --with-storage-server=$installdir/var/LiveSupport/storageServer
+#    --with-storage-server=$installdir/var/Campcaster/storageServer
 cd $modules_dir/storageAdmin && ./configure --prefix=$installdir \
-    --with-storage-server=$installdir/var/LiveSupport/storageServer \
-    --with-phppart-dir=$installdir/var/LiveSupport/storageAdmin
+    --with-storage-server=$installdir/var/Campcaster/storageServer \
+    --with-phppart-dir=$installdir/var/Campcaster/storageAdmin
 cd $modules_dir/storageServer && \
         ./configure --prefix=$installdir \
                 --with-apache-group=$apache_group \
@@ -420,12 +420,12 @@ done
 echo "Creating symlinks...";
 
 # create symlink for the PHP pages in apache's document root
-rm -f $www_root/livesupport
-ln -vs $install_var_ls $www_root/livesupport
+rm -f $www_root/campcaster
+ln -vs $install_var_ls $www_root/campcaster
 
 
 #-------------------------------------------------------------------------------
-#   Install PEAR packages (locally in the LiveSupport)
+#   Install PEAR packages (locally in the Campcaster)
 #   only if necessary
 #-------------------------------------------------------------------------------
 if [ -f $toolsdir/pear/bin/install.sh ]; then

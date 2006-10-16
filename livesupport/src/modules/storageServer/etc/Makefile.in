@@ -2,20 +2,20 @@
 #   StorageServer - file storage component
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
+#   This file is part of the Campcaster project.
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -84,7 +84,7 @@ TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 PEAR_TOOL_DIR  = ${BASE_DIR}/../../tools/pear
 PEAR_INSTALLER = ${PEAR_TOOL_DIR}/bin/install.sh
 
-DEST_DIR   = ${USR_VAR_DIR}/LiveSupport/storageServer/var
+DEST_DIR   = ${USR_VAR_DIR}/Campcaster/storageServer/var
 
 HOSTNAME       = @HOSTNAME@
 APACHE_GROUP   = @APACHE_GROUP@
@@ -96,7 +96,7 @@ DB_PASSWORD    = @DB_PASSWORD@
 SCHEDULER_PORT = @SCHEDULER_PORT@
 WWW_DOCROOT    = @WWW_DOCROOT@
 
-PHP_URL_PREFIX=livesupport
+PHP_URL_PREFIX=campcaster
 SCHEDULER_URL_PREFIX = 
 SCHEDULER_XML_RPC_PREFIX = RC2
 
@@ -196,8 +196,8 @@ copy_files:
 	chmod g+sw ${DEST_DIR}/stor/buffer
 	chmod g+sw ${DEST_DIR}/trans
 
-	${RM} ${WWW_DOCROOT}/livesupport
-	ln -sf ${USR_VAR_DIR}/LiveSupport ${WWW_DOCROOT}/livesupport
+	${RM} ${WWW_DOCROOT}/campcaster
+	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/campcaster
 
 create_database:
 ifeq (@CREATE_LS_DATABASE@,yes)

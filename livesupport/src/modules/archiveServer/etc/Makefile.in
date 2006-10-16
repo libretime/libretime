@@ -2,20 +2,20 @@
 #   ArchiveServer - central archive component
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
+#   This file is part of the Campcaster project.
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -79,7 +79,7 @@ TRANS_DIR	= ${PHP_DIR}/trans
 BUFF_DIR	= ${STOR_DIR}/buffer
 TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
-DEST_DIR   = ${USR_VAR_DIR}/LiveSupport/archiveServer/var
+DEST_DIR   = ${USR_VAR_DIR}/Campcaster/archiveServer/var
 
 HOSTNAME       = @HOSTNAME@
 WWW_PORT       = @WWW_PORT@
@@ -88,7 +88,7 @@ DATABASE       = @DATABASE@
 DB_USER        = @DB_USER@
 DB_PASSWORD    = @DB_PASSWORD@
 
-PHP_URL_PREFIX=livesupport
+PHP_URL_PREFIX=campcaster
 
 USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
 PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
@@ -105,7 +105,6 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
 #  explanation: on archive side, archive have the storage role =>
 #  ls_storageUrlPath shouldn't be replaced by string ending with
 #  'storageServer/var'
-
 
 #-------------------------------------------------------------------------------
 #  	Configuration parameters

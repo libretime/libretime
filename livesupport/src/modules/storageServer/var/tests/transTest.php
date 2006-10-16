@@ -36,7 +36,6 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
 */
 /* ========== STORE ========== */
-echo "#  UPLOAD test:\n";
 echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
 
 echo"#  Store: ";
@@ -70,6 +69,7 @@ var_export($r); echo"\n";
 
 
 /* ========== UPLOAD ========== */
+echo "#  UPLOAD test:\n";
 echo"#  uploadAudioClip2Hub: ";
 $r = $gb->upload2Hub($gunid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }

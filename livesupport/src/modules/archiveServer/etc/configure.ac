@@ -1,22 +1,22 @@
 dnl-----------------------------------------------------------------------------
 dnl Copyright (c) 2004 Media Development Loan Fund
 dnl
-dnl This file is part of the LiveSupport project.
-dnl http://livesupport.campware.org/
+dnl This file is part of the Campcaster project.
+dnl http://campcaster.campware.org/
 dnl To report bugs, send an e-mail to bugs@campware.org
 dnl
-dnl LiveSupport is free software; you can redistribute it and/or modify
+dnl Campcaster is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
 dnl the Free Software Foundation; either version 2 of the License, or
 dnl (at your option) any later version.
 dnl
-dnl LiveSupport is distributed in the hope that it will be useful,
+dnl Campcaster is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU General Public License
-dnl along with LiveSupport; if not, write to the Free Software
+dnl along with Campcaster; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
@@ -80,14 +80,14 @@ AC_MSG_RESULT([using database server: ${DB_SERVER}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl get the name of the LiveSupport database
+dnl get the name of the Campcaster database
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DATABASE)
 
 AC_ARG_WITH([database],
             AC_HELP_STRING([--with-database],
-                    [the name of the postgresql database to use (LiveSupport)]),
-            [DATABASE=${withval}], [DATABASE=LiveSupport])
+                    [the name of the postgresql database to use (Campcaster)]),
+            [DATABASE=${withval}], [DATABASE=Campcaster])
 
 AC_MSG_RESULT([using database: ${DATABASE}])
 
@@ -99,8 +99,8 @@ AC_SUBST(DB_USER)
 
 AC_ARG_WITH([database-user],
             AC_HELP_STRING([--with-database-user],
-                       [use the specified database server user (livesupport)]),
-            [DB_USER=${withval}], [DB_USER=livesupport])
+                       [use the specified database server user (campcaster)]),
+            [DB_USER=${withval}], [DB_USER=campcaster])
 
 AC_MSG_RESULT([using database server user: ${DB_USER}])
 
@@ -112,8 +112,8 @@ AC_SUBST(DB_PASSWORD)
 
 AC_ARG_WITH([database-password],
             AC_HELP_STRING([--with-database-password],
-               [use the specified database server user password (livesupport)]),
-            [DB_PASSWORD=${withval}], [DB_PASSWORD=livesupport])
+               [use the specified database server user password (campcaster)]),
+            [DB_PASSWORD=${withval}], [DB_PASSWORD=campcaster])
 
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 

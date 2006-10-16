@@ -48,8 +48,8 @@ XMETADATA="<?xml version=\"1.0\"?>
 METADATA="<?xml version=\"1.0\"?>
 <audioClip>
 <metadata
-   xmlns=\"http://mdlf.org/livesupport/elements/1.0/\"
-   xmlns:ls=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns=\"http://mdlf.org/campcaster/elements/1.0/\"
+   xmlns:ls=\"http://mdlf.org/campcaster/elements/1.0/\"
    xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
    xmlns:dcterms=\"http://purl.org/dc/terms/\"
    xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"
@@ -61,10 +61,10 @@ METADATA="<?xml version=\"1.0\"?>
 METAREGEX="(<\\?xml version=\"1\\.0\"( encoding=\"UTF-8\")?\\?> )?\
 <audioClip>\
 <metadata\
- xmlns=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns=\"http://mdlf\\.org/campcaster/elements/1\\.0/\"\
  xmlns:dc=\"http://purl\\.org/dc/elements/1\\.1/\"\
  xmlns:dcterms=\"http://purl\\.org/dc/terms/\"\
- xmlns:ls=\"http://mdlf\\.org/livesupport/elements/1\\.0/\"\
+ xmlns:ls=\"http://mdlf\\.org/campcaster/elements/1\\.0/\"\
  xmlns:xml=\"http://www\\.w3\\.org/XML/1998/namespace\"\
 >\
 <dc:title>Media title testRunner</dc:title>\

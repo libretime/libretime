@@ -2,22 +2,22 @@
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
-#   http://livesupport.campware.org/
+#   This file is part of the Campcaster project.
+#   http://campcaster.campware.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script reates the database used by LiveSupport
+#  This script reates the database used by Campcaster
 #
 #  Invoke as:
 #  ./bin/createDatabase.sh
@@ -51,17 +51,17 @@ usrdir=$basedir/usr
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport scheduler database creation script.";
+    echo "Campcaster scheduler database creation script.";
     echo "parameters";
     echo "";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
+    echo "                      database. [default: campcaster]";
     echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
+    echo "                      [default: campcaster]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -106,18 +106,18 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupport;
+    database=Campcaster;
 fi
 
 if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
+    dbuser=campcaster;
 fi
 
 if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
+    dbpassword=campcaster;
 fi
 
-echo "Creating database for LiveSupport scheduler.";
+echo "Creating database for Campcaster scheduler.";
 echo "";
 echo "Using the following parameters:";
 echo "";

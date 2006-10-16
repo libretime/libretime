@@ -2,22 +2,22 @@
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
 #
-#   This file is part of the LiveSupport project.
-#   http://livesupport.campware.org/
+#   This file is part of the Campcaster project.
+#   http://campcaster.campware.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
-#   LiveSupport is free software; you can redistribute it and/or modify
+#   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   LiveSupport is distributed in the hope that it will be useful,
+#   Campcaster is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with LiveSupport; if not, write to the Free Software
+#   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
@@ -26,8 +26,8 @@
 #   Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/bin/postInstallStation.sh $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script creates a distribution tarball for livesupport network hub.
-#  (livesupport-aserver-<version>.tar.bz2)
+#  This script creates a distribution tarball for Campcaster network hub.
+#  (campcaster-aserver-<version>.tar.bz2)
 #
 #  Invoke as:
 #  ./bin/makeArchiveServerTar.sh -v <version.number>
@@ -58,7 +58,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport network hub tar package creator.";
+    echo "Campcaster network hub tar package creator.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     Place the tarball in the specified directory.";
@@ -107,7 +107,7 @@ if [ "x$version" == "x" ]; then
     exit 1;
 fi
 
-echo "Creating LiveSupport network hub tar.gz package.";
+echo "Creating Campcaster network hub tar.gz package.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -120,16 +120,16 @@ echo ""
 #-------------------------------------------------------------------------------
 if [ -f $basedir/Makefile ]; then
     echo "ERROR: make sure to run this script on a freshly checked-out copy";
-    echo "       of LiveSupport, with NO generated files!";
+    echo "       of Campcaster, with NO generated files!";
     exit 1;
 fi
 
 #-------------------------------------------------------------------------------
 #   More definitions
 #-------------------------------------------------------------------------------
-tarball=$directory/livesupport-aserver-$version.tar.bz2
+tarball=$directory/campcaster-aserver-$version.tar.bz2
 
-ls_tmpdir=$tmpdir/livesupport-$version
+ls_tmpdir=$tmpdir/campcaster-$version
 src_tmpdir=$ls_tmpdir/src
 tools_tmpdir=$src_tmpdir/tools
 modules_tmpdir=$src_tmpdir/modules
@@ -221,7 +221,7 @@ cp -pPR README INSTALL configure $ls_tmpdir
 #-------------------------------------------------------------------------------
 echo "Creating $tarball ...";
 cd $tmpdir
-tar cjf $tarball livesupport-$version
+tar cjf $tarball campcaster-$version
 cd $basedir
 
 #-------------------------------------------------------------------------------
