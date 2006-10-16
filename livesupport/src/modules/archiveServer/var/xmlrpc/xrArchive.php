@@ -1,32 +1,9 @@
 <?php
-/*------------------------------------------------------------------------------
+/**
+ * @author $Author$
+ * @version  : $Revision$
+ */
 
-    Copyright (c) 2004 Media Development Loan Fund
- 
-    This file is part of the Campcaster project.
-    http://campcaster.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
- 
-    Campcaster is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-  
-    Campcaster is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with Campcaster; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
 
 /* ====================================================== specific PHP config */
@@ -62,12 +39,12 @@ require_once 'XR_Archive.php';
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
     switch($errno){
         case E_WARNING:
-        case E_NOTICE: 
+        case E_NOTICE:
         case E_USER_WARNING:
-        case E_USER_NOTICE: 
+        case E_USER_NOTICE:
             return;
-            break; 
-        default:   
+            break;
+        default:
             $xr =& new XML_RPC_Response(0, 805,
                 htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
             header("Content-type: text/xml");
