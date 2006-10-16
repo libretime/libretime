@@ -1,32 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
-
-    This file is part of the Campcaster project.
-    http://campcaster.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
-
-    Campcaster is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Campcaster is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Campcaster; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
 require_once "class.php";
 define('ALIBERR_NOTGR', 20);
 define('ALIBERR_BADSMEMB', 21);
@@ -40,6 +12,8 @@ define('ALIBERR_BADSMEMB', 21);
  *
  * @author  $Author$
  * @version $Revision$
+ * @package Campcaster
+ * @subpackage Alib
  * @see ObjClasses
  * @see Alib
  */
@@ -68,9 +42,12 @@ class Subjects extends ObjClasses {
      * Add new subject
      *
      * @param string $login
-     * @param string $pass, optional
-     * @param string $realname, optional
-     * @param boolean $passenc, optional, password already encrypted if true
+     * @param string $pass
+     * 		optional
+     * @param string $realname
+     * 		optional
+     * @param boolean $passenc
+     * 		optional, password already encrypted if true
      * @return int/err
      */
     function addSubj($login, $pass=NULL, $realname='', $passenc=FALSE)
@@ -101,7 +78,8 @@ class Subjects extends ObjClasses {
      * Remove subject by uid or by login
      *
      * @param string $login
-     * @param int $uid, optional, default: null
+     * @param int $uid
+     * 		optional, default: null
      * @return boolean/err
      */
     function removeSubj($login, $uid=NULL)
@@ -132,7 +110,8 @@ class Subjects extends ObjClasses {
      * Check login and password
      *
      * @param string $login
-     * @param string $pass, optional
+     * @param string $pass
+     * 		optional
      * @return boolean/int/err
      */
     function authenticate($login, $pass='')
@@ -152,7 +131,8 @@ class Subjects extends ObjClasses {
      * Set lastlogin or lastfail timestamp
      *
      * @param string $login
-     * @param boolean $failed, true=> set lastfail, false=> set lastlogin
+     * @param boolean $failed
+     * 		true=> set lastfail, false=> set lastlogin
      * @return boolean/int/err
      */
     function setTimeStamp($login, $failed=FALSE)
@@ -172,9 +152,12 @@ class Subjects extends ObjClasses {
      * Change user password
      *
      * @param string $login
-     * @param string $oldpass, old password (optional for 'superuser mode')
-     * @param string $pass, optional
-     * @param boolean $passenc, optional, password already encrypted if true
+     * @param string $oldpass
+     * 		old password (optional for 'superuser mode')
+     * @param string $pass
+     * 		optional
+     * @param boolean $passenc
+     * 		optional, password already encrypted if true
      * @return boolean/err
      */
     function passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
@@ -386,8 +369,10 @@ class Subjects extends ObjClasses {
     /**
      * Return true if uid is [id]direct member of gid
      *
-     * @param int $uid, local user id
-     * @param int $gid, local group id
+     * @param int $uid
+     * 		local user id
+     * @param int $gid
+     * 		local group id
      * @return boolean
      */
     function isMemberOf($uid, $gid)
@@ -412,8 +397,10 @@ class Subjects extends ObjClasses {
      *
      * @param int $uid
      * @param int $gid
-     * @param int $level, optional
-     * @param int $mid, optional
+     * @param int $level
+     * 		optional
+     * @param int $mid
+     * 		optional
      * @return int/err
      */
     function _addMemb($uid, $gid, $level=0, $mid='null')
@@ -474,7 +461,8 @@ class Subjects extends ObjClasses {
      * List [in]direct members of group
      *
      * @param int $gid
-     * @param int $uid, optional
+     * @param int $uid
+     * 		optional
      * @return array/err
      */
     function _listMemb($gid, $uid=NULL)
@@ -490,7 +478,8 @@ class Subjects extends ObjClasses {
      * List groups where uid is [in]direct member
      *
      * @param int $gid
-     * @param int $uid, optional
+     * @param int $uid
+     * 		optional
      * @return array/err
      */
     function _listRMemb($uid, $gid=NULL)
@@ -580,8 +569,10 @@ class Subjects extends ObjClasses {
     /**
      * Dump subjects for debug
      *
-     * @param string $indstr    // indentation string
-     * @param string $ind       // aktual indentation
+     * @param string $indstr
+     * 		indentation string
+     * @param string $ind
+     * 		actual indentation
      * @return string
      */
     function dumpSubjects($indstr='    ', $ind='')

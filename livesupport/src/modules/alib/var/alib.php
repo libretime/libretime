@@ -1,33 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
-
-    This file is part of the Campcaster project.
-    http://campcaster.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
-
-    Campcaster is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Campcaster is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Campcaster; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
-------------------------------------------------------------------------------*/
-
 require_once 'subj.php';
 
 define('USE_ALIB_CLASSES', TRUE);
@@ -35,14 +6,16 @@ define('ALIBERR_NOTLOGGED', 30);
 define('ALIBERR_NOTEXISTS', 31);
 
 /**
- *   Alib class
+ * Alib class
  *
- *   authentication/authorization class
+ * Authentication/authorization class
  *
- *  @author  $Author$
- *  @version $Revision$
- *  @see Subjects
- *  @see GreenBox
+ * @author  $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage Alib
+ * @see Subjects
+ * @see GreenBox
  */
 class Alib extends Subjects{
     var $permTable;
@@ -54,7 +27,7 @@ class Alib extends Subjects{
     /**
      * Constructor
      *
-     * @param object $dbc DB
+     * @param DB $dbc
      * @param array $config
      */
     function Alib(&$dbc, $config)
@@ -74,7 +47,8 @@ class Alib extends Subjects{
      *
      * @param string $login
      * @param string $pass
-     * @return boolean/sessionId/err
+     * @return mixed
+     * 		boolean/sessionId/err
      */
     function login($login, $pass)
     {
@@ -166,11 +140,15 @@ class Alib extends Subjects{
     /**
      * Insert permission record
      *
-     * @param int $sid - local user/group id
+     * @param int $sid
+     * 		local user/group id
      * @param string $action
-     * @param int $oid - local object id
-     * @param string $type - 'A'|'D' (allow/deny)
-     * @return int - local permission id
+     * @param int $oid
+     * 		local object id
+     * @param string $type
+     * 		'A'|'D' (allow/deny)
+     * @return int
+     * 		local permission id
      */
     function addPerm($sid, $action, $oid, $type='A')
     {
@@ -188,9 +166,12 @@ class Alib extends Subjects{
     /**
      * Remove permission record
      *
-     * @param int $permid OPT - local permission id
-     * @param int $subj OPT - local user/group id
-     * @param int $obj OPT - local object id
+     * @param int $permid
+     * 		(optional) local permission id
+     * @param int $subj
+     * 		(optional) local user/group id
+     * @param int $obj
+     * 		(optional) local object id
      * @return boolean/error
      */
     function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
@@ -217,8 +198,10 @@ class Alib extends Subjects{
     /**
      * Return object related with permission record
      *
-     * @param int $permid - local permission id
-     * @return int - local object id
+     * @param int $permid
+     * 		local permission id
+     * @return int
+     * 		local object id
      */
     function _getPermOid($permid)
     {
@@ -242,10 +225,14 @@ class Alib extends Subjects{
      * object-tree-related.
      * Support for object classes can be disabled by USE_ALIB_CLASSES const.
      *
-     * @param int $sid, subject id (user or group id)
-     * @param string $action, from set defined in config
-     * @param int $oid, object id, optional (default: root node)
-     * @return boolean/err
+     * @param int $sid
+     * 		subject id (user or group id)
+     * @param string $action
+     * 		from set defined in config
+     * @param int $oid
+     * 		object id, optional (default: root node)
+     * @return mixed
+     * 		boolean/err
      */
     function checkPerm($sid, $action, $oid=NULL)
     {
@@ -335,7 +322,8 @@ class Alib extends Subjects{
      * Remove all permissions on object and then remove object itself
      *
      * @param int $id
-     * @return void/error
+     * @return mixed
+     * 		void/error
      */
     function removeObj($id)
     {
@@ -352,7 +340,8 @@ class Alib extends Subjects{
      * Remove all permissions of subject and then remove subject itself
      *
      * @param string $login
-     * @return void/error
+     * @return mixed
+     * 		void/error
      */
     function removeSubj($login)
     {
@@ -370,6 +359,7 @@ class Alib extends Subjects{
         }
         return parent::removeSubj($login, $uid);
     } // fn removeSubj
+
 
     /* ------------------------------------------------------------- sessions */
     /**
@@ -515,8 +505,10 @@ class Alib extends Subjects{
     /**
      * Dump all permissions for debug
      *
-     * @param string $indstr   // indentation string
-     * @param string $ind      // actual indentation
+     * @param string $indstr
+     * 		indentation string
+     * @param string $ind
+     * 		actual indentation
      * @return string
      */
     function dumpPerms($indstr='    ', $ind='')

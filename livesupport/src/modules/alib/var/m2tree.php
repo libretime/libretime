@@ -2,12 +2,12 @@
 define('ALIBERR_MTREE', 10);
 
 /**
- *   M2tree class
+ * M2tree class
  *
- *   class for tree hierarchy stored in db
+ * A class for tree hierarchy stored in db.
  *
- *   example config: example/conf.php<br>
- *   example minimal config:
+ *  example config: example/conf.php<br>
+ *  example minimal config:
  *   <pre><code>
  *    $config = array(
  *        'dsn'       => array(           // data source definition
@@ -21,12 +21,16 @@ define('ALIBERR_MTREE', 10);
  *        'RootNode'	=>'RootNode',
  *    );
  *   </code></pre>
- *  @author  $Author$
- *  @version $Revision$
- *  @see ObjClasses
- *  Original author Tom Hlava
+ *
+ * @author  $Author$
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage Alib
+ * @see ObjClasses
+ *
+ * Original author Tom Hlava
  */
-class M2tree{
+class M2tree {
     /**
      *  Database object container
      */
@@ -53,11 +57,10 @@ class M2tree{
     var $rootNodeName;
 
     /**
-     *  Constructor
+     * Constructor
      *
-     *  @param dbc object
-     *  @param config array
-     *  @return this
+     * @param DB $dbc
+     * @param array $config
      */
     function M2tree(&$dbc, $config)
     {
@@ -71,13 +74,17 @@ class M2tree{
 
     /* ======================================================= public methods */
     /**
-     *   Add new object of specified type to the tree under specified parent
-     *   node
+     * Add new object of specified type to the tree under specified parent
+     * node
      *
-     *   @param string $name, mnemonic name for new object
-     *   @param string $type, type of new object
-     *   @param int $parid, optional, parent id
-     *   @return int/err - new id of inserted object or PEAR::error
+     * @param string $name
+     * 		mnemonic name for new object
+     * @param string $type
+     * 		type of new object
+     * @param int $parid
+     * 		optional, parent id
+     * @return mixed
+     * 		int/err - new id of inserted object or PEAR::error
      */
     function addObj($name, $type, $parid = NULL)
     {
@@ -138,14 +145,16 @@ class M2tree{
 
 
     /**
-     *   Remove specified object
+     * Remove specified object
      *
-     *   @param int $oid, object id to remove
-     *   @return boolean/err - TRUE or PEAR::error
+     * @param int $oid
+     * 		object id to remove
+     * @return mixed
+     * 		boolean/err - TRUE or PEAR::error
      */
     function removeObj($oid)
     {
-        if ($oid == $this->getRootNode()){
+        if ($oid == $this->getRootNode()) {
             return $this->dbc->raiseError(
                 "M2tree::removeObj: Can't remove root"
             );
@@ -154,7 +163,7 @@ class M2tree{
         if ($this->dbc->isError($dir)) {
             return $dir;
         }
-        foreach ($dir as $k => $ch){
+        foreach ($dir as $k => $ch) {
             $r = $this->removeObj($ch['id']);
             if ($this->dbc->isError($r)) {
                 return $r;
@@ -172,24 +181,28 @@ class M2tree{
             DELETE FROM {$this->structTable}
             WHERE objid=$oid
         ");
-        if($this->dbc->isError($r)) return $r;
+        if ($this->dbc->isError($r)) return $r;
         */
         return TRUE;
     } // fn removeObj
 
 
     /**
-     *  Create copy of specified object and insert copy to new position
-     *  recursively
+     * Create copy of specified object and insert copy to new position
+     * recursively
      *
-     *  @param oid int, source object id
-     *  @param newParid int, destination parent id
-     *  @param after null, dummy argument for back-compatibility
-     *  @return int/err - new id of inserted object or PEAR::error
+     * @param int $oid
+     * 		source object id
+     * @param int $newParid
+     * 		destination parent id
+     * @param null $after
+     * 		dummy argument for back-compatibility
+     * @return mixed
+     * 		int/err - new id of inserted object or PEAR::error
      */
     function copyObj($oid, $newParid, $after=NULL)
     {
-        if (TRUE === ($r = $this->isChildOf($newParid, $oid, TRUE))){
+        if (TRUE === ($r = $this->isChildOf($newParid, $oid, TRUE))) {
             return $this->dbc->raiseError(
                 "M2tree::copyObj: Can't copy into itself"
             );
@@ -230,7 +243,7 @@ class M2tree{
             return $nid;
         }
         // optionally insert children recursively:
-        foreach ($dir as $k => $item){
+        foreach ($dir as $k => $item) {
             $r = $this->copyObj($item['id'], $nid);
             if ($this->dbc->isError($r)) {
                 return $r;
@@ -241,11 +254,12 @@ class M2tree{
 
 
     /**
-     *  Move subtree to another node without removing/adding
+     * Move subtree to another node without removing/adding
      *
-     *  @param oid int
-     *  @param newParid int
-     *  @param after null, dummy argument for back-compatibility
+     * @param int $oid
+     * @param int $newParid
+     * @param null $after
+     * 		dummy argument for back-compatibility
      *  @return boolean/err
      */
     function moveObj($oid, $newParid, $after=NULL)
@@ -281,7 +295,7 @@ class M2tree{
         if ($this->dbc->isError($xid)) {
             return $this->_dbRollback($xid);
         }
-        if ($name != $name0){
+        if ($name != $name0) {
             $r = $this->renameObj($oid, $name);
             if ($this->dbc->isError($r)) {
                 return $this->_dbRollback($r);
@@ -301,11 +315,14 @@ class M2tree{
 
 
     /**
-     *   Rename of specified object
+     * Rename of specified object
      *
-     *   @param int $oid, object id to rename
-     *   @param string $newName, new name
-     *   @return boolean/err - True or PEAR::error
+     * @param int $oid
+     * 		object id to rename
+     * @param string $newName
+     * 		new name
+     * @return mixed
+     * 		boolean/err - True or PEAR::error
      */
     function renameObj($oid, $newName)
     {
@@ -338,11 +355,14 @@ class M2tree{
 
     /* --------------------------------------------------------- info methods */
     /**
-     *   Search for child id by name in sibling set
+     * Search for child id by name in sibling set
      *
-     *   @param string $name, searched name
-     *   @param int $parId, optional, parent id (default is root node)
-     *   @return int/null/err - child id (if found) or null or PEAR::error
+     * @param string $name
+     * 		searched name
+     * @param int $parId
+     * 		optional, parent id (default is root node)
+     * @return mixed
+     * 		int/null/err - child id (if found) or null or PEAR::error
      */
     function getObjId($name, $parId = null)
     {
@@ -365,11 +385,13 @@ class M2tree{
 
 
     /**
-     *   Get one value for object by id (default: get name)
+     * Get one value for object by id (default: get name)
      *
-     *   @param int $oid
-     *   @param string $fld, optional, requested field (default: name)
-     *   @return string/err
+     * @param int $oid
+     * @param string $fld
+     * 		optional, requested field (default: name)
+     * @return mixed
+     * 		string/err
      */
     function getObjName($oid, $fld='name')
     {
@@ -382,10 +404,10 @@ class M2tree{
 
 
     /**
-     *   Get object type by id.
+     * Get object type by id.
      *
-     *   @param int $oid
-     *   @return string/err
+     * @param int $oid
+     * @return string/err
      */
     function getObjType($oid)
     {
@@ -394,10 +416,10 @@ class M2tree{
 
 
     /**
-     *   Get parent id
+     * Get parent id
      *
-     *   @param int $oid
-     *   @return int/err
+     * @param int $oid
+     * @return int/err
      */
     function getParent($oid)
     {
@@ -410,12 +432,13 @@ class M2tree{
 
 
     /**
-     *   Get array of nodes in object's path from root node
+     * Get array of nodes in object's path from root node
      *
-     *   @param int $oid
-     *   @param string $flds, optional
-     *   @param boolean $withSelf - flag for include specified object to the path
-     *   @return array/err
+     * @param int $oid
+     * @param string $flds, optional
+     * @param boolean $withSelf
+     * 		flag for include specified object to the path
+     * @return array/err
      */
     function getPath($oid, $flds='id', $withSelf=TRUE)
     {
@@ -426,13 +449,17 @@ class M2tree{
             WHERE objid=$oid
             ORDER BY coalesce(level, 0) DESC
         ");
-        if($this->dbc->isError($path)) return $path;
-        if($withSelf){
+        if ($this->dbc->isError($path)) {
+        	return $path;
+        }
+        if ($withSelf) {
             $r = $this->dbc->getRow("
                 SELECT $flds FROM {$this->treeTable}
                 WHERE id=$oid
             ");
-            if($this->dbc->isError($r)) return $r;
+            if ($this->dbc->isError($r)) {
+            	return $r;
+            }
             array_push($path, $r);
         }
         return $path;
@@ -440,12 +467,14 @@ class M2tree{
 
 
     /**
-     *   Get array of childnodes
+     * Get array of childnodes
      *
-     *   @param int $oid
-     *   @param string $flds, optional, comma separated list of requested fields
-     *   @param string $order, optional, fieldname for order by clause
-     *   @return array/err
+     * @param int $oid
+     * @param string $flds
+     * 		optional, comma separated list of requested fields
+     * @param string $order
+     * 		optional, fieldname for order by clause
+     * @return array/err
      */
     function getDir($oid, $flds='id', $order='name')
     {
@@ -461,14 +490,17 @@ class M2tree{
 
 
     /**
-     *  Get level of object relatively to specified root
+     * Get level of object relatively to specified root
      *
-     *  @param int $oid, object id
-     *  @param string $flds, list of field names for select
+     * @param int $oid
+     * 		object id
+     * @param string $flds
+     * 		list of field names for select
      *      (optional - default: 'level')
-     *  @param int $rootId, root for relative levels
+     * @param int $rootId
+     * 		root for relative levels
      *      (optional - default: NULL - use root of whole tree)
-     *  @return hash-array with field name/value pairs
+     * @return hash-array with field name/value pairs
      */
     function getObjLevel($oid, $flds='level', $rootId=NULL)
     {
@@ -490,19 +522,23 @@ class M2tree{
 
 
     /**
-     *  Get subtree of specified node
+     * Get subtree of specified node
      *
-     *  @param int $oid, optional, default: root node
-     *  @param boolean $withRoot, optional, include/exclude specified node
-     *  @param int $rootId, root for relative levels, optional
-     *  @return array/err
+     * @param int $oid
+     * 		optional, default: root node
+     * @param boolean $withRoot
+     * 		optional, include/exclude specified node
+     * @param int $rootId
+     * 		root for relative levels, optional
+     * @return mixed
+     * 		array/err
      */
     function getSubTree($oid=NULL, $withRoot=FALSE, $rootId=NULL)
     {
-        if(is_null($oid)) $oid = $this->getRootNode();
-        if(is_null($rootId)) $rootId = $oid;
+        if (is_null($oid)) $oid = $this->getRootNode();
+        if (is_null($rootId)) $rootId = $oid;
         $r = array();
-        if($withRoot){
+        if ($withRoot) {
             $r[] = $re = $this->getObjLevel($oid, 'id, name, level', $rootId);
         } else {
             $re=NULL;
@@ -516,7 +552,7 @@ class M2tree{
         }
         foreach ($dirarr as $k => $snod) {
             $re = $this->getObjLevel($snod['id'], 'id, name, level', $rootId);
-            if($this->dbc->isError($re)) {
+            if ($this->dbc->isError($re)) {
                 return $re;
             }
 #            $re['level'] = intval($re['level'])+1;
@@ -529,16 +565,19 @@ class M2tree{
 
 
     /**
-     *  Returns true if first object if child of second one
+     * Returns true if first object if child of second one
      *
-     *  @param int $oid, object id of tested object
-     *  @param int $parid, object id of parent
-     *  @param boolean $indirect, test indirect or only direct relation
-     *  @return boolean
+     * @param int $oid
+     * 		object id of tested object
+     * @param int $parid
+     * 		object id of parent
+     * @param boolean $indirect
+     * 		test indirect or only direct relation
+     * @return boolean
      */
     function isChildOf($oid, $parid, $indirect=FALSE)
     {
-        if (!$indirect){
+        if (!$indirect) {
             $paridD = $this->getParent($oid);
             if ($this->dbc->isError($paridD)) {
                 return $paridD;
@@ -560,9 +599,9 @@ class M2tree{
 
 
     /**
-     *   Get id of root node
+     * Get id of root node
      *
-     *   @return int/err
+     * @return int/err
      */
     function getRootNode()
     {
@@ -571,9 +610,9 @@ class M2tree{
 
 
     /**
-     *   Get all objects in the tree as array of hashes
+     * Get all objects in the tree as array of hashes
      *
-     *   @return array/err
+     * @return array/err
      */
     function getAllObjects()
     {
@@ -604,11 +643,12 @@ class M2tree{
     /* ==================================================== "private" methods */
 
     /**
-     *  Cut subtree of specified object from tree.
-     *  Preserve subtree structure.
+     * Cut subtree of specified object from tree.
+     * Preserve subtree structure.
      *
-     *  @param int $oid, object id
-     *  @return boolean
+     * @param int $oid
+     * 		object id
+     * @return boolean
      */
     function _cutSubtree($oid)
     {
@@ -638,17 +678,19 @@ class M2tree{
     /**
      * Paste subtree previously cut by _cutSubtree method into main tree
      *
-     * @param int $oid, object id
-     * @param int $newParid, destination object id
+     * @param int $oid
+     * 		object id
+     * @param int $newParid
+     * 		destination object id
      * @return boolean
      */
     function _pasteSubtree($oid, $newParid)
     {
         $dataArr = array();
         // build data ($dataArr) for INSERT:
-        foreach ($this->getSubTree($oid, TRUE) as $o){
+        foreach ($this->getSubTree($oid, TRUE) as $o) {
             $l = intval($o['level'])+1;
-            for ($p = $newParid; !is_null($p); $p=$this->getParent($p), $l++){
+            for ($p = $newParid; !is_null($p); $p=$this->getParent($p), $l++) {
                 $rid = $this->dbc->nextId("{$this->structTable}_id_seq");
                 if ($this->dbc->isError($rid)) {
                     return $rid;
@@ -672,17 +714,18 @@ class M2tree{
 
 
     /**
-     *  Do SQL rollback and return PEAR::error
+     * Do SQL rollback and return PEAR::error
      *
-     *  @param object/string $r, error object or error message
-     *  @return err
+     * @param object/string $r
+     * 		error object or error message
+     * @return err
      */
     function _dbRollback($r)
     {
         $this->dbc->query("ROLLBACK");
         if ($this->dbc->isError($r)) {
             return $r;
-        } elseif(is_string($r)) {
+        } elseif (is_string($r)) {
             $msg = basename(__FILE__)."::".get_class($this).": $r";
         } else {
             $msg = basename(__FILE__)."::".get_class($this).": unknown error";
@@ -694,18 +737,21 @@ class M2tree{
     /* ==================================================== auxiliary methods */
 
     /**
-     *   Human readable dump of subtree - for debug
+     * Human readable dump of subtree - for debug
      *
-     *   @param int $oid, start object id
-     *   @param string $indstr, indentation string
-     *   @param string $ind, aktual indentation
-     *   @return string
+     * @param int $oid
+     * 		start object id
+     * @param string $indstr
+     * 		indentation string
+     * @param string $ind
+     * 		actual indentation
+     * @return string
      */
     function dumpTree($oid=NULL, $indstr='    ', $ind='',
         $format='{name}({id})', $withRoot=TRUE)
     {
         $r='';
-        foreach($st = $this->getSubTree($oid, $withRoot) as $o){
+        foreach ($st = $this->getSubTree($oid, $withRoot) as $o) {
             if ($this->dbc->isError($st)) {
                 return $st;
             }
