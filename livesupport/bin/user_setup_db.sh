@@ -59,7 +59,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport user database setup script.";
+    echo "Campcaster user database setup script.";
     echo "parameters:";
     echo "";
     echo "  -u, --user          The user to set up the environment for.";
@@ -101,7 +101,7 @@ if [ "x$user" == "x" ]; then
 fi
 
 
-echo "Creating the LiveSupport user database";
+echo "Creating the Campcaster user database";
 echo "for user: $user.";
 echo ""
 
@@ -111,7 +111,7 @@ echo ""
 #-------------------------------------------------------------------------------
 postgres_user=postgres
 
-ls_database=LiveSupport-$user
+ls_database=Campcaster-$user
 ls_dbuser=test
 ls_dbpassword=test
 ls_dbserver=localhost

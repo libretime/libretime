@@ -93,12 +93,12 @@ namespace {
 /*------------------------------------------------------------------------------
  *  The name of the configuration file for this class
  *----------------------------------------------------------------------------*/
-const std::string   configFileDirStr = "/.livesupport/";
+const std::string   configFileDirStr = "/.campcaster/";
 
 /*------------------------------------------------------------------------------
  *  The name of the configuration file for this class
  *----------------------------------------------------------------------------*/
-const std::string   configFileNameStr = "gLiveSupport.xml";
+const std::string   configFileNameStr = "campcaster-studio.xml";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for the list of supported languages

@@ -1,5 +1,5 @@
 [ls_database]
-Description      = the LiveSupport database at PostgreSQL
+Description      = the Campcaster database at PostgreSQL
 Driver           = PostgreSQL
 Trace            = No
 TraceFile        = /tmp/sql.log

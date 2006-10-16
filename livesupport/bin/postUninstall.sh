@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script makes post-uninstallation steps for LiveSupport.
+#  This script makes post-uninstallation steps for Campcaster.
 #
 #  Invoke as:
 #  ./bin/postUninstall.sh
@@ -50,18 +50,18 @@ tmpdir=$basedir/tmp
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport post-uninstall script.";
+    echo "Campcaster post-uninstall script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -r, --www-root      The root directory for web documents served";
     echo "                      by apache [default: /var/www]";
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
+    echo "                      database. [default: campcaster]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -115,11 +115,11 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupport;
+    database=Campcaster;
 fi
 
 if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
+    dbuser=campcaster;
 fi
 
 if [ "x$www_root" == "x" ]; then
@@ -127,7 +127,7 @@ if [ "x$www_root" == "x" ]; then
 fi
 
 
-echo "Making post-uninstall steps for LiveSupport.";
+echo "Making post-uninstall steps for Campcaster.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -196,7 +196,7 @@ check_exe "odbcinst" || exit 1;
 echo "Removing symlinks...";
 
 # remove symlink for the PHP pages in apache's document root
-rm -f $www_root/livesupport
+rm -f $www_root/campcaster
 
 
 #-------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ rm -rf $installdir/var/archiveServer/var/trans/*
 #-------------------------------------------------------------------------------
 echo "Removing ODBC data source and driver...";
 
-echo "Removing LiveSupport ODBC data source...";
+echo "Removing Campcaster ODBC data source...";
 odbcinst -u -s -l -n $ls_database || exit 1;
 
 echo "De-registering ODBC PostgreSQL driver...";

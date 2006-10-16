@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  A script to set up the development environment for LiveSupport
+#  A script to set up the development environment for Campcaster
 #
 #  Invoke as:
 #  ./bin/setupDevelopmentEnvironment.sh
@@ -54,7 +54,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport development environment setup script.";
+    echo "Campcaster development environment setup script.";
     echo "parameters";
     echo "";
     echo "  -g, --apache-group  The group the apache daemon runs as.";

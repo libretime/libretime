@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script sets up the test database for LiveSupport
+#  This script sets up the test database for Campcaster
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -48,13 +48,13 @@ scheduler_bindir=${scheduler_dir}/bin
 
 usrdir=`cd $basedir/usr; pwd;`
 
-installlog=/tmp/livesupport_install.log
+installlog=/tmp/campcaster_install.log
 
 
 #-------------------------------------------------------------------------------
 #  The details of the setup
 #-------------------------------------------------------------------------------
-ls_database=LiveSupport-test
+ls_database=Campcaster-test
 ls_dbuser=test
 ls_dbpassword=test
 ls_dbserver=localhost

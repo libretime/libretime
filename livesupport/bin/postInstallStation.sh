@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script makes post-installation steps for the LiveSupport Station.
+#  This script makes post-installation steps for the Campcaster Station.
 #
 #  Invoke as:
 #  ./bin/postInstallStation.sh
@@ -48,12 +48,12 @@ bindir=$basedir/bin
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport scheduler post-install script.";
+    echo "Campcaster Station post-install script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
     echo "                      [default: www-data]";
     echo "  -r, --www-root      The root directory for web documents served";
@@ -61,9 +61,9 @@ printUsage()
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
+    echo "                      database. [default: campcaster]";
     echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
+    echo "                      [default: campcaster]";
     echo "  -p, --postgresql-dir    The postgresql data directory, containing";
     echo "                      pg_hba.conf [default: /etc/postgresql]";
     echo "  -i, --postgresql-init-script    The name of the postgresql init";
@@ -133,15 +133,15 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupport;
+    database=Campcaster;
 fi
 
 if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
+    dbuser=campcaster;
 fi
 
 if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
+    dbpassword=campcaster;
 fi
 
 if [ "x$apache_group" == "x" ]; then
@@ -160,7 +160,7 @@ if [ "x$www_root" == "x" ]; then
     www_root=/var/www;
 fi
 
-echo "Making post-install steps for the LiveSupport scheduler.";
+echo "Making post-install steps for Campcaster Station.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -189,7 +189,7 @@ install_bin=$installdir/bin
 install_etc=$installdir/etc
 install_lib=$installdir/lib
 install_usr=$installdir/usr
-install_var_ls=$installdir/var/LiveSupport
+install_var_ls=$installdir/var/Campcaster
 
 
 #-------------------------------------------------------------------------------
@@ -252,7 +252,7 @@ echo "Modifying postgresql access permissions...";
 
 pg_config_dir=$postgresql_dir
 pg_config_file=pg_hba.conf
-pg_config_file_saved=pg_hba.conf.before-livesupport
+pg_config_file_saved=pg_hba.conf.before-campcaster
 
 if [ -f $pg_config_dir/$pg_config_file ] ; then
     mv -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
@@ -331,12 +331,12 @@ if [ "x$odbcinst_template" != "x" ] && [ "x$odbcinst_res" == "x" ]; then
     odbcinst -i -d -v -f $odbcinst_template || exit 1;
 fi
 
-echo "Registering LiveSupport ODBC data source...";
+echo "Registering Campcaster ODBC data source...";
 odbcinst -i -s -l -f $odbc_template || exit 1;
 
 
 #-------------------------------------------------------------------------------
-#   Install PEAR packages (locally in the LiveSupport)
+#   Install PEAR packages (locally in the Campcaster)
 #   only if necessary
 #-------------------------------------------------------------------------------
 if [ -f $install_usr/lib/pear/bin/install.sh ]; then
@@ -379,7 +379,7 @@ chmod g+sw $install_var_ls/htmlUI/var/html/img
 #  Configuring Apache
 #-------------------------------------------------------------------------------
 echo "Configuring apache ..."
-CONFFILE=90_php_livesupport.conf
+CONFFILE=90_php_campcaster.conf
 AP_DDIR_FOUND=no
 for APACHE_DDIR in \
     /etc/apache/conf.d /etc/apache2/conf.d /etc/apache2/conf/modules.d \
@@ -431,8 +431,8 @@ echo "done"
 echo "Creating symlinks...";
 
 # create symlink for the PHP pages in apache's document root
-rm -f $www_root/livesupport
-ln -s $install_var_ls $www_root/livesupport
+rm -f $www_root/campcaster
+ln -s $install_var_ls $www_root/campcaster
 
 
 #-------------------------------------------------------------------------------

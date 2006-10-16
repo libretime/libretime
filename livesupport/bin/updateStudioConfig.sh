@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script updates the configuration file of gLiveSupport.
+#  This script updates the configuration file of Campcaster Studio.
 #
 #  Invoke as:
 #  ./bin/updateStudioConfig.sh
@@ -50,7 +50,7 @@ tmpdir=$basedir/tmp
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "GLiveSupport post-install script.";
+    echo "Campcaster Studio post-install script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
@@ -134,7 +134,7 @@ if [ "x$cue_alsa_device" == "x" ]; then
     cue_alsa_device="default";
 fi
 
-echo "Making post-install steps for GLiveSupport.";
+echo "Making post-install steps for Campcaster Studio.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -151,7 +151,7 @@ echo ""
 #-------------------------------------------------------------------------------
 ls_php_host=$hostname
 ls_php_port=$http_port
-ls_php_urlPrefix=livesupport
+ls_php_urlPrefix=campcaster
 
 ls_alib_xmlRpcPrefix="xmlrpc/xrLocStor.php"
 ls_storage_xmlRpcPrefix="xmlrpc/xrLocStor.php"
@@ -228,10 +228,10 @@ check_exe "sed" || exit 1;
 #-------------------------------------------------------------------------------
 echo "Customizing configuration files..."
 
-# customize the gLiveSupport config file
-cat $install_etc/gLiveSupport.xml.template \
+# customize the Campcaster Studio config file
+cat $install_etc/campcaster-studio.xml.template \
     | sed -e "$replace_sed_string" \
-    > $install_etc/gLiveSupport.xml
+    > $install_etc/campcaster-studio.xml
 
 
 #-------------------------------------------------------------------------------

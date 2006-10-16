@@ -1,9 +1,9 @@
 [LiveSupport-test]
-Description      = the LiveSupport database at PostgreSQL
+Description      = the Campcaster database at PostgreSQL
 Driver           = PostgreSQL
 Trace            = No
 TraceFile        = /tmp/sql.log
-Database         = LiveSupport-test
+Database         = Campcaster-test
 Servername       = localhost
 Username         =
 Password         =

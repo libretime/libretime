@@ -58,7 +58,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport local user settings setup script.";
+    echo "Campcaster local user settings setup script.";
     echo "parameters";
     echo "";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
@@ -105,17 +105,17 @@ hostname=localhost
 http_port=80
 scheduler_port=`expr $scheduler_base_port + $UID`
 dbserver=localhost
-database=LiveSupport-$user
+database=Campcaster-$user
 dbuser=test
 dbpassword=test
 homedir=$HOME
-configdir=$homedir/.livesupport
+configdir=$homedir/.campcaster
 htmldir=$homedir/public_html
 output_device=default
 cue_device=default
 
 
-echo "Configuring LiveSupport development environment for user $user.";
+echo "Configuring Campcaster development environment for user $user.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -155,7 +155,7 @@ installdir=$usrdir
 
 ls_php_host=$hostname
 ls_php_port=$http_port
-ls_php_urlPrefix=~$user/livesupport
+ls_php_urlPrefix=~$user/campcaster
 
 ls_alib_xmlRpcPrefix="xmlrpc/xrLocStor.php"
 ls_storage_xmlRpcPrefix="xmlrpc/xrLocStor.php"
@@ -308,9 +308,9 @@ cat $products_dir/scheduler/etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/scheduler.xml
 
-cat $products_dir/gLiveSupport/etc/gLiveSupport.xml.user-template \
+cat $products_dir/gLiveSupport/etc/campcaster-studio.xml.user-template \
     | sed -e "$replace_sed_string" \
-    > $configdir/gLiveSupport.xml
+    > $configdir/campcaster-studio.xml
 
 cat $products_dir/gLiveSupport/etc/authenticationClient.xml.user-template \
     | sed -e "$replace_sed_string" \
@@ -328,9 +328,9 @@ echo "Creating public HTML directory and links to web interfaces..."
 
 mkdir -p $htmldir
 
-rm -f $htmldir/livesupport
+rm -f $htmldir/campcaster
 
-ln -s $modules_dir $htmldir/livesupport
+ln -s $modules_dir $htmldir/campcaster
 
 
 #-------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/var/index.php
 #  Say goodbye
 #-------------------------------------------------------------------------------
 echo "";
-echo "The HTML user interface for the LiveSupport development environment";
+echo "The HTML user interface for the Campcaster development environment";
 echo "for user $user is available at:";
 echo "http://$ls_php_host:$ls_php_port/$ls_php_urlPrefix/htmlUI/var";
 echo "";

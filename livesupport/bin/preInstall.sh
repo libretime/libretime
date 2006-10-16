@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script makes pre-install steps and checks for LiveSupport.
+#  This script makes pre-install steps and checks for Campcaster.
 #
 #  Invoke as:
 #  ./bin/preInstall.sh
@@ -56,7 +56,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport pre-install script.";
+    echo "Campcaster pre-install script.";
     echo "parameters";
     echo "";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
@@ -96,7 +96,7 @@ if [ "x$apache_group" == "x" ]; then
 fi
 
 
-echo "Making pre-install steps for LiveSupport.";
+echo "Making pre-install steps for Campcaster.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";

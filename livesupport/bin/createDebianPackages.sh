@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script creates Debian packages from LiveSupport tarballs.
+#  This script creates Debian packages from Campcaster tarballs.
 #  To create the tarballs first, see the dist.sh script.
 #
 #  Invoke as:
@@ -53,10 +53,10 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport debian source package creation script";
+    echo "Campcaster debian source package creation script";
     echo "parameters";
     echo "";
-    echo "  -d, --directory     Place to look for the livesupport source";
+    echo "  -d, --directory     Place to look for the campcaster source";
     echo "                      tarballs [default: current directory]";
     echo "  -m, --maintainer    The name and e-mail address of the package";
     echo "                      maintainer.";
@@ -128,7 +128,7 @@ else
 fi
 
 
-echo "Creating Debian source packages for LiveSupport.";
+echo "Creating Debian source packages for Campcaster.";
 echo "";
 echo "Using the following parameters:";
 echo "";
@@ -168,8 +168,8 @@ check_exe "sed" || exit 1;
 #-------------------------------------------------------------------------------
 #   More definitions
 #-------------------------------------------------------------------------------
-tarball=$directory/livesupport-$version.tar.bz2
-tarball_libs=$directory/livesupport-libraries-$version.tar.bz2
+tarball=$directory/campcaster-$version.tar.bz2
+tarball_libs=$directory/campcaster-libraries-$version.tar.bz2
 
 if [ ! -f $tarball ]; then
     echo "source tarball $tarball not found in directory $directory";
@@ -182,7 +182,7 @@ if [ ! -f $tarball_libs ]; then
 fi
 
 
-packageName=livesupport-$version
+packageName=campcaster-$version
 packageNameOrig=$packageName.orig
 workdir=$tmpdir/debianize
 
@@ -202,17 +202,17 @@ cd $workdir
 #-------------------------------------------------------------------------------
 echo "Extracting source tarballs...";
 
-# untar first, and rename as livesupport-$version.orig
+# untar first, and rename as campcaster-$version.orig
 tar xfj $tarball
 tar xfj $tarball_libs
 mv $packageName $packageNameOrig
 
-# untar again, and leave it as livesupport-$version
+# untar again, and leave it as campcaster-$version
 tar xfj $tarball
 tar xfj $tarball_libs
 
 #-------------------------------------------------------------------------------
-#   Debianize the livesupport-$version sources
+#   Debianize the campcaster-$version sources
 #-------------------------------------------------------------------------------
 echo "Debianizing sources...";
 
@@ -239,7 +239,7 @@ dpkg-source -b $packageName $packageNameOrig
 #-------------------------------------------------------------------------------
 echo "Moving debian source package files to target directory...";
 
-mv -f livesupport_$version* $outdir
+mv -f campcaster_$version* $outdir
 
 
 #-------------------------------------------------------------------------------

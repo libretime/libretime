@@ -26,10 +26,10 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script creates a distribution tarball for livesupport.
+#  This script creates a distribution tarball for Campcaster.
 #  Creates two tarballs:
-#  livesupport-<version>.tar.bz2            - the LiveSupport source files
-#  livesupport-libraries-<version>.tar.bz2  - dependent libraries
+#  campcaster-<version>.tar.bz2            - the Campcaster source files
+#  campcaster-libraries-<version>.tar.bz2  - dependent libraries
 #
 #  Invoke as:
 #  ./bin/dist.sh -v <version.number>
@@ -57,7 +57,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport install script.";
+    echo "Campcaster install script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     Place the tarballs in the specified directory.";
@@ -110,7 +110,7 @@ d=`cd $directory; pwd`
 directory=$d
 
 
-echo "Creating tarballs for LiveSupport.";
+echo "Creating tarballs for Campcaster.";
 echo "";
 echo "Using the following parameters:";
 echo "";
@@ -124,7 +124,7 @@ echo ""
 #-------------------------------------------------------------------------------
 if [ -f $basedir/Makefile ]; then
     echo "ERROR: make sure to run this script on a freshly checked-out copy";
-    echo "       of LiveSupport, with NO generated files!";
+    echo "       of Campcaster, with NO generated files!";
     exit 1;
 fi
 
@@ -132,10 +132,10 @@ fi
 #-------------------------------------------------------------------------------
 #   More definitions
 #-------------------------------------------------------------------------------
-tarball=$directory/livesupport-$version.tar.bz2
-tarball_libs=$directory/livesupport-libraries-$version.tar.bz2
+tarball=$directory/campcaster-$version.tar.bz2
+tarball_libs=$directory/campcaster-libraries-$version.tar.bz2
 
-ls_tmpdir=$tmpdir/livesupport-$version
+ls_tmpdir=$tmpdir/campcaster-$version
 src_tmpdir=$ls_tmpdir/src
 tools_tmpdir=$src_tmpdir/tools
 modules_tmpdir=$src_tmpdir/modules
@@ -231,14 +231,13 @@ cp -pPR README INSTALL configure $ls_tmpdir
 #-------------------------------------------------------------------------------
 #  Get rid of the remnants of the subversion system
 #-------------------------------------------------------------------------------
-# Paul Baranowski: you dont need to do this when you export from SVN.
-#rm -rf `find $ls_tmpdir -name .svn -type d`
+rm -rf `find $ls_tmpdir -name .svn -type d`
 
 
 #-------------------------------------------------------------------------------
 #  Create the main configure script
 #-------------------------------------------------------------------------------
-cd $tmpdir/livesupport-$version
+cd $tmpdir/campcaster-$version
 ./bin/autogen.sh
 cd $basedir
 
@@ -247,7 +246,7 @@ cd $basedir
 #  Create the tarball
 #-------------------------------------------------------------------------------
 cd $tmpdir
-tar cfj $tarball livesupport-$version
+tar cfj $tarball campcaster-$version
 cd $basedir
 
 
@@ -323,7 +322,7 @@ rm -rf `find $ls_tmpdir -name .svn -type d`
 #  Create the libraries tarball
 #-------------------------------------------------------------------------------
 cd $tmpdir
-tar cfj $tarball_libs livesupport-$version
+tar cfj $tarball_libs campcaster-$version
 cd $basedir
 
 

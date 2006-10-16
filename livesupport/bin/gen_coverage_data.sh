@@ -28,7 +28,7 @@
 #-------------------------------------------------------------------------------
 # This script generates code coverage data for all modules
 #-------------------------------------------------------------------------------
-module="LiveSupport"
+module="Campcaster"
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`

@@ -27,7 +27,7 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# This script runs cvs to update the LiveSupport source code.
+# This script runs cvs to update the Campcaster source code.
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
@@ -37,7 +37,7 @@ tmpdir=$basedir/tmp
 logdir=$basedir/tmp
 
 echo "";
-echo "The LiveSupport source code will be updated now ... and logged in";
+echo "The Campcaster source code will be updated now ... and logged in";
 echo "$logdir";
 echo "";
 

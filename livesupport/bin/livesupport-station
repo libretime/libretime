@@ -2,48 +2,48 @@
 #
 #
 
-LIVESUPPORT_DIR=/opt/livesupport
-LIVESUPPORT_BIN=$LIVESUPPORT_DIR/bin
-LIVESUPPORT_ETC=$LIVESUPPORT_DIR/etc
-LIVESUPPORT_LIB=$LIVESUPPORT_DIR/lib
-GSTREAMER_DIR=`find $LIVESUPPORT_LIB -type d -name "gstreamer-*"`
+CAMPCASTER_DIR=/opt/campcaster
+CAMPCASTER_BIN=$CAMPCASTER_DIR/bin
+CAMPCASTER_ETC=$CAMPCASTER_DIR/etc
+CAMPCASTER_LIB=$CAMPCASTER_DIR/lib
+GSTREAMER_DIR=`find $CAMPCASTER_LIB -type d -name "gstreamer-*"`
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin:$LIVESUPPORT_BIN
-LD_LIBRARY_PATH=$LIVESUPPORT_LIB:$LD_LIBRARY_PATH
-DAEMON=$LIVESUPPORT_BIN/scheduler
-NAME=livesupport-scheduler
-DESC="livesupport scheduler"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:$CAMPCASTER_BIN
+LD_LIBRARY_PATH=$CAMPCASTER_LIB:$LD_LIBRARY_PATH
+DAEMON=$CAMPCASTER_BIN/scheduler
+NAME=campcaster-scheduler
+DESC="campcaster scheduler"
 
 test -x $DAEMON || exit 0
 
 export PATH
 export LD_LIBRARY_PATH
 
-DAEMON_OPTS="-c $LIVESUPPORT_ETC/scheduler.xml"
+DAEMON_OPTS="-c $CAMPCASTER_ETC/scheduler.xml"
 
 set -e
 
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml start > /dev/null
+    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml start > /dev/null
 	echo "$NAME."
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml stop > /dev/null
+    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml stop > /dev/null
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
-    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml stop > /dev/null
+    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml stop > /dev/null
 	sleep 1
-    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml start > /dev/null
+    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml start > /dev/null
 	echo "$NAME."
 	;;
   kill)
 	echo -n "Killing $DESC: "
-    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml kill > /dev/null
+    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml kill > /dev/null
 	echo "$NAME."
 	;;
   *)
