@@ -24,9 +24,9 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script reates the database used by LiveSupport
+#-------------------------------------------------------------------------------
+#  This script reates the database used by Campcaster
 #
 #  Invoke as:
 #  ./bin/createDatabase.sh
@@ -51,17 +51,17 @@ usrdir=$basedir/usr
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport scheduler database creation script.";
+    echo "Campcaster scheduler database creation script.";
     echo "parameters";
     echo "";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
+    echo "                      database. [default: campcaster]";
     echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
+    echo "                      [default: campcaster]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -106,18 +106,18 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupport;
+    database=Campcaster;
 fi
 
 if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
+    dbuser=campcaster;
 fi
 
 if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
+    dbpassword=campcaster;
 fi
 
-echo "Creating database for LiveSupport scheduler.";
+echo "Creating database for Campcaster scheduler.";
 echo "";
 echo "Using the following parameters:";
 echo "";

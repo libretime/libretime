@@ -1,6 +1,6 @@
 es:table
 {
-    windowTitle:string       { "Panel maestro de LiveSupport" }
+    windowTitle:string       { "Panel maestro de Campcaster" }
     notLoggedInMsg:string    { "No ha ingresado al sistema" }
     loggedInMsg:string       { "Ingresó al sistema como {0}" }
     loginButtonLabel:string  { "Accesar" }
@@ -31,7 +31,7 @@ es:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "Ventana de audio clip de LiveSupport" }
+        windowTitle:string            { "Ventana de audio clip de Campcaster" }
 
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "duración" }
@@ -43,7 +43,7 @@ es:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "Scratchpad de LiveSupport " }
+        windowTitle:string                  { "Scratchpad de Campcaster " }
 
         typeColumnLabel:string              { "Tipo" }
         titleColumnLabel:string             { "Título" }
@@ -62,7 +62,7 @@ es:table
 
     playlistListWindow:table
     {
-        windowTitle:string            { "Venta de lista de reproducción de LiveSupport" }
+        windowTitle:string            { "Venta de lista de reproducción de Campcaster" }
 
         listBoxLabel                  { "Listas de reproducción" }
         detailBoxLabel                { "Detalles de las listas de reproducción" }
@@ -100,7 +100,7 @@ es:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "Ventana del módulo administrativo de las listas de reproducción simples de LiveSupport" }
+        windowTitle:string            { "Ventana del módulo administrativo de las listas de reproducción simples de Campcaster" }
 
         startColumnLabel:string       { "inicio" }
         titleColumnLabel:string       { "título" }
@@ -116,7 +116,7 @@ es:table
 
     schedulerWindow:table
     {
-        windowTitle:string            { "Ventana del programador de LiveSupport" }
+        windowTitle:string            { "Ventana del programador de Campcaster" }
 
         startColumnLabel:string       { "inicio" }
         titleColumnLabel:string       { "título" }
@@ -129,7 +129,7 @@ es:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "Ventana de las listas de reproducción programadas de LiveSupport" }
+        windowTitle:string            { "Ventana de las listas de reproducción programadas de Campcaster" }
 
         hourLabel:string              { "hora: " }
         minuteLabel:string            { "minuto: " }
@@ -139,45 +139,45 @@ es:table
 
     searchWindow:table
     {
-        windowTitle:string            { "Ventana de búsqueda/navegación de LiveSupport" }
+        windowTitle:string            { "Ventana de búsqueda/navegación de Campcaster" }
 
         simpleSearchTab:string        { "Búsqueda" }
         advancedSearchTab:string      { "Búsqueda avanzada" }
         browseTab:string              { "Navegar" }
-        
+
         searchByTextLabel:string      { "Buscar por" }
         searchButtonLabel:string      { "Buscar" }
-        
+
         typeColumnLabel:string        { "Tipo" }
         titleColumnLabel:string       { "Título" }
         creatorColumnLabel:string     { "Creador" }
         lengthColumnLabel:string      { "Duración" }
-        
+
         partialOperatorDisplay:string     { "contiene" }
         prefixOperatorDisplay:string      { "empieza con" }
         =OperatorDisplay:string           { "equivale" }
         <=OperatorDisplay:string          { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        
+
         allStringForBrowse                { "--- todo ---" }
-        
+
         addToScratchpadMenuItem:string    { "_Añadir a Scratchpad" }
         addToLiveModeMenuItem:string      { "Añadir a Modo en vivo" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "Venta Modo en vivo de LiveSupport" }
-        
+        windowTitle:string            { "Venta Modo en vivo de Campcaster" }
+
         cueMenuItem:string            { "Previsualizar" }
         upMenuItem:string             { "Desplazar hacia arriba" }
         downMenuItem:string           { "Desplazar hacia abajo" }
         removeMenuItem:string         { "Eliminar" }
         playMenuItem:string           { "Reproduccir" }
-        
+
         cuePlayerLabel:string         { "Previsualizar" }
     }
-    
+
     metadataTypes:table
     {
         title:string                { "Título" }

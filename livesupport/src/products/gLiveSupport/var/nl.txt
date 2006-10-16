@@ -1,6 +1,6 @@
 nl:table
 {
-    windowTitle:string       { "LiveSupport Master Panel" }
+    windowTitle:string       { "Campcaster Master Panel" }
     notLoggedInMsg:string    { "Niet aangemeld" }
     loggedInMsg:string       { "Aangemeld als {0}" }
     loginButtonLabel:string  { "aanmelden" }
@@ -31,7 +31,7 @@ nl:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "LiveSupport Audio Clip window" }
+        windowTitle:string            { "Campcaster Audio Clip window" }
 
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "lengte" }
@@ -43,7 +43,7 @@ nl:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "LiveSupport Scratchpad" }
+        windowTitle:string                  { "Campcaster Scratchpad" }
 
         typeColumnLabel:string              { "Type" }
         titleColumnLabel:string             { "Titel" }
@@ -62,7 +62,7 @@ nl:table
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Playlist window" }
+        windowTitle:string            { "Campcaster Playlist window" }
 
         listBoxLabel                  { "Playlists" }
         detailBoxLabel                { "Playlist details" }
@@ -100,7 +100,7 @@ nl:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Playlist beheer window" }
+        windowTitle:string            { "Campcaster Playlist beheer window" }
 
         startColumnLabel:string       { "start" }
         titleColumnLabel:string       { "titel" }
@@ -116,7 +116,7 @@ nl:table
 
     schedulerWindow:table
     {
-        windowTitle:string            { "LiveSupport Scheduler window" }
+        windowTitle:string            { "Campcaster Scheduler window" }
 
         startColumnLabel:string       { "start" }
         titleColumnLabel:string       { "titel" }
@@ -129,7 +129,7 @@ nl:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "LiveSupport Schedule Playlist window" }
+        windowTitle:string            { "Campcaster Schedule Playlist window" }
 
         hourLabel:string              { "uur: " }
         minuteLabel:string            { "minuten: " }
@@ -139,45 +139,45 @@ nl:table
 
     searchWindow:table
     {
-        windowTitle:string            { "LiveSupport zoeken/bladeren window" }
+        windowTitle:string            { "Campcaster zoeken/bladeren window" }
 
         simpleSearchTab:string        { "Zoeken" }
         advancedSearchTab:string      { "Geadvanceerd" }
         browseTab:string              { "Bladeren" }
-        
+
         searchByTextLabel:string      { "Zoeken met" }
         searchButtonLabel:string      { "Zoeken" }
-        
+
         typeColumnLabel:string        { "Type" }
         titleColumnLabel:string       { "Titel" }
         creatorColumnLabel:string     { "Maker" }
         lengthColumnLabel:string      { "Lengte" }
-        
+
         partialOperatorDisplay:string     { "contains" }
         prefixOperatorDisplay:string      { "start met" }
         =OperatorDisplay:string           { "gelijk aan" }
         <=OperatorDisplay:string          { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        
+
         allStringForBrowse                { "--- alle ---" }
-        
+
         addToScratchpadMenuItem:string    { "Toevoegen aan _Scratchpad" }
         addToLiveModeMenuItem:string      { "Toevoegen aan _Live Mode" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "LiveSupport Live Mode window" }
-        
+        windowTitle:string            { "Campcaster Live Mode window" }
+
         cueMenuItem:string            { "_Cue" }
         upMenuItem:string             { "Naar B_oven" }
         downMenuItem:string           { "Naar B_eneden" }
         removeMenuItem:string         { "_Verwijderen" }
         playMenuItem:string           { "_Play" }
-        
+
         cuePlayerLabel:string         { "Cue" }
     }
-    
+
     metadataTypes:table
     {
         title:string                { "Titel" }

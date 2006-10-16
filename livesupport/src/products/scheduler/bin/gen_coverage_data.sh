@@ -24,11 +24,11 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
+#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 # This script generates code coverage data for the module
 #-------------------------------------------------------------------------------
-module="LiveSupport Scheduler"
+module="Campcaster Scheduler"
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`

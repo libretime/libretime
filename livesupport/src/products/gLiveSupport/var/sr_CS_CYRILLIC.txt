@@ -1,6 +1,6 @@
 sr_CS_CYRILLIC:table
 {
-    windowTitle:string       { "LiveSupport Maстер Панел" }
+    windowTitle:string       { "Campcaster Maстер Панел" }
     notLoggedInMsg:string    { "Нисте пријављени" }
     loggedInMsg:string       { "Пријављени сте као {0}" }
     loginButtonLabel:string  { "Пријава" }
@@ -31,7 +31,7 @@ sr_CS_CYRILLIC:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "LiveSupport Аудио Клипови" }
+        windowTitle:string            { "Campcaster Аудио Клипови" }
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
@@ -43,7 +43,7 @@ sr_CS_CYRILLIC:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "LiveSupport Припрема" }
+        windowTitle:string                  { "Campcaster Припрема" }
 
         typeColumnLabel:string              { "Тип" }
         titleColumnLabel:string             { "Наслов" }
@@ -62,7 +62,7 @@ sr_CS_CYRILLIC:table
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Плеј Листа" }
+        windowTitle:string            { "Campcaster Плеј Листа" }
 
         listBoxLabel                  { "Плеј листе" }
         detailBoxLabel                { "Детаљи плеј листе" }
@@ -99,7 +99,7 @@ sr_CS_CYRILLIC:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Једноставно управљање плеј листом" }
+        windowTitle:string            { "Campcaster Једноставно управљање плеј листом" }
 
         startColumnLabel:string       { "почни" }
         titleColumnLabel:string       { "наслов" }
@@ -115,7 +115,7 @@ sr_CS_CYRILLIC:table
 
     schedulerWindow:table
     {
-        windowTitle:string            { "LiveSupport Распоред" }
+        windowTitle:string            { "Campcaster Распоред" }
 
         startColumnLabel:string       { "почетак" }
         titleColumnLabel:string       { "назив" }
@@ -128,7 +128,7 @@ sr_CS_CYRILLIC:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "LiveSupport Програмирање Плеј листе" }
+        windowTitle:string            { "Campcaster Програмирање Плеј листе" }
 
         hourLabel:string              { "сат: " }
         minuteLabel:string            { "минут: " }
@@ -138,45 +138,45 @@ sr_CS_CYRILLIC:table
 
     searchWindow:table
     {
-        windowTitle:string            { "LiveSupport Претрага/Преглед" }
+        windowTitle:string            { "Campcaster Претрага/Преглед" }
 
         simpleSearchTab:string        { "Претрага" }
         advancedSearchTab:string      { "Напредна претрага" }
         browseTab:string              { "Преглед" }
-        
+
         searchByTextLabel:string      { "Тражи по" }
         searchButtonLabel:string      { "Претражи" }
-        
+
         typeColumnLabel:string        { "Тип" }
         titleColumnLabel:string       { "Наслов" }
         creatorColumnLabel:string     { "Аутор" }
         lengthColumnLabel:string      { "Дужина" }
-        
+
         partialOperatorDisplay:string     { "садржи" }
         prefixOperatorDisplay:string      { "почиње са" }
         =OperatorDisplay:string           { "једнако" }
         <=OperatorDisplay:string          { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        
+
         allStringForBrowse                { "--- све ---" }
-        
+
         addToScratchpadMenuItem:string    { "Додај у Припрему " }
         addToLiveModeMenuItem:string      { "Додај у Програм Уживо" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "LiveSupport Програм Уживо" }
-        
+        windowTitle:string            { "Campcaster Програм Уживо" }
+
         cueMenuItem:string            { "Проба" }
         upMenuItem:string             { "Помери горе" }
         downMenuItem:string           { "Помери доле" }
         removeMenuItem:string         { "Уклони" }
         playMenuItem:string           { "Пусти" }
-        
+
         cuePlayerLabel:string         { "Проба" }
     }
-    
+
     metadataTypes:table
     {
         title:string                { "Назив" }

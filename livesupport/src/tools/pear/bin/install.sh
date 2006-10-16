@@ -24,10 +24,10 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-# Run this script to install PEAR packages needed by LiveSupport locally
-# into the Livesupport usr environment.
+#-------------------------------------------------------------------------------
+# Run this script to install PEAR packages needed by Campcaster locally
+# into the Campcaster usr environment.
 # To read more about PEAR, see http://pear.php.net/
 #-------------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ etcdir=$basedir/etc
 srcdir=$basedir/src
 installdir=$basedir/../../usr
 
-package="PEAR packages needed by LiveSupport"
+package="PEAR packages needed by Campcaster"
 
 packages_required="
 Archive_Tar
@@ -80,10 +80,10 @@ VERSION_XML_Serializer=XML_Serializer-0.15.0
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport PEAR packages install script.";
+    echo "Campcaster PEAR packages install script.";
     echo " parameters:";
     echo "";
-    echo "  -d, --directory  The LiveSupport installation directory";
+    echo "  -d, --directory  The Campcaster installation directory";
     echo "  -h, --help       Print this message and exit.";
     echo "";
 }

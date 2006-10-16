@@ -1,6 +1,6 @@
 pl:table
 {
-    windowTitle:string              { "LiveSupport - Okno główne" }
+    windowTitle:string              { "Campcaster - Okno główne" }
     notLoggedInMsg:string           { "Nie zalogowany" }
     loggedInMsg:string              { "Zalogowany jako {0}" }
     loginButtonLabel:string         { "Zaloguj" }
@@ -20,7 +20,7 @@ pl:table
 
     elapsedTimeLabel:string         { "minęło" }
     remainingTimeLabel:string       { "zostało" }
-    
+
     localeNotAvailableMsg:string    { "Język {0} nie jest dostępny" }
     schedulerNotReachableMsg:string { "Serwer programacji nie jest dostępny" }
     storageNotReachableMsg:string   { "Serwer plików nie jest dostępny" }
@@ -41,7 +41,7 @@ pl:table
 
     audioClipListWindow:table
     {
-        windowTitle:string          { "LiveSupport - Okno utworu" }
+        windowTitle:string          { "Campcaster - Okno utworu" }
 
         idColumnLabel:string        { "id" }
         lengthColumnLabel:string    { "długość" }
@@ -53,7 +53,7 @@ pl:table
 
     scratchpadWindow:table
     {
-        windowTitle:string          { "LiveSupport - Przybornik" }
+        windowTitle:string          { "Campcaster - Przybornik" }
 
         typeColumnLabel:string      { "Rodzaj" }
         titleColumnLabel:string     { "Tytuł" }
@@ -73,14 +73,14 @@ pl:table
         cueMenuItem:string          { "Po_słuchaj" }
         addToLiveModeMenuItem:string
                                     { "Dodaj do _Na żywo" }
-        
+
         cannotEditPlaylistMsg:string
                                     { "Nie udało się otworzyć listę do edycji." }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string          { "LiveSupport - Okno listy utworów" }
+        windowTitle:string          { "Campcaster - Okno listy utworów" }
 
         listBoxLabel                { "Listy utworów" }
         detailBoxLabel              { "Szczegóły" }
@@ -104,7 +104,7 @@ pl:table
         mainSectionLabel:string     { "Start" }
         musicSectionLabel:string    { "Muzyka" }
         voiceSectionLabel:string    { "Audycja" }
-        
+
         lengthLabel:string          { "Długość" }
 
         uploadButtonLabel:string    { "Załaduj" }
@@ -114,7 +114,7 @@ pl:table
                                     { "Wybierz plik" }
         clipUploadedMsg:string      { "Plik ''{0}'' został załadowany." }
         couldNotOpenFileMsg:string  { "Nie udało się otworzyć pliku." }
-        couldNotReadLengthMsg:string 
+        couldNotReadLengthMsg:string
                                     { "Nie udało się ustalić długość pliku." }
         unsupportedFileTypeMsg:string
                                     { "To rozszerzenie nie jest obsługiwane." }
@@ -123,7 +123,7 @@ pl:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string          { "LiveSupport - Zarządzanie listą utworów" }
+        windowTitle:string          { "Campcaster - Zarządzanie listą utworów" }
 
         startColumnLabel:string     { "Początek" }
         titleColumnLabel:string     { "Tytuł" }
@@ -133,10 +133,10 @@ pl:table
         nameLabel:string            { "Nazwa" }
         saveButtonLabel:string      { "Zapisz" }
         closeButtonLabel:string     { "Zamknij" }
-        lockFadesCheckButtonLabel:string    
+        lockFadesCheckButtonLabel:string
                                     { "Zablokuj zakończenie do następnego wprowadzenia" }
         statusBar:string            { "pasek stanu" }
-        
+
         upMenuItem:string           { "Do _Góry" }
         downMenuItem:string         { "Do D_ołu" }
         removeMenuItem:string       { "_Usuń" }
@@ -149,7 +149,7 @@ pl:table
 
     schedulerWindow:table
     {
-        windowTitle:string          { "LiveSupport - Okno programacji" }
+        windowTitle:string          { "Campcaster - Okno programacji" }
 
         startColumnLabel:string     { "Początek" }
         titleColumnLabel:string     { "tytuł" }
@@ -162,7 +162,7 @@ pl:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string          { "LiveSupport - Programacja listy utworów" }
+        windowTitle:string          { "Campcaster - Programacja listy utworów" }
 
         hourLabel:string            { "godzina: " }
         minuteLabel:string          { "minuta: " }
@@ -172,20 +172,20 @@ pl:table
 
     searchWindow:table
     {
-        windowTitle:string          { "LiveSupport - Szukaj / Przeglądaj" }
+        windowTitle:string          { "Campcaster - Szukaj / Przeglądaj" }
 
         simpleSearchTab:string      { "Szukaj" }
         advancedSearchTab:string    { "Szukanie zaawansowane" }
         browseTab:string            { "Przeglądaj" }
-        
+
         searchByTextLabel:string    { "Szukaj po" }
         searchButtonLabel:string    { "Szukaj" }
-        
+
         typeColumnLabel:string      { "Rodzaj" }
         titleColumnLabel:string     { "Tytuł" }
         creatorColumnLabel:string   { "Autor" }
         lengthColumnLabel:string    { "Długość" }
-        
+
         partialOperatorDisplay:string
                                     { "zawiera" }
         prefixOperatorDisplay:string
@@ -193,9 +193,9 @@ pl:table
         =OperatorDisplay:string     { "równa się" }
         <=OperatorDisplay:string    { "<=" }
         >=OperatorDisplay:string    { ">=" }
-        
+
         allStringForBrowse          { "--- wszystko ---" }
-        
+
         addToScratchpadMenuItem:string
                                     { "_Dodaj do przybornika" }
         addToLiveModeMenuItem:string
@@ -204,17 +204,17 @@ pl:table
 
     liveModeWindow:table
     {
-        windowTitle:string          { "LiveSupport - Na żywo" }
-        
+        windowTitle:string          { "Campcaster - Na żywo" }
+
         cueMenuItem:string          { "Po_słuchaj" }
         upMenuItem:string           { "Do _Góry" }
         downMenuItem:string         { "Do D_ołu" }
         removeMenuItem:string       { "_Usuń" }
         playMenuItem:string         { "_Zagraj" }
-        
+
         cuePlayerLabel:string       { "Podgląd" }
     }
-    
+
     metadataTypes:table
     {
         title:string                { "Tytuł" }

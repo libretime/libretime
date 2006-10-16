@@ -26,7 +26,7 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  System V runlevel style invoke script for the LiveSupport Scheduler
+#  System V runlevel style invoke script for the Campcaster Scheduler
 #-------------------------------------------------------------------------------
 
 
@@ -57,50 +57,50 @@ mode=$1
 #-------------------------------------------------------------------------------
 case "$mode" in
     'start')
-        echo "Starting the LiveSupport scheduler..."
+        echo "Starting the Campcaster scheduler..."
         $scheduler_exe -c $config_file start
         sleep 2
         ;;
 
     'stop')
-        echo "Stopping the LiveSupport scheduler..."
+        echo "Stopping the Campcaster scheduler..."
         $scheduler_exe -c $config_file stop
         sleep 2
         ;;
 
     'restart')
-        echo "Stopping the LiveSupport scheduler..."
+        echo "Stopping the Campcaster scheduler..."
         $scheduler_exe -c $config_file stop
         sleep 2
-        echo "Starting the LiveSupport scheduler..."
+        echo "Starting the Campcaster scheduler..."
         $scheduler_exe -c $config_file start
         sleep 2
         ;;
 
     'status')
-        echo "Checking LiveSupport scheduler status..."
+        echo "Checking Campcaster scheduler status..."
         $scheduler_exe -c $config_file status
         ;;
 
     'install')
-        echo "Installing LiveSupport scheduler database tables..."
+        echo "Installing Campcaster scheduler database tables..."
         $scheduler_exe -c $config_file install
         ;;
 
     'uninstall')
-        echo "Uninstalling LiveSupport scheduler database tables..."
+        echo "Uninstalling Campcaster scheduler database tables..."
         $scheduler_exe -c $config_file uninstall
         ;;
 
     'kill')
-        echo "Killing all LiveSupport scheduler processes..."
+        echo "Killing all Campcaster scheduler processes..."
         killall scheduler
         sleep 2
         killall -9 scheduler
         ;;
 
     *)
-        echo "LiveSupport scheduler System V runlevel init script."
+        echo "Campcaster scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
         echo "  $0 start|stop|restart|status|install|uninstall|kill"

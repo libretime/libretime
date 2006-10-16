@@ -1,6 +1,6 @@
 hu:table
 {
-    windowTitle:string       { "LiveSupport Fő Panel" }
+    windowTitle:string       { "Campcaster Fő Panel" }
     notLoggedInMsg:string    { "Nincs bejelentkezve" }
     loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
     loginButtonLabel:string  { "bejelentkezés" }
@@ -37,7 +37,7 @@ hu:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "LiveSupport Hanganyag ablak" }
+        windowTitle:string            { "Campcaster Hanganyag ablak" }
 
         idColumnLabel:string          { "azonosító" }
         lengthColumnLabel:string      { "hossz" }
@@ -49,7 +49,7 @@ hu:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "LiveSupport Praktikus csupor" }
+        windowTitle:string                  { "Campcaster Praktikus csupor" }
 
         typeColumnLabel:string              { "Típus" }
         titleColumnLabel:string             { "Cím" }
@@ -68,7 +68,7 @@ hu:table
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Műsorszerkesztő ablak" }
+        windowTitle:string            { "Campcaster Műsorszerkesztő ablak" }
 
         listBoxLabel                  { "Műsorok" }
         detailBoxLabel                { "Műsor adatai" }
@@ -106,7 +106,7 @@ hu:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Egyszerű műsorszerkesztő ablak" }
+        windowTitle:string            { "Campcaster Egyszerű műsorszerkesztő ablak" }
 
         startColumnLabel:string       { "kezdet" }
         titleColumnLabel:string       { "cím" }
@@ -122,7 +122,7 @@ hu:table
 
     schedulerWindow:table
     {
-        windowTitle:string           { "LiveSupport Időzítő Ablak" }
+        windowTitle:string           { "Campcaster Időzítő Ablak" }
 
         startColumnLabel:string      { "kezdet" }
         titleColumnLabel:string      { "cím" }
@@ -134,7 +134,7 @@ hu:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string           { "LiveSupport Műsoridőzítő ablak" }
+        windowTitle:string           { "Campcaster Műsoridőzítő ablak" }
 
         hourLabel:string             { "óra: " }
         minuteLabel:string           { "perc: " }
@@ -144,7 +144,7 @@ hu:table
 
     searchWindow:table
     {
-        windowTitle:string            { "LiveSupport Keresés Ablak" }
+        windowTitle:string            { "Campcaster Keresés Ablak" }
 
         simpleSearchTab:string        { "Keresés" }
         advancedSearchTab:string      { "Összetett keresés" }
@@ -152,12 +152,12 @@ hu:table
 
         searchByTextLabel:string      { "Keresési feltétel:" }
         searchButtonLabel:string      { "Keress!" }
-        
+
         typeColumnLabel:string        { "Típus" }
         titleColumnLabel:string       { "Cím" }
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }
-        
+
         partialOperatorDisplay:string     { "része" }
         prefixOperatorDisplay:string      { "kezdete" }
         =OperatorDisplay:string           { "=" }
@@ -165,15 +165,15 @@ hu:table
         >=OperatorDisplay:string          { ">=" }
 
         allStringForBrowse                { "--- minden ---" }
-        
+
         addToScratchpadMenuItem:string    { "_Hasznos csuporba betenni" }
         addToLiveModeMenuItem:string      { "Élő _adásba" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "LiveSupport Élő adás ablak" }
-        
+        windowTitle:string            { "Campcaster Élő adás ablak" }
+
         cueMenuItem:string            { "_Belehallgatni" }
         upMenuItem:string             { "_Fel" }
         downMenuItem:string           { "_Le" }

@@ -24,9 +24,9 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script creates the ODBC data source needed for LiveSupport scheduler
+#-------------------------------------------------------------------------------
+#  This script creates the ODBC data source needed for Campcaster scheduler
 #
 #  Invoke as:
 #  ./bin/createOdbcDataSource.sh
@@ -51,11 +51,11 @@ usrdir=$basedir/usr
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport scheduler ODBC DataSource creating script.";
+    echo "Campcaster scheduler ODBC DataSource creating script.";
     echo "parameters";
     echo "";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
+    echo "  -D, --database      The name of the Campcaster database.";
+    echo "                      [default: Campcaster]";
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -h, --help          Print this message and exit.";
@@ -93,11 +93,11 @@ if [ "x$dbserver" == "x" ]; then
 fi
 
 if [ "x$database" == "x" ]; then
-    database=LiveSupport;
+    database=Campcaster;
 fi
 
 
-echo "Creating ODBC data source for LiveSupport scheduler.";
+echo "Creating ODBC data source for Campcaster scheduler.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -179,7 +179,7 @@ if [ "x$odbcinst_res" == "x" ]; then
     odbcinst -i -d -v -f $odbcinst_template || exit 1;
 fi
 
-echo "Registering LiveSupport ODBC data source...";
+echo "Registering Campcaster ODBC data source...";
 cat $odbc_template | sed -e "$replace_sed_string" > $odbc_template_tmp
 odbcinst -i -s -l -f $odbc_template_tmp || exit 1;
 rm -f $odbc_template_tmp
