@@ -317,7 +317,7 @@ class DataEngine{
             $sql =
                 "SELECT to_hex(sq2.gunid)as gunid, m.object, sq2.ftype, sq2.id\n".
                 "FROM (\n$sql\n)sq2\n".
-                "LEFT JOIN ls_mdata m\n".
+                "LEFT JOIN {$this->mdataTable} m\n".
                 "  ON m.gunid = sq2.gunid AND m.predicate='$orderby'".
                 " AND m.objns='_L' AND m.predxml='T'".
                 (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
