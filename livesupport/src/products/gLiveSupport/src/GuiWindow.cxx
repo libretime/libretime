@@ -53,7 +53,7 @@ namespace {
 /**
  *  The name of the application, shown on the task bar.
  */
-const Glib::ustring     applicationTitleSuffix = " - LiveSupport";
+const Glib::ustring     applicationTitleSuffix = " - Campcaster";
 
 }
 
