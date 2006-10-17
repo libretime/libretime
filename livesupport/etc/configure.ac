@@ -538,9 +538,9 @@ using the following configuration settings:
     station audio output device:     ${STATION_AUDIO_OUT}
     studio audio output device:      ${STUDIO_AUDIO_OUT}
     studio audio cue device:         ${STUDIO_AUDIO_CUE}
-    creating Campcaster database:   ${CREATE_LS_DATABASE}
+    creating Campcaster database:    ${CREATE_LS_DATABASE}
     creating ODBC data source:       ${CREATE_ODBC_DATA_SOURCE}
-    initialize Campcaster database: ${INIT_LS_DATABASE}
+    initialize Campcaster database:  ${INIT_LS_DATABASE}
     configuring apache:              ${CONFIGURE_APACHE}
 
 ])

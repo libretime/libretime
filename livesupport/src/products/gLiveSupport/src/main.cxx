@@ -154,8 +154,6 @@ int main (  int     argc,
         return 1;
     }
 
-    std::cerr << "using config file '" << configFileName << '\'' << std::endl;
-
     Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
                     gLiveSupport(new LiveSupport::GLiveSupport::GLiveSupport());
 

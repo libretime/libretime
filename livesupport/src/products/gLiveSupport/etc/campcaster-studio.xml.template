@@ -119,7 +119,7 @@
 ]>
 
 <gLiveSupport>
-    <resourceBundle path   = "ls_var_dir/Campcaster/campcaster-studio"
+    <resourceBundle path   = "ls_var_dir/LiveSupport/campcaster-studio"
                     locale = "en"
     />
 
