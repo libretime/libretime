@@ -148,7 +148,7 @@ SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
 GLIVESUPPORT_DIR = ${PRODUCTS_DIR}/gLiveSupport
 
 SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
-GLIVESUPPORT_EXE = ${GLIVESUPPORT_DIR}/tmp/gLiveSupport
+GLIVESUPPORT_EXE = ${GLIVESUPPORT_DIR}/tmp/campcaster-studio
 
 #-------------------------------------------------------------------------------
 #   Targets
