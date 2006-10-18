@@ -93,10 +93,15 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     isActive = false;
     isPaused = false;
 
-    label = Gtk::manage(new Gtk::Label);
-    label->set_use_markup(true);
-    label->set_ellipsize(Pango::ELLIPSIZE_END);
-    label->set_markup("");
+    titleLabel = Gtk::manage(new Gtk::Label);
+    titleLabel->set_use_markup(true);
+    titleLabel->set_ellipsize(Pango::ELLIPSIZE_END);
+    titleLabel->set_markup("");
+    
+    creatorLabel = Gtk::manage(new Gtk::Label);
+    creatorLabel->set_use_markup(true);
+    creatorLabel->set_ellipsize(Pango::ELLIPSIZE_END);
+    creatorLabel->set_markup("");
     
     Gtk::Label *    elapsedLabel = createFormattedLabel(8);
     Gtk::Label *    remainsLabel = createFormattedLabel(8);
@@ -134,8 +139,9 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     timeBox->pack_start(*remainsBox, Gtk::PACK_EXPAND_WIDGET, 2);
     
     Gtk::Box *      textBox = Gtk::manage(new Gtk::VBox);
-    textBox->pack_start(*label,   Gtk::PACK_EXPAND_PADDING, 2);
-    textBox->pack_start(*timeBox, Gtk::PACK_EXPAND_PADDING, 2);
+    textBox->pack_start(*titleLabel,   Gtk::PACK_EXPAND_PADDING, 2);
+    textBox->pack_start(*creatorLabel, Gtk::PACK_EXPAND_PADDING, 2);
+    textBox->pack_start(*timeBox,      Gtk::PACK_EXPAND_PADDING, 2);
     
     pack_end(*textBox, Gtk::PACK_EXPAND_WIDGET, 5);
     pack_end(*stopButton, Gtk::PACK_SHRINK, 0);
@@ -160,22 +166,21 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
     
         Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
     
-        infoString->append("<span font_desc='Bitstream Vera Sans"
-                           " Bold 16'>");
+        infoString->assign("<span font_desc='Bitstream Vera Sans"
+                           " Bold 14'>");
         infoString->append(Glib::Markup::escape_text(*playable->getTitle()));
-        infoString->append("</span>    ");
-
-        // TODO: rewrite this using the Core::Metadata class
+        infoString->append("</span>");
+        titleLabel->set_markup(*infoString);
 
         Ptr<Glib::ustring>::Ref 
                         creator = playable->getMetadata("dc:creator");
         if (creator) {
-            infoString->append("<span font_desc='Bitstream Vera Sans"
-                               " Bold 16'>");
+            infoString->assign("<span font_desc='Bitstream Vera Sans"
+                               " Bold 12'>");
             infoString->append(Glib::Markup::escape_text(*creator));
             infoString->append("</span>");
+            creatorLabel->set_markup(*infoString);
         }
-        label->set_markup(*infoString);
         
         audioLength = playable->getPlaylength();
         resetRemainsTimeState();
@@ -187,7 +192,8 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             playButton->show();
             isActive = false;
         }
-        label->set_markup("");
+        titleLabel->set_markup("");
+        creatorLabel->set_markup("");
         elapsedTime->set_text("");
         remainsTime->set_text("");
         resetRemainsTimeState();

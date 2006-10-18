@@ -89,9 +89,14 @@ class NowPlaying : public Gtk::HBox,
         Ptr<time_duration>::Ref audioLength;
 
         /**
-         *  The label holding the title etc. of the now playing item.
+         *  The label holding the title of the now playing item.
          */
-        Gtk::Label *            label;
+        Gtk::Label *            titleLabel;
+
+        /**
+         *  The label holding the creator of the now playing item.
+         */
+        Gtk::Label *            creatorLabel;
 
         /**
          *  The label holding the elapsed time.
