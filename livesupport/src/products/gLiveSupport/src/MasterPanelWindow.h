@@ -291,7 +291,15 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  pressed.
          */
         virtual void
-        onUploadFileButtonClicked(void)                     throw ();
+        onUploadFileButtonClicked(void)                     throw ()
+        {
+            if (!uploadFileWindow ||
+                    uploadFileWindow && !uploadFileWindow->is_visible()) {
+                updateUploadFileWindow();
+            } else {
+                uploadFileWindow->hide();
+            }
+        }
 
         /**
          *  Function to catch the event of the live mode button being
@@ -468,6 +476,12 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         createScratchpadWindow(void)                            throw ();
+
+        /**
+         *  Update the Upload File window.
+         */
+        void
+        updateUploadFileWindow(void)                            throw ();
 
         /**
          *  Update the Scratchpad window.

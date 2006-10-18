@@ -466,9 +466,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
         liveModeWindow->addItem(playable);
     }
     
-    if (!liveModeWindow->is_visible()) {
-        liveModeWindow->show();
-    }
+    liveModeWindow->present();
 }
 
 
@@ -476,7 +474,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
  *  The event when the upload file button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
+MasterPanelWindow :: updateUploadFileWindow(void)                   throw ()
 {
     if (!uploadFileWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -490,15 +488,9 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
         uploadFileWindow.reset(new UploadFileWindow(gLiveSupport,
                                                     bundle,
                                                     uploadFileButton));
-        uploadFileWindow->show();
-        return;
     }
 
-    if (!uploadFileWindow->is_visible()) {
-        uploadFileWindow->show();
-    } else {
-        uploadFileWindow->hide();
-    }
+    uploadFileWindow->present();
 }
 
 
@@ -538,9 +530,7 @@ MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
         scratchpadWindow->addItem(playable);
     }
     
-    if (!scratchpadWindow->is_visible()) {
-        scratchpadWindow->show();
-    }
+    scratchpadWindow->present();
 }
 
 
@@ -567,9 +557,7 @@ MasterPanelWindow :: updateSimplePlaylistMgmtWindow(void)           throw ()
     
     simplePlaylistMgmtWindow->showContents();
     
-    if (!simplePlaylistMgmtWindow->is_visible()) {
-        simplePlaylistMgmtWindow->show();
-    }
+    simplePlaylistMgmtWindow->present();
 }
 
 
@@ -611,9 +599,7 @@ MasterPanelWindow :: updateSchedulerWindow(
         return;
     }
 
-    if (!schedulerWindow->is_visible()) {
-        schedulerWindow->show();
-    }
+    schedulerWindow->present();
 }
 
 
@@ -637,9 +623,7 @@ MasterPanelWindow :: updateSearchWindow(void)                       throw ()
                                             searchButton));
     }
     
-    if (!searchWindow->is_visible()) {
-        searchWindow->show();
-    }
+    searchWindow->present();
 }
 
 
@@ -667,9 +651,7 @@ MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
         }
     }
 
-    if (!optionsWindow->is_visible()) {
-        optionsWindow->show();
-    }
+    optionsWindow->present();
 }
 
 
@@ -885,9 +867,7 @@ MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
     
     bool    success = searchWindow->uploadToHub(playable);
     
-    if (success && !searchWindow->is_visible()) {
-        searchWindow->show();
-    }
+    searchWindow->present();
 }
 
 
