@@ -1,0 +1,14 @@
+hu:table
+{
+    section1:table
+    {
+        foo:string      { "fú" }
+        bar:string      { "bár" }
+    }
+
+    metadata:table
+    {
+        creator:string   { "Előadó" }
+    }
+}
+

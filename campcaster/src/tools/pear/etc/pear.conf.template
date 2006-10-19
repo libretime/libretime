@@ -1,0 +1,2 @@
+#PEAR_Config 0.9
+a:10:{s:15:"preferred_state";s:6:"stable";s:7:"bin_dir";s:25:"/tmp/campcaster/build/bin";s:7:"php_dir";s:30:"/tmp/campcaster/build/lib/pear";s:7:"doc_dir";s:35:"/tmp/campcaster/build/lib/pear/docs";s:8:"data_dir";s:35:"/tmp/campcaster/build/lib/pear/data";s:8:"test_dir";s:36:"/tmp/campcaster/build/lib/pear/tests";s:9:"cache_dir";s:36:"/tmp/campcaster/build/lib/pear/cache";s:9:"cache_ttl";i:300;s:7:"php_bin";s:0:"";s:10:"__channels";a:2:{s:12:"pecl.php.net";a:0:{}s:5:"__uri";a:0:{}}}

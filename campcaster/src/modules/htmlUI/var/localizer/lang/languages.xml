@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languages>
+	<item>
+		<Id>am_AM</Id>
+		<Name>Armenian (AM)</Name>
+		<NativeName>Armenian (AM)</NativeName>
+	</item>
+	<item>
+		<Id>ar_JO</Id>
+		<Name>Arabic (JO)</Name>
+		<NativeName>اللغة العربية (JO)</NativeName>
+	</item>
+	<item>
+		<Id>cz_CZ</Id>
+		<Name>Czech (CZ)</Name>
+		<NativeName>Čeština (CZ)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>de_DE</Id>
+		<Name>German (DE)</Name>
+		<NativeName>Deutsch (DE)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>default_DEFAULT</Id>
+		<Name>Default</Name>
+		<NativeName>Default</NativeName>
+	</item>
+	<item>
+		<Id>en_GB</Id>
+		<Name>English (GB)</Name>
+		<NativeName>English (GB)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>en_US</Id>
+		<Name>English (US)</Name>
+		<NativeName>English (US)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>es_CO</Id>
+		<Name>Spanish (CO)</Name>
+		<NativeName>Español (CO)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>fr_FR</Id>
+		<Name>French</Name>
+		<NativeName>Français (FR)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>hu_HU</Id>
+		<Name>Hungarian (HU)</Name>
+		<NativeName>Magyar (HU)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>it_IT</Id>
+		<Name>Italian</Name>
+		<NativeName>Italiano (IT)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>nl_NL</Id>
+		<Name>Dutch (NL)</Name>
+		<NativeName>Nederlands (NL)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>pl_PL</Id>
+		<Name>Polish (PL)</Name>
+		<NativeName>Polski (PL)</NativeName>
+       <Completed>1</Completed>
+	</item>
+	<item>
+		<Id>ru_RU</Id>
+		<Name>Russian (RU)</Name>
+		<NativeName>По-pусски (RU)</NativeName>
+	</item>
+	<item>
+		<Id>sr_CS</Id>
+		<Name>Serbian (CS)</Name>
+		<NativeName>Srpski (CS)</NativeName>
+       <Completed>1</Completed>
+	</item>
+</languages>

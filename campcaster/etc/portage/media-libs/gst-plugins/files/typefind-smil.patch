@@ -1,0 +1,86 @@
+--- gst-plugins-0.8.9/gst/typefind/gsttypefindfunctions.c	2005-05-17 10:41:47.000000000 +0200
++++ gst-plugins-0.8.9-livesupport/gst/typefind/gsttypefindfunctions.c	2005-06-22 18:46:33.000000000 +0200
+@@ -132,6 +132,66 @@
+   }
+ }
+ 
++/*** application/smil *********************************************************/
++
++static GstStaticCaps smil_caps = GST_STATIC_CAPS ("application/smil");
++
++#define SMIL_CAPS (gst_static_caps_get(&smil_caps))
++static void
++smil_type_find (GstTypeFind * tf, gpointer unused)
++{
++  guint8 *data = gst_type_find_peek (tf, 0, BUFFER_SIZE);
++  guint pos = 0;
++  guint offset = 0;
++
++  if (data) {
++    /* look for the XMLDec,
++     * see XML spec 2.8, Prolog and Document Type Declaration
++     * http://www.w3.org/TR/2004/REC-xml-20040204/#sec-prolog-dtd
++     */
++    /* we know that BUFFER_SIZE > strlen("<?xml") */
++    if (!(data[0] == '<'
++       && data[1] == '?'
++       && data[2] == 'x'
++       && data[3] == 'm'
++       && data[4] == 'l')) {
++
++        return;
++    }
++
++    data += 5;
++    pos  += 5;
++
++    /* look for the first element, it has to be a <smil> element */
++    while (data) {
++      while (*data != '<') {
++        INC_BUFFER;
++      }
++
++      INC_BUFFER;
++      if (!g_ascii_isalpha(*data)) {
++        /* if not alphabetic, it's a PI or an element / attribute declaration
++         * like <?xxx or <!xxx */
++        INC_BUFFER;
++        continue;
++      }
++
++      /* the first normal element
++       * get the next 4 bytes, and look if it's smil */
++      data = gst_type_find_peek(tf, offset + pos, 5);
++      if (!(data[0] == 's'
++         && data[1] == 'm'
++         && data[2] == 'i'
++         && data[3] == 'l')) {
++        return;
++      }
++
++      gst_type_find_suggest(tf, GST_TYPE_FIND_MAXIMUM, SMIL_CAPS);
++      return;
++    }
++  }
++}
++
+ /*** video/x-fli **************************************************************/
+ 
+ static GstStaticCaps flx_caps = GST_STATIC_CAPS ("video/x-fli");
+@@ -1789,6 +1849,7 @@
+   static gchar *shn_exts[] = { "shn", NULL };
+   static gchar *ape_exts[] = { "ape", NULL };
+   static gchar *uri_exts[] = { "ram", NULL };
++  static gchar *smil_exts[] = { "smil", NULL };
+   static gchar *jpeg_exts[] = { "jpg", "jpe", "jpeg", NULL };
+   static gchar *gif_exts[] = { "gif", NULL };
+   static gchar *png_exts[] = { "png", NULL };
+@@ -1871,6 +1932,8 @@
+       utf8_exts, UTF8_CAPS, NULL);
+   TYPE_FIND_REGISTER (plugin, "text/uri-list", GST_RANK_MARGINAL, uri_type_find,
+       uri_exts, URI_CAPS, NULL);
++  TYPE_FIND_REGISTER (plugin, "application/smil", GST_RANK_PRIMARY, smil_type_find,
++      smil_exts, SMIL_CAPS, NULL);
+   TYPE_FIND_REGISTER_RIFF (plugin, "audio/x-wav", GST_RANK_PRIMARY, wav_exts,
+       "WAVE");
+   TYPE_FIND_REGISTER (plugin, "audio/x-aiff", GST_RANK_SECONDARY,

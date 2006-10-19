@@ -1,0 +1,26 @@
+<smil xmlns="http://www.w3.org/2001/SMIL20/Language">
+	<body>
+        <par>
+            <audio src = "file:var/5seccounter.mp3">
+                <!-- fade in -->
+                <animate attributeName = "soundLevel"
+                         from          = "0%"
+                         to            = "100%"
+                         calcMode      = "linear"
+                         begin         = "0s"
+                         end           = "1.5s"
+                         fill          = "freeze"
+                />
+                <!-- fade out -->
+                <animate attributeName = "soundLevel"
+                         from          = "100%"
+                         to            = "0%"
+                         calcMode      = "linear"
+                         begin         = "3.5s"
+                         end           = "5s"
+                         fill          = "freeze"
+                />
+            </audio>
+        </par>
+	</body>
+</smil>

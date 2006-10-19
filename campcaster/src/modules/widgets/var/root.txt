@@ -1,0 +1,8 @@
+root:table
+{
+    cancelButtonLabel:string    { "Cancel" }
+    noButtonLabel:string        { "No" }
+    yesButtonLabel:string       { "Yes" }
+    okButtonLabel:string        { "OK" }
+}
+

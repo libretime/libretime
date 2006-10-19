@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<smil xmlns    = "http://www.w3.org/2001/SMIL20/Language">
+    <body>
+        <par>
+            <audio src="file:var/test10001.mp3" begin="0s"/> 
+            <audio src="file:var/test10002.mp3" begin="11.23s"/> 
+            <audio src="file:var/test10003.mp3" begin="23.45s"/> 
+        </par>
+    </body>
+</smil>

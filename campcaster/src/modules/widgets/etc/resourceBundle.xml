@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE resourceBundle [
+
+<!ELEMENT resourceBundle    EMPTY >
+<!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
+<!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
+
+]>
+<resourceBundle path   = "./tmp/Widgets"
+                locale = "en"
+/>

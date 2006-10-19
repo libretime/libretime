@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE keyboardShortcutContainer [
+
+<!ELEMENT keyboardShortcutContainer     (keyboardShortcut+)          >
+<!ATTLIST keyboardShortcutContainer windowName  CDATA   #REQUIRED    >
+
+<!ELEMENT keyboardShortcut  EMPTY >
+<!ATTLIST keyboardShortcut  action      CDATA   #REQUIRED >
+<!ATTLIST keyboardShortcut  key         CDATA   #REQUIRED >
+
+]>
+
+<keyboardShortcutContainer  windowName = "hiMyNameIsWindow">
+    <keyboardShortcut   action  = "playAudio"   key = "p" />
+    <keyboardShortcut   action  = "pauseAudio"  key = "&lt;Control&gt;p" />
+    <keyboardShortcut   action  = "stopAudio"   key = "space" />
+</keyboardShortcutContainer>

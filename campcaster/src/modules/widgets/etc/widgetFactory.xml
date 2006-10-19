@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE widgetFactory [
+
+<!ELEMENT widgetFactory   EMPTY >
+<!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
+]>
+<widgetFactory    path = "var/"
+/>
+

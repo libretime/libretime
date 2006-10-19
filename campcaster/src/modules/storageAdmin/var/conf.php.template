@@ -1,0 +1,7 @@
+<?php
+/**
+ * @author $Author$
+ * @version $Revision$
+ */
+$storageServerPath = 'ls_storageServer';
+?>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE webStorage [
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
+]>
+<webStorage tempFiles="file:///ls_install_dir/tmp/webStorageClient" >
+    <location server="ls_php_host" port="ls_php_port"
+              path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
+</webStorage>

@@ -1,0 +1,29 @@
+--- gst-plugins-0.8.9/gst/adder/gstadder.c	2005-06-29 14:45:17.000000000 +0200
++++ gst-plugins-0.8.9-livesupport/gst/adder/gstadder.c	2005-06-29 14:42:05.000000000 +0200
+@@ -558,14 +558,19 @@
+   }
+ 
+   if (valid_inputs > 0 || adder->eos == FALSE) {
++    gint64  delta;
++    gint64  duration;
++
++    delta = (adder->format == GST_ADDER_FORMAT_FLOAT)
++          ? GST_BUFFER_SIZE (buf_out) / adder->width / adder->channels
++          : GST_BUFFER_SIZE (buf_out) * 8 / adder->width / adder->channels;
++    duration = delta * GST_SECOND / adder->rate;
++
+     GST_BUFFER_TIMESTAMP (buf_out) = adder->timestamp;
+-    if (adder->format == GST_ADDER_FORMAT_FLOAT)
+-      adder->offset +=
+-          GST_BUFFER_SIZE (buf_out) / adder->width / adder->channels;
+-    else
+-      adder->offset +=
+-          GST_BUFFER_SIZE (buf_out) * 8 / adder->width / adder->channels;
+-    adder->timestamp = adder->offset * GST_SECOND / adder->rate;
++    GST_BUFFER_DURATION (buf_out)  = duration;
++
++    adder->offset    += delta;
++    adder->timestamp += duration;
+ 
+     /* send it out */
+     GST_LOG ("pushing buf_out");

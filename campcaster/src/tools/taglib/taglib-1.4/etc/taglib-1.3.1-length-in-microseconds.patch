@@ -1,0 +1,172 @@
+--- taglib-1.3.1/taglib/audioproperties.h	2003-11-04 03:48:25.000000000 +0100
++++ taglib-1.3.1-microseconds/taglib/audioproperties.h	2005-06-15 19:27:31.805943362 +0200
+@@ -59,11 +59,16 @@
+     virtual ~AudioProperties();
+ 
+     /*!
+-     * Returns the lenght of the file in seconds.
++     * Returns the length of the file in seconds (rounded down).
+      */
+     virtual int length() const = 0;
+ 
+     /*!
++     * Returns the fractional part of the length of the file, in microseconds.
++     */
++    virtual int length_microseconds() const = 0;
++
++    /*!
+      * Returns the most appropriate bit rate for the file in kb/s.  For constant
+      * bitrate formats this is simply the bitrate of the file.  For variable
+      * bitrate formats this is either the average or nominal bitrate.
+--- taglib-1.3.1/taglib/flac/flacproperties.h	2004-06-24 21:27:02.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/flac/flacproperties.h	2005-06-15 19:41:27.176791223 +0200
+@@ -62,6 +62,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
+--- taglib-1.3.1/taglib/flac/flacproperties.cpp	2004-08-02 16:18:58.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/flac/flacproperties.cpp	2005-06-15 21:42:48.714138847 +0200
+@@ -76,6 +76,11 @@
+   return d->length;
+ }
+ 
++int FLAC::Properties::length_microseconds() const
++{
++  return 0;
++}
++
+ int FLAC::Properties::bitrate() const
+ {
+   return d->bitrate;
+--- taglib-1.3.1/taglib/mpc/mpcproperties.h	2004-07-21 00:30:00.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/mpc/mpcproperties.h	2005-06-15 19:46:10.845016974 +0200
+@@ -56,6 +56,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
+--- taglib-1.3.1/taglib/mpc/mpcproperties.cpp	2004-09-09 02:28:18.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/mpc/mpcproperties.cpp	2005-06-15 21:43:14.322020672 +0200
+@@ -71,6 +71,11 @@
+   return d->length;
+ }
+ 
++int MPC::Properties::length_microseconds() const
++{
++  return 0;
++}
++
+ int MPC::Properties::bitrate() const
+ {
+   return d->bitrate;
+--- taglib-1.3.1/taglib/mpeg/mpegproperties.h	2003-11-05 05:29:05.000000000 +0100
++++ taglib-1.3.1-microseconds/taglib/mpeg/mpegproperties.h	2005-06-15 19:33:00.669147926 +0200
+@@ -56,6 +56,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
+--- taglib-1.3.1/taglib/mpeg/mpegproperties.cpp	2004-08-02 16:18:58.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/mpeg/mpegproperties.cpp	2005-06-15 20:57:14.538631543 +0200
+@@ -41,7 +41,7 @@
+ 
+   File *file;
+   ReadStyle style;
+-  int length;
++  long long length;
+   int bitrate;
+   int sampleRate;
+   int channels;
+@@ -71,7 +71,12 @@
+ 
+ int MPEG::Properties::length() const
+ {
+-  return d->length;
++  return int(d->length / 1000000);
++}
++
++int MPEG::Properties::length_microseconds() const
++{
++  return int(d->length % 1000000);
+ }
+ 
+ int MPEG::Properties::bitrate() const
+@@ -191,8 +196,9 @@
+ 
+       double timePerFrame = blockSize[firstHeader.layer()];
+       timePerFrame = firstHeader.sampleRate() > 0 ? timePerFrame / firstHeader.sampleRate() : 0;
+-      d->length = int(timePerFrame * xingHeader.totalFrames());
+-      d->bitrate = d->length > 0 ? xingHeader.totalSize() * 8 / d->length / 1000 : 0;
++      d->length = (long long)(
++                        timePerFrame * xingHeader.totalFrames() * 1000000 + 0.5);
++      d->bitrate = d->length > 0 ? xingHeader.totalSize() * 8000 / d->length : 0;
+   }
+ 
+   // Since there was no valid Xing header found, we hope that we're in a constant
+@@ -204,8 +210,10 @@
+   else if(firstHeader.frameLength() > 0 && firstHeader.bitrate() > 0) {
+     int frames = (last - first) / firstHeader.frameLength() + 1;
+ 
+-    d->length = int(float(firstHeader.frameLength() * frames) /
+-                    float(firstHeader.bitrate() * 125) + 0.5);
++    d->length = (long long)(
++                    (double(firstHeader.frameLength()) * frames * 1000000) /
++                    (double(firstHeader.bitrate()) * 125) + 0.5);
++
+     d->bitrate = firstHeader.bitrate();
+   }
+ 
+--- taglib-1.3.1/taglib/ogg/vorbis/vorbisproperties.h	2004-05-13 02:29:48.000000000 +0200
++++ taglib-1.3.1-microseconds/taglib/ogg/vorbis/vorbisproperties.h	2005-06-15 19:48:18.365492520 +0200
+@@ -65,6 +65,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
+--- taglib-1.3.1/taglib/ogg/vorbis/vorbisproperties.cpp	2003-12-02 06:00:23.000000000 +0100
++++ taglib-1.3.1-microseconds/taglib/ogg/vorbis/vorbisproperties.cpp	2005-06-15 20:36:41.687062239 +0200
+@@ -46,7 +46,7 @@
+ 
+   File *file;
+   ReadStyle style;
+-  int length;
++  long long length;
+   int bitrate;
+   int sampleRate;
+   int channels;
+@@ -81,7 +81,12 @@
+ 
+ int Vorbis::Properties::length() const
+ {
+-  return d->length;
++  return int(d->length / 1000000);
++}
++
++int Vorbis::Properties::length_microseconds() const
++{
++  return int(d->length % 1000000);
+ }
+ 
+ int Vorbis::Properties::bitrate() const
+@@ -169,7 +174,7 @@
+     long long end = last->absoluteGranularPosition();
+ 
+     if(start >= 0 && end >= 0 && d->sampleRate > 0)
+-      d->length = (end - start) / (long long) d->sampleRate;
++      d->length = ((end - start) * 1000000) / (long long) d->sampleRate;
+     else
+       debug("Vorbis::Properties::read() -- Either the PCM values for the start or "
+             "end of this file was incorrect or the sample rate is zero.");

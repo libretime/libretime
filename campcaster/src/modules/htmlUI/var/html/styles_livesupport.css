@@ -1,0 +1,957 @@
+a {
+    text-decoration: none;
+}
+
+body { 
+    font-size: 12px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #2C2C2C;
+    margin: 0px;
+}
+
+img { 
+    border: none;
+}
+
+form { 
+    font-size: 12px;
+    margin: 15px 0 15px 0;
+}
+
+
+.copyright {
+    font-size: 9px;
+    clear: both;
+    margin: 0;
+    padding: 0;
+    padding-left: 25px;
+    text-align: center;
+    color: #000;
+}
+
+.copyright a{
+    color: blue;
+}
+
+.clearer {
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+}
+
+.container { 
+    font-size: 12px;
+    width: 100%;
+}
+
+.button { 
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.button_wide { 
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 170px;
+}
+.button_large { 
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.button_small { 
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    cursor: pointer;
+    width: 34px;
+}
+
+input, select { 
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    border-top: 1px solid #C7CCCC;
+    border-left: 1px solid #C7CCCC;
+    border-bottom: 1px solid #A4A9A9;
+    border-right: 1px solid #A4A9A9;
+}
+
+.checkbox { 
+    border: none;
+}
+
+.input { 
+    font-size: 12px;
+    height: 16px;
+}
+
+.input[class] { 
+    font-size: 12px;
+    height: 15px;
+}
+
+
+/* #################################### NAVIGATION ############################### */
+
+.container_nav { 
+    font-size : 12px;
+    height: 26px;
+    clear: both;
+    background: url("css_img/bg_navigation.png") repeat-x top left;
+    margin-bottom: 38px;
+}
+
+.container_nav[class] { 
+    padding-left: 10px;
+    margin-bottom: 50px;
+}
+
+#nav, #nav ul { 
+    float: left;
+    width: auto;
+    list-style: none;
+    line-height: 24px;
+    padding: 0px;
+    margin: 2px 0 0 15px;
+    display: block;
+}
+
+#nav a { 
+    display: block;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-right: 40px;
+}
+
+#nav li { 
+    float: left;
+    padding: 0;
+}
+
+#nav li ul { 
+    display: block;
+    position: absolute;
+    left: -999px;
+    width: 120px;
+    font-weight: normal;
+    margin: 0;
+    z-index: 1;
+}
+
+#nav li ul li { 
+    clear: both;
+    margin: 0;
+}
+
+#nav li ul a {
+    width: 120px;
+    line-height: 25px;
+    background: #EE9232;
+    padding-left : 5px;
+    border-top: 0px solid #B57228;
+    border-left: 1px solid #B57228;
+    border-bottom: 1px solid #B57228;
+    border-right: 1px solid #B57228;
+}
+
+#nav a:hover { 
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+#nav li li a:hover { 
+    background: #EE9232;
+}
+
+#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul { 
+    left: -999em;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
+    left: auto;
+}
+
+.nav-main{
+    width: 120px;
+}
+
+
+/* #################################### CONTENTNAVTAB ############################### */
+
+.contenttabnav {
+    height: 26px;
+    clear: both;
+    /*background: url("css_img/bg_navigation.png") repeat-x top left;*/
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.contenttabnav[class] {
+    padding-left: 10px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.contenttabnav A { 
+    font-size: 12px;
+    /*display: block;*/
+    color: #5286ba;
+    text-decoration: none;
+}
+
+.contenttabnav a:hover { 
+    font-size: 12px;
+    color: #000;
+    text-decoration: underline;
+}
+
+/*############## Navigation tabs on top of content box ############*/
+#tabnav {
+    position: absolute;
+    top: 190px;
+    left: 19px;
+    z-index: 0;
+}
+
+#tabnav ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    display: block;
+}
+
+#tabnav a {
+    background: url("css_img/bt_tab_off.png");
+    display: block;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 99px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#tabnav a:hover {
+    background: url("css_img/bt_tab_on.png");
+    color: #FFF;
+}
+
+#tabnav a.active {
+    background: url("css_img/bt_tab_on.png");
+    color: #FFF;
+}
+
+#tabnav li {
+    padding: 0;
+    float: left;
+}
+
+
+/*############## SMALL Navigation tabs on top of content box ############*/
+#tabnavsmall {
+    position: absolute;
+    top: 190px;
+    left: 19px;
+    z-index: 0;
+}
+
+#tabnavsmall ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    display: block;
+}
+
+#tabnavsmall a {
+    background: url("css_img/bt_tabsm_off.png");
+    display: block;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 50px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+#tabnavsmall a:hover {
+    background: url("css_img/bt_tabsm_on.png");
+    color: #FFF;
+}
+
+#tabnavsmall a.active {
+    background: url("css_img/bt_tabsm_on.png");
+    color: #FFF;
+}
+
+#tabnavsmall li {
+    padding: 0;
+    float: left;
+}
+
+/* #################################### CONTENTAREA ############################### */
+
+
+.content {
+    margin: 19px;
+    margin-top: 0;
+    float: left;
+}
+
+.container_elements {
+    border: 1px solid #cfcfcf;
+    padding: 6px;
+    margin-bottom: 21px;
+}
+
+.container_elements h1 { 
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: #666;
+}
+
+.head { 
+    font-size: 12px;
+    background-color: #5286ba;
+    font-weight: bold;
+    color: #FFF;
+}
+
+.head .left { 
+    font-size: 12px;
+    padding: 5px 0 3px 10px;
+    float: left;
+    width: 330px;
+}
+
+.head .right { 
+    font-size: 12px;
+    padding: 5px 10px 3px 0;
+    float: left;
+    text-align: right;
+    width: 224px;
+}
+
+.container_table { 
+    font-size: 12px;
+    /*height: 275px;*/
+    overflow: auto;
+}
+
+
+table { 
+    font-size: 12px;
+    border-collapse: collapse;
+}
+
+table td { 
+    font-size: 12px;
+    padding: 0 6px 0 12px;
+    border-right: 1px solid #333;
+    height: 19px;
+    vertical-align: top;
+}
+
+table tr.blue_head td { 
+    font-size: 12px;
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+
+}
+
+A#blue_head { 
+    font-size: 12px;
+    color:#fff;
+}
+
+table tr.blue1 td { 
+    font-size: 12px;
+    color: #000;
+    background-color: #d5e2ee;
+}
+
+table tr.blue2 td { 
+    font-size: 12px;
+    color: #000;
+    background-color: #f5f5f5;
+}
+
+table tr.red td { 
+    font-size: 12px;
+    background-color: #FBAAAA;
+}
+
+.footer { 
+    font-size: 12px;
+    padding: 4px 5px 5px 0;
+    background-color: #8baed1;
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.container_button { 
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.container_search {
+    margin-bottom: 4px;
+}
+
+.comment { 
+    float: left;
+    font-size: 10px;
+    margin: 5px 0 0 10px;
+}
+
+.select_width_comment { 
+    font-size: 12px;
+    float:left;
+    margin-left: 3px;
+}
+
+.select_width_comment[class] { 
+    font-size: 12px;
+    margin-left: 0;
+}
+
+
+.tablebottom { 
+    font-size: 12px;
+    float: left;
+    margin-left: 0px;
+    background-color: #8baed1;
+}
+
+.counter { 
+    font-size: 12px;
+    float: left;
+    margin-left: 7px;
+    font-weight: bold;
+    background-color: #8baed1;
+}
+
+.counter[class] { 
+    font-size: 12px;
+    margin-left: 15px;
+}
+
+.container_browse {
+    width: 170px;
+    float: left;
+    margin: 0px 0px 10px 0px;
+}
+
+.area_browse {
+    width: 174px;
+    height: 100px;
+}
+
+.area_browse[class] {
+    width: 180px;
+}
+
+.comment_browse {
+    font-size: 10px;
+}
+
+.container_button_upload { 
+    font-size: 12px;
+    margin: 20px 0 0 204px;
+}
+
+.container_button_upload[class] { 
+    font-size: 12px;
+    margin-left: 200px;
+}
+
+label { 
+    font-size: 12px;
+    display: block;
+    float: left;
+    width: 200px;
+}
+
+
+/* ############################################# SCHEDULER ################################# */
+
+.container_calender_overview {
+    width: 235px;
+}
+
+.container_calender_overview p {
+    font-size: 10px;
+    margin-top: 0;
+    float: right;
+}
+
+.month_year {
+    border: 1px solid #cdcdcd;
+    border-bottom: none;
+    padding: 5px 20px;
+    float: right;
+}
+
+.calender_overview {
+    border: 1px solid #cdcdcd;
+}
+
+table.calender_overview_table {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+table.calender_overview_table td {
+    border: 0;
+    text-align: center;
+    padding: 2px;
+    font-size: 10px;
+}
+
+table.calender_overview_table td.full {
+    font-weight: bold
+}
+
+table.calender_overview_table td.week {
+    border-right: 1px solid #cdcdcd;
+}
+
+table.calender_overview_table a.full {
+    color: #FFF;
+    font-weight: bold;
+    background-color: #5286ba;
+    padding: 1px 0;
+    width: 100%;
+    display: block;
+}
+
+table.calender_overview_table td.today {
+    border: 1px black solid;
+}
+
+table.calender_overview_table td.current {
+    background: #d5e2ee;
+    /*#d5e2ee;*/
+}
+
+table.calender_overview_table td.nothing {
+    background: #eee;
+    /*#d5e2ee;*/
+}
+
+table.calender_overview_table a {
+    text-decoration: none;
+    color: #000;
+}
+
+table.calender_overview_table td.not_this_month {
+    color: #999;
+    background-color: #fff;
+}
+
+.head_scheduler {
+    float: left;
+    width: 50%;
+}
+
+.container_button_scheduler {
+    float: left;
+    width: 50%;
+    text-align: right;
+    margin-top: 5px;
+}
+
+table.scheduler_day td{ 
+    font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    padding-top: 2px;
+}
+
+
+/*############# SCHEDULER WEEK #######*/
+
+table.scheduler_week_time {
+    background: #ddd;
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+table.scheduler_week_time tr {
+    width: 20px;
+    border-bottom: 1px solid #7392A6;
+}
+
+table.scheduler_week_time td {
+    height: 20px;
+    text-align: center;
+}
+
+table.scheduler_week {
+    width: 790px;
+    border: 1px solid #7392A6;
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+table.scheduler_week a {
+    text-decoration: none;
+    color: #fff;
+}
+
+table.scheduler_week th {
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+    text-align: left;
+}
+
+table.scheduler_week th.date {
+    width: 20px;
+    border-left: 1px solid #7392A6;
+}
+
+table.scheduler_week th.day {
+    width: 286px;
+    text-align: left;
+}
+
+table.scheduler_week td.firstrow_secondcol {
+    background-color: #CFDEE7;
+    border: none;
+    border-bottom: 1px solid #757575;
+    padding: 0;
+}
+
+table.scheduler_week td.date_secondcol {
+    width: 20px;
+    background-color: #CFDEE7;
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #757575;
+    font-weight: bold;
+}
+table.scheduler_week td.date_secondcol a {
+    color: #000;
+}
+
+table.scheduler_week td.day_secondcol {
+    background-color: #CFDEE7;
+    border: none;
+    border-bottom: 1px solid #757575;
+    padding: 0;
+    padding-left: 2px;
+}
+
+table.scheduler_week td.firstrow {
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    font-weight: bold;
+}
+
+table.scheduler_week td.date {
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #D0D0D0;
+}
+
+table.scheduler_week td.date_full {
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #97BACF;
+}
+
+table.scheduler_week td.date_locked {
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    background-color: #FFCACB;
+    text-align: center;
+    padding: 0;
+    padding-top: 3px;
+}
+
+table.scheduler_week td.day {
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #EAEAEA;
+}
+
+table.scheduler_week td.day_full {
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    background-color: #E7ECEF;
+}
+
+table.scheduler_week td.day_locked { 
+    font-size: 12px;
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    background-color: #EAEAEA;
+}
+
+table.scheduler_week td h2 {
+    font-size: 11px;
+    margin: 0;
+}
+
+table.scheduler_week td p { 
+    font-size: 11px;
+    margin: 0;
+}
+
+table.scheduler_month{
+    width: 790px;
+}
+
+table.scheduler_month th {
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #7392A6;
+}
+
+table.scheduler_month td {
+    width: 113px;
+    border: 1px solid #7392A6;
+    padding: 2px;
+    text-align: left;
+}
+
+table.scheduler_month p {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+
+table.scheduler_month a {
+    color: #000;
+}
+
+table.scheduler_month td.today {
+    background: #d5e2ee;
+}
+
+table.scheduler_month .scala {
+    margin: 0 0 2px 4px;
+    width: 100px;
+    height: 12px;
+    background-color: #DADADA;
+    border: 1px solid #7F95A7;
+}
+
+table.scheduler_month .scala .scala_in {
+    background: #DADADA url("css_img/bg_scala_in_scheduler.png") repeat-x top left;
+    font-size:1px;
+    height: 12px;
+}
+
+/* ############################################# MASTERPALETTE ################################# */
+#masterpalette{
+	padding-left: 0px;
+	border-left: 0px;
+	background: #fff;
+	width: 990px;
+	height: 140px;
+	#border-bottom: 1px solid #ccc;
+	}
+	
+table.masterpalette td{
+    padding: 5px 5px 5px 5px;
+    border-right: 0;
+    vertical-align: middle;
+}
+
+#logo {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	}
+	
+	
+#time {
+	padding-top: 5px;
+	
+	background: #EBF1F8;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	line-height: 14pt;
+	font-size: 14pt;
+	font-family: bitstream-vera, verdana, helvetica;
+	color: #999;
+	width: 150px;
+	height: 85px;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	}
+	
+#time h1{
+    font-size: 18pt;
+    line-height: 10pt;
+    font-weight: bold;
+}
+	
+#nowplaying {
+	padding-top: 5px;
+	background: #EBF1F8;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 5px;
+	font-family: bitstream-vera, verdana, helvetica;
+	font: #999;
+	width: 275px;
+	height: 85px;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	color: #999;
+	}
+	
+	
+#nowplaying_indicator {
+	padding-top: 5px;
+	background: #EBF1F8;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-family: bitstream-vera, verdana, helvetica;
+	font: #999;
+	width: 85px;
+	height: 85px;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	}	
+	
+#onair {
+    margin-top: 30px;
+    text-transform: uppercase;
+    font-size: 14pt;
+    font-weight: bold;
+	vertical-align: middle;
+	color: #A2C6D6;
+	white-space: nowrap;
+	}	
+	
+#offair {
+    margin-top: 30px;
+    text-transform: uppercase;
+    font-size: 14pt;
+    font-weight: bold;
+	vertical-align: middle;
+	color: #999;
+	white-space: nowrap;
+	}
+
+
+#station {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 80px;
+	padding-right: 5px;
+	}
+	
+/*  *************** NOW/NEXT CLIP  ******************  */
+
+.whatplaying .title {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.whatplaying .scala { 
+    width: 250px;
+    height: 8px;
+    margin-top: 5px;
+    background-color: #DADADA;
+    border-top: 1px solid #B5B5B5;
+    border-left: 1px solid #B5B5B5;
+    border-bottom: 1px solid #6F6F6F;
+    border-right: 1px solid #6F6F6F;
+}
+
+.whatplaying .scala .scala_in { 
+    background: #DADADA url("css_img/bg_scala_in.png") repeat-x top left;
+    font-size:1px;
+    height: 8px;
+}
+
+.whatplaying .time { 
+    width: 250px;
+    font-size: 11px;
+}
+
+.whatplaying .time .left {
+    float: left;
+    width: 125px;
+}
+
+.whatplaying .time .right {
+    width: 125px;
+    float: left;
+    text-align: right;
+}
+
+.whatplaying .next {
+    font-size: 11px;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+    vertical-align: baseline;
+}
+
+.loginname {
+	font-size: 12px;
+	font-weight: bold;
+	float : right;
+}
+
+.station { font-size: 12px;
+    margin: 30px 30px 0 30px;
+    float: left;
+}
+
+.frequence { font-size: 12px;
+    margin: 15px 0 8px 0;
+}
+
+
+
+
+
+
+

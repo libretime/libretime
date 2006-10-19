@@ -1,0 +1,4 @@
+MD5 7a549789db883fd2a1fece00159db85b taglib-1.3.1-r3.ebuild 916
+MD5 103dd47ff1744397288b44834902e16c files/taglib-1.3.1-memleak-fix2.patch 2514
+MD5 5be2e7958dd0c6985fd109659eb90b6b files/taglib-1.3.1-length-in-microseconds.patch 5962
+MD5 cc8a58ea8028f3539fcee148baeffcc1 files/digest-taglib-1.3.1-r3 64

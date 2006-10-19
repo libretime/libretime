@@ -1,0 +1,12 @@
+diff -u gtkmm-2.6.5/gtk/gtkmm/settings.h gtkmm-2.6.5-remove-extra-semicolon/gtk/gtkmm/settings.h
+--- gtkmm-2.6.5/gtk/gtkmm/settings.h	2005-10-18 09:12:13.000000000 +0200
++++ gtkmm-2.6.5-remove-extra-semicolon/gtk/gtkmm/settings.h	2005-11-29 16:25:02.000000000 +0100
+@@ -98,7 +98,7 @@
+    * @return A Gtk::Settings object. If there is no default
+    * screen, then returns <tt>0</tt>.
+    */
+-  static Glib::RefPtr<Settings> get_default();;
++  static Glib::RefPtr<Settings> get_default();
+ 
+   
+   /** Gets the Gtk::Settings object for @a screen , creating it if necessary.

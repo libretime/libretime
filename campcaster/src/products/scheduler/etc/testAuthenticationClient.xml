@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE authenticationClientFactory [
+
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT testAuthentication (user) >
+
+<!ELEMENT user EMPTY >
+<!ATTLIST user login        CDATA       #REQUIRED >
+<!ATTLIST user password     CDATA       #REQUIRED >
+
+]>
+<authenticationClientFactory>
+    <testAuthentication>
+        <user login="root" password="q" />
+    </testAuthentication>
+</authenticationClientFactory>

@@ -1,0 +1,3 @@
+MD5 5675251f4f6bd25fbf54f809816140ac gst-plugins-mad-0.8.10-r1.ebuild 421
+MD5 e5a6b80e2dfc0bf36559f4663fb90e25 files/digest-gst-plugins-mad-0.8.10-r1 72
+MD5 9b4b87c7c0e1bf243ebc6def2f62c971 files/id3demuxbin-pad-free-fix.patch 551

@@ -1,0 +1,96 @@
+--- libodbc++-0.2.3-20050404/src/preparedstatement.cpp	2001-06-12 05:38:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/preparedstatement.cpp	2006-10-04 11:06:36.000000000 -0500
+@@ -161,7 +161,7 @@
+   numParams_=np;
+   
+   SQLSMALLINT sqlType;
+-  SQLUINTEGER prec;
++  SQLULEN prec;
+   SQLSMALLINT scale;
+   SQLSMALLINT nullable;
+ 
+@@ -303,7 +303,7 @@
+       r=SQLParamData(hstmt_,&currentCol);
+       this->_checkStmtError(hstmt_,r,"SQLParamData failure");
+       if(r==SQL_NEED_DATA) {
+-	DataHandler* dh=rowset_->getColumn((int)currentCol);
++	DataHandler* dh=rowset_->getColumn((long)currentCol);
+ 
+ 	assert(dh->isStreamed_);
+ 	
+--- libodbc++-0.2.3-20050404/src/resultset.cpp	2003-06-17 05:10:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/resultset.cpp	2006-10-04 18:08:03.000000000 -0500
+@@ -528,7 +528,7 @@
+       r=SQLParamData(hstmt_,&currentCol);
+       this->_checkStmtError(hstmt_,r,"SQLParamData failure");
+       if(r==SQL_NEED_DATA) {
+-	DataHandler* dh=rowset_->getColumn((int)currentCol);
++	DataHandler* dh=rowset_->getColumn((long)currentCol);
+ 
+ 	assert(dh->isStreamed_);
+ 
+@@ -1356,8 +1356,9 @@
+   DataHandler* dh=rowset_->getColumn(idx);
+   ODBCXX_STREAM* s=dh->getStream();
+   if(s==NULL) {
+-    s=new DataStream(this,hstmt_,idx,SQL_C_BINARY,
+-		     dh->dataStatus_[dh->currentRow_]);
++    SQLINTEGER Status=dh->dataStatus_[dh->currentRow_];
++    s=new DataStream(this,hstmt_,idx,SQL_C_BINARY,Status);
++    dh->dataStatus_[dh->currentRow_]=Status;
+     dh->setStream(s);
+   }
+   lastWasNull_=dh->isNull();
+--- libodbc++-0.2.3-20050404/src/resultsetmetadata.cpp	2001-06-12 05:38:35.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/resultsetmetadata.cpp	2006-10-04 12:05:45.000000000 -0500
+@@ -39,7 +39,7 @@
+ int ResultSetMetaData::_getNumericAttribute(unsigned int col,
+ 					   SQLUSMALLINT attr)
+ {
+-  SQLINTEGER res=0;
++  SQLLEN res=0;
+   SQLRETURN r=
+     ODBC3_C(SQLColAttribute,SQLColAttributes)(resultSet_->hstmt_,
+ 					      (SQLUSMALLINT)col,
+@@ -63,7 +63,7 @@
+   odbc::Deleter<char> _buf(buf,true);
+   buf[maxlen]=0;
+ 
+-  SQLINTEGER res=0;
++  SQLLEN res=0;
+   SQLSMALLINT len=0;
+ 
+   SQLRETURN r=
+--- libodbc++-0.2.3-20050404/src/statement.cpp	2003-03-28 08:26:02.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/statement.cpp	2006-10-04 12:06:54.000000000 -0500
+@@ -672,7 +672,7 @@
+ 
+   if(lastExecute_!=ODBC3_C(SQL_NO_DATA,SQL_NO_DATA_FOUND)) {
+ 
+-    SQLINTEGER res;
++    SQLLEN res;
+     SQLRETURN r=SQLRowCount(hstmt_,&res);
+     this->_checkStmtError(hstmt_,r,"Error fetching update count");
+     return res;
+--- libodbc++-0.2.3-20050404/src/datahandler.cpp	2006-10-04 17:37:32.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/datahandler.cpp	2006-10-04 12:07:52.000000000 -0500
+@@ -269,7 +269,7 @@
+   };
+   this->setupBuffer(bs);
+ 
+-  dataStatus_=new SQLINTEGER[rows_];
++  dataStatus_=new SQLLEN[rows_];
+ 
+   //set everything to NULL
+   for(unsigned int i=0; i<rows_; i++) {
+--- libodbc++-0.2.3-20050404/src/datahandler.h	2001-07-27 12:04:49.000000000 -0500
++++ libodbc++-0.2.3-20050404-x64/src/datahandler.h	2006-10-04 12:08:14.000000000 -0500
+@@ -48,7 +48,7 @@
+     size_t rows_;
+     char* buffer_;
+     size_t bufferSize_;
+-    SQLINTEGER* dataStatus_;
++    SQLLEN* dataStatus_;
+     bool isStreamed_;
+     ODBCXX_STREAM* stream_;
+     bool ownStream_;

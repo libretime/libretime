@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE metadataType [
+
+<!ELEMENT metadataType EMPTY >
+<!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
+<!ATTLIST metadataType  id3Tag            NMTOKEN     #IMPLIED  >
+<!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
+<!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
+
+]>
+
+<metadataType dcName          = "dc:creator"
+              id3Tag          = "TPE2"
+              localizationKey = "creator"
+              tab             = "main"
+/>
+

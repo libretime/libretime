@@ -1,0 +1,14 @@
+jp:table
+{
+    section1:table
+    {
+        foo:string      { "ふ" }
+        bar:string      { "ばる" }
+    }
+
+    metadata:table
+    {
+        creator:string   { "クリエーター" }
+    }
+}
+

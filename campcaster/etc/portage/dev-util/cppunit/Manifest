@@ -1,0 +1,4 @@
+MD5 1d1904de3d5f6dd756279f300a4ae35d cppunit-1.10.2-r1.ebuild 1081
+MD5 b437cd880b8b07ee37ff84cb9f912bed .cppunit-1.10.2-r1.ebuild.swp 12288
+MD5 2f66c625e1f7de63458cfb987e9b0d9d files/digest-cppunit-1.10.2-r1 66
+MD5 bc589fdb15867ba23639c300f62e70f5 files/cppunit-1.10.2-nostandalone.patch 3175
