@@ -125,7 +125,6 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // set up the drop down list for available languages
     languageList->set_name("languageList");
-    languageList->set_flags(Gtk::CAN_FOCUS);
 
     // fill up the language list with the list of available languages
     Ptr<const GLiveSupport::LanguageMap>::Ref   languages;
