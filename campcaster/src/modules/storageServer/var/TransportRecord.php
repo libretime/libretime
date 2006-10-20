@@ -65,12 +65,13 @@ class TransportRecord
             $names .= ", $k";
             $values .= ", $sqlVal";
         }
-        $res = $r = $trec->dbc->query("
+        $query = "
             INSERT INTO {$trec->transTable}
                 ($names)
             VALUES
                 ($values)
-        ");
+        ";
+        $res = $r = $trec->dbc->query($query);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -316,6 +317,7 @@ class TransportRecord
                 return "x'$fldVal'::bigint";
                 break;
             default:
+                $fldVal = pg_escape_string($fldVal);
                 return "'$fldVal'";
                 break;
         }
