@@ -968,6 +968,7 @@ class BasicStor extends Alib {
      *          type: string - audioclip | playlist | webstream
      *          title: string - dc:title from metadata
      *          creator: string - dc:creator from metadata
+     *          source: string - dc:source from metadata
      *          length: string - dcterms:extent in extent format
      *  @see DataEngine
      */
@@ -2034,6 +2035,7 @@ class BasicStor extends Alib {
      *          type: string - audioclip | playlist | webstream
      *          title: string - dc:title from metadata
      *          creator: string - dc:creator from metadata
+     *          source: string - dc:source from metadata
      *          length: string - dcterms:extent in extent format
      */
     function resetStorage($loadSampleData=TRUE, $filesOnly=FALSE)

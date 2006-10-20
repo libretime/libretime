@@ -366,6 +366,7 @@ class LocStor extends BasicStor {
      *           <li>type: string - audioclip | playlist | webstream</li>
      *           <li>title: string - dc:title from metadata</li>
      *           <li>creator: string - dc:creator from metadata</li>
+     *           <li>source: string - dc:source from metadata</li>
      *           <li>length: string - dcterms:extent in extent format</li>
      *          </ul>
      *      </li>

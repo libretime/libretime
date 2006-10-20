@@ -266,6 +266,7 @@ class DataEngine{
      *          type: string - audioclip | playlist | webstream
      *          title: string - dc:title from metadata
      *          creator: string - dc:creator from metadata
+     *          source: string - dc:source from metadata
      *          length: string - dcterms:extent in extent format
      *     OR (in browse mode)
      *       results: array of strings - browsed values
@@ -342,15 +343,19 @@ class DataEngine{
                 $creatorA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:creator');
                 if(PEAR::isError($r)) return $r;
                 $creator  = (isset($creatorA[0]['value']) ? $creatorA[0]['value'] : '');
+                $sourceA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:source');
+                if(PEAR::isError($r)) return $r;
+                $source  = (isset($sourceA[0]['value']) ? $sourceA[0]['value'] : '');
                 $lengthA  = $r = $this->gb->bsGetMetadataValue($it['id'], 'dcterms:extent');
                 if(PEAR::isError($r)) return $r;
                 $length   = (isset($lengthA[0]['value']) ? $lengthA[0]['value'] : '');
                 $eres[] = array(
-                    'gunid'   => $gunid,
-                    'type'    => $it['ftype'],
-                    'title'   => $title,
+                    'gunid' => $gunid,
+                    'type' => $it['ftype'],
+                    'title' => $title,
                     'creator' => $creator,
-                    'length'  => $length,
+                    'length' => $length,
+                    'source' => $source,
                 );
             }else{
                 $eres[] = $it['txt'];
