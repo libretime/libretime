@@ -337,7 +337,8 @@ TransportList :: setStatus(Gtk::TreeIter                        iter,
                            Ptr<const Glib::ustring>::Ref        errorMsg)
                                                                     throw ()
 {
-    if (status == AsyncState::pendingState) {
+    if (status == AsyncState::initState
+                    || status == AsyncState::pendingState) {
         iter->set_value(modelColumns.statusColumn,
                         workingStatusKey);
         iter->set_value(modelColumns.statusDisplayColumn, 
