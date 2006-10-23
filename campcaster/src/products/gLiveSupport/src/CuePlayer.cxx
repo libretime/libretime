@@ -128,15 +128,15 @@ CuePlayer :: onPlayItem(void)                                       throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         try {
             gLiveSupport->playCueAudio(playable);
-        } catch (std::logic_error &e) {
+            audioState = playingState;
+            remove(*playButton);
+            pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
+            pauseButton->show();
+            gLiveSupport->runMainLoop();
+        } catch (std::runtime_error &e) {
             std::cerr << "GLiveSupport::playCueAudio() error:"
                         << std::endl << e.what() << std::endl;
         }
-        audioState = playingState;
-        remove(*playButton);
-        pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
-        pauseButton->show();
-        gLiveSupport->runMainLoop();
     }
 }
 

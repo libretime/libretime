@@ -497,7 +497,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
                                                                     throw ()
 {
-    std::cerr << "gLiveSupport: " << *message;
+    std::cerr << "gLiveSupport: " << *message << std::endl;
     
     Ptr<DialogWindow>::Ref  window(widgetFactory->createDialogWindow(
                                                                 message,
@@ -1161,7 +1161,8 @@ GLiveSupport :: removeFromSchedule(Ptr<const UniqueId>::Ref   scheduleEntryId)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
-                                                    throw (std::logic_error)
+                                                    throw (std::logic_error,
+                                                           std::runtime_error)
 {
     try {        
         switch (playable->getType()) {
@@ -1186,18 +1187,21 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     }
 
     outputPlayerIsPaused = false;
@@ -1251,12 +1255,17 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(void)                                throw ()
 {
     outputItemPlayingNow.reset();
-    outputPlayer->close();
+    try {
+        outputPlayer->close();
 
-    Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
-    setNowPlaying(playable);
-    if (playable) {
-        playOutputAudio(playable);
+        Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
+        setNowPlaying(playable);
+        if (playable) {
+            playOutputAudio(playable);
+        }
+    } catch (std::logic_error) {
+        std::cerr << "logic_error caught in GLiveSupport::onStop()\n";
+        std::exit(1);
     }
 }
 
@@ -1267,7 +1276,8 @@ GLiveSupport :: onStop(void)                                throw ()
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
-                                                throw (std::logic_error)
+                                                throw (std::logic_error,
+                                                       std::runtime_error)
 {
     if (cueItemPlayingNow) {
         stopCueAudio();     // stop the audio player and
@@ -1296,18 +1306,21 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
         displayMessageWindow(eMsg);
+        throw std::runtime_error(e.what());
     }
     
     cuePlayerIsPaused = false;

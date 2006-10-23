@@ -853,10 +853,12 @@ class GLiveSupport : public LocalizedConfigurable,
          *
          *  @param playable the Playable object to play.
          *  @exception std::logic_error in case of audio player errors.
+         *  @exception std::runtime_error in case of audio player errors.
          */
         virtual void
         playOutputAudio(Ptr<Playable>::Ref   playable)
-                                                throw (std::logic_error);
+                                                throw (std::logic_error,
+                                                       std::runtime_error);
 
         /**
          *  Stop the output audio player.
@@ -895,14 +897,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Play a Playable object using the cue audio player.
          *
          *  @param playable the Playable object to play.
-         *  @exception XmlRpcException in case of storage server errors.
-         *  @exception std::invalid_argument in case of audio player errors.
          *  @exception std::logic_error in case of audio player errors.
          *  @exception std::runtime_error in case of audio player errors.
          */
         virtual void
         playCueAudio(Ptr<Playable>::Ref   playable)
-                                                throw (std::logic_error);
+                                                throw (std::logic_error,
+                                                       std::runtime_error);
 
         /**
          *  Stop the cue audio player.

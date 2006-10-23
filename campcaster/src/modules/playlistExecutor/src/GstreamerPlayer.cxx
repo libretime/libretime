@@ -452,7 +452,7 @@ GstreamerPlayer :: stop(void)                       throw (std::logic_error)
  *  Close the currently opened audio file.
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayer :: close(void)                       throw ()
+GstreamerPlayer :: close(void)                       throw (std::logic_error)
 {
     if (isPlaying()) {
         stop();

@@ -335,7 +335,7 @@ class GstreamerPlayer : virtual public Configurable,
          *  @see #open
          */
         virtual void
-        close(void)                             throw ();
+        close(void)                             throw (std::logic_error);
 
         /**
          *  Start playing.

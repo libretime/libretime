@@ -168,7 +168,7 @@ class AudioPlayerInterface
          *  @see #open
          */
         virtual void
-        close(void)                             throw ()                = 0;
+        close(void)                             throw (std::logic_error) = 0;
 
         /**
          *  Get the length of the currently opened audio clip.
