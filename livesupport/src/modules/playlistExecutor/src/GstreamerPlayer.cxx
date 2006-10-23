@@ -100,11 +100,8 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
         throw std::runtime_error("couldn't initialize the gstreamer library");
     }
 
-    // initialize the pipeline
-    pipeline   = gst_thread_new("audio-player");
-    // take ownership of the pipeline object
-    gst_object_ref(GST_OBJECT(pipeline));
-    gst_object_sink(GST_OBJECT(pipeline));
+    // create the pipeline container
+    pipeline = gst_thread_new("audio-player");
 
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
 
