@@ -288,7 +288,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     gst_element_unlink(decoder, fakesink);
     gst_object_unref(GST_OBJECT(pipe));
 
-    // not sure what this does, but it seems important
+    // converts between different audio formats (e.g. bitrate) 
     audioconvert    = gst_element_factory_make("audioconvert", NULL);
 
     // reduce the volume to 80%
