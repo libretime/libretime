@@ -523,15 +523,15 @@ bool
 GstreamerPlayer :: setAudioDevice(const std::string &deviceName)       
                                                                 throw ()
 {
-    bool    oss    = deviceName.find("/dev") == 0;
-    bool    relink = false;
+    const bool    oss    = deviceName.find("/dev") == 0;
+          bool    relink = false;
 
     if (deviceName.size() == 0) {
         return false;
     }
 
     if (audiosink) {
-        bool    oldOss = g_strrstr(gst_element_get_name(audiosink), "osssink");
+        const bool    oldOss = g_strrstr(gst_element_get_name(audiosink), "osssink");
         relink = oss && !oldOss;
     }
 
