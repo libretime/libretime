@@ -1358,6 +1358,8 @@ GLiveSupport :: stopCueAudio(void)
         cuePlayer->close();
         cuePlayerIsPaused = false;
         cueItemPlayingNow.reset();
+        
+        masterPanel->showCuePlayerStopped();
     }
 }
 

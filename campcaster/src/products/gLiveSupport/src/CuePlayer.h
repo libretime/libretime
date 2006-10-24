@@ -140,6 +140,16 @@ class CuePlayer : public Gtk::HBox,
         void
         onStopButtonClicked(void)                       throw ();
 
+        /**
+         *  Set the state of the widget.
+         *  It sets the value of the audioState variable, and changes the
+         *  play/pause button if necessary.
+         *
+         *  @param  newState    the new value of the audioState variable.
+         */
+        void
+        setAudioState(AudioState    newState)           throw ();
+
     
     public:
     

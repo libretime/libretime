@@ -888,3 +888,19 @@ MasterPanelWindow :: setSchedulerAvailable(bool  status)            throw ()
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Update the cue player displays to show a stopped state.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: showCuePlayerStopped(void)                     throw ()
+{
+    if (scratchpadWindow) {
+        scratchpadWindow->showCuePlayerStopped();
+    }
+    
+    if (liveModeWindow) {
+        liveModeWindow->showCuePlayerStopped();
+    }
+}
+

@@ -149,9 +149,9 @@ ScratchpadWindow :: ScratchpadWindow (
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    audioButtonBox = Gtk::manage(new CuePlayer(
+    cueAudioButtons = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));
-    topButtonBox.pack_start(*audioButtonBox, Gtk::PACK_EXPAND_PADDING);
+    topButtonBox.pack_start(*cueAudioButtons, Gtk::PACK_EXPAND_PADDING);
     
     middleButtonBox.set_layout(Gtk::BUTTONBOX_END);
     middleButtonBox.set_spacing(5);
@@ -191,7 +191,7 @@ ScratchpadWindow :: ScratchpadWindow (
                                         &ZebraTreeView::onRemoveMenuOption)));
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
-                                sigc::mem_fun(*audioButtonBox,
+                                sigc::mem_fun(*cueAudioButtons,
                                         &CuePlayer::onPlayItem)));
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToLiveModeMenuItem"),
@@ -240,7 +240,7 @@ ScratchpadWindow :: ScratchpadWindow (
                                     &ZebraTreeView::onRemoveMenuOption)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
-                                sigc::mem_fun(*audioButtonBox,
+                                sigc::mem_fun(*cueAudioButtons,
                                     &CuePlayer::onPlayItem)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToLiveModeMenuItem"),

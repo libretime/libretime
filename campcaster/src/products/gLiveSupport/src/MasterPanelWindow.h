@@ -551,6 +551,14 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         setSchedulerAvailable(bool  status)                     throw ();
+
+        /**
+         *  Update the cue player displays to show a stopped state.
+         *  Two cue player displays are updated by this method:
+         *  one in the Scratchpad, and one in the Live Mode window.
+         */
+        void
+        showCuePlayerStopped(void)                              throw ();
 };
 
 /* ================================================= external data structures */

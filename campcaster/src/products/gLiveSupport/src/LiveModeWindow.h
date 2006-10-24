@@ -85,6 +85,11 @@ class LiveModeWindow : public GuiWindow
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
 
+        /**
+         *  The cue player widget with play/pause and stop buttons.
+         */
+        CuePlayer *                         cueAudioButtons;
+
 
     protected:
 
@@ -251,6 +256,15 @@ class LiveModeWindow : public GuiWindow
          */
         Ptr<Playable>::Ref
         popTop(void)                                            throw ();
+
+        /**
+         *  Update the cue player display to show a stopped state.
+         */
+        void
+        showCuePlayerStopped(void)                              throw ()
+        {
+            cueAudioButtons->onStop();
+        }
 };
 
 /* ================================================= external data structures */

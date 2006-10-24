@@ -128,11 +128,7 @@ CuePlayer :: onPlayItem(void)                                       throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         try {
             gLiveSupport->playCueAudio(playable);
-            audioState = playingState;
-            remove(*playButton);
-            pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
-            pauseButton->show();
-            gLiveSupport->runMainLoop();
+            setAudioState(playingState);
         } catch (std::runtime_error &e) {
             std::cerr << "GLiveSupport::playCueAudio() error:"
                         << std::endl << e.what() << std::endl;
@@ -151,23 +147,21 @@ CuePlayer :: onPlayButtonClicked(void)                              throw ()
         case waitingState:
             onPlayItem();
             break;
-        case pausedState:
-            try {
-                gLiveSupport->pauseCueAudio();      // ie, restart
-                audioState = playingState;
-                remove(*playButton);
-                pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
-                pauseButton->show();
-                gLiveSupport->runMainLoop();
-            } catch (std::logic_error &e) {
-                std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
-                            << e.what() << std::endl;
-            }
-            break;
+            
         case playingState:      // should never happen
             std::cerr << "Assertion failed in CuePlayer:" << std::endl
                       << "play button clicked when it should not be visible."
                       << std::endl;
+            break;
+            
+        case pausedState:
+            try {
+                gLiveSupport->pauseCueAudio();      // ie, restart
+                setAudioState(playingState);
+            } catch (std::logic_error &e) {
+                std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
+                            << e.what() << std::endl;
+            }
             break;
     }
 }
@@ -181,11 +175,7 @@ CuePlayer :: onPauseButtonClicked(void)                             throw ()
 {
     try {
         gLiveSupport->pauseCueAudio();
-        audioState = pausedState;
-        remove(*pauseButton);
-        pack_end(*playButton, Gtk::PACK_SHRINK, 3);
-        playButton->show();
-        gLiveSupport->runMainLoop();
+        setAudioState(pausedState);
     } catch (std::logic_error &e) {
         std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
                     << e.what() << std::endl;
@@ -206,7 +196,7 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
             std::cerr << "GLiveSupport::stopCueAudio() error:" << std::endl
                         << e.what() << std::endl;
         }
-        onStop();
+        setAudioState(waitingState);
     }
 }
 
@@ -217,19 +207,31 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
 void
 CuePlayer :: onStop(void)                                           throw ()
 {
-    switch (audioState) {
-        case pausedState:
-            remove(*playButton);
-            break;
-        case playingState:
-            remove(*pauseButton);
-            break;
-        case waitingState:      // sometimes onStop() is called twice
-            return;
+    setAudioState(waitingState);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the state of the widget.
+ *----------------------------------------------------------------------------*/
+void
+CuePlayer :: setAudioState(AudioState    newState)                  throw ()
+{
+    if ((audioState == waitingState || audioState == pausedState)
+                && newState == playingState) {
+        remove(*playButton);
+        pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
+        pauseButton->show();
+        gLiveSupport->runMainLoop();
+        
+    } else if (audioState == playingState
+                && (newState == waitingState || newState == pausedState)) {
+        remove(*pauseButton);
+        pack_end(*playButton, Gtk::PACK_SHRINK, 3);
+        playButton->show();
+        gLiveSupport->runMainLoop();
     }
-    audioState = waitingState;
-    pack_end(*playButton, Gtk::PACK_SHRINK, 3);
-    playButton->show();
-    gLiveSupport->runMainLoop();
+    
+    audioState = newState;
 }
 

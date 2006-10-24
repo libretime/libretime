@@ -84,7 +84,7 @@ class ScratchpadWindow : public GuiWindow,
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
-        
+
         /**
          *  Check whether exactly one row is selected, and if so, set
          *  the currentRow variable to point to it.
@@ -193,9 +193,9 @@ class ScratchpadWindow : public GuiWindow,
         Gtk::HBox                   topButtonBox;
 
         /**
-         *  The box containing the audio buttons.
+         *  The cue player widget containing the audio buttons.
          */
-        CuePlayer *                 audioButtonBox;
+        CuePlayer *                 cueAudioButtons;
 
         /**
          *  The box containing the close button.
@@ -405,9 +405,18 @@ class ScratchpadWindow : public GuiWindow,
          *  @return the user preference key.
          */
         Ptr<const Glib::ustring>::Ref
-        getUserPreferencesKey(void)                              throw ()
+        getUserPreferencesKey(void)                             throw ()
         {
             return userPreferencesKey;
+        }
+
+        /**
+         *  Update the cue player display to show a stopped state.
+         */
+        void
+        showCuePlayerStopped(void)                              throw ()
+        {
+            cueAudioButtons->onStop();
         }
 };
 

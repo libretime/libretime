@@ -140,7 +140,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         std::exit(1);
     }
     Gtk::HBox *         cueAudioButtonsBox = Gtk::manage(new Gtk::HBox);
-    CuePlayer *         cueAudioButtons = Gtk::manage(new CuePlayer(
+    cueAudioButtons = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));
     buttonBox->pack_start(*outputPlayButton, Gtk::PACK_EXPAND_PADDING, 10);
     buttonBox->pack_start(*cueAudioBox,      Gtk::PACK_EXPAND_PADDING, 10);
