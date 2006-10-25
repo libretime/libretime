@@ -1,7 +1,7 @@
 <?php
 /**
  * @author $Author$
- * @version  : $Revision$
+ * @version $Revision$
  */
 
 /* ====================================================== specific PHP config */
@@ -28,14 +28,15 @@ ini_set("error_append_string", "</string></value>
 header("Content-type: text/xml");
 
 /* ================================================================= includes */
-require_once dirname(__FILE__).'/../conf.php';
-require_once 'DB.php';
-require_once "XML/RPC/Server.php";
-require_once 'XR_LocStor.php';
+require_once(dirname(__FILE__).'/../conf.php');
+require_once('DB.php');
+require_once("XML/RPC/Server.php");
+require_once('XR_LocStor.php');
 
 /* ============================================ setting default error handler */
-function errHndl($errno, $errmsg, $filename, $linenum, $vars){
-    switch($errno){
+function errHndl($errno, $errmsg, $filename, $linenum, $vars)
+{
+    switch ($errno) {
         case E_WARNING:
         case E_NOTICE:
         case E_USER_WARNING:
@@ -50,15 +51,15 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars){
             exit($errno);
     }
 }
-if(PHP5){
+if (PHP5) {
     $old_error_handler = set_error_handler("errHndl", E_ALL);
-}else{
+} else {
     $old_error_handler = set_error_handler("errHndl");
 }
 
 /* ============================================================= runable code */
 $r = $dbc =& DB::connect($config['dsn'], TRUE);
-if(PEAR::isError($r)){
+if (PEAR::isError($r)) {
     trigger_error("DB::connect: ".$r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
 }
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
@@ -153,7 +154,7 @@ $methods = array(
 );
 
 $defs = array();
-foreach($methods as $method=>$description){
+foreach ($methods as $method => $description) {
     $defs["locstor.$method"] = array(
             "function" => array(&$locStor, "xr_$method"),
 #            "function" => "\$GLOBALS['locStor']->xr_$method",
@@ -164,6 +165,6 @@ foreach($methods as $method=>$description){
     );
 }
 
-$s=new XML_RPC_Server( $defs );
+$s = new XML_RPC_Server($defs);
 
 ?>
