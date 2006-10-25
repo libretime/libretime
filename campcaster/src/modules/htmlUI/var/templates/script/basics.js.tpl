@@ -110,10 +110,6 @@
     }
     {/literal}
 
-    {UIBROWSER->getAlertMsg assign='alertMsg'}
-    {if $alertMsg}
-        alert('{$alertMsg}');
-    {/if}
 
 
 </script>

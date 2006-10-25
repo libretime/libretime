@@ -268,7 +268,7 @@ DIV.blockquote
 
 	<H2>Troubleshooting</H2>
 	<H3>File Upload</H3>
-	<P>If you encounter the message <i>The uploadet filer is bigger than allowed in system settings.</i> most probably the file size is bigger than
+	<P>If you encounter the message <i>The uploaded file is bigger than allowed in system settings.</i> most probably the file size is bigger than
 	allowed in the PHP system settings of the machine you are running
 	Campcaster on. Please increase the settings of
 	&quot;upload_max_filesize&quot; and &quot;post_max_size&quot; in
