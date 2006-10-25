@@ -6,9 +6,7 @@ define('MODIFY_LAST_MATCH', TRUE);
 require_once "XML/Util.php";
 
 /**
- * MetaData class
- *
- * Campcaster file storage support class.<br>
+ * File storage support class.
  * Store metadata tree in relational database.<br>
  *
  * @author $Author$
@@ -43,8 +41,7 @@ class MetaData {
         $this->exists     =
             $this->dbCheck($gunid) &&
             is_file($this->fname) &&
-            is_readable($this->fname)
-        ;
+            is_readable($this->fname);
     }
 
 
@@ -282,10 +279,10 @@ class MetaData {
         	return $r;
         }
         if (!is_null($value)) {
-        	$value = pg_escape_string($value);
+        	$escapedValue = pg_escape_string($value);
             $sql = "
                 UPDATE {$this->mdataTable}
-                SET object='$value', objns='_L'
+                SET object='$escapedValue', objns='_L'
                 WHERE id={$mid}
             ";
             $res = $this->dbc->query($sql);
@@ -398,10 +395,10 @@ class MetaData {
                 switch (strtolower($atlang)) {
                     case '':
                         $plain = array($all[$i]);
-                    break;
+                    	break;
                     case strtolower($lang):
                         $exact = array($all[$i]);
-                    break;
+                    	break;
                     case strtolower($deflang):
                         $def = array($all[$i]);
                     break;
@@ -430,7 +427,7 @@ class MetaData {
      * 		value to store, if NULL then delete record
      * @param string $lang
      * 		optional xml:lang value for select language version
-     * @param int mid
+     * @param int $mid
      * 		metadata record id (OPTIONAL on unique elements)
      * @param string $container
      * 		container element name for insert
@@ -440,7 +437,7 @@ class MetaData {
         $container='metadata')
     {
         // resolve aktual element:
-        $rows   = $this->getMetadataValue($category, $lang);
+        $rows = $this->getMetadataValue($category, $lang);
         $aktual = NULL;
         if (count($rows) > 1) {
             if (is_null($mid)) {
@@ -467,10 +464,9 @@ class MetaData {
             if (PEAR::isError($res)) {
             	return $res;
             }
-            if (!is_null($lang) &&
-                isset($aktual['attrs']['xml:lang']) &&
-                $aktual['attrs']['xml:lang']!=$lang
-            ) {
+            if (!is_null($lang)
+            	&& isset($aktual['attrs']['xml:lang'])
+            	&& $aktual['attrs']['xml:lang'] != $lang) {
                 $lg = $this->getMetadataEl('xml:lang', $aktual['mid']);
                 if (PEAR::isError($lg)) {
                 	return $lg;
@@ -764,7 +760,7 @@ class MetaData {
     	$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
     	$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
         $res = $this->dbc->query("UPDATE {$this->mdataTable}
-            SET objns  = $objns_sql,  object    = $object_sql
+            SET objns = $objns_sql, object = $object_sql
             WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
         ");
         if (PEAR::isError($res)) {
@@ -815,9 +811,9 @@ class MetaData {
         }
         $res = $this->dbc->query("
             INSERT INTO {$this->mdataTable}
-                (id , gunid           , subjns   , subject   ,
-                    predns     , predicate   , predxml   ,
-                    objns     , object
+                (id , gunid, subjns, subject,
+                    predns, predicate, predxml,
+                    objns, object
                 )
             VALUES
                 ($id, x'{$this->gunid}'::bigint, $subjns_sql, $subject_sql,
