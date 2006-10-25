@@ -23,6 +23,16 @@ require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
  * @see RawMediaData
  */
 class StoredFile {
+	var $gb;
+	var $dbc;
+	var $filesTable;
+	var $accessTable;
+	var $gunid;
+	var $resDir;
+	var $accessDir;
+	var $rmd;
+	var $md;
+
     /* ========================================================== constructor */
     /**
      *  Constructor, but shouldn't be externally called
@@ -77,26 +87,26 @@ class StoredFile {
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
-        $name = pg_escape_string($name);
-        $ftype = pg_escape_string($ftype);
         $ac =& new $className($gb, ($gunid ? $gunid : NULL));
         if (PEAR::isError($ac)) {
             return $ac;
         }
         $ac->name = $name;
-        $ac->id   = $oid;
-        $ac->mime = "unKnown";
+        $ac->id = $oid;
+        $ac->mime = "unknown";
         $emptyState = TRUE;
-        if ($ac->name=='') {
-            $ac->name=$ac->gunid;
+        if ($ac->name == '') {
+            $ac->name = $ac->gunid;
         }
+        $escapedName = pg_escape_string($name);
+        $escapedFtype = pg_escape_string($ftype);
         $ac->dbc->query("BEGIN");
         $res = $ac->dbc->query("
             INSERT INTO {$ac->filesTable}
                 (id, name, gunid, mime, state, ftype, mtime)
             VALUES
-                ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
-                    '{$ac->mime}', 'incomplete', '$ftype', now())
+                ('$oid', '{$escapedName}', x'{$ac->gunid}'::bigint,
+                    '{$ac->mime}', 'incomplete', '$escapedFtype', now())
         ");
         if (PEAR::isError($res)) {
             $ac->dbc->query("ROLLBACK");
@@ -192,7 +202,7 @@ class StoredFile {
         $ac =& new $className($gb, $gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
-        $ac->id   = $row['id'];
+        $ac->id = $row['id'];
         $ac->md->setFormat($row['ftype']);
         return $ac;
     }
@@ -450,14 +460,13 @@ class StoredFile {
      * Rename stored virtual file
      *
      * @param string $newname
-     * @return mixed
-     * 		true or PEAR::error
+     * @return TRUE/PEAR_Error
      */
     function rename($newname)
     {
-        $newname = pg_escape_string($newname);
+        $escapedName = pg_escape_string($newname);
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET name='$newname', mtime=now()
+            UPDATE {$this->filesTable} SET name='$escapedName', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if (PEAR::isError($res)) {
@@ -475,15 +484,15 @@ class StoredFile {
      * @param int $editedby
      * 		 user id | 'NULL' for clear editedBy field
      *      (optional)
-     * @return boolean or error
+     * @return TRUE/PEAR_Error
      */
     function setState($state, $editedby=NULL)
     {
-        $state = pg_escape_string($state);
+        $escapedState = pg_escape_string($state);
         $eb = (!is_null($editedby) ? ", editedBy=$editedby" : '');
         $res = $this->dbc->query("
             UPDATE {$this->filesTable}
-            SET state='$state'$eb, mtime=now()
+            SET state='$escapedState'$eb, mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if (PEAR::isError($res)) {
@@ -502,9 +511,9 @@ class StoredFile {
      */
     function setMime($mime)
     {
-        $mime = pg_escape_string($mime);
+        $escapedMime = pg_escape_string($mime);
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET mime='$mime', mtime=now()
+            UPDATE {$this->filesTable} SET mime='$escapedMime', mtime=now()
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if (PEAR::isError($res)) {
@@ -561,7 +570,7 @@ class StoredFile {
 
 
     /**
-     * Returns true if virtual file is accessed.<br>
+     * Returns true if virtual file is currently in use.<br>
      * Static or dynamic call is possible.
      *
      * @param string $gunid
