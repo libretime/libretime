@@ -242,7 +242,7 @@ namespace Debug
 #define DEBUG_BLOCK Debug::Block uniquelyNamedStackAllocatedStandardBlock( __PRETTY_FUNCTION__ );
 
 /// Standard function announcer
-#define DEBUG_FUNC_INFO { debug() << "[" __PRETTY_FUNCTION__ "]" << endl; }
+#define DEBUG_FUNC_INFO { debug() << '[' << __PRETTY_FUNCTION__ << ']' << endl; }
 
 /// Announce a line
-#define DEBUG_LINE_INFO {  debug() << "[" __PRETTY_FUNCTION__ "]" << "Line: " << __LINE__ << endl; }
+#define DEBUG_LINE_INFO {  debug() << '[' << __PRETTY_FUNCTION__ << ']' << "Line: " << __LINE__ << endl; }
