@@ -60,6 +60,7 @@ AC_ARG_ENABLE([debug],
 
 if test "x${enable_debug}" = "xyes"; then
     CXXFLAGS="-g -O0"
+    AC_DEFINE( YDEBUG, 1, [Debug is on] )
 else
     CXXFLAGS="-O3"
 fi
