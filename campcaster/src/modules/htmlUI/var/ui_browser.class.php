@@ -279,9 +279,9 @@ class uiBrowser extends uiBase {
             return FALSE;
         }
 
-        foreach ($mdata as $key=>$val) {
+        foreach ($mdata as $key => $val) {
             if (is_array($val)) {
-                if ($val[$this->langid]) {
+                if (isset($val[$this->langid])) {
                     $val = $val[$this->langid];
                 } else {
                     $val = $val[UI_DEFAULT_LANGID];
