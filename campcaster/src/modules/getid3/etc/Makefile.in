@@ -120,7 +120,7 @@ check: all
 
 install:
 	${MKDIR} ${USR_VAR_DIR}/Campcaster/getid3/var
-	${CP} ${VAR_DIR}/*.{php,txt} ${USR_VAR_DIR}/Campcaster/getid3/var
+	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/Campcaster/getid3/var
 
 
 #-------------------------------------------------------------------------------
