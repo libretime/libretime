@@ -160,19 +160,19 @@ class uiBase
             die($this->dbc->getMessage());
         }
         $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb       =& new GreenBox($this->dbc, $config);
-        $this->config   =& $config;
+        $this->gb =& new GreenBox($this->dbc, $config);
+        $this->config =& $config;
 
         $this->config['accessRawAudioUrl'] = $config['storageUrlPath'].'/xmlrpc/simpleGet.php';
 
-        $this->sessid   = isset($_REQUEST[$config['authCookieName']]) ?
+        $this->sessid = isset($_REQUEST[$config['authCookieName']]) ?
                             $_REQUEST[$config['authCookieName']] : null;
-        $this->userid   = $this->gb->getSessUserId($this->sessid);
-        $this->login    = $this->gb->getSessLogin($this->sessid);
+        $this->userid = $this->gb->getSessUserId($this->sessid);
+        $this->login = $this->gb->getSessLogin($this->sessid);
         if (PEAR::isError($this->login)) {
             $this->login = null;
         }
-        $this->langid   =& $_SESSION['langid'];
+        $this->langid =& $_SESSION['langid'];
 
         if (!is_null($this->login)) {
             if (isset($_REQUEST['id'])) {
@@ -180,27 +180,27 @@ class uiBase
             } else {
                 $this->id = $this->gb->getObjId($this->login, $this->gb->storId);
             }
-            $this->pid      = $this->gb->getparent($this->id) != 1 ?
+            $this->pid = $this->gb->getparent($this->id) != 1 ?
                                 $this->gb->getparent($this->id) : FALSE;
-            $this->type     = $this->gb->getFileType($this->id);
-            $this->fid      = ($this->type == 'Folder') ? $this->id : $this->pid;
+            $this->type = $this->gb->getFileType($this->id);
+            $this->fid = ($this->type == 'Folder') ? $this->id : $this->pid;
             $this->homeid = $this->gb->getObjId($this->login, $this->gb->storId);
         }
 
         $this->InputTextStandardAttrib = array('size'=>UI_INPUT_STANDARD_SIZE,
                                         'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
-        $this->SCRATCHPAD   =& new uiScratchPad($this);
-        $this->SEARCH       =& new uiSearch($this);
-        $this->BROWSE       =& new uiBrowse($this);
-        $this->HUBBROWSE    =& new uiHubBrowse($this);
-        $this->HUBSEARCH    =& new uiHubSearch($this);
-        $this->PLAYLIST     =& new uiPlaylist($this);
-        $this->SCHEDULER    =& new uiScheduler($this);
-        $this->SUBJECTS     =& new uiSubjects($this);
-        $this->EXCHANGE     =& new uiExchange($this);
-        $this->TRANSFERS    =& new uiTransfers($this);
-        $this->_self_       =& $this;
+        $this->SCRATCHPAD =& new uiScratchPad($this);
+        $this->SEARCH =& new uiSearch($this);
+        $this->BROWSE =& new uiBrowse($this);
+        $this->HUBBROWSE =& new uiHubBrowse($this);
+        $this->HUBSEARCH =& new uiHubSearch($this);
+        $this->PLAYLIST =& new uiPlaylist($this);
+        $this->SCHEDULER =& new uiScheduler($this);
+        $this->SUBJECTS =& new uiSubjects($this);
+        $this->EXCHANGE =& new uiExchange($this);
+        $this->TRANSFERS =& new uiTransfers($this);
+        $this->_self_ =& $this;
     } // fn uiBase
 
 
