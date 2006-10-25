@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>Preface</h1>
-This document is part of the <a href="http://campcaster.campware.org/">LiveSupport</a>
+This document is part of the <a href="http://campcaster.campware.org/">Campcaster</a>
 project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
@@ -18,9 +18,9 @@ Development Loan Fund</a>, under the GNU <a
   <li>Location: $URL$</li>
 </ul>
 <h1>Scope</h1>
-This document describes the PHP script file conventions for the LiveSupport
+This document describes the PHP script file conventions for the Campcaster
 project. See also the generic description of the <a
- href="fileConventions.html">file conventions</a> in the LiveSupport
+ href="fileConventions.html">file conventions</a> in the Campcaster
 project.<br>
 <h1>Introduction</h1>
 PHP scripts are text-based files containing PHP class definitions and/or commands.<br/>
@@ -76,26 +76,26 @@ column wide partitioning delimiter enclosing the header.<br>
 <pre>
 /*------------------------------------------------------------------------------
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
- 
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -116,7 +116,7 @@ This section contains all the include files that the script needs
 to include.
 The include files are listed in
 a most generic to most specific order: first PEAR classes, then
-other LiveSupport module include files, and finally include files from
+other Campcaster module include files, and finally include files from
 the same module / product are listed.<br>
 Is much safer to use <code>include_once</code> or <code>require_once</code>, not the original versions
 of this statement.<br/>

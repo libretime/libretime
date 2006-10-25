@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Preface</h1>
-This document is part of the <a href="http://campcaster.campware.org/">LiveSupport</a>
+This document is part of the <a href="http://campcaster.campware.org/">Campcaster</a>
 project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
@@ -18,10 +18,10 @@ Development Loan Fund</a>, under the GNU <a
 </ul>
 <h1>Scope</h1>
 This document describes C++ source file conventions for the
-LiveSupport
+Campcaster
 project. See also the generic description of the <a
  href="fileConventions.html">file
-conventions</a> in the LiveSupport
+conventions</a> in the Campcaster
 project.<br>
 <h1>Introduction</h1>
 C++ source files are files containing implementations of functions and
@@ -30,7 +30,7 @@ based files, thus they should adhere to the <a
  href="fileConventions.html#textConventions">generic text-based
 conventions</a>.<br>
 <br>
-The LiveSupport project uses a strong object oriented approach. Part of
+The Campcaster project uses a strong object oriented approach. Part of
 this approach is to group implementations of classes into their own
 files: one header file and one source file for each class. Therefore
 each C++ source file contains implementation of exactly one C++ class,
@@ -89,7 +89,7 @@ A sample for a C++ source file header follows.<br>
 This section contains all the include files that the source file needs
 to include, plus namespace references. The include files are listed in
 a most generic to most specific order: first system include files, then
-other LiveSupport module include files, and finally include files from
+other Campcaster module include files, and finally include files from
 the same module / product are listed. The last one is the header file
 for the class this source file implements.<br>
 <br>
@@ -100,7 +100,7 @@ most specific, the last one being the namespace of the class this
 source file implements.<br>
 <h3>Sample</h3>
 A sample include files &amp; namespaces section follows.<br>
-<pre>/* =============================================== include files &amp; namespaces */<br><br>#ifdef HAVE_CONFIG_H<br>#include "configure.h"<br>#endif<br><br>#if HAVE_STDLIB_H<br>#include &lt;stdlib.h&gt;<br>#else<br>#error need stdlib.h<br>#endif<br><br>#include &lt;string&gt;<br><br>#include &lt;LiveSupport/Foo/Bar.h&gt;<br><br><br>using namespace LiveSupport::Core;<br>using namespace LiveSupport::Foo;<br><br></pre>
+<pre>/* =============================================== include files &amp; namespaces */<br><br>#ifdef HAVE_CONFIG_H<br>#include "configure.h"<br>#endif<br><br>#if HAVE_STDLIB_H<br>#include &lt;stdlib.h&gt;<br>#else<br>#error need stdlib.h<br>#endif<br><br>#include &lt;string&gt;<br><br>#include &lt;Campcaster/Foo/Bar.h&gt;<br><br><br>using namespace Campcaster::Core;<br>using namespace Campcaster::Foo;<br><br></pre>
 <h2>Local data structures<br>
 </h2>
 The constants section contains locally defined data structures, that

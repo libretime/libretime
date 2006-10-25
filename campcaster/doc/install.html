@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>LiveSupport installation documentation</title>
+  <title>Campcaster installation documentation</title>
   <meta content="$Author$" name="author">
 </head>
 <body>
 <h1>Preface</h1>
-This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+This document is part of the <a href="http://campcaster.campware.org/">Campcaster</a>
 project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
@@ -17,41 +17,41 @@ Development Loan Fund</a>, under the GNU <a
   <li>Location: $URL$</li>
 </ul>
 <h1>Scope</h1>
-This document describes how to compile and install LiveSupport on your
+This document describes how to compile and install Campcaster on your
 system.<br>
 <h1>Introduction</h1>
-LiveSupport has an installation procedure to make sure LiveSupport will
+Campcaster has an installation procedure to make sure Campcaster will
 work properly on your system. This procedure consists of the following
 steps:<br>
 <ul>
   <li>installing required compilation tools</li>
   <li>installing and configuring required external services</li>
-  <li>obtaining LiveSupport sources</li>
-  <li>compiling LiveSupport</li>
-  <li>installing LiveSupport</li>
+  <li>obtaining Campcaster sources</li>
+  <li>compiling Campcaster</li>
+  <li>installing Campcaster</li>
   <li>try it out</li>
 </ul>
 <h2>For the impatient</h2>
 Those who think they know everything, the quick steps to install
-LiveSupport are the following.  (To run <code>make</code>, you need write
+Campcaster are the following.  (To run <code>make</code>, you need write
 permissions in the <code>prefix</code> directory; to run
 <code>make install</code> and <code>postInstallStation.sh</code>,
 you need to be root.)
 
 <pre><code>
-wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-&lt;version&gt;.tar.bz2
-wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-&lt;version&gt;.tar.bz2
-tar xfj livesupport-&lt;version&gt;.tar.bz2
-tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2
-cd livesupport-&lt;version&gt;
-./configure --prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www
+wget http://switch.dl.sourceforge.net/sourceforge/campcaster/campcaster-&lt;version&gt;.tar.bz2
+wget http://switch.dl.sourceforge.net/sourceforge/campcaster/campcaster-libraries-&lt;version&gt;.tar.bz2
+tar xfj campcaster-&lt;version&gt;.tar.bz2
+tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2
+cd campcaster-&lt;version&gt;
+./configure --prefix=/usr/local/campcaster --with-apache-group=apache --with-www-docroot=/var/www
 make
 make install
-./bin/postInstallStation.sh -d /usr/local/livesupport -g apache -r /var/www
-/usr/local/livesupport/bin/scheduler.sh start
+./bin/postInstallStation.sh -d /usr/local/campcaster -g apache -r /var/www
+/usr/local/campcaster/bin/scheduler.sh start
 <br></code></pre>
 
-Then try the URL <code>http://localhost/livesupport/</code>
+Then try the URL <code>http://localhost/campcaster/</code>
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
 <br>
 Everyone else, please read the lines below carefully.<br>
@@ -63,11 +63,11 @@ them from the URLs listed, and compile them yourself (follow the instructions
 included with each tool and library).<br>
 
 <h1>Installing and configuring required external services</h1>
-LiveSupport depends on some external services to be able to run, most
+Campcaster depends on some external services to be able to run, most
 importantly a PHP-capable web server (we assume apache), and a database
 server (we assume PostgreSQL). <br>
 <h2>Database</h2>
-LiveSupport expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
+Campcaster expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
 database, version 7.4 or later, to be installed on your system.  You will
 also need a postgresql driver for unixODBC; this may be in the unixODBC
 package, or may need to be installed separately.<br>
@@ -89,7 +89,7 @@ to include the following line, before any other lines starting with "host":<br>
 These changes will make sure that the PostgreSQL database is accessible
 via TCP/IP from localhost.<br>
 <h2>Web server</h2>
-LiveSupport expects an apache web server with PHP and some additional
+Campcaster expects an apache web server with PHP and some additional
 PHP modules installed. In particular:
 <ul>
   <li><a href="http://httpd.apache.org/">Apache</a> httpd server,
@@ -128,32 +128,32 @@ or one other from <a href="http://packages.debian.org/cgi-bin/search_packages.pl
 Then run "alsaconf" and check /proc/asound/cards again.
 
 
-<h1>Obtaining LiveSupport sources</h1>
-LiveSupport sources come in two different tarballs:<br>
+<h1>Obtaining Campcaster sources</h1>
+Campcaster sources come in two different tarballs:<br>
 <ul>
-  <li><code>livesupport-&lt;version&gt;.tar.bz2</code> - the
-LiveSupport source files<code><br>
+  <li><code>campcaster-&lt;version&gt;.tar.bz2</code> - the
+Campcaster source files<code><br>
     </code></li>
-  <li><code>livesupport-libraries-&lt;version&gt;.tar.bz2</code> -
-external libraries used by LiveSupport<code><br>
+  <li><code>campcaster-libraries-&lt;version&gt;.tar.bz2</code> -
+external libraries used by Campcaster<code><br>
     </code></li>
 </ul>
 Both files can be downloaded from <a
- href="http://sourceforge.net/projects/livesupport/"><code>http://sourceforge.net/projects/livesupport/</code></a>.
+ href="http://sourceforge.net/projects/campcaster/"><code>http://sourceforge.net/projects/campcaster/</code></a>.
 <br>
 <br>
 After downloading the files, untar them in the same directory:<br>
 <br>
-<pre><code>tar xfj livesupport-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br></code></pre>
+<pre><code>tar xfj campcaster-&lt;version&gt;.tar.bz2<br>tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2<br></code></pre>
 <br>
-which will create a <code>livesupport-&lt;version&gt;</code>
+which will create a <code>campcaster-&lt;version&gt;</code>
 directory, with all the required files to compile and install
-LiveSupport.<br>
-<h1>Compiling LiveSupport</h1>
-To compile LiveSupport, enter the LiveSupport directory, and execute
+Campcaster.<br>
+<h1>Compiling Campcaster</h1>
+To compile Campcaster, enter the Campcaster directory, and execute
 the following commands:<br>
 <br>
-<pre><code>cd livesupport-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
+<pre><code>cd campcaster-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/campcaster --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
 <br>
 Note that you need to have write permissions in the <code>prefix</code> directory
 when you run <code>make</code>.
@@ -161,15 +161,15 @@ The configure options used above are the options most probably used:<br>
 <br>
 <pre><code>&nbsp; --prefix=PREFIX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; install architecture-independent files in PREFIX<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [/usr/local]</code></pre>
 The installation directory. Supply the previously
-decided LiveSupport installation directory here, <code>&lt;ls-installdir&gt;</code>
-(as mentioned above). A sensible value to use here is <code>/usr/local/livesupport</code>.<br>
+decided Campcaster installation directory here, <code>&lt;ls-installdir&gt;</code>
+(as mentioned above). A sensible value to use here is <code>/usr/local/campcaster</code>.<br>
 <pre><code><br>  --with-apache-group     use apache running in the specified group (apache)<br><br></code></pre>
 The user group the apache web server daemon runs at (see the section
 above on installing apache). Supply the <code>&lt;apache-group&gt;</code>
 value here, as mentioned above, which is usually either <code>apache</code>
 or <code>www-data</code>.<br>
 <br>
-<pre>  --with-www-docroot      deploy LiveSupport under the specified docroot<br>                          (/var/www)<br><br></pre>
+<pre>  --with-www-docroot      deploy Campcaster under the specified docroot<br>                          (/var/www)<br><br></pre>
 The document root of your apache installation (see the section above on
 installing apache). Supply the <code>&lt;www-root&gt;</code>
 value here, as mentioned above, which is usually <code>/var/www</code>
@@ -182,39 +182,39 @@ movie, relax,
 etc.<br>
 <br>
 If you want the installation script to create the database tables used
-by LiveSupport, consider using the following configure options:<br>
+by Campcaster, consider using the following configure options:<br>
 <br>
-<pre>  --with-create-database  specify whether the LiveSupport database and database<br>                          user should be created (no)<br>  --with-create-odbc-data-source<br>                          specify whether the ODBC data source for LiveSupport<br>                          should be created (no)<br>  --with-init-database    specify whether the LiveSupport database tables<br>                          should be initialized (no)<br>  --with-configure-apache specify whether apache should be configured for<br>                          LiveSupport through its conf.d directory (no)<br><br><br></pre>
+<pre>  --with-create-database  specify whether the Campcaster database and database<br>                          user should be created (no)<br>  --with-create-odbc-data-source<br>                          specify whether the ODBC data source for Campcaster<br>                          should be created (no)<br>  --with-init-database    specify whether the Campcaster database tables<br>                          should be initialized (no)<br>  --with-configure-apache specify whether apache should be configured for<br>                          Campcaster through its conf.d directory (no)<br><br><br></pre>
 For a full list of options, see <code>./configure --help</code><br>
-<h1>Installing LiveSupport<br>
+<h1>Installing Campcaster<br>
 </h1>
-After a successful compilation, to install LiveSupport, you can install
-LiveSupport by typing:<br>
+After a successful compilation, to install Campcaster, you can install
+Campcaster by typing:<br>
 <br>
 <pre><code>make install</code><br></pre>
 <br>
-This will install LiveSupport into the directory specified to the
+This will install Campcaster into the directory specified to the
 configure script. It will also create necessary database tables,
 depending on the invocation of the configure script. You need to run
 <code>make install</code> as root.<br>
 <br>
 <h1>Try it out</h1>
-After a successful installation, the LiveSupport scheduler has to be
+After a successful installation, the Campcaster scheduler has to be
 started. The scheduler has a System V runlevel-style startup script,
 under &lt;ls-installdir&gt;/bin/scheduler.sh. To start the scheduler,
 simply invoke:<br>
 <br>
 <pre><code>&lt;ls-installdir&gt;/bin/scheduler.sh start</code><br></pre>
 <br>
-The only thing left to do is to try out the LiveSupport web interface
+The only thing left to do is to try out the Campcaster web interface
 or the GUI application.<br>
 <br>
-For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/</code>
+For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/campcaster/</code>
 .<br>
 <br>
 The GUI application can be started by issuing the following command:<br>
 <br>
-<pre><code>&lt;ls-installdir&gt;/bin/gLiveSupport.sh</code><br></pre>
+<pre><code>&lt;ls-installdir&gt;/bin/campcaster-studio.sh</code><br></pre>
 <br>
 For your first login, use the following values:<br>
 <ul>

@@ -3,12 +3,12 @@
 <head>
   <meta content="text/html; charset=ISO-8859-2"
  http-equiv="content-type">
-  <title>LiveSupport Local storage specification</title>
-  <meta content="Ákos Maróy" name="author">
+  <title>Campcaster Local storage specification</title>
+  <meta content="ďż˝kos Marďż˝y" name="author">
 </head>
 <body>
 <h1>Preface</h1>
-This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+This document is part of the <a href="http://campcaster.campware.org/">Campcaster</a>
 project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
@@ -18,7 +18,7 @@ Development Loan Fund</a>, under the GNU <a
   <li>Location: $URL$</li>
 </ul>
 <h1>Scope</h1>
-This document contains the specification of the LiveSupport Local
+This document contains the specification of the Campcaster Local
 storage component.<br>
 <br>
 This document contains embedded <a
@@ -36,7 +36,7 @@ Audio Clips contain audio data bundled with metadata describing it.
 Storing locally means that the binary audio data is available not just
 as a stream, but also as random seekable file.<br>
 The local storage contains Playlists also.  These are metadata
-files containing a list of Audio Clip IDs with extra (fade in / fade out) 
+files containing a list of Audio Clip IDs with extra (fade in / fade out)
 information.</br>
 <h2>System functions</h2>
 The main system functions are described below. There are three
@@ -1116,7 +1116,7 @@ with the given ID, the user is notified and the use case ends.</li>
     </tr>
     <tr>
       <td valign="top"><b>purpose</b> </td>
-      <td valign="top">To modify an existing Playlist in the local 
+      <td valign="top">To modify an existing Playlist in the local
 storage<br>
       </td>
     </tr>
@@ -1124,7 +1124,7 @@ storage<br>
       <td valign="top"><b>overview</b> </td>
       <td valign="top">The Storage maintainer contacts the Local
 storage with the aim of editing an existing Playlist.  The Local
-storage retrieves the Playlist and marks it as being edited.  The Storage 
+storage retrieves the Playlist and marks it as being edited.  The Storage
 maintainer modifies the Playlist.  The Storage maintainer saves the
 modified Playlist, the Local storage stores it in place of the old
 Playlist and marks it as no longer being edited.<br>
@@ -1172,8 +1172,8 @@ and grants access<br>
       </td>
       <td valign="top"><b>5.</b><br>
       </td>
-      <td valign="top">The system verifies that there is a Playlist 
-in the Local storage with the given ID, and it is not currently 
+      <td valign="top">The system verifies that there is a Playlist
+in the Local storage with the given ID, and it is not currently
 being edited<br>
       </td>
     </tr>
@@ -1184,7 +1184,7 @@ being edited<br>
       </td>
       <td valign="top"><b>6.</b><br>
       </td>
-      <td valign="top">The system marks the Playlist with the given ID 
+      <td valign="top">The system marks the Playlist with the given ID
 as being edited<br>
       </td>
     </tr>
@@ -1228,8 +1228,8 @@ Playlist earlier<br>
       </td>
       <td valign="top"><b>11.</b><br>
       </td>
-      <td valign="top">The system stores the new Playlist metafile in 
-place of the old one, marks it as no longer being edited, 
+      <td valign="top">The system stores the new Playlist metafile in
+place of the old one, marks it as no longer being edited,
 and notifies the Storage maintainer of the actions taken<br>
       </td>
     </tr>
@@ -1261,7 +1261,7 @@ and notifies the Storage maintainer of the actions taken<br>
   <li><b>action 3:</b> if the Storage maintainer can not be
 authenticated, she is notified, and the use case ends.</li>
   <li><b>action 5:</b> if there is no Playlist in the Local storage
-with the given ID, or if the Playlist is already being edited, 
+with the given ID, or if the Playlist is already being edited,
 the user is notified and the use case ends.</li>
   <li><b>action 10:</b> if the user cannot be identified as the same
 that opened the Playlist for editing, the user is notified, and the
@@ -1297,7 +1297,7 @@ use case continues at point 8.</li></ul>
     <tr>
       <td valign="top"><b>overview</b> </td>
       <td valign="top">The Storage maintainer contacts the Local
-storage with the aim of deleting a Playlist.  The system deletes the 
+storage with the aim of deleting a Playlist.  The system deletes the
 Playlist with the given ID from the Local storage.<br>
       </td>
     </tr>
@@ -1344,7 +1344,7 @@ Playlist to be deleted<br>
       </td>
       <td valign="top"><b>5.</b><br>
       </td>
-      <td valign="top">The system verifies that there is a Playlist 
+      <td valign="top">The system verifies that there is a Playlist
 in the Local storage with the given ID, and it is not currently being
 edited<br>
       </td>
@@ -1389,7 +1389,7 @@ and notifies the Storage maintainer of the action taken<br>
   <li><b>action 3:</b> if the Storage maintainer can not be
 authenticated, she is notified, and the use case ends.</li>
   <li><b>action 5:</b> if there is no Playlist in the Local storage
-with the given ID, or if the Playlist is currently being edited, 
+with the given ID, or if the Playlist is currently being edited,
 the user is notified and the use case ends.</li>
 </ul>
 <br>
@@ -1417,14 +1417,14 @@ the user is notified and the use case ends.</li>
     </tr>
     <tr>
       <td valign="top"><b>purpose</b> </td>
-      <td valign="top">To access a Playlist metafile in order to 
+      <td valign="top">To access a Playlist metafile in order to
 execute (play) it<br>
       </td>
     </tr>
     <tr>
       <td valign="top"><b>overview</b> </td>
       <td valign="top">The Audio player contacts the Local
-storage with the aim of accessing a Playlist.  The Local storage 
+storage with the aim of accessing a Playlist.  The Local storage
 returns the requested Playlist metafile.<br>
       </td>
     </tr>
@@ -1623,7 +1623,7 @@ extra (fade in / fade out) information<br>
     <tr>
       <td valign="top"><b>Token</b><br>
       </td>
-      <td valign="top">An identifier used to match the parts of two-part 
+      <td valign="top">An identifier used to match the parts of two-part
 operations, e.g., access--release or edit--save<br>
       </td>
     </tr>
@@ -2726,7 +2726,7 @@ being edited, report as an error<br>
     <tr>
       <td valign="top"><b>Output</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist 
+      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist
 metafile, and a token identifying it<br>
       </td>
     </tr>
@@ -2812,7 +2812,7 @@ the newPlaylist argument looks like<br>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument 
+      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument
 does not match a token generated earlier in this session by editPlaylist(),
 report as an error<br>
       </td>
@@ -2996,7 +2996,7 @@ given playlistId exists, report as an error<br>
     <tr>
       <td valign="top"><b>Output</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist 
+      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist
 metafile, and a token identifying it<br>
     </tr>
     <tr>
@@ -3072,7 +3072,7 @@ obtained earlier by accessPlaylist().<br>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument 
+      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument
 does not match a token generated earlier in this session by accessPlaylist(),
 report as an error<br>
       </td>
@@ -3306,7 +3306,7 @@ given audioClipId exists, report as an error<br>
     <tr>
       <td valign="top"><b>Output</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">a URL of an AudioClip 
+      <td colspan="2" rowspan="1" valign="top">a URL of an AudioClip
 metafile, and a token identifying it<br>
     </tr>
     <tr>
@@ -3382,7 +3382,7 @@ obtained earlier by accessAudioClip().<br>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the audioClipToken argument 
+      <td colspan="2" rowspan="1" valign="top">if the audioClipToken argument
 does not match a token generated earlier in this session by accessAudioClip(),
 report as an error<br>
       </td>
