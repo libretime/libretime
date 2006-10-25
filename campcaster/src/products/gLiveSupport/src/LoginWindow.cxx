@@ -66,9 +66,8 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      "",
                       windowOpenerButton,
-                      0 /* not resizable */),
+                      WhiteWindow::isNotResizable),
             loggedIn(false)
 {
     this->gLiveSupport = gLiveSupport;

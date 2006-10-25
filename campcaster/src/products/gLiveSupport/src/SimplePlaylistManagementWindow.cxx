@@ -76,7 +76,6 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle,
-                      WidgetConstants::playlistsWindowTitleImage,
                       windowOpenerButton),
             isPlaylistModified(false)
 {

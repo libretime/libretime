@@ -63,8 +63,7 @@ RestoreBackupWindow :: RestoreBackupWindow (
                                 Ptr<const Glib::ustring>::Ref   fileName)
                                                                     throw ()
           : GuiWindow(gLiveSupport,
-                      bundle,
-                      ""),
+                      bundle),
             fileName(fileName),
             currentState(AsyncState::pendingState)
 {

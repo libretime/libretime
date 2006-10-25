@@ -53,7 +53,7 @@ namespace {
 /**
  *  The name of the application, shown on the task bar.
  */
-const Glib::ustring     applicationTitleSuffix = " - Campcaster";
+const Glib::ustring     applicationTitle = "Campcaster";
 
 }
 
@@ -67,68 +67,10 @@ const Glib::ustring     applicationTitleSuffix = " - Campcaster";
  *----------------------------------------------------------------------------*/
 GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Ptr<ResourceBundle>::Ref    bundle,
-                        WidgetConstants::ImageType  titleImage,
-                        Button *                    windowOpenerButton)
-                                                                    throw ()
-          : WhiteWindow(titleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            windowOpenerButton(windowOpenerButton),
-            gLiveSupport(gLiveSupport)
-{
-}
-
-
-/*------------------------------------------------------------------------------
- *  Constructor.
- *----------------------------------------------------------------------------*/
-GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
-                        WidgetConstants::ImageType  titleImage,
                         Button *                    windowOpenerButton,
                         int                         properties)
                                                                     throw ()
-          : WhiteWindow(titleImage,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        properties),
-            LocalizedObject(bundle),
-            windowOpenerButton(windowOpenerButton),
-            gLiveSupport(gLiveSupport)
-{
-}
-
-
-/*------------------------------------------------------------------------------
- *  Constructor.
- *----------------------------------------------------------------------------*/
-GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
-                        const Glib::ustring &       titleString,
-                        Button *                    windowOpenerButton)
-                                                                    throw ()
-          : WhiteWindow(titleString,
-                        Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle),
-            windowOpenerButton(windowOpenerButton),
-            gLiveSupport(gLiveSupport)
-{
-}
-
-
-/*------------------------------------------------------------------------------
- *  Constructor.
- *----------------------------------------------------------------------------*/
-GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
-                        const Glib::ustring &       titleString,
-                        Button *                    windowOpenerButton,
-                        int                         properties)
-                                                                    throw ()
-          : WhiteWindow(titleString,
-                        Colors::White,
+          : WhiteWindow(Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
                         properties),
             LocalizedObject(bundle),
@@ -176,7 +118,6 @@ GuiWindow :: on_hide (void)                                         throw ()
 void
 GuiWindow :: set_title (const Glib::ustring &   title)              throw ()
 {
-    Glib::ustring       completeTitle = title + applicationTitleSuffix;
-    WhiteWindow::set_title(completeTitle);
+    WhiteWindow::setTitle(title, applicationTitle);
 }
 

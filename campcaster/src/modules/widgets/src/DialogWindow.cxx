@@ -62,10 +62,9 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
                               int                       buttonTypes,
                               Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-          : WhiteWindow("",
-                        Colors::White,
+          : WhiteWindow(Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        WhiteWindow::isModal),
+                        WhiteWindow::hasNoTitle || WhiteWindow::isModal),
             LocalizedObject(bundle)
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();

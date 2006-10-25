@@ -88,11 +88,7 @@ class WidgetConstants
          *  The list of available miscellaneous images.
          */
         typedef enum { resizeImage,
-                       scratchpadWindowTitleImage,
-                       searchWindowTitleImage,
-                       liveModeWindowTitleImage,
-                       playlistsWindowTitleImage,
-                       schedulerWindowTitleImage,
+                       windowTitleLogoImage,
                        audioClipIconImage,
                        playlistIconImage }          ImageType;
 };

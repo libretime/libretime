@@ -133,7 +133,7 @@ root:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string          { "Simple Playlist Management" }
+        windowTitle:string          { "Edit Playlist" }
 
         startColumnLabel:string     { "Start" }
         titleColumnLabel:string     { "Title" }

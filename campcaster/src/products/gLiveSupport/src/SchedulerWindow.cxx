@@ -76,7 +76,6 @@ SchedulerWindow :: SchedulerWindow (
                                                     throw (XmlRpcException)
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      WidgetConstants::schedulerWindowTitleImage,
                       windowOpenerButton)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();

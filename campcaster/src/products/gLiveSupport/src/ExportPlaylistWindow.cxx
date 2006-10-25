@@ -82,8 +82,7 @@ ExportPlaylistWindow :: ExportPlaylistWindow(
                         Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
           : GuiWindow(gLiveSupport,
-                      bundle, 
-                      ""),
+                      bundle),
             playlist(playlist)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();

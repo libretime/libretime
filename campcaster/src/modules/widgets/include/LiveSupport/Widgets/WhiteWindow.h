@@ -124,11 +124,6 @@ class WhiteWindow : public Gtk::Window,
         Gtk::Table                    * layout;
 
         /**
-         *  The event box for the title, enabling capturing mouse events.
-         */
-        Gtk::HBox                     * titleBox;
-
-        /**
          *  The left alignment contaner for the title.
          */
         Gtk::Alignment                * titleAlignment;
@@ -335,31 +330,17 @@ class WhiteWindow : public Gtk::Window,
 
     public:
         /**
-         *  Constructor for windows with image titles.
+         *  Constructor.
          *
          *  @param title the title of the window.
+         *  @param applicationTitle the name of the application.
          *  @param backgroundColor the background color.
          *  @param cornerImages the corner images.
          *  @param properties   some WindowProperties flags
          */
-        WhiteWindow(WidgetConstants::ImageType    title,
-                    Colors::ColorName           backgroundColor,
+        WhiteWindow(Colors::ColorName           backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages,
-                    int                         properties = isResizable)
-                                                            throw ();
-
-        /**
-         *  Constructor for windows with text titles.
-         *
-         *  @param title the title of the window.
-         *  @param backgroundColor the background color.
-         *  @param cornerImages the corner images.
-         *  @param properties   some WindowProperties flags
-         */
-        WhiteWindow(Glib::ustring               title,
-                    Colors::ColorName           backgroundColor,
-                    Ptr<CornerImages>::Ref      cornerImages,
-                    int                         properties = isResizable)
+                    int                         properties = 0)
                                                             throw ();
 
         /**
@@ -371,18 +352,17 @@ class WhiteWindow : public Gtk::Window,
         /**
          *  Set the title of the window.
          *
-         *  @param title the title of the window.
+         *  This sets the title shown in the upper left corner of the window
+         *  to "TITLE", and sets the window manager title shown in the task
+         *  bar to "title - applicationTitle".
+         *
+         *  @param title                the title of the window.
+         *  @param applicationTitle     the name of the application.
          */
         void
-        set_title(const Glib::ustring & title)              throw ();
-
-        /**
-         *  Get the title of the window.
-         *
-         *  @return the title of the window.
-         */
-        Glib::ustring
-        get_title(void) const                               throw ();
+        setTitle(const Glib::ustring &     title,
+                 const Glib::ustring &     applicationTitle)
+                                                            throw ();
 
         /**
          *  Set the default size of the window.
@@ -398,8 +378,9 @@ class WhiteWindow : public Gtk::Window,
          *  Properties the WhiteWindow can have.  This is passed as the
          *  properties parameter to the constructors.
          */
-        typedef enum  { isResizable     = 1,
-                        isModal         = 2 }       WindowProperties;
+        typedef enum  { hasNoTitle      = 1,
+                        isNotResizable  = 2,
+                        isModal         = 4 }       WindowProperties;
 };
 
 

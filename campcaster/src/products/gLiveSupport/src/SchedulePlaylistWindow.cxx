@@ -69,7 +69,6 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      WidgetConstants::schedulerWindowTitleImage,
                       windowOpenerButton),
             playlist(playlist)
 {

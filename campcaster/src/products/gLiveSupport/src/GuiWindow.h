@@ -115,66 +115,15 @@ class GuiWindow : public WhiteWindow,
          *  @param  gLiveSupport    the GLiveSupport application object.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
-         *  @param  titleImage      the LS logo for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window (optional).
+         *  @param  properties      see WhiteWindow::WindowProperties
+         *                          (optional).
          */
         GuiWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
                   Ptr<ResourceBundle>::Ref      bundle,
-                  WidgetConstants::ImageType    titleImage,
-                  Button *                      windowOpenerButton = 0)
-                                                                    throw ();
-
-        /**
-         *  Constructor.
-         *
-         *  @param  gLiveSupport    the GLiveSupport application object.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param  titleImage      the LS logo for this window.
-         *  @param  windowOpenerButton  the button which was pressed to open
-         *                              this window.
-         *  @param  properties      see WhiteWindow::WindowProperties.
-         */
-        GuiWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
-                  Ptr<ResourceBundle>::Ref      bundle,
-                  WidgetConstants::ImageType    titleImage,
-                  Button *                      windowOpenerButton,
-                  int                           properties)
-                                                                    throw ();
-
-        /**
-         *  Constructor.
-         *
-         *  @param  gLiveSupport    the GLiveSupport, application object.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param  titleString     the title of this window.
-         *  @param  windowOpenerButton  the button which was pressed to open
-         *                              this window (optional).
-         */
-        GuiWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
-                  Ptr<ResourceBundle>::Ref      bundle,
-                  const Glib::ustring &         titleString,
-                  Button *                      windowOpenerButton = 0)
-                                                                    throw ();
-
-        /**
-         *  Constructor.
-         *
-         *  @param  gLiveSupport    the GLiveSupport, application object.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param  titleString     the title of this window.
-         *  @param  windowOpenerButton  the button which was pressed to open
-         *                              this window.
-         *  @param  properties      see WhiteWindow::WindowProperties.
-         */
-        GuiWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
-                  Ptr<ResourceBundle>::Ref      bundle,
-                  const Glib::ustring &         titleString,
-                  Button *                      windowOpenerButton,
-                  int                           properties)
+                  Button *                      windowOpenerButton = 0,
+                  int                           properties = 0)
                                                                     throw ();
 
         /**
@@ -189,8 +138,8 @@ class GuiWindow : public WhiteWindow,
          *  Set the title of the window.
          *
          *  Overrides WhiteWindow::set_title() (inherited from Gtk::Window).
-         *  Adds " - LiveSupport" to the title of the window shown on the
-         *  task bar.
+         *  Adds the application's title to the title of the window shown
+         *  on the task bar.
          *
          *  @param  title   the title of the window.
          */

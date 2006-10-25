@@ -78,7 +78,6 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      WidgetConstants::liveModeWindowTitleImage,
                       windowOpenerButton)
 {
     try {

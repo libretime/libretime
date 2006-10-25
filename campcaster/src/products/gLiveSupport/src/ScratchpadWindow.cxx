@@ -83,7 +83,6 @@ ScratchpadWindow :: ScratchpadWindow (
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      WidgetConstants::scratchpadWindowTitleImage,
                       windowOpenerButton)
 {
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();

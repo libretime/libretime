@@ -73,7 +73,6 @@ UploadFileWindow :: UploadFileWindow (
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle,
-                      "",
                       windowOpenerButton),
             fileType(invalidType)
 {

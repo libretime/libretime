@@ -85,7 +85,6 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                                                 throw ()
           : GuiWindow(gLiveSupport,
                       bundle,
-                      WidgetConstants::searchWindowTitleImage,
                       windowOpenerButton)
 {
     Gtk::Box *          searchWhereBox     = constructSearchWhereBox();

@@ -207,7 +207,6 @@ install: all
              ${USR_VAR_DIR}/LiveSupport/Widgets/icons \
              ${USR_VAR_DIR}/LiveSupport/Widgets/imageButton \
              ${USR_VAR_DIR}/LiveSupport/Widgets/tabButton \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/titleImages \
              ${USR_VAR_DIR}/LiveSupport/Widgets/whiteWindow
 	${CP} ${VAR_DIR}/blueBin/*.png \
           ${USR_VAR_DIR}/LiveSupport/Widgets/blueBin
@@ -225,8 +224,6 @@ install: all
           ${USR_VAR_DIR}/LiveSupport/Widgets/imageButton
 	${CP} ${VAR_DIR}/tabButton/*.png \
           ${USR_VAR_DIR}/LiveSupport/Widgets/tabButton
-	${CP} ${VAR_DIR}/titleImages/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/titleImages
 	${CP} ${VAR_DIR}/whiteWindow/*.png \
           ${USR_VAR_DIR}/LiveSupport/Widgets/whiteWindow
 

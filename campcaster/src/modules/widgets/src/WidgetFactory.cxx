@@ -253,28 +253,10 @@ static const std::string    comboBoxRightName = "combo/right.png";
 static const std::string    resizeImageName = "whiteWindow/resize.png";
 
 /**
- *  The name of the image for the title of the scratchpad window.
+ *  The name of the image for the title logo of the GUI windows.
  */
-static const std::string    scratchpadWindowTitleImageName 
-                            = "titleImages/scratchpadWindowTitle.png";
-
-/**
- *  The name of the image for the title of the search window.
- */
-static const std::string    searchWindowTitleImageName 
-                            = "titleImages/searchWindowTitle.png";
-
-/**
- *  The name of the image for the title of the live mode window.
- */
-static const std::string    liveModeWindowTitleImageName 
-                            = "titleImages/liveModeWindowTitle.png";
-
-/**
- *  The name of the image for the title of the playlist editor window.
- */
-static const std::string    playlistsWindowTitleImageName 
-                            = "titleImages/playlistsWindowTitle.png";
+static const std::string    windowTitleLogoImageName 
+                            = "whiteWindow/windowTitleLogo.png";
 
 /**
  *  The name of the image for the audio clip icon.
@@ -285,12 +267,6 @@ static const std::string    audioClipIconImageName = "icons/audioClipIcon.png";
  *  The name of the image for the playlist icon.
  */
 static const std::string    playlistIconImageName = "icons/playlistIcon.png";
-
-/**
- *  The name of the image for the title of the scheduler window.
- */
-static const std::string    schedulerWindowTitleImageName 
-                            = "titleImages/schedulerWindowTitle.png";
 
 /**
  *  The name of the passive image for the minimize window button.
@@ -389,16 +365,8 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     // load the miscellaneous images
     imageTypePixbufs[WidgetConstants::resizeImage] 
                                     = loadImage(resizeImageName);
-    imageTypePixbufs[WidgetConstants::scratchpadWindowTitleImage]
-                                    = loadImage(scratchpadWindowTitleImageName);
-    imageTypePixbufs[WidgetConstants::searchWindowTitleImage]
-                                    = loadImage(searchWindowTitleImageName);
-    imageTypePixbufs[WidgetConstants::liveModeWindowTitleImage]
-                                    = loadImage(liveModeWindowTitleImageName);
-    imageTypePixbufs[WidgetConstants::playlistsWindowTitleImage]
-                                    = loadImage(playlistsWindowTitleImageName);
-    imageTypePixbufs[WidgetConstants::schedulerWindowTitleImage]
-                                    = loadImage(schedulerWindowTitleImageName);
+    imageTypePixbufs[WidgetConstants::windowTitleLogoImage]
+                                    = loadImage(windowTitleLogoImageName);
     imageTypePixbufs[WidgetConstants::audioClipIconImage]
                                     = loadImage(audioClipIconImageName);
     imageTypePixbufs[WidgetConstants::playlistIconImage]

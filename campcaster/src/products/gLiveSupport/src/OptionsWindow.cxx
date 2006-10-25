@@ -74,8 +74,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 Button *                  windowOpenerButton)
                                                                     throw ()
           : GuiWindow(gLiveSupport,
-                      bundle, 
-                      "",
+                      bundle,
                       windowOpenerButton),
             backupView(0)
 {

@@ -48,6 +48,14 @@ using namespace LiveSupport::Widgets;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The font used for the window title.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     windowTitleFont = "Bitstream Vera Sans Mono Bold 9";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -55,66 +63,22 @@ using namespace LiveSupport::Widgets;
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Constructor for windows with image titles.
+ *  Constructor.
  *----------------------------------------------------------------------------*/
-WhiteWindow :: WhiteWindow(WidgetConstants::ImageType     title,
-                           Colors::ColorName            backgroundColor,
+WhiteWindow :: WhiteWindow(Colors::ColorName            backgroundColor,
                            Ptr<CornerImages>::Ref       cornerImages,
                            int                          properties)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
                   isMaximized(false)
 {
-    // do the image title-specific stuff
-    titleLabel = 0;
-    Ptr<WidgetFactory>::Ref wf          = WidgetFactory::getInstance();
-    Gtk::Image*             titleImage  = Gtk::manage(wf->createImage(title));
-    titleBox                            = Gtk::manage(new Gtk::HBox());
-    titleBox->add(*titleImage);
-    
-    constructWindow(backgroundColor, cornerImages, properties);
-}
+    Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
-
-/*------------------------------------------------------------------------------
- *  Constructor for windows with text titles.
- *----------------------------------------------------------------------------*/
-WhiteWindow :: WhiteWindow(Glib::ustring                title,
-                           Colors::ColorName            backgroundColor,
-                           Ptr<CornerImages>::Ref       cornerImages,
-                           int                          properties)
-                                                                    throw ()
-                : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
-                  isMaximized(false)
-{
-    // do the text title-specific stuff
-    titleLabel      = Gtk::manage(new Gtk::Label);
-    titleLabel->modify_font(Pango::FontDescription(
-                                        "Bitstream Vera Sans 10"));
-    set_title(title);
-    titleBox   = Gtk::manage(new Gtk::HBox());
-    titleBox->add(*titleLabel);
-
-    constructWindow(backgroundColor, cornerImages, properties);
-}
-
-    
-/*------------------------------------------------------------------------------
- *  The common part of both constructors.
- *----------------------------------------------------------------------------*/
-void
-WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
-                               Ptr<CornerImages>::Ref       cornerImages,
-                               int                          properties)
-                                                                    throw ()
-{
     set_decorated(false);
     defaultWidth  = -1;
     defaultHeight = -1;
-    set_resizable(properties & isResizable);
+    set_resizable(!(properties & isNotResizable));
     set_modal(properties & isModal);
-
-    Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
     layout = Gtk::manage(new Gtk::Table());
 
@@ -122,6 +86,22 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     Gdk::Color      bgColor = Colors::getColor(backgroundColor);
 
     // create the title
+    Gtk::Box *      titleBox = Gtk::manage(new Gtk::VBox());
+    titleLabel = 0;
+    
+    if (!(properties & hasNoTitle)) {
+        Gtk::Image *    titleImage  = Gtk::manage(wf->createImage(
+                                        WidgetConstants::windowTitleLogoImage));
+        
+        titleLabel      = Gtk::manage(new Gtk::Label());
+        titleLabel->modify_font(Pango::FontDescription(windowTitleFont));
+        titleLabel->modify_fg(Gtk::STATE_NORMAL, Colors::getColor(
+                                        Colors::Orange));
+        
+        titleBox->pack_start(*titleImage, Gtk::PACK_SHRINK, 0);
+        titleBox->pack_start(*titleLabel, Gtk::PACK_SHRINK, 2);
+    }
+    
     titleBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
     titleAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                     Gtk::ALIGN_CENTER,
@@ -141,7 +121,7 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
         closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &WhiteWindow::onCloseButtonClicked));
     }
-    if (properties & isResizable) {
+    if (!(properties & isNotResizable)) {
         maximizeButton = Gtk::manage(wf->createButton(
                                         WidgetConstants::windowMaximizeButton));
         cornerButtonBox->pack_end(*maximizeButton, Gtk::PACK_SHRINK, padding);
@@ -168,7 +148,7 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     layout->attach(*childContainer, 0, 2, 1, 2);
 
     // create the resize image
-    if (properties & isResizable) {
+    if (!(properties & isNotResizable)) {
         resizeImage = Gtk::manage(wf->createImage(WidgetConstants::resizeImage));
         resizeEventBox = Gtk::manage(new Gtk::EventBox());
         resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
@@ -393,22 +373,14 @@ WhiteWindow :: onCloseButtonClicked (void)                  throw ()
  *  Set the title of the window.
  *----------------------------------------------------------------------------*/
 void
-WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
+WhiteWindow :: setTitle(const Glib::ustring &   title,
+                        const Glib::ustring &   applicationTitle)
+                                                            throw ()
 {
-    Gtk::Window::set_title(title);
+    Gtk::Window::set_title(title + " - " + applicationTitle);
     if (titleLabel) {
-        titleLabel->set_label(title);
+        titleLabel->set_label(title.uppercase());
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Get the title of the window.
- *----------------------------------------------------------------------------*/
-Glib::ustring
-WhiteWindow :: get_title(void) const                        throw ()
-{
-    return titleLabel ? titleLabel->get_label() : "";
 }
 
 

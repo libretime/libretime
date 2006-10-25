@@ -64,12 +64,13 @@ static const std::string bundleConfigFileName = "etc/resourceBundle.xml";
  *----------------------------------------------------------------------------*/
 TestWindow :: TestWindow (void)
                                                                 throw ()
-          : WhiteWindow("test window",
-                        Colors::White,
+          : WhiteWindow(Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners())
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
+    setTitle("test widget", "Test App");
+    
     // init the imageButtons
     hugeImageButton = Gtk::manage(
                 widgetFactory->createButton(WidgetConstants::hugePlayButton));
