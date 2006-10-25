@@ -35,9 +35,9 @@ class uiHandler extends uiBase {
         #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
-            $_SESSION['retransferFormData']['login']  = $formdata['login'];
+            $_SESSION['retransferFormData']['login'] = $formdata['login'];
             $_SESSION['retransferFormData']['langid'] = $formdata['langid'];
-            $_SESSION['retransferFormData']['pass']   = "\n";
+            $_SESSION['retransferFormData']['pass'] = "\n";
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
@@ -46,9 +46,9 @@ class uiHandler extends uiBase {
 
         if (!$sessid || PEAR::isError($sessid)){
             $this->_retMsg('Login failed.');
-            $_SESSION['retransferFormData']['login']  = $formdata['login'];
+            $_SESSION['retransferFormData']['login'] = $formdata['login'];
             $_SESSION['retransferFormData']['langid'] = $formdata['langid'];
-            $_SESSION['retransferFormData']['pass']   = "\n";
+            $_SESSION['retransferFormData']['pass'] = "\n";
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
@@ -61,7 +61,7 @@ class uiHandler extends uiBase {
 
         if (PEAR::isError($id)) {
             $this->_retMsg('Access to home directory failed.');
-            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $_SESSION['retransferFormData']['login'] = $formdata['login'];
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
@@ -127,15 +127,26 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
+        $metadata = camp_get_audio_metadata($formdata['mediafile']['tmp_name']);
+        if (PEAR::isError($metadata)) {
+            $this->_retMsg($metadata->getMessage());
+            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
+            return FALSE;
+        }
+
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.campcaster");
         $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
         chmod($ntmp, 0664);
 
+//        echo "buffer dir: ".$this->gb->bufferDir."<BR>";
+//        echo "$ntmp <br>";
+//        print_r($formdata);
+//        exit;
         $r = $this->gb->putFile($folderId, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid, $replace);
         @unlink($ntmp);
 
-        if(PEAR::isError($r)) {
+        if (PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
             return FALSE;
@@ -177,37 +188,38 @@ class uiHandler extends uiBase {
      */
     function transMData($id, $langid=UI_DEFAULT_LANGID)
     {
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
 
         $ia = $this->gb->analyzeFile($id, $this->sessid);
+        if (PEAR::isError($ia)) {
+            $this->_retMsg($ia->getMessage());
+            return;
+        }
         $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
         $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
-        if ($ia['audio']['channels']) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS,   $ia['audio']['channels']);
+        if (isset($ia['audio']['channels'])) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
         }
-        if ($ia['audio']['sample_rate']) {
+        if (isset($ia['audio']['sample_rate'])) {
         	$this->_setMDataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
         }
-        if ($ia['audio']['bitrate']) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_BITRATE,    $ia['audio']['bitrate']);
+        if (isset($ia['audio']['bitrate'])) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
         }
-        if ($ia['audio']['codec']) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_ENCODER,    $ia['audio']['codec']);
+        if (isset($ia['audio']['codec'])) {
+        	$this->_setMDataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
         }
 
         // from id3 Tags
-        foreach ($mask['pages'] as $key=>$val) {                   ## loop main, music, talk
-            foreach ($mask['pages'][$key] as $k=>$v) {             ## loop throught elements
-                if (is_array($v['id3'])) {
-                    foreach ($v['id3'] as $name) {                 ## loop throught list of equivalent id3-tags
-                        $key = strtolower($name);
-                        if ($ia['comments'][$key][0]) {
-                            $this->_setMdataValue($id, $v['element'], str_replace("'", "\\'", utf8_encode($ia['comments'][$key][0])), $langid);
-                        }
-                    }
-                }
+        // loop main, music, talk
+        foreach ($mask['pages'] as $key => $val) {
+        	// loop through elements
+            foreach ($mask['pages'][$key] as $k => $v) {
+            	if (isset($v['element']) && isset($ia[$v['element']])) {
+	                $this->_setMdataValue($id, $v['element'], $ia[$v['element']], $langid);
+            	}
             }
         }
     }

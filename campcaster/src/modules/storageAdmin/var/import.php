@@ -4,6 +4,7 @@
  * @version $Revision$
  */
 ini_set('memory_limit', '64M');
+set_time_limit(30);
 header("Content-type: text/plain");
 echo "\n#StorageServer import script:\n";
 //echo date('H:i:s')."\n";
@@ -23,93 +24,32 @@ if (PEAR::isError($dbc)) {
 	exit(1);
 }
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox($dbc, $config);
+$gb =& new GreenBox($dbc, $config);
 
 $testonly = (isset($argv[1]) && $argv[1] == '-t');
 
-$errors = 0;
+$g_errors = 0;
 $filecount = 0;
 
-function _err($r, $fn, $txt='')
+/**
+ * Print error to the screen and keep a count of number of errors.
+ *
+ * @param PEAR_Error $pearErrorObj
+ * @param string $txt
+ */
+function import_err($p_pearErrorObj, $txt='')
 {
-    global $errors;
-    if (PEAR::isError($r)) {
-    	$msg = $r->getMessage()." ".$r->getUserInfo();
-    } else {
-    	$msg = $txt;
+    global $g_errors;
+    if (PEAR::isError($p_pearErrorObj)) {
+    	$msg = $p_pearErrorObj->getMessage()." ".$p_pearErrorObj->getUserInfo();
     }
-    echo "ERROR\n $msg\n";
-    $errors++;
+    echo "\nERROR: $msg\n";
+    if (!empty($txt)) {
+    	echo "ERROR: $txt\n";
+    }
+    $g_errors++;
 }
 
-$flds = array(
-    'dc:format'     => array(
-        array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
-    ),
-    'ls:bitrate'    => array(
-        array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
-    ),
-    'dcterms:extent'=> array(
-        array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
-    ),
-    'dc:title'	    => array(
-        array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
-        array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    'dc:creator'	=> array(
-        array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
-        array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    'dc:source'	    => array(
-        array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    ),
-    'ls:encoded_by'	=> array(
-        array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    'ls:track_num'	=> array(
-        array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    'ls:genre'	    => array(
-        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    'ls:channels'	=> array(
-        array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
-    ),
-    'ls:year'	    => array(
-    	array('path'=>"['comments']['date']"),
-        array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-        array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    //'dc:publisher'	=> array(array('path'=>"['comments']['label']")),
-    'ls:filename'	=> array(
-        array('path'=>"['filename']"),
-    ),
-/*
-    'xx:fileformat' => array(array('path'=>"['fileformat']")),
-    'xx:filesize'   => array(array('path'=>"['filesize']")),
-    'xx:dataformat' => array(array('path'=>"['audio']['dataformat']")),
-    'xx:sample_rate'=> array(array('path'=>"['audio']['sample_rate']")),
-*/
-);
-
-$titleKey = 'dc:title';
 
 $r = $gb->getObjId('import', $gb->storId);
 if (PEAR::isError($r)) {
@@ -125,26 +65,6 @@ if (is_null($r)) {
 }
 $parid = $r;
 
-function addMdata($key, $val, $iEnc='iso-8859-1')
-{
-    global $mdata, $titleHaveSet, $titleKey;
-    #echo "$key($iEnc): $val\n";
-    if (!is_null($val)) {
-        $data = $val;
-        $oEnc = 'UTF-8';
-        if (function_exists('iconv') && $iEnc != $oEnc) {
-            $data = $r = @iconv($iEnc, $oEnc, $data);
-            if ($r === FALSE) {
-                echo "Warning: convert $key data to unicode failed\n";
-                $data = $val;  // fallback
-            }
-        }
-        if ($key == $titleKey) {
-        	$titleHaveSet = TRUE;
-        }
-        $mdata[$key] = trim($data);
-    }
-}
 
 $stdin = fopen('php://stdin', 'r');
 while ($filename = fgets($stdin, 2048)) {
@@ -154,81 +74,19 @@ while ($filename = fgets($stdin, 2048)) {
         continue;
     }
     echo "$filename:   ";
-    set_time_limit(30);
-    //$infoFromFile = GetAllFileInfo("$filename", 'mp3');
-    //prepared for getid3 upgrade:
-    $getID3 = new getID3;
-    $infoFromFile = $getID3->analyze("$filename");
-    //echo "\n".var_export($infoFromFile)."\n"; exit;
-    if (PEAR::isError($infoFromFile)) {
-    	_err($infoFromFile, $filename);
-    	continue;
-    }
-    if (isset($infoFromFile['error'])) {
-    	_err(NULL, $filename, $infoFromFile['error']);
-    	continue;
-    }
-    #if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
-    if (!$infoFromFile['bitrate']) {
-    	echo "not audio?\n";
-    	continue;
-    }
 
-    $mdata = array();
-    $titleHaveSet = FALSE;
-    foreach ($flds as $key => $getid3keys) {
-        if ($testonly) {
-        	echo "$key\n";
-        }
-        foreach ($getid3keys as $getid3key) {
-            // defaults:
-            $ignoreEnc  = FALSE;
-            $dataPath   = "";
-            $encPath    = "";
-            $enc        = "UTF-8";
-            extract($getid3key);
-            $vn = "\$infoFromFile$path$dataPath";
-            if ($testonly) {
-            	echo "   $vn   ->   ";
-            }
-            eval("\$vnFl = isset($vn);");
-            if ($vnFl) {
-                eval("\$data = $vn;");
-                if ($testonly) {
-                	echo "$data\n";
-                }
-                if (!$ignoreEnc && $encPath != "") {
-                    $encVn = "\$infoFromFile$path$encPath";
-                    eval("\$encVnFl = isset($encVn);");
-                    if ($encVnFl) {
-                    	eval("\$enc = $encVn;");
-                    }
-                }
-                if ($testonly) {
-                	echo "        ENC=$enc\n";
-                }
-                //addMdata($key, $data);
-                addMdata($key, $data, $enc);
-                break;
-            } else {
-                if ($testonly) {
-                	echo "\n";
-                }
-            }
-        }
+    $mdata = camp_get_audio_metadata($filename, $testonly);
+    if (PEAR::isError($mdata)) {
+    	import_err($mdata);
+    	continue;
     }
-    if ($testonly) {
-    	var_dump($mdata);
-    }
-
-    if (!$titleHaveSet || trim($mdata[$titleKey]) == '') {
-    	addMdata($titleKey, basename($filename));
-    }
+    unset($mdata['audio']);
+    unset($mdata['playtime_seconds']);
 
     if (!$testonly) {
         $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
         if (PEAR::isError($r)) {
-        	_err($r, $filename);
+        	import_err($r, "Error in bsPutFile()");
         	echo var_export($mdata)."\n";
         	continue;
         }
@@ -236,15 +94,15 @@ while ($filename = fgets($stdin, 2048)) {
 
         $r = $gb->bsSetMetadataBatch($id, $mdata);
         if (PEAR::isError($r)) {
-        	_err($r, $filename);
+        	import_err($r, "Error in bsSetMetadataBatch()");
         	echo var_export($mdata)."\n";
         	continue;
         }
     } else {
         var_dump($infoFromFile);
-        echo"======================= ";
+        echo "======================= ";
         var_dump($mdata);
-        echo"======================= ";
+        echo "======================= ";
     }
 
     echo "OK\n";
@@ -256,9 +114,9 @@ $end = intval(date('U'));
 //echo date('H:i:s')."\n";
 $time = $end - $start;
 if ($time > 0) {
-	$speed = round(($filecount+$errors)/$time, 1);
+	$speed = round(($filecount+$g_errors)/$time, 1);
 } else {
 	$speed = "N/A";
 }
-echo " Files ".($testonly ? "analyzed" : "imported").": $filecount, in $time s, $speed files/s, errors: $errors\n";
+echo " Files ".($testonly ? "analyzed" : "imported").": $filecount, in $time s, $speed files/s, errors: $g_errors\n";
 ?>
