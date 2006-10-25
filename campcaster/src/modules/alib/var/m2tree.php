@@ -82,7 +82,7 @@ class M2tree {
      * @param string $type
      * 		type of new object
      * @param int $parid
-     * 		optional, parent id
+     * 		parent id
      * @return mixed
      * 		int/err - new id of inserted object or PEAR::error
      */
@@ -109,9 +109,11 @@ class M2tree {
         if ($this->dbc->isError($oid)) {
             return $this->_dbRollback($oid);
         }
+        $escapedName = pg_escape_string($name);
+        $escapedType = pg_escape_string($type);
         $r = $this->dbc->query("
             INSERT INTO {$this->treeTable} (id, name, type)
-            VALUES ($oid, '$name', '$type')
+            VALUES ($oid, '$escapedName', '$escapedType')
         ");
         if ($this->dbc->isError($r)) {
             return $this->_dbRollback($r);
@@ -321,8 +323,7 @@ class M2tree {
      * 		object id to rename
      * @param string $newName
      * 		new name
-     * @return mixed
-     * 		boolean/err - True or PEAR::error
+     * @return TRUE/PEAR_Error
      */
     function renameObj($oid, $newName)
     {
@@ -340,10 +341,10 @@ class M2tree {
         if ($this->dbc->isError($xid)) {
             return $xid;
         }
-        $newName = pg_escape_string($newName);
+        $escapedName = pg_escape_string($newName);
         $r = $this->dbc->query("
             UPDATE {$this->treeTable}
-            SET name='$newName'
+            SET name='$escapedName'
             WHERE id=$oid
         ");
         if ($this->dbc->isError($r)) {
@@ -360,7 +361,7 @@ class M2tree {
      * @param string $name
      * 		searched name
      * @param int $parId
-     * 		optional, parent id (default is root node)
+     * 		parent id (default is root node)
      * @return mixed
      * 		int/null/err - child id (if found) or null or PEAR::error
      */
@@ -369,13 +370,13 @@ class M2tree {
         if ( ($name == '') && is_null($parId)) {
             $name = $this->rootNodeName;
         }
-        $name = pg_escape_string($name);
+        $escapedName = pg_escape_string($name);
         $parcond = (is_null($parId) ? "parid is null" :
             "parid='$parId' AND level=1");
         $r = $this->dbc->getOne("
             SELECT id FROM {$this->treeTable} t
             LEFT JOIN {$this->structTable} s ON id=objid
-            WHERE name='$name' AND $parcond"
+            WHERE name='$escapedName' AND $parcond"
         );
         if ($this->dbc->isError($r)) {
             return $r;
@@ -389,7 +390,7 @@ class M2tree {
      *
      * @param int $oid
      * @param string $fld
-     * 		optional, requested field (default: name)
+     * 		requested field (default: name)
      * @return mixed
      * 		string/err
      */
@@ -435,7 +436,7 @@ class M2tree {
      * Get array of nodes in object's path from root node
      *
      * @param int $oid
-     * @param string $flds, optional
+     * @param string $flds
      * @param boolean $withSelf
      * 		flag for include specified object to the path
      * @return array/err
@@ -471,9 +472,9 @@ class M2tree {
      *
      * @param int $oid
      * @param string $flds
-     * 		optional, comma separated list of requested fields
+     * 		comma separated list of requested fields
      * @param string $order
-     * 		optional, fieldname for order by clause
+     * 		fieldname for order by clause
      * @return array/err
      */
     function getDir($oid, $flds='id', $order='name')
@@ -496,10 +497,9 @@ class M2tree {
      * 		object id
      * @param string $flds
      * 		list of field names for select
-     *      (optional - default: 'level')
      * @param int $rootId
      * 		root for relative levels
-     *      (optional - default: NULL - use root of whole tree)
+     *      (if NULL - use root of whole tree)
      * @return hash-array with field name/value pairs
      */
     function getObjLevel($oid, $flds='level', $rootId=NULL)
@@ -525,11 +525,11 @@ class M2tree {
      * Get subtree of specified node
      *
      * @param int $oid
-     * 		optional, default: root node
+     * 		default: root node
      * @param boolean $withRoot
-     * 		optional, include/exclude specified node
+     * 		include/exclude specified node
      * @param int $rootId
-     * 		root for relative levels, optional
+     * 		root for relative levels
      * @return mixed
      * 		array/err
      */
