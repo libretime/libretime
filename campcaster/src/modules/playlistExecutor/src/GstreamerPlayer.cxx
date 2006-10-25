@@ -33,6 +33,9 @@
 #include "configure.h"
 #endif
 
+#define DEBUG_PREFIX "GstreamerPlayer"
+#include "LiveSupport/Core/Debug.h"
+
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/GstreamerElements/autoplug.h"
 #include "GstreamerPlayer.h"
@@ -71,6 +74,8 @@ GstreamerPlayer :: configure(const xmlpp::Element   &  element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error)
 {
+    DEBUG_FUNC_INFO
+
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
         eMsg += element.get_name();
@@ -91,6 +96,8 @@ GstreamerPlayer :: configure(const xmlpp::Element   &  element)
 void
 GstreamerPlayer :: initialize(void)                 throw (std::exception)
 {
+    DEBUG_FUNC_INFO
+
     if (initialized) {
         return;
     }
@@ -143,6 +150,8 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
 void
 GstreamerPlayer :: deInitialize(void)                       throw ()
 {
+    DEBUG_FUNC_INFO
+
     if (initialized) {
         gst_element_set_state(pipeline, GST_STATE_NULL);
         gst_bin_sync_children_state(GST_BIN(pipeline));
@@ -233,6 +242,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
                                                 throw (std::invalid_argument,
                                                        std::runtime_error)
 {
+    DEBUG_BLOCK
+
     std::string     filePath;
     GstElement    * pipe;
     GstElement    * fakesink;
@@ -451,6 +462,8 @@ GstreamerPlayer :: stop(void)                       throw (std::logic_error)
 void
 GstreamerPlayer :: close(void)                       throw (std::logic_error)
 {
+    DEBUG_FUNC_INFO
+
     if (isPlaying()) {
         stop();
     }
@@ -523,6 +536,8 @@ bool
 GstreamerPlayer :: setAudioDevice(const std::string &deviceName)       
                                                                 throw ()
 {
+    DEBUG_FUNC_INFO
+
     const bool    oss    = deviceName.find("/dev") == 0;
           bool    relink = false;
 
