@@ -511,7 +511,7 @@ GstreamerPlayer :: close(void)                       throw (std::logic_error)
 
 
 /*------------------------------------------------------------------------------
- *  Get the volume of the player.
+ *  Get the volume of the player. *Unimplemented*: Feature is currently not used.
  *----------------------------------------------------------------------------*/
 unsigned int
 GstreamerPlayer :: getVolume(void)                                  throw ()
@@ -521,12 +521,11 @@ GstreamerPlayer :: getVolume(void)                                  throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Set the volume of the player.
+ *  Set the volume of the player. *Unimplemented*: Feature is currently not used.
  *----------------------------------------------------------------------------*/
 void
 GstreamerPlayer :: setVolume(unsigned int   volume)                 throw ()
-{
-}
+{}
 
 
 /*------------------------------------------------------------------------------
