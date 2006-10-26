@@ -346,6 +346,11 @@ class SearchWindow : public GuiWindow
                 Gtk::TreeModelColumn<Glib::ustring>         creatorColumn;
 
                 /**
+                 *  The column for the album of the audio clip or playlist.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         sourceColumn;
+
+                /**
                  *  The column for the length of the audio clip or playlist.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>         lengthColumn;
@@ -358,6 +363,7 @@ class SearchWindow : public GuiWindow
                     add(typeColumn);
                     add(titleColumn);
                     add(creatorColumn);
+                    add(sourceColumn);
                     add(lengthColumn);
                 }
         };

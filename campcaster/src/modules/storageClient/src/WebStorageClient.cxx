@@ -2899,6 +2899,13 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
     
     checkStruct("private:createPlayable",
                 data,
+                "source",
+                XmlRpcValue::TypeString);
+    Ptr<const Glib::ustring>::Ref   source(new const Glib::ustring(std::string(
+                                                            data["source"] )));
+    
+    checkStruct("private:createPlayable",
+                data,
                 "length",
                 XmlRpcValue::TypeString);
     Ptr<const std::string>::Ref     playlengthString(new const std::string(
@@ -2917,11 +2924,21 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
     
     if (type == "audioclip") {
         playable.reset(new AudioClip(uniqueId, title, playlength));
-        playable->setMetadata(creator, "dc:creator");
+        if (*creator != "") {
+            playable->setMetadata(creator, "dc:creator");
+        }
+        if (*source != "") {
+            playable->setMetadata(source, "dc:source");
+        }
     
     } else if (type == "playlist") {
         playable.reset(new Playlist(uniqueId, title, playlength));
-        playable->setMetadata(creator, "dc:creator");
+        if (*creator != "") {
+            playable->setMetadata(creator, "dc:creator");
+        }
+        if (*source != "") {
+            playable->setMetadata(source, "dc:source");
+        }
     
     } else if (type == "webstream") {
         // TODO: handle this case

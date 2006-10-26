@@ -336,11 +336,14 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
                                     modelColumns.typeColumn, 20);
         searchResultsTreeView->appendColumn(
                                     *getResourceUstring("titleColumnLabel"),
-                                    modelColumns.titleColumn, 360);
+                                    modelColumns.titleColumn, 320);
         searchResultsTreeView->appendColumn(
                                     *getResourceUstring("creatorColumnLabel"),
-                                    modelColumns.creatorColumn, 260);
+                                    modelColumns.creatorColumn, 200);
         searchResultsTreeView->appendColumn(
+                                    *getResourceUstring("sourceColumnLabel"),
+                                    modelColumns.sourceColumn, 150);
+        searchResultsTreeView->appendCenteredColumn(
                                     *getResourceUstring("lengthColumnLabel"),
                                     modelColumns.lengthColumn, 50);
     } catch (std::invalid_argument &e) {
@@ -511,6 +514,12 @@ SearchWindow :: displaySearchResults(
         row[modelColumns.creatorColumn]
                             = creator ? Glib::Markup::escape_text(*creator)
                                       : "";
+
+        Ptr<Glib::ustring>::Ref
+                    source = playable->getMetadata("dc:source");
+        row[modelColumns.sourceColumn]
+                            = source ? Glib::Markup::escape_text(*source)
+                                     : "";
 
         Ptr<time_duration>::Ref length = playable->getPlaylength();
         row[modelColumns.lengthColumn] = length ? 
