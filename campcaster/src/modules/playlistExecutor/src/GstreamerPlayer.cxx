@@ -242,6 +242,9 @@ GstreamerPlayer :: open(const std::string   fileUrl)
                                                 throw (std::invalid_argument,
                                                        std::runtime_error)
 {
+    // GStreamer pipeline overview:
+    // filesrc -> decoder -> audioconvert -> audioscale -> audiosink
+
     DEBUG_BLOCK
 
     std::string     filePath;
@@ -302,23 +305,17 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // converts between different audio formats (e.g. bitrate) 
     audioconvert    = gst_element_factory_make("audioconvert", NULL);
 
-    // reduce the volume to 80%
-    volume          = gst_element_factory_make("volume", NULL);
-    gst_element_set(volume, "volume", gdouble(0.8), NULL);
-
     // scale the sampling rate, if necessary
     audioscale      = gst_element_factory_make("audioscale", NULL);
 
     gst_element_link_many(decoder,
                           audioconvert,
-                          volume,
                           audioscale,
                           audiosink,
                           NULL);
     gst_bin_add_many(GST_BIN(pipeline), filesrc,
                                         decoder,
                                         audioconvert,
-                                        volume,
                                         audioscale,
                                         audiosink,
                                         NULL);
@@ -470,27 +467,23 @@ GstreamerPlayer :: close(void)                       throw (std::logic_error)
 
     gst_element_set_state(pipeline, GST_STATE_NULL);
 
+    // Unlink elements:
     if (filesrc && decoder) {
         gst_element_unlink(filesrc, decoder);
     }
     if (decoder && audioconvert) {
         gst_element_unlink(decoder, audioconvert);
     }
-    if (audioconvert && volume) {
-        gst_element_unlink(audioconvert, volume);
-    }
-    if (volume && audioscale) {
-        gst_element_unlink(volume, audioscale);
+    if (audioconvert && audioscale ) {
+        gst_element_unlink(audioconvert, audioscale);
     }
     if (audioscale && audiosink) {
         gst_element_unlink(audioscale, audiosink);
     }
 
+    // Remove elements from pipeline:
     if (audioscale) {
         gst_bin_remove(GST_BIN(pipeline), audioscale);
-    }
-    if (volume) {
-        gst_bin_remove(GST_BIN(pipeline), volume);
     }
     if (audioconvert) {
         gst_bin_remove(GST_BIN(pipeline), audioconvert);
@@ -505,7 +498,6 @@ GstreamerPlayer :: close(void)                       throw (std::logic_error)
     filesrc         = 0;
     decoder         = 0;
     audioconvert    = 0;
-    volume          = 0;
     audioscale      = 0;
 }
 

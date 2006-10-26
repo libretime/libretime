@@ -118,11 +118,6 @@ class GstreamerPlayer : virtual public Configurable,
         GstElement            * audioconvert;
 
         /**
-         *  The volume element.
-         */
-        GstElement            * volume;
-
-        /**
          *  The audioscale element.
          */
         GstElement            * audioscale;
@@ -401,7 +396,7 @@ class GstreamerPlayer : virtual public Configurable,
         getPosition(void)                       throw (std::logic_error);
 
         /**
-         *  Get the volume of the player.
+         *  Get the volume of the player. *Unimplemented*
          *
          *  @return the volume, from 1 to 100.
          */
@@ -409,7 +404,7 @@ class GstreamerPlayer : virtual public Configurable,
         getVolume(void)                                     throw ();
 
         /**
-         *  Set the volume of the player.
+         *  Set the volume of the player. *Unimplemented*
          *
          *  @param volume the new volume, from 1 to 100.
          */
