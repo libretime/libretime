@@ -263,11 +263,11 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         throw std::invalid_argument("badly formed URL or unsupported protocol");
     }
 
-    g_object_ref(G_OBJECT(audiosink));
+    gst_object_ref(GST_OBJECT(audiosink));
     gst_bin_remove(GST_BIN(pipeline), audiosink);
 
     filesrc    = gst_element_factory_make("filesrc", "file-source");
-    g_object_set(G_OBJECT(filesrc), "location", filePath.c_str(), NULL);
+    gst_element_set(filesrc, "location", filePath.c_str(), NULL);
 
     decoder = ls_gst_autoplug_plug_source(filesrc, "decoder", sinkCaps);
 
@@ -280,8 +280,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // initialiation is done at opening
     pipe     = gst_pipeline_new("pipe");
     fakesink = gst_element_factory_make("fakesink", "fakesink");
-    g_object_ref(G_OBJECT(filesrc));
-    g_object_ref(G_OBJECT(decoder));
+    gst_object_ref(GST_OBJECT(filesrc));
+    gst_object_ref(GST_OBJECT(decoder));
     gst_element_link_many(decoder, fakesink, NULL);
     gst_bin_add_many(GST_BIN(pipe), filesrc, decoder, fakesink, NULL);
 
@@ -304,7 +304,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     // reduce the volume to 80%
     volume          = gst_element_factory_make("volume", NULL);
-    g_object_set(G_OBJECT(volume), "volume", gdouble(0.8), NULL);
+    gst_element_set(volume, "volume", gdouble(0.8), NULL);
 
     // scale the sampling rate, if necessary
     audioscale      = gst_element_factory_make("audioscale", NULL);
@@ -556,7 +556,7 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
         }
         gst_bin_remove(GST_BIN(pipeline), audiosink);
         // FIXME: why unref here? remove should unref already
-        g_object_unref(G_OBJECT(audiosink));
+        gst_object_unref(GST_OBJECT(audiosink));
         audiosink = 0;
     }
 
@@ -570,7 +570,7 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     }
 
     // it's the same property, "device" for both alsasink and osssink
-    g_object_set(G_OBJECT(audiosink), "device", deviceName.c_str(), NULL);
+    gst_element_set(audiosink, "device", deviceName.c_str(), NULL);
 
     if (relink) {
         if (decoder) {
