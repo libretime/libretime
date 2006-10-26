@@ -326,6 +326,11 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     localSearchResults  = Gtk::ListStore::create(modelColumns);
     remoteSearchResults = Gtk::ListStore::create(modelColumns);
     
+    localSearchResults->set_default_sort_func(sigc::mem_fun(
+                                    *this, &SearchWindow::onSortTreeModel));
+    remoteSearchResults->set_default_sort_func(sigc::mem_fun(
+                                    *this, &SearchWindow::onSortTreeModel));
+    
     searchResultsTreeView = Gtk::manage(wf->createTreeView(localSearchResults));
     searchResultsTreeView->connectModelSignals(remoteSearchResults);
 
@@ -525,6 +530,41 @@ SearchWindow :: displaySearchResults(
         row[modelColumns.lengthColumn] = length ? 
                     *TimeConversion::timeDurationToHhMmSsString(length) : "";
     }
+    
+    treeModel->set_sort_column(Gtk::TreeSortable::DEFAULT_SORT_COLUMN_ID,
+                               Gtk::SORT_ASCENDING);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Sorting function for the search results.
+ *----------------------------------------------------------------------------*/
+int
+SearchWindow :: onSortTreeModel(const Gtk::TreeModel::iterator &    iter1,
+                                const Gtk::TreeModel::iterator &    iter2)
+                                                                throw ()
+{
+    Gtk::TreeModel::Row     row1 = *iter1;
+    Gtk::TreeModel::Row     row2 = *iter2;
+
+    int     creatorCompare =
+                    Glib::ustring(row1[modelColumns.creatorColumn]).compare(
+                    Glib::ustring(row2[modelColumns.creatorColumn]));
+    if (creatorCompare != 0) {
+        return creatorCompare;
+    }
+    
+    int     sourceCompare =
+                    Glib::ustring(row1[modelColumns.sourceColumn]).compare(
+                    Glib::ustring(row2[modelColumns.sourceColumn]));
+    if (sourceCompare != 0) {
+        return sourceCompare;
+    }
+    
+    int     titleCompare =
+                    Glib::ustring(row1[modelColumns.titleColumn]).compare(
+                    Glib::ustring(row2[modelColumns.titleColumn]));
+    return titleCompare;
 }
 
 
