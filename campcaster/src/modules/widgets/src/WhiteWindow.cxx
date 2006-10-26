@@ -53,7 +53,7 @@ namespace {
 /*------------------------------------------------------------------------------
  *  The font used for the window title.
  *----------------------------------------------------------------------------*/
-const Glib::ustring     windowTitleFont = "Bitstream Vera Sans Mono Bold 9";
+const Glib::ustring     windowTitleFont = "Bitstream Vera Sans Bold 8";
 
 }
 
