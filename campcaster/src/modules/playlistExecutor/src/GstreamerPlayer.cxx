@@ -266,9 +266,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         throw std::invalid_argument("badly formed URL or unsupported protocol");
     }
 
-    gst_object_ref(GST_OBJECT(audiosink));
-    gst_bin_remove(GST_BIN(pipeline), audiosink);
-
     filesrc    = gst_element_factory_make("filesrc", "file-source");
     gst_element_set(filesrc, "location", filePath.c_str(), NULL);
 
@@ -308,17 +305,17 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // scale the sampling rate, if necessary
     audioscale      = gst_element_factory_make("audioscale", NULL);
 
+    gst_bin_add_many(GST_BIN(pipeline), filesrc,
+                                        decoder,
+                                        audioconvert,
+                                        audioscale,
+                                        NULL);
     gst_element_link_many(decoder,
                           audioconvert,
                           audioscale,
                           audiosink,
                           NULL);
-    gst_bin_add_many(GST_BIN(pipeline), filesrc,
-                                        decoder,
-                                        audioconvert,
-                                        audioscale,
-                                        audiosink,
-                                        NULL);
+
     // connect the eos signal handler
     g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
@@ -404,6 +401,8 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 void
 GstreamerPlayer :: start(void)                      throw (std::logic_error)
 {
+    DEBUG_BLOCK
+
     if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");
     }
