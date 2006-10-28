@@ -285,7 +285,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     gst_element_link_many(decoder, fakesink, NULL);
     gst_bin_add_many(GST_BIN(pipe), filesrc, decoder, fakesink, NULL);
 
-    gst_element_set_state(pipe, GST_STATE_PAUSED);
     gst_element_set_state(pipe, GST_STATE_PLAYING);
 
     position = 0LL;
@@ -408,7 +407,6 @@ GstreamerPlayer :: start(void)                      throw (std::logic_error)
     }
 
     if (!isPlaying()) {
-        gst_element_set_state(audiosink, GST_STATE_PAUSED);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
     }
 }
