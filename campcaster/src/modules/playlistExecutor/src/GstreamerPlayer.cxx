@@ -110,6 +110,11 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     // create the pipeline container (threaded)
     pipeline   = gst_thread_new("audio-player");
 
+    filesrc         = 0;
+    decoder         = 0;
+    audioconvert    = 0;
+    audioscale      = 0;
+
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
 
     // TODO: read the caps from the config file
@@ -524,24 +529,18 @@ bool
 GstreamerPlayer :: setAudioDevice(const std::string &deviceName)       
                                                                 throw ()
 {
-    DEBUG_FUNC_INFO
-
-    const bool    oss    = deviceName.find("/dev") == 0;
-          bool    relink = false;
+    DEBUG_BLOCK
 
     if (deviceName.size() == 0) {
         return false;
     }
 
-    if (audiosink) {
-        const bool    oldOss = g_strrstr(gst_element_get_name(audiosink), "osssink");
-        relink = oss && !oldOss;
-    }
+    const bool oss = deviceName.find("/dev") == 0;
 
-    if (relink && audiosink) {
-        debug() << "Relinking sink." << endl;
-        if (decoder) {
-            gst_element_unlink(decoder, audiosink);
+    if (audiosink) {
+        debug() << "Destroying old sink." << endl;
+        if (audioscale) {
+            gst_element_unlink(audioscale, audiosink);
         }
         gst_bin_remove(GST_BIN(pipeline), audiosink);
         audiosink = 0;
@@ -550,7 +549,6 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     if (!audiosink) {
         audiosink = (oss ? gst_element_factory_make("osssink", "osssink")
                          : gst_element_factory_make("alsasink", "alsasink"));
-        relink = true;
     }
     if (!audiosink) {
         return false;
@@ -559,12 +557,11 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     // it's the same property, "device" for both alsasink and osssink
     gst_element_set(audiosink, "device", deviceName.c_str(), NULL);
 
-    if (relink) {
-        if (decoder) {
-            gst_element_link_filtered(decoder, audiosink, sinkCaps);
-        }
-        gst_bin_add(GST_BIN(pipeline), audiosink);
+    if (audioscale) {
+        gst_element_link_filtered(audioscale, audiosink, sinkCaps);
     }
+    gst_bin_add(GST_BIN(pipeline), audiosink);
+    gst_bin_sync_children_state(GST_BIN(pipeline));
 
     return true;
 }
