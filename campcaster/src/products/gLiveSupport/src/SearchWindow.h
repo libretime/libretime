@@ -347,22 +347,6 @@ class SearchWindow : public GuiWindow
         updateBackwardAndForwardButtons(void)                   throw ();
 
         /**
-         *  Sorting function for the search results.
-         *
-         *  The order of both the local and remote search results is
-         *  determined by this function.
-         *  @param  iter1   iterator for one row to be compared.
-         *  @param  iter2   iterator for the other row to be compared.
-         *  @return -1 if iter1 < iter2, 0 if they are equal, and
-         *           1 if iter1 > iter2.
-         *  @see Gtk::TreeSortable::SlotCompare
-         */
-        int
-        onSortTreeModel(const Gtk::TreeModel::iterator &    iter1,
-                        const Gtk::TreeModel::iterator &    iter2)
-                                                                throw ();
-
-        /**
          *  Signal handler for the mouse clicked on one of the entries.
          *
          *  @param event the button event received
