@@ -539,12 +539,11 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     }
 
     if (relink && audiosink) {
+        debug() << "Relinking sink." << endl;
         if (decoder) {
             gst_element_unlink(decoder, audiosink);
         }
         gst_bin_remove(GST_BIN(pipeline), audiosink);
-        // FIXME: why unref here? remove should unref already
-        gst_object_unref(GST_OBJECT(audiosink));
         audiosink = 0;
     }
 
