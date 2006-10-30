@@ -286,23 +286,6 @@ class SearchWindow : public GuiWindow
         }
 
         /**
-         *  Set the search criteria for the currently selected kind.
-         *  Sets either localSearchCriteria or remoteSearchCriteria
-         *  depending on the value of searchIsLocal().
-         *
-         *  @param  criteria    the new criteria to be saved.
-         */
-        void
-        setSearchCriteria(Ptr<SearchCriteria>::Ref  criteria)   throw ()
-        {
-            if (searchIsLocal()) {
-                localSearchCriteria = criteria;
-            } else {
-                remoteSearchCriteria = criteria;
-            }
-        }
-
-        /**
          *  Get the number of search results found by the last search
          *  of the currently selected kind.
          *  Returns either localSearchResultsCount or remoteSearchResultsCount
