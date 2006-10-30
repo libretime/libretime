@@ -62,12 +62,27 @@ namespace {
 /*------------------------------------------------------------------------------
  *  The 'search where' combo box key for local searches.
  *----------------------------------------------------------------------------*/
-const std::string    searchWhereLocalKey  = "searchWhereLocal";
+const std::string       searchWhereLocalKey  = "searchWhereLocal";
 
 /*------------------------------------------------------------------------------
  *  The 'search where' combo box key for remote searches.
  *----------------------------------------------------------------------------*/
-const std::string    searchWhereRemoteKey = "searchWhereRemote";
+const std::string       searchWhereRemoteKey = "searchWhereRemote";
+
+/*------------------------------------------------------------------------------
+ *  The number of items which can be shown in the search results.
+ *----------------------------------------------------------------------------*/
+const int               searchResultsSize = 10;
+
+/*------------------------------------------------------------------------------
+ *  The label for the Backward button.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     backwardButtonText = "⇧";
+
+/*------------------------------------------------------------------------------
+ *  The label for the Forward button.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     forwardButtonText = "⇩";
 
 }
 
@@ -111,16 +126,16 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     }
 
     // set up the search results box
-    ScrolledWindow *    searchResultsView = constructSearchResultsView();
+    Gtk::Box *          searchResultsView = constructSearchResultsView();
 
     // set the sizes of the two parts of the window
-    searchInput      ->set_size_request(750, 240);
-    searchResultsView->set_size_request(750, 300);
+    searchInput      ->set_size_request(750, 231);
+    searchResultsView->set_size_request(750, 340);
     
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
     bigBox->pack_start(*searchWhereBox, Gtk::PACK_SHRINK);
-    bigBox->pack_start(*searchInput,      Gtk::PACK_SHRINK);
+    bigBox->pack_start(*searchInput,    Gtk::PACK_SHRINK);
     bigBox->pack_start(*searchResultsView);
     add(*bigBox);
     
@@ -318,7 +333,7 @@ SearchWindow :: constructTransportsView(void)                   throw ()
 /*------------------------------------------------------------------------------
  *  Construct the search results display.
  *----------------------------------------------------------------------------*/
-ScrolledWindow *
+Gtk::Box *
 SearchWindow :: constructSearchResultsView(void)                throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
@@ -341,16 +356,16 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
                                     modelColumns.typeColumn, 20);
         searchResultsTreeView->appendColumn(
                                     *getResourceUstring("titleColumnLabel"),
-                                    modelColumns.titleColumn, 320);
+                                    modelColumns.titleColumn, 300);
         searchResultsTreeView->appendColumn(
                                     *getResourceUstring("creatorColumnLabel"),
                                     modelColumns.creatorColumn, 200);
         searchResultsTreeView->appendColumn(
                                     *getResourceUstring("sourceColumnLabel"),
-                                    modelColumns.sourceColumn, 150);
+                                    modelColumns.sourceColumn, 145);
         searchResultsTreeView->appendCenteredColumn(
                                     *getResourceUstring("lengthColumnLabel"),
-                                    modelColumns.lengthColumn, 50);
+                                    modelColumns.lengthColumn, 55);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -368,11 +383,27 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     constructRemoteContextMenu();
     
     // put the tree view inside a scrolled window
-    ScrolledWindow *    view = Gtk::manage(new ScrolledWindow);
-    view->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    view->add(*searchResultsTreeView);
+    ScrolledWindow *    resultsWindow = Gtk::manage(new ScrolledWindow);
+    resultsWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    resultsWindow->add(*searchResultsTreeView);
+    
+    // create the page backward and forward buttons
+    backwardButton = Gtk::manage(wf->createButton(backwardButtonText));
+    forwardButton  = Gtk::manage(wf->createButton(forwardButtonText));
+    
+    backwardButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SearchWindow::onBackwardButtonClicked));
+    forwardButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SearchWindow::onForwardButtonClicked));
+    updateBackwardAndForwardButtons();
 
-    return view;
+    // pack everything in a box
+    Gtk::Box *      view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*backwardButton, Gtk::PACK_SHRINK,         2);
+    view->pack_start(*resultsWindow,  Gtk::PACK_EXPAND_WIDGET,  0);
+    view->pack_start(*forwardButton,  Gtk::PACK_SHRINK,         2);
+    
+    return   view;
 }
 
 
@@ -407,7 +438,7 @@ SearchWindow :: onSimpleSearch(void)                            throw ()
         criteria->addCondition(*metadata->getDcName(), "partial", value);
     }
     
-    onSearch(criteria);
+    onInitialSearch(criteria);
 }
 
 
@@ -417,7 +448,7 @@ SearchWindow :: onSimpleSearch(void)                            throw ()
 void
 SearchWindow :: onAdvancedSearch(void)                          throw ()
 {
-    onSearch(advancedSearchEntry->getSearchCriteria());
+    onInitialSearch(advancedSearchEntry->getSearchCriteria());
 }
 
 
@@ -427,7 +458,33 @@ SearchWindow :: onAdvancedSearch(void)                          throw ()
 void
 SearchWindow :: onBrowse(void)                                  throw ()
 {
-    onSearch(browseEntry->getSearchCriteria());
+    onInitialSearch(browseEntry->getSearchCriteria());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Do the searching (first set of results).
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onInitialSearch(Ptr<SearchCriteria>::Ref    criteria)
+                                                                throw ()
+{
+    criteria->setOffset(0);
+    criteria->setLimit(getSearchResultsSize());
+    onSearch(criteria);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Do the searching (after paging backward or forward).
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onContinuedSearch(int   offset)
+                                                                throw ()
+{
+    Ptr<SearchCriteria>::Ref    criteria = getSearchCriteria();
+    criteria->setOffset(offset);
+    onSearch(criteria);    
 }
 
 
@@ -458,11 +515,14 @@ SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
 
     Ptr<GLiveSupport::PlayableList>::Ref    searchResults;
     try {
-        searchResults = gLiveSupport->search(criteria);
+        localSearchResultsCount = gLiveSupport->search(criteria);
+        searchResults           = gLiveSupport->getSearchResults();
     } catch (XmlRpcException &e) {
         displayLocalSearchError(e);
         return;
     }
+    
+    localSearchCriteria         = criteria;
     
     displaySearchResults(searchResults, localSearchResults);
 }
@@ -479,6 +539,7 @@ SearchWindow :: displaySearchResults(
 {
     treeModel->clear();
     searchResultsTreeView->set_model(treeModel);
+    updateBackwardAndForwardButtons();
     
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
@@ -595,6 +656,8 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
     } catch (XmlRpcException &e) {
         displayRemoteSearchError(e);
     }
+    
+    remoteSearchCriteria = criteria;
 }
 
 
@@ -637,6 +700,7 @@ SearchWindow :: remoteSearchClose(void)
                 return;
             }
             
+            remoteSearchResultsCount = results->size();     // FIXME
             displaySearchResults(results, remoteSearchResults);
             
         } else if (state == AsyncState::closedState) {
@@ -971,6 +1035,8 @@ SearchWindow :: onSearchWhereChanged(void)                      throw ()
     } else {
         searchResultsTreeView->set_model(remoteSearchResults);
     }
+    
+    updateBackwardAndForwardButtons();
 }
 
 
@@ -1072,4 +1138,70 @@ SearchWindow :: constructRemoteContextMenu(void)                throw ()
 
     remoteContextMenu->accelerate(*this);
 }    
+
+
+/*------------------------------------------------------------------------------
+ *  Return the number of search results which can be displayed.
+ *----------------------------------------------------------------------------*/
+int
+SearchWindow :: getSearchResultsSize(void)                      throw ()
+{
+    return searchResultsSize;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a click on the Backward button.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onBackwardButtonClicked(void)                   throw ()
+{
+    Ptr<SearchCriteria>::Ref    criteria    = getSearchCriteria();
+    int                         offset      = criteria->getOffset();    
+    
+    if (offset > 0) {
+        int     newOffset = offset - getSearchResultsSize();
+        if (newOffset < 0) {
+            newOffset = 0;
+        }
+        onContinuedSearch(newOffset);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a click on the Forward button.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onForwardButtonClicked(void)                    throw ()
+{
+    Ptr<SearchCriteria>::Ref    criteria    = getSearchCriteria();
+    int                         offset      = criteria->getOffset();    
+    int                         count       = getSearchResultsCount();
+    
+    int     newOffset = offset + getSearchResultsSize();
+    if (newOffset < count) {
+        onContinuedSearch(newOffset);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Enable or disable the Backward and Forward buttons.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: updateBackwardAndForwardButtons(void)           throw ()
+{
+    Ptr<SearchCriteria>::Ref    criteria    = getSearchCriteria();
+    
+    if (criteria) {
+        int                     offset      = criteria->getOffset();    
+        int                     count       = getSearchResultsCount();
+        backwardButton->setDisabled(offset == 0);
+        forwardButton->setDisabled(offset + getSearchResultsSize() >= count);
+    } else {
+        backwardButton->setDisabled(true);
+        forwardButton->setDisabled(true);
+    }        
+}
 

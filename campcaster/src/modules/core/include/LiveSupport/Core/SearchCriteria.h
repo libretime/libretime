@@ -319,6 +319,17 @@ class SearchCriteria
         }
 
         /**
+         *  Get the limit field.
+         *
+         *  @return the maximum number of search results to be returned
+         */
+        int
+        getLimit()                                                  throw()
+        {
+            return limit;
+        }
+
+        /**
          *  Set the limit field.
          *
          *  @param limit the maximum number of search results to be returned
@@ -333,6 +344,18 @@ class SearchCriteria
             } else {
                 throw std::invalid_argument("bad argument: less than zero");
             }
+        }
+
+        /**
+         *  Get the offset field.
+         *
+         *  @return the index of the first matching condition 
+         *          to be returned (first = 0)
+         */
+        int
+        getOffset()                                                 throw()
+        {
+            return offset;
         }
 
         /**

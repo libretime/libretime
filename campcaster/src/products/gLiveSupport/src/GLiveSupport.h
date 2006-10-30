@@ -962,13 +962,16 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  Search in the local storage.
+         *  Note that the return value (number of items found) will not be
+         *  the same as the size of getSearchResults() if the limit and offset
+         *  fields in the criteria parameter are not zero.
          *
          *  @param criteria the search conditions to use.
-         *  @return the list of audio clips and playlists found.
+         *  @return the number of audio clips and playlists found.
          *  @exception XmlRpcException thrown by 
          *                             StorageClientInterface::search()
          */
-        Ptr<PlayableList>::Ref
+        int
         search(Ptr<SearchCriteria>::Ref     criteria)
                                                 throw (XmlRpcException);
 

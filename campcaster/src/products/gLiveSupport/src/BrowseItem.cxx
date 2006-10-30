@@ -82,7 +82,7 @@ BrowseItem :: BrowseItem(
     
     metadataValues = Gtk::manage(wf->createTreeView(treeModel));
     metadataValues->appendColumn("", modelColumns.column, 200);
-    metadataValues->set_size_request(230,150);
+    metadataValues->set_size_request(230, 150);
     metadataValues->set_headers_visible(false);
     metadataValues->signal_cursor_changed().connect(sigc::mem_fun(*this,
                                     &BrowseItem::emitSignalSelectionChanged ));

@@ -1391,14 +1391,12 @@ GLiveSupport :: detachCueAudioListener(AudioPlayerEventListener *   listener)
 /*------------------------------------------------------------------------------
  *  Search in the local storage.
  *----------------------------------------------------------------------------*/
-Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
+int
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
                                                 throw (XmlRpcException)
 {
-    storage->search(sessionId, criteria);
-    
-    return getSearchResults();
+    return storage->search(sessionId, criteria);
 }
 
 

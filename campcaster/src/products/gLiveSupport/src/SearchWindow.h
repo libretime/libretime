@@ -84,6 +84,26 @@ class SearchWindow : public GuiWindow
     private:
 
         /**
+         *  The criteria for the last local search.
+         */
+        Ptr<SearchCriteria>::Ref    localSearchCriteria;
+
+        /**
+         *  The criteria for the last remote search.
+         */
+        Ptr<SearchCriteria>::Ref    remoteSearchCriteria;
+
+        /**
+         *  The number of items found by the last local search.
+         */
+        int                         localSearchResultsCount;
+
+        /**
+         *  The number of items found by the last remote search.
+         */
+        int                         remoteSearchResultsCount;
+
+        /**
          *  The "search where" input field.
          */
         ComboBoxText *              searchWhereEntry;
@@ -107,6 +127,16 @@ class SearchWindow : public GuiWindow
          *  The list of transports in progress.
          */
         TransportList *             transportList;
+
+        /**
+         *  The button for paging in the search results backward.
+         */
+        Button *                    backwardButton;
+
+        /**
+         *  The button for paging in the search results forward.
+         */
+        Button *                    forwardButton;
 
         /**
          *  The Export Playlist pop-up window.
@@ -164,9 +194,9 @@ class SearchWindow : public GuiWindow
         /**
          *  Construct the search results display.
          *
-         *  @return a pointer to the new tree view (already Gtk::manage()'ed)
+         *  @return a pointer to the new view (already Gtk::manage()'ed)
          */
-        ScrolledWindow *
+        Gtk::Box *
         constructSearchResultsView(void)                        throw ();
 
         /**
@@ -207,6 +237,24 @@ class SearchWindow : public GuiWindow
         onBrowse(void)                                          throw ();
 
         /**
+         *  Do the searching (first set of results).
+         *  Sets the offset to 0, and calls onSearch().
+         *
+         *  @param  criteria    the search criteria.
+         */
+        void
+        onInitialSearch(Ptr<SearchCriteria>::Ref    criteria)   throw ();
+
+        /**
+         *  Do the searching (after paging backward or forward).
+         *  Sets the offset to the given value, and calls onSearch().
+         *
+         *  @param  offset  the new offset to use for this search.
+         */
+        void
+        onContinuedSearch(int   offset)                         throw ();
+
+        /**
          *  Do the searching.
          *  Calls either localSearch() or remoteSearch().
          *
@@ -220,6 +268,55 @@ class SearchWindow : public GuiWindow
          */
         bool
         searchIsLocal(void)                                     throw ();
+
+        /**
+         *  Get the search criteria used for the last search
+         *  of the currently selected kind.
+         *  Returns either localSearchCriteria or remoteSearchCriteria
+         *  depending on the value of searchIsLocal().
+         *
+         *  @return the saved search criteria of the appropriate kind;
+         *          or a 0 pointer if nothing has been saved yet.
+         */
+        Ptr<SearchCriteria>::Ref
+        getSearchCriteria(void)                                 throw ()
+        {
+            return searchIsLocal() ? localSearchCriteria
+                                   : remoteSearchCriteria;
+        }
+
+        /**
+         *  Set the search criteria for the currently selected kind.
+         *  Sets either localSearchCriteria or remoteSearchCriteria
+         *  depending on the value of searchIsLocal().
+         *
+         *  @param  criteria    the new criteria to be saved.
+         */
+        void
+        setSearchCriteria(Ptr<SearchCriteria>::Ref  criteria)   throw ()
+        {
+            if (searchIsLocal()) {
+                localSearchCriteria = criteria;
+            } else {
+                remoteSearchCriteria = criteria;
+            }
+        }
+
+        /**
+         *  Get the number of search results found by the last search
+         *  of the currently selected kind.
+         *  Returns either localSearchResultsCount or remoteSearchResultsCount
+         *  depending on the value of searchIsLocal().
+         *
+         *  @return the saved search result count of the appropriate kind;
+         *          undefined if nothing has been saved yet.
+         */
+        int
+        getSearchResultsCount(void)                             throw ()
+        {
+            return searchIsLocal() ? localSearchResultsCount
+                                   : remoteSearchResultsCount;
+        }
 
         /**
          *  Change the displayed search results (local or remote).
@@ -259,6 +356,12 @@ class SearchWindow : public GuiWindow
                     Ptr<GLiveSupport::PlayableList>::Ref    searchResults,
                     Glib::RefPtr<Gtk::ListStore>            treeModel)
                                                                 throw ();
+
+        /**
+         *  Enable or disable the Backward and Forward buttons.
+         */
+        void
+        updateBackwardAndForwardButtons(void)                   throw ();
 
         /**
          *  Sorting function for the search results.
@@ -311,21 +414,33 @@ class SearchWindow : public GuiWindow
          *  Signal handler for the "export playlist" menu item selected from
          *  the entry context menu.
          */
-        virtual void
+        void
         onExportPlaylist(void)                                  throw ();
         
         /**
          *  Signal handler for "upload to hub" in the context menu.
          */
-        virtual void
+        void
         onUploadToHub(void)                                     throw ();
         
         /**
          *  Signal handler for "download from hub" in the context menu.
          */
-        virtual void
+        void
         onDownloadFromHub(void)                                 throw ();
         
+        /**
+         *  Event handler for a click on the Backward button.
+         */
+        void
+        onBackwardButtonClicked(void)                           throw ();
+
+        /**
+         *  Event handler for a click on the Forward button.
+         */
+        void
+        onForwardButtonClicked(void)                            throw ();
+
         /**
          *  Event handler called when the the window gets hidden.
          *
@@ -468,6 +583,16 @@ class SearchWindow : public GuiWindow
         void
         displayRemoteSearchError(const XmlRpcException &    error)
                                                                 throw ();
+
+        /**
+         *  Return the number of search results which can be displayed.
+         *  As currently implemented, this returns a constant 10.
+         *
+         *  @return the number of rows which can be displayed in the
+         *          search results section of the window.
+         */
+        int
+        getSearchResultsSize(void)                              throw ();
 
 
     public:
