@@ -203,7 +203,6 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     set_default_size(width, -1);
     move(0, 0);
     set_decorated(false);
-    set_keep_above(true);
     set_name(windowName);
 
     // set the localized resources
