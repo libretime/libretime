@@ -261,6 +261,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         close();
     }
 
+    debug() << "Opening URL: " << fileUrl << endl;
+
     if (fileUrl.find("file://") == 0) {
         filePath = fileUrl.substr(7, fileUrl.size());
     }
