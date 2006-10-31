@@ -224,12 +224,8 @@ class MetaData {
             ORDER BY id
         ";
         $all = $this->dbc->getAll($sql);
-        $transTbl = get_html_translation_table();
-        $transTbl = array_flip($transTbl);
         foreach ($all as $i => $v) {
-            if (!is_null($all[$i]['value'])) {
-                $all[$i]['value'] = strtr($all[$i]['value'], $transTbl);
-            } else {
+            if (is_null($all[$i]['value'])) {
                 $all[$i]['value'] = '';
             }
         }
@@ -251,10 +247,6 @@ class MetaData {
      */
     function setMetadataEl($mid, $value=NULL)
     {
-        if (!is_null($value)) {
-            $transTbl = get_html_translation_table();
-            $value = strtr($value, $transTbl);
-        }
         $info = $this->dbc->getRow("
             SELECT parmd.predns as parns, parmd.predicate as parname,
                 md.predxml, md.predns as chns, md.predicate as chname
@@ -338,10 +330,6 @@ class MetaData {
         $catNs = $a['namespace'];
         $cat = $a['localPart'];
         $objns = (is_null($value) ? '_blank' : '_L' );
-        if (!is_null($value)) {
-            $transTbl = get_html_translation_table();
-            $value = strtr($value, $transTbl);
-        }
         $nid= $this->storeRecord('_I', $parid, $catNs, $cat, $predxml,
             $objns, $value);
         if (PEAR::isError($nid)) {
