@@ -160,7 +160,7 @@ class TestStorageClient :
         /**
          *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<SearchResultsType>::Ref searchResults;
+        Ptr<SearchResultsType>::Ref localSearchResults;
 
         /**
          *  Auxilliary method used by search().
@@ -467,7 +467,7 @@ class TestStorageClient :
          *  Reset the storage to its initial state.  
          *  Re-initializes the storage based on the xml element which was
          *  passed to configure() earlier; the new contents of the storage
-         *  can be read using getSearchResults().
+         *  can be read using getLocalSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
@@ -479,7 +479,7 @@ class TestStorageClient :
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getSearchResults().
+         *  using getLocalSearchResults().
          *  
          *  If an audio clip or playlist does not have a metadata field X,
          *  it does not match any condition about field X.  In particular,
@@ -544,7 +544,7 @@ class TestStorageClient :
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getSearchResults().
+         *  search results can be read using getRemoteSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -562,16 +562,29 @@ class TestStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return the list of items found by the search method.
+         *  Return the list of items found by the local search method.
          *
          *  (Or the list of items returned by reset() -- used for testing.)
          *
          *  @return a vector of Playable objects.
          */
         virtual Ptr<SearchResultsType>::Ref
-        getSearchResults(void)                   throw ()
+        getLocalSearchResults(void)              throw ()
         {
-            return searchResults;
+            return localSearchResults;
+        }
+
+        /**
+         *  Return the list of items found by the remote search method.
+         *  NOT IMPLEMENTED, always returns 0.
+         *
+         *  @return a vector of Playable objects.
+         */
+        virtual Ptr<SearchResultsType>::Ref
+        getRemoteSearchResults(void)             throw ()
+        {
+            Ptr<SearchResultsType>::Ref     nullPointer;
+            return nullPointer;
         }
 
 

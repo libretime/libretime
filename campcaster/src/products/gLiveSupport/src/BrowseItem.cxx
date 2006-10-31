@@ -147,9 +147,13 @@ BrowseItem :: onShow(void)                                          throw ()
 {
     Ptr<const Glib::ustring>::Ref   metadataKey = metadataEntry->getActiveKey();
     
+    Ptr<StorageClientInterface>::Ref 
+                                storage   = gLiveSupport->getStorageClient();
+    Ptr<SessionId>::Ref         sessionId = gLiveSupport->getSessionId();
+    
     Ptr<std::vector<Glib::ustring> >::Ref   values;
     try {
-        values = gLiveSupport->browse(metadataKey, parentCriteria);
+        values = storage->browse(sessionId, metadataKey, parentCriteria);
     } catch (XmlRpcException &e) {
         std::cerr << "Error in BrowseItem::onShow(): " 
                   << e.what() << std::endl;

@@ -351,7 +351,7 @@ class StorageClientInterface
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getSearchResults().
+         *  using getLocalSearchResults().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
@@ -410,7 +410,7 @@ class StorageClientInterface
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getSearchResults().
+         *  search results can be read using getRemoteSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -435,18 +435,27 @@ class StorageClientInterface
                                     SearchResultsType;
 
         /**
-         *  Return the list of items found by the latest search.
+         *  Return the list of items found by the latest local search.
          *
          *  (Or the list of items returned by reset() -- used for testing.)
          *
          *  @return a vector of Playable objects.
          */
         virtual Ptr<SearchResultsType>::Ref
-        getSearchResults(void)                  throw ()                = 0;
+        getLocalSearchResults(void)             throw ()                = 0;
+
+        /**
+         *  Return the list of items found by the latest remote search.
+         *
+         *  @return a vector of Playable objects.
+         */
+        virtual Ptr<SearchResultsType>::Ref
+        getRemoteSearchResults(void)            throw ()                = 0;
 
         /**
          *  Reset the storage to its initial state.  
-         *  The contents of the storage can be read using getSearchResults().
+         *  The contents of the storage can be read using 
+         *  getLocalSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.

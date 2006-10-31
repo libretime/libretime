@@ -171,7 +171,7 @@ TestStorageClientTest :: resetTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref searchResults
-                                               = tsc->getSearchResults();
+                                               = tsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults);
     CPPUNIT_ASSERT(searchResults->size() >= 4);
 
@@ -244,7 +244,7 @@ TestStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref searchResults
-                                               = tsc->getSearchResults();
+                                               = tsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults);
     CPPUNIT_ASSERT(searchResults->size() >= 3);
 
@@ -388,8 +388,8 @@ TestStorageClientTest :: searchTest(void)
 
         int numberFound = tsc->search(dummySessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 2);
-        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref searchResults
-                                                   = tsc->getSearchResults();
+        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+                                searchResults = tsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 2);
         CPPUNIT_ASSERT(searchResults->at(0)->getId()->getId() == 0x10001);
         CPPUNIT_ASSERT(searchResults->at(1)->getId()->getId() == 0x10003);
@@ -406,8 +406,8 @@ TestStorageClientTest :: searchTest(void)
         criteria->addCondition("dc:title", "prefix", "Playlist");
         int numberFound = tsc->search(dummySessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 3);
-        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref searchResults
-                                                   = tsc->getSearchResults();
+        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+                                searchResults = tsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 3);
         CPPUNIT_ASSERT(searchResults->at(0)->getId()->getId() == 0x10002);
         CPPUNIT_ASSERT(searchResults->at(1)->getId()->getId() == 1);
@@ -427,8 +427,8 @@ TestStorageClientTest :: searchTest(void)
         criteria->setOffset(1);
         int numberFound = tsc->search(dummySessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 4);
-        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref searchResults
-                                                   = tsc->getSearchResults();
+        Ptr<std::vector<Ptr<Playable>::Ref> >::Ref
+                                searchResults = tsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 2);
         CPPUNIT_ASSERT(searchResults->at(0)->getId()->getId() == 0x10003);
         CPPUNIT_ASSERT(searchResults->at(1)->getId()->getId() == 1);

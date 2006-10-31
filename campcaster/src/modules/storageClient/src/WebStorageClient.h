@@ -147,7 +147,12 @@ class WebStorageClient :
         /**
          *  A vector containing the items returned by search() or by reset().
          */
-        Ptr<SearchResultsType>::Ref searchResults;
+        Ptr<SearchResultsType>::Ref localSearchResults;
+
+        /**
+         *  A vector containing the items returned by remoteSearchClose().
+         */
+        Ptr<SearchResultsType>::Ref remoteSearchResults;
 
         /**
          *  Execute an XML-RPC function call.
@@ -193,11 +198,13 @@ class WebStorageClient :
          *
          *  @param  methodName      the name of the calling method.
          *  @param  xmlRpcStruct    the XML-RPC struct to be extracted.
+         *  @param  searchResults   the array to store the results in.
          *  @exception XmlRpcException if the format of xmlRpcStruct is wrong.
          */
         int
-        extractSearchResults(const std::string &    methodName,
-                             XmlRpcValue &          xmlRpcStruct)
+        extractSearchResults(const std::string &            methodName,
+                             XmlRpcValue &                  xmlRpcStruct,
+                             Ptr<SearchResultsType>::Ref &  searchResults)
                                                 throw (XmlRpcException);
 
         /**
@@ -590,7 +597,7 @@ class WebStorageClient :
         /**
          *  Reset the storage to its initial state.  
          *  Calls locstor.resetStorage; the new contents of the storage
-         *  can be read using getSearchResults().
+         *  can be read using getLocalSearchResults().
          *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
@@ -602,7 +609,7 @@ class WebStorageClient :
 
         /**
          *  Search for audio clips or playlists.  The results can be read
-         *  using getSearchResults().
+         *  using getLocalSearchResults().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
@@ -658,7 +665,7 @@ class WebStorageClient :
          *
          *  If this search is in the finishedState, it will be moved to the
          *  closedState, the transport token will be invalidated, and the 
-         *  search results can be read using getSearchResults().
+         *  search results can be read using getRemoteSearchResults().
          *
          *  If the search is in any other state, an exception is raised.
          *
@@ -676,16 +683,27 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return the list of items found by the search method.
+         *  Return the list of items found by the local search method.
          *
          *  (Or the list of items returned by reset() -- used for testing.)
          *
          *  @return a vector of Playable objects.
          */
         virtual Ptr<SearchResultsType>::Ref
-        getSearchResults(void)                  throw ()
+        getLocalSearchResults(void)             throw ()
         {
-            return searchResults;
+            return localSearchResults;
+        }
+
+        /**
+         *  Return the list of items found by the remote search method.
+         *
+         *  @return a vector of Playable objects.
+         */
+        virtual Ptr<SearchResultsType>::Ref
+        getRemoteSearchResults(void)            throw ()
+        {
+            return remoteSearchResults;
         }
 
 

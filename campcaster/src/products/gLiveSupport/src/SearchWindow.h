@@ -330,14 +330,20 @@ class SearchWindow : public GuiWindow
         remoteSearchClose(void)                                 throw ();
 
         /**
+         *  Typedef to save some typing.
+         */
+        typedef StorageClientInterface::SearchResultsType
+                                                    SearchResultsType;
+
+        /**
          *  Display the search results.
          *  The most important metadata are shown in the rows of the given
          *  tree model.
          */
         void
         displaySearchResults(
-                    Ptr<GLiveSupport::PlayableList>::Ref    searchResults,
-                    Glib::RefPtr<Gtk::ListStore>            treeModel)
+                    Ptr<SearchResultsType>::Ref     searchResults,
+                    Glib::RefPtr<Gtk::ListStore>    treeModel)
                                                                 throw ();
 
         /**

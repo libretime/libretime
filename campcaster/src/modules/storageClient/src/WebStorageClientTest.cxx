@@ -280,10 +280,10 @@ WebStorageClientTest :: playlistTest(void)
     }
     CPPUNIT_ASSERT(playlist);
     
-    // searchResults was filled by reset() with a list of all items
+    // localSearchResults was filled by reset() with a list of all items
     // in the storage
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref 
-                            searchResults = wsc->getSearchResults();
+                            searchResults = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 7);
     Ptr<AudioClip>::Ref     audioClip = searchResults->at(4)->getAudioClip();
     CPPUNIT_ASSERT(audioClip);
@@ -377,7 +377,7 @@ WebStorageClientTest :: embeddedPlaylistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
-                                                = wsc->getSearchResults();
+                                                = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 7);
     Ptr<AudioClip>::Ref     audioClip = searchResults->at(6)->getAudioClip();
     CPPUNIT_ASSERT(audioClip);
@@ -432,7 +432,7 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
-                                                = wsc->getSearchResults();
+                                                = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 7);
     Ptr<AudioClip>::Ref     audioClip = searchResults->at(6)->getAudioClip();
     CPPUNIT_ASSERT(audioClip);
@@ -541,7 +541,7 @@ WebStorageClientTest :: simplePlaylistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
-                                                = wsc->getSearchResults();
+                                                = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 7);
     Ptr<AudioClip>::Ref     audioClip = searchResults->at(6)->getAudioClip();
     CPPUNIT_ASSERT(audioClip);
@@ -624,7 +624,7 @@ WebStorageClientTest :: searchTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
-                                                = wsc->getSearchResults();
+                                                = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 9);
     Ptr<Playlist>::Ref      playlist0  = searchResults->at(0)->getPlaylist();
     Ptr<Playlist>::Ref      playlist1  = searchResults->at(1)->getPlaylist();
@@ -660,7 +660,7 @@ WebStorageClientTest :: searchTest(void)
                                             "dc:title", "prefix", "File "));
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 1);
-        searchResults = wsc->getSearchResults();
+        searchResults = wsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 1);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip1->getId());
 
@@ -677,7 +677,7 @@ WebStorageClientTest :: searchTest(void)
         criteria->setLimit(10);
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound >= 2);
-        searchResults = wsc->getSearchResults();
+        searchResults = wsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() >= 2);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *playlist0->getId());
         CPPUNIT_ASSERT(*searchResults->at(1)->getId() == *playlist1->getId());
@@ -696,7 +696,7 @@ WebStorageClientTest :: searchTest(void)
         criteria->addCondition("dc:title", "partial",  "Title ");
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 1);
-        searchResults = wsc->getSearchResults();
+        searchResults = wsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 1);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip0->getId());
 
@@ -712,7 +712,7 @@ WebStorageClientTest :: searchTest(void)
         criteria->addCondition("dc:title", "prefix", "My");
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound >= 5);
-        searchResults = wsc->getSearchResults();
+        searchResults = wsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() >= 5);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *playlist0->getId());
         CPPUNIT_ASSERT(*searchResults->at(3)->getId() == *audioClip0->getId());
@@ -731,7 +731,7 @@ WebStorageClientTest :: searchTest(void)
         criteria->setOffset(3);
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound >= 5);
-        searchResults = wsc->getSearchResults();
+        searchResults = wsc->getLocalSearchResults();
         CPPUNIT_ASSERT(searchResults->size() == 2);
         CPPUNIT_ASSERT(*searchResults->at(0)->getId() == *audioClip4->getId());
         CPPUNIT_ASSERT(*searchResults->at(1)->getId() == *audioClip5->getId());
@@ -763,7 +763,7 @@ WebStorageClientTest :: searchUnicodeTest(void)
         CPPUNIT_FAIL(e.what());
     }
     Ptr<std::vector<Ptr<Playable>::Ref> >::Ref  searchResults
-                                                = wsc->getSearchResults();
+                                                = wsc->getLocalSearchResults();
     CPPUNIT_ASSERT(searchResults->size() >= 9);
     Ptr<AudioClip>::Ref     audioClip1 = searchResults->at(4)->getAudioClip();
     
@@ -1104,6 +1104,11 @@ WebStorageClientTest :: remoteSearchTest(void)
     CPPUNIT_ASSERT_NO_THROW(
         wsc->cancelTransport(sessionId, token)
     );
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        token = wsc->remoteSearchOpen(sessionId, criteria);
+    );
+    CPPUNIT_ASSERT(token);
     
     Ptr<Glib::ustring>::Ref                 errorMessage(new Glib::ustring);
     AsyncState                              state;

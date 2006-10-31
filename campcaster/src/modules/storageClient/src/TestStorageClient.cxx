@@ -250,7 +250,7 @@ TestStorageClient :: reset(void)
                                      = nodes.begin();
     playlistMap.clear();
     editedPlaylists.clear();
-    searchResults.reset(new SearchResultsType);
+    localSearchResults.reset(new SearchResultsType);
 
     while (it != nodes.end()) {
         Ptr<Playlist>::Ref      playlist(new Playlist);
@@ -258,7 +258,7 @@ TestStorageClient :: reset(void)
                                     dynamic_cast<const xmlpp::Element*> (*it);
         playlist->configure(*element);
         playlistMap[playlist->getId()->getId()] = playlist;
-        searchResults->push_back(playlist);
+        localSearchResults->push_back(playlist);
         ++it;
     }
 
@@ -279,7 +279,7 @@ TestStorageClient :: reset(void)
             audioClip->setUri(nullPointer);
         }
         audioClipMap[audioClip->getId()->getId()] = audioClip;
-        searchResults->push_back(audioClip);
+        localSearchResults->push_back(audioClip);
         ++it;
     }
 }
@@ -801,14 +801,14 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         last = 0;
     }
 
-    searchResults.reset(new SearchResultsType);
+    localSearchResults.reset(new SearchResultsType);
 
     if (searchCriteria->type == "audioclip" || searchCriteria->type == "all") {
         AudioClipMapType::const_iterator    it = audioClipMap.begin();
         while (it != audioClipMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
                 if (counter >= first && (!last || counter < last)) {
-                    searchResults->push_back(it->second);
+                    localSearchResults->push_back(it->second);
                 }
                 ++counter;
             }
@@ -821,7 +821,7 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         while (it != playlistMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
                 if (counter >= first && (!last || counter < last)) {
-                    searchResults->push_back(it->second);
+                    localSearchResults->push_back(it->second);
                 }
                 ++counter;
             }
@@ -975,7 +975,8 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref    sessionId,
                                         new std::vector<Ptr<Playlist>::Ref>);
     
     SearchResultsType::const_iterator it;
-    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+    for (it = localSearchResults->begin();
+                                    it != localSearchResults->end(); ++it) {
         Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
         if (playlist) {
             playlists->push_back(playlist);
@@ -1005,7 +1006,8 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref   sessionId,
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
     SearchResultsType::const_iterator it;
-    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+    for (it = localSearchResults->begin();
+                                    it != localSearchResults->end(); ++it) {
         Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
         if (audioClip) {
             audioClips->push_back(audioClip);

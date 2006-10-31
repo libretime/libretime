@@ -1389,42 +1389,6 @@ GLiveSupport :: detachCueAudioListener(AudioPlayerEventListener *   listener)
 
 
 /*------------------------------------------------------------------------------
- *  Search in the local storage.
- *----------------------------------------------------------------------------*/
-int
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
-                                                throw (XmlRpcException)
-{
-    return storage->search(sessionId, criteria);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Return the Playable items found by the latest search (local or remote).
- *----------------------------------------------------------------------------*/
-Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: getSearchResults(void)          throw (XmlRpcException)
-{
-    return storage->getSearchResults();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Browse in the local storage.
- *----------------------------------------------------------------------------*/
-Ptr<std::vector<Glib::ustring> >::Ref
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: browse(Ptr<const Glib::ustring>::Ref    metadata,
-                       Ptr<SearchCriteria>::Ref         criteria)
-                                                throw (XmlRpcException)
-{
-    return storage->browse(sessionId, metadata, criteria);
-}
-
-
-/*------------------------------------------------------------------------------
  *  Return an image containing the radio station logo.
  *----------------------------------------------------------------------------*/
 Gtk::Image *

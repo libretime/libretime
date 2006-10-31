@@ -2097,7 +2097,7 @@ WebStorageClient :: reset(void)
     
     execute(resetStorageMethodName, parameters, result);
     
-    extractSearchResults(resetStorageMethodName, result);
+    extractSearchResults(resetStorageMethodName, result, localSearchResults);
     
     editedPlaylists.clear();
 }
@@ -2122,7 +2122,7 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
 
     execute(searchMethodName, parameters, result);
     
-    return extractSearchResults(searchMethodName, result);
+    return extractSearchResults(searchMethodName, result, localSearchResults);
 }
 
     
@@ -2130,8 +2130,10 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
  *  Extract the results returned by search() or remoteSearchClose().
  *----------------------------------------------------------------------------*/
 int
-WebStorageClient :: extractSearchResults(const std::string &    methodName,
-                                         XmlRpcValue &          xmlRpcStruct)
+WebStorageClient :: extractSearchResults(
+                                const std::string &             methodName,
+                                XmlRpcValue &                   xmlRpcStruct,
+                                Ptr<SearchResultsType>::Ref &   searchResults)
                                                 throw (XmlRpcException)
 {
     checkStruct(methodName,
@@ -2307,7 +2309,9 @@ WebStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref     token)
 
     execute(remoteSearchCloseMethodName, parameters, result);
     
-    return extractSearchResults(remoteSearchCloseMethodName, result);
+    return extractSearchResults(remoteSearchCloseMethodName,
+                                result,
+                                remoteSearchResults);
 }
 
 
@@ -2330,7 +2334,8 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
                                         new std::vector<Ptr<Playlist>::Ref>);
     
     SearchResultsType::const_iterator it;
-    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+    for (it = localSearchResults->begin();
+                                    it != localSearchResults->end(); ++it) {
         Ptr<Playlist>::Ref      playlist = (*it)->getPlaylist();
         if (playlist) {
             playlists->push_back(playlist);
@@ -2360,7 +2365,8 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
                                         new std::vector<Ptr<AudioClip>::Ref>);
     
     SearchResultsType::const_iterator it;
-    for (it = searchResults->begin(); it != searchResults->end(); ++it) {
+    for (it = localSearchResults->begin();
+                                    it != localSearchResults->end(); ++it) {
         Ptr<AudioClip>::Ref     audioClip = (*it)->getAudioClip();
         if (audioClip) {
             audioClips->push_back(audioClip);
@@ -2890,17 +2896,9 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
     Ptr<const Glib::ustring>::Ref   title(new const Glib::ustring(std::string(
                                                             data["title"] )));
     
-    checkStruct("private:createPlayable",
-                data,
-                "creator",
-                XmlRpcValue::TypeString);
     Ptr<const Glib::ustring>::Ref   creator(new const Glib::ustring(std::string(
                                                             data["creator"] )));
     
-    checkStruct("private:createPlayable",
-                data,
-                "source",
-                XmlRpcValue::TypeString);
     Ptr<const Glib::ustring>::Ref   source(new const Glib::ustring(std::string(
                                                             data["source"] )));
     

@@ -508,10 +508,14 @@ SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
     displayMessage("pleaseWaitMsg", localSearchResults);
     gLiveSupport->runMainLoop();
 
-    Ptr<GLiveSupport::PlayableList>::Ref    searchResults;
+    Ptr<StorageClientInterface>::Ref 
+                                storage   = gLiveSupport->getStorageClient();
+    Ptr<SessionId>::Ref         sessionId = gLiveSupport->getSessionId();
+    
+    Ptr<SearchResultsType>::Ref searchResults;
     try {
-        localSearchResultsCount = gLiveSupport->search(criteria);
-        searchResults           = gLiveSupport->getSearchResults();
+        localSearchResultsCount = storage->search(sessionId, criteria);
+        searchResults           = storage->getLocalSearchResults();
     } catch (XmlRpcException &e) {
         displayLocalSearchError(e);
         return;
@@ -528,8 +532,8 @@ SearchWindow :: localSearch(Ptr<SearchCriteria>::Ref    criteria)
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: displaySearchResults(
-                    Ptr<GLiveSupport::PlayableList>::Ref    searchResults,
-                    Glib::RefPtr<Gtk::ListStore>            treeModel)
+                    Ptr<SearchResultsType>::Ref     searchResults,
+                    Glib::RefPtr<Gtk::ListStore>    treeModel)
                                                                 throw ()
 {
     treeModel->clear();
@@ -538,7 +542,7 @@ SearchWindow :: displaySearchResults(
     
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
-    GLiveSupport::PlayableList::const_iterator it = searchResults->begin();
+    SearchResultsType::const_iterator it = searchResults->begin();
     
     if (it == searchResults->end()) {
         displayMessage("nothingFoundMsg", treeModel);
@@ -642,11 +646,12 @@ SearchWindow :: remoteSearchClose(void)
             return;
         }
         
-        Ptr<GLiveSupport::PlayableList>::Ref        results;
+        Ptr<SearchResultsType>::Ref                 results;
         
         if (state == AsyncState::finishedState) {
             try {
-                storage->remoteSearchClose(remoteSearchToken);
+                remoteSearchResultsCount =
+                                storage->remoteSearchClose(remoteSearchToken);
             } catch (XmlRpcException &e) {
                 displayRemoteSearchError(e);
                 return;
@@ -654,13 +659,12 @@ SearchWindow :: remoteSearchClose(void)
             remoteSearchToken.reset();
             
             try {
-                results = gLiveSupport->getSearchResults();
+                results = storage->getRemoteSearchResults();
             } catch (XmlRpcException &e) {
                 displayRemoteSearchError(e);
                 return;
             }
             
-            remoteSearchResultsCount = results->size();     // FIXME
             displaySearchResults(results, remoteSearchResults);
             
         } else if (state == AsyncState::closedState) {

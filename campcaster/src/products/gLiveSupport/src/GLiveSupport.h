@@ -131,12 +131,6 @@ class GLiveSupport : public LocalizedConfigurable,
                          const std::string>         LanguageMap;
 
         /**
-         *  The type of the list of search results.
-         */
-        typedef StorageClientInterface::SearchResultsType
-                                                    PlayableList;
-
-        /**
          *  A type for having a map of AudioClip objects, with using
          *  the ids of the objects as keys.
          */
@@ -973,30 +967,6 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         int
         search(Ptr<SearchCriteria>::Ref     criteria)
-                                                throw (XmlRpcException);
-
-        /**
-         *  Return the Playable items found by the latest search.
-         *
-         *  @return the list of audio clips and playlists found.
-         *  @exception XmlRpcException passed on from getAudioClip() or
-         *                             getPlaylist().
-         */
-        Ptr<PlayableList>::Ref
-        getSearchResults(void)                  throw (XmlRpcException);
-
-        /**
-         *  Browse in the local storage.
-         *
-         *  @param metadata the type of metadata to list (e.g., "dc:title").
-         *  @param criteria the search conditions to use.
-         *  @return the list of metadata values found.
-         *  @exception XmlRpcException thrown by
-         *                             StorageClientInterface::browse()
-         */
-        Ptr<std::vector<Glib::ustring> >::Ref
-        browse(Ptr<const Glib::ustring>::Ref        metadata,
-               Ptr<SearchCriteria>::Ref             criteria)
                                                 throw (XmlRpcException);
 
         /**
