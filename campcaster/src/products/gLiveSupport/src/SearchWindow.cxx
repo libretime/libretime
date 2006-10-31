@@ -931,14 +931,18 @@ SearchWindow :: onDownloadFromHub(void)                         throw ()
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
-            try {
-                searchInput->activatePage(3);
-                transportList->addDownload(playable);
-                
-            } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(formatMessage(
+            if (!gLiveSupport->existsPlayable(playable->getId())) {
+                try {
+                    searchInput->activatePage(3);
+                    transportList->addDownload(playable);
+                    
+                } catch (XmlRpcException &e) {
+                    gLiveSupport->displayMessageWindow(formatMessage(
                                         "downloadFromHubErrorMsg", e.what() ));
-                return;
+                    return;
+                }
+            } else {
+                onAddToScratchpad();
             }
         }
     }
@@ -953,7 +957,11 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                               const Gtk::TreeViewColumn *     column)
                                                                 throw ()
 {
-    onAddToScratchpad();
+    if (searchIsLocal()) {
+        onAddToScratchpad();
+    } else {
+        onDownloadFromHub();
+    }
 }
 
 

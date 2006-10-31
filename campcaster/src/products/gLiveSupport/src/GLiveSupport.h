@@ -673,6 +673,21 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
+         *  Tell if a playable object specified by an id exists.
+         *
+         *  @param id the id of the playable to check for.
+         *  @return true if the playable by the specified id exists,
+         *          false otherwise.
+         *  @exception XmlRpcException on communication problems.
+         */
+        bool
+        existsPlayable(Ptr<const UniqueId>::Ref   id)   throw (XmlRpcException)
+        {
+            return storage->existsAudioClip(sessionId, id)
+                        || storage->existsPlaylist(sessionId, id);
+        }
+
+        /**
          *  Open a playable object, for reading only.
          *  Calls either getAudioClip() or getPlaylist().
          *  You do not need to release the returned Playable object.
