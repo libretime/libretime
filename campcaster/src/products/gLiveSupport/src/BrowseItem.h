@@ -115,16 +115,22 @@ class BrowseItem : public Gtk::VBox,
         {
             public:
                 /**
+                 *  The original (unescaped) value of metadata.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>     originalColumn;
+                
+                /**
                  *  The single displayed column.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>     column;
+                Gtk::TreeModelColumn<Glib::ustring>     displayedColumn;
                 
                 /**
                  *  Constructor.
                  */
                 ModelColumns(void)                              throw ()
                 {
-                    add(column);
+                    add(originalColumn);
+                    add(displayedColumn);
                 }
         };
         

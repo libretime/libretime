@@ -81,7 +81,7 @@ BrowseItem :: BrowseItem(
     treeModel = Gtk::ListStore::create(modelColumns);
     
     metadataValues = Gtk::manage(wf->createTreeView(treeModel));
-    metadataValues->appendColumn("", modelColumns.column, 200);
+    metadataValues->appendColumn("", modelColumns.displayedColumn, 200);
     metadataValues->set_size_request(230, 150);
     metadataValues->set_headers_visible(false);
     metadataValues->signal_cursor_changed().connect(sigc::mem_fun(*this,
@@ -120,7 +120,7 @@ BrowseItem :: getSearchCriteria(void)           throw (std::invalid_argument)
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
         if (iter) {
             found = true;
-            metadataValue = (*iter)[modelColumns.column];
+            metadataValue = (*iter)[modelColumns.originalColumn];
         }
     }
     
@@ -162,13 +162,15 @@ BrowseItem :: onShow(void)                                          throw ()
     
     treeModel->clear();
     Gtk::TreeModel::Row     row = *treeModel->append();
-    row[modelColumns.column]                = allString;
+    row[modelColumns.originalColumn]        = allString;
+    row[modelColumns.displayedColumn]       = allString;
     metadataValues->get_selection()->select(*row);
 
     std::vector<Glib::ustring>::const_iterator valuesIt;
     for (valuesIt = values->begin(); valuesIt != values->end(); ++valuesIt) {
         row = *treeModel->append();
-        row[modelColumns.column]            = Glib::Markup::escape_text(
+        row[modelColumns.originalColumn]    = *valuesIt;
+        row[modelColumns.displayedColumn]   = Glib::Markup::escape_text(
                                                                     *valuesIt);
     }
     
