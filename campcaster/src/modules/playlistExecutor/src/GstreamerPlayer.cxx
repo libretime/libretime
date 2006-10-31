@@ -252,16 +252,13 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     DEBUG_BLOCK
 
-    std::string     filePath;
-    GstElement    * pipe;
-    GstElement    * fakesink;
-    gint64          position;
-
     if (isOpen()) {
         close();
     }
 
     debug() << "Opening URL: " << fileUrl << endl;
+
+    std::string filePath;
 
     if (fileUrl.find("file://") == 0) {
         filePath = fileUrl.substr(7, fileUrl.size());
@@ -281,29 +278,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     if (!decoder) {
         throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
     }
-
-    // connect the decoder unto a fakesink, and iterate on it until the
-    // first bytes come out. this is to make sure that _really_ all
-    // initialiation is done at opening
-    pipe     = gst_pipeline_new("pipe");
-    fakesink = gst_element_factory_make("fakesink", "fakesink");
-    gst_object_ref(GST_OBJECT(filesrc));
-    gst_object_ref(GST_OBJECT(decoder));
-    gst_element_link_many(decoder, fakesink, NULL);
-    gst_bin_add_many(GST_BIN(pipe), filesrc, decoder, fakesink, NULL);
-
-    gst_element_set_state(pipe, GST_STATE_PLAYING);
-
-    position = 0LL;
-    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
-        GstFormat   format = GST_FORMAT_DEFAULT;
-        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
-    }
-
-    gst_element_set_state(pipe, GST_STATE_PAUSED);
-    gst_bin_remove_many(GST_BIN(pipe), filesrc, decoder, NULL);
-    gst_element_unlink(decoder, fakesink);
-    gst_object_unref(GST_OBJECT(pipe));
 
     // converts between different audio formats (e.g. bitrate) 
     audioconvert    = gst_element_factory_make("audioconvert", NULL);
