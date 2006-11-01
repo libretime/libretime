@@ -3,14 +3,14 @@ nl:table
     windowTitle:string       { "Campcaster Master Panel" }
     notLoggedInMsg:string    { "Niet aangemeld" }
     loggedInMsg:string       { "Aangemeld als {0}" }
-    loginButtonLabel:string  { "aanmelden" }
-    logoutButtonLabel:string { "afmelden" }
-    liveModeButtonLabel:string              { "live mode" }
-    uploadFileButtonLabel:string            { "bestand toevoegen" }
-    scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "edit playlist" }
-    schedulerButtonLabel:string             { "scheduler" }
-    searchButtonLabel:string                { "zoeken" }
+    loginButtonLabel:string  { "Aanmelden" }
+    logoutButtonLabel:string { "Afmelden" }
+    liveModeButtonLabel:string              { "Live mode" }
+    uploadFileButtonLabel:string            { "Bestand toevoegen" }
+    scratchpadButtonLabel:string            { "Scratchpad" }
+    simplePlaylistMgmtButtonLabel:string    { "Edit playlist" }
+    schedulerButtonLabel:string             { "Scheduler" }
+    searchButtonLabel:string                { "Zoeken" }
 
     localeNotAvailableMsg:string        { "Locale {0} niet beschikbaar" }
     schedulerNotReachableMsg:string     { "Scheduler server niet beschikbaar" }

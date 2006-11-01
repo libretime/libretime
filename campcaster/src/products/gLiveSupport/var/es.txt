@@ -7,10 +7,10 @@ es:table
     logoutButtonLabel:string { "Salir" }
     liveModeButtonLabel:string              { "Modo en vivo" }
     uploadFileButtonLabel:string            { "Cargar archivo" }
-    scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "editar lista de repr." }
+    scratchpadButtonLabel:string            { "Scratchpad" }
+    simplePlaylistMgmtButtonLabel:string    { "Editar lista de repr." }
     schedulerButtonLabel:string             { "Programador" }
-    searchButtonLabel:string                { "búsqueda" }
+    searchButtonLabel:string                { "Búsqueda" }
 
     localeNotAvailableMsg:string        { "Ubicación {0} no disponible" }
     schedulerNotReachableMsg:string     { "El servidor del programador no está disponible" }

@@ -5,13 +5,13 @@ pl:table
     loggedInMsg:string              { "Zalogowany jako {0}" }
     loginButtonLabel:string         { "Zaloguj" }
     logoutButtonLabel:string        { "wyloguj" }
-    liveModeButtonLabel:string      { "na żywo" }
-    uploadFileButtonLabel:string    { "załaduj plik" }
-    scratchpadButtonLabel:string    { "przybornik" }
+    liveModeButtonLabel:string      { "Na żywo" }
+    uploadFileButtonLabel:string    { "Załaduj plik" }
+    scratchpadButtonLabel:string    { "Przybornik" }
     simplePlaylistMgmtButtonLabel:string
-                                    { "edituj listę utworów" }
-    schedulerButtonLabel:string     { "programacja" }
-    searchButtonLabel:string        { "szukaj" }
+                                    { "Edituj listę utworów" }
+    schedulerButtonLabel:string     { "Programacja" }
+    searchButtonLabel:string        { "Szukaj" }
 
     cancelButtonLabel:string        { "Anuluj" }
     noButtonLabel:string            { "Nie" }

@@ -3,15 +3,15 @@ hu:table
     windowTitle:string       { "Campcaster Fő Panel" }
     notLoggedInMsg:string    { "Nincs bejelentkezve" }
     loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
-    loginButtonLabel:string  { "bejelentkezés" }
-    logoutButtonLabel:string { "kijelentkezés" }
-    liveModeButtonLabel:string              { "élő adás" }
-    uploadFileButtonLabel:string            { "filefeltöltés" }
-    scratchpadButtonLabel:string            { "praktikus csupor" }
-    simplePlaylistMgmtButtonLabel:string    { "műsorkezelés" }
-    schedulerButtonLabel:string             { "időzítő" }
-    searchButtonLabel:string                { "keresés" }
-    optionsButtonLabel:string               { "beállítások" }
+    loginButtonLabel:string  { "Bejelentkezés" }
+    logoutButtonLabel:string { "Kijelentkezés" }
+    liveModeButtonLabel:string              { "Élő adás" }
+    uploadFileButtonLabel:string            { "Filefeltöltés" }
+    scratchpadButtonLabel:string            { "Praktikus csupor" }
+    simplePlaylistMgmtButtonLabel:string    { "Műsorkezelés" }
+    schedulerButtonLabel:string             { "Időzítő" }
+    searchButtonLabel:string                { "Keresés" }
+    optionsButtonLabel:string               { "Beállítások" }
 
     cancelButtonLabel:string        { "Mégsem" }
     noButtonLabel:string            { "Nem" }

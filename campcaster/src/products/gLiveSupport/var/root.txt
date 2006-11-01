@@ -2,16 +2,16 @@ root:table
 {
     notLoggedInMsg:string           { "Not logged in" }
     loggedInMsg:string              { "Logged in as {0}" }
-    loginButtonLabel:string         { "log in" }
-    logoutButtonLabel:string        { "log out" }
-    liveModeButtonLabel:string      { "live mode" }
-    uploadFileButtonLabel:string    { "upload file" }
-    scratchpadButtonLabel:string    { "scratchpad" }
+    loginButtonLabel:string         { "Log in" }
+    logoutButtonLabel:string        { "Log out" }
+    liveModeButtonLabel:string      { "Live Mode" }
+    uploadFileButtonLabel:string    { "Upload File" }
+    scratchpadButtonLabel:string    { "Scratchpad" }
     simplePlaylistMgmtButtonLabel:string
-                                    { "edit playlist" }
-    schedulerButtonLabel:string     { "scheduler" }
-    searchButtonLabel:string        { "search" }
-    optionsButtonLabel:string       { "options" }
+                                    { "Edit Playlist" }
+    schedulerButtonLabel:string     { "Scheduler" }
+    searchButtonLabel:string        { "Search" }
+    optionsButtonLabel:string       { "Options" }
 
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
