@@ -203,15 +203,15 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  A map, holding references to all AudioClip objects that are
-         *  openned.
+         *  opened.
          */
-        Ptr<AudioClipMap>::Ref          opennedAudioClips;
+        Ptr<AudioClipMap>::Ref          openedAudioClips;
 
         /**
          *  A map, holding references to all Playlist objects that are
-         *  openned.
+         *  opened.
          */
-        Ptr<PlaylistMap>::Ref           opennedPlaylists;
+        Ptr<PlaylistMap>::Ref           openedPlaylists;
 
         /**
          *  The one and only playlist that may be edited at any one time.
@@ -360,8 +360,8 @@ class GLiveSupport : public LocalizedConfigurable,
                 : outputPlayerIsPaused(false),
                   cuePlayerIsPaused(false)
         {
-            opennedAudioClips.reset(new AudioClipMap());
-            opennedPlaylists.reset(new PlaylistMap());
+            openedAudioClips.reset(new AudioClipMap());
+            openedPlaylists.reset(new PlaylistMap());
         }
 
         /**
@@ -377,11 +377,11 @@ class GLiveSupport : public LocalizedConfigurable,
                 cuePlayer->deInitialize();
             }
             try {
-                releaseOpennedAudioClips();
+                releaseOpenedAudioClips();
             } catch (XmlRpcException &e) {
             }
             try {
-                releaseOpennedPlaylists();
+                releaseOpenedPlaylists();
             } catch(XmlRpcException &e) {
             }
         }
@@ -602,7 +602,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  GLiveSupport object.
          *
          *  @param id the audio clip id.
-         *  @return the audio clip openned.
+         *  @return the audio clip opened.
          *  @exception XmlRpcException if no audio clip with the specified
          *             id exists, or there was a communication problem.
          */
@@ -647,7 +647,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  GLiveSupport object.
          *
          *  @param id the playlist id.
-         *  @return the playlist openned.
+         *  @return the playlist opened.
          *  @exception XmlRpcException if no playlist with the specified
          *             id exists, or there was a communication problem.
          */
@@ -718,16 +718,16 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
-         *  Release all openned audio clips.
+         *  Release all opened audio clips.
          */
         void
-        releaseOpennedAudioClips(void)              throw (XmlRpcException);
+        releaseOpenedAudioClips(void)              throw (XmlRpcException);
 
         /**
-         *  Release all openned playlists.
+         *  Release all opened playlists.
          */
         void
-        releaseOpennedPlaylists(void)               throw (XmlRpcException);
+        releaseOpenedPlaylists(void)               throw (XmlRpcException);
 
         /**
          *  Add a file to the Live Mode, and update it.

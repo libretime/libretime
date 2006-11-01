@@ -730,10 +730,10 @@ GLiveSupport :: getAudioClip(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<AudioClip>::Ref     clip;
 
-    clip = (*opennedAudioClips)[id->getId()];
+    clip = (*openedAudioClips)[id->getId()];
     if (!clip.get()) {
         clip = storage->getAudioClip(sessionId, id);
-        (*opennedAudioClips)[id->getId()] = clip;
+        (*openedAudioClips)[id->getId()] = clip;
     }
 
     return clip;
@@ -751,10 +751,10 @@ GLiveSupport :: acquireAudioClip(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<AudioClip>::Ref     clip;
 
-    clip = (*opennedAudioClips)[id->getId()];
+    clip = (*openedAudioClips)[id->getId()];
     if (!clip.get() || !clip->getToken().get()) {
         clip = storage->acquireAudioClip(sessionId, id);
-        (*opennedAudioClips)[id->getId()] = clip;
+        (*openedAudioClips)[id->getId()] = clip;
     }
 
     return clip;
@@ -772,10 +772,10 @@ GLiveSupport :: getPlaylist(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<Playlist>::Ref      playlist;
 
-    playlist = (*opennedPlaylists)[id->getId()];
+    playlist = (*openedPlaylists)[id->getId()];
     if (!playlist.get()) {
         playlist = storage->getPlaylist(sessionId, id);
-        (*opennedPlaylists)[id->getId()] = playlist;
+        (*openedPlaylists)[id->getId()] = playlist;
     }
 
     return playlist;
@@ -793,10 +793,10 @@ GLiveSupport :: acquirePlaylist(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<Playlist>::Ref      playlist;
 
-    playlist = (*opennedPlaylists)[id->getId()];
+    playlist = (*openedPlaylists)[id->getId()];
     if (!playlist.get() || !playlist->getUri().get()) {
         playlist = storage->acquirePlaylist(sessionId, id);
-        (*opennedPlaylists)[id->getId()] = playlist;
+        (*openedPlaylists)[id->getId()] = playlist;
     }
 
     return playlist;
@@ -854,7 +854,7 @@ GLiveSupport :: acquirePlayable(Ptr<const UniqueId>::Ref  id)
 
 
 /*------------------------------------------------------------------------------
- *  Release all openned audio clips.
+ *  Remove a playlist from the playlist cache.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
@@ -863,28 +863,28 @@ GLiveSupport :: uncachePlaylist(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<Playlist>::Ref      playlist;
     PlaylistMap::iterator   it;
-    PlaylistMap::iterator   end = opennedPlaylists->end();
+    PlaylistMap::iterator   end = openedPlaylists->end();
 
-    if ((it = opennedPlaylists->find(id->getId())) != end) {
-        playlist = (*opennedPlaylists)[id->getId()];
+    if ((it = openedPlaylists->find(id->getId())) != end) {
+        playlist = (*openedPlaylists)[id->getId()];
         if (playlist->getUri().get()) {
             storage->releasePlaylist(playlist);
         }
 
-        opennedPlaylists->erase(it);
+        openedPlaylists->erase(it);
     }
 }
 
 
 /*-----------------------------------------------------------------------------
- *  Release all openned audio clips.
+ *  Release all opened audio clips.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseOpennedAudioClips(void)          throw (XmlRpcException)
+GLiveSupport :: releaseOpenedAudioClips(void)           throw (XmlRpcException)
 {
-    AudioClipMap::iterator   it  = opennedAudioClips->begin();
-    AudioClipMap::iterator   end = opennedAudioClips->end();
+    AudioClipMap::iterator   it  = openedAudioClips->begin();
+    AudioClipMap::iterator   end = openedAudioClips->end();
 
     while (it != end) {
         Ptr<AudioClip>::Ref clip = (*it).second;
@@ -896,19 +896,19 @@ GLiveSupport :: releaseOpennedAudioClips(void)          throw (XmlRpcException)
         ++it;
     }
 
-    opennedAudioClips->clear();
+    openedAudioClips->clear();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Release all openned playlists.
+ *  Release all opened playlists.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseOpennedPlaylists(void)           throw (XmlRpcException)
+GLiveSupport :: releaseOpenedPlaylists(void)            throw (XmlRpcException)
 {
-    PlaylistMap::iterator   it  = opennedPlaylists->begin();
-    PlaylistMap::iterator   end = opennedPlaylists->end();
+    PlaylistMap::iterator   it  = openedPlaylists->begin();
+    PlaylistMap::iterator   end = openedPlaylists->end();
 
     while (it != end) {
         Ptr<Playlist>::Ref playlist = (*it).second;
@@ -920,7 +920,7 @@ GLiveSupport :: releaseOpennedPlaylists(void)           throw (XmlRpcException)
         ++it;
     }
 
-    opennedPlaylists->clear();
+    openedPlaylists->clear();
 }
 
 

@@ -153,6 +153,11 @@ GLiveSupportTest :: setUp(void)                 throw (CPPUNIT_NS::Exception)
     if (!gLiveSupport->login(login, password)) {
         std::cerr << "gLiveSupport unable to log in" << std::endl;
     }
+
+    CPPUNIT_ASSERT_NO_THROW(
+        storage = gLiveSupport->getStorageClient();
+    );
+    CPPUNIT_ASSERT(storage);
 }
 
 
@@ -192,8 +197,8 @@ GLiveSupportTest :: openAudioClipTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      clip;
 
-    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 7);
-    id = gLiveSupport->getSearchResults()->at(6)->getId();
+    CPPUNIT_ASSERT(sampleData()->size() >= 7);
+    id = sampleData()->at(6)->getId();
 
     try {
         clip = gLiveSupport->getAudioClip(id);
@@ -205,7 +210,7 @@ GLiveSupportTest :: openAudioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
-    gLiveSupport->releaseOpennedAudioClips();
+    gLiveSupport->releaseOpenedAudioClips();
 
     try {
         clip = gLiveSupport->getAudioClip(id);
@@ -226,8 +231,8 @@ GLiveSupportTest :: acquireAudioClipTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      clip;
 
-    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 7);
-    id = gLiveSupport->getSearchResults()->at(6)->getId();
+    CPPUNIT_ASSERT(sampleData()->size() >= 7);
+    id = sampleData()->at(6)->getId();
 
     try {
         clip = gLiveSupport->acquireAudioClip(id);
@@ -241,7 +246,7 @@ GLiveSupportTest :: acquireAudioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
-    gLiveSupport->releaseOpennedAudioClips();
+    gLiveSupport->releaseOpenedAudioClips();
 
     try {
         clip = gLiveSupport->acquireAudioClip(id);
@@ -263,8 +268,8 @@ GLiveSupportTest :: openPlaylistTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      playlist;
 
-    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 2);
-    id = gLiveSupport->getSearchResults()->at(1)->getId();
+    CPPUNIT_ASSERT(sampleData()->size() >= 2);
+    id = sampleData()->at(1)->getId();
 
     try {
         playlist = gLiveSupport->getPlaylist(id);
@@ -276,7 +281,7 @@ GLiveSupportTest :: openPlaylistTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
-    gLiveSupport->releaseOpennedPlaylists();
+    gLiveSupport->releaseOpenedPlaylists();
 
     try {
         playlist = gLiveSupport->getPlaylist(id);
@@ -297,8 +302,8 @@ GLiveSupportTest :: acquirePlaylistTest(void)
     Ptr<UniqueId>::Ref      id;
     Ptr<Playable>::Ref      playlist;
 
-    CPPUNIT_ASSERT(gLiveSupport->getSearchResults()->size() >= 2);
-    id = gLiveSupport->getSearchResults()->at(1)->getId();
+    CPPUNIT_ASSERT(sampleData()->size() >= 2);
+    id = sampleData()->at(1)->getId();
 
     try {
         playlist = gLiveSupport->acquirePlaylist(id);
@@ -312,7 +317,7 @@ GLiveSupportTest :: acquirePlaylistTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
-    gLiveSupport->releaseOpennedPlaylists();
+    gLiveSupport->releaseOpenedPlaylists();
 
     try {
         playlist = gLiveSupport->acquirePlaylist(id);

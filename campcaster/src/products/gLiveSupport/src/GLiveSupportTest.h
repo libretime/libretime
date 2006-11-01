@@ -82,9 +82,28 @@ class GLiveSupportTest : public BaseTestMethod
     private:
     
         /**
-         *  The GLiveSupport object we're testing
+         *  The GLiveSupport object we're testing.
          */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
+        Ptr<GLiveSupport>::Ref              gLiveSupport;
+
+        /**
+         *  The storage object we get from gLiveSupport.
+         */
+        Ptr<StorageClientInterface>::Ref    storage;
+
+        /**
+         *  Get the list of test Playable objects.
+         *  This gets the result of the latest "local search", which in
+         *  this case is reset(), which loads the sample data into the
+         *  local storage.
+         *
+         *  @return a list of Playable items loaded by reset().
+         */
+        Ptr<StorageClientInterface::SearchResultsType>::Ref
+        sampleData(void)                                throw ()
+        {
+            return storage->getLocalSearchResults();
+        }
 
 
     protected:
