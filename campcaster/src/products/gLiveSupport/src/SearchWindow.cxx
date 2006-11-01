@@ -130,7 +130,7 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // set the sizes of the two parts of the window
     searchInput      ->set_size_request(750, 231);
-    searchResultsView->set_size_request(750, 340);
+    searchResultsView->set_size_request(750, 343);
     
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
