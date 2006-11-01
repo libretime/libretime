@@ -38,7 +38,6 @@
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "SchedulePlaylistWindow.h"
 
 #include "ScratchpadWindow.h"
 
@@ -492,14 +491,12 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
         return;
     }
     
-    // TODO: this should be somewhere else; figure out where
-    Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
-    scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
-                                                    bundle,
-                                                    0, /* no button */
-                                                    playlist));
+    schedulePlaylistWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
+                                                            bundle,
+                                                            0, /* no button */
+                                                            playlist));
 
-    Gtk::Main::run(*scheduleWindow);
+    Gtk::Main::run(*schedulePlaylistWindow);
 }
 
 
@@ -748,6 +745,9 @@ ScratchpadWindow :: on_hide(void)                               throw ()
 {
     if (exportPlaylistWindow) {
         exportPlaylistWindow->hide();
+    }
+    if (schedulePlaylistWindow) {
+        schedulePlaylistWindow->hide();
     }
         
     GuiWindow::on_hide();

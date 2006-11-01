@@ -54,6 +54,7 @@
 #include "GuiWindow.h"
 #include "ContentsStorable.h"
 #include "ExportPlaylistWindow.h"
+#include "SchedulePlaylistWindow.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -84,6 +85,11 @@ class ScratchpadWindow : public GuiWindow,
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
+
+        /**
+         *  The Schedule Playlist pop-up window.
+         */
+        Ptr<SchedulePlaylistWindow>::Ref    schedulePlaylistWindow;
 
         /**
          *  Check whether exactly one row is selected, and if so, set
