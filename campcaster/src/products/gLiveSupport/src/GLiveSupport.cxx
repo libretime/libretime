@@ -1172,12 +1172,18 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
                 outputItemPlayingNow = acquireAudioClip(playable->getId());
                 outputPlayer->open(*outputItemPlayingNow->getUri());
                 outputPlayer->start();
+                std::cerr << "gLiveSupport: Live Mode playing audio clip '"
+                          << *playable->getTitle()
+                          << "'" << std::endl;
                 break;
     
             case Playable::PlaylistType:
                 outputItemPlayingNow = acquirePlaylist(playable->getId());
                 outputPlayer->open(*outputItemPlayingNow->getUri());
                 outputPlayer->start();
+                std::cerr << "gLiveSupport: Live Mode playing playlist '"
+                          << *playable->getTitle()
+                          << "'" << std::endl;
                 break;
     
             default:        // this never happens
@@ -1291,12 +1297,18 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
                 cueItemPlayingNow = acquireAudioClip(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri());
                 cuePlayer->start();
+                std::cerr << "gLiveSupport: Cue playing audio clip '"
+                          << *playable->getTitle()
+                          << "'" << std::endl;
                 break;
     
             case Playable::PlaylistType:
                 cueItemPlayingNow = acquirePlaylist(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri());
                 cuePlayer->start();
+                std::cerr << "gLiveSupport: Cue playing playlist '"
+                          << *playable->getTitle()
+                          << "'" << std::endl;
                 break;
     
             default:        // this never happens
