@@ -344,6 +344,19 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         displayAuthenticationServerMissingMessage(void)         throw ();
 
+        /**
+         *  Refresh the playlist in the Live Mode window.
+         *  Updates the playlist to the new copy supplied in the argument,
+         *  if it is present in the Live Mode window.
+         *  This is called by savePlaylist() after the playlist has been
+         *  edited.
+         *
+         *  @param  playlist    the new version of the playlist.
+         */
+        void
+        refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
+                                                                throw ();
+
 
     protected:
         /**

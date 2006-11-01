@@ -208,13 +208,24 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
 
 /*------------------------------------------------------------------------------
- *  Add a new item to the Live Mode Window.
+ *  Add a new item to the top of the Live Mode Window.
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
-    Gtk::TreeModel::Row     row       = *(treeModel->append());
+    addItem(treeModel->append(), playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a new item as the given row in the Live Mode Window.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: addItem(Gtk::TreeModel::iterator  iter,
+                          Ptr<Playable>::Ref        playable)       throw ()
+{
     
+    Gtk::TreeModel::Row     row       = *iter;
     row[modelColumns.playableColumn]  = playable;
 
     Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
@@ -442,5 +453,21 @@ LiveModeWindow :: on_hide(void)                                     throw ()
     }
         
     GuiWindow::on_hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Refresh the playlist in the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: refreshPlaylist(Ptr<Playlist>::Ref    playlist)   throw ()
+{
+    for (Gtk::TreeModel::iterator   iter = treeModel->children().begin();
+                iter != treeModel->children().end(); ++iter) {
+        Ptr<Playable>::Ref  currentItem = (*iter)[modelColumns.playableColumn];
+        if (*currentItem->getId() == *playlist->getId()) {
+            addItem(iter, playlist);
+        }
+    }
 }
 

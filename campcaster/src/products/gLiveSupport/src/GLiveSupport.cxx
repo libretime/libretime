@@ -1118,7 +1118,9 @@ GLiveSupport :: savePlaylist(void)
             }
             // update with new version
             // this will also add it to the local cache
+            uncachePlaylist(editedPlaylist->getId());
             addToScratchpad(editedPlaylist);
+            refreshPlaylistInLiveMode(editedPlaylist);
         }
         editedPlaylist.reset();
     }
@@ -1686,5 +1688,17 @@ GLiveSupport :: displayAuthenticationServerMissingMessage(void)     throw ()
             optionsContainer->writeToFile();
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Refresh the playlist in the Live Mode window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
+                                                                    throw ()
+{
+    masterPanel->refreshPlaylistInLiveMode(playlist);
 }
 

@@ -472,6 +472,24 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
                                                                 throw ();
 
         /**
+         *  Refresh the playlist in the Live Mode window.
+         *  Updates the playlist to the new copy supplied in the argument,
+         *  if it is present in the Live Mode window.
+         *  This is called by GLiveSupport::savePlaylist() after the playlist
+         *  has been edited.
+         *
+         *  @param  playlist    the new version of the playlist.
+         */
+        void
+        refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
+                                                                throw ()
+        {
+            if (liveModeWindow) {
+                liveModeWindow->refreshPlaylist(playlist);
+            }
+        }
+
+        /**
          *  Create the Scratchpad window.
          */
         void

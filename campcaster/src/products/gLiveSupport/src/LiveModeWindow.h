@@ -246,13 +246,28 @@ class LiveModeWindow : public GuiWindow
         }
 
         /**
-         *  Add a new item to the Live Mode Window.
+         *  Add a new item to the top of the Live Mode Window.
+         *
+         *  @param  playable    the playable object to be added.
          */
         void
         addItem(Ptr<Playable>::Ref  playable)                   throw ();
 
         /**
+         *  Add a new item as the given row in the Live Mode Window.
+         *
+         *  @param  iter        an iterator pointing to the row to be updated.
+         *  @param  playable    the playable object to be added.
+         */
+        void
+        addItem(Gtk::TreeModel::iterator    iter,
+                Ptr<Playable>::Ref          playable)           throw ();
+
+        /**
          *  "Pop" the first item from the top of the Live Mode Window.
+         *
+         *  @return the playable object at the top of the window,
+         *          or 0 if the window is empty.
          */
         Ptr<Playable>::Ref
         popTop(void)                                            throw ();
@@ -265,6 +280,18 @@ class LiveModeWindow : public GuiWindow
         {
             cueAudioButtons->onStop();
         }
+
+        /**
+         *  Refresh the playlist in the window.
+         *  Updates the playlist to the new copy supplied in the argument,
+         *  if it is present in the window.
+         *  This is called by GLiveSupport::savePlaylist() after the playlist
+         *  has been edited.
+         *
+         *  @param  playlist    the new version of the playlist.
+         */
+        void
+        refreshPlaylist(Ptr<Playlist>::Ref  playlist)           throw ();
 };
 
 /* ================================================= external data structures */
