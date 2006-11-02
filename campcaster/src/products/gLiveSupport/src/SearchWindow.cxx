@@ -638,8 +638,8 @@ SearchWindow :: remoteSearchClose(void)
                                 storage   = gLiveSupport->getStorageClient();
         Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
         
-        AsyncState                                  state;
-        Ptr<Glib::ustring>::Ref                     errorMessage;
+        AsyncState                      state;
+        Ptr<Glib::ustring>::Ref         errorMessage(new Glib::ustring());
         try {
             state = storage->checkTransport(remoteSearchToken, errorMessage);
         } catch (XmlRpcException &e) {
@@ -647,7 +647,7 @@ SearchWindow :: remoteSearchClose(void)
             return;
         }
         
-        Ptr<SearchResultsType>::Ref                 results;
+        Ptr<SearchResultsType>::Ref     results;
         
         if (state == AsyncState::finishedState) {
             try {
@@ -674,7 +674,9 @@ SearchWindow :: remoteSearchClose(void)
             
         } else if (state == AsyncState::failedState) {
             remoteSearchToken.reset();
-            displayMessage(*errorMessage, remoteSearchResults);
+            gLiveSupport->displayMessageWindow(formatMessage("longErrorMsg",
+                                                             *errorMessage ));
+            displayMessage("shortErrorMsg", remoteSearchResults);
         }
     }
 }
