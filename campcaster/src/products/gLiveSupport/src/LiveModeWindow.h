@@ -90,6 +90,22 @@ class LiveModeWindow : public GuiWindow
          */
         CuePlayer *                         cueAudioButtons;
 
+        /**
+         *  Construct the right-click context menu for local audio clips.
+         *
+         *  @return the context menu created (already Gtk::manage()'ed).
+         */
+        Gtk::Menu *
+        constructAudioClipContextMenu(void)                     throw ();
+
+        /**
+         *  Construct the right-click context menu for local playlists.
+         *
+         *  @return the context menu created (already Gtk::manage()'ed).
+         */
+        Gtk::Menu *
+        constructPlaylistContextMenu(void)                      throw ();
+
 
     protected:
 
@@ -151,10 +167,14 @@ class LiveModeWindow : public GuiWindow
         Glib::RefPtr<Gtk::ListStore>    treeModel;
 
         /**
-         *  The right-click context menu,
-         *  that comes up when right-clicking an entry in the entry list.
+         *  The right-click context menu for audio clips.
          */
-        Gtk::Menu *                 contextMenu;
+        Gtk::Menu *                 audioClipContextMenu;
+
+        /**
+         *  The right-click context menu for playlists.
+         */
+        Gtk::Menu *                 playlistContextMenu;
 
         /**
          *  Signal handler for the output play button clicked

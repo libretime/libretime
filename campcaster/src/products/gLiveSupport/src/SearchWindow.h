@@ -201,21 +201,27 @@ class SearchWindow : public GuiWindow
 
         /**
          *  Construct the right-click context menu for local audio clips.
+         *
+         *  @return the context menu created (already Gtk::manage()'ed).
          */
-        void
+        Gtk::Menu *
         constructAudioClipContextMenu(void)                     throw ();
 
         /**
          *  Construct the right-click context menu for local playlists.
+         *
+         *  @return the context menu created (already Gtk::manage()'ed).
          */
-        void
+        Gtk::Menu *
         constructPlaylistContextMenu(void)                      throw ();
 
         /**
          *  Construct the right-click context menu for remote audio clips
          *  and playlists.
+         *
+         *  @return the context menu created (already Gtk::manage()'ed).
          */
-        void
+        Gtk::Menu *
         constructRemoteContextMenu(void)                        throw ();
 
         /**

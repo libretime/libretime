@@ -172,22 +172,6 @@ ScratchpadWindow :: ScratchpadWindow (
     // register the signal handlers for the popup menu
     try {
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onAddToPlaylist)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("upMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onUpMenuOption)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("downMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onDownMenuOption)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onRemoveMenuOption)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*cueAudioButtons,
                                         &CuePlayer::onPlayItem)));
@@ -195,6 +179,15 @@ ScratchpadWindow :: ScratchpadWindow (
                                 *getResourceUstring("addToLiveModeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onAddToLiveMode)));
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onAddToPlaylist)));
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("removeMenuItem"),
+                                sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onRemoveMenuOption)));
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("uploadToHubMenuItem"),
                                 sigc::mem_fun(*this,
@@ -213,30 +206,6 @@ ScratchpadWindow :: ScratchpadWindow (
 
     try{
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("editPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onEditPlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                    &ScratchpadWindow::onAddToPlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("schedulePlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                    &ScratchpadWindow::onSchedulePlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("upMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onUpMenuOption)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("downMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onDownMenuOption)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onRemoveMenuOption)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*cueAudioButtons,
                                     &CuePlayer::onPlayItem)));
@@ -245,9 +214,27 @@ ScratchpadWindow :: ScratchpadWindow (
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onAddToLiveMode)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                    &ScratchpadWindow::onAddToPlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("removeMenuItem"),
+                                sigc::mem_fun(*treeView,
+                                    &ZebraTreeView::onRemoveMenuOption)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("editPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onEditPlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("schedulePlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                    &ScratchpadWindow::onSchedulePlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("exportPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onExportPlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("uploadToHubMenuItem"),
                                 sigc::mem_fun(*this,

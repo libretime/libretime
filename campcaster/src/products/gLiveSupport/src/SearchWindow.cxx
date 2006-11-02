@@ -373,9 +373,10 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(
                                     *this, &SearchWindow::onDoubleClick));
     
-    constructAudioClipContextMenu();
-    constructPlaylistContextMenu();
-    constructRemoteContextMenu();
+    // create the right-click context menus
+    audioClipContextMenu    = constructAudioClipContextMenu();
+    playlistContextMenu     = constructPlaylistContextMenu();
+    remoteContextMenu       = constructRemoteContextMenu();
     
     // put the tree view inside a scrolled window
     ScrolledWindow *    resultsWindow = Gtk::manage(new ScrolledWindow);
@@ -739,26 +740,18 @@ void
 SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                        searchResultsTreeView->get_selection();
-        if (refSelection) {
-            Gtk::TreeModel::iterator iter = refSelection->get_selected();
-            
-            // if nothing is currently selected, select row at mouse pointer
-            if (!iter) {
-                Gtk::TreeModel::Path    path;
-                Gtk::TreeViewColumn *   column;
-                int     cell_x,
-                        cell_y;
-                if (searchResultsTreeView->get_path_at_pos(
-                                                int(event->x), int(event->y),
-                                                path, column,
-                                                cell_x, cell_y )) {
-                    refSelection->select(path);
-                    iter = refSelection->get_selected();
-                }
-            }
+        Gtk::TreePath           currentPath;
+        Gtk::TreeViewColumn *   column;
+        int     cell_x,
+                cell_y;
+        bool foundValidRow = searchResultsTreeView->get_path_at_pos(
+                                            int(event->x), int(event->y),
+                                            currentPath, column,
+                                            cell_x, cell_y);
 
+        if (foundValidRow) {
+            Gtk::TreeIter   iter = searchResultsTreeView->get_model()
+                                                        ->get_iter(currentPath);
             if (iter) {
                 Ptr<Playable>::Ref  playable =
                                          (*iter)[modelColumns.playableColumn];
@@ -1026,21 +1019,22 @@ SearchWindow :: onTimer(void)                                   throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local audio clips.
  *----------------------------------------------------------------------------*/
-void
+Gtk::Menu *
 SearchWindow :: constructAudioClipContextMenu(void)             throw ()
 {
-    audioClipContextMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& contextMenuList = audioClipContextMenu->items();
+    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
     try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToScratchpadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToScratchpad)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToLiveModeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToLiveMode)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToScratchpadMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToScratchpad)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("uploadToHubMenuItem"),
                                 sigc::mem_fun(*this,
@@ -1050,32 +1044,35 @@ SearchWindow :: constructAudioClipContextMenu(void)             throw ()
         std::exit(1);
     }
 
-    audioClipContextMenu->accelerate(*this);
+    contextMenu->accelerate(*this);
+    return contextMenu;
 }    
 
 
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local playlists.
  *----------------------------------------------------------------------------*/
-void
+Gtk::Menu *
 SearchWindow :: constructPlaylistContextMenu(void)              throw ()
 {
-    playlistContextMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& contextMenuList = playlistContextMenu->items();
+    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
     try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToScratchpadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToScratchpad)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToLiveModeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToLiveMode)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToScratchpadMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToScratchpad)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("exportPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onExportPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("uploadToHubMenuItem"),
                                 sigc::mem_fun(*this,
@@ -1085,18 +1082,19 @@ SearchWindow :: constructPlaylistContextMenu(void)              throw ()
         std::exit(1);
     }
 
-    playlistContextMenu->accelerate(*this);
+    contextMenu->accelerate(*this);
+    return contextMenu;
 }    
 
 
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for remote audio clips & playlists.
  *----------------------------------------------------------------------------*/
-void
+Gtk::Menu *
 SearchWindow :: constructRemoteContextMenu(void)                throw ()
 {
-    remoteContextMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& contextMenuList = remoteContextMenu->items();
+    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
     try {
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
@@ -1108,7 +1106,8 @@ SearchWindow :: constructRemoteContextMenu(void)                throw ()
         std::exit(1);
     }
 
-    remoteContextMenu->accelerate(*this);
+    contextMenu->accelerate(*this);
+    return contextMenu;
 }    
 
 

@@ -157,45 +157,9 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &LiveModeWindow::onOutputPlay ));
 
-    // create the right-click entry context menu
-    contextMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
-    // register the signal handlers for the popup menu
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("cueMenuItem"),
-                                  sigc::mem_fun(*cueAudioButtons,
-                                        &CuePlayer::onPlayItem)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("upMenuItem"),
-                                  sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onUpMenuOption)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("downMenuItem"),
-                                  sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onDownMenuOption)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("removeMenuItem"),
-                                  sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onRemoveMenuOption)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("playMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onOutputPlay)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("exportPlaylistMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onExportPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("uploadToHubMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    contextMenu->accelerate(*this);
+    // create the right-click context menus
+    audioClipContextMenu = constructAudioClipContextMenu();
+    playlistContextMenu  = constructPlaylistContextMenu();
 
     // show
     set_name(windowName);
@@ -321,26 +285,38 @@ void
 LiveModeWindow :: onEntryClicked(GdkEventButton *   event)          throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                      treeView->get_selection();
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        
-        // if nothing is currently selected, select row at mouse pointer
-        if (!iter) {
-            Gtk::TreeModel::Path    path;
-            Gtk::TreeViewColumn *   column;
-            int     cell_x,
-                    cell_y;
-            if (treeView->get_path_at_pos(int(event->x), int(event->y),
-                                          path, column,
-                                          cell_x, cell_y)) {
-                refSelection->select(path);
-                iter = refSelection->get_selected();
-            }
-        }
+        Gtk::TreePath           currentPath;
+        Gtk::TreeViewColumn *   column;
+        int     cell_x,
+                cell_y;
+        bool foundValidRow = treeView->get_path_at_pos(
+                                            int(event->x), int(event->y),
+                                            currentPath, column,
+                                            cell_x, cell_y);
 
-        if (iter) {
-            contextMenu->popup(event->button, event->time);
+        if (foundValidRow) {
+            Gtk::TreeIter   iter = treeModel->get_iter(currentPath);
+            if (iter) {
+                Ptr<Playable>::Ref  playable =
+                                         (*iter)[modelColumns.playableColumn];
+                
+                if (playable) {
+                    switch (playable->getType()) {
+                        case Playable::AudioClipType:
+                            audioClipContextMenu->popup(event->button,
+                                                        event->time);
+                            break;
+                            
+                        case Playable::PlaylistType:
+                            playlistContextMenu->popup(event->button,
+                                                        event->time);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
         }
     }
 }
@@ -470,4 +446,83 @@ LiveModeWindow :: refreshPlaylist(Ptr<Playlist>::Ref    playlist)   throw ()
         }
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the right-click context menu for local audio clips.
+ *----------------------------------------------------------------------------*/
+Gtk::Menu *
+LiveModeWindow :: constructAudioClipContextMenu(void)           throw ()
+{
+    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
+
+    try {
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("playMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onOutputPlay)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("cueMenuItem"),
+                                  sigc::mem_fun(*cueAudioButtons,
+                                        &CuePlayer::onPlayItem)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("removeMenuItem"),
+                                  sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onRemoveMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("uploadToHubMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onUploadToHub)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    contextMenu->accelerate(*this);
+    return contextMenu;
+}    
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the right-click context menu for local playlists.
+ *----------------------------------------------------------------------------*/
+Gtk::Menu *
+LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
+{
+    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
+
+    try {
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("playMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onOutputPlay)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("cueMenuItem"),
+                                  sigc::mem_fun(*cueAudioButtons,
+                                        &CuePlayer::onPlayItem)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("removeMenuItem"),
+                                  sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onRemoveMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("exportPlaylistMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onExportPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("uploadToHubMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onUploadToHub)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    contextMenu->accelerate(*this);
+    return contextMenu;
+}    
 
