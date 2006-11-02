@@ -442,10 +442,14 @@ class GreenBox extends BasicStor {
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
      *     <li>orderby : string - metadata category for sorting (optional)
-     *         default sorting by dc:title (+ primary sorting by filetype -
-     *         audioclips, playlists, webstreams ...)
+     *          or array of strings for multicolumn orderby
+     *          [default: dc:creator, dc:source, dc:title]
      *     </li>
-     *     <li>desc : boolean - flag for descending order (optional)</li>
+     *     <li>desc : boolean - flag for descending order (optional)
+     *          or array of boolean for multicolumn orderby
+     *          (it corresponds to elements of orderby field)
+     *          [default: all ascending]
+     *     </li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>

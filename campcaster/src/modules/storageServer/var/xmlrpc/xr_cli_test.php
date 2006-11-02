@@ -16,6 +16,16 @@ if($pars[0] == '-s'){
       "http://{$config['storageUrlHost']}:{$config['storageUrlPort']}".
       "{$config['storageUrlPath']}/{$config['storageXMLRPC']}";
 }
+$options = array();
+if($pars[0] == '-o'){
+    array_shift($pars);
+    $optStr = array_shift($pars);
+    $optArr = split(",", $optStr);
+    foreach($optArr as $opt){
+        list($k, $v) = split(':', $opt);
+        $options[$k] = $v;
+    }
+}
 
 #$serverPath = "http://localhost:80/campcasterStorageServerCVS/xmlrpc/xrLocStor.php";
 
@@ -287,12 +297,13 @@ if(isset($infos[$method]['r'])){
     case"getSearchResults":
         $acCnt = 0; $acGunids = array();
         $plCnt = 0; $plGunids = array();
+        $fld = (isset($options['category']) ? $options['category'] : 'gunid' );
         foreach($resp['results'] as $k=>$v){
             if($v['type']=='audioclip'){ $acCnt++;
-                $acGunids[] = $v['gunid'];
+                $acGunids[] = $v[$fld];
             }
             if($v['type']=='playlist'){ $plCnt++;
-                $plGunids[] = $v['gunid'];
+                $plGunids[] = $v[$fld];
             }
         }
         echo

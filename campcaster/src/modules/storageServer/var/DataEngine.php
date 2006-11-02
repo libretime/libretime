@@ -16,8 +16,15 @@ require_once "XML/Util.php";
  *       (may be empty or ommited only with less then 2 items in
  *       &quot;conditions&quot; field)
  *     </li>
- *     <li>orderby : string - metadata category for sorting (optional)</li>
- *     <li>desc : boolean - flag for descending order (optional)</li>
+ *     <li>orderby : string - metadata category for sorting (optional)
+ *          or array of strings for multicolumn orderby
+ *          [default: dc:creator, dc:source, dc:title]
+ *     </li>
+ *     <li>desc : boolean - flag for descending order (optional)
+ *          or array of boolean for multicolumn orderby
+ *          (it corresponds to elements of orderby field)
+ *          [default: all ascending]
+ *     </li>
  *     <li>conditions - array of hashes with structure:
  *       <ul>
  *           <li>cat - string, metadata category name</li>
@@ -346,14 +353,35 @@ class DataEngine {
         $filetype = $this->filetypes[$filetype];
         $operator = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
         $operator = strtolower($operator);
-        $desc = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
         $whereArr = $this->_makeWhereArr($conditions);
-        $orderbyQn  =       // default is dc:title
-            (isset($criteria['orderby']) ? $criteria['orderby'] : 'dc:title' /*NULL*/);
-        $obSplitQn = XML_Util::splitQualifiedName($orderbyQn);
-        $obNs = $obSplitQn['namespace'];
-        $orderby = $obSplitQn['localPart'];
+        $orderby = TRUE;                     // if there is any default
+        if ( (!isset($criteria['orderby'])) || (is_array($criteria['orderby']) && (count($criteria['orderby'])<1) ) ) {
+            $orderbyQns  = array('dc:creator', 'dc:source', 'dc:title');      // default
+        } else {
+            $orderbyQns  = $criteria['orderby'];
+        }
+        if (!is_array($orderbyQns)) {
+            $orderbyQns = array($orderbyQns);
+        }
+        $desc = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
+        $orderJoinSql = array();
+        $orderBySql = array();
+        foreach($orderbyQns as $j=>$orderbyQn){
+            $i = $j+1;
+            $obSplitQn = XML_Util::splitQualifiedName($orderbyQn);
+            $obNs = $obSplitQn['namespace'];
+            $obLp = $obSplitQn['localPart'];
+            $desc = (isset($criteria['desc'][$i]) ? $criteria['desc'][$i] : NULL);
+            $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
+            $orderJoinSql[] =
+                "LEFT JOIN {$this->mdataTable} m$i\n".
+                "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
+                " AND m$i.objns='_L' AND m$i.predxml='T'".
+                (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
+            $orderBySql[] =
+                "m$i.object".$retype.($desc? ' DESC':'');
+        }
         $browse = !is_null($brFld);
         if (!$browse) {
             if (!$orderby) {
@@ -376,15 +404,11 @@ class DataEngine {
             $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
         if (!$browse && $orderby) {
-            $retype = ($orderby == 'mtime' ? '::timestamp with time zone' : '' );
             $sql =
-                "SELECT to_hex(sq2.gunid)as gunid, m.object, sq2.ftype, sq2.id\n".
+                "SELECT to_hex(sq2.gunid)as gunid, m1.object, sq2.ftype, sq2.id\n".
                 "FROM (\n$sql\n)sq2\n".
-                "LEFT JOIN {$this->mdataTable} m\n".
-                "  ON m.gunid = sq2.gunid AND m.predicate='$orderby'".
-                " AND m.objns='_L' AND m.predxml='T'".
-                (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
-                "ORDER BY sq2.ftype, m.object".$retype.($desc? ' DESC':'')."\n";
+                join("\n", $orderJoinSql).
+                "ORDER BY ".join(",", $orderBySql)."\n";
         }
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
@@ -398,10 +422,8 @@ class DataEngine {
         if (!is_array($res)) {
         	$res = array();
         }
-#        if (!$browse) {
-#            $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
-#        }
         $eres = array();
+        // echo "\n---\n"; var_dump($res); echo"\n---\n";
         foreach ($res as $it) {
             if (!$browse) {
                 $gunid = StoredFile::_normalizeGunid($it['gunid']);
