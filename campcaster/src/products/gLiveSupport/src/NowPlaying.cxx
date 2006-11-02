@@ -179,8 +179,10 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
                                " Bold 12'>");
             infoString->append(Glib::Markup::escape_text(*creator));
             infoString->append("</span>");
-            creatorLabel->set_markup(*infoString);
+        } else {
+            infoString->assign("");
         }
+        creatorLabel->set_markup(*infoString);
         
         audioLength = playable->getPlaylength();
         resetRemainsTimeState();
