@@ -430,24 +430,6 @@ ScratchpadWindow :: onEditPlaylist(void)                        throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Add To Playlist menu item selected from the
- *  entry conext menu
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
-{
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    try {
-        gLiveSupport->addToPlaylist(playable->getId());
-    } catch (XmlRpcException &e) {
-        std::cerr << "error in ScratchpadWindow::onAddToPlaylist(): "
-                    << e.what() << std::endl;
-        return;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Event handler for the Schedule Playlist menu item selected from the
  *  entry conext menu
  *----------------------------------------------------------------------------*/
@@ -480,22 +462,9 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
     
     schedulePlaylistWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
                                                             bundle,
-                                                            0, /* no button */
                                                             playlist));
 
     Gtk::Main::run(*schedulePlaylistWindow);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Add To Live Mode menu item selected from the
- *  entry conext menu
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
-{
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    gLiveSupport->addToLiveMode(playable);
 }
 
 
@@ -520,6 +489,36 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Add To Playlist menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    try {
+        gLiveSupport->addToPlaylist(playable->getId());
+    } catch (XmlRpcException &e) {
+        std::cerr << "error in ScratchpadWindow::onAddToPlaylist(): "
+                    << e.what() << std::endl;
+        return;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Add To Live Mode menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    gLiveSupport->addToLiveMode(playable);
 }
 
 

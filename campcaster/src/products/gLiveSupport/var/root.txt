@@ -72,16 +72,14 @@ root:table
         clearListButtonLabel:string { "Clear list" }
         removeButtonLabel:string    { "Remove item(s)" }
 
-        upMenuItem:string               { "Move _Up" }
-        downMenuItem:string             { "Move D_own" }
-        removeMenuItem:string           { "_Remove" }
-        editPlaylistMenuItem:string     { "_Edit" }
-        addToPlaylistMenuItem:string    { "_Add To Playlist" }
-        schedulePlaylistMenuItem:string { "_Schedule" }
         cueMenuItem:string              { "Pre_view" }
-        addToLiveModeMenuItem:string    { "Add To _Live Mode" }
+        addToLiveModeMenuItem:string    { "Add to _Live Mode" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        removeMenuItem:string           { "_Remove" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
-        uploadToHubMenuItem:string      { "Upload to the network hub" }
+        uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
         cannotEditPlaylistMsg:string
                                     { "Could not open playlist for editing." }
@@ -245,15 +243,19 @@ root:table
     {
         windowTitle:string          { "Live Mode" }
 
-        cueMenuItem:string              { "Pre_view" }
-        upMenuItem:string               { "Move _Up" }
-        downMenuItem:string             { "Move D_own" }
-        removeMenuItem:string           { "_Remove" }
         playMenuItem:string             { "_Play" }
+        cueMenuItem:string              { "Pre_view" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        removeMenuItem:string           { "_Remove" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
-        uploadToHubMenuItem:string      { "Upload to the network hub" }
+        uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
         cuePlayerLabel:string       { "Preview" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
     }
 
     optionsWindow:table

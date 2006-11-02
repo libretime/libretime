@@ -64,12 +64,10 @@ using namespace LiveSupport::GLiveSupport;
 SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                 Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 Ptr<ResourceBundle>::Ref    bundle,
-                                Button *                    windowOpenerButton,
                                 Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
           : GuiWindow(gLiveSupport,
-                      bundle, 
-                      windowOpenerButton),
+                      bundle),
             playlist(playlist)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();

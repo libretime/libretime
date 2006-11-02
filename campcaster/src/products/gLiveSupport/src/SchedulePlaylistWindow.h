@@ -159,13 +159,10 @@ class SchedulePlaylistWindow : public GuiWindow
          *                          all the vital info.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
-         *  @param windowOpenerButton   the button which was pressed to open
-         *                              this window.
          *  @param  playlist        the playlist to schedule.
          */
         SchedulePlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
                                Ptr<ResourceBundle>::Ref     bundle,
-                               Button *                     windowOpenerButton,
                                Ptr<Playlist>::Ref           playlist)
                                                                     throw ();
 

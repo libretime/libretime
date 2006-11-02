@@ -377,6 +377,58 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the Edit Playlist menu item selected from the
+ *  entry conext menu.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onEditPlaylist(void)                              throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                                refSelection = treeView->get_selection();
+    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+        if (playlist) {
+            try {
+                gLiveSupport->openPlaylistForEditing(playlist->getId());
+            } catch (XmlRpcException &e) {
+                gLiveSupport->displayMessageWindow(getResourceUstring(
+                                                    "cannotEditPlaylistMsg" ));
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Schedule Playlist menu item selected from the
+ *  entry conext menu.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                                refSelection = treeView->get_selection();
+    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+        if (playlist) {
+            schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
+                            gLiveSupport,
+                            gLiveSupport->getBundle("schedulePlaylistWindow"),
+                            playlist));
+            schedulePlaylistWindow->set_transient_for(*this);
+            Gtk::Main::run(*schedulePlaylistWindow);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Signal handler for "export playlist" in the context menu.
  *----------------------------------------------------------------------------*/
 void
@@ -402,6 +454,30 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the Add To Playlist menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onAddToPlaylist(void)                             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                                refSelection = treeView->get_selection();
+    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        try {
+            gLiveSupport->addToPlaylist(playable->getId());
+        } catch (XmlRpcException &e) {
+            std::cerr << "error in LiveModeWindow::onAddToPlaylist(): "
+                        << e.what() << std::endl;
+            return;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Signal handler for "upload to hub" in the context menu.
  *----------------------------------------------------------------------------*/
 void
@@ -415,20 +491,6 @@ LiveModeWindow :: onUploadToHub(void)                               throw ()
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
         gLiveSupport->uploadToHub(playable);
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler called when the the window gets hidden.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: on_hide(void)                                     throw ()
-{
-    if (exportPlaylistWindow) {
-        exportPlaylistWindow->hide();
-    }
-        
-    GuiWindow::on_hide();
 }
 
 
@@ -467,6 +529,10 @@ LiveModeWindow :: constructAudioClipContextMenu(void)           throw ()
                                   sigc::mem_fun(*cueAudioButtons,
                                         &CuePlayer::onPlayItem)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &LiveModeWindow::onAddToPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("removeMenuItem"),
                                   sigc::mem_fun(*treeView,
                                         &ZebraTreeView::onRemoveMenuOption)));
@@ -504,10 +570,22 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
                                   sigc::mem_fun(*cueAudioButtons,
                                         &CuePlayer::onPlayItem)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &LiveModeWindow::onAddToPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("removeMenuItem"),
                                   sigc::mem_fun(*treeView,
                                         &ZebraTreeView::onRemoveMenuOption)));
         contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("editPlaylistMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onEditPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("schedulePlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &LiveModeWindow::onSchedulePlaylist)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("exportPlaylistMenuItem"),
                                   sigc::mem_fun(*this,
@@ -525,4 +603,21 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
     contextMenu->accelerate(*this);
     return contextMenu;
 }    
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler called when the the window gets hidden.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: on_hide(void)                                     throw ()
+{
+    if (exportPlaylistWindow) {
+        exportPlaylistWindow->hide();
+    }
+    if (schedulePlaylistWindow) {
+        schedulePlaylistWindow->hide();
+    }
+        
+    GuiWindow::on_hide();
+}
 

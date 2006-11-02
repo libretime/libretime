@@ -55,6 +55,7 @@
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
 #include "ExportPlaylistWindow.h"
+#include "SchedulePlaylistWindow.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -84,6 +85,11 @@ class LiveModeWindow : public GuiWindow
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
+
+        /**
+         *  The Schedule Playlist pop-up window.
+         */
+        Ptr<SchedulePlaylistWindow>::Ref    schedulePlaylistWindow;
 
         /**
          *  The cue player widget with play/pause and stop buttons.
@@ -218,12 +224,33 @@ class LiveModeWindow : public GuiWindow
         onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
+         *  Signal handler for the "edit playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onEditPlaylist(void)                                    throw ();
+
+        /**
+         *  Signal handler for the "schedule playlist" menu item selected
+         *  from the entry context menu.
+         */
+        virtual void
+        onSchedulePlaylist(void)                                throw ();
+
+        /**
          *  Signal handler for the "export playlist" menu item selected from
          *  the entry context menu.
          */
         virtual void
         onExportPlaylist(void)                                  throw ();
         
+        /**
+         *  Signal handler for the "add to playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onAddToPlaylist(void)                                   throw ();
+
         /**
          *  Signal handler for the "upload to hub" menu item selected from
          *  the entry context menu.

@@ -293,11 +293,25 @@ class ScratchpadWindow : public GuiWindow,
 
         /**
          *  Signal handler for the "edit playlist" menu item selected from
-         *  the entry context menu.
+         *  the entry context menu.  For playlists only.
          */
         virtual void
         onEditPlaylist(void)                                    throw ();
 
+        /**
+         *  Signal handler for the "schedule playlist" menu item selected
+         *  from the entry context menu.  For playlists only.
+         */
+        virtual void
+        onSchedulePlaylist(void)                                throw ();
+
+        /**
+         *  Signal handler for the "export playlist" menu item selected from
+         *  the entry context menu.  For playlists only.
+         */
+        virtual void
+        onExportPlaylist(void)                                  throw ();
+        
         /**
          *  Signal handler for the "add to playlist" menu item selected from
          *  the entry context menu.
@@ -306,26 +320,12 @@ class ScratchpadWindow : public GuiWindow,
         onAddToPlaylist(void)                                   throw ();
 
         /**
-         *  Signal handler for the "schedule playlist" menu item selected
-         *  from the entry context menu.
-         */
-        virtual void
-        onSchedulePlaylist(void)                                throw ();
-
-        /**
          *  Signal handler for the "add to live mode" menu item selected from
          *  the entry context menu.
          */
         virtual void
         onAddToLiveMode(void)                                   throw ();
 
-        /**
-         *  Signal handler for the "export playlist" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onExportPlaylist(void)                                  throw ();
-        
         /**
          *  Signal handler for the "upload to hub" menu item selected from
          *  the entry context menu.
