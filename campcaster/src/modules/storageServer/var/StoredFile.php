@@ -193,10 +193,11 @@ class StoredFile {
             return $row;
         }
         if (is_null($row)) {
-            return PEAR::raiseError(
+            $r =& PEAR::raiseError(
                 "StoredFile::recall: fileobj not exist ($oid/$gunid)",
                 GBERR_FOBJNEX
             );
+            return $r;
         }
         $gunid = StoredFile::_normalizeGunid($row['gunid']);
         $ac =& new $className($gb, $gunid);
@@ -511,6 +512,9 @@ class StoredFile {
      */
     function setMime($mime)
     {
+        if ( !is_string($mime)){
+            $mime = 'application/octet-stream';
+        }
         $escapedMime = pg_escape_string($mime);
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET mime='$escapedMime', mtime=now()
