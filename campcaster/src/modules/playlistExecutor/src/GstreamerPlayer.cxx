@@ -240,6 +240,31 @@ GstreamerPlayer :: eosEventHandler(GstElement    * element,
 
 
 /*------------------------------------------------------------------------------
+ * NewPad event handler. Links the decoder after decodebin's autoplugging. 
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayer::newpadEventHandler(GstElement*, GstPad* pad, gboolean, gpointer self) throw ()
+{
+    DEBUG_BLOCK
+
+    GstreamerPlayer* const player = (GstreamerPlayer*) self;
+    GstPad* const audiopad = gst_element_get_pad(player->audioconvert, "sink");
+
+    if (GST_PAD_IS_LINKED(audiopad)) {
+        debug() << "audiopad is already linked. Unlinking old pad." << endl;
+        gst_pad_unlink(audiopad, GST_PAD_PEER(audiopad));
+    }
+
+    gst_pad_link(pad, audiopad);
+
+    if (gst_element_get_parent(player->audiosink) == NULL)
+        gst_bin_add(GST_BIN(player->pipeline), player->audiosink);
+
+    gst_bin_sync_children_state(GST_BIN(player->pipeline));
+}
+
+
+/*------------------------------------------------------------------------------
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 void
@@ -270,14 +295,10 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         throw std::invalid_argument("badly formed URL or unsupported protocol");
     }
 
+    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
+
     filesrc    = gst_element_factory_make("filesrc", "file-source");
     gst_element_set(filesrc, "location", filePath.c_str(), NULL);
-
-    decoder = ls_gst_autoplug_plug_source(filesrc, "decoder", sinkCaps);
-
-    if (!decoder) {
-        throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
-    }
 
     // converts between different audio formats (e.g. bitrate) 
     audioconvert    = gst_element_factory_make("audioconvert", NULL);
@@ -285,16 +306,28 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // scale the sampling rate, if necessary
     audioscale      = gst_element_factory_make("audioscale", NULL);
 
-    gst_bin_add_many(GST_BIN(pipeline), filesrc,
-                                        decoder,
-                                        audioconvert,
-                                        audioscale,
-                                        NULL);
-    gst_element_link_many(decoder,
-                          audioconvert,
-                          audioscale,
-                          audiosink,
-                          NULL);
+    // Using our custom autoplugger for SMIL
+    if (isSmil) {
+        debug() << "SMIL file detected. Using custom autoplugger." << endl;
+        decoder = ls_gst_autoplug_plug_source(filesrc, "decoder", sinkCaps);
+        gst_element_link(decoder,audioconvert);
+        if (gst_element_get_parent(audiosink) == NULL)
+            gst_bin_add(GST_BIN(pipeline), audiosink);
+    }
+    // Using GStreamer's decodebin autoplugger for everything else (it's much faster)
+    else {
+        decoder = gst_element_factory_make("decodebin", NULL);
+        gst_element_link(filesrc,decoder);
+        g_signal_connect(decoder, "new-decoded-pad", G_CALLBACK(newpadEventHandler), this);
+    }
+
+    if (!decoder) {
+        throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
+    }
+
+    gst_bin_add_many(GST_BIN(pipeline), filesrc, decoder, audioconvert, audioscale, NULL);
+
+    gst_element_link_many(audioconvert, audioscale, audiosink, NULL);
 
     // connect the eos signal handler
     g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
@@ -305,7 +338,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         // the audio device (as it might be blocked by an other process
         throw std::runtime_error("can't open audio device " + audioDevice);
     }
-    gst_bin_sync_children_state(GST_BIN(pipeline));
 }
 
 
@@ -472,6 +504,10 @@ GstreamerPlayer :: close(void)                       throw (std::logic_error)
     if (filesrc) {
         gst_bin_remove(GST_BIN(pipeline), filesrc);
     }
+    if (audiosink && gst_element_get_parent(audiosink) == GST_OBJECT(pipeline)) {
+        gst_object_ref(GST_OBJECT(audiosink));
+        gst_bin_remove(GST_BIN(pipeline), audiosink);
+    }
 
     filesrc         = 0;
     decoder         = 0;
@@ -518,7 +554,10 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
         if (audioscale) {
             gst_element_unlink(audioscale, audiosink);
         }
-        gst_bin_remove(GST_BIN(pipeline), audiosink);
+        if ( gst_element_get_parent( audiosink ) == NULL )
+            gst_object_unref(GST_OBJECT(audiosink));
+        else
+            gst_bin_remove(GST_BIN(pipeline), audiosink);
         audiosink = 0;
     }
 
@@ -536,8 +575,6 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
     if (audioscale) {
         gst_element_link_filtered(audioscale, audiosink, sinkCaps);
     }
-    gst_bin_add(GST_BIN(pipeline), audiosink);
-    gst_bin_sync_children_state(GST_BIN(pipeline));
 
     return true;
 }

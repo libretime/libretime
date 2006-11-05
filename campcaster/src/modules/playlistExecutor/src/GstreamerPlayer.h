@@ -188,6 +188,16 @@ class GstreamerPlayer : virtual public Configurable,
         eosEventHandler(GstElement    * element,
                         gpointer        self)
                                                                     throw ();
+        /**
+         *  An newpad event handler, that will link the decoder after 
+         *  decodebin's autoplugging.
+         *
+         *  @param element the element emitting the eos signal
+         *  @param self a pointer to the associated GstreamerPlayer object.
+         */
+        static void
+        newpadEventHandler(GstElement*, GstPad*, gboolean, gpointer self)  throw();
+
 
         /**
          *  Send the onStop event to all attached listeners.
@@ -294,6 +304,7 @@ class GstreamerPlayer : virtual public Configurable,
         setAudioDevice(const std::string &deviceName)       
                                                 throw ();
 
+        
         /**
          *  Specify which audio resource to play.
          *  The file may be a playlist, referencing other files, which
