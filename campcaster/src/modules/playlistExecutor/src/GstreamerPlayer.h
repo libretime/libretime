@@ -189,7 +189,7 @@ class GstreamerPlayer : virtual public Configurable,
                         gpointer        self)
                                                                     throw ();
         /**
-         *  An newpad event handler, that will link the decoder after 
+         *  A newpad event handler, that will link the decoder after 
          *  decodebin's autoplugging.
          *
          *  @param element the element emitting the eos signal
