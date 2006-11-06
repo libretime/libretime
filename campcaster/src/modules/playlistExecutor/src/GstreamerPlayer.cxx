@@ -37,7 +37,6 @@
 #include "LiveSupport/Core/Debug.h"
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "GstreamerPlayer.h"
 
 
@@ -306,15 +305,16 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // scale the sampling rate, if necessary
     audioscale      = gst_element_factory_make("audioscale", NULL);
 
-    // Using our custom autoplugger for SMIL
+    // Due to bugs in the minimalaudiosmil element, it does not currently work with decodebin.
+    // Therefore we instantiate it manually if the file has the .smil extension. 
     if (isSmil) {
-        debug() << "SMIL file detected. Using custom autoplugger." << endl;
-        decoder = ls_gst_autoplug_plug_source(filesrc, "decoder", sinkCaps);
-        gst_element_link(decoder,audioconvert);
+        debug() << "SMIL file detected." << endl;
+        decoder = gst_element_factory_make("minimalaudiosmil", NULL);
+        gst_element_link_many(filesrc, decoder, audioconvert, NULL);
         if (gst_element_get_parent(audiosink) == NULL)
             gst_bin_add(GST_BIN(pipeline), audiosink);
     }
-    // Using GStreamer's decodebin autoplugger for everything else (it's much faster)
+    // Using GStreamer's decodebin autoplugger for everything else
     else {
         decoder = gst_element_factory_make("decodebin", NULL);
         gst_element_link(filesrc,decoder);
@@ -386,13 +386,14 @@ Ptr<time_duration>::Ref
 GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 {
     Ptr<time_duration>::Ref   length;
-    gint64                    ns;
+    gint64                    ns = 0;
 
     if (!isOpen()) {
         throw std::logic_error("player not open");
     }
-
-    ns = ls_gst_autoplug_get_position(decoder);
+    
+    GstFormat fmt = GST_FORMAT_TIME;
+    gst_element_query( decoder, GST_QUERY_POSITION, &fmt, &ns );
     
     // this is necessary for boost version < 1.33.0
     gint64      us      = ns / 1000LL;
