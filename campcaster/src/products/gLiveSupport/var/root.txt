@@ -139,6 +139,7 @@ root:table
         fadeInColumnLabel:string    { "Fade in" }
         fadeOutColumnLabel:string   { "Fade out" }
         nameLabel:string            { "Name" }
+        lengthLabel:string          { "Duration:" }
         saveButtonLabel:string      { "Save" }
         closeButtonLabel:string     { "Close" }
         lockFadesCheckButtonLabel:string

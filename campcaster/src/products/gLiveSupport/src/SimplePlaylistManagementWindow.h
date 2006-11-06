@@ -119,50 +119,59 @@ class SimplePlaylistManagementWindow : public GuiWindow
         Gtk::TreeIter               currentItem;
 
         /**
-         *  Signal handler for the title being edited.
+         *  The label for the name entry.
          */
-        void
-        onTitleEdited(void)                                     throw();
+        Gtk::Label                * nameLabel;
 
         /**
-         *  Signal handler for the fade info being edited.
-         *
-         *  @path       the path representing the row in the tree model
-         *  @columnId   the ID of the row which was passed to appendColumn()
-         *  @newText    the new fade value
+         *  The test input entry for the name of the playlist.
          */
-        void
-        onFadeInfoEdited(const Glib::ustring &  path,
-                         int                    columnId,
-                         const Glib::ustring &  newText)        throw();
+        EntryBin                  * nameEntry;
 
         /**
-         *  Signal handler for the playlist being modified outside the window.
+         *  A scrolled window, so that the entry list can be scrolled.
          */
-        void
-        onPlaylistModified(void)                                throw();
+        Gtk::ScrolledWindow       * entriesScrolledWindow;
 
         /**
-         *  Signal handler for the mouse clicked on one of the entries.
-         *  This is used to pop up the right-click context menu.
-         *
-         *  @param event the button event recieved
+         *  The entry tree view, now only showing rows.
          */
-        void
-        onEntryClicked(GdkEventButton     * event)              throw ();
+        ZebraTreeView             * entriesView;
 
         /**
-         *  Signal handler for a key pressed at one of the entries.
-         *  The keys can be customized by the keyboardShortcutContainer
-         *  element in the gLiveSupport configuration file.
-         *  
-         *  The actions handled are: moveItemUp, moveItemDown and removeItem.
-         *
-         *  @param  event the button event received
-         *  @return true if the key press was fully handled, false if not
+         *  The entry tree model, as a GTK reference.
          */
-        bool
-        onKeyPressed(GdkEventKey *          event)              throw ();
+        Glib::RefPtr<Gtk::ListStore>    entriesModel;
+
+        /**
+         *  The label containing the length of the playlist.
+         */
+        Gtk::Label                * lengthValueLabel;
+        /**
+         *  The save button.
+         */
+        Button                    * saveButton;
+
+        /**
+         *  The close button.
+         */
+        Button                    * closeButton;
+
+        /**
+         *  The status bar.
+         */
+        Gtk::Label                * statusBar;
+
+        /**
+         *  The "are you sure you want to exit?" dialog window.
+         */
+        Ptr<DialogWindow>::Ref      dialogWindow;
+
+        /**
+         *  The right-click context menu that comes up when right-clicking
+         *  a playlist element.
+         */
+        Gtk::Menu *                 rightClickMenu;
 
         /**
          *  Find (an iterator pointing to) the currently selected row.
@@ -181,43 +190,6 @@ class SimplePlaylistManagementWindow : public GuiWindow
          */
         void
         selectRow(int   rowNumber)                              throw ();
-
-        /**
-         *  Signal handler for a click on the save button.
-         */
-        void
-        onSaveButtonClicked(void)                               throw ();
-
-        /**
-         *  Signal handler for a click on the close button at the bottom
-         *  right corner.
-         *  This cancels the edited playlist; the normal close button (X)
-         *  at the upper right corner hides the window only.
-         *  If the playlist has been modified, a confirmation message will
-         *  be displayed.
-         */
-        void
-        onBottomCloseButtonClicked(void)                        throw ();
-
-        /**
-         *  Signal handler for the "lock fades" check button toggled.
-         */
-        void
-        onLockFadesCheckButtonClicked(void)                     throw ();
-
-        /**
-         *  Signal handler for the "up" menu item selected from
-         *  the right-click context menu.
-         */
-        void
-        onUpItem(void)                                          throw ();
-
-        /**
-         *  Signal handler for the "down" menu item selected from
-         *  the right-click context menu.
-         */
-        void
-        onDownItem(void)                                        throw ();
 
         /**
          *  Swap two playlist elements in the edited playlist.
@@ -347,55 +319,87 @@ class SimplePlaylistManagementWindow : public GuiWindow
         ModelColumns                modelColumns;
 
         /**
-         *  The label for the name entry.
+         *  Signal handler for the title being edited.
          */
-        Gtk::Label                * nameLabel;
+        void
+        onTitleEdited(void)                                     throw();
 
         /**
-         *  The test input entry for the name of the playlist.
+         *  Signal handler for the fade info being edited.
+         *
+         *  @path       the path representing the row in the tree model
+         *  @columnId   the ID of the row which was passed to appendColumn()
+         *  @newText    the new fade value
          */
-        EntryBin                  * nameEntry;
+        void
+        onFadeInfoEdited(const Glib::ustring &  path,
+                         int                    columnId,
+                         const Glib::ustring &  newText)        throw();
 
         /**
-         *  A scrolled window, so that the entry list can be scrolled.
+         *  Signal handler for the playlist being modified outside the window.
          */
-        Gtk::ScrolledWindow       * entriesScrolledWindow;
+        void
+        onPlaylistModified(void)                                throw();
 
         /**
-         *  The entry tree view, now only showing rows.
+         *  Signal handler for the mouse clicked on one of the entries.
+         *  This is used to pop up the right-click context menu.
+         *
+         *  @param event the button event recieved
          */
-        ZebraTreeView             * entriesView;
+        void
+        onEntryClicked(GdkEventButton     * event)              throw ();
 
         /**
-         *  The entry tree model, as a GTK reference.
+         *  Signal handler for a key pressed at one of the entries.
+         *  The keys can be customized by the keyboardShortcutContainer
+         *  element in the gLiveSupport configuration file.
+         *  
+         *  The actions handled are: moveItemUp, moveItemDown and removeItem.
+         *
+         *  @param  event the button event received
+         *  @return true if the key press was fully handled, false if not
          */
-        Glib::RefPtr<Gtk::ListStore>    entriesModel;
+        bool
+        onKeyPressed(GdkEventKey *          event)              throw ();
 
         /**
-         *  The save button.
+         *  Signal handler for a click on the save button.
          */
-        Button                    * saveButton;
+        void
+        onSaveButtonClicked(void)                               throw ();
 
         /**
-         *  The close button.
+         *  Signal handler for a click on the close button at the bottom
+         *  right corner.
+         *  This cancels the edited playlist; the normal close button (X)
+         *  at the upper right corner hides the window only.
+         *  If the playlist has been modified, a confirmation message will
+         *  be displayed.
          */
-        Button                    * closeButton;
+        void
+        onBottomCloseButtonClicked(void)                        throw ();
 
         /**
-         *  The status bar.
+         *  Signal handler for the "lock fades" check button toggled.
          */
-        Gtk::Label                * statusBar;
+        void
+        onLockFadesCheckButtonClicked(void)                     throw ();
 
         /**
-         *  The "are you sure you want to exit?" dialog window.
+         *  Signal handler for the "up" menu item selected from
+         *  the right-click context menu.
          */
-        Ptr<DialogWindow>::Ref      dialogWindow;
+        void
+        onUpItem(void)                                          throw ();
 
         /**
-         *  The right-click context menu that comes up when right-clicking
-         *  a playlist element.
+         *  Signal handler for the "down" menu item selected from
+         *  the right-click context menu.
          */
-        Gtk::Menu *                 rightClickMenu;
+        void
+        onDownItem(void)                                        throw ();
 
 
     public:

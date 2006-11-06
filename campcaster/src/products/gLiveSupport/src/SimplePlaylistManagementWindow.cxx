@@ -180,7 +180,15 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     lockFadesCheckButton->signal_toggled().connect(sigc::mem_fun(
             *this, 
             &SimplePlaylistManagementWindow::onLockFadesCheckButtonClicked ));
-        
+    
+    // construct the "total time" display
+    Gtk::Label *        lengthTextLabel = Gtk::manage(new Gtk::Label(
+                                        *getResourceUstring("lengthLabel") ));
+    lengthValueLabel = Gtk::manage(new Gtk::Label("00:00:00"));
+    Gtk::HBox *         lengthBox = Gtk::manage(new Gtk::HBox());
+    lengthBox->pack_start(*lengthTextLabel,     Gtk::PACK_SHRINK,  5);
+    lengthBox->pack_start(*lengthValueLabel,    Gtk::PACK_SHRINK,  5);
+    
     // set up the layout
     Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
     
@@ -191,23 +199,23 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                         0.7));  // take up 70% of available room
     nameEntryAlignment->add(*nameEntry);
     nameBox->pack_start(*nameEntryAlignment, Gtk::PACK_EXPAND_WIDGET, 5);
-    mainBox->pack_start(*nameBox, Gtk::PACK_SHRINK, 5);
-
-    mainBox->pack_start(*entriesScrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
     
-    mainBox->pack_start(*lockFadesCheckButton, Gtk::PACK_SHRINK, 5);
-
     Gtk::ButtonBox *    buttonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END, 5));
     buttonBox->pack_start(*saveButton);
     buttonBox->pack_start(*closeButton);
-    mainBox->pack_start(*buttonBox, Gtk::PACK_SHRINK, 0);
-    
+
     Gtk::Alignment *    statusBarAlignment = Gtk::manage(new Gtk::Alignment(
                                         Gtk::ALIGN_LEFT, Gtk::ALIGN_CENTER,
                                         0.0));  // do not expand the label
     statusBarAlignment->add(*statusBar);
-    mainBox->pack_start(*statusBarAlignment, Gtk::PACK_SHRINK, 5);
+
+    mainBox->pack_start(*nameBox,               Gtk::PACK_SHRINK,           5);
+    mainBox->pack_start(*entriesScrolledWindow, Gtk::PACK_EXPAND_WIDGET,    5);
+    mainBox->pack_start(*lengthBox,             Gtk::PACK_SHRINK,           5);
+    mainBox->pack_start(*lockFadesCheckButton,  Gtk::PACK_SHRINK,           5);
+    mainBox->pack_start(*buttonBox,             Gtk::PACK_SHRINK,           0);
+    mainBox->pack_start(*statusBarAlignment,    Gtk::PACK_SHRINK,           5);
 
     add(*mainBox);
 
@@ -399,6 +407,12 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
     
     if (playlist) {
         nameEntry->set_text(*playlist->getTitle());
+        
+        Ptr<const std::string>::Ref
+                lengthStr = TimeConversion::timeDurationToHhMmSsString(
+                                                    playlist->getPlaylength());
+        lengthValueLabel->set_text(*lengthStr);
+        
         entriesModel->clear();
         for (it = playlist->begin(); it != playlist->end(); ++it) {
             Ptr<PlaylistElement>::Ref playlistElement
