@@ -55,6 +55,7 @@
 #include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
 #include "GLiveSupport.h"
+#include "SchedulePlaylistWindow.h"
 #include "ExportPlaylistWindow.h"
 #include "TransportList.h"
 
@@ -137,6 +138,11 @@ class SearchWindow : public GuiWindow
          *  The button for paging in the search results forward.
          */
         Button *                    forwardButton;
+
+        /**
+         *  The Schedule Playlist pop-up window.
+         */
+        Ptr<SchedulePlaylistWindow>::Ref    schedulePlaylistWindow;
 
         /**
          *  The Export Playlist pop-up window.
@@ -384,10 +390,31 @@ class SearchWindow : public GuiWindow
         onAddToScratchpad(void)                                 throw ();
 
         /**
+         *  Signal handler for the "add to playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onAddToPlaylist(void)                                   throw ();
+
+        /**
          *  Add a playable to the live mode.
          */
         void
         onAddToLiveMode(void)                                   throw ();
+
+        /**
+         *  Signal handler for the "edit playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onEditPlaylist(void)                                    throw ();
+
+        /**
+         *  Signal handler for the "schedule playlist" menu item selected
+         *  from the entry context menu.
+         */
+        virtual void
+        onSchedulePlaylist(void)                                throw ();
 
         /**
          *  Signal handler for the "export playlist" menu item selected from

@@ -790,9 +790,10 @@ SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
 void
 SearchWindow :: onAddToScratchpad(void)                         throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                        searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                        refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                        iter         = refSelection->get_selected();
     
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
@@ -811,14 +812,41 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Signal handler for the Add To Playlist menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onAddToPlaylist(void)                           throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                        refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                        iter         = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        try {
+            gLiveSupport->addToPlaylist(playable->getId());
+        } catch (XmlRpcException &e) {
+                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                            "error in SearchWindow::onAddToPlaylist(): "));
+                errorMessage->append(e.what());
+                gLiveSupport->displayMessageWindow(errorMessage);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Add a playable to the live mode.
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onAddToLiveMode(void)                           throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                        searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                        refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                        iter         = refSelection->get_selected();
     
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
@@ -839,15 +867,69 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the Edit Playlist menu item selected from the
+ *  entry conext menu.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onEditPlaylist(void)                            throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                        refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                        iter         = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+        if (playlist) {
+            try {
+                gLiveSupport->openPlaylistForEditing(playlist->getId());
+            } catch (XmlRpcException &e) {
+                gLiveSupport->displayMessageWindow(getResourceUstring(
+                                                    "cannotEditPlaylistMsg" ));
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Schedule Playlist menu item selected from the
+ *  entry conext menu.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onSchedulePlaylist(void)                        throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>
+                        refSelection = searchResultsTreeView->get_selection();
+    Gtk::TreeModel::iterator
+                        iter         = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+        if (playlist) {
+            schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
+                            gLiveSupport,
+                            gLiveSupport->getBundle("schedulePlaylistWindow"),
+                            playlist));
+            schedulePlaylistWindow->set_transient_for(*this);
+            Gtk::Main::run(*schedulePlaylistWindow);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Signal handler for "export playlist" in the context menu.
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onExportPlaylist(void)                          throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection>
-                refSelection = searchResultsTreeView->get_selection();
+                        refSelection = searchResultsTreeView->get_selection();
     Gtk::TreeModel::iterator
-                iter         = refSelection->get_selected();
+                        iter         = refSelection->get_selected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
@@ -878,12 +960,12 @@ void
 SearchWindow :: onUploadToHub(void)                             throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection>
-                refSelection = searchResultsTreeView->get_selection();
+                        refSelection = searchResultsTreeView->get_selection();
     Gtk::TreeModel::iterator
-                iter         = refSelection->get_selected();
+                        iter         = refSelection->get_selected();
 
     if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
             uploadToHub(playable);
         }
@@ -919,12 +1001,12 @@ void
 SearchWindow :: onDownloadFromHub(void)                         throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection>
-                refSelection = searchResultsTreeView->get_selection();
+                        refSelection = searchResultsTreeView->get_selection();
     Gtk::TreeModel::iterator
-                iter         = refSelection->get_selected();
+                        iter         = refSelection->get_selected();
 
     if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
             if (!gLiveSupport->existsPlayable(playable->getId())) {
                 try {
@@ -969,7 +1051,10 @@ SearchWindow :: on_hide(void)                                   throw ()
     if (exportPlaylistWindow) {
         exportPlaylistWindow->hide();
     }
-        
+    if (schedulePlaylistWindow) {
+        schedulePlaylistWindow->hide();
+    }
+    
     GuiWindow::on_hide();
 }
 
@@ -1033,6 +1118,10 @@ SearchWindow :: constructAudioClipContextMenu(void)             throw ()
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToLiveMode)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToScratchpadMenuItem"),
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToScratchpad)));
@@ -1066,10 +1155,22 @@ SearchWindow :: constructPlaylistContextMenu(void)              throw ()
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToLiveMode)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToScratchpadMenuItem"),
                                 sigc::mem_fun(*this,
                                         &SearchWindow::onAddToScratchpad)));
         contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("editPlaylistMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &SearchWindow::onEditPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("schedulePlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onSchedulePlaylist)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("exportPlaylistMenuItem"),
                                 sigc::mem_fun(*this,

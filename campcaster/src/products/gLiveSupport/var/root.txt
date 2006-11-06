@@ -208,8 +208,11 @@ root:table
 
         allStringForBrowse          { "--- all ---" }
 
-        addToScratchpadMenuItem:string  { "_Add To Scratchpad" }
+        addToScratchpadMenuItem:string  { "Add To S_cratchpad" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
         addToLiveModeMenuItem:string    { "Add To _Live Mode" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
         exportPlaylistMenuItem:string   { "E_xport Playlist" }
         uploadToHubMenuItem:string      { "Upload to the network hub" }
         downloadFromHubMenuItem:string  { "Download from the network hub" }

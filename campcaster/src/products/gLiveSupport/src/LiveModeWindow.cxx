@@ -39,7 +39,6 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "SchedulePlaylistWindow.h"
 
 #include "LiveModeWindow.h"
 
