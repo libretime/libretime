@@ -210,16 +210,23 @@ GstreamerPlayer :: detachListener(AudioPlayerEventListener*     eventListener)
 /*------------------------------------------------------------------------------
  *  Send the onStop event to all attached listeners.
  *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: fireOnStopEvent(void)                        throw ()
+gboolean
+GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw ()
 {
-    ListenerVector::iterator    it  = listeners.begin();
-    ListenerVector::iterator    end = listeners.end();
+    DEBUG_BLOCK
+
+    GstreamerPlayer   * player = (GstreamerPlayer*) self;
+
+    ListenerVector::iterator    it  = player->listeners.begin();
+    ListenerVector::iterator    end = player->listeners.end();
 
     while (it != end) {
         (*it)->onStop();
         ++it;
     }
+
+    // false == Don't call this idle function again
+    return false;
 }
 
 
@@ -231,10 +238,15 @@ GstreamerPlayer :: eosEventHandler(GstElement    * element,
                                    gpointer        self)
                                                                 throw ()
 {
+    DEBUG_BLOCK
+
     GstreamerPlayer   * player = (GstreamerPlayer*) self;
 
     gst_element_set_eos(player->pipeline);
-    player->fireOnStopEvent();
+    
+    // Important: We *must* use an idle function call here, so that the signal handler returns 
+    // before fireOnStopEvent() is executed.
+    g_idle_add(fireOnStopEvent, player);
 }
 
 
@@ -470,7 +482,7 @@ GstreamerPlayer :: stop(void)                       throw (std::logic_error)
 void
 GstreamerPlayer :: close(void)                       throw (std::logic_error)
 {
-    DEBUG_FUNC_INFO
+    DEBUG_BLOCK
 
     if (isPlaying()) {
         stop();
