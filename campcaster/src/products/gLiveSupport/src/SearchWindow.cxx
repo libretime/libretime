@@ -74,16 +74,6 @@ const std::string       searchWhereRemoteKey = "searchWhereRemote";
  *----------------------------------------------------------------------------*/
 const int               searchResultsSize = 10;
 
-/*------------------------------------------------------------------------------
- *  The label for the Backward button.
- *----------------------------------------------------------------------------*/
-const Glib::ustring     backwardButtonText = "⇧";
-
-/*------------------------------------------------------------------------------
- *  The label for the Forward button.
- *----------------------------------------------------------------------------*/
-const Glib::ustring     forwardButtonText = "⇩";
-
 }
 
 /* ===============================================  local function prototypes */
@@ -383,21 +373,39 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     resultsWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     resultsWindow->add(*searchResultsTreeView);
     
-    // create the page backward and forward buttons
-    backwardButton = Gtk::manage(wf->createButton(backwardButtonText));
-    forwardButton  = Gtk::manage(wf->createButton(forwardButtonText));
-    
+    // create the paging toolbar
+    try {
+        backwardButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("backwardButtonLabel")));
+        forwardButton  = Gtk::manage(wf->createButton(
+                                *getResourceUstring("forwardButtonLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
     backwardButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &SearchWindow::onBackwardButtonClicked));
     forwardButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &SearchWindow::onForwardButtonClicked));
-    updateBackwardAndForwardButtons();
+    
+    Gtk::Box *  pagingButtonBox = Gtk::manage(new Gtk::HButtonBox(
+                                    Gtk::BUTTONBOX_DEFAULT_STYLE, 5));
+    pagingButtonBox->add(*backwardButton);
+    pagingButtonBox->add(*forwardButton);
+    
+    searchResultsCountLabel = Gtk::manage(new Gtk::Label());
+    
+    Gtk::Box *  pagingToolbar = Gtk::manage(new Gtk::HBox);
+    pagingToolbar->pack_start(*searchResultsCountLabel,
+                                                Gtk::PACK_EXPAND_WIDGET, 5);
+    pagingToolbar->pack_start(*pagingButtonBox, Gtk::PACK_SHRINK,        5);
+    
+    updatePagingToolbar();
 
     // pack everything in a box
     Gtk::Box *      view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*backwardButton, Gtk::PACK_SHRINK,         2);
+        view->pack_start(*pagingToolbar,  Gtk::PACK_SHRINK,         5);
     view->pack_start(*resultsWindow,  Gtk::PACK_EXPAND_WIDGET,  0);
-    view->pack_start(*forwardButton,  Gtk::PACK_SHRINK,         2);
     
     return   view;
 }
@@ -539,7 +547,7 @@ SearchWindow :: displaySearchResults(
 {
     treeModel->clear();
     searchResultsTreeView->set_model(treeModel);
-    updateBackwardAndForwardButtons();
+    updatePagingToolbar();
     
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
@@ -1088,7 +1096,7 @@ SearchWindow :: onSearchWhereChanged(void)                      throw ()
         searchResultsTreeView->set_model(remoteSearchResults);
     }
     
-    updateBackwardAndForwardButtons();
+    updatePagingToolbar();
 }
 
 
@@ -1264,18 +1272,48 @@ SearchWindow :: onForwardButtonClicked(void)                    throw ()
  *  Enable or disable the Backward and Forward buttons.
  *----------------------------------------------------------------------------*/
 void
-SearchWindow :: updateBackwardAndForwardButtons(void)           throw ()
+SearchWindow :: updatePagingToolbar(void)                       throw ()
 {
     Ptr<SearchCriteria>::Ref    criteria    = getSearchCriteria();
     
     if (criteria) {
-        int                     offset      = criteria->getOffset();    
-        int                     count       = getSearchResultsCount();
+        int     offset      = criteria->getOffset();    
+        int     count       = getSearchResultsCount();
+        int     lastNumber  = std::min(offset + getSearchResultsSize(), count);
+        
+        try {
+            if (count > 0) {
+                searchResultsCountLabel->set_text(*formatMessage(
+                                        "searchResultsCountLabel",
+                                        itoa(offset + 1),
+                                        itoa(lastNumber),
+                                        itoa(count) ));
+            } else {
+                searchResultsCountLabel->set_text("");
+            }
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
+        }
         backwardButton->setDisabled(offset == 0);
         forwardButton->setDisabled(offset + getSearchResultsSize() >= count);
     } else {
+        searchResultsCountLabel->set_text("");
         backwardButton->setDisabled(true);
         forwardButton->setDisabled(true);
     }        
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert an integer to a string.
+ *----------------------------------------------------------------------------*/
+Glib::ustring
+SearchWindow :: itoa(int    number)                             throw ()
+{
+    std::ostringstream  stream;
+    stream << number;
+    Glib::ustring       string = stream.str();
+    return string;
 }
 

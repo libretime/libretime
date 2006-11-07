@@ -264,7 +264,7 @@ class Button : public Gtk::Button
          *  @param child the widget that should be displayed inside the button.
          *  @param buttonImages the images of the button
          */
-        Button(Gtk::Widget               * child,
+        Button(Gtk::Widget &               child,
                Ptr<ButtonImages>::Ref      buttonImages)        throw ();
 
         /**

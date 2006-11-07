@@ -200,6 +200,9 @@ root:table
         transportsTab:string        { "Transfers" }
 
         searchButtonLabel:string    { "Search" }
+        backwardButtonLabel:string  { "⇦ Previous" }
+        forwardButtonLabel:string   { "Next ⇨" }
+        searchResultsCountLabel:string  { "{0}-{1} of {2} results" }
 
         typeColumnLabel:string      { "Type" }
         titleColumnLabel:string     { "Title" }

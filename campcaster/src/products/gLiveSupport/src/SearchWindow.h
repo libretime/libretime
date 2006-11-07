@@ -150,6 +150,51 @@ class SearchWindow : public GuiWindow
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
 
         /**
+         *  The tree model, as a GTK reference, for the local search results.
+         */
+        Glib::RefPtr<Gtk::ListStore>    localSearchResults;
+
+        /**
+         *  The tree model, as a GTK reference, for the remote search results.
+         */
+        Glib::RefPtr<Gtk::ListStore>    remoteSearchResults;
+
+        /**
+         *  The tree view showing the search results.
+         */
+        ZebraTreeView *                 searchResultsTreeView;
+
+        /**
+         *  The label showing the number of search results.
+         */
+        Gtk::Label *                    searchResultsCountLabel;
+
+        /**
+         *  The notebook for the various tabs in the window.
+         */
+        ScrolledNotebook *              searchInput;
+
+        /**
+         *  The transport token used when a remote search is pending.
+         */
+        Ptr<const Glib::ustring>::Ref   remoteSearchToken;
+
+        /**
+         *  The pop-up context menu for local audio clips.
+         */
+        Gtk::Menu *                     audioClipContextMenu;
+
+        /**
+         *  The pop-up context menu for local playlists.
+         */
+        Gtk::Menu *                     playlistContextMenu;
+
+        /**
+         *  The pop-up context menu for remote audio clips and playlists.
+         */
+        Gtk::Menu *                     remoteContextMenu;
+
+        /**
          *  Construct the "search where" box.
          *  This contains a combo box, where the user can choose between
          *  local search or hub search.
@@ -229,51 +274,6 @@ class SearchWindow : public GuiWindow
          */
         Gtk::Menu *
         constructRemoteContextMenu(void)                        throw ();
-
-        /**
-         *  Event handler for the simple Search button getting clicked.
-         */
-        void
-        onSimpleSearch(void)                                    throw ();
-
-        /**
-         *  Event handler for the advanced Search button getting clicked.
-         */
-        void
-        onAdvancedSearch(void)                                  throw ();
-
-        /**
-         *  Event handler for changed selection in the Browse view.
-         */
-        void
-        onBrowse(void)                                          throw ();
-
-        /**
-         *  Do the searching (first set of results).
-         *  Sets the offset to 0, and calls onSearch().
-         *
-         *  @param  criteria    the search criteria.
-         */
-        void
-        onInitialSearch(Ptr<SearchCriteria>::Ref    criteria)   throw ();
-
-        /**
-         *  Do the searching (after paging backward or forward).
-         *  Sets the offset to the given value, and calls onSearch().
-         *
-         *  @param  offset  the new offset to use for this search.
-         */
-        void
-        onContinuedSearch(int   offset)                         throw ();
-
-        /**
-         *  Do the searching.
-         *  Calls either localSearch() or remoteSearch().
-         *
-         *  @param  criteria    the search criteria.
-         */
-        void
-        onSearch(Ptr<SearchCriteria>::Ref       criteria)       throw ();
 
         /**
          *  Check the status of the "search where" input box.
@@ -359,103 +359,65 @@ class SearchWindow : public GuiWindow
                                                                 throw ();
 
         /**
-         *  Enable or disable the Backward and Forward buttons.
+         *  Update the paging portion of the search results view.
+         *  Prints the number of results, and enables or disables
+         *  the Backward and Forward buttons.
          */
         void
-        updateBackwardAndForwardButtons(void)                   throw ();
+        updatePagingToolbar(void)                               throw ();
 
         /**
-         *  Signal handler for the mouse clicked on one of the entries.
+         *  Display a (usually error) message in the search results tree view.
          *
-         *  @param event the button event received
+         *  @param  messageKey  the localization key for the message.
+         *  @param  treeModel   the tree model to display the message in.
          */
         void
-        onEntryClicked(GdkEventButton *     event)              throw ();
-
+        displayMessage(const Glib::ustring &          messageKey,
+                       Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ();
+        
         /**
-         *  Signal handler for the user double-clicking, or pressing Enter
-         *  on one of the entries.
+         *  Display an error message which occurred during a search.
          *
-         *  @param event the button event recieved
+         *  @param  error       the error which occurred.
+         *  @param  treeModel   the tree model to display the message in.
          */
         void
-        onDoubleClick(const Gtk::TreeModel::Path &      path,
-                      const Gtk::TreeViewColumn *       column)
+        displayError(const XmlRpcException &        error,
+                     Glib::RefPtr<Gtk::ListStore>   treeModel)
+                                                                throw ();
+        
+        /**
+         *  Display an error message which occurred during a local search.
+         *
+         *  @param  error       the error which occurred.
+         */
+        void
+        displayLocalSearchError(const XmlRpcException &     error)
+                                                                throw ();
+        
+        /**
+         *  Display an error message which occurred during a remote search.
+         *
+         *  @param  error       the error which occurred.
+         */
+        void
+        displayRemoteSearchError(const XmlRpcException &    error)
                                                                 throw ();
 
         /**
-         *  Add a playable to the scratchpad.
-         */
-        void
-        onAddToScratchpad(void)                                 throw ();
-
-        /**
-         *  Signal handler for the "add to playlist" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onAddToPlaylist(void)                                   throw ();
-
-        /**
-         *  Add a playable to the live mode.
-         */
-        void
-        onAddToLiveMode(void)                                   throw ();
-
-        /**
-         *  Signal handler for the "edit playlist" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onEditPlaylist(void)                                    throw ();
-
-        /**
-         *  Signal handler for the "schedule playlist" menu item selected
-         *  from the entry context menu.
-         */
-        virtual void
-        onSchedulePlaylist(void)                                throw ();
-
-        /**
-         *  Signal handler for the "export playlist" menu item selected from
-         *  the entry context menu.
-         */
-        void
-        onExportPlaylist(void)                                  throw ();
-        
-        /**
-         *  Signal handler for "upload to hub" in the context menu.
-         */
-        void
-        onUploadToHub(void)                                     throw ();
-        
-        /**
-         *  Signal handler for "download from hub" in the context menu.
-         */
-        void
-        onDownloadFromHub(void)                                 throw ();
-        
-        /**
-         *  Event handler for a click on the Backward button.
-         */
-        void
-        onBackwardButtonClicked(void)                           throw ();
-
-        /**
-         *  Event handler for a click on the Forward button.
-         */
-        void
-        onForwardButtonClicked(void)                            throw ();
-
-        /**
-         *  Event handler called when the the window gets hidden.
+         *  Convert an integer to a string.
          *
-         *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
-         *  window, if it is still open.
+         *  @param  number      the number to be converted.
+         *  @return the string value of the number (in base 10).
          */
-        virtual void
-        on_hide(void)                                           throw ();
-        
+        static Glib::ustring
+        itoa(int    number)                                     throw ();
+
+
+    protected:
+
         /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
@@ -511,86 +473,6 @@ class SearchWindow : public GuiWindow
         ModelColumns                    modelColumns;
 
         /**
-         *  The tree model, as a GTK reference, for the local search results.
-         */
-        Glib::RefPtr<Gtk::ListStore>    localSearchResults;
-
-        /**
-         *  The tree model, as a GTK reference, for the remote search results.
-         */
-        Glib::RefPtr<Gtk::ListStore>    remoteSearchResults;
-
-        /**
-         *  The tree view showing the search results.
-         */
-        ZebraTreeView *                 searchResultsTreeView;
-
-        /**
-         *  The notebook for the various tabs in the window.
-         */
-        ScrolledNotebook *              searchInput;
-
-        /**
-         *  The transport token used when a remote search is pending.
-         */
-        Ptr<const Glib::ustring>::Ref   remoteSearchToken;
-
-        /**
-         *  The pop-up context menu for local audio clips.
-         */
-        Gtk::Menu *                     audioClipContextMenu;
-
-        /**
-         *  The pop-up context menu for local playlists.
-         */
-        Gtk::Menu *                     playlistContextMenu;
-
-        /**
-         *  The pop-up context menu for remote audio clips and playlists.
-         */
-        Gtk::Menu *                     remoteContextMenu;
-
-        /**
-         *  Display a (usually error) message in the search results tree view.
-         *
-         *  @param  messageKey  the localization key for the message.
-         *  @param  treeModel   the tree model to display the message in.
-         */
-        void
-        displayMessage(const Glib::ustring &          messageKey,
-                       Glib::RefPtr<Gtk::ListStore>   treeModel)
-                                                                throw ();
-        
-        /**
-         *  Display an error message which occurred during a search.
-         *
-         *  @param  error       the error which occurred.
-         *  @param  treeModel   the tree model to display the message in.
-         */
-        void
-        displayError(const XmlRpcException &        error,
-                     Glib::RefPtr<Gtk::ListStore>   treeModel)
-                                                                throw ();
-        
-        /**
-         *  Display an error message which occurred during a local search.
-         *
-         *  @param  error       the error which occurred.
-         */
-        void
-        displayLocalSearchError(const XmlRpcException &     error)
-                                                                throw ();
-        
-        /**
-         *  Display an error message which occurred during a remote search.
-         *
-         *  @param  error       the error which occurred.
-         */
-        void
-        displayRemoteSearchError(const XmlRpcException &    error)
-                                                                throw ();
-
-        /**
          *  Return the number of search results which can be displayed.
          *  As currently implemented, this returns a constant 10.
          *
@@ -600,6 +482,143 @@ class SearchWindow : public GuiWindow
         int
         getSearchResultsSize(void)                              throw ();
 
+        /**
+         *  Event handler for the simple Search button getting clicked.
+         */
+        void
+        onSimpleSearch(void)                                    throw ();
+
+        /**
+         *  Event handler for the advanced Search button getting clicked.
+         */
+        void
+        onAdvancedSearch(void)                                  throw ();
+
+        /**
+         *  Event handler for changed selection in the Browse view.
+         */
+        void
+        onBrowse(void)                                          throw ();
+
+        /**
+         *  Do the searching (first set of results).
+         *  Sets the offset to 0, and calls onSearch().
+         *
+         *  @param  criteria    the search criteria.
+         */
+        void
+        onInitialSearch(Ptr<SearchCriteria>::Ref    criteria)   throw ();
+
+        /**
+         *  Do the searching (after paging backward or forward).
+         *  Sets the offset to the given value, and calls onSearch().
+         *
+         *  @param  offset  the new offset to use for this search.
+         */
+        void
+        onContinuedSearch(int   offset)                         throw ();
+
+        /**
+         *  Do the searching.
+         *  Calls either localSearch() or remoteSearch().
+         *
+         *  @param  criteria    the search criteria.
+         */
+        void
+        onSearch(Ptr<SearchCriteria>::Ref       criteria)       throw ();
+
+        /**
+         *  Signal handler for the mouse clicked on one of the entries.
+         *
+         *  @param event the button event received
+         */
+        void
+        onEntryClicked(GdkEventButton *     event)              throw ();
+
+        /**
+         *  Signal handler for the user double-clicking, or pressing Enter
+         *  on one of the entries.
+         *
+         *  @param event the button event recieved
+         */
+        void
+        onDoubleClick(const Gtk::TreeModel::Path &      path,
+                      const Gtk::TreeViewColumn *       column)
+                                                                throw ();
+
+        /**
+         *  Add a playable to the scratchpad.
+         */
+        void
+        onAddToScratchpad(void)                                 throw ();
+
+        /**
+         *  Signal handler for the "add to playlist" menu item selected from
+         *  the entry context menu.
+         */
+        void
+        onAddToPlaylist(void)                                   throw ();
+
+        /**
+         *  Add a playable to the live mode.
+         */
+        void
+        onAddToLiveMode(void)                                   throw ();
+
+        /**
+         *  Signal handler for the "edit playlist" menu item selected from
+         *  the entry context menu.
+         */
+        void
+        onEditPlaylist(void)                                    throw ();
+
+        /**
+         *  Signal handler for the "schedule playlist" menu item selected
+         *  from the entry context menu.
+         */
+        void
+        onSchedulePlaylist(void)                                throw ();
+
+        /**
+         *  Signal handler for the "export playlist" menu item selected from
+         *  the entry context menu.
+         */
+        void
+        onExportPlaylist(void)                                  throw ();
+        
+        /**
+         *  Signal handler for "upload to hub" in the context menu.
+         */
+        void
+        onUploadToHub(void)                                     throw ();
+        
+        /**
+         *  Signal handler for "download from hub" in the context menu.
+         */
+        void
+        onDownloadFromHub(void)                                 throw ();
+        
+        /**
+         *  Event handler for a click on the Backward button.
+         */
+        void
+        onBackwardButtonClicked(void)                           throw ();
+
+        /**
+         *  Event handler for a click on the Forward button.
+         */
+        void
+        onForwardButtonClicked(void)                            throw ();
+
+        /**
+         *  Event handler called when the the window gets hidden.
+         *
+         *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
+         *  window, if it is still open.
+         */
+        virtual void
+        on_hide(void)                                           throw ();
+        
 
     public:
 

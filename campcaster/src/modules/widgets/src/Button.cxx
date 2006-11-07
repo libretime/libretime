@@ -78,7 +78,7 @@ Button :: Button(const Glib::ustring          & label,
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-Button :: Button(Gtk::Widget                  * child,
+Button :: Button(Gtk::Widget &                  child,
                  Ptr<ButtonImages>::Ref         buttonImages)
                                                                     throw ()
           : useSelected(false),
@@ -88,7 +88,7 @@ Button :: Button(Gtk::Widget                  * child,
 
     state                    = passiveState;
 
-    this->child = Gtk::manage(child);
+    this->child = &child;
     this->child->set_parent(*this);
 }
 

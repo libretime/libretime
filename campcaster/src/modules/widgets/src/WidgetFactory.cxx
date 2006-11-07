@@ -401,7 +401,39 @@ WidgetFactory :: loadImage(const std::string    imageName)
 
 
 /*------------------------------------------------------------------------------
- *  Create a button
+ *  Create a generic button.
+ *----------------------------------------------------------------------------*/
+Button *
+WidgetFactory :: createButton(Gtk::Widget &                 label,
+                              WidgetConstants::ButtonType   type)   throw ()
+{
+    Button *    button = 0;
+    
+    switch (type) {
+        case WidgetConstants::pushButton:
+            button = new Button(label, buttonImages);
+            break;
+
+        case WidgetConstants::radioButton:
+            button = new Button(label, buttonImages);
+            button->setUseSelected(true);
+            break;
+
+        case WidgetConstants::tabButton:
+            button = new Button(label, tabButtonImages);
+            button->setUseSelected(true);
+            break;
+
+        default:
+            break;
+    }
+    
+    return button;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a text button.
  *----------------------------------------------------------------------------*/
 Button *
 WidgetFactory :: createButton(const Glib::ustring &         label,

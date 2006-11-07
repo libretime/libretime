@@ -228,7 +228,22 @@ class WidgetFactory :
                                                        std::logic_error);
 
         /**
-         *  Create and return a button.
+         *  Create and return a generic button.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @param label the label shown inside the button.
+         *  @param type the type of the button to create
+         *  @return a button with the specified label.
+         */
+        Button *
+        createButton(
+            Gtk::Widget &                   label,
+            WidgetConstants::ButtonType     type = WidgetConstants::pushButton)
+                                                                    throw ();
+
+        /**
+         *  Create and return a button with a text label.
          *  It is the reponsibility of the caller to dispose of the created
          *  object properly.
          *
