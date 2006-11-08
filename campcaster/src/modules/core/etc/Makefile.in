@@ -59,7 +59,6 @@ USR_DIR         = ${prefix}
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
-BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 
 GENRB     = @GENRB@
 GENRBOPTS = --destdir ${TMP_DIR} \
@@ -69,6 +68,8 @@ GENRBOPTS = --destdir ${TMP_DIR} \
 
 VPATH    = ${SRC_DIR}
 
+BOOST_CFLAGS=@BOOST_CPPFLAGS@
+BOOST_LIBS=@BOOST_LDFLAGS@
 BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
@@ -103,12 +104,13 @@ export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
+                             ${BOOST_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
-                             -I${BOOST_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
+                     ${BOOST_LIBS} \
 					 ${CURL_LIBS} \
                      ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
@@ -172,8 +174,8 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} \
-                   -l${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lxmlrpc++ -ltar
+TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} ${BOOST_DATE_TIME_LIB} \
+                   -lcppunit -ldl -lxmlrpc++ -ltar
 
 
 #-------------------------------------------------------------------------------

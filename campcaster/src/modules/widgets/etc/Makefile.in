@@ -61,8 +61,6 @@ USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_VAR_DIR     = ${USR_DIR}/var
 
-BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
-
 MODULES_DIR     = ${BASE_DIR}/..
 
 CORE_DIR         = ${MODULES_DIR}/core
@@ -79,6 +77,8 @@ GENRBOPTS = --destdir ${TMP_DIR} \
 
 VPATH    = ${SRC_DIR}
 
+BOOST_CFLAGS=@BOOST_CPPFLAGS@
+BOOST_LIBS=@BOOST_LDFLAGS@
 BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
@@ -111,14 +111,15 @@ export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
+                             ${BOOST_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${ICU_CFLAGS} \
                              ${GTKMM_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
-                             -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
+                     ${BOOST_LIBS} \
                      ${LIBXMLPP_LIBS} \
                      ${ICU_LIBS} \
                      ${GTKMM_LIBS} \
@@ -160,7 +161,7 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_hu.res
 
 TEST_EXE_LIBS = -l${WIDGETS_LIB} -l${CORE_LIB} ${ICU_LIBS} \
-                -l${BOOST_DATE_TIME_LIB} -lxmlrpc++ -lssl
+                ${BOOST_DATE_TIME_LIB} -lxmlrpc++ -lssl
 
 #-------------------------------------------------------------------------------
 #   Targets

@@ -72,6 +72,8 @@ install: all
 	cd ${BOOST_DIR} && \
 	./tools/build/jam_src/bin.linuxx86/bjam "-sTOOLS=gcc" \
                                             --prefix=${INSTALL_DIR} install
+    # this is a hack to make the autoconf script work
+    cd ${INSTALL_DIR}/include && ln -s boost-1_33_1/boost boost
 
 clean:
 	cd ${BOOST_DIR} && \

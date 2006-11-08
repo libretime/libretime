@@ -66,7 +66,6 @@ USR_ETC_DIR     = ${USR_DIR}/etc
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_VAR_DIR     = ${USR_DIR}/var
-BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 
 HOSTNAME       = @HOSTNAME@
 WWW_PORT       = @WWW_PORT@
@@ -167,6 +166,8 @@ WIDGETS_LIB_DIR     = ${WIDGETS_DIR}/lib
 WIDGETS_LIB         = livesupport_widgets
 WIDGETS_LIB_FILE    = ${WIDGETS_LIB_DIR}/lib${WIDGETS_LIB}.a
 
+BOOST_CFLAGS=@BOOST_CPPFLAGS@
+BOOST_LIBS=@BOOST_LDFLAGS@
 BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
@@ -209,12 +210,12 @@ export GST_PLUGIN_PATH=${GST_REAL_LIB_DIR}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
+                             ${BOOST_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${GTKMM_CFLAGS} \
 							 ${GSTREAMER_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
-                             -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_CLIENT_INCLUDE_DIR} \
@@ -224,6 +225,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
+                     ${BOOST_LIBS} \
                      ${ICU_LIBS} \
                      ${LIBXMLPP_LIBS} \
                      ${CURL_LIBS} \
@@ -293,7 +295,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${WIDGETS_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
-                         -l${BOOST_DATE_TIME_LIB} \
+                         ${BOOST_DATE_TIME_LIB} \
                          -lxmlrpc++ -lssl -ltar
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \

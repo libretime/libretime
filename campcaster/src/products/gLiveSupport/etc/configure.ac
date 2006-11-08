@@ -83,12 +83,15 @@ export PKG_CONFIG_PATH
 export PATH=${prefix}/bin:${PATH}
 
 
-AX_BOOST_DATE_TIME()
-if test "$BOOST_DATE_TIME_LIB" = "" ; then
-    BOOST_DATE_TIME_LIB=boost_date_time-gcc
-    AC_SUBST(BOOST_DATE_TIME_LIB)
+AX_BOOST_BASE([1.33.1])
+if test "x${BOOST_CPPFLAGS}" != "x"; then
+    AX_BOOST_DATE_TIME
+    if test "x${BOOST_DATE_TIME_LIB}" = "x"; then
+        AC_MSG_ERROR([Boost date-time library not found])
+    fi
+else
+    AC_MSG_ERROR([Boost library >= 1.33.1 not found])
 fi
-AC_MSG_RESULT([checking BOOST_DATE_TIME_LIB... ${BOOST_DATE_TIME_LIB}])
 
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)

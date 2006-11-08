@@ -288,7 +288,7 @@ dnl-----------------------------------------------------------------------------
 AC_ARG_WITH([check-boost],
             AC_HELP_STRING([--with-check-boost],
                [check for the availability of the boost library on the
-                system, and use it if available (no)]),
+                system, and use it if available (yes)]),
             [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=yes])
 
 AC_MSG_RESULT([checking for boost library on system: ${CHECK_BOOST_LIB}])
@@ -324,7 +324,7 @@ AC_ARG_WITH([check-icu],
             AC_HELP_STRING([--with-check-icu],
                [check for the availability of the icu library on the
                 system, and use it if available (no)]),
-            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=yes])
+            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=no])
 
 AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
 
@@ -347,15 +347,21 @@ dnl-----------------------------------------------------------------------------
 
 AC_SUBST(COMPILE_BOOST)
 
-dnl check for the boost library
-AX_BOOST_DATE_TIME()
-
-if test "$CHECK_BOOST_LIB" = "yes" ; then
-    if test "$BOOST_DATE_TIME_LIB" = "" ; then
-        AC_MSG_RESULT([not found boost library of sufficient version, will compile from our own])
-        COMPILE_BOOST="yes"
-    else
+if test "${CHECK_BOOST_LIB}" = "yes" ; then
+    found_boost_date_time="no"
+    AX_BOOST_BASE([1.33.1])
+    if test "x${BOOST_CPPFLAGS}" != "x"; then
+        AX_BOOST_DATE_TIME
+        if test "x${BOOST_DATE_TIME_LIB}" != "x"; then
+            found_boost_date_time="yes"
+        fi
+    fi
+    if test "${found_boost_date_time}" = "yes"; then
+        AC_MSG_RESULT([using boost date-time library found on the system])
         COMPILE_BOOST="no"
+    else
+        AC_MSG_RESULT([not found boost date-time library of sufficient version, will compile from our own])
+        COMPILE_BOOST="yes"
     fi
 else
     COMPILE_BOOST="yes"

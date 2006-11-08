@@ -55,7 +55,6 @@ prefix = @prefix@
 USR_DIR         = ${prefix}
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
-BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_33_1
 
 MODULES_DIR     = ${BASE_DIR}/..
 
@@ -79,6 +78,8 @@ SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
 
 VPATH    = ${SRC_DIR}
 
+BOOST_CFLAGS=@BOOST_CPPFLAGS@
+BOOST_LIBS=@BOOST_LDFLAGS@
 BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
@@ -113,14 +114,15 @@ export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
+                             ${BOOST_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${LIBTAR_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
-                             -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
+                     ${BOOST_LIBS} \
                      ${LIBXMLPP_LIBS} \
                      ${CURL_LIBS} \
                      ${ICU_LIBS} \
@@ -145,7 +147,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} \
                    -l${CORE_LIB} \
                    -l${AUTHENTICATION_LIB} \
-                   -l${BOOST_DATE_TIME_LIB} \
+                   ${BOOST_DATE_TIME_LIB} \
                    -lcppunit -ldl -lxmlrpc++ -lssl -ltar
 
 
