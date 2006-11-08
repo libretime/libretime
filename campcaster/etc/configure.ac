@@ -323,8 +323,8 @@ dnl-----------------------------------------------------------------------------
 AC_ARG_WITH([check-icu],
             AC_HELP_STRING([--with-check-icu],
                [check for the availability of the icu library on the
-                system, and use it if available (no)]),
-            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=no])
+                system, and use it if available (yes)]),
+            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=yes])
 
 AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
 
