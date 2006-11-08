@@ -407,14 +407,7 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
     GstFormat fmt = GST_FORMAT_TIME;
     gst_element_query( decoder, GST_QUERY_POSITION, &fmt, &ns );
     
-    // this is necessary for boost version < 1.33.0
-    gint64      us      = ns / 1000LL;
-    long        s       = us / 1000000LL;
-    long        frac_s  = us % 1000000LL;
-    length.reset(new time_duration(seconds(s) + microseconds(frac_s)));
-    
-    // if we can be sure that boost >= 1.33.0, then we can write this instead:
-    // length.reset(new time_duration(microseconds(ns / 1000LL)));
+    length.reset(new time_duration(microseconds(ns / 1000LL)));
 
     return length;
 }
