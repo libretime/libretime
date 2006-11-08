@@ -631,7 +631,6 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
     } catch (XmlRpcException &e) {
         displayRemoteSearchError(e);
     }
-std::cerr << "token: " << *remoteSearchToken << std::endl;
     
     remoteSearchCriteria = criteria;
 }
