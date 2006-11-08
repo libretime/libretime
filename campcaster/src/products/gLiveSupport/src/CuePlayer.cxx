@@ -106,7 +106,7 @@ CuePlayer :: ~CuePlayer(void)                                       throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Play menu item selected from the entry conext menu
+ *  Event handler for the Play menu item selected from the entry context menu
  *----------------------------------------------------------------------------*/
 void
 CuePlayer :: onPlayItem(void)                                       throw ()

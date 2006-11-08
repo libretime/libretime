@@ -414,7 +414,7 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref  id)    throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Edit Playlist menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onEditPlaylist(void)                        throw ()
@@ -431,7 +431,7 @@ ScratchpadWindow :: onEditPlaylist(void)                        throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Schedule Playlist menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
@@ -494,7 +494,7 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Add To Playlist menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
@@ -512,7 +512,7 @@ ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Add To Live Mode menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onAddToLiveMode(void)                       throw ()

@@ -377,7 +377,7 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Edit Playlist menu item selected from the
- *  entry conext menu.
+ *  entry context menu.
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: onEditPlaylist(void)                              throw ()
@@ -403,7 +403,7 @@ LiveModeWindow :: onEditPlaylist(void)                              throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Schedule Playlist menu item selected from the
- *  entry conext menu.
+ *  entry context menu.
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
@@ -454,7 +454,7 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Add To Playlist menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: onAddToPlaylist(void)                             throw ()

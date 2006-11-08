@@ -361,7 +361,7 @@ SchedulerWindow :: onEntryClicked (GdkEventButton * event)          throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Delete menu item selected from the entry conext menu
+ *  Event handler for the Delete menu item selected from the entry context menu
  *----------------------------------------------------------------------------*/
 void
 SchedulerWindow :: onDeleteItem(void)                               throw ()

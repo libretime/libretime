@@ -610,6 +610,8 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
                                                                 throw ()
 {
     displayMessage("pleaseWaitMsg", remoteSearchResults);
+    remoteSearchCriteria.reset();
+    updatePagingToolbar();
     
     Ptr<StorageClientInterface>::Ref 
                                 storage   = gLiveSupport->getStorageClient();
@@ -629,6 +631,7 @@ SearchWindow :: remoteSearchOpen(Ptr<SearchCriteria>::Ref   criteria)
     } catch (XmlRpcException &e) {
         displayRemoteSearchError(e);
     }
+std::cerr << "token: " << *remoteSearchToken << std::endl;
     
     remoteSearchCriteria = criteria;
 }
@@ -821,7 +824,7 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
 
 /*------------------------------------------------------------------------------
  *  Signal handler for the Add To Playlist menu item selected from the
- *  entry conext menu
+ *  entry context menu
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onAddToPlaylist(void)                           throw ()
@@ -876,7 +879,7 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Edit Playlist menu item selected from the
- *  entry conext menu.
+ *  entry context menu.
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onEditPlaylist(void)                            throw ()
@@ -903,7 +906,7 @@ SearchWindow :: onEditPlaylist(void)                            throw ()
 
 /*------------------------------------------------------------------------------
  *  Event handler for the Schedule Playlist menu item selected from the
- *  entry conext menu.
+ *  entry context menu.
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onSchedulePlaylist(void)                        throw ()
