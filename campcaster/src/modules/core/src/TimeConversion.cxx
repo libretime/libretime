@@ -205,21 +205,32 @@ TimeConversion :: timeDurationToHhMmSsString(
                                 Ptr<time_duration>::Ref  duration)
                                                                     throw ()
 {
+    int     hours       = duration->hours();
+    int     minutes     = duration->minutes();
+    int     seconds     = duration->seconds();
+
+    if (duration->fractional_seconds() >= 500000) {
+        ++seconds;
+    }
+    if (seconds == 60) {
+        seconds = 0;
+        ++minutes;
+    }
+    if (minutes == 60) {
+        minutes = 0;
+        ++hours;
+    }
+    
     std::stringstream   stringStream;
     stringStream << std::dec
                  << std::setw(2) 
                  << std::setfill('0')
-                 << duration->hours()
+                 << hours
                  << ":" 
                  << std::setw(2) 
                  << std::setfill('0')
-                 << duration->minutes();
-
-    int   seconds = duration->seconds();
-    if (duration->fractional_seconds() >= 500000) {
-        ++seconds;
-    }
-    stringStream << ":"
+                 << minutes
+                 << ":"
                  << std::setw(2) 
                  << std::setfill('0')
                  << seconds;
