@@ -131,6 +131,7 @@ $methods = array(
     'createBackupClose' => 'Create backup of storage (close handle)',
 
     'restoreBackupOpen'  => 'Restore a backup file (open handle)',
+    'restoreBackupClosePut' => 'Restore a backup file (close PUT handle)',
     'restoreBackupCheck' => 'Restore a backup file (check results)',
     'restoreBackupClose' => 'Restore a backup file (close handle)',
 

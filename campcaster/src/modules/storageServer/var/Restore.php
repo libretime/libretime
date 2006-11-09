@@ -119,8 +119,9 @@ class Restore {
             $r['status'] = $stat;
             if ($stat=='fault') {
             	$r['faultString'] = $message;
+            } else {
+            	$r['faultString'] = '';
             }
-            // $r['token'] = $token;
             return $r;
         } else {
             return PEAR::raiseError('Restore::checkRestore: invalid token!');

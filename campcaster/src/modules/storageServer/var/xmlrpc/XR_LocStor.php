@@ -1935,11 +1935,12 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  : string  -  session id </li>
-     *      <li> filename: string  -  backup file</li>
+     *      <li> chsum :  string - md5 checksum of restore file</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
+     *      <li> url : string - writable URL for HTTP PUT</li>
      *      <li> token : string - PUT token</li>
      *  </ul>
      *
@@ -1961,16 +1962,61 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->restoreBackupOpen($r['sessid'], $r['filename']);
+        $res = $this->restoreBackupOpen($r['sessid'], $r['chsum']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array(
-            'token'=>$res['token'],
-        )));
+        unset($res['fname']);
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+
+    /**
+     *  Close writable URL for restore a backup file and start the restore
+     *  process
+     *
+     *  The XML-RPC name of this method is "locstor.restoreBackupClosePut".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  : string  -  session id </li>
+     *      <li> token  :  string  -  PUT token </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with following fields:
+     *  <ul>
+     *      <li> token : string - restore token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_restoreBackupClosePut:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::restoreBackupClosePut
+     */
+    function xr_restoreBackupClosePut($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->restoreBackupClosePut($r['sessid'], $r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_restoreBackupClosePut: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /**
@@ -1981,7 +2027,7 @@ class XR_LocStor extends LocStor{
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
-     *      <li> token  :  string  -  access token </li>
+     *      <li> token  :  string  -  restore token </li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with following fields:
@@ -2022,14 +2068,14 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Close writable URL for restore a backup file and restore the backup file
+     *  Close the restore process
      *
      *  The XML-RPC name of this method is "locstor.restoreBackupClose".
      *
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
-     *      <li> token  :  string  -  access token </li>
+     *      <li> token  :  string  -  restore token </li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with following fields:

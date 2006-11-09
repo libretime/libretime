@@ -1194,26 +1194,54 @@ class LocStor extends BasicStor {
     /* ------------------------------------------------------ restore methods */
 
     /**
-     *  Restore a beckup file (open handle)
+     *  Restore a backup file (open handle)
      *
      *  @param  string $sessid - session id
-     *  @param  string $filename - backup file path
+     *  @param  string $chsum, md5 checksum of imported file
+     * @return array
+     * 		array with:
+     *      url string: writable URL
+     *      fname string: writable local filename
+     *      token string: PUT token
+     */
+    function restoreBackupOpen($sessid, $chsum)
+    {
+        $userid = $r =$this->getSessUserId($sessid);
+        if ($this->dbc->isError($r)) {
+            return $r;
+        }
+        $r = $this->bsOpenPut($chsum, NULL, $userid);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
+        return $r;
+    }
+
+
+    /**
+     *  Restore a backup file (close put handle)
+     *
+     *  @param string $sessid - session id
+     *  @param string $token -  put token
      *  @return string $token - restore token
      */
-    function restoreBackupOpen($sessid, $filename)
-    {
+    function restoreBackupClosePut($sessid, $token) {
+        $arr = $r = $this->bsClosePut($token);
+        if (PEAR::isError($r)) {
+            return $r;
+        }
+        $fname = $arr['fname'];
         require_once 'Restore.php';
         $rs = new Restore($this);
         if (PEAR::isError($rs)) {
             return $rs;
         }
-        return $rs->openRestore($sessid,$filename);
+        return $rs->openRestore($sessid, $fname);
     }
 
-
     /**
-     *  Restore a beckup file (check state)
-     *
+     *  Restore a backup file (check state)
+     *  
      *  @param string $token -  restore token
      *  @return array status - fields:
      * 							token:  string - restore token
