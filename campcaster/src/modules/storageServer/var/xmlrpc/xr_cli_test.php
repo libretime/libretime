@@ -146,13 +146,6 @@ $infos = array(
     "renderPlaylistToRSSClose"   => array('m'=>"locstor.renderPlaylistToRSSClose",
         'p'=>array('token'), 'r'=>array('status')),
 
-    "createBackupOpen"    => array('m'=>"locstor.createBackupOpen",
-        'p'=>array('sessid', 'criteria'), 'r'=>array('token')),
-    "createBackupCheck"   => array('m'=>"locstor.createBackupCheck",
-        'p'=>array('token'), 'r'=>array('status', 'url', 'metafile')),
-    "createBackupClose"   => array('m'=>"locstor.createBackupClose",
-        'p'=>array('token'), 'r'=>array('status')),
-
     "loadPref"      => array('m'=>"locstor.loadPref",
         'p'=>array('sessid', 'key'), 'r'=>'value'),
     "savePref"      => array('m'=>"locstor.savePref",
@@ -185,6 +178,20 @@ $infos = array(
         'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
     "getSearchResults" => array('m'=>"locstor.getSearchResults",
         'p'=>array('trtok')),
+
+    "createBackupOpen" => array('m'=>"locstor.createBackupOpen",
+        'p'=>array('sessid', 'criteria'), 'r'=>array('token')),
+    "createBackupCheck" => array('m'=>"locstor.createBackupCheck",
+#        'p'=>array('token'), 'r'=>array('status', 'url', 'metafile', 'faultString')),
+        'p'=>array('token'), 'r'=>array('status', 'url', 'tmpfile')),
+    "createBackupClose" => array('m'=>"locstor.createBackupClose",
+        'p'=>array('token'), 'r'=>array('status')),
+    "restoreBackupOpen" => array('m'=>"locstor.restoreBackupOpen",
+        'p'=>array('sessid', 'filename'), 'r'=>array('token')),
+    "restoreBackupCheck" => array('m'=>"locstor.restoreBackupCheck",
+        'p'=>array('token'), 'r'=>array('status', 'faultString')),
+    "restoreBackupClose" => array('m'=>"locstor.restoreBackupClose",
+        'p'=>array('token'), 'r'=>array('status')),
 
 /*
     "uploadToArchive"       => array('m'=>"locstor.uploadToArchive",

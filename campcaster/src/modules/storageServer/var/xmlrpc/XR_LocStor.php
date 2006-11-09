@@ -1986,10 +1986,8 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with following fields:
      *  <ul>
-     *      <li> status :  hasharray - fields:
-     *                          token:  string - restore token
-     *                          status: string - working | fault | success
-     *                          faultString: string - description of fault</li>
+     *      <li> status : string - success | working | fault</li>
+     *      <li> faultString: string - description of fault</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -2017,9 +2015,10 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array(
-            'status'=>$res,
-        )));
+#        return new XML_RPC_Response(XML_RPC_encode(array(
+#            'status'=>$res,
+#        )));
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /**
@@ -2063,9 +2062,10 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array(
-            'gunid'=>$res,
-        )));
+#        return new XML_RPC_Response(XML_RPC_encode(array(
+#            'gunid'=>$res,
+#        )));
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /*========================================================== info methods */

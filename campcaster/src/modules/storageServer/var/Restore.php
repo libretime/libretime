@@ -111,6 +111,7 @@ class Restore {
         $this->token = $token;
         $this->setEnviroment();
         if (is_file($this->statusFile)) {
+            $r = array();
             $stat = file_get_contents($this->statusFile);
             if (strpos($stat,'fault|') !== false) {
                 list($stat,$message) = explode('|',$stat);
@@ -119,7 +120,7 @@ class Restore {
             if ($stat=='fault') {
             	$r['faultString'] = $message;
             }
-            $r['token'] = $token;
+            // $r['token'] = $token;
             return $r;
         } else {
             return PEAR::raiseError('Restore::checkRestore: invalid token!');
