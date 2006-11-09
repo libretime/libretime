@@ -731,6 +731,12 @@ const std::string    restoreBackupOpenMethodName
                             = "locstor.restoreBackupOpen";
 
 /*------------------------------------------------------------------------------
+ *  The name of the 'close put' restore backup method on the storage server
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupClosePutMethodName 
+                            = "locstor.restoreBackupClosePut";
+
+/*------------------------------------------------------------------------------
  *  The name of the 'check' restore backup method on the storage server
  *----------------------------------------------------------------------------*/
 const std::string    restoreBackupCheckMethodName 
@@ -751,6 +757,16 @@ const std::string    restoreBackupSessionIdParamName    = "sessid";
  *  The name of the file name parameter in the input structure
  *----------------------------------------------------------------------------*/
 const std::string    restoreBackupFileNameParamName     = "filename";
+
+/*------------------------------------------------------------------------------
+ *  The name of the URL parameter in the input or output structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupUrlParamName          = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the PUT token parameter in the input or output structure
+ *----------------------------------------------------------------------------*/
+const std::string    restoreBackupPutTokenParamName     = "token";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input or output structure
@@ -2516,11 +2532,40 @@ WebStorageClient :: restoreBackupOpen(
     
     checkStruct(restoreBackupOpenMethodName,
                 result,
+                restoreBackupUrlParamName,
+                XmlRpcValue::TypeString);
+    
+    checkStruct(restoreBackupOpenMethodName,
+                result,
+                restoreBackupPutTokenParamName,
+                XmlRpcValue::TypeString);
+    
+    std::string url      = std::string(result[restoreBackupUrlParamName]);
+    std::string putToken = std::string(result[restoreBackupPutTokenParamName]);
+    
+    try {
+        FileTools::copyFileToUrl(*path, url);
+        
+    } catch (std::runtime_error &e) {
+        throw XmlRpcCommunicationException(e.what());
+    }
+    
+    parameters.clear();
+    parameters[restoreBackupSessionIdParamName] 
+            = sessionId->getId();
+    parameters[restoreBackupPutTokenParamName]
+            = putToken;
+    
+    result.clear();
+    execute(restoreBackupClosePutMethodName, parameters, result);
+    
+    checkStruct(restoreBackupClosePutMethodName,
+                result,
                 restoreBackupTokenParamName,
                 XmlRpcValue::TypeString);
     
     Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
-                                    result[createBackupTokenParamName] ));
+                                    result[restoreBackupTokenParamName] ));
     
     return token;
 }
