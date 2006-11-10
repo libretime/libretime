@@ -154,7 +154,7 @@ TimeConversion :: nowString(void)
  *  Sleep for the specified duration.
  *----------------------------------------------------------------------------*/
 void
-TimeConversion :: sleep(Ptr<time_duration>::Ref duration)
+TimeConversion :: sleep(Ptr<const time_duration>::Ref duration)
                                                                     throw ()
 {
     int                 ret;
@@ -179,7 +179,7 @@ TimeConversion :: sleep(Ptr<time_duration>::Ref duration)
  *----------------------------------------------------------------------------*/
 Ptr<std::string>::Ref
 TimeConversion :: timeDurationToSmilString(
-                                Ptr<time_duration>::Ref  duration)
+                                Ptr<const time_duration>::Ref  duration)
                                                                     throw ()
 {
     std::stringstream   stringStream;
@@ -202,38 +202,24 @@ TimeConversion :: timeDurationToSmilString(
  *----------------------------------------------------------------------------*/
 Ptr<std::string>::Ref
 TimeConversion :: timeDurationToHhMmSsString(
-                                Ptr<time_duration>::Ref  duration)
+                                Ptr<const time_duration>::Ref  duration)
                                                                     throw ()
 {
-    int     hours       = duration->hours();
-    int     minutes     = duration->minutes();
-    int     seconds     = duration->seconds();
-
-    if (duration->fractional_seconds() >= 500000) {
-        ++seconds;
-    }
-    if (seconds == 60) {
-        seconds = 0;
-        ++minutes;
-    }
-    if (minutes == 60) {
-        minutes = 0;
-        ++hours;
-    }
-    
+    Ptr<time_duration>::Ref     roundedDuration = roundToNearestSecond(
+                                                                    duration);
     std::stringstream   stringStream;
     stringStream << std::dec
                  << std::setw(2) 
                  << std::setfill('0')
-                 << hours
+                 << roundedDuration->hours()
                  << ":" 
                  << std::setw(2) 
                  << std::setfill('0')
-                 << minutes
+                 << roundedDuration->minutes()
                  << ":"
                  << std::setw(2) 
                  << std::setfill('0')
-                 << seconds;
+                 << roundedDuration->seconds();
 
     Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
     return result;
@@ -245,7 +231,7 @@ TimeConversion :: timeDurationToHhMmSsString(
  *----------------------------------------------------------------------------*/
 Ptr<std::string>::Ref
 TimeConversion :: timeDurationToShortString(
-                                Ptr<time_duration>::Ref  duration)
+                                Ptr<const time_duration>::Ref  duration)
                                                                     throw ()
 {
     std::stringstream   stringStream;
@@ -395,5 +381,34 @@ int
 TimeConversion :: getNumberOfDigitsPrecision(void)                  throw ()
 {
     return numberOfDigitsPrecision;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Round the time duration to the nearest second.
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+TimeConversion :: roundToNearestSecond(Ptr<const time_duration>::Ref  duration)
+                                                                    throw ()
+{
+    int     hours       = duration->hours();
+    int     minutes     = duration->minutes();
+    int     seconds     = duration->seconds();
+
+    if (duration->fractional_seconds() >= 500000) {
+        ++seconds;
+    }
+    if (seconds == 60) {
+        seconds = 0;
+        ++minutes;
+    }
+    if (minutes == 60) {
+        minutes = 0;
+        ++hours;
+    }
+    
+    Ptr<time_duration>::Ref     roundedDuration(new time_duration(
+                                                hours, minutes, seconds, 0));
+    return roundedDuration;
 }
 

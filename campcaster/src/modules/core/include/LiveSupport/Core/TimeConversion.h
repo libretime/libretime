@@ -191,7 +191,7 @@ class TimeConversion
          *  @param duration sleep for this duration.
          */
         static void
-        sleep(Ptr<time_duration>::Ref   duration)               throw ();
+        sleep(Ptr<const time_duration>::Ref   duration)         throw ();
 
         /**
          *  Convert a time_duration to a format used in SMILs.
@@ -201,7 +201,7 @@ class TimeConversion
          *  @param duration the time duration to convert.
          */
         static Ptr<std::string>::Ref
-        timeDurationToSmilString(Ptr<time_duration>::Ref    duration)
+        timeDurationToSmilString(Ptr<const time_duration>::Ref    duration)
                                                                 throw ();
 
         /**
@@ -216,7 +216,7 @@ class TimeConversion
          *  @return the time duration in string format
          */
         static Ptr<std::string>::Ref
-        timeDurationToHhMmSsString(Ptr<time_duration>::Ref  duration)
+        timeDurationToHhMmSsString(Ptr<const time_duration>::Ref  duration)
                                                                 throw ();
 
         /**
@@ -232,7 +232,7 @@ class TimeConversion
          *  @return the time duration in string format
          */
         static Ptr<std::string>::Ref
-        timeDurationToShortString(Ptr<time_duration>::Ref  duration)
+        timeDurationToShortString(Ptr<const time_duration>::Ref  duration)
                                                                 throw ();
 
         /**
@@ -257,10 +257,21 @@ class TimeConversion
         /**
          *  Get the number of digits used for fractional seconds 
          *  in time durations.
-         *  Returns the constant 6, for microsecond precision.
+         *  @return the constant 6, for microsecond precision.
          */
         static int
         getNumberOfDigitsPrecision(void)                        throw ();
+
+        /**
+         *  Round the time duration to the nearest second.
+         *
+         *  @param  duration    the time to be rounded; it will not be
+         *                      modified.
+         *  @return the rounded value.
+         */
+        static Ptr<time_duration>::Ref
+        roundToNearestSecond(Ptr<const time_duration>::Ref  duration)
+                                                                throw ();
 };
 
 

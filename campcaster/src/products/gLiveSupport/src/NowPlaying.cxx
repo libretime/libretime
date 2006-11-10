@@ -184,7 +184,8 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         }
         creatorLabel->set_markup(*infoString);
         
-        audioLength = playable->getPlaylength();
+        audioLength = TimeConversion::roundToNearestSecond(
+                                                playable->getPlaylength());
         resetRemainsTimeState();
         
     } else {
