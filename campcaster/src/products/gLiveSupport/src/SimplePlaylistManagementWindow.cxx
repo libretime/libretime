@@ -503,6 +503,11 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
         return;
     }
     
+    if (newTime->is_negative()) {
+        showContents();
+        return;
+    }
+    
     Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
     Playlist::const_iterator    iter = playlist->begin();
     for (int i=0; i<rowNumber; ++i) {
