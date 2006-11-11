@@ -137,22 +137,22 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The container for the VU meter widget
          */
-        BlueBin                   * vuMeterBin;
+//        BlueBin                   * vuMeterBin;
 
         /**
          *  The VU meter display.
          */
-        Gtk::Widget               * vuMeterWidget;
+//        Gtk::Widget               * vuMeterWidget;
 
         /**
          *  The container for the next playing widget.
          */
-        BlueBin                   * nextPlayingBin;
+//        BlueBin                   * nextPlayingBin;
 
         /**
          *  The 'next playing' display.
          */
-        Gtk::Widget               * nextPlayingWidget;
+//        Gtk::Widget               * nextPlayingWidget;
 
         /**
          *  The user info alignment helper.

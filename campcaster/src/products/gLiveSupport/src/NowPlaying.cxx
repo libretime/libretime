@@ -93,29 +93,31 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     isActive = false;
     isPaused = false;
 
-    titleLabel = Gtk::manage(new Gtk::Label);
-    titleLabel->set_use_markup(true);
+    titleLabel = createFormattedLabel(14);
     titleLabel->set_ellipsize(Pango::ELLIPSIZE_END);
-    titleLabel->set_markup("");
     
-    creatorLabel = Gtk::manage(new Gtk::Label);
-    creatorLabel->set_use_markup(true);
+    creatorLabel = createFormattedLabel(8);
     creatorLabel->set_ellipsize(Pango::ELLIPSIZE_END);
-    creatorLabel->set_markup("");
     
-    Gtk::Label *    elapsedLabel = createFormattedLabel(8);
-    Gtk::Label *    remainsLabel = createFormattedLabel(8);
-    elapsedTime = createFormattedLabel(12);
-    remainsTime = createFormattedLabel(12);
+    playlistLabel = createFormattedLabel(8);
+    playlistLabel->set_ellipsize(Pango::ELLIPSIZE_END);
+    
+    Gtk::Label *    elapsedLabel = createFormattedLabel(7);
+    Gtk::Label *    remainsLabel = createFormattedLabel(7);
+    elapsedTime = createFormattedLabel(16);
+    remainsTime = createFormattedLabel(16);
+    
+    Gtk::HBox *         elapsedTimeHBox = Gtk::manage(new Gtk::HBox);
+    Gtk::VBox *         elapsedTimeVBox = Gtk::manage(new Gtk::VBox);
+    elapsedTimeHBox->pack_start(*elapsedTime,     Gtk::PACK_SHRINK, 5);
+    elapsedTimeVBox->pack_start(*elapsedTimeHBox, Gtk::PACK_SHRINK, 2);
     
     remainsTimeBox = Gtk::manage(new Gtk::EventBox);
     Gtk::HBox *         remainsTimeHBox = Gtk::manage(new Gtk::HBox);
     Gtk::VBox *         remainsTimeVBox = Gtk::manage(new Gtk::VBox);
-    Gtk::HBox *         remainsTimeOuterBox = Gtk::manage(new Gtk::HBox);
-    remainsTimeHBox->pack_start(*remainsTime,     Gtk::PACK_SHRINK, 4);
+    remainsTimeHBox->pack_start(*remainsTime,     Gtk::PACK_SHRINK, 5);
     remainsTimeVBox->pack_start(*remainsTimeHBox, Gtk::PACK_SHRINK, 2);
     remainsTimeBox->add(*remainsTimeVBox);
-    remainsTimeOuterBox->pack_start(*remainsTimeBox, Gtk::PACK_EXPAND_PADDING);
     resetRemainsTimeState();
 
     try {
@@ -126,24 +128,44 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
         std::exit(1);
     }
     
+    Gtk::Box *      titleBox = Gtk::manage(new Gtk::HBox);
+    titleBox->pack_start(*titleLabel, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::Box *      creatorBox = Gtk::manage(new Gtk::HBox);
+    creatorBox->pack_start(*creatorLabel, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::Box *      extraSpace = Gtk::manage(new Gtk::HBox);
+    
+    Gtk::Box *      playlistBox = Gtk::manage(new Gtk::HBox);
+    playlistBox->pack_start(*playlistLabel, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::Box *      elapsedTextBox = Gtk::manage(new Gtk::HBox);
+    elapsedTextBox->pack_start(*elapsedLabel, Gtk::PACK_EXPAND_WIDGET, 5);
+    elapsedTextBox->set_size_request(150);      // set a fixed width
+    
     Gtk::Box *      elapsedBox = Gtk::manage(new Gtk::VBox);
-    elapsedBox->pack_start(*elapsedLabel, Gtk::PACK_EXPAND_WIDGET, 2);
-    elapsedBox->pack_start(*elapsedTime,  Gtk::PACK_EXPAND_WIDGET, 2);
+    elapsedBox->pack_start(*elapsedTextBox,     Gtk::PACK_SHRINK, 0);
+    elapsedBox->pack_start(*elapsedTimeVBox,    Gtk::PACK_SHRINK, 0);
+    
+    Gtk::Box *      remainsTextBox = Gtk::manage(new Gtk::HBox);
+    remainsTextBox->pack_start(*remainsLabel, Gtk::PACK_EXPAND_WIDGET, 5);
     
     Gtk::Box *      remainsBox = Gtk::manage(new Gtk::VBox);
-    remainsBox->pack_start(*remainsLabel,        Gtk::PACK_EXPAND_WIDGET, 2);
-    remainsBox->pack_start(*remainsTimeOuterBox, Gtk::PACK_EXPAND_WIDGET, 0);
+    remainsBox->pack_start(*remainsTextBox, Gtk::PACK_SHRINK, 0);
+    remainsBox->pack_start(*remainsTimeBox, Gtk::PACK_SHRINK, 0);
     
     Gtk::Box *      timeBox = Gtk::manage(new Gtk::HBox);
-    timeBox->pack_start(*elapsedBox, Gtk::PACK_EXPAND_WIDGET, 2);
-    timeBox->pack_start(*remainsBox, Gtk::PACK_EXPAND_WIDGET, 2);
+    timeBox->pack_start(*elapsedBox, Gtk::PACK_SHRINK, 0);
+    timeBox->pack_start(*remainsBox, Gtk::PACK_SHRINK, 0);
     
     Gtk::Box *      textBox = Gtk::manage(new Gtk::VBox);
-    textBox->pack_start(*titleLabel,   Gtk::PACK_EXPAND_PADDING, 2);
-    textBox->pack_start(*creatorLabel, Gtk::PACK_EXPAND_PADDING, 2);
-    textBox->pack_start(*timeBox,      Gtk::PACK_EXPAND_PADDING, 2);
+    textBox->pack_start(*titleBox,      Gtk::PACK_SHRINK, 0);
+    textBox->pack_start(*creatorBox,    Gtk::PACK_SHRINK, 0);
+    textBox->pack_start(*extraSpace,    Gtk::PACK_SHRINK, 2);
+    textBox->pack_start(*timeBox,       Gtk::PACK_SHRINK, 0);
+    textBox->pack_start(*playlistBox,   Gtk::PACK_SHRINK, 0);
     
-    pack_end(*textBox, Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_end(*textBox, Gtk::PACK_EXPAND_WIDGET, 0);
     pack_end(*stopButton, Gtk::PACK_SHRINK, 0);
     pack_end(*playButton, Gtk::PACK_SHRINK, 2);
 }
@@ -163,26 +185,16 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         }
         isActive = true;
         isPaused = false;
-    
-        Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
-    
-        infoString->assign("<span font_desc='Bitstream Vera Sans"
-                           " Bold 14'>");
-        infoString->append(Glib::Markup::escape_text(*playable->getTitle()));
-        infoString->append("</span>");
-        titleLabel->set_markup(*infoString);
+
+        titleLabel->set_text(*playable->getTitle());
 
         Ptr<Glib::ustring>::Ref 
                         creator = playable->getMetadata("dc:creator");
         if (creator) {
-            infoString->assign("<span font_desc='Bitstream Vera Sans"
-                               " Bold 12'>");
-            infoString->append(Glib::Markup::escape_text(*creator));
-            infoString->append("</span>");
+            creatorLabel->set_text(*creator);
         } else {
-            infoString->assign("");
+            creatorLabel->set_text("");
         }
-        creatorLabel->set_markup(*infoString);
         
         audioLength = TimeConversion::roundToNearestSecond(
                                                 playable->getPlaylength());
@@ -195,8 +207,8 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             playButton->show();
             isActive = false;
         }
-        titleLabel->set_markup("");
-        creatorLabel->set_markup("");
+        titleLabel->set_text("");
+        creatorLabel->set_text("");
         elapsedTime->set_text("");
         remainsTime->set_text("");
         resetRemainsTimeState();
@@ -259,7 +271,8 @@ NowPlaying :: onStopButtonClicked(void)                             throw ()
 Gtk::Label *
 NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
 {
-    Gtk::Label *    label = Gtk::manage(new Gtk::Label);
+    Gtk::Label *    label = Gtk::manage(new Gtk::Label("", Gtk::ALIGN_LEFT,
+                                                           Gtk::ALIGN_CENTER));
     
     Pango::FontDescription  fontDescription;
     fontDescription.set_family("Bitstream Vera Sans");
@@ -303,7 +316,7 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
         // just act as if nothing has happened
         return;
     }
-        
+    
     Ptr<time_duration>::Ref     remains(new time_duration(
                                             *audioLength - *elapsed ));
     switch (remainsTimeState) {

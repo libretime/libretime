@@ -127,17 +127,21 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     nowPlayingBin->add(*nowPlayingAlignment);
     nowPlayingBin->set_size_request(-1, 104);
 
+/*  temporarily disabled
     // set up the VU meter widget
     vuMeterWidget = Gtk::manage(new Gtk::Label(""));
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
     vuMeterBin->set_size_request(200, 40);
+*/
     
+/*  temporarily disabled
     // set up the next playing widget
     nextPlayingWidget = Gtk::manage(new Gtk::Label(""));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
     nextPlayingBin->add(*nextPlayingWidget);
     nextPlayingBin->set_size_request(200, 59);
+*/
 
     // create the bottom bar
     bottomBar = Gtk::manage(new Gtk::HBox());
@@ -168,12 +172,12 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*nowPlayingBin,      1, 2, 0, 2,
                     Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK,
                     5, 0);
-    layout->attach(*vuMeterBin,         2, 3, 0, 1,
-                    Gtk::SHRINK, Gtk::SHRINK,
-                    0, 0);
-    layout->attach(*nextPlayingBin,     2, 3, 1, 2,
-                    Gtk::SHRINK, Gtk::SHRINK,
-                    0, 0);
+//    layout->attach(*vuMeterBin,         2, 3, 0, 1,
+//                    Gtk::SHRINK, Gtk::SHRINK,
+//                    0, 0);
+//    layout->attach(*nextPlayingBin,     2, 3, 1, 2,
+//                    Gtk::SHRINK, Gtk::SHRINK,
+//                    0, 0);
     layout->attach(*radioLogoWidget,    3, 4, 0, 2,
                     Gtk::SHRINK, Gtk::SHRINK,
                     5, 0);

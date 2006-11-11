@@ -99,6 +99,12 @@ class NowPlaying : public Gtk::HBox,
         Gtk::Label *            creatorLabel;
 
         /**
+         *  The label holding the playlist containing the audio clip
+         *  which is playing now (if any).
+         */
+        Gtk::Label *            playlistLabel;
+
+        /**
          *  The label holding the elapsed time.
          */
         Gtk::Label *            elapsedTime;
