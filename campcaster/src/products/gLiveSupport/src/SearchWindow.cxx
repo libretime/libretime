@@ -72,7 +72,7 @@ const std::string       searchWhereRemoteKey = "searchWhereRemote";
 /*------------------------------------------------------------------------------
  *  The number of items which can be shown in the search results.
  *----------------------------------------------------------------------------*/
-const int               searchResultsSize = 10;
+const int               searchResultsSize = 25;
 
 }
 
@@ -119,8 +119,8 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     Gtk::Box *          searchResultsView = constructSearchResultsView();
 
     // set the sizes of the two parts of the window
-    searchInput      ->set_size_request(750, 231);
-    searchResultsView->set_size_request(750, 343);
+    searchInput      ->set_size_request(766, 231);
+    searchResultsView->set_size_request(766, 343);
     
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
@@ -404,7 +404,7 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
 
     // pack everything in a box
     Gtk::Box *      view = Gtk::manage(new Gtk::VBox);
-        view->pack_start(*pagingToolbar,  Gtk::PACK_SHRINK,         5);
+    view->pack_start(*pagingToolbar,  Gtk::PACK_SHRINK,         5);
     view->pack_start(*resultsWindow,  Gtk::PACK_EXPAND_WIDGET,  0);
     
     return   view;
