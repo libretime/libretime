@@ -155,8 +155,14 @@ check_exe "odbcinst" || exit 1;
 #-------------------------------------------------------------------------------
 #  Create the ODBC data source and driver
 #-------------------------------------------------------------------------------
-echo "Creating ODBC data source and driver...";
+# check for an existing PostgreSQL ODBC driver, and uninstall if necessary
+odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL_Campcaster\]"`
+if [ "x$odbcinst_res" != "x" ]; then
+    echo "Removing old ODBC PostgreSQL driver...";
+    odbcinst -u -d -n PostgreSQL_Campcaster || exit 1;
+fi
 
+echo "Registering ODBC PostgreSQL driver...";
 # check where the odbc dirvers are for PostgreSQL
 if [ -f /usr/lib/libodbcpsql.so ]; then
     odbcinst_template=$etcdir/odbcinst_template
@@ -169,17 +175,11 @@ else
     echo "nor at /usr/lib/odbc. please install proper ODBC drivers";
     exit 1;
 fi
-odbc_template=$etcdir/odbc_template
-odbc_template_tmp=/tmp/odbc_template.$$
-
-# check for an existing PostgreSQL ODBC driver, and only install if necessary
-odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
-if [ "x$odbcinst_res" == "x" ]; then
-    echo "Registering ODBC PostgreSQL driver...";
-    odbcinst -i -d -v -f $odbcinst_template || exit 1;
-fi
+odbcinst -i -d -f $odbcinst_template || exit 1;
 
 echo "Registering Campcaster ODBC data source...";
+odbc_template=$etcdir/odbc_template
+odbc_template_tmp=/tmp/odbc_template.$$
 cat $odbc_template | sed -e "$replace_sed_string" > $odbc_template_tmp
 odbcinst -i -s -l -f $odbc_template_tmp || exit 1;
 rm -f $odbc_template_tmp

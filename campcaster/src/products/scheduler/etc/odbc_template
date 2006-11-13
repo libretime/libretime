@@ -1,6 +1,6 @@
 [ls_database]
 Description      = the Campcaster database at PostgreSQL
-Driver           = PostgreSQL
+Driver           = PostgreSQL_Campcaster
 Trace            = No
 TraceFile        = /tmp/sql.log
 Database         = ls_database
