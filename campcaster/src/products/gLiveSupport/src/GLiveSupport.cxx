@@ -1593,6 +1593,7 @@ GLiveSupport :: playTestSoundOnCue(void)                            throw ()
         cuePlayer->start();
         Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
         while (cuePlayer->isPlaying()) {
+            runMainLoop();
             TimeConversion::sleep(sleepT);
         }
     } catch (std::runtime_error &e) {
