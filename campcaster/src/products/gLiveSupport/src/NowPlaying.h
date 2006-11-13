@@ -84,9 +84,9 @@ class NowPlaying : public Gtk::HBox,
         bool                    isPaused;
 
         /**
-         *  The length of the item currently playing.
+         *  The item which is currently playing.
          */
-        Ptr<time_duration>::Ref audioLength;
+        Ptr<Playable>::Ref      playable;
 
         /**
          *  The label holding the title of the now playing item.

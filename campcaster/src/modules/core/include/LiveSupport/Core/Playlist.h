@@ -883,6 +883,23 @@ class Playlist : public Configurable,
          */
         virtual bool
         eliminateGaps(void)                      throw ();
+
+        /**
+         *  Find the playlist element at the specified offset.
+         *
+         *  This is used by the Master Panel to display the contents
+         *  of the currently playing Playlist.
+         *  When there are more than one playlist elements at the given
+         *  offset, the one with the greatest relativeOffset is chosen.
+         *  Can return a 0 pointer if there is no playlist element at
+         *  the given offset.
+         *
+         *  @param  offset  the elapsed time relative to the Playlist.
+         *  @return the playlist element at the given offset.
+         */
+        Ptr<PlaylistElement>::Ref
+        findAtOffset(Ptr<const time_duration>::Ref  offset) const
+                                                throw ();
 };
 
 

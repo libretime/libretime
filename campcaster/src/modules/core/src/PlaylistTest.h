@@ -73,6 +73,7 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(addPlayableTest);
     CPPUNIT_TEST(eliminateGapsTest);
     CPPUNIT_TEST(eliminateGapsLastItemTest);
+    CPPUNIT_TEST(findAtOffsetTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -155,6 +156,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         eliminateGapsLastItemTest(void)         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the findAtOffset() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        findAtOffsetTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

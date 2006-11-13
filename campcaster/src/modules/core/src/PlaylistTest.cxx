@@ -481,3 +481,46 @@ PlaylistTest :: eliminateGapsLastItemTest(void)
 
 }   
 
+
+/*------------------------------------------------------------------------------
+ *  Test the findAtOffset() method.
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: findAtOffsetTest(void)          throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref             offset(new time_duration());
+    Ptr<const PlaylistElement>::Ref     playlistElement;
+    
+    *offset = seconds(-1);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(!playlistElement);
+    
+    *offset = seconds(0);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(playlistElement);
+    CPPUNIT_ASSERT(playlistElement->getPlayable()->getId()->getId() == 0x10001);
+    
+    *offset = seconds(11);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(playlistElement);
+    CPPUNIT_ASSERT(playlistElement->getPlayable()->getId()->getId() == 0x10002);
+    
+    *offset = seconds(20);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(playlistElement);
+    CPPUNIT_ASSERT(playlistElement->getPlayable()->getId()->getId() == 0x10002);
+    
+    *offset = microseconds(30123456);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(playlistElement);
+    CPPUNIT_ASSERT(playlistElement->getPlayable()->getId()->getId() == 0x2);
+    
+    *offset = seconds(34);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(!playlistElement);
+    
+    *offset = hours(1);
+    playlistElement     = playlist->findAtOffset(offset);
+    CPPUNIT_ASSERT(!playlistElement);
+}
+

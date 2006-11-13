@@ -183,22 +183,11 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             pack_end(*pauseButton, Gtk::PACK_SHRINK, 2);
             pauseButton->show();
         }
+        this->playable = playable;
         isActive = true;
         isPaused = false;
-
-        titleLabel->set_text(*playable->getTitle());
-
-        Ptr<Glib::ustring>::Ref 
-                        creator = playable->getMetadata("dc:creator");
-        if (creator) {
-            creatorLabel->set_text(*creator);
-        } else {
-            creatorLabel->set_text("");
-        }
-        
-        audioLength = TimeConversion::roundToNearestSecond(
-                                                playable->getPlaylength());
         resetRemainsTimeState();
+        onUpdateTime();
         
     } else {
         if (isActive && !isPaused) {
@@ -211,8 +200,9 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         creatorLabel->set_text("");
         elapsedTime->set_text("");
         remainsTime->set_text("");
+        playlistLabel->set_text("");
         resetRemainsTimeState();
-        audioLength.reset();
+        this->playable.reset();
     }
 }
 
@@ -317,8 +307,11 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
         return;
     }
     
+    Ptr<time_duration>::Ref     totalLength
+                                = TimeConversion::roundToNearestSecond(
+                                                    playable->getPlaylength());
     Ptr<time_duration>::Ref     remains(new time_duration(
-                                            *audioLength - *elapsed ));
+                                                    *totalLength - *elapsed));
     switch (remainsTimeState) {
         case TIME_GREEN :
             if (*remains <= seconds(20)) {
@@ -337,10 +330,56 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
     }
     setRemainsTimeColor(remainsTimeState);
 
+    Ptr<Playable>::Ref          innerPlayable   = playable;
+    Ptr<time_duration>::Ref     innerElapsed    = elapsed;
+    Ptr<time_duration>::Ref     innerRemains    = remains;
+    Glib::ustring               playlistInfo;
+    bool                        isFirst      = true;
+    
+    while (innerPlayable->getType() == Playable::PlaylistType) {
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            playlistInfo += "   >>>   ";
+        }
+        playlistInfo += *innerPlayable->getTitle();
+        playlistInfo += " [";
+        playlistInfo += *TimeConversion::timeDurationToHhMmSsString(
+                                                innerRemains);
+        playlistInfo += "/";
+        playlistInfo += *TimeConversion::timeDurationToHhMmSsString(
+                                                innerPlayable->getPlaylength());
+        playlistInfo += "]";
+        
+        Ptr<PlaylistElement>::Ref   element
+                                    = innerPlayable->getPlaylist()
+                                                   ->findAtOffset(elapsed);
+        if (!element) {
+            break;
+        }
+        innerPlayable = element->getPlayable();
+        *innerElapsed -= *element->getRelativeOffset();
+        *innerRemains = *TimeConversion::roundToNearestSecond(
+                                                innerPlayable->getPlaylength())
+                      - *innerElapsed;
+    }
+
+    playlistLabel->set_text(playlistInfo);
+
+    titleLabel->set_text(*innerPlayable->getTitle());
+
+    Ptr<Glib::ustring>::Ref
+                    creator = innerPlayable->getMetadata("dc:creator");
+    if (creator) {
+        creatorLabel->set_text(*creator);
+    } else {
+        creatorLabel->set_text("");
+    }
+    
     elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                elapsed ));
+                                                innerElapsed ));
     remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                remains ));
+                                                innerRemains ));
 }
 
 

@@ -901,3 +901,33 @@ Playlist :: eliminateGaps(void)                 throw ()
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Find the playlist element at the specified offset.
+ *----------------------------------------------------------------------------*/
+Ptr<PlaylistElement>::Ref
+Playlist :: findAtOffset(Ptr<const time_duration>::Ref  offset) const
+                                                throw ()
+{
+    Ptr<PlaylistElement>::Ref       playlistElement;
+    
+    PlaylistElementListType::const_reverse_iterator     it;
+    PlaylistElementListType::const_reverse_iterator     rend
+                                                        = elementList->rend();
+    for (it = elementList->rbegin(); it != rend; ++it) {
+        time_duration       currentStart    = it->first;
+        if (currentStart <= *offset) {
+            Ptr<PlaylistElement>::Ref
+                            currentElement  = it->second;
+            time_duration   currentEnd      = currentStart
+                                            + *currentElement->getPlayable()
+                                                             ->getPlaylength();
+            if (currentEnd > *offset) {
+                playlistElement = currentElement;
+            }
+        }
+    }
+    
+    return playlistElement;
+}
+
