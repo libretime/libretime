@@ -11,11 +11,11 @@ require_once '../conf.php';
 require_once 'DB.php';
 require_once '../GreenBox.php';
 
-#$rmd =& new RawMediaData('qwerty', '../stor');
+#$rmd = new RawMediaData('qwerty', '../stor');
 #$r = $rmd->insert('./ex1.mp3', 'mp3');
 #$r = $rmd->test('./ex1.mp3', './ex2.wav', '../access/xyz.ext');
 
-$rmd =& new RawMediaData($gunid, '../stor/'.substr($gunid, 0, 3));
+$rmd = new RawMediaData($gunid, '../stor/'.substr($gunid, 0, 3));
 $r = $rmd->analyze();
 
 echo "r=$r  (".gettype($r).")\n";

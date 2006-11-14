@@ -3,103 +3,128 @@ define('BACKUP_EXT', 'tar');
 define('ACCESS_TYPE', 'backup');
 
 /**
- * @author $Author:  $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision:  $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class Backup
 {
     /**
-     *  string - name of logfile
+     * Name of logfile
+     * @var string
      */
-    var $logFile;
+    private $logFile;
 
     /**
-     *  string  -  session id
+     * Session id
+     * @var string
      */
-    var $sessid;
-    /**
-     *  struct - see search criteria
-     */
-    var $criteria;
+    private $sessid;
 
     /**
-     *  string - token
+     * struct - see search criteria
+     * @var array
      */
-    var $token;
-    /**
-     *  string - name of statusfile
-     */
-    var $statusFile;
-    /**
-     *  array - affected gunids
-     */
-    var $ids;
-    /**
-     *  array - array of affected filenames
-     */
-    var $filenames  = array();
+    private $criteria;
 
     /**
-     *  string - base tmp name
+     * @var string
      */
-    var $tmpName;
-    /**
-     *  stirng - name of temporary tarball file
-     */
-    var $tmpFile;
-    /**
-     *  string - name of temporary directory
-     */
-    var $tmpDir;
-    /**
-     *  string - name of temporary playlist directory
-     */
-    var $tmpDirPlaylist;
-    /**
-     *  string - name of temporary audioclip directory
-     */
-    var $tmpDirClip;
-    /**
-     *  string - name of temporary metafile directory
-     */
-    var $tmpDirMeta;
+    private $token;
 
     /**
-     *  string - loglevel
+     * name of statusfile
+     * @var string
      */
-    var $loglevel = 'warn';  # 'debug';
+    private $statusFile;
 
     /**
-     *  greenbox object reference
+     * Affected gunids
+     * @var array
      */
-    var $gb;
+    private $ids;
 
     /**
-     *  Constructor
-     *
-     *  @param gb: greenbox object reference
+     * Array of affected filenames
+     * @var array
      */
-    function Backup (&$gb)
+    private $filenames  = array();
+
+    /**
+     * Base tmp name
+     * @var string
+     */
+    private $tmpName;
+
+    /**
+     * Name of temporary tarball file
+     * @var string
+     */
+    private $tmpFile;
+
+    /**
+     * Name of temporary directory
+     * @var string
+     */
+    private $tmpDir;
+
+    /**
+     * Name of temporary playlist directory
+     * @var string
+     */
+    private $tmpDirPlaylist;
+
+    /**
+     * Name of temporary audioclip directory
+     * @var string
+     */
+    private $tmpDirClip;
+
+    /**
+     * Name of temporary metafile directory
+     * @var string
+     */
+    private $tmpDirMeta;
+
+    /**
+     * @var string
+     */
+    private $loglevel = 'warn';  # 'debug';
+
+    /**
+     * @var GreenBox
+     */
+    private $gb;
+
+    /**
+     * @param GreeenBox $gb
+     */
+    public function __construct(&$gb)
     {
-        $this->gb       =& $gb;
-        $this->token    = null;
-        $this->logFile  = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
+        $this->gb =& $gb;
+        $this->token = null;
+        $this->logFile = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
         $this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
     }
 
 
     /**
-     *  Open a backup
+     * Open a backup
      *      Create a backup file (tarball)
      *
-     *  @param sessid  :  string  -  session id
-     *  @param criteria : struct - see search criteria
-     *  @return hasharray with field:
+     * @param string $sessid
+     * @param array $criteria
+     * 		struct - see search criteria
+     * @return array
+     * 		hasharray with field:
      *      token string: backup token
      */
-    function openBackup($sessid,$criteria='')
+    function openBackup($sessid, $criteria='')
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." openBackup - sessid:$sessid\n");
@@ -108,9 +133,9 @@ class Backup
         $this->criteria = $criteria;
 
         # get ids (and real filenames) which files match with criteria
-        $srch = $r = $this->gb->localSearch($this->criteria,$this->sessid);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $srch = $this->gb->localSearch($this->criteria,$this->sessid);
+        if (PEAR::isError($srch)) {
+        	return $srch;
         }
         $this->setIDs($srch);
         #echo '<XMP>this->ids:'; print_r($this->ids); echo '</XMP>';
@@ -217,7 +242,7 @@ class Backup
     /**
      *  list of unclosed backups
      *
-     *  @param string $stat (optional)
+     *  @param string $stat
      *      if this parameter is not set, then return with all unclosed backups
      *  @return array of hasharray with field:
      *      status : string - susccess | working | fault
@@ -274,9 +299,9 @@ class Backup
             foreach ($this->ids as $i=>$item) {
                 $gunid = $item['gunid'];
                 # get a stored file object of this gunid
-                $sf = $r = StoredFile::recallByGunid($this->gb, $gunid);
-                if (PEAR::isError($r)) {
-                	return $r;
+                $sf = StoredFile::recallByGunid($this->gb, $gunid);
+                if (PEAR::isError($sf)) {
+                	return $sf;
                 }
                 $lid = $this->gb->_idFromGunid($gunid);
                 if (($res = $this->gb->_authorize('read', $lid, $this->sessid)) !== TRUE) {
@@ -425,7 +450,8 @@ class Backup
     /**
      * Add a line to the logfile.
      *
-     * @param string $item - the new row of log file
+     * @param string $item
+     * 		the new row of log file
      */
     function addLogItem($item)
     {
@@ -439,7 +465,8 @@ class Backup
     /**
      * Delete a directory recursive
      *
-     * @param string $dirname - path of dir.
+     * @param string $dirname
+     * 		path of dir.
      */
     function rRmDir($dirname)
     {

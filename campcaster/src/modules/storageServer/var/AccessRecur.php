@@ -5,24 +5,28 @@
  * Handles recursive accessPlaylist/releasePlaylist.
  * Should be 'required_once' from LocStor.php only.
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class AccessRecur {
 
-    function AccessRecur(&$ls, $sessid)
+    public function __construct(&$ls, $sessid)
     {
-        $this->ls       =& $ls;
-        $this->dbc       =& $ls->dbc;
-        $this->sessid   = $sessid;
+        $this->ls =& $ls;
+        $this->dbc =& $ls->dbc;
+        $this->sessid = $sessid;
     }
 
 
     function accessPlaylist(&$ls, $sessid, $plid, $parent='0')
     {
-        $ppa =& new AccessRecur($ls, $sessid);
+        $ppa = new AccessRecur($ls, $sessid);
         $r = $ls->accessPlaylist($sessid, $plid, FALSE, $parent);
         if (PEAR::isError($r)) {
         	return $r;
@@ -49,7 +53,7 @@ class AccessRecur {
 
     function releasePlaylist(&$ls, $sessid, $token)
     {
-        $ppa =& new AccessRecur($ls, $sessid);
+        $ppa = new AccessRecur($ls, $sessid);
         $r = $ppa->dbc->getAll("
             SELECT to_hex(token)as token2, to_hex(gunid)as gunid
             FROM {$ppa->ls->accessTable}
@@ -68,14 +72,14 @@ class AccessRecur {
             $ftype = $r;
             # echo "$ftype/$token2\n";
             switch (strtolower($ftype)) {
-                case"audioclip":
+                case "audioclip":
                     $r = $ppa->ls->releaseRawAudioData($ppa->sessid, $token2);
                     if ($ppa->dbc->isError($r)) {
                     	return $r;
                     }
                     # var_dump($r);
                 break;
-                case"playlist":
+                case "playlist":
                     $r = $ppa->releasePlaylist($ppa->ls, $ppa->sessid, $token2);
                     if ($ppa->dbc->isError($r)) {
                     	return $r;
@@ -98,7 +102,7 @@ class AccessRecur {
         $res = array();
         foreach ($pla['children'] as $ple) {
             switch ($ple['elementname']) {
-                case"playlistElement":
+                case "playlistElement":
                     $r = $this->processPlEl($ple, $parent);
                     if (PEAR::isError($r)) {
                     	return $r;
@@ -127,14 +131,13 @@ class AccessRecur {
     {
         foreach ($ple['children'] as $ac) {
             switch ($ac['elementname']) {
-                case"audioClip":
+                case "audioClip":
                     $r = $this->processAc($ac['attrs']['id'], $parent);
                     if (PEAR::isError($r)) {
                     	return $r;
                     }
                     return $r;
-                break;
-                case"playlist":
+                case "playlist":
 //                    if(empty($ac['children'])){
                         $r = $this->accessPlaylist($this->ls, $this->sessid,
                             $ac['attrs']['id'], $parent);

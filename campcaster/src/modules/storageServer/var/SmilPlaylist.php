@@ -6,10 +6,14 @@ require_once "XmlParser.php";
 /**
  * SmilPlaylist class
  *
- * @author $Author: tomash $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision: 1848 $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class SmilPlaylist {
 
@@ -122,10 +126,14 @@ class SmilPlaylist {
 
 
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class SmilPlaylistBodyElement {
 
@@ -161,10 +169,14 @@ class SmilPlaylistBodyElement {
 
 
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class SmilPlaylistParElement {
 
@@ -190,10 +202,14 @@ class SmilPlaylistParElement {
 
 
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class SmilPlaylistAudioElement {
     function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
@@ -273,10 +289,14 @@ class SmilPlaylistAudioElement {
 
 
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class SmilPlaylistAnimateElement {
 

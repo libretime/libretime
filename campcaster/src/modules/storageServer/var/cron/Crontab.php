@@ -9,6 +9,7 @@ define('CRON_EMPTY',   4);
  * A class that interfaces with the crontab. (cjpa@audiophile.com)
  *
  * This class lets you manipulate the crontab. It lets you add delete update entries easily.
+ *
  * @author $Author: $
  * @version $Revision: $
  * @package Campcaster
@@ -18,7 +19,7 @@ class Crontab
 {
     // {{{ properties
     /**
-     * @var array holds all the different lines.
+     * Holds all the different lines.
      *     Lines are associative arrays with the following fields:
      *       "minute"     : holds the minutes (0-59)
      *       "hour"       : holds the hour (0-23)
@@ -30,20 +31,23 @@ class Crontab
      *           "name" => "value"
      *   or a line can be a comment (string beginning with #)
      *   or it can be a special command (beginning with an @)
+     * @var array
      */
-    var $crontabs;
+    private $crontabs;
 
     /**
-     * @var string the user for whom the crontab will be manipulated
+     * The user for whom the crontab will be manipulated
+     * @var string
      */
-    var $user;
+    private $user;
 
     /**
-     * @var string Lists the type of line of each line in $crontabs.
+     * Lists the type of line of each line in $crontabs.
      *   can be: any of the CRON_* constants.
      *   so $linetype[5] is the type of $crontabs[5].
+     * @var string
      */
-    var $linetypes;
+    private $linetypes;
 
     // }}}
 

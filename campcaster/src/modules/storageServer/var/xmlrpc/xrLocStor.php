@@ -44,7 +44,7 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars)
             return;
             break;
         default:
-            $xr =& new XML_RPC_Response(0, 805,
+            $xr = new XML_RPC_Response(0, 805,
                 htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
             header("Content-type: text/xml");
             echo $xr->serialize();
@@ -58,14 +58,14 @@ if (PHP5) {
 }
 
 /* ============================================================= runable code */
-$r = $dbc =& DB::connect($config['dsn'], TRUE);
+$r = $dbc = DB::connect($config['dsn'], TRUE);
 if (PEAR::isError($r)) {
     trigger_error("DB::connect: ".$r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
 }
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$locStor = &new XR_LocStor($dbc, $config);
+$locStor = new XR_LocStor($dbc, $config);
 
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.

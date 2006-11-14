@@ -2,12 +2,12 @@
 require_once dirname(__FILE__).'/../LocStor.php';
 
 /**
- *  XML-RPC interface for LocStor class
+ * XML-RPC interface for LocStor class
  * @author $Author$
  * @version $Revision$
  *
  */
-class XR_LocStor extends LocStor{
+class XR_LocStor extends LocStor {
 
     /* ----------------------------------------------------------- getVersion */
     /**
@@ -39,9 +39,11 @@ class XR_LocStor extends LocStor{
     function xr_getVersion($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        if (!$ok) {
+        	return $r;
+        }
         $res = $this->getVersion();
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getVersion: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -51,6 +53,7 @@ class XR_LocStor extends LocStor{
             XML_RPC_encode(array('version'=>$res))
         );
     }
+
 
     /* ------------------------------------------------------- authentication */
     /**
@@ -85,9 +88,11 @@ class XR_LocStor extends LocStor{
     function xr_authenticate($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        if (!$ok) {
+        	return $r;
+        }
         $res = $this->authenticate($r['login'], $r['pass']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 804,
                 "xr_authenticate: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -98,6 +103,7 @@ class XR_LocStor extends LocStor{
             XML_RPC_encode(array('authenticate'=>$retval))
         );
     }
+
 
     /**
      *  Checks the login name and password of the user.  If the login is
@@ -2451,7 +2457,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Prefs.php';
-        $pr =& new Prefs($this);
+        $pr = new Prefs($this);
         $res = $pr->loadPref($r['sessid'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2502,7 +2508,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Prefs.php';
-        $pr =& new Prefs($this);
+        $pr = new Prefs($this);
         $res = $pr->savePref($r['sessid'], $r['key'], $r['value']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2552,7 +2558,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Prefs.php';
-        $pr =& new Prefs($this);
+        $pr = new Prefs($this);
         $res = $pr->delPref($r['sessid'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2604,7 +2610,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Prefs.php';
-        $pr =& new Prefs($this);
+        $pr = new Prefs($this);
         $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2660,7 +2666,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Prefs.php';
-        $pr =& new Prefs($this);
+        $pr = new Prefs($this);
         $res = $pr->saveGroupPref($r['sessid'], $r['group'], $r['key'], $r['value']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2719,7 +2725,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->getTransportInfo($r['trtok']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2769,7 +2775,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->turnOnOffTransports($r['onOff']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2819,7 +2825,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->doTransportAction($r['trtok'], $r['action']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2870,7 +2876,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->uploadFile2Hub($r['filePath']); // local files on XML-RPC :(
                         // there should be something as uploadFile2storageServer
         if(PEAR::isError($res)){
@@ -2924,7 +2930,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->getHubInitiatedTransfers();
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -2972,8 +2978,8 @@ class XR_LocStor extends LocStor{
     function xr_startHubInitiatedTransfer($input)    {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        require_once '../Transport.php';
-        $tr =& new Transport($this);
+        require_once('../Transport.php');
+        $tr = new Transport($this);
         $res = $tr->startHubInitiatedTransfer($r['trtok']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -3025,7 +3031,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->upload2Hub($r['gunid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -3075,7 +3081,7 @@ class XR_LocStor extends LocStor{
         list($ok, $par) = $this->_xr_getPars($input);
         if(!$ok) return $par;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $uid = $r = $this->getSessUserId($par['sessid']); // ###
         $res = $tr->downloadFromHub($uid, $par['gunid']);
         if(PEAR::isError($res)){
@@ -3127,7 +3133,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->globalSearch($r['criteria']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -3189,7 +3195,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->getSearchResults($r['trtok']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -3241,7 +3247,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -3291,7 +3297,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once dirname(__FILE__).'/../Transport.php';
-        $tr =& new Transport($this);
+        $tr = new Transport($this);
         $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());

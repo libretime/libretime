@@ -3,10 +3,14 @@
 /**
  * Preference storage class.
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see StoredFile
  */
 /* ================== Prefs ================== */
@@ -18,7 +22,7 @@ class Prefs {
      * @param GreenBox $gb
      * 		GreenBox object reference
      */
-    function Prefs(&$gb)
+    public function __construct(&$gb)
     {
         $this->gb =& $gb;
         $this->dbc =& $gb->dbc;

@@ -49,9 +49,9 @@ if(PEAR::isError($dbc)){
 }
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb =& new GreenBox($dbc, $config, TRUE);
-$tr =& new Transport($gb);
-$pr =& new Prefs($gb);
+$gb = new GreenBox($dbc, $config, TRUE);
+$tr = new Transport($gb);
+$pr = new Prefs($gb);
 
 //------------------------------------------------------------------------------
 // install

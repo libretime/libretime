@@ -217,10 +217,14 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
  * File storage support class
  * Store media files in real filesystem and handle access to them.
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see StoredFile
  */
 class RawMediaData {
@@ -233,7 +237,7 @@ class RawMediaData {
      * @param string $resDir
      * 		resource directory
      */
-    function RawMediaData($gunid, $resDir)
+    public function __construct($gunid, $resDir)
     {
         $this->gunid  = $gunid;
         $this->resDir = $resDir;

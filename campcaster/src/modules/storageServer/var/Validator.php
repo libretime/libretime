@@ -23,24 +23,33 @@ define('VAL_PREDXML', 121);
  *  </ul>
  *  It probably should be replaced by XML schema validation in the future.
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class Validator {
     /**
-     *  string - format type of validated document
+     * Format type of validated document
+     * @var string
      */
-    var $format = NULL;
+    private $format = NULL;
+
     /**
-     *  Preloaded format tree structure
+     * Preloaded format tree structure
+     * @var array
      */
-    var $formTree = NULL;
+    private $formTree = NULL;
+
     /**
-     *  string - gunid of validated file for identification in mass input
+     * Gunid of validated file for identification in mass input
+     * @var string
      */
-    var $gunid = NULL;
+    private $gunid = NULL;
 
 
     /**
@@ -51,11 +60,11 @@ class Validator {
      * @param string $gunid
      * 		gunid of validated file for identification in mass input
      */
-    function Validator($format, $gunid)
+    public function __construct($format, $gunid)
     {
-        $format   = strtolower($format);
-        $this->format   = $format;
-        $this->gunid        = $gunid;
+        $format = strtolower($format);
+        $this->format = $format;
+        $this->gunid = $gunid;
         $formats = array(
             'audioclip' => "audioClipFormat",
             'playlist'  => "playlistFormat",
@@ -69,7 +78,7 @@ class Validator {
         if (!file_exists($formatFile)) {
         	return $this->_err(VAL_FORMAT);
         }
-        require $formatFile;
+        require($formatFile);
         $this->formTree = $$formatName;
     }
 

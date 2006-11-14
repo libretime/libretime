@@ -3,26 +3,60 @@
 define('TR_LEAVE_CLOSED', TRUE);
 
 /**
- *  Auxiliary class for transport records
+ * Auxiliary class for transport records
  *
- * @author $Author: tomash $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision: 1946 $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class TransportRecord
 {
-    var $dbc;
-    var $recalled = FALSE;
-    var $dropped  = FALSE;
+	/**
+	 * @var DB
+	 */
+    public $dbc;
 
     /**
-     *  Constructor
-     *
-     * @param Transport $tr object reference
-     * @return TransportRecord object instance
+     * @var GreenBox
      */
-    function TransportRecord(&$tr)
+    private $gb;
+
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var string
+     */
+    private $transTable;
+
+    /**
+     * @var Transport
+     */
+    private $tr;
+
+    /**
+     * @var boolean
+     */
+    private $recalled = FALSE;
+
+    /**
+     * @var boolean
+     */
+    private $dropped = FALSE;
+
+
+    /**
+     * @param Transport $tr
+     * @return TransportRecord
+     */
+    public function __construct(&$tr)
     {
         $this->tr =& $tr;
         $this->gb =& $tr->gb;
@@ -46,8 +80,8 @@ class TransportRecord
      */
     function create(&$tr, $trtype, $direction='up', $defaults=array())
     {
-        $trec =& new TransportRecord($tr);
-        $trec->trtok = $trtok = $tr->_createTrtok();
+        $trec = new TransportRecord($tr);
+        $trec->trtok = $trtok = $tr->_createTransportToken();
         $trec->row = array_merge($defaults,
             array('trtype'=>$trtype, 'direction'=>$direction));
         $trec->recalled = TRUE;
@@ -60,7 +94,7 @@ class TransportRecord
         $id = $trec->dbc->nextId("{$trec->transTable}_id_seq");
         $names  = "id, trtok, direction, state, trtype, start, ts";
         $values = "$id, '$trtok', '$direction', 'init', '$trtype', now(), now()";
-        foreach ($defaults as $k=>$v) {
+        foreach ($defaults as $k => $v) {
             $sqlVal = $trec->_getSqlVal($k, $v);
             $names .= ", $k";
             $values .= ", $sqlVal";
@@ -71,16 +105,16 @@ class TransportRecord
             VALUES
                 ($values)
         ";
-        $res = $r = $trec->dbc->query($query);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $res = $trec->dbc->query($query);
+        if (PEAR::isError($res)) {
+        	return $res;
         }
         return $trec;
     }
 
 
     /**
-     *  Recall transport record from DB
+     * Recall transport record from DB
      *
      * @param Transport $tr
      * @param string $trtok
@@ -89,9 +123,9 @@ class TransportRecord
      */
     function recall(&$tr, $trtok)
     {
-        $trec =& new TransportRecord($tr);
+        $trec = new TransportRecord($tr);
         $trec->trtok = $trtok;
-        $row = $r = $trec->dbc->getRow("
+        $row = $trec->dbc->getRow("
             SELECT
                 id, trtok, state, trtype, direction,
                 to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
@@ -101,8 +135,8 @@ class TransportRecord
             FROM {$trec->transTable}
             WHERE trtok='$trtok'
         ");
-        if (PEAR::isError($r)) {
-        	return $r;
+        if (PEAR::isError($row)) {
+        	return $row;
         }
         if (is_null($row)) {
             return PEAR::raiseError("TransportRecord::recall:".
@@ -118,15 +152,15 @@ class TransportRecord
 
 
     /**
-     *  Set state of transport record
+     * Set state of transport record
      *
      * @param string $newState
      * @param array $data
      * 		other data fields to set
      * @param string $oldState
-     * 		(opt.) check old state and do nothing if differ
+     * 		check old state and do nothing if differ
      * @param boolean $lock
-     * 		(opt.) check lock and do nothing if differ
+     * 		check lock and do nothing if differ
      * @return boolean success
      */
     function setState($newState, $data=array(), $oldState=NULL, $lock=NULL)
@@ -152,9 +186,9 @@ class TransportRecord
         	return $r;
         }
         // return TRUE;
-        $affRows = $r = $this->dbc->affectedRows();
-        if (PEAR::isError($r)) {
-        	return $r;
+        $affRows = $this->dbc->affectedRows();
+        if (PEAR::isError($affRows)) {
+        	return $affRows;
         }
         return ($affRows == 1);
     }
@@ -201,9 +235,9 @@ class TransportRecord
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $affRows = $r = $this->dbc->affectedRows();
-        if (PEAR::isError($r)) {
-        	return $r;
+        $affRows = $this->dbc->affectedRows();
+        if (PEAR::isError($affRows)) {
+        	return $affRows;
         }
         if ($affRows != 1) {
             $ltxt = ($lock ? 'lock' : 'unlock' );
@@ -333,21 +367,21 @@ class TransportRecord
     function getTitle()
     {
         $defStr = 'unknown';
-        $trtype = $r = $this->getTransportType();   //contains recall check
-        if (PEAR::isError($r)) {
-        	return $r;
+        $trtype = $this->getTransportType();   //contains recall check
+        if (PEAR::isError($trtype)) {
+        	return $trtype;
         }
         switch ($trtype) {
             case "audioclip":
             case "playlist":
             case "playlistPkg":
             case "metadata":
-                $title = $r = $this->gb->bsGetTitle(NULL, $this->row['gunid']);
-                if (PEAR::isError($r)) {
-                    if ($r->getCode()==GBERR_FOBJNEX) {
+                $title = $this->gb->bsGetTitle(NULL, $this->row['gunid']);
+                if (PEAR::isError($title)) {
+                    if ($title->getCode() == GBERR_FOBJNEX) {
                     	$title = $defStr;
                     } else {
-                    	return $r;
+                    	return $title;
                     }
                 }
                 break;

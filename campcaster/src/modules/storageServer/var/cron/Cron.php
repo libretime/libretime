@@ -23,20 +23,24 @@ require_once (dirname(__FILE__).'/../conf.php');
  */
 class Cron {
     /**
-     * @var reference Crontab object reference
+     * @var Crontab
      */
-    var $ct;
+    public $ct;
 
     /**
      * @var array This array created with getCommand() function
-     * @access private
      */
-    var $params;
+    private $params;
 
     /**
      * @var string available values: read | write
      */
-    var $ctAccess = 'read';
+    private $ctAccess = 'read';
+
+    private $lockfile;
+    private $cronfile;
+    private $paramdir;
+    private $cronUserName;
 
     /**
      * Constructor

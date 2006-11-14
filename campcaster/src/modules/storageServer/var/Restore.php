@@ -2,53 +2,61 @@
 define('ACCESS_TYPE', 'restore');
 
 /**
- * @author  $Author:  $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision:  $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class Restore {
     /**
-     *  string - name of logfile
+     * Name of logfile
+     * @var string
      */
-    var $logFile;
+    private $logFile;
 
     /**
-     *  string  -  session id
+     * session id
+     * @var string
      */
-    var $sessid;
+    private $sessid;
 
     /**
-     *  string - token
+     * @var string
      */
-    var $token;
-    /**
-     *  string - name of statusfile
-     */
-    var $statusFile;
-     /**
-     *  string - name of temporary directory, to here extract the backup tarball
-     */
-    var $tmpDir;
+    private $token;
 
     /**
-     *  string - loglevel
+     * Name of statusfile
+     * @var string
      */
-    var $loglevel = 'warn';
-    #var $loglevel = 'debug';
+    private $statusFile;
 
     /**
-     *  greenbox object reference
+     * Name of temporary directory, to here extract the backup tarball
+     * @var string
      */
-    var $gb;
+    private $tmpDir;
 
     /**
-     * Constructor
-     *
+     * @var string
+     */
+    private $loglevel = 'warn';
+    #private $loglevel = 'debug';
+
+    /**
+     * @var GreenBox
+     */
+    private $gb;
+
+    /**
      * @param GreenBox $gb
      * 		greenbox object reference
      */
-    function Restore (&$gb) {
+    public function __construct(&$gb) {
         $this->gb =& $gb;
         $this->token = null;
         $this->logFile = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';

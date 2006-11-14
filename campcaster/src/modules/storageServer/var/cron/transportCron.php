@@ -9,8 +9,8 @@ $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$gb =& new LocStor($dbc, $config);
-$tr =& new Transport($gb);
+$gb = new LocStor($dbc, $config);
+$tr = new Transport($gb);
 
 $r = $tr->cronMain();
 if(!$r) exit(1);

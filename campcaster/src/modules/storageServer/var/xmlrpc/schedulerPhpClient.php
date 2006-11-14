@@ -5,9 +5,9 @@
  */
 
 /* ================================================================= includes */
-include_once dirname(__FILE__)."/../conf.php";
-require_once 'DB.php';
-include_once "XML/RPC.php";
+include_once(dirname(__FILE__)."/../conf.php");
+require_once('DB.php');
+include_once("XML/RPC.php");
 
 /* ================================================== method definition array */
 /**
@@ -333,42 +333,54 @@ $mdefs = array(
 
 /* ======================================================== class definitions */
 
-class SchedulerPhpClient{
+class SchedulerPhpClient {
     /**
-     *  Databases object reference
+     * Databases object reference
+     * @var DB
      */
-    var $dbc = NULL;
+    public $dbc = NULL;
+
     /**
-     *  Array with methods description
+     * Array with methods description
+     * @var array
      */
-    var $mdefs = array();
+    private $mdefs = array();
+
     /**
-     *  Confiduration array from ../conf.php
+     * Confiduration array from ../conf.php
+     * @var array
      */
-    var $config = array();
+    public $config = array();
+
     /**
-     *  XMLRPC client object reference
+     * XMLRPC client object reference
      */
-    var $client = NULL;
+    private $client = NULL;
+
     /**
      *  Verbosity flag
      */
-    var $verbose = FALSE;
+    private $verbose = FALSE;
+
     /**
      *  XMLRPC debug flag
      */
-    var $debug = 0;
+    private $debug = 0;
+
     /**
-     *  Constructor - pelase DON'T CALL IT, use factory method instead
+     * Constructor - please DON'T CALL IT, use factory method instead
      *
-     *  @param dbc object, database object reference
-     *  @param mdefs array, hash array with methods description
-     *  @param config array, hash array with configuration
-     *  @param debug int, XMLRPC debug flag
-     *  @param verbose boolean, verbosity flag
-     *  @return this
+     * @param DB $dbc
+     * @param array $mdefs
+     * 		hash array with methods description
+     * @param array $config
+     * 		hash array with configuration
+     * @param int $debug
+     * 		XMLRPC debug flag
+     * @param boolean $verbose
+     * 		verbosity flag
      */
-    function SchedulerPhpClient(
+    public function __construct(
         &$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
     {
         $this->dbc = $dbc;
@@ -382,32 +394,40 @@ class SchedulerPhpClient{
           "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
           "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
         #$serverPath = "http://localhost:80/campcasterStorageServerCVS/xmlrpc/xrLocStor.php";
-        if($this->verbose) echo "serverPath: $serverPath\n";
+        if ($this->verbose) {
+        	echo "serverPath: $serverPath\n";
+        }
         $url = parse_url($serverPath);
         $this->client = new XML_RPC_Client($url['path'], $url['host'], $url['port']);
     }
 
+
     /**
-     *  Factory, create object instance
+     * Factory, create object instance
      *
-     *  In fact it doesn't create instance of SchedulerPhpClient, but
-     *  dynamically extend this class with set of methods based on $mdefs array
-     *  (using eval function) and instantiate resulting class
-     *  SchedulerPhpClientCore instead.
-     *  Each new method in this subclass accepts parameters according to $mdefs
-     *  array, call wrapper callMethod(methodname, parameters) and return its
-     *  result.
+     * In fact it doesn't create instance of SchedulerPhpClient, but
+     * dynamically extend this class with set of methods based on $mdefs array
+     * (using eval function) and instantiate resulting class
+     * SchedulerPhpClientCore instead.
+     * Each new method in this subclass accepts parameters according to $mdefs
+     * array, call wrapper callMethod(methodname, parameters) and return its
+     * result.
      *
-     *  @param dbc object, database object reference
-     *  @param mdefs array, hash array with methods description
-     *  @param config array, hash array with configuration
-     *  @param debug int, XMLRPC debug flag
-     *  @param verbose boolean, verbosity flag
-     *  @return object, created object instance
+     * @param DB $dbc
+     * @param array $mdefs
+     * 		hash array with methods description
+     * @param array $config
+     * 		hash array with configuration
+     * @param int $debug
+     * 		XMLRPC debug flag
+     * @param boolean $verbose
+     * 		verbosity flag
+     * @return SchedulerPhpClientCore
      */
-    function &factory(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE){
+    function &factory(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
+    {
         $f = '';
-        foreach($mdefs as $fn=>$farr){
+        foreach ($mdefs as $fn => $farr) {
             $f .=
                 '    function '.$fn.'(){'."\n".
                 '        $pars = func_get_args();'."\n".
@@ -420,32 +440,38 @@ class SchedulerPhpClient{
             "$f\n".
             "}\n";
 #        echo $e;
-        if(FALSE === eval($e)) return $dbc->raiseError("Eval failed");
-        $spc =& new SchedulerPhpClientCore(
+        if (FALSE === eval($e)) {
+        	return $dbc->raiseError("Eval failed");
+        }
+        $spc = new SchedulerPhpClientCore(
             $dbc, $mdefs, $config, $debug, $verbose);
         return $spc;
     }
+
 
     /**
      *  XMLRPC methods wrapper
      *  Encode XMLRPC request message, send it, receive and decode response.
      *
-     *  @param method string, method name
-     *  @param gettedPars array, returned by func_get_args() in called method
-     *  @return array, PHP hash with response
+     *  @param string $method
+     * 		method name
+     *  @param array $gettedPars
+     * 		returned by func_get_args() in called method
+     *  @return array
+     * 		PHP hash with response
      */
     function callMethod($method, $gettedPars)
     {
         $parr = array();
         $XML_RPC_val = new XML_RPC_Value;
-        foreach($this->mdefs[$method]['p'] as $i=>$p){
+        foreach ($this->mdefs[$method]['p'] as $i => $p) {
             $parr[$p] = new XML_RPC_Value;
             $parr[$p]->addScalar($gettedPars[$i], $this->mdefs[$method]['t'][$i]);
         }
         $XML_RPC_val->addStruct($parr);
         $fullmethod = $this->mdefs[$method]['m'];
         $msg = new XML_RPC_Message($fullmethod, array($XML_RPC_val));
-        if($this->verbose){
+        if ($this->verbose) {
             echo "parr:\n";
             var_dump($parr);
             echo "message:\n";
@@ -453,14 +479,14 @@ class SchedulerPhpClient{
         }
         $this->client->setDebug($this->debug);
         $res = $this->client->send($msg);
-        if($res->faultCode() > 0) {
+        if ($res->faultCode() > 0) {
             return PEAR::raiseError(
                 "SchedulerPhpClient::$method:".$res->faultString()." ".
                 $res->faultCode()."\n", $res->faultCode(),
                 PEAR_ERROR_RETURN
             );
         }
-        if($this->verbose){
+        if ($this->verbose) {
             echo "result:\n";
             echo $res->serialize();
         }
@@ -469,7 +495,7 @@ class SchedulerPhpClient{
         return $resp;
     }
 
-}
+} // class SchedulerPhpClient
 
 /* ======================================================== class definitions */
 
@@ -485,8 +511,8 @@ $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 
 // scheduler client instantiation:
-$spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config);
-#$spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config, 0, TRUE);
+$spc = SchedulerPhpClient::factory($dbc, $mdefs, $config);
+#$spc = SchedulerPhpClient::factory($dbc, $mdefs, $config, 0, TRUE);
 if(PEAR::isError($spc)){ echo $spc->getMessage."\n"; exit; }
 
 // call of chosen function by name according to key values in $mdefs array:

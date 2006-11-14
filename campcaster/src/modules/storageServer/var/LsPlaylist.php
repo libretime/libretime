@@ -10,10 +10,14 @@ define('PL_URL_RELPATH', '../playlist/');
  *
  * Internal playlist format helper.
  *
- * @author $Author: tomash $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision: 1848 $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @todo Rename this class
  */
 class LsPlaylist extends Playlist
@@ -150,8 +154,13 @@ class LsPlaylist extends Playlist
 
 /**
  * Several auxiliary classes follows
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @todo Rename this class PlaylistTag
  */
 class LsPlaylistTag
@@ -258,8 +267,13 @@ class LsPlaylistTag
 
 
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @todo Rename this class "PlaylistElement"
  */
 class LsPlaylistElement {
@@ -438,8 +452,13 @@ class LsPlaylistElement {
 
 
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @todo Rename this class to PlaylistAudioClip (notice the caps)
  */
 class LsPLaylistAudioClip
@@ -518,8 +537,13 @@ class LsPLaylistAudioClip
 
 
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
  */
 class LsPLaylistFadeInfo
@@ -550,9 +574,14 @@ class LsPLaylistFadeInfo
 
 
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @todo Rename this class to PlaylistMetadata (notive the caps)
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class to PlaylistMetadata (notice the caps)
  */
 class LsPLaylistMetadata
 {

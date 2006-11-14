@@ -1,6 +1,7 @@
 <?php
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
@@ -12,58 +13,71 @@ require_once "XML/Util.php";
 /**
  * Object representation of one XML element
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see MetaData
  */
 class XmlElement {
     /**
-     *  Namespace prefix
+     * Namespace prefix
+     * @var string
      */
-    var $ns;
-    /**
-     *  Element name
-     */
-    var $name;
-    /**
-     *  Attributes
-     */
-    var $attrs = array();
-    /**
-     *  Namespace definitions
-     */
-    var $nSpaces = array();
-    /**
-     *  Child nodes
-     */
-    var $children = array();
-    /**
-     *  Text content of element
-     */
-    var $content = '';
+    public $ns;
 
     /**
-     *  Constructor
-     *
-     *  @param string $fullname
-     * 		Fully qualified name of element
-     *  @param array $attrs
-     * 		hash of attributes
-     *  @param array $nSpaces
-     * 		hash of namespace definitions
-     *  @param array $children
-     * 		hash of child nodes
-     *  @return this
+     * Element name
+     * @var string
      */
-    function XmlElement($fullname, $attrs, $nSpaces=array(), $children=array())
+    public $name;
+
+    /**
+     * Attributes
+     * @var array
+     */
+    public $attrs = array();
+
+    /**
+     * Namespace definitions
+     * @var array
+     */
+    public $nSpaces = array();
+
+    /**
+     * Child nodes
+     * @var array
+     */
+    public $children = array();
+
+    /**
+     * Text content of element
+     * @var string
+     */
+    public $content = '';
+
+
+    /**
+     * @param string $fullname
+     *		Fully qualified name of element
+     * @param array $attrs
+     * 		hash of attributes
+     * @param array $nSpaces
+     * 		hash of namespace definitions
+     * @param array $children
+     * 		hash of child nodes
+     */
+    public function __construct($fullname, $attrs, $nSpaces=array(), $children=array())
     {
         $a = XML_Util::splitQualifiedName($fullname);
-        $this->ns   = $a['namespace'];
+        $this->ns = $a['namespace'];
         $this->name = $a['localPart'];
-        $this->attrs    = $attrs;
-        $this->nSpaces  = $nSpaces;
+        $this->attrs = $attrs;
+        $this->nSpaces = $nSpaces;
         $this->children = $children;
     }
 } // class XmlElement
@@ -73,39 +87,47 @@ class XmlElement {
 /**
  * Object representation of one XML attribute
  *
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see MetaData
  */
 class XmlAttrib {
     /**
-     *  Namespace prefix
+     * Namespace prefix
+     * @var string
      */
-    var $ns;
+    public $ns;
+
     /**
-     *  Attribute name
+     * Attribute name
+     * @var string
      */
-    var $name;
+    public $name;
+
     /**
-     *  Attribute value
+     * Attribute value
+     * @var string
      */
-    var $val;
+    public $val;
+
     /**
-     *  Constructor
-     *
-     *  @param string $atns
+     * @param string $atns
      * 		namespace prefix
-     *  @param string $atnm
+     * @param string $atnm
      * 		attribute name
-     *  @param string $atv
+     * @param string $atv
      * 		attribute value
-     *  @return this
      */
-    function XmlAttrib($atns, $atnm, $atv)
+    public function __construct($atns, $atnm, $atv)
     {
-        $this->ns   = $atns;
+        $this->ns = $atns;
         $this->name = $atnm;
-        $this->val  = $atv;
+        $this->val = $atv;
     }
 } // fn XmlAttrib
 
@@ -114,32 +136,39 @@ class XmlAttrib {
 /**
  *  XML parser object encapsulation
  *
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- *  @see MetaData
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @see MetaData
  */
 class XmlParser {
     /**
-     *  Tree of nodes
+     * Tree of nodes
+     * @var array
      */
-    var $tree  = NULL;
-    /**
-     *  Parse stack
-     */
-    var $stack = array();
-    /**
-     *  Error structure
-     */
-    var $err = array(FALSE, '');
+    private $tree = NULL;
 
     /**
-     *  Constructor
-     *
-     *  @param string $data
-     * 		XML string to be parsed
-     *  @return this
+     * Parse stack
+     * @var array
      */
-    function XmlParser($data){
+    private $stack = array();
+
+    /**
+     * Error structure
+     * @var array
+     */
+    private $err = array(FALSE, '');
+
+    /**
+     * @param string $data
+     * 		XML string to be parsed
+     */
+    public function __construct($data){
         $xml_parser = xml_parser_create('UTF-8');
         xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, FALSE);
         xml_set_object($xml_parser, $this);
@@ -185,7 +214,7 @@ class XmlParser {
 	            }
 	            $data = file_get_contents($data);
 	        case "string":
-	            $parser =& new XmlParser($data);
+	            $parser = new XmlParser($data);
 	            if ($parser->isError()) {
 	                return PEAR::raiseError(
 	                    "SmilPlaylist::parse: ".$parser->getError()
@@ -234,13 +263,13 @@ class XmlParser {
 
 
     /**
-     *  End tag handler
+     * End tag handler
      *
-     *  @param resource $parser
+     * @param resource $parser
      * 		reference to parser resource
-     *  @param string $fullname
+     * @param string $fullname
      * 		element name
-     *  @return none
+     * @return none
      */
     function endTag($parser, $fullname) {
         $cnt = count($this->stack);

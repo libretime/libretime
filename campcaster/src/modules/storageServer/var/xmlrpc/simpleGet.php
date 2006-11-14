@@ -35,7 +35,7 @@ $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$locStor = &new LocStor($dbc, $config);
+$locStor = new LocStor($dbc, $config);
 
 function http_error($code, $err){
     header("HTTP/1.1 $code");

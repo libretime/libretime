@@ -4,10 +4,14 @@
  *
  * remark: dcterms:extent format: hh:mm:ss.ssssss
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class Playlist extends StoredFile {
 
@@ -185,15 +189,15 @@ class Playlist extends StoredFile {
     function setAuxMetadata()
     {
         // get info about playlist
-        $plInfo = $r = $this->getPlInfo();
-        if (PEAR::isError($r)) {
-        	return $r;
+        $plInfo = $this->getPlInfo();
+        if (PEAR::isError($plInfo)) {
+        	return $plInfo;
         }
         extract($plInfo);   // 'plLen', 'parid', 'metaParid'
         // set gunid as id attr in playlist tag:
-        $mid = $r = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
+        $mid = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
+        if (PEAR::isError($mid)) {
+        	return $mid;
         }
         $r = $this->_setValueOrInsert(
             $mid, $this->gunid, $parid,  'id', 'A');
@@ -1160,11 +1164,16 @@ class Playlist extends StoredFile {
 
 
 /**
- *  Auxiliary class for GB playlist editing methods
+ * Auxiliary class for GB playlist editing methods
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class PlaylistElement {
-    var $pl   = NULL;
-    var $plEl = NULL;
+    private $pl   = NULL;
+    private $plEl = NULL;
 
     function PlaylistElement(&$pl, $plEl)
     {

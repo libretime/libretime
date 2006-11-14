@@ -6,26 +6,37 @@ require_once "BasicStor.php";
  *
  * Local storage interface
  *
- * @author  $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class LocStor extends BasicStor {
 
     /* ---------------------------------------------------------------- store */
 
     /**
-     *  Store or replace existing audio clip
+     * Store or replace existing audio clip
      *
-     *  @param string $sessid, session id
-     *  @param string $gunid, global unique id
-     *  @param string $metadata, metadata XML string
-     *  @param string $fname, human readable menmonic file name
-     *                      with extension corresponding to filetype
-     *  @param string $chsum, md5 checksum of media file
-     *  @param string $ftype audioclip | playlist | webstream
-     *  @return struct {url:writable URL for HTTP PUT, token:access token
+     * @param string $sessid
+     * 		session id
+     * @param string $gunid
+     * 		global unique id
+     * @param string $metadata
+     * 		metadata XML string
+     * @param string $fname
+     * 		human readable menmonic file name
+     *      with extension corresponding to filetype
+     * @param string $chsum
+     * 		md5 checksum of media file
+     * @param string $ftype
+     * 		audioclip | playlist | webstream
+     * @return array
+     * 		{url:writable URL for HTTP PUT, token:access token}
      */
     function storeAudioClipOpen(
         $sessid, $gunid, $metadata, $fname, $chsum, $ftype='audioclip'
@@ -98,11 +109,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Store or replace existing audio clip
+     * Store or replace existing audio clip
      *
-     *  @param string $sessid
-     *  @param string $token
-     *  @return string gunid or PEAR::error
+     * @param string $sessid
+     * @param string $token
+     * @return string gunid|PEAR_Error
      */
     function storeAudioClipClose($sessid, $token)
     {
@@ -133,10 +144,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Check uploaded file
+     * Check uploaded file
      *
-     *  @param string $token, put token
-     *  @return hash, (status: boolean, size: int - filesize)
+     * @param string $token
+     * 		"put" token
+     * @return array
+     * 		hash, (status: boolean, size: int - filesize)
      */
     function uploadCheck($token)
     {
@@ -145,15 +158,20 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Store webstream
+     * Store webstream
      *
-     *  @param string $sessid, session id
-     *  @param string $gunid, global unique id
-     *  @param string $metadata, metadata XML string
-     *  @param string $fname, human readable menmonic file name
-     *                      with extension corresponding to filetype
-     *  @param string $url, wewbstream url
-     *  @return string, gunid
+     * @param string $sessid
+     * 		session id
+     * @param string $gunid
+     * 		global unique id
+     * @param string $metadata
+     * 		metadata XML string
+     * @param string $fname
+     * 		human readable menmonic file name with extension corresponding to filetype
+     * @param string $url
+     * 		webstream url
+     * @return string
+     * 		gunid
      */
     function storeWebstream($sessid, $gunid, $metadata, $fname, $url)
     {
@@ -182,12 +200,14 @@ class LocStor extends BasicStor {
 
     /* --------------------------------------------------------------- access */
     /**
-     *  Make access to audio clip
+     * Make access to audio clip
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @param int $parent parent token
-     *  @return array with: seekable filehandle, access token
+     * @param string $sessid
+     * @param string $gunid
+     * @param int $parent
+     * 		parent token
+     * @return array
+     * 		with: seekable filehandle, access token
      */
     function accessRawAudioData($sessid, $gunid, $parent='0')
     {
@@ -203,11 +223,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Release access to audio clip
+     * Release access to audio clip
      *
-     *  @param string $sessid
-     *  @param string $token, access token
-     *  @return boolean or PEAR::error
+     * @param string $sessid
+     * @param string $token
+     * 		access token
+     * @return boolean|PEAR_Error
      */
     function releaseRawAudioData($sessid, $token)
     {
@@ -221,11 +242,14 @@ class LocStor extends BasicStor {
 
     /* ------------------------------------------------------------- download */
     /**
-     *  Create and return downloadable URL for audio file
+     * Create and return downloadable URL for audio file
      *
-     *  @param string $sessid, session id
-     *  @param string $gunid, global unique id
-     *  @return array with strings:
+     * @param string $sessid
+     * 		session id
+     * @param string $gunid
+     * 		global unique id
+     * @return array
+     * 		array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
     function downloadRawAudioDataOpen($sessid, $gunid)
@@ -249,10 +273,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Discard downloadable URL for audio file
+     * Discard downloadable URL for audio file
      *
-     *  @param string $token, download token
-     *  @return string, gunid
+     * @param string $token
+     * 		download token
+     * @return string
+     * 		gunid
      */
     function downloadRawAudioDataClose($token)
     {
@@ -261,11 +287,14 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Create and return downloadable URL for metadata
+     * Create and return downloadable URL for metadata
      *
-     *  @param string $sessid, session id
-     *  @param string $gunid, global unique id
-     *  @return array with strings:
+     * @param string $sessid
+     * 		session id
+     * @param string $gunid
+     * 		global unique id
+     * @return array
+     * 		array with strings:
      *      downloadable URL, download token, chsum, filename
      */
     function downloadMetadataOpen($sessid, $gunid)
@@ -288,10 +317,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Discard downloadable URL for metadata
+     * Discard downloadable URL for metadata
      *
-     *  @param string $token, download token
-     *  @return string, gunid
+     * @param string $token
+     * 		download token
+     * @return string
+     * 		gunid
      */
     function downloadMetadataClose($token)
     {
@@ -300,11 +331,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Return metadata as XML
+     * Return metadata as XML
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @return string or PEAR::error
+     * @param string $sessid
+     * @param string $gunid
+     * @return string|PEAR_Error
      */
     function getAudioClip($sessid, $gunid)
     {
@@ -326,10 +357,11 @@ class LocStor extends BasicStor {
     /* ------------------------------------------------------- search, browse */
 
     /**
-     *  Search in metadata database
+     * Search in metadata database
      *
-     *  @param string $sessid
-     *  @param hash $criteria, with following structure:<br>
+     * @param string $sessid
+     * @param array $criteria
+     * 	with following structure:<br>
      *   <ul>
      *     <li>filetype - string, type of searched files,
      *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
@@ -389,8 +421,6 @@ class LocStor extends BasicStor {
 
 
     /**
-     * Enter description here...
-     *
      * @param array $criteria
      * @param mixed $sessid - this variable isnt used
      * @return unknown
@@ -408,13 +438,16 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Return values of specified metadata category
+     * Return values of specified metadata category
      *
-     *  @param string $category, metadata category name
-     *          with or without namespace prefix (dc:title, author)
-     *  @param hash $criteria, see searchMetadata method
-     *  @param string $sessid
-     *  @return hash, fields:
+     * @param string $category
+     * 		metadata category name
+     *      with or without namespace prefix (dc:title, author)
+     * @param hash $criteria
+     * 		see searchMetadata method
+     * @param string $sessid
+     * @return array
+     * 		hash, fields:
      *       results : array with found values
      *       cnt : integer - number of matching values
      *  @see BasicStor::bsBrowseCategory
@@ -430,11 +463,11 @@ class LocStor extends BasicStor {
 
     /* ----------------------------------------------------------------- etc. */
     /**
-     *  Check if audio clip exists
+     * Check if audio clip exists
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @return boolean
+     * @param string $sessid
+     * @param string $gunid
+     * @return boolean
      */
     function existsAudioClip($sessid, $gunid)
     {
@@ -458,12 +491,13 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Check if file exists in the storage
+     * Check if file exists in the storage
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @param string $ftype, internal file type
-     *  @return boolean
+     * @param string $sessid
+     * @param string $gunid
+     * @param string $ftype
+     * 		internal file type
+     * @return boolean
      */
     function existsFile($sessid, $gunid, $ftype=NULL)
     {
@@ -480,12 +514,13 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Delete existing audio clip
+     * Delete existing audio clip
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @param boolean $forced, if true don't use trash
-     *  @return boolean or PEAR::error
+     * @param string $sessid
+     * @param string $gunid
+     * @param boolean $forced
+     * 		if true, don't use trash
+     * @return boolean|PEAR_Error
      */
     function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
@@ -508,12 +543,13 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Update existing audio clip metadata
+     * Update existing audio clip metadata
      *
-     *  @param string $sessid
-     *  @param string $gunid
-     *  @param string $metadata, metadata XML string
-     *  @return boolean or PEAR::error
+     * @param string $sessid
+     * @param string $gunid
+     * @param string $metadata
+     * 		metadata XML string
+     * @return boolean|PEAR_Error
      */
     function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
@@ -530,12 +566,16 @@ class LocStor extends BasicStor {
 
     /*====================================================== playlist methods */
     /**
-     *  Create a new empty playlist.
+     * Create a new empty playlist.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @param string $fname, human readable mnemonic file name
-     *  @return string, playlist global unique ID
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @param string $fname
+     * 		human readable mnemonic file name
+     * @return string
+     * 		playlist global unique ID
      */
     function createPlaylist($sessid, $playlistId, $fname)
     {
@@ -588,12 +628,14 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Open a Playlist metafile for editing.
-     *  Open readable URL and mark file as beeing edited.
+     * Open a Playlist metafile for editing.
+     * Open readable URL and mark file as beeing edited.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @return struct
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @return struct
      *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
     function editPlaylist($sessid, $playlistId)
@@ -634,12 +676,16 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Store a new Playlist metafile in place of the old one.
+     * Store a new Playlist metafile in place of the old one.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistToken, playlist access token
-     *  @param string $newPlaylist, new playlist as XML string
-     *  @return string, playlistId
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistToken
+     * 		playlist access token
+     * @param string $newPlaylist
+     * 		new playlist as XML string
+     * @return string
+     * 		playlistId
      */
     function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
@@ -664,11 +710,14 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  RollBack playlist changes to the locked state
+     * RollBack playlist changes to the locked state
      *
-     *  @param string $playlistToken, playlist access token
-     *  @param string $sessid, session ID
-     *  @return string gunid of playlist
+     * @param string $playlistToken
+     * 		playlist access token
+     * @param string $sessid
+     * 		session ID
+     * @return string
+     * 		gunid of playlist
      */
     function revertEditedPlaylist($playlistToken, $sessid='')
     {
@@ -695,12 +744,15 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Delete a Playlist metafile.
+     * Delete a Playlist metafile.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @param boolean $forced, if true don't use trash
-     *  @return boolean
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @param boolean $forced
+     * 		if true don't use trash
+     * @return boolean
      */
     function deletePlaylist($sessid, $playlistId, $forced=FALSE)
     {
@@ -733,14 +785,17 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Access (read) a Playlist metafile.
+     * Access (read) a Playlist metafile.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @param boolean $recursive, flag for recursive access content
-     *                  inside playlist (optional, default: false)
-     *  @param int $parent parent token
-     *  @return struct {
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @param boolean $recursive
+     * 		flag for recursive access content inside playlist
+     * @param int $parent
+     * 		parent token
+     * @return struct {
      *      url: readable URL for HTTP GET,
      *      token: access token,
      *      chsum: checksum,
@@ -779,13 +834,16 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Release the resources obtained earlier by accessPlaylist().
+     * Release the resources obtained earlier by accessPlaylist().
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistToken, playlist access token
-     *  @param boolean $recursive, flag for recursive access content
-     *                  inside playlist (optional, default: false)
-     *  @return string, playlist ID
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistToken
+     * 		playlist access token
+     * @param boolean $recursive
+     * 		flag for recursive access content inside playlist
+     * @return string
+     * 		playlist ID
      */
     function releasePlaylist($sessid, $playlistToken, $recursive=FALSE)
     {
@@ -802,16 +860,18 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Create a tarfile with playlist export - playlist and all matching
-     *  sub-playlists and media files (if desired)
+     * Create a tarfile with playlist export - playlist and all matching
+     * sub-playlists and media files (if desired)
      *
-     *  @param sessid - string, session ID
-     *  @param plids - array of strings, playlist global unique IDs
-     *          (one gunid is accepted too)
-     *  @param type - string, playlist format, values: lspl | smil | m3u
-     *  @param standalone - boolean, if only playlist should be exported or
-     *          with all related files
-     *  @return hasharray with  fields:
+     * @param string $sessid
+     * 		session ID
+     * @param array $plids
+     * 		array of strings, playlist global unique IDs (one gunid is accepted too)
+     * @param string $type
+     * 		playlist format, values: lspl | smil | m3u
+     * @param boolean $standalone
+     * 		if only playlist should be exported or with all related files
+     * @return hasharray with  fields:
      *      url string: readable url,
      *      token string: access token
      *      chsum string: md5 checksum,
@@ -834,11 +894,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Close playlist export previously opened by the exportPlaylistOpen method
+     * Close playlist export previously opened by the exportPlaylistOpen method
      *
-     *  @param token - string, access token obtained from exportPlaylistOpen
-     *            method call
-     *  @return boolean true or error object
+     * @param string $token
+     * 		access token obtained from exportPlaylistOpen method call
+     * @return boolean|PEAR_Error
      */
     function exportPlaylistClose($token)
     {
@@ -847,11 +907,13 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Open writable handle for import playlist in LS Archive format
+     * Open writable handle for import playlist in LS Archive format
      *
-     *  @param string $sessid, session id
-     *  @param string $chsum, md5 checksum of imported file
-     *  @return hasharray with:
+     * @param string $sessid
+     * 		session id
+     * @param string $chsum
+     * 		md5 checksum of imported file
+     * @return hasharray with:
      *      url string: writable URL
      *      token string: PUT token
      */
@@ -870,10 +932,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Close import-handle and import playlist
+     * Close import-handle and import playlist
      *
-     *  @param string $token, import token obtained by importPlaylistOpen method
-     *  @return string, result file global id (or error object)
+     * @param string $token
+     * 		import token obtained by importPlaylistOpen method
+     * @return string
+     * 		result file global id (or error object)
      */
     function importPlaylistClose($token)
     {
@@ -902,11 +966,13 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Check whether a Playlist metafile with the given playlist ID exists.
+     * Check whether a Playlist metafile with the given playlist ID exists.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @return boolean
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @return boolean
      */
     function existsPlaylist($sessid, $playlistId)
     {
@@ -915,14 +981,17 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Check whether a Playlist metafile with the given playlist ID
-     *  is available for editing, i.e., exists and is not marked as
-     *  beeing edited.
+     * Check whether a Playlist metafile with the given playlist ID
+     * is available for editing, i.e., exists and is not marked as
+     * being edited.
      *
-     *  @param string $sessid, session ID
-     *  @param string $playlistId, playlist global unique ID
-     *  @param boolean $getUid, optional flag for returning editedby uid
-     *  @return boolean
+     * @param string $sessid
+     * 		session ID
+     * @param string $playlistId
+     * 		playlist global unique ID
+     * @param boolean $getUid
+     * 		flag for returning editedby uid
+     * @return boolean
      */
     function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
@@ -948,11 +1017,13 @@ class LocStor extends BasicStor {
 
     /* ------------------------------------------------------- render methods */
     /**
-     *  Render playlist to ogg file (open handle)
+     * Render playlist to ogg file (open handle)
      *
-     *  @param string $sessid -  session id
-     *  @param string $plid -  playlist gunid
-     *  @return hasharray:
+     * @param string $sessid
+     * 		session id
+     * @param string $plid
+     * 		 playlist gunid
+     * @return hasharray
      *      token: string - render token
      */
     function renderPlaylistToFileOpen($sessid, $plid)
@@ -967,10 +1038,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to ogg file (check results)
+     * Render playlist to ogg file (check results)
      *
-     *  @param string $token  -  render token
-     *  @return hasharray:
+     * @param string $token
+     * 		render token
+     * @return hasharray:
      *      status : string - success | working | fault
      *      url : string - readable url
      */
@@ -986,10 +1058,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to ogg file (close handle)
+     * Render playlist to ogg file (close handle)
      *
-     *  @param string $token  -  render token
-     *  @return boolean status
+     * @param string $token
+     * 		render token
+     * @return boolean status
      */
     function renderPlaylistToFileClose($token)
     {
@@ -1003,11 +1076,14 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to storage media clip (open handle)
+     * Render playlist to storage media clip (open handle)
      *
-     *  @param string $sessid  -  session id
-     *  @param string $plid  -  playlist gunid
-     *  @return string -  render token
+     * @param string $sessid
+     * 		session id
+     * @param string $plid
+     * 		playlist gunid
+     * @return string
+     * 		render token
      */
     function renderPlaylistToStorageOpen($sessid, $plid)
     {
@@ -1025,10 +1101,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to storage media clip (check results)
+     * Render playlist to storage media clip (check results)
      *
-     *  @param string $token -  render token
-     *  @return hasharray:
+     * @param string $token
+     * 		render token
+     * @return hasharray:
      *      status : string - success | working | fault
      *      gunid  : string - gunid of result file
      */
@@ -1044,11 +1121,14 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to RSS file (open handle)
+     * Render playlist to RSS file (open handle)
      *
-     *  @param string $sessid -  session id
-     *  @param string $plid -  playlist gunid
-     *  @return string -  render token
+     * @param string $sessid
+     * 		session id
+     * @param string $plid
+     * 		 playlist gunid
+     * @return string
+     * 		render token
      */
     function renderPlaylistToRSSOpen($sessid, $plid)
     {
@@ -1060,10 +1140,11 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to RSS file (check results)
+     * Render playlist to RSS file (check results)
      *
-     *  @param string $token -  render token
-     *  @return hasharray :
+     * @param string $token
+     * 		render token
+     * @return hasharray :
      *      status : string - success | working | fault
      *      url    : string - readable url
      */
@@ -1084,10 +1165,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Render playlist to RSS file (close handle)
+     * Render playlist to RSS file (close handle)
      *
-     *  @param string $token -  render token
-     *  @return boolean status
+     * @param string $token
+     * 		render token
+     * @return boolean
+     * 		status
      */
     function renderPlaylistToRSSClose($token)
     {
@@ -1107,19 +1190,21 @@ class LocStor extends BasicStor {
     /* ------------------------------------------------------- backup methods */
 
     /**
-     *  Create backup of storage (open handle)
+     * Create backup of storage (open handle)
      *
-     *  @param string $sessid  -  session id
-     *  @param array $criteria - see search criteria
-     *  @return hasharray:
+     * @param string $sessid
+     * 		session id
+     * @param array $criteria
+     * 		see search criteria
+     * @return array
      *           token  : string - backup token
      */
     function createBackupOpen($sessid, $criteria='')
     {
-        require_once "Backup.php";
-        $bu = $r = new Backup($this);
-        if (PEAR::isError($r)) {
-            return $r;
+        require_once("Backup.php");
+        $bu = new Backup($this);
+        if (PEAR::isError($bu)) {
+            return $bu;
         }
         $r = $bu->openBackup($sessid,$criteria);
         if ($r === FALSE) {
@@ -1132,10 +1217,12 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Create backup of storage (check results)
+     * Create backup of storage (check results)
      *
-     *  @param string $token -  backup token
-     *  @return hasharray with field:
+     * @param string $token
+     * 		backup token
+     * @return hasharray
+     * 		with field:
      *      status : string - susccess | working | fault
      *      faultString: string - description of fault
      *      token  : stirng - backup token
@@ -1143,49 +1230,53 @@ class LocStor extends BasicStor {
      */
     function createBackupCheck($token)
     {
-        require_once "Backup.php";
-        $bu = $r = new Backup($this);
-        if (PEAR::isError($r)) {
-            return $r;
+        require_once("Backup.php");
+        $bu = new Backup($this);
+        if (PEAR::isError($bu)) {
+            return $bu;
         }
         return $bu->checkBackup($token);
     }
 
 
     /**
-     *  Create backup of storage (list results)
+     * Create backup of storage (list results)
      *
-     *  @param string $sessid - session id
-     *  @param status $stat (optional)
+     * @param string $sessid
+     * 		session id
+     * @param status $stat
      *      if this parameter is not set, then return with all unclosed backups
-     *  @return array of hasharray with field:
+     * @return array
+     * 		array of hasharray with field:
      *      status : string - susccess | working | fault
      *      token  : stirng - backup token
      *      url    : string - access url
      */
     function createBackupList($sessid, $stat='')
     {
-        require_once "Backup.php";
-        $bu = $r = new Backup($this);
-        if (PEAR::isError($r)) {
-            return $r;
+        require_once("Backup.php");
+        $bu = new Backup($this);
+        if (PEAR::isError($bu)) {
+            return $bu;
         }
         return $bu->listBackups($stat);
     }
 
 
     /**
-     *  Create backup of storage (close handle)
+     * Create backup of storage (close handle)
      *
-     *  @param string $token -  backup token
-     *  @return boolean status
+     * @param string $token
+     * 		backup token
+     * @return boolean
+     * 		status
      */
     function createBackupClose($token)
     {
-        require_once "Backup.php";
-        $bu = $r = new Backup($this);
-        if (PEAR::isError($r)) {
-            return $r;
+        require_once("Backup.php");
+        $bu = new Backup($this);
+        if (PEAR::isError($bu)) {
+            return $bu;
         }
         return $bu->closeBackup($token);
     }
@@ -1194,10 +1285,12 @@ class LocStor extends BasicStor {
     /* ------------------------------------------------------ restore methods */
 
     /**
-     *  Restore a backup file (open handle)
+     * Restore a backup file (open handle)
      *
-     *  @param  string $sessid - session id
-     *  @param  string $chsum, md5 checksum of imported file
+     * @param string $sessid
+     * 		session id
+     * @param string $chsum
+     * 		md5 checksum of imported file
      * @return array
      * 		array with:
      *      url string: writable URL
@@ -1206,9 +1299,9 @@ class LocStor extends BasicStor {
      */
     function restoreBackupOpen($sessid, $chsum)
     {
-        $userid = $r =$this->getSessUserId($sessid);
-        if ($this->dbc->isError($r)) {
-            return $r;
+        $userid = $this->getSessUserId($sessid);
+        if ($this->dbc->isError($userid)) {
+            return $userid;
         }
         $r = $this->bsOpenPut($chsum, NULL, $userid);
         if (PEAR::isError($r)) {
@@ -1219,19 +1312,22 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Restore a backup file (close put handle)
+     * Restore a backup file (close put handle)
      *
-     *  @param string $sessid - session id
-     *  @param string $token -  put token
-     *  @return string $token - restore token
+     * @param string $sessid
+     * 		session id
+     * @param string $token
+     * 		"put" token
+     * @return string $token
+     * 		restore token
      */
     function restoreBackupClosePut($sessid, $token) {
-        $arr = $r = $this->bsClosePut($token);
-        if (PEAR::isError($r)) {
-            return $r;
+        $arr = $this->bsClosePut($token);
+        if (PEAR::isError($arr)) {
+            return $arr;
         }
         $fname = $arr['fname'];
-        require_once 'Restore.php';
+        require_once('Restore.php');
         $rs = new Restore($this);
         if (PEAR::isError($rs)) {
             return $rs;
@@ -1239,18 +1335,21 @@ class LocStor extends BasicStor {
         return $rs->openRestore($sessid, $fname);
     }
 
+
     /**
-     *  Restore a backup file (check state)
-     *  
-     *  @param string $token -  restore token
-     *  @return array status - fields:
-     * 							token:  string - restore token
-     *                          status: string - working | fault | success
-     *                          faultString: string - description of fault
+     * Restore a backup file (check state)
+     *
+     * @param string $token
+     * 		restore token
+     * @return array
+     * 		status - fields:
+     * 		token:  string - restore token
+     *      status: string - working | fault | success
+     *      faultString: string - description of fault
      */
     function restoreBackupCheck($token)
     {
-        require_once 'Restore.php';
+        require_once('Restore.php');
         $rs = new Restore($this);
         if (PEAR::isError($rs)) {
             return $rs;
@@ -1260,15 +1359,17 @@ class LocStor extends BasicStor {
 
 
     /**
-     *  Restore a backup file (close handle)
+     * Restore a backup file (close handle)
      *
-     *  @param string $token -  restore token
-     *  @return array status - fields:
-     * 							token:  string - restore token
-     *                          status: string - working | fault | success
+     * @param string $token
+     * 		restore token
+     * @return array
+     * 		status - fields:
+     * 		token:  string - restore token
+     *      status: string - working | fault | success
      */
     function restoreBackupClose($token) {
-    	require_once 'Restore.php';
+    	require_once('Restore.php');
     	$rs = new Restore($this);
     	if (PEAR::isError($rs)) {
     	    return $rs;

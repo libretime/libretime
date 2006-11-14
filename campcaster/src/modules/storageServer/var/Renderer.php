@@ -8,10 +8,14 @@ require_once "LsPlaylist.php";
  *
  * Playlist to file rendering - PHP layer, caller to the renderer executable
  *
- * @author  $Author: tomash $
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision: 1949 $
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see LocStor
  */
 class Renderer

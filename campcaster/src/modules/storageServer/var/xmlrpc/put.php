@@ -35,7 +35,7 @@ require_once dirname(__FILE__).'/../LocStor.php';
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new LocStor($dbc, $config);
+$gb = new LocStor($dbc, $config);
 
 function http_error($code, $err){
     header("HTTP/1.1 $code");

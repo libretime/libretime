@@ -9,39 +9,45 @@ require_once "XML/Util.php";
  * File storage support class.
  * Store metadata tree in relational database.<br>
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see StoredFile
  * @see XmlParser
  * @see DataEngine
  */
 class MetaData {
 
+	public $config;
+	public $dbc;
+	public $mdataTable;
+	public $gunid;
+	public $resDir;
+	public $fname;
+	public $exists;
+
     /**
-     *  Constructor
-     *
-     *  @param Greenbox $gb
+     * @param Greenbox $gb
      * 		A reference to GreenBox object
-     *  @param string $gunid
+     * @param string $gunid
      * 		global unique id
-     *  @param string $resDir
+     * @param string $resDir
      * 		resource directory
-     *  @return this
      */
-    function MetaData(&$gb, $gunid, $resDir)
+    public function __construct(&$gb, $gunid, $resDir)
     {
-        $this->config     =& $gb->config;
-        $this->dbc        =& $gb->dbc;
+        $this->config =& $gb->config;
+        $this->dbc =& $gb->dbc;
         $this->mdataTable = $gb->mdataTable;
-        $this->gunid      = $gunid;
-        $this->resDir     = $resDir;
-        $this->fname      = $this->makeFname();
-        $this->exists     =
-            $this->dbCheck($gunid) &&
-            is_file($this->fname) &&
-            is_readable($this->fname);
+        $this->gunid = $gunid;
+        $this->resDir = $resDir;
+        $this->fname = $this->makeFname();
+        $this->exists = null;
     }
 
 
@@ -60,7 +66,7 @@ class MetaData {
      */
     function insert($mdata, $loc='file', $format=NULL)
     {
-        if ($this->exists) {
+        if ($this->exists()) {
         	return FALSE;
         }
         $tree =& $this->parse($mdata, $loc);
@@ -128,7 +134,7 @@ class MetaData {
      */
     function replace($mdata, $loc='file', $format=NULL)
     {
-        if ($this->exists) {
+        if ($this->exists()) {
             $res = $this->delete();
             if (PEAR::isError($res)) {
             	return $res;
@@ -139,20 +145,25 @@ class MetaData {
 
 
     /**
-     *  Return true if metadata exists
+     * Return true if metadata exists
      *
-     *  @return boolean
+     * @return boolean
      */
     function exists()
     {
+    	if (is_null($this->exists)) {
+	        $this->exists = $this->dbCheck($gunid) &&
+            				is_file($this->fname) &&
+            				is_readable($this->fname);
+    	}
         return $this->exists;
     }
 
 
     /**
-     *  Delete all file's metadata
+     * Delete all file's metadata
      *
-     *  @return true or PEAR::error
+     * @return TRUE|PEAR_Error
      */
     function delete()
     {
@@ -616,7 +627,7 @@ class MetaData {
     {
         if ($this->config['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
-            $val =& new Validator($this->format, $this->gunid);
+            $val = new Validator($this->format, $this->gunid);
             if (PEAR::isError($val)) {
             	return $val;
             }
@@ -646,7 +657,7 @@ class MetaData {
     {
         if ($this->config['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
-            $val =& new Validator($this->format, $this->gunid);
+            $val = new Validator($this->format, $this->gunid);
             if (PEAR::isError($val)) {
             	return $val;
             }

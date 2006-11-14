@@ -42,10 +42,14 @@ require_once "XML/Util.php";
  *      <li>cnt : integer - number of matching items</li>
  *   </ul>
  *
- * @Author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version  $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see MetaData
  * @see StoredFile
  */
@@ -56,7 +60,7 @@ class DataEngine {
      *
      * @param BasicStor $gb
      */
-    function DataEngine(&$gb)
+    public function __construct(&$gb)
     {
         $this->gb =& $gb;
         $this->dbc =& $gb->dbc;

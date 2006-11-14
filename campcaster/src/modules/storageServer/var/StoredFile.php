@@ -14,24 +14,50 @@ require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
  *          - represented by RawMediaData class</li>
  *  </ul>
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see GreenBox
  * @see MetaData
  * @see RawMediaData
  */
 class StoredFile {
-	var $gb;
-	var $dbc;
-	var $filesTable;
-	var $accessTable;
-	var $gunid;
-	var $resDir;
-	var $accessDir;
-	var $rmd;
-	var $md;
+	/**
+	 * @var GreenBox
+	 */
+	public $gb;
+
+	/**
+	 * @var DB
+	 */
+	public $dbc;
+
+	/**
+	 * Name of a database table.
+	 * @var string
+	 */
+	public $filesTable;
+
+	/**
+	 * Name of a database table.
+	 * @var string
+	 */
+	public $accessTable;
+
+	public $gunid;
+	private $resDir;
+	private $accessDir;
+
+	/**
+	 * @var RawMediaData
+	 */
+	public $rmd;
+	public $md;
 
     /* ========================================================== constructor */
     /**
@@ -39,10 +65,9 @@ class StoredFile {
      *
      *  @param GreenBox $gb
      *  @param string $gunid
-     * 		optional, globally unique id of file
-     *  @return this
+     * 		globally unique id of file
      */
-    function StoredFile(&$gb, $gunid=NULL)
+    public function __construct(&$gb, $gunid=NULL)
     {
         $this->gb =& $gb;
         $this->dbc =& $gb->dbc;
@@ -54,8 +79,8 @@ class StoredFile {
         }
         $this->resDir = $this->_getResDir($this->gunid);
         $this->accessDir = $this->gb->accessDir;
-        $this->rmd =& new RawMediaData($this->gunid, $this->resDir);
-        $this->md =& new MetaData($gb, $this->gunid, $this->resDir);
+        $this->rmd = new RawMediaData($this->gunid, $this->resDir);
+        $this->md = new MetaData($gb, $this->gunid, $this->resDir);
 #        return $this->gunid;
     }
 
@@ -87,7 +112,7 @@ class StoredFile {
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
-        $ac =& new $className($gb, ($gunid ? $gunid : NULL));
+        $ac = new $className($gb, ($gunid ? $gunid : NULL));
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -200,7 +225,7 @@ class StoredFile {
             return $r;
         }
         $gunid = StoredFile::_normalizeGunid($row['gunid']);
-        $ac =& new $className($gb, $gunid);
+        $ac = new $className($gb, $gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id = $row['id'];
@@ -259,10 +284,11 @@ class StoredFile {
     /**
      * Create instance of StoredFile object and make copy of existing file
      *
-     * @param reference $src to source object
+     * @param StoredFile $src
+     * 		source object
      * @param int $nid
      * 		new local id
-     * @return unknown
+     * @return StoredFile
      */
     function &copyOf(&$src, $nid)
     {
