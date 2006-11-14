@@ -112,6 +112,16 @@ class LiveModeWindow : public GuiWindow
         Gtk::Menu *
         constructPlaylistContextMenu(void)                      throw ();
 
+        /**
+         *  Find the selected row.
+         *  If more than one row is selected, it returns the first one.
+         *
+         *  @return an iterator for the selected row; may be invalid
+         *          if nothing is selected.
+         */
+        Gtk::TreeModel::iterator
+        getSelected(void)                                       throw ();
+
 
     protected:
 

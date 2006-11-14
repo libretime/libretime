@@ -93,6 +93,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     
     // ... and the tree view:
     treeView = Gtk::manage(wf->createTreeView(treeModel));
+    treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
     treeView->set_reorderable(true);
     treeView->set_headers_visible(false);
     treeView->set_enable_search(false);
@@ -249,14 +250,31 @@ LiveModeWindow :: popTop(void)                                      throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Find the selected row.
+ *----------------------------------------------------------------------------*/
+Gtk::TreeModel::iterator
+LiveModeWindow :: getSelected(void)                                 throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = treeView->get_selection();
+    std::vector<Gtk::TreeModel::Path>       selectedPaths
+                                            = selection->get_selected_rows();
+    
+    Gtk::TreeModel::iterator                it;
+    if (selectedPaths.size() > 0) {
+        it = treeModel->get_iter(selectedPaths.front());
+    }
+    return it;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Signal handler for the output play button clicked.
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: onOutputPlay(void)                                throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator        iter = getSelected();
 
     if (!iter) {
         iter = treeModel->children().begin();
@@ -340,9 +358,7 @@ bool
 LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
-        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                      treeView->get_selection();
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        Gtk::TreeModel::iterator        iter = getSelected();
         
         if (iter) {
             KeyboardShortcut::Action    action = gLiveSupport->findAction(
@@ -382,9 +398,7 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 void
 LiveModeWindow :: onEditPlaylist(void)                              throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = treeView->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
@@ -408,9 +422,7 @@ LiveModeWindow :: onEditPlaylist(void)                              throw ()
 void
 LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = treeView->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
@@ -433,9 +445,7 @@ LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
 void
 LiveModeWindow :: onExportPlaylist(void)                            throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = treeView->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
@@ -459,9 +469,7 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
 void
 LiveModeWindow :: onAddToPlaylist(void)                             throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = treeView->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
@@ -482,9 +490,7 @@ LiveModeWindow :: onAddToPlaylist(void)                             throw ()
 void
 LiveModeWindow :: onUploadToHub(void)                               throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                                refSelection = treeView->get_selection();
-    Gtk::TreeModel::iterator    iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator    iter = getSelected();
 
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
