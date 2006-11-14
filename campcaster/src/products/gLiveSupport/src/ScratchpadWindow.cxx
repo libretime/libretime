@@ -303,24 +303,7 @@ ScratchpadWindow :: onClearListButtonClicked (void)             throw ()
 void
 ScratchpadWindow :: onRemoveItemButtonClicked(void)             throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> 
-                        selection       = treeView->get_selection();
-    std::vector<Gtk::TreePath> 
-                        selectedPaths   = selection->get_selected_rows();
-    std::vector<Gtk::TreeIter>
-                        selectedRows;
-
-    // the TreePath is just a row number; convert it to a reference to a row
-    std::vector<Gtk::TreePath>::iterator    iter;
-    for (iter = selectedPaths.begin(); iter != selectedPaths.end(); ++iter) {
-        selectedRows.push_back(treeModel->get_iter(*iter));
-    }
-    
-    // ... and then remove those rows
-    std::vector<Gtk::TreeIter>::iterator    it;
-    for (it = selectedRows.begin(); it != selectedRows.end(); ++it) {
-        treeModel->erase(*it);
-    }
+    treeView->onRemoveMenuOption();
 }
 
 

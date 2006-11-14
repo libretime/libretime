@@ -411,10 +411,39 @@ ZebraTreeView :: onDownMenuOption(void)                             throw ()
 void
 ZebraTreeView :: onRemoveMenuOption(void)                           throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelectedRow();
-
-    if (iter) {
-        removeItem(iter);
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
+    Gtk::TreeModel::iterator                newSelection;
+    
+    if (selection->get_mode() == Gtk::SELECTION_SINGLE) {
+        Gtk::TreeModel::iterator    it = selection->get_selected();
+        if (it) {
+            newSelection = it;
+            ++newSelection;
+            removeItem(it);
+        }
+    
+    } else {
+        std::vector<Gtk::TreePath>  selectedPaths
+                                    = selection->get_selected_rows();
+        
+        std::vector<Gtk::TreeModel::iterator>   selectedIters;
+        std::vector<Gtk::TreePath>::iterator    pathIt = selectedPaths.begin();
+        for ( ; pathIt != selectedPaths.end(); ++pathIt) {
+            selectedIters.push_back(get_model()->get_iter(*pathIt));
+        }
+        
+        std::vector<Gtk::TreeModel::iterator>::iterator
+                                                iterIt = selectedIters.begin();
+        for ( ; iterIt != selectedIters.end(); ++iterIt) {
+            newSelection = *iterIt;
+            ++newSelection;
+            removeItem(*iterIt);
+        }
+        
+    }
+    
+    if (newSelection) {
+        selection->select(newSelection);
     }
 }
 
@@ -428,15 +457,6 @@ ZebraTreeView :: removeItem(const Gtk::TreeModel::iterator &   iter)
 {
     Glib::RefPtr<Gtk::ListStore>    treeModel
                     = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
-    ZebraTreeModelColumnRecord      modelColumns;
-
-    Gtk::TreeModel::iterator        later = iter;
-
-    int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
-    for (++later; later != treeModel->children().end(); ++later) {
-        (*later)[modelColumns.rowNumberColumn] = rowNumber++;
-    }
-    
     treeModel->erase(iter);
 }
 
