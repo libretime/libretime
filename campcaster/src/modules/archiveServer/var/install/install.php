@@ -45,8 +45,8 @@ if (PEAR::isError($dbc)) {
 }
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb =& new Archive($dbc, $config, TRUE);
-$tr =& new Transport($gb);
+$gb = new Archive($dbc, $config, TRUE);
+$tr = new Transport($gb);
 
 echo "# archiveServer step 2:\n# trying uninstall ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);

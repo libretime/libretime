@@ -45,7 +45,7 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars){
             return;
             break;
         default:
-            $xr =& new XML_RPC_Response(0, 805,
+            $xr = new XML_RPC_Response(0, 805,
                 htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
             header("Content-type: text/xml");
             echo $xr->serialize();
@@ -64,7 +64,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$archive = &new XR_Archive($dbc, $config);
+$archive = new XR_Archive($dbc, $config);
 
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
@@ -129,6 +129,6 @@ foreach($methods as $method=>$description){
             "docstring" => $description
     );
 }
-$s = &new XML_RPC_Server( $defs );
+$s = new XML_RPC_Server( $defs );
 
 ?>

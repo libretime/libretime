@@ -4,6 +4,9 @@
  * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 
 require_once "../Archive.php";
@@ -15,7 +18,9 @@ require_once "../Archive.php";
  * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
- *
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class XR_Archive extends Archive {
 

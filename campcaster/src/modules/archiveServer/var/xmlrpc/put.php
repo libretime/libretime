@@ -36,7 +36,7 @@ require_once dirname(__FILE__).'/../Archive.php';
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new Archive($dbc, $config);
+$gb = new Archive($dbc, $config);
 
 function http_error($code, $err){
     header("HTTP/1.1 $code");
