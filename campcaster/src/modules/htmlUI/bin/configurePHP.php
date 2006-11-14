@@ -20,7 +20,7 @@ $changes 	= array(
 require_once 'Config.php';
 require_once 'Config/Container.php';
 
-$conf = &new Config();
+$conf = new Config();
 $root = &$conf->parseConfig($path, 'IniFile');
 if (PEAR::isError($root)) {
 	die($root->getMessage());
