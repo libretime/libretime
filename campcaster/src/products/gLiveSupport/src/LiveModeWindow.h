@@ -267,7 +267,19 @@ class LiveModeWindow : public GuiWindow
          */
         virtual void
         onUploadToHub(void)                                     throw ();
-        
+
+        /**
+         *  Signal handler for the clear list button clicked.
+         */
+        virtual void
+        onClearListButtonClicked(void)                          throw ();
+
+        /**
+         *  Signal handler for the remove item button clicked.
+         */
+        virtual void
+        onRemoveItemButtonClicked(void)                         throw ();
+
         /**
          *  Event handler called when the the window gets hidden.
          *

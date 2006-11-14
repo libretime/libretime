@@ -101,7 +101,6 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendLineNumberColumn("", 2 /* offset */, 50);
-//        treeView->appendColumn("", WidgetConstants::hugePlayButton, 82);
         treeView->appendColumn("", modelColumns.infoColumn, 200);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -125,15 +124,24 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
     // Create the play etc buttons:
-    Gtk::HBox *         buttonBox = Gtk::manage(new Gtk::HBox);
+    Gtk::HBox *         topButtonBox = Gtk::manage(new Gtk::HBox);
+    Gtk::HButtonBox *   bottomButtonBox = Gtk::manage(new Gtk::HButtonBox);
+    
     ImageButton *       outputPlayButton = Gtk::manage(wf->createButton(
                                         WidgetConstants::hugePlayButton ));
+    Button *            clearListButton;
+    Button *            removeButton;
+    
     Gtk::VBox *         cueAudioBox = Gtk::manage(new Gtk::VBox);
     Gtk::HBox *         cueAudioLabelBox = Gtk::manage(new Gtk::HBox);
     Gtk::Label *        cueAudioLabel;
     try {
         cueAudioLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("cuePlayerLabel") ));
+                                *getResourceUstring("cuePlayerLabel") ));
+        clearListButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("clearListButtonLabel")));
+        removeButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("removeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -141,21 +149,32 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Gtk::HBox *         cueAudioButtonsBox = Gtk::manage(new Gtk::HBox);
     cueAudioButtons = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));
-    buttonBox->pack_start(*outputPlayButton, Gtk::PACK_EXPAND_PADDING, 10);
-    buttonBox->pack_start(*cueAudioBox,      Gtk::PACK_EXPAND_PADDING, 10);
+    
+    topButtonBox->pack_start(*outputPlayButton,  Gtk::PACK_EXPAND_PADDING, 10);
+    topButtonBox->pack_start(*cueAudioBox,       Gtk::PACK_EXPAND_PADDING, 10);
     cueAudioBox->pack_start(*cueAudioLabelBox,   Gtk::PACK_SHRINK, 6);
     cueAudioLabelBox->pack_start(*cueAudioLabel, Gtk::PACK_EXPAND_PADDING, 1);
     cueAudioBox->pack_start(*cueAudioButtonsBox, Gtk::PACK_SHRINK, 0);
     cueAudioButtonsBox->pack_start(*cueAudioButtons, 
                                                  Gtk::PACK_EXPAND_PADDING, 1);
-
-    vBox.pack_start(*buttonBox,     Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    bottomButtonBox->set_layout(Gtk::BUTTONBOX_END);
+    bottomButtonBox->set_spacing(5);
+    bottomButtonBox->pack_start(*clearListButton);
+    bottomButtonBox->pack_start(*removeButton);
+    
+    vBox.pack_start(*topButtonBox,      Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(scrolledWindow,     Gtk::PACK_EXPAND_WIDGET, 5);
+    vBox.pack_start(*bottomButtonBox,   Gtk::PACK_SHRINK, 5);
     add(vBox);
 
-    // connect the signal handler for the output play button
+    // connect the signal handlers for the buttons
     outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onOutputPlay ));
+                                &LiveModeWindow::onOutputPlay ));
+    clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &LiveModeWindow::onClearListButtonClicked));
+    removeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &LiveModeWindow::onRemoveItemButtonClicked));
 
     // create the right-click context menus
     audioClipContextMenu = constructAudioClipContextMenu();
@@ -608,6 +627,26 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
     contextMenu->accelerate(*this);
     return contextMenu;
 }    
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the clear list button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onClearListButtonClicked (void)                   throw ()
+{
+    treeModel->clear();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onRemoveItemButtonClicked(void)                   throw ()
+{
+    treeView->onRemoveMenuOption();
+}
 
 
 /*------------------------------------------------------------------------------

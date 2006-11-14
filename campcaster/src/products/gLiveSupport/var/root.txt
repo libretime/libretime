@@ -261,6 +261,9 @@ root:table
 
         cuePlayerLabel:string       { "Preview" }
 
+        clearListButtonLabel:string { "Clear list" }
+        removeButtonLabel:string    { "Remove item(s)" }
+
         cannotEditPlaylistMsg:string
                                     { "Could not open playlist for editing." }
     }
