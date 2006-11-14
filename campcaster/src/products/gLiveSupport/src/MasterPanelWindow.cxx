@@ -678,7 +678,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         if (liveModeWindow->is_visible()) {
             liveModeWindow->hide();
         }
-        liveModeWindow.reset();
+        // the Live Mode window is not destroyed at logout, unlike the others
     }
     if (uploadFileWindow.get()) {
         if (uploadFileWindow->is_visible()) {
@@ -755,6 +755,10 @@ MasterPanelWindow :: showLoggedInUI(void)                           throw ()
     }
     
     setSchedulerAvailable(gLiveSupport->isSchedulerAvailable());
+    
+    if (liveModeWindow && liveModeWindow->isNotEmpty()) {
+        liveModeWindow->present();
+    }
 }
 
 

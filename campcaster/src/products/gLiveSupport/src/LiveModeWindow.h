@@ -361,6 +361,18 @@ class LiveModeWindow : public GuiWindow
          */
         void
         refreshPlaylist(Ptr<Playlist>::Ref  playlist)           throw ();
+
+        /**
+         *  Report whether the window is non-empty.
+         *
+         *  @return true if there is at least one Playable item in the window.
+         */
+        bool
+        isNotEmpty(void)                                        throw ()
+        {
+            return (treeModel->children().size() != 0);
+        }
+
 };
 
 /* ================================================= external data structures */
