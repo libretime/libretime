@@ -9,8 +9,8 @@ define('ACTION_BASE', '/actions' ) ;
  * @version $Revision$
  */
 class uiHandler extends uiBase {
-	var $uiBase;
-	var $redirUrl;
+	public $uiBase;
+	public $redirUrl;
 
     /**
      * Initialize a new Browser Class
@@ -19,9 +19,9 @@ class uiHandler extends uiBase {
      * @param array $config
      * 		configurartion data
      */
-    function uiHandler($config)
+    public function __construct($config)
     {
-        $this->uiBase($config);
+        parent::__construct($config);
     } // constructor
 
 
@@ -152,12 +152,12 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
+        $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
         $this->transMData($r);
 
 		// set records in default language too
         if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {
-            $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
+            $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
             $this->transMData($r, UI_UPLOAD_LANGID);
         }
 
@@ -196,20 +196,20 @@ class uiHandler extends uiBase {
             return;
         }
         $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
-        $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
+        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
         if (isset($ia['audio']['channels'])) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
+        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
         }
         if (isset($ia['audio']['sample_rate'])) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
         }
         if (isset($ia['audio']['bitrate'])) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
+        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
         }
         if (isset($ia['audio']['codec'])) {
-        	$this->_setMDataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
+        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
         }
 
         // from id3 Tags
@@ -256,9 +256,9 @@ class uiHandler extends uiBase {
 
         $extent = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
 
-        $this->_setMDataValue($r, UI_MDATA_KEY_TITLE,    $formdata['title']);
-        $this->_setMDataValue($r, UI_MDATA_KEY_DURATION, $extent);
-        $this->_setMDataValue($r, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_STREAM);
+        $this->setMetadataValue($r, UI_MDATA_KEY_TITLE,    $formdata['title']);
+        $this->setMetadataValue($r, UI_MDATA_KEY_DURATION, $extent);
+        $this->setMetadataValue($r, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_STREAM);
 
         $this->redirUrl = UI_BROWSER."?act=addWebstreamMData&id=$r";
         if (UI_VERBOSE) {
@@ -277,9 +277,9 @@ class uiHandler extends uiBase {
         }
         $extent = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
 
-        $this->_setMDataValue($id, UI_MDATA_KEY_TITLE, $formdata['title']);
-        $this->_setMDataValue($id, UI_MDATA_KEY_URL, $formdata['url']);
-        $this->_setMDataValue($id, UI_MDATA_KEY_DURATION, $extent);
+        $this->setMetadataValue($id, UI_MDATA_KEY_TITLE, $formdata['title']);
+        $this->setMetadataValue($id, UI_MDATA_KEY_URL, $formdata['url']);
+        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, $extent);
 
         $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
         if (UI_VERBOSE) {
@@ -302,7 +302,7 @@ class uiHandler extends uiBase {
 
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $k => $v) {
-                $formdata[$key.'___'.$this->_formElementEncode($v['element'])] ? $mData[$this->_formElementDecode($v['element'])] = $formdata[$key.'___'.$this->_formElementEncode($v['element'])] : NULL;
+                $formdata[$key.'___'.uiBase::formElementEncode($v['element'])] ? $mData[uiBase::formElementDecode($v['element'])] = $formdata[$key.'___'.uiBase::formElementEncode($v['element'])] : NULL;
             }
         }
 
@@ -311,7 +311,7 @@ class uiHandler extends uiBase {
         }
 
         foreach ($mData as $key => $val) {
-            $r = $this->_setMDataValue($id, $key, $val, $curr_langid);
+            $r = $this->setMetadataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
@@ -542,7 +542,7 @@ class uiHandler extends uiBase {
     function _validateForm($formdata, $mask)
     {
         $form = new HTML_QuickForm('validation', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->_parseArr2Form($form, $mask, 'server');
+        uiBase::parseArrayToForm($form, $mask, 'server');
         if (!$form->validate()) {
             $_SESSION['retransferFormData'] = $_REQUEST;
             return FALSE;

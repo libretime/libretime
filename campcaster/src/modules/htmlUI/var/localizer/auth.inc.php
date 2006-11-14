@@ -12,7 +12,7 @@ function login(&$data)
     }
 
     $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-    $gb =& new GreenBox($dbc, $config);
+    $gb = new GreenBox($dbc, $config);
 
     if (!$data['PHP_AUTH_USER'] || !$data['PHP_AUTH_PW']) {
         return FALSE;

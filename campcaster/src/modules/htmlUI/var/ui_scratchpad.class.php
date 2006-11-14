@@ -6,14 +6,14 @@
  */
 class uiScratchPad
 {
-	var $Base;
-	var $items;
-	var $order;
-	var $reloadUrl;
+	private $Base;
+	private $items;
+	private $order;
+	private $reloadUrl;
 
-    function uiScratchPad(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base  =& $uiBase;
+        $this->Base =& $uiBase;
         $this->items =& $_SESSION[UI_SCRATCHPAD_SESSNAME]['content'];
         $this->order =& $_SESSION[UI_SCRATCHPAD_SESSNAME]['order'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
@@ -46,8 +46,8 @@ class uiScratchPad
 
             foreach ($arr as $gunid) {
                 if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                    if ($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)) != FALSE) {
-                        if ($i = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)))) {
+                    if ($this->Base->gb->_idFromGunid($this->Base->toHex($gunid)) != FALSE) {
+                        if ($i = $this->Base->getMetaInfo($this->Base->gb->_idFromGunid($this->Base->toHex($gunid)))) {
                             $this->items[] = $i;
                         }
                     }
@@ -61,7 +61,7 @@ class uiScratchPad
     {
         foreach ($this->items as $val) {
             //$str .= $val['gunid'].':'.$val['added'].' ';         ## new format ###
-            $str .= $this->Base->_toInt8($val['gunid']).' ';      ## Akos� old format ###
+            $str .= $this->Base->toInt8($val['gunid']).' ';      ## Akos� old format ###
         }
         $this->Base->gb->savePref($this->Base->sessid, UI_SCRATCHPAD_KEY, $str);
     } // fn save
@@ -87,7 +87,7 @@ class uiScratchPad
 
         $sp   = $this->get();
         foreach ($ids as $id) {
-            $item = $this->Base->_getMetaInfo($id);
+            $item = $this->Base->getMetaInfo($id);
 
             foreach ($sp as $key=>$val) {
                 if ($val['id'] == $item['id']) {
@@ -167,7 +167,7 @@ class uiScratchPad
     function reLoadM()
     {
         foreach($this->items as $key=>$val) {
-            $this->items[$key] = $this->Base->_getMetaInfo($val['id']);
+            $this->items[$key] = $this->Base->getMetaInfo($val['id']);
         }
     }
 } // class uiScratchPad

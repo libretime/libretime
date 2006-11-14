@@ -124,7 +124,9 @@ $config = array_merge($config,
         'file_types'    => array(
                             '.mp3',
                             '.wav',
-                            '.ogg'
+                            '.ogg',
+                            '.flac',
+                            '.aac'
         ),
         'stream_types'  => array(
                             'application/ogg',

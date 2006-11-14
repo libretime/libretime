@@ -6,11 +6,11 @@
  */
 class uiExchange
 {
-	var $Base;
-	var $file;
-	var $folder;
+	private $Base;
+	private $file;
+	private $folder;
 
-    function uiExchange(&$uiBase)
+    public function __construct(&$uiBase)
     {
         $this->Base =& $uiBase;
         $this->file =& $_SESSION['EXCHANGE']['file'];
@@ -103,8 +103,8 @@ class uiExchange
     {
         include('formmask/exchange.inc.php');
         $form = new HTML_QuickForm('BACKUP_Schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->Base->_parseArr2Form($form, $mask['BACKUP.schedule']);
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask['BACKUP.schedule']);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     }
@@ -113,7 +113,8 @@ class uiExchange
     /**
      * Copy a file or directory.
      *
-     * @param string $target - path to file or directory
+     * @param string $target
+     * 		path to file or directory
      * @return boolean
      */
     function copy2target($target)

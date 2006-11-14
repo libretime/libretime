@@ -5,7 +5,6 @@
  * @version $Revision$
  */
 class uiBrowser extends uiBase {
-    var $alertMsg;
 
     // --- class constructor ---
     /**
@@ -15,9 +14,9 @@ class uiBrowser extends uiBase {
      * @param array $config
      * 		configurartion data
      */
-    function uiBrowser(&$config)
+    public function __construct(&$config)
     {
-        $this->uiBase($config);
+        parent::__construct($config);
     } // constructor
 
 
@@ -71,12 +70,10 @@ class uiBrowser extends uiBase {
     function login($mask)
     {
         $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->_parseArr2Form($form, $mask['languages']);
-        $this->_parseArr2Form($form, $mask['login']);
-
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask['languages']);
+        uiBase::parseArrayToForm($form, $mask['login']);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
-
         return $renderer->toArray();
     }  // fn login
 
@@ -123,7 +120,7 @@ class uiBrowser extends uiBase {
         }
         foreach ($data['listdata'] as $key=>$val) {
             if ($val['type'] != 'Folder') {
-                $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], UI_MDATA_KEY_TITLE);
+                $data['listdata'][$key]['title'] = $this->getMetadataValue($val['id'], UI_MDATA_KEY_TITLE);
             } else {
                 $data['listdata'][$key]['title'] = $val['name'];
             }
@@ -153,8 +150,8 @@ class uiBrowser extends uiBase {
         $form->setConstants(array('folderId' => $folderId,
                                   'id'  => $id,
                                   'act' => $id ? 'editItem' : 'addFileData'));
-        $this->_parseArr2Form($form, $mask);
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     } // fn fileForm
@@ -177,12 +174,12 @@ class uiBrowser extends uiBase {
         $const = array('folderId' => $folderId,
                        'id'     => $id,
                        'act'    => $id ? 'editWebstreamData' : 'addWebstreamData',
-                       'title'  => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_TITLE) : NULL,
-                       'url'    => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_URL) : 'http://',
-                       'length' => $id ? preg_replace("/\.[0-9]{1,6}/", "", $this->_getMDataValue($id, UI_MDATA_KEY_DURATION)) : NULL
+                       'title'  => $id ? $this->getMetadataValue($id, UI_MDATA_KEY_TITLE) : NULL,
+                       'url'    => $id ? $this->getMetadataValue($id, UI_MDATA_KEY_URL) : 'http://',
+                       'length' => $id ? preg_replace("/\.[0-9]{1,6}/", "", $this->getMetadataValue($id, UI_MDATA_KEY_DURATION)) : NULL
                       );
         $form->setConstants($const);
-        $this->_parseArr2Form($form, $mask);
+        uiBase::parseArrayToForm($form, $mask);
 
         /*
         $form->addGroupRule('grp',
@@ -201,7 +198,7 @@ class uiBrowser extends uiBase {
         $form->_rules['grp[url]'][1][validation] = 'client';
         */
 
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     } // fn webstreamForm
@@ -294,7 +291,7 @@ class uiBrowser extends uiBase {
                 $arr[tra($key)] = $val;
             }
         }
-        $arr[$relations[UI_MDATA_KEY_TITLE]] = $this->_getMDataValue($id, UI_MDATA_KEY_TITLE);
+        $arr[$relations[UI_MDATA_KEY_TITLE]] = $this->getMetadataValue($id, UI_MDATA_KEY_TITLE);
         ksort($arr);
 
         return array('metadata' => $arr);
@@ -316,14 +313,14 @@ class uiBrowser extends uiBase {
         $langid = $langid ? $langid : UI_DEFAULT_LANGID;
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
-        $this->_parseArr2Form($form, $mask['langswitch']);
+        uiBase::parseArrayToForm($form, $mask['langswitch']);
         $form->setConstants(array('target_langid' => $langid));
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['langswitch'] = $renderer->toArray();
 
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->_parseArr2Form($form, $mask['basics']);
+        uiBase::parseArrayToForm($form, $mask['basics']);
         $form->setConstants(array('act'         => 'editMetaData',
                                   'id'          => $id,
                                   'curr_langid' => $langid,
@@ -338,20 +335,20 @@ class uiBrowser extends uiBase {
                 if (!is_array($mask['pages'][$key][$k]['attributes'])) {
                 	$mask['pages'][$key][$k]['attributes'] = array();
                 }
-                $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
-                $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));
+                $mask['pages'][$key][$k]['element']    = $key.'___'.uiBase::formElementEncode($v['element']);
+                $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".uiBase::formElementEncode($v['element'])."')"));
                 ## load data from GreenBox
-                if ($getval = $this->_getMDataValue($id, $v['element'], $langid, NULL)) {
+                if ($getval = $this->getMetadataValue($id, $v['element'], $langid, NULL)) {
                     $mask['pages'][$key][$k]['default']                 = $getval;
                     $mask['pages'][$key][$k]['attributes']['onFocus']   = 'MData_confirmChange(this)';
                 }
             }
             $form->addElement('static', NULL, NULL, "<div id='div_$key'>");
-            $this->_parseArr2Form($form, $mask['pages'][$key]);
-            $this->_parseArr2Form($form, $mask['buttons']);
+            uiBase::parseArrayToForm($form, $mask['pages'][$key]);
+            uiBase::parseArrayToForm($form, $mask['buttons']);
             $form->addElement('static', NULL, NULL, "</div id='div_$key'>");
         }
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['pages'][] = $renderer->toArray();
         #print_r($output);
@@ -369,8 +366,8 @@ class uiBrowser extends uiBase {
                 $mask[$key]['default'] = $p;
             }
         }
-        $this->_parseArr2Form($form, $mask);
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     } // fn changeStationPrefs
@@ -456,7 +453,7 @@ class uiBrowser extends uiBase {
         if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
             $m3u = "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n";
         } else {
-            $m3u = $this->_getMDataValue($id, UI_MDATA_KEY_URL);
+            $m3u = $this->getMetadataValue($id, UI_MDATA_KEY_URL);
         }
         touch(UI_TESTSTREAM_MU3_TMP);
         $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");

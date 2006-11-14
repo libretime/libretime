@@ -1,6 +1,10 @@
 <?php
 require(dirname(__FILE__).'/../ui_handler_init.php');
 
+if (strstr($_REQUEST['act'], "HUBBROWSE")) {
+	$HUBBROWSE = new uiHubBrowse($uiHandler);
+
+}
 switch ($_REQUEST['act']) {
 
     case "login":
@@ -167,31 +171,31 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "HUBBROWSE.setCategory":
-	    $uiHandler->HUBBROWSE->setCategory($_REQUEST);
+	    $HUBBROWSE->setCategory($_REQUEST);
 	    break;
 
     case "HUBBROWSE.setValue":
-	    $uiHandler->HUBBROWSE->setValue($_REQUEST);
+	    $HUBBROWSE->setValue($_REQUEST);
 	    break;
 
     case "HUBBROWSE.reOrder":
-	    $uiHandler->HUBBROWSE->reOrder($_REQUEST['by']);
+	    $HUBBROWSE->reOrder($_REQUEST['by']);
 	    break;
 
     case "HUBBROWSE.setDefaults":
-	    $uiHandler->HUBBROWSE->setDefaults(TRUE);
+	    $HUBBROWSE->setDefaults(TRUE);
 	    break;
 
     case "HUBBROWSE.setOffset":
-	    $uiHandler->HUBBROWSE->setOffset($_REQUEST['page']);
+	    $HUBBROWSE->setOffset($_REQUEST['page']);
 	    break;
 
     case "HUBBROWSE.setLimit":
-	    $uiHandler->HUBBROWSE->setLimit($_REQUEST['limit']);
+	    $HUBBROWSE->setLimit($_REQUEST['limit']);
 	    break;
 
     case "HUBBROWSE.setFiletype":
-	    $uiHandler->HUBBROWSE->setFiletype($_REQUEST['filetype']);
+	    $HUBBROWSE->setFiletype($_REQUEST['filetype']);
 	    break;
 
     case "HUBSEARCH.newSearch":

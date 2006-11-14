@@ -6,21 +6,23 @@
  */
 class uiCalendar
 {
-    var $Decade;
-    var $Year;
-    var $Month;
-    var $Week;
-    var $Day;
-    var $Hour;
+    public $Decade;
+    public $Year;
+    public $Month;
+    public $Week;
+    public $Day;
+    public $Hour;
 
-    function uiCalendar()
+    public function __construct()
     {
 
     }
 
     function buildDecade()
     {
-        if (is_array($this->Decade)) return;
+        if (is_array($this->Decade)) {
+        	return;
+        }
 
         for ($Year = $this->curr['year']-5; $Year<=$this->curr['year']+5; $Year++) {
             $this->Decade[] = array(
@@ -34,14 +36,16 @@ class uiCalendar
 
     function buildYear()
     {
-        if (is_array($this->Year)) return;
+        if (is_array($this->Year)) {
+        	return;
+        }
 
-        require_once 'Calendar/Year.php';
-        require_once 'Calendar/Month.php';
+        require_once('Calendar/Year.php');
+        require_once('Calendar/Month.php');
 
         $Year = new Calendar_Year($this->curr['year']);
         # mark current month
-        $sel =   new Calendar_Month($this->curr['year'], $this->curr['month']);
+        $sel = new Calendar_Month($this->curr['year'], $this->curr['month']);
         $selections = array($sel);
 
         $Year->build($selections, UI_SCHEDULER_FIRSTWEEKDAY);
@@ -57,16 +61,20 @@ class uiCalendar
 
     function buildMonth()
     {
-        if (is_array($this->Month)) return;
+        if (is_array($this->Month)) {
+        	return;
+        }
 
-        require_once 'Calendar/Month/Weekdays.php';
-        require_once 'Calendar/Day.php';
+        require_once('Calendar/Month/Weekdays.php');
+        require_once('Calendar/Day.php');
 
         $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], UI_SCHEDULER_FIRSTWEEKDAY);
-        $Month->build($this->_scheduledDays('month'));                                                       ## scheduled days are selected
+        // scheduled days are selected
+        $Month->build($this->_scheduledDays('month'));
         while ($Day = $Month->fetch()) {
-            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';           ## due to bug in
-            $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
+        	// Next 2 lines are due to a bug in Calendar_Month_Weekdays
+            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';
+            $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;
             $this->Month[] = array(
                                 'day'           => sprintf('%02d', $Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
@@ -87,9 +95,11 @@ class uiCalendar
 
     function buildWeek()
     {
-        if (is_array($this->Week)) return;
+        if (is_array($this->Week)) {
+        	return;
+        }
 
-        require_once 'Calendar/Week.php';
+        require_once('Calendar/Week.php');
 
         $Week = new Calendar_Week($this->curr['year'], $this->curr['month'], $this->curr['day'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Week->build($this->_scheduledDays('week'));
@@ -122,8 +132,9 @@ class uiCalendar
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
         while ($Hour = $Day->fetch()) {
-            $corrMonth = $Hour->thisMonth()<=12 ? sprintf('%02d', $Hour->thisMonth()) : '01';           ## due to bug in
-            $corrYear  = $Hour->thisMonth()<=12 ? $Day->thisYear() : $Hour->thisYear()+1;               ## Calendar_Month_Weekdays
+        	// Next two lines are due to a bug in Calendar_Month_Weekdays
+            $corrMonth = $Hour->thisMonth()<=12 ? sprintf('%02d', $Hour->thisMonth()) : '01';
+            $corrYear  = $Hour->thisMonth()<=12 ? $Day->thisYear() : $Hour->thisYear()+1;
             $this->Day[] = array(
                                 'day'          => sprintf('%02d', $Hour->thisDay()),
                                 'week'         => $this->_getWeekNr($Hour),
@@ -141,7 +152,9 @@ class uiCalendar
 
     function buildHour()
     {
-        if (is_array($this->Hour)) return;
+        if (is_array($this->Hour)) {
+        	return;
+        }
 
         require_once('Calendar/Hour.php');
 

@@ -7,17 +7,17 @@
 class uiHubBrowse extends uiBrowse
 {
 
-    function uiHubBrowse(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base       =& $uiBase;
-        $this->prefix     = 'HUBBROWSE';
-        $this->col        =& $_SESSION[UI_HUBBROWSE_SESSNAME]['col'];
-        $this->criteria   =& $_SESSION[UI_HUBBROWSE_SESSNAME]['criteria'];
-        #$this->results    =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
-        $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->Base =& $uiBase;
+        $this->prefix = 'HUBBROWSE';
+        $this->col =& $_SESSION[UI_HUBBROWSE_SESSNAME]['col'];
+        $this->criteria =& $_SESSION[UI_HUBBROWSE_SESSNAME]['criteria'];
+        #$this->results =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {
-        	$this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        	$this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
         }
         if (empty($this->criteria['filetype'])) {
         	$this->criteria['filetype'] = UI_FILETYPE_ANY;
@@ -53,8 +53,8 @@ class uiHubBrowse extends uiBrowse
         }
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
-            // TODO: maybe this _getMetaInfo is not correct for the remote results
-            $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            // TODO: maybe this getMetaInfo is not correct for the remote results
+            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
         $this->pagination($results);
 //        echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";

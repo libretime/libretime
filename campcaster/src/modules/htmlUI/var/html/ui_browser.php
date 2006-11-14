@@ -72,7 +72,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	                $Smarty->assign('filecount', count($_REQUEST['id']));
 	                $Smarty->assign('idstr', $idstr);
 	            } else {
-	                $Smarty->assign('filename', $uiBrowser->_getMDataValue($_REQUEST['id'], UI_MDATA_KEY_TITLE));
+	                $Smarty->assign('filename', $uiBrowser->getMetadataValue($_REQUEST['id'], UI_MDATA_KEY_TITLE));
 	            }
 	            $Smarty->display('popup/deleteItem.tpl');
 	            break;
@@ -140,7 +140,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case "SCHEDULER.removeItem":
-	            $Smarty->assign('playlistName', $uiBrowser->_getMDataValue($_REQUEST['playlistId'], UI_MDATA_KEY_TITLE));
+	            $Smarty->assign('playlistName', $uiBrowser->getMetadataValue($_REQUEST['playlistId'], UI_MDATA_KEY_TITLE));
 	            $Smarty->display('popup/SCHEDULER.removeItem.tpl');
 	            break;
 
@@ -214,19 +214,21 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case 'HUBBROWSE.getResults':
+       	        $HUBBROWSE = new uiHubBrowse($uiBrowser);
+
 	            if (isset($_REQUEST['trtokid'])) {
-	                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
-	                if ($uiBrowser->HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
-	                    $Smarty->assign('results',true);
+	                $Smarty->assign('trtokid', $_REQUEST['trtokid']);
+	                if ($HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
+	                    $Smarty->assign('results', true);
 	                } else {
-	                    $Smarty->assign('results',false);
+	                    $Smarty->assign('results', false);
 	                }
 	            } else {
-	                $Smarty->assign('trtokid',$uiBrowser->HUBBROWSE->searchDB());
-	                $Smarty->assign('results',false);
+	                $Smarty->assign('trtokid', $HUBBROWSE->searchDB());
+	                $Smarty->assign('results', false);
 	            }
-	            $Smarty->assign('polling_frequency',UI_HUB_POLLING_FREQUENCY);
-	            $Smarty->assign('_prefix','HUBBROWSE');
+	            $Smarty->assign('polling_frequency', UI_HUB_POLLING_FREQUENCY);
+	            $Smarty->assign('_prefix', 'HUBBROWSE');
 	            $Smarty->display('popup/HUB.getResults.tpl');
 	            break;
 
@@ -320,7 +322,8 @@ if ($uiBrowser->userid) {
 	        break;
 
         case "HUBBROWSE":
-	        $Smarty->assign('hubBrowseForm', $uiBrowser->HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
+       	    $HUBBROWSE = new uiHubBrowse($uiBrowser);
+	        $Smarty->assign('hubBrowseForm', $HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        $Smarty->assign('isHub', TRUE);
 	        break;
@@ -341,7 +344,7 @@ if ($uiBrowser->userid) {
 	        break;
 
         case "_analyzeFile":
-	        $Smarty->assign('_analyzeFile', $uiBrowser->_analyzeFile($uiBrowser->id, 'text'));
+	        $Smarty->assign('_analyzeFile', $uiBrowser->analyzeFile($uiBrowser->id, 'text'));
 	        $Smarty->assign('showFile', TRUE);
 	        break;
 

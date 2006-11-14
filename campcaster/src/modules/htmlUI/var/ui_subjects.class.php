@@ -6,18 +6,17 @@
  */
 class uiSubjects
 {
+	public $Base;
+	private $reloadUrl;
+	private $suRedirUrl;
+	private $redirUrl;
 
-	var $Base;
-	var $reloadUrl;
-	var $suRedirUrl;
-	var $redirUrl;
-
-    function uiSubjects(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base       =& $uiBase;
-        $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->Base =& $uiBase;
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->suRedirUrl = UI_BROWSER.'?act=SUBJECTS';
-        $this->redirUrl   = UI_BROWSER.'?act=SUBJECTS';
+        $this->redirUrl = UI_BROWSER.'?act=SUBJECTS';
     }
 
 
@@ -50,8 +49,8 @@ class uiSubjects
         include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
         $form = new HTML_QuickForm('addSubject', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->Base->_parseArr2Form($form, $mask[$type]);
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask[$type]);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     }
@@ -145,9 +144,9 @@ class uiSubjects
         } else {
             $mask['chgPasswd']['cancel']['attributes'] = array('onClick' => 'location.href="'.UI_BROWSER.'"');
         }
-        $this->Base->_parseArr2Form($form, $mask['chgPasswd']);
+        uiBase::parseArrayToForm($form, $mask['chgPasswd']);
         $form->setConstants(array('login' => $login));
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
     }

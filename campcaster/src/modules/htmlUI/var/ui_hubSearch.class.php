@@ -6,13 +6,13 @@
  */
 class uiHubSearch extends uiSearch {
 
-    function uiHubSearch(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base       =& $uiBase;
-        $this->prefix     = 'HUBSEARCH';
-        #$this->results    =& $_SESSION[UI_HUBSEARCH_SESSNAME]['results'];
-        $this->criteria   =& $_SESSION[UI_HUBSEARCH_SESSNAME]['criteria'];
-        $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->Base =& $uiBase;
+        $this->prefix = 'HUBSEARCH';
+        #$this->results =& $_SESSION[UI_HUBSEARCH_SESSNAME]['results'];
+        $this->criteria =& $_SESSION[UI_HUBSEARCH_SESSNAME]['criteria'];
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {
         	$this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
@@ -33,24 +33,24 @@ class uiHubSearch extends uiSearch {
 
     function newSearch(&$formdata)
     {
-        $this->results                  = NULL;
-        $this->criteria['conditions']   = NULL;
-        $this->criteria['offset']       = NULL;
-        $this->criteria['form']         = NULL;
-        $this->criteria['operator']     = $formdata['operator'];
-        $this->criteria['filetype']     = $formdata['filetype'];
-        $this->criteria['limit']        = $formdata['limit'];
-        $this->criteria['counter']      = 0;
+        $this->results = NULL;
+        $this->criteria['conditions'] = NULL;
+        $this->criteria['offset'] = NULL;
+        $this->criteria['form'] = NULL;
+        $this->criteria['operator'] = $formdata['operator'];
+        $this->criteria['filetype'] = $formdata['filetype'];
+        $this->criteria['limit'] = $formdata['limit'];
+        $this->criteria['counter'] = 0;
 
         // $criteria['form'] is used for retransfer to form
         $this->criteria['form']['operator'] = $formdata['operator'];
         $this->criteria['form']['filetype'] = $formdata['filetype'];
-        $this->criteria['form']['limit']    = $formdata['limit'];
+        $this->criteria['form']['limit'] = $formdata['limit'];
 
-        foreach ($formdata as $key=>$val) {
+        foreach ($formdata as $key => $val) {
             if (is_array($val) && $val['active']) {
                 $this->criteria['counter']++;
-                $this->criteria['conditions'][$key] = array('cat' => $this->Base->_formElementDecode($val[0]),
+                $this->criteria['conditions'][$key] = array('cat' => uiBase::formElementDecode($val[0]),
                                                             'op'  => $val[1],
                                                             'val' => stripslashes($val[2])
                                                       );
@@ -83,7 +83,7 @@ class uiHubSearch extends uiSearch {
         }
         foreach ($results['results'] as $rec) {
             $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->_getMetaInfo($tmpId);
+            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
         $this->results['cnt'] = $results['cnt'];
 
@@ -94,16 +94,18 @@ class uiHubSearch extends uiSearch {
     } // fn searchDB
 
 
-    function getSearchResults($trtokid) {
+    function getSearchResults($trtokid)
+    {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
         $results = $this->Base->gb->getSearchResults($trtokid);
+        //echo"<pre><b>RESULTS:</b><br>";print_r($results);echo "</pre>";
         if (!is_array($results) || !count($results)) {
             return false;
         }
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
-            // TODO: maybe this _getMetaInfo is not correct for the remote results
-            $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            // TODO: maybe this getMetaInfo is not correct for the remote results
+            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
         $this->pagination($results);
         //echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";

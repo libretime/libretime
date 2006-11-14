@@ -7,14 +7,14 @@
  */
 class uiTransfers
 {
-    var $Base;
-    var $allItems;
-    var $rows;
-    var $trShowInfo;
-    var $reloadUrl;
+    private $Base;
+    private $allItems;
+    private $rows;
+    private $trShowInfo;
+    private $reloadUrl;
 
 
-    function uiTransfers(&$uiBase)
+    public function __construct(&$uiBase)
     {
         $this->Base =& $uiBase;
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';

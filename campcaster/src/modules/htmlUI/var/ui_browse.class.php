@@ -6,31 +6,31 @@
  */
 class uiBrowse
 {
-    var $Base; // uiBase object
-    var $prefix;
-    var $col;
-    var $criteria;
-    var $reloadUrl;
+    public $Base; // uiBase object
+    private $prefix;
+    private $col;
+    private $criteria;
+    private $reloadUrl;
 
 
-    function uiBrowse(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base       =& $uiBase;
-        $this->prefix     = 'BROWSE';
-        $this->col        =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['col'];
-        $this->criteria   =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['criteria'];
-        #$this->results    =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['results'];
-        $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->Base =& $uiBase;
+        $this->prefix = 'BROWSE';
+        $this->col =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['col'];
+        $this->criteria =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['criteria'];
+        //$this->results =& $_SESSION[constant('UI_'.$this->prefix.'_SESSNAME')]['results'];
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {
-            $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+            $this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
         }
         if (empty($this->criteria['filetype'])) {
             $this->criteria['filetype'] = UI_FILETYPE_ANY;
         }
 
         if (!is_array($this->col)) {
-            ## init Categorys
+            // init Categorys
             $this->setDefaults();
         }
     } // constructor
@@ -89,7 +89,7 @@ class uiBrowse
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $v){
                 if (isset($v['type']) && $v['type']) {
-                    $tmp = $this->Base->_formElementEncode($v['element']);
+                    $tmp = uiBase::formElementEncode($v['element']);
                     $mask2['browse_columns']['category']['options'][$tmp] = tra($v['label']);
                 }
             }
@@ -99,22 +99,22 @@ class uiBrowse
             $form = new HTML_QuickForm('col'.$n, UI_STANDARD_FORM_METHOD, UI_HANDLER);
             $form->setConstants(array('id' => $id,
                                       'col' => $n,
-                                      'category' => $this->Base->_formElementEncode($this->col[$n]['category'])));
+                                      'category' => uiBase::formElementEncode($this->col[$n]['category'])));
             $mask2['browse_columns']['value']['options'] = $this->options($this->col[$n]['values']['results']);
             $mask2['browse_columns']['value']['default'] = $this->col[$n]['form_value'];
-            $this->Base->_parseArr2Form($form, $mask2['browse_columns']);
+            uiBase::parseArrayToForm($form, $mask2['browse_columns']);
             $form->validate();
-            $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+            $renderer = new HTML_QuickForm_Renderer_Array(true, true);
             $form->accept($renderer);
             $output['col'.$n]['dynform'] = $renderer->toArray();
         }
 
         ## form to change limit and file-type
         $form = new HTML_QuickForm('switch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->Base->_parseArr2Form($form, $mask2['browse_global']);
+        uiBase::parseArrayToForm($form, $mask2['browse_global']);
         $form->setDefaults(array('limit'    => $this->criteria['limit'],
                                  'filetype' => $this->criteria['filetype']));
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['global']['dynform'] = $renderer->toArray();
 
@@ -123,19 +123,31 @@ class uiBrowse
 
 
     /**
+     * Set the category for audio file browser.  There are three columns
+     * you can set the category for.
+     *
      * @param array $parm
+     * 		Has keys:
+     * 		int 'col' - the column you are setting the category for
+     * 		string 'category' - the category for the given column
+     * 		string 'value' - the
      * @return void
      */
-    function setCategory($parm)
+    public function setCategory($parm)
     {
-        $which = $parm['col'];
-        $this->col[$which]['category'] = $this->Base->_formElementDecode($parm['category']);
-        $criteria = isset($this->col[$which]['criteria']) ? $this->col[$which]['criteria'] : null;
-        $this->col[$which]['values'] = $this->Base->gb->browseCategory($this->col[$which]['category'], $criteria, $this->Base->sessid);
+//    	$reflect = new ReflectionProperty('uiBrowse', 'Base');
+//    	echo "<pre>";print_r(Reflection::getModifierNames($reflect->getModifiers()));echo "</pre>";
+
+        $columnNumber = $parm['col'];
+        $category = $parm['category'];
+
+        $this->col[$columnNumber]['category'] = uiBase::formElementDecode($category);
+        $criteria = isset($this->col[$columnNumber]['criteria']) ? $this->col[$columnNumber]['criteria'] : null;
+//        print_r($this->Base->gb);
+        $this->col[$columnNumber]['values'] = $this->Base->gb->browseCategory($this->col[$columnNumber]['category'], $criteria, $this->Base->sessid);
 
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
-
-        $this->clearHierarchy($which);
+        $this->clearHierarchy($columnNumber);
         #print_r($this->col);
     } // fn setCategory
 
@@ -150,7 +162,8 @@ class uiBrowse
         $next  = $which + 1;
         $this->col[$which]['form_value'] =  $parm['value'][0];
         if ($parm['value'][0] == '%%all%%') {
-            $this->col[$next]['criteria'] = array('operator' => 'and', 'filetype' => $this->criteria['filetype']);
+            $this->col[$next]['criteria'] = array('operator' => 'and',
+            									  'filetype' => $this->criteria['filetype']);
         } else {
             $this->col[$next]['criteria'] = array(
                 'operator' => 'and',
@@ -158,7 +171,7 @@ class uiBrowse
                 'conditions'  => array_merge(
                     is_array($this->col[$which]['criteria']['conditions']) ? $this->col[$which]['criteria']['conditions'] : array(),
                     array(
-                        array('cat'  => $this->Base->_formElementDecode($parm['category']),
+                        array('cat'  => uiBase::formElementDecode($parm['category']),
                               'op'   => '=',
                               'val'  => $parm['value'][0]
                         )
@@ -232,7 +245,7 @@ class uiBrowse
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
             $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->_getMetaInfo($tmpId);
+            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
 
         /*

@@ -1,10 +1,10 @@
 <?php
 function phtml($str) {
-    echo htmlspecialchars($str);    
+    echo htmlspecialchars($str);
 }
 
 class Maintenance {
-    function listLanguages() 
+    function listLanguages()
     {
         $mode       = Localizer::GetMode();
         $languages  = Localizer::getAllLanguages($mode);
@@ -16,27 +16,27 @@ class Maintenance {
             ?>
             <tr><td><?php phtml($l->m_languageId); ?></td><td><?php phtml($l->m_englishName); ?></td><td><?php phtml($l->m_nativeName); ?></td><td><?php phtml('Edit'); ?></td>
             <?php
-        } 
+        }
         ?>
-        </table> 
-        <?php 
-    }    
+        </table>
+        <?php
+    }
 
     function languageForm($validate=FALSE)
     {
         require_once 'HTML/QuickForm.php';
         require_once 'form_function.php';
-        $form =& new  HTML_QuickForm();
-        parseArr2Form($form, addLanguageFormArr()); 
-        
+        $form = new  HTML_QuickForm();
+        parseArr2Form($form, addLanguageFormArr());
+
         if ($validate) {
             if ($form->validate()) {
-                return $form->getSubmitValues(); 
+                return $form->getSubmitValues();
             } else {
                 return FALSE;
-            } 
+            }
         }
-        
+
         ?>
         <table style="background-color: #d5e2ee; border: 1px solid #8baed1; margin-left: 10px; margin-top: 5px;" width="700px;">
         <tr><th>Add language</th></tr>
@@ -44,25 +44,25 @@ class Maintenance {
         </table>
         <?php
     }
-    
+
     function doAddLanguage()
     {
         if ($values = Maintenance::languageForm(TRUE)) {
             // store from here
             global $g_localizerConfig;
-            $className = "LocalizerFileFormat_".strtoupper($g_localizerConfig['DEFAULT_FILE_TYPE']); 
-            $storage =& new $className();
-            
+            $className = "LocalizerFileFormat_".strtoupper($g_localizerConfig['DEFAULT_FILE_TYPE']);
+            $storage = new $className();
+
             if ($storage->addLanguage($values)) {
                 return TRUE;
-            } 
-        } 
-        
-        return FALSE;       
+            }
+        }
+
+        return FALSE;
     }
 }
 
-if ($g_localizerConfig['MAINTENANCE']) {    
+if ($g_localizerConfig['MAINTENANCE']) {
     ?>
     <table>
         <tr><td valign="top"> <!-- Begin top control panel -->
@@ -74,17 +74,17 @@ if ($g_localizerConfig['MAINTENANCE']) {
         </td></tr>
     </table>
     <?
-    
+
     switch ($action) {
         case 'list_languages':
             Maintenance::listLanguages();
             break;
-            
+
         case 'add_language':
             Maintenance::languageForm();
-            break;   
-        
-        case 'do_add_language': 
+            break;
+
+        case 'do_add_language':
             if (Maintenance::doAddLanguage()) {
                 Maintenance::listLanguages();
             }

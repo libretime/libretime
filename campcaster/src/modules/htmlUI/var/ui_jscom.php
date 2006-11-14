@@ -6,12 +6,12 @@
  * @version $Revision$
  */
 class jscom {
-    var $prefix = 'jsc_';
-    var $callables  = array();
-    var $method     = 'POST';
-    var $uri = '';
+    private $prefix = 'jsc_';
+    private $callables = array();
+    private $method = 'POST';
+    private $uri = '';
 
-    function jscom($calls = NULL, $pars = NULL)
+    public function __construct($calls = NULL, $pars = NULL)
     {
         $this->uri = $_SERVER['REQUEST_URI'];
         if (!is_null($calls)) {

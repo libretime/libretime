@@ -6,21 +6,21 @@
  */
 class uiSearch
 {
-    var $Base;
-    var $prefix;
-    var $criteria;
-    var $reloadUrl;
-    var $results;
+    private $Base;
+    private $prefix;
+    private $criteria;
+    private $reloadUrl;
+    private $results;
 
-    function uiSearch(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->Base       =& $uiBase;
-        $this->prefix     = 'SEARCH';
-        //$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
-        $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
-        $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->Base =& $uiBase;
+        $this->prefix = 'SEARCH';
+        //$this->results =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
+        $this->criteria =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
+        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         if (empty($this->criteria['limit'])) {
-            $this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+            $this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
         }
     }
 
@@ -47,7 +47,7 @@ class uiSearch
     function searchForm($id, $mask2)
     {
         //print_r($this->criteria['form']);
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $counter = isset($this->criteria['counter']) ? $this->criteria['counter'] : 1;
         $form->setConstants(array('id'=>$id, 'counter'=>$counter));
@@ -55,11 +55,11 @@ class uiSearch
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $v){
                 if (isset($v['type']) && $v['type']) {
-                    $col1[$this->Base->_formElementEncode($v['element'])] = tra($v['label']);
+                    $col1[uiBase::formElementEncode($v['element'])] = tra($v['label']);
                     if (isset($val['relation'])) {
-                        $col2[$this->Base->_formElementEncode($v['element'])] = $mask2['relations'][$v['relation']];
+                        $col2[uiBase::formElementEncode($v['element'])] = $mask2['relations'][$v['relation']];
                     } else {
-                        $col2[$this->Base->_formElementEncode($v['element'])] = $mask2['relations']['standard'];
+                        $col2[uiBase::formElementEncode($v['element'])] = $mask2['relations']['standard'];
                     }
                 }
             };
@@ -101,11 +101,11 @@ class uiSearch
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
 
-        $this->Base->_parseArr2Form($form, $mask2['search']);
+        uiBase::parseArrayToForm($form, $mask2['search']);
         $constants = isset($this->criteria['form']) ? $this->criteria['form'] : null;
         $form->setConstants($constants);
         $form->validate();
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['dynform'] = $renderer->toArray();
         //print_r($output);
@@ -134,7 +134,7 @@ class uiSearch
         foreach ($formdata as $key=>$val) {
             if (is_array($val) && $val['active']) {
                 $this->criteria['counter']++;
-                $this->criteria['conditions'][$key] = array('cat' => $this->Base->_formElementDecode($val[0]),
+                $this->criteria['conditions'][$key] = array('cat' => uiBase::formElementDecode($val[0]),
                                                             'op'  => $val[1],
                                                             'val' => stripslashes($val[2])
                                                       );
@@ -152,8 +152,8 @@ class uiSearch
     function simpleSearchForm($mask)
     {
         $form = new HTML_QuickForm('simplesearch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->Base->_parseArr2Form($form, $mask);
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        uiBase::parseArrayToForm($form, $mask);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output = $renderer->toArray();
         //print_r($output);
@@ -179,7 +179,7 @@ class uiSearch
                                                       'op'      => constant('UI_SIMPLESEARCH_OP'.$n),
                                                       'val'     => stripslashes($formdata['criterium'])
                                                );
-            $this->criteria['form']['row_'.$n]= array(0     => $this->Base->_formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
+            $this->criteria['form']['row_'.$n]= array(0     => uiBase::formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
                                                       1     => constant('UI_SIMPLESEARCH_OP'.$n),
                                                       2     => stripslashes($formdata['criterium'])
                                                );
@@ -206,7 +206,7 @@ class uiSearch
         }
         foreach ($results['results'] as $rec) {
             $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->_getMetaInfo($tmpId);
+            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
         $this->results['cnt'] = $results['cnt'];
 

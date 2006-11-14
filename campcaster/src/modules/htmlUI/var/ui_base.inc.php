@@ -115,56 +115,48 @@ function _getNumArr($start, $end, $step=1)
  */
 class uiBase
 {
-    var $redirUrl;
-    var $alertMsg;
-    var $dbc;
-    var $gb; // GreenBox
-    var $config;
-    var $sessid;
-    var $userid;
-    var $login;
-    var $langid;
-    var $id;
-    var $pid;
-    var $type;
-    var $fid;
-    var $homeid;
-    var $InputTextStandardAttrib;
-    var $STATIONPREFS;
-    var $SCRATCHPAD;
-    var $SEARCH;
-    var $BROWSE;
-    var $HUBBROWSE;
-    var $HUBSEARCH;
-    var $PLAYLIST;
-    var $SCHEDULER;
-    var $SUBJECTS;
-    var $EXCHANGE;
-    var $TRANSFERS;
-    var $_self_;
+    public $gb; // GreenBox
+    public $STATIONPREFS;
+    public $SCRATCHPAD;
+    public $SEARCH;
+    public $BROWSE;
+    // Note: loading HUBBROWSE on every page load slows things down
+    // a lot.  we only load it on demand.
+    //public $HUBBROWSE;
+    public $HUBSEARCH;
+    public $PLAYLIST;
+    public $SCHEDULER;
+    public $SUBJECTS;
+    public $EXCHANGE;
+    public $TRANSFERS;
+    public $redirUrl;
+    public $dbc;
+    public $config;
+    public $sessid;
+    public $userid;
+    public $login;
+    public $id;
+    public $langid;
+    public $pid;
+    public $type;
+    public $fid;
+    public $homeid;
+    public $alertMsg;
 
     /**
-     *  uiBase
-     *
-     *  Initialize a new Basis Class including:
-     *  - database  initialation
-     *  - GreenBox initialation
-     *
-     *  @param array $config
+     * @param array $config
      * 		configurartion data
      */
-    function uiBase(&$config)
+    public function __construct(&$config)
     {
         $this->dbc = DB::connect($config['dsn'], TRUE);
         if (DB::isError($this->dbc)) {
             die($this->dbc->getMessage());
         }
         $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb =& new GreenBox($this->dbc, $config);
+        $this->gb = new GreenBox($this->dbc, $config);
         $this->config =& $config;
-
         $this->config['accessRawAudioUrl'] = $config['storageUrlPath'].'/xmlrpc/simpleGet.php';
-
         $this->sessid = isset($_REQUEST[$config['authCookieName']]) ?
                             $_REQUEST[$config['authCookieName']] : null;
         $this->userid = $this->gb->getSessUserId($this->sessid);
@@ -187,21 +179,23 @@ class uiBase
             $this->homeid = $this->gb->getObjId($this->login, $this->gb->storId);
         }
 
-        $this->InputTextStandardAttrib = array('size'=>UI_INPUT_STANDARD_SIZE,
-                                        'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
+    }
+
+
+    public function init()
+    {
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
-        $this->SCRATCHPAD =& new uiScratchPad($this);
-        $this->SEARCH =& new uiSearch($this);
-        $this->BROWSE =& new uiBrowse($this);
-        $this->HUBBROWSE =& new uiHubBrowse($this);
-        $this->HUBSEARCH =& new uiHubSearch($this);
-        $this->PLAYLIST =& new uiPlaylist($this);
-        $this->SCHEDULER =& new uiScheduler($this);
-        $this->SUBJECTS =& new uiSubjects($this);
-        $this->EXCHANGE =& new uiExchange($this);
-        $this->TRANSFERS =& new uiTransfers($this);
-        $this->_self_ =& $this;
-    } // fn uiBase
+        $this->SCRATCHPAD = new uiScratchPad($this);
+        $this->SEARCH = new uiSearch($this);
+        $this->BROWSE = new uiBrowse($this);
+        //$this->HUBBROWSE = new uiHubBrowse($this);
+        $this->HUBSEARCH = new uiHubSearch($this);
+        $this->PLAYLIST = new uiPlaylist($this);
+        $this->SCHEDULER = new uiScheduler($this);
+        $this->SUBJECTS = new uiSubjects($this);
+        $this->EXCHANGE = new uiExchange($this);
+        $this->TRANSFERS = new uiTransfers($this);
+    }
 
 
     /**
@@ -210,7 +204,7 @@ class uiBase
      * @param array $mask
      * @param boolean $reload
      */
-    function loadStationPrefs(&$mask, $reload=FALSE)
+    public function loadStationPrefs(&$mask, $reload=FALSE)
     {
         if (!is_array($this->STATIONPREFS) || ($reload === TRUE) ) {
         	$this->STATIONPREFS = array();
@@ -230,8 +224,6 @@ class uiBase
 
 
     /**
-     *  _parseArr2Form
-     *
      *  Add elements/rules/groups to an given HTML_QuickForm object
      *
      *  @param HTML_Quickform $form
@@ -241,7 +233,7 @@ class uiBase
      *  @param string $side
      * 		can be 'client' or 'server' - this is where the form validation occurs.
      */
-    function _parseArr2Form(&$form, &$mask, $side='client')
+    public static function parseArrayToForm(&$form, &$mask, $side='client')
     {
         foreach ($mask as $v) {
             $attrs = isset($v['attributes']) ? $v['attributes'] : null;
@@ -347,7 +339,7 @@ class uiBase
 
         reset($mask);
         $form->validate();
-    } // fn _parseArr2Form
+    } // fn parseArrayToForm
 
 
     /**
@@ -356,21 +348,21 @@ class uiBase
      * @param array $input
      * 		array of form-elements
      */
-    function _dateArr2Str(&$input)
-    {
-        foreach ($input as $k => $v){
-            if (is_array($v)) {
-                if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
-                    $input[$k] = $v['Y'].$v['y'].'-'.sprintf('%02d', $v['M'].$v['m']).'-'.sprintf('%02d', $v['d']);
-                }
-                if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
-                    $input[$k] = sprintf('%02d', $v['H'].$v['h']).':'.sprintf('%02d', $v['i']).':'.sprintf('%02d', $v['s']);
-                }
-            }
-        }
-
-        return $input;
-    } // fn _dateArr2Str
+//    function _dateArr2Str(&$input)
+//    {
+//        foreach ($input as $k => $v){
+//            if (is_array($v)) {
+//                if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
+//                    $input[$k] = $v['Y'].$v['y'].'-'.sprintf('%02d', $v['M'].$v['m']).'-'.sprintf('%02d', $v['d']);
+//                }
+//                if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
+//                    $input[$k] = sprintf('%02d', $v['H'].$v['h']).':'.sprintf('%02d', $v['i']).':'.sprintf('%02d', $v['s']);
+//                }
+//            }
+//        }
+//
+//        return $input;
+//    } // fn _dateArr2Str
 
 
     /**
@@ -380,7 +372,7 @@ class uiBase
      * 		local ID of file
      * @param string $format
      */
-    function _analyzeFile($id, $format)
+    public function analyzeFile($id, $format)
     {
         $ia = $this->gb->analyzeFile($id, $this->sessid);
         $s  = $ia['playtime_seconds'];
@@ -404,23 +396,23 @@ class uiBase
                    </audioClip>';
         }
         return FALSE;
-    } // fn _analyzeFile
+    } // fn analyzeFile
 
 
-    function _toHex($gunid)
+    public function toHex($gunid)
     {
         $res = $this->dbc->query("SELECT to_hex($gunid)");
         $row = $res->fetchRow();
         return $row['to_hex'];
-    } // fn _toHex
+    } // fn toHex
 
 
-    function _toInt8($gunid)
+    public function toInt8($gunid)
     {
         $res = $this->dbc->query("SELECT x'$gunid'::bigint");
         $row = $res->fetchRow();
         return $row['int8'];
-    } // fn _toInt8
+    } // fn toInt8
 
 
     /**
@@ -438,7 +430,7 @@ class uiBase
      * @param string $p8
      * @param string $p9
      */
-    function _retMsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
+    public function _retMsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
     {
         if (!isset($_SESSION['alertMsg'])) {
             $_SESSION['alertMsg'] = '';
@@ -447,22 +439,22 @@ class uiBase
     } // fn _retMsg
 
 
-    function _getMetaInfo($id)
+    public function getMetaInfo($id)
     {
         $type = strtolower($this->gb->getFileType($id));
         $data = array('id'          => $id,
                       'gunid'       => $this->gb->_gunidFromId($id),
-                      'title'       => $this->_getMDataValue($id, UI_MDATA_KEY_TITLE),
-                      'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_CREATOR),
-                      'duration'    => $this->_getMDataValue($id, UI_MDATA_KEY_DURATION),
+                      'title'       => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                      'creator'     => $this->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                      'duration'    => $this->getMetadataValue($id, UI_MDATA_KEY_DURATION),
                       'type'        => $type,
                       #'isAvailable' => $type == 'playlist' ? $this->gb->playlistIsAvailable($id, $this->sessid) : NULL,
                 );
          return ($data);
-    } // fn _getMetaInfo
+    } // fn getMetaInfo
 
 
-    function _getMDataValue($id, $key, $langid=NULL, $deflangid=UI_DEFAULT_LANGID)
+    public function getMetadataValue($id, $key, $langid=NULL, $deflangid=UI_DEFAULT_LANGID)
     {
         if (!$langid) {
             $langid = $_SESSION['langid'];
@@ -473,10 +465,10 @@ class uiBase
             return $value['value'];
         }
         return FALSE;
-    } // fn _getMDataValue
+    } // fn getMetadataValue
 
 
-    function _setMDataValue($id, $key, $value, $langid=NULL)
+    public function setMetadataValue($id, $key, $value, $langid=NULL)
     {
         if (!$langid) {
             $langid = UI_DEFAULT_LANGID;
@@ -489,16 +481,14 @@ class uiBase
             return TRUE;
         }
         return FALSE;
-    } // fn _setMDataValue
+    } // fn setMetadataValue
 
 
     /**
-     * Enter description here...
-     *
      * @param unknown_type $id
      * @return string/FALSE
      */
-    function _getFileTitle($id)
+    private function _getFileTitle($id)
     {
         if (is_array($arr = $this->gb->getPath($id))) {
             $file = array_pop($arr);
@@ -508,29 +498,29 @@ class uiBase
     } // fn _getFileTitle
 
 
-    function _isFolder($id)
-    {
-        if (strtolower($this->gb->getFileType($id)) != 'folder') {
-            return FALSE;
-        }
-        return TRUE;
-    } // fn _isFolder
+//    function _isFolder($id)
+//    {
+//        if (strtolower($this->gb->getFileType($id)) != 'folder') {
+//            return FALSE;
+//        }
+//        return TRUE;
+//    } // fn _isFolder
 
 
-    function _formElementEncode($str)
+    public static function formElementEncode($str)
     {
         $str = str_replace(':', '__', $str);
         #$str = str_replace('.', '_', $str);
         return $str;
-    } // fn _formElementEncode
+    } // fn formElementEncode
 
 
-    function _formElementDecode($str)
+    public static function formElementDecode($str)
     {
         $str = str_replace('__', ':', $str);
         #$str = str_replace('_', '.', $str);
         return $str;
-    } // fn _formElementDecode
+    } // fn formElementDecode
 
 } // class uiBase
 ?>

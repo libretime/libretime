@@ -5,45 +5,42 @@
  * @version $Revision$
  */
 class uiScheduler extends uiCalendar {
-    var $curr;
-    var $scheduleAtTime;
-    var $schedulePrev;
-    var $scheduleNext;
-    var $error;
-    var $Base;
-    var $reloadUrl;
-    var $closeUrl;
-    var $firstDayOfWeek;
+    public $curr;
+    private $scheduleAtTime;
+    private $schedulePrev;
+    private $scheduleNext;
+    private $error;
+    private $Base;
+    private $reloadUrl;
+    private $closeUrl;
+    private $firstDayOfWeek;
 
 
-    function uiScheduler(&$uiBase)
+    public function __construct(&$uiBase)
     {
-        $this->curr           =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
+        $this->curr =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
         $this->scheduleAtTime =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAtTime'];
-        $this->schedulePrev   =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
-        $this->scheduleNext   =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
-        $this->error          =& $_SESSION['SCHEDULER']['error'];
-        $this->error          =& $_SESSION['SCHEDULER']['error'];
+        $this->schedulePrev =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
+        $this->scheduleNext =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
+        $this->error =& $_SESSION['SCHEDULER']['error'];
 
         if (!is_array($this->curr)) {
-            $this->curr['view']      = UI_SCHEDULER_DEFAULT_VIEW;
-            $this->curr['year']      = strftime("%Y");
-            $this->curr['month']     = strftime("%m");
-            $this->curr['week']      = strftime("%V");
-            $this->curr['day']       = strftime("%d");
-            $this->curr['hour']      = strftime("%H");
-            $this->curr['dayname']   = strftime("%A");
+            $this->curr['view'] = UI_SCHEDULER_DEFAULT_VIEW;
+            $this->curr['year'] = strftime("%Y");
+            $this->curr['month'] = strftime("%m");
+            $this->curr['week'] = strftime("%V");
+            $this->curr['day'] = strftime("%d");
+            $this->curr['hour'] = strftime("%H");
+            $this->curr['dayname'] = strftime("%A");
             $this->curr['monthname'] = strftime("%B");
-            $this->curr['isToday']   = TRUE;
+            $this->curr['isToday'] = TRUE;
         }
 
         $this->Base =& $uiBase;
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        $this->closeUrl  = UI_BROWSER.'?popup[]=_close';
-
-        $this->uiCalendar();
+        $this->closeUrl = UI_BROWSER.'?popup[]=_close';
+        parent::__construct();
         $this->initXmlRpc();
-
         //$this->startDaemon();
     } // constructor
 
@@ -298,8 +295,8 @@ class uiScheduler extends uiCalendar {
                 'end'       => substr($val['end'],   strpos($val['end'], 'T')+1),
                 'start_stamp' => $this->_datetime2timestamp($val['start']),
                 'end_stamp' => $this->_datetime2timestamp($val['end']),
-                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
                 'type'      => 'Playlist'
             );
         }
@@ -338,8 +335,8 @@ class uiScheduler extends uiCalendar {
 	                'scheduleid'=> $val['id'],
 	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
 	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+	                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
 	                'type'      => 'Playlist',
 	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
                     'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
@@ -360,8 +357,8 @@ class uiScheduler extends uiCalendar {
 	                'scheduleid'=> $val['id'],
 	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
 	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+	                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
 	                'type'      => 'Playlist',
 	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
 	            );
@@ -383,8 +380,8 @@ class uiScheduler extends uiCalendar {
             $items[date('H', $this->_datetime2timestamp($val['start']))][]= array (
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
         #print_r($items);
@@ -403,8 +400,8 @@ class uiScheduler extends uiCalendar {
         }
 
         foreach ($arr as $key => $val) {
-            $arr[$key]['title']     = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
-            $arr[$key]['creator']   = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
+            $arr[$key]['title']     = $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
+            $arr[$key]['creator']   = $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
             $arr[$key]['pos']       = $this->_datetime2timestamp($val['start']);
             $arr[$key]['span']      = date('H', $this->_datetime2timestamp($val['end'])) - date('H', $this->_datetime2timestamp($val['start'])) +1;
         }
@@ -446,7 +443,7 @@ class uiScheduler extends uiCalendar {
         //print_r($ui_fmask['schedule']);
 
         $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $this->Base->_parseArr2Form($form, $ui_fmask['schedule']);
+        uiBase::parseArrayToForm($form, $ui_fmask['schedule']);
         $settime = array('H' => $this->scheduleAtTime['hour'],
                          'i' => $this->scheduleAtTime['minute'],
                          's' => $this->scheduleAtTime['second']
@@ -459,7 +456,7 @@ class uiScheduler extends uiCalendar {
                                  'date'         => $setdate,
         ));
 
-        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output = $renderer->toArray();
         //print_r($output);
@@ -473,8 +470,8 @@ class uiScheduler extends uiCalendar {
             $this->Base->SCRATCHPAD->addItem($id);
             $this->availablePlaylists[] = array(
                 'gunid'     => $this->Base->gb->_gunidFromId($id),
-                'title'     => $this->Base->_getMDataValue($id, UI_MDATA_KEY_TITLE),
-                'duration'  => $this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION),
+                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
             );
             return TRUE;
         } else {
@@ -643,6 +640,7 @@ class uiScheduler extends uiCalendar {
             return array(FALSE);
         }
 
+        $pStampArr = null;
         foreach ($pArr as $val) {
             #print_r($val);
             $pStampArr[] = array('start' => $this->_datetime2timestamp($val['start']),

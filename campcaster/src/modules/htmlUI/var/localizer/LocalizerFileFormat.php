@@ -128,7 +128,7 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
 
         $metadata = array();
         foreach ($languages as $language) {
-            $tmpMetadata =& new LanguageMetadata();
+            $tmpMetadata = new LanguageMetadata();
             $tmpMetadata->m_englishName     = $language['Name'];
             $tmpMetadata->m_nativeName      = $language['NativeName'];
             $tmpMetadata->m_languageCode    = $language['LanguageCode'];
@@ -195,7 +195,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
         if (file_exists($filePath)) {
             $xml = File::readAll($filePath);
             File::close($filePath, FILE_MODE_READ);
-	        $unserializer =& new XML_Unserializer($this->m_unserializeOptions);
+	        $unserializer = new XML_Unserializer($this->m_unserializeOptions);
 	        $unserializer->unserialize($xml);
 	        $translationArray = $unserializer->getUnserializedData();
 
@@ -233,7 +233,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 		}
     	$saveData = array_merge($saveData, $saveTranslationTable);
 
-        $serializer =& new XML_Serializer($this->m_serializeOptions);
+        $serializer = new XML_Serializer($this->m_serializeOptions);
         $serializer->serialize($saveData);
         $xml = $serializer->getSerializedData();
 
@@ -289,7 +289,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 
 		$xml = File::readAll($fileName);
 		File::rewind($fileName, FILE_MODE_READ);
-		$handle =& new XML_Unserializer($this->l_unserializeOptions);
+		$handle = new XML_Unserializer($this->l_unserializeOptions);
     	$handle->unserialize($xml);
     	$arr = $handle->getUnserializedData();
 
@@ -303,7 +303,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
                 // just display default language in maintainance mode
                 if ($p_default || $language['Id'] !== $g_localizerConfig['DEFAULT_LANGUAGE']) {
                     list ($langCode, $countryCode) = explode('_', $language['Id']);
-                    $languageDef =& new LanguageMetadata();
+                    $languageDef = new LanguageMetadata();
                     $languageDef->m_languageId      = $language['Id'];
                     $languageDef->m_languageCode    = $langCode;
                     $languageDef->m_countryCode     = $countryCode;
@@ -330,7 +330,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
 
 		$xml = File::readAll($fileName);
 		File::rewind($fileName, FILE_MODE_READ);
-		$handle =& new XML_Unserializer($this->l_unserializeOptions);
+		$handle = new XML_Unserializer($this->l_unserializeOptions);
     	$handle->unserialize($xml);
     	$arr = $handle->getUnserializedData();
 
@@ -346,7 +346,7 @@ class LocalizerFileFormat_XML extends LocalizerFileFormat {
            'NativeName'    => $new['NativeName']
         );
         $languages = $this->_xSortArray($languages, 'Id');
-    	$handle =& new XML_Serializer($this->l_serializeOptions);
+    	$handle = new XML_Serializer($this->l_serializeOptions);
     	$handle->serialize($languages);
 
     	if (!$xml = $handle->getSerializedData()) {

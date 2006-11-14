@@ -3,24 +3,26 @@ header("Content-type: text/html; charset=utf-8");
 session_start();
 
 ## LS classes/functions #############################################
-require_once dirname(__FILE__).'/ui_conf.php';
-require_once dirname(__FILE__).'/ui_browser.class.php';
+require_once(dirname(__FILE__).'/ui_conf.php');
+require_once(dirname(__FILE__).'/ui_browser.class.php');
 
 
 ## well known classes ###############################################
-require_once dirname(__FILE__).'/Smarty/libs/Smarty.class.php';
-require_once 'HTML/QuickForm/Renderer/ArraySmarty.php';
+require_once(dirname(__FILE__).'/Smarty/libs/Smarty.class.php');
+require_once('HTML/QuickForm/Renderer/ArraySmarty.php');
 
 ## initialize objects ###############################################
-$Smarty         =& new Smarty;
-$uiBrowser      =& new uiBrowser($config);
-$uiBase         =& $uiBrowser;
-$jscom          =& new jscom(array("jscom_wrapper"));
+$Smarty = new Smarty;
+$uiBrowser = new uiBrowser($config);
+$uiBrowser->init();
+
+$uiBase =& $uiBrowser;
+$jscom = new jscom(array("jscom_wrapper"));
 $jscom->handler();
 
 
 ## load Smarty+filters ##############################################
-require_once  dirname(__FILE__).'/ui_smartyExtensions.inc.php';
+require_once(dirname(__FILE__).'/ui_smartyExtensions.inc.php');
 #$Smarty->load_filter('output', 'trimwhitespace');
 #$Smarty->load_filter('post', 'template_marker');
 $Smarty->load_filter('output', 'localizer');
