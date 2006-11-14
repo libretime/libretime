@@ -87,7 +87,7 @@ class XR_Alib extends Alib{
  }
 }
 
-$alib = &new XR_Alib($dbc, $config);
+$alib = new XR_Alib($dbc, $config);
 
 $s=new xmlrpc_server( array(
 	"alib.xrTest" => array(

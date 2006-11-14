@@ -6,27 +6,39 @@ require_once "m2tree.php";
  *
  * A class for 'object classes' handling - i.e. groups of object in tree
  *
- * @author  $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage Alib
- * @see Mtree
- * @see Subj
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
-class ObjClasses extends M2tree{
-    var $classTable;
-    var $cmembTable;
+class ObjClasses extends M2tree {
+	/**
+	 * The name of the database table ("PREFIXclasses")
+	 *
+	 * @var string
+	 */
+    public $classTable;
 
     /**
-     *  Constructor
+     * The name of a database table ("PREFIXcmemb")
      *
-     *  @param dbc object
-     *  @param config array
-     *  @return this
+     * @var string
      */
-    function ObjClasses(&$dbc, $config)
+    public $cmembTable;
+
+
+    /**
+     * @param object $dbc
+     * @param array $config
+     * @return this
+     */
+    public function __construct(&$dbc, $config)
     {
-        parent::M2Tree($dbc, $config);
+        parent::__construct($dbc, $config);
         $this->classTable = $config['tblNamePrefix'].'classes';
         $this->cmembTable = $config['tblNamePrefix'].'cmemb';
     }
@@ -35,12 +47,12 @@ class ObjClasses extends M2tree{
     /* ======================================================= public methods */
 
     /**
-     *   Add new class of objects
+     * Add new class of objects
      *
-     *   @param cname string
-     *   @return id/error
+     * @param string $cname
+     * @return id/error
      */
-    function addClass($cname)
+    public function addClass($cname)
     {
         $id = $this->dbc->nextId("{$this->treeTable}_id_seq");
         if (PEAR::isError($id)) {
@@ -58,12 +70,12 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Remove class by name
+     * Remove class by name
      *
-     *   @param cname string
-     *   @return boolean/err
+     * @param string $cname
+     * @return boolean/err
      */
-    function removeClass($cname)
+    public function removeClass($cname)
     {
         $cid = $this->getClassId($cname);
         if (PEAR::isError($cid)) {
@@ -74,12 +86,12 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Remove class by id
+     * Remove class by id
      *
-     *   @param cid int
-     *   @return boolean/err
+     * @param int $cid
+     * @return boolean/err
      */
-    function removeClassById($cid)
+    public function removeClassById($cid)
     {
         $r = $this->dbc->query("DELETE FROM {$this->cmembTable}
             WHERE cid=$cid");
@@ -96,13 +108,13 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Add object to class
+     * Add object to class
      *
-     *   @param cid int
-     *   @param oid int
-     *   @return boolean/err
+     * @param int $cid
+     * @param int $oid
+     * @return boolean/err
      */
-    function addObj2Class($cid, $oid)
+    public function addObj2Class($cid, $oid)
     {
         $r = $this->dbc->query("INSERT INTO {$this->cmembTable} (cid, objid)
             VALUES ($cid, $oid)");
@@ -114,13 +126,13 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Remove object from class
+     * Remove object from class
      *
-     *   @param oid int
-     *   @param cid int, optional, default: remove obj from all classes
-     *   @return boolean/err
+     * @param int $oid
+     * @param int $cid, optional, default: remove obj from all classes
+     * @return boolean/err
      */
-    function removeObjFromClass($oid, $cid=NULL)
+    public function removeObjFromClass($oid, $cid=NULL)
     {
         $r = $this->dbc->query("DELETE FROM {$this->cmembTable}
             WHERE objid=$oid".(is_null($cid)? '':" AND cid=$cid"));
@@ -134,12 +146,12 @@ class ObjClasses extends M2tree{
     /* ---------------------------------------------------------- object tree */
 
     /**
-     *   Remove object from all classes and remove object itself
+     * Remove object from all classes and remove object itself
      *
-     *   @param id int
-     *   @return boolean/err
+     * @param int $id
+     * @return boolean/err
      */
-    function removeObj($id)
+    public function removeObj($id)
     {
         $r = $this->removeObjFromClass($id);
         if (PEAR::isError($r)) {
@@ -152,12 +164,12 @@ class ObjClasses extends M2tree{
     /* --------------------------------------------------------- info methods */
 
     /**
-     *   Get class id from name
+     * Get class id from name
      *
-     *   @param cname string
-     *   @return int/err
+     * @param string $cname
+     * @return int/err
      */
-    function getClassId($cname)
+    public function getClassId($cname)
     {
         $cname = pg_escape_string($cname);
         return $this->dbc->getOne($query = "SELECT id FROM {$this->classTable}
@@ -166,12 +178,12 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Get class name from id
+     * Get class name from id
      *
-     *   @param id int
-     *   @return string/err
+     * @param int $id
+     * @return string/err
      */
-    function getClassName($id)
+    public function getClassName($id)
     {
         return $this->dbc->getOne(
             $query = "SELECT cname FROM {$this->classTable} WHERE id=$id");
@@ -179,12 +191,12 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Return true is object is class
+     * Return true is object is class
      *
-     *   @param id int
-     *   @return boolean/err
+     * @param int $id
+     * @return boolean/err
      */
-    function isClass($id)
+    public function isClass($id)
     {
         $r = $this->dbc->getOne("SELECT count(*) FROM {$this->classTable}
             WHERE id=$id");
@@ -196,23 +208,23 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Return all classes
+     * Return all classes
      *
-     *   @return array/err
+     * @return array/err
      */
-    function getClasses()
+    public function getClasses()
     {
         return $this->dbc->getAll("SELECT * FROM {$this->classTable}");
     }
 
 
     /**
-     *   Return all objects in class
+     * Return all objects in class
      *
-     *   @param id int
-     *   @return array/err
+     * @param int $id
+     * @return array/err
      */
-    function listClass($id)
+    public function listClass($id)
     {
         return $this->dbc->getAll("
             SELECT t.* FROM {$this->cmembTable} cm, {$this->treeTable} t
@@ -223,13 +235,15 @@ class ObjClasses extends M2tree{
     /* =============================================== test and debug methods */
 
     /**
-     *   Dump all classes fot debug
+     * Dump all classes for debug
      *
-     *   @param indstr string    // indentation string
-     *   @param ind string       // aktual indentation
-     *   @return string
+     * @param string $indstr
+     * 		indentation string
+     * @param string $ind
+     * 		actual indentation
+     * @return string
      */
-    function dumpClasses($indstr='    ', $ind='')
+    public function dumpClasses($indstr='    ', $ind='')
     {
         $r = $ind.join(', ', array_map(
             create_function('$v', 'return "{$v[\'cname\']} ({$v[\'cnt\']})";'),
@@ -244,10 +258,10 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Delete all classes and membeship records
-     *
+     * Delete all classes and membeship records
+     * @return void
      */
-    function deleteData()
+    public function deleteData()
     {
         $this->dbc->query("DELETE FROM {$this->cmembTable}");
         $this->dbc->query("DELETE FROM {$this->classTable}");
@@ -256,10 +270,10 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Insert test data
+     * Insert test data
      *
      */
-    function testData()
+    public function testData()
     {
         parent::testData();
         $o['cl_sa'] = $this->addClass('Sections a');
@@ -273,10 +287,10 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Make basic test
+     * Make basic test
      *
      */
-    function test()
+    public function test()
     {
         if (PEAR::isError($p = parent::test())) {
         	return $p;
@@ -303,10 +317,10 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Create tables + initialize
+     * Create tables + initialize
      *
      */
-    function install()
+    public function install()
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->classTable} (
@@ -328,10 +342,10 @@ class ObjClasses extends M2tree{
 
 
     /**
-     *   Drop tables etc.
+     * Drop tables etc.
      *
      */
-    function uninstall()
+    public function uninstall()
     {
         $this->dbc->query("DROP TABLE {$this->classTable}");
         $this->dbc->query("DROP TABLE {$this->cmembTable}");

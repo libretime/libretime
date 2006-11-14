@@ -27,5 +27,5 @@ function errCallback($err)
 
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$alib =& new Alib($dbc, $config);
+$alib = new Alib($dbc, $config);
 ?>

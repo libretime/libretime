@@ -22,10 +22,14 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *
- * @author  $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage Alib
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see ObjClasses
  *
  * Original author Tom Hlava
@@ -34,27 +38,27 @@ class M2tree {
     /**
      *  Database object container
      */
-    var $dbc;
+    public $dbc;
 
     /**
      *  Configuration tree
      */
-    var $config;
+    public $config;
 
     /**
      *  Tree table name
      */
-    var $treeTable;
+    protected $treeTable;
 
     /**
      *  Structure table name
      */
-    var $structTable;
+    protected $structTable;
 
     /**
      *  Root node name
      */
-    var $rootNodeName;
+    private $rootNodeName;
 
     /**
      * Constructor
@@ -62,9 +66,9 @@ class M2tree {
      * @param DB $dbc
      * @param array $config
      */
-    function M2tree(&$dbc, $config)
+    public function __construct(&$dbc, $config)
     {
-        $this->dbc =& $dbc;
+        $this->dbc = $dbc;
         $this->config = $config;
         $this->treeTable = $config['tblNamePrefix'].'tree';
         $this->structTable = $config['tblNamePrefix'].'struct';
@@ -86,7 +90,7 @@ class M2tree {
      * @return mixed
      * 		int/err - new id of inserted object or PEAR::error
      */
-    function addObj($name, $type, $parid = NULL)
+    public function addObj($name, $type, $parid = NULL)
     {
         if ( ($name == '') || ($type == '') ) {
             return $this->dbc->raiseError("M2tree::addObj: Wrong name or type", ALIBERR_MTREE);
@@ -154,7 +158,7 @@ class M2tree {
      * @return mixed
      * 		boolean/err - TRUE or PEAR::error
      */
-    function removeObj($oid)
+    public function removeObj($oid)
     {
         if ($oid == $this->getRootNode()) {
             return $this->dbc->raiseError(
@@ -202,7 +206,7 @@ class M2tree {
      * @return mixed
      * 		int/err - new id of inserted object or PEAR::error
      */
-    function copyObj($oid, $newParid, $after=NULL)
+    protected function copyObj($oid, $newParid, $after=NULL)
     {
         if (TRUE === ($r = $this->isChildOf($newParid, $oid, TRUE))) {
             return $this->dbc->raiseError(
@@ -264,7 +268,7 @@ class M2tree {
      * 		dummy argument for back-compatibility
      *  @return boolean/err
      */
-    function moveObj($oid, $newParid, $after=NULL)
+    public function moveObj($oid, $newParid, $after=NULL)
     {
         if (TRUE === (
                 $r = $this->isChildOf($newParid, $oid, TRUE)
@@ -325,7 +329,7 @@ class M2tree {
      * 		new name
      * @return TRUE/PEAR_Error
      */
-    function renameObj($oid, $newName)
+    public function renameObj($oid, $newName)
     {
         // get parent id:
         $parid = $this->getParent($oid);
@@ -365,7 +369,7 @@ class M2tree {
      * @return mixed
      * 		int/null/err - child id (if found) or null or PEAR::error
      */
-    function getObjId($name, $parId = null)
+    public function getObjId($name, $parId = null)
     {
         if ( ($name == '') && is_null($parId)) {
             $name = $this->rootNodeName;
@@ -394,7 +398,7 @@ class M2tree {
      * @return mixed
      * 		string/err
      */
-    function getObjName($oid, $fld='name')
+    public function getObjName($oid, $fld='name')
     {
         $r = $this->dbc->getOne("
             SELECT $fld FROM {$this->treeTable}
@@ -410,7 +414,7 @@ class M2tree {
      * @param int $oid
      * @return string/err
      */
-    function getObjType($oid)
+    public function getObjType($oid)
     {
         return $this->getObjName($oid, 'type');
     } // fn getObjType
@@ -422,7 +426,7 @@ class M2tree {
      * @param int $oid
      * @return int/err
      */
-    function getParent($oid)
+    public function getParent($oid)
     {
         $r = $this->dbc->getOne("
             SELECT parid FROM {$this->structTable}
@@ -441,7 +445,7 @@ class M2tree {
      * 		flag for include specified object to the path
      * @return array/err
      */
-    function getPath($oid, $flds='id', $withSelf=TRUE)
+    public function getPath($oid, $flds='id', $withSelf=TRUE)
     {
         $path = $this->dbc->getAll("
             SELECT $flds
@@ -477,7 +481,7 @@ class M2tree {
      * 		fieldname for order by clause
      * @return array/err
      */
-    function getDir($oid, $flds='id', $order='name')
+    public function getDir($oid, $flds='id', $order='name')
     {
         $r = $this->dbc->getAll("
             SELECT $flds
@@ -502,7 +506,7 @@ class M2tree {
      *      (if NULL - use root of whole tree)
      * @return hash-array with field name/value pairs
      */
-    function getObjLevel($oid, $flds='level', $rootId=NULL)
+    public function getObjLevel($oid, $flds='level', $rootId=NULL)
     {
         if (is_null($rootId)) {
             $rootId = $this->getRootNode();
@@ -533,7 +537,7 @@ class M2tree {
      * @return mixed
      * 		array/err
      */
-    function getSubTree($oid=NULL, $withRoot=FALSE, $rootId=NULL)
+    public function getSubTree($oid=NULL, $withRoot=FALSE, $rootId=NULL)
     {
         if (is_null($oid)) $oid = $this->getRootNode();
         if (is_null($rootId)) $rootId = $oid;
@@ -575,7 +579,7 @@ class M2tree {
      * 		test indirect or only direct relation
      * @return boolean
      */
-    function isChildOf($oid, $parid, $indirect=FALSE)
+    public function isChildOf($oid, $parid, $indirect=FALSE)
     {
         if (!$indirect) {
             $paridD = $this->getParent($oid);
@@ -603,7 +607,7 @@ class M2tree {
      *
      * @return int/err
      */
-    function getRootNode()
+    public function getRootNode()
     {
         return $this->getObjId($this->rootNodeName);
     } // fn getRootNode
@@ -614,7 +618,7 @@ class M2tree {
      *
      * @return array/err
      */
-    function getAllObjects()
+    public function getAllObjects()
     {
         return $this->dbc->getAll(
             "SELECT * FROM {$this->treeTable}"
@@ -634,7 +638,7 @@ class M2tree {
      * @param string $type
      * @return array
      */
-    function getAllowedChildTypes($type)
+    public function getAllowedChildTypes($type)
     {
         return $this->config['objtypes'][$type];
     } // fn getAllowedChildTypes
@@ -650,7 +654,7 @@ class M2tree {
      * 		object id
      * @return boolean
      */
-    function _cutSubtree($oid)
+    private function _cutSubtree($oid)
     {
         $lvl = $this->getObjLevel($oid);
         if ($this->dbc->isError($lvl)) {
@@ -684,7 +688,7 @@ class M2tree {
      * 		destination object id
      * @return boolean
      */
-    function _pasteSubtree($oid, $newParid)
+    private function _pasteSubtree($oid, $newParid)
     {
         $dataArr = array();
         // build data ($dataArr) for INSERT:
@@ -720,7 +724,7 @@ class M2tree {
      * 		error object or error message
      * @return err
      */
-    function _dbRollback($r)
+    private function _dbRollback($r)
     {
         $this->dbc->query("ROLLBACK");
         if ($this->dbc->isError($r)) {
@@ -747,7 +751,7 @@ class M2tree {
      * 		actual indentation
      * @return string
      */
-    function dumpTree($oid=NULL, $indstr='    ', $ind='',
+    public function dumpTree($oid=NULL, $indstr='    ', $ind='',
         $format='{name}({id})', $withRoot=TRUE)
     {
         $r='';
@@ -768,7 +772,7 @@ class M2tree {
      * Create tables + initialize root node
      * @return err/void
      */
-    function install()
+    public function install()
     {
         $r = $this->dbc->query("BEGIN");
         if (PEAR::isError($r)) {
@@ -871,7 +875,7 @@ class M2tree {
      * Drop all tables and sequences.
      * @return void
      */
-    function uninstall()
+    public function uninstall()
     {
         $this->dbc->query("DROP TABLE {$this->structTable}");
         $this->dbc->dropSequence("{$this->structTable}_id_seq");
@@ -884,7 +888,7 @@ class M2tree {
      * Uninstall and install.
      * @return void
      */
-    function reinstall()
+    public function reinstall()
     {
         $this->uninstall();
         $this->install();
@@ -895,7 +899,7 @@ class M2tree {
      * Clean up tree - delete all except the root node.
      * @return err/void
      */
-    function reset()
+    public function reset()
     {
         $rid = $this->getRootNode();
         if ($this->dbc->isError($rid)) {
@@ -913,27 +917,27 @@ class M2tree {
 
 
     /**
-     *  Insert test data to the tree.
-     *  Only for compatibility with previous mtree - will be removed.
+     * Insert test data to the tree.
+     * Only for compatibility with previous mtree - will be removed.
      *
-     *  @return array
+     * @return array
      */
-    function test()
+    public function test()
     {
         require_once "m2treeTest.php";
-        $mt = &new M2treeTest($this->dbc, $this->config);
+        $mt = new M2treeTest($this->dbc, $this->config);
         $r = $mt->_test();
         return $r;
     } // fn test
 
 
     /**
-     *  Insert test data to the tree.
-     *  Only for compatibility with previous mtree - will be removed.
+     * Insert test data to the tree.
+     * Only for compatibility with previous mtree - will be removed.
      *
-     *  @return array
+     * @return array
      */
-    function testData()
+    public function testData()
     {
         $o['root'] = $this->getRootNode();
         $o['pa'] = $this->addObj('Publication A', 'Publication', $o['root']);

@@ -1,20 +1,19 @@
 <?php
 /**
- * @author $Author$
  * @version  $Revision$
  */
 
-require_once "alib_h.php";
-require_once "alibExTestAuth.php";
+require_once("alib_h.php");
+require_once("alibExTestAuth.php");
 
-if(isset($_GET['id']) && is_numeric($_GET['id'])){
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
-}else{
+} else {
     $id = $alib->getRootNode();
 }
 
 // prefill data structure for template
-if(!$alib->isClass($id)){
+if (!$alib->isClass($id)) {
     $d = array(
         'path'      => $alib->getPath($id, 'id,name'),
         'perms'     => $alib->getObjPerms($id),
@@ -23,7 +22,7 @@ if(!$alib->isClass($id)){
         'id'        => $id,
         'loggedAs'  => $login
     );
-}else{
+} else {
     $d = array(
         'path'      => '',
         'name'      => $alib->getClassName($id),
@@ -36,7 +35,7 @@ if(!$alib->isClass($id)){
 }
 $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 
-require_once "alib_f.php";
+require_once("alib_f.php");
 // template follows:
 ?>
 <html><head>

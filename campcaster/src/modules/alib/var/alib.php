@@ -10,19 +10,33 @@ define('ALIBERR_NOTEXISTS', 31);
  *
  * Authentication/authorization class
  *
- * @author  $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage Alib
- * @see Subjects
- * @see GreenBox
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
-class Alib extends Subjects{
-    var $permTable;
-    var $sessTable;
-    var $login=NULL;
-    var $userid=NULL;
-    var $sessid=NULL;
+class Alib extends Subjects {
+	/**
+	 * The name of a database table.
+	 *
+	 * @var string
+	 */
+    public $permTable;
+
+    /**
+     * The name of a database table.
+     *
+     * @var string
+     */
+    public $sessTable;
+
+    //var $login = NULL;
+    //var $userid = NULL;
+    public $sessid = NULL;
 
     /**
      * Constructor
@@ -30,9 +44,9 @@ class Alib extends Subjects{
      * @param DB $dbc
      * @param array $config
      */
-    function Alib(&$dbc, $config)
+    public function __construct(&$dbc, $config)
     {
-        parent::Subjects($dbc, $config);
+        parent::__construct($dbc, $config);
         $this->permTable = $config['tblNamePrefix'].'perms';
         $this->sessTable = $config['tblNamePrefix'].'sess';
     } // constructor
@@ -47,10 +61,9 @@ class Alib extends Subjects{
      *
      * @param string $login
      * @param string $pass
-     * @return mixed
-     * 		boolean/sessionId/err
+     * @return boolean|sessionId|PEAR_Error
      */
-    function login($login, $pass)
+    public function login($login, $pass)
     {
         if (FALSE === $this->authenticate($login, $pass)) {
             $this->setTimeStamp($login, TRUE);
@@ -67,9 +80,9 @@ class Alib extends Subjects{
         if (PEAR::isError($r)) {
             return $r;
         }
-        $this->login = $login;
-        $this->userid = $userid;
-        $this->sessid = $sessid;
+        //$this->login = $login;
+        //$this->userid = $userid;
+        //$this->sessid = $sessid;
         $this->setTimeStamp($login, FALSE);
         return $sessid;
     } // fn login
@@ -79,12 +92,12 @@ class Alib extends Subjects{
      * Logout and destroy session
      *
      * @param string $sessid
-     * @return true/err
+     * @return true|PEAR_Error
      */
-    function logout($sessid)
+    public function logout($sessid)
     {
         $ct = $this->checkAuthToken($sessid);
-        if($ct === FALSE) {
+        if ($ct === FALSE) {
             return PEAR::raiseError('Alib::logout: not logged ($ct)',
                 ALIBERR_NOTLOGGED, PEAR_ERROR_RETURN);
         } elseif (PEAR::isError($ct)) {
@@ -96,9 +109,9 @@ class Alib extends Subjects{
             if (PEAR::isError($r)) {
                 return $r;
             }
-            $this->login = NULL;
-            $this->userid = NULL;
-            $this->sessid = NULL;
+            //$this->login = NULL;
+            //$this->userid = NULL;
+            //$this->sessid = NULL;
             return TRUE;
         }
     } // fn logout
@@ -108,9 +121,9 @@ class Alib extends Subjects{
      * Return true if the token is valid
      *
      * @param string $sessid
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    function checkAuthToken($sessid)
+    private function checkAuthToken($sessid)
     {
         $sql = "SELECT count(*) as cnt FROM {$this->sessTable}
             WHERE sessid='$sessid'";
@@ -123,17 +136,20 @@ class Alib extends Subjects{
      * Set valid token in alib object
      *
      * @param string $sessid
-     * @return boolean/err
+     * @return TRUE|PEAR_Error
      */
-    function setAuthToken($sessid)
-    {
-        $r = checkAuthToken($sessid);
-        if(PEAR::isError($r)) return $r;
-        if(!$r)
-            return PEAR::raiseError("ALib::setAuthToken: invalid token ($sessid)");
-        $this->sessid = $sessid;
-        return TRUE;
-    } // fn setAuthToken
+//    public function setAuthToken($sessid)
+//    {
+//        $r = $this->checkAuthToken($sessid);
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
+//        if (!$r) {
+//            return PEAR::raiseError("ALib::setAuthToken: invalid token ($sessid)");
+//        }
+//        //$this->sessid = $sessid;
+//        return TRUE;
+//    } // fn setAuthToken
 
 
     /* -------------------------------------------------------- authorization */
@@ -150,7 +166,7 @@ class Alib extends Subjects{
      * @return int
      * 		local permission id
      */
-    function addPerm($sid, $action, $oid, $type='A')
+    public function addPerm($sid, $action, $oid, $type='A')
     {
         $permid = $this->dbc->nextId("{$this->permTable}_id_seq");
         $sql = "INSERT INTO {$this->permTable} (permid, subj, action, obj, type)
@@ -167,14 +183,14 @@ class Alib extends Subjects{
      * Remove permission record
      *
      * @param int $permid
-     * 		(optional) local permission id
+     * 		local permission id
      * @param int $subj
-     * 		(optional) local user/group id
+     * 		local user/group id
      * @param int $obj
-     * 		(optional) local object id
-     * @return boolean/error
+     * 		local object id
+     * @return boolean|PEAR_Error
      */
-    function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
+    public function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
     {
         $ca = array();
         if ($permid) {
@@ -203,7 +219,7 @@ class Alib extends Subjects{
      * @return int
      * 		local object id
      */
-    function _getPermOid($permid)
+    protected function _getPermOid($permid)
     {
         $sql = "SELECT obj FROM {$this->permTable} WHERE permid=$permid";
         $res = $this->dbc->getOne($sql);
@@ -234,7 +250,7 @@ class Alib extends Subjects{
      * @return mixed
      * 		boolean/err
      */
-    function checkPerm($sid, $action, $oid=NULL)
+    public function checkPerm($sid, $action, $oid=NULL)
     {
         if (!is_numeric($sid)) {
             return FALSE;
@@ -322,10 +338,9 @@ class Alib extends Subjects{
      * Remove all permissions on object and then remove object itself
      *
      * @param int $id
-     * @return mixed
-     * 		void/error
+     * @return void|PEAR_Error
      */
-    function removeObj($id)
+    public function removeObj($id)
     {
         $r = $this->removePerm(NULL, NULL, $id);
         if (PEAR::isError($r)) {
@@ -340,10 +355,9 @@ class Alib extends Subjects{
      * Remove all permissions of subject and then remove subject itself
      *
      * @param string $login
-     * @return mixed
-     * 		void/error
+     * @return void|PEAR_Error
      */
-    function removeSubj($login)
+    public function removeSubj($login)
     {
         $uid = $this->getSubjId($login);
         if (PEAR::isError($uid)) {
@@ -366,9 +380,9 @@ class Alib extends Subjects{
      * Get login from session id (token)
      *
      * @param string $sessid
-     * @return string/error
+     * @return string|PEAR_Error
      */
-    function getSessLogin($sessid)
+    public function getSessLogin($sessid)
     {
         $sql = "SELECT login FROM {$this->sessTable} WHERE sessid='$sessid'";
         $r = $this->dbc->getOne($sql);
@@ -388,9 +402,9 @@ class Alib extends Subjects{
      * Get user id from session id.
      *
      * @param string $sessid
-     * @return int/error
+     * @return int|PEAR_Error
      */
-    function getSessUserId($sessid)
+    public function getSessUserId($sessid)
     {
         $sql = "SELECT userid FROM {$this->sessTable} WHERE sessid='$sessid'";
         $r = $this->dbc->getOne($sql);
@@ -411,9 +425,9 @@ class Alib extends Subjects{
      * Get all permissions on object.
      *
      * @param int $id
-     * @return array/null/err
+     * @return array|null|PEAR_Error
      */
-    function getObjPerms($id)
+    public function getObjPerms($id)
     {
         $sql = "SELECT s.login, p.* FROM {$this->permTable} p, {$this->subjTable} s
             WHERE s.id=p.subj AND p.obj=$id";
@@ -427,7 +441,7 @@ class Alib extends Subjects{
      * @param int $sid
      * @return array
      */
-    function getSubjPerms($sid)
+    public function getSubjPerms($sid)
     {
         $sql = "
             SELECT t.name, t.type as otype , p.*
@@ -460,7 +474,7 @@ class Alib extends Subjects{
      *
      * @return array
      */
-    function getAllActions()
+    public function getAllActions()
     {
         return $this->config['allActions'];
     } // fn getAllActions
@@ -472,7 +486,7 @@ class Alib extends Subjects{
      * @param string $type
      * @return array
      */
-    function getAllowedActions($type)
+    public function getAllowedActions($type)
     {
         return $this->config['allowedActions'][$type];
     } // fn getAllowedActions
@@ -485,7 +499,7 @@ class Alib extends Subjects{
      *
      * @return string
      */
-    function _createSessid()
+    private function _createSessid()
     {
         for ($c=1; $c>0;){
             $sessid = md5(uniqid(rand()));
@@ -511,7 +525,7 @@ class Alib extends Subjects{
      * 		actual indentation
      * @return string
      */
-    function dumpPerms($indstr='    ', $ind='')
+    public function dumpPerms($indstr='    ', $ind='')
     {
         $arr = $this->dbc->getAll("
             SELECT s.login, p.action, p.type
@@ -536,7 +550,7 @@ class Alib extends Subjects{
      *
      * @return void
      */
-    function deleteData()
+    public function deleteData()
     {
         $this->dbc->query("DELETE FROM {$this->permTable}");
         $this->dbc->query("DELETE FROM {$this->sessTable}");
@@ -549,7 +563,7 @@ class Alib extends Subjects{
      *
      * @return array
      */
-    function testData()
+    public function testData()
     {
         parent::testData();
         $t =& $this->tdata['tree'];
@@ -585,9 +599,9 @@ class Alib extends Subjects{
     /**
      * Make basic test
      *
-     * @return boolean/error
+     * @return boolean|PEAR_Error
      */
-    function test()
+    public function test()
     {
         if (PEAR::isError($p = parent::test())) {
             return $p;
@@ -646,7 +660,7 @@ class Alib extends Subjects{
      *
      * @return void
      */
-    function install()
+    public function install()
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->permTable} (
@@ -680,11 +694,11 @@ class Alib extends Subjects{
 
 
     /**
-     *   Drop tables etc.
+     * Drop tables etc.
      *
-     *   @return void
+     * @return void
      */
-    function uninstall()
+    public function uninstall()
     {
         $this->dbc->query("DROP TABLE {$this->permTable}");
         $this->dbc->dropSequence("{$this->permTable}_id_seq");

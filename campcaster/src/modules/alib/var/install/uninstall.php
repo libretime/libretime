@@ -28,7 +28,7 @@ if(PEAR::isError($dbc)){
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$alib =& new Alib($dbc, $config);
+$alib = new Alib($dbc, $config);
 
 #    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 echo "Trying to uninstall all ...\n";

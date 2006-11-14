@@ -29,7 +29,7 @@ $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 #$$dbc->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$alib =& new Alib($dbc, $config);
+$alib = new Alib($dbc, $config);
 
 echo "\n\n======\n".
     "This is Alib standalone installation script, it is NOT needed to run ".

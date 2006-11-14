@@ -1,5 +1,5 @@
 <?php
-require_once "class.php";
+require_once("class.php");
 define('ALIBERR_NOTGR', 20);
 define('ALIBERR_BADSMEMB', 21);
 
@@ -10,16 +10,32 @@ define('ALIBERR_BADSMEMB', 21);
  * with "linearized recursive membership" ;)
  *   (allow adding users to groups or groups to groups)
  *
- * @author  $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage Alib
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  * @see ObjClasses
  * @see Alib
  */
 class Subjects extends ObjClasses {
-    var $subjTable;
-    var $smembTable;
+	/**
+	 * The name of the 'Subjects' database table.
+	 *
+	 * @var string
+	 */
+    public $subjTable;
+
+    /**
+     * The name of a database table.
+     *
+     * @var string
+     */
+    public $smembTable;
+
 
     /**
      * Constructor
@@ -28,9 +44,9 @@ class Subjects extends ObjClasses {
      * @param array $config
      * @return this
      */
-    function Subjects(&$dbc, $config)
+    public function __construct(&$dbc, $config)
     {
-        parent::ObjClasses($dbc, $config);
+        parent::__construct($dbc, $config);
         $this->subjTable = $config['tblNamePrefix'].'subjs';
         $this->smembTable = $config['tblNamePrefix'].'smemb';
     } // constructor
@@ -43,14 +59,12 @@ class Subjects extends ObjClasses {
      *
      * @param string $login
      * @param string $pass
-     * 		optional
      * @param string $realname
-     * 		optional
      * @param boolean $passenc
-     * 		optional, password already encrypted if true
+     * 		password already encrypted if true
      * @return int/err
      */
-    function addSubj($login, $pass=NULL, $realname='', $passenc=FALSE)
+    public function addSubj($login, $pass=NULL, $realname='', $passenc=FALSE)
     {
         if(!$login) {
             return $this->dbc->raiseError(get_class($this)."::addSubj: empty login");
@@ -82,7 +96,7 @@ class Subjects extends ObjClasses {
      * 		optional, default: null
      * @return boolean/err
      */
-    function removeSubj($login, $uid=NULL)
+    public function removeSubj($login, $uid=NULL)
     {
         if (is_null($uid)) {
             $uid = $this->getSubjId($login);
@@ -114,7 +128,7 @@ class Subjects extends ObjClasses {
      * 		optional
      * @return boolean/int/err
      */
-    function authenticate($login, $pass='')
+    public function authenticate($login, $pass='')
     {
         $cpass = md5($pass);
         $sql = "SELECT id FROM {$this->subjTable}
@@ -135,7 +149,7 @@ class Subjects extends ObjClasses {
      * 		true=> set lastfail, false=> set lastlogin
      * @return boolean/int/err
      */
-    function setTimeStamp($login, $failed=FALSE)
+    public function setTimeStamp($login, $failed=FALSE)
     {
         $fld = ($failed ? 'lastfail' : 'lastlogin');
         $sql = "UPDATE {$this->subjTable} SET $fld=now()
@@ -160,7 +174,7 @@ class Subjects extends ObjClasses {
      * 		optional, password already encrypted if true
      * @return boolean/err
      */
-    function passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
+    public function passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
     {
         if (!$passenc) {
             $cpass = md5($pass);
@@ -193,7 +207,7 @@ class Subjects extends ObjClasses {
      * @param string $gname
      * @return int/err
      */
-    function addSubj2Gr($login, $gname)
+    public function addSubj2Gr($login, $gname)
     {
         $uid = $this->getSubjId($login);
         if (PEAR::isError($uid)) {
@@ -238,7 +252,7 @@ class Subjects extends ObjClasses {
      * @param string $gname
      * @return boolean/err
      */
-    function removeSubjFromGr($login, $gname)
+    public function removeSubjFromGr($login, $gname)
     {
         $uid = $this->getSubjId($login);
         if (PEAR::isError($uid)) {
@@ -279,7 +293,7 @@ class Subjects extends ObjClasses {
      * @param string $login
      * @return int/err
      */
-    function getSubjId($login)
+    public function getSubjId($login)
     {
         $sql = "SELECT id FROM {$this->subjTable}
             WHERE login='$login'";
@@ -294,7 +308,7 @@ class Subjects extends ObjClasses {
      * @param string $fld
      * @return string/err
      */
-    function getSubjName($id, $fld='login')
+    public function getSubjName($id, $fld='login')
     {
         $sql = "SELECT $fld FROM {$this->subjTable}
             WHERE id='$id'";
@@ -305,10 +319,10 @@ class Subjects extends ObjClasses {
     /**
      * Get all subjects
      *
-     * @param string $flds, optional
+     * @param string $flds
      * @return array/err
      */
-    function getSubjects($flds='id, login')
+    public function getSubjects($flds='id, login')
     {
         $sql = "SELECT $flds FROM {$this->subjTable}";
         return $this->dbc->getAll($sql);
@@ -320,7 +334,7 @@ class Subjects extends ObjClasses {
      *
      * @return array/err
      */
-    function getSubjectsWCnt()
+    public function getSubjectsWCnt()
     {
         $sql = "
             SELECT count(m.uid)as cnt, s.id, s.login, s.type
@@ -339,7 +353,7 @@ class Subjects extends ObjClasses {
      * @param int $gid
      * @return boolean/err
      */
-    function isGroup($gid)
+    public function isGroup($gid)
     {
         $sql = "SELECT type FROM {$this->subjTable}
             WHERE id='$gid'";
@@ -357,7 +371,7 @@ class Subjects extends ObjClasses {
      * @param int $gid
      * @return array/err
      */
-    function listGroup($gid)
+    public function listGroup($gid)
     {
         $sql = "SELECT s.id, s.login, s.type
             FROM {$this->smembTable} m, {$this->subjTable} s
@@ -375,7 +389,7 @@ class Subjects extends ObjClasses {
      * 		local group id
      * @return boolean
      */
-    function isMemberOf($uid, $gid)
+    public function isMemberOf($uid, $gid)
     {
         $sql = "
             SELECT count(*)as cnt
@@ -398,12 +412,10 @@ class Subjects extends ObjClasses {
      * @param int $uid
      * @param int $gid
      * @param int $level
-     * 		optional
      * @param int $mid
-     * 		optional
      * @return int/err
      */
-    function _addMemb($uid, $gid, $level=0, $mid='null')
+    private function _addMemb($uid, $gid, $level=0, $mid='null')
     {
         if($uid == $gid)  {
             return PEAR::raiseError("Subjects::_addMemb: uid==gid ($uid)", ALIBERR_BADSMEMB);
@@ -447,9 +459,9 @@ class Subjects extends ObjClasses {
      * Remove membership record
      *
      * @param int $mid
-     * @return null/err
+     * @return null|PEAR_Error
      */
-    function _removeMemb($mid)
+    private function _removeMemb($mid)
     {
         $sql = "DELETE FROM {$this->smembTable}
             WHERE id='$mid'";
@@ -462,10 +474,9 @@ class Subjects extends ObjClasses {
      *
      * @param int $gid
      * @param int $uid
-     * 		optional
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    function _listMemb($gid, $uid=NULL)
+    private function _listMemb($gid, $uid=NULL)
     {
         $sql = "
             SELECT id, uid, level FROM {$this->smembTable}
@@ -479,10 +490,9 @@ class Subjects extends ObjClasses {
      *
      * @param int $gid
      * @param int $uid
-     * 		optional
      * @return array/err
      */
-    function _listRMemb($uid, $gid=NULL)
+    private function _listRMemb($uid, $gid=NULL)
     {
         $sql = "
             SELECT id, gid, level FROM {$this->smembTable}
@@ -497,10 +507,10 @@ class Subjects extends ObjClasses {
      * @param int $uid
      * @param int $gid
      * @param int $level
-     * @param int $rmid             //
-     * @return int/err
+     * @param int $rmid
+     * @return int|PEAR_Error
      */
-    function _plainAddSubj2Gr($uid, $gid, $level=0, $rmid='null')
+    private function _plainAddSubj2Gr($uid, $gid, $level=0, $rmid='null')
     {
         $mid = $this->_addMemb($uid, $gid, $level, $rmid);
         if (PEAR::isError($mid)) {
@@ -526,9 +536,9 @@ class Subjects extends ObjClasses {
      * Rebuild indirect membership records<br>
      * it's probably more complicated to do removing without rebuild ...
      *
-     * @return true/err
+     * @return true|PEAR_Error
      */
-    function _rebuildRels()
+    private function _rebuildRels()
     {
         $this->dbc->query("BEGIN");
         $r = $this->dbc->query("LOCK TABLE {$this->smembTable}");
@@ -575,7 +585,7 @@ class Subjects extends ObjClasses {
      * 		actual indentation
      * @return string
      */
-    function dumpSubjects($indstr='    ', $ind='')
+    public function dumpSubjects($indstr='    ', $ind='')
     {
         $r = $ind.join(', ', array_map(
             create_function('$v', 'return "{$v[\'login\']}({$v[\'cnt\']})";'),
@@ -590,7 +600,7 @@ class Subjects extends ObjClasses {
      *
      * @return void
      */
-    function deleteData()
+    public function deleteData()
     {
         $this->dbc->query("DELETE FROM {$this->subjTable}");
         $this->dbc->query("DELETE FROM {$this->smembTable}");
@@ -603,7 +613,7 @@ class Subjects extends ObjClasses {
      *
      * @return array
      */
-    function testData()
+    public function testData()
     {
         parent::testData();
         $o['root'] = $this->addSubj('root', 'q');
@@ -631,7 +641,7 @@ class Subjects extends ObjClasses {
      * Make basic test
      *
      */
-    function test()
+    public function test()
     {
         if (PEAR::isError($p = parent::test())) {
             return $p;
@@ -665,7 +675,7 @@ class Subjects extends ObjClasses {
      * Create tables + initialize
      *
      */
-    function install()
+    public function install()
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->subjTable} (
@@ -701,7 +711,7 @@ class Subjects extends ObjClasses {
      *
      * @return void
      */
-    function uninstall()
+    public function uninstall()
     {
         $this->dbc->query("DROP TABLE {$this->subjTable}");
         $this->dbc->dropSequence("{$this->subjTable}_id_seq");

@@ -20,7 +20,7 @@ function errCallback($err)
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$m2 = &new M2treeTest($dbc, $config);
+$m2 = new M2treeTest($dbc, $config);
 #$m2->uninstall();
 #exit;
 #$r = $m2->install(); if($dbc->isError($r)){ echo $r->getMessage()."\n".$r->getUserInfo()."\n"; exit; }
