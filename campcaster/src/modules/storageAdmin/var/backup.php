@@ -17,7 +17,7 @@ require_once "$storageServerPath/var/Prefs.php";
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$bs = &new BasicStor($dbc, $config);
+$bs = new BasicStor($dbc, $config);
 
 $stid = $bs->storId;
 #var_dump($stid); exit;
@@ -156,7 +156,7 @@ function admDumpSubjects(&$bs, $ind=''){
 
 function admDumpPrefs(&$bs, $subjid){
     $res ='';
-    $pr =& new Prefs($bs);
+    $pr = new Prefs($bs);
     $prefkeys = $pr->readKeys($subjid);
 #    var_dump($subjid); var_dump($prefkeys); #exit;
     foreach($prefkeys as $i =>$prefk){

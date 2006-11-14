@@ -24,7 +24,7 @@ if (PEAR::isError($dbc)) {
 	exit(1);
 }
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb =& new GreenBox($dbc, $config);
+$gb = new GreenBox($dbc, $config);
 
 $testonly = (isset($argv[1]) && $argv[1] == '-t');
 

@@ -84,15 +84,15 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$bs = &new BasicStor($dbc, $config);
-$pr =& new Prefs($bs);
+$bs = new BasicStor($dbc, $config);
+$pr = new Prefs($bs);
 
 $dbxml = file_get_contents($argv[1]);
 $tmpdir = $argv[2];
 
-require_once"$storageServerPath/var/XmlParser.php";
-$parser =& new XmlParser($dbxml);
-if($parser->isError()){
+require_once("$storageServerPath/var/XmlParser.php");
+$parser = new XmlParser($dbxml);
+if ($parser->isError()) {
     return PEAR::raiseError(
         "MetaData::parse: ".$parser->getError()
     );
