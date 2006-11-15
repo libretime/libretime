@@ -172,8 +172,8 @@ class Transport
      *      direction: string - up | down
      *      expectedsize: int - file size in bytes
      *      realsize: int - currently transported bytes
-     *      expectedchsum: string - orginal file checksum
-     *      realchsum: string - transported file checksum
+     *      expectedsum: string - orginal file checksum
+     *      realsum: string - transported file checksum
      *      title: string - dc:title or filename etc.
      *      errmsg: string - error message for failed transports
      *      ... ?
@@ -187,9 +187,13 @@ class Transport
         $res = array();
         foreach (array(
             'trtype', 'state', 'direction', 'expectedsize', 'realsize',
-            'expectedchsum', 'realchsum', 'title', 'errmsg'
+            'expectedsum', 'realsum', 'title', 'errmsg'
         ) as $k) {
             $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
+        }
+        if ( file_exists($trec->row['localfile']) ){
+            $res['realsize'] = filesize($trec->row['localfile']);
+            $res['realsum']  = $this->_chsum($trec->row['localfile']);
         }
         // do not return finished on finished search job upload
         // - whole search is NOT finished

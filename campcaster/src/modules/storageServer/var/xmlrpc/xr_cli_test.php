@@ -159,7 +159,7 @@ $infos = array(
 
     "getTransportInfo"       => array('m'=>"locstor.getTransportInfo",
         'p'=>array('trtok'),
-        'r'=>array('state', 'realsize', 'expectedsize', 'realchsum', 'expectedchsum')),
+        'r'=>array('state', 'realsize', 'expectedsize', 'realsum', 'expectedsum')),
     "turnOnOffTransports" => array('m'=>"locstor.turnOnOffTransports",
         'p'=>array('sessid', 'onOff'), 'r'=>array('state')),
     "doTransportAction" => array('m'=>"locstor.doTransportAction",
@@ -187,7 +187,7 @@ $infos = array(
     "createBackupClose" => array('m'=>"locstor.createBackupClose",
         'p'=>array('token'), 'r'=>array('status')),
     "restoreBackupOpen" => array('m'=>"locstor.restoreBackupOpen",
-        'p'=>array('sessid', 'filename'), 'r'=>array('url', 'token')),
+        'p'=>array('sessid', 'chsum'), 'r'=>array('url', 'token')),
     "restoreBackupClosePut" => array('m'=>"locstor.restoreBackupClosePut",
         'p'=>array('sessid', 'token'), 'r'=>array('token')),
     "restoreBackupCheck" => array('m'=>"locstor.restoreBackupCheck",
