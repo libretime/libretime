@@ -191,7 +191,7 @@ class Transport
         ) as $k) {
             $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
         }
-        if ( file_exists($trec->row['localfile']) ){
+        if ( ($trec->row['direction'] == 'down')  && file_exists($trec->row['localfile']) ){
             $res['realsize'] = filesize($trec->row['localfile']);
             $res['realsum']  = $this->_chsum($trec->row['localfile']);
         }
