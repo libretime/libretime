@@ -143,8 +143,11 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
                                 gpointer       self)
                                                                 throw ()
 {
-    // TODO: handle error
     std::cerr << "gstreamer error: " << error->message << std::endl;
+
+    // Important: We *must* use an idle function call here, so that the signal handler returns 
+    // before fireOnStopEvent() is executed.
+    g_idle_add(fireOnStopEvent, self);
 }
 
 
@@ -322,6 +325,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     if (isSmil) {
         debug() << "SMIL file detected." << endl;
         decoder = gst_element_factory_make("minimalaudiosmil", NULL);
+        if (!decoder) error() << "Unable to create minimalaudiosmil element." << endl;
         gst_element_link_many(filesrc, decoder, audioconvert, NULL);
         if (gst_element_get_parent(audiosink) == NULL)
             gst_bin_add(GST_BIN(pipeline), audiosink);
