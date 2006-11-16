@@ -26,24 +26,24 @@ set -e
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml start > /dev/null
+    $DAEMON $DAEMON_OPTS start > /dev/null
 	echo "$NAME."
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml stop > /dev/null
+    $DAEMON $DAEMON_OPTS stop > /dev/null
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
-    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml stop > /dev/null
+    $DAEMON $DAEMON_OPTS stop > /dev/null
 	sleep 1
-    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml start > /dev/null
+    $DAEMON $DAEMON_OPTS start > /dev/null
 	echo "$NAME."
 	;;
   kill)
 	echo -n "Killing $DESC: "
-    $DAEMON -c $CAMPCASTER_ETC/scheduler.xml kill > /dev/null
+    $DAEMON $DAEMON_OPTS kill > /dev/null
 	echo "$NAME."
 	;;
   *)
