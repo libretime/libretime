@@ -29,7 +29,7 @@
 #  This script makes installation steps for the Campcaster network hub.
 #
 #  Invoke as:
-#  ./bin/archiveServerSetup.sh
+#  ./bin/hubSetup.sh
 #
 #  To get usage help, try the -h option
 #

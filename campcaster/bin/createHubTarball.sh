@@ -1,36 +1,14 @@
 #!/bin/bash
+
 #-------------------------------------------------------------------------------
-#   Copyright (c) 2004 Media Development Loan Fund
-#
-#   This file is part of the Campcaster project.
-#   http://campcaster.campware.org/
-#   To report bugs, send an e-mail to bugs@campware.org
-#
-#   Campcaster is free software; you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation; either version 2 of the License, or
-#   (at your option) any later version.
-#
-#   Campcaster is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with Campcaster; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-#
 #   Author   : $Author: fgerlits $
 #   Version  : $Revision: 2292 $
-#   Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/bin/postInstallStation.sh $
-#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #  This script creates a distribution tarball for Campcaster network hub.
-#  (campcaster-aserver-<version>.tar.bz2)
+#  (campcaster-hub-<version>.tar.bz2)
 #
 #  Invoke as:
-#  ./bin/makeArchiveServerTar.sh -v <version.number>
+#  ./bin/createHubTarball.sh -v <version.number>
 #
 #  To get usage help, try the -h option
 #
@@ -127,9 +105,10 @@ fi
 #-------------------------------------------------------------------------------
 #   More definitions
 #-------------------------------------------------------------------------------
-tarball=$directory/campcaster-aserver-$version.tar.bz2
+tarball=$directory/campcaster-hub-$version.tar.bz2
 
-ls_tmpdir=$tmpdir/campcaster-$version
+tmpreldir=campcaster-$version
+ls_tmpdir=$tmpdir/$tmpreldir
 src_tmpdir=$ls_tmpdir/src
 tools_tmpdir=$src_tmpdir/tools
 modules_tmpdir=$src_tmpdir/modules
@@ -195,7 +174,7 @@ done
 for it in pear; do
     cp -pPR $toolsdir/$it $tools_tmpdir
 done
-for it in preInstall.sh archiveServerSetup.sh; do
+for it in preInstall.sh hubSetup.sh; do
     cp -pPR $bindir/$it $bin_tmpdir
 done
 cp -pPR $etcdir/apache/* $etc_tmpdir/apache
@@ -221,8 +200,9 @@ cp -pPR README INSTALL configure $ls_tmpdir
 #-------------------------------------------------------------------------------
 echo "Creating $tarball ...";
 cd $tmpdir
-tar cjf $tarball campcaster-$version
+tar cjf $tarball $tmpreldir
 cd $basedir
+rm -rf $ls_tmpdir
 
 #-------------------------------------------------------------------------------
 #  Say goodbye
