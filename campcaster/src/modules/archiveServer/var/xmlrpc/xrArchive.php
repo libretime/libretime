@@ -60,8 +60,11 @@ if(PHP5){
 
 
 /* ============================================================= runable code */
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
+$r = $dbc =& DB::connect($config['dsn'], TRUE);
+if (PEAR::isError($r)) {
+    trigger_error("DB::connect: ".$r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
+}
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
 $archive = new XR_Archive($dbc, $config);

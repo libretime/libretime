@@ -152,7 +152,7 @@ class MetaData {
     function exists()
     {
     	if (is_null($this->exists)) {
-	        $this->exists = $this->dbCheck($gunid) &&
+	        $this->exists = $this->dbCheck($this->gunid) &&
             				is_file($this->fname) &&
             				is_readable($this->fname);
     	}

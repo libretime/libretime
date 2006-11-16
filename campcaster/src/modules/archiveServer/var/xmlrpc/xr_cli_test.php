@@ -63,7 +63,7 @@ $infos = array(
 
     "deleteAudioClip"   =>
         array('m'=>"archive.deleteAudioClip",
-            'p'=>array('sessid', 'gunid'), 'r'=>'status'),
+            'p'=>array('sessid', 'gunid','forced'), 'r'=>'status'),
     "existsAudioClip"   => array('m'=>"archive.existsAudioClip",
         'p'=>array('sessid', 'gunid'), 'r'=>'exists'),
     "getAudioClip"  => array('m'=>"archive.getAudioClip",

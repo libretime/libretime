@@ -34,9 +34,11 @@ if (!function_exists('pg_connect')) {
   exit(2);
 }
 
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 if (PEAR::isError($dbc)) {
+    echo $dbc->getMessage()."\n";
+    echo $dbc->getUserInfo()."\n";
     echo "Database connection problem.\n";
     echo "Check if database '{$config['dsn']['database']}' exists".
         " with corresponding permissions.\n";
@@ -72,15 +74,6 @@ $log = $gb->test_log;
 if ($log) {
 	echo "# testlog:\n{$log}";
 }
-
-#echo "#  Reinstall + testdata insert ...\n";
-#$gb->reinstall();
-#$gb->sessid = $gb->login('root', $gb->config['tmpRootPass']);
-#$gb->testData();
-#$gb->logout($gb->sessid); unset($gb->sessid);
-
-#echo "#  TREE DUMP:\n";
-#echo $gb->dumpTree();
 
 echo "# Delete test data ...\n";
 $gb->deleteData();

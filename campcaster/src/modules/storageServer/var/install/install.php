@@ -6,7 +6,7 @@
 
 // no remote execution
 $arr = array_diff_assoc($_SERVER, $_ENV);
-if(isset($arr["DOCUMENT_ROOT"]) && $arr["DOCUMENT_ROOT"] != ""){
+if (isset($arr["DOCUMENT_ROOT"]) && $arr["DOCUMENT_ROOT"] != "") {
     header("HTTP/1.1 400");
     header("Content-type: text/plain; charset=UTF-8");
     echo "400 Not executable\r\n";
@@ -21,7 +21,9 @@ require_once "../Prefs.php";
 
 function errCallback($err)
 {
-    if(assert_options(ASSERT_ACTIVE)==1) return;
+    if (assert_options(ASSERT_ACTIVE) == 1) {
+        return;
+    }
     echo "ERROR:\n";
     echo "request: "; print_r($_REQUEST);
     echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
@@ -29,15 +31,14 @@ function errCallback($err)
     exit(1);
 }
 
-if(!function_exists('pg_connect')){
+if (!function_exists('pg_connect')) {
   trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
   exit(2);
 }
 
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
-if(PEAR::isError($dbc)){
+if (PEAR::isError($dbc)) {
     echo $dbc->getMessage()."\n";
     echo $dbc->getUserInfo()."\n";
     echo "Database connection problem.\n";
