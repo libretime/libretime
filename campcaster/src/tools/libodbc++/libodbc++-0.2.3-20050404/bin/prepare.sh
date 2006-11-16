@@ -56,7 +56,8 @@ if [ ! -d $product ]; then
     patch -p1 < $etcdir/libodbc++-dont-install-some-docs.patch
     # patch to fix bug #1545 (not submitted; already fixed in 0.2.4)
     patch -p1 < $etcdir/libodbc++-gcc-4.0-fix.patch
-    # patch not submitted yet
+    # a similar patch submitted by somebody else:
+    # http://sourceforge.net/tracker/index.php?func=detail&aid=1595055&group_id=19075&atid=319075
     patch -p1 < $etcdir/libodbc++-x64-fix.patch
 fi
 

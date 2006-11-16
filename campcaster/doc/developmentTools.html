@@ -55,6 +55,7 @@ environment variable WANT_AUTOCONF_2_5="1" before compiling the tools.)</li>
   <li><a href="http://www.gnu.org/software/bison/bison.html">bison</a> &gt;= 1.35<br>
   <li><a href="http://www.gnu.org/software/flex/flex.html">flex</a>
   <!-- to compile gstreamer; end -->
+  <li><a href="http://ltp.sourceforge.net/coverage/lcov.php">lcov</a> &gt;= 1.4</li>
   </li>
 </ul>
 <h1>Libraries</h1>
@@ -86,24 +87,18 @@ system:<br>
   <li><a href="http://mad.sourceforge.net/">libmad</a></li>
   <li><a href="http://www.xiph.org/ogg/vorbis/">libogg</a></li>
   <li><a href="http://www.xiph.org/ogg/vorbis/">libvorbis</a></li>
-  <li><a href="http://www.bzip.org">bzip2</a></li>
-  <!-- bzip2 headers are only required if boost will be compiled -->
-</ul>
-
-<h2>Recommended libraries</h2>
-The following libraries are used by Campcaster. If they are not found
-on the system, Campcaster will compile them from sources on its own.
-While having these libraries is not necessary, Compiling takes longer
-without them, and the generated Campcaster directory will be larger as
-well.<br>
-<ul>
   <li><a href="http://www.boost.org/">boost</a> &gt;= 1.33.1</li>
+  including the <a href="http://www.boost.org/doc/html/date_time.html">date-time
+  library</a></li>
+  <li><a href="http://curl.haxx.se/">curl</a> &gt;= 7.12.3</li>
   <li><a href="http://www.gtk.org/">gtk+</a> &gt;= 2.6.10</li>
   <li><a href="http://www.gtkmm.org/">gtkmm</a> &gt;= 2.6.5</li>
   <li><a href="http://www.ibm.com/software/globalization/icu/">icu</a>
 &gt;= 3.0</li>
   <li><a href="http://libxmlplusplus.sourceforge.net/">libxml++</a>
 &gt;= 2.8.1</li>
+  <li><a href="http://www.feep.net/libtar/">libtar</a> &gt;= 1.2.11</li>
 </ul>
+
 </body>
 </html>

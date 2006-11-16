@@ -32,7 +32,7 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(Campcaster, 1.0, bugs@campware.org)
+AC_INIT(Campcaster, 1.1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
@@ -275,170 +275,13 @@ AC_ARG_WITH([studio-audio-cue],
 AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
 
 
-
+dnl-----------------------------------------------------------------------------
+dnl  set up the individual components
+dnl
 dnl unfortunately for both AC_CONFIG_COMMANDS and AC_CONFIG_SUBDIRS, the
 dnl directories have to be literally included, so we can't use any
 dnl fancy variables to avoid duplication of hard-coded values :(
-
-
 dnl-----------------------------------------------------------------------------
-dnl  specify if boost library should be looked for on the system
-dnl-----------------------------------------------------------------------------
-
-AC_ARG_WITH([check-boost],
-            AC_HELP_STRING([--with-check-boost],
-               [check for the availability of the boost library on the
-                system, and use it if available (yes)]),
-            [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=yes])
-
-AC_MSG_RESULT([checking for boost library on system: ${CHECK_BOOST_LIB}])
-
-dnl-----------------------------------------------------------------------------
-dnl  specify if gtk+ library should be looked for on the system
-dnl-----------------------------------------------------------------------------
-AC_ARG_WITH([check-gtk],
-            AC_HELP_STRING([--with-check-gtk],
-               [check for the availability of the gtk+ library on the
-                system, and use it if available (yes)]),
-            [CHECK_GTK_LIB=${withval}], [CHECK_GTK_LIB=yes])
-
-AC_MSG_RESULT([checking for gtk+ library on system: ${CHECK_GTK_LIB}])
-
-
-dnl-----------------------------------------------------------------------------
-dnl  specify if gtk-- library should be looked for on the system
-dnl-----------------------------------------------------------------------------
-AC_ARG_WITH([check-gtkmm],
-            AC_HELP_STRING([--with-check-gtkmm],
-               [check for the availability of the gtk-- library on the
-                system, and use it if available (yes)]),
-            [CHECK_GTKMM_LIB=${withval}], [CHECK_GTKMM_LIB=yes])
-
-AC_MSG_RESULT([checking for gtk-- library on system: ${CHECK_GTKMM_LIB}])
-
-
-dnl-----------------------------------------------------------------------------
-dnl  specify if icu library should be looked for on the system
-dnl-----------------------------------------------------------------------------
-AC_ARG_WITH([check-icu],
-            AC_HELP_STRING([--with-check-icu],
-               [check for the availability of the icu library on the
-                system, and use it if available (yes)]),
-            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=yes])
-
-AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
-
-
-dnl-----------------------------------------------------------------------------
-dnl  specify if libxml++ library should be looked for on the system
-dnl-----------------------------------------------------------------------------
-AC_ARG_WITH([check-libxmlpp],
-            AC_HELP_STRING([--with-check-libxmlpp],
-               [check for the availability of the xml++ library on the
-                system, and use it if available (yes)]),
-            [CHECK_XMLPP_LIB=${withval}], [CHECK_XMLPP_LIB=yes])
-
-AC_MSG_RESULT([checking for xml++ library on system: ${CHECK_XMLPP_LIB}])
-
-
-dnl-----------------------------------------------------------------------------
-dnl  determine which optional packages will be compiled
-dnl-----------------------------------------------------------------------------
-
-AC_SUBST(COMPILE_BOOST)
-
-if test "${CHECK_BOOST_LIB}" = "yes" ; then
-    found_boost_date_time="no"
-    AX_BOOST_BASE([1.33.1])
-    if test "x${BOOST_CPPFLAGS}" != "x"; then
-        AX_BOOST_DATE_TIME
-        if test "x${BOOST_DATE_TIME_LIB}" != "x"; then
-            found_boost_date_time="yes"
-        fi
-    fi
-    if test "${found_boost_date_time}" = "yes"; then
-        AC_MSG_RESULT([using boost date-time library found on the system])
-        COMPILE_BOOST="no"
-    else
-        AC_MSG_RESULT([not found boost date-time library of sufficient version, will compile from our own])
-        COMPILE_BOOST="yes"
-    fi
-else
-    COMPILE_BOOST="yes"
-fi
-
-
-AC_SUBST(COMPILE_GTK)
-
-if test "$CHECK_GTK_LIB" = "yes" ; then
-    dnl check for gtk+ 2.6.10 or more recent
-    PKG_CHECK_MODULES(GTK,[gtk+-2.0 >= 2.6.10],
-    [
-        AC_MSG_RESULT([using gtk+ found on the system])
-        COMPILE_GTK="no"
-    ],
-    [
-        AC_MSG_RESULT([not found gtk+ of sufficient version, will compile from our own])
-        COMPILE_GTK="yes"
-    ])
-else
-    COMPILE_GTK="yes"
-fi
-
-
-AC_SUBST(COMPILE_GTKMM)
-
-if test "$CHECK_GTKMM_LIB" = "yes" ; then
-    dnl check for gtk-- 2.6.5 or more recent
-    PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.6.5],
-    [
-        AC_MSG_RESULT([using gtk-- found on the system])
-        COMPILE_GTKMM="no"
-    ],
-    [
-        AC_MSG_RESULT([not found gtk-- of sufficient version, will compile from our own])
-        COMPILE_GTKMM="yes"
-    ])
-else
-    COMPILE_GTKMM="yes"
-fi
-
-
-AC_SUBST(COMPILE_ICU)
-
-if test "$CHECK_ICU_LIB" = "yes" ; then
-    dnl check for ICU 3.0 or more recent
-    AC_CHECK_ICU(3.0,
-    [
-        AC_MSG_RESULT([using ICU found on the system])
-        COMPILE_ICU="no"
-    ],
-    [
-        AC_MSG_RESULT([not found ICU of sufficient version, will compile from our own])
-        COMPILE_ICU="yes"
-    ])
-else
-    COMPILE_ICU="yes"
-fi
-
-
-AC_SUBST(COMPILE_LIBXMLPP)
-
-if test "$CHECK_XMLPP_LIB" = "yes" ; then
-    dnl check for libxml++ 2.8.1 or more recent
-    PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1],
-    [
-        AC_MSG_RESULT([using libxml++ found on the system])
-        COMPILE_LIBXMLPP="no"
-    ],
-    [
-        AC_MSG_RESULT([not found libxml++ of sufficient version, will compile from our own])
-        COMPILE_LIBXMLPP="yes"
-    ])
-else
-    COMPILE_LIBXMLPP="yes"
-fi
-
 
 dnl set up the alib module
 AC_CONFIG_COMMANDS([../src/modules/alib/tmp/configure],
@@ -516,19 +359,11 @@ AC_MSG_NOTICE(
 [compiling the following external libraries that are needed
 by Campcaster:
 
-    boost 1.33.1               ${COMPILE_BOOST}
-    cppunit 1.10.2             yes
-    curl 7.12.3                yes
-    gstreamer 0.8.12           yes
-    gtk+ 2.6.10                ${COMPILE_GTK}
-    gtk-- 2.6.5                ${COMPILE_GTKMM}
-    icu 3.0                    ${COMPILE_ICU}
-    lcov 1.3                   yes
-    libodbc++ 0.2.3            yes
-    libxml++ 2.8.1             ${COMPILE_LIBXMLPP}
-    taglib 1.4                 yes
-    xmlrpc++ 2004-07-13        yes
-
+    cppunit 1.10.2
+    gstreamer 0.8.12
+    libodbc++ 0.2.3
+    taglib 1.4
+    xmlrpc++ 2004-07-13
 
 using the following configuration settings:
 

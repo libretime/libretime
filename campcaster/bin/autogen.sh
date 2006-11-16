@@ -74,22 +74,10 @@ echo "Generating configuration files for $package, please wait...."
 
 configure_ac=${etcdir}/configure.ac
 configure=${tmpdir}/configure
-aclocal_m4=${tmpdir}/aclocal.m4
 
 # copy over install-sh, as it's going to be missed by autoconf
 cp -f ${bindir}/install-sh ${tmpdir}
-
-# copy over configure.ac and acinlclude.m4 from etc to tmp,
-# as aclocal >= 1.8 is sooo unbelivably stupid that it will simply try to
-# look for configure.ac in the current directory, and include acinclude.m4
-# in aclocal.m4 it without a directory path in front
-ACLOCAL_FLAGS="-I ${tmpdir} --acdir=${tmpdir} --output=${aclocal_m4}"
-echo "  aclocal $ACLOCAL_FLAGS"
 cp -f ${configure_ac} ${tmpdir}
-cp -f ${etcdir}/acinclude.m4 ${tmpdir}
-aclocal $ACLOCAL_FLAGS
 
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
-
-
