@@ -195,7 +195,7 @@ class uiHandler extends uiBase {
             $this->_retMsg($ia->getMessage());
             return;
         }
-        $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
+        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
         $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
@@ -218,7 +218,7 @@ class uiHandler extends uiBase {
         	// loop through elements
             foreach ($mask['pages'][$key] as $k => $v) {
             	if (isset($v['element']) && isset($ia[$v['element']])) {
-	                $this->_setMdataValue($id, $v['element'], $ia[$v['element']], $langid);
+	                $this->setMetadataValue($id, $v['element'], $ia[$v['element']], $langid);
             	}
             }
         }
