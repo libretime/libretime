@@ -144,7 +144,6 @@ root:table
         closeButtonLabel:string     { "Close" }
         lockFadesCheckButtonLabel:string
                                     { "Lock fade-out to following fade-in" }
-        statusBar:string            { "status bar" }
 
         upMenuItem:string           { "Move _Up" }
         downMenuItem:string         { "Move D_own" }
