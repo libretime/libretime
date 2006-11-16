@@ -298,7 +298,7 @@ read_stream_into_memory(LivesupportMinimalAudioSmil    * smil,
         return;
     }
 
-    *outbuffer = g_malloc(length);
+    *outbuffer = (guint8*)g_malloc(length);
     *outlength = length;
     memcpy(*outbuffer, buffer, length);
 }
@@ -312,12 +312,12 @@ get_body_element(xmlDocPtr  document)
 {
     xmlNode * node = document->children;
 
-    if (!node || strcmp(node->name, "smil")) {
+    if (!node || strcmp((const char*)node->name, "smil")) {
         return 0;
     }
     for (node = node->children; node; node = node->next) {
         if (node->type == XML_ELEMENT_NODE
-         && !strcmp(node->name, "body")) {
+         && !strcmp((const char*)node->name, "body")) {
 
             return node;
         }
@@ -358,7 +358,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
 
         /* TODO: support attribute values that are represented with
          *       more than one text node, in all content assignments below */
-        if (!strcmp(attr->name, "attributeName")) {
+        if (!strcmp((const char*)attr->name, "attributeName")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 cstr = (gchar*) node->content;
                 /* we only support soundLevel animation at the moment */
@@ -367,7 +367,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                     return 0;
                 }
             }
-        } else if (!strcmp(attr->name, "calcMode")) {
+        } else if (!strcmp((const char*)attr->name, "calcMode")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 cstr = (gchar*) node->content;
                 /* we only support linear calc mode at the moment */
@@ -376,7 +376,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                     return 0;
                 }
             }
-        } else if (!strcmp(attr->name, "fill")) {
+        } else if (!strcmp((const char*)attr->name, "fill")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 cstr = (gchar*) node->content;
                 /* we only support freeze fill at the moment */
@@ -385,7 +385,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                     return 0;
                 }
             }
-        } else if (!strcmp(attr->name, "from")) {
+        } else if (!strcmp((const char*)attr->name, "from")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 cstr = (gchar*) node->content;
                 if (!smil_parse_percent(cstr, &from)) {
@@ -393,7 +393,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                     return 0;
                 }
             }
-        } else if (!strcmp(attr->name, "to")) {
+        } else if (!strcmp((const char*)attr->name, "to")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 cstr = (gchar*) node->content;
                 if (!smil_parse_percent(cstr, &to)) {
@@ -401,7 +401,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                     return 0;
                 }
             }
-        } else if (!strcmp(attr->name, "begin")) {
+        } else if (!strcmp((const char*)attr->name, "begin")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 gint64  i;
 
@@ -409,7 +409,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
                 i     = smil_clock_value_to_nanosec(cstr) + offset;
                 begin = ((double) i) / NSEC_PER_SEC_FLOAT;
             }
-        } else if (!strcmp(attr->name, "end")) {
+        } else if (!strcmp((const char*)attr->name, "end")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 gint64  i;
 
@@ -435,7 +435,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
 
     /* now create a volenv element */
     len = strlen(namePrefix) + strlen("_volenv_XXXXXXXXXX") + 1;
-    str = g_malloc(len);
+    str = (gchar*)g_malloc(len);
     g_snprintf(str, len, "%s_volenv_%d", namePrefix, index);
     if (!(volenv = gst_element_factory_make("volenv", str))) {
         GST_WARNING("can't create a required gstreamer element");
@@ -445,7 +445,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
     g_free(str);
 
     /* insert the control points */
-    str = g_malloc(64);
+    str = (gchar*)g_malloc(64);
     /* insert an initial volume level at 0.0 */
     if (begin <= 0.0) {
         g_snprintf(str, 64, "0.0:%lf", from);
@@ -516,19 +516,19 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
 
         /* TODO: support attribute values that are represented with
          *       more than one text node, in all content assignments below */
-        if (!strcmp(attr->name, "src")) {
+        if (!strcmp((const char*)attr->name, "src")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 src = (gchar*) node->content;
             }
-        } else if (!strcmp(attr->name, "begin")) {
+        } else if (!strcmp((const char*)attr->name, "begin")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 begin = (gchar*) node->content;
             }
-        } else if (!strcmp(attr->name, "clipBegin")) {
+        } else if (!strcmp((const char*)attr->name, "clipBegin")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 clipBegin = (gchar*) node->content;
             }
-        } else if (!strcmp(attr->name, "clipEnd")) {
+        } else if (!strcmp((const char*)attr->name, "clipEnd")) {
             if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                 clipEnd = (gchar*) node->content;
             }
@@ -561,7 +561,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
 
     /* now create a partial play element */
     len = strlen("partialplay_XXXXXXXXXX") + 1;
-    name = g_malloc(len);
+    name = (gchar*)g_malloc(len);
     g_snprintf(name, len, "partialplay_%d", index);
     if (!(pplay = gst_element_factory_make("partialplay", name))) {
         GST_WARNING("can't create a required gstreamer element");
@@ -574,7 +574,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
         + strlen(clipBegin)
         + (clipEnd ? strlen(clipEnd) : 0)
         + 3;
-    str = g_malloc(sizeof(gchar) * len);
+    str = (gchar*)g_malloc(sizeof(gchar) * len);
     g_snprintf(str, len, "%s;%s-%s",
                begin, clipBegin, clipEnd ? clipEnd : "");
     g_object_set(G_OBJECT(pplay), "config", str, NULL);
@@ -588,7 +588,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * elem = 0;
 
-            if (!strcmp(node->name, "animate")) {
+            if (!strcmp((const char*)node->name, "animate")) {
                 elem = handle_animate_element(smil, bin, nsBegin,
                                               node, name, ix);
             } else {
@@ -662,7 +662,7 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
-            if (!strcmp(node->name, "audio")) {
+            if (!strcmp((const char*)node->name, "audio")) {
                 element = handle_audio_element(smil,
                                                GST_BIN(pipeline),
                                                node,
@@ -735,7 +735,7 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
-            if (!strcmp(node->name, "par")) {
+            if (!strcmp((const char*)node->name, "par")) {
                 element = handle_par_element(smil, node);
             } else {
                 GST_WARNING("unsupported SMIL element %s found",
@@ -767,7 +767,7 @@ static GstElementStateReturn
 livesupport_minimal_audio_smil_change_state(GstElement * element)
 {
     LivesupportMinimalAudioSmil   * smil;
-    GstElementState                 transition = GST_STATE_TRANSITION(element);
+    GstElementState                 transition = (GstElementState)GST_STATE_TRANSITION(element);
 
     smil = LIVESUPPORT_MINIMAL_AUDIO_SMIL(element);
 
@@ -918,7 +918,7 @@ livesupport_minimal_audio_smil_class_init(
 
     gobject_class    = (GObjectClass *) klass;
     gstelement_class = (GstElementClass *) klass;
-    parent_class     = g_type_class_ref(GST_TYPE_BIN);
+    parent_class     = (GstBinClass*)g_type_class_ref(GST_TYPE_BIN);
 
     gobject_class->dispose         = livesupport_minimal_audio_smil_dispose;
     gstelement_class->change_state =
@@ -953,7 +953,7 @@ livesupport_minimal_audio_smil_get_type(void)
         minimal_audio_smil_type = g_type_register_static(GST_TYPE_BIN,
                                                   "LivesupportMinimalAudioSmil",
                                                   &minimal_audio_smil_info,
-                                                  0);
+                                                  (GTypeFlags) 0);
 
         GST_DEBUG_CATEGORY_INIT(minimal_audio_smil_debug,
                                 "minimalaudiosmil",
