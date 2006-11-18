@@ -100,52 +100,52 @@ class GstreamerPlayer : virtual public Configurable,
         /**
          *  The pipeline inside the player
          */
-        GstElement            * pipeline;
+        GstElement            * m_pipeline;
 
         /**
          *  The file source element.
          */
-        GstElement            * filesrc;
+        GstElement            * m_filesrc;
 
         /**
          *  The decoder element.
          */
-        GstElement            * decoder;
+        GstElement            * m_decoder;
 
         /**
          *  The audioconvert element.
          */
-        GstElement            * audioconvert;
+        GstElement            * m_audioconvert;
 
         /**
          *  The audioscale element.
          */
-        GstElement            * audioscale;
+        GstElement            * m_audioscale;
 
         /**
          *  The desired capabilities of the audio sink.
          */
-        GstCaps               * sinkCaps;
+        GstCaps               * m_sinkCaps;
 
         /**
          *  The audio sink
          */
-        GstElement            * audiosink;
+        GstElement            * m_audiosink;
 
         /**
          *  The URL to play.
          */
-        std::string             url;
+        std::string             m_url;
 
         /**
          *  Flag to indicate if this object has been initialized.
          */
-        bool                    initialized;
+        bool                    m_initialized;
 
         /**
          *  The audio device to play on.
          */
-        std::string             audioDevice;
+        std::string             m_audioDevice;
 
         /**
          *  The type for the vector of listeners.
@@ -159,7 +159,7 @@ class GstreamerPlayer : virtual public Configurable,
          *  A vector of event listeners, which are interested in events
          *  related to this player.
          */
-        ListenerVector          listeners;
+        ListenerVector          m_listeners;
 
         /**
          *  Handler to recieve errors from gstreamer.
@@ -212,11 +212,11 @@ class GstreamerPlayer : virtual public Configurable,
          */
         GstreamerPlayer(void)                           throw ()
         {
-            pipeline    = 0;
-            filesrc     = 0;
-            decoder     = 0;
-            audiosink   = 0;
-            initialized = false;
+            m_pipeline    = 0;
+            m_filesrc     = 0;
+            m_decoder     = 0;
+            m_audiosink   = 0;
+            m_initialized = false;
         }
 
         /**
