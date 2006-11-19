@@ -144,8 +144,17 @@ ButtonImages :: loadImage(const std::string     path,
 {
     Glib::RefPtr<Gdk::Pixbuf>   image;
 
-    if (!(image = Gdk::Pixbuf::create_from_file(path + imageName))) {
-        throw std::invalid_argument("Missing " + image);
+    bool    success = true;
+    try {
+        image = Gdk::Pixbuf::create_from_file(path + imageName);
+    } catch (Glib::FileError &e) {
+        success = false;
+    } catch (Gdk::PixbufError &e) {
+        success = false;
+    }
+    
+    if (!success || !image) {
+        throw std::invalid_argument("Missing " + imageName);
     }
 
     return image;

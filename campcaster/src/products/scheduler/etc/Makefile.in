@@ -64,6 +64,7 @@ USR_ETC_DIR     = ${USR_DIR}/etc
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_TMP_DIR     = ${USR_DIR}/tmp
+STORAGE_TMP_DIR = "/tmp"
 
 HOSTNAME       = @HOSTNAME@
 WWW_PORT       = @WWW_PORT@
@@ -79,9 +80,12 @@ ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
 POSTGRES_USER=postgres
 
 USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
-USR_TMP_DIR_S=$(shell ${ECHO} ${USR_TMP_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
-PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
-ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+STORAGE_TMP_DIR_S=$(shell ${ECHO} ${STORAGE_TMP_DIR} | \
+                        ${SED} -e "s/\//\\\\\\\\\//g")
+PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | \
+                        ${SED} -e "s/\//\\\\\\\\\//g")
+ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | \
+                        ${SED} -e "s/\//\\\\\\\\\//g")
 AUDIO_OUT_S=$(shell ${ECHO} ${AUDIO_OUT} | ${SED} -e "s/\//\\\\\\\\\//g")
 
 
@@ -94,7 +98,7 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
               s/ls_php_host/${HOSTNAME}/; \
               s/ls_php_port/${WWW_PORT}/; \
               s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
-              s/ls_tmp_dir/${USR_TMP_DIR_S}/; \
+              s/ls_tmp_dir/${STORAGE_TMP_DIR_S}/; \
               s/ls_audio_output_device/${AUDIO_OUT_S}/; \
               s/ls_scheduler_host/${HOSTNAME}/; \
               s/ls_scheduler_port/${SCHEDULER_PORT}/;"
@@ -356,6 +360,8 @@ copy_files:
 	${CP} ${ETC_DIR}/odbcinst_old_debian_template \
 	      ${ETC_DIR}/odbcinst_new_debian_template \
 	      ${ETC_DIR}/odbcinst_template ${USR_ETC_DIR}
+	${CP} ${BIN_DIR}/createDatabase.sh \
+	      ${BIN_DIR}/createOdbcDataSource.sh ${USR_BIN_DIR}
 	${CAT} ${ETC_DIR}/odbc_template | ${SED} -e ${REPLACE_SED_STRING} \
 	       > ${USR_ETC_DIR}/odbc_template
 	${CAT} ${ETC_DIR}/scheduler.xml.template | ${SED} -e ${REPLACE_SED_STRING} \

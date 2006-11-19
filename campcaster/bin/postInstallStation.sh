@@ -55,7 +55,7 @@ printUsage()
     echo "  -D, --database      The name of the Campcaster database.";
     echo "                      [default: Campcaster]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
-    echo "                      [default: www-data]";
+    echo "                      [default: apache]";
     echo "  -r, --www-root      The root directory for web documents served";
     echo "                      by apache [default: /var/www]";
     echo "  -s, --dbserver      The name of the database server host.";
@@ -145,7 +145,7 @@ if [ "x$dbpassword" == "x" ]; then
 fi
 
 if [ "x$apache_group" == "x" ]; then
-    apache_group=www-data;
+    apache_group=apache;
 fi
 
 if [ "x$postgresql_dir" == "x" ]; then
@@ -269,70 +269,17 @@ ${postgresql_init_script} start
 #-------------------------------------------------------------------------------
 #  Create the necessary database user and database itself
 #-------------------------------------------------------------------------------
-echo "Creating database and database user...";
-
-# FIXME: the below might not work for remote databases
-
-if [ "x$ls_dbserver" == "xlocalhost" ]; then
-    su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
-                                   ENCRYPTED PASSWORD '$ls_dbpassword' \
-                                   CREATEDB NOCREATEUSER;\" \
-                            | psql template1" \
-        || echo "Couldn't create database user $ls_dbuser.";
-
-    su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
-                                    OWNER $ls_dbuser ENCODING 'utf-8';\" \
-                            | psql template1" \
-        || echo "Couldn't create database $ls_database.";
-else
-    echo "Unable to automatically create database user and table for";
-    echo "remote database $ls_dbserver.";
-    echo "Make sure to create database user $ls_dbuser with password";
-    echo "$ls_dbpassword on database server at $ls_dbserver.";
-    echo "Also create a database called $ls_database, owned by this user.";
-    echo "";
-    echo "The easiest way to achieve this is by issuing the following SQL";
-    echo "commands to PostgreSQL:";
-    echo "CREATE USER $ls_dbuser";
-    echo "    ENCRYPTED PASSWORD '$ls_dbpassword'";
-    echo "    CREATEDB NOCREATEUSER;";
-    echo "CREATE DATABASE \"$ls_database\"";
-    echo "    OWNER $ls_dbuser ENCODING 'utf-8';";
-fi
-
-
-# TODO: check for the success of these operations somehow
+${install_bin}/createDatabase.sh --database=${ls_database} \
+                                 --dbuser=${ls_dbuser} \
+                                 --dbpassword=${ls_dbpassword} \
+                                 --dbserver=${ls_dbserver}
 
 
 #-------------------------------------------------------------------------------
 #  Create the ODBC data source and driver
 #-------------------------------------------------------------------------------
-echo "Creating ODBC data source and driver...";
-
-if [ -f /usr/lib/libodbcpsql.so ]; then
-    odbcinst_template=$install_etc/odbcinst_template
-elif [ -f /usr/lib/odbc/psqlodbc.so ]; then
-    odbcinst_template=$install_etc/odbcinst_old_debian_template
-elif [ -f /usr/lib/odbc/psqlodbcw.so ]; then
-    odbcinst_template=$install_etc/odbcinst_new_debian_template
-else
-    echo "###############################"
-    echo "Postgresql driver for unixODBC not found;"
-    echo "please register the PostgreSQL ODBC driver manually."
-    echo "###############################"
-fi
-odbc_template=$install_etc/odbc_template
-odbc_template_tmp=/tmp/odbc_template.$$
-
-# check for an existing PostgreSQL ODBC driver, and only install if necessary
-odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
-if [ "x$odbcinst_template" != "x" ] && [ "x$odbcinst_res" == "x" ]; then
-    echo "Registering ODBC PostgreSQL driver...";
-    odbcinst -i -d -v -f $odbcinst_template || exit 1;
-fi
-
-echo "Registering Campcaster ODBC data source...";
-odbcinst -i -s -l -f $odbc_template || exit 1;
+${install_bin}/createOdbcDataSource.sh --database=${ls_database} \
+                                       --dbserver=${ls_dbserver}
 
 
 #-------------------------------------------------------------------------------

@@ -119,7 +119,7 @@
 ]>
 
 <gLiveSupport>
-    <resourceBundle path   = "ls_var_dir/LiveSupport/campcaster-studio"
+    <resourceBundle path   = "ls_var_dir/Campcaster/campcaster-studio"
                     locale = "en"
     />
 
@@ -143,7 +143,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file:///tmp/campcasterStorageClient" >
+        <webStorage tempFiles="file://ls_tmp_dir/campcasterStudioStorageClient">
             <location server="ls_php_host" port="ls_php_port"
                       path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webStorage>

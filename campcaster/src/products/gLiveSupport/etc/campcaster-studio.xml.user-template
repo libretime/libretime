@@ -143,7 +143,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file://ls_install_dir/tmp/webStorageClient" >
+        <webStorage tempFiles="file://ls_tmp_dir/campcasterStudioStorageClient">
             <location server="ls_php_host" port="ls_php_port"
                       path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webStorage>

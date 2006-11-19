@@ -96,7 +96,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <testStorage tempFiles="file:///tmp/tempPlaylist">
+        <testStorage tempFiles="file:///tmp/campcasterSchedulerStorageClient">
             <playlist id="0000000000000001" playlength="01:30:00.000000">
                 <playlistElement id="0000000000000101" relativeOffset="0" >
                         <audioClip id="0000000000010001" 

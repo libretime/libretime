@@ -338,8 +338,14 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
                                                ->get_value();
     try {
         stationLogoPixbuf = Gdk::Pixbuf::create_from_file(stationLogoFileName);
+    } catch (Glib::FileError &e) {
+        Glib::ustring   errorMsg = "could not open station logo image file: ";
+        errorMsg += e.what();
+        throw std::invalid_argument(errorMsg);
     } catch (Gdk::PixbufError &e) {
-        throw std::invalid_argument("could not open station logo image file");
+        Glib::ustring   errorMsg = "could not create station logo image: ";
+        errorMsg += e.what();
+        throw std::invalid_argument(errorMsg);
     }
 
     // configure the taskbar icon images

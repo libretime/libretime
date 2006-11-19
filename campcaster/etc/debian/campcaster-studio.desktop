@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+
+Name=Campcaster-Studio
+GenericName=Campcaster Studio GUI Client
+Comment=
+Icon=/opt/campcaster/var/Campcaster/campcaster.png
+
+Type=Application
+Categories=Application;AudioVideo;Audio;
+
+Exec=/opt/campcaster/bin/campcaster-studio.sh
+Terminal=false
+

@@ -120,13 +120,18 @@ CornerImages :: loadImage(const std::string     path,
 {
     Glib::RefPtr<Gdk::Pixbuf>   image;
 
-    if (!(image = Gdk::Pixbuf::create_from_file(path + imageName))) {
-        throw std::invalid_argument("Missing " + image);
+    bool    success = true;
+    try {
+        image = Gdk::Pixbuf::create_from_file(path + imageName);
+    } catch (Glib::FileError &e) {
+        success = false;
+    } catch (Gdk::PixbufError &e) {
+        success = false;
     }
     
-    // activate alpha channel (transparency)
-//     but it doesn't seem to work :(
-//    image->add_alpha(false, 0, 0, 0);
+    if (!success || !image) {
+        throw std::invalid_argument("Missing " + imageName);
+    }
 
     return image;
 }

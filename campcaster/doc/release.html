@@ -16,10 +16,14 @@ Development Loan Fund</a>, under the GNU <a
   <li>Version: $Revision$</li>
   <li>Location: $URL$</li>
 </ul>
+
+
 <h1>Scope</h1>
 This document describes the process of releasing a new version of
 Campcaster. Obviously this document is only relevant to people who
 have the rights and permissions to make such a release.<br>
+
+
 <h1>Introduction</h1>
 For all the releases of Campcaster to remain consistent, it is
 preferable to have a repeatable release process, which will be followed
@@ -41,6 +45,8 @@ The release process boils down to the following steps:<br>
   <li>announcing the release<br>
   </li>
 </ul>
+
+
 <h1>Getting Campcaster sources</h1>
 It is assumed that the person doing the release has a read/write access
 to the Campcaster version control system. As a first step of the
@@ -52,12 +58,10 @@ control system</li>
   <li>there are no generated files in the release</li>
 </ul>
 To get a fresh copy of the Campcaster repository, execute the
-following in an empty directory:<br>
-<br>
-<pre><code>svn export svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/campcaster/trunk/campcaster</code><br></pre>
-<br>
-Where <code>&lt;username&gt;</code> is the user name for accessing the
-repository of the person making the release.<br>
+following in an empty directory:
+<pre><code>svn export svn://code.campware.org/campcaster/trunk/campcaster</code><br></pre>
+
+
 <h1>Checking the distribution script</h1>
 It is advisable to check the installation script <code>bin/dist.sh</code>,
 to make sure it refers to up-to-date information from the development
@@ -92,6 +96,8 @@ manager is quite picky on the format of the changelog file. See <a
 <br>
 Don't forget to commit the changes made to the changelog into Subversion
 before proceeding.<br>
+
+
 <h1>Creating release tarballs<br>
 </h1>
 To create the release tarballs, invoke the distribution script <code>bin/dist.sh</code>,
@@ -104,6 +110,8 @@ This will create two tarballs in the current directory:<br>
   <li><code>campcaster-&lt;ls-version&gt;.tar.bz2</code></li>
   <li><code>campcaster-libraries-&lt;ls-version&gt;.tar.bz2</code></li>
 </ul>
+
+
 <h1>Testing the tarballs</h1>
 Having broken releases is very annoying, thus it is highly recommended
 that the release tarballs are tested on a plain vanilla system. To test
@@ -112,18 +120,28 @@ the tarballs, follow the procedure described in the Campcaster <a
 <br>
 Do not publish tarballs that have not been tested, or are known to be
 broken.<br>
+
+
 <h1>Creating Debian packages</h1>
 After the source tarballs have been tested, Debian source and binary
 packages can be created. To do so, upload the source tarballs to a
 Debian system, and do the following:<br>
 <br>
-<pre><code>tar xfj campcaster-&lt;ls-version&gt;.tar.bz2<br>tar xfj campcaster-libraries-&lt;ls-version&gt;.tar.bz2<br>cd campcaster-&lt;ls-version&gt;<br>./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -m "Package Maintainer &lt;maintainer@foo.bar&gt;" -o ..<br>cd ..<br></code></pre>
+<pre>tar xfj campcaster-&lt;ls-version&gt;.tar.bz2
+tar xfj campcaster-libraries-&lt;ls-version&gt;.tar.bz2
+cd campcaster-&lt;ls-version&gt;
+./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -m "Package Maintainer &lt;maintainer@foo.bar&gt;" -o ..
+cd ..
+</pre>
 <br>
 The above command will create the Debain source package files next to
 the original source tarballs. The script will generate the following
 files, making up the Debian source package:<br>
 <br>
-<pre><code>campcaster_&lt;ls-version&gt;-1.dsc<br></code><code>campcaster_&lt;ls-version&gt;-1.diff.gz<br></code><code>campcaster_&lt;ls-version&gt;.orig.tar.gz<br><br></code></pre>
+<pre>campcaster_&lt;ls-version&gt;-1.dsc
+campcaster_&lt;ls-version&gt;-1.diff.gz
+campcaster_&lt;ls-version&gt;.orig.tar.gz
+</pre>
 Based on the source packages, the Debian package management system can
 build the binaries for the current target platform, provided all the
 necessary packages required to build are installed on the system. For a
@@ -132,11 +150,25 @@ in extracted debianized source tree generated below.<br>
 Building is best done
 in an empty directory as follows:<br>
 <br>
-<pre><code>rm -rf /opt/campcaster<br>rm -rf debian_build<br>mkdir debian_build<br>cd debian_build<br></code>dpkg-source -x ../campcaster_&lt;ls_version&gt;-1.dsc<br>cd campcaster-&lt;ls-version&gt;<br>dpkg-buildpackage -rfakeroot<br>cd ../..<br><br></pre>
+<pre>rm -rf /opt/campcaster
+rm -rf debian_build
+mkdir debian_build
+cd debian_build
+dpkg-source -x ../campcaster_&lt;ls_version&gt;-1.dsc
+cd campcaster-&lt;ls-version&gt;
+sudo dpkg-buildpackage
+cd ../..
+</pre>
+<!-- "dpkg-buildpackage -rfakeroot" would be better instead of
+"sudo dpkg-buildpackage", but it does not work because of the strange
+-libraries package -->
 The above commands will result in the following debian packages:<br>
 <br>
-<pre><code>campcaster-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>campcaster-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>campcaster-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb</code><br></pre>
-<pre><code></code><code></code></pre>
+<pre>campcaster-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
+campcaster-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
+campcaster-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
+</pre>
+
 
 <h1>Tagging the sources</h1>
 After the tarballs have been tested, the release can be finalized. As a
@@ -145,17 +177,20 @@ repository has to be tagged, so that the the very versions in the
 release can be retrieved at any later date. To tag the repository,
 issue the following command:<br>
 <br>
-<pre><code>svn copy svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/campcaster/trunk/ \
-         svn+ssh://&lt;username&gt;@code.campware.org/home/svn/repo/campcaster/tags/campcaster-&lt;ls-version&gt;<br></code></pre>
+<pre><code>svn copy svn://code.campware.org/campcaster/trunk \
+         svn://code.campware.org/campcaster/tags/campcaster-&lt;ls-version&gt;
+</code></pre>
 <br>
 This will tag the current state of the repository with the tag <code>campcaster-&lt;ls-version&gt;</code>,
 enabling later retrieval of this specific state.<br>
+
 
 <h1>Updating Trac</h1>
 Add the new version number to the Version pull-down menu in Trac by
 executing
 <pre><code>trac-admin /usr/local/trac-projects/campcaster version add &lt;ls-version&gt;</code></pre>
 on <code>code.campware.org</code>.
+
 
 <h1>Publishing the tarballs</h1>
 To make the release available to the public, the created tarballs have

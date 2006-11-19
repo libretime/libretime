@@ -21,6 +21,8 @@ installdir=/opt/campcaster
 apache_docroot=/var/www
 
 postgres_user=postgres
+postgresql_dir=/etc/postgresql/8.1/main
+postgresql_init_script=/etc/init.d/postgresql-8.1
 
 ls_dbserver=localhost
 ls_database=Campcaster
@@ -47,19 +49,19 @@ check_exe() {
 case "$1" in
         remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
             # remove the init script
-            rm -f /etc/init.d/campcaster-station
-            update-rc.d campcaster-station remove
+            rm -f /etc/init.d/campcaster-scheduler
+            update-rc.d campcaster-scheduler remove
             
             # remove the symlink to the campcaster web pages
             rm -f $apache_docroot/campcaster
             
             # restore the old pg_hba.conf file
-            if [ -f /etc/postgresql/pg_hba.conf ] \
-               && [ -f /etc/postgresql/pg_hba.conf.before-campcaster ] ; then
-                mv -f /etc/postgresql/pg_hba.conf \
-                      /etc/postgresql/pg_hba.conf.campcaster ;
-                mv -f /etc/postgresql/pg_hba.conf.before-campcaster \
-                      /etc/postgresql/pg_hba.conf ;
+            if [ -f $postgresql_dir/pg_hba.conf ] \
+               && [ -f $postgresql_dir/pg_hba.conf.before-campcaster ] ; then
+                mv -f $postgresql_dir/pg_hba.conf \
+                      $postgresql_dir/pg_hba.conf.campcaster ;
+                mv -f $postgresql_dir/pg_hba.conf.before-campcaster \
+                      $postgresql_dir/pg_hba.conf ;
             fi
         ;;
 
@@ -87,14 +89,15 @@ case "$1" in
 
             echo "Removing ODBC data source and driver...";
             
-            # kill active connections to LiveSuport database
-            /etc/init.d/postgresql restart
+            # kill active connections to database
+            $postgresql_init_script stop
+            $postgresql_init_script start
 
             echo "Removing Campcaster ODBC data source...";
             odbcinst -u -s -l -n $ls_database || exit 1;
 
             echo "De-registering ODBC PostgreSQL driver...";
-            odbcinst -u -d -v -n PostgreSQL || exit 1;
+            odbcinst -u -d -n PostgreSQL_Campcaster || exit 1;
 
 
             echo "Removing database and database user...";

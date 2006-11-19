@@ -92,8 +92,8 @@ case "$1" in
         check_group_permission $apache_group || exit 1;
 
         if [ "$1" = "upgrade" ]; then
-            /etc/init.d/livesupport-station stop || true
-            /etc/init.d/livesupport-station kill || true
+            /etc/init.d/campcaster-scheduler stop || true
+            /etc/init.d/campcaster-scheduler kill || true
         fi
     ;;
 

@@ -17,17 +17,20 @@ set -e
 # the debian-policy package
 #
 
-installdir=/opt/livesupport
+installdir=/opt/campcaster
 
 case "$1" in
     configure)
         # do post-installation configuration
-        $installdir/bin/postInstallStation.sh --directory $installdir
+        $installdir/bin/postInstallStation.sh --directory=$installdir \
+                        --apache-group=www-data \
+                        --postgresql-dir=/etc/postgresql/8.1/main \
+                        --postgresql-init-script=/etc/init.d/postgresql-8.1
 
         # register and start the livesupport scheduler daemon
-        cp -f $installdir/bin/livesupport-station /etc/init.d
-        update-rc.d livesupport-station defaults 92 || true
-        /etc/init.d/livesupport-station start || true
+        cp -f $installdir/bin/campcaster-scheduler /etc/init.d
+        update-rc.d campcaster-scheduler defaults 92 || true
+        /etc/init.d/campcaster-scheduler start || true
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -27,18 +27,20 @@
 
 --------------------------------------------------------------------------------
 
-Building on Ubuntu Dapper or Debian
+Installing on Ubuntu Dapper
+doc/installUbuntu.html
+
+Installing on other platforms
+doc/install.html
+
+Developing on Ubuntu Dapper
 http://code.campware.org/projects/campcaster/wiki/DevelopmentEnvironment
 
-Installing on Other Platforms
-doc/install.html
+Developing on other platforms
 doc/gettingStarted.html
 
-User Documentation
-http://code.campware.org/manuals/campcaster/1.0/
+User manual
+http://code.campware.org/manuals/campcaster/1.1/
 
-Developer Documentation
-doc/index.html
-
-Campcaster HomePage
+Campcaster home page
 http://campcaster.campware.org/

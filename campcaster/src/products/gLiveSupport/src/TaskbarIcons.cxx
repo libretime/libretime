@@ -95,9 +95,13 @@ TaskbarIcons :: configure(const xmlpp::Element & element)
                                     image = Gdk::Pixbuf::create_from_file(path);
                 taskbarIconList.push_back(image);
                 
-            } catch (Gdk::PixbufError &e) {
+            } catch (Glib::FileError &e) {
                 Glib::ustring   errorMsg = "could not open icon image file: ";
-                errorMsg.append(path);
+                errorMsg += e.what();
+                throw std::invalid_argument(errorMsg);
+            } catch (Gdk::PixbufError &e) {
+                Glib::ustring   errorMsg = "could not create icon image: ";
+                errorMsg += e.what();
                 throw std::invalid_argument(errorMsg);
             }
         } else {

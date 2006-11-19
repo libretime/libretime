@@ -169,7 +169,7 @@ ls_scheduler_host=$hostname
 ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
-ls_tmp_dir=$tmpdir
+ls_tmp_dir=$installdir/tmp
 ls_scheduler_daemon_command="$scheduler_bin_dir/scheduler_devenv.sh"
 
 ls_audio_output_device=$output_device

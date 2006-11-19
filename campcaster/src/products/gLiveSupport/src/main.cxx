@@ -163,21 +163,21 @@ int main (  int     argc,
         const xmlpp::Document * document = parser->get_document();
         gLiveSupport->configure(*(document->get_root_node()));
     } catch (std::invalid_argument &e) {
-        std::cerr << "semantic error in configuration file" << std::endl
+        std::cerr << "error in configuration file: "
                   << e.what() << std::endl;
         return 1;
     } catch (xmlpp::exception &e) {
-        std::cerr << "error parsing configuration file" << std::endl
+        std::cerr << "error parsing configuration file: "
                   << e.what() << std::endl;
         return 1;
     } catch (std::logic_error &e) {
-        std::cerr << "error configuring..." << std::endl
+        std::cerr << "error while configuring: "
                   << e.what() << std::endl;
         return 1;
     }
 
     if (!gLiveSupport->checkConfiguration()) {
-        std::cerr << "some problem with the configuration" << std::endl;
+        std::cerr << "error; please check your configuration file" << std::endl;
         return 1;
     }
 

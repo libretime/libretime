@@ -144,14 +144,6 @@ doc_tmpdir=$ls_tmpdir/doc
 etc_tmpdir=$ls_tmpdir/etc
 tmp_tmpdir=$ls_tmpdir/tmp
 
-boost_dir=$toolsdir/boost
-boost_version=boost-1.33.1
-boost_tmpdir=$tools_tmpdir/boost
-
-libxmlxx_dir=$toolsdir/libxml++
-libxmlxx_version=libxml++-2.8.1
-libxmlxx_tmpdir=$tools_tmpdir/libxml++
-
 cxxunit_dir=$toolsdir/cppunit
 cxxunit_version=cppunit-1.10.2
 cxxunit_tmpdir=$tools_tmpdir/cppunit
@@ -164,29 +156,9 @@ xmlrpcxx_dir=$toolsdir/xmlrpc++
 xmlrpcxx_version=xmlrpc++-20040713
 xmlrpcxx_tmpdir=$tools_tmpdir/xmlrpc++
 
-lcov_dir=$toolsdir/lcov
-lcov_version=lcov-1.3
-lcov_tmpdir=$tools_tmpdir/lcov
-
-gtk_dir=$toolsdir/gtk+
-gtk_version=gtk+-2.6.10
-gtk_tmpdir=$tools_tmpdir/gtk+
-
-gtkmm_dir=$toolsdir/gtkmm
-gtkmm_version=gtkmm-2.6.5
-gtkmm_tmpdir=$tools_tmpdir/gtkmm
-
 gstreamer_dir=$toolsdir/gstreamer
 gstreamer_version=gstreamer-0.8.12
 gstreamer_tmpdir=$tools_tmpdir/gstreamer
-
-icu_dir=$toolsdir/icu
-icu_version=icu-3.0
-icu_tmpdir=$tools_tmpdir/icu
-
-curl_dir=$toolsdir/curl
-curl_version=curl-7.12.3
-curl_tmpdir=$tools_tmpdir/curl
 
 taglib_dir=$toolsdir/taglib
 taglib_version=taglib-1.4
@@ -265,19 +237,8 @@ mkdir -p $tools_tmpdir
 
 
 #-------------------------------------------------------------------------------
-#  Copy needed files to the temporary directory
-#-------------------------------------------------------------------------------
-
-
-#-------------------------------------------------------------------------------
 #  Copy the tools sources
 #-------------------------------------------------------------------------------
-mkdir -p $boost_tmpdir
-cp -pPR $boost_dir/$boost_version $boost_tmpdir
-
-mkdir -p $libxmlxx_tmpdir
-cp -pPR $libxmlxx_dir/$libxmlxx_version $libxmlxx_tmpdir
-
 mkdir -p $cxxunit_tmpdir
 cp -pPR $cxxunit_dir/$cxxunit_version $cxxunit_tmpdir
 
@@ -287,23 +248,8 @@ cp -pPR $libodbcxx_dir/$libodbcxx_version $libodbcxx_tmpdir
 mkdir -p $xmlrpcxx_tmpdir
 cp -pPR $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
 
-mkdir -p $lcov_tmpdir
-cp -pPR $lcov_dir/$lcov_version $lcov_tmpdir
-
-mkdir -p $gtk_tmpdir
-cp -pPR $gtk_dir/$gtk_version $gtk_tmpdir
-
-mkdir -p $gtkmm_tmpdir
-cp -pPR $gtkmm_dir/$gtkmm_version $gtkmm_tmpdir
-
 mkdir -p $gstreamer_tmpdir
 cp -pPR $gstreamer_dir/$gstreamer_version $gstreamer_tmpdir
-
-mkdir -p $icu_tmpdir
-cp -pPR $icu_dir/$icu_version $icu_tmpdir
-
-mkdir -p $curl_tmpdir
-cp -pPR $curl_dir/$curl_version $curl_tmpdir
 
 mkdir -p $taglib_tmpdir
 cp -pPR $taglib_dir/$taglib_version $taglib_tmpdir

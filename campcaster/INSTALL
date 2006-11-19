@@ -27,12 +27,12 @@
 
 --------------------------------------------------------------------------------
 
-Installing on Ubuntu Dapper and Debian
-http://code.campware.org/projects/campcaster/wiki/DevelopmentEnvironment
+Installing on Ubuntu Dapper
+doc/installUbuntu.html
 
-Installing on Other Platforms
+Installing on other platforms
 doc/install.html
 
-Campcaster HomePage
+Campcaster home page
 http://campcaster.campware.org/
 

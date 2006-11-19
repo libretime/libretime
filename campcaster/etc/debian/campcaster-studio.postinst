@@ -17,7 +17,7 @@ set -e
 # the debian-policy package
 #
 
-installdir=/opt/livesupport
+installdir=/opt/campcaster
 apache_group=www-data
 apache_docroot=/var/www
 

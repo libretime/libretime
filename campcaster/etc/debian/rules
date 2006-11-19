@@ -31,12 +31,12 @@ config.status: configure
 	dh_testdir
 	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
                                        --build=$(DEB_BUILD_GNU_TYPE) \
-                                       --prefix=/opt/livesupport \
+                                       --prefix=/opt/campcaster \
                                        --with-www-docroot=/var/www \
                                        --with-apache-group=www-data \
-                                       --with-station-audio-out=/dev/dsp \
-                                       --with-studio-audio-out=/dev/dsp1 \
-                                       --with-studio-audio-cue=/dev/dsp2 \
+                                       --with-station-audio-out=hw:0,0 \
+                                       --with-studio-audio-out=hw:1,0 \
+                                       --with-studio-audio-cue=hw:2,0 \
                                        --with-hostname=localhost
 
 build: build-arch
@@ -64,89 +64,87 @@ install-arch:
 	dh_clean -k -s 
 	dh_installdirs -s
 
-	# this will install everything into /opt/livesupport/usr
+	# this will install everything into /opt/campcaster/usr
 	$(MAKE) install
 
-	# move the installation to debian/livesupport
-	mkdir -p $(CURDIR)/debian/livesupport/opt
-	mv /opt/livesupport $(CURDIR)/debian/livesupport/opt
+	# move the installation to debian/campcaster
+	mkdir -p $(CURDIR)/debian/campcaster/opt
+	mv /opt/campcaster $(CURDIR)/debian/campcaster/opt
 
-	# now separate the libraries into debian/livesupport-libs
-	mkdir -p $(CURDIR)/debian/livesupport-libs
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/etc/pango
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/tmp
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/usr/lib
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/lib \
-	          $(CURDIR)/debian/livesupport-libs/opt/livesupport
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gst-* \
-		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/lib/pear \
-		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/usr/lib
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/pango/* \
-		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/etc/pango
+	# now separate the libraries into debian/campcaster-libs
+	mkdir -p $(CURDIR)/debian/campcaster-libs
+	mkdir -p $(CURDIR)/debian/campcaster-libs/opt/campcaster
+	mkdir -p $(CURDIR)/debian/campcaster-libs/opt/campcaster/bin
+	mkdir -p $(CURDIR)/debian/campcaster-libs/opt/campcaster/tmp
+	mkdir -p $(CURDIR)/debian/campcaster-libs/opt/campcaster/usr/lib
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/lib \
+	          $(CURDIR)/debian/campcaster-libs/opt/campcaster
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/gst-* \
+		      $(CURDIR)/debian/campcaster-libs/opt/campcaster/bin
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/usr/lib/pear \
+		      $(CURDIR)/debian/campcaster-libs/opt/campcaster/usr/lib
 
-	# now separate the station (server) files into debian/livesupport-station
-	mkdir -p $(CURDIR)/debian/livesupport-station
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/tmp
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
-	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/usr/lib
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallStation.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/livesupport-station \
-		      $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/gtk* \
-		      $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/alib \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/archiveServer \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/getid3 \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/index.php \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
-          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageAdmin \
-              $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/backup.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/dumpDbSchema.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/import.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/restore.sh \
-              $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
-              $(CURDIR)/debian/livesupport-station/opt/livesupport/var
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/pg_hba.conf \
-              $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
+	# now separate the station (server) files into debian/campcaster-station
+	mkdir -p $(CURDIR)/debian/campcaster-station
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/bin
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/etc
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/tmp
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/var/Campcaster
+	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/usr/lib
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/scheduler \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/scheduler.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/postInstallStation.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-scheduler \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/createDatabase.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/createOdbcDataSource.sh \
+		      $(CURDIR)/debian/campcaster-station/opt/campcaster/bin
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/scheduler.xml* \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/etc/odbc* \
+		      $(CURDIR)/debian/campcaster-station/opt/campcaster/etc
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/alib \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/archiveServer \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/getid3 \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/index.php \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/htmlUI \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/storageServer \
+          $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/storageAdmin \
+              $(CURDIR)/debian/campcaster-station/opt/campcaster/var/Campcaster
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/backup.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/dumpDbSchema.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/import.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/restore.sh \
+              $(CURDIR)/debian/campcaster-station/opt/campcaster/bin
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/cache \
+              $(CURDIR)/debian/campcaster-station/opt/campcaster/var
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/apache \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/etc/pg_hba.conf \
+              $(CURDIR)/debian/campcaster-station/opt/campcaster/etc
 
-	# now separate the studio (client) files into debian/livesupport-studio
-	mkdir -p $(CURDIR)/debian/livesupport-studio
-	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport
-	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
-	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
-	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/tmp
-	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport.sh \
-		      $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
-              $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/Widgets \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/gLiveSupport*.res \
-		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/livesupport.png \
-		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/icon*.png \
-		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/stationLogo.png \
-		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/testAudio.ogg \
-		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/testAudio.ogg.license \
-		      $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
-	mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
-	cp -a $(CURDIR)/debian/livesupport-studio.desktop \
-		      $(CURDIR)/debian/livesupport-studio/usr/share/applications/
-	dh_desktop -plivesupport-studio    
+	# now separate the studio (client) files into debian/campcaster-studio
+	mkdir -p $(CURDIR)/debian/campcaster-studio
+	mkdir -p $(CURDIR)/debian/campcaster-studio/opt/campcaster
+	mkdir -p $(CURDIR)/debian/campcaster-studio/opt/campcaster/bin
+	mkdir -p $(CURDIR)/debian/campcaster-studio/opt/campcaster/etc
+	mkdir -p $(CURDIR)/debian/campcaster-studio/opt/campcaster/tmp
+	mkdir -p $(CURDIR)/debian/campcaster-studio/opt/campcaster/var/Campcaster
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-studio \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-studio.sh \
+		      $(CURDIR)/debian/campcaster-studio/opt/campcaster/bin
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/campcaster-studio.xml* \
+              $(CURDIR)/debian/campcaster-studio/opt/campcaster/etc
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/Widgets \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/campcaster-studio_*.res \
+		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/campcaster.png \
+		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/icon*.png \
+		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/stationLogo.png \
+		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/testAudio.ogg \
+		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/testAudio.ogg.license \
+		      $(CURDIR)/debian/campcaster-studio/opt/campcaster/var/Campcaster
+	mkdir -p $(CURDIR)/debian/campcaster-studio/usr/share/applications
+	cp -a $(CURDIR)/debian/campcaster-studio.desktop \
+		      $(CURDIR)/debian/campcaster-studio/usr/share/applications/
+	dh_desktop -pcampcaster-studio    
 	dh_installmenu 
 
 	dh_install -s
@@ -176,7 +174,7 @@ binary-common:
 	dh_fixperms
 	dh_makeshlibs
 	dh_installdeb
-	dh_shlibdeps -l${CURDIR}/debian/livesupport-libs/opt/livesupport/lib
+	dh_shlibdeps -l${CURDIR}/debian/campcaster-libs/opt/campcaster/lib
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

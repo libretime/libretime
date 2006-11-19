@@ -16,214 +16,153 @@ Development Loan Fund</a>, under the GNU <a
   <li>Version: $Revision$</li>
   <li>Location: $URL$</li>
 </ul>
+
 <h1>Scope</h1>
 This document describes how to compile and install Campcaster on your
-system.<br>
-<h1>Introduction</h1>
-Campcaster has an installation procedure to make sure Campcaster will
-work properly on your system. This procedure consists of the following
-steps:<br>
-<ul>
-  <li>installing required compilation tools</li>
-  <li>installing and configuring required external services</li>
-  <li>obtaining Campcaster sources</li>
-  <li>compiling Campcaster</li>
-  <li>installing Campcaster</li>
-  <li>try it out</li>
-</ul>
-<h2>For the impatient</h2>
-Those who think they know everything, the quick steps to install
-Campcaster are the following.  (To run <code>make</code>, you need write
-permissions in the <code>prefix</code> directory; to run
-<code>make install</code> and <code>postInstallStation.sh</code>,
-you need to be root.)
+system.
 
-<pre><code>
-wget http://switch.dl.sourceforge.net/sourceforge/campcaster/campcaster-&lt;version&gt;.tar.bz2
-wget http://switch.dl.sourceforge.net/sourceforge/campcaster/campcaster-libraries-&lt;version&gt;.tar.bz2
-tar xfj campcaster-&lt;version&gt;.tar.bz2
-tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2
-cd campcaster-&lt;version&gt;
-./configure --prefix=/usr/local/campcaster --with-apache-group=apache --with-www-docroot=/var/www
-make
-make install
-./bin/postInstallStation.sh -d /usr/local/campcaster -g apache -r /var/www
-/usr/local/campcaster/bin/scheduler.sh start
-<br></code></pre>
 
-Then try the URL <code>http://localhost/campcaster/</code>
-and log in using username: <code>root</code>, password: <code>q</code>.<br>
-<br>
-Everyone else, please read the lines below carefully.<br>
-<h1>Installing required compilation tools</h1>
-Make sure that all the <a href="developmentTools.html">required compilation
-tools and libraries</a> are installed.  You can either install pre-packaged
+<h1>Installation instructions</h1>
+
+
+<h2>1. Install the tools, libraries and services</h2>
+First, you need to install the <a href="developmentTools.html">tools, 
+libraries and services</a> needed to compile and run Campcaster.
+You can either install pre-packaged
 versions, if they are provided for your distribution; or you can download
 them from the URLs listed, and compile them yourself (follow the instructions
-included with each tool and library).<br>
+included with each tool and library).
 
-<h1>Installing and configuring required external services</h1>
-Campcaster depends on some external services to be able to run, most
-importantly a PHP-capable web server (we assume apache), and a database
-server (we assume PostgreSQL). <br>
-<h2>Database</h2>
-Campcaster expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
-database, version 7.4 or later, to be installed on your system.  You will
-also need a postgresql driver for unixODBC; this may be in the unixODBC
-package, or may need to be installed separately.<br>
-<br>
-The database will be accessed through TCP/IP, usually via the localhost
-interface. To achieve this, make sure to make the following changes to
-the PostgreSQL configuration files.<br>
-<br>
-Edit <code>postgresql.conf</code>
-(usually <code>/var/lib/postgres/data/postgresql.conf</code>), to have
-to following line:<br>
-<br>
-<pre><code>tcpip_socket = true</code></pre>
-<br>
-and also edit <code>pg_hba.conf</code> (usually <code>/var/lib/postgres/data/pg_hba.conf</code>)
-to include the following line, before any other lines starting with "host":<br>
-<br>
-<pre><code>host&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 127.0.0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 255.255.255.255&nbsp;&nbsp; password<br><br></code></pre>
-These changes will make sure that the PostgreSQL database is accessible
-via TCP/IP from localhost.<br>
-<h2>Web server</h2>
-Campcaster expects an apache web server with PHP and some additional
-PHP modules installed. In particular:
-<ul>
-  <li><a href="http://httpd.apache.org/">Apache</a> httpd server,
-either version 1.x or 2.x<br>
-  </li>
-  <li><a href="http://www.php.net/">PHP</a> interpreter</li>
-  <li><a href="http://www.php.net/">PHP</a> apache module</li>
-  <li><a href="http://www.php.net/domxml">DOMXML</a> PHP extension - an
-XMLv2 module for PHP<br>
-  </li>
-  <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
-  <li><a href="http://pear.php.net/">PEAR</a></li>
-</ul>
-
-Check php.ini file if "upload_max_filesize" fits the needs of an radio-station. On our experience, soundfiles can be up to 100MB.
-If you changed this setting, increase "post_max_size" to something bigger than "upload_max_filesize".
-<br><br>
-Please note the user group your apache daemon is running as (usually <code>apache</code>
-or <code>www-data</code>), you will need this information later. Later
-on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.  For the automatic install scripts to work, the user
-running them must either be <code>root</code>, or belong to
-<code>&lt;apache-group&gt;</code>.<br>
-<br>
-Also note the document root directory for your apache installation
-(usually <code>/var/www</code> or <code>/var/www/htdocs</code>
-or <code>/var/www/&lt;yourhost&gt;/htdocs</code>). Later on in this
-document, this directory will be referred to as <code>&lt;www-root&gt;</code>.<br>
-
-<h2>ALSA</h2>
-Please check if ALSA is installed and configured properly.
-File /proc/asound/cards should contain entry(s) for your soundcard(s).
-<br>
-If not, maybe you do not have suitable ALSA module for your soundcard on the system. Search you package manager for "alsa-modules" and figure out which are suitable for your kernel version and architecture.
-or one other from <a href="http://packages.debian.org/cgi-bin/search_packages.pl?version=stable&subword=1&exact=&arch=any&releases=all&case=insensitive&keywords=alsa-modules&searchon=names" target="_blank">http://packages.debian.org/cgi-bin/search_packages.pl...</a>.
-<br>
-Then run "alsaconf" and check /proc/asound/cards again.
+<p>If you are using Ubuntu Dapper (or later), then the easiest way of doing this
+is to run the
+<a href="http://code.campware.org/projects/campcaster/wiki/DevelopmentEnvironment#a1.Installpackages">
+<code>apt-get install</code> command</a> given on our wiki page.
 
 
-<h1>Obtaining Campcaster sources</h1>
-Campcaster sources come in two different tarballs:<br>
-<ul>
-  <li><code>campcaster-&lt;version&gt;.tar.bz2</code> - the
-Campcaster source files<code><br>
-    </code></li>
-  <li><code>campcaster-libraries-&lt;version&gt;.tar.bz2</code> -
-external libraries used by Campcaster<code><br>
-    </code></li>
-</ul>
-Both files can be downloaded from <a
- href="http://sourceforge.net/projects/campcaster/"><code>http://sourceforge.net/projects/campcaster/</code></a>.
+<h2>2. Obtain the Campcaster sources</h2>
+If you are reading this, you probably already have the sources, so you can
+skip to the next step.
+
+<p>If you do not have the sources yet, you need to get the tarballs named
+<code>campcaster-&lt;version&gt;.tar.bz2</code> and
+<code>campcaster-libraries-&lt;version&gt;.tar.bz2</code>.
+Both can be downloaded from 
+<a href="http://sourceforge.net/projects/campcaster/">
+<code>http://sourceforge.net/projects/campcaster/</code></a>.
+
+
+<h2>3. Compile and install Campcaster</h2>
+To install Campcaster in /opt/campcaster, do the following:
+<pre>tar xfj campcaster-&lt;version&gt;.tar.bz2
+tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2
+cd campcaster-&lt;version&gt;
+./configure --prefix=/opt/campcaster
+make install
+</pre>
+To run <code>make install</code>, you need to be able to write the
+installation directory.  Run it as root (change to the root user, or
+write <code>sudo</code> before it).
+
+<p>The <code>configure</code> command takes several arguments, 
+the most important are the following:
+<pre>  --prefix=PREFIX           install the files of the application in PREFIX
+                            [default: /usr/local]
+</pre>
+The installation directory.  This is where Campcaster will be installed.
 <br>
-<br>
-After downloading the files, untar them in the same directory:<br>
-<br>
-<pre><code>tar xfj campcaster-&lt;version&gt;.tar.bz2<br>tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2<br></code></pre>
-<br>
-which will create a <code>campcaster-&lt;version&gt;</code>
-directory, with all the required files to compile and install
-Campcaster.<br>
-<h1>Compiling Campcaster</h1>
-To compile Campcaster, enter the Campcaster directory, and execute
-the following commands:<br>
-<br>
-<pre><code>cd campcaster-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/campcaster --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
-<br>
-Note that you need to have write permissions in the <code>prefix</code> directory
-when you run <code>make</code>.
-The configure options used above are the options most probably used:<br>
-<br>
-<pre><code>&nbsp; --prefix=PREFIX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; install architecture-independent files in PREFIX<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [/usr/local]</code></pre>
-The installation directory. Supply the previously
-decided Campcaster installation directory here, <code>&lt;ls-installdir&gt;</code>
-(as mentioned above). A sensible value to use here is <code>/usr/local/campcaster</code>.<br>
-<pre><code><br>  --with-apache-group     use apache running in the specified group (apache)<br><br></code></pre>
-The user group the apache web server daemon runs at (see the section
-above on installing apache). Supply the <code>&lt;apache-group&gt;</code>
-value here, as mentioned above, which is usually either <code>apache</code>
-or <code>www-data</code>.<br>
-<br>
-<pre>  --with-www-docroot      deploy Campcaster under the specified docroot<br>                          (/var/www)<br><br></pre>
-The document root of your apache installation (see the section above on
-installing apache). Supply the <code>&lt;www-root&gt;</code>
-value here, as mentioned above, which is usually <code>/var/www</code>
-or <code>/var/www/htdocs</code>
-or <code>/var/www/&lt;yourhost&gt;/htdocs.</code>
-<span style="font-family: monospace;"><br>
-<br>
-</span>Compilation will take quite a while, so go have a tea, watch a
-movie, relax,
-etc.<br>
-<br>
-If you want the installation script to create the database tables used
-by Campcaster, consider using the following configure options:<br>
-<br>
-<pre>  --with-create-database  specify whether the Campcaster database and database<br>                          user should be created (no)<br>  --with-create-odbc-data-source<br>                          specify whether the ODBC data source for Campcaster<br>                          should be created (no)<br>  --with-init-database    specify whether the Campcaster database tables<br>                          should be initialized (no)<br>  --with-configure-apache specify whether apache should be configured for<br>                          Campcaster through its conf.d directory (no)<br><br><br></pre>
-For a full list of options, see <code>./configure --help</code><br>
-<h1>Installing Campcaster<br>
-</h1>
-After a successful compilation, to install Campcaster, you can install
-Campcaster by typing:<br>
-<br>
-<pre><code>make install</code><br></pre>
-<br>
-This will install Campcaster into the directory specified to the
-configure script. It will also create necessary database tables,
-depending on the invocation of the configure script. You need to run
-<code>make install</code> as root.<br>
-<br>
-<h1>Try it out</h1>
+<pre>  --with-apache-group       specify the group of the apache web server daemon
+                            [default: apache]
+</pre>
+The group of the apache web server daemon.  On Debian-based systems, including
+Ubuntu, this is <code>www-data</code>.
+
+<p>There are several more options; type <code>./configure --help</code> to get
+a list of them, together with their default values.
+
+
+<h2>4. Configure the external services</h2>
+Before you can use Campcaster, you need to set up and configure the web server 
+and the database that Campcaster uses to store its data. 
+The simplest way is to use the script included with Campcaster:
+<pre>./bin/postInstallStation.sh --directory=/opt/campcaster</pre>
+You need to run this script as root, too.
+
+<p>You can also set up everything manually; see the 
+<a href="gettingStarted.html">gettingStarted.html</a> 
+document about how to do that.
+
+<p><code>postInstallStation.sh</code> takes several arguments;
+the most important are the following:
+<pre>  --directory=PREFIX        look for Campcaster files in PREFIX
+</pre>
+The installation directory, where Campcaster was installed.  This argument
+is obligatory.
+
+<p><pre>  --apache-group            specify the group of the apache web server
+                            [default: apache]
+</pre>
+The group of the apache web server daemon.  On Debian-based systems, including
+Ubuntu, this is <code>www-data</code>.
+
+<p><pre>  --postgresql-dir          the PostgreSQL configuration directory
+                            [default: /etc/postgresql]
+</pre>
+The directory containing the PostgreSQL configuration file
+<code>pg_hba.conf</code>.  On Ubuntu Dapper and Edgy, this is 
+<code>/etc/postgresql/8.1/main</code>.  On some distributions, it may be
+<code>/var/lib/postgres/data/</code>.
+
+<p><pre>
+  --postgresql-init-script  the start/stop command for the PostgreSQL daemon
+                            [default: /etc/init.d/postgresql]
+</pre>
+The init script used to start and stop the PostgreSQL daemon.  On Ubuntu Dapper
+and Edgy, this is <code>/etc/init.d/postgresql-8.1</code>.
+
+<p>There are several more options; type
+<code>./bin/postInstallStation.sh --help</code>
+to get a list of them, together with their default values.
+
+
+<h2>5. Start Campcaster</h2>
 After a successful installation, the Campcaster scheduler has to be
 started. The scheduler has a System V runlevel-style startup script,
-under &lt;ls-installdir&gt;/bin/scheduler.sh. To start the scheduler,
-simply invoke:<br>
-<br>
-<pre><code>&lt;ls-installdir&gt;/bin/scheduler.sh start</code><br></pre>
-<br>
-The only thing left to do is to try out the Campcaster web interface
-or the GUI application.<br>
-<br>
-For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/campcaster/</code>
-.<br>
-<br>
-The GUI application can be started by issuing the following command:<br>
-<br>
-<pre><code>&lt;ls-installdir&gt;/bin/campcaster-studio.sh</code><br></pre>
-<br>
-For your first login, use the following values:<br>
+under <code>&lt;installation directory&gt;/bin/scheduler.sh<code>. 
+To start the scheduler, simply type:
+<pre><code>&lt;installation directory&gt;/bin/scheduler.sh start</code></pre>
+
+<p>To use the the web interface, point your browser to
+<code>http://localhost/campcaster</code>.  You can also use the web interface
+from other computers; simply put the name or IP number of the computer where 
+Campcaster was installed in place of <code>localhost</code>.
+
+<p>To start Campcaster Studio, type the following:
+<pre><code>&lt;installation directory&gt;/bin/campcaster-studio.sh</code></pre>
+
+<p>For your first login, use the following values:
 <ul>
   <li>username: root</li>
   <li>password: q</li>
 </ul>
-Have fun!<br>
-<br>
-<br>
-<pre><code></code></pre>
+Later you can change the password, and add more users, from the web interface.
+
+<p>You can make the scheduler start automatically when the system boots up, 
+by installing the &lt;installation directory&gt;/bin/campcaster-scheduler 
+init script.  In Debian-based systems, this is done by 
+typing 
+<pre>cp &lt;installation directory&gt;/bin/campcaster-scheduler /etc/init.d/
+update-rc.d campcaster-scheduler defaults 92
+</pre>
+as root.  Note: in the init script, the variable <code>CAMPCASTER_DIR</code> 
+is hard-coded to <code>/opt/campcaster</code>.  You will need to edit it and 
+change it to your installation directory if it is different.
+
+<p>You can quickly fill your Campcaster storage with audio files using the 
+mass import script <code>&lt;installation directory&gt;/bin/import.sh</code>.
+Use the <code>--help</code> option to learn how to use it.  You will need 
+write permissions to the installation directory (i.e., typically you will 
+need to run the script as root).
+
+<p>Have fun!
 </body>
 </html>

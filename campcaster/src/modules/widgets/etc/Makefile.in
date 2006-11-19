@@ -200,33 +200,34 @@ install: all
 	${CP} ${INCLUDE_DIR}/LiveSupport/Widgets/*.h \
           ${USR_INCLUDE_DIR}/LiveSupport/Widgets
 	${CP} ${WIDGETS_LIB_FILE} ${USR_LIB_DIR}
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/Widgets/blueBin \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/button \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/combo \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/darkBlueBin \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/entryBin \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/icons \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/imageButton \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/tabButton \
-             ${USR_VAR_DIR}/LiveSupport/Widgets/whiteWindow
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/Widgets
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/Widgets/blueBin \
+             ${USR_VAR_DIR}/Campcaster/Widgets/button \
+             ${USR_VAR_DIR}/Campcaster/Widgets/combo \
+             ${USR_VAR_DIR}/Campcaster/Widgets/darkBlueBin \
+             ${USR_VAR_DIR}/Campcaster/Widgets/entryBin \
+             ${USR_VAR_DIR}/Campcaster/Widgets/icons \
+             ${USR_VAR_DIR}/Campcaster/Widgets/imageButton \
+             ${USR_VAR_DIR}/Campcaster/Widgets/tabButton \
+             ${USR_VAR_DIR}/Campcaster/Widgets/whiteWindow
 	${CP} ${VAR_DIR}/blueBin/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/blueBin
+          ${USR_VAR_DIR}/Campcaster/Widgets/blueBin
 	${CP} ${VAR_DIR}/button/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/button
+          ${USR_VAR_DIR}/Campcaster/Widgets/button
 	${CP} ${VAR_DIR}/combo/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/combo
+          ${USR_VAR_DIR}/Campcaster/Widgets/combo
 	${CP} ${VAR_DIR}/darkBlueBin/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/darkBlueBin
+          ${USR_VAR_DIR}/Campcaster/Widgets/darkBlueBin
 	${CP} ${VAR_DIR}/entryBin/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/entryBin
+          ${USR_VAR_DIR}/Campcaster/Widgets/entryBin
 	${CP} ${VAR_DIR}/icons/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/icons
+          ${USR_VAR_DIR}/Campcaster/Widgets/icons
 	${CP} ${VAR_DIR}/imageButton/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/imageButton
+          ${USR_VAR_DIR}/Campcaster/Widgets/imageButton
 	${CP} ${VAR_DIR}/tabButton/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/tabButton
+          ${USR_VAR_DIR}/Campcaster/Widgets/tabButton
 	${CP} ${VAR_DIR}/whiteWindow/*.png \
-          ${USR_VAR_DIR}/LiveSupport/Widgets/whiteWindow
+          ${USR_VAR_DIR}/Campcaster/Widgets/whiteWindow
 
 
 #-------------------------------------------------------------------------------

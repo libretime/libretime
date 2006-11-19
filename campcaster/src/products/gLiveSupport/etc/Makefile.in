@@ -66,6 +66,7 @@ USR_ETC_DIR     = ${USR_DIR}/etc
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_VAR_DIR     = ${USR_DIR}/var
+STORAGE_TMP_DIR = "/tmp"
 
 HOSTNAME       = @HOSTNAME@
 WWW_PORT       = @WWW_PORT@
@@ -83,12 +84,16 @@ SCHEDULER_XML_RPC_PREFIX=RC2
 SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/scheduler.sh"
 
 USR_VAR_DIR_S=$(shell ${ECHO} ${USR_VAR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
-PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
-ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
-AUDIO_OUT_S=$(shell ${ECHO} ${AUDIO_OUT} | ${SED} -e "s/\//\\\\\\\\\//g")
-AUDIO_CUE_S=$(shell ${ECHO} ${AUDIO_CUE} | ${SED} -e "s/\//\\\\\\\\\//g")
-SCHEDULER_DAEMON_COMMAND_S=$(shell ${ECHO} ${SCHEDULER_DAEMON_COMMAND} \
-                                         | ${SED} -e "s/\//\\\\\\\\\//g")
+PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | \
+                                            ${SED} -e "s/\//\\\\\\\\\//g")
+ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | \
+                                            ${SED} -e "s/\//\\\\\\\\\//g")
+STORAGE_TMP_DIR_S=$(shell ${ECHO} ${STORAGE_TMP_DIR} | \
+                                            ${SED} -e "s/\//\\\\\\\\\//g")
+AUDIO_OUT_S=$(shell ${ECHO} ${AUDIO_OUT} |  ${SED} -e "s/\//\\\\\\\\\//g")
+AUDIO_CUE_S=$(shell ${ECHO} ${AUDIO_CUE} |  ${SED} -e "s/\//\\\\\\\\\//g")
+SCHEDULER_DAEMON_COMMAND_S=$(shell ${ECHO} ${SCHEDULER_DAEMON_COMMAND} | \
+                                            ${SED} -e "s/\//\\\\\\\\\//g")
 
 REPLACE_SED_STRING="s/ls_var_dir/${USR_VAR_DIR_S}/; \
     s/ls_dbuser/${DB_USER}/; \
@@ -99,6 +104,7 @@ REPLACE_SED_STRING="s/ls_var_dir/${USR_VAR_DIR_S}/; \
     s/ls_php_host/${HOSTNAME}/; \
     s/ls_php_port/${WWW_PORT}/; \
     s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
+    s/ls_tmp_dir/${STORAGE_TMP_DIR_S}/; \
     s/ls_audio_output_device/${AUDIO_OUT_S}/; \
     s/ls_audio_cue_device/${AUDIO_CUE_S}/; \
     s/ls_scheduler_host/${HOSTNAME}/; \

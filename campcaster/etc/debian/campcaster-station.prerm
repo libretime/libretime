@@ -20,8 +20,8 @@ set -e
 case "$1" in
     remove|upgrade|deconfigure)
         # stop the livesupport scheduler daemon
-        /etc/init.d/livesupport-station stop || true
-        /etc/init.d/livesupport-station kill || true
+        /etc/init.d/campcaster-scheduler stop || true
+        /etc/init.d/campcaster-scheduler kill || true
     ;;
     
     failed-upgrade)

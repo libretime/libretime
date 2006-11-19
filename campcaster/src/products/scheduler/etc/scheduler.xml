@@ -100,7 +100,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file:///tmp/webStorageClient" >
+        <webStorage tempFiles="file:///tmp/campcasterSchedulerStorageClient" >
             <location server="localhost" port="80" 
                       path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
         </webStorage>

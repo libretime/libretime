@@ -130,98 +130,98 @@ distclean: clean docclean
 check: all
 
 install: configure_apache
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/assets
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/icon
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/includes
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/internals
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/sub
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/file
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/popup
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/library
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scheduler
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scratchpad
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/loader
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/script
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/system
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/css_img
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/assets
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/icon
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/includes
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/lang
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs/plugins
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs/internals
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/formmask
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/sub
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/file
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/popup
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/library
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/scheduler
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/scratchpad
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/loader
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/script
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/system
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/playlist
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/subjects
 
-	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/index.php
-	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/htmlUI/index.php
-	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var
-	${CAT} ${VAR_DIR}/ui_conf.php.template | ${SED} -e ${REPLACE_SED_STRING} > ${USR_VAR_DIR}/LiveSupport/htmlUI/var/ui_conf.php
-	${CP} ${VAR_DIR}/.htaccess ${USR_VAR_DIR}/LiveSupport/htmlUI/var
-	${CP} ${VAR_DIR}/localizer/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
-	${CP} ${VAR_DIR}/localizer/includes/*.php ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/includes
-	${CP} ${VAR_DIR}/localizer/icon/*.png ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/icon
-	${CP} -r ${VAR_DIR}/localizer/lang/* ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang/
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/Campcaster/index.php
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/Campcaster/htmlUI/index.php
+	${CP} ${VAR_DIR}/*.php ${USR_VAR_DIR}/Campcaster/htmlUI/var
+	${CAT} ${VAR_DIR}/ui_conf.php.template | ${SED} -e ${REPLACE_SED_STRING} > ${USR_VAR_DIR}/Campcaster/htmlUI/var/ui_conf.php
+	${CP} ${VAR_DIR}/.htaccess ${USR_VAR_DIR}/Campcaster/htmlUI/var
+	${CP} ${VAR_DIR}/localizer/*.php ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer
+	${CP} ${VAR_DIR}/localizer/includes/*.php ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/includes
+	${CP} ${VAR_DIR}/localizer/icon/*.png ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/icon
+	${CP} -r ${VAR_DIR}/localizer/lang/* ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/lang/
 	${CP} ${VAR_DIR}/html/*.php ${VAR_DIR}/html/*.css \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/html
 	${CP} ${VAR_DIR}/html/img/*.png ${VAR_DIR}/html/img/*.gif \
 	      ${VAR_DIR}/html/img/*.swf ${VAR_DIR}/html/img/*.image \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
 	${CP} ${VAR_DIR}/html/assets/*.js \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/assets
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/assets
 	${CP} ${VAR_DIR}/html/css_img/*.png \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/css_img
 	${CP} ${VAR_DIR}/formmask/*.php \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/formmask
 	${CP} ${VAR_DIR}/Smarty/libs/*.php \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs/
 	${CP} ${VAR_DIR}/Smarty/libs/internals/*.php \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/internals/
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs/internals/
 	${CP} ${VAR_DIR}/Smarty/libs/plugins/*.php \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins/
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/Smarty/libs/plugins/
 	${CP} ${VAR_DIR}/templates/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates
 	${CP} ${VAR_DIR}/templates/sub/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/sub
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/sub
 	${CP} ${VAR_DIR}/templates/file/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/file
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/file
 	${CP} ${VAR_DIR}/templates/popup/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/popup
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/popup
 	${CP} ${VAR_DIR}/templates/library/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/library
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/library
 	${CP} ${VAR_DIR}/templates/scheduler/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scheduler
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/scheduler
 	${CP} ${VAR_DIR}/templates/scratchpad/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scratchpad
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/scratchpad
 	${CP} ${VAR_DIR}/templates/loader/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/loader
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/loader
 	${CP} ${VAR_DIR}/templates/script/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/script
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/script
 	${CP} ${VAR_DIR}/templates/system/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/system
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/system
 	${CP} ${VAR_DIR}/templates/playlist/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/playlist
 	${CP} ${VAR_DIR}/templates/subjects/*.tpl \
-	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
+	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/subjects
 
-	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
 
-	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
-	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
-	chgrp -R ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
+	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
+	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
+	chgrp -R ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/lang
 
-	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
-	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
-	chmod -R g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/lang
+	chmod g+sw ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
+	chmod g+sw ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
+	chmod -R g+sw ${USR_VAR_DIR}/Campcaster/htmlUI/var/localizer/lang
 
-	${RM} ${WWW_DOCROOT}/livesupport
-	ln -sf ${USR_VAR_DIR}/LiveSupport ${WWW_DOCROOT}/livesupport
+	${RM} ${WWW_DOCROOT}/campcaster
+	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/campcaster
 
 configure_apache:
 ifeq (@CONFIGURE_APACHE@,yes)
