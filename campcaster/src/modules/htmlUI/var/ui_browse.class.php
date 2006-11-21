@@ -36,13 +36,13 @@ class uiBrowse
     } // constructor
 
 
-    function setReload()
+    public function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
     } // fn setReload
 
 
-    function setDefaults($reload=FALSE)
+    public function setDefaults($reload=FALSE)
     {
         $this->col[1]['category'] = UI_BROWSE_DEFAULT_KEY_1;
         $this->col[1]['value'][0] = '%%all%%';
@@ -69,22 +69,22 @@ class uiBrowse
     } // fn setDefaults
 
 
-    function getCriteria()
+    public function getCriteria()
     {
         return $this->criteria;
     } // fn getCriteria
 
 
-    function getResult()
+    public function getResult()
     {
         $this->searchDB();
         return $this->results;
     } // fn getResult
 
 
-    function browseForm($id, $mask2)
+    public function browseForm($id, $mask2)
     {
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
         #$mask2['browse_columns']['category']['options'][0] = tra('Select a Value');
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $v){
@@ -128,91 +128,102 @@ class uiBrowse
      *
      * @param array $parm
      * 		Has keys:
-     * 		int 'col' - the column you are setting the category for
-     * 		string 'category' - the category for the given column
-     * 		string 'value' - the
+     * 		int ['col'] - the column you are setting the category for
+     * 		string ['category'] - the category for the given column
+     * 		string ['value'] - the search value for the given category
      * @return void
      */
     public function setCategory($parm)
     {
-//    	$reflect = new ReflectionProperty('uiBrowse', 'Base');
-//    	echo "<pre>";print_r(Reflection::getModifierNames($reflect->getModifiers()));echo "</pre>";
-
         $columnNumber = $parm['col'];
         $category = $parm['category'];
 
         $this->col[$columnNumber]['category'] = uiBase::formElementDecode($category);
         $criteria = isset($this->col[$columnNumber]['criteria']) ? $this->col[$columnNumber]['criteria'] : null;
-//        print_r($this->Base->gb);
         $this->col[$columnNumber]['values'] = $this->Base->gb->browseCategory($this->col[$columnNumber]['category'], $criteria, $this->Base->sessid);
 
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         $this->clearHierarchy($columnNumber);
-        #print_r($this->col);
     } // fn setCategory
 
 
     /**
      * @param array $parm
+     * 		contains the following indexes:
+     * 		int ['col']: column number
+     * 		string ['value'][0]: the search value for the given category
+     * 		string ['category']: the category to search
      */
-    function setValue($parm)
+    public function setValue($parm)
     {
         $this->criteria['offset'] = 0;
-        $which = $parm['col'];
-        $next  = $which + 1;
-        $this->col[$which]['form_value'] =  $parm['value'][0];
+        $columnNumber = $parm['col'];
+        $next  = $columnNumber + 1;
+        $this->col[$columnNumber]['form_value'] = $parm['value'][0];
         if ($parm['value'][0] == '%%all%%') {
             $this->col[$next]['criteria'] = array('operator' => 'and',
             									  'filetype' => $this->criteria['filetype']);
         } else {
+        	$conditions = array(
+	                        array('cat' => uiBase::formElementDecode($parm['category']),
+	                              'op' => '=',
+	                              'val' => $parm['value'][0]
+	                        ));
+        	if (isset($this->col[$columnNumber]['criteria']['conditions'])
+        		&& is_array($this->col[$columnNumber]['criteria']['conditions'])) {
+        		$conditions = array_merge($conditions,
+        								  $this->col[$columnNumber]['criteria']['conditions']);
+        	}
             $this->col[$next]['criteria'] = array(
                 'operator' => 'and',
                 'filetype' => $this->criteria['filetype'],
-                'conditions'  => array_merge(
-                    is_array($this->col[$which]['criteria']['conditions']) ? $this->col[$which]['criteria']['conditions'] : array(),
-                    array(
-                        array('cat'  => uiBase::formElementDecode($parm['category']),
-                              'op'   => '=',
-                              'val'  => $parm['value'][0]
-                        )
-                    )
-                )
-            );
+                'conditions'  => $conditions);
         }
         $nextCriteria = isset($this->col[$next]['criteria']) ? $this->col[$next]['criteria'] : null;
         $category = isset($this->col[$next]['category']) ? $this->col[$next]['category'] : null;
         $this->col[$next]['values'] = $this->Base->gb->browseCategory($category, $nextCriteria, $this->Base->sessid);
 
-        #echo "cat: ".$this->col[$next]['category']."\n";
-        #echo "criteria: "; print_r($this->col[$next]['criteria']);
-        #echo "\nvalues: "; print_r($this->col[$next]['values']);
+//        echo "cat: ".$this->col[$next]['category']."\n";
+//        echo "criteria: "; print_r($this->col[$next]['criteria']);
+//        echo "\nvalues: "; print_r($this->col[$next]['values']);
 
         $this->setCriteria();
         $this->clearHierarchy($next);
-        #$this->searchDB();
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
-        #$this->setReload();
     } // fn setValue
 
 
-    function options($arr)
+    /**
+     * Given an array of category values, prepare the array for display:
+     * add "--all--" option to the beginning and index all elements by
+     * their own name.  Return the new array created.
+     *
+     * @param array $p_categoryValues
+     * @return array
+     */
+    public function options($p_categoryValues)
     {
         $ret['%%all%%'] = '---all---';
-        if (is_array($arr)) {
-            foreach ($arr as $val) {
+        if (is_array($p_categoryValues)) {
+            foreach ($p_categoryValues as $val) {
                 $ret[$val]  = $val;
             }
         }
-
         return $ret;
     } // fn options
 
 
-    function clearHierarchy($which)
+    /**
+     * Clear all categories from the given column number to column 3.
+     *
+     * @param int $columnNumber
+     * @return void
+     */
+    private function clearHierarchy($columnNumber)
     {
-        $this->col[$which]['form_value'] = NULL;
-        $which++;
-        for ($col=$which; $col<=3; $col++) {
+        $this->col[$columnNumber]['form_value'] = NULL;
+        $columnNumber++;
+        for ($col = $columnNumber; $col <= 3; $col++) {
             $this->col[$col]['criteria']    = NULL;
             $this->col[$col]['values']      = NULL;
             $this->col[$col]['form_value']  = NULL;
@@ -220,22 +231,20 @@ class uiBrowse
     } // fn clearHierarchy
 
 
-    function setCriteria() {
-        //$this->criteria['conditions'] = array();
+    public function setCriteria() {
         unset($this->criteria['conditions']);
-        for ($col=3; $col>=1; $col--) {
+        for ($col = 3; $col >= 1; $col--) {
             if (is_array($this->col[$col]['criteria'])) {
-                $this->criteria = array_merge ($this->col[$col]['criteria'], $this->criteria);
+                $this->criteria = array_merge($this->col[$col]['criteria'], $this->criteria);
                 break;
             }
         }
     } // fn setCriteria
 
 
-    function searchDB()
+    public function searchDB()
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
-
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
 
         if (!is_array($results) || !count($results)) {
@@ -244,7 +253,7 @@ class uiBrowse
 
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
-            $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
+            $tmpId = $this->Base->gb->idFromGunid($rec["gunid"]);
             $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
 
@@ -273,27 +282,22 @@ class uiBrowse
     } // fn searchDB
 
 
-    function pagination(&$results)
+    public function pagination(&$results)
     {
         if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
         $delta = 4;
-        $currp = ($this->criteria['offset'] / $this->criteria['limit']) + 1;   # current page
-        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
-
-        /*
-        for ($n = 1; $n <= $maxp; $n = $n+$width) {
-            $width = pow(10, floor(($n)/10));
-            $this->results['pagination'][$n] = $n;
-        }
-        */
+        // current page
+        $currp = ($this->criteria['offset'] / $this->criteria['limit']) + 1;
+        // maximum page
+        $maxp = ceil($results['cnt'] / $this->criteria['limit']);
 
         $deltaLower = UI_BROWSERESULTS_DELTA;
         $deltaUpper = UI_BROWSERESULTS_DELTA;
         $start = $currp;
 
-        if ($start+$delta-$maxp > 0) {
+        if ( ($start+$delta-$maxp) > 0) {
             // correct lower border if page is near end
             $deltaLower += $start+$delta-$maxp;
         }
@@ -307,20 +311,23 @@ class uiBrowse
             }
         }
 
-        #array_pop($this->results['pagination']);
-        $this->results['pagination'][1] ? NULL : $this->results['pagination'][1] = '|<<';
-        $this->results['pagination'][$maxp] ? NULL : $this->results['pagination'][$maxp] = '>>|';
-        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
-        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
+        if (!isset($this->results['pagination'][1])) {
+        	$this->results['pagination'][1] = '|<<';
+        }
+        if (!isset($this->results['pagination'][$maxp])) {
+        	$this->results['pagination'][$maxp] = '>>|';
+        }
+        $this->results['next']  = ($results['cnt'] > ($this->criteria['offset'] + $this->criteria['limit'])) ? TRUE : FALSE;
+        $this->results['prev']  = ($this->criteria['offset'] > 0) ? TRUE : FALSE;
         ksort($this->results['pagination']);
     } // fn pagination
 
 
-    function reOrder($by)
+    public function reorder($by)
     {
         $this->criteria['offset'] = NULL;
 
-        if ($this->criteria['orderby'] == $by && !$this->criteria['desc']) {
+        if ( ($this->criteria['orderby'] == $by) && !$this->criteria['desc']) {
             $this->criteria['desc'] = TRUE;
         } else {
             $this->criteria['desc'] = FALSE;
@@ -328,11 +335,16 @@ class uiBrowse
 
         $this->criteria['orderby'] = $by;
         $this->setReload();
-        #$this->searchDB();
-    } // fn reOrder
+    } // fn reorder
 
 
-    function setOffset($page)
+    /**
+     * Set the current page of results to display.
+     *
+     * @param int $page
+     * @return void
+     */
+    public function setOffset($page)
     {
         $o =& $this->criteria['offset'];
         $l =& $this->criteria['limit'];
@@ -345,32 +357,34 @@ class uiBrowse
             $o = $l * ($page-1);
         }
         $this->setReload();
-        #$this->searchDB();
     } // fn setOffset
 
 
-    function setLimit($limit)
+    /**
+     * Set the number of results to return.
+     *
+     * @param int $limit
+     * @return void
+     */
+    public function setLimit($limit)
     {
         $this->criteria['limit'] = $limit;
         $this->setReload();
-        #$this->searchDB();
     } // fn setLimit
 
 
-    function setFiletype($filetype)
+    public function setFiletype($filetype)
     {
         $this->criteria['filetype'] = $filetype;
         $this->criteria['offset'] = 0;
 
-        for ($n=1; $n<=3; $n++) {
+        for ($n = 1; $n <= 3; $n++) {
             $this->col[$n]['criteria']['filetype'] = $filetype;
-
             $this->col[$n]['values'] = $this->Base->gb->browseCategory($this->col[$n]['category'], $this->col[$n]['criteria'], $this->Base->sessid);
             $this->clearHierarchy($n);
         }
 
         $this->setReload();
-        #$this->searchDB();
     } // fn setFiletype
 } // class uiBrowse
 ?>
