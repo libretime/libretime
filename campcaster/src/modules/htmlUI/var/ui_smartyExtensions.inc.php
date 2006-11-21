@@ -55,14 +55,17 @@ function S_tra($in)
  */
 function S_getHour($param)
 {
-    ## input format is HH:MM:SS.dddddd
+    // input format is HH:MM:SS.dddddd
     extract($param);
-    if (!isset($time) || !is_string($time)) {
+    if (empty($time) || !is_string($time)) {
         return 0;
     }
-    list($h, $m, $s) = explode (':', $time);
+    list($h, $m, $s) = explode(':', $time);
+    $h = intval($h);
+    $m = intval($m);
+    $s = intval($s);
     $curr = mktime($h, $m ,$s);
-    if ($pause) {
+    if (isset($pause) && $pause) {
         $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
     }
     return strftime("%H", $curr);
@@ -76,14 +79,17 @@ function S_getHour($param)
  */
 function S_getMinute($param)
 {
-    ## input format is HH:MM:SS.dddddd
-    extract ($param);
-    if (!isset($time) || !is_string($time)) {
+    // input format is HH:MM:SS.dddddd
+    extract($param);
+    if (empty($time) || !is_string($time)) {
         return 0;
     }
-    list ($h, $m, $s) = explode (':', $time);
+    list ($h, $m, $s) = explode(':', $time);
+    $h = intval($h);
+    $m = intval($m);
+    $s = intval($s);
     $curr = mktime($h, $m ,$s);
-    if ($pause) {
+    if (isset($pause) && $pause) {
         $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
     }
     return strftime("%M", $curr);
@@ -97,14 +103,17 @@ function S_getMinute($param)
  */
 function S_getSecond($param)
 {
-    ## input format is HH:MM:SS.dddddd
-    extract ($param);
-    if (!isset($time) || !is_string($time)) {
+    // input format is HH:MM:SS.dddddd
+    extract($param);
+    if (empty($time) || !is_string($time)) {
         return 0;
     }
     list ($h, $m, $s) = explode (':', $time);
+    $h = intval($h);
+    $m = intval($m);
+    $s = intval($s);
     $curr = mktime($h, $m ,$s);
-    if ($pause) {
+    if (isset($pause) && $pause) {
         $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
     }
     return strftime("%S", $curr);
@@ -124,11 +133,13 @@ function S_niceTime($param)
         list ($in, $lost) = explode('.', $in);
     }
     $in = str_replace('&nbsp;', '', $in);
-
+	$h = 0;
+	$i = 0;
+	$s = 0;
     if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
         list($h, $i, $s) = explode(':', $in);
     } elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
-        list($i, $s)     = explode(':', $in);
+        list($i, $s) = explode(':', $in);
     } else {
         $s = $in;
     }
