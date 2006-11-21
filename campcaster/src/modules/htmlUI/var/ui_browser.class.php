@@ -447,7 +447,7 @@ class uiBrowser extends uiBase {
      */
     function listen2Audio($clipid)
     {
-        $id   = $this->gb->_idFromGunid($clipid);
+        $id   = $this->gb->idFromGunid($clipid);
         $type = $this->gb->getFileType($id);
 
         if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
