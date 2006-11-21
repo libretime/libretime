@@ -417,37 +417,28 @@ class uiBase
 
     /**
      * Add an alert message to the session var.
-     * @todo Fix this to use call_user_func()
      *
      * @param string $msg
-     * @param string $p1
-     * @param string $p2
-     * @param string $p3
-     * @param string $p4
-     * @param string $p5
-     * @param string $p6
-     * @param string $p7
-     * @param string $p8
-     * @param string $p9
      */
-    public function _retMsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
+    public function _retMsg($msg)
     {
         if (!isset($_SESSION['alertMsg'])) {
             $_SESSION['alertMsg'] = '';
         }
-        $_SESSION['alertMsg'] .= tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9).'\n';
+       	$args = func_get_args();
+        $_SESSION['alertMsg'] .= call_user_func_array('tra', $args).'\n';
     } // fn _retMsg
 
 
     public function getMetaInfo($id)
     {
         $type = strtolower($this->gb->getFileType($id));
-        $data = array('id'          => $id,
-                      'gunid'       => $this->gb->_gunidFromId($id),
-                      'title'       => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                      'creator'     => $this->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-                      'duration'    => $this->getMetadataValue($id, UI_MDATA_KEY_DURATION),
-                      'type'        => $type,
+        $data = array('id' => $id,
+                      'gunid' => $this->gb->gunidFromId($id),
+                      'title' => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                      'creator' => $this->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                      'duration' => $this->getMetadataValue($id, UI_MDATA_KEY_DURATION),
+                      'type' => $type,
                       #'isAvailable' => $type == 'playlist' ? $this->gb->playlistIsAvailable($id, $this->sessid) : NULL,
                 );
          return ($data);
@@ -460,11 +451,7 @@ class uiBase
             $langid = $_SESSION['langid'];
         }
 
-        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid, $deflangid))) {
-            $value = current($arr);
-            return $value['value'];
-        }
-        return FALSE;
+        return $this->gb->getMetadataValue($id, $key, $this->sessid, $langid, $deflangid);
     } // fn getMetadataValue
 
 
@@ -477,7 +464,7 @@ class uiBase
             $value = str_replace("\'", "'", $value);
         }
 
-        if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
+        if ($this->gb->setMetadataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;
         }
         return FALSE;
