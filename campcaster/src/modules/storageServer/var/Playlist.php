@@ -147,7 +147,7 @@ class Playlist extends StoredFile {
      */
     function lock(&$gb, $subjid=NULL, $val=TRUE)
     {
-        if ($val && $gb->_isEdited($this->gunid) !== FALSE) {
+        if ($val && $gb->isEdited($this->gunid) !== FALSE) {
             return PEAR::raiseError(
                 'Playlist::lock: playlist already locked'
             );
@@ -791,7 +791,7 @@ class Playlist extends StoredFile {
                         );
                 }
             }
-            $acId = $this->gb->_idFromGunid($acGunid);
+            $acId = $this->gb->idFromGunid($acGunid);
             if (PEAR::isError($acId)) {
             	return $acId;
             }
