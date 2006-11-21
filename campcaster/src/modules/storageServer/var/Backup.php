@@ -303,7 +303,7 @@ class Backup
                 if (PEAR::isError($sf)) {
                 	return $sf;
                 }
-                $lid = $this->gb->_idFromGunid($gunid);
+                $lid = $this->gb->idFromGunid($gunid);
                 if (($res = $this->gb->_authorize('read', $lid, $this->sessid)) !== TRUE) {
                     $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
                     return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
