@@ -2,13 +2,17 @@
 /**
  * ArchiveServer configuration file
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 
-define('LS_VERSION', '1.0');
+define('CAMPCASTER_VERSION', '1.1.0');
 
 /**
  *  configuration structure:
