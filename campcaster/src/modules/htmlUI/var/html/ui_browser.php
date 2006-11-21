@@ -5,6 +5,19 @@ if (UI_DEBUG === TRUE) {
 	$Smarty->assign('DEBUG', TRUE);
 }
 
+// Defaults.  Theses also prevent warnings from coming up in the
+// master panel template when debugging.
+$Smarty->assign('showScheduler', FALSE);
+$Smarty->assign('fileList', FALSE);
+$Smarty->assign('act', null);
+$Smarty->assign('showLibrary', FALSE);
+$Smarty->assign('showSubjects', FALSE);
+$Smarty->assign('showFile', FALSE);
+$Smarty->assign('editItem', null);
+$Smarty->assign('changeStationPrefs', FALSE);
+$Smarty->assign('PL_simpleManagement', FALSE);
+$Smarty->assign('showBackup', FALSE);
+
 if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
     foreach ($_REQUEST['popup'] as $val) {
         switch ($val) {
@@ -120,7 +133,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 
             case "PL.downloadExportedFile":
 	            $exportedPlaylist = $uiBrowser->gb->exportPlaylistOpen($uiBrowser->sessid,
-	            			$uiBrowser->gb->_gunidFromId($_REQUEST['id']),
+	            			$uiBrowser->gb->gunidFromId($_REQUEST['id']),
 	            			$_REQUEST['playlisttype'],
 	            		    $_REQUEST['exporttype']=='playlistOnly'?true:false);
 	            $fp = fopen($exportedPlaylist['fname'],'r');
