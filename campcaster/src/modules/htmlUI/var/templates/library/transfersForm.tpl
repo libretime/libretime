@@ -7,9 +7,9 @@
             <table style="width: 535px;">
                 <tr class="blue_head">
                     <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
-                    <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 120px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=state', 'order');" id="blue_head">##State##</a></td>
-                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=type', 'order');" id="blue_head">##Type##</a></td>
+                    <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
+                    <td style="width: 120px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=state', 'order');" id="blue_head">##State##</a></td>
+                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type', 'order');" id="blue_head">##Type##</a></td>
                 </tr>
 				{if $_results.cnt > 0}
                 {foreach from=$_results.items item=i}
