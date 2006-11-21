@@ -69,7 +69,7 @@ if($dbc->isError($ac)){
             http_error(500, "500 ".$ac->getMessage());
     }
 }
-$lid = $locStor->_idFromGunid($gunid);
+$lid = $locStor->idFromGunid($gunid);
 if($dbc->isError($lid)){ http_error(500, $lid->getMessage()); }
 if(($res = $locStor->_authorize('read', $lid, $sessid)) !== TRUE){
     http_error(403, "403 Access denied");
@@ -86,8 +86,9 @@ switch($ftype){
         break;
     case"webstream":
         $url = $locStor->bsGetMetadataValue($lid, 'ls:url');
-        if(PEAR::isError($url)){ http_error(500, $url->getMessage()); }
-        $url = $url[0]['value'];
+        if (empty($url)) {
+        	http_error(500, "Unable to get ls:url value");
+        }
         $txt = "Location: $url";
         header($txt);
         // echo "$txt\n";

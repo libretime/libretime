@@ -24,7 +24,7 @@ echo"#  storeWebstream: "; $r = $gb->storeWebstream(
     $parid, 'test stream', $mdataFileLP, $sessid, $gunid, 'http://localhost/y');
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n"; exit(1); }
 echo ""; var_dump($r);
-#$id = $gb->_idFromGunid($gunid);
+#$id = $gb->idFromGunid($gunid);
 $id = $r;
 
 echo"#  getMdata: "; $r = $gb->getMdata($id, $sessid);
