@@ -7,8 +7,7 @@
  */
 
 
-define('LS_VERSION', '1.1');
-define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
+define('CAMPCASTER_VERSION', '1.1.0');
 
 /**
  *  configuration structure:
@@ -54,7 +53,7 @@ $config = array(
     'tblNamePrefix' => 'ls_',
 
     /* ================================================ storage configuration */
-    'authCookieName'=> 'lssid',
+    'authCookieName'=> 'campcaster_session_id',
     'AdminsGr'      => 'Admins',
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
@@ -152,17 +151,6 @@ if(!is_null($this_file)){
         $user_config = $config;
         $config = $user_config + $default_config;
     }
-}
-
-if(!PHP5){
- eval('
-    define("FILE_APPEND", TRUE);
-    function file_put_contents($f, $s, $ap=FALSE){
-        $fp=fopen($f, $ap==FILE_APPEND ? "a" : "w");
-        fwrite($fp,$s);
-        fclose($fp);
-    }
-');
 }
 
 ?>
