@@ -103,7 +103,7 @@ class M3uPlaylist {
             list($length, $title) = preg_split("|, *|", $md);
             // $gunid  = StoredFile::_createGunid();
             $gunid  = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
-            $acId = $r = $gb->_idFromGunid($gunid);
+            $acId = $r = $gb->idFromGunid($gunid);
             if (PEAR::isError($r)) {
             	return $r;
             }
