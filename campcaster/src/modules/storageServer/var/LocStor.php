@@ -258,7 +258,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($ex)) {
             return $ex;
         }
-        $id = $this->_idFromGunid($gunid);
+        $id = $this->idFromGunid($gunid);
         if (is_null($id) || !$ex) {
             return PEAR::raiseError(
                 "LocStor::downloadRawAudioDataOpen: gunid not found ($gunid)",
@@ -301,7 +301,7 @@ class LocStor extends BasicStor {
     {
 //        $res = $this->existsAudioClip($sessid, $gunid);
 //        if(PEAR::isError($res)) return $res;
-        $id = $this->_idFromGunid($gunid);
+        $id = $this->idFromGunid($gunid);
         if (is_null($id)) {
             return PEAR::raiseError(
              "LocStor::downloadMetadataOpen: gunid not found ($gunid)"
@@ -501,7 +501,7 @@ class LocStor extends BasicStor {
      */
     function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $id = $this->_idFromGunid($gunid);
+        $id = $this->idFromGunid($gunid);
         if (is_null($id)) {
             return FALSE;
         }
@@ -649,7 +649,7 @@ class LocStor extends BasicStor {
                 'LocStor::editPlaylist: playlist not exists'
             );
         }
-        if ($this->_isEdited($playlistId) !== FALSE) {
+        if ($this->isEdited($playlistId) !== FALSE) {
             return PEAR::raiseError(
                 'LocStor::editPlaylist: playlist already edited'
             );
@@ -823,7 +823,7 @@ class LocStor extends BasicStor {
                 GBERR_NOTF
             );
         }
-        $id = $this->_idFromGunid($playlistId);
+        $id = $this->idFromGunid($playlistId);
         if (($res = $this->_authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
@@ -961,7 +961,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($r)) {
             return $r;
         }
-        return $this->_gunidFromId($res);
+        return $this->gunidFromId($res);
     }
 
 
@@ -995,16 +995,16 @@ class LocStor extends BasicStor {
      */
     function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
-        $ex = $this->existsPlaylist($sessid, $playlistId);
-        if (PEAR::isError($ex)) {
-            return $ex;
-        }
-        if (!$ex) {
-            return PEAR::raiseError(
-                'LocStor::playlistIsAvailable: playlist not exists'
-            );
-        }
-        $ie = $this->_isEdited($playlistId);
+//        $ex = $this->existsPlaylist($sessid, $playlistId);
+//        if (PEAR::isError($ex)) {
+//            return $ex;
+//        }
+//        if (!$ex) {
+//            return PEAR::raiseError(
+//                'LocStor::playlistIsAvailable: playlist not exists'
+//            );
+//        }
+        $ie = $this->isEdited($playlistId);
         if ($ie === FALSE) {
             return TRUE;
         }
@@ -1380,14 +1380,13 @@ class LocStor extends BasicStor {
 
     /*===================================================== auxiliary methods */
     /**
-     *  Dummy method - only returns Campcaster version
+     * Dummy method - only returns Campcaster version
      *
-     *  @return string
+     * @return string
      */
     function getVersion()
     {
-        //return $this->config['version'];
-        return LS_VERSION;
+        return CAMPCASTER_VERSION;
     }
 
 } // class LocStor
