@@ -273,7 +273,7 @@ class Restore {
         }
         if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
             //replace it
-            $id = $this->gb->_idFromGunid($gunid);
+            $id = $this->gb->idFromGunid($gunid);
             $replace = $this->gb->replaceFile(
                 $id,   				# id int, virt.file's local id
                 $mediaFileLP,       # mediaFileLP string, local path of media file
