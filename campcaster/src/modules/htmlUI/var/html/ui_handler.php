@@ -6,14 +6,16 @@ if (strstr($_REQUEST['act'], "HUBBROWSE")) {
 
 }
 switch ($_REQUEST['act']) {
-
     case "login":
 	    if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
 	        $uiHandler->loadStationPrefs($ui_fmask['stationPrefs'], TRUE);
 	        # $uiHandler->PLAYLIST->reportLookedPL();
 	        $uiHandler->PLAYLIST->loadLookedFromPref();
 	    }
-	    break;
+	    include('../templates/loader/index.tpl');
+	    include('../templates/popup/_reload_parent.tpl');
+	    include('../templates/popup/_close.tpl');
+	    exit;
 
     case "logout":
 	    $uiHandler->SCRATCHPAD->save();
@@ -42,12 +44,12 @@ switch ($_REQUEST['act']) {
     case "addWebstreamMData":
     case "editWebstreamData":
 	    $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
-	    $uiHandler->SCRATCHPAD->reLoadM();
+	    $uiHandler->SCRATCHPAD->reloadMetadata();
 	    break;
 
     case "editMetaData":
 	    $uiHandler->editMetaData($_REQUEST);
-	    $uiHandler->SCRATCHPAD->reLoadM();
+	    $uiHandler->SCRATCHPAD->reloadMetadata();
 	    break;
 
     case "newFolder":
@@ -117,8 +119,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->SCRATCHPAD->setReload();
 	    break;
 
-    case "SP.reOrder":
-	    $uiHandler->SCRATCHPAD->reOrder($_REQUEST['by']);
+    case "SP.reorder":
+	    $uiHandler->SCRATCHPAD->reorder($_REQUEST['by']);
 	    $uiHandler->SCRATCHPAD->setReload();
 	    break;
 
@@ -130,8 +132,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->SEARCH->simpleSearch($_REQUEST);
 	    break;
 
-    case "SEARCH.reOrder":
-	    $uiHandler->SEARCH->reOrder($_REQUEST['by']);
+    case "SEARCH.reorder":
+	    $uiHandler->SEARCH->reorder($_REQUEST['by']);
 	    break;
 
     case "SEARCH.clear":
@@ -150,8 +152,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->BROWSE->setValue($_REQUEST);
 	    break;
 
-    case "BROWSE.reOrder":
-	    $uiHandler->BROWSE->reOrder($_REQUEST['by']);
+    case "BROWSE.reorder":
+	    $uiHandler->BROWSE->reorder($_REQUEST['by']);
 	    break;
 
     case "BROWSE.setDefaults":
@@ -178,8 +180,8 @@ switch ($_REQUEST['act']) {
 	    $HUBBROWSE->setValue($_REQUEST);
 	    break;
 
-    case "HUBBROWSE.reOrder":
-	    $HUBBROWSE->reOrder($_REQUEST['by']);
+    case "HUBBROWSE.reorder":
+	    $HUBBROWSE->reorder($_REQUEST['by']);
 	    break;
 
     case "HUBBROWSE.setDefaults":
@@ -202,8 +204,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->HUBSEARCH->newSearch($_REQUEST);
 	    break;
 
-    case "HUBSEARCH.reOrder":
-	    $uiHandler->HUBSEARCH->reOrder($_REQUEST['by']);
+    case "HUBSEARCH.reorder":
+	    $uiHandler->HUBSEARCH->reorder($_REQUEST['by']);
 	    break;
 
     case "HUBSEARCH.clear":
@@ -214,8 +216,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->HUBSEARCH->setOffset($_REQUEST['page']);
 	    break;
 
-    case "TRANSFERS.reOrder":
-	    $uiHandler->TRANSFERS->reOrder($_REQUEST['by']);
+    case "TRANSFERS.reorder":
+	    $uiHandler->TRANSFERS->reorder($_REQUEST['by']);
 	    break;
 
     case "TRANSFERS.setOffset":
@@ -317,13 +319,13 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
-    case "PL.reOrder":
-	    $uiHandler->PLAYLIST->reOrder($_REQUEST['pl_items']);
+    case "PL.reorder":
+	    $uiHandler->PLAYLIST->reorder($_REQUEST['pl_items']);
 	    $uiHandler->PLAYLIST->setReturn();
 	    break;
 
     case "PL.reArrange":
-	    $uiHandler->PLAYLIST->reOrder($_REQUEST['pl_items']);
+	    $uiHandler->PLAYLIST->reorder($_REQUEST['pl_items']);
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
@@ -387,7 +389,7 @@ switch ($_REQUEST['act']) {
 	    $_REQUEST['toDay'] = strlen($_REQUEST['toDay'])>1?$_REQUEST['toDay']:'0'.$_REQUEST['toDay'];
 	    $fromTime=$_REQUEST['fromYear'].'-'.$_REQUEST['fromMonth'].'-'.$_REQUEST['fromDay'].' '.$_REQUEST['fromHour'].':'.$_REQUEST['fromMinute'].':00';
 	    $toTime=$_REQUEST['toYear'].'-'.$_REQUEST['toMonth'].'-'.$_REQUEST['toDay'].' '.$_REQUEST['toHour'].':'.$_REQUEST['toMinute'].':00';
-	    //íecho '<XMP style="background:yellow;">';echo "fromTime:$fromTime | toTime:$toTime";echo'</XMP>'."\n";
+	    //echo '<XMP style="background:yellow;">';echo "fromTime:$fromTime | toTime:$toTime";echo'</XMP>'."\n";
 	    $uiHandler->SCHEDULER->scheduleExportOpen($fromTime, $toTime);
 	    $uiHandler->redirUrl = UI_BROWSER.'?act=SCHEDULER';
 	    break;
@@ -449,12 +451,15 @@ switch ($_REQUEST['act']) {
 if ($uiHandler->alertMsg) {
     $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 }
-$ui_wait = 0;
-if (ob_get_contents()) {
-    $ui_wait = 10;
-}
+//$ui_wait = 0;
+//if (ob_get_contents()) {
+//    $ui_wait = 10;
+//}
 ob_end_clean();
+if (isset($_REQUEST['target'])) {
+	header('Location: ui_browser.php?act='.$_REQUEST['target']);
+} else {
+	header("Location: ".$uiHandler->redirUrl);
+}
+exit;
 ?>
-<meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">
-</body>
-</html>
