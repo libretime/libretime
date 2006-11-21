@@ -458,11 +458,7 @@ if ($uiHandler->alertMsg) {
 //}
 ob_end_clean();
 if (isset($_REQUEST['target'])) {
-	if ($_REQUEST['target'] == "reload") {
-		header('Location: ui_browser.php?act='.$_REQUEST['target']);
-	} else {
-
-	}
+	header('Location: ui_browser.php?act='.$_REQUEST['target']);
 } else {
 	header("Location: ".$uiHandler->redirUrl);
 }
