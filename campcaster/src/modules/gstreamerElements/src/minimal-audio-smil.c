@@ -659,6 +659,8 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
 
 
     for (index = 0, node = par->children; node; node = node->next, ++index) {
+        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
+
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
@@ -732,6 +734,8 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
     }
 
     for (node = node->children; node; node = node->next) {
+        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
+
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
