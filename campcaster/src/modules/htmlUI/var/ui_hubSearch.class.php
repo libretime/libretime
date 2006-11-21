@@ -82,7 +82,7 @@ class uiHubSearch extends uiSearch {
             return FALSE;
         }
         foreach ($results['results'] as $rec) {
-            $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
+            $tmpId = $this->Base->gb->idFromGunid($rec["gunid"]);
             $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
         $this->results['cnt'] = $results['cnt'];
@@ -105,7 +105,7 @@ class uiHubSearch extends uiSearch {
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
             // TODO: maybe this getMetaInfo is not correct for the remote results
-            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
         }
         $this->pagination($results);
         //echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";
