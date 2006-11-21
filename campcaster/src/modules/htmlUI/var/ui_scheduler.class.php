@@ -290,14 +290,14 @@ class uiScheduler extends uiCalendar {
         $items = array();
         foreach ($arr as $key => $val) {
             $items[strftime('%d', $this->datetimeToTimestamp($val['start']))][number_format(strftime('%H', $this->datetimeToTimestamp($val['start'])))][]= array (
-                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
+                'id'        => $this->Base->gb->idFromGunid($val['playlistId']),
                 'scheduleid'=> $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T')+1),
                 'start_stamp' => $this->datetimeToTimestamp($val['start']),
                 'end_stamp' => $this->datetimeToTimestamp($val['end']),
-                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
                 'type'      => 'Playlist'
             );
         }
@@ -333,12 +333,12 @@ class uiScheduler extends uiCalendar {
             // item starts today
             if (strftime('%Y%m%d', $start) === $thisDay) {
             	$items[number_format(strftime('%H', $start))]['start'][] = array(
-	                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
+	                'id'        => $this->Base->gb->idFromGunid($val['playlistId']),
 	                'scheduleid'=> $val['id'],
 	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
 	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+	                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
 	                'type'      => 'Playlist',
 	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
                     'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
@@ -355,12 +355,12 @@ class uiScheduler extends uiCalendar {
             if (strftime('%Y%m%d', $end) === $thisDay && strftime('%H', $start) !== strftime('%H', $end)) {
             	$items[number_format(strftime('%H', $end))]['end'][] =
             	array(
-	                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
+	                'id'        => $this->Base->gb->idFromGunid($val['playlistId']),
 	                'scheduleid'=> $val['id'],
 	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
 	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+	                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
 	                'type'      => 'Playlist',
 	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
 	            );
@@ -382,8 +382,8 @@ class uiScheduler extends uiCalendar {
             $items[date('H', $this->datetimeToTimestamp($val['start']))][]= array (
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-                'title'     => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
         #print_r($items);
@@ -402,8 +402,8 @@ class uiScheduler extends uiCalendar {
         }
 
         foreach ($arr as $key => $val) {
-            $arr[$key]['title']     = $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
-            $arr[$key]['creator']   = $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
+            $arr[$key]['title']     = $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
+            $arr[$key]['creator']   = $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
             $arr[$key]['pos']       = $this->datetimeToTimestamp($val['start']);
             $arr[$key]['span']      = date('H', $this->datetimeToTimestamp($val['end'])) - date('H', $this->datetimeToTimestamp($val['start'])) +1;
         }
@@ -471,7 +471,7 @@ class uiScheduler extends uiCalendar {
         if ($id) {
             $this->Base->SCRATCHPAD->addItem($id);
             $this->availablePlaylists[] = array(
-                'gunid'     => $this->Base->gb->_gunidFromId($id),
+                'gunid'     => $this->Base->gb->gunidFromId($id),
                 'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
                 'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
             );
