@@ -225,7 +225,7 @@ class Archive extends XR_LocStor {
                 	return $res;
                 }
                 $fname = "transported_playlist.lspl";
-                $id = $this->_idFromGunid($gunid);
+                $id = $this->idFromGunid($gunid);
                 $acc = $this->bsAccess($plfpath, 'lspl', NULL, 'download');
                 if ($this->dbc->isError($acc)) {
                 	return $acc;
