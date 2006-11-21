@@ -461,7 +461,7 @@ class LsPlaylistElement {
  * @link http://www.campware.org
  * @todo Rename this class to PlaylistAudioClip (notice the caps)
  */
-class LsPLaylistAudioClip
+class LsPlaylistAudioClip
 {
 
     function output2Smil(&$pl, $plac, $ind='')

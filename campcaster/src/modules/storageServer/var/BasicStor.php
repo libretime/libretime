@@ -1193,6 +1193,7 @@ class BasicStor extends Alib {
             }
             $gunids = array_merge($gunids, $gunidsX);
         }
+#        header("Content-type: text/plain"); var_dump($gunids); var_dump($withContent); exit;
         $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
         $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
         $res = array();
@@ -1225,7 +1226,7 @@ class BasicStor extends Alib {
 	                            $string = $r = $ac->output2Smil();
 	                            break;
 	                        case"m3u":
-	                            $string = $r = $ac->output2M3U();
+	                            $string = $r = $ac->output2m3u();
 	                            break;
 	                        default:
 	                            $string = $r = $ac->md->genXmlDoc();

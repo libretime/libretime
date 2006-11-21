@@ -903,7 +903,7 @@ class GreenBox extends BasicStor {
      */
     public function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        return $this->bsExportPlaylistOpen($plids, $type, $standalone);
+        return $this->bsExportPlaylistOpen($plids, $type, !$standalone);
     } // fn exportPlaylistOpen
 
 
