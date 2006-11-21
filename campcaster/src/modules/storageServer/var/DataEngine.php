@@ -1,7 +1,7 @@
 <?php
 define('USE_INTERSECT', TRUE);
 
-require_once "XML/Util.php";
+require_once("XML/Util.php");
 
 /**
  *  DataEngine class
@@ -84,7 +84,7 @@ class DataEngine {
      * @return array
      * 		array of strings - WHERE-parts of SQL queries
      */
-    function _makeWhereArr($conditions)
+    private function _makeWhereArr($conditions)
     {
         $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'",
             'prefix'=>"like '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
@@ -148,7 +148,7 @@ class DataEngine {
      * @return string
      * 		query
      */
-    function _makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse,
+    private function _makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         $innerBlocks = array();
@@ -200,7 +200,7 @@ class DataEngine {
      * @return string
      * 		query
      */
-    function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
+    private function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         if (!USE_INTERSECT) {
@@ -259,7 +259,7 @@ class DataEngine {
      * @return string
      * 		query
      */
-    function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
+    private function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         //$whereArr[] = " FALSE\n";
@@ -309,7 +309,7 @@ class DataEngine {
      *       cnt : integer - number of matching gunids
      *              of files have been found
      */
-    function localSearch($cri, $limit=0, $offset=0)
+    public function localSearch($cri, $limit=0, $offset=0)
     {
         $res = $this->_localGenSearch($cri, $limit, $offset);
         // if (PEAR::isError($res)) return $res;
@@ -344,7 +344,7 @@ class DataEngine {
      *     OR (in browse mode)
      *       results: array of strings - browsed values
      */
-    function _localGenSearch($criteria, $limit=0, $offset=0,
+    private function _localGenSearch($criteria, $limit=0, $offset=0,
         $brFldNs=NULL, $brFld=NULL)
     {
         $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
@@ -359,9 +359,11 @@ class DataEngine {
         $operator = strtolower($operator);
         $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
         $whereArr = $this->_makeWhereArr($conditions);
-        $orderby = TRUE;                     // if there is any default
-        if ( (!isset($criteria['orderby'])) || (is_array($criteria['orderby']) && (count($criteria['orderby'])<1) ) ) {
-            $orderbyQns  = array('dc:creator', 'dc:source', 'dc:title');      // default
+        $orderby = TRUE;
+        if ((!isset($criteria['orderby']))
+        	|| (is_array($criteria['orderby']) && (count($criteria['orderby'])==0))) {
+      		// default ORDER BY
+            $orderbyQns  = array('dc:creator', 'dc:source', 'dc:title');
         } else {
             $orderbyQns  = $criteria['orderby'];
         }
@@ -371,8 +373,8 @@ class DataEngine {
         $desc = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $orderJoinSql = array();
         $orderBySql = array();
-        foreach($orderbyQns as $j=>$orderbyQn){
-            $i = $j+1;
+        foreach ($orderbyQns as $j => $orderbyQn) {
+            $i = $j + 1;
             $obSplitQn = XML_Util::splitQualifiedName($orderbyQn);
             $obNs = $obSplitQn['namespace'];
             $obLp = $obSplitQn['localPart'];
@@ -408,11 +410,10 @@ class DataEngine {
             $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
         if (!$browse && $orderby) {
-            $sql =
-                "SELECT to_hex(sq2.gunid)as gunid, m1.object, sq2.ftype, sq2.id\n".
-                "FROM (\n$sql\n)sq2\n".
-                join("\n", $orderJoinSql).
-                "ORDER BY ".join(",", $orderBySql)."\n";
+            $sql = "SELECT to_hex(sq2.gunid)as gunid, m1.object, sq2.ftype, sq2.id\n".
+                   "FROM (\n$sql\n)sq2\n".
+                    join("\n", $orderJoinSql).
+                   "ORDER BY ".join(",", $orderBySql)."\n";
         }
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
@@ -428,36 +429,20 @@ class DataEngine {
         }
         $eres = array();
         // echo "\n---\n"; var_dump($res); echo"\n---\n";
+        $categoryNames = array('dc:title', 'dc:creator', 'dc:source', 'dcterms:extent');
         foreach ($res as $it) {
             if (!$browse) {
                 $gunid = StoredFile::_normalizeGunid($it['gunid']);
-                $titleA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:title');
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                $title = (isset($titleA[0]['value']) ? $titleA[0]['value'] : '');
-                $creatorA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:creator');
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                $creator = (isset($creatorA[0]['value']) ? $creatorA[0]['value'] : '');
-                $sourceA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dc:source');
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                $source = (isset($sourceA[0]['value']) ? $sourceA[0]['value'] : '');
-                $lengthA = $r = $this->gb->bsGetMetadataValue($it['id'], 'dcterms:extent');
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                $length = (isset($lengthA[0]['value']) ? $lengthA[0]['value'] : '');
+                $values = $this->gb->bsGetMetadataValue($it['id'], $categoryNames);
                 $eres[] = array(
+                	'id' => $it['id'],
                     'gunid' => $gunid,
                     'type' => $it['ftype'],
-                    'title' => $title,
-                    'creator' => $creator,
-                    'length' => $length,
-                    'source' => $source,
+                    'title' => $values['dc:title'],
+                    'creator' => $values['dc:creator'],
+                    'duration' => $values['dcterms:extent'],
+                    'length' => $values['dcterms:extent'],
+                    'source' => $values['dc:source'],
                 );
             } else {
                 $eres[] = $it['txt'];
@@ -482,7 +467,7 @@ class DataEngine {
      *       results : array with found values
      *       cnt : integer - number of matching values
      */
-    function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
+    public function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
         //$category = strtolower($category);
         $r = XML_Util::splitQualifiedName($category);
@@ -524,7 +509,7 @@ class DataEngine {
      * @return int
      * 		Number of rows in query result
      */
-    function _getNumRows($query)
+    private function _getNumRows($query)
     {
         $rh = $this->dbc->query($query);
         if (PEAR::isError($rh)) {
