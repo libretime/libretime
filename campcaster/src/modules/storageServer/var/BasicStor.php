@@ -79,6 +79,7 @@ class BasicStor extends Alib {
 
     public $storId;
 
+
     /**
      * Constructor
      *
@@ -921,13 +922,43 @@ class BasicStor extends Alib {
      * 		array of matching records (as hash {id, value, attrs})
      * @see Metadata::getMetadataValue
      */
-    public function bsGetMetadataValue($id, $category, $lang=NULL, $deflang=NULL)
+//    public function bsGetMetadataValue($id, $category, $lang=NULL, $deflang=NULL)
+//    {
+//        $ac = StoredFile::recall($this, $id);
+//        if ($this->dbc->isError($ac)) {
+//            return $ac;
+//        }
+//        return $ac->md->getMetadataValue($category, $lang, $deflang);
+//    }
+
+
+    /**
+     * Get metadata element value
+     *
+     * @param int $id
+     * 		Virtual file's local id
+     * @param string|array $category
+     * 		metadata element name, or array of metadata element names
+     * @return string|array
+     * 		If a string is passed in for $category, a string is returned,
+     * 		if an array is passed, an array is returned.
+     * @see Metadata::getMetadataValue
+     */
+    public function bsGetMetadataValue($id, $category)
     {
         $ac = StoredFile::recall($this, $id);
         if ($this->dbc->isError($ac)) {
             return $ac;
         }
-        return $ac->md->getMetadataValue($category, $lang, $deflang);
+        if (!is_array($category)) {
+        	return $ac->md->getMetadataValue($category);
+        } else {
+        	$values = array();
+			foreach ($category as $tmpCat) {
+				$values[$tmpCat] = $ac->md->getMetadataValue($tmpCat);
+			}
+			return $values;
+        }
     }
 
 
@@ -957,13 +988,6 @@ class BasicStor extends Alib {
         if ($this->dbc->isError($ac)) {
             return $ac;
         }
-        /* disabled - html ui change only nonimportant categories
-        if($ac->isEdited()){
-            return PEAR::raiseError(
-                'BasicStor::bsSetMetadataValue: is edited', GBERR_LOCK
-            );
-        }
-        */
         if ($category == 'dcterms:extent') {
             $value = $this->normalizeExtent($value);
         }
@@ -1294,7 +1318,7 @@ class BasicStor extends Alib {
      */
     public function bsImportPlaylistRaw($parid, $plid, $aPath, $rPath, $ext, &$gunids, $subjid)
     {
-        $id = $this->_idFromGunid($plid);
+        $id = $this->idFromGunid($plid);
         if (!is_null($id)) {
             return $id;
         }
@@ -1457,7 +1481,7 @@ class BasicStor extends Alib {
             if ($v['type'] == 'Folder') {
                 break;
             }
-            $gunid = $this->_gunidFromId($v['id']);
+            $gunid = $this->gunidFromId($v['id']);
             if ($this->dbc->isError($gunid)) {
                 return $gunid;
             }
@@ -1608,7 +1632,7 @@ class BasicStor extends Alib {
     {
         $type = parent::getObjType($oid);
         if ($type == 'File') {
-            $gunid = $this->_gunidFromId($oid);
+            $gunid = $this->gunidFromId($oid);
             if ($this->dbc->isError($gunid)) {
                 return $gunid;
             }
@@ -1766,13 +1790,13 @@ class BasicStor extends Alib {
             $acts = array($acts);
         }
         $perm = true;
-        foreach ($acts as $i => $action) {
-            $res = $this->checkPerm($userid, $action, $pars[$i]);
-            if ($this->dbc->isError($res)) {
-                return $res;
-            }
-            $perm = $perm && $res;
-        }
+//        foreach ($acts as $i => $action) {
+//            $res = $this->checkPerm($userid, $action, $pars[$i]);
+//            if ($this->dbc->isError($res)) {
+//                return $res;
+//            }
+//            $perm = $perm && $res;
+//        }
         if ($perm) {
             return TRUE;
         }
@@ -1827,14 +1851,14 @@ class BasicStor extends Alib {
 
 
     /**
-     * Get local id from global id
+     * Get local id from global id.
      *
      * @param string $gunid
      * 		Global id
      * @return int
      * 		Local id
      */
-    public function _idFromGunid($gunid)
+    public function idFromGunid($gunid)
     {
         return $this->dbc->getOne(
             "SELECT id FROM {$this->filesTable} WHERE gunid=x'$gunid'::bigint"
@@ -1850,7 +1874,7 @@ class BasicStor extends Alib {
      * @return string
      * 		Global id
      */
-    public function _gunidFromId($id)
+    public function gunidFromId($id)
     {
         if (!is_numeric($id)) {
             return NULL;
@@ -1968,7 +1992,7 @@ class BasicStor extends Alib {
      * @return FALSE|int
      * 		ID of user editing it
      */
-    public function _isEdited($playlistId)
+    public function isEdited($playlistId)
     {
         $ac = StoredFile::recallByGunid($this, $playlistId);
         if ($this->dbc->isError($ac)) {
@@ -2267,7 +2291,7 @@ class BasicStor extends Alib {
             if (PEAR::isError($r)) {
                 return $r;
             }
-            #$gunid = $this->_gunidFromId($r);
+            #$gunid = $this->gunidFromId($r);
             #$res['results'][] = array('gunid' => $gunid, 'type' => $type);
             #$res['cnt']++;
         }
