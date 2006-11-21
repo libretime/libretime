@@ -6,13 +6,13 @@
 define('NSPACE', 'lse');
 
 header("Content-type: text/plain");
-require_once 'conf.php';
-require_once "$storageServerPath/var/conf.php";
-require_once 'DB.php';
-require_once "XML/Util.php";
-require_once "XML/Beautifier.php";
-require_once "$storageServerPath/var/BasicStor.php";
-require_once "$storageServerPath/var/Prefs.php";
+require_once('conf.php');
+require_once("$storageServerPath/var/conf.php");
+require_once('DB.php');
+require_once("XML/Util.php");
+require_once("XML/Beautifier.php");
+require_once("$storageServerPath/var/BasicStor.php");
+require_once("$storageServerPath/var/Prefs.php");
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
@@ -23,32 +23,47 @@ $stid = $bs->storId;
 #var_dump($stid); exit;
 #$farr = $bs->bsListFolder($stid); var_dump($farr); exit;
 
-function admDumpFolder(&$bs, $fid, $ind=''){
+function admDumpFolder(&$bs, $fid, $ind='')
+{
     $name = $bs->getObjName($fid);
-    if(PEAR::isError($name)){ echo $name->getMessage(); exit; }
+    if (PEAR::isError($name)) {
+    	echo $name->getMessage();
+    	exit;
+    }
     $type = $bs->getObjType($fid);
-    if(PEAR::isError($type)){ echo $type->getMessage(); exit; }
-    $gunid = $bs->_gunidFromId($fid);
-    if(PEAR::isError($gunid)){ echo $gunid->getMessage(); exit; }
+    if (PEAR::isError($type)) {
+    	echo $type->getMessage();
+    	exit;
+    }
+    $gunid = $bs->gunidFromId($fid);
+    if (PEAR::isError($gunid)) {
+    	echo $gunid->getMessage();
+    	exit;
+    }
     $pars  = array();
-    if($gunid){ $pars['id']="$gunid"; }
-    $pars['name']="$name";
-    switch($type){
-        case"Folder":
+    if ($gunid) {
+    	$pars['id']="$gunid";
+    }
+    $pars['name'] = "$name";
+    switch ($type) {
+        case "Folder":
             $farr = $bs->bsListFolder($fid);
-            if(PEAR::isError($farr)){ echo $farr->getMessage(); exit; }
+            if (PEAR::isError($farr)) {
+            	echo $farr->getMessage();
+            	exit;
+            }
             $res = '';
-            foreach($farr as $i =>$folder){
+            foreach ($farr as $i => $folder) {
                 $fid2 = $folder['id'];
                 $res .= admDumpFolder($bs, $fid2, "$ind ");
             }
-            if(!$res){
+            if (!$res) {
                 return XML_Util::createTagFromArray(array(
                     'namespace' => NSPACE,
                     'localPart' => 'folder',
                     'attributes'=> $pars,
                 ));
-            }else{
+            } else {
                 return XML_Util::createTagFromArray(array(
                     'namespace' => NSPACE,
                     'localPart' => 'folder',
@@ -57,21 +72,21 @@ function admDumpFolder(&$bs, $fid, $ind=''){
                 ), FALSE);
             }
             break;
-        case"audioclip":
+        case "audioclip":
             return XML_Util::createTagFromArray(array(
                 'namespace' => NSPACE,
                 'localPart' => 'audioClip',
                 'attributes'=> $pars,
             ));
             break;
-        case"webstream":
+        case "webstream":
             return XML_Util::createTagFromArray(array(
                 'namespace' => NSPACE,
                 'localPart' => 'webstream',
                 'attributes'=> $pars,
             ));
             break;
-        case"playlist":
+        case "playlist":
             return XML_Util::createTagFromArray(array(
                 'namespace' => NSPACE,
                 'localPart' => 'playlist',
@@ -83,14 +98,21 @@ function admDumpFolder(&$bs, $fid, $ind=''){
     }
 
 }
-function admDumpGroup(&$bs, $gid, $ind=''){
+function admDumpGroup(&$bs, $gid, $ind='')
+{
     $name = $bs->getSubjName($gid);
-    if(PEAR::isError($name)){ echo $name->getMessage(); exit; }
+    if (PEAR::isError($name)) {
+    	echo $name->getMessage();
+    	exit;
+    }
     $isGr = $bs->isGroup($gid);
-    if(PEAR::isError($isGr)){ echo $isGr->getMessage(); exit; }
+    if (PEAR::isError($isGr)) {
+    	echo $isGr->getMessage();
+    	exit;
+    }
     $pars = array('name'=>"$name");
     $pars['id'] = $gid;
-    if(!$isGr){
+    if (!$isGr) {
         return XML_Util::createTagFromArray(array(
             'namespace' => NSPACE,
             'localPart' => 'member',
@@ -98,9 +120,12 @@ function admDumpGroup(&$bs, $gid, $ind=''){
         ));
     }
     $garr = $bs->listGroup($gid);
-    if(PEAR::isError($garr)){ echo $garr->getMessage(); exit; }
+    if (PEAR::isError($garr)) {
+    	echo $garr->getMessage();
+    	exit;
+    }
     $res = '';
-    foreach($garr as $i =>$member){
+    foreach ($garr as $i => $member) {
         $fid2 = $member['id'];
         $res .= admDumpGroup($bs, $fid2, "$ind ");
     }
@@ -110,26 +135,31 @@ function admDumpGroup(&$bs, $gid, $ind=''){
             'attributes'=> $pars,
     );
     $prefs = admDumpPrefs($bs, $gid);
-    if(!is_null($prefs)) $res .= $prefs;
-    if($res) $tagarr['content'] = $res;
-    return XML_Util::createTagFromArray($tagarr, $res === '');
-    if(!$res){
-    }else{
-        return XML_Util::createTagFromArray(array(
-            'namespace' => NSPACE,
-            'localPart' => 'group',
-            'attributes'=> $pars,
-            'content'   => $res,
-        ), FALSE);
+    if (!is_null($prefs)) {
+    	$res .= $prefs;
     }
+    if ($res) {
+    	$tagarr['content'] = $res;
+    }
+    return XML_Util::createTagFromArray($tagarr, $res === '');
+//    if (!$res) {
+//    } else {
+//        return XML_Util::createTagFromArray(array(
+//            'namespace' => NSPACE,
+//            'localPart' => 'group',
+//            'attributes'=> $pars,
+//            'content'   => $res,
+//        ), FALSE);
+//    }
 
 }
-function admDumpSubjects(&$bs, $ind=''){
+function admDumpSubjects(&$bs, $ind='')
+{
     $res ='';
     $subjs = $bs->getSubjects('id, login, pass, type');
-    foreach($subjs as $i =>$member){
-        switch($member['type']){
-            case"U":
+    foreach ($subjs as $i => $member) {
+        switch ($member['type']) {
+            case "U":
                 $prefs = admDumpPrefs($bs, $member['id']);
                 $pars = array('login'=>"{$member['login']}", 'pass'=>"{$member['pass']}");
                 $pars['id'] = $member['id'];
@@ -138,10 +168,12 @@ function admDumpSubjects(&$bs, $ind=''){
                     'localPart' => 'user',
                     'attributes'=> $pars,
                 );
-                if(!is_null($prefs)) $tagarr['content'] = $prefs;
+                if (!is_null($prefs)) {
+                	$tagarr['content'] = $prefs;
+                }
                 $res .= XML_Util::createTagFromArray($tagarr , FALSE);
                 break;
-            case"G":
+            case "G":
                 $res .= admDumpGroup($bs, $member['id'], "$ind  ");
                 break;
         }
@@ -154,12 +186,13 @@ function admDumpSubjects(&$bs, $ind=''){
     ), FALSE);
 }
 
-function admDumpPrefs(&$bs, $subjid){
+function admDumpPrefs(&$bs, $subjid)
+{
     $res ='';
     $pr = new Prefs($bs);
     $prefkeys = $pr->readKeys($subjid);
 #    var_dump($subjid); var_dump($prefkeys); #exit;
-    foreach($prefkeys as $i =>$prefk){
+    foreach ($prefkeys as $i => $prefk) {
         $keystr = $prefk['keystr'];
         $prefval = $pr->readVal($subjid, $keystr);
         $pars = array('name'=>"$keystr", 'val'=>"$prefval");
@@ -169,7 +202,9 @@ function admDumpPrefs(&$bs, $subjid){
             'attributes'=> $pars,
         ));
     }
-    if(!$res) return NULL;
+    if (!$res) {
+    	return NULL;
+    }
     return XML_Util::createTagFromArray(array(
         'namespace' => NSPACE,
         'localPart' => 'preferences',
