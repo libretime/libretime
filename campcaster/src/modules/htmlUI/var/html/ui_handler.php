@@ -253,9 +253,10 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "PL.create":
-	    if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
-	        if ($_REQUEST['id']) {
-	        	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+    	$ids = (isset($_REQUEST['id']) ? $_REQUEST['id'] : null);
+	    if (($ui_tmpid = $uiHandler->PLAYLIST->create($ids)) !== FALSE) {
+	        if ($ids) {
+	        	$uiHandler->SCRATCHPAD->addItem($ids);
 	        }
 	        $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
 	    }
@@ -457,7 +458,11 @@ if ($uiHandler->alertMsg) {
 //}
 ob_end_clean();
 if (isset($_REQUEST['target'])) {
-	header('Location: ui_browser.php?act='.$_REQUEST['target']);
+	if ($_REQUEST['target'] == "reload") {
+		header('Location: ui_browser.php?act='.$_REQUEST['target']);
+	} else {
+
+	}
 } else {
 	header("Location: ".$uiHandler->redirUrl);
 }

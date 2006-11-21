@@ -451,7 +451,7 @@ class MetaData {
         $container='metadata')
     {
         // resolve actual element:
-        $rows = $this->getMetadataValue($category, $lang);
+        $rows = $this->getMetadataValueWithAttrs($category, $lang);
         $aktual = NULL;
         if (count($rows) > 1) {
             if (is_null($mid)) {
@@ -480,7 +480,7 @@ class MetaData {
             }
             if (!is_null($lang)
             	&& isset($aktual['attrs']['xml:lang'])
-            	&& $aktual['attrs']['xml:lang'] != $lang) {
+            	&& $aktual['attrs']['xml:lang'] != $lang)  {
                 $lg = $this->getMetadataEl('xml:lang', $aktual['mid']);
                 if (PEAR::isError($lg)) {
                 	return $lg;
@@ -500,7 +500,7 @@ class MetaData {
             }
         } else {
             // resolve container:
-            $contArr = $this->getMetadataValue($container, NULL, NULL, '_blank');
+            $contArr = $this->getMetadataValueWithAttrs($container, NULL, NULL, '_blank');
             if (PEAR::isError($contArr)) {
             	return $contArr;
             }

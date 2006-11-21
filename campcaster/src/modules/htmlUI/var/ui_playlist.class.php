@@ -290,7 +290,15 @@ class uiPlaylist
     } // fn removeItem
 
 
-    public function create($ids)
+    /**
+     * Create a playlist.
+     *
+     * @param array $ids
+     * 		Optional list of media files to be added to the playlist
+     * 		after it is created.
+     * @return FALSE|int
+     */
+    public function create($ids = null)
     {
         // create PL
         // activate
@@ -308,7 +316,7 @@ class uiPlaylist
             return FALSE;
         }
 
-        $this->Base->setMetadataValue($plid, UI_MDATA_KEY_CREATOR,     $this->Base->login);
+        $this->Base->setMetadataValue($plid, UI_MDATA_KEY_CREATOR, $this->Base->login);
         $this->Base->setMetadataValue($plid, UI_MDATA_KEY_DESCRIPTION, tra('created at $1', $datetime));
 
         if ($this->activate($plid)===FALSE) {
@@ -319,8 +327,6 @@ class uiPlaylist
                 return FALSE;
             }
         }
-        #$this->redirUrl = UI_BRWOSER.'?popup=_2PL.simpleManagement';<br>
-
         return $plid;
     } // fn create
 
@@ -641,7 +647,7 @@ class uiPlaylist
         }
 
         foreach ($mData as $key => $val) {
-            $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
+            $r = $this->Base->gb->setMetadataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
                 	print_r($r);
