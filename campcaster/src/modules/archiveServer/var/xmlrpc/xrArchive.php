@@ -4,8 +4,6 @@
  * @version  : $Revision$
  */
 
-define('PHP5', version_compare( phpversion(), "5.0.0", ">=" ));
-
 /* ====================================================== specific PHP config */
 //error_reporting(0);
 ini_set("html_errors", FALSE);
@@ -52,11 +50,7 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars){
             exit($errno);
     }
 }
-if(PHP5){
-    $old_error_handler = set_error_handler("errHndl", E_ALL);
-}else{
-    $old_error_handler = set_error_handler("errHndl");
-}
+$old_error_handler = set_error_handler("errHndl", E_ALL);
 
 
 /* ============================================================= runable code */
