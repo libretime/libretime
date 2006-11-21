@@ -1,24 +1,23 @@
 <?php
-$Smarty->register_object('UIBROWSER',  $uiBrowser);
-$Smarty->register_object('BROWSE',     $uiBrowser->BROWSE);
-$Smarty->register_object('HUBBROWSE',  $HUBBROWSE);
-$Smarty->register_object('SEARCH',     $uiBrowser->SEARCH);
-$Smarty->register_object('HUBSEARCH',  $uiBrowser->HUBSEARCH);
-$Smarty->register_object('TRANSFERS',  $uiBrowser->TRANSFERS);
-$Smarty->assign_by_ref  ('PL',         $uiBrowser->PLAYLIST);
-$Smarty->assign_by_ref  ('SCHEDULER',  $uiBrowser->SCHEDULER);
-$Smarty->assign_by_ref  ('SCRATCHPAD', $uiBrowser->SCRATCHPAD);
-$Smarty->assign_by_ref  ('SUBJECTS',   $uiBrowser->SUBJECTS);
-$Smarty->assign_by_ref  ('EXCHANGE',   $uiBrowser->EXCHANGE);
-$Smarty->assign_by_ref  ('JSCOM',      $jscom);
+$Smarty->register_object('UIBROWSER', $uiBrowser);
+$Smarty->register_object('BROWSE', $uiBrowser->BROWSE);
+$Smarty->register_object('HUBBROWSE', $HUBBROWSE);
+$Smarty->register_object('SEARCH', $uiBrowser->SEARCH);
+$Smarty->register_object('HUBSEARCH', $uiBrowser->HUBSEARCH);
+$Smarty->register_object('TRANSFERS', $uiBrowser->TRANSFERS);
+$Smarty->assign_by_ref('PL', $uiBrowser->PLAYLIST);
+$Smarty->assign_by_ref('SCHEDULER', $uiBrowser->SCHEDULER);
+$Smarty->assign_by_ref('SCRATCHPAD', $uiBrowser->SCRATCHPAD);
+$Smarty->assign_by_ref('SUBJECTS', $uiBrowser->SUBJECTS);
+$Smarty->assign_by_ref('EXCHANGE', $uiBrowser->EXCHANGE);
+$Smarty->assign_by_ref('JSCOM', $jscom);
 
-
-$Smarty->register_function('str_repeat',        'S_str_repeat');
-$Smarty->register_function('tra',               'S_tra');
-$Smarty->register_function('getHour',           'S_getHour');
-$Smarty->register_function('getMinute',         'S_getMinute');
-$Smarty->register_function('getSecond',         'S_getSecond');
-$Smarty->register_function('niceTime',          'S_niceTime');
+$Smarty->register_function('str_repeat', 'S_str_repeat');
+$Smarty->register_function('tra', 'S_tra');
+$Smarty->register_function('getHour', 'S_getHour');
+$Smarty->register_function('getMinute', 'S_getMinute');
+$Smarty->register_function('getSecond', 'S_getSecond');
+$Smarty->register_function('niceTime', 'S_niceTime');
 
 // --- Smarty Extensions ---
 /**
