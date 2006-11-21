@@ -7,16 +7,16 @@
 
 {if $_results.cnt > 0}
     <form name="SEARCHRESULTS">
-    <div class="head" style="width:535px; height: 21px;">&nbsp;</div>
-    <div class="container_table"  style="width: 555px; height: auto;">
+    <div class="head" style="width:600px; height: 21px;">&nbsp;</div>
+    <div class="container_table"  style="width: 600px; height: auto;">
 
-            <table style="width: 535px;">
+            <table style="width: 600px;">
                 <tr class="blue_head">
                     <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
-                    <td style="width: 200px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
-                    <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
-                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=type', 'order');" id="blue_head">##Type##</a></td>
+                    <td style="width: 200px;"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
+                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
+                    <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
+                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type', 'order');" id="blue_head">##Type##</a></td>
                 </tr>
                 {foreach from=$_results.items item=i}
             <!-- start item -->
@@ -24,15 +24,15 @@
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file=$action_handler} style="cursor: pointer">
                         {if $PLAYLIST.id == $i.id}
-                            <b>{$i.title|truncate:30}</b>
+                            <b>{$i.title|truncate:30:"...":true}</b>
                         {else}
-                            {$i.title|truncate:30}
+                            {$i.title|truncate:30:"...":true}
                         {/if}
                     </td>
                     <td {include file=$action_handler} style="cursor: pointer">{$i.creator}</td>
                     <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
-                        <img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/alttext.tpl"} />
+                        <img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />
                     </td>
                 </tr>
             <!-- end item -->
@@ -40,16 +40,16 @@
             </table>
 
     </div>
-    <div class="footer" style="width: 530px;">
+    <div class="footer" style="width: 595px;">
 
          <div class="counter">
             {* {if $_results.prev}<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=prev', 'pager')" id="blue_head">##previous##</a>{/if}  *}
 
             {foreach from=$_results.pagination item=p key=k}
                 {if $k != $_results.page+1}
-                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page={$k}', 'pager')" id="blue_head">{$p}</a>
+                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page={$k}', 'pager')" id="blue_head" class="pagination_number"><span class="pagination_number">{$p}</span></a>
                 {else}
-                    {$p}
+                    <span class="pagination_number">{$p}</span>
                 {/if}
             {/foreach}
 
