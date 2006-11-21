@@ -49,42 +49,42 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         </li>
         <li class="nav-main"><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>
             <ul>
-                <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month');       location.href='{$UI_BROWSER}?act=SCHEDULER'">##Month##</a></li>
-                <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week');        location.href='{$UI_BROWSER}?act=SCHEDULER'">##Week##</a></li>
-                <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day');         location.href='{$UI_BROWSER}?act=SCHEDULER'">##Day##</a></li>
-                <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Today##</a></li>
-                {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus')}
-                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status');  location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
-                {/if}
-                {if $SUBJECTS->isMemberOf('Backup')}
-                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=export'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Export##</a></li>
-                {/if}
-                {if $SUBJECTS->isMemberOf('Restore')}
-                    <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=import'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Import##</a></li>
-                {/if}
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=month&target=SCHEDULER">##Month##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=week&target=SCHEDULER">##Week##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&target=SCHEDULER">##Day##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1&target=SCHEDULER">##Today##</a></li>
+                {* if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
+                    <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=status&target=SCHEDULER">##Status##</a></li>
+                {* /if *}
+                {* if $SUBJECTS->isMemberOf('Backup') *}
+                    <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=export&target=SCHEDULER">##Export##</a></li>
+                {* /if *}
+                {* if $SUBJECTS->isMemberOf('Restore') *}
+                    <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=import&target=SCHEDULER">##Import##</a></li>
+                {* /if *}
 
             </ul>
         </li>
 
         <li class="nav-main"><a>##Preferences##</a>
             <ul>
-            {if $SUBJECTS->isMemberOf('StationPrefs')}
+            {* if $SUBJECTS->isMemberOf('StationPrefs') *}
                 <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
-            {/if}
+            {* /if *}
             {*if $SUBJECTS->isMemberOf('Subjects')*}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS">##User/Groups##</a></li>
             {*else*}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS.chgPasswd&id={$USER.userid}">##Change Password##</a></li>
             {*/if*}
-            {if $SUBJECTS->isMemberOf('Admins')}
+            {* if $SUBJECTS->isMemberOf('Admins')}
                 <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
-            {/if}
-            {if $SUBJECTS->isMemberOf('Backup')}
+            {/if *}
+            {* if $SUBJECTS->isMemberOf('Backup') }
                 <li><a href="{$UI_BROWSER}?act=BACKUP">##Database Backup##</a></li>
-            {/if}
-            {if $SUBJECTS->isMemberOf('Restore')}
+            { /if *}
+            {* if $SUBJECTS->isMemberOf('Restore') }
                 <li><a href="{$UI_BROWSER}?act=RESTORE">##Database Restore##</a></li>
-            {/if}
+            { /if *}
             </ul>
         </li>
 
