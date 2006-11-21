@@ -4,12 +4,20 @@ define('ACTION_BASE', '/actions' ) ;
 
 /**
  * HTML User Interface module
+ *
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
  * @version $Revision$
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class uiHandler extends uiBase {
-	public $uiBase;
+	/**
+	 * @var string
+	 */
 	public $redirUrl;
 
     /**
