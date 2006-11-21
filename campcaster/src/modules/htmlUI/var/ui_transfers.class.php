@@ -26,7 +26,7 @@ class uiTransfers
     }
 
 
-    function reOrder($by)
+    function reorder($by)
     {
         $this->trShowInfo['offset'] = NULL;
 
@@ -155,7 +155,7 @@ class uiTransfers
 
     function upload2Hub($id)
     {
-        $gunid = $this->Base->gb->_gunidFromId($id);
+        $gunid = $this->Base->gb->gunidFromId($id);
         $type = $this->Base->gb->_getType($gunid);
 
         switch ($type) {
