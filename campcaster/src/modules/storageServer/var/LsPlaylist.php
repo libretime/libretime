@@ -514,16 +514,8 @@ class LsPLaylistAudioClip
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $title = ( isset($r[0]) ? $r[0]['value'] : '' );
-        $r = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $desc = ( isset($r[0]) ? $r[0]['value'] : '' );
+        $title = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
+        $desc = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
         return array(
             'type'       => 'audioclip',
             'gunid'      => $gunid,
