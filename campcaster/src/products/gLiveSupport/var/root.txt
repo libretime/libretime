@@ -4,14 +4,13 @@ root:table
     loggedInMsg:string              { "Logged in as {0}" }
     loginButtonLabel:string         { "Log in" }
     logoutButtonLabel:string        { "Log out" }
-    liveModeButtonLabel:string      { "Live Mode" }
-    uploadFileButtonLabel:string    { "Upload File" }
-    scratchpadButtonLabel:string    { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string
-                                    { "Edit Playlist" }
-    schedulerButtonLabel:string     { "Scheduler" }
-    searchButtonLabel:string        { "Search" }
-    optionsButtonLabel:string       { "Options" }
+    liveModeButtonLabel:string              { "Live Mode" }
+    uploadFileButtonLabel:string            { "Upload File" }
+    scratchpadButtonLabel:string            { "Scratchpad" }
+    simplePlaylistMgmtButtonLabel:string    { "Edit Playlist" }
+    schedulerButtonLabel:string             { "Scheduler" }
+    searchButtonLabel:string                { "Search" }
+    optionsButtonLabel:string               { "Options" }
 
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
@@ -63,14 +62,13 @@ root:table
 
     scratchpadWindow:table
     {
-        windowTitle:string          { "Scratchpad" }
+        windowTitle:string              { "Scratchpad" }
 
-        typeColumnLabel:string      { "Type" }
-        titleColumnLabel:string     { "Title" }
-        addToPlaylistButtonLabel:string
-                                    { "Add to playlist" }
-        clearListButtonLabel:string { "Clear list" }
-        removeButtonLabel:string    { "Remove item(s)" }
+        typeColumnLabel:string          { "Type" }
+        titleColumnLabel:string         { "Title" }
+        addToPlaylistButtonLabel:string { "Add to playlist" }
+        clearListButtonLabel:string     { "Clear list" }
+        removeButtonLabel:string        { "Remove item(s)" }
 
         cueMenuItem:string              { "Pre_view" }
         addToLiveModeMenuItem:string    { "Add to _Live Mode" }
@@ -102,31 +100,28 @@ root:table
 
     uploadFileWindow:table
     {
-        windowTitle:string          { "Upload File" }
+        windowTitle:string              { "Upload File" }
 
-        chooseFileLabel:string      { "Filename" }
-        chooseFileButtonLabel:string
-                                    { "Browse" }
+        chooseFileLabel:string          { "Filename" }
+        chooseFileButtonLabel:string    { "Browse" }
 
-        mainSectionLabel:string     { "Main" }
-        musicSectionLabel:string    { "Music" }
-        voiceSectionLabel:string    { "Voice" }
+        mainSectionLabel:string         { "Main" }
+        musicSectionLabel:string        { "Music" }
+        voiceSectionLabel:string        { "Voice" }
 
-        lengthLabel:string          { "Duration" }
+        lengthLabel:string              { "Duration" }
 
-        uploadButtonLabel:string    { "Upload" }
-        closeButtonLabel:string     { "Cancel" }
+        uploadButtonLabel:string        { "Upload" }
+        closeButtonLabel:string         { "Cancel" }
 
-        fileChooserDialogTitle:string
-                                    { "Open File" }
-        fileUploadedMsg:string      { "Uploaded ''{0}''." }
-        couldNotOpenFileMsg:string  { "The file could not be opened." }
-        couldNotReadLengthMsg:string
-                                    { "Could not determine audio clip length." }
-        unsupportedFileTypeMsg:string
-                                    { "Unsupported file type." }
-        missingTitleMsg:string      { "Please enter a title." }
-        badMetadataMsg:string       { "Invalid data for {0}." }
+        fileChooserDialogTitle:string   { "Open File" }
+        fileUploadedMsg:string          { "Uploaded ''{0}''." }
+        couldNotOpenFileMsg:string      { "The file could not be opened." }
+        couldNotReadLengthMsg:string    { "Could not determine audio clip "
+                                          "length." }
+        unsupportedFileTypeMsg:string   { "Unsupported file type." }
+        missingTitleMsg:string          { "Please enter a title." }
+        badMetadataMsg:string           { "Invalid data for {0}." }
     }
 
     simplePlaylistManagementWindow:table
@@ -138,6 +133,7 @@ root:table
         lengthColumnLabel:string    { "Length" }
         fadeInColumnLabel:string    { "Fade in" }
         fadeOutColumnLabel:string   { "Fade out" }
+
         nameLabel:string            { "Name" }
         lengthLabel:string          { "Duration:" }
         saveButtonLabel:string      { "Save" }
@@ -149,10 +145,9 @@ root:table
         downMenuItem:string         { "Move D_own" }
         removeMenuItem:string       { "_Remove" }
 
-        playlistSavedMsg:string     { "Saved playlist ''{0}''." }
-        savePlaylistDialogMsg:string
-                                    { "Do you want to save the playlist?" }
-        emptyTitleErrorMsg:string   { "Please enter a title." }
+        playlistSavedMsg:string         { "Saved playlist ''{0}''." }
+        savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
     schedulerWindow:table
@@ -228,7 +223,8 @@ root:table
         nothingFoundMsg:string      { "No files found." }
     }
 
-    advancedSearchEntry:table {
+    advancedSearchEntry:table
+    {
         fileTypeTextLabel:string    { "File types" }
         allFileType:string          { "all" }
         audioClipFileType:string    { "audio clips" }
@@ -236,13 +232,11 @@ root:table
 
         searchByTextLabel:string    { "Search by" }
 
-        partialOperatorDisplay:string
-                                    { "contains" }
-        prefixOperatorDisplay:string
-                                    { "starts with" }
-        =OperatorDisplay:string     { "equals" }
-        <=OperatorDisplay:string    { "<=" }
-        >=OperatorDisplay:string    { ">=" }
+        partialOperatorDisplay:string   { "contains" }
+        prefixOperatorDisplay:string    { "starts with" }
+        =OperatorDisplay:string         { "equals" }
+        <=OperatorDisplay:string        { "<=" }
+        >=OperatorDisplay:string        { ">=" }
     }
 
     liveModeWindow:table
@@ -437,7 +431,7 @@ root:table
         report_date_time:string     { "Report date/time" }
         report_location:string      { "Report location" }
         report_organizations:string { "Report organizations" }
-        subject                     { "Subject" }
+        subject:string              { "Subject" }
     }
 
     keyboardShortcuts:table

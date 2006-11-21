@@ -1,23 +1,41 @@
 es:table
 {
-    windowTitle:string       { "Panel maestro de Campcaster" }
-    notLoggedInMsg:string    { "No ha ingresado al sistema" }
-    loggedInMsg:string       { "Ingresó al sistema como {0}" }
-    loginButtonLabel:string  { "Accesar" }
-    logoutButtonLabel:string { "Salir" }
+    notLoggedInMsg:string           { "No ha ingresado al sistema" }
+    loggedInMsg:string              { "Ingresó al sistema como {0}" }
+    loginButtonLabel:string         { "Accesar" }
+    logoutButtonLabel:string        { "Salir" }
     liveModeButtonLabel:string              { "Modo en vivo" }
     uploadFileButtonLabel:string            { "Cargar archivo" }
     scratchpadButtonLabel:string            { "Scratchpad" }
     simplePlaylistMgmtButtonLabel:string    { "Editar lista de repr." }
     schedulerButtonLabel:string             { "Programador" }
     searchButtonLabel:string                { "Búsqueda" }
+    optionsButtonLabel:string               { "Options" }
 
-    localeNotAvailableMsg:string        { "Ubicación {0} no disponible" }
-    schedulerNotReachableMsg:string     { "El servidor del programador no está disponible" }
-    storageNotReachableMsg:string       { "El servidor de almacenamiento no está disponible" }
+    cancelButtonLabel:string        { "Cancel" }
+    noButtonLabel:string            { "No" }
+    yesButtonLabel:string           { "Yes" }
+    okButtonLabel:string            { "OK" }
+
+    elapsedTimeLabel:string         { "elapsed" }
+    remainingTimeLabel:string       { "remaining" }
+
+
+    localeNotAvailableMsg:string    { "Ubicación {0} no disponible" }
+    schedulerNotReachableMsg:string { "El servidor del programador no está disponible" }
+    storageNotReachableMsg:string   { "El servidor de almacenamiento no está disponible" }
     authenticationNotReachableMsg:string
-                                      { "El servidor de autenticación no está disponible" }
-    audioErrorMsg                       { "Error del reproductor de audio: " }
+                                    { "El servidor de autenticación no está "
+                                      "disponible.\n"
+                                      "Would you like to edit the server "
+                                      "settings?" }
+    audioErrorMsg                   { "Error del reproductor de audio: " }
+    sureToExitMsg:string            { "Are you sure you want to exit?" }
+
+    masterPanelWindow:table
+    {
+    windowTitle:string              { "Panel maestro" }
+    }
 
     loginWindow:table
     {
@@ -27,11 +45,13 @@ es:table
         passwordLabel:string        { "Clave de acceso" }
         okButtonLabel:string        { "OK" }
         cancelButtonLabel:string    { "Cancelar" }
+
+        pleaseWaitMsg:string        { "Logging in, please wait." }
     }
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "Ventana de audio clip de Campcaster" }
+        windowTitle:string            { "Audio clip" }
 
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "duración" }
@@ -43,26 +63,30 @@ es:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "Scratchpad de Campcaster " }
+        windowTitle:string              { "Scratchpad" }
 
-        typeColumnLabel:string              { "Tipo" }
-        titleColumnLabel:string             { "Título" }
-        addToPlaylistButtonLabel:string     { "Añadir a lista de reproducción" }
-        clearListButtonLabel:string         { "Limpiar la lista" }
-        removeButtonLabel:string            { "Eliminar elemento(s)" }
+        typeColumnLabel:string          { "Tipo" }
+        titleColumnLabel:string         { "Título" }
+        addToPlaylistButtonLabel:string { "Añadir a lista de reproducción" }
+        clearListButtonLabel:string     { "Limpiar la lista" }
+        removeButtonLabel:string        { "Eliminar elemento(s)" }
 
-        upMenuItem:string                   { "Desplazar hacia arriba" }
-        downMenuItem:string                 { "Desplazar hacia abajo" }
-        removeMenuItem:string               { "Eliminar" }
-        addToPlaylistMenuItem:string        { "Añadir a lista de reproducción" }
-        schedulePlaylistMenuItem:string     { "Programar lista de reproducción" }
-        cueMenuItem:string                  { "Previsualizar" }
-        addToLiveModeMenuItem:string        { "Añadir a modo en vivo" }
+        cueMenuItem:string              { "Previsualizar" }
+        addToLiveModeMenuItem:string    { "Añadir a modo en vivo" }
+        addToPlaylistMenuItem:string    { "Añadir a lista de reproducción" }
+        removeMenuItem:string           { "Eliminar" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "Programar lista de reproducción" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to Network Hub" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string            { "Venta de lista de reproducción de Campcaster" }
+        windowTitle:string            { "Lista de reproducción" }
 
         listBoxLabel                  { "Listas de reproducción" }
         detailBoxLabel                { "Detalles de las listas de reproducción" }
@@ -77,51 +101,72 @@ es:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "Cargar archivo" }
+        windowTitle:string              { "Cargar archivo" }
 
-        chooseFileLabel:string        { "Nombre del archivo" }
-        chooseFileButtonLabel:string  { "Navegar" }
+        chooseFileLabel:string          { "Nombre del archivo" }
+        chooseFileButtonLabel:string    { "Navegar" }
 
-        mainSectionLabel:string       { "Principal" }
-        titleLabel:string             { "Título" }
-        creatorLabel:string           { "Creador" }
-        genreLabel:string             { "Género" }
-        fileFormatLabel:string        { "Tipo de archivo" }
-        lengthLabel:string            { "Duración" }
+        mainSectionLabel:string         { "Principal" }
+        musicSectionLabel:string        { "Music" }
+        voiceSectionLabel:string        { "Voice" }
 
-        uploadButtonLabel:string      { "Cargar" }
-        closeButtonLabel:string       { "Cancelar" }
+        lengthLabel:string              { "Duración" }
 
-        fileChooserDialogTitle:string { "Seleccione un archivo" }
-        clipUploadedMsg:string        { "Clip ''{0}'' cargado." }
-        couldNotOpenFileMsg:string    { "*** translate me ***" }
-        missingTitleMsg:string        { "*** translate me ***" }
+        uploadButtonLabel:string        { "Cargar" }
+        closeButtonLabel:string         { "Cancelar" }
+
+        fileChooserDialogTitle:string   { "Seleccione un archivo" }
+        fileUploadedMsg:string          { "File ''{0}'' cargado." }
+        couldNotOpenFileMsg:string      { "The file could not be opened." }
+        couldNotReadLengthMsg:string    { "Could not determine audio clip "
+                                          "length." }
+        unsupportedFileTypeMsg:string   { "Unsupported file type." }
+        missingTitleMsg:string          { "Please enter a title." }
+        badMetadataMsg:string           { "Invalid data for {0}." }
     }
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "Ventana del módulo administrativo de las listas de reproducción simples de Campcaster" }
+        windowTitle:string          { "Lista de reproducción" }
 
-        startColumnLabel:string       { "inicio" }
-        titleColumnLabel:string       { "título" }
-        lengthColumnLabel:string      { "duración" }
-        nameLabel:string              { "nombre" }
-        saveButtonLabel:string        { "guardar" }
-        closeButtonLabel:string       { "cerrar" }
-        statusBar:string              { "barra de estatus" }
-        playlistSavedMsg:string       { "lista de reproducción guardada {0}" }
-        savePlaylistDialogMsg:string  { "*** translate me ***" }
-        emptyTitleErrorMsg:string     { "*** translate me ***" }
+        startColumnLabel:string     { "inicio" }
+        titleColumnLabel:string     { "título" }
+        lengthColumnLabel:string    { "duración" }
+        fadeInColumnLabel:string    { "Fade in" }
+        fadeOutColumnLabel:string   { "Fade out" }
+
+        nameLabel:string            { "nombre" }
+        lengthLabel:string          { "Duration:" }
+        saveButtonLabel:string      { "guardar" }
+        closeButtonLabel:string     { "cerrar" }
+        lockFadesCheckButtonLabel:string
+                                    { "Lock fade-out to following fade-in" }
+
+        upMenuItem:string           { "Move _Up" }
+        downMenuItem:string         { "Move D_own" }
+        removeMenuItem:string       { "_Remove" }
+
+        playlistSavedMsg:string         { "lista de reproducción guardada {0}" }
+        savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
     schedulerWindow:table
     {
-        windowTitle:string            { "Ventana del programador de Campcaster" }
+        windowTitle:string          { "Programador" }
 
-        startColumnLabel:string       { "inicio" }
-        titleColumnLabel:string       { "título" }
-        endColumnLabel:string         { "fin" }
-        deleteMenuItem:string         { "eliminar" }
+        scheduleTab:string          { "Schedule" }
+        statusTab:string            { "Status" }
+
+        startColumnLabel:string     { "inicio" }
+        titleColumnLabel:string     { "título" }
+        endColumnLabel:string       { "fin" }
+        deleteMenuItem:string       { "eliminar" }
+
+        stopCurrentlyPlayingText:string
+                                    { "Currently playing in scheduler:" }
+        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
+        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
 
         closeButtonLabel:string       { "cerrar" }
 
@@ -129,7 +174,7 @@ es:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "Ventana de las listas de reproducción programadas de Campcaster" }
+        windowTitle:string            { "Listas de reproducción programadas" }
 
         hourLabel:string              { "hora: " }
         minuteLabel:string            { "minuto: " }
@@ -139,43 +184,212 @@ es:table
 
     searchWindow:table
     {
-        windowTitle:string            { "Ventana de búsqueda/navegación de Campcaster" }
+        windowTitle:string          { "Búsqueda/Navegación" }
 
-        simpleSearchTab:string        { "Búsqueda" }
-        advancedSearchTab:string      { "Búsqueda avanzada" }
-        browseTab:string              { "Navegar" }
+        searchWhereLabel:string     { "Search or browse on: " }
+        searchWhereLocal:string     { "local storage" }
+        searchWhereRemote:string    { "network hub" }
 
-        searchByTextLabel:string      { "Buscar por" }
-        searchButtonLabel:string      { "Buscar" }
+        simpleSearchTab:string      { "Búsqueda" }
+        advancedSearchTab:string    { "Búsqueda avanzada" }
+        browseTab:string            { "Navegar" }
+        transportsTab:string        { "Transfers" }
 
-        typeColumnLabel:string        { "Tipo" }
-        titleColumnLabel:string       { "Título" }
-        creatorColumnLabel:string     { "Creador" }
-        lengthColumnLabel:string      { "Duración" }
+        searchButtonLabel:string    { "Buscar" }
+        backwardButtonLabel:string  { "⇦ Previous" }
+        forwardButtonLabel:string   { "Next ⇨" }
+        searchResultsCountLabel:string  { "{0}-{1} of {2} results" }
 
-        partialOperatorDisplay:string     { "contiene" }
-        prefixOperatorDisplay:string      { "empieza con" }
-        =OperatorDisplay:string           { "equivale" }
-        <=OperatorDisplay:string          { "<=" }
-        >=OperatorDisplay:string          { ">=" }
+        typeColumnLabel:string      { "Tipo" }
+        titleColumnLabel:string     { "Título" }
+        creatorColumnLabel:string   { "Creador" }
+        sourceColumnLabel:string    { "Album" }
+        lengthColumnLabel:string    { "Duración" }
 
-        allStringForBrowse                { "--- todo ---" }
+        allStringForBrowse          { "--- todo ---" }
 
-        addToScratchpadMenuItem:string    { "_Añadir a Scratchpad" }
-        addToLiveModeMenuItem:string      { "Añadir a Modo en vivo" }
+        addToScratchpadMenuItem:string  { "_Añadir a Scratchpad" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        addToLiveModeMenuItem:string    { "Añadir a Modo en vivo" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to the network hub" }
+        downloadFromHubMenuItem:string  { "Download from the network hub" }
+
+        pleaseWaitMsg:string        { "Please wait..." }
+        shortErrorMsg:string        { "Search failed." }
+        longErrorMsg:string         { "Search failed: {0}." }
+        uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
+        downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
+        nothingFoundMsg:string      { "No files found." }
+    }
+
+    advancedSearchEntry:table
+    {
+        fileTypeTextLabel:string    { "File types" }
+        allFileType:string          { "all" }
+        audioClipFileType:string    { "audio clips" }
+        playlistFileType:string     { "playlists" }
+
+        searchByTextLabel:string    { "Buscar por" }
+
+        partialOperatorDisplay:string   { "contiene" }
+        prefixOperatorDisplay:string    { "empieza con" }
+        =OperatorDisplay:string         { "equivale" }
+        <=OperatorDisplay:string        { "<=" }
+        >=OperatorDisplay:string        { ">=" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "Venta Modo en vivo de Campcaster" }
+        windowTitle:string          { "Modo en vivo" }
 
-        cueMenuItem:string            { "Previsualizar" }
-        upMenuItem:string             { "Desplazar hacia arriba" }
-        downMenuItem:string           { "Desplazar hacia abajo" }
-        removeMenuItem:string         { "Eliminar" }
-        playMenuItem:string           { "Reproduccir" }
+        playMenuItem:string             { "Reproduccir" }
+        cueMenuItem:string              { "Previsualizar" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        removeMenuItem:string           { "Eliminar" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
-        cuePlayerLabel:string         { "Previsualizar" }
+        cuePlayerLabel:string       { "Previsualizar" }
+
+        clearListButtonLabel:string { "Clear list" }
+        removeButtonLabel:string    { "Remove item(s)" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
+    }
+
+    optionsWindow:table
+    {
+        windowTitle:string          { "Options" }
+
+        needToRestartMsg:string     { "You will need to restart the "
+                                      "application\nfor the new settings "
+                                      "to take effect." }
+        errorMsg:string             { "Could not save the options: " }
+
+        soundSectionLabel:string        { "Sound" }
+        keyBindingsSectionLabel:string  { "Keyboard Shortcuts" }
+        serversSectionLabel:string      { "Servers" }
+        schedulerSectionLabel:string    { "Scheduler" }
+        backupSectionLabel:string       { "Backup" }
+        aboutSectionLabel:string        { "About" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        applyButtonLabel:string     { "Apply" }
+        okButtonLabel:string        { "OK" }
+
+        cueDeviceLabel:string       { "Cue audio device:" }
+        outputDeviceLabel:string    { "Live Mode audio device:" }
+        testButtonLabel:string      { "Test" }
+
+        pressAKeyMsg:string         { "Press a key..." }
+        keyBindingsInstructionsText:string
+                                    { "Double-click on the shortcut you want "
+                                      "to change, \n"
+                                      "then press the key for the new "
+                                      "shortcut\n"
+                                      "(or press the Escape key to cancel "
+                                      "the operation)." }
+
+        authenticationLabel:string  { "Authentication server" }
+        storageLabel:string         { "Storage server" }
+        schedulerLabel:string       { "Scheduler server" }
+        serverLabel:string          { "address:" }
+        portLabel:string            { "port:" }
+        pathLabel:string            { "path:" }
+
+        schedulerStatusText:string          { "The scheduler is" }
+        schedulerRunningStatus:string       { "running." }
+        schedulerStoppedStatus:string       { "stopped." }
+        schedulerStartButtonLabel:string    { "Start" }
+        schedulerStopButtonLabel:string     { "Stop" }
+
+        reportBugsToText:string     { "Report bugs to: {0}" }
+    }
+
+    backupView:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+
+        mtimeTextLabel:string       { "Modified since:" }
+        chooseTimeButtonLabel:string    { "Choose time" }
+        resetTimeButtonLabel:string     { "Reset" }
+
+        backupButtonLabel:string    { "Backup" }
+        deleteButtonLabel:string    { "Delete" }
+        saveButtonLabel:string      { "Save" }
+
+        backupTitleLabel:string     { "Title" }
+        defaultBackupTitle:string   { "new backup" }
+
+        fileChooserDialogTitle:string   { "Save File" }
+        backupErrorMsg:string       { "Backup error: " }
+    }
+
+    dateTimeChooserWindow:table
+    {
+        windowTitle:string          { "Select the date and time" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        okButtonLabel:string        { "OK" }
+
+        hourLabel:string            { "hour:" }
+        minuteLabel:string          { "minute:" }
+    }
+
+    exportPlaylistWindow:table
+    {
+        windowTitle:string          { "Export Playlist" }
+
+        playlistTitleLabel:string   { "Title:" }
+        formatLabel:string          { "Export as:" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        saveButtonLabel:string      { "Save" }
+
+        internalFormatName:string   { "Campcaster archive" }
+        smilFormatName:string       { "tar containing a SMIL" }
+
+        fileChooserDialogTitle:string   { "Save File" }
+
+        createExportErrorMsg:string { "Could not export the playlist:" }
+        saveExportErrorMsg:string   { "Could not save the exported playlist." }
+    }
+
+    transportList:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+
+        cancelUploadMenuItem:string     { "Cancel upload" }
+        cancelDownloadMenuItem:string   { "Cancel download" }
+
+        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+    }
+
+    restoreBackupWindow:table
+    {
+        windowTitle:string          { "Restore Backup" }
+        errorMessage:string         { "Error: {0}" }
+        pendingMessage:string       { "Uploading backup file\n''{0}''.\n"
+                                      "Please wait..." }
+        finishedMessage:string      { "Upload finished." }
     }
 
     metadataTypes:table
@@ -216,5 +430,21 @@ es:table
         catalog_number:string       { "número de catálogo" }
         original_artist:string      { "Artista original" }
         copyright:string            { "Derechos Reservados" }
+        report_date_time:string     { "Report date/time" }
+        report_location:string      { "Report location" }
+        report_organizations:string { "Report organizations" }
+        subject:string              { "Subject" }
+    }
+
+    keyboardShortcuts:table
+    {
+        playAudio:string            { Play }
+        pauseAudio:string           { Pause }
+        stopAudio:string            { Stop }
+        nextTrack:string            { Next track }
+        fadeOut:string              { Fade out }
+        moveItemUp:string           { Move item up }
+        moveItemDown:string         { Move item down }
+        removeItem:string           { Remove item }
     }
 }

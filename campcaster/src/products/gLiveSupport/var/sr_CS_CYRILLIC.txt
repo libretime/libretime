@@ -1,23 +1,39 @@
 sr_CS_CYRILLIC:table
 {
-    windowTitle:string       { "Campcaster Maстер Панел" }
-    notLoggedInMsg:string    { "Нисте пријављени" }
-    loggedInMsg:string       { "Пријављени сте као {0}" }
-    loginButtonLabel:string  { "Пријава" }
-    logoutButtonLabel:string { "Одјава" }
+    notLoggedInMsg:string           { "Нисте пријављени" }
+    loggedInMsg:string              { "Пријављени сте као {0}" }
+    loginButtonLabel:string         { "Пријава" }
+    logoutButtonLabel:string        { "Одјава" }
     liveModeButtonLabel:string              { "Програм Уживо" }
     uploadFileButtonLabel:string            { "Аплоуд фајла" }
     scratchpadButtonLabel:string            { "Припрема" }
     simplePlaylistMgmtButtonLabel:string    { "Обрада п.л." }
     schedulerButtonLabel:string             { "Распоред" }
     searchButtonLabel:string                { "Претрага" }
+    optionsButtonLabel:string               { "Options" }
 
-    localeNotAvailableMsg:string        { "Место {0} није доступно " }
-    schedulerNotReachableMsg:string     { "Сервер са распоредом није доступан" }
-    storageNotReachableMsg:string       { "Сервер није доступан" }
+    cancelButtonLabel:string        { "Cancel" }
+    noButtonLabel:string            { "No" }
+    yesButtonLabel:string           { "Yes" }
+    okButtonLabel:string            { "OK" }
+
+    elapsedTimeLabel:string         { "elapsed" }
+    remainingTimeLabel:string       { "remaining" }
+
+    localeNotAvailableMsg:string    { "Место {0} није доступно " }
+    schedulerNotReachableMsg:string { "Сервер са распоредом није доступан" }
+    storageNotReachableMsg:string   { "Сервер није доступан" }
     authenticationNotReachableMsg:string
-                                      { "Сервер за аутентизацију није доступан" }
-    audioErrorMsg                       { "Грешка у аудио плејеру: " }
+                                    { "Сервер за аутентизацију није доступан."
+                                      "Would you like to edit the server "
+                                      "settings?" }
+    audioErrorMsg                   { "Грешка у аудио плејеру: " }
+    sureToExitMsg:string            { "Are you sure you want to exit?" }
+
+    masterPanelWindow:table
+    {
+        windowTitle:string          { "Maстер Панел" }
+    }
 
     loginWindow:table
     {
@@ -27,11 +43,13 @@ sr_CS_CYRILLIC:table
         passwordLabel:string        { "Лозинка" }
         okButtonLabel:string        { "У реду" }
         cancelButtonLabel:string    { "Откажи" }
+
+        pleaseWaitMsg:string        { "Logging in, please wait." }
     }
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "Campcaster Аудио Клипови" }
+        windowTitle:string            { "Аудио Клипови" }
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
@@ -43,7 +61,7 @@ sr_CS_CYRILLIC:table
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "Campcaster Припрема" }
+        windowTitle:string                  { "Припрема" }
 
         typeColumnLabel:string              { "Тип" }
         titleColumnLabel:string             { "Наслов" }
@@ -51,18 +69,22 @@ sr_CS_CYRILLIC:table
         clearListButtonLabel:string         { "Обриши листу" }
         removeButtonLabel:string            { "Уклони из листе" }
 
-        upMenuItem:string                   { "Помери горе" }
-        downMenuItem:string                 { "Помери доле" }
-        removeMenuItem:string               { "Уклони" }
-        addToPlaylistMenuItem:string        { "Додај у плеј листу" }
-        schedulePlaylistMenuItem:string     { "Програмирај плеј листу" }
         cueMenuItem:string                  { "Проба" }
         addToLiveModeMenuItem:string        { "Додај у Програм Уживо" }
+        addToPlaylistMenuItem:string        { "Додај у плеј листу" }
+        removeMenuItem:string               { "Уклони" }
+        editPlaylistMenuItem:string         { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string     { "Програмирај плеј листу" }
+        exportPlaylistMenuItem:string       { "E_xport Playlist" }
+        uploadToHubMenuItem:string          { "Upload to Network Hub" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string            { "Campcaster Плеј Листа" }
+        windowTitle:string            { "Плеј Листа" }
 
         listBoxLabel                  { "Плеј листе" }
         detailBoxLabel                { "Детаљи плеј листе" }
@@ -77,58 +99,75 @@ sr_CS_CYRILLIC:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "Аплоуд фајла" }
+        windowTitle:string              { "Аплоуд фајла" }
 
-        chooseFileLabel:string        { "Име фајла" }
-        chooseFileButtonLabel:string  { "Претражи" }
+        chooseFileLabel:string          { "Име фајла" }
+        chooseFileButtonLabel:string    { "Претражи" }
 
-        mainSectionLabel:string       { "Главно" }
-        titleLabel:string             { "Наслов" }
-        creatorLabel:string           { "Жанр" }
-        fileFormatLabel:string        { "Тип фајла" }
-        lengthLabel:string            { "Трајање" }
+        mainSectionLabel:string         { "Главно" }
+        musicSectionLabel:string        { "Music" }
+        voiceSectionLabel:string        { "Voice" }
 
-        uploadButtonLabel:string      { "Аплоуд" }
-        closeButtonLabel:string       { "Откажи" }
+        lengthLabel:string              { "Трајање" }
 
-        fileChooserDialogTitle:string { "Изабери фајл" }
-        clipUploadedMsg:string        { "Аплоудован клип ''{0}''." }
-        couldNotOpenFileMsg:string    { "*** translate me ***" }
-        missingTitleMsg:string        { "*** translate me ***" }
+        uploadButtonLabel:string        { "Аплоуд" }
+        closeButtonLabel:string         { "Откажи" }
+
+        fileChooserDialogTitle:string   { "Изабери фајл" }
+        clipUploadedMsg:string          { "Аплоудован клип ''{0}''." }
+        couldNotOpenFileMsg:string      { "The file could not be opened." }
+        couldNotReadLengthMsg:string    { "Could not determine audio clip "
+                                          "length." }
+        unsupportedFileTypeMsg:string   { "Unsupported file type." }
+        missingTitleMsg:string          { "Please enter a title." }
+        badMetadataMsg:string           { "Invalid data for {0}." }
     }
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "Campcaster Једноставно управљање плеј листом" }
+        windowTitle:string          { "Једноставно управљање плеј листом" }
 
-        startColumnLabel:string       { "почни" }
-        titleColumnLabel:string       { "наслов" }
-        lengthColumnLabel:string      { "дужина" }
-        nameLabel:string              { "име" }
-        saveButtonLabel:string        { "сачувај" }
-        closeButtonLabel:string       { "затвори" }
-        statusBar:string              { "статус бар" }
-        playlistSavedMsg:string       { "сачувана плеј листа {0}" }
-        savePlaylistDialogMsg:string  { "*** translate me ***" }
-        emptyTitleErrorMsg:string     { "*** translate me ***" }
+        startColumnLabel:string     { "почни" }
+        titleColumnLabel:string     { "наслов" }
+        lengthColumnLabel:string    { "дужина" }
+        fadeInColumnLabel:string    { "Fade in" }
+        fadeOutColumnLabel:string   { "Fade out" }
+
+        nameLabel:string            { "име" }
+        saveButtonLabel:string      { "сачувај" }
+        closeButtonLabel:string     { "затвори" }
+        lockFadesCheckButtonLabel:string
+                                    { "Lock fade-out to following fade-in" }
+
+        playlistSavedMsg:string         { "сачувана плеј листа {0}" }
+        savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
     schedulerWindow:table
     {
-        windowTitle:string            { "Campcaster Распоред" }
+        windowTitle:string          { "Распоред" }
 
-        startColumnLabel:string       { "почетак" }
-        titleColumnLabel:string       { "назив" }
-        endColumnLabel:string         { "крај" }
-        deleteMenuItem:string         { "Обриши" }
+        scheduleTab:string          { "Schedule" }
+        statusTab:string            { "Status" }
 
-        closeButtonLabel:string       { "затвори" }
+        startColumnLabel:string     { "почетак" }
+        titleColumnLabel:string     { "назив" }
+        endColumnLabel:string       { "крај" }
+        deleteMenuItem:string       { "Обриши" }
+
+        stopCurrentlyPlayingText:string
+                                    { "Currently playing in scheduler:" }
+        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
+        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+
+        closeButtonLabel:string     { "затвори" }
 
     }
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "Campcaster Програмирање Плеј листе" }
+        windowTitle:string            { "Програмирање Плеј листе" }
 
         hourLabel:string              { "сат: " }
         minuteLabel:string            { "минут: " }
@@ -138,43 +177,212 @@ sr_CS_CYRILLIC:table
 
     searchWindow:table
     {
-        windowTitle:string            { "Campcaster Претрага/Преглед" }
+        windowTitle:string          { "Претрага/Преглед" }
 
-        simpleSearchTab:string        { "Претрага" }
-        advancedSearchTab:string      { "Напредна претрага" }
-        browseTab:string              { "Преглед" }
+        searchWhereLabel:string     { "Search or browse on: " }
+        searchWhereLocal:string     { "local storage" }
+        searchWhereRemote:string    { "network hub" }
 
-        searchByTextLabel:string      { "Тражи по" }
-        searchButtonLabel:string      { "Претражи" }
+        simpleSearchTab:string      { "Претрага" }
+        advancedSearchTab:string    { "Напредна претрага" }
+        browseTab:string            { "Преглед" }
+        transportsTab:string        { "Transfers" }
 
-        typeColumnLabel:string        { "Тип" }
-        titleColumnLabel:string       { "Наслов" }
-        creatorColumnLabel:string     { "Аутор" }
-        lengthColumnLabel:string      { "Дужина" }
+        searchButtonLabel:string    { "Претражи" }
+        backwardButtonLabel:string  { "⇦ Previous" }
+        forwardButtonLabel:string   { "Next ⇨" }
+        searchResultsCountLabel:string  { "{0}-{1} of {2} results" }
 
-        partialOperatorDisplay:string     { "садржи" }
-        prefixOperatorDisplay:string      { "почиње са" }
-        =OperatorDisplay:string           { "једнако" }
-        <=OperatorDisplay:string          { "<=" }
-        >=OperatorDisplay:string          { ">=" }
+        typeColumnLabel:string      { "Тип" }
+        titleColumnLabel:string     { "Наслов" }
+        creatorColumnLabel:string   { "Аутор" }
+        sourceColumnLabel:string    { "Album" }
+        lengthColumnLabel:string    { "Дужина" }
 
-        allStringForBrowse                { "--- све ---" }
+        allStringForBrowse          { "--- све ---" }
 
-        addToScratchpadMenuItem:string    { "Додај у Припрему " }
-        addToLiveModeMenuItem:string      { "Додај у Програм Уживо" }
+        addToScratchpadMenuItem:string  { "Додај у Припрему " }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        addToLiveModeMenuItem:string    { "Додај у Програм Уживо" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to the network hub" }
+        downloadFromHubMenuItem:string  { "Download from the network hub" }
+
+        pleaseWaitMsg:string        { "Please wait..." }
+        shortErrorMsg:string        { "Search failed." }
+        longErrorMsg:string         { "Search failed: {0}." }
+        uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
+        downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
+        nothingFoundMsg:string      { "No files found." }
+    }
+
+    advancedSearchEntry:table
+    {
+        fileTypeTextLabel:string    { "File types" }
+        allFileType:string          { "all" }
+        audioClipFileType:string    { "audio clips" }
+        playlistFileType:string     { "playlists" }
+
+        searchByTextLabel:string    { "Тражи по" }
+
+        partialOperatorDisplay:string   { "садржи" }
+        prefixOperatorDisplay:string    { "почиње са" }
+        =OperatorDisplay:string         { "једнако" }
+        <=OperatorDisplay:string        { "<=" }
+        >=OperatorDisplay:string        { ">=" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "Campcaster Програм Уживо" }
+        windowTitle:string          { "Програм Уживо" }
 
-        cueMenuItem:string            { "Проба" }
-        upMenuItem:string             { "Помери горе" }
-        downMenuItem:string           { "Помери доле" }
-        removeMenuItem:string         { "Уклони" }
-        playMenuItem:string           { "Пусти" }
+        playMenuItem:string             { "Пусти" }
+        cueMenuItem:string              { "Проба" }
+        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        removeMenuItem:string           { "Уклони" }
+        editPlaylistMenuItem:string     { "_Edit Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
+        exportPlaylistMenuItem:string   { "E_xport Playlist" }
+        uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
-        cuePlayerLabel:string         { "Проба" }
+        cuePlayerLabel:string       { "Проба" }
+
+        clearListButtonLabel:string { "Clear list" }
+        removeButtonLabel:string    { "Remove item(s)" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
+    }
+
+    optionsWindow:table
+    {
+        windowTitle:string          { "Options" }
+
+        needToRestartMsg:string     { "You will need to restart the "
+                                      "application\nfor the new settings "
+                                      "to take effect." }
+        errorMsg:string             { "Could not save the options: " }
+
+        soundSectionLabel:string        { "Sound" }
+        keyBindingsSectionLabel:string  { "Keyboard Shortcuts" }
+        serversSectionLabel:string      { "Servers" }
+        schedulerSectionLabel:string    { "Scheduler" }
+        backupSectionLabel:string       { "Backup" }
+        aboutSectionLabel:string        { "About" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        applyButtonLabel:string     { "Apply" }
+        okButtonLabel:string        { "OK" }
+
+        cueDeviceLabel:string       { "Cue audio device:" }
+        outputDeviceLabel:string    { "Live Mode audio device:" }
+        testButtonLabel:string      { "Test" }
+
+        pressAKeyMsg:string         { "Press a key..." }
+        keyBindingsInstructionsText:string
+                                    { "Double-click on the shortcut you want "
+                                      "to change, \n"
+                                      "then press the key for the new "
+                                      "shortcut\n"
+                                      "(or press the Escape key to cancel "
+                                      "the operation)." }
+
+        authenticationLabel:string  { "Authentication server" }
+        storageLabel:string         { "Storage server" }
+        schedulerLabel:string       { "Scheduler server" }
+        serverLabel:string          { "address:" }
+        portLabel:string            { "port:" }
+        pathLabel:string            { "path:" }
+
+        schedulerStatusText:string          { "The scheduler is" }
+        schedulerRunningStatus:string       { "running." }
+        schedulerStoppedStatus:string       { "stopped." }
+        schedulerStartButtonLabel:string    { "Start" }
+        schedulerStopButtonLabel:string     { "Stop" }
+
+        reportBugsToText:string     { "Report bugs to: {0}" }
+    }
+
+    backupView:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+
+        mtimeTextLabel:string       { "Modified since:" }
+        chooseTimeButtonLabel:string    { "Choose time" }
+        resetTimeButtonLabel:string     { "Reset" }
+
+        backupButtonLabel:string    { "Backup" }
+        deleteButtonLabel:string    { "Delete" }
+        saveButtonLabel:string      { "Save" }
+
+        backupTitleLabel:string     { "Title" }
+        defaultBackupTitle:string   { "new backup" }
+
+        fileChooserDialogTitle:string   { "Save File" }
+        backupErrorMsg:string       { "Backup error: " }
+    }
+
+    dateTimeChooserWindow:table
+    {
+        windowTitle:string          { "Select the date and time" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        okButtonLabel:string        { "OK" }
+
+        hourLabel:string            { "hour:" }
+        minuteLabel:string          { "minute:" }
+    }
+
+    exportPlaylistWindow:table
+    {
+        windowTitle:string          { "Export Playlist" }
+
+        playlistTitleLabel:string   { "Title:" }
+        formatLabel:string          { "Export as:" }
+
+        cancelButtonLabel:string    { "Cancel" }
+        saveButtonLabel:string      { "Save" }
+
+        internalFormatName:string   { "Campcaster archive" }
+        smilFormatName:string       { "tar containing a SMIL" }
+
+        fileChooserDialogTitle:string   { "Save File" }
+
+        createExportErrorMsg:string { "Could not export the playlist:" }
+        saveExportErrorMsg:string   { "Could not save the exported playlist." }
+    }
+
+    transportList:table
+    {
+        workingStatus:string        { "in progress" }
+        successStatus:string        { "ready" }
+        faultStatus:string          { "error: {0}" }
+
+        titleColumnLabel:string     { "Title" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Status" }
+
+        cancelUploadMenuItem:string     { "Cancel upload" }
+        cancelDownloadMenuItem:string   { "Cancel download" }
+
+        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+    }
+
+    restoreBackupWindow:table
+    {
+        windowTitle:string          { "Restore Backup" }
+        errorMessage:string         { "Error: {0}" }
+        pendingMessage:string       { "Uploading backup file\n''{0}''.\n"
+                                      "Please wait..." }
+        finishedMessage:string      { "Upload finished." }
     }
 
     metadataTypes:table
@@ -215,6 +423,22 @@ sr_CS_CYRILLIC:table
         catalog_number:string       { "Каталошки број" }
         original_artist:string      { "Оригинални извођач" }
         copyright:string            { "Ауторска права" }
+        report_date_time:string     { "Report date/time" }
+        report_location:string      { "Report location" }
+        report_organizations:string { "Report organizations" }
+        subject:string              { "Subject" }
+    }
+
+    keyboardShortcuts:table
+    {
+        playAudio:string            { Play }
+        pauseAudio:string           { Pause }
+        stopAudio:string            { Stop }
+        nextTrack:string            { Next track }
+        fadeOut:string              { Fade out }
+        moveItemUp:string           { Move item up }
+        moveItemDown:string         { Move item down }
+        removeItem:string           { Remove item }
     }
 }
 
