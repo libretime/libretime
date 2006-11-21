@@ -147,6 +147,10 @@ class GstreamerPlayer : virtual public Configurable,
          */
         std::string             m_audioDevice;
 
+        std::string             m_preloadUrl;
+        GstElement            * m_preloadFilesrc;
+        GstElement            * m_preloadDecoder;
+
         /**
          *  The type for the vector of listeners.
          *  Just a shorthand notation, to make reference to the type
@@ -304,6 +308,9 @@ class GstreamerPlayer : virtual public Configurable,
         setAudioDevice(const std::string &deviceName)       
                                                 throw ();
 
+        virtual void
+        preload(const std::string  fileUrl)        throw (std::invalid_argument,
+                                                       std::runtime_error);
         
         /**
          *  Specify which audio resource to play.

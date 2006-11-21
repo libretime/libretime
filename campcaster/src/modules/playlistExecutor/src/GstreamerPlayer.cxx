@@ -279,6 +279,68 @@ GstreamerPlayer::newpadEventHandler(GstElement*, GstPad* pad, gboolean, gpointer
 
 
 /*------------------------------------------------------------------------------
+ * Preload a file, to speed up the subsequent open() call. 
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayer :: preload(const std::string   fileUrl)
+                                                throw (std::invalid_argument,
+                                                       std::runtime_error)
+{
+    DEBUG_BLOCK
+
+    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
+    if (!isSmil)
+        return;
+
+    debug() << "Preloading SMIL file: " << fileUrl << endl;
+
+    std::string filePath;
+
+    if (fileUrl.find("file://") == 0) {
+        filePath = fileUrl.substr(7, fileUrl.size());
+    }
+    else if (fileUrl.find("file:") == 0) {
+        filePath = fileUrl.substr(5, fileUrl.size());
+    }
+    else {
+        return;
+    }
+
+    if (!m_preloadUrl.empty()) {
+        g_object_unref(G_OBJECT(m_preloadFilesrc));
+        g_object_unref(G_OBJECT(m_preloadDecoder));
+    }
+
+    m_preloadFilesrc = gst_element_factory_make("filesrc", NULL);
+    gst_element_set(m_preloadFilesrc, "location", filePath.c_str(), NULL);
+
+    m_preloadDecoder = gst_element_factory_make("minimalaudiosmil", NULL);
+
+    GstElement* pipe     = gst_pipeline_new("pipe");
+    GstElement* fakesink = gst_element_factory_make("fakesink", "fakesink");
+    g_object_ref(G_OBJECT(m_preloadFilesrc));
+    g_object_ref(G_OBJECT(m_preloadDecoder));
+    gst_element_link_many(m_preloadFilesrc, m_preloadDecoder, fakesink, NULL);
+    gst_bin_add_many(GST_BIN(pipe), m_preloadFilesrc, m_preloadDecoder, fakesink, NULL);
+
+    gst_element_set_state(pipe, GST_STATE_PLAYING);
+
+    gint64 position = 0LL;
+    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+        GstFormat   format = GST_FORMAT_DEFAULT;
+        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
+    }
+
+    gst_element_set_state(pipe, GST_STATE_PAUSED);
+    gst_bin_remove_many(GST_BIN(pipe), m_preloadFilesrc, m_preloadDecoder, NULL);
+    gst_element_unlink(m_preloadFilesrc, fakesink);
+    gst_object_unref(GST_OBJECT(pipe));
+   
+    m_preloadUrl = fileUrl;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 void
@@ -297,6 +359,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     debug() << "Opening URL: " << fileUrl << endl;
 
+    preload(fileUrl);
+
     std::string filePath;
 
     if (fileUrl.find("file://") == 0) {
@@ -311,8 +375,12 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
 
-    m_filesrc    = gst_element_factory_make("filesrc", "file-source");
-    gst_element_set(m_filesrc, "location", filePath.c_str(), NULL);
+    if ( m_preloadUrl != fileUrl ) {
+        m_filesrc    = gst_element_factory_make("filesrc", "file-source");
+        gst_element_set(m_filesrc, "location", filePath.c_str(), NULL);
+    }
+    else
+        m_filesrc = m_preloadFilesrc;
 
     // converts between different audio formats (e.g. bitrate) 
     m_audioconvert    = gst_element_factory_make("audioconvert", NULL);
@@ -324,9 +392,14 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // Therefore we instantiate it manually if the file has the .smil extension. 
     if (isSmil) {
         debug() << "SMIL file detected." << endl;
-        m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
-        if (!m_decoder) error() << "Unable to create minimalaudiosmil element." << endl;
-        gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
+        if (m_preloadUrl != fileUrl) {
+            m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
+            gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
+        }
+        else {
+            m_decoder = m_preloadDecoder;
+            gst_element_link(m_decoder, m_audioconvert);
+        }
         if (gst_element_get_parent(m_audiosink) == NULL)
             gst_bin_add(GST_BIN(m_pipeline), m_audiosink);
     }
@@ -354,6 +427,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         // the audio device (as it might be blocked by an other process
         throw std::runtime_error("can't open audio device " + m_audioDevice);
     }
+
+    m_preloadUrl.clear();
 }
 
 
