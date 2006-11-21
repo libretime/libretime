@@ -209,8 +209,9 @@ class MetaData {
      * 		metadata element name
      * @param int $parid
      * 		metadata record id of parent element
-     * @return hash
-     * 		{mid: int - record id, value: metadata alue}
+     * @return array
+     * 		int 'mid': record id
+     * 		string 'value': metadata value}
      */
     function getMetadataEl($category, $parid=NULL)
     {
@@ -228,12 +229,10 @@ class MetaData {
         if (!is_null($parid)) {
         	$cond .= " AND subjns='_I' AND subject='$parid'";
         }
-        $sql = "
-            SELECT id as mid, object as value
-            FROM {$this->mdataTable}
-            WHERE $cond
-            ORDER BY id
-        ";
+        $sql = "SELECT id as mid, object as value
+            	FROM {$this->mdataTable}
+            	WHERE $cond
+            	ORDER BY id";
         $all = $this->dbc->getAll($sql);
         foreach ($all as $i => $v) {
             if (is_null($all[$i]['value'])) {
@@ -371,7 +370,7 @@ class MetaData {
      *   </ul>
      * @see BasicStor::bsGetMetadataValue
      */
-    function getMetadataValue($category, $lang=NULL, $deflang=NULL, $objns='_L')
+    function getMetadataValueWithAttrs($category, $lang=NULL, $deflang=NULL, $objns='_L')
     {
         $all = $this->getMetadataEl($category);
         $res = array();
@@ -400,7 +399,7 @@ class MetaData {
                     	break;
                     case strtolower($deflang):
                         $def = array($all[$i]);
-                    break;
+                    	break;
                 }
             }
         }
@@ -414,6 +413,22 @@ class MetaData {
         	return $plain;
         }
         return $res;
+    }
+
+
+    /**
+     * Get metadata element value.
+     *
+     * @param string $category
+     * 		metadata element name
+     * @return string
+     * 		If the value doesnt exist, return the empty string.
+     */
+    function getMetadataValue($category)
+    {
+        $element = $this->getMetadataEl($category);
+        $value = (isset($element[0]['value']) ? $element[0]['value'] : '');
+        return $value;
     }
 
 
@@ -435,7 +450,7 @@ class MetaData {
     function setMetadataValue($category, $value, $lang=NULL, $mid=NULL,
         $container='metadata')
     {
-        // resolve aktual element:
+        // resolve actual element:
         $rows = $this->getMetadataValue($category, $lang);
         $aktual = NULL;
         if (count($rows) > 1) {
@@ -444,7 +459,7 @@ class MetaData {
                 	$aktual = array_pop($rows);
                 } else {
                     return PEAR::raiseError(
-                        "MetaData::setMdataValue:".
+                        "MetaData::setMetadataValue:".
                         " nonunique category, mid required"
                     );
                 }
@@ -492,7 +507,7 @@ class MetaData {
             $parid = $contArr[0]['mid'];
             if (is_null($parid)) {
                 return PEAR::raiseError(
-                    "MetaData::setMdataValue: container ($container) not found"
+                    "MetaData::setMetadataValue: container ($container) not found"
                 );
             }
             $nid = $this->insertMetadataEl($parid, $category, $value);
