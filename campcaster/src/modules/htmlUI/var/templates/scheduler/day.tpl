@@ -20,7 +20,7 @@
 
         {foreach from=$_scale item="_hour"}
 
-            {if is_array($_entrys[$_hour])}
+            {if isset($_hour) && is_array($_entrys[$_hour])}
                 <tr class="blue1">
                     <td style="border-left: 1px solid #ccc; cursor: pointer" {include file="scheduler/day_additem.tpl"}>
                    	    {$_hour|string_format:"%02d"}:00
@@ -41,13 +41,13 @@
 	                       {include file="scheduler/between_additem.tpl"}
 	                   {/if}
 
-	                   {if $_entrys[$_hour].start} 
+	                   {if $_entrys[$_hour].start}
 	                       {foreach from=$_entrys[$_hour].start item="i"}
 	                          <div {include file="scheduler/removeitem.tpl"}>
 	                              <img src="img/playlist.png" border="0" {include file="sub/alttext.tpl"}>
 	                              &nbsp;
 	                              <b>{$i.title}</b>
-	                              
+
                                   {if $i.endstoday}
                                       	{$i.start} - {$i.end}
     	                                <i>{$i.creator}</i>
