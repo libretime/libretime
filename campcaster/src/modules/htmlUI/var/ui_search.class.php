@@ -117,19 +117,19 @@ class uiSearch
     function newSearch(&$formdata)
     {
         #print_r($formdata);
-        $this->results                  = NULL;
-        $this->criteria['conditions']   = NULL;
-        $this->criteria['offset']       = NULL;
-        $this->criteria['form']         = NULL;
-        $this->criteria['operator']     = $formdata['operator'];
-        $this->criteria['filetype']     = $formdata['filetype'];
-        $this->criteria['limit']        = $formdata['limit'];
-        $this->criteria['counter']      = 0;
+        $this->results = NULL;
+        $this->criteria['conditions'] = NULL;
+        $this->criteria['offset'] = NULL;
+        $this->criteria['form'] = NULL;
+        $this->criteria['operator'] = $formdata['operator'];
+        $this->criteria['filetype'] = $formdata['filetype'];
+        $this->criteria['limit'] = $formdata['limit'];
+        $this->criteria['counter'] = 0;
 
         // $criteria['form'] is used for retransfer to form
         $this->criteria['form']['operator'] = $formdata['operator'];
         $this->criteria['form']['filetype'] = $formdata['filetype'];
-        $this->criteria['form']['limit']    = $formdata['limit'];
+        $this->criteria['form']['limit'] = $formdata['limit'];
 
         foreach ($formdata as $key=>$val) {
             if (is_array($val) && $val['active']) {
@@ -163,25 +163,25 @@ class uiSearch
 
     function simpleSearch($formdata)
     {
-        $this->results                  = NULL;
-        $this->criteria['conditions']   = NULL;
-        $this->criteria['offset']       = NULL;
-        $this->criteria['operator']         = UI_SIMPLESEARCH_OPERATOR;
-        $this->criteria['filetype']         = UI_SIMPLESEARCH_FILETYPE;
-        $this->criteria['limit']            = UI_SIMPLESEARCH_LIMIT;
-        $this->criteria['counter']          = UI_SIMPLESEARCH_ROWS;
+        $this->results = NULL;
+        $this->criteria['conditions'] = NULL;
+        $this->criteria['offset'] = NULL;
+        $this->criteria['operator'] = UI_SIMPLESEARCH_OPERATOR;
+        $this->criteria['filetype'] = UI_SIMPLESEARCH_FILETYPE;
+        $this->criteria['limit'] = UI_SIMPLESEARCH_LIMIT;
+        $this->criteria['counter'] = UI_SIMPLESEARCH_ROWS;
         $this->criteria['form']['operator'] = 'OR';    ## $criteria['form'] is used for retransfer to form ##
         $this->criteria['form']['filetype'] = UI_SIMPLESEARCH_FILETYPE;
-        $this->criteria['form']['limit']    = UI_SIMPLESEARCH_LIMIT;
+        $this->criteria['form']['limit'] = UI_SIMPLESEARCH_LIMIT;
 
         for ($n = 1; $n <= UI_SIMPLESEARCH_ROWS; $n++) {
-            $this->criteria['conditions'][$n] = array('cat'     => constant('UI_SIMPLESEARCH_CAT'.$n),
-                                                      'op'      => constant('UI_SIMPLESEARCH_OP'.$n),
-                                                      'val'     => stripslashes($formdata['criterium'])
+            $this->criteria['conditions'][$n] = array('cat' => constant('UI_SIMPLESEARCH_CAT'.$n),
+                                                      'op' => constant('UI_SIMPLESEARCH_OP'.$n),
+                                                      'val' => stripslashes($formdata['criterium'])
                                                );
-            $this->criteria['form']['row_'.$n]= array(0     => uiBase::formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
-                                                      1     => constant('UI_SIMPLESEARCH_OP'.$n),
-                                                      2     => stripslashes($formdata['criterium'])
+            $this->criteria['form']['row_'.$n]= array(0 => uiBase::formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
+                                                      1 => constant('UI_SIMPLESEARCH_OP'.$n),
+                                                      2 => stripslashes($formdata['criterium'])
                                                );
         }
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
@@ -189,96 +189,77 @@ class uiSearch
     }
 
 
+    /**
+     * Run the search query.  Use getResult() to get the results.
+     *
+     * @return boolean
+     */
     function searchDB()
     {
         if (count($this->criteria) === 0) {
             return FALSE;
         }
-
         $offset = (isset($this->criteria['offset'])) ? $this->criteria['offset'] : 0;
         $this->results = array('page' => $offset / $this->criteria['limit']);
-
-        //print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
-        if (PEAR::isError($results)) {
-            //print_r($results);
-            return FALSE;
-        }
-        foreach ($results['results'] as $rec) {
-            $tmpId = $this->Base->gb->_idFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
-        }
+        $this->results['items'] = $results["results"];
         $this->results['cnt'] = $results['cnt'];
-
-        /*
-        ## test
-        for ($n=0; $n<=$this->criteria['limit']; $n++) {
-            $this->results['items'][] = Array
-                (
-                    'id' => 24,
-                    'gunid' => '1cc472228d0cb2ac',
-                    'title' => 'Item '.$n,
-                    'creator' => 'Sebastian',
-                    'duration' => '&nbsp;&nbsp;&nbsp;10:00',
-                    'type' => 'webstream'
-                );
-        }
-        $results['cnt'] = 500;
-        $this->results['cnt'] = $results['cnt'];
-        ## end test
-        */
-
-        //print_r($this->results);
-        $this->pagination($results);
-
+        $this->pagination();
         return TRUE;
     }
 
 
-    function pagination($results)
+    function pagination()
     {
         if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
         $offset = isset($this->criteria['offset']) ? $this->criteria['offset'] : 0;
-        $currp = ($offset / $this->criteria['limit']) + 1;   // current page
-        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);  // maximum page
-
-        /*
-        for ($n = 1; $n <= $maxp; $n = $n+$width) {
-            $width = pow(10, floor(($n)/10));
-            $this->results['pagination'][$n] = $n;
-        }
-        */
-
+        $currentPage = ($offset / $this->criteria['limit']) + 1;
+        $maxPage = ceil($this->results['cnt'] / $this->criteria['limit']);
         $deltaLower = UI_SEARCHRESULTS_DELTA;
         $deltaUpper = UI_SEARCHRESULTS_DELTA;
-        $start      = $currp;
+        $maxNumPaginationButtons = $deltaLower + $deltaUpper + 1;
 
-        if ($start + $maxp > 0) {
-            $deltaLower += $start - $maxp;  // correct lower boarder if page is near end
+        $start = 1;
+		$end = $maxPage;
+
+		// If there are enough pages to warrant "next" and "previous"
+		// buttons...
+        if ($maxPage > $maxNumPaginationButtons) {
+        	// When currentPage goes past deltaLower
+        	if ($currentPage <= $deltaLower) {
+        		$end = min($deltaLower + $deltaUpper + 1, $maxPage);
+        	}
+	       	// When currentpage is near the end of the results.
+        	elseif ($currentPage >= ($maxPage - $deltaUpper)) {
+	            $start = max($maxPage - $deltaLower - $deltaUpper + 1, 1);
+	        }
+        	// somewhere in the middle
+	        else {
+	        	$start = max($currentPage - $deltaLower, 1);
+	        	$end = min($currentPage + $deltaUpper, $maxPage);
+	        }
         }
 
-        for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
-            if ($n <= 0) {
-                $deltaUpper++;  // correct upper boarder if page is near zero
-            } elseif ($n <= $maxp) {
-                $this->results['pagination'][$n] = $n;
-            }
+        for ($n = $start; $n <= $end; $n++) {
+	        $this->results['pagination'][$n] = $n;
         }
 
-        #array_pop($this->results['pagination']);
-        $this->results['pagination'][1] ? NULL : $this->results['pagination'][1] = '|<<';
-        $this->results['pagination'][$maxp] ? NULL : $this->results['pagination'][$maxp] = '>>|';
-        $this->results['next']  = ($results['cnt'] > $offset + $this->criteria['limit']) ? TRUE : FALSE;
-        $this->results['prev']  = ($offset > 0) ? TRUE : FALSE;
+        if (!isset($this->results['pagination'][1])) {
+        	$this->results['pagination'][1] = '|<<';
+        }
+        if (!isset($this->results['pagination'][$maxPage])) {
+        	$this->results['pagination'][$maxPage] = '>>|';
+        }
+        $this->results['next'] = ($this->results['cnt'] > $offset + $this->criteria['limit']) ? TRUE : FALSE;
+        $this->results['prev'] = ($offset > 0) ? TRUE : FALSE;
         ksort($this->results['pagination']);
-
         return TRUE;
     }
 
 
-    function reOrder($by)
+    function reorder($by)
     {
         $this->criteria['offset'] = NULL;
 
