@@ -685,16 +685,16 @@ class uiPlaylist
     } // fn isAvailable
 
 
-//    function isUsedBy($id)
-//    {
-//        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
-//            return FALSE;
-//        }
-//        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
-//             return $this->Base->gb->getSubjName($userid);
-//        }
-//        return FALSE;
-//    } // fn isUsedBy
+    function isUsedBy($id)
+    {
+        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
+            return FALSE;
+        }
+        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
+             return $this->Base->gb->getSubjName($userid);
+        }
+        return FALSE;
+    } // fn isUsedBy
 
 
     public function exportForm($id,$mask)
