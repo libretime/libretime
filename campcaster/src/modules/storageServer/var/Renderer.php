@@ -214,37 +214,30 @@ class Renderer
         $realOgg = $r['realFname'];
         $owner = $r['owner'];
         $gunid = $r['gunid'];
-        if (PEAR::isError($r)) {
-        	return $r;
+        $parid = $gb->_getHomeDirId($owner);
+        if (PEAR::isError($parid)) {
+        	return $parid;
         }
-        $parid = $r = $gb->_getHomeDirId($owner);
-        if (PEAR::isError($r)) return $r;
         $fileName = 'rendered_playlist';
-        $id = $r = $gb->_idFromGunid($gunid);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $id = $gb->idFromGunid($gunid);
+        if (PEAR::isError($id)) {
+        	return $id;
         }
         $mdata = '';
-        foreach (array(
-            'dc:title', 'dcterms:extent', 'dc:creator', 'dc:description'
-        ) as $item) {
-            $md = $r = $gb->bsGetMetadataValue($id, $item);
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            $val = ( isset($md[0]) ? ( isset($md[0]['value']) ? $md[0]['value'] : '') : '');
+        foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
+            $val = $gb->bsGetMetadataValue($id, $item);
             $mdata .= "  <$item>$val</$item>\n";
         }
         $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
         //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
-        $id = $r = $gb->bsPutFile($parid, $fileName, $realOgg, $mdata,
+        $id = $gb->bsPutFile($parid, $fileName, $realOgg, $mdata,
             NULL, 'audioclip', 'string');
-        if (PEAR::isError($r)) {
-        	return $r;
+        if (PEAR::isError($id)) {
+        	return $id;
         }
-        $ac = $r = StoredFile::recall($gb, $id);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $ac = StoredFile::recall($gb, $id);
+        if (PEAR::isError($ac)) {
+        	return $ac;
         }
         return array('gunid' => $ac->gunid);
     }
