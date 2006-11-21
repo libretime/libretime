@@ -1,5 +1,5 @@
 {assign var="_PL_activeId" value=$PL->getActiveId()}
-{assign var="SCRATCHPAD"   value=$SCRATCHPAD->get()}
+{assign var="SCRATCHPAD" value=$SCRATCHPAD->get()}
 
 <!-- start scratch pad -->
 <form name="SP">
@@ -12,9 +12,9 @@
             <!-- start table header -->
                 <tr class="blue_head">
                     <td style="width: 1px"><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
-                    <td style="width: *"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 1px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Duration##</td>
-                    <td style="width: 1px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Type##</td>
+                    <td style="width: *"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
+                    <td style="width: 1px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Duration##</td>
+                    <td style="width: 1px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Type##</td>
                 </tr>
             <!-- end table header -->
 
@@ -31,12 +31,13 @@
                             {else}
                                 <div style="cursor: pointer">
                             {/if}
-                                {$i.title|truncate:14}
+                                {$i.title|truncate:14:"...":true}
                                 </div>
                         {else}
-                            {$i.title|truncate:14}
-                        {/if}                                         {* on some reason object call doesn�t like usage of array *}
-                    </td>                                             {assign var="_duration" value=$i.duration}
+                            {$i.title|truncate:14:"...":true}
+                        {/if}  {* for some reason object call doesn't like usage of array *}
+                    </td>
+                    {assign var="_duration" value=$i.duration}
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
                         {if $PL->isAvailable($i.id) == false}
