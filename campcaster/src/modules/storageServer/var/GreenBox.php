@@ -1,5 +1,7 @@
 <?php
 require_once("BasicStor.php");
+require_once("LocStor.php");
+require_once('Prefs.php');
 
 /**
  * GreenBox class
@@ -129,7 +131,7 @@ class GreenBox extends BasicStor {
 //        if (($res = $this->_authorize('read', $id, $sessid)) !== TRUE) {
 //            return $res;
 //        }
-//        $gunid = $this->_gunidFromId($id);
+//        $gunid = $this->gunidFromId($id);
 //        $r = $this->bsAccess(NULL, '', $gunid, 'access');
 //        if (PEAR::isError($r)) {
 //            return $r;
@@ -393,16 +395,15 @@ class GreenBox extends BasicStor {
      *      <li>attrs hasharray of element's attributes indexed by
      *          qualified name (e.g. xml:lang)</li>
      *   </ul>
-     * @todo rename this function to "getMetadataValue"
      */
-    public function getMdataValue($id, $category, $sessid='',
+    public function getMetadataValue($id, $category, $sessid='',
         $lang=NULL, $deflang=NULL)
     {
         if (($res = $this->_authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsGetMetadataValue($id, $category, $lang, $deflang);
-    } // fn getMdataValue
+        return $this->bsGetMetadataValue($id, $category);
+    } // fn getMetadataValue
 
 
     /**
@@ -421,15 +422,14 @@ class GreenBox extends BasicStor {
      * @param int $mid
      * 		(optional on unique elements) Metadata record id
      * @return boolean
-     * @todo rename this function to "setMetadataValue"
      */
-    public function setMdataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
+    public function setMetadataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
     {
         if (($res = $this->_authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
         return $this->bsSetMetadataValue($id, $category, $value, $lang, $mid);
-    } // fn setMdataValue
+    } // fn setMetadataValue
 
 
     /**
@@ -487,7 +487,7 @@ class GreenBox extends BasicStor {
      */
     public function localSearch($criteria, $sessid='')
     {
-        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
         return $this->bsLocalSearch($criteria, $limit, $offset);
     } // fn localSearch
@@ -509,7 +509,7 @@ class GreenBox extends BasicStor {
      */
     public function browseCategory($category, $criteria, $sessid = '')
     {
-        $limit  = 0;
+        $limit = 0;
         $offset = 0;
         if (!is_null($criteria)) {
             $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
@@ -535,15 +535,14 @@ class GreenBox extends BasicStor {
      */
     public function createPlaylist($parid, $fname, $sessid='')
     {
-        $gunid  = StoredFile::_createGunid();
-        require_once"LocStor.php";
+        $gunid = StoredFile::_createGunid();
         $lc = new LocStor($this->dbc, $this->config);
         $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
         if (PEAR::isError($gunid2)) {
             return $gunid2;
         }
         // get local id:
-        $id = $this->_idFromGunid($gunid2);
+        $id = $this->idFromGunid($gunid2);
         if (PEAR::isError($id)) {
             return $id;
         }
@@ -590,7 +589,7 @@ class GreenBox extends BasicStor {
      */
     public function getPlaylistArray($id, $sessid)
     {
-        $gunid = $this->_gunidFromId($id);
+        $gunid = $this->gunidFromId($id);
         $pl = StoredFile::recall($this, $id);
         if (PEAR::isError($pl)) {
             return $pl;
@@ -612,8 +611,7 @@ class GreenBox extends BasicStor {
      */
     public function lockPlaylistForEdit($id, $sessid)
     {
-        $gunid = $this->_gunidFromId($id);
-        require_once("LocStor.php");
+        $gunid = $this->gunidFromId($id);
         $lc = new LocStor($this->dbc, $this->config);
         $res = $lc->editPlaylist($sessid, $gunid);
         if (PEAR::isError($res)) {
@@ -679,7 +677,7 @@ class GreenBox extends BasicStor {
         if (PEAR::isError($pl)) {
             return $pl;
         }
-        $acGunid = $this->_gunidFromId($acId);
+        $acGunid = $this->gunidFromId($acId);
         if ($pl->_cyclicRecursion($acGunid)){
             return PEAR::raiseError(
                 "GreenBox::addAudioClipToPlaylist: cyclic-recursion detected".
@@ -816,7 +814,6 @@ class GreenBox extends BasicStor {
      */
     public function revertEditedPlaylist($token, $sessid='')
     {
-        require_once("LocStor.php");
         $lc = new LocStor($this->dbc, $this->config);
         return $lc->revertEditedPlaylist($token, $sessid);
     } // fn revertEditedPlaylist
@@ -833,8 +830,7 @@ class GreenBox extends BasicStor {
      */
     public function deletePlaylist($id, $sessid)
     {
-        $gunid = $this->_gunidFromId($id);
-        require_once("LocStor.php");
+        $gunid = $this->gunidFromId($id);
         $lc = new LocStor($this->dbc, $this->config);
         return $lc->deletePlaylist($sessid, $gunid);
     } // fn deletePlaylist
@@ -876,18 +872,12 @@ class GreenBox extends BasicStor {
             return $res;
         }
         $res['title'] = NULL;
-        $id = $this->_idFromGunid($res['gunid']);
+        $id = $this->idFromGunid($res['gunid']);
         if (PEAR::isError($id)) {
             return $id;
         }
         if (!is_null($id)) {
-            $md = $this->bsGetMetadataValue($id, "dc:title", $lang, $deflang);
-            if (PEAR::isError($md)) {
-                return $md;
-            }
-            if (isset($md[0]['value'])) {
-                $res['title'] = $md[0]['value'];
-            }
+            $res['title'] = $this->bsGetMetadataValue($id, "dc:title");
         }
         return $res;
     } // fn displayPlaylistClipAtOffset
@@ -998,8 +988,7 @@ class GreenBox extends BasicStor {
      */
     public function existsPlaylist($id, $sessid)
     {
-        $gunid = $this->_gunidFromId($id);
-        require_once("LocStor.php");
+        $gunid = $this->gunidFromId($id);
         $lc = new LocStor($this->dbc, $this->config);
         return $lc->existsPlaylist($sessid, $gunid);
     } // fn existsPlaylist
@@ -1019,8 +1008,7 @@ class GreenBox extends BasicStor {
      */
     public function playlistIsAvailable($id, $sessid)
     {
-        $gunid = $this->_gunidFromId($id);
-        require_once("LocStor.php");
+        $gunid = $this->gunidFromId($id);
         $lc = new LocStor($this->dbc, $this->config);
         return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
     } // fn playlistIsAvailable
@@ -1425,7 +1413,6 @@ class GreenBox extends BasicStor {
      */
     public function loadPref($sessid, $key)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->loadPref($sessid, $key);
         return $res;
@@ -1445,7 +1432,6 @@ class GreenBox extends BasicStor {
      */
     public function savePref($sessid, $key, $value)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->savePref($sessid, $key, $value);
         return $res;
@@ -1463,7 +1449,6 @@ class GreenBox extends BasicStor {
      */
     public function delPref($sessid, $key)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->delPref($sessid, $key);
         return $res;
@@ -1484,7 +1469,6 @@ class GreenBox extends BasicStor {
      */
     public function loadGroupPref($sessid, $group, $key)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->loadGroupPref($sessid, $group, $key);
         return $res;
@@ -1506,7 +1490,6 @@ class GreenBox extends BasicStor {
      */
     public function saveGroupPref($sessid, $group, $key, $value)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->saveGroupPref($sessid, $group, $key, $value);
         return $res;
@@ -1526,7 +1509,6 @@ class GreenBox extends BasicStor {
      */
     public function delGroupPref($sessid, $group, $key)
     {
-        require_once('Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->delGroupPref($sessid, $group, $key);
         return $res;
@@ -1753,7 +1735,7 @@ class GreenBox extends BasicStor {
      */
     public function getFileType($id)
     {
-        // $id = $this->_idFromGunid($gunid);
+        // $id = $this->idFromGunid($gunid);
         $type = $this->getObjType($id);
         return $type;
     } // fn getFileType
@@ -1772,7 +1754,7 @@ class GreenBox extends BasicStor {
      */
     public function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $id = $this->_idFromGunid($gunid);
+        $id = $this->idFromGunid($gunid);
         $ex = $this->bsExistsFile($id, $ftype);
         if (($res = $this->_authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
