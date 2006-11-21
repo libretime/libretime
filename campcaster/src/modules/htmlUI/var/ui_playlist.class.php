@@ -32,13 +32,13 @@ class uiPlaylist
     } // constructor
 
 
-    function setReload()
+    public function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
     } // fn setReload
 
 
-    function setRedirect($target=FALSE)
+    public function setRedirect($target=FALSE)
     {
         if ($target !== FALSE) {
             $this->Base->redirUrl = UI_BROWSER."?popup[]=$target&popup[]=_close";
@@ -48,19 +48,19 @@ class uiPlaylist
     } // fn setRedirect
 
 
-    function setReturn()
+    public function setReturn()
     {
         $this->Base->redirUrl = $this->returnUrl;
     } // fn setReturn
 
 
-    function getPLArray($id)
+    private function getPLArray($id)
     {
         return $this->Base->gb->getPlaylistArray($id, $this->Base->sessid);
     } // fn getPLArray
 
 
-    function getActiveArr()
+    public function getActiveArr()
     {
         if (!$this->activeId) {
             return FALSE;
@@ -70,7 +70,7 @@ class uiPlaylist
     } // fn getActiveArr
 
 
-    function getActiveId()
+    public function getActiveId()
     {
         if (!$this->activeId) {
             return FALSE;
@@ -79,12 +79,12 @@ class uiPlaylist
     } // fn getActiveId
 
 
-    function activate($plid, $msg=TRUE)
+    public function activate($plid, $msg=TRUE)
     {
-        # test if PL available
-        # look PL
-        # store access token to ls_pref abd session
-        # load PL into session
+        // test if PL available
+        // look PL
+        // store access token to ls_pref abd session
+        // load PL into session
         if ($this->token) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('You already have an open playlist. Close it first.');
@@ -116,12 +116,12 @@ class uiPlaylist
     }
 
 
-    function release($msg=TRUE)
+    public function release($msg=TRUE)
     {
-        # get token from ls_pref
-        # release PL
-        # delete PL from session
-        # remove token from ls_pref
+        // get token from ls_pref
+        // release PL
+        // delete PL from session
+        // remove token from ls_pref
         if (!$this->token) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('There is no playlist available to unlock.');
@@ -139,7 +139,7 @@ class uiPlaylist
             return FALSE;
         }
         if ($msg && UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->getMetadataValue($this->Base->gb->idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         }
         $this->activeId = NULL;
         $this->token    = NULL;
@@ -150,7 +150,7 @@ class uiPlaylist
     } // fn release
 
 
-    function save()
+    public function save()
     {
         $tmpid = $this->activeId;
         $this->release(FALSE);
@@ -164,7 +164,7 @@ class uiPlaylist
     } // fn save
 
 
-    function revert()
+    public function revert()
     {
         if (!$this->token) {
             if (UI_WARNING) {
@@ -183,13 +183,13 @@ class uiPlaylist
             return FALSE;
         }
         if (UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->getMetadataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->getMetadataValue($this->Base->gb->idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         }
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
 
-        if ($this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE) !== TRUE) {
+        if ($this->activate($this->Base->gb->idFromGunid($plgunid), FALSE) !== TRUE) {
             return FALSE;
         }
 
@@ -199,7 +199,7 @@ class uiPlaylist
     } // fn revert
 
 
-    function reportLookedPL($setMsg=FALSE)
+    public function reportLookedPL($setMsg=FALSE)
     {
         if (is_string($this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
             if ($setMsg == TRUE) {
@@ -211,7 +211,7 @@ class uiPlaylist
     } // fn reportLookedPL
 
 
-    function loadLookedFromPref()
+    public function loadLookedFromPref()
     {
         $this->changed = TRUE;
 
@@ -234,7 +234,7 @@ class uiPlaylist
     } // fn loadLookedFromPref
 
 
-    function addItem($elemIds, $duration=null)
+    public function addItem($elemIds, $duration=null)
     {
         $this->changed = TRUE;
         $fadeIn = null;
@@ -267,7 +267,7 @@ class uiPlaylist
     } // fn addItem
 
 
-    function removeItem($elemIds)
+    public function removeItem($elemIds)
     {
         $this->changed = TRUE;
 
@@ -290,11 +290,11 @@ class uiPlaylist
     } // fn removeItem
 
 
-    function create($ids)
+    public function create($ids)
     {
-        # create PL
-        # activate
-        # add clip if $id is set
+        // create PL
+        // activate
+        // add clip if $id is set
         $this->changed = TRUE;
 
         if (is_array($this->activeId)) {
@@ -352,7 +352,7 @@ class uiPlaylist
             if ($sub['elementname']===UI_FILETYPE_AUDIOCLIP || $sub['elementname']===UI_FILETYPE_PLAYLIST) {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
-                $this->flat[$parent] = $this->Base->getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
+                $this->flat[$parent] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
                 $this->flat[$parent]['playlength'] = $sub['attrs']['playlength'];
             }
@@ -366,7 +366,7 @@ class uiPlaylist
     } // fn _plwalk
 
 
-    function changeTransition($id, $type, $duration)
+    public function changeTransition($id, $type, $duration)
     {
         $this->changed = TRUE;
         $pause = $pause;
@@ -438,7 +438,7 @@ class uiPlaylist
     } // fn changeTransition
 
 
-    function moveItem($id, $pos)
+    public function moveItem($id, $pos)
     {
         $this->changed = TRUE;
 
@@ -454,7 +454,7 @@ class uiPlaylist
     } // fn moveItem
 
 
-    function reOrder($items)
+    public function reorder($items)
     {
         $this->changed  = TRUE;
 
@@ -476,7 +476,7 @@ class uiPlaylist
     } // fn reorder
 
 
-    function getCurrElement($id)
+    private function getCurrElement($id)
     {
         $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
@@ -488,7 +488,7 @@ class uiPlaylist
     } // fn getCurrElement
 
 
-    function getPrevElement($id)
+    private function getPrevElement($id)
     {
         $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
@@ -500,7 +500,7 @@ class uiPlaylist
     } // fn getPrevElement
 
 
-    function getNextElement($id)
+    private function getNextElement($id)
     {
         $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
@@ -512,7 +512,7 @@ class uiPlaylist
     } // fn getNextElement
 
 
-    function changeTransitionForm($id, $type, $mask)
+    public function changeTransitionForm($id, $type, $mask)
     {
         $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $s = $this->getCurrElement($id);
@@ -544,7 +544,7 @@ class uiPlaylist
     } // fn changeTransitionForm
 
 
-    function changeAllTransitionsForm($mask)
+    public function changeAllTransitionsForm($mask)
     {
         $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $mask['transition']);
@@ -555,19 +555,19 @@ class uiPlaylist
     } // fn changeAllTransitionsForm
 
 
-    function setItemPlaylengthForm($id, $elemId, $mask)
+    public function setItemPlaylengthForm($id, $elemId, $mask)
     {
         if (isset($elemId)) {
-            $mask['act']['constant']        = 'PL.setItemPlaylength';
-            $mask['elemId']['constant']     = $elemId;
-            $element                        = $this->getCurrElement($elemId);
-            $mask['playlength']['default']  = substr($element['playlength'], 0, 8);
-            $mask['duration']['constant']   = substr($element['duration'], 0, 8);
+            $mask['act']['constant'] = 'PL.setItemPlaylength';
+            $mask['elemId']['constant'] = $elemId;
+            $element = $this->getCurrElement($elemId);
+            $mask['playlength']['default'] = substr($element['playlength'], 0, 8);
+            $mask['duration']['constant'] = substr($element['duration'], 0, 8);
         } else {
-            $mask['act']['constant']        = 'PL.addItem';
-            $mask['id']['constant']         = $id;
-            $mask['playlength']['default']  = substr($this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
-            $mask['duration']['constant']   = $mask['playlength']['default'];
+            $mask['act']['constant'] = 'PL.addItem';
+            $mask['id']['constant'] = $id;
+            $mask['playlength']['default'] = substr($this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
+            $mask['duration']['constant'] = $mask['playlength']['default'];
         }
 
         $form = new HTML_QuickForm('PL_setItemPlaylengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -578,10 +578,10 @@ class uiPlaylist
     } // fn setItemPlaylengthForm
 
 
-    function metaDataForm($langid)
+    public function metaDataForm($langid)
     {
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
-        $id     = $this->activeId;
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
+        $id = $this->activeId;
         $langid = $langid ? $langid : UI_DEFAULT_LANGID;
 
         foreach ($mask['playlist'] as $k=>$v) {
@@ -616,7 +616,7 @@ class uiPlaylist
     } // fn metadataForm
 
 
-    function editMetaData($formdata)
+    public function editMetaData($formdata)
     {
         $this->changed = TRUE;
 
@@ -655,7 +655,7 @@ class uiPlaylist
     } // fn editMetadata
 
 
-    function deleteActive()
+    public function deleteActive()
     {
         $id = $this->activeId;
         $this->release(FALSE);
@@ -667,38 +667,34 @@ class uiPlaylist
     } // fn deleteActive
 
 
-    function isAvailable($id)
+    public function isAvailable($id)
     {
         if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
             return TRUE;
         }
-
         if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE) {
             return TRUE;
         }
-
         return FALSE;
     } // fn isAvailable
 
 
-    function isUsedBy($id)
+//    function isUsedBy($id)
+//    {
+//        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
+//            return FALSE;
+//        }
+//        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
+//             return $this->Base->gb->getSubjName($userid);
+//        }
+//        return FALSE;
+//    } // fn isUsedBy
+
+
+    public function exportForm($id,$mask)
     {
-        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
-            return FALSE;
-        }
-
-        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
-             return $this->Base->gb->getSubjName($userid);
-        }
-
-        return FALSE;
-    } // fn isUsedBy
-
-
-    function exportForm($id,$mask)
-    {
-        $mask['act']['constant']        = 'PL.export';
-        $mask['id']['constant']         = $id;
+        $mask['act']['constant'] = 'PL.export';
+        $mask['id']['constant'] = $id;
         $form = new HTML_QuickForm('PL_exportForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $mask);
         $renderer = new HTML_QuickForm_Renderer_Array(true, true);
@@ -707,7 +703,7 @@ class uiPlaylist
     } // fn exportForm
 
 
-    function importForm($id, $mask)
+    public function importForm($id, $mask)
     {
         $form = new HTML_QuickForm('PL_importForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         //print_r($mask);
