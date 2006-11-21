@@ -51,11 +51,7 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars)
             exit($errno);
     }
 }
-if (PHP5) {
-    $old_error_handler = set_error_handler("errHndl", E_ALL);
-} else {
-    $old_error_handler = set_error_handler("errHndl");
-}
+$old_error_handler = set_error_handler("errHndl", E_ALL);
 
 /* ============================================================= runable code */
 $r = $dbc = DB::connect($config['dsn'], TRUE);
