@@ -231,7 +231,7 @@ class Alib extends Subjects {
      * Check if specified subject have permission to specified action
      * on specified object
      *
-     * Look for sequence of correnponding permissions and order it by
+     * Look for sequence of corresponding permissions and order it by
      * relevence, then test the most relevant for result.
      * High relevence have direct permission (directly for specified subject
      * and object. Relevance order is done by level distance in the object
