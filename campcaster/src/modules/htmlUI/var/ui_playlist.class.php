@@ -333,6 +333,7 @@ class uiPlaylist
 
     public function getFlat($id)
     {
+    	$this->flat = array();
         $this->_plwalk($this->getPLArray($id));
 
         if (count($this->flat) > 0) {
@@ -350,7 +351,8 @@ class uiPlaylist
 
     private function _plwalk($arr, $parent=0, $attrs=0)
     {
-    	$this->flat = array();
+    	// Note: the array $this->flat needs to be initialized before
+    	// this function is called.
         foreach ($arr['children'] as $node => $sub) {
             if ($sub['elementname']===UI_PL_ELEM_PLAYLIST) {
                 $this->_plwalk($sub, $node, $sub['attrs']);
