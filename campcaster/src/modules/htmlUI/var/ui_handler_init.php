@@ -11,6 +11,6 @@ $uiHandler = new uiHandler($config);
 $uiHandler->init();
 $uiBase =& $uiHandler;
 
-include("../templates/loader/index.tpl");
+//include("../templates/loader/index.tpl");
 ob_start();
 ?>
