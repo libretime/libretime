@@ -50,13 +50,25 @@ class StoredFile {
 	public $accessTable;
 
 	public $gunid;
+
+	/**
+	 * @var string
+	 */
 	private $resDir;
+
+	/**
+	 * @var string
+	 */
 	private $accessDir;
 
 	/**
 	 * @var RawMediaData
 	 */
 	public $rmd;
+
+	/**
+	 * @var MetaData
+	 */
 	public $md;
 
     /* ========================================================== constructor */
@@ -193,7 +205,7 @@ class StoredFile {
 
     /**
      * Create instance of StoreFile object and recall existing file.<br>
-     * Should be supplied oid XOR gunid - not both ;)
+     * Should be supplied with oid OR gunid - not both.
      *
      * @param GreenBox $gb
      * @param int $oid
@@ -735,27 +747,28 @@ class StoredFile {
 
     /**
      * Get local id from global id.
-     * Static or dynamic call is possible.
+     * Static or dynamic call is possible, argument required for
+     * static call.
      *
      * @param string $gunid
      * 		optional (for static call), global unique id of file
      */
-    function _idFromGunid($gunid=NULL)
-    {
-        if (is_null($gunid)) {
-            $gunid = $this->$gunid;
-        }
-        $id = $this->dbc->getOne("
-            SELECT id FROM {$this->filesTable}
-            WHERE gunid=x'$gunid'::bigint
-        ");
-        if (is_null($id)) {
-            return PEAR::raiseError(
-            "StoredFile::_idFromGunid: no such global unique id ($gunid)"
-            );
-        }
-        return $id;
-    }
+//    function _idFromGunid($gunid=NULL)
+//    {
+//        if (is_null($gunid)) {
+//            $gunid = $this->$gunid;
+//        }
+//        $id = $this->dbc->getOne("
+//            SELECT id FROM {$this->filesTable}
+//            WHERE gunid=x'$gunid'::bigint
+//        ");
+//        if (is_null($id)) {
+//            return PEAR::raiseError(
+//            "StoredFile::_idFromGunid: no such global unique id ($gunid)"
+//            );
+//        }
+//        return $id;
+//    }
 
 
     /**
