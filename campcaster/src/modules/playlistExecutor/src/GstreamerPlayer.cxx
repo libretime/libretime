@@ -392,12 +392,13 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // Due to bugs in the minimalaudiosmil element, it does not currently work with decodebin.
     // Therefore we instantiate it manually if the file has the .smil extension. 
     if (isSmil) {
-        debug() << "SMIL file detected." << endl;
         if (isPreloaded) {
+            debug() << "Using preloaded SMIL element instance." << endl;
             m_decoder = m_preloadDecoder;
             gst_element_link(m_decoder, m_audioconvert);
         }
         else {
+            debug() << "SMIL file detected." << endl;
             m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
             gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
         }
