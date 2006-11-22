@@ -1164,6 +1164,32 @@ GLiveSupport :: removeFromSchedule(Ptr<const UniqueId>::Ref   scheduleEntryId)
 
 
 /*------------------------------------------------------------------------------
+ *  Preload the item in the output audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: preload(Ptr<const Playable>::Ref    playable)
+                                                    throw ()
+{
+    Ptr<const std::string>::Ref     uri = playable->getUri();
+    if (uri) {
+        try {
+            outputPlayer->preload(*uri);
+            
+        } catch (std::invalid_argument) {
+            std::cerr << "gLiveSupport: invalid argument in preload("
+                      << *uri 
+                      << ")" << std::endl;
+        } catch (std::runtime_error) {
+            std::cerr << "gLiveSupport: runtime error in preload("
+                      << *uri 
+                      << ")" << std::endl;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Play a Playable object using the output audio player.
  *----------------------------------------------------------------------------*/
 void

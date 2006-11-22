@@ -871,6 +871,16 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
+         *  Preload the item in the output audio player.
+         *  This is to shorten the time a playlist takes to start.
+         *
+         *  @param  playable    the Playable object to be preloaded.
+         */
+        void
+        preload(Ptr<const Playable>::Ref    playable)
+                                                throw ();
+
+        /**
          *  Play a Playable object using the output audio player.
          *
          *  @param playable the Playable object to play.

@@ -197,6 +197,10 @@ void
 LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
     addItem(treeModel->append(), playable);
+    
+    if (treeModel->children().size() == 1) {
+        preloadNextItem();
+    }
 }
 
 
@@ -265,6 +269,22 @@ LiveModeWindow :: popTop(void)                                      throw ()
     gLiveSupport->runMainLoop();
 
     return playable;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Preload the item at the top of the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: preloadNextItem(void)                             throw ()
+{
+    Ptr<Playable>::Ref          playable;
+    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
+    
+    if (iter) {
+        playable = (*iter)[modelColumns.playableColumn];
+        gLiveSupport->preload(playable);
+    }
 }
 
 

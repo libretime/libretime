@@ -342,6 +342,13 @@ class LiveModeWindow : public GuiWindow
         popTop(void)                                            throw ();
 
         /**
+         *  Preload the item at the top of the window.
+         *  This is to shorten the time a playlist takes to start.
+         */
+        void
+        preloadNextItem()                                       throw ();
+
+        /**
          *  Update the cue player display to show a stopped state.
          */
         void

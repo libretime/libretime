@@ -466,11 +466,11 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
                                                 liveModeButton));
     }
     
+    liveModeWindow->present();
+    
     if (playable) {
         liveModeWindow->addItem(playable);
     }
-    
-    liveModeWindow->present();
 }
 
 
