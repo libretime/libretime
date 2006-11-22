@@ -374,13 +374,14 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     }
 
     const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
+    const bool isPreloaded = (m_preloadUrl == fileUrl);
 
-    if ( m_preloadUrl != fileUrl ) {
+    if (isPreloaded)
+        m_filesrc = m_preloadFilesrc;
+    else {
         m_filesrc    = gst_element_factory_make("filesrc", "file-source");
         gst_element_set(m_filesrc, "location", filePath.c_str(), NULL);
     }
-    else
-        m_filesrc = m_preloadFilesrc;
 
     // converts between different audio formats (e.g. bitrate) 
     m_audioconvert    = gst_element_factory_make("audioconvert", NULL);
@@ -392,13 +393,13 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // Therefore we instantiate it manually if the file has the .smil extension. 
     if (isSmil) {
         debug() << "SMIL file detected." << endl;
-        if (m_preloadUrl != fileUrl) {
-            m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
-            gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
-        }
-        else {
+        if (isPreloaded) {
             m_decoder = m_preloadDecoder;
             gst_element_link(m_decoder, m_audioconvert);
+        }
+        else {
+            m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
+            gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
         }
         if (gst_element_get_parent(m_audiosink) == NULL)
             gst_bin_add(GST_BIN(m_pipeline), m_audiosink);
