@@ -327,6 +327,7 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
 
     gint64 position = 0LL;
     while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
         GstFormat   format = GST_FORMAT_DEFAULT;
         gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
     }
