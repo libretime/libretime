@@ -131,6 +131,10 @@ class AudioPlayerInterface
         detachListener(AudioPlayerEventListener*    eventListener)
                                             throw (std::invalid_argument)  = 0;
 
+        virtual void
+        preload(const std::string  fileUrl)     throw (std::invalid_argument,
+                                                       std::runtime_error)
+                                                                           = 0;
         /**
          *  Specify which audio resource to play.
          *  The file may be a playlist, referencing other files, which
