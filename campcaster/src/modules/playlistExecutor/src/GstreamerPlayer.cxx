@@ -359,7 +359,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     debug() << "Opening URL: " << fileUrl << endl;
 
-    preload(fileUrl);
+    //preload(fileUrl);
 
     std::string filePath;
 
