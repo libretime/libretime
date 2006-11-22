@@ -151,6 +151,16 @@ class ZebraTreeView : public Gtk::TreeView
         }
 
         /**
+         *  Emit the "tree model has changed" signal.
+         */
+        void
+        emitSignalTreeModelChanged(void)
+                                                                throw ()
+        {
+            signalTreeModelChanged().emit();
+        }
+
+        /**
          *  Renumber the rows after they have changed.
          *
          *  This is called from the onRowInserted(), onRowDeleted() and
@@ -180,6 +190,11 @@ class ZebraTreeView : public Gtk::TreeView
                      const Glib::ustring &, 
                      int, 
                      const Glib::ustring &>     signalCellEditedObject;
+
+        /**
+         *  A signal object to notify people that the tree model has changed.
+         */
+        sigc::signal<void>                      signalTreeModelChangedObject;
 
         /**
          *  Event handler for the row_inserted signal.
@@ -395,6 +410,19 @@ class ZebraTreeView : public Gtk::TreeView
         signalCellEdited(void)                                  throw ()
         {
             return signalCellEditedObject;
+        }
+
+        /**
+         *  The signal raised when the rows in the tree model have changed.
+         *  This signal is emitted whenever the tree model emits a
+         *  row_inserted, row_deleted or rows_reordered signal.
+         *
+         *  @return the signal object (a protected member of this class)
+         */
+        sigc::signal<void>
+        signalTreeModelChanged(void)                            throw ()
+        {
+            return signalTreeModelChangedObject;
         }
 
         /**

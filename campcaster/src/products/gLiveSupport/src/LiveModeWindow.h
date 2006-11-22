@@ -82,6 +82,11 @@ class LiveModeWindow : public GuiWindow
 {
     private:
         /**
+         *  The Playable item at the top of the window.
+         */
+        Ptr<Playable>::Ref                  savedTopPlayable;
+
+        /**
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;
@@ -281,6 +286,12 @@ class LiveModeWindow : public GuiWindow
         onRemoveItemButtonClicked(void)                         throw ();
 
         /**
+         *  Signal handler for a change in the tree model.
+         */
+        virtual void
+        onTreeModelChanged(void)                                throw ();
+
+        /**
          *  Event handler called when the the window gets hidden.
          *
          *  This overrides GuiWindow::on_hide(), and closes the Export Playlist
@@ -340,13 +351,6 @@ class LiveModeWindow : public GuiWindow
          */
         Ptr<Playable>::Ref
         popTop(void)                                            throw ();
-
-        /**
-         *  Preload the item at the top of the window.
-         *  This is to shorten the time a playlist takes to start.
-         */
-        void
-        preloadNextItem()                                       throw ();
 
         /**
          *  Update the cue player display to show a stopped state.

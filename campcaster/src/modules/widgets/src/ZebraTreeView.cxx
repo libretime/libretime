@@ -501,6 +501,7 @@ ZebraTreeView :: onRowInserted(const Gtk::TreeModel::Path &      path,
 {
     renumberRows();
     columns_autosize();
+    emitSignalTreeModelChanged();
 }
 
 
@@ -513,6 +514,7 @@ ZebraTreeView :: onRowDeleted(const Gtk::TreeModel::Path &      path)
 {
     renumberRows();
     columns_autosize();
+    emitSignalTreeModelChanged();
 }
 
 
@@ -526,6 +528,7 @@ ZebraTreeView :: onRowsReordered(const Gtk::TreeModel::Path &      path,
                                                                     throw ()
 {
     renumberRows();
+    emitSignalTreeModelChanged();
 }
 
 

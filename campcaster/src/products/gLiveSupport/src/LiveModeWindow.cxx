@@ -109,9 +109,11 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onEntryClicked));
+                                        &LiveModeWindow::onEntryClicked));
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onDoubleClick));
+                                        &LiveModeWindow::onDoubleClick));
+    treeView->signalTreeModelChanged().connect(sigc::mem_fun(*this,
+                                        &LiveModeWindow::onTreeModelChanged));
     
     // register the signal handler for keyboard key presses
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
@@ -197,10 +199,7 @@ void
 LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
     addItem(treeModel->append(), playable);
-    
-    if (treeModel->children().size() == 1) {
-        preloadNextItem();
-    }
+    onTreeModelChanged();
 }
 
 
@@ -269,22 +268,6 @@ LiveModeWindow :: popTop(void)                                      throw ()
     gLiveSupport->runMainLoop();
 
     return playable;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Preload the item at the top of the window.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: preloadNextItem(void)                             throw ()
-{
-    Ptr<Playable>::Ref          playable;
-    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
-    
-    if (iter) {
-        playable = (*iter)[modelColumns.playableColumn];
-        gLiveSupport->preload(playable);
-    }
 }
 
 
@@ -666,6 +649,28 @@ void
 LiveModeWindow :: onRemoveItemButtonClicked(void)                   throw ()
 {
     treeView->onRemoveMenuOption();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for a change in the tree model.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onTreeModelChanged(void)                          throw ()
+{
+    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
+    
+    if (iter) {
+        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+        if (playable) {
+            if (!savedTopPlayable || savedTopPlayable &&
+                    *savedTopPlayable->getId() != *playable->getId()) {
+                gLiveSupport->preload(playable);
+            }
+            savedTopPlayable = playable;
+        }
+        
+    }
 }
 
 
