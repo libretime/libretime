@@ -121,10 +121,10 @@ class LocStor extends BasicStor {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $arr = $r = $this->bsClosePut($token);
-        if (PEAR::isError($r)) {
+        $arr = $this->bsClosePut($token);
+        if (PEAR::isError($arr)) {
             $ac->delete();
-            return $r;
+            return $arr;
         }
         $fname = $arr['fname'];
         //$owner = $arr['owner'];
@@ -427,12 +427,9 @@ class LocStor extends BasicStor {
      */
     function localSearch($criteria, $sessid='')
     {
-        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        $res = $r = $this->bsLocalSearch($criteria, $limit, $offset);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+        $res = $this->bsLocalSearch($criteria, $limit, $offset);
         return $res;
     }
 
@@ -454,7 +451,7 @@ class LocStor extends BasicStor {
      */
     function browseCategory($category, $criteria=NULL, $sessid='')
     {
-        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
         $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
         return $res;
@@ -730,7 +727,7 @@ class LocStor extends BasicStor {
             return $ac;
         }
         $id = $ac->getId();
-        $mdata = $ac->getMetaData();
+        $mdata = $ac->getMetadata();
         if (PEAR::isError($mdata)) {
             return $mdata;
         }
@@ -878,9 +875,9 @@ class LocStor extends BasicStor {
      */
     function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        $res = $r =$this->bsExportPlaylistOpen($plids, $type, !$standalone);
-        if ($this->dbc->isError($r)) {
-            return $r;
+        $res = $this->bsExportPlaylistOpen($plids, $type, !$standalone);
+        if ($this->dbc->isError($res)) {
+            return $res;
         }
         $url = $this->getUrlPart()."access/".basename($res['fname']);
         $chsum = md5_file($res['fname']);
@@ -919,9 +916,9 @@ class LocStor extends BasicStor {
      */
     function importPlaylistOpen($sessid, $chsum)
     {
-        $userid = $r =$this->getSessUserId($sessid);
-        if ($this->dbc->isError($r)) {
-            return $r;
+        $userid = $this->getSessUserId($sessid);
+        if ($this->dbc->isError($userid)) {
+            return $userid;
         }
         $r = $this->bsOpenPut($chsum, NULL, $userid);
         if (PEAR::isError($r)) {
@@ -941,25 +938,25 @@ class LocStor extends BasicStor {
      */
     function importPlaylistClose($token)
     {
-        $arr = $r = $this->bsClosePut($token);
-        if (PEAR::isError($r)) {
-            return $r;
+        $arr = $this->bsClosePut($token);
+        if (PEAR::isError($arr)) {
+            return $arr;
         }
         $fname = $arr['fname'];
         $owner = $arr['owner'];
-        $parid = $r= $this->_getHomeDirId($owner);
-        if (PEAR::isError($r)) {
+        $parid = $this->_getHomeDirId($owner);
+        if (PEAR::isError($parid)) {
             if (file_exists($fname)) {
                 @unlink($fname);
             }
-            return $r;
+            return $parid;
         }
-        $res = $r = $this->bsImportPlaylist($parid, $fname);
+        $res = $this->bsImportPlaylist($parid, $fname);
         if (file_exists($fname)) {
             @unlink($fname);
         }
-        if (PEAR::isError($r)) {
-            return $r;
+        if (PEAR::isError($res)) {
+            return $res;
         }
         return $this->gunidFromId($res);
     }
