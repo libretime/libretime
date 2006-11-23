@@ -16,13 +16,11 @@ define('GBERR_GUNID', 53);
 define('GBERR_BGERR', 54);
 define('GBERR_NOTIMPL', 69);
 
-require_once(dirname(__FILE__)."/../../alib/var/alib.php");
+require_once(dirname(__FILE__)."/../../alib/var/Alib.php");
 require_once("StoredFile.php");
 require_once("Transport.php");
 
 /**
- * BasicStor class
- *
  * Core of Campcaster file storage module
  *
  * @author Tomas Hlava <th@red2head.com>
@@ -870,7 +868,7 @@ class BasicStor extends Alib {
         if ($this->dbc->isError($ac)) {
             return $ac;
         }
-        return $ac->getMetaData();
+        return $ac->getMetadata();
     }
 
 
@@ -893,10 +891,10 @@ class BasicStor extends Alib {
         if (is_null($gunid)) {
             $ac = StoredFile::recall($this, $id);
         } else {
-            $ac = $r = StoredFile::recallByGunid($this, $gunid);
+            $ac = StoredFile::recallByGunid($this, $gunid);
         }
-        if ($this->dbc->isError($r)) {
-            return $r;
+        if ($this->dbc->isError($ac)) {
+            return $ac;
         }
         $r = $ac->md->getMetadataValue('dc:title', $lang, $deflang);
         if ($this->dbc->isError($r)) {
@@ -937,27 +935,31 @@ class BasicStor extends Alib {
      *
      * @param int $id
      * 		Virtual file's local id
-     * @param string|array $category
-     * 		metadata element name, or array of metadata element names
+     * @param string|array|null $category
+     * 		metadata element name, or array of metadata element names,
+     * 		if null is passed, all metadata values for the given ID will
+     * 		be fetched.
      * @return string|array
      * 		If a string is passed in for $category, a string is returned,
      * 		if an array is passed, an array is returned.
      * @see Metadata::getMetadataValue
      */
-    public function bsGetMetadataValue($id, $category)
+    public function bsGetMetadataValue($id, $category = null)
     {
         $ac = StoredFile::recall($this, $id);
         if ($this->dbc->isError($ac)) {
             return $ac;
         }
-        if (!is_array($category)) {
-        	return $ac->md->getMetadataValue($category);
-        } else {
+        if (is_null($category)) {
+        	return $ac->md->getAllMetadata();
+        } elseif (is_array($category)) {
         	$values = array();
 			foreach ($category as $tmpCat) {
 				$values[$tmpCat] = $ac->md->getMetadataValue($tmpCat);
 			}
 			return $values;
+        } else {
+        	return $ac->md->getMetadataValue($category);
         }
     }
 
@@ -1016,8 +1018,8 @@ class BasicStor extends Alib {
     {
         if (!preg_match("|^\d{2}:\d{2}:\d{2}.\d{6}$|", $v)) {
             require_once("Playlist.php");
-            $s = Playlist::_plTimeToSecs($v);
-            $t = Playlist::_secsToPlTime($s);
+            $s = Playlist::playlistTimeToSeconds($v);
+            $t = Playlist::secondsToPlaylistTime($s);
             return $t;
         }
         return $v;
@@ -1223,10 +1225,10 @@ class BasicStor extends Alib {
 	                    $ac = $r = LsPlaylist::recallByGunid($this, $it['gunid']);
 	                    switch ($type) {
 	                        case"smil":
-	                            $string = $r = $ac->output2Smil();
+	                            $string = $r = $ac->outputToSmil();
 	                            break;
 	                        case"m3u":
-	                            $string = $r = $ac->output2m3u();
+	                            $string = $r = $ac->outputToM3u();
 	                            break;
 	                        default:
 	                            $string = $r = $ac->md->genXmlDoc();
@@ -1490,9 +1492,9 @@ class BasicStor extends Alib {
                 unset($listArr[$i]);
                 break;
             }
-            $listArr[$i]['type'] = $r = $this->_getType($gunid);
-            if ($this->dbc->isError($r)) {
-                return $r;
+            $listArr[$i]['type'] = $this->_getType($gunid);
+            if ($this->dbc->isError($listArr[$i]['type'])) {
+                return $listArr[$i]['type'];
             }
             $listArr[$i]['gunid'] = $gunid;
             if (StoredFIle::_getState($gunid) == 'incomplete') {
