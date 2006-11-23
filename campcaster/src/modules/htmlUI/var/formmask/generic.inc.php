@@ -65,7 +65,7 @@ $ui_fmask = array(
         array(
             'element'   => 'schedulerStartupScript',
             'isPref'    => TRUE,
-            'type'      => 'hidden',
+            'type'      => 'text',
             'label'     => 'Scheduler startup script',
             'required'  => false,
         ),
