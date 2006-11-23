@@ -85,14 +85,14 @@ class M3uPlaylist {
                 "M3uPlaylist::import: file doesn't exist ($aPath/$rPath)"
             );
         }
-        $arr = $r = M3uPlaylist::parse($path);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $arr = M3uPlaylist::parse($path);
+        if (PEAR::isError($arr)) {
+        	return $arr;
         }
         require_once("Playlist.php");
-        $pl = $r =& Playlist::create($gb, $plid, "imported_M3U", $parid);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $pl =& Playlist::create($gb, $plid, "imported_M3U", $parid);
+        if (PEAR::isError($pl)) {
+        	return $pl;
         }
         $r = $pl->lock($gb, $subjid);
         if (PEAR::isError($r)) {
@@ -102,12 +102,12 @@ class M3uPlaylist {
             list($md, $uri) = preg_split("|\n|", $it);
             list($length, $title) = preg_split("|, *|", $md);
             // $gunid  = StoredFile::_createGunid();
-            $gunid  = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
-            $acId = $r = $gb->idFromGunid($gunid);
-            if (PEAR::isError($r)) {
-            	return $r;
+            $gunid = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
+            $acId = $gb->idFromGunid($gunid);
+            if (PEAR::isError($acId)) {
+            	return $acId;
             }
-            $length = Playlist::_secsToPlTime($length);
+            $length = Playlist::secondsToPlaylistTime($length);
             $offset = '???';
             if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
                 switch (strtolower($ext = $va[1])) {
@@ -115,9 +115,9 @@ class M3uPlaylist {
                     case "xml":
                     case "smil":
                     case "m3u":
-                        $acId = $r = $gb->bsImportPlaylistRaw($parid, $gunid,
+                        $acId = $gb->bsImportPlaylistRaw($parid, $gunid,
                             $aPath, $uri, $ext, $gunids, $subjid);
-                        if (PEAR::isError($r)) {
+                        if (PEAR::isError($acId)) {
                         	break;
                         }
                         //no break!
@@ -133,7 +133,7 @@ class M3uPlaylist {
                 }
             }
         }
-        $r = $pl->unLock($gb);
+        $r = $pl->unlock($gb);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -151,9 +151,9 @@ class M3uPlaylist {
      */
     function convert2lspl(&$gb, $data)
     {
-        $arr = $r = M3uPlaylist::parse($data);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $arr = M3uPlaylist::parse($data);
+        if (PEAR::isError($arr)) {
+        	return $arr;
         }
         $ind = '';
         $ind2 = $ind.INDCH;
@@ -162,9 +162,9 @@ class M3uPlaylist {
         foreach ($arr as $i => $it) {
             list($md, $uri) = preg_split("|\n|", $it);
             list($length, $title) = preg_split("|, *|", $md);
-            $gunid  = StoredFile::_createGunid();
+            $gunid = StoredFile::_createGunid();
             $gunid2 = StoredFile::_createGunid();
-            $length = Playlist::_secsToPlTime($length);
+            $length = Playlist::secondsToPlaylistTime($length);
             $offset = '???';
             $uri_h = preg_replace("|--|", "&#2d;&#2d;", htmlspecialchars("$uri"));
             if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
@@ -221,10 +221,9 @@ class M3uPlaylistBodyElement {
                 $tree->children[1]->name
             ));
         }
-        $res = $r =
-            M3uPlaylistParElement::convert2lspl($tree->children[0], $ind2);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $res = M3uPlaylistParElement::convert2lspl($tree->children[0], $ind2);
+        if (PEAR::isError($res)) {
+        	return $res;
         }
         $gunid = StoredFile::_createGunid();
         $playlength = '???'; // ***
@@ -308,16 +307,16 @@ class M3uPlaylistAudioElement {
             }
         }
         if ($fadeIn > 0 || $fadeOut > 0) {
-            $fadeIn  = Playlist::_secsToPlTime($fadeIn);
-            $fadeOut = Playlist::_secsToPlTime($fadeOut);
+            $fadeIn  = Playlist::secondsToPlaylistTime($fadeIn);
+            $fadeOut = Playlist::secondsToPlaylistTime($fadeOut);
             $fInfo  = "$ind2<fadeInfo fadeIn=\"$fadeIn\" fadeOut=\"$fadeOut\"/>\n";
         } else {
         	$fInfo = '';
         }
-        $plElGunid  = StoredFile::_createGunid();
-        $aGunid     = StoredFile::_createGunid();
-        $title      = basename($tree->attrs['src']->val);
-        $offset     = Playlist::_secsToPlTime($tree->attrs['begin']->val);
+        $plElGunid = StoredFile::_createGunid();
+        $aGunid = StoredFile::_createGunid();
+        $title = basename($tree->attrs['src']->val);
+        $offset = Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
         $playlength = '???'; # ***
         $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\">\n".
             "$ind2<audioClip id=\"$aGunid\" playlength=\"$playlength\" title=\"$title\"/>\n".
