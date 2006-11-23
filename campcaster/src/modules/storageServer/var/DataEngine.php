@@ -429,11 +429,12 @@ class DataEngine {
         }
         $eres = array();
         // echo "\n---\n"; var_dump($res); echo"\n---\n";
-        $categoryNames = array('dc:title', 'dc:creator', 'dc:source', 'dcterms:extent');
+        //$categoryNames = array('dc:title', 'dc:creator', 'dc:source', 'dcterms:extent');
         foreach ($res as $it) {
             if (!$browse) {
                 $gunid = StoredFile::_normalizeGunid($it['gunid']);
-                $values = $this->gb->bsGetMetadataValue($it['id'], $categoryNames);
+                //$values = $this->gb->bsGetMetadataValue($it['id'], $categoryNames);
+                $values = $this->gb->bsGetMetadataValue($it['id']);
                 $eres[] = array(
                 	'id' => $it['id'],
                     'gunid' => $gunid,
