@@ -264,11 +264,11 @@ class Restore {
         $tree = XmlParser::parse($file);
         $mediaFileLP = str_replace('.xml','',$file);
         $mediaFileLP = ($type=='audioClip' && is_file($mediaFileLP))?$mediaFileLP:'';
-        $ex = $r = $this->gb->existsFile($this->sessid,$gunid);
-        if (PEAR::isError($r)) {
+        $ex = $this->gb->existsFile($this->sessid,$gunid);
+        if (PEAR::isError($ex)) {
             $this->addLogItem("-E- ".date("Ymd-H:i:s").
                 " addFileToStorage - existsFile($gunid) ".
-                "(".$r->getMessage()."/".$r->getUserInfo().")\n"
+                "(".$ex->getMessage()."/".$ex->getUserInfo().")\n"
             );
         }
         if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
@@ -325,13 +325,13 @@ class Restore {
                 return $put;
             }
         }
-        $ac = $r = StoredFile::recallByGunid($this->gb, $gunid);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $ac = StoredFile::recallByGunid($this->gb, $gunid);
+        if (PEAR::isError($ac)) {
+        	return $ac;
         }
-        $res = $r = $ac->setState('ready');
-        if (PEAR::isError($r)) {
-        	return $r;
+        $res = $ac->setState('ready');
+        if (PEAR::isError($res)) {
+        	return $res;
         }
         return true;
     }
