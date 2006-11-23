@@ -28,7 +28,7 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    function &recallByGunid(&$gb, $gunid, $className='Playlist')
+    public static function &recallByGunid(&$gb, $gunid, $className='Playlist')
     {
         return parent::recallByGunid($gb, $gunid, $className);
     }
@@ -47,7 +47,7 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    function &recallByToken(&$gb, $token, $className='Playlist')
+    public static function &recallByToken(&$gb, $token, $className='Playlist')
     {
         return parent::recallByToken($gb, $token, $className);
     }
@@ -75,7 +75,7 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    function &insert(&$gb, $oid, $fname,
+    private static function &insert(&$gb, $oid, $fname,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $plid=NULL, $ftype=NULL)
     {
@@ -85,7 +85,7 @@ class Playlist extends StoredFile {
 
 
     /**
-     *  Create instance of Playlist object and insert empty file
+     * Create instance of Playlist object and insert empty file
      *
      * @param GreenBox $gb
      * 		reference to GreenBox object
@@ -97,7 +97,7 @@ class Playlist extends StoredFile {
      * 		local object id of parent folder
      * @return instance of Playlist object
      */
-    function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
+    public function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
     {
         $tmpFname = uniqid('');
         $oid = $this->addObj($tmpFname , 'playlist', $parid);
@@ -134,7 +134,7 @@ class Playlist extends StoredFile {
 
 
     /**
-     *  Lock playlist for edit
+     * Lock playlist for edit
      *
      * @param GreenBox $gb
      * 		reference to GreenBox object
@@ -145,7 +145,7 @@ class Playlist extends StoredFile {
      * @return boolean
      * 		previous state or error object
      */
-    function lock(&$gb, $subjid=NULL, $val=TRUE)
+    public function lock(&$gb, $subjid=NULL, $val=TRUE)
     {
         if ($val && $gb->isEdited($this->gunid) !== FALSE) {
             return PEAR::raiseError(
@@ -165,7 +165,7 @@ class Playlist extends StoredFile {
      * @return boolean
      * 		previous state or error object
      */
-    function unLock(&$gb)
+    public function unlock(&$gb)
     {
         $r = $this->recalculateTimes();
         if (PEAR::isError($r)) {
@@ -186,10 +186,10 @@ class Playlist extends StoredFile {
      * @return mixed
      * 		true or error object
      */
-    function setAuxMetadata()
+    private function setAuxMetadata()
     {
         // get info about playlist
-        $plInfo = $this->getPlInfo();
+        $plInfo = $this->getPlaylistInfo();
         if (PEAR::isError($plInfo)) {
         	return $plInfo;
         }
@@ -209,7 +209,7 @@ class Playlist extends StoredFile {
 
 
     /**
-     * Get audioClip legth and title
+     * Get audioClip length and title
      *
      * @param int $acId
      * 		local id of audioClip inserted to playlist
@@ -221,7 +221,7 @@ class Playlist extends StoredFile {
      *   <li>elType string - audioClip | playlist</li>
      *  </ul>
      */
-    function getAcInfo($acId)
+    private function getAudioClipInfo($acId)
     {
         $ac = StoredFile::recall($this->gb, $acId);
         if (PEAR::isError($ac)) {
@@ -243,8 +243,9 @@ class Playlist extends StoredFile {
         }
         if (isset($r[0]['value'])) {
         	$acTit = $r[0]['value'];
+        } else {
+        	$acTit = $acGunid;
         }
-        else $acTit = $acGunid;
         $elType = $this->gb->getObjType($acId);
         $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip',
             'playlist'=>'playlist');
@@ -266,7 +267,7 @@ class Playlist extends StoredFile {
      *   <li>metaParid int - metadata record id of metadata container</li>
      *  </ul>
      */
-    function getPlInfo()
+    private function getPlaylistInfo()
     {
         $parid = $this->getContainer('playlist');
         if (PEAR::isError($parid)) {
@@ -315,7 +316,7 @@ class Playlist extends StoredFile {
      * @return int
      * 		metadata record id of container
      */
-    function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
+    private function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
     {
         $r = $this->md->getMetadataEl($containerName, $parid);
         if (PEAR::isError($r)) {
@@ -367,7 +368,7 @@ class Playlist extends StoredFile {
      *   <li>fadeOutId int - record id</li>
      *  </ul>
      */
-    function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
+    private function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
         $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL, $elType='audioClip')
     {
         // insert playlistElement
@@ -451,7 +452,7 @@ class Playlist extends StoredFile {
      * @return int
      * 		metadata record id
      */
-    function _getMidOrInsert($category, $parid, $value=NULL, $predxml='T')
+    private function _getMidOrInsert($category, $parid, $value=NULL, $predxml='T')
     {
         $arr = $this->md->getMetadataEl($category, $parid);
         if (PEAR::isError($arr)) {
@@ -487,7 +488,7 @@ class Playlist extends StoredFile {
      * 		'A' | 'T' (attribute or tag)
      * @return boolean
      */
-    function _setValueOrInsert($mid, $value, $parid, $category, $predxml='T')
+    private function _setValueOrInsert($mid, $value, $parid, $category, $predxml='T')
     {
         if (is_null($mid)) {
             $r = $this->md->insertMetadataEl(
@@ -513,7 +514,7 @@ class Playlist extends StoredFile {
      * 		metadata container record id
      * @return boolean
      */
-    function setPlaylistLength($newPlLen, $parid, $metaParid)
+    private function setPlaylistLength($newPlLen, $parid, $metaParid)
     {
         $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
         if (PEAR::isError($mid)) {
@@ -553,12 +554,12 @@ class Playlist extends StoredFile {
      * @return string
      * 		generated playlistElement gunid
      */
-    function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL,
+    public function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL,
         $length=NULL)
     {
         $plGunid = $this->gunid;
         // get information about audioClip
-        $acInfo = $this->getAcInfo($acId);
+        $acInfo = $this->getAudioClipInfo($acId);
         if (PEAR::isError($acInfo)) {
         	return $acInfo;
         }
@@ -567,7 +568,7 @@ class Playlist extends StoredFile {
         	$acLen = $length;
         }
         // get information about playlist and containers
-        $plInfo = $this->getPlInfo();
+        $plInfo = $this->getPlaylistInfo();
         if (PEAR::isError($plInfo)) {
         	return $plInfo;
         }
@@ -581,18 +582,7 @@ class Playlist extends StoredFile {
         if (PEAR::isError($plElInfo)) {
         	return $plElInfo;
         }
-        extract($plElInfo); // 'plElId', 'plElGunid', 'fadeInId', 'fadeOutId'
-
-        /* commented - maybe useless (C++ part doesn't do it)
-        // set access to audio clip:
-        $r = $this->bsAccess(NULL, '', $acGunid, 'access');
-        if(PEAR::isError($r)){ return $r; }
-        $acToken = $r['token'];
-        // insert token attribute:
-        $r = $this->md->insertMetadataEl($acId, 'accessToken', $acToken, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        */
-        return $plElGunid;
+        return $plElInfo['plElGunid'];
     }
 
 
@@ -603,11 +593,11 @@ class Playlist extends StoredFile {
      * 		global id of deleted playlistElement
      * @return boolean
      */
-    function delAudioClip($plElGunid)
+    public function delAudioClip($plElGunid)
     {
         $plGunid = $this->gunid;
         // get information about playlist and containers
-        $plInfo = $this->getPlInfo();
+        $plInfo = $this->getPlaylistInfo();
         if (PEAR::isError($plInfo)) {
         	return $plInfo;
         }
@@ -636,21 +626,11 @@ class Playlist extends StoredFile {
                 	return $acLenArr;
                 }
                 $acLen = $acLenArr[0]['value'];
-                /*
-                $acTokArr = $this->md->getMetadataEl('accessToken', $storedAcMid);
-                if(PEAR::isError($acTokArr)){ return $acTokArr; }
-                $acToken = $acTokArr[0]['value'];
-                */
                 // remove playlist element:
                 $r = $this->md->setMetadataEl($el['mid'], NULL);
                 if (PEAR::isError($r)) {
                 	return $r;
                 }
-                /*
-                // release audioClip:
-                $r = $this->bsRelease($acToken, 'access');
-                if(PEAR::isError($r)){ return $r; }
-                */
                 $found = TRUE;
             }
         }
@@ -675,11 +655,11 @@ class Playlist extends StoredFile {
      * 		new value in ss.ssssss or extent format
      * @return boolean
      */
-    function changeFadeInfo($plElGunid, $fadeIn, $fadeOut)
+    public function changeFadeInfo($plElGunid, $fadeIn, $fadeOut)
     {
         $plGunid = $this->gunid;
         // get information about playlist and containers
-        $plInfo = $this->getPlInfo();
+        $plInfo = $this->getPlaylistInfo();
         if (PEAR::isError($plInfo)) {
         	return $plInfo;
         }
@@ -742,7 +722,7 @@ class Playlist extends StoredFile {
      * 		new position in playlist
      * @return mixed
      */
-    function moveAudioClip($plElGunid, $newPos)
+    public function moveAudioClip($plElGunid, $newPos)
     {
         $plGunid = $this->gunid;
         $arr = $this->md->genPhpArray();
@@ -816,11 +796,11 @@ class Playlist extends StoredFile {
      *
      * @return boolean
      */
-    function recalculateTimes()
+    public function recalculateTimes()
     {
         $plGunid = $this->gunid;
         // get information about playlist and containers
-        $plInfo = $this->getPlInfo();
+        $plInfo = $this->getPlaylistInfo();
         if (PEAR::isError($plInfo)) {
         	return $plInfo;
         }
@@ -887,7 +867,7 @@ class Playlist extends StoredFile {
                 $fadeIn = '00:00:00.000000';
                 $fadeOut = '00:00:00.000000';
             }
-            $fadeInS = $this->_plTimeToSecs($fadeIn);
+            $fadeInS = Playlist::playlistTimeToSeconds($fadeIn);
             if (!is_null($lastLenS)) {
                 if ($lastLenS < $fadeInS) {
                     return PEAR::raiseError(
@@ -898,16 +878,15 @@ class Playlist extends StoredFile {
             //    'offset'=>$offset, 'offsetId'=>$offsetId,
             //    'fadeIn'=>$fadeIn, 'fadeOut'=>$fadeOut);
             // set relativeOffset:
-            if ($len>0) {
+            if ($len > 0) {
             	$len = $len - $fadeInS;
             }
-            $newOffset = $this->_secsToPlTime($len);
+            $newOffset = Playlist::secondsToPlaylistTime($len);
             $r = $this->_setValueOrInsert($offsetId, $newOffset, $elId, 'relativeOffset');
             if (PEAR::isError($r)) {
             	return $r;
             }
-            // $fadeInS = $this->_plTimeToSecs($fadeIn);
-            $acLenS = $this->_plTimeToSecs($acLen);
+            $acLenS = Playlist::playlistTimeToSeconds($acLen);
             $len = $len + $acLenS;
             if (!is_null($prevFiMid)) {
                 $foMid = $this->_getMidOrInsert('fadeOut', $prevFiMid, $fadeIn, 'A');
@@ -923,7 +902,7 @@ class Playlist extends StoredFile {
             $prevFiMid = $fiMid;
             $lastLenS = $acLenS;
         }
-        $newPlLen = $this->_secsToPlTime($len);
+        $newPlLen = Playlist::secondsToPlaylistTime($len);
         $r = $this->setPlaylistLength($newPlLen, $parid, $metaParid);
         if (PEAR::isError($r)) {
         	return $r;
@@ -947,9 +926,9 @@ class Playlist extends StoredFile {
      *      <li>duration string, total playlength of clip </li>
      *   </ul>
      */
-    function displayPlaylistClipAtOffset($offset, $distance=0)
+    public function displayPlaylistClipAtOffset($offset, $distance=0)
     {
-        $offsetS = $this->_plTimeToSecs($offset);
+        $offsetS = Playlist::playlistTimeToSeconds($offset);
         $plGunid = $this->gunid;
         $arr = $this->md->genPhpArray();
         if (PEAR::isError($arr)) {
@@ -986,7 +965,7 @@ class Playlist extends StoredFile {
                     if ($dd > 0) {
                         $offsetLoc = "00:00:00.000000";
                     } else {
-                        $offsetLoc = $this->_secsToPlTime($offsetS - $elOffsetS);
+                        $offsetLoc = Playlist::secondsToPlaylistTime($offsetS - $elOffsetS);
                     }
                     $distanceLoc = $distance - $dd;
                     $res2 = $pl->displayPlaylistClipAtOffset($offsetLoc, $distanceLoc);
@@ -1006,9 +985,9 @@ class Playlist extends StoredFile {
                         }
                         $remainS = $acLenS - $playedS;
                         $res  = array('gunid'=>$acGunid,
-                            'elapsed'   => $this->_secsToPlTime($playedS),
-                            'remaining' => $this->_secsToPlTime($remainS),
-                            'duration'  => $this->_secsToPlTime($acLenS),
+                            'elapsed'   => Playlist::secondsToPlaylistTime($playedS),
+                            'remaining' => Playlist::secondsToPlaylistTime($remainS),
+                            'duration'  => Playlist::secondsToPlaylistTime($acLenS),
                         );
                         return $res;
                     }
@@ -1030,7 +1009,7 @@ class Playlist extends StoredFile {
      *              gunid - global id
      *              type  - playlist | audioClip
      */
-    function export()
+    public function export()
     {
         $plGunid = $this->gunid;
         $arr = $this->md->genPhpArray();
@@ -1083,7 +1062,7 @@ class Playlist extends StoredFile {
      * @return int
      * 		seconds
      */
-    function _plTimeToSecs($plt)
+    public static function playlistTimeToSeconds($plt)
     {
         $arr = split(':', $plt);
         if (isset($arr[2])) {
@@ -1104,15 +1083,14 @@ class Playlist extends StoredFile {
      * @return string
      * 		time in playlist time format (HH:mm:ss.dddddd)
      */
-    function _secsToPlTime($s0)
+    public static function secondsToPlaylistTime($s0)
     {
-        $m  = intval($s0 / 60);
+        $m = intval($s0 / 60);
         $r0 = $s0 - $m*60;
-        $h  = $m  / 60;
-        $m  = $m  % 60;
-        $s  = intval($r0);
-        $r  = $r0 - $s;
-        // $res = sprintf("%02d:%02d:%09.6f", $h, $m, $r);
+        $h = $m / 60;
+        $m = $m  % 60;
+        $s = intval($r0);
+        $r = $r0 - $s;
         $res = sprintf("%02d:%02d:%02d", $h, $m, $s);
         $res .= str_replace('0.', '.', number_format($r, 6, '.', ''));
         return $res;
@@ -1122,10 +1100,12 @@ class Playlist extends StoredFile {
     /**
      * Cyclic-recursion checking
      *
-     * @param string $insGunid, gunid of playlist beeing inserted
-     * @return boolean - true if recursion is detected
+     * @param string $insGunid
+     * 		gunid of playlist being inserted
+     * @return boolean
+     * 		true if recursion is detected
      */
-    function _cyclicRecursion($insGunid)
+    public function cyclicRecursion($insGunid)
     {
         if ($this->gunid == $insGunid) {
         	return TRUE;
@@ -1151,7 +1131,7 @@ class Playlist extends StoredFile {
                 	continue;
                 }
                 $nextGunid = $elCh['attrs']['id'];
-                $res = $this->_cyclicRecursion($nextGunid);
+                $res = $this->cyclicRecursion($nextGunid);
                 if ($res) {
                 	return TRUE;
                 }
@@ -1172,48 +1152,51 @@ class Playlist extends StoredFile {
  * @link http://www.campware.org
  */
 class PlaylistElement {
-    private $pl   = NULL;
+    private $pl = NULL;
     private $plEl = NULL;
 
-    function PlaylistElement(&$pl, $plEl)
+    public function PlaylistElement(&$pl, $plEl)
     {
         $this->pl   = $pl;
         $this->plEl = $plEl;
     }
 
 
-    function analyze()
+    public function analyze()
     {
         $plInfo = array(
-            'acLen'   => '00:00:00.000000', 'acLenS'   => 0,
-            'fadeIn'  => '00:00:00.000000', 'fadeInS'  => 0,
-            'fadeOut' => '00:00:00.000000', 'fadeOutS' => 0,
+            'acLen' => '00:00:00.000000',
+            'acLenS' => 0,
+            'fadeIn' => '00:00:00.000000',
+            'fadeInS' => 0,
+            'fadeOut' => '00:00:00.000000',
+            'fadeOutS' => 0,
         );
-        $plInfo['elOffset']  = $pom = $this->plEl['attrs']['relativeOffset'];
-        $plInfo['elOffsetS'] = $this->pl->_plTimeToSecs($pom);
+        $plInfo['elOffset'] = $this->plEl['attrs']['relativeOffset'];
+        $plInfo['elOffsetS'] = Playlist::playlistTimeToSeconds($plInfo['elOffset']);
         // cycle over tags inside playlistElement
         foreach ($this->plEl['children'] as $j => $acFi) {
             switch ($acFi['elementname']) {
-            case "playlist":
-                $plInfo['type'] = 'playlist';
-                break;
-            case "audioClip":
-                $plInfo['type'] = 'audioClip';
-                break;
-            }
-            switch ($acFi['elementname']) {
-            case"playlist":
-            case"audioClip":
-                $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
-                $plInfo['acLenS'] = $this->pl->_plTimeToSecs($pom);
-                $plInfo['acGunid'] = $pom = $acFi['attrs']['id'];
-                break;
-            case"fadeInfo":
-                $plInfo['fadeIn'] = $pom = $acFi['attrs']['fadeIn'];
-                $plInfo['fadeInS'] = $this->pl->_plTimeToSecs($pom);
-                $plInfo['fadeOut'] = $pom = $acFi['attrs']['fadeOut'];
-                $plInfo['fadeOutS'] = $this->pl->_plTimeToSecs($pom);
-                break;
+	            case "playlist":
+	                $plInfo['type'] = 'playlist';
+	                break;
+	            case "audioClip":
+	                $plInfo['type'] = 'audioClip';
+	                break;
+	        }
+	        switch ($acFi['elementname']) {
+	            case "playlist":
+	            case "audioClip":
+	                $plInfo['acLen'] = $acFi['attrs']['playlength'];
+	                $plInfo['acLenS'] = Playlist::playlistTimeToSeconds($plInfo['acLen']);
+	                $plInfo['acGunid'] = $acFi['attrs']['id'];
+	                break;
+	            case "fadeInfo":
+	                $plInfo['fadeIn'] = $acFi['attrs']['fadeIn'];
+	                $plInfo['fadeInS'] = Playlist::playlistTimeToSeconds($plInfo['fadeIn']);
+	                $plInfo['fadeOut'] = $acFi['attrs']['fadeOut'];
+	                $plInfo['fadeOutS'] = Playlist::playlistTimeToSeconds($plInfo['fadeOut']);
+	                break;
             }
         }
         return $plInfo;
