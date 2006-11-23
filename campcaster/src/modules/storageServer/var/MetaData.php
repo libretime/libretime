@@ -52,19 +52,19 @@ class MetaData {
 
 
     /**
-     *  Parse and store metadata from XML file or XML string
+     * Parse and store metadata from XML file or XML string
      *
-     *  @param string $mdata
+     * @param string $mdata
      * 		Local path to metadata XML file or XML string
-     *  @param string $loc
+     * @param string $loc
      * 		location: 'file'|'string'
-     *  @param string $format
+     * @param string $format
      * 		Metadata format for validation
      *      ('audioclip' | 'playlist' | 'webstream' | NULL)
      *      (NULL = no validation)
-     *  @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function insert($mdata, $loc='file', $format=NULL)
+    public function insert($mdata, $loc='file', $format=NULL)
     {
         if ($this->exists()) {
         	return FALSE;
@@ -82,34 +82,6 @@ class MetaData {
         if (PEAR::isError($res)) {
         	return $res;
         }
-/* obsolete by regenerateXmlFile()
-        switch($loc){
-        case"file":
-            if(! @copy($mdata, $this->fname)){
-                return PEAR::raiseError(
-                    "MetaData::insert: file save failed".
-                    " ($mdata, {$this->fname})",GBERR_FILEIO
-                );
-            }
-            break;
-        case"string":
-            $fname = $this->fname;
-            $e  = FALSE;
-            if(!$fh = fopen($fname, "w")){ $e = TRUE; }
-            elseif(fwrite($fh, $mdata) === FALSE){ $e = TRUE; }
-            if($e){
-                return PEAR::raiseError(
-                    "BasicStor::bsOpenDownload: can't write ($fname)",
-                    GBERR_FILEIO);
-            }
-            fclose($fh);
-            break;
-        default:
-            return PEAR::raiseError(
-                "MetaData::insert: unsupported metadata location ($loc)"
-            );
-        }
-*/
         $this->exists = TRUE;
         $r = $this->regenerateXmlFile();
         if (PEAR::isError($r)) {
@@ -120,19 +92,19 @@ class MetaData {
 
 
     /**
-     *  Call delete and insert
+     * Call delete and insert
      *
-     *  @param string $mdata
+     * @param string $mdata
      * 		local path to metadata XML file or XML string
-     *  @param string $loc
+     * @param string $loc
      * 		'file'|'string'
-     *  @param string $format
+     * @param string $format
      * 		metadata format for validation
      *      ('audioclip' | 'playlist' | 'webstream' | NULL)
      *      (NULL = no validation)
-     *  @return true or PEAR::error
+     * @return true or PEAR::error
      */
-    function replace($mdata, $loc='file', $format=NULL)
+    public function replace($mdata, $loc='file', $format=NULL)
     {
         if ($this->exists()) {
             $res = $this->delete();
@@ -149,12 +121,12 @@ class MetaData {
      *
      * @return boolean
      */
-    function exists()
+    public function exists()
     {
     	if (is_null($this->exists)) {
-	        $this->exists = $this->dbCheck($this->gunid) &&
-            				is_file($this->fname) &&
-            				is_readable($this->fname);
+	        $this->exists = $this->dbCheck($this->gunid)
+            				&& is_file($this->fname)
+            				&& is_readable($this->fname);
     	}
         return $this->exists;
     }
@@ -165,7 +137,7 @@ class MetaData {
      *
      * @return TRUE|PEAR_Error
      */
-    function delete()
+    public function delete()
     {
         if (file_exists($this->fname)) {
         	@unlink($this->fname);
@@ -187,18 +159,33 @@ class MetaData {
      *
      * @return string
      */
-    function getMetaData()
+    public function getMetadata()
     {
-        // return $this->genXMLDoc();       // obsolete
         if (file_exists($this->fname)) {
             $res = file_get_contents($this->fname);
-            //require_once "XML/Beautifier.php";
-            //$fmt = new XML_Beautifier();
-            //$res = $fmt->formatString($res);
             return $res;
         } else {
         	return file_get_contents(dirname(__FILE__).'/emptyMdata.xml');
         }
+    }
+
+
+    /**
+     * Return all metadata for this GUNID.
+     *
+     * @return array
+     */
+    public function getAllMetadata()
+    {
+        $sql = "SELECT predns, predicate, object
+            	FROM {$this->mdataTable}
+            	WHERE gunid=x'{$this->gunid}'::bigint";
+        $rows = $this->dbc->getAll($sql);
+        $values = array();
+        foreach ($rows as $row) {
+        	$values[$row["predns"].":".$row["predicate"]] = $row["object"];
+        }
+		return $values;
     }
 
 
@@ -213,7 +200,7 @@ class MetaData {
      * 		int 'mid': record id
      * 		string 'value': metadata value}
      */
-    function getMetadataEl($category, $parid=NULL)
+    public function getMetadataEl($category, $parid=NULL)
     {
         // handle predicate namespace shortcut
         $a = XML_Util::splitQualifiedName($category);
@@ -247,15 +234,15 @@ class MetaData {
 
 
     /**
-     *  Set metadata value / delete metadata record
+     * Set metadata value / delete metadata record
      *
-     *  @param int $mid
+     * @param int $mid
      * 		metadata record id
-     *  @param string $value
+     * @param string $value
      * 		new metadata value (NULL for delete)
-     *  @return boolean
+     * @return boolean
      */
-    function setMetadataEl($mid, $value=NULL)
+    public function setMetadataEl($mid, $value=NULL)
     {
         $info = $this->dbc->getRow("
             SELECT parmd.predns as parns, parmd.predicate as parname,
@@ -309,10 +296,10 @@ class MetaData {
      * 		new metadata value (NULL for delete)
      * @param string $predxml
      * 		'T' | 'A' | 'N' (tag, attr., namespace)
-     * @return int,
+     * @return int
      * 		new metadata record id
      */
-    function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
+    public function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
     {
         //$category = strtolower($category);
         $parent = $this->dbc->getRow("
@@ -370,7 +357,7 @@ class MetaData {
      *   </ul>
      * @see BasicStor::bsGetMetadataValue
      */
-    function getMetadataValueWithAttrs($category, $lang=NULL, $deflang=NULL, $objns='_L')
+    private function getMetadataValueWithAttrs($category, $lang=NULL, $deflang=NULL, $objns='_L')
     {
         $all = $this->getMetadataEl($category);
         $res = array();
@@ -424,7 +411,7 @@ class MetaData {
      * @return string
      * 		If the value doesnt exist, return the empty string.
      */
-    function getMetadataValue($category)
+    public function getMetadataValue($category)
     {
         $element = $this->getMetadataEl($category);
         $value = (isset($element[0]['value']) ? $element[0]['value'] : '');
@@ -447,7 +434,7 @@ class MetaData {
      * 		container element name for insert
      * @return boolean
      */
-    function setMetadataValue($category, $value, $lang=NULL, $mid=NULL,
+    public function setMetadataValue($category, $value, $lang=NULL, $mid=NULL,
         $container='metadata')
     {
         // resolve actual element:
@@ -530,7 +517,7 @@ class MetaData {
      *
      * @return boolean
      */
-    function regenerateXmlFile()
+    public function regenerateXmlFile()
     {
         $atime = date('c');
         // php4 fix:
@@ -566,7 +553,7 @@ class MetaData {
      *
      * @return string
      */
-    function makeFname()
+    private function makeFname()
     {
         return "{$this->resDir}/{$this->gunid}.xml";
     }
@@ -577,7 +564,7 @@ class MetaData {
      *
      * @return string
      */
-    function getFname()
+    public function getFname()
     {
         return $this->fname;
     }
@@ -585,8 +572,9 @@ class MetaData {
 
     /**
      * Set the metadata format to the object instance
+     * @return void
      */
-    function setFormat($format=NULL)
+    public function setFormat($format=NULL)
     {
         $this->format = $format;
     }
@@ -599,7 +587,7 @@ class MetaData {
      * 		global unique id
      * @return boolean
      */
-    function dbCheck($gunid)
+    private function dbCheck($gunid)
     {
         $cnt = $this->dbc->getOne("
             SELECT count(*)as cnt
@@ -615,16 +603,16 @@ class MetaData {
 
     /* ============================================= parse and store metadata */
     /**
-     *  Parse XML metadata
+     * Parse XML metadata
      *
-     *  @param string $mdata
+     * @param string $mdata
      * 		local path to metadata XML file or XML string
-     *  @param string $loc
+     * @param string $loc
      * 		location: 'file'|'string'
-     *  @return array
-     * 		reference, parse result tree (or PEAR::error)
+     * @return array|PEAR_Error
+     * 		reference, parse result tree
      */
-    function &parse($mdata='', $loc='file')
+    public function &parse($mdata='', $loc='file')
     {
         require_once("XmlParser.php");
         return XmlParser::parse($mdata, $loc);
@@ -636,9 +624,9 @@ class MetaData {
      *
      * @param array $tree
      * 		parsed tree
-     * @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function validate(&$tree)
+    private function validate(&$tree)
     {
         if ($this->config['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
@@ -666,9 +654,9 @@ class MetaData {
      * 		'A' | 'T' (attr or tag)
      * @param string $value
      * 		validated element value
-     * @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function validateOneValue($parName, $category, $predxml, $value)
+    private function validateOneValue($parName, $category, $predxml, $value)
     {
         if ($this->config['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
@@ -688,12 +676,11 @@ class MetaData {
     /**
      * Insert parsed metadata into database
      *
-     * @todo Check the return value for this function...
      * @param array $tree
      * 		parsed tree
-     * @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function storeDoc(&$tree)
+    private function storeDoc(&$tree)
     {
         $this->dbc->query("BEGIN");
         $res = $this->storeNode($tree);
@@ -707,7 +694,6 @@ class MetaData {
         	return $res;
         }
         return TRUE;
-        return $root;
     }
 
 
@@ -723,7 +709,7 @@ class MetaData {
      * @return int
      * 		local metadata record id
      */
-    function storeNode(&$node, $parid=NULL, $nSpaces=array())
+    private function storeNode(&$node, $parid=NULL, $nSpaces=array())
     {
         //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
         $nSpaces = array_merge($nSpaces, $node->nSpaces);
@@ -767,21 +753,21 @@ class MetaData {
      * 		object value, e.g. title string
      * @param string $objns
      * 		object namespace prefix, have to be defined in file's metadata
-     * @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function updateRecord($mdid, $object, $objns='_L')
-    {
-    	$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
-    	$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
-        $res = $this->dbc->query("UPDATE {$this->mdataTable}
-            SET objns = $objns_sql, object = $object_sql
-            WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
-        ");
-        if (PEAR::isError($res)) {
-        	return $res;
-        }
-        return TRUE;
-    }
+//    function updateRecord($mdid, $object, $objns='_L')
+//    {
+//    	$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
+//    	$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
+//        $res = $this->dbc->query("UPDATE {$this->mdataTable}
+//            SET objns = $objns_sql, object = $object_sql
+//            WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
+//        ");
+//        if (PEAR::isError($res)) {
+//        	return $res;
+//        }
+//        return TRUE;
+//    }
 
 
     /**
@@ -807,7 +793,7 @@ class MetaData {
      * @return int
      * 		new metadata record id
      */
-    function storeRecord($subjns, $subject, $predns, $predicate, $predxml='T',
+    private function storeRecord($subjns, $subject, $predns, $predicate, $predxml='T',
         $objns=NULL, $object=NULL)
     {
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
@@ -849,13 +835,11 @@ class MetaData {
      * 		local metadata record id
      * @return boolean
      */
-    function deleteRecord($mid)
+    private function deleteRecord($mid)
     {
-        $sql = "
-            SELECT id FROM {$this->mdataTable}
-            WHERE subjns='_I' AND subject='{$mid}' AND
-                gunid=x'{$this->gunid}'::bigint
-        ";
+        $sql = "SELECT id FROM {$this->mdataTable}
+            	WHERE subjns='_I' AND subject='{$mid}' AND
+                gunid=x'{$this->gunid}'::bigint";
         $rh = $this->dbc->query($sql);
         if (PEAR::isError($rh)) {
         	return $rh;
@@ -867,11 +851,9 @@ class MetaData {
             }
         }
         $rh->free();
-        $sql = "
-            DELETE FROM {$this->mdataTable}
-            WHERE id={$mid} AND
-                gunid=x'{$this->gunid}'::bigint
-        ";
+        $sql = "DELETE FROM {$this->mdataTable}
+            	WHERE id={$mid} AND
+                gunid=x'{$this->gunid}'::bigint";
         $res = $this->dbc->query($sql);
         if (PEAR::isError($res)) {
         	return $res;
@@ -887,7 +869,7 @@ class MetaData {
      * @return array
      * 		array with metadata tree
      */
-    function genPhpArray()
+    public function genPhpArray()
     {
         $res = array();
         $row = $this->dbc->getRow("
@@ -915,7 +897,7 @@ class MetaData {
      * @return string
      * 		string with XML document
      */
-    function genXMLDoc()
+    public function genXMLDoc()
     {
         require_once("XML/Util.php");
         $res = XML_Util::getXMLDeclaration("1.0", "UTF-8")."\n";
@@ -940,7 +922,6 @@ class MetaData {
         $res .= $node;
         require_once("XML/Beautifier.php");
         $fmt = new XML_Beautifier();
-#        $res = $fmt->formatString($res);
         return $res;
     }
 
@@ -955,7 +936,7 @@ class MetaData {
      * @return string
      * 		XML serialization of node
      */
-    function genXMLNode($row, $genXML=TRUE)
+    private function genXMLNode($row, $genXML=TRUE)
     {
         if (DEBUG) {
         	echo"genXMLNode:\n";
@@ -1007,7 +988,7 @@ class MetaData {
      *      - children array, child nodes
      *      - nSpaces hash, namespace definitions
      */
-    function getSubrows($parid, $genXML=TRUE)
+    private function getSubrows($parid, $genXML=TRUE)
     {
         if (DEBUG) {
         	echo" getSubrows:\n";
@@ -1063,17 +1044,17 @@ class MetaData {
 
     /* ========================================================= test methods */
     /**
-     *  Test method
+     * Test method
      *
-     *  @return true or PEAR::error
+     * @return true|PEAR_Error
      */
-    function test()
+    public function test()
     {
         $res = $this->replace(getcwd().'/mdata2.xml');
         if (PEAR::isError($res)) {
         	return $res;
         }
-        $res = $this->getMetaData();
+        $res = $this->getMetadata();
         if (PEAR::isError($res)) {
         	return $res;
         }
