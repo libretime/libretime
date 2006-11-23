@@ -555,15 +555,15 @@
 	</item>
 	<item>
 		<key>Schedule</key>
-		<value />
+		<value>Schedule</value>
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value />
+		<value>Scheduler</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value />
+		<value>Scheduler Navigation</value>
 	</item>
 	<item>
 		<key>ScratchPad</key>
@@ -796,5 +796,61 @@
 	<item>
 		<key>yesterday</key>
 		<value>gestern</value>
+	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value>Programmliste exportieren</value>
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value>Programmliste importieren</value>
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value>Zum Hub senden</value>
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value>Vom Hub empfangen</value>
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value>Die Datei wurde zur Transferwarteschlange hinzugefügt!</value>
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value>Hub durchstöbern</value>
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value>Hub durchsuchen</value>
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value>Übertragungen</value>
+	</item>
+	<item>
+		<key>State</key>
+		<value>Zustand</value>
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value>Übertragung(en) fortsetzen.</value>
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value>Übertragung(en) anhalten.</value>
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value>Übertragung(en) wirklich abbrechen?</value>
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value>Backup-Datei auswählen</value>
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value>Restore Status</value>
 	</item>
 </translations>

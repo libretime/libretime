@@ -7,27 +7,27 @@
 	</item>
 	<item>
 		<key>&quot;$1&quot; uses an unsupported file type.</key>
-		<value />
+		<value>&quot;$1&quot; utiliza un tipo de archivo no es soportado.</value>
 	</item>
 	<item>
 		<key>A playlist is already opened.</key>
-		<value />
+		<value>Ya está abierta una lista de reproducción.</value>
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value />
+		<value>Acceso denegado.</value>
 	</item>
 	<item>
 		<key>Access to home directory failed.</key>
-		<value />
+		<value>Falló el acceso al directorio raíz.</value>
 	</item>
 	<item>
 		<key>Cannot create playlist.</key>
-		<value />
+		<value>No se puede crear lista de reproducción.</value>
 	</item>
 	<item>
 		<key>Cannot delete this playlist.</key>
-		<value />
+		<value>No se puede eliminar esta lista de reproducción.</value>
 	</item>
 	<item>
 		<key>Cannot move item.</key>
@@ -167,23 +167,23 @@
 	</item>
 	<item>
 		<key>There is no playlist available to unlock.</key>
-		<value />
+		<value>No hay lista de reproducción disponible para desbloquear.</value>
 	</item>
 	<item>
 		<key>Unable to open playlist &quot;$1&quot;.</key>
-		<value />
+		<value>Imposible abrir la lista de reproducción &quot;$1&quot;.</value>
 	</item>
 	<item>
 		<key>Unable to release playlist.</key>
-		<value />
+		<value>Imposible transmitir la lista de reproducción.</value>
 	</item>
 	<item>
 		<key>Unable to revert to locked state.</key>
-		<value />
+		<value>Imposible revertir a bloqueado.</value>
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
-		<value />
+		<value>Imposible establecer $1 con el valor de $2</value>
 	</item>
 	<item>
 		<key>Upload of file &quot;$1&quot; was incomplete.</key>

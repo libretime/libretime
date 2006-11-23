@@ -797,4 +797,60 @@
 		<key>yesterday</key>
 		<value />
 	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value />
+	</item>
+	<item>
+		<key>State</key>
+		<value />
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value />
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value />
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value />
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value />
+	</item>
 </translations>
