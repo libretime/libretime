@@ -1,0 +1,10 @@
+<!--  $Id: green.html,v 1.2 2003/11/03 12:55:52 avb Exp $ --> 
+ 
+<tr> 
+    <td align="right" valign="top" class="green">{if:required}<font color="red">*</font>{end:}<b>{label:h}:</b></td> 
+    <td valign="top" align="left" class="green"> 
+    {if:error}<font color="red">{error:h}</font><br />{end:} 
+    {html:h}
+    {if:label_2}<br /><span style="font-size: 75%">{label_2:h}</span>{end:}
+    </td> 
+</tr>

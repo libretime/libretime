@@ -1,0 +1,156 @@
+===================
+HOW TO TEST PEAR DB
+===================
+
+$Id: TESTERS,v 1.20 2005/02/16 06:33:12 danielc Exp $
+
+
+INTRODUCTION
+============
+
+These are instructions for testing PEAR DB on a Windows machine using a
+Cygwin Bash shell.  Adjust the paths and commands to match your system.
+This configuration is used because these precise steps are known to work.
+
+NOTE:  You must log on as a user which has permissions to modify the
+contents of your PHP executable's directory.  This is necessary for both
+configuring AND running the test system.
+
+
+INSTALLATION
+============
+
+Obtain PHP's Test Framework
+---------------------------
+If you don't have PHP's test framework, you need to obtain it.  These
+steps include changing the working directory, downloading run-tests.php
+via CVS and copying the file into place.  Change the revision flag in the
+CVS command as appropriate for your present version of PHP.
+
+ cd c:/progra~1/php
+ cvs -d :pserver:cvsread@cvs.php.net:/repository login   # password is phpfi
+ cvs -d :pserver:cvsread@cvs.php.net:/repository co -r PHP_4_3 \
+     -d test php-src/run-tests.php
+ cp test/run-tests.php .
+ rm -rf test
+
+
+Obtain DB and its Test Framework
+--------------------------------
+* IF PEAR DB IS ALREADY INSTALLED:
+
+  If you have PEAR DB installed already, good.  The test suite
+  is in place.  Open up a command/shell prompt and move into
+  the test directory.
+
+   cd <path to pear insall>/tests/DB/tests
+
+* VIA A NEW INSTALLATION USING THE PEAR INSTALLER:
+
+  Installing PEAR has gotten fairly easy.  Follow the instructions
+  from the manual:  http://pear.php.net/manual/en/installation.php
+  Once PEAR and DB are installed, move to the test directory.
+
+   cd pear/tests/DB/tests
+
+* VIA CVS:
+
+  Create a location to store the test installation of DB and its
+  test scripts.
+
+   mkdir d:/peartest
+   cd d:/peartest
+   cvs -d :pserver:cvsread@cvs.php.net:/repository co -P pear/DB
+
+  We assume you already have the PEAR base package installed.  If
+  you don't, you will need to do so, but the instructions for
+  doing that are beyond the scope of this document.  See
+  http://pear.php.net/manual/en/installation.php for more info.
+
+  Move to the test directory.
+
+   cd pear/DB/tests
+
+
+Copy the Starter Shell Script and Edit the Paths
+------------------------------------------------
+To make starting up each test run easier, we have included two shell
+scripts.  The original files are named "run.cvs".  They need to be
+renamed to "run" so CVS won't bother you with tracking them.  Then,
+the paths and file names in them need to be set to those used by
+your system.
+
+ cp run.cvs run
+ chmod 755 run
+ vi run
+
+ cd driver
+ cp run.cvs run
+ chmod 755 run
+ vi run
+
+
+Copy the Setup File and Edit the DSN's
+--------------------------------------
+The test suite contains a file that stores the DSN's needed to
+connect to your database.  The original file is "setup.inc.cvs"
+and it needs to be renamed "setup.inc" so CVS won't track it.
+Then you'll need to edit the DSN's in it.
+
+ cp setup.inc.cvs setup.inc
+ vi setup.inc
+
+
+RUN THE TESTS
+=============
+
+To run all tests:  ./run
+To run one test:   ./run <test file name>
+Example:           ./run db_parsedsn.phpt
+
+
+Test Types and Locations
+------------------------
+tests             Common PEAR DB tests
+tests/driver      Common tests for all the drivers
+
+
+Results and What To Do With Them
+--------------------------------
+Each test that fails generates a .php (which you can execute), a .exp
+(the expected output), a .out (the test output) and a .diff (a diff -u
+from the .exp and .out files).
+
+If you run the tests, please report or fill the TEST CONFORMANCE table
+in the STATUS document.  Before any commit to CVS be sure to run the
+tests and nothing got broken with the change.
+
+If you get the message "SKIP", means that the test it's not executed.
+Look at the DB/tests/driver/skipif.inc to see what's the problem
+(probably a connection problem).
+
+
+DB TESTER MATRIX
+================
+                                fbsql    ifx    mssql   mysqli   odbc   sqlite
+TESTER                      dbase | ibase |  msql | mysql |  oci8 | pgsql | sybase
+John Horton                   -   -   -   X   -   -   -   -   -   -   -   -   -
+Tim Zickus                    -   -   -   -   -   -   -   -   X   -   -   -   -
+Tim Parkin                    -   -   -   -   -   -   -   -   X   -   -   -   -
+Paul Gardiner                 -   -   -   X   -   -   -   -   -   -   -   -   -
+peterwb@iafrica.com           -   -   -   X   -   -   -   -   -   -   -   -   -
+Daniel, Adam                  -   -   -   -   -   -   -   -   X   -   -   -   -
+szii@sziisoft.com             -   -   -   -   -   -   -   -   -   X¹  -   -   -
+jmh3@linuxfreak.com           -   -   -   -   -   -   -   -   -   -   X   -   -
+Kevin Henrikson               -   -   -   -   -   -   -   -   X   -   -   -   -
+Stig Bakken                   -   -   -   -   -   -   X   -   -   -   X   -   -
+Chuck Hagenbuch               -   -   -   -   -   X   -   -   -   -   -   -   -
+Ludovico Magnocavallo         -   -   X   -   -   -   -   -   -   -   -   -   -
+Daniel Convissor              X   X   X   -   X   X   X   X   X   X²  X   X   X
+
+MISSING TESTERS               -   -   -   -   -   -   -   -   -   -   -   -   -
+
+Comments:
+
+[1]: ODBC using IBM DB2
+[2]: ODBC using IBM DB2 and MS Access

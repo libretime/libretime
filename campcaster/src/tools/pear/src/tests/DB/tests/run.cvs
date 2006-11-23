@@ -1,0 +1,40 @@
+#! /bin/sh
+
+# $Id: run.cvs,v 1.3 2004/02/20 18:57:51 danielc Exp $
+
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+# PEAR DB TEST STARTER
+#
+#   To run all tests:  ./run
+#   To run one test:   ./run <test file name>
+#   Example:           ./run db_parsedsn.phpt
+#
+# Before running the tests you must adjust the
+# following three variables:
+
+#   The full path to your PHP directory:
+    DB_TEST_PHP_PATH=c:/progra~1/php
+
+#   The name of your PHP CLI executable
+#   (examples php.exe, php-cli.exe, cli/php.exe):
+    DB_TEST_PHP_CLI=php.exe
+
+#   The full path to the present directory
+#   (not using $PWD due to Cygwin):
+    DB_TEST_DIR=d:/peartest/pear/DB/tests
+
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+TEST_PHP_EXECUTABLE=$DB_TEST_PHP_PATH/$DB_TEST_PHP_CLI
+export TEST_PHP_EXECUTABLE
+
+if [ $# -gt 0 ]
+then
+    test=$1
+else
+    test=*.phpt
+fi
+
+$TEST_PHP_EXECUTABLE $DB_TEST_PHP_PATH/run-tests.php $DB_TEST_DIR/${test}

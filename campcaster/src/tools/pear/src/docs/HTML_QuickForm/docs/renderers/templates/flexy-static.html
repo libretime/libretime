@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--  $Id: flexy-static.html,v 1.1 2003/08/05 09:34:48 mansion Exp $ -->
+<html>
+<head>
+    <title>Flexy template : 2 column layout example</title>
+    <style type="text/css">
+       .errors {
+       font-family: sans-serif;
+       color : #000;
+       background-color : #FFF;
+       font-size : 12pt;
+       }
+       .label {
+       font-family: sans-serif;
+       color : Navy;
+       font-size : 11px;
+       text-align : right;
+       vertical-align : top;
+       white-space: nowrap;
+       }
+       .element {
+       font-family: sans-serif;
+       background-color : #EEE;
+       text-align : left;
+       white-space: nowrap;
+       }
+       .note {
+       font-family: sans-serif;
+       background-color : #EEE;
+       text-align : center;
+       font-size : 10pt;
+       color : AAA;
+       white-space: nowrap;
+       }
+       th {
+       font-family: sans-serif;
+       font-size : small;
+       color : #FFF;
+       background-color : #AAA;
+       }
+       .maintable {
+       border : thin dashed #D0D0D0;
+       background-color : #EEE;
+       }
+    </style>
+{form.javascript:h}
+</head>
+
+<body>
+
+{form.outputHeader():h}
+{form.hidden:h}
+
+<table class="maintable" width="600" align="center">
+    <tr>
+        <td width="50%" valign="top"><!-- Personal info -->
+            <table width="100%" cellpadding="4">
+                <tr><th colspan="2">{form.header.personal:h}</th></tr>
+                <tr>
+                    <td class="label">{form.name.label:h}</td>
+                    <td class="element">{form.name.error:h}
+                        <table cellspacing="0" cellpadding="1">
+                            <tr>
+                                <td>{form.name.first.html:h}</td>
+                                <td>{form.name.last.html:h}</td>
+                            </tr>
+                            <tr>
+                                <td><font size="1" color="grey">{form.name.first.label:h}</font></td>
+                                <td><font size="1" color="grey">{form.name.last.label:h}</font></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">{form.phone.label:h}</td>
+                    <td class="element">{form.phone.html:h}</td>
+                </tr>
+                <tr>
+                    <td class="label">{form.email.label:h}</td>
+                    <td class="element">{form.email.html:h}</td>
+                </tr>
+                <tr><td colspan="2" class="note">Please, choose a 8-10 characters password.</td></tr>
+                <tr>
+                    <td class="label">{form.pass.label:h}</td>
+                    <td class="element">{form.pass.html:h}</td>
+                </tr>
+            </table>
+        </td>
+        
+        <td width="50%" valign="top"><!-- Company info -->
+            <table width="100%" cellpadding="4">
+                <tr><th colspan="2">{form.header.company_info:h}</th></tr>
+                <tr>
+                    <td class="label">{form.company.label:h}</td>
+                    <td class="element">{form.company.html:h}</td>
+                </tr>
+                <tr>
+                    <td class="label" valign="top">{form.street.label:h}</td>
+                    <td class="element">{form.street.html:h}</td>
+                </tr>
+                <tr>
+                    <td class="label">{form.address.label:h}</td>
+                    <td class="element">{form.address.error:h}
+                        <table cellspacing="0" cellpadding="1">
+                            <tr>
+                                <td>{form.address.zip.html:h}</td>
+                                <td>{form.address.city.html:h}</td>
+                            </tr>
+                            <tr>
+                                <td><font size="1" color="grey">{form.address.zip.label:h}</font></td>
+                                <td><font size="1" color="grey">{form.address.city.label:h}</font></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">{form.country.label:h}</td>
+                    <td class="element">{form.country.html:h}</td>
+                </tr>
+                <tr>
+                    <td class="label">{form.destination.label:h}</td>
+                    <td class="element">{form.destination.html:h}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table width="600" align="center">
+    <tr>
+        <td>{form.requirednote:h}</td>
+        <td align="right">{form.reset.html:h}&nbsp;{form.submit.html:h}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size:11px; color: navy;"><br />{form.news.html:h}</td>
+    </tr>
+</table>
+
+</form>
+
+<br />
+<b>Collected Errors:</b><br />
+{foreach:form.errors,error}
+    <font color="red">{error}</font> in element [{name}]<br />
+{end:}
+
+&nbsp;
+<p><strong>The used "Static" Object</strong></p>
+<pre style="font-size: 12px;">
+{static_object}
+</pre>
+
+</body>
+</html>

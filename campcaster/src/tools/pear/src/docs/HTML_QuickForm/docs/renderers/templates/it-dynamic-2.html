@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<title>IT dynamic renderer: 2 column layout example</title>
+<style type="text/css">
+   .errors {
+   font-family: sans-serif;
+   color : #000;
+   background-color : #FFF;
+   font-size : 12pt;
+   }
+   .label {
+   font-family: sans-serif;
+   color : Navy;
+   background-color : #EEE;
+   font-size : 11px;
+   text-align : right;
+   vertical-align : top;
+   white-space: nowrap;
+   }
+   .element {
+   font-family: sans-serif;
+   background-color : #EEE;
+   text-align : left;
+   white-space: nowrap;
+   }
+   .note {
+   font-family: sans-serif;
+   background-color : #EEE;
+   text-align : center;
+   font-size : 10pt;
+   color : AAA;
+   white-space: nowrap;
+   }
+   th {
+   font-family: sans-serif;
+   font-size : small;
+   color : #FFC;
+   background-color : #AAA;
+   }
+   .maintable {
+   border : thin dashed #D0D0D0;
+   background-color : #EEE;
+   }
+</style>
+{qf_javascript}
+</head>
+<body>
+
+<!-- BEGIN qf_error_loop -->
+<font color="red">{qf_error}</font><br />
+<!-- END qf_error_loop -->
+<form {qf_attributes}>
+<!-- BEGIN qf_hidden_block -->
+<div style="display: none;">
+    <!-- BEGIN qf_hidden_loop -->
+    {qf_hidden}
+    <!-- END qf_hidden_loop -->
+</div>
+<!-- END qf_hidden_block -->
+
+<table class="maintable" width="600" align="center">
+<tr>
+<!-- BEGIN qf_main_loop -->
+    <!-- BEGIN qf_header -->
+<td width="50%" valign="top">
+    <table width="100%" cellpadding="4">
+    <tr><th colspan="2">{qf_header}</th></tr>
+    <!-- END qf_header -->
+    <!-- BEGIN qf_element -->
+    <tr><td class="label"><!-- BEGIN qf_element_required --><span style="color: #FF0000;">*</span> <!-- END qf_element_required -->{qf_label}</td><td class="element"><!-- BEGIN qf_element_error --><font size="1" color="red">{qf_error}</font><br /><!-- END qf_element_error -->{qf_element}</td></tr>
+    <!-- END qf_element -->
+    <!-- BEGIN qf_password -->
+    <tr><td colspan="2" class="note">Please, choose a 8-10 characters password.</td></tr>
+    <tr><td class="label"><!-- BEGIN qf_password_required --><span style="color: #FF0000;">*</span> <!-- END qf_password_required --><span style="color: green;">{qf_label}</span></td><td class="element"><!-- BEGIN qf_password_error --><font size="1" color="red">{qf_error}</font><br /><!-- END qf_password_error -->{qf_element}</td></tr>
+    <!-- END qf_password -->
+    <!-- BEGIN qf_group -->
+    <tr>
+        <td class="label"><!-- BEGIN qf_group_required --><span style="color: #FF0000;">*</span> <!-- END qf_group_required -->{qf_group_label}</td>
+        <td class="element"><!-- BEGIN qf_group_loop --><!-- BEGIN qf_group_element -->{qf_separator}{qf_element}<!-- END qf_group_element --><!-- END qf_group_loop --></td>
+    </tr>
+    <!-- END qf_group -->
+    <!-- BEGIN qf_group_table -->
+    <tr>
+        <td class="label"><!-- BEGIN qf_group_table_required --><span style="color: #FF0000;">*</span> <!-- END qf_group_table_required -->{qf_group_label}</td>
+        <td class="element"><table cellpadding="0" cellspacing="0"><tr>
+            <!-- BEGIN qf_group_table_loop --><!-- BEGIN qf_group_table_element -->
+            <td>{qf_element}<br /><span style="font-size: 80%; color: #999;">{qf_label}<!-- BEGIN qf_group_table_element_required --><span style="color: #FF0000;">*</span> <!-- END qf_group_table_element_required --></span></td>
+            <!-- END qf_group_table_element --><!-- END qf_group_table_loop -->
+        </tr></table></td>
+    </tr>
+    <!-- END qf_group_table -->
+    <!-- BEGIN qf_static -->
+    </table>
+</td><!-- {qf_element} ends -->
+    <!-- END qf_static -->
+<!-- END qf_main_loop -->
+</tr>
+</table>
+
+<table width="600" align="center">
+<tr>
+  <td>{qf_required_note}</td>
+  <td align="right"><input name="reset" value="Reset" type="reset" />&nbsp;<input name="submit" value="Register" type="submit" /></td>
+</tr>
+</table>
+</form>
+</body>
+</html>

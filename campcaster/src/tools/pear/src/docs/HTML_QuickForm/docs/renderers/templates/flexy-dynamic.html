@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"> 
+<!--  Id: flexy-dynamic.html,v 1.3 2003/05/21 13:27:59 avb Exp  --> 
+<html> 
+<head> 
+    <title>Flexy template for Object renderer</title> 
+    <style type="text/css"> 
+    body, td, th { 
+        font-family: sans-serif; 
+        color: Navy; 
+        background-color: #EEE; 
+        font-size: smaller; 
+        white-space: nowrap; 
+    } 
+     
+    .maintable { 
+        border: thin dashed #D0D0D0; 
+        background-color: #EEE; 
+    } 
+     
+    .header { 
+        color: #FFF; 
+        background-color: #999; 
+    } 
+     
+    .green { 
+        background-color : #CFC; 
+        color: black; 
+    }
+    .error { 
+        color: red; 
+    }
+    </style> 
+     
+</head> 
+<body> 
+ 
+{form.javascript:h}
+
+{form.outputHeader():h}
+<table border="0" class="maintable" align="center"> 
+    {form.outputHeader():h}
+    {form.hidden:h} 
+     
+    {foreach:form.sections,sec} 
+        <tr> 
+            <td class="header" colspan="2"> 
+            <b>{sec.header}</b></td> 
+        </tr> 
+               
+        {foreach:sec.elements,elem} 
+            {if:elem.style} 
+              {elem.outputStyle():h}
+            {else:}
+		{if:elem.isButton()} 
+                    {if:elem.notFrozen()} 
+                    <tr>    
+                        <td>&nbsp;</td> 
+                        <td align="left">{elem.html:h}</td> 
+                    </tr> 
+                    {end:} 
+                {else:} 
+                    <tr> 
+                    {if:elem.isType(#textarea#)}                
+                        <td colspan="2"> 
+                            {if:elem.required}<span class="error">*</span>{end:}
+                            {if:elem.error}<span class="error">{end:}
+                            <b>{elem.label:h}:</b><br />
+                            {if:elem.error}</span>{end:}
+                    {else:} 
+                        <td align="right" valign="top"> 
+                            {if:elem.required}<span class="error">*</span>{end:}
+                            {if:elem.error}<span class="error">{end:}
+                            <b>{elem.label:h}:</b>
+                            {if:elem.error}</span>{end:}
+                        </td> 
+                        <td> 
+                    {end:}  
+                    {if:elem.error}<div class="error">{elem.error}</div>{end:} 
+                    {if:elem.isType(#group#)} 
+                        {foreach:elem.elements,gitem} 
+                            {gitem.label:h} 
+                            {gitem.html:h}{if:gitem.required}<span class="error">*</span>*</span>{end:}
+                            {if:elem.separator}{elem.separator:h}{end:}
+                        {end:} 
+                    {else:} 
+                        {elem.html:h} 
+                    {end:} 
+                    </td> 
+                    </tr> 
+                {end:} 
+            {end:}    
+        {end:} 
+     {end:}
+        {if:form.requirednote}
+        <tr> 
+            <td>&nbsp;</td> 
+            <td valign="top">{form.requirednote:h}</td> 
+        </tr> 
+        {end:} 
+     
+    </form>    
+</table> 
+
+&nbsp; 
+<p><b>Collected Errors:</b><br /> 
+{foreach:form.errors,name,error} 
+    <span class="error">{error:h}</span> in element [{name:h}]<br /> 
+{end:} 
+</p> 
+ 
+&nbsp; 
+<p><strong>Best Practice: </strong><br /> 
+Use only one dynamic form template like this for your <br /> 
+Flexy driven project. You include this where <br /> 
+to place a form with the formdata object rendered by <br /> 
+Object QuickForm Renderer as option:</p> 
+ 
+<pre style="font-size: 12px;"> 
+<strong>&lt;include file=form-dynamic.tpl form={formdata}&gt;</strong> 
+</pre> 
+ 
+&nbsp; 
+<p><strong>The used &quot;Dynamic&quot; Object </strong></p> 
+<pre style="font-size: 12px;"> 
+{dynamic_object} 
+</pre> 
+ 
+</body> 
+</html>

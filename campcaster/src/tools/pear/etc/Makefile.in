@@ -53,20 +53,16 @@ INSTALL_DIR = @prefix@
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all install copy_files clean distclean
+.PHONY: all install clean distclean
 
 all:
 
-install: copy_files
-	${INSTALL_DIR}/usr/lib/pear/bin/install.sh -d ${INSTALL_DIR}
-
-copy_files:
+install:
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/bin
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/etc
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/src
-	cp -pP ${BASE_DIR}/../pear/bin/install.sh ${INSTALL_DIR}/usr/lib/pear/bin
 	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/usr/lib/pear/etc
-	cp -pP ${BASE_DIR}/../pear/src/*.tgz ${INSTALL_DIR}/usr/lib/pear/src
+	cp -R ${BASE_DIR}/../pear/src/* ${INSTALL_DIR}/usr/lib/pear/src
 
 clean:
 

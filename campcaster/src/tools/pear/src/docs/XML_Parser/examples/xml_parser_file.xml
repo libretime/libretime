@@ -1,0 +1,5 @@
+<foo>
+    <bar>content of bar</bar>
+    <empty/>
+    <argh foo="bar">test</argh>
+</foo>

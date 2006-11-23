@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>PEAR::Calendar Examples</title>
+  <style type="text/css">
+  body {
+     font-family: georgia, serif;
+  }
+  pre {
+     background-color: silver;
+  }
+  code {
+     color: navy;
+     background-color: #e2e3e4;
+  }
+  </style>
+</head>
+
+<body>
+<h1>PEAR::Calendar Examples</h1>
+<p>$Id: index.html,v 1.6 2004/08/17 09:10:53 hfuecks Exp $</p>
+<ul>
+<li><a href="1.php">1.php</a> [<a href="1.phps">src</a>] - shows basic usage, passing all the way down from <code>Calendar_Year</code> to <code>Calendar_Second</code> - more of a quick test it's working</li>
+<li><a href="2.php">2.php</a> [<a href="2.phps">src</a>] - shows how to build a tabular month using <code>Calendar_Month_Weeks</code>, <code>Calendar_Week</code>, <code>Calendar_Day</code> as well as selecting some dates.</li>
+<li><a href="3.php">3.php</a> [<a href="3.phps">src</a>] - shows how to build a tabular month using <code>Calendar_Month_Weekdays</code> and <code>Calendar_Day</code>, as well as selecting some dates (this method is faster).</li>
+<li><a href="4.php">4.php</a> [<a href="4.phps">src</a>] - shows how to use PEAR::Calendar for validation.</li>
+<li><a href="5.php">5.php</a> [<a href="5.phps">src</a>] - shows PEAR::Calendar in use to help generate a form.</li>
+<li><a href="6.php">6.php</a> [<a href="6.phps">src</a>] - a month and day "planner" calendar, which can be rendered both as HTML and WML.</li>
+<li><a href="7.php">7.php</a> [<a href="7.phps">src</a>] - a simple SOAP Calendar Server, using PEAR::SOAP and PEAR::Calendar</li>
+<li><a href="8.php">8.php</a> [<a href="8.phps">src</a>] - a WSDL SOAP client for the SOAP Calendar Server</li>
+<li><a href="9.php">9.php</a> [<a href="9.phps">src</a>] - quick example of i18n with <code>setlocale</code> (not working on SF)</li>
+<li><a href="10.php">10.php</a> [<a href="10.phps">src</a>] - an example of extending <code>Calendar_Decorator</code> to modify output</li>
+<li><a href="11.php">11.php</a> [<a href="11.phps">src</a>] - attaching a "payload" (e.g. results of a DB query) to a calendar using <code>Calendar_Decorator</code> to allow the payload to be available inside the main loop.</li>
+<li><a href="12.php">12.php</a> [<a href="12.phps">src</a>] - a complete year with months.</li>
+<li><a href="13.php">13.php</a> [<a href="13.phps">src</a>] - same as 1.php but using <code>Calendar_Engine_PearDate</code>, (see <a href="http://pear.php.net/Date">PEAR::Date</a>).</li>
+<li><a href="14.php">14.php</a> [<a href="14.phps">src</a>] - same as 3.php but using <code>Calendar_Engine_PearDate</code></li>
+<li><a href="15.php">15.php</a> [<a href="15.phps">src</a>] - paging through weeks </li>
+<li><a href="16.php">16.php</a> [<a href="16.phps">src</a>] - example of <code>Calendar_Decorator_Uri</code>. <i>Note</i> you should prefer <code>Calendar_Util_Uri</code> (see below) in most cases, for performance </li>
+<li><a href="17.php">17.php</a> [<a href="17.phps">src</a>] - example of <code>Calendar_Decorator_Textual</code>. <i>Note</i> you should prefer <code>Calendar_Util_Textual</code> (see below) in most cases, for performance</li>
+<li><a href="18.php">18.php</a> [<a href="18.phps">src</a>] - example of <code>Calendar_Decorator_Wrapper</code>.</li>
+<li><a href="19.php">19.php</a> [<a href="19.phps">src</a>] - example of <code>Calendar_Decorator_Weekday</code>.</li>
+<li><a href="20.php">20.php</a> [<a href="20.phps">src</a>] - shows how to attach a "payload" spanning multiple days, with more than one entry per day</li>
+<li><a href="21.php">21.php</a> [<a href="21.phps">src</a>] - same as 12.php but using <code>Calendar_Month_Weeks</code> instead of <code>Calendar_Month_Weekdays</code> to allow the week in the year or week in the month to be displayed.</li>
+<li><a href="22.php">22.php</a> [<a href="22.phps">src</a>] - demonstrates use of <code>Calendar_Util_Uri</code>.</li>
+<li><a href="23.php">23.php</a> [<a href="23.phps">src</a>] - demonstrates use of <code>Calendar_Util_Textual</code>.</li>
+<li><a href="24.php">24.php</a> [<a href="24.phps">src</a>] - <code>Calendar_Decorator_Weekday</code> combined with <code>Calendar_Decorator_Wrapper</code> to decorate days in the month.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>IT dynamic renderer</title>
+<style type="text/css">
+body, td, th {
+   font-family: sans-serif;
+   color : Navy;
+   background-color : #EEE;
+   font-size : smaller;
+   white-space: nowrap;
+}
+
+.maintable {
+   border : thin dashed #D0D0D0;
+   background-color : #EEE;
+}
+
+.header {
+   color : #FFF;
+   background-color : #AAA;
+}
+
+.green {
+   background-color : #CFC;
+   color : black;
+}
+
+</style>
+</head>
+
+<body>
+{qf_javascript}
+<form {qf_attributes}>
+<!-- BEGIN qf_hidden_block -->
+<div style="display: none;">
+    <!-- BEGIN qf_hidden_loop -->
+    {qf_hidden}
+    <!-- END qf_hidden_loop -->
+</div>
+<!-- END qf_hidden_block -->
+<table border="0" class="maintable" align="center">
+
+<!-- BEGIN qf_errors -->
+    <tr>
+        <td align="left" valign="top" colspan="2">
+            <ul>
+                <!-- BEGIN qf_error_loop -->
+                <li>{qf_error}</li>
+                <!-- END qf_error_loop -->
+            </ul>
+        </td>
+    </tr>
+<!-- END qf_errors -->
+
+<!-- BEGIN qf_main_loop -->
+    <!-- BEGIN qf_header -->
+    <tr>
+        <td align="left" valign="top" colspan="2" class="header"><b>{qf_header}</b></td>
+    </tr>
+    <!-- END qf_header -->
+
+    <!-- BEGIN qf_element -->
+    <tr>
+        <td align="right" valign="top"><!-- BEGIN qf_element_required --><span style="color: #FF0000;">*</span><!-- END qf_element_required --><b>{qf_label}</b></td>
+        <td valign="top" align="left"><!-- BEGIN qf_element_error --><span style="color: #FF0000;">{qf_error}</span><br /><!-- END qf_element_error -->{qf_element}</td>
+    </tr>
+    <!-- END qf_element -->
+
+    <!-- BEGIN qf_textarea -->
+    <tr>
+        <td valign="top" colspan="2"><!-- BEGIN qf_textarea_required --><span style="color: #FF0000;">*</span><!-- END qf_textarea_required --><b>{qf_label}</b><br />
+        <!-- BEGIN qf_textarea_error --><span style="color: #FF0000;">{qf_error}</span><br><!-- END qf_textarea_error -->{qf_element}</td>
+    </tr>
+    <!-- END qf_textarea -->
+
+    <!-- BEGIN qf_group -->
+    <tr>
+        <td align="right" valign="top"><!-- BEGIN qf_group_required --><span style="color: #FF0000;">*</span><!-- END qf_group_required --><b>{qf_group_label}</b></td>
+        <td valign="top" align="left">
+            <!-- BEGIN qf_group_error --><span style="color: #FF0000;">{qf_error}</span><br /><!-- END qf_group_error -->
+            <!-- BEGIN qf_group_loop --><!-- BEGIN qf_group_element -->{qf_separator}{qf_element}<!-- END qf_group_element --><!-- END qf_group_loop -->
+        </td>
+    </tr>
+    <!-- END qf_group -->
+
+    <!-- BEGIN qf_fancygroup -->
+    <tr>
+        <td align="right" valign="top"><span<!-- BEGIN qf_fancygroup_required --> style="font-weight: bold; color: red"<!-- END qf_fancygroup_required -->>{qf_group_label}</span></td>
+        <td valign="top" align="left">
+            <table cellspacing="2">
+            <!-- BEGIN qf_fancygroup_loop -->
+                <tr>
+                <!-- BEGIN qf_fancygroup_element -->
+                <td class="green" align="right"><!-- BEGIN qf_fancygroup_element_required --><span style="color: #FF0000;">*</span><!-- END qf_fancygroup_element_required -->{qf_label}</td>
+                <td class="green">{qf_element}</td>
+                <!-- END qf_fancygroup_element -->
+                <!-- BEGIN qf_fancygroup_radio -->
+                <td colspan="2" class="green">{qf_element}</td>
+                <!-- END qf_fancygroup_radio -->
+                </tr>
+            <!-- END qf_fancygroup_loop -->
+            </table>
+        </td>
+    </tr>
+    <!-- END qf_fancygroup -->
+
+    <!-- BEGIN qf_green -->
+    <tr>
+        <td align="right" valign="top" class="green"><!-- BEGIN qf_green_required --><span style="color: #FF0000;">*</span><!-- END qf_green_required --><b>{qf_label}</b></td>
+        <td valign="top" align="left" class="green"><!-- BEGIN qf_green_error --><span style="color: #FF0000;">{qf_error}</span><br /><!-- END qf_green_error -->{qf_element}
+        <!-- BEGIN qf_green_label_2 --><br /><span style="font-size: 80%;">{qf_label_2}</span><!-- END qf_green_label_2 --></td>
+    </tr>
+    <!-- END qf_green -->
+    {qf_addblock}
+<!-- END qf_main_loop -->
+
+<!-- BEGIN qf_required_note -->
+    <tr>
+        <td>&nbsp;</td>
+        <td align="left" valign="top">{qf_required_note}</td>
+    </tr>
+<!-- END qf_required_note -->
+</table>
+</form>
+</body>
+</html>

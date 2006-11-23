@@ -1,0 +1,18 @@
+f1	f2	f3	f4
+good1	good2	good3	good4
+;;;;;	;;;;;	;;;;;	;;;;;
+: : :	; ; "	".	"	::::;;;;"
+no"quote	no"qu"ote	n"quote"	n"q"u"o"t"
+"quote1"	"quote2"	noquote3"	noquote4
+test1	"long
+test2"	"long test3	with	seps"	"I'm
+					silly
+					long"
+less1	"less2	."	less3
+isvalid1	isvalid2	isvalid3	isvalid4
+more21	"more22		."	more23	more24	more25	more26
+isvalid21	isvalid22	isvalid23	isvalid24
+lessnoq31	lessnoq32	lessnoq33
+isvalid31	isvalid32	isvalid33	isvalid34
+morenoq41	morenoq42	morenoq43	morenoq44	morenoq45
+isvalid41	isvalid42	isvalid43	isvalid44
