@@ -86,9 +86,9 @@ class TransportRecord
             array('trtype'=>$trtype, 'direction'=>$direction));
         $trec->recalled = TRUE;
         if (!isset($defaults['title'])) {
-            $defaults['title'] = $r = $trec->getTitle();
-            if (PEAR::isError($r)) {
-            	return $r;
+            $defaults['title'] = $trec->getTitle();
+            if (PEAR::isError($defaults['title'])) {
+            	return $defaults['title'];
             }
         }
         $id = $trec->dbc->nextId("{$trec->transTable}_id_seq");
