@@ -36,14 +36,14 @@ class Renderer
     function rnRender2FileOpen(&$gb, $plid, $owner=NULL)
     {
         // recall playlist:
-        $pl = $r = LsPlaylist::recallByGunid($gb, $plid);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $pl = LsPlaylist::recallByGunid($gb, $plid);
+        if (PEAR::isError($pl)) {
+        	return $pl;
         }
         // smil export:
-        $smil = $r = $pl->output2Smil();
-        if (PEAR::isError($r)) {
-        	return $r;
+        $smil = $pl->outputToSmil();
+        if (PEAR::isError($smil)) {
+        	return $smil;
         }
         // temporary file for smil:
         $tmpn = tempnam($gb->bufferDir, 'plRender_');
