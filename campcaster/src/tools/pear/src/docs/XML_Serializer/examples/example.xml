@@ -1,6 +1,0 @@
-<xml>
-    <test foo="bar">
-        Test
-        <tag>test</tag>
-    </test>
-</xml>
