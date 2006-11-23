@@ -75,7 +75,7 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    private static function &insert(&$gb, $oid, $fname,
+    public static function &insert(&$gb, $oid, $fname,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $plid=NULL, $ftype=NULL)
     {

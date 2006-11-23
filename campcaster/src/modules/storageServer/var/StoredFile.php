@@ -120,7 +120,7 @@ class StoredFile {
      * 		class to be constructed (opt.)
      *  @return StoredFile
      */
-    function &insert(&$gb, $oid, $name,
+    public static function &insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
@@ -257,7 +257,7 @@ class StoredFile {
      * 		optional classname to recall
      * @return StoredFile
      */
-    function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
+    public static function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
     {
         return StoredFile::recall($gb, '', $gunid, $className);
     }
@@ -274,7 +274,7 @@ class StoredFile {
      * 		optional classname to recall
      * @return StoredFile
      */
-    function recallByToken(&$gb, $token, $className='StoredFile')
+    public static function recallByToken(&$gb, $token, $className='StoredFile')
     {
         $gunid = $gb->dbc->getOne("
             SELECT to_hex(gunid)as gunid
