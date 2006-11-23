@@ -1,5 +1,5 @@
 <?php
-require_once "m2tree.php";
+require_once("M2tree.php");
 
 /**
  * ObjClass class

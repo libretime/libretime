@@ -1,7 +1,7 @@
 <?php
-require_once"m2tree.php";
+require_once("M2tree.php");
 
-class M2treeTest extends M2tree{
+class M2treeTest extends M2tree {
     function _test_init()
     {
         for($i=1; $i<=3; $i++){

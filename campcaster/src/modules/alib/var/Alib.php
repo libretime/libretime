@@ -1,13 +1,11 @@
 <?php
-require_once 'subj.php';
+require_once('Subjects.php');
 
 define('USE_ALIB_CLASSES', TRUE);
 define('ALIBERR_NOTLOGGED', 30);
 define('ALIBERR_NOTEXISTS', 31);
 
 /**
- * Alib class
- *
  * Authentication/authorization class
  *
  * @author Tomas Hlava <th@red2head.com>

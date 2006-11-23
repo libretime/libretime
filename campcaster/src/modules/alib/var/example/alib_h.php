@@ -3,9 +3,9 @@
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 session_start();
-require_once 'conf.php';
-require_once 'DB.php';
-require_once '../alib.php';
+require_once('conf.php');
+require_once('DB.php');
+require_once('../Alib.php');
 
 #PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
