@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__).'/../LocStor.php';
+require_once(dirname(__FILE__).'/../LocStor.php');
 
 /**
  * XML-RPC interface for LocStor class
@@ -11,19 +11,19 @@ class XR_LocStor extends LocStor {
 
     /* ----------------------------------------------------------- getVersion */
     /**
-     *  Dummy method - only returns Campcaster version
+     * Dummy method - only returns Campcaster version
      *
-     *  The XML-RPC name of this method is "locstor.getVersion".
+     * The XML-RPC name of this method is "locstor.getVersion".
      *
-     *  Input parameters: XML-RPC struct with no fields.
+     * Input parameters: XML-RPC struct with no fields.
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> version :  string </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -32,13 +32,13 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Subjects::getVersion
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Subjects::getVersion
      */
-    function xr_getVersion($input)
+    public function xr_getVersion($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -57,23 +57,23 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------- authentication */
     /**
-     *  Checks the login name and password of the user and return
-     *  true if login data are correct, othervise return false.
+     * Checks the login name and password of the user and return
+     * true if login data are correct, othervise return false.
      *
-     *  The XML-RPC name of this method is "locstor.authenticate".
+     * The XML-RPC name of this method is "locstor.authenticate".
      *
-     *  Input parameters: XML-RPC struct with the following fields:
+     * Input parameters: XML-RPC struct with the following fields:
      *  <ul>
      *      <li> login  :  string  -  login name </li>
      *      <li> pass   :  string  -  password </li>
      *  </ul>
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> authenticate :  boolean </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -81,13 +81,13 @@ class XR_LocStor extends LocStor {
      *      <li> 804  -  xr_authenticate: database error </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Subjects::authenticate
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Subjects::authenticate
      */
-    function xr_authenticate($input)
+    public function xr_authenticate($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -106,27 +106,27 @@ class XR_LocStor extends LocStor {
 
 
     /**
-     *  Checks the login name and password of the user.  If the login is
-     *  correct, a new session ID string is generated, to be used in all
-     *  subsequent XML-RPC calls as the "sessid" field of the
-     *  parameters.
+     * Checks the login name and password of the user.  If the login is
+     * correct, a new session ID string is generated, to be used in all
+     * subsequent XML-RPC calls as the "sessid" field of the
+     * parameters.
      *
-     *  The XML-RPC name of this method is "locstor.login".
+     * The XML-RPC name of this method is "locstor.login".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> login  :  string  -  login name </li>
      *      <li> pass   :  string  -  password </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> sessid : string  -  the newly generated session ID </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -134,66 +134,71 @@ class XR_LocStor extends LocStor {
      *      <li> 802  -  xr_login: login failed -
      *                      incorrect username or password. </li>
      *      <li> 804  -  xr_login:: database error </li>
-     *  </ul>
+     * </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Alib::login
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Alib::login
      */
-    function xr_login($input)
+    public function xr_login($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->login($r['login'], $r['pass']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 804,
                 "xr_login: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
-        if($res === FALSE)
+        if ($res === FALSE) {
             return new XML_RPC_Response(0, 802,
                 "xr_login: login failed - incorrect username or password."
             );
-        else
+        } else {
             return new XML_RPC_Response(XML_RPC_encode(array('sessid'=>$res)));
+        }
     }
 
     /**
-     *  Logout, destroy session and return status.
-     *  If session is not valid error message is returned.
+     * Logout, destroy session and return status.
+     * If session is not valid error message is returned.
      *
-     *  The XML-RPC name of this method is "locstor.logout".
+     * The XML-RPC name of this method is "locstor.logout".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
+     * <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *  </ul>
+     * </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
-     *  <ul>
+     * On success, returns a XML-RPC struct with single field:
+     * <ul>
      *      <li> status : boolean  -  TRUE </li>
-     *  </ul>
+     * </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
+     * <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
      *      <li> 803  -  xr_logout: logout failed - not logged. </li>
-     *  </ul>
+     * </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
-    function xr_logout($input)
+    public function xr_logout($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->logout($r['sessid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 803,
                 "xr_logout: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -204,15 +209,15 @@ class XR_LocStor extends LocStor {
 
     /* ---------------------------------------------------------------- store */
     /**
-     *  Open writable URL for store new AudioClip or replace existing one.
-     *  Writing to returned URL is possible using HTTP PUT method
-     *  (as e.g. curl -T &lt;filename&gt; command does)
+     * Open writable URL for store new AudioClip or replace existing one.
+     * Writing to returned URL is possible using HTTP PUT method
+     * (as e.g. curl -T &lt;filename&gt; command does)
      *
-     *  The XML-RPC name of this method is "locstor.storeAudioClipOpen".
+     * The XML-RPC name of this method is "locstor.storeAudioClipOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
+     * <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip,
      *          if gunid is empty string, new one is generated
@@ -225,36 +230,38 @@ class XR_LocStor extends LocStor {
      *      <li> fname :  string - human readable mnemonic file name
      *                      with extension corresponding to filetype</li>
      *      <li> chsum :  string - md5 checksum of media file</li>
-     *  </ul>
+     * </ul>
      *
-     *  On success, returns a XML-RPC struct:
-     *  <ul>
+     * On success, returns a XML-RPC struct:
+     * <ul>
      *      <li> url : string - writable URL for HTTP PUT</li>
      *      <li> token : string - access token</li>
-     *  </ul>
+     * </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
+     * <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
      *      <li> 805  -  xr_storeAudioClipOpen:
      *                      &lt;message from lower layer&gt; </li>
-     *  </ul>
+     * </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::storeAudioClipOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::storeAudioClipOpen
      */
-    function xr_storeAudioClipOpen($input)
+    public function xr_storeAudioClipOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->storeAudioClipOpen(
             $r['sessid'], $r['gunid'], $r['metadata'], $r['fname'], $r['chsum']
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_storeAudioClipOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -264,43 +271,45 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Close writable URL for store new AudioClip or replace existing one.
+     * Close writable URL for store new AudioClip or replace existing one.
      *
-     *  The XML-RPC name of this method is "locstor.storeAudioClipClose".
+     * The XML-RPC name of this method is "locstor.storeAudioClipClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
-     *  <ul>
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
+     * <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> token  :  string  -  access token</li>
-     *  </ul>
+     * </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
-     *  <ul>
+     * On success, returns a XML-RPC struct with single field:
+     * <ul>
      *      <li> gunid : string - gunid of stored file</li>
-     *  </ul>
+     * </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
-     *  <ul>
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
+     * <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
      *      <li> 805  -  xr_storeAudioClipClose:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 850  -  wrong 1st parameter, struct expected.</li>
-     *  </ul>
+     * </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::storeAudioClipClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::storeAudioClipClose
      */
-    function xr_storeAudioClipClose($input)
+    public function xr_storeAudioClipClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->storeAudioClipClose($r['sessid'], $r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_TOKEN ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -312,12 +321,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Store audio stream identified by URL - no raw audio data
+     * Store audio stream identified by URL - no raw audio data
      *
-     *  The XML-RPC name of this method is "locstor.storeWebstream".
+     * The XML-RPC name of this method is "locstor.storeWebstream".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
@@ -327,13 +336,13 @@ class XR_LocStor extends LocStor {
      *      <li> url :  string - URL of the webstrea,</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> gunid : string - gunid of stored file</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -342,18 +351,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::storeWebstream
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::storeWebstream
      */
-    function xr_storeWebstream($input)
+    public function xr_storeWebstream($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->storeWebstream(
             $r['sessid'], $r['gunid'], $r['metadata'], $r['fname'], $r['url']
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_storeWebstream: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -364,25 +375,25 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------ access raw audio data */
     /**
-     *  Make access to audio clip.
+     * Make access to audio clip.
      *
-     *  The XML-RPC name of this method is "locstor.accessRawAudioData".
+     * The XML-RPC name of this method is "locstor.accessRawAudioData".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioClip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct:
+     * On success, returns a XML-RPC struct:
      *  <ul>
      *      <li> url : string - local access url</li>
      *      <li> token : string - access token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -391,16 +402,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::accessRawAudioData
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::accessRawAudioData
      */
-    function xr_accessRawAudioData($input)
+    public function xr_accessRawAudioData($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->accessRawAudioData($r['sessid'], $r['gunid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_accessRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -410,24 +423,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Release access to audio clip
+     * Release access to audio clip
      *
-     *  The XML-RPC name of this method is "locstor.releaseRawAudioData".
+     * The XML-RPC name of this method is "locstor.releaseRawAudioData".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token   :  string  -  access token
      *              returned by locstor.accessRawAudioData</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -436,16 +449,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::releaseRawAudioData
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::releaseRawAudioData
      */
-    function xr_releaseRawAudioData($input)
+    public function xr_releaseRawAudioData($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->releaseRawAudioData(NULL, $r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_releaseRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -456,18 +471,18 @@ class XR_LocStor extends LocStor {
 
     /* ---------------------------------------------- download raw audio data */
     /**
-     *  Create downlodable URL for stored file
+     * Create downlodable URL for stored file
      *
-     *  The XML-RPC name of this method is "locstor.downloadRawAudioDataOpen".
+     * The XML-RPC name of this method is "locstor.downloadRawAudioDataOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioClip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct:
+     * On success, returns a XML-RPC struct:
      *  <ul>
      *      <li> url : string - downloadable url</li>
      *      <li> token : string - download token</li>
@@ -476,8 +491,8 @@ class XR_LocStor extends LocStor {
      *      <li> filename : string - human readable mnemonic file name</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -487,16 +502,18 @@ class XR_LocStor extends LocStor {
      *      <li> 847  -  invalid gunid.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::downloadRawAudioDataOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::downloadRawAudioDataOpen
      */
-    function xr_downloadRawAudioDataOpen($input)
+    public function xr_downloadRawAudioDataOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->downloadRawAudioDataOpen($r['sessid'], $r['gunid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_NOTF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -508,25 +525,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Delete downlodable URL with media file.
+     * Delete downlodable URL with media file.
      *
-     *  The XML-RPC name of this method is "locstor.downloadRawAudioDataClose".
+     * The XML-RPC name of this method is "locstor.downloadRawAudioDataClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  download token
      *              returned by locstor.downloadRawAudioDataOpen</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> gunid : string - global unique ID</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -535,16 +552,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::downloadRawAudioDataClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::downloadRawAudioDataClose
      */
-    function xr_downloadRawAudioDataClose($input)
+    public function xr_downloadRawAudioDataClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->downloadRawAudioDataClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_downloadRawAudioDataClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -555,18 +574,18 @@ class XR_LocStor extends LocStor {
 
     /* ---------------------------------------------------- download metadata */
     /**
-     *  Create downlodable URL for metadata part of stored file
+     * Create downlodable URL for metadata part of stored file
      *
-     *  The XML-RPC name of this method is "locstor.downloadMetadataOpen".
+     * The XML-RPC name of this method is "locstor.downloadMetadataOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioClip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct:
+     * On success, returns a XML-RPC struct:
      *  <ul>
      *      <li> url : string - downloadable url</li>
      *      <li> token : string - download token</li>
@@ -574,8 +593,8 @@ class XR_LocStor extends LocStor {
      *      <li> filename : string - mnemonic filename</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -584,17 +603,19 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::downloadRawAudioDataOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::downloadRawAudioDataOpen
      */
-    function xr_downloadMetadataOpen($input)
+    public function xr_downloadMetadataOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         #$this->debugLog("{$r['sessid']}, {$r['gunid']}");
         $res = $this->downloadMetadataOpen($r['sessid'], $r['gunid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_downloadMetadataOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -604,25 +625,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Delete downlodable URL with metadata.
+     * Delete downlodable URL with metadata.
      *
-     *  The XML-RPC name of this method is "locstor.downloadMetadataClose".
+     * The XML-RPC name of this method is "locstor.downloadMetadataClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  download token
      *              returned by locstor.downloadRawAudioDataOpen</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> gunid : string - global unique ID</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -631,16 +652,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::downloadRawAudioDataClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::downloadRawAudioDataClose
      */
-    function xr_downloadMetadataClose($input)
+    public function xr_downloadMetadataClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->downloadMetadataClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_downloadMetadataClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -651,24 +674,24 @@ class XR_LocStor extends LocStor {
 
     /* --------------------------------------------------------------- delete */
     /**
-     *  Delete existing audio clip - DISABLED now!
+     * Delete existing audio clip - DISABLED now!
      *
-     *  The XML-RPC name of this method is "locstor.deleteAudioClip".
+     * The XML-RPC name of this method is "locstor.deleteAudioClip".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean - TRUE</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -677,20 +700,24 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::deleteAudioClip
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::deleteAudioClip
      */
-    function xr_deleteAudioClip($input)
+    public function xr_deleteAudioClip($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['forced'])) $r['forced']=FALSE;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        if (!isset($r['forced'])) {
+            $r['forced']=FALSE;
+        }
         $res = $this->deleteAudioClip($r['sessid'], $r['gunid'], $r['forced']);
-        if(!$r['forced']) return new XML_RPC_Response(0, 805,
-            "xr_deleteAudioClip: method disabled"
-        );
-        if(PEAR::isError($res)){
+        if (!$r['forced']) {
+            return new XML_RPC_Response(0, 805, "xr_deleteAudioClip: method disabled");
+        }
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_deleteAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -701,25 +728,25 @@ class XR_LocStor extends LocStor {
 
     /*====================================================== playlist methods */
     /**
-     *  Create a new Playlist metafile.
+     * Create a new Playlist metafile.
      *
-     *  The XML-RPC name of this method is "locstor.createPlaylist".
+     * The XML-RPC name of this method is "locstor.createPlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
      *      <li> fname :  string - human readable menmonic file name</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> plid : string</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -728,16 +755,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::createPlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::createPlaylist
      */
-    function xr_createPlaylist($input)
+    public function xr_createPlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->createPlaylist($r['sessid'], $r['plid'], $r['fname']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_createPlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -747,27 +776,27 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Open a Playlist metafile for editing.
-     *  Open readable URL and mark file as beeing edited.
+     * Open a Playlist metafile for editing.
+     * Open readable URL and mark file as beeing edited.
      *
-     *  The XML-RPC name of this method is "locstor.editPlaylist".
+     * The XML-RPC name of this method is "locstor.editPlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> url : string - readable url</li>
      *      <li> token : string - playlist token</li>
      *      <li> chsum : string - md5 checksum</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -776,16 +805,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::editPlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::editPlaylist
      */
-    function xr_editPlaylist($input)
+    public function xr_editPlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->editPlaylist($r['sessid'], $r['plid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_editPlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -795,12 +826,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Store a new Playlist metafile in place of the old one.
+     * Store a new Playlist metafile in place of the old one.
      *
-     *  The XML-RPC name of this method is "locstor.savePlaylist".
+     * The XML-RPC name of this method is "locstor.savePlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  playlist token
@@ -808,13 +839,13 @@ class XR_LocStor extends LocStor {
      *      <li> newPlaylist  :  string  -  new Playlist in XML string </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> plid : string - playlistId</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -823,17 +854,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::savePlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::savePlaylist
      */
-    function xr_savePlaylist($input)
+    public function xr_savePlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        $res = $this->savePlaylist(
-            $r['sessid'], $r['token'], $r['newPlaylist']);
-        if(PEAR::isError($res)){
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        $res = $this->savePlaylist($r['sessid'], $r['token'], $r['newPlaylist']);
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_savePlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -843,25 +875,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  RollBack playlist changes to the locked state
+     * RollBack playlist changes to the locked state
      *
-     *  The XML-RPC name of this method is "locstor.revertEditedPlaylist".
+     * The XML-RPC name of this method is "locstor.revertEditedPlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.editPlaylist</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> plid : string - playlistId</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -870,17 +902,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::revertEditedPlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::revertEditedPlaylist
      */
-    function xr_revertEditedPlaylist($input)
+    public function xr_revertEditedPlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        $res = $this->revertEditedPlaylist(
-            $r['token'], $r['sessid']);
-        if(PEAR::isError($res)){
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        $res = $this->revertEditedPlaylist($r['token'], $r['sessid']);
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_revertEditedPlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -891,24 +924,24 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------- delete playlist*/
     /**
-     *  Delete a Playlist metafile - DISABLED now!
+     * Delete a Playlist metafile - DISABLED now!
      *
-     *  The XML-RPC name of this method is "locstor.deletePlaylist".
+     * The XML-RPC name of this method is "locstor.deletePlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean - TRUE</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -917,20 +950,24 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::deletePlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::deletePlaylist
      */
-    function xr_deletePlaylist($input)
+    public function xr_deletePlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['forced'])) $r['forced']=FALSE;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        if (!isset($r['forced'])) {
+            $r['forced']=FALSE;
+        }
         $res = $this->deletePlaylist($r['sessid'], $r['plid'], $r['forced']);
-        if(! $r['forced']) return new XML_RPC_Response(0, 805,
-            "xr_deletePlaylist: method disabled"
-        );
-        if(PEAR::isError($res)){
+        if (! $r['forced']) {
+            return new XML_RPC_Response(0, 805,"xr_deletePlaylist: method disabled");
+        }
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_FILENEX ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -943,12 +980,12 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------- access playlist*/
     /**
-     *  Access (read) a Playlist metafile.
+     * Access (read) a Playlist metafile.
      *
-     *  The XML-RPC name of this method is "locstor.accessPlaylist".
+     * The XML-RPC name of this method is "locstor.accessPlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
@@ -956,7 +993,7 @@ class XR_LocStor extends LocStor {
      *                  inside playlist (default: false)</li>
      *  </ul>
      *
-     *  On success, returns an XML-RPC struct with the following fields:
+     * On success, returns an XML-RPC struct with the following fields:
      *  <ul>
      *      <li> url : string - readable url of accessed playlist in
      *          XML format</li>
@@ -965,13 +1002,13 @@ class XR_LocStor extends LocStor {
      *      <li> content: array of structs - recursive access (optional)</li>
      *  </ul>
      *
-     *  The <code>content</code> field contains a struct for each playlist
-     *  element contained in the playlist.  For audio clips, this struct is
-     *  of type <code>{url, token}</code>; for sub-playlists, it is of type
+     * The <code>content</code> field contains a struct for each playlist
+     * element contained in the playlist.  For audio clips, this struct is
+     * of type <code>{url, token}</code>; for sub-playlists, it is of type
      *  <code>{url, token, chsum, content}</code>.
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -981,18 +1018,21 @@ class XR_LocStor extends LocStor {
      *      <li> 847  -  invalid plid.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::accessPlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::accessPlaylist
      */
-    function xr_accessPlaylist($input)
+    public function xr_accessPlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
-        $res = $this->accessPlaylist($r['sessid'], $r['plid'],
-            (boolean)$r['recursive']);
-        if(PEAR::isError($res)){
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        if (!isset($r['recursive']) || is_null($r['recursive'])) {
+            $r['recursive']=FALSE;
+        }
+        $res = $this->accessPlaylist($r['sessid'], $r['plid'], (boolean)$r['recursive']);
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_NOTF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -1004,12 +1044,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Release the resources obtained earlier by accessPlaylist().
+     * Release the resources obtained earlier by accessPlaylist().
      *
-     *  The XML-RPC name of this method is "locstor.releasePlaylist".
+     * The XML-RPC name of this method is "locstor.releasePlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.accessPlaylist</li>
@@ -1018,13 +1058,13 @@ class XR_LocStor extends LocStor {
      *              (ignored now - true forced)</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> plid : string - playlist ID</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1033,17 +1073,19 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::releasePlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::releasePlaylist
      */
-    function xr_releasePlaylist($input)
+    public function xr_releasePlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        //if(!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        //if (!isset($r['recursive']) || is_null($r['recursive'])) $r['recursive']=FALSE;
         $res = $this->releasePlaylist(NULL, $r['token'], TRUE);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_releasePlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1054,24 +1096,24 @@ class XR_LocStor extends LocStor {
 
     /* -------------------------------------------------------- playlist info */
     /**
-     *  Check whether a Playlist metafile with the given playlist ID exists.
+     * Check whether a Playlist metafile with the given playlist ID exists.
      *
-     *  The XML-RPC name of this method is "locstor.existsPlaylist".
+     * The XML-RPC name of this method is "locstor.existsPlaylist".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> exists : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1080,16 +1122,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::existsPlaylist
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::existsPlaylist
      */
-    function xr_existsPlaylist($input)
+    public function xr_existsPlaylist($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->existsPlaylist($r['sessid'], $r['plid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_existsPlaylist: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1099,28 +1143,28 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Check whether a Playlist metafile with the given playlist ID
-     *  is available for editing, i.e., exists and is not marked as
-     *  beeing edited.
+     * Check whether a Playlist metafile with the given playlist ID
+     * is available for editing, i.e., exists and is not marked as
+     * beeing edited.
      *
-     *  The XML-RPC name of this method is "locstor.playlistIsAvailable".
+     * The XML-RPC name of this method is "locstor.playlistIsAvailable".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> available : boolean</li>
      *      <li> ownerid : int - local user id</li>
      *      <li> ownerlogin : string - local username</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1129,18 +1173,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::playlistIsAvailable
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::playlistIsAvailable
      */
-    function xr_playlistIsAvailable($input)
+    public function xr_playlistIsAvailable($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->playlistIsAvailable($r['sessid'], $r['plid'], TRUE);
         $ownerId = ($res === TRUE ? NULL : $res);
         $ownerLogin = (is_null($ownerId) ? NULL : $this->getSubjName($ownerId));
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_playlistIsAvailable: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1155,13 +1201,13 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------ export playlist */
     /**
-     *  Create a tarfile with playlist export - playlist and all matching
-     *  sub-playlists and media files (if desired)
+     * Create a tarfile with playlist export - playlist and all matching
+     * sub-playlists and media files (if desired)
      *
-     *  The XML-RPC name of this method is "locstor.exportPlaylistOpen".
+     * The XML-RPC name of this method is "locstor.exportPlaylistOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plids : array of strings  -  global unique IDs of Playlists</li>
@@ -1170,14 +1216,14 @@ class XR_LocStor extends LocStor {
      *          with all related files  </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> url : string - readable url</li>
      *      <li> token : string - access token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1186,19 +1232,23 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::exportPlaylistOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::exportPlaylistOpen
      */
-    function xr_exportPlaylistOpen($input)
+    public function xr_exportPlaylistOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['standalone']) || empty($r['standalone'])) $r['standalone']=FALSE;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        if (!isset($r['standalone']) || empty($r['standalone'])) {
+            $r['standalone']=FALSE;
+        }
         $res = $this->exportPlaylistOpen(
             $r['sessid'], $r['plids'], $r['type'], $r['standalone']
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_exportPlaylistOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1211,23 +1261,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Close playlist export previously opened by the exportPlaylistOpen method
+     * Close playlist export previously opened by the exportPlaylistOpen method
      *
-     *  The XML-RPC name of this method is "locstor.exportPlaylistClose".
+     * The XML-RPC name of this method is "locstor.exportPlaylistClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  access token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean - status/li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1236,16 +1286,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::exportPlaylistClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::exportPlaylistClose
      */
-    function xr_exportPlaylistClose($input)
+    public function xr_exportPlaylistClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->exportPlaylistClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_exportPlaylistClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1256,25 +1308,25 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------ import playlist */
     /**
-     *  Open writable URL for import playlist in LS Archive format
+     * Open writable URL for import playlist in LS Archive format
      *
-     *  The XML-RPC name of this method is "locstor.importPlaylistOpen".
+     * The XML-RPC name of this method is "locstor.importPlaylistOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> chsum : string  -  md5 checksum of imported file</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> url : string - writable url</li>
      *      <li> token : string - PUT token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1283,16 +1335,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::importPlaylistOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::importPlaylistOpen
      */
-    function xr_importPlaylistOpen($input)
+    public function xr_importPlaylistOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->importPlaylistOpen($r['sessid'], $r['chsum']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_importPlaylistOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1305,23 +1359,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Open writable URL for import playlist in LS Archive format
+     * Open writable URL for import playlist in LS Archive format
      *
-     *  The XML-RPC name of this method is "locstor.importPlaylistClose".
+     * The XML-RPC name of this method is "locstor.importPlaylistClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  access token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> gunid : string - global id</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1330,16 +1384,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::importPlaylistClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::importPlaylistClose
      */
-    function xr_importPlaylistClose($input)
+    public function xr_importPlaylistClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->importPlaylistClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_importPlaylistClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1352,24 +1408,24 @@ class XR_LocStor extends LocStor {
 
     /* ---------------------------------------------- render playlist to file */
     /**
-     *  Render playlist to ogg file (open handle)
+     * Render playlist to ogg file (open handle)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToFileOpen".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToFileOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  playlist gunid </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> token : string - render token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1378,16 +1434,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToFileOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToFileOpen
      */
-    function xr_renderPlaylistToFileOpen($input)
+    public function xr_renderPlaylistToFileOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToFileOpen($r['sessid'], $r['plid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToFileOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1399,24 +1457,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Render playlist to ogg file (check results)
+     * Render playlist to ogg file (check results)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToFileCheck".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToFileCheck".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  render token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1425,16 +1483,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToFileCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToFileCheck
      */
-    function xr_renderPlaylistToFileCheck($input)
+    public function xr_renderPlaylistToFileCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToFileCheck($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToFileCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1447,23 +1507,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Render playlist to ogg file (close handle)
+     * Render playlist to ogg file (close handle)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToFileClose".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToFileClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  render token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1472,16 +1532,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToFileClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToFileClose
      */
-    function xr_renderPlaylistToFileClose($input)
+    public function xr_renderPlaylistToFileClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToFileClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToFileClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1494,24 +1556,24 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------- render playlist to storage */
     /**
-     *  Render playlist to storage media clip (open handle)
+     * Render playlist to storage media clip (open handle)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToStorageOpen".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToStorageOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  playlist gunid </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> token : string - render token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1520,16 +1582,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToStorageOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToStorageOpen
      */
-    function xr_renderPlaylistToStorageOpen($input)
+    public function xr_renderPlaylistToStorageOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToStorageOpen($r['sessid'], $r['plid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToStorageOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1541,24 +1605,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Render playlist to storage media clip (check results)
+     * Render playlist to storage media clip (check results)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToStorageCheck".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToStorageCheck".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  render token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> gunid : string - gunid of result file</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1567,16 +1631,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToStorageCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToStorageCheck
      */
-    function xr_renderPlaylistToStorageCheck($input)
+    public function xr_renderPlaylistToStorageCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToStorageCheck($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToStorageCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1590,24 +1656,24 @@ class XR_LocStor extends LocStor {
 
     /* ----------------------------------------------- render playlist to RSS */
     /**
-     *  Render playlist to RSS file (open handle)
+     * Render playlist to RSS file (open handle)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToRSSOpen".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToRSSOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  playlist gunid </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> token : string - render token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1616,16 +1682,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToRSSOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToRSSOpen
      */
-    function xr_renderPlaylistToRSSOpen($input)
+    public function xr_renderPlaylistToRSSOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToRSSOpen($r['sessid'], $r['plid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToRSSOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1637,24 +1705,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Render playlist to RSS file (check results)
+     * Render playlist to RSS file (check results)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToRSSCheck".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToRSSCheck".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  render token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1663,16 +1731,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToRSSCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToRSSCheck
      */
-    function xr_renderPlaylistToRSSCheck($input)
+    public function xr_renderPlaylistToRSSCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToRSSCheck($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToRSSCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1685,23 +1755,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Render playlist to RSS file (close handle)
+     * Render playlist to RSS file (close handle)
      *
-     *  The XML-RPC name of this method is "locstor.renderPlaylistToRSSClose".
+     * The XML-RPC name of this method is "locstor.renderPlaylistToRSSClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  render token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1710,16 +1780,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::renderPlaylistToRSSClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::renderPlaylistToRSSClose
      */
-    function xr_renderPlaylistToRSSClose($input)
+    public function xr_renderPlaylistToRSSClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->renderPlaylistToRSSClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_renderPlaylistToRSSClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1733,24 +1805,24 @@ class XR_LocStor extends LocStor {
     /*==================================================storage admin methods */
     /* ------------------------------------------------------- backup methods */
     /**
-     *  Create backup of storage (open handle)
+     * Create backup of storage (open handle)
      *
-     *  The XML-RPC name of this method is "locstor.createBackupOpen".
+     * The XML-RPC name of this method is "locstor.createBackupOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> criteria : struct - see search criteria </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> token : string - backup token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1759,19 +1831,21 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::createBackupOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::createBackupOpen
      */
-    function xr_createBackupOpen($input)
+    public function xr_createBackupOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
 
 #        return new XML_RPC_Response(XML_RPC_encode(var_export($this, TRUE)));
 
         $res = $this->createBackupOpen($r['sessid'], $r['criteria']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_createBackupOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1783,17 +1857,17 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Create backup of storage (check results)
+     * Create backup of storage (check results)
      *
-     *  The XML-RPC name of this method is "locstor.createBackupCheck".
+     * The XML-RPC name of this method is "locstor.createBackupCheck".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  backup token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
@@ -1802,8 +1876,8 @@ class XR_LocStor extends LocStor {
      *                  (use only if status==fault) </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1812,18 +1886,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::createBackupCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::createBackupCheck
      */
      //      <li> 854  -  backup process fault</li>
-    function xr_createBackupCheck($input)
+    public function xr_createBackupCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->createBackupCheck($r['token']);
 
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_BGERR ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -1835,17 +1911,17 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Create backup of storage (list results)
+     * Create backup of storage (list results)
      *
-     *  The XML-RPC name of this method is "locstor.createBackupList".
+     * The XML-RPC name of this method is "locstor.createBackupList".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> stat  :  string  -  backup status </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC array of struct with following fields:
+     * On success, returns a XML-RPC array of struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> url : string - readable url</li>
@@ -1854,8 +1930,8 @@ class XR_LocStor extends LocStor {
      *                  (use only if status==fault) </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1864,18 +1940,22 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::createBackupCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::createBackupCheck
      */
      //      <li> 854  -  backup process fault</li>
-    function xr_createBackupList($input)
+    public function xr_createBackupList($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        if(!isset($r['stat']) || is_null($r['stat'])) $r['stat']='';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        if (!isset($r['stat']) || is_null($r['stat'])) {
+            $r['stat']='';
+        }
         $res = $this->createBackupList($r['stat']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_BGERR ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -1887,23 +1967,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Create backup of storage (close handle)
+     * Create backup of storage (close handle)
      *
-     *  The XML-RPC name of this method is "locstor.createBackupClose".
+     * The XML-RPC name of this method is "locstor.createBackupClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  backup token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1912,16 +1992,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::createBackupClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::createBackupClose
      */
-    function xr_createBackupClose($input)
+    public function xr_createBackupClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->createBackupClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_createBackupClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1933,25 +2015,25 @@ class XR_LocStor extends LocStor {
     }
     /* ------------------------------------------------------ restore methods */
     /**
-     *  Open restore a backup file
+     * Open restore a backup file
      *
-     *  The XML-RPC name of this method is "locstor.restoreBackupOpen".
+     * The XML-RPC name of this method is "locstor.restoreBackupOpen".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  : string  -  session id </li>
      *      <li> chsum :  string - md5 checksum of restore file</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> url : string - writable URL for HTTP PUT</li>
      *      <li> token : string - PUT token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -1960,16 +2042,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::restoreBackupOpen
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::restoreBackupOpen
      */
-    function xr_restoreBackupOpen($input)
+    public function xr_restoreBackupOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->restoreBackupOpen($r['sessid'], $r['chsum']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -1980,25 +2064,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Close writable URL for restore a backup file and start the restore
-     *  process
+     * Close writable URL for restore a backup file and start the restore
+     * process
      *
-     *  The XML-RPC name of this method is "locstor.restoreBackupClosePut".
+     * The XML-RPC name of this method is "locstor.restoreBackupClosePut".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  : string  -  session id </li>
      *      <li> token  :  string  -  PUT token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> token : string - restore token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2007,16 +2091,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::restoreBackupClosePut
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::restoreBackupClosePut
      */
-    function xr_restoreBackupClosePut($input)
+    public function xr_restoreBackupClosePut($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->restoreBackupClosePut($r['sessid'], $r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupClosePut: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2026,24 +2112,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Check the state of restore procedure
+     * Check the state of restore procedure
      *
-     *  The XML-RPC name of this method is "locstor.restoreBackupCheck".
+     * The XML-RPC name of this method is "locstor.restoreBackupCheck".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  restore token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - success | working | fault</li>
      *      <li> faultString: string - description of fault</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2052,16 +2138,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::restoreBackupCheck
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::restoreBackupCheck
      */
-    function xr_restoreBackupCheck($input)
+    public function xr_restoreBackupCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->restoreBackupCheck($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2074,23 +2162,23 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Close the restore process
+     * Close the restore process
      *
-     *  The XML-RPC name of this method is "locstor.restoreBackupClose".
+     * The XML-RPC name of this method is "locstor.restoreBackupClose".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> token  :  string  -  restore token </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with following fields:
+     * On success, returns a XML-RPC struct with following fields:
      *  <ul>
      *      <li> status : string - status</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2099,16 +2187,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::restoreBackupClose
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::restoreBackupClose
      */
-    function xr_restoreBackupClose($input)
+    public function xr_restoreBackupClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->restoreBackupClose($r['token']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_restoreBackupClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2122,24 +2212,24 @@ class XR_LocStor extends LocStor {
 
     /*========================================================== info methods */
     /**
-     *  Check if audio clip exists and return TRUE/FALSE
+     * Check if audio clip exists and return TRUE/FALSE
      *
-     *  The XML-RPC name of this method is "locstor.existsAudioClip".
+     * The XML-RPC name of this method is "locstor.existsAudioClip".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> exists : boolean  </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2148,18 +2238,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::existsAudioClip
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::existsAudioClip
      */
-    function xr_existsAudioClip($input)
+    public function xr_existsAudioClip($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         #$this->debugLog(join(', ', $r));
         $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
         #$this->debugLog($res);
-        if(PEAR::isError($res))
+        if (PEAR::isError($res))
             return new XML_RPC_Response(0, 805,
                 "xr_existsAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2169,24 +2261,24 @@ class XR_LocStor extends LocStor {
 
     /*====================================================== metadata methods */
     /**
-     *  Return all file's metadata as XML string
+     * Return all file's metadata as XML string
      *
-     *  The XML-RPC name of this method is "locstor.getAudioClip".
+     * The XML-RPC name of this method is "locstor.getAudioClip".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> metadata : string - metadata as XML</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2195,16 +2287,18 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::getAudioClip
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::getAudioClip
      */
-    function xr_getAudioClip($input)
+    public function xr_getAudioClip($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->getAudioClip($r['sessid'], $r['gunid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
@@ -2213,25 +2307,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Update existing audio clip metadata
+     * Update existing audio clip metadata
      *
-     *  The XML-RPC name of this method is "locstor.updateAudioClipMetadata".
+     * The XML-RPC name of this method is "locstor.updateAudioClipMetadata".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
      *      <li> metadata  :  metadata XML string</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean - TRUE</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2240,18 +2334,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::updateAudioClipMetadata
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::updateAudioClipMetadata
      */
-    function xr_updateAudioClipMetadata($input)
+    public function xr_updateAudioClipMetadata($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->updateAudioClipMetadata(
             $r['sessid'], $r['gunid'], $r['metadata']
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_updateAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2261,12 +2357,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Search in local metadata database
+     * Search in local metadata database
      *
-     *  The XML-RPC name of this method is "locstor.searchMetadata".
+     * The XML-RPC name of this method is "locstor.searchMetadata".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> criteria : struct, with following fields:<br>
@@ -2303,7 +2399,7 @@ class XR_LocStor extends LocStor {
      *   </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC array of structs with fields:
+     * On success, returns a XML-RPC array of structs with fields:
      *   <ul>
      *       <li>cnt : integer - number of matching gunids
      *              of files have been found</li>
@@ -2318,10 +2414,10 @@ class XR_LocStor extends LocStor {
      *          </ul>
      *      </li>
      *   </ul>
-     *  (cnt value may be greater than size of result array - see limit param)
+     * (cnt value may be greater than size of result array - see limit param)
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2330,17 +2426,19 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::searchMetadata
-     *  @see BasicStor::localSearch
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::searchMetadata
+     * @see BasicStor::localSearch
      */
-    function xr_searchMetadata($input)
+    public function xr_searchMetadata($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->searchMetadata($r['sessid'], $r['criteria']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_searchAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
@@ -2360,12 +2458,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Return values of specified metadata category
+     * Return values of specified metadata category
      *
-     *  The XML-RPC name of this method is "locstor.browseCategory".
+     * The XML-RPC name of this method is "locstor.browseCategory".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> category : string - metadata category name
@@ -2373,14 +2471,14 @@ class XR_LocStor extends LocStor {
      *      <li> criteria : hash - see searchMetadata method </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> results : array with found values </li>
      *      <li> cnt : integer - number of matching values </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2389,18 +2487,20 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::browseCategory
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::browseCategory
      */
-    function xr_browseCategory($input)
+    public function xr_browseCategory($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->browseCategory(
             $r['category'], $r['criteria'], $r['sessid']
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
 
@@ -2420,24 +2520,24 @@ class XR_LocStor extends LocStor {
 
     /* ============================================== methods for preferences */
     /**
-     *  Load user preference value
+     * Load user preference value
      *
-     *  The XML-RPC name of this method is "locstor.loadPref".
+     * The XML-RPC name of this method is "locstor.loadPref".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> key : string - preference key </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> value : string - preference value </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2448,18 +2548,20 @@ class XR_LocStor extends LocStor {
      *      <li> 849  -  invalid preference key.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::loadPref
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Pref::loadPref
      */
-    function xr_loadPref($input)
+    public function xr_loadPref($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Prefs.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->loadPref($r['sessid'], $r['key']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == GBERR_PREF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2471,25 +2573,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Save user preference value
+     * Save user preference value
      *
-     *  The XML-RPC name of this method is "locstor.savePref".
+     * The XML-RPC name of this method is "locstor.savePref".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> key : string - preference key </li>
      *      <li> value : string - preference value </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2499,18 +2601,20 @@ class XR_LocStor extends LocStor {
      *      <li> 848  -  invalid session id.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::savePref
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Pref::savePref
      */
-    function xr_savePref($input)
+    public function xr_savePref($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Prefs.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->savePref($r['sessid'], $r['key'], $r['value']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2521,24 +2625,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Delete user preference record
+     * Delete user preference record
      *
-     *  The XML-RPC name of this method is "locstor.delPref".
+     * The XML-RPC name of this method is "locstor.delPref".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> key : string - preference key </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2549,18 +2653,20 @@ class XR_LocStor extends LocStor {
      *      <li> 849  -  invalid preference key.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::delPref
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Pref::delPref
      */
-    function xr_delPref($input)
+    public function xr_delPref($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Prefs.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->delPref($r['sessid'], $r['key']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == GBERR_PREF ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2571,25 +2677,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Read group preference record
+     * Read group preference record
      *
-     *  The XML-RPC name of this method is "locstor.loadGroupPref".
+     * The XML-RPC name of this method is "locstor.loadGroupPref".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> group : string - group name </li>
      *      <li> key : string - preference key </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> value : string - preference value </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2601,18 +2707,20 @@ class XR_LocStor extends LocStor {
      *      <li> 849  -  invalid preference key.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::loadGroupPref
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Pref::loadGroupPref
      */
-    function xr_loadGroupPref($input)
+    public function xr_loadGroupPref($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Prefs.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = (
                 $ec0 == GBERR_SESS || $ec0 == GBERR_PREF || $ec0==ALIBERR_NOTGR
@@ -2627,12 +2735,12 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Save group preference record
+     * Save group preference record
      *
-     *  The XML-RPC name of this method is "locstor.saveGroupPref".
+     * The XML-RPC name of this method is "locstor.saveGroupPref".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> group : string - group name </li>
@@ -2640,13 +2748,13 @@ class XR_LocStor extends LocStor {
      *      <li> value : string - preference value </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> status : boolean</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2657,18 +2765,20 @@ class XR_LocStor extends LocStor {
      *      <li> 848  -  invalid session id.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Pref::saveGroupPref
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Pref::saveGroupPref
      */
-    function xr_saveGroupPref($input)
+    public function xr_saveGroupPref($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Prefs.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
         $res = $pr->saveGroupPref($r['sessid'], $r['group'], $r['key'], $r['value']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0==GBERR_SESS || $ec0==ALIBERR_NOTGR ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2681,17 +2791,17 @@ class XR_LocStor extends LocStor {
     /* =============================== remote repository (networking) methods */
     /* ------------------------------------------------------- common methods */
     /**
-     *  Common "check" method for transports
+     * Common "check" method for transports
      *
-     *  The XML-RPC name of this method is "locstor.getTransportInfo".
+     * The XML-RPC name of this method is "locstor.getTransportInfo".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *     <li>trtype: string - audioclip | playlist | search | file</li>
      *     <li>direction: string - up | down</li>
@@ -2704,8 +2814,8 @@ class XR_LocStor extends LocStor {
      *     <li>errmsg: string - error message from failed transports</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2716,18 +2826,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::getTransportInfo
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::getTransportInfo
      */
-    function xr_getTransportInfo($input)
+    public function xr_getTransportInfo($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->getTransportInfo($r['trtok']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2738,25 +2850,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Turn transports on/off, optionaly return current state.
+     * Turn transports on/off, optionaly return current state.
      *
-     *  The XML-RPC name of this method is "locstor.turnOnOffTransports".
+     * The XML-RPC name of this method is "locstor.turnOnOffTransports".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> onOff: boolean optional
      *              (if not used, current state is returned)</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> state : boolean - previous state</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2767,17 +2879,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::turnOnOffTransports
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::turnOnOffTransports
      */
-    function xr_turnOnOffTransports($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+    public function xr_turnOnOffTransports($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->turnOnOffTransports($r['onOff']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2788,25 +2903,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Pause, resume or cancel transport
+     * Pause, resume or cancel transport
      *
-     *  The XML-RPC name of this method is "locstor.doTransportAction".
+     * The XML-RPC name of this method is "locstor.doTransportAction".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> trtok : string - transport token</li>
      *      <li> action: string - pause | resume | cancel
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> state : string - resulting transport state</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2817,17 +2932,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::doTransportAction
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::doTransportAction
      */
-    function xr_doTransportAction($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+    public function xr_doTransportAction($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->doTransportAction($r['trtok'], $r['action']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2839,25 +2957,25 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------ methods for ls-archive-format file transports */
     /**
-     *  Open async file transfer from local storageServer to network hub,
-     *  file should be ls-archive-format file.
+     * Open async file transfer from local storageServer to network hub,
+     * file should be ls-archive-format file.
      *
-     *  The XML-RPC name of this method is "locstor.uploadFile2Hub".
+     * The XML-RPC name of this method is "locstor.uploadFile2Hub".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> filePath string - local path to uploaded file</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2868,18 +2986,21 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::uploadFile2Hub
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::uploadFile2Hub
      */
-    function xr_uploadFile2Hub($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+    public function xr_uploadFile2Hub($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->uploadFile2Hub($r['filePath']); // local files on XML-RPC :(
                         // there should be something as uploadFile2storageServer
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2890,17 +3011,17 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Get list of prepared transfers initiated by hub
+     * Get list of prepared transfers initiated by hub
      *
-     *  The XML-RPC name of this method is "locstor.getHubInitiatedTransfers".
+     * The XML-RPC name of this method is "locstor.getHubInitiatedTransfers".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> results : array of structs with fields:
      *          <ul>
@@ -2910,8 +3031,8 @@ class XR_LocStor extends LocStor {
      *      </li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2922,17 +3043,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::getHubInitiatedTransfers
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::getHubInitiatedTransfers
      */
-    function xr_getHubInitiatedTransfers($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+    public function xr_getHubInitiatedTransfers($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->getHubInitiatedTransfers();
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2943,24 +3067,24 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Start of download initiated by hub
+     * Start of download initiated by hub
      *
-     *  The XML-RPC name of this method is "locstor.startHubInitiatedTransfer".
+     * The XML-RPC name of this method is "locstor.startHubInitiatedTransfer".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> trtok : string - transport token obtained from
      *          the getHubInitiatedTransfers method</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -2971,17 +3095,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::startHubInitiatedTransfer
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::startHubInitiatedTransfer
      */
-    function xr_startHubInitiatedTransfer($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+    public function xr_startHubInitiatedTransfer($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->startHubInitiatedTransfer($r['trtok']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -2994,25 +3121,25 @@ class XR_LocStor extends LocStor {
     /* ------------- special methods for audioClip/webstream object transport */
 
     /**
-     *  Start upload of audioclip or playlist from local storageServer to hub
+     * Start upload of audioclip or playlist from local storageServer to hub
      *
-     *  The XML-RPC name of this method is "locstor.upload2Hub".
+     * The XML-RPC name of this method is "locstor.upload2Hub".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid: string - global unique id of object being transported
      *      </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3023,17 +3150,20 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::upload2Hub
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::upload2Hub
      */
-    function xr_upload2Hub($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once '../Transport.php';
+    public function xr_upload2Hub($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once('../Transport.php');
         $tr = new Transport($this);
         $res = $tr->upload2Hub($r['gunid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -3044,25 +3174,25 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Start download of audioclip or playlist from hub to local storageServer
+     * Start download of audioclip or playlist from hub to local storageServer
      *
-     *  The XML-RPC name of this method is "locstor.downloadFromHub".
+     * The XML-RPC name of this method is "locstor.downloadFromHub".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid: string - global unique id of object being transported
      *      </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3073,12 +3203,13 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::downloadFromHub
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::downloadFromHub
      */
-    function xr_downloadFromHub($input)    {
-        list($ok, $par) = $this->_xr_getPars($input);
+    public function xr_downloadFromHub($input)
+    {
+        list($ok, $par) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $par;
         }
@@ -3098,25 +3229,25 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------ global-search methods */
     /**
-     *  Start search job on network hub
+     * Start search job on network hub
      *
-     *  The XML-RPC name of this method is "locstor.globalSearch".
+     * The XML-RPC name of this method is "locstor.globalSearch".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> criteria : hash, LS criteria format - see searchMetadata method
      *      </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with the following fields:
+     * On success, returns a XML-RPC struct with the following fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3127,13 +3258,13 @@ class XR_LocStor extends LocStor {
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::globalSearch
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::globalSearch
      */
-    function xr_globalSearch($input)
+    public function xr_globalSearch($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -3151,18 +3282,18 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Get results from search job on network hub.
-     *  (returns error if not finished)
+     * Get results from search job on network hub.
+     * (returns error if not finished)
      *
-     *  The XML-RPC name of this method is "locstor.getSearchResults".
+     * The XML-RPC name of this method is "locstor.getSearchResults".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC array of structs with fields:
+     * On success, returns a XML-RPC array of structs with fields:
      *   <ul>
      *       <li>cnt : integer - number of matching gunids
      *              of files have been found</li>
@@ -3177,10 +3308,10 @@ class XR_LocStor extends LocStor {
      *          </ul>
      *      </li>
      *   </ul>
-     *  (cnt value may be greater than size of result array - see limit param)
+     * (cnt value may be greater than size of result array - see limit param)
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3192,12 +3323,13 @@ class XR_LocStor extends LocStor {
      *      <li> 873  -  not finished.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::getSearchResults
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::getSearchResults
      */
-    function xr_getSearchResults($input)    {
-        list($ok, $r) = $this->_xr_getPars($input);
+    public function xr_getSearchResults($input)
+    {
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -3218,24 +3350,24 @@ class XR_LocStor extends LocStor {
 
     /**
      * OBSOLETE
-     *  Starts upload audioclip to remote archive
+     * Starts upload audioclip to remote archive
      *
-     *  The XML-RPC name of this method is "locstor.uploadToArchive".
+     * The XML-RPC name of this method is "locstor.uploadToArchive".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid : string - global unique id </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3245,20 +3377,20 @@ class XR_LocStor extends LocStor {
      *      <li> 848  -  invalid session id.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::uploadToArchive
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::uploadToArchive
      */
-    function xr_uploadToArchive($input)
+    public function xr_uploadToArchive($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
         require_once(dirname(__FILE__).'/../Transport.php');
         $tr = new Transport($this);
         $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -3270,24 +3402,24 @@ class XR_LocStor extends LocStor {
 
     /**
      * OBSOLETE
-     *  Starts download audioclip from remote archive
+     * Starts download audioclip from remote archive
      *
-     *  The XML-RPC name of this method is "locstor.downloadFromArchive".
+     * The XML-RPC name of this method is "locstor.downloadFromArchive".
      *
-     *  The input parameters are an XML-RPC struct with the following
-     *  fields:
+     * The input parameters are an XML-RPC struct with the following
+     * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid : string - global unique id </li>
      *  </ul>
      *
-     *  On success, returns a XML-RPC struct with single field:
+     * On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> trtok : string - transport token</li>
      *  </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3297,18 +3429,20 @@ class XR_LocStor extends LocStor {
      *      <li> 848  -  invalid session id.</li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see Transport::downloadFromArchive
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see Transport::downloadFromArchive
      */
-    function xr_downloadFromArchive($input)
+    public function xr_downloadFromArchive($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        require_once dirname(__FILE__).'/../Transport.php';
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
+        require_once(dirname(__FILE__).'/../Transport.php');
         $tr = new Transport($this);
         $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
@@ -3320,12 +3454,12 @@ class XR_LocStor extends LocStor {
 
     /* ================================================ methods for debugging */
     /**
-     *  Reset storageServer for debugging.
+     * Reset storageServer for debugging.
      *
-     *  The XML-RPC name of this method is "locstor.resetStorage".
+     * The XML-RPC name of this method is "locstor.resetStorage".
      *
-     *  The input parameters are an empty XML-RPC struct,
-     *  or struct with the following <b>optional</b> fields:
+     * The input parameters are an empty XML-RPC struct,
+     * or struct with the following <b>optional</b> fields:
      *  <ul>
      *      <li> loadSampleData : boolean - load sample data? (default: true)
      *      </li>
@@ -3334,9 +3468,9 @@ class XR_LocStor extends LocStor {
      *      </li>
      *  </ul>
      *
-     *  On success, returns the same result as searchMetadata with filetype
+     * On success, returns the same result as searchMetadata with filetype
      *  'all' and no conditions, ordered by filetype and dc:title
-     *  i.e. XML-RPC array of structs with fields:
+     * i.e. XML-RPC array of structs with fields:
      *   <ul>
      *       <li>cnt : integer - number of inserted files</li>
      *       <li>results : array of hashes:
@@ -3351,8 +3485,8 @@ class XR_LocStor extends LocStor {
      *      </li>
      *   </ul>
      *
-     *  On errors, returns an XML-RPC error response.
-     *  The possible error codes and error message are:
+     * On errors, returns an XML-RPC error response.
+     * The possible error codes and error message are:
      *  <ul>
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
@@ -3361,19 +3495,21 @@ class XR_LocStor extends LocStor {
      *                      &lt;message from lower layer&gt; </li>
      *  </ul>
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
-     *  @see LocStor::getAudioClip
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
+     * @see LocStor::getAudioClip
      */
-    function xr_resetStorage($input)
+    public function xr_resetStorage($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->resetStorage(
             isset($r['loadSampleData']) ? $r['loadSampleData'] : TRUE,
             !(isset($r['invalidateSessionIds']) ? $r['invalidateSessionIds'] : FALSE)
         );
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
@@ -3382,17 +3518,19 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Test XMLRPC - strupper and return given string,
-     *  also return loginname of logged user
+     * Test XMLRPC - strupper and return given string,
+     * also return loginname of logged user
      *  - debug method only
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
-    function xr_test($input)
+    public function xr_test($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         return new XML_RPC_Response(XML_RPC_encode(array(
             'str'=>strtoupper($r['teststring']),
             'login'=>$this->getSessLogin($r['sessid']),
@@ -3401,17 +3539,19 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     *  Open writable URL for put method - debug method only
+     * Open writable URL for put method - debug method only
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
-    function xr_openPut($input)
+    public function xr_openPut($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->bsOpenPut();
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
@@ -3419,18 +3559,21 @@ class XR_LocStor extends LocStor {
         return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
+
     /**
-     *  Close writable URL - debug method only
+     * Close writable URL - debug method only
      *
-     *  @param input XMLRPC struct
-     *  @return XMLRPC struct
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
-    function xr_closePut($input)
+    public function xr_closePut($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
+        if (!$ok) {
+            return $r;
+        }
         $res = $this->bsClosePut($r['token'], $r['chsum']);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
@@ -3443,23 +3586,26 @@ class XR_LocStor extends LocStor {
 
     /* ==================================================== "private" methods */
     /**
-     *  Check and convert struct of parameters
+     * Check and convert struct of parameters
      *
-     *  @param input XMLRPC parameters
-     *  @return array
+     * @param XML_RPC_Message $input
+     * @return array
+     *      Array of two items: first item is boolean, indicating
+     *      successful decode.
+     *      On success, the second param is an array of values.
+     *      On failure, the second param is an XML_RPC_Response object.
      */
-    function _xr_getPars($input)
+    private static function xr_getParams($input)
     {
         $p = $input->getParam(0);
-        if(isset($p) && $p->scalartyp()=="struct"){
+        if (isset($p) && ($p->scalartyp()=="struct")) {
             $r = XML_RPC_decode($p);
             return array(TRUE, $r);
+        } else {
+            return array(FALSE, new XML_RPC_Response(0, 801, "wrong 1st parameter, struct expected." ));
         }
-        else return array(FALSE, new XML_RPC_Response(0, 801,
-            "wrong 1st parameter, struct expected."
-        ));
     }
 
-}   // end of class definition
+} // class XR_LocStor
 
 ?>
