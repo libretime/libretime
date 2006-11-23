@@ -1,13 +1,13 @@
 pl:table
 {
     notLoggedInMsg:string           { "Nie zalogowany" }
-    loggedInMsg:string              { "Zalogowany jako {0}" }
+    loggedInMsg:string              { "Zalogowany: {0}" }
     loginButtonLabel:string         { "Zaloguj" }
-    logoutButtonLabel:string        { "wyloguj" }
+    logoutButtonLabel:string        { "Wyloguj" }
     liveModeButtonLabel:string              { "Na żywo" }
     uploadFileButtonLabel:string            { "Załaduj plik" }
     scratchpadButtonLabel:string            { "Przybornik" }
-    simplePlaylistMgmtButtonLabel:string    { "Edituj listę utworów" }
+    simplePlaylistMgmtButtonLabel:string    { "Listę utworów" }
     schedulerButtonLabel:string             { "Programacja" }
     searchButtonLabel:string                { "Szukaj" }
     optionsButtonLabel:string               { "Options" }

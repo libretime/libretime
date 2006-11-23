@@ -1,13 +1,13 @@
 sr_CS:table
 {
     notLoggedInMsg:string           { "Niste prijavljeni" }
-    loggedInMsg:string              { "Prijavljeni ste kao {0}" }
+    loggedInMsg:string              { "Prijavljeni: {0}" }
     loginButtonLabel:string         { "Prijava" }
     logoutButtonLabel:string        { "Odjava" }
-    liveModeButtonLabel:string              { "Program Uživo" }
-    uploadFileButtonLabel:string            { "Aploud fajla" }
+    liveModeButtonLabel:string              { "Uživo" }
+    uploadFileButtonLabel:string            { "Aploud" }
     scratchpadButtonLabel:string            { "Priprema" }
-    simplePlaylistMgmtButtonLabel:string    { "Obrada plej liste" }
+    simplePlaylistMgmtButtonLabel:string    { "Plej lista" }
     schedulerButtonLabel:string             { "Raspored" }
     searchButtonLabel:string                { "Pretraga" }
     optionsButtonLabel:string               { "Options" }

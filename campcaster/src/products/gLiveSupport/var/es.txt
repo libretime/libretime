@@ -1,13 +1,13 @@
 es:table
 {
     notLoggedInMsg:string           { "No ha ingresado al sistema" }
-    loggedInMsg:string              { "Ingresó al sistema como {0}" }
+    loggedInMsg:string              { "Ingresó: {0}" }
     loginButtonLabel:string         { "Accesar" }
     logoutButtonLabel:string        { "Salir" }
-    liveModeButtonLabel:string              { "Modo en vivo" }
+    liveModeButtonLabel:string              { "En vivo" }
     uploadFileButtonLabel:string            { "Cargar archivo" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Editar lista de repr." }
+    simplePlaylistMgmtButtonLabel:string    { "Lista de repr." }
     schedulerButtonLabel:string             { "Programador" }
     searchButtonLabel:string                { "Búsqueda" }
     optionsButtonLabel:string               { "Options" }

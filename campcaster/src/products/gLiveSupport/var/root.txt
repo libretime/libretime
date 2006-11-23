@@ -1,13 +1,13 @@
 root:table
 {
     notLoggedInMsg:string           { "Not logged in" }
-    loggedInMsg:string              { "Logged in as {0}" }
+    loggedInMsg:string              { "User: {0}" }
     loginButtonLabel:string         { "Log in" }
     logoutButtonLabel:string        { "Log out" }
     liveModeButtonLabel:string              { "Live Mode" }
     uploadFileButtonLabel:string            { "Upload File" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Edit Playlist" }
+    simplePlaylistMgmtButtonLabel:string    { "Playlist" }
     schedulerButtonLabel:string             { "Scheduler" }
     searchButtonLabel:string                { "Search" }
     optionsButtonLabel:string               { "Options" }

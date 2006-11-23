@@ -1,13 +1,13 @@
 sr_CS_CYRILLIC:table
 {
     notLoggedInMsg:string           { "Нисте пријављени" }
-    loggedInMsg:string              { "Пријављени сте као {0}" }
+    loggedInMsg:string              { "Пријављени: {0}" }
     loginButtonLabel:string         { "Пријава" }
     logoutButtonLabel:string        { "Одјава" }
-    liveModeButtonLabel:string              { "Програм Уживо" }
-    uploadFileButtonLabel:string            { "Аплоуд фајла" }
+    liveModeButtonLabel:string              { "Уживо" }
+    uploadFileButtonLabel:string            { "Аплоуд" }
     scratchpadButtonLabel:string            { "Припрема" }
-    simplePlaylistMgmtButtonLabel:string    { "Обрада п.л." }
+    simplePlaylistMgmtButtonLabel:string    { "Плеј листа" }
     schedulerButtonLabel:string             { "Распоред" }
     searchButtonLabel:string                { "Претрага" }
     optionsButtonLabel:string               { "Options" }

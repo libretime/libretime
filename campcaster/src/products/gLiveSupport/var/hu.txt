@@ -1,12 +1,12 @@
 hu:table
 {
     notLoggedInMsg:string           { "Nincs bejelentkezve" }
-    loggedInMsg:string              { "Bejelentkezve {0} felhasználóként" }
-    loginButtonLabel:string         { "Bejelentkezés" }
-    logoutButtonLabel:string        { "Kijelentkezés" }
+    loggedInMsg:string              { "Bejelentkezve: {0}" }
+    loginButtonLabel:string         { "Log in" }
+    logoutButtonLabel:string        { "Log out" }
     liveModeButtonLabel:string              { "Élő adás" }
     uploadFileButtonLabel:string            { "Filefeltöltés" }
-    scratchpadButtonLabel:string            { "Praktikus csupor" }
+    scratchpadButtonLabel:string            { "Scratchpad" }
     simplePlaylistMgmtButtonLabel:string    { "Műsorkezelés" }
     schedulerButtonLabel:string             { "Időzítő" }
     searchButtonLabel:string                { "Keresés" }
