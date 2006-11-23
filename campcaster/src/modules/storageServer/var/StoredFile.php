@@ -311,7 +311,7 @@ class StoredFile {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $ac->md->replace($src->md->getMetaData(), 'string');
+        $ac->md->replace($src->md->getMetadata(), 'string');
         return $ac;
     }
 
@@ -450,19 +450,19 @@ class StoredFile {
     function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
     {
         $this->dbc->query("BEGIN");
-        $res = $r = $this->md->replace($metadata, $mdataLoc, $format);
-        if (PEAR::isError($r)) {
+        $res = $this->md->replace($metadata, $mdataLoc, $format);
+        if (PEAR::isError($res)) {
             $this->dbc->query("ROLLBACK");
-            return $r;
+            return $res;
         }
         $r = $this->md->regenerateXmlFile();
         if (PEAR::isError($r)) {
             $this->dbc->query("ROLLBACK");
             return $r;
         }
-        $res = $r = $this->dbc->query("COMMIT");
-        if (PEAR::isError($r)) {
-            return $r;
+        $res = $this->dbc->query("COMMIT");
+        if (PEAR::isError($res)) {
+            return $res;
         }
         return TRUE;
     }
@@ -474,9 +474,9 @@ class StoredFile {
      * @return XML string
      * @see MetaData
      */
-    function getMetaData()
+    function getMetadata()
     {
-        return $this->md->getMetaData();
+        return $this->md->getMetadata();
     }
 
 
