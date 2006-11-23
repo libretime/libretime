@@ -46,6 +46,7 @@
 
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
+#include "LiveSupport/Core/Thread.h"
 
 #include "LiveSupport/Core/Playlist.h"
 
@@ -91,6 +92,8 @@ using namespace LiveSupport::Core;
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
 {
+    friend class Preloader;
+
     private:
         /**
          *  The name of the configuration XML elmenent used by GstreamerPlayer
@@ -150,6 +153,8 @@ class GstreamerPlayer : virtual public Configurable,
         std::string             m_preloadUrl;
         GstElement            * m_preloadFilesrc;
         GstElement            * m_preloadDecoder;
+
+        Thread                * m_preloadThread;
 
         /**
          *  The type for the vector of listeners.
@@ -429,6 +434,24 @@ class GstreamerPlayer : virtual public Configurable,
         virtual void
         setVolume(unsigned int  volume)                     throw ();
 
+};
+
+
+
+class Preloader : public RunnableInterface
+{
+    public:
+        Preloader(GstreamerPlayer*, const std::string)      throw();
+        ~Preloader()                                        throw();
+
+        void run()                                          throw();
+        void signal(int)                                    throw();
+        void stop()                                         throw();
+
+    private:
+        GstreamerPlayer* m_player;
+        std::string      m_fileUrl;
+        bool             m_stop;
 };
 
 

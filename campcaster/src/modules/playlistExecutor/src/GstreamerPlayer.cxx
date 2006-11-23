@@ -114,6 +114,8 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     m_audioconvert    = 0;
     m_audioscale      = 0;
 
+    m_preloadThread   = 0;
+
     g_signal_connect(m_pipeline, "error", G_CALLBACK(errorHandler), this);
 
     // TODO: read the caps from the config file
@@ -288,56 +290,17 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
 {
     DEBUG_BLOCK
 
-    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
-    if (!isSmil)
-        return;
-
-    debug() << "Preloading SMIL file: " << fileUrl << endl;
-
-    std::string filePath;
-
-    if (fileUrl.find("file://") == 0) {
-        filePath = fileUrl.substr(7, fileUrl.size());
-    }
-    else if (fileUrl.find("file:") == 0) {
-        filePath = fileUrl.substr(5, fileUrl.size());
-    }
-    else {
-        return;
+    if (m_preloadThread) {
+        m_preloadThread->stop();
+        // Wait for thread exit
+        while (m_preloadThread) {}
     }
 
-    if (!m_preloadUrl.empty()) {
-        g_object_unref(G_OBJECT(m_preloadFilesrc));
-        g_object_unref(G_OBJECT(m_preloadDecoder));
-    }
+    Ptr<Preloader>::Ref loader;
+    loader.reset(new Preloader(this, fileUrl));
 
-    m_preloadFilesrc = gst_element_factory_make("filesrc", NULL);
-    gst_element_set(m_preloadFilesrc, "location", filePath.c_str(), NULL);
-
-    m_preloadDecoder = gst_element_factory_make("minimalaudiosmil", NULL);
-
-    GstElement* pipe     = gst_pipeline_new("pipe");
-    GstElement* fakesink = gst_element_factory_make("fakesink", "fakesink");
-    g_object_ref(G_OBJECT(m_preloadFilesrc));
-    g_object_ref(G_OBJECT(m_preloadDecoder));
-    gst_element_link_many(m_preloadFilesrc, m_preloadDecoder, fakesink, NULL);
-    gst_bin_add_many(GST_BIN(pipe), m_preloadFilesrc, m_preloadDecoder, fakesink, NULL);
-
-    gst_element_set_state(pipe, GST_STATE_PLAYING);
-
-    gint64 position = 0LL;
-    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
-        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
-        GstFormat   format = GST_FORMAT_DEFAULT;
-        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
-    }
-
-    gst_element_set_state(pipe, GST_STATE_PAUSED);
-    gst_bin_remove_many(GST_BIN(pipe), m_preloadFilesrc, m_preloadDecoder, NULL);
-    gst_element_unlink(m_preloadFilesrc, fakesink);
-    gst_object_unref(GST_OBJECT(pipe));
-   
-    m_preloadUrl = fileUrl;
+    m_preloadThread = new Thread(loader);
+    m_preloadThread->start();
 }
 
 
@@ -666,4 +629,107 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
 
     return true;
 }
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+// CLASS Preloader
+//////////////////////////////////////////////////////////////////////////////
+
+Preloader::Preloader(GstreamerPlayer* player, const std::string url) throw()
+    : RunnableInterface()
+    , m_player(player)
+    , m_fileUrl(url)
+    , m_stop(false)
+{}
+
+
+Preloader::~Preloader() throw()
+{
+    DEBUG_BLOCK
+
+    m_player->m_preloadThread = 0;
+}
+
+
+void Preloader::run() throw()
+{
+    DEBUG_BLOCK
+
+    GstreamerPlayer* const p = m_player;
+    const std::string fileUrl(m_fileUrl);
+
+    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
+    if (!isSmil)
+        return;
+
+    debug() << "Preloading SMIL file: " << fileUrl << endl;
+
+    std::string filePath;
+
+    if (fileUrl.find("file://") == 0) {
+        filePath = fileUrl.substr(7, fileUrl.size());
+    }
+    else if (fileUrl.find("file:") == 0) {
+        filePath = fileUrl.substr(5, fileUrl.size());
+    }
+    else {
+        return;
+    }
+
+    m_player->m_preloadUrl.clear();
+
+    if (!p->m_preloadUrl.empty()) {
+        g_object_unref(G_OBJECT(p->m_preloadFilesrc));
+        g_object_unref(G_OBJECT(p->m_preloadDecoder));
+    }
+
+    p->m_preloadFilesrc = gst_element_factory_make("filesrc", NULL);
+    gst_element_set(p->m_preloadFilesrc, "location", filePath.c_str(), NULL);
+
+    p->m_preloadDecoder = gst_element_factory_make("minimalaudiosmil", NULL);
+
+    GstElement* pipe     = gst_pipeline_new("pipe");
+    GstElement* fakesink = gst_element_factory_make("fakesink", "fakesink");
+    gst_element_link_many(p->m_preloadFilesrc, p->m_preloadDecoder, fakesink, NULL);
+    gst_bin_add_many(GST_BIN(pipe), p->m_preloadFilesrc, p->m_preloadDecoder, fakesink, NULL);
+
+    gst_element_set_state(pipe, GST_STATE_PLAYING);
+
+    gint64 position = 0LL;
+    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe)) && !m_stop) {
+        GstFormat   format = GST_FORMAT_DEFAULT;
+        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
+    }
+
+    gst_element_set_state(pipe, GST_STATE_PAUSED);
+
+    if (m_stop) {
+        gst_object_unref(GST_OBJECT(pipe));
+        return;
+    }
+
+    g_object_ref(G_OBJECT(p->m_preloadFilesrc));
+    g_object_ref(G_OBJECT(p->m_preloadDecoder));
+    gst_bin_remove_many(GST_BIN(pipe), p->m_preloadFilesrc, p->m_preloadDecoder, NULL);
+    gst_element_unlink(p->m_preloadFilesrc, fakesink);
+    gst_object_unref(GST_OBJECT(pipe));
+   
+    p->m_preloadUrl = fileUrl;
+
+    delete this;
+}
+
+
+void Preloader::signal(int) throw()
+{}
+
+
+void Preloader::stop() throw()
+{
+    DEBUG_BLOCK
+
+    m_stop = true;
+}
+
 
