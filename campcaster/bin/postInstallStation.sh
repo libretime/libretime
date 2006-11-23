@@ -226,7 +226,6 @@ echo "Checking for required tools..."
 check_exe "sed" || exit 1;
 check_exe "psql" || exit 1;
 check_exe "php" || exit 1;
-check_exe "pear" || exit 1;
 check_exe "odbcinst" || exit 1;
 
 
@@ -280,15 +279,6 @@ ${install_bin}/createDatabase.sh --database=${ls_database} \
 #-------------------------------------------------------------------------------
 ${install_bin}/createOdbcDataSource.sh --database=${ls_database} \
                                        --dbserver=${ls_dbserver}
-
-
-#-------------------------------------------------------------------------------
-#   Install PEAR packages (locally in the Campcaster)
-#   only if necessary
-#-------------------------------------------------------------------------------
-if [ -f $install_usr/lib/pear/bin/install.sh ]; then
-    $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
-fi
 
 
 #-------------------------------------------------------------------------------

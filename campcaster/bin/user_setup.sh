@@ -24,7 +24,7 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
+#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #  This script configures the environment for a developer.
 #
@@ -234,31 +234,12 @@ check_exe() {
 
 
 #-------------------------------------------------------------------------------
-#  Function to check for a PEAR module
-#
-#  @param $1 the name of the PEAR module
-#  @return 0 if the module is available, non-0 otherwise
-#-------------------------------------------------------------------------------
-check_pear_module() {
-    test_result=`pear info $1`
-    if [ $? = 0 ]; then
-        echo "PEAR module $1 found...";
-        return 0;
-    else
-        echo "PEAR module $1 not found...";
-        return 1;
-    fi
-}
-
-
-#-------------------------------------------------------------------------------
 #  Check for required tools
 #-------------------------------------------------------------------------------
 echo "Checking for required tools..."
 
 check_exe "sed" || exit 1;
 check_exe "php" || exit 1;
-check_exe "pear" || exit 1;
 
 
 #-------------------------------------------------------------------------------

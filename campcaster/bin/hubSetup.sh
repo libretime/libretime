@@ -235,7 +235,6 @@ echo "Checking for required tools..."
 check_exe "sed" || exit 1;
 check_exe "psql" || exit 1;
 check_exe "php" || exit 1;
-check_exe "pear" || exit 1;
 
 
 #-------------------------------------------------------------------------------
@@ -422,15 +421,6 @@ echo "Creating symlinks...";
 # create symlink for the PHP pages in apache's document root
 rm -f $www_root/campcaster
 ln -vs $install_var_ls $www_root/campcaster
-
-
-#-------------------------------------------------------------------------------
-#   Install PEAR packages (locally in the Campcaster)
-#   only if necessary
-#-------------------------------------------------------------------------------
-if [ -f $toolsdir/pear/bin/install.sh ]; then
-    $toolsdir/pear/bin/install.sh -d $installdir || exit 1;
-fi
 
 
 #-------------------------------------------------------------------------------
