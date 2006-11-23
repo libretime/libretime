@@ -203,7 +203,7 @@ class uiHandler extends uiBase {
             $this->_retMsg($ia->getMessage());
             return;
         }
-        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
+        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
         $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
@@ -603,8 +603,8 @@ class uiHandler extends uiBase {
 
 
     /**
-     * @param unknown_type $formdata
-     * @param unknown_type $mask
+     * @param array $formdata
+     * @param array $mask
      * @return boolean
      */
     function changeStationPrefs($formdata, $mask)
@@ -617,14 +617,18 @@ class uiHandler extends uiBase {
         }
         foreach ($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
-                if (strlen($formdata[$val['element']])) {
-                    if (PEAR::isError($this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']])))
+                if (!empty($formdata[$val['element']])) {
+                	$result = $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                    if (PEAR::isError($result))
                         $this->_retMsg('Error while saving settings.');
                 } else {
                     $this->gb->delGroupPref($this->sessid,  'StationPrefs', $val['element']);
                 }
             }
-            if (isset($val['type']) && ($val['type'] == 'file') && $formdata[$val['element']]['name']) {
+            if (isset($val['type'])
+            	&& ($val['type'] == 'file')
+            	&& ($val['element'] == "stationlogo")
+            	&& !empty($formdata[$val['element']]['name'])) {
                 $stationLogoPath = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath');
                 $filePath = $formdata[$val['element']]['tmp_name'];
                 if (function_exists("getimagesize")) {
