@@ -1,8 +1,13 @@
 <?php
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
  * @version $Revision$
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class uiPlaylist
 {
@@ -365,10 +370,10 @@ class uiPlaylist
                 $this->flat[$parent]['playlength'] = $sub['attrs']['playlength'];
             }
             if ($sub['elementname']===UI_PL_ELEM_FADEINFO) {
-                $this->flat[$parent][UI_PL_ELEM_FADEIN]  = GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEIN]);
-                $this->flat[$parent][UI_PL_ELEM_FADEOUT] = GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEOUT]);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs'][UI_PL_ELEM_FADEIN]  ? GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEIN])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs'][UI_PL_ELEM_FADEOUT] ? GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEOUT]) * 1000 : 0;
+                $this->flat[$parent][UI_PL_ELEM_FADEIN]  = Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEIN]);
+                $this->flat[$parent][UI_PL_ELEM_FADEOUT] = Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEOUT]);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs'][UI_PL_ELEM_FADEIN]  ? Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEIN])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs'][UI_PL_ELEM_FADEOUT] ? Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEOUT]) * 1000 : 0;
             }
         }
     } // fn _plwalk
@@ -378,7 +383,7 @@ class uiPlaylist
     {
         $this->changed = TRUE;
         $pause = $pause;
-        $xfade = GreenBox::_secsToPlTime($duration/1000);
+        $xfade = Playlist::secondsToPlaylistTime($duration/1000);
 
         if ($id) {
             // just change fade between 2 clips
@@ -389,29 +394,29 @@ class uiPlaylist
             switch ($type) {
                 case "fadeX":
                     $item[$prev['attrs']['id']] =
-                                  array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                  array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($prev[UI_PL_ELEM_FADEIN]),
                                         UI_PL_ELEM_FADEOUT => $xfade
                                   );
                     $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
-                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
                                   );
                 break;
                 case "pause":
                     $item[$prev['attrs']['id']] =
-                                  array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                  array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($prev[UI_PL_ELEM_FADEIN]),
                                         UI_PL_ELEM_FADEOUT => $pause
                                   );
                     $item[$id]  = array(UI_PL_ELEM_FADEIN  => $pause,
-                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
                                   );
                 break;
                 case "fadeIn":
                     $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
-                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
                                   );
                 break;
                 case "fadeOut":
-                    $item[$id] = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEIN]),
+                    $item[$id] = array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEIN]),
                                        UI_PL_ELEM_FADEOUT => $xfade
                                  );
                 break;
