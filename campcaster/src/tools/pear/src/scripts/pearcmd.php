@@ -40,8 +40,8 @@ if (!function_exists('file_get_contents')) {
 /**
  * @nodep Gtk
  */
-if ('/home/paul/software/campcaster/campcaster/usr/lib/pear' != '@'.'include_path'.'@') {
-    ini_set('include_path', '/home/paul/software/campcaster/campcaster/usr/lib/pear');
+if ('@include_path@' != '@'.'include_path'.'@') {
+    ini_set('include_path', '@include_path@');
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -58,7 +58,7 @@ ob_implicit_flush(true);
 $_PEAR_PHPDIR = '#$%^&*';
 set_error_handler('error_handler');
 
-$pear_package_version = "1.4.11";
+$pear_package_version = "@pear_version@";
 
 require_once 'PEAR.php';
 require_once 'PEAR/Frontend.php';
