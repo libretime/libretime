@@ -74,7 +74,7 @@ case "$1" in
 
             echo "Deleting data files...";
 
-            rm -rf $installdir/etc/scheduler.xml
+            rm -rf $installdir/etc/campcaster-scheduler.xml
             rm -rf $installdir/etc/gst-registry.xml
             rm -rf $installdir/etc/pear.conf
             rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*

@@ -27,6 +27,7 @@
 
 #-------------------------------------------------------------------------------
 #  System V runlevel style invoke script for the Campcaster Scheduler
+#  This script is only used in the Campcaster development environment
 #-------------------------------------------------------------------------------
 
 
@@ -38,18 +39,36 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 libdir=$basedir/lib
+tmpdir=$basedir/tmp
+
+usrdir=`cd $basedir/../../../usr; pwd;`
 
 
 #-------------------------------------------------------------------------------
 #  Set up the environment
 #-------------------------------------------------------------------------------
-gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
+export LD_LIBRARY_PATH=$usrdir/lib:$LD_LIBRARY_PATH
 
-export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
-scheduler_exe=$bindir/scheduler
-config_file=$etcdir/scheduler.xml
+if [ -x $bindir/campcaster-scheduler ]; then
+    scheduler_exe=$bindir/campcaster-scheduler
+elif [ -x $tmpdir/campcaster-scheduler ]; then
+    scheduler_exe=$tmpdir/campcaster-scheduler
+else
+    echo "Can't find scheduler executable.";
+fi
+
+if [ -f ~/.campcaster/campcaster-scheduler.xml ]; then
+    config_file=~/.campcaster/campcaster-scheduler.xml
+elif [ -f $etcdir/campcaster-scheduler.xml ]; then
+    config_file=$etcdir/campcaster-scheduler.xml
+else
+    echo "Can't find configuration file.";
+fi
 
 mode=$1
+
+#echo "Using scheduler:           $scheduler_exe";
+#echo "      configuration file:  $config_file";
 
 
 #-------------------------------------------------------------------------------
@@ -59,6 +78,12 @@ case "$mode" in
     'start')
         echo "Starting the Campcaster scheduler..."
         $scheduler_exe -c $config_file start
+        sleep 2
+        ;;
+
+    'run')
+        echo "Running the Campcaster scheduler..."
+        $scheduler_exe -c $config_file --debug start
         sleep 2
         ;;
 
@@ -94,16 +119,16 @@ case "$mode" in
 
     'kill')
         echo "Killing all Campcaster scheduler processes..."
-        killall scheduler
+        killall campcaster-scheduler
         sleep 2
-        killall -9 scheduler
+        killall -9 campcaster-scheduler
         ;;
 
     *)
         echo "Campcaster scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
-        echo "  $0 start|stop|restart|status|install|uninstall|kill"
+        echo "  $0 start|run|stop|restart|status|install|uninstall|kill"
         echo ""
 
 esac

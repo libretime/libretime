@@ -81,7 +81,7 @@ AUDIO_CUE      = "@AUDIO_CUE@"
 PHP_URL_PREFIX=campcaster
 ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
 SCHEDULER_XML_RPC_PREFIX=RC2
-SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/scheduler.sh"
+SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/campcaster-scheduler.sh"
 
 USR_VAR_DIR_S=$(shell ${ECHO} ${USR_VAR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
 PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | \
@@ -127,7 +127,7 @@ PRODUCTS_DIR     = ${BASE_DIR}/../../products
 STORAGE_SERVER_DIR = ${MODULES_DIR}/storageServer
 
 SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
-SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
+SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/campcaster-scheduler
 
 CORE_DIR         = ${MODULES_DIR}/core
 CORE_INCLUDE_DIR = ${CORE_DIR}/include

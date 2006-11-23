@@ -129,7 +129,7 @@ After a successful installation, the Campcaster scheduler has to be
 started. The scheduler has a System V runlevel-style startup script,
 under <code>&lt;installation directory&gt;/bin/scheduler.sh<code>. 
 To start the scheduler, simply type:
-<pre><code>&lt;installation directory&gt;/bin/scheduler.sh start</code></pre>
+<pre>&lt;installation directory&gt;/bin/campcaster-scheduler.sh start</pre>
 
 <p>To use the the web interface, point your browser to
 <code>http://localhost/campcaster</code>.  You can also use the web interface
@@ -137,7 +137,7 @@ from other computers; simply put the name or IP number of the computer where
 Campcaster was installed in place of <code>localhost</code>.
 
 <p>To start Campcaster Studio, type the following:
-<pre><code>&lt;installation directory&gt;/bin/campcaster-studio.sh</code></pre>
+<pre>&lt;installation directory&gt;/bin/campcaster-studio.sh</pre>
 
 <p>For your first login, use the following values:
 <ul>
@@ -147,10 +147,10 @@ Campcaster was installed in place of <code>localhost</code>.
 Later you can change the password, and add more users, from the web interface.
 
 <p>You can make the scheduler start automatically when the system boots up, 
-by installing the &lt;installation directory&gt;/bin/campcaster-scheduler 
+by installing the &lt;installation directory&gt;/etc/campcaster-scheduler 
 init script.  In Debian-based systems, this is done by 
 typing 
-<pre>cp &lt;installation directory&gt;/bin/campcaster-scheduler /etc/init.d/
+<pre>cp &lt;installation directory&gt;/etc/campcaster-scheduler /etc/init.d/
 update-rc.d campcaster-scheduler defaults 92
 </pre>
 as root.  Note: in the init script, the variable <code>CAMPCASTER_DIR</code> 

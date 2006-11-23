@@ -28,7 +28,7 @@ case "$1" in
                         --postgresql-init-script=/etc/init.d/postgresql-8.1
 
         # register and start the livesupport scheduler daemon
-        cp -f $installdir/bin/campcaster-scheduler /etc/init.d
+        cp -f $installdir/etc/campcaster-scheduler /etc/init.d
         update-rc.d campcaster-scheduler defaults 92 || true
         /etc/init.d/campcaster-scheduler start || true
     ;;

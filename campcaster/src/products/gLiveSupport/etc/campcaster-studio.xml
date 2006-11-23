@@ -157,8 +157,8 @@
     </schedulerClientFactory>
 
     <schedulerDaemonCommands
-                    start = "../scheduler/bin/scheduler_devenv.sh start"
-                    stop  = "../scheduler/bin/scheduler_devenv.sh stop" />
+            start = "../scheduler/bin/campcaster-scheduler_devenv.sh start"
+            stop  = "../scheduler/bin/campcaster-scheduler_devenv.sh stop" />
 
     <outputPlayer>
         <audioPlayer>

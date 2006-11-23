@@ -92,14 +92,13 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/tmp
 	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/var/Campcaster
 	mkdir -p $(CURDIR)/debian/campcaster-station/opt/campcaster/usr/lib
-	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/scheduler \
-	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/scheduler.sh \
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-scheduler \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-scheduler.sh \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/postInstallStation.sh \
-	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-scheduler \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/createDatabase.sh \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/createOdbcDataSource.sh \
 		      $(CURDIR)/debian/campcaster-station/opt/campcaster/bin
-	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/scheduler.xml* \
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/campcaster-scheduler.xml* \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/etc/odbc* \
 		      $(CURDIR)/debian/campcaster-station/opt/campcaster/etc
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/alib \
@@ -119,6 +118,7 @@ install-arch:
               $(CURDIR)/debian/campcaster-station/opt/campcaster/var
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/apache \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/etc/pg_hba.conf \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/etc/campcaster-scheduler \
               $(CURDIR)/debian/campcaster-station/opt/campcaster/etc
 
 	# now separate the studio (client) files into debian/campcaster-studio

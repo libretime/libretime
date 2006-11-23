@@ -133,7 +133,7 @@ PRODUCTS_DIR     = ${SRC_DIR}/products
 SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
 GLIVESUPPORT_DIR = ${PRODUCTS_DIR}/gLiveSupport
 
-SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
+SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/campcaster-scheduler
 GLIVESUPPORT_EXE = ${GLIVESUPPORT_DIR}/tmp/campcaster-studio
 
 #-------------------------------------------------------------------------------
@@ -405,7 +405,7 @@ install: setup compile setup_install_dirs create_database install_modules instal
 	${CP} ${ETC_DIR}/apache/*.conf ${USR_ETC_DIR}/apache
 	${MKDIR} ${USR_BIN_DIR}
 	${CP} ${BIN_DIR}/postInstallStation.sh ${USR_BIN_DIR}
-	${CP} ${BIN_DIR}/campcaster-scheduler ${USR_BIN_DIR}
+	${CP} ${ETC_DIR}/campcaster-scheduler ${USR_ETC_DIR}
 	${CP} ${ETC_DIR}/pg_hba.conf ${USR_ETC_DIR}
 
 create_database:

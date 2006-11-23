@@ -394,7 +394,7 @@ cd -
 
 # create scheduler-related database tables
 cd $installdir
-./bin/scheduler.sh install || exit 1;
+./bin/campcaster-scheduler.sh install || exit 1;
 cd -
 
 

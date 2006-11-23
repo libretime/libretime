@@ -69,10 +69,8 @@ and the database that Campcaster uses to store its data.  Type the following:
 
 <h2>5. Start Campcaster</h2>
 After a successful installation, the Campcaster scheduler has to be
-started. The scheduler has a System V runlevel-style startup script,
-under <code>/opt/campcaster/bin/scheduler.sh<code>. To start the scheduler,
-simply type:
-<pre>/opt/campcaster/bin/scheduler.sh start</pre>
+started, by typing:
+<pre>/opt/campcaster/bin/campcaster-scheduler.sh start</pre>
 
 <p>To use the the web interface, point your browser to
 <code>http://localhost/campcaster</code>.  You can also use the web interface
@@ -91,7 +89,7 @@ Later you can change the password, and add more users, from the web interface.
 
 <p>You can make the scheduler start automatically when the system boots up, 
 by doing the following:
-<pre>sudo cp /opt/livesupport/bin/campcaster-scheduler /etc/init.d/
+<pre>sudo cp /opt/livesupport/etc/campcaster-scheduler /etc/init.d/
 sudo update-rc.d campcaster-scheduler defaults 92
 </pre>
 

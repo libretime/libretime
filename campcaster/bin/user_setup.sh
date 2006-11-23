@@ -170,7 +170,7 @@ ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
 ls_tmp_dir=$installdir/tmp
-ls_scheduler_daemon_command="$scheduler_bin_dir/scheduler_devenv.sh"
+ls_scheduler_daemon_command="$scheduler_bin_dir/campcaster-scheduler_devenv.sh"
 
 ls_audio_output_device=$output_device
 ls_audio_cue_device=$cue_device
@@ -304,9 +304,9 @@ cat $modules_dir/storageClient/etc/webStorage.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/webStorage.xml
 
-cat $products_dir/scheduler/etc/scheduler.xml.template \
+cat $products_dir/scheduler/etc/campcaster-scheduler.xml.template \
     | sed -e "$replace_sed_string" \
-    > $configdir/scheduler.xml
+    > $configdir/campcaster-scheduler.xml
 
 cat $products_dir/gLiveSupport/etc/campcaster-studio.xml.user-template \
     | sed -e "$replace_sed_string" \

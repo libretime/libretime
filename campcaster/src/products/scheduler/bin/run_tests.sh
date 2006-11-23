@@ -54,10 +54,10 @@ else
     echo "Can't find testRunner executable.";
 fi
 
-if [ -f ~/.campcaster/scheduler.xml ]; then
-    config_file=~/.campcaster/scheduler.xml
-elif [ -f $etcdir/scheduler.xml ]; then
-    config_file=$etcdir/scheduler.xml
+if [ -f ~/.campcaster/campcaster-scheduler.xml ]; then
+    config_file=~/.campcaster/campcaster-scheduler.xml
+elif [ -f $etcdir/campcaster-scheduler.xml ]; then
+    config_file=$etcdir/campcaster-scheduler.xml
 else
     echo "Can't find configuration file.";
 fi
