@@ -199,7 +199,7 @@ class uiBase
 
 
     /**
-     * Load system preferences.
+     * Load the system preferences into the session.
      *
      * @param array $mask
      * @param boolean $reload
@@ -210,9 +210,10 @@ class uiBase
         	$this->STATIONPREFS = array();
             foreach ($mask as $key => $val) {
                 if (isset($val['isPref']) && $val['isPref']) {
-                    if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
+                	$setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']);
+                    if (is_string($setting)) {
                         $this->STATIONPREFS[$val['element']] = $setting;
-                    } elseif ($val['required']){
+                    } elseif ($val['required']) {
                         // set default values on first login
                         $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $val['default']);
                         $this->STATIONPREFS[$val['element']] = $val['default'];
