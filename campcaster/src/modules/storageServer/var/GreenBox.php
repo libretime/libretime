@@ -678,7 +678,7 @@ class GreenBox extends BasicStor {
             return $pl;
         }
         $acGunid = $this->gunidFromId($acId);
-        if ($pl->_cyclicRecursion($acGunid)){
+        if ($pl->cyclicRecursion($acGunid)){
             return PEAR::raiseError(
                 "GreenBox::addAudioClipToPlaylist: cyclic-recursion detected".
                 " ($type)"
@@ -1023,11 +1023,11 @@ class GreenBox extends BasicStor {
      * @return int
      * 		seconds
      */
-    public function _plTimeToSecs($plt)
-    {
-        require_once("Playlist.php");
-        return Playlist::_plTimeToSecs($plt);
-    } // fn _plTimeToSecs
+//    public function playlistTimeToSeconds($plt)
+//    {
+//        require_once("Playlist.php");
+//        return Playlist::playlistTimeToSeconds($plt);
+//    }
 
 
     /**
@@ -1038,11 +1038,11 @@ class GreenBox extends BasicStor {
      * @return string
      * 		time in playlist time format (HH:mm:ss.dddddd)
      */
-    function _secsToPlTime($s0)
-    {
-        require_once("Playlist.php");
-        return Playlist::_secsToPlTime($s0);
-    } // fn _secsToPlTime
+//    public static function secondsToPlaylistTime($s0)
+//    {
+//        require_once("Playlist.php");
+//        return Playlist::secondsToPlaylistTime($s0);
+//    } // fn secondsToPlaylistTime
 
 
     /* ------------------------------------------------------- render methods */
