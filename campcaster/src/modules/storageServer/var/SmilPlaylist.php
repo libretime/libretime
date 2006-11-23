@@ -1,7 +1,7 @@
 <?
 define('INDCH', ' ');
 
-require_once "XmlParser.php";
+require_once("XmlParser.php");
 
 /**
  * SmilPlaylist class
@@ -18,7 +18,7 @@ require_once "XmlParser.php";
 class SmilPlaylist {
 
     /**
-     *  Parse SMIL file or string
+     * Parse SMIL file or string
      *
      * @param string $data
      * 		local path to SMIL file or SMIL string
@@ -27,7 +27,7 @@ class SmilPlaylist {
      * @return array
      * 		reference, parse result tree (or PEAR::error)
      */
-    function &parse($data='', $loc='file')
+    private static function &parse($data='', $loc='file')
     {
         return XmlParser::parse($data, $loc);
     }
@@ -53,7 +53,7 @@ class SmilPlaylist {
      * 		local subject (user) id (id of user doing the import)
      * @return Playlist
      */
-    function &import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL)
+    public static function &import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL)
     {
         $parr = compact('parid', 'subjid', 'aPath', 'plid', 'rPath');
         $path = realpath("$aPath/$rPath");
@@ -62,12 +62,11 @@ class SmilPlaylist {
                 "SmilPlaylist::import: file doesn't exist ($aPath/$rPath)"
             );
         }
-        $lspl = $r = SmilPlaylist::convert2lspl(
-            $gb, $path, $gunids, $parr);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $lspl = SmilPlaylist::convert2lspl($gb, $path, $gunids, $parr);
+        if (PEAR::isError($lspl)) {
+        	return $lspl;
         }
-        require_once "Playlist.php";
+        require_once("Playlist.php");
         $pl =& Playlist::create($gb, $plid, "imported_SMIL", $parid);
         if (PEAR::isError($pl)) {
         	return $pl;
@@ -80,7 +79,7 @@ class SmilPlaylist {
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $pl->unLock($gb);
+        $r = $pl->unlock($gb);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -89,7 +88,7 @@ class SmilPlaylist {
 
 
     /**
-     *  Import SMIL file to storage
+     * Import SMIL file to storage.
      *
      * @param GreenBox $gb
      * @param string $data
@@ -101,12 +100,12 @@ class SmilPlaylist {
      * @return string
      * 		XML of playlist in Campcaster playlist format
      */
-    function convert2lspl(&$gb, $data, &$gunids, $parr)
+    public static function convert2lspl(&$gb, $data, &$gunids, $parr)
     {
         extract($parr);
-        $tree = $r = SmilPlaylist::parse($data);
-        if (PEAR::isError($r)) {
-        	return $r;
+        $tree = SmilPlaylist::parse($data);
+        if (PEAR::isError($tree)) {
+        	return $tree;
         }
         if ($tree->name != 'smil') {
             return PEAR::raiseError("SmilPlaylist::parse: smil tag expected");
@@ -137,7 +136,7 @@ class SmilPlaylist {
  */
 class SmilPlaylistBodyElement {
 
-    function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+    public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
     {
         extract($parr);
         $ind2 = $ind.INDCH;
@@ -150,10 +149,10 @@ class SmilPlaylistBodyElement {
                 $tree->children[1]->name
             ));
         }
-        $res = $r = SmilPlaylistParElement::convert2lspl(
+        $res = SmilPlaylistParElement::convert2lspl(
             $gb, $tree->children[0], &$gunids, $parr, $ind2);
-        if (PEAR::isError($r)) {
-        	return $r;
+        if (PEAR::isError($res)) {
+        	return $res;
         }
         $title = basename($rPath);
         $playlength = '0';
@@ -180,7 +179,7 @@ class SmilPlaylistBodyElement {
  */
 class SmilPlaylistParElement {
 
-	function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+	public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
     {
         extract($parr);
         if ($tree->name != 'par') {
@@ -189,8 +188,7 @@ class SmilPlaylistParElement {
         $res = '';
         foreach ($tree->children as $i => $ch) {
             $ch =& $tree->children[$i];
-            $r = SmilPlaylistAudioElement::convert2lspl(
-                $gb, $ch, &$gunids, $parr, $ind.INDCH);
+            $r = SmilPlaylistAudioElement::convert2lspl($gb, $ch, &$gunids, $parr, $ind.INDCH);
             if (PEAR::isError($r)) {
             	return $r;
             }
@@ -212,7 +210,7 @@ class SmilPlaylistParElement {
  * @link http://www.campware.org
  */
 class SmilPlaylistAudioElement {
-    function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+    public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
     {
         extract($parr);
         $uri = $tree->attrs['src']->val;
@@ -230,8 +228,7 @@ class SmilPlaylistAudioElement {
         $res = ''; $fadeIn = 0; $fadeOut = 0;
         foreach ($tree->children as $i => $ch) {
             $ch =& $tree->children[$i];
-            $r = SmilPlaylistAnimateElement::convert2lspl(
-                $gb, $ch, &$gunids, $parr, $ind2);
+            $r = SmilPlaylistAnimateElement::convert2lspl($gb, $ch, &$gunids, $parr, $ind2);
             if (PEAR::isError($r)) {
             	return $r;
             }
@@ -242,8 +239,8 @@ class SmilPlaylistAudioElement {
         }
         if ($fadeIn > 0 || $fadeOut > 0) {
             $fiGunid = StoredFile::_createGunid();
-            $fadeIn  = Playlist::_secsToPlTime($fadeIn);
-            $fadeOut = Playlist::_secsToPlTime($fadeOut);
+            $fadeIn  = Playlist::secondsToPlaylistTime($fadeIn);
+            $fadeOut = Playlist::secondsToPlaylistTime($fadeOut);
             $fInfo   = "$ind2<fadeInfo id=\"$fiGunid\" fadeIn=\"$fadeIn\" fadeOut=\"$fadeOut\"/>\n";
         } else {
         	$fInfo = '';
@@ -258,16 +255,16 @@ class SmilPlaylistAudioElement {
                 case "smil":
                 case "m3u":
                     $type = 'playlist';
-                    $acId = $r = $gb->bsImportPlaylistRaw($parid, $gunid,
+                    $acId = $gb->bsImportPlaylistRaw($parid, $gunid,
                         $aPath, $uri, $ext, $gunids, $subjid);
-                    if (PEAR::isError($r)) {
+                    if (PEAR::isError($acId)) {
                     	return $r;
                     }
                    //break;
                 default:
-                    $ac = $r = StoredFile::recallByGunid($gb, $gunid);
-                    if (PEAR::isError($r)) {
-                    	return $r;
+                    $ac = StoredFile::recallByGunid($gb, $gunid);
+                    if (PEAR::isError($ac)) {
+                    	return $ac;
                     }
                     $r = $ac->md->getMetadataEl('dcterms:extent');
                     if (PEAR::isError($r)) {
@@ -278,7 +275,7 @@ class SmilPlaylistAudioElement {
         }
 
         $title = basename($tree->attrs['src']->val);
-        $offset = Playlist::_secsToPlTime($tree->attrs['begin']->val);
+        $offset = Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
         $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\">\n".
             "$ind2<$type id=\"$acGunid\" playlength=\"$playlength\" title=\"$title\"/>\n".
             $fInfo.
@@ -300,7 +297,7 @@ class SmilPlaylistAudioElement {
  */
 class SmilPlaylistAnimateElement {
 
-	function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+	public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
 	{
         extract($parr);
         if ($tree->name != 'animate') {
