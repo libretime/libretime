@@ -512,8 +512,6 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
          attr;
          attr = (xmlAttribute*) attr->next) {
 
-        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
-
         xmlNode * node;
 
         /* TODO: support attribute values that are represented with
@@ -587,8 +585,6 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
     /* now handle the possible animate elements inside this audio element */
     element = pplay;
     for (ix = 0, node = audio->children; node; node = node->next, ++ix) {
-        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
-
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * elem = 0;
 
@@ -663,8 +659,6 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
 
 
     for (index = 0, node = par->children; node; node = node->next, ++index) {
-        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
-
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
@@ -738,8 +732,6 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
     }
 
     for (node = node->children; node; node = node->next) {
-        while(g_main_context_pending(NULL)) g_main_context_iteration(NULL,FALSE);
-
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
