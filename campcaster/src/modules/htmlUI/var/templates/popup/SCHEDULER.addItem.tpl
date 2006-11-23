@@ -1,6 +1,6 @@
 {include file="popup/header.tpl"}
-              
-{if $SCHEDULER->getPLtoSchedule($_REQUEST.playlistId)}
+
+{if $SCHEDULER->getPlaylistToSchedule($_REQUEST.playlistId)}
     {assign var="dynform" value=$SCHEDULER->getScheduleForm()}
     <table height="100%" width="100%">
         <tr>
