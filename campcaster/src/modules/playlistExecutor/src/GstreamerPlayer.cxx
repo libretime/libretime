@@ -38,6 +38,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "GstreamerPlayer.h"
+#include <unistd.h>
 
 
 using namespace boost::posix_time;
@@ -113,8 +114,6 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     m_decoder         = 0;
     m_audioconvert    = 0;
     m_audioscale      = 0;
-
-    m_preloadThread   = 0;
 
     g_signal_connect(m_pipeline, "error", G_CALLBACK(errorHandler), this);
 
@@ -292,14 +291,14 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
 
     if (m_preloadThread) {
         m_preloadThread->stop();
-        // Wait for thread exit
-        while (m_preloadThread) {}
+        m_preloadThread->join();
+        m_preloadThread.reset();
     }
 
     Ptr<Preloader>::Ref loader;
     loader.reset(new Preloader(this, fileUrl));
 
-    m_preloadThread = new Thread(loader);
+    m_preloadThread.reset(new Thread(loader));
     m_preloadThread->start();
 }
 
@@ -323,8 +322,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     debug() << "Opening URL: " << fileUrl << endl;
 
-    //preload(fileUrl);
-
     std::string filePath;
 
     if (fileUrl.find("file://") == 0) {
@@ -335,6 +332,11 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     }
     else {
         throw std::invalid_argument("badly formed URL or unsupported protocol");
+    }
+
+    if (m_preloadThread) {
+        debug() << "Waiting for Preloader thread to finish..." << endl;
+        m_preloadThread->join();
     }
 
     const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
@@ -640,15 +642,12 @@ Preloader::Preloader(GstreamerPlayer* player, const std::string url) throw()
     : RunnableInterface()
     , m_player(player)
     , m_fileUrl(url)
-    , m_stop(false)
 {}
 
 
 Preloader::~Preloader() throw()
 {
     DEBUG_BLOCK
-
-    m_player->m_preloadThread = 0;
 }
 
 
@@ -677,9 +676,8 @@ void Preloader::run() throw()
         return;
     }
 
-    m_player->m_preloadUrl.clear();
-
     if (!p->m_preloadUrl.empty()) {
+        p->m_preloadUrl.clear();
         g_object_unref(G_OBJECT(p->m_preloadFilesrc));
         g_object_unref(G_OBJECT(p->m_preloadDecoder));
     }
@@ -697,17 +695,12 @@ void Preloader::run() throw()
     gst_element_set_state(pipe, GST_STATE_PLAYING);
 
     gint64 position = 0LL;
-    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe)) && !m_stop) {
+    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
         GstFormat   format = GST_FORMAT_DEFAULT;
         gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
     }
 
     gst_element_set_state(pipe, GST_STATE_PAUSED);
-
-    if (m_stop) {
-        gst_object_unref(GST_OBJECT(pipe));
-        return;
-    }
 
     g_object_ref(G_OBJECT(p->m_preloadFilesrc));
     g_object_ref(G_OBJECT(p->m_preloadDecoder));
@@ -717,7 +710,7 @@ void Preloader::run() throw()
    
     p->m_preloadUrl = fileUrl;
 
-    delete this;
+    p->m_preloadThread.reset();
 }
 
 
@@ -726,10 +719,6 @@ void Preloader::signal(int) throw()
 
 
 void Preloader::stop() throw()
-{
-    DEBUG_BLOCK
-
-    m_stop = true;
-}
+{}
 
 

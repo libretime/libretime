@@ -154,7 +154,7 @@ class GstreamerPlayer : virtual public Configurable,
         GstElement            * m_preloadFilesrc;
         GstElement            * m_preloadDecoder;
 
-        Thread                * m_preloadThread;
+        Ptr<Thread>::Ref        m_preloadThread;
 
         /**
          *  The type for the vector of listeners.
@@ -451,7 +451,6 @@ class Preloader : public RunnableInterface
     private:
         GstreamerPlayer* m_player;
         std::string      m_fileUrl;
-        bool             m_stop;
 };
 
 
