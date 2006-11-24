@@ -14,7 +14,8 @@ require_once "../Archive.php";
 /**
  * XML-RPC interface for Archive.
  *
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
@@ -27,11 +28,12 @@ class XR_Archive extends Archive {
     /**
      * Simple ping method - return strtouppered string
      *
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_ping($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -41,11 +43,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_uploadOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -62,11 +65,12 @@ class XR_Archive extends Archive {
     /**
      * Check state of file upload
      *
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_uploadCheck($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -81,11 +85,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_uploadClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -101,10 +106,11 @@ class XR_Archive extends Archive {
 
     /**
      * @param XMLRPC_strcut $input
+     * @return XML_RPC_Response
      */
     function xr_downloadOpen($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -119,11 +125,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_downloadClose($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -138,11 +145,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_prepareHubInitiatedTransfer($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -163,11 +171,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_listHubInitiatedTransfers($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }
@@ -188,11 +197,12 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_struct $input
+     * @param XML_RPC_Message $input
+     * @return XML_RPC_Response
      */
     function xr_setHubInitiatedTransfer($input)
     {
-        list($ok, $r) = $this->_xr_getPars($input);
+        list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
         	return $r;
         }

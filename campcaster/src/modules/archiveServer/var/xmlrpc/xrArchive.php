@@ -1,7 +1,13 @@
 <?php
 /**
- * @author $Author$
- * @version  : $Revision$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage ArchiveServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 
 /* ====================================================== specific PHP config */
@@ -28,14 +34,15 @@ ini_set("error_append_string", "</string></value>
 header("Content-type: text/xml");
 
 /* ================================================================= includes */
-require_once dirname(__FILE__).'/../conf.php';
-require_once 'DB.php';
-require_once "XML/RPC/Server.php";
-require_once 'XR_Archive.php';
+require_once(dirname(__FILE__).'/../conf.php');
+require_once('DB.php');
+require_once("XML/RPC/Server.php");
+require_once('XR_Archive.php');
 
 /* ============================================ setting default error handler */
-function errHndl($errno, $errmsg, $filename, $linenum, $vars){
-    switch($errno){
+function errHndl($errno, $errmsg, $filename, $linenum, $vars)
+{
+    switch ($errno) {
         case E_WARNING:
         case E_NOTICE:
         case E_USER_WARNING:
@@ -54,9 +61,9 @@ $old_error_handler = set_error_handler("errHndl", E_ALL);
 
 
 /* ============================================================= runable code */
-$r = $dbc =& DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($r)) {
-    trigger_error("DB::connect: ".$r->getMessage()." ".$r->getUserInfo(),E_USER_ERROR);
+$dbc =& DB::connect($config['dsn'], TRUE);
+if (PEAR::isError($dbc)) {
+    trigger_error("DB::connect: ".$dbc->getMessage()." ".$dbc->getUserInfo(),E_USER_ERROR);
 }
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
@@ -116,7 +123,7 @@ $methods = array(
 );
 
 $defs = array();
-foreach($methods as $method=>$description){
+foreach($methods as $method => $description){
     $defs["archive.$method"] = array(
             "function" => array(&$archive, "xr_$method"),
 #            "function" => "\$GLOBALS['archive']->xr_$method",
@@ -126,6 +133,6 @@ foreach($methods as $method=>$description){
             "docstring" => $description
     );
 }
-$s = new XML_RPC_Server( $defs );
+$s = new XML_RPC_Server($defs);
 
 ?>

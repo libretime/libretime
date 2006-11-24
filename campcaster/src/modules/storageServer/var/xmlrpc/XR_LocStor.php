@@ -3,9 +3,15 @@ require_once(dirname(__FILE__).'/../LocStor.php');
 
 /**
  * XML-RPC interface for LocStor class
- * @author $Author$
- * @version $Revision$
  *
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class XR_LocStor extends LocStor {
 
@@ -3595,7 +3601,7 @@ class XR_LocStor extends LocStor {
      *      On success, the second param is an array of values.
      *      On failure, the second param is an XML_RPC_Response object.
      */
-    private static function xr_getParams($input)
+    protected static function xr_getParams($input)
     {
         $p = $input->getParam(0);
         if (isset($p) && ($p->scalartyp()=="struct")) {
