@@ -58,12 +58,12 @@ $config = array(
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
     'TrashName'     => 'trash_',
-    'storageDir'    =>  realpath(dirname(__FILE__).'/../../storageServer/var/stor'),
-    'bufferDir'     =>  realpath(dirname(__FILE__).'/../../storageServer/var/stor/buffer'),
-    'transDir'      =>  realpath(dirname(__FILE__).'/../../storageServer/var/trans'),
-    'accessDir'     =>  realpath(dirname(__FILE__).'/../../storageServer/var/access'),
-    'pearPath'      =>  realpath(dirname(__FILE__).'/../../../../usr/lib/pear'),
-    'cronDir'       =>  realpath(dirname(__FILE__).'/../../storageServer/var/cron'),
+    'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
+    'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
+    'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
+    'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
+    'pearPath'      =>  dirname(__FILE__).'/../../../../usr/lib/pear',
+    'cronDir'       =>  dirname(__FILE__).'/../../storageServer/var/cron',
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
@@ -151,6 +151,17 @@ if (!is_null($this_file)) {
         $user_config = $config;
         $config = $user_config + $default_config;
     }
+}
+
+// make dirpaths better (without ../)
+foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
+    $rp = realpath($config[$d]);
+    // workaround for missing dirs
+    if ( $rp === FALSE ) {
+        mkdir( $config[$d] );
+        $rp = realpath($config[$d]);
+    }
+    $config[$d] = $rp;
 }
 
 ?>
