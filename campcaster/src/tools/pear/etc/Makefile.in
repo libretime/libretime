@@ -61,8 +61,8 @@ install:
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/bin
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/etc
 	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/src
-	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/usr/lib/pear/etc
-	cp -Rf ${BASE_DIR}/../pear/src/* ${INSTALL_DIR}/usr/lib/pear/src
+	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/lib/pear/etc
+	cp -Rf ${BASE_DIR}/../pear/src/* ${INSTALL_DIR}/lib/pear/src
 
 clean:
 
