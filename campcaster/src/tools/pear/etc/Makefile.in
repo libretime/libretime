@@ -58,11 +58,18 @@ INSTALL_DIR = @prefix@
 all:
 
 install:
-	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/bin
-	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/etc
-	${MKDIR} ${INSTALL_DIR}/usr/lib/pear/src
-	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/lib/pear/etc
-	cp -Rf ${BASE_DIR}/../pear/src/* ${INSTALL_DIR}/lib/pear/src
+	# ##########################
+	# Install the PEAR libraries
+	# ##########################
+	${MKDIR} ${INSTALL_DIR}/lib/pear/bin
+	${MKDIR} ${INSTALL_DIR}/lib/pear/etc
+	${MKDIR} ${INSTALL_DIR}/lib/pear/src
+	cp -pP ${BASE_DIR}/../pear/etc/pear.conf.template ${INSTALL_DIR}/usr/lib/pear/etc
+
+	# Copy the PEAR libraries without the SVN directories
+	cd src; tar -cf tmp.tar --exclude=*svn . 2>/dev/null; mv -f tmp.tar ${INSTALL_DIR}/lib/pear/src
+	tar xf ${INSTALL_DIR}/lib/pear/src/tmp.tar --directory ${INSTALL_DIR}/lib/pear/src
+	rm -f ${INSTALL_DIR}/lib/pear/src/tmp.tar
 
 clean:
 
