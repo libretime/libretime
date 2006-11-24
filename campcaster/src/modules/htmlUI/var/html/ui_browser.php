@@ -248,7 +248,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
             case 'HUBSEARCH.getResults':
 	            if (isset($_REQUEST['trtokid']) && $_REQUEST['trtokid']) {
 	                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
-	                if ($uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'])) {
+	                if ($uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'], FALSE)) {
 	                    $Smarty->assign('results',true);
 	                } else {
 	                    $Smarty->assign('results',false);

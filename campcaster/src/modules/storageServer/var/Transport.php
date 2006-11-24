@@ -462,10 +462,12 @@ class Transport
      *
      * @param string $trtok
      * 		transport token
+     * @param boolean $andClose
+     * 		if TRUE, close transport token
      * @return array
      * 		LS search result format (see localSearch)
      */
-    function getSearchResults($trtok)
+    function getSearchResults($trtok, $andClose=TRUE)
     {
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
@@ -481,30 +483,44 @@ class Transport
                     " ({$trec->row['errmsg']})"
                 );
             case "closed":
+/*
+                $res = file_get_contents($row['localfile']);
+                $results = unserialize($res);
+                return $results;
+*/
                 return PEAR::raiseError(
                     "Transport::getSearchResults:".
                     " closed transport token ($trtok)", TRERR_TOK
                 );
             case "finished":
                 if ($row['direction'] == 'down') {
-                	break;    // really finished
+                    // really finished
+                    $res = file_get_contents($row['localfile']);
+                    $results = unserialize($res);
+                    if ($andClose) {
+                        $ret = $this->xmlrpcCall('archive.downloadClose',
+                            array(
+                               'token'     => $row['pdtoken'] ,
+                               'trtype'     => $row['trtype'] ,
+                            ));
+                        if (PEAR::isError($ret)) {
+                            return $ret;
+                        }
+                        @unlink($row['localfile']);
+                        $r = $trec->close();
+                        if (PEAR::isError($r)) {
+                            return $r;
+                        }
+                    }
+                    return $results;
                 }
-                // otherwise only request upload finished
+                // otherwise not really finished - only request upload finished
             default:
                 return PEAR::raiseError(
                     "Transport::getSearchResults: not finished ($st)",
                     TRERR_NOTFIN
                 );
         }
-        $res = file_get_contents($row['localfile']);
-        //print_r($res);
-        $results = unserialize($res);
-        @unlink($row['localfile']);
-        $r = $trec->close();
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return $results;
     }
 
 
@@ -1377,7 +1393,7 @@ class Transport
                 break;
             case "metadata":
             case "searchjob":
-                return TRUE;     // don't close
+                return TRUE;     // don't close - getSearchResults should close it
                 break;
         }
         $ret = $this->xmlrpcCall('archive.downloadClose',

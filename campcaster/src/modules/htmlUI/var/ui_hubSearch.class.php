@@ -94,22 +94,31 @@ class uiHubSearch extends uiSearch {
     } // fn searchDB
 
 
-    function getSearchResults($trtokid)
+    function getSearchResults($trtokid, $andClose=TRUE)
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
-        $results = $this->Base->gb->getSearchResults($trtokid);
-        //echo"<pre><b>RESULTS:</b><br>";print_r($results);echo "</pre>";
+        #sleep(4);
+        $results = $this->Base->gb->getSearchResults($trtokid, $andClose);
+        // echo"<pre><b>RESULTS:</b><br>";print_r($results);echo "</pre>";
+/*
+        if (PEAR::isError($results)) {
+             echo "ERROR: {$results->getMessage()} {$results->getUserInfo()}\n";
+        }
+*/
         if (!is_array($results) || !count($results)) {
             return false;
         }
         $this->results['cnt'] = $results['cnt'];
+/*
         foreach ($results['results'] as $rec) {
             // TODO: maybe this getMetaInfo is not correct for the remote results
-            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
+            // yes, right :)
+            // $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
+            $this->results['items'][] = $rec;
         }
+*/
+        $this->results['items'] = $results['results'];
         $this->pagination($results);
-        //echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";
-        //echo '<XMP>results:'; print_r($results); echo "</XMP>\n";
         return is_array($results);
     } // fn getSearchResults
 

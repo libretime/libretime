@@ -1695,14 +1695,16 @@ class GreenBox extends BasicStor {
      *
      * @param string $trtok
      *      transport token
+     * @param boolean $andClose
+     * 		if TRUE, close transport token
      * @return array
      * 		search result format (see localSearch)
      */
-    public function getSearchResults($trtok)
+    public function getSearchResults($trtok, $andClose=TRUE)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
-        return $tr->getSearchResults($trtok);
+        return $tr->getSearchResults($trtok, $andClose);
     } // fn getSearchResults
 
 
