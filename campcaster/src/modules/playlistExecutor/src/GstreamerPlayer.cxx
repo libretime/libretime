@@ -38,7 +38,6 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "GstreamerPlayer.h"
-#include <unistd.h>
 
 
 using namespace boost::posix_time;
