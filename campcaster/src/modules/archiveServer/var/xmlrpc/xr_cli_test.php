@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__).'/../conf.php';
 include_once "XML/RPC.php";
 
 $pars = $argv;

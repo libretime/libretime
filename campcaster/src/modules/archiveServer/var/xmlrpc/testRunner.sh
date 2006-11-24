@@ -77,7 +77,7 @@ existsAudioClip() {
 }
 
 storeAudioClip() {
-    MEDIA=../tests/ex1.mp3
+    MEDIA=../../../storageServer/var/tests/ex1.mp3
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     if [ $DEBUG_I ]; then echo "md5=$MD5"; fi
     echo -n "# storeAudioClipOpen: "
