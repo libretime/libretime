@@ -11,7 +11,7 @@
 	</item>
 	<item>
 		<key>Crossfade</key>
-		<value>Mezclar y degradar</value>
+		<value>Mezclar y disolver</value>
 	</item>
 	<item>
 		<key>Destination folder (relative path)</key>
@@ -119,7 +119,7 @@
 	</item>
 	<item>
 		<key>Add files to ScratchPad</key>
-		<value>Agregar archivos al ScratchPad.</value>
+		<value>Agregar archivos a la Lista Rápida.</value>
 	</item>
 	<item>
 		<key>Add files to open Playlist</key>
@@ -131,7 +131,7 @@
 	</item>
 	<item>
 		<key>Add to ScratchPad</key>
-		<value>Agregar a ScratchPad.</value>
+		<value>Agregar a Lista Rápida.</value>
 	</item>
 	<item>
 		<key>Add to group</key>
@@ -203,15 +203,15 @@
 	</item>
 	<item>
 		<key>Change Fadein</key>
-		<value>Cambiar el nivel de degradación de entrada.</value>
+		<value>Cambiar el nivel de disolvencia de entrada.</value>
 	</item>
 	<item>
 		<key>Change Fadeout</key>
-		<value>Cambiar el nivel de degradación de salida.</value>
+		<value>Cambiar el nivel de disolvencia de salida.</value>
 	</item>
 	<item>
 		<key>Change Fades</key>
-		<value>Cambiar los niveles de degradación</value>
+		<value>Cambiar los niveles de disolvencia</value>
 	</item>
 	<item>
 		<key>Change Password</key>
@@ -515,7 +515,7 @@
 	</item>
 	<item>
 		<key>Remove from ScratchPad</key>
-		<value>Eliminar del ScratchPad</value>
+		<value>Eliminar de Lista Rápida</value>
 	</item>
 	<item>
 		<key>Remove from group</key>
@@ -567,7 +567,7 @@
 	</item>
 	<item>
 		<key>ScratchPad</key>
-		<value>Scratchpad</value>
+		<value>Lista Rápida</value>
 	</item>
 	<item>
 		<key>Search</key>
@@ -651,11 +651,11 @@
 	</item>
 	<item>
 		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
-		<value>El URL es &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;</value>
+		<value>La URL es &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;</value>
 	</item>
 	<item>
 		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
-		<value>El URL parece &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;.  Reporta el error de código:  $1</value>
+		<value>La URL parece &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;.  Reporta el error de código:  $1</value>
 	</item>
 	<item>
 		<key>Use to create playlist</key>
@@ -796,5 +796,61 @@
 	<item>
 		<key>yesterday</key>
 		<value>ayer</value>
+	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value>Exportar Lista de Reproducción</value>
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value>Importar Lista de Reproducción</value>
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value>Transferir al Hub</value>
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value>Transferir desde el Hub</value>
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value>El archivo ha sido añadido a la solicitud de transferencia</value>
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value>Navegar por el Hub</value>
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value>Búsqueda en el Hub</value>
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value>Tranferencias</value>
+	</item>
+	<item>
+		<key>State</key>
+		<value>Estado</value>
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value>Reanudar transferencia(s)</value>
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value>Pausar transferencia(s)</value>
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value>¿Está seguro que desea cancelar la(s) transferencia(s)?</value>
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value>Escoja un archivo de respaldo</value>
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value>Restaurar estado</value>
 	</item>
 </translations>

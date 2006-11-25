@@ -3,15 +3,15 @@
 	<Id>es_CO</Id>
 	<item>
 		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
-		<value>El archivo cargado es más grande de lo permitido en la configuración del sistema. Vea en la &quot;Ayuda&quot; el capítulo &quot;Troubleshooting&quot; para más información.</value>
+		<value>El archivo que intenta subir es más grande de lo permitido en la configuración del sistema. Vea en la &quot;Ayuda&quot; el capítulo &quot;Problemas&quot; para más información.</value>
 	</item>
 	<item>
 		<key>&quot;$1&quot; uses an unsupported file type.</key>
-		<value>$1 utiliza un tipo de archivo no respaldado.</value>
+		<value>$1 utiliza un tipo de archivo no soportado.</value>
 	</item>
 	<item>
 		<key>A playlist is already opened.</key>
-		<value>Lista de reproducción ya activa.</value>
+		<value>Ya hay una lista de reproducción abierta.</value>
 	</item>
 	<item>
 		<key>Access denied.</key>
@@ -47,7 +47,7 @@
 	</item>
 	<item>
 		<key>Entry $1 is already on the scratchpad. It has been moved to the top of the list.</key>
-		<value>La entrada $1 ya se encontraba en el ScratchPad. Ha sido desplazada al inicio de la lista.</value>
+		<value>La entrada $1 ya se encontraba en la Lista Rápida. Ha sido desplazada al inicio de la lista.</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId $2.</key>
@@ -75,7 +75,7 @@
 	</item>
 	<item>
 		<key>File &quot;$1&quot; has not been uploaded.</key>
-		<value>El archivo $1 no ha sido cargado.</value>
+		<value>El archivo $1 no ha sido subido.</value>
 	</item>
 	<item>
 		<key>Found locked playlist.</key>
@@ -155,11 +155,11 @@
 	</item>
 	<item>
 		<key>Stream data saved.</key>
-		<value>Se cambiaron los datos de flujo.</value>
+		<value>Se guardaron los datos de flujo.</value>
 	</item>
 	<item>
 		<key>The scratchpad length is not set in system preferences, so it cannot be used.</key>
-		<value>El tamaño del scratchpad no ha sido asignado en las preferencias por lo cual no puede ser utilizado.</value>
+		<value>El tamaño de la Lista Rápida no ha sido asignado en las preferencias por lo cual no puede ser utilizado.</value>
 	</item>
 	<item>
 		<key>The target is not a folder.</key>

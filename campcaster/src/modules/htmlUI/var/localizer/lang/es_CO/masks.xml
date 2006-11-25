@@ -63,7 +63,7 @@
 	</item>
 	<item>
 		<key>Conductor</key>
-		<value>Conductor</value>
+		<value>Director</value>
 	</item>
 	<item>
 		<key>Contributor</key>
@@ -95,7 +95,7 @@
 	</item>
 	<item>
 		<key>Encoded by</key>
-		<value>Codificador por</value>
+		<value>Codificado por</value>
 	</item>
 	<item>
 		<key>Encoder software used</key>
@@ -143,7 +143,7 @@
 	</item>
 	<item>
 		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value>Duración. Ingrese 0 para Live Stream</value>
+		<value>Duración. Ingrese 0 para Flujo en Vivo</value>
 	</item>
 	<item>
 		<key>Login</key>
@@ -159,7 +159,7 @@
 	</item>
 	<item>
 		<key>Maximum length of scratchpad</key>
-		<value>Longitud máxima del scratchpad</value>
+		<value>Longitud máxima de la Lista Rápida</value>
 	</item>
 	<item>
 		<key>Media file</key>
