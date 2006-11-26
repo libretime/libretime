@@ -89,8 +89,8 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
 
     playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
     calendar      = Gtk::manage(new Gtk::Calendar());
-    hourEntry     = Gtk::manage(wf->createEntryBin());
-    minuteEntry   = Gtk::manage(wf->createEntryBin());
+    hourEntry     = Gtk::manage(wf->createNumericComboBoxText(0, 23));
+    minuteEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59));
 
     layout = Gtk::manage(new Gtk::Table());
 
@@ -139,9 +139,10 @@ SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
 
     // get the hour and minute from the entries
     // and construct an HH:MM:00.00 string from it
-    Ptr<std::string>::Ref   timeStr(new std::string(hourEntry->get_text()));
+    Ptr<std::string>::Ref   timeStr(new std::string(
+                                                hourEntry->get_active_text()));
     *timeStr += ":";
-    *timeStr += minuteEntry->get_text();
+    *timeStr += minuteEntry->get_active_text();
     *timeStr += ":00.00";
 
     Ptr<posix_time::ptime>::Ref selectedTime;

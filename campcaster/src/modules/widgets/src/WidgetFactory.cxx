@@ -507,6 +507,24 @@ WidgetFactory :: createOperatorComboBoxText(
 
 
 /*------------------------------------------------------------------------------
+ *  Create a numeric combo box
+ *----------------------------------------------------------------------------*/
+ComboBoxText *
+WidgetFactory :: createNumericComboBoxText(int  lowerLimit,
+                                           int  upperLimit)
+                                                                    throw ()
+{
+    ComboBoxText *  comboBox = new ComboBoxText(comboBoxLeftImage,
+                                                comboBoxCenterImage,
+                                                comboBoxRightImage);
+    for (int i = lowerLimit; i <= upperLimit; ++i) {
+        comboBox->append_text(itoa(i));
+    }
+    return comboBox;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Create a blue bin
  *----------------------------------------------------------------------------*/
 BlueBin *
@@ -682,5 +700,18 @@ WidgetFactory :: createDateTimeChooserWindow(Ptr<ResourceBundle>::Ref   bundle)
                                                                     throw ()
 {
     return new DateTimeChooserWindow(bundle);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert an integer to a string.
+ *----------------------------------------------------------------------------*/
+Glib::ustring
+WidgetFactory :: itoa(int    number)                                throw ()
+{
+    std::ostringstream  stream;
+    stream << number;
+    Glib::ustring       string = stream.str();
+    return string;
 }
 

@@ -183,6 +183,15 @@ class WidgetFactory :
         loadImage(const std::string     imageName)
                                                 throw (std::invalid_argument);
 
+        /**
+         *  Convert an integer to a string.
+         *
+         *  @param  number      the number to be converted.
+         *  @return the string value of the number (in base 10).
+         */
+        static Glib::ustring
+        itoa(int    number)                                         throw ();
+
 
     public:
         /**
@@ -304,6 +313,19 @@ class WidgetFactory :
                         Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ();
 
+        /**
+         *  Create a combo box that holds a range of numeric entries.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @param  lowerLimit  the lowest entry in the combo box.
+         *  @param  upperLimit  the highest entry in the combo box.
+         *  @return a combo box, that holds numeric entries.
+         */
+        ComboBoxText *
+        createNumericComboBoxText(int  lowerLimit,
+                                  int  upperLimit)                  throw ();
+        
         /**
          *  Create and return a blue singular container.
          *  It is the reponsibility of the caller to dispose of the created

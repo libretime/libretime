@@ -122,7 +122,7 @@ class SchedulePlaylistWindow : public GuiWindow
         /**
          *  The entry field for hour.
          */
-        EntryBin                 * hourEntry;
+        ComboBoxText              * hourEntry;
 
         /**
          *  The minute label.
@@ -132,7 +132,7 @@ class SchedulePlaylistWindow : public GuiWindow
         /**
          *  The minute entry field.
          */
-        EntryBin                  * minuteEntry;
+        ComboBoxText              * minuteEntry;
 
         /**
          *  The schedule button.
