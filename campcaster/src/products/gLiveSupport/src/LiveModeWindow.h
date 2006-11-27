@@ -87,6 +87,11 @@ class LiveModeWindow : public GuiWindow
         Ptr<Playable>::Ref                  savedTopPlayable;
 
         /**
+         *  A flag used to disable preload() while deleting items.
+         */
+        bool                                isDeleting;
+
+        /**
          *  The Export Playlist pop-up window.
          */
         Ptr<ExportPlaylistWindow>::Ref      exportPlaylistWindow;

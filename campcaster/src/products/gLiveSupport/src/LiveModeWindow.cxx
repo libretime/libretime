@@ -77,7 +77,8 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                                                     throw ()
           : GuiWindow(gLiveSupport,
                       bundle, 
-                      windowOpenerButton)
+                      windowOpenerButton),
+            isDeleting(false)
 {
     try {
         set_title(*getResourceUstring("windowTitle"));
@@ -397,7 +398,7 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
                                         return true;
                 
                 case KeyboardShortcut::removeItem :
-                                        treeView->onRemoveMenuOption();
+                                        onRemoveItemButtonClicked();
                                         return true;
                 
                 case KeyboardShortcut::playAudio :
@@ -638,7 +639,10 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
 void
 LiveModeWindow :: onClearListButtonClicked (void)                   throw ()
 {
+    isDeleting = true;
     treeModel->clear();
+    isDeleting = false;
+    onTreeModelChanged();
 }
 
 
@@ -648,7 +652,10 @@ LiveModeWindow :: onClearListButtonClicked (void)                   throw ()
 void
 LiveModeWindow :: onRemoveItemButtonClicked(void)                   throw ()
 {
+    isDeleting = true;
     treeView->onRemoveMenuOption();
+    isDeleting = false;
+    onTreeModelChanged();
 }
 
 
@@ -658,6 +665,10 @@ LiveModeWindow :: onRemoveItemButtonClicked(void)                   throw ()
 void
 LiveModeWindow :: onTreeModelChanged(void)                          throw ()
 {
+    if (isDeleting) {
+        return;
+    }
+    
     Gtk::TreeModel::iterator    iter = treeModel->children().begin();
     
     if (iter) {
