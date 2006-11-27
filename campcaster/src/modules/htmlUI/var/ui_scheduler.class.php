@@ -15,6 +15,11 @@ class uiScheduler extends uiCalendar {
     public $error;
 
     /**
+     * @var SchedulerPhpClient
+     */
+    public $spc;
+
+    /**
      * @var uiBase
      */
     public $Base;
@@ -85,10 +90,10 @@ class uiScheduler extends uiCalendar {
     	$this->scriptError = null;
         if (!isset($this->Base->STATIONPREFS['schedulerStartupScript'])
         	|| empty($this->Base->STATIONPREFS['schedulerStartupScript'])) {
-           	$this->scriptError = 'Scheduler startup script has not been defined.  Please set this value in the Preferences->System Settings.';
+           	$this->scriptError = 'Scheduler startup script has not been defined.  Please set this value in the "Preferences->System Settings".';
            	return FALSE;
         } elseif (!file_exists($this->Base->STATIONPREFS['schedulerStartupScript'])) {
-        	$this->scriptError = sprintf('The scheduler startup script you defined does not exist.  You can set this value in Preferences->System Settings the current value is "%s"', $this->Base->STATIONPREFS['schedulerStartupScript']);
+        	$this->scriptError = sprintf('The scheduler startup script you defined does not exist.  You can set this value in "Preferences->System Settings".  The current value is "%s"', $this->Base->STATIONPREFS['schedulerStartupScript']);
         	return FALSE;
         }
         return TRUE;
@@ -613,7 +618,7 @@ class uiScheduler extends uiCalendar {
     } // fn getNowNextClip
 
 
-    function getNowNextClip4jscom()
+    public function getNowNextClip4jscom()
     {
         // just use methods which work without valid authentification
 
@@ -668,14 +673,14 @@ class uiScheduler extends uiCalendar {
 //    } // fn OneOrMore
 
 
-    function _scheduledDays($period)
+    protected function _scheduledDays($period)
     {
         if ($period === 'month') {
-            require_once 'Calendar/Month/Weekdays.php';
+            require_once('Calendar/Month/Weekdays.php');
             $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
             $Period->build();
         } elseif ($period === 'week') {
-            require_once 'Calendar/Week.php';
+            require_once('Calendar/Week.php');
             $Period = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
             $Period->build();
         } else {
@@ -686,8 +691,7 @@ class uiScheduler extends uiCalendar {
         $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;         ## Calendar_Month_Weekdays
         $first = array('day'   => sprintf('%02d', $d->thisDay()),
                        'month' => $corrMonth,
-                       'year'  => $corrYear
-                 );
+                       'year'  => $corrYear);
 
         while ($l = $Period->fetch()) {
             $d = $l;
@@ -699,8 +703,6 @@ class uiScheduler extends uiCalendar {
                       'year'  => $corrYear
                 );
 
-
-        #echo "F:".$first['year'].$first['month'].$first['day']." L:".$last['year'].$last['month'].$last['day'];
         $days = $this->_receiveScheduledDays($first['year'].$first['month'].$first['day'], $last['year'].$last['month'].$last['day']);
         foreach ($days as $val) {
             $selections[] = new Calendar_Day($val['year'], $val['month'], $val['day']);
@@ -709,22 +711,20 @@ class uiScheduler extends uiCalendar {
     } // fn _scheduledDays
 
 
-    function _receiveScheduledDays($dfrom, $dto)
+    private function _receiveScheduledDays($dfrom, $dto)
     {
         $dfrom = $dfrom.'T00:00:00';
-        $dto   = $dto.'T23:59:59';
-        if (($pArr  = $this->displayScheduleMethod($dfrom, $dto)) === FALSE) {
+        $dto = $dto.'T23:59:59';
+        if (($pArr = $this->displayScheduleMethod($dfrom, $dto)) === FALSE) {
             return array(FALSE);
         }
 
         $pStampArr = null;
         foreach ($pArr as $val) {
-            #print_r($val);
             $pStampArr[] = array('start' => uiScheduler::datetimeToTimestamp($val['start']),
                                  'end'   => uiScheduler::datetimeToTimestamp($val['end']));
         }
         if (is_array($pStampArr)) {
-            #print_r($pStampArr);
             for ($n = uiScheduler::datetimeToTimestamp($dfrom); $n <= uiScheduler::datetimeToTimestamp($dto); $n+=86400) {
                 foreach ($pStampArr as $val) {
                     if ($val['start'] < $n+86400 && $val['end'] >= $n) {
@@ -740,6 +740,14 @@ class uiScheduler extends uiCalendar {
     } // fn _receiveScheduledDays
 
 
+    /**
+     * Return true if the argument is an array and has a key index "error"
+     * which is an array.  If it is an error, set the internal error
+     * message, which can be retrieved with getErrorMsg().
+     *
+     * @param mixed $r
+     * @return boolean
+     */
     function _isError($r)
     {
         if (isset($r['error']) && is_array($r['error'])) {
@@ -756,7 +764,13 @@ class uiScheduler extends uiCalendar {
     } // fn getErrorMsg
 
 
-    function setErrorMSg($msg)
+    /**
+     * Set the internal error message.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function setErrorMsg($msg)
     {
         $this->error = $msg;
     } // fn setErrorMsg
@@ -765,7 +779,7 @@ class uiScheduler extends uiCalendar {
     ## XML-RPC wrapper methods ############################################################################################
     function initXmlRpc()
     {
-        include_once dirname(__FILE__).'/ui_schedulerPhpClient.class.php';
+        include_once(dirname(__FILE__).'/ui_schedulerPhpClient.class.php');
         $this->spc =& SchedulerPhpClient::factory($this->Base->dbc, $mdefs, $this->Base->config, FALSE, FALSE);
     } // fn initXmlRpc
 
@@ -784,9 +798,9 @@ class uiScheduler extends uiCalendar {
         if ($this->_isError($r)) {
             return FALSE;
         }
-        if (isset($r['scheduleEntryId'])) {
-            $this->Base->_retMsg('Entry added at $1 with ScheduleId $2.', strftime("%Y-%m-%d %H:%M:%S", uiScheduler::datetimeToTimestamp($datetime)), $r['scheduleEntryId']);
-        }
+//        if (isset($r['scheduleEntryId'])) {
+//            $this->Base->_retMsg('Entry added at $1 with ScheduleId $2.', strftime("%Y-%m-%d %H:%M:%S", uiScheduler::datetimeToTimestamp($datetime)), $r['scheduleEntryId']);
+//        }
     } // fn uploadPlaylistMethod
 
 
@@ -831,7 +845,7 @@ class uiScheduler extends uiCalendar {
     function scheduleExportOpen($from,$to)
     {
         $criteria = array('filetype' => UI_FILETYPE_ANY);
-        $token = $this->spc->exportOpenMethod($this->Base->sessid, $criteria,$from, $to);
+        $token = $this->spc->exportOpenMethod($this->Base->sessid, $from, $to, $criteria);
 
         if (PEAR::isError($token)) {
             $this->Base->_retMsg('Error initializing scheduler export: $1', $token->getMessage());
