@@ -89,9 +89,14 @@ using namespace LiveSupport::Core;
  *  for each play log item in the interval.  An array of size 0 means there
  *  are no play log entries. Each structure is as follows:
  *  <ul>
- *      <li>audioClipId - string -      the id of the audio clip played </li>
+ *      <li>audioClipId - string -   the id of the audio clip played </li>
  *      <li>timestamp   - datetime - the time the clip was played (started)</li>
  *  </ul>
+ *
+ *  The audioClipId parameter is a string containing the hexadecimal value of 
+ *  the audio clip ID.
+ *  It is up to 32 characters long, representing a value between 0 and 2^31-1,
+ *  inclusive.
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
  *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The

@@ -81,6 +81,11 @@ using namespace LiveSupport::Core;
  *                                scheduled, an ISO 8601 DateTime field</li>
  *  </ul>
  *
+ *  The playlistId parameter is a string containing the hexadecimal value of 
+ *  the playlist ID.
+ *  It is up to 32 characters long, representing a value between 0 and 2^31-1,
+ *  inclusive.
+ *
  *  If the upload is successful, the method returns an XML-RPC structure with
  *  the following members:
  *  <ul>
