@@ -98,7 +98,7 @@ using namespace LiveSupport::Core;
  *
  *  The playlistId parameter is a string containing the hexadecimal value of 
  *  the playlist ID.
- *  It is up to 32 characters long, representing a value between 0 and 2^31-1,
+ *  It is up to 8 characters long, representing a value between 0 and 2^31-1,
  *  inclusive.
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
