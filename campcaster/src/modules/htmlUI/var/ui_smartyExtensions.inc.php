@@ -1,7 +1,7 @@
 <?php
 $Smarty->register_object('UIBROWSER', $uiBrowser);
 $Smarty->register_object('BROWSE', $uiBrowser->BROWSE);
-$Smarty->register_object('HUBBROWSE', $HUBBROWSE);
+$Smarty->register_object('HUBBROWSE', $uiBrowser->HUBBROWSE);
 $Smarty->register_object('SEARCH', $uiBrowser->SEARCH);
 $Smarty->register_object('HUBSEARCH', $uiBrowser->HUBSEARCH);
 $Smarty->register_object('TRANSFERS', $uiBrowser->TRANSFERS);

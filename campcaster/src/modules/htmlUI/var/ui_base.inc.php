@@ -115,25 +115,91 @@ function _getNumArr($start, $end, $step=1)
  */
 class uiBase
 {
-    public $gb; // GreenBox
+    /**
+     * @var GreenBox
+     */
+    public $gb;
+
     public $STATIONPREFS;
+
+    /**
+     * @var uiScratchPad
+     */
     public $SCRATCHPAD;
+
+    /**
+     * @var uiSearch
+     */
     public $SEARCH;
+
+    /**
+     * @var uiBrowse
+     */
     public $BROWSE;
-    // Note: loading HUBBROWSE on every page load slows things down
-    // a lot.  we only load it on demand.
-    //public $HUBBROWSE;
+
+    /**
+     * @todo loading HUBBROWSE on every page load slows things down
+     * a lot.  We should only load it on demand.
+     *
+     * @var uiHubBrowse
+     */
+    public $HUBBROWSE;
+
+    /**
+     * @var uiHubSearch
+     */
     public $HUBSEARCH;
+
+    /**
+     * @var uiPlaylist
+     */
     public $PLAYLIST;
+
+    /**
+     * @var uiScheduler
+     */
     public $SCHEDULER;
+
+    /**
+     * @var uiSubjects
+     */
     public $SUBJECTS;
+
+    /**
+     * @var uiExchange
+     */
     public $EXCHANGE;
+
+    /**
+     * @var uiTransfers
+     */
     public $TRANSFERS;
+
+    /**
+     * @var string
+     */
     public $redirUrl;
+
+    /**
+     * @var DB
+     */
     public $dbc;
+
+    /**
+     * @var array
+     */
     public $config;
+
+    /**
+     * @var string
+     */
     public $sessid;
+
+    /**
+     * @var int
+     */
     public $userid;
+
     public $login;
     public $id;
     public $langid;
@@ -141,11 +207,16 @@ class uiBase
     public $type;
     public $fid;
     public $homeid;
+
+    /**
+     * @var string
+     */
     public $alertMsg;
+
 
     /**
      * @param array $config
-     * 		configurartion data
+     * 		configuration data
      */
     public function __construct(&$config)
     {
@@ -188,7 +259,7 @@ class uiBase
         $this->SCRATCHPAD = new uiScratchPad($this);
         $this->SEARCH = new uiSearch($this);
         $this->BROWSE = new uiBrowse($this);
-        //$this->HUBBROWSE = new uiHubBrowse($this);
+        $this->HUBBROWSE = new uiHubBrowse($this);
         $this->HUBSEARCH = new uiHubSearch($this);
         $this->PLAYLIST = new uiPlaylist($this);
         $this->SCHEDULER = new uiScheduler($this);

@@ -1,10 +1,6 @@
 <?php
 require(dirname(__FILE__).'/../ui_handler_init.php');
 
-if (strstr($_REQUEST['act'], "HUBBROWSE")) {
-	$HUBBROWSE = new uiHubBrowse($uiHandler);
-
-}
 switch ($_REQUEST['act']) {
     case "login":
 	    if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
@@ -173,31 +169,31 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "HUBBROWSE.setCategory":
-	    $HUBBROWSE->setCategory($_REQUEST);
+	    $uiHandler->HUBBROWSE->setCategory($_REQUEST);
 	    break;
 
     case "HUBBROWSE.setValue":
-	    $HUBBROWSE->setValue($_REQUEST);
+	    $uiHandler->HUBBROWSE->setValue($_REQUEST);
 	    break;
 
     case "HUBBROWSE.reorder":
-	    $HUBBROWSE->reorder($_REQUEST['by']);
+	    $uiHandler->HUBBROWSE->reorder($_REQUEST['by']);
 	    break;
 
     case "HUBBROWSE.setDefaults":
-	    $HUBBROWSE->setDefaults(TRUE);
+	    $uiHandler->HUBBROWSE->setDefaults(TRUE);
 	    break;
 
     case "HUBBROWSE.setOffset":
-	    $HUBBROWSE->setOffset($_REQUEST['page']);
+	    $uiHandler->HUBBROWSE->setOffset($_REQUEST['page']);
 	    break;
 
     case "HUBBROWSE.setLimit":
-	    $HUBBROWSE->setLimit($_REQUEST['limit']);
+	    $uiHandler->HUBBROWSE->setLimit($_REQUEST['limit']);
 	    break;
 
     case "HUBBROWSE.setFiletype":
-	    $HUBBROWSE->setFiletype($_REQUEST['filetype']);
+	    $uiHandler->HUBBROWSE->setFiletype($_REQUEST['filetype']);
 	    break;
 
     case "HUBSEARCH.newSearch":
@@ -386,10 +382,14 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case 'SCHEDULER.scheduleExportOpen':
-	    $_REQUEST['fromDay'] = strlen($_REQUEST['fromDay'])>1?$_REQUEST['fromDay']:'0'.$_REQUEST['fromDay'];
-	    $_REQUEST['toDay'] = strlen($_REQUEST['toDay'])>1?$_REQUEST['toDay']:'0'.$_REQUEST['toDay'];
-	    $fromTime=$_REQUEST['fromYear'].'-'.$_REQUEST['fromMonth'].'-'.$_REQUEST['fromDay'].' '.$_REQUEST['fromHour'].':'.$_REQUEST['fromMinute'].':00';
-	    $toTime=$_REQUEST['toYear'].'-'.$_REQUEST['toMonth'].'-'.$_REQUEST['toDay'].' '.$_REQUEST['toHour'].':'.$_REQUEST['toMinute'].':00';
+        // Make sure days are always 2 digits.
+	    $_REQUEST['fromDay'] = (strlen($_REQUEST['fromDay'])>1)?$_REQUEST['fromDay']:'0'.$_REQUEST['fromDay'];
+	    $_REQUEST['toDay'] = (strlen($_REQUEST['toDay'])>1)?$_REQUEST['toDay']:'0'.$_REQUEST['toDay'];
+
+	    $fromTime = $_REQUEST['fromYear'].'-'.$_REQUEST['fromMonth'].'-'.$_REQUEST['fromDay'].' '
+	               .$_REQUEST['fromHour'].':'.$_REQUEST['fromMinute'].':00';
+	    $toTime = $_REQUEST['toYear'].'-'.$_REQUEST['toMonth'].'-'.$_REQUEST['toDay'].' '
+	              .$_REQUEST['toHour'].':'.$_REQUEST['toMinute'].':00';
 	    //echo '<XMP style="background:yellow;">';echo "fromTime:$fromTime | toTime:$toTime";echo'</XMP>'."\n";
 	    $uiHandler->SCHEDULER->scheduleExportOpen($fromTime, $toTime);
 	    $uiHandler->redirUrl = UI_BROWSER.'?act=SCHEDULER';
