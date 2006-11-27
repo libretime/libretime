@@ -9,17 +9,17 @@
 {if $searchForm}
 		<div id="tabnav">
 			<ul>
-				<li><a href="{$browseURL}">##Browse##</a></li>	
-				<li><a href="#" class="active">##Search##</a></li>				
-				<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>	
-				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>	
-				<li><a href="{$transfersURL}">##Transfers##</a></li>	
+				<li><a href="{$browseURL}">##Browse##</a></li>
+				<li><a href="#" class="active">##Search##</a></li>
+				{* <li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>*}
+				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>
+				<li><a href="{$transfersURL}">##Transfers##</a></li>
 			</ul>
-		</div>		
+		</div>
         <div class="content">
         <!-- start search -->
         <div class="container_elements" style="width: 607px;">
-        <h1>##Search##</h1>	
+        <h1>##Search##</h1>
     {assign var="_act_prefix" value="SEARCH"}
     {assign var="_form" value=$searchForm}
     {include file="library/searchForm.tpl"}
@@ -31,13 +31,13 @@
 {if $browseForm}
 		<div id="tabnav">
 			<ul>
-				<li><a href="#" class="active">##Browse##</a></li>					
-				<li><a href="{$searchURL}">##Search##</a></li>				
-				<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>	
-				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>	
-				<li><a href="{$transfersURL}">##Transfers##</a></li>	
+				<li><a href="#" class="active">##Browse##</a></li>
+				<li><a href="{$searchURL}">##Search##</a></li>
+				{*<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>*}
+				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>
+				<li><a href="{$transfersURL}">##Transfers##</a></li>
 			</ul>
-		</div>			
+		</div>
         <div class="content">
         <!-- start browsing -->
 		<div class="container_elements" style="width: 607px;">
@@ -52,13 +52,13 @@
 {if $hubBrowseForm}
 		<div id="tabnav">
 			<ul>
-				<li><a href="{$browseURL}">##Browse##</a></li>					
-				<li><a href="{$searchURL}">##Search##</a></li>				
-				<li><a href="#" class="active">##Hub Browse##</a></li>	
-				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>	
-				<li><a href="{$transfersURL}">##Transfers##</a></li>	
+				<li><a href="{$browseURL}">##Browse##</a></li>
+				<li><a href="{$searchURL}">##Search##</a></li>
+				{*<li><a href="#" class="active">##Hub Browse##</a></li>*}
+				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>
+				<li><a href="{$transfersURL}">##Transfers##</a></li>
 			</ul>
-		</div>			
+		</div>
         <div class="content">
         <!-- start hub browsing -->
 		<div class="container_elements" style="width: 607px;">
@@ -73,13 +73,13 @@
 {if $hubSearchForm}
 		<div id="tabnav">
 			<ul>
-				<li><a href="{$browseURL}">##Browse##</a></li>					
-				<li><a href="{$searchURL}">##Search##</a></li>				
-				<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>	
-				<li><a href="#" class="active">##Hub Search##</a></li>	
-				<li><a href="{$transfersURL}">##Transfers##</a></li>	
+				<li><a href="{$browseURL}">##Browse##</a></li>
+				<li><a href="{$searchURL}">##Search##</a></li>
+				{*<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>*}
+				<li><a href="#" class="active">##Hub Search##</a></li>
+				<li><a href="{$transfersURL}">##Transfers##</a></li>
 			</ul>
-		</div>			
+		</div>
         <div class="content">
         <!-- start hub search -->
 		<div class="container_elements" style="width: 607px;">
@@ -95,13 +95,13 @@
 {if $transfersForm}
 		<div id="tabnav">
 			<ul>
-				<li><a href="{$browseURL}">##Browse##</a></li>					
-				<li><a href="{$searchURL}">##Search##</a></li>				
-				<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>	
-				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>	
-				<li><a href="#" class="active">##Transfers##</a></li>	
+				<li><a href="{$browseURL}">##Browse##</a></li>
+				<li><a href="{$searchURL}">##Search##</a></li>
+				{*<li><a href="{$hubBrowseURL}">##Hub Browse##</a></li>*}
+				<li><a href="{$hubSearchURL}">##Hub Search##</a></li>
+				<li><a href="#" class="active">##Transfers##</a></li>
 			</ul>
-		</div>			
+		</div>
         <div class="content">
         <!-- start transfers -->
 		<div class="container_elements" style="width: 607px;">

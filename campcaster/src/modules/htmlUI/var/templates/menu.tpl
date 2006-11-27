@@ -28,7 +28,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             <ul>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Browse##</a></li>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=SEARCH">##Search##</a></li>
-                <li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li>
+                {* <li><a href="{$UI_BROWSER}?id={$START.id}&popup[]=HUBBROWSE.getResults">##Hub Browse##</a></li> *}
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=HUBSEARCH">##Hub Search##</a></li>
                 <li><a href="{$UI_BROWSER}?id={$START.id}&act=TRANSFERS">##Transfers##</a></li>
             </ul>
