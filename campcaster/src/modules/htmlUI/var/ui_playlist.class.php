@@ -1,4 +1,6 @@
 <?php
+require_once("../../../storageServer/var/Playlist.php");
+
 /**
  * @author Tomas Hlava <th@red2head.com>
  * @author Paul Baranowski <paul@paulbaranowski.org>
