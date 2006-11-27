@@ -1,8 +1,13 @@
 <?php
 /**
+ * @author Sebastian Gobel <sebastian.goebel@web.de>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
  * @version $Revision$
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class uiScheduler extends uiCalendar {
 	/**
@@ -831,38 +836,64 @@ class uiScheduler extends uiCalendar {
 
     // export methods
 
+    /**
+     * Get the token for the schedule which is currently being exported.
+     * It is stored in the user preferences.
+     *
+     * @return string
+     */
     function getExportToken()
     {
         $token = $this->Base->gb->loadPref($this->Base->sessid, UI_SCHEDULER_EXPORTTOKEN_KEY);
 
-        if (PEAR::isError($token)) {
+        if (PEAR::isError($token) || empty($token)) {
             return false;
         }
         return $token;
     } // fn getExportToken
 
 
-    function scheduleExportOpen($from,$to)
+    /**
+     * Export a schedule within a certain time range.
+     *
+     * @param string $from
+     *      Date-time format
+     * @param string $to
+     *      Date-time format
+     * @return boolean
+     */
+    function scheduleExportOpen($from, $to)
     {
         $criteria = array('filetype' => UI_FILETYPE_ANY);
-        $token = $this->spc->exportOpenMethod($this->Base->sessid, $from, $to, $criteria);
+        $token = $this->spc->exportOpenMethod($this->Base->sessid, $criteria, $from, $to);
 
         if (PEAR::isError($token)) {
             $this->Base->_retMsg('Error initializing scheduler export: $1', $token->getMessage());
             return false;
         }
 
-        $this->scheduleExportCheck();
+        if (isset($token["error"])) {
+            $this->Base->_retMsg('Error initializing scheduler export: $1',
+                                 $token["error"]["code"].":".$token["error"]["message"]);
+            return false;
+        }
         $this->Base->gb->savePref($this->Base->sessid, UI_SCHEDULER_EXPORTTOKEN_KEY, $token['token']);
+        //$this->scheduleExportCheck();
         return true;
     } // fn scheduleExportOpen
 
 
+    /**
+     * Check the status of a schedule that is being exported.
+     *
+     * @return string|false
+     */
     function scheduleExportCheck()
     {
         $token = $this->getExportToken();
 
-        if ($token === false) {
+        if (empty($token)) {
+            $this->Base->_retMsg('Token not available');
             return false;
         }
 
@@ -879,7 +910,7 @@ class uiScheduler extends uiCalendar {
     {
         $token = $this->getExportToken();
 
-        if ($token === false) {
+        if (empty($token)) {
             $this->Base->_retMsg('Token not available');
             return false;
         }

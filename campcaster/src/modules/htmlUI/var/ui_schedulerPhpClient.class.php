@@ -1,9 +1,4 @@
 <?php
-/* ================================================================= includes */
-#require_once 'DB.php';
-#require_once "XML/RPC.php";
-#include_once "../conf.php";
-
 /* ================================================== method definition array */
 /**
  *  Array with methods description
@@ -98,9 +93,9 @@ $mdefs = array(
         )
     ),
     "ExportOpenMethod" => array(
-        'm'=>'exportOpen',
-        'p'=>array('sessionId'/*string*/, 'from'/*datetime*/, 'to'/*datetime*/, 'criteria'/*struct*/),
-        't'=>array('string', 'dateTime.iso8601', 'dateTime.iso8601', 'struct'),
+        'm'=>'createBackupOpen',
+        'p'=>array('sessionId'/*string*/, 'criteria'/*struct*/, 'from'/*datetime*/, 'to'/*datetime*/),
+        't'=>array('string', 'struct', 'dateTime.iso8601', 'dateTime.iso8601'),
         'r'=>array('schedulerExportToken'/*string*/),
         'e'=>array(
             '1601'=>'invalid argument format',
@@ -111,7 +106,7 @@ $mdefs = array(
         )
     ),
     "ExportCheckMethod" => array(
-        'm'=>'exportCheck',
+        'm'=>'createBackupCheck',
         'p'=>array('sessionId'/*string*/, 'token'/*string*/),
         't'=>array('string', 'string'),
         'r'=>array('status'/*string*/),
@@ -122,7 +117,7 @@ $mdefs = array(
         )
     ),
     "ExportCloseMethod" => array(
-        'm'=>'exportClose',
+        'm'=>'createBackupClose',
         'p'=>array('sessionId'/*string*/, 'token'/*string*/),
         't'=>array('string', 'string'),
         'r'=>array('status'/*boolean*/),
@@ -227,11 +222,8 @@ class SchedulerPhpClient {
         $this->debug = $debug;
         $this->verbose = $verbose;
         $confPrefix = "scheduler";
-        //$confPrefix = "storage";
-        $serverPath =
-          "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
-          "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
-        //$serverPath = "http://localhost:80/campcasterStorageServerCVS/xmlrpc/xrLocStor.php";
+        $serverPath = "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
+                      "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
         if ($this->verbose) {
         	echo "serverPath: $serverPath\n";
         }
@@ -273,11 +265,9 @@ class SchedulerPhpClient {
                 '        return $r;'."\n".
                 '    }'."\n";
         }
-        $e =
-            "class SchedulerPhpClientCore extends SchedulerPhpClient{\n".
-            "$f\n".
-            "}\n";
-#        echo $e;
+        $e = "class SchedulerPhpClientCore extends SchedulerPhpClient{\n".
+             "$f\n".
+             "}\n";
         if (FALSE === eval($e)) {
         	return $dbc->raiseError("Eval failed");
         }
@@ -304,16 +294,16 @@ class SchedulerPhpClient {
         $XML_RPC_val = new XML_RPC_Value;
         foreach ($this->mdefs[$method]['p'] as $i => $p) {
             $parr[$p] = new XML_RPC_Value;
-            switch ($this->mdefs[$method]['t'][$i]) { // switch ($parr[$p]->kindOf($gettedPars[$i])) {
-                /* array type: normal array */
+            switch ($this->mdefs[$method]['t'][$i]) {
+                // array type: normal array
                 case 'array':
                     $parr[$p]->addArray($gettedPars[$i]);
                     break;
-                /* stuct type: assoc. array */
+                // stuct type: assoc. array
                 case 'struct':
                     $parr[$p]->addStruct($gettedPars[$i]);
                     break;
-                /* scalar types: 'int' | 'boolean' | 'string' | 'double' | 'dateTime.iso8601' | 'base64'*/
+                // scalar types: 'int' | 'boolean' | 'string' | 'double' | 'dateTime.iso8601' | 'base64'
                 default:
                     $parr[$p]->addScalar($gettedPars[$i], $this->mdefs[$method]['t'][$i]);
             }
@@ -332,28 +322,13 @@ class SchedulerPhpClient {
             return array('error' => array('code' => -1, 'message' => '##Cannot connect to Scheduler##'));
         }
         if ($res->faultCode() > 0) {
-            return array('error' => array('code' => $res->faultCode(), 'message' => $res->faultString()));   ## changed by sebastian
-            /*
-            tomas� orig. method
-            return $this->dbc->raiseError(
-                "SchedulerPhpClient::$method:".$res->faultString()." ".
-                $res->faultCode()."\n", $res->faultCode()
-            );
-
-            newer method:
-            return PEAR::raiseError(
-                "SchedulerPhpClient::$method:".$res->faultString()." ".
-                $res->faultCode()."\n", $res->faultCode(),
-                PEAR_ERROR_RETURN
-            );
-            */
+            return array('error' => array('code' => $res->faultCode(), 'message' => $res->faultString()));
         }
         if ($this->verbose) {
             echo "result:\n";
             echo $res->serialize();
         }
         $val = $res->value();
-#        echo"<pre>\n"; var_dump($val); exit;
         $resp = XML_RPC_decode($res->value());
         return $resp;
     } // fn callMethod
