@@ -176,6 +176,7 @@ root:table
 
         hourLabel:string            { "hour: " }
         minuteLabel:string          { "minute: " }
+        secondLabel:string          { "seconds: " }
         scheduleButtonLabel:string  { "schedule" }
         closeButtonLabel:string     { "close" }
     }

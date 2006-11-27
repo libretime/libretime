@@ -171,6 +171,7 @@ sr_CS:table
 
         hourLabel:string              { "sat: " }
         minuteLabel:string            { "minut: " }
+        secondLabel:string            { "seconds: " }
         scheduleButtonLabel:string    { "programiraj" }
         closeButtonLabel:string       { "zatvori" }
     }

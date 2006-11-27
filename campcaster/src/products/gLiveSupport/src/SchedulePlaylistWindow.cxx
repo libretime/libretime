@@ -78,6 +78,8 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                                                 "hourLabel")));
         minuteLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
                                                             "minuteLabel")));
+        secondLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                            "secondLabel")));
         scheduleButton = Gtk::manage(wf->createButton(
                                   *getResourceUstring("scheduleButtonLabel")));
         closeButton = Gtk::manage(wf->createButton(
@@ -90,18 +92,21 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
     playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
     calendar      = Gtk::manage(new Gtk::Calendar());
     hourEntry     = Gtk::manage(wf->createNumericComboBoxText(0, 23));
-    minuteEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59));
+    minuteEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59, 2));
+    secondEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59, 2));
 
     layout = Gtk::manage(new Gtk::Table());
 
-    layout->attach(*playlistLabel,  0, 4, 0, 1);
-    layout->attach(*calendar,       0, 4, 1, 2);
+    layout->attach(*playlistLabel,  0, 6, 0, 1);
+    layout->attach(*calendar,       0, 6, 1, 2);
     layout->attach(*hourLabel,      0, 1, 2, 3);
     layout->attach(*hourEntry,      1, 2, 2, 3);
     layout->attach(*minuteLabel,    2, 3, 2, 3);
     layout->attach(*minuteEntry,    3, 4, 2, 3);
-    layout->attach(*scheduleButton, 2, 4, 3, 4);
-    layout->attach(*closeButton   , 2, 4, 4, 5);
+    layout->attach(*secondLabel,    4, 5, 2, 3);
+    layout->attach(*secondEntry,    5, 6, 2, 3);
+    layout->attach(*scheduleButton, 4, 6, 3, 4);
+    layout->attach(*closeButton   , 4, 6, 4, 5);
 
     // register the signal handler for the schedule getting clicked.
     scheduleButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -142,9 +147,19 @@ SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
     Ptr<std::string>::Ref   timeStr(new std::string(
                                                 hourEntry->get_active_text()));
     *timeStr += ":";
-    *timeStr += minuteEntry->get_active_text();
-    *timeStr += ":00.00";
-
+    Glib::ustring   minutes = minuteEntry->get_active_text();
+    if (minutes == "") {
+        minutes = "00";
+    }
+    *timeStr += minutes;
+    *timeStr += ":";
+    Glib::ustring   seconds = secondEntry->get_active_text();
+    if (seconds == "") {
+        seconds = "00";
+    }
+    *timeStr += seconds;
+    *timeStr += ".00";
+    
     Ptr<posix_time::ptime>::Ref selectedTime;
 
     try {

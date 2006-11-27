@@ -171,6 +171,7 @@ sr_CS_CYRILLIC:table
 
         hourLabel:string              { "сат: " }
         minuteLabel:string            { "минут: " }
+        secondLabel:string            { "seconds: " }
         scheduleButtonLabel:string    { "програмирај" }
         closeButtonLabel:string       { "затвори" }
     }

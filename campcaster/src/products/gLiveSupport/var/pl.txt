@@ -176,6 +176,7 @@ pl:table
 
         hourLabel:string            { "godzina: " }
         minuteLabel:string          { "minuta: " }
+        secondLabel:string          { "seconds: " }
         scheduleButtonLabel:string  { "zaprogramuj" }
         closeButtonLabel:string     { "zamknij" }
     }

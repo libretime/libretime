@@ -187,10 +187,13 @@ class WidgetFactory :
          *  Convert an integer to a string.
          *
          *  @param  number      the number to be converted.
+         *  @param  minLength   the minimum length of the result; smaller
+         *                      numbers get padded with zeroes (optional).
          *  @return the string value of the number (in base 10).
          */
         static Glib::ustring
-        itoa(int    number)                                         throw ();
+        itoa(int    number,
+             int    minLength = 0)                                  throw ();
 
 
     public:
@@ -320,11 +323,14 @@ class WidgetFactory :
          *
          *  @param  lowerLimit  the lowest entry in the combo box.
          *  @param  upperLimit  the highest entry in the combo box.
+         *  @param  minLength   the minimum length of the entries; smaller
+         *                      numbers get padded with zeroes (optional).
          *  @return a combo box, that holds numeric entries.
          */
         ComboBoxText *
-        createNumericComboBoxText(int  lowerLimit,
-                                  int  upperLimit)                  throw ();
+        createNumericComboBoxText(int   lowerLimit,
+                                  int   upperLimit,
+                                  int   minLength = 0)              throw ();
         
         /**
          *  Create and return a blue singular container.

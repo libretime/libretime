@@ -178,6 +178,7 @@ es:table
 
         hourLabel:string              { "hora: " }
         minuteLabel:string            { "minuto: " }
+        secondLabel:string            { "seconds: " }
         scheduleButtonLabel:string    { "programado" }
         closeButtonLabel:string       { "cerrar" }
     }

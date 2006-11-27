@@ -135,6 +135,16 @@ class SchedulePlaylistWindow : public GuiWindow
         ComboBoxText              * minuteEntry;
 
         /**
+         *  The second label.
+         */
+        Gtk::Label                * secondLabel;
+
+        /**
+         *  The second entry field.
+         */
+        ComboBoxText              * secondEntry;
+
+        /**
          *  The schedule button.
          */
         Button                    * scheduleButton;

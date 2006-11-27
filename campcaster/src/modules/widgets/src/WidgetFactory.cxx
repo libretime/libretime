@@ -511,14 +511,15 @@ WidgetFactory :: createOperatorComboBoxText(
  *----------------------------------------------------------------------------*/
 ComboBoxText *
 WidgetFactory :: createNumericComboBoxText(int  lowerLimit,
-                                           int  upperLimit)
+                                           int  upperLimit,
+                                           int  minLength)
                                                                     throw ()
 {
     ComboBoxText *  comboBox = new ComboBoxText(comboBoxLeftImage,
                                                 comboBoxCenterImage,
                                                 comboBoxRightImage);
     for (int i = lowerLimit; i <= upperLimit; ++i) {
-        comboBox->append_text(itoa(i));
+        comboBox->append_text(itoa(i, minLength));
     }
     return comboBox;
 }
@@ -707,9 +708,14 @@ WidgetFactory :: createDateTimeChooserWindow(Ptr<ResourceBundle>::Ref   bundle)
  *  Convert an integer to a string.
  *----------------------------------------------------------------------------*/
 Glib::ustring
-WidgetFactory :: itoa(int    number)                                throw ()
+WidgetFactory :: itoa(int   number,
+                      int   minLength)                              throw ()
 {
     std::ostringstream  stream;
+    if (minLength > 0) {
+        stream << std::setw(minLength)
+               << std::setfill('0');
+    }
     stream << number;
     Glib::ustring       string = stream.str();
     return string;

@@ -92,6 +92,7 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
+std::cerr << "PlaylistEvent :: initialize BEGIN\n";
     if (state != created) {
         throw std::logic_error("PlaylistEvent in bad state");
     }
@@ -102,6 +103,7 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
                                                                ->getId()));
     try {
         playlist = storage->acquirePlaylist(sessionId, playlistId);
+std::cerr << "PlaylistEvent :: initialize acquired playlist\n";
     } catch (Core::XmlRpcException &e) {
         std::string     errorMessage = "storage server error: ";
         errorMessage += e.what();
@@ -130,6 +132,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
     }
     playlist.reset();
     state = deInitialized;
+std::cerr << "PlaylistEvent :: deInitialize END\n";
 }
 
 
@@ -139,6 +142,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
 void
 PlaylistEvent :: start(void)                       throw ()
 {
+std::cerr << "PlaylistEvent :: start BEGIN\n";
     if (state != initialized) {
         // TODO: handle error?
         return;
@@ -147,6 +151,7 @@ PlaylistEvent :: start(void)                       throw ()
     try {
         audioPlayer->open(*playlist->getUri());
         audioPlayer->start();
+std::cerr << "PlaylistEvent :: audio player started\n";
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {
@@ -166,6 +171,7 @@ PlaylistEvent :: start(void)                       throw ()
 void
 PlaylistEvent :: stop(void)                        throw ()
 {
+std::cerr << "PlaylistEvent :: stop BEGIN\n";
     if (state != running) {
         // TODO: handle error?
         return;
@@ -174,6 +180,7 @@ PlaylistEvent :: stop(void)                        throw ()
     try {
         audioPlayer->stop();
         audioPlayer->close();
+std::cerr << "PlaylistEvent :: audio player stopped\n";
     } catch (std::logic_error &e) {
         // TODO: handle error
         // NOTE: this may not be an error, because the user may have stopped
