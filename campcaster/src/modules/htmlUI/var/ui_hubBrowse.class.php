@@ -1,8 +1,13 @@
 <?php
 /**
+ * @author Sebastian Gobel <sebastian.goebel@web.de>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
  * @version $Revision$
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 class uiHubBrowse extends uiBrowse
 {
@@ -13,7 +18,7 @@ class uiHubBrowse extends uiBrowse
         $this->prefix = 'HUBBROWSE';
         $this->col =& $_SESSION[UI_HUBBROWSE_SESSNAME]['col'];
         $this->criteria =& $_SESSION[UI_HUBBROWSE_SESSNAME]['criteria'];
-        #$this->results =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
+        //$this->results =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {
@@ -24,8 +29,10 @@ class uiHubBrowse extends uiBrowse
         }
 
         if (!is_array($this->col)) {
-            ## init Categorys
-            $this->setDefaults();
+            // init Categorys
+            // This is broken - it initializes the columns from the local
+            // storage instead of the remote storage. -- Paul
+            //$this->setDefaults();
         }
     } // constructor
 
@@ -45,6 +52,12 @@ class uiHubBrowse extends uiBrowse
     } // fn searchDB
 
 
+    /**
+     * @todo this function is broken
+     *
+     * @param string $trtokid
+     * @return boolean
+     */
     function getSearchResults($trtokid) {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
         $results = $this->Base->gb->getSearchResults($trtokid);
@@ -57,8 +70,6 @@ class uiHubBrowse extends uiBrowse
             $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
         }
         $this->pagination($results);
-//        echo '<XMP>this->results:'; print_r($this->results); echo "</XMP>\n";
-//        echo '<XMP>results:'; print_r($results); echo "</XMP>\n";
         return is_array($results);
     } // fn getSearchResults
 
