@@ -739,9 +739,7 @@ GLiveSupport :: getAudioClip(Ptr<const UniqueId>::Ref  id)
     AudioClipMap::iterator  it = openedAudioClips->find(id->getId());
     if (it != openedAudioClips->end()) {
         clip = it->second;
-    }
-    
-    if (!clip || !clip->getToken()) {
+    } else {
         clip = storage->getAudioClip(sessionId, id);
         (*openedAudioClips)[id->getId()] = clip;
     }
@@ -764,7 +762,9 @@ GLiveSupport :: acquireAudioClip(Ptr<const UniqueId>::Ref  id)
     AudioClipMap::iterator  it = openedAudioClips->find(id->getId());
     if (it != openedAudioClips->end()) {
         clip = it->second;
-    } else {
+    }
+    
+    if (!clip || !clip->getToken()) {
         clip = storage->acquireAudioClip(sessionId, id);
         (*openedAudioClips)[id->getId()] = clip;
     }
