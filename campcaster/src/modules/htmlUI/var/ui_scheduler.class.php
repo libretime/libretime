@@ -14,10 +14,27 @@ class uiScheduler extends uiCalendar {
 	 * @var array
 	 */
     public $curr;
+
+    /**
+     * For the "schedule at time" value.
+     *
+     * @var array
+     */
     public $scheduleAtTime;
+
+    /**
+     * For the "snap to previous" value.
+     *
+     * @var array
+     */
     public $schedulePrev;
+
+    /**
+     * For the "snap to next" value.
+     *
+     * @var array
+     */
     public $scheduleNext;
-    public $error;
 
     /**
      * @var SchedulerPhpClient
@@ -39,9 +56,18 @@ class uiScheduler extends uiCalendar {
      */
     public $closeUrl;
 
-    public $firstDayOfWeek;
+    /**
+     * Playlists that are available to be scheduled.  These are copied
+     * from the scratchpad.
+     *
+     * @var array
+     */
+    private $availablePlaylists;
 
+    public $firstDayOfWeek;
 	private $scriptError;
+    public $error;
+
 
     public function __construct(&$uiBase)
     {
@@ -82,6 +108,636 @@ class uiScheduler extends uiCalendar {
         $this->Base->redirUrl = $this->closeUrl;
     } // fn setClose
 
+
+    /**
+     * @param array $arr
+     * 		Can have keys:
+     * 		["view"]
+     * 		["today"]
+     * 		["year"]
+     * 		["month"]
+     * 		["day"]
+     * 		["hour"]
+     * @return void
+     */
+    function set($arr)
+    {
+        extract($arr);
+
+        if (isset($view)) {
+            $this->curr['view'] = $view;
+        }
+        if (isset($today)) {
+            list($year, $month, $day) = explode("-", strftime("%Y-%m-%d"));
+        }
+        if (isset($year) && is_numeric($year)) {
+            $this->curr['year'] = sprintf('%04d', $year);
+        }
+        if (isset($month) && is_numeric($month)) {
+            $this->curr['month'] = sprintf('%02d', $month);
+        }
+        if (isset($day) && is_numeric($day)) {
+            $this->curr['day'] = sprintf('%02d', $day);
+        }
+        if (isset($hour) && is_numeric($hour)) {
+            $this->curr['hour'] = sprintf('%02d', $hour);
+        }
+
+        $stampNow = uiScheduler::datetimeToTimestamp($this->curr['year']
+            .$this->curr['month']
+            .$this->curr['day']
+            .'T'.$this->curr['hour'].':00:00');
+        $stampTarget = $stampNow;
+
+        if (isset($month) && ($month==='++')) {
+            $stampTarget = strtotime("+1 month", $stampNow);
+        }
+        if (isset($month) && ($month==='--')) {
+            $stampTarget = strtotime("-1 month", $stampNow);
+        }
+        if (isset($week) && ($week==='++')) {
+            $stampTarget = strtotime("+1 week", $stampNow);
+        }
+        if (isset($week) && ($week==='--')) {
+            $stampTarget = strtotime("-1 week", $stampNow);
+        }
+        if (isset($day) && ($day==='++')) {
+            $stampTarget = strtotime("+1 day", $stampNow);
+        }
+        if (isset($day) && ($day==='--')) {
+            $stampTarget = strtotime("-1 day", $stampNow);
+        }
+
+        $this->curr['year'] = strftime("%Y", $stampTarget);
+        $this->curr['month'] = strftime("%m", $stampTarget);
+        $this->curr['week'] = strftime("%V", $stampTarget);
+        $this->curr['day'] = strftime("%d", $stampTarget);
+        $this->curr['hour'] = strftime("%H", $stampTarget);
+        $this->curr['dayname'] = strftime("%A", $stampTarget);
+        $this->curr['monthname'] = strftime("%B", $stampTarget);
+
+        if ($this->curr['year'] === strftime("%Y") && $this->curr['month'] === strftime("%m") && $this->curr['day'] === strftime("%d")) {
+            $this->curr['isToday'] = TRUE;
+        } else {
+            $this->curr['isToday'] = FALSE;
+        }
+    } // fn set
+
+
+    /**
+     * Set the schedule time given by parameters,
+     * calculate previous and next clip to snap with it
+     *
+     * @param input $arr
+     * 		Can contain keys:
+     * 		["today"]
+     * 		["year"]
+     * 		["month"]
+     * 		["day"]
+     * 		["hour"]
+     * 		["minute"]
+     * 		["second"]
+     *
+     * @return void
+     */
+    public function setScheduleAtTime($arr)
+    {
+//        $today = $arr['today'];
+//        $year = $arr['year'];
+//        $month = $arr['month'];
+//        $day = $arr['day'];
+//        $hour = $arr['hour'];
+//        $minute = $arr['minute'];
+//        $second = $arr['second'];
+        extract($arr);
+
+        if (isset($today)) {
+            list($year, $month, $day) = explode("-", strftime("%Y-%m-%d"));
+        }
+        if (is_numeric($year)) {
+            $this->scheduleAtTime['year'] = sprintf('%04d', $year);
+        }
+        if (is_numeric($month)) {
+            $this->scheduleAtTime['month'] = sprintf('%02d', $month);
+        }
+        if (is_numeric($day)) {
+            $this->scheduleAtTime['day'] = sprintf('%02d', $day);
+        }
+        if (is_numeric($hour)) {
+            $this->scheduleAtTime['hour'] = sprintf('%02d', $hour);
+        }
+        if (is_numeric($minute)) {
+            $this->scheduleAtTime['minute'] = sprintf('%02d', $minute);
+        }
+        if (is_numeric($second)) {
+            $this->scheduleAtTime['second'] = sprintf('%02d', $second);
+        }
+
+        $this->schedulePrev['year'] = $this->scheduleAtTime['year'];
+        $this->schedulePrev['month'] = $this->scheduleAtTime['month'];
+        $this->schedulePrev['day'] = $this->scheduleAtTime['day'];
+        $this->schedulePrev['hour'] = 0;
+        $this->schedulePrev['minute'] = 0;
+        $this->schedulePrev['second'] = 0;
+
+        $this->scheduleNext['year'] = $this->scheduleAtTime['year'];
+        $this->scheduleNext['month'] = $this->scheduleAtTime['month'];
+        $this->scheduleNext['day'] = $this->scheduleAtTime['day'];
+        $this->scheduleNext['hour'] = 23;
+        $this->scheduleNext['minute'] = 59;
+        $this->scheduleNext['second'] = 59;
+
+        $this->scheduleAtTime['stamp'] = uiScheduler::datetimeToTimestamp(
+            $this->scheduleAtTime['year']
+            .$this->scheduleAtTime['month']
+            .$this->scheduleAtTime['day']
+            .'T'.$this->scheduleAtTime['hour']
+            .':'.$this->scheduleAtTime['minute']
+            .':'.$this->scheduleAtTime['second']);
+
+        $week = $this->getWeekEntrys();
+        if (is_array($week)) {
+            // Search for previous entry
+            if (count($week[$this->scheduleAtTime['day']]) >= 1) {
+                $reversedDays = array_reverse($week[$this->scheduleAtTime['day']]);
+                foreach ($reversedDays as $hourly) {
+                    $reversedHours = array_reverse($hourly);
+                    foreach ($reversedHours as $entry) {
+                        if ($entry['end_stamp'] <=  $this->scheduleAtTime['stamp']) {
+                            list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) =
+                                explode (':', strftime('%H:%M:%S', strtotime('+'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['end'])))
+                            );
+                            break 2;
+                        }
+                    }
+                }
+            }
+            reset($week);
+
+            // Search for next entry
+            if (count($week[$this->scheduleAtTime['day']]) >= 1) {
+                // Go through each hour
+                foreach ($week[$this->scheduleAtTime['day']] as $hourly) {
+                    // Go through all the entries of the hour
+                    foreach ($hourly as $entry) {
+                        if ($entry['start_stamp'] >= $this->scheduleAtTime['stamp']) {
+                            list ($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) =
+                                explode (':', strftime('%H:%M:%S', strtotime('-'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['start']))));
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+    } // fn setScheduleAtTime
+
+
+    /**
+     * Get all items scheduled for the week.
+     *
+     * @return false|array
+     */
+    public function getWeekEntrys()
+    {
+        // build array within all entrys of current week
+        $this->buildWeek();
+        $thisWeekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
+        $nextWeekStart = strftime("%Y%m%d", $this->Week[6]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisWeekStart.'T00:00:00', $nextWeekStart.'T00:00:00');
+
+        if (!is_array($arr)) {
+            return FALSE;
+        }
+
+        $items = array();
+        foreach ($arr as $key => $val) {
+        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
+        	$startDay = strftime('%d', uiScheduler::datetimeToTimestamp($val['start']));
+        	$startHour = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
+            $items[$startDay][$startHour][]= array (
+                'id' => $id,
+                'scheduleid'=> $val['id'],
+                'start' => substr($val['start'], strpos($val['start'], 'T')+1),
+                'end' => substr($val['end'], strpos($val['end'], 'T')+1),
+                'start_stamp' => uiScheduler::datetimeToTimestamp($val['start']),
+                'end_stamp' => uiScheduler::datetimeToTimestamp($val['end']),
+                'title' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                'creator' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                'type' => 'Playlist'
+            );
+        }
+        return $items;
+    } // fn getWeekEntrys
+
+
+    /**
+     * Get all items scheduled for a given day.
+     *
+     * @return false|array
+     */
+    public function getDayEntrys()
+    {
+        // build array within all entrys of current day
+        $this->buildDay();
+        $thisDay = strftime("%Y%m%d", $this->Day[0]['timestamp']);
+        $nextDay = strftime("%Y%m%d", $this->Day[0]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
+
+        if (!is_array($arr)) {
+            return FALSE;
+        }
+
+        $items = array();
+        foreach ($arr as $key => $val) {
+        	$start = uiScheduler::datetimeToTimestamp($val['start']);
+            $end = uiScheduler::datetimeToTimestamp($val['end']);
+        	$Y = strftime('%Y', $start);
+            $m = number_format(strftime('%m', $start));
+            $d = number_format(strftime('%d', $start));
+            $h = number_format(strftime('%H', $start));
+            $M = number_format(strftime('%i', $start));
+
+            $id = $this->Base->gb->idFromGunid($val['playlistId']);
+            // item starts today
+            if (strftime('%Y%m%d', $start) === $thisDay) {
+            	$items[number_format(strftime('%H', $start))]['start'][] = array(
+	                'id'        => $id,
+	                'scheduleid'=> $val['id'],
+	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+	                'end'       => substr($val['end'], strpos($val['end'], 'T') + 1),
+	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+	                'type'      => 'Playlist',
+	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
+                    'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
+	            );
+            }
+
+            // item ends today
+            if (strftime('%Y%m%d', $end) === $thisDay && strftime('%H', $start) !== strftime('%H', $end)) {
+            	$items[number_format(strftime('%H', $end))]['end'][] =
+            	array(
+	                'id'        => $id,
+	                'scheduleid'=> $val['id'],
+	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+	                'type'      => 'Playlist',
+	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
+	            );
+            }
+        }
+        return $items;
+    } // fn getDayEntrys
+
+    /*
+    function getDayHourlyEntrys($year, $month, $day)
+    {
+        $date = $year.$month.$day;
+        $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
+        if (!count($arr))
+            return FALSE;
+        foreach ($arr as $key => $val) {
+            $items[date('H', uiScheduler::datetimeToTimestamp($val['start']))][]= array (
+                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+            );
+        }
+        #print_r($items);
+        return $items;
+    }
+    */
+
+    private function getDayUsage($year, $month, $day)
+    {
+        $thisDay = $year.$month.$day;
+        $nextDay = strftime("%Y%m%d", strtotime('+1 day', strtotime("$year-$month-$day")));
+        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
+
+        if (!is_array($arr)) {
+            return FALSE;
+        }
+
+        foreach ($arr as $key => $val) {
+        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
+            $arr[$key]['title'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
+            $arr[$key]['creator'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
+            $arr[$key]['pos'] = uiScheduler::datetimeToTimestamp($val['start']);
+            $arr[$key]['span'] = date('H', uiScheduler::datetimeToTimestamp($val['end'])) - date('H', uiScheduler::datetimeToTimestamp($val['start'])) +1;
+        }
+        return $arr;
+    } // fn getDayUsage
+
+
+    /**
+     * Return the percentage of the day for which audio has been scheduled.
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return int
+     */
+    public function getDayUsagePercentage($year, $month, $day)
+    {
+        if (!$arr = $this->getDayUsage($year, $month, $day)) {
+            return false;
+        }
+
+        $duration = 0;
+        foreach ($arr as $val) {
+            $duration += (uiScheduler::datetimeToTimestamp($val['end'])-uiScheduler::datetimeToTimestamp($val['start']))/86400*100;
+        }
+        return $duration;
+    } // fn getDayUsagePercentage
+
+
+    /**
+     * Return an array of numbers from 0 to 23.
+     *
+     * @return array
+     */
+    public function getDayTimingScale()
+    {
+        for ($n = 0; $n <= 23; $n++) {
+            $scale[] = $n;
+        }
+
+        return $scale;
+    } //fn getDayTimingScale
+
+
+    /**
+     * @return array
+     */
+    public function getScheduleForm()
+    {
+        global $ui_fmask;
+        foreach ($this->availablePlaylists as $val) {
+            $ui_fmask['schedule']['gunid_duration']['options'][$val['gunid'].'|'.$val['duration']] = $val['title'];
+        }
+
+        $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        uiBase::parseArrayToForm($form, $ui_fmask['schedule']);
+        $settime = array('H' => $this->scheduleAtTime['hour'],
+                         'i' => $this->scheduleAtTime['minute'],
+                         's' => $this->scheduleAtTime['second']);
+        $setdate = array('Y' => $this->scheduleAtTime['year'],
+                         'm' => $this->scheduleAtTime['month'],
+                         'd' => $this->scheduleAtTime['day']);
+        $form->setDefaults(array('time' => $settime,
+                                 'date' => $setdate));
+
+        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        $output = $renderer->toArray();
+        return $output;
+    } // fn getScheduleForm
+
+
+    public function getPlaylistToSchedule($id)
+    {
+        if ($id) {
+            $this->Base->SCRATCHPAD->addItem($id);
+            $this->availablePlaylists[] = array(
+                'gunid'     => $this->Base->gb->gunidFromId($id),
+                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
+            );
+            return TRUE;
+        } else {
+            return $this->copyPlaylistFromScratchpad();
+        }
+    } // fn getPlaylistToSchedule
+
+
+    /**
+     * Get the currently available playlists in the scratchpad and
+     * add them to the internal $this->availablePlaylists array.
+     *
+     * @return boolean
+     */
+    private function copyPlaylistFromScratchpad()
+    {
+    	$scratchpad = $this->Base->SCRATCHPAD->get();
+        foreach ($scratchpad as $val) {
+            if ($val['type'] === 'playlist'
+            	&& ($this->Base->gb->playlistIsAvailable($val['id'], $this->Base->sessid) === TRUE)
+            	&& ($val['id'] != $this->Base->PLAYLIST->activeId) ) {
+                $this->availablePlaylists[] = $val;
+            }
+        }
+        if (!count($this->availablePlaylists)) {
+            return FALSE;
+        }
+
+        return TRUE;
+    } // fn copyPlfromSP
+
+
+    public function getNowNextClip($distance=0)
+    {
+        // just use methods which work without valid authentification
+        $datetime = strftime('%Y-%m-%dT%H:%M:%S');
+        $xmldatetime = str_replace('-', '', $datetime);
+        $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
+
+        if (!is_array($pl) || !count($pl)) {
+            return FALSE;
+        }
+
+        $pl = current($pl);
+        //  subtract difference to UTC
+        $offset = strftime('%H:%M:%S', time() - uiScheduler::datetimeToTimestamp($pl['start']) - 3600 * strftime('%H', 0));
+
+        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance, $_SESSION['langid'], UI_DEFAULT_LANGID);
+
+        if (!$clip['gunid']) {
+            return FALSE;
+        }
+
+        list($duration['h'], $duration['m'], $duration['s'])  = explode(':', Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining'])));
+        list($elapsed['h'], $elapsed['m'], $elapsed['s']) = explode(':', $clip['elapsed']);
+        list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
+        $duration = array_map('round', $duration);
+        $elapsed = array_map('round', $elapsed);
+        $remaining = array_map('round', $remaining);
+
+        return array(
+                'title'     => $clip['title'],
+                'duration'  => $duration,
+                'elapsed'   => $elapsed,
+                'remaining' => $remaining,
+                'percentage'=> Playlist::playlistTimeToSeconds($clip['elapsed'])
+                                    ? 100 * Playlist::playlistTimeToSeconds($clip['elapsed']) / ( Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining']))
+                                    : 100
+               );
+    } // fn getNowNextClip
+
+
+    public function getNowNextClip4jscom()
+    {
+        // just use methods which work without valid authentification
+
+        if ($curr = $this->getNowNextClip()) {
+            $next = $this->getNowNextClip(1);
+            return array(
+                    'title'         => $curr['title'],
+                    'elapsed.h'     => $curr['elapsed']['h'],
+                    'elapsed.m'     => $curr['elapsed']['m'],
+                    'elapsed.s'     => $curr['elapsed']['s'],
+                    'duration.h'    => $curr['duration']['h'],
+                    'duration.m'    => $curr['duration']['m'],
+                    'duration.s'    => $curr['duration']['s'],
+                    'next'          => $next ? 1 : 0,
+                    'next.title'    => $next ? $next['title'] : "",
+                    'next.dur.h'    => $next ? $next['duration']['h'] : 0,
+                    'next.dur.m'    => $next ? $next['duration']['m'] : 0,
+                    'next.dur.s'    => $next ? $next['duration']['s'] : 0,
+                   );
+        } else {
+            return FALSE;
+        }
+    } // fn getNowNextClip4jscom
+
+
+    /**
+     * Convert a string timestamp to UNIX time value.
+     *
+     * @param string $i
+     * @return int
+     */
+    private static function datetimeToTimestamp($i)
+    {
+        $i = str_replace('T', ' ', $i);
+        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, ' ');
+        return uiScheduler::strtotime($formatted);
+    } // fn datetimeToTimestamp
+
+
+    /**
+     * There is a bug in strtotime() - it does not support
+     * datetime-format using "T" character correctly, so we need this
+     * function.
+     *
+     * @param string $input
+     * @return string
+     */
+    private static function strtotime($input)
+    {
+        return strtotime(str_replace('T', ' ', $input));
+    }
+
+
+    protected function _scheduledDays($period)
+    {
+        if ($period === 'month') {
+            require_once('Calendar/Month/Weekdays.php');
+            $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
+            $Period->build();
+        } elseif ($period === 'week') {
+            require_once('Calendar/Week.php');
+            $Period = new Calendar_Week($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
+            $Period->build();
+        } else {
+            return array();
+        }
+        $d = $Period->fetch();
+        // The next two lines are due to a bug in Calendar_Month_Weekdays
+        $corrMonth = ($d->thisMonth() <= 12) ? sprintf('%02d', $d->thisMonth()) : '01';
+        $corrYear = ($d->thisMonth() <= 12) ? $d->thisYear() : $d->thisYear()+1;
+        $first = array('day'   => sprintf('%02d', $d->thisDay()),
+                       'month' => $corrMonth,
+                       'year'  => $corrYear);
+
+        while ($l = $Period->fetch()) {
+            $d = $l;
+        }
+        // The next two lines are due to a bug in Calendar_Month_Weekdays
+        $corrMonth = ($d->thisMonth() <= 12) ? sprintf('%02d', $d->thisMonth()) : '01';
+        $corrYear = ($d->thisMonth() <= 12) ? $d->thisYear() : $d->thisYear()+1;
+        $last = array('day'   => sprintf('%02d', $d->thisDay()),
+                      'month' => $corrMonth,
+                      'year'  => $corrYear);
+
+        $days = $this->_receiveScheduledDays($first['year'].$first['month'].$first['day'], $last['year'].$last['month'].$last['day']);
+        foreach ($days as $val) {
+            $selections[] = new Calendar_Day($val['year'], $val['month'], $val['day']);
+        }
+        return $selections;
+    } // fn _scheduledDays
+
+
+    private function _receiveScheduledDays($dfrom, $dto)
+    {
+        $dfrom = $dfrom.'T00:00:00';
+        $dto = $dto.'T23:59:59';
+        if (($pArr = $this->displayScheduleMethod($dfrom, $dto)) === FALSE) {
+            return array(FALSE);
+        }
+
+        $pStampArr = null;
+        foreach ($pArr as $val) {
+            $pStampArr[] = array('start' => uiScheduler::datetimeToTimestamp($val['start']),
+                                 'end'   => uiScheduler::datetimeToTimestamp($val['end']));
+        }
+        if (is_array($pStampArr)) {
+            for ($n = uiScheduler::datetimeToTimestamp($dfrom); $n <= uiScheduler::datetimeToTimestamp($dto); $n+=86400) {
+                foreach ($pStampArr as $val) {
+                    if ($val['start'] < $n+86400 && $val['end'] >= $n) {
+                        $days[date('Ymd', $n)] = array('year'  => date('Y', $n),
+                                                                       'month' => date('m', $n),
+                                                                       'day'   => date('d', $n));
+                    }
+                }
+            }
+            return $days;
+        }
+        return array(FALSE);
+    } // fn _receiveScheduledDays
+
+
+    /**
+     * Return true if the argument is an array and has a key index "error"
+     * which is an array.  If it is an error, set the internal error
+     * message, which can be retrieved with getErrorMsg().
+     *
+     * @param mixed $r
+     * @return boolean
+     */
+    function _isError($r)
+    {
+        if (isset($r['error']) && is_array($r['error'])) {
+            $this->setErrorMsg(tra('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message']))));
+            return TRUE;
+        }
+        return FALSE;
+    } // fn _isError
+
+
+    function getErrorMsg()
+    {
+        return $this->error;
+    } // fn getErrorMsg
+
+
+    /**
+     * Set the internal error message.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function setErrorMsg($msg)
+    {
+        $this->error = $msg;
+    } // fn setErrorMsg
+
+
+    /********************************************************************
+     * Scheduler Daemon methods
+     ********************************************************************/
 
     /**
      * Return TRUE if the scheduler startup script has been configured.
@@ -207,582 +863,13 @@ class uiScheduler extends uiCalendar {
     } // fn daemonIsRunning
 
 
-    /**
-     * @param array $arr
-     * 		Can have keys:
-     * 		["view"]
-     * 		["today"]
-     * 		["year"]
-     * 		["month"]
-     * 		["day"]
-     * 		["hour"]
-     */
-    function set($arr)
-    {
-        extract($arr);
-
-        if (isset($view)) {
-            $this->curr['view'] = $view;
-        }
-        if (isset($today)) {
-            list($year, $month, $day) = explode("-", strftime("%Y-%m-%d"));
-        }
-        if (isset($year) && is_numeric($year)) {
-            $this->curr['year'] = sprintf('%04d', $year);
-        }
-        if (isset($month) && is_numeric($month)) {
-            $this->curr['month'] = sprintf('%02d', $month);
-        }
-        if (isset($day) && is_numeric($day)) {
-            $this->curr['day'] = sprintf('%02d', $day);
-        }
-        if (isset($hour) && is_numeric($hour)) {
-            $this->curr['hour'] = sprintf('%02d', $hour);
-        }
-
-        $stampNow = uiScheduler::datetimeToTimestamp($this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$this->curr['hour'].':00:00');
-        $stampTarget = $stampNow;
-
-        if (isset($month) && ($month==='++')) {
-            $stampTarget = strtotime("+1 month", $stampNow);
-        }
-        if (isset($month) && ($month==='--')) {
-            $stampTarget = strtotime("-1 month", $stampNow);
-        }
-        if (isset($week) && ($week==='++')) {
-            $stampTarget = strtotime("+1 week", $stampNow);
-        }
-        if (isset($week) && ($week==='--')) {
-            $stampTarget = strtotime("-1 week", $stampNow);
-        }
-        if (isset($day) && ($day==='++')) {
-            $stampTarget = strtotime("+1 day", $stampNow);
-        }
-        if (isset($day) && ($day==='--')) {
-            $stampTarget = strtotime("-1 day", $stampNow);
-        }
-
-        $this->curr['year'] = strftime("%Y", $stampTarget);
-        $this->curr['month'] = strftime("%m", $stampTarget);
-        $this->curr['week'] = strftime("%V", $stampTarget);
-        $this->curr['day'] = strftime("%d", $stampTarget);
-        $this->curr['hour'] = strftime("%H", $stampTarget);
-        $this->curr['dayname'] = strftime("%A", $stampTarget);
-        $this->curr['monthname'] = strftime("%B", $stampTarget);
-
-        if ($this->curr['year'] === strftime("%Y") && $this->curr['month'] === strftime("%m") && $this->curr['day'] === strftime("%d")) {
-            $this->curr['isToday'] = TRUE;
-        } else {
-            $this->curr['isToday'] = FALSE;
-        }
-        //print_r($this->curr);
-    } // fn set
-
+    /********************************************************************
+     * XML-RPC wrapper methods
+     ********************************************************************/
 
     /**
-     * Set the schedule time given by parameters,
-     * calculate previous and next clip to snap with it
-     *
-     * @param input $arr
-     * 		Can contain keys:
-     * 		["today"]
-     * 		["year"]
-     * 		["month"]
-     * 		["day"]
-     * 		["hour"]
-     * 		["minute"]
-     * 		["second"]
-     *
-     * @return void
+     * Create the XMLRPC client.
      */
-    public function setScheduleAtTime($arr)
-    {
-        extract($arr);
-
-        $this->schedulePrev['hour'] = 0;
-        $this->schedulePrev['minute'] = 0;
-        $this->schedulePrev['second'] = 0;
-        $this->scheduleNext['hour'] = 23;
-        $this->scheduleNext['minute'] = 59;
-        $this->scheduleNext['second'] = 59;
-
-        if (isset($today)) {
-            list($year, $month, $day) = explode("-", strftime("%Y-%m-%d"));
-        }
-        if (is_numeric($year)) {
-            $this->scheduleAtTime['year'] = sprintf('%04d', $year);
-        }
-        if (is_numeric($month)) {
-            $this->scheduleAtTime['month'] = sprintf('%02d', $month);
-        }
-        if (is_numeric($day)) {
-            $this->scheduleAtTime['day'] = sprintf('%02d', $day);
-        }
-        if (is_numeric($hour)) {
-            $this->scheduleAtTime['hour'] = sprintf('%02d', $hour);
-        }
-        if (is_numeric($minute)) {
-            $this->scheduleAtTime['minute'] = sprintf('%02d', $minute);
-        }
-        if (is_numeric($second)) {
-            $this->scheduleAtTime['second'] = sprintf('%02d', $second);
-        }
-
-        $this->scheduleAtTime['stamp'] = uiScheduler::datetimeToTimestamp($this->scheduleAtTime['year'].$this->scheduleAtTime['month'].$this->scheduleAtTime['day'].'T'.
-                                                                    $this->scheduleAtTime['hour'].':'.$this->scheduleAtTime['minute'].':'.$this->scheduleAtTime['second']);
-
-        if (is_array($week = $this->getWeekEntrys())) {
-
-            // search for previous entry
-            if (count($week[$this->scheduleAtTime['day']]) >= 1) {
-                foreach (array_reverse($week[$this->scheduleAtTime['day']]) as $hourly) {
-                    foreach (array_reverse($hourly) as $entry) {
-                        if ($entry['end_stamp'] <=  $this->scheduleAtTime['stamp']) {
-                            list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) =
-                                explode (':', strftime('%H:%M:%S', strtotime('+'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['end'])))
-                            );
-                            break 2;
-                        }
-                    }
-                }
-            }
-
-            reset($week);
-
-            // search for next entry
-            if (count($week[$this->scheduleAtTime['day']]) >= 1) {
-                foreach ($week[$this->scheduleAtTime['day']] as $hourly) {
-                    foreach ($hourly as $entry) {
-                        if ($entry['start_stamp'] >=  $this->scheduleAtTime['stamp']) {
-                            list ($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) =
-                                explode (':', strftime('%H:%M:%S', strtotime('-'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['start']))));
-                            break 2;
-                        }
-                    }
-                }
-            }
-        }
-    } // fn setScheduleAtTime
-
-
-    public function getWeekEntrys()
-    {
-        // build array within all entrys of current week
-        $this->buildWeek();
-        $thisWeekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
-        $nextWeekStart = strftime("%Y%m%d", $this->Week[6]['timestamp'] + 86400);
-        $arr = $this->displayScheduleMethod($thisWeekStart.'T00:00:00', $nextWeekStart.'T00:00:00');
-
-        if (!is_array($arr)) {
-            return FALSE;
-        }
-
-        $items = array();
-        foreach ($arr as $key => $val) {
-        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
-        	$startDay = strftime('%d', uiScheduler::datetimeToTimestamp($val['start']));
-        	$startHour = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
-            $items[$startDay][$startHour][]= array (
-                'id'        => $id,
-                'scheduleid'=> $val['id'],
-                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-                'end'       => substr($val['end'], strpos($val['end'], 'T')+1),
-                'start_stamp' => uiScheduler::datetimeToTimestamp($val['start']),
-                'end_stamp' => uiScheduler::datetimeToTimestamp($val['end']),
-                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-                'type'      => 'Playlist'
-            );
-        }
-        return $items;
-    } // fn getWeekEntrys
-
-
-    public function getDayEntrys()
-    {
-        // build array within all entrys of current day
-        $this->buildDay();
-        $thisDay = strftime("%Y%m%d", $this->Day[0]['timestamp']);
-        $nextDay = strftime("%Y%m%d", $this->Day[0]['timestamp'] + 86400);
-        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
-
-        if (!is_array($arr)) {
-            return FALSE;
-        }
-
-        $items = array();
-        foreach ($arr as $key => $val) {
-        	$start = uiScheduler::datetimeToTimestamp($val['start']);
-            $end = uiScheduler::datetimeToTimestamp($val['end']);
-        	$Y = strftime('%Y', $start);
-            $m = number_format(strftime('%m', $start));
-            $d = number_format(strftime('%d', $start));
-            $h = number_format(strftime('%H', $start));
-            $M = number_format(strftime('%i', $start));
-
-            $id = $this->Base->gb->idFromGunid($val['playlistId']);
-            // item starts today
-            if (strftime('%Y%m%d', $start) === $thisDay) {
-            	$items[number_format(strftime('%H', $start))]['start'][] = array(
-	                'id'        => $id,
-	                'scheduleid'=> $val['id'],
-	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-	                'end'       => substr($val['end'], strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-	                'type'      => 'Playlist',
-	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
-                    'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
-	            );
-            }
-
-            // item ends today
-            if (strftime('%Y%m%d', $end) === $thisDay && strftime('%H', $start) !== strftime('%H', $end)) {
-            	$items[number_format(strftime('%H', $end))]['end'][] =
-            	array(
-	                'id'        => $id,
-	                'scheduleid'=> $val['id'],
-	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-	                'type'      => 'Playlist',
-	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
-	            );
-            }
-        }
-        return $items;
-    } // fn getDayEntrys
-
-    /*
-    function getDayHourlyEntrys($year, $month, $day)
-    {
-        $date = $year.$month.$day;
-        $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
-        if (!count($arr))
-            return FALSE;
-        foreach ($arr as $key => $val) {
-            $items[date('H', uiScheduler::datetimeToTimestamp($val['start']))][]= array (
-                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
-            );
-        }
-        #print_r($items);
-        return $items;
-    }
-    */
-
-    private function getDayUsage($year, $month, $day)
-    {
-        $thisDay = $year.$month.$day;
-        $nextDay = strftime("%Y%m%d", strtotime('+1 day', strtotime("$year-$month-$day")));
-        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
-
-        if (!is_array($arr)) {
-            return FALSE;
-        }
-
-        foreach ($arr as $key => $val) {
-        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
-            $arr[$key]['title'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
-            $arr[$key]['creator'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
-            $arr[$key]['pos'] = uiScheduler::datetimeToTimestamp($val['start']);
-            $arr[$key]['span'] = date('H', uiScheduler::datetimeToTimestamp($val['end'])) - date('H', uiScheduler::datetimeToTimestamp($val['start'])) +1;
-        }
-        //print_r($arr);
-        return $arr;
-    } // fn getDayUsage
-
-
-    public function getDayUsagePercentage($year, $month, $day)
-    {
-        if (!$arr = $this->getDayUsage($year, $month, $day)) {
-            return false;
-        }
-
-        $duration = 0;
-        foreach ($arr as $val) {
-            $duration += (uiScheduler::datetimeToTimestamp($val['end'])-uiScheduler::datetimeToTimestamp($val['start']))/86400*100;
-        }
-        return $duration;
-    } // fn getDayUsagePercentage
-
-
-    /**
-     * Return an array of numbers from 0 to 23.
-     *
-     * @return array
-     */
-    public function getDayTimingScale()
-    {
-        for ($n = 0; $n <= 23; $n++) {
-            $scale[] = $n;
-        }
-
-        return $scale;
-    } //fn getDayTimingScale
-
-
-    public function getScheduleForm()
-    {
-        global $ui_fmask;
-        foreach ($this->availablePlaylists as $val) {
-            $ui_fmask['schedule']['gunid_duration']['options'][$val['gunid'].'|'.$val['duration']] = $val['title'];
-        }
-
-        $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        uiBase::parseArrayToForm($form, $ui_fmask['schedule']);
-        $settime = array('H' => $this->scheduleAtTime['hour'],
-                         'i' => $this->scheduleAtTime['minute'],
-                         's' => $this->scheduleAtTime['second']);
-        $setdate = array('Y' => $this->scheduleAtTime['year'],
-                         'm' => $this->scheduleAtTime['month'],
-                         'd' => $this->scheduleAtTime['day']);
-        $form->setDefaults(array('time' => $settime,
-                                 'date' => $setdate));
-
-        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
-        $form->accept($renderer);
-        $output = $renderer->toArray();
-        return $output;
-    } // fn getScheduleForm
-
-
-    public function getPlaylistToSchedule($id)
-    {
-        if ($id) {
-            $this->Base->SCRATCHPAD->addItem($id);
-            $this->availablePlaylists[] = array(
-                'gunid'     => $this->Base->gb->gunidFromId($id),
-                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
-            );
-            return TRUE;
-        } else {
-            return $this->copyPlaylistFromScratchpad();
-        }
-    } // fn getPlaylistToSchedule
-
-
-    private function copyPlaylistFromScratchpad()
-    {
-    	$scratchpad = $this->Base->SCRATCHPAD->get();
-        foreach ($scratchpad as $val) {
-            if ($val['type'] === 'playlist'
-            	&& ($this->Base->gb->playlistIsAvailable($val['id'], $this->Base->sessid) === TRUE)
-            	&& ($val['id'] != $this->Base->PLAYLIST->activeId) ) {
-                $this->availablePlaylists[] = $val;
-            }
-        }
-        if (!count($this->availablePlaylists)) {
-            return FALSE;
-        }
-
-        return TRUE;
-    } // fn copyPlfromSP
-
-
-    public function getNowNextClip($distance=0)
-    {
-        // just use methods which work without valid authentification
-        $datetime = strftime('%Y-%m-%dT%H:%M:%S');
-        $xmldatetime = str_replace('-', '', $datetime);
-        $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
-
-        if (!is_array($pl) || !count($pl)) {
-            return FALSE;
-        }
-
-        $pl = current($pl);
-        //  subtract difference to UTC
-        $offset = strftime('%H:%M:%S', time() - uiScheduler::datetimeToTimestamp($pl['start']) - 3600 * strftime('%H', 0));
-
-        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance, $_SESSION['langid'], UI_DEFAULT_LANGID);
-
-        if (!$clip['gunid']) {
-            return FALSE;
-        }
-
-        list($duration['h'], $duration['m'], $duration['s'])  = explode(':', Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining'])));
-        list($elapsed['h'], $elapsed['m'], $elapsed['s']) = explode(':', $clip['elapsed']);
-        list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
-        $duration = array_map('round', $duration);
-        $elapsed = array_map('round', $elapsed);
-        $remaining = array_map('round', $remaining);
-
-        return array(
-                'title'     => $clip['title'],
-                'duration'  => $duration,
-                'elapsed'   => $elapsed,
-                'remaining' => $remaining,
-                'percentage'=> Playlist::playlistTimeToSeconds($clip['elapsed'])
-                                    ? 100 * Playlist::playlistTimeToSeconds($clip['elapsed']) / ( Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining']))
-                                    : 100
-               );
-    } // fn getNowNextClip
-
-
-    public function getNowNextClip4jscom()
-    {
-        // just use methods which work without valid authentification
-
-        if ($curr = $this->getNowNextClip()) {
-            $next = $this->getNowNextClip(1);
-            return array(
-                    'title'         => $curr['title'],
-                    'elapsed.h'     => $curr['elapsed']['h'],
-                    'elapsed.m'     => $curr['elapsed']['m'],
-                    'elapsed.s'     => $curr['elapsed']['s'],
-                    'duration.h'    => $curr['duration']['h'],
-                    'duration.m'    => $curr['duration']['m'],
-                    'duration.s'    => $curr['duration']['s'],
-                    'next'          => $next ? 1 : 0,
-                    'next.title'    => $next ? $next['title'] : "",
-                    'next.dur.h'    => $next ? $next['duration']['h'] : 0,
-                    'next.dur.m'    => $next ? $next['duration']['m'] : 0,
-                    'next.dur.s'    => $next ? $next['duration']['s'] : 0,
-                   );
-        } else {
-            return FALSE;
-        }
-    } // fn getNowNextClip4jscom
-
-
-    private static function datetimeToTimestamp($i)
-    {
-        $i = str_replace('T', ' ', $i);
-        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, ' ');
-        //echo "input: $i formatted:".$formatted;
-        return uiScheduler::strtotime($formatted);
-    } // fn datetimeToTimestamp
-
-
-    /**
-     * There is a bug in strtotime() - it does not support
-     * datetime-format using "T" character correctly, so we need this
-     * function.
-     *
-     * @param string $input
-     * @return string
-     */
-    private static function strtotime($input)
-    {
-        return strtotime(str_replace('T', ' ', $input));
-    }
-
-
-//    private static function OneOrMore($in)
-//    {
-//        return ( ($id < 1) ? ceil($in) : round($in));
-//    } // fn OneOrMore
-
-
-    protected function _scheduledDays($period)
-    {
-        if ($period === 'month') {
-            require_once('Calendar/Month/Weekdays.php');
-            $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
-            $Period->build();
-        } elseif ($period === 'week') {
-            require_once('Calendar/Week.php');
-            $Period = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
-            $Period->build();
-        } else {
-            return array();
-        }
-        $d = $Period->fetch();
-        $corrMonth = $d->thisMonth()<=12 ? sprintf('%02d', $d->thisMonth()) : '01';   ## due to bug in
-        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;         ## Calendar_Month_Weekdays
-        $first = array('day'   => sprintf('%02d', $d->thisDay()),
-                       'month' => $corrMonth,
-                       'year'  => $corrYear);
-
-        while ($l = $Period->fetch()) {
-            $d = $l;
-        }
-        $corrMonth = $d->thisMonth()<=12 ? sprintf('%02d', $d->thisMonth()) : '01';   ## due to bug in
-        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;         ## Calendar_Month_Weekdays
-        $last = array('day'   => sprintf('%02d', $d->thisDay()),
-                      'month' => $corrMonth,
-                      'year'  => $corrYear
-                );
-
-        $days = $this->_receiveScheduledDays($first['year'].$first['month'].$first['day'], $last['year'].$last['month'].$last['day']);
-        foreach ($days as $val) {
-            $selections[] = new Calendar_Day($val['year'], $val['month'], $val['day']);
-        }
-        return $selections;
-    } // fn _scheduledDays
-
-
-    private function _receiveScheduledDays($dfrom, $dto)
-    {
-        $dfrom = $dfrom.'T00:00:00';
-        $dto = $dto.'T23:59:59';
-        if (($pArr = $this->displayScheduleMethod($dfrom, $dto)) === FALSE) {
-            return array(FALSE);
-        }
-
-        $pStampArr = null;
-        foreach ($pArr as $val) {
-            $pStampArr[] = array('start' => uiScheduler::datetimeToTimestamp($val['start']),
-                                 'end'   => uiScheduler::datetimeToTimestamp($val['end']));
-        }
-        if (is_array($pStampArr)) {
-            for ($n = uiScheduler::datetimeToTimestamp($dfrom); $n <= uiScheduler::datetimeToTimestamp($dto); $n+=86400) {
-                foreach ($pStampArr as $val) {
-                    if ($val['start'] < $n+86400 && $val['end'] >= $n) {
-                        $days[date('Ymd', $n)] = array('year'  => date('Y', $n),
-                                                                       'month' => date('m', $n),
-                                                                       'day'   => date('d', $n));
-                    }
-                }
-            }
-            return $days;
-        }
-        return array(FALSE);
-    } // fn _receiveScheduledDays
-
-
-    /**
-     * Return true if the argument is an array and has a key index "error"
-     * which is an array.  If it is an error, set the internal error
-     * message, which can be retrieved with getErrorMsg().
-     *
-     * @param mixed $r
-     * @return boolean
-     */
-    function _isError($r)
-    {
-        if (isset($r['error']) && is_array($r['error'])) {
-            $this->setErrorMsg(tra('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message']))));
-            return TRUE;
-        }
-        return FALSE;
-    } // fn _isError
-
-
-    function getErrorMsg()
-    {
-        return $this->error;
-    } // fn getErrorMsg
-
-
-    /**
-     * Set the internal error message.
-     *
-     * @param string $msg
-     * @return void
-     */
-    public function setErrorMsg($msg)
-    {
-        $this->error = $msg;
-    } // fn setErrorMsg
-
-
-    ## XML-RPC wrapper methods ############################################################################################
     function initXmlRpc()
     {
         include_once(dirname(__FILE__).'/ui_schedulerPhpClient.class.php');
@@ -790,43 +877,63 @@ class uiScheduler extends uiCalendar {
     } // fn initXmlRpc
 
 
+    /**
+     * Upload a playlist to the scheduler.
+     *
+     * @param array $formdata
+     *      Must have the following keys set:
+     *      ['playlist'] -> gunid of playlist
+     *      ['date']['Y'] - Year
+     *      ['date']['m'] - month
+     *      ['date']['d'] - day
+     *      ['date']['H'] - hour
+     *      ['date']['i'] - minute
+     *      ['date']['s'] - second
+     *
+     * @return boolean
+     *      TRUE on success, FALSE on failure.
+     */
     function uploadPlaylistMethod(&$formdata)
     {
-        //$gunid = $formdata['gunid'];
-        //$datetime = $this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$formdata['time'];
-
         $gunid = $formdata['playlist'];
-        $datetime = $formdata['date']['Y'].sprintf('%02d', $formdata['date']['m']).sprintf('%02d', $formdata['date']['d']).'T'.sprintf('%02d', $formdata['time']['H']).':'.sprintf('%02d', $formdata['time']['i']).':'.sprintf('%02d', $formdata['time']['s']);
+        $datetime = $formdata['date']['Y']
+            .sprintf('%02d', $formdata['date']['m'])
+            .sprintf('%02d', $formdata['date']['d'])
+            .'T'.sprintf('%02d', $formdata['time']['H'])
+            .':'.sprintf('%02d', $formdata['time']['i'])
+            .':'.sprintf('%02d', $formdata['time']['s']);
 
-        //echo "Schedule Gunid: $gunid  At: ".$datetime;
         $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
-        //print_r($r);
         if ($this->_isError($r)) {
             return FALSE;
         }
-//        if (isset($r['scheduleEntryId'])) {
-//            $this->Base->_retMsg('Entry added at $1 with ScheduleId $2.', strftime("%Y-%m-%d %H:%M:%S", uiScheduler::datetimeToTimestamp($datetime)), $r['scheduleEntryId']);
-//        }
+        return TRUE;
     } // fn uploadPlaylistMethod
 
 
+    /**
+     * Remove a playlist from the scheduler.
+     *
+     * @param string $id
+     *      gunid of the playlist
+     * @return boolean
+     *      TRUE on success, FALSE on failure.
+     */
     function removeFromScheduleMethod($id)
     {
-        //echo "Unschedule Gunid: $gunid";
         $r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $id);
-        //print_r($r);
         if ($this->_isError($r)) {
             return FALSE;
         }
         if (UI_VERBOSE) {
             $this->Base->_retMsg('Entry with ScheduleId $1 removed.', $id);
         }
+        return TRUE;
     } // fn removeFromScheduleMethod
 
 
     function displayScheduleMethod($from, $to)
     {
-        //echo $from.$to;
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
         if ($this->_isError($r)) {
             return FALSE;
@@ -835,7 +942,9 @@ class uiScheduler extends uiCalendar {
     } // fn displayScheduleMethod
 
 
-    // export methods
+    /********************************************************************
+     * Export Methods
+     ********************************************************************/
 
     /**
      * Get the token for the schedule which is currently being exported.
@@ -931,7 +1040,10 @@ class uiScheduler extends uiCalendar {
     } // fn scheduleExportClose
 
 
-    // import methods
+    /********************************************************************
+     * Import Methods
+     ********************************************************************/
+
 
     function getImportToken()
     {
@@ -959,6 +1071,7 @@ class uiScheduler extends uiCalendar {
 
         return true;
     } // fn scheduleImportOpen
+
 
     function scheduleImportCheck()
     {

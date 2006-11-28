@@ -50,21 +50,25 @@ function SCHEDULE_snap2Prev()
 function SCHEDULE_snap2Next()
 {
 {/literal}
-    var beginD = new Date();
-    var colon = ":";
-    var duration  = SCHEDULE_selectedDuration();
-    var nextD     = new Date("january 01, 1970 {$SCHEDULER->scheduleNext.hour}:{$SCHEDULER->scheduleNext.minute}:{$SCHEDULER->scheduleNext.second}");
-    var durationD = new Date("january 01, 1970 " + SCHEDULE_selectedDuration());
-    //alert(durationD.getTime());
-    beginD.setTime(nextD.getTime() - durationD.getTime() - 3600000);
+    // Get the absolute "next item" time, meaning how many milliseconds from
+    // the beginning of the day that the next item starts.
+    var nextItemTime = new Date("january 01, 1970 {$SCHEDULER->scheduleNext.hour}:{$SCHEDULER->scheduleNext.minute}:{$SCHEDULER->scheduleNext.second}");
 
-    //alert(nextD.toLocaleString());
-    //alert(durationD.toLocaleString());
-    //alert(beginD.toLocaleString());
+    // Get the absolute duration of the playlist in Date format (milliseconds)
+    var duration = new Date("january 01, 1970 " + SCHEDULE_selectedDuration());
 
-    document.forms["schedule"].elements["time[H]"].value = beginD.getHours();
-    document.forms["schedule"].elements["time[i]"].value = beginD.getMinutes();
-    document.forms["schedule"].elements["time[s]"].value = beginD.getSeconds();
+    // Get the date of the "next item".
+    var beginDate = new Date({$SCHEDULER->scheduleNext.year},
+                             {$SCHEDULER->scheduleNext.month},
+                             {$SCHEDULER->scheduleNext.day});
+
+    // Calculate the final time by starting with the "next item" date (midnight),
+    // add in milliseconds to the starting time of the "next item",
+    // subtract the duration of the selected playlist.
+    beginDate.setTime(beginDate.getTime() + nextItemTime.getTime() - duration.getTime());
+    document.forms["schedule"].elements["time[H]"].value = beginDate.getHours();
+    document.forms["schedule"].elements["time[i]"].value = beginDate.getMinutes();
+    document.forms["schedule"].elements["time[s]"].value = beginDate.getSeconds();
 {literal}
 }
 
