@@ -736,8 +736,12 @@ GLiveSupport :: getAudioClip(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<AudioClip>::Ref     clip;
 
-    clip = (*openedAudioClips)[id->getId()];
-    if (!clip.get()) {
+    AudioClipMap::iterator  it = openedAudioClips->find(id->getId());
+    if (it != openedAudioClips->end()) {
+        clip = it->second;
+    }
+    
+    if (!clip || !clip->getToken()) {
         clip = storage->getAudioClip(sessionId, id);
         (*openedAudioClips)[id->getId()] = clip;
     }
@@ -757,8 +761,10 @@ GLiveSupport :: acquireAudioClip(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<AudioClip>::Ref     clip;
 
-    clip = (*openedAudioClips)[id->getId()];
-    if (!clip.get() || !clip->getToken().get()) {
+    AudioClipMap::iterator  it = openedAudioClips->find(id->getId());
+    if (it != openedAudioClips->end()) {
+        clip = it->second;
+    } else {
         clip = storage->acquireAudioClip(sessionId, id);
         (*openedAudioClips)[id->getId()] = clip;
     }
@@ -778,8 +784,10 @@ GLiveSupport :: getPlaylist(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<Playlist>::Ref      playlist;
 
-    playlist = (*openedPlaylists)[id->getId()];
-    if (!playlist.get()) {
+    PlaylistMap::iterator  it = openedPlaylists->find(id->getId());
+    if (it != openedPlaylists->end()) {
+        playlist = it->second;
+    } else {
         playlist = storage->getPlaylist(sessionId, id);
         (*openedPlaylists)[id->getId()] = playlist;
     }
@@ -799,8 +807,12 @@ GLiveSupport :: acquirePlaylist(Ptr<const UniqueId>::Ref  id)
 {
     Ptr<Playlist>::Ref      playlist;
 
-    playlist = (*openedPlaylists)[id->getId()];
-    if (!playlist.get() || !playlist->getUri().get()) {
+    PlaylistMap::iterator  it = openedPlaylists->find(id->getId());
+    if (it != openedPlaylists->end()) {
+        playlist = it->second;
+    }
+    
+    if (!playlist || !playlist->getUri()) {
         playlist = storage->acquirePlaylist(sessionId, id);
         (*openedPlaylists)[id->getId()] = playlist;
     }
@@ -827,7 +839,7 @@ GLiveSupport :: getPlayable(Ptr<const UniqueId>::Ref  id)
 
     } else {
         throw XmlRpcInvalidArgumentException(
-                                "invalid ID in GLiveSupport::acquirePlayable");
+                                "invalid ID in GLiveSupport::getPlayable");
     }
     
     return playable;
@@ -873,7 +885,7 @@ GLiveSupport :: uncachePlaylist(Ptr<const UniqueId>::Ref  id)
 
     if ((it = openedPlaylists->find(id->getId())) != end) {
         playlist = (*openedPlaylists)[id->getId()];
-        if (playlist->getUri().get()) {
+        if (playlist->getUri()) {
             storage->releasePlaylist(playlist);
         }
 
@@ -893,7 +905,7 @@ GLiveSupport :: releaseOpenedAudioClips(void)           throw (XmlRpcException)
     AudioClipMap::iterator   end = openedAudioClips->end();
 
     while (it != end) {
-        Ptr<AudioClip>::Ref clip = (*it).second;
+        Ptr<AudioClip>::Ref clip = it->second;
 
         if (clip->getToken().get()) {
             storage->releaseAudioClip(clip);
@@ -917,9 +929,9 @@ GLiveSupport :: releaseOpenedPlaylists(void)            throw (XmlRpcException)
     PlaylistMap::iterator   end = openedPlaylists->end();
 
     while (it != end) {
-        Ptr<Playlist>::Ref playlist = (*it).second;
+        Ptr<Playlist>::Ref playlist = it->second;
 
-        if (playlist->getUri().get()) {
+        if (playlist->getUri()) {
             storage->releasePlaylist(playlist);
         }
 

@@ -1302,11 +1302,13 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref          sessionId,
         playlist->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        throw XmlRpcInvalidDataException(
-                                    "semantic error in playlist metafile");
+        std::string eMsg = "semantic error in playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     } catch (xmlpp::exception &e) {
-        throw XmlRpcInvalidDataException(
-                                    "error parsing playlist metafile");
+        std::string eMsg = "error parsing playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     }
     playlist->setToken(token);
 
@@ -1344,11 +1346,13 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref        sessionId,
         playlist->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        throw XmlRpcMethodResponseException(
-                                    "semantic error in playlist metafile");
+        std::string eMsg = "semantic error in playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     } catch (xmlpp::exception &e) {
-        throw XmlRpcMethodResponseException(
-                                    "error parsing playlist metafile");
+        std::string eMsg = "error parsing playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     }
 
     playlist->setEditToken(editToken);
@@ -1541,11 +1545,13 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         playlist->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        throw XmlRpcInvalidDataException(
-                                    "semantic error in playlist metafile");
+        std::string eMsg = "semantic error in playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     } catch (xmlpp::exception &e) {
-        throw XmlRpcInvalidDataException(
-                                    "error parsing playlist metafile");
+        std::string eMsg = "error parsing playlist metafile: ";
+        eMsg += e.what();
+        throw XmlRpcInvalidDataException(eMsg);
     }
 
     // read the content array corresponding to the playlist
@@ -1885,11 +1891,11 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
         audioClip->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        std::string eMsg = "semantic error in audio clip metafile:\n";
+        std::string eMsg = "semantic error in audio clip metafile: ";
         eMsg += e.what();
         throw XmlRpcInvalidDataException(eMsg);
     } catch (xmlpp::exception &e) {
-        std::string eMsg = "error parsing audio clip metafile";
+        std::string eMsg = "error parsing audio clip metafile: ";
         eMsg += e.what();
         throw XmlRpcInvalidDataException(eMsg);
     }
