@@ -4,7 +4,7 @@
 <!-- start scheduler -->
 <div class="content">
 <div class="container_elements">
-    <h1>##Monthly View##</h1>
+    <h1>##Monthly View## : {$SCHEDULER->curr.monthname}</h1>
     <table class="scheduler_month">
         <tr>
         {foreach from=$SCHEDULER->Week item="_Weekday"}
