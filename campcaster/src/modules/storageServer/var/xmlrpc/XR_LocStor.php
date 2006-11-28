@@ -3261,6 +3261,7 @@ class XR_LocStor extends LocStor {
      *      <li> 805  -  xr_globalSearch:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
+     *      <li> 874  -  invalid hub connection configuration.</li>
      *      <li> 872  -  invalid tranport token.</li>
      *  </ul>
      *

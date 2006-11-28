@@ -160,10 +160,11 @@ class uiTransfers
 
         switch ($type) {
             case 'audioClip':
-                $this->Base->gb->uploadAudioClip2Hub($gunid);
+            case 'audioclip':
+                $r = $this->Base->gb->upload2Hub($gunid);
             break;
             case 'playlist':
-                $this->Base->gb->uploadPlaylist2Hub($gunid);
+                $this->Base->gb->upload2Hub($gunid);
             break;
             default:
                 // TODO: it is not implemented in gb, and this way maybe impossible
@@ -173,8 +174,10 @@ class uiTransfers
     }
 
 
-    function downloadFromHub($id,$type)
+    function downloadFromHub($sessid, $gunid /*,$type*/)
     {
+        $this->Base->gb->downloadFromHub($sessid, $gunid);
+/*
          switch ($type) {
             case 'audioClip':
                 $this->Base->gb->downloadAudioClipFromHub($id);
@@ -187,6 +190,7 @@ class uiTransfers
                 //$this->Base->gb->downloadFileFromHub($gunid);
                 return false;
         }
+*/
     }
 
 

@@ -135,7 +135,7 @@ function contextmenu(param) {
             break;
 
             case "TR.downloadFromHub":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmDownloadFromHub&id="+param+"', 'confirmDownloadFromHub', 400, 50)\" "+oF+">&nbsp;##Transfer from the hub##&nbsp;</a></li>";
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmDownloadFromHub&gunid="+param+"', 'confirmDownloadFromHub', 400, 50)\" "+oF+">&nbsp;##Transfer from the hub##&nbsp;</a></li>";
             break;
 
             case "TR.pause":

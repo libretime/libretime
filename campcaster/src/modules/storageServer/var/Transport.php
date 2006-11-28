@@ -444,6 +444,20 @@ class Transport
      */
     function globalSearch($criteria, $resultMode='php', $pars=array())
     {
+        // testing of hub availability and hub account configuration.
+        // it makes searchjob not async - should be removed for real async
+        $r = $this->loginToArchive();
+        if (PEAR::isError($r)) {
+            switch(intval($r->getCode())) {
+                case 802:
+                    return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+                case TRERR_XR_FAIL:
+                    return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+            }
+            return $r;
+        }
+        $this->logoutFromArchive($r);
+        // ----------
         $criteria['resultMode'] = $resultMode;
         $localfile = tempnam($this->transDir, 'searchjob_');
         @chmod($localfile, 0660);
@@ -726,7 +740,10 @@ class Transport
                 'login'=>$this->config['archiveAccountLogin'],
                 'pass'=>$this->config['archiveAccountPass']
             ));
-        return $res;
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+        return $res['sessid'];
     }
 
 
@@ -908,7 +925,7 @@ class Transport
                         $r2 = $trec->setLock(FALSE);
                         return $r;
                     }
-                    $asessid = $r['sessid'];
+                    $asessid = $r;
                     // method call:
                     if (TR_LOG_LEVEL > 2) {
                         $this->trLog("cronCallMethod: $mname($trtok) >");

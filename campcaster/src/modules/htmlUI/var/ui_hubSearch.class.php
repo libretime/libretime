@@ -63,6 +63,16 @@ class uiHubSearch extends uiSearch {
 
         //echo '<XMP>this->criteria:'; print_r($this->criteria); echo "</XMP>\n";
         $trtokid = $this->Base->gb->globalSearch($this->criteria);
+        if (PEAR::isError($trtokid)) {
+            // don't know how to display error message in htmlUi- should be improved:
+            echo "ERROR: {$trtokid->getMessage()} {$trtokid->getUserInfo()}".
+                ($trtokid->getCode() ? " ({$trtokid->getCode()})" : "")."\n";
+            echo "<br/>\n<a href=\"javascript:history.go(-1)\">Back</a>\n";
+            exit;
+            //$this->Base->_retMsg("ERROR_3: {$trtokid->getMessage()} {$trtokid->getUserInfo()}\n");
+            //$this->Base->redirUrl = UI_BROWSER.'?popup[]=';
+            return $trtokid;
+        }
 
         $this->Base->redirUrl = UI_BROWSER.'?popup[]='.$this->prefix.'.getResults&trtokid='.$trtokid;
     } // fn newSearch
@@ -75,10 +85,8 @@ class uiHubSearch extends uiSearch {
         }
         $this->results = array('page' => $this->criteria['offset'] / $this->criteria['limit']);
 
-        //print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         if (PEAR::isError($results)) {
-            #print_r($results);
             return FALSE;
         }
         foreach ($results['results'] as $rec) {
@@ -87,7 +95,6 @@ class uiHubSearch extends uiSearch {
         }
         $this->results['cnt'] = $results['cnt'];
 
-        //print_r($this->results);
         $this->pagination($results);
 
         return TRUE;
@@ -97,14 +104,11 @@ class uiHubSearch extends uiSearch {
     function getSearchResults($trtokid, $andClose=TRUE)
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
-        #sleep(4);
         $results = $this->Base->gb->getSearchResults($trtokid, $andClose);
-        // echo"<pre><b>RESULTS:</b><br>";print_r($results);echo "</pre>";
-/*
-        if (PEAR::isError($results)) {
+        if ( PEAR::isError($results) && ($results->getCode() != TRERR_NOTFIN) ) {
              echo "ERROR: {$results->getMessage()} {$results->getUserInfo()}\n";
+            return $results;
         }
-*/
         if (!is_array($results) || !count($results)) {
             return false;
         }

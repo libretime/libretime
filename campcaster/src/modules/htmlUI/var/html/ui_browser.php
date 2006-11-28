@@ -199,7 +199,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case 'TR.confirmDownloadFromHub':
-	            $uiBrowser->TRANSFERS->downloadFromHub($_REQUEST['id']);
+	            $uiBrowser->TRANSFERS->downloadFromHub($uiBrowser->sessid, $_REQUEST['gunid']);
 	            $Smarty->display('popup/TR.confirmTransfer.tpl');
 	            break;
 
@@ -250,7 +250,11 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
             case 'HUBSEARCH.getResults':
 	            if (isset($_REQUEST['trtokid']) && $_REQUEST['trtokid']) {
 	                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
-	                if ($uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'], FALSE)) {
+	                $r = $uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'], FALSE);
+                    if ( PEAR::isError($r) && ($r->getCode() != TRERR_NOTFIN) ) {
+                        break;
+                    }
+	                if ($r) {
 	                    $Smarty->assign('results',true);
 	                } else {
 	                    $Smarty->assign('results',false);

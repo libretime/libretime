@@ -1,4 +1,4 @@
-onClick="return contextmenu('{$i.id}'
+onClick="return contextmenu('{$i.gunid}'
     , 'TR.downloadFromHub'
 )"
 
