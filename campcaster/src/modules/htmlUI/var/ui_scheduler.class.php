@@ -502,6 +502,7 @@ class uiScheduler extends uiCalendar {
             return false;
         }
 
+        $duration = 0;
         foreach ($arr as $val) {
             $duration += (uiScheduler::datetimeToTimestamp($val['end'])-uiScheduler::datetimeToTimestamp($val['start']))/86400*100;
         }
