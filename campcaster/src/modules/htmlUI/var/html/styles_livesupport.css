@@ -2,7 +2,7 @@ a {
     text-decoration: none;
 }
 
-body { 
+body {
     font-size: 12px;
     font-family: Arial, Verdana, Helvetica, sans-serif;
     font-size: 12px;
@@ -10,11 +10,11 @@ body {
     margin: 0px;
 }
 
-img { 
+img {
     border: none;
 }
 
-form { 
+form {
     font-size: 12px;
     margin: 15px 0 15px 0;
 }
@@ -41,12 +41,12 @@ form {
     font-size: 0;
 }
 
-.container { 
+.container {
     font-size: 12px;
     width: 100%;
 }
 
-.button { 
+.button {
     font-size: 12px;
     font-weight: bold;
     color: #666;
@@ -56,7 +56,7 @@ form {
     width: 100px;
 }
 
-.button_wide { 
+.button_wide {
     font-size: 12px;
     font-weight: bold;
     color: #666;
@@ -65,7 +65,7 @@ form {
     cursor: pointer;
     width: 170px;
 }
-.button_large { 
+.button_large {
     font-size: 12px;
     font-weight: bold;
     color: #666;
@@ -75,7 +75,7 @@ form {
     width: 150px;
 }
 
-.button_small { 
+.button_small {
     font-size: 12px;
     font-weight: bold;
     color: #666;
@@ -84,7 +84,7 @@ form {
     width: 34px;
 }
 
-input, select { 
+input, select {
     font-family: Arial, Verdana, Helvetica, sans-serif;
     font-size: 12px;
     border-top: 1px solid #C7CCCC;
@@ -93,16 +93,16 @@ input, select {
     border-right: 1px solid #A4A9A9;
 }
 
-.checkbox { 
+.checkbox {
     border: none;
 }
 
-.input { 
+.input {
     font-size: 12px;
     height: 16px;
 }
 
-.input[class] { 
+.input[class] {
     font-size: 12px;
     height: 15px;
 }
@@ -110,7 +110,7 @@ input, select {
 
 /* #################################### NAVIGATION ############################### */
 
-.container_nav { 
+.container_nav {
     font-size : 12px;
     height: 26px;
     clear: both;
@@ -118,12 +118,12 @@ input, select {
     margin-bottom: 38px;
 }
 
-.container_nav[class] { 
+.container_nav[class] {
     padding-left: 10px;
     margin-bottom: 50px;
 }
 
-#nav, #nav ul { 
+#nav, #nav ul {
     float: left;
     width: auto;
     list-style: none;
@@ -133,19 +133,19 @@ input, select {
     display: block;
 }
 
-#nav a { 
+#nav a {
     display: block;
     color: #FFFFFF;
     text-decoration: none;
     padding-right: 40px;
 }
 
-#nav li { 
+#nav li {
     float: left;
     padding: 0;
 }
 
-#nav li ul { 
+#nav li ul {
     display: block;
     position: absolute;
     left: -999px;
@@ -155,7 +155,7 @@ input, select {
     z-index: 1;
 }
 
-#nav li ul li { 
+#nav li ul li {
     clear: both;
     margin: 0;
 }
@@ -171,16 +171,16 @@ input, select {
     border-right: 1px solid #B57228;
 }
 
-#nav a:hover { 
+#nav a:hover {
     color: #FFFFFF;
     font-weight: bold;
 }
 
-#nav li li a:hover { 
+#nav li li a:hover {
     background: #EE9232;
 }
 
-#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul { 
+#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul {
     left: -999em;
 }
 
@@ -209,14 +209,14 @@ input, select {
     margin-bottom: 12px;
 }
 
-.contenttabnav A { 
+.contenttabnav A {
     font-size: 12px;
     /*display: block;*/
     color: #5286ba;
     text-decoration: none;
 }
 
-.contenttabnav a:hover { 
+.contenttabnav a:hover {
     font-size: 12px;
     color: #000;
     text-decoration: underline;
@@ -322,27 +322,33 @@ input, select {
     margin-bottom: 21px;
 }
 
-.container_elements h1 { 
+.container_elements h1 {
     font-size: 18px;
     margin: 0 0 4px 0;
     color: #666;
 }
 
-.head { 
+.container_elements h3 {
+    font-size: 14px;
+    margin: 0 0 4px 0;
+    color: #666;
+}
+
+.head {
     font-size: 12px;
     background-color: #5286ba;
     font-weight: bold;
     color: #FFF;
 }
 
-.head .left { 
+.head .left {
     font-size: 12px;
     padding: 5px 0 3px 10px;
     float: left;
     width: 330px;
 }
 
-.head .right { 
+.head .right {
     font-size: 12px;
     padding: 5px 10px 3px 0;
     float: left;
@@ -350,19 +356,19 @@ input, select {
     width: 224px;
 }
 
-.container_table { 
+.container_table {
     font-size: 12px;
     /*height: 275px;*/
     overflow: auto;
 }
 
 
-table { 
+table {
     font-size: 12px;
     border-collapse: collapse;
 }
 
-table td { 
+table td {
     font-size: 12px;
     padding: 0 6px 0 12px;
     border-right: 1px solid #333;
@@ -370,7 +376,7 @@ table td {
     vertical-align: top;
 }
 
-table tr.blue_head td { 
+table tr.blue_head td {
     font-size: 12px;
     background-color: #8baed1;
     color: #FFF;
@@ -378,29 +384,29 @@ table tr.blue_head td {
 
 }
 
-A#blue_head { 
+A#blue_head {
     font-size: 12px;
     color:#fff;
 }
 
-table tr.blue1 td { 
+table tr.blue1 td {
     font-size: 12px;
     color: #000;
     background-color: #d5e2ee;
 }
 
-table tr.blue2 td { 
+table tr.blue2 td {
     font-size: 12px;
     color: #000;
     background-color: #f5f5f5;
 }
 
-table tr.red td { 
+table tr.red td {
     font-size: 12px;
     background-color: #FBAAAA;
 }
 
-.footer { 
+.footer {
     font-size: 12px;
     padding: 4px 5px 5px 0;
     background-color: #8baed1;
@@ -408,7 +414,7 @@ table tr.red td {
     margin-bottom: 8px;
 }
 
-.container_button { 
+.container_button {
     font-size: 12px;
     margin-top: 4px;
 }
@@ -417,32 +423,32 @@ table tr.red td {
     margin-bottom: 4px;
 }
 
-.comment { 
+.comment {
     float: left;
     font-size: 10px;
     margin: 5px 0 0 10px;
 }
 
-.select_width_comment { 
+.select_width_comment {
     font-size: 12px;
     float:left;
     margin-left: 3px;
 }
 
-.select_width_comment[class] { 
+.select_width_comment[class] {
     font-size: 12px;
     margin-left: 0;
 }
 
 
-.tablebottom { 
+.tablebottom {
     font-size: 12px;
     float: left;
     margin-left: 0px;
     background-color: #8baed1;
 }
 
-.counter { 
+.counter {
     font-size: 12px;
     float: left;
     margin-left: 7px;
@@ -450,7 +456,7 @@ table tr.red td {
     background-color: #8baed1;
 }
 
-.counter[class] { 
+.counter[class] {
     font-size: 12px;
     margin-left: 15px;
 }
@@ -474,17 +480,17 @@ table tr.red td {
     font-size: 10px;
 }
 
-.container_button_upload { 
+.container_button_upload {
     font-size: 12px;
     margin: 20px 0 0 204px;
 }
 
-.container_button_upload[class] { 
+.container_button_upload[class] {
     font-size: 12px;
     margin-left: 200px;
 }
 
-label { 
+label {
     font-size: 12px;
     display: block;
     float: left;
@@ -580,7 +586,7 @@ table.calender_overview_table td.not_this_month {
     margin-top: 5px;
 }
 
-table.scheduler_day td{ 
+table.scheduler_day td{
     font-size: 12px;
     border-bottom: 1px solid #ccc;
     padding-top: 2px;
@@ -710,7 +716,7 @@ table.scheduler_week td.day_full {
     background-color: #E7ECEF;
 }
 
-table.scheduler_week td.day_locked { 
+table.scheduler_week td.day_locked {
     font-size: 12px;
     border: none;
     border-bottom: 1px solid #7392A6;
@@ -723,7 +729,7 @@ table.scheduler_week td h2 {
     margin: 0;
 }
 
-table.scheduler_week td p { 
+table.scheduler_week td p {
     font-size: 11px;
     margin: 0;
 }
@@ -785,7 +791,7 @@ table.scheduler_month .scala .scala_in {
 	height: 140px;
 	#border-bottom: 1px solid #ccc;
 	}
-	
+
 table.masterpalette td{
     padding: 5px 5px 5px 5px;
     border-right: 0;
@@ -798,11 +804,11 @@ table.masterpalette td{
 	padding-left: 20px;
 	padding-right: 20px;
 	}
-	
-	
+
+
 #time {
 	padding-top: 5px;
-	
+
 	background: #EBF1F8;
 	padding-bottom: 10px;
 	padding-left: 10px;
@@ -818,13 +824,13 @@ table.masterpalette td{
 	border-top: 1px solid #999;
 	border-left: 1px solid #999;
 	}
-	
+
 #time h1{
     font-size: 18pt;
     line-height: 10pt;
     font-weight: bold;
 }
-	
+
 #nowplaying {
 	padding-top: 5px;
 	background: #EBF1F8;
@@ -841,8 +847,8 @@ table.masterpalette td{
 	border-left: 1px solid #999;
 	color: #999;
 	}
-	
-	
+
+
 #nowplaying_indicator {
 	padding-top: 5px;
 	background: #EBF1F8;
@@ -857,8 +863,8 @@ table.masterpalette td{
 	border-bottom: 1px solid #ccc;
 	border-top: 1px solid #999;
 	border-left: 1px solid #999;
-	}	
-	
+	}
+
 #onair {
     margin-top: 30px;
     text-transform: uppercase;
@@ -867,8 +873,8 @@ table.masterpalette td{
 	vertical-align: middle;
 	color: #A2C6D6;
 	white-space: nowrap;
-	}	
-	
+	}
+
 #offair {
     margin-top: 30px;
     text-transform: uppercase;
@@ -886,7 +892,7 @@ table.masterpalette td{
 	padding-left: 80px;
 	padding-right: 5px;
 	}
-	
+
 /*  *************** NOW/NEXT CLIP  ******************  */
 
 .whatplaying .title {
@@ -894,7 +900,7 @@ table.masterpalette td{
     font-size: 15px;
 }
 
-.whatplaying .scala { 
+.whatplaying .scala {
     width: 250px;
     height: 8px;
     margin-top: 5px;
@@ -905,13 +911,13 @@ table.masterpalette td{
     border-right: 1px solid #6F6F6F;
 }
 
-.whatplaying .scala .scala_in { 
+.whatplaying .scala .scala_in {
     background: #DADADA url("css_img/bg_scala_in.png") repeat-x top left;
     font-size:1px;
     height: 8px;
 }
 
-.whatplaying .time { 
+.whatplaying .time {
     width: 250px;
     font-size: 11px;
 }

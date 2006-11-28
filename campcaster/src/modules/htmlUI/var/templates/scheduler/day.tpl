@@ -7,7 +7,7 @@
 <div class="container_elements">
     <h1>##Daily View##</h1>
     <div class="clearer">&nbsp;</div>
-    <p>##{$SCHEDULER->curr.monthname}## {$SCHEDULER->curr.day}, {$SCHEDULER->curr.year}</p>
+    <p><h3>##{$SCHEDULER->curr.monthname}## {$SCHEDULER->curr.day}, {$SCHEDULER->curr.year}</h3></p>
 
     <form name="SCHEDULER">
     <table class="scheduler_day" style="width: 606px;">
@@ -30,7 +30,7 @@
 	                       {foreach from=$_entrys[$_hour].end item="i"}
     	                       {if $i.startsyesterday}
     	                          <div {include file="scheduler/removeitem.tpl"}>
-    	                              <img src="img/playlist.png" border="0" {include file="sub/alttext.tpl"}>
+    	                              <img src="img/playlist.png" border="0" {* include file="sub/alttext.tpl"*}>
     	                              &nbsp;
     	                              <b>{$i.title}</b>
     	                              ##yesterday## {$i.start} - {$i.end}
@@ -44,7 +44,7 @@
 	                   {if $_entrys[$_hour].start}
 	                       {foreach from=$_entrys[$_hour].start item="i"}
 	                          <div {include file="scheduler/removeitem.tpl"}>
-	                              <img src="img/playlist.png" border="0" {include file="sub/alttext.tpl"}>
+	                              <img src="img/playlist.png" border="0" {*include file="sub/alttext.tpl"*}>
 	                              &nbsp;
 	                              <b>{$i.title}</b>
 
