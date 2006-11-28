@@ -381,7 +381,7 @@ class uiScheduler extends uiCalendar {
         foreach ($arr as $key => $val) {
         	$id = $this->Base->gb->idFromGunid($val['playlistId']);
         	$startDay = strftime('%d', uiScheduler::datetimeToTimestamp($val['start']));
-        	$startHour2 = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
+        	$startHour = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
             $items[$startDay][$startHour][]= array (
                 'id'        => $id,
                 'scheduleid'=> $val['id'],
