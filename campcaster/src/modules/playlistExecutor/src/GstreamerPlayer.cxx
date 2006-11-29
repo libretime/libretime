@@ -642,12 +642,14 @@ Preloader::Preloader(GstreamerPlayer* player, const std::string url) throw()
     : RunnableInterface()
     , m_player(player)
     , m_fileUrl(url)
-{}
+{
+    DEBUG_FUNC_INFO
+}
 
 
 Preloader::~Preloader() throw()
 {
-    DEBUG_BLOCK
+    DEBUG_FUNC_INFO
 }
 
 
