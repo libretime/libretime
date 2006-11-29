@@ -322,12 +322,12 @@ PostgresqlSchedule :: isTimeframeAvailable(
         Ptr<Timestamp>::Ref         timestamp;
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                             isTimeframaAvailableStmt));
-        timestamp = Conversion::ptimeToTimestamp(from);
+        timestamp = Conversion::ptimeToTimestamp(from, Conversion::roundDown);
         pstmt->setTimestamp(1, *timestamp);
         pstmt->setTimestamp(2, *timestamp);
         pstmt->setTimestamp(5, *timestamp);
 
-        timestamp = Conversion::ptimeToTimestamp(to);
+        timestamp = Conversion::ptimeToTimestamp(to, Conversion::roundUp);
         pstmt->setTimestamp(3, *timestamp);
         pstmt->setTimestamp(4, *timestamp);
         pstmt->setTimestamp(6, *timestamp);
@@ -370,11 +370,13 @@ PostgresqlSchedule :: schedulePlaylist(
         pstmt->setLong(1, id->getId());
         pstmt->setLong(2, playlist->getId()->getId());
  
-        timestamp = Conversion::ptimeToTimestamp(playtime);
+        timestamp = Conversion::ptimeToTimestamp(playtime, 
+                                                 Conversion::roundNearest);
         pstmt->setTimestamp(3, *timestamp);
 
         ends.reset(new ptime((*playtime) + *(playlist->getPlaylength())));
-        timestamp = Conversion::ptimeToTimestamp(ends);
+        timestamp = Conversion::ptimeToTimestamp(ends,
+                                                 Conversion::roundUp);
         pstmt->setTimestamp(4, *timestamp);
 
         result = pstmt->executeUpdate() == 1;
@@ -416,10 +418,12 @@ PostgresqlSchedule :: storeScheduleEntry(
         pstmt->setLong(1, scheduleEntry->getId()->getId());
         pstmt->setLong(2, scheduleEntry->getPlaylistId()->getId());
  
-        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getStartTime());
+        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getStartTime(),
+                                                 Conversion::roundDown);
         pstmt->setTimestamp(3, *timestamp);
 
-        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getEndTime());
+        timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getEndTime(),
+                                                 Conversion::roundUp);
         pstmt->setTimestamp(4, *timestamp);
 
         result = pstmt->executeUpdate() == 1;
@@ -456,9 +460,11 @@ PostgresqlSchedule :: getScheduleEntries(
         Ptr<Timestamp>::Ref         timestamp;
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                             getScheduleEntriesStmt));
-        timestamp = Conversion::ptimeToTimestamp(fromTime);
+        timestamp = Conversion::ptimeToTimestamp(fromTime,
+                                                 Conversion::roundDown);
         pstmt->setTimestamp(1, *timestamp);
-        timestamp = Conversion::ptimeToTimestamp(toTime);
+        timestamp = Conversion::ptimeToTimestamp(toTime,
+                                                 Conversion::roundUp);
         pstmt->setTimestamp(2, *timestamp);
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
@@ -565,7 +571,7 @@ PostgresqlSchedule :: getCurrentlyPlaying(void)                 throw ()
         Ptr<Timestamp>::Ref         timestamp;
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                             getCurrentlyPlayingStmt));
-        timestamp = Conversion::ptimeToTimestamp(now);
+        timestamp = Conversion::ptimeToTimestamp(now, Conversion::roundNearest);
         pstmt->setTimestamp(1, *timestamp);
         pstmt->setTimestamp(2, *timestamp);
 
@@ -611,7 +617,8 @@ PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
         Ptr<Timestamp>::Ref         timestamp;
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                             getNextEntryStmt));
-        timestamp = Conversion::ptimeToTimestamp(fromTime);
+        timestamp = Conversion::ptimeToTimestamp(fromTime,
+                                                 Conversion::roundDown);
         pstmt->setTimestamp(1, *timestamp);
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
@@ -781,10 +788,12 @@ PostgresqlSchedule :: reschedule(Ptr<UniqueId>::Ref   entryId,
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                       reschedulePlaylistStmt));
 
-        timestamp = Conversion::ptimeToTimestamp(playtime);
+        timestamp = Conversion::ptimeToTimestamp(playtime,
+                                                 Conversion::roundNearest);
         pstmt->setTimestamp(1, *timestamp);
 
-        timestamp = Conversion::ptimeToTimestamp(ends);
+        timestamp = Conversion::ptimeToTimestamp(ends,
+                                                 Conversion::roundUp);
         pstmt->setTimestamp(2, *timestamp);
 
         pstmt->setLong(3, entryId->getId());

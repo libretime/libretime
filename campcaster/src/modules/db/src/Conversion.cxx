@@ -56,18 +56,26 @@ using namespace LiveSupport::Db;
  *  Convert a boost::ptime to an odbc::Timestamp
  *----------------------------------------------------------------------------*/
 Ptr<odbc::Timestamp>::Ref
-Conversion :: ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref ptime)
+Conversion :: ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref ptime,
+                               RoundingType                      round)
                                                                     throw ()
 {
-    gregorian::date           date  = ptime->date();
-    posix_time::time_duration hours = ptime->time_of_day();
+    posix_time::ptime   newPtime    = *ptime;
+    if (round == roundUp && newPtime.time_of_day().fractional_seconds() != 0) {
+        newPtime += posix_time::seconds(1);
+    } else if (round == roundNearest) {
+        newPtime += posix_time::microseconds(500000);
+    }
+    
+    gregorian::date           date  = newPtime.date();
+    posix_time::time_duration time  = newPtime.time_of_day();
 
     Ptr<odbc::Timestamp>::Ref   timestamp(new odbc::Timestamp(date.year(),
                                                               date.month(),
                                                               date.day(),
-                                                              hours.hours(),
-                                                              hours.minutes(),
-                                                              hours.seconds()));
+                                                              time.hours(),
+                                                              time.minutes(),
+                                                              time.seconds()));
     return timestamp;
 }
 

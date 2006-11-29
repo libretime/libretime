@@ -83,13 +83,22 @@ class Conversion
 
     public:
         /**
-         *  Convert a boost::ptime to a odbc::Timestamp.
+         *  Constants to specify whether we round time values up or down.
+         */
+        typedef enum { roundDown,
+                       roundUp,
+                       roundNearest }               RoundingType;
+
+        /**
+         *  Convert a boost::ptime to a odbc::Timestamp, rounding down.
          *
          *  @param ptime the boost ptime to convert.
          *  @return an odbc::Timestamp, holding the same time.
          */
         static Ptr<odbc::Timestamp>::Ref
-        ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref   ptime)  throw ();
+        ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref   ptime,
+                         RoundingType                        round = roundDown)
+                                                                    throw ();
 
         /**
          *  Convert an odbc::Timestamp to a  boost::ptime.
