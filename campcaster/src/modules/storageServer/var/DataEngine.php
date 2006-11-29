@@ -370,7 +370,10 @@ class DataEngine {
         if (!is_array($orderbyQns)) {
             $orderbyQns = array($orderbyQns);
         }
-        $desc = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
+        $descA = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
+        if (!is_array($descA)) {
+            $descA = array($descA);
+        }
         $orderJoinSql = array();
         $orderBySql = array();
         foreach ($orderbyQns as $j => $orderbyQn) {
@@ -378,7 +381,7 @@ class DataEngine {
             $obSplitQn = XML_Util::splitQualifiedName($orderbyQn);
             $obNs = $obSplitQn['namespace'];
             $obLp = $obSplitQn['localPart'];
-            $desc = (isset($criteria['desc'][$i]) ? $criteria['desc'][$i] : NULL);
+            $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
             $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
             $orderJoinSql[] =
                 "LEFT JOIN {$this->mdataTable} m$i\n".
@@ -440,10 +443,10 @@ class DataEngine {
                     'gunid' => $gunid,
                     'type' => $it['ftype'],
                     'title' => $values['dc:title'],
-                    'creator' => $values['dc:creator'],
+                    'creator' => (isset($values['dc:creator']) ? $values['dc:creator'] : NULL ),
                     'duration' => $values['dcterms:extent'],
                     'length' => $values['dcterms:extent'],
-                    'source' => $values['dc:source'],
+                    'source' => (isset($values['dc:source']) ? $values['dc:source'] : NULL ),
                 );
             } else {
                 $eres[] = $it['txt'];
