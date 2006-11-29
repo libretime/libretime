@@ -251,6 +251,19 @@ class BrowseItem : public Gtk::VBox,
         {
             return signalSelectionChangedObject;
         }
+
+        /**
+         *  Enable or disable the widget.
+         *
+         *  @param  sensitive   if true, the widget is enabled (default);
+         *                      if false, the widget is disabled.
+         */
+        void
+        setSensitive(bool   sensitive = true)                   throw ()
+        {
+            metadataEntry->set_sensitive(sensitive);
+            metadataValues->set_sensitive(sensitive);
+        }
 };
 
 

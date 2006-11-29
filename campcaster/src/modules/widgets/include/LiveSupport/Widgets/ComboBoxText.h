@@ -355,6 +355,19 @@ class ComboBoxText : public Gtk::ComboBoxText
          */
         sigc::signal<void>
         signalSelectionChanged(void)                                throw ();
+
+        /**
+         *  Enable or disable the widget.
+         *
+         *  @param  sensitive   if true, the widget is enabled (default);
+         *                      if false, the widget is disabled.
+         */
+        virtual void
+        set_sensitive(bool   sensitive = true)                      throw ()
+        {
+            label->set_sensitive(sensitive);
+            Gtk::ComboBoxText::set_sensitive(sensitive);
+        }
 };
 
 
