@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # install - install a program, script, or datafile
 
 scriptversion=2005-02-02.21
