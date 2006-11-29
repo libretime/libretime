@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #   Author   : $Author$
 #   Version  : $Revision$

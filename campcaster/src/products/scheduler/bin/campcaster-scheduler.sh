@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #-------------------------------------------------------------------------------#   Copyright (c) 2004 Media Development Loan Fund
 #
 #   This file is part of the Campcaster project.
