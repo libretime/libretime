@@ -1,7 +1,13 @@
 {$SCHEDULER->buildDay()}
-{assign var="_scale"  value=$SCHEDULER->getDayTimingScale()}   {* get the 24h scale *}
-{assign var="_entrys" value=$SCHEDULER->getDayEntrys()}        {* get all entrys on given day from scheduler *}
-{assign var="_day"    value=$SCHEDULER->curr}  				   {* to have year, month, day in between_additem.tpl *}
+
+{* get the 24h scale *}
+{assign var="_scale"  value=$SCHEDULER->getDayTimingScale()}
+
+{* get all entrys on given day from scheduler *}
+{assign var="_entrys" value=$SCHEDULER->getDayEntrys()}
+
+{* to have year, month, day in between_additem.tpl *}
+{assign var="_day" value=$SCHEDULER->curr}
 
 <div class="content">
 <div class="container_elements">
@@ -20,7 +26,7 @@
 
         {foreach from=$_scale item="_hour"}
 
-            {if isset($_hour) && is_array($_entrys[$_hour])}
+            {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
                     <td style="border-left: 1px solid #ccc; cursor: pointer" {include file="scheduler/day_additem.tpl"}>
                    	    {$_hour|string_format:"%02d"}:00
@@ -53,7 +59,7 @@
     	                                <i>{$i.creator}</i>
     	                                {if $i.endshere}
                                      	  {include file="scheduler/between_additem.tpl"}
-                                     	  {/if}
+                                     	{/if}
                                   {else}
                                         {$i.start} - ##tomorrow## {$i.end}
     	                                <i>{$i.creator}</i>
@@ -62,8 +68,10 @@
 	                       {/foreach}
 	                   {/if}
 
-	                   {if $_entrys.span[$_hour]}
-                          span
+	                   {if $_entrys[$_hour].span}
+                          <div {include file="scheduler/removeitem.tpl"}>
+                             ...
+                          </div>
 	                   {/if}
                     </td>
                 </tr>
