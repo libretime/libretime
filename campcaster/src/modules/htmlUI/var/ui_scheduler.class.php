@@ -358,34 +358,57 @@ class uiScheduler extends uiCalendar {
             $M = number_format(strftime('%i', $start));
 
             $id = $this->Base->gb->idFromGunid($val['playlistId']);
-            // item starts today
+
+            $startHour = (int)strftime('%H', $start);
+            $endHour = (int)strftime('%H', $end);
+            $startTime = substr($val['start'], strpos($val['start'], 'T')+1);
+            $endTime = substr($val['end'], strpos($val['end'], 'T') + 1);
+            $title = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
+            $creator = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
+
+            // Item starts today
             if (strftime('%Y%m%d', $start) === $thisDay) {
-            	$items[number_format(strftime('%H', $start))]['start'][] = array(
-	                'id'        => $id,
-	                'scheduleid'=> $val['id'],
-	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-	                'end'       => substr($val['end'], strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-	                'type'      => 'Playlist',
-	                'endstoday' => strftime('%d', $start) === strftime('%d', $end) ? TRUE : FALSE,
-                    'endshere'	=> strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE
-	            );
+                $endsToday = (strftime('%d', $start) === strftime('%d', $end)) ? TRUE : FALSE;
+                $endsHere = strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE;
+            	$items[$startHour]['start'][] =
+            	   array('id' => $id,
+	                     'scheduleid' => $val['id'],
+	                     'start' => $startTime,
+	                     'end' => $endTime,
+	                     'title' => $title,
+	                     'creator' => $creator,
+	                     'type' => 'Playlist',
+	                     'endstoday' => $endsToday,
+                         'endshere' => $endsHere);
             }
 
-            // item ends today
-            if (strftime('%Y%m%d', $end) === $thisDay && strftime('%H', $start) !== strftime('%H', $end)) {
-            	$items[number_format(strftime('%H', $end))]['end'][] =
-            	array(
-	                'id'        => $id,
-	                'scheduleid'=> $val['id'],
-	                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-	                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-	                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-	                'creator'   => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-	                'type'      => 'Playlist',
-	                'startsyesterday' => strftime('%d', $start) === strftime('%d', $end) ? FALSE : TRUE,
-	            );
+            // Item ends today
+            if ( (strftime('%Y%m%d', $end) === $thisDay) && ($startHour !== $endHour) ) {
+                $startsYesterday = (strftime('%d', $start) === strftime('%d', $end)) ? FALSE : TRUE;
+
+            	$items[$endHour]['end'][] =
+            	   array('id' => $id,
+	                     'scheduleid' => $val['id'],
+	                     'start' => $startTime,
+	                     'end' => $endTime,
+	                     'title' => $title,
+	                     'creator' => $creator,
+	                     'type' => 'Playlist',
+	                     'startsyesterday' => $startsYesterday);
+            }
+
+            // If the item spans more than one hour
+            if ( ($endHour - $startHour) > 1) {
+                for ($i = $startHour + 1; $i < $endHour; $i++) {
+                	$items[$i]['span'][] =
+                	   array('id' => $id,
+    	                     'scheduleid' => $val['id'],
+    	                     'start' => $startTime,
+    	                     'end' => $endTime,
+    	                     'title' => $title,
+    	                     'creator' => $creator,
+    	                     'type' => 'Playlist');
+                }
             }
         }
         return $items;
@@ -932,6 +955,15 @@ class uiScheduler extends uiCalendar {
     } // fn removeFromScheduleMethod
 
 
+    /**
+     * Get the scheduled items between the $from and $to dates.
+     *
+     * @param string $from
+     *      In the format YYYMMDDTHH:MM:SS
+     * @param string $to
+     *      In the format YYYMMDDTHH:MM:SS
+     * @return array|false
+     */
     function displayScheduleMethod($from, $to)
     {
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
