@@ -1144,7 +1144,7 @@ class Transport
             }
         } else {
             return PEAR::raiseError("Transport::cronUploadWaiting:".
-                " wrong return status from curl: $status ".
+                " wrong return status from curl: $status on $url".
                 "($trtok)"
             );
         }
