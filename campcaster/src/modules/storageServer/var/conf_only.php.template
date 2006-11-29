@@ -59,6 +59,7 @@ $config = array(
     'schedulerXMLRPC'         => 'ls_scheduler_xmlRpcPrefix',
     'schedulerUrlHost'        => 'ls_scheduler_host',
     'schedulerUrlPort'        => ls_scheduler_port,
+    'schedulerPass' => 'ls_scheduler_storage_pass',
 
     /* =================================================== cron configuration */
     //'cronUserName'      => 'www-data',

@@ -34,6 +34,7 @@ define('CAMPCASTER_VERSION', '1.1.0');
  *   <dt>archiveAccountLogin, archiveAccountPass <dd>account info
  *           for login to archive
  *   <dt>sysSubjs<dd>system users/groups - cannot be deleted
+ *   <dt>schedulerPass<dd>scheduler's password for storageServer access
  *  </dl>
  */
 
@@ -85,6 +86,7 @@ $config = array(
     'schedulerXMLRPC'         => 'ls_scheduler_xmlRpcPrefix',
     'schedulerUrlHost'        => 'ls_scheduler_host',
     'schedulerUrlPort'        => ls_scheduler_port,
+    'schedulerPass' => 'ls_scheduler_storage_pass',
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(

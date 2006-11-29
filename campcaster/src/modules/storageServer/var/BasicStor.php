@@ -2516,6 +2516,7 @@ class BasicStor extends Alib {
         $this->rootId = $this->getRootNode();
         $this->storId = $this->wd =
             $this->addObj('StorageRoot', 'Folder', $this->rootId);
+        // user root init
         $rootUid = parent::addSubj('root', $this->config['tmpRootPass']);
         $res = parent::addPerm($rootUid, '_all', $this->rootId, 'A');
         if ($this->dbc->isError($res)) {
@@ -2560,6 +2561,13 @@ class BasicStor extends Alib {
                 return $stPrefGr;
             }
             $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
+            // user scheduler init
+            $schUid = parent::addSubj('scheduler', $this->config['schedulerPass']);
+            $res = parent::addPerm($rootUid, 'read', $this->rootId, 'A');
+            if ($this->dbc->isError($res)) {
+                return $res;
+            }
+            $r = $this->addSubj2Gr('scheduler', $this->config['AllGr']);
         }
     }
 
