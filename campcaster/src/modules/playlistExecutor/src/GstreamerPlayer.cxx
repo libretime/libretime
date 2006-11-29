@@ -319,13 +319,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         close();
     }
 
-    GTimeVal time;
-    g_get_current_time(&time);
-    Ptr<gchar>::Ref isotime;
-    isotime.reset(g_time_val_to_iso8601(&time));
-
     debug() << "Opening URL: " << fileUrl << endl;
-    debug() << "Timestamp: " << isotime << endl;
+    debug() << "Timestamp: " << *TimeConversion::now() << endl;
 
     std::string filePath;
 
