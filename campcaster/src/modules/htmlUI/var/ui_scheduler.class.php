@@ -397,17 +397,43 @@ class uiScheduler extends uiCalendar {
 	                     'startsyesterday' => $startsYesterday);
             }
 
-            // If the item spans more than one hour
-            if ( ($endHour - $startHour) > 1) {
-                for ($i = $startHour + 1; $i < $endHour; $i++) {
-                	$items[$i]['span'][] =
-                	   array('id' => $id,
-    	                     'scheduleid' => $val['id'],
-    	                     'start' => $startTime,
-    	                     'end' => $endTime,
-    	                     'title' => $title,
-    	                     'creator' => $creator,
-    	                     'type' => 'Playlist');
+            $diffHours = floor(($end - $start)/3600);
+            // If the item spans three hours or more
+            if ( $diffHours > 2 ) {
+                // $skip becomes true if we dont actually have to do
+                // this section.
+                $skip = false;
+                if (strftime('%Y%m%d', $start) === $thisDay) {
+                    // For the edge case of starting at the end of 
+                    // today.
+                    if ($startHour == 23) {
+                        $skip = true;
+                    }
+                    $countStart = $startHour + 1;
+                } else {
+                    $countStart = 0;
+                }
+                if (strftime('%Y%m%d', $end) === $thisDay) {
+                    // For the edge case of ending at the beginning
+                    // of today.
+                    if ($endHour == 0) {
+                        $skip = true;
+                    }
+                    $countEnd = $endHour - 1;
+                } else {
+                    $countEnd = 23;
+                }
+                if (!$skip) {
+                    for ($i = $countStart; $i <= $countEnd; $i++) {
+                    	$items[$i]['span'] =
+                    	   array('id' => $id,
+        	                     'scheduleid' => $val['id'],
+        	                     'start' => $startTime,
+        	                     'end' => $endTime,
+        	                     'title' => $title,
+        	                     'creator' => $creator,
+        	                     'type' => 'Playlist');
+                    }
                 }
             }
         }

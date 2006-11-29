@@ -69,9 +69,10 @@
 	                   {/if}
 
 	                   {if $_entrys[$_hour].span}
-                          <div {include file="scheduler/removeitem.tpl"}>
-                             ...
-                          </div>
+	                       {assign var="i" value=$_entrys[$_hour].span}
+                            <div {include file="scheduler/removeitem.tpl"}>
+                            &nbsp;&nbsp;&nbsp;&nbsp;... <i><b>{$i.title}</b> ##continued##</i> ...
+                            </div>
 	                   {/if}
                     </td>
                 </tr>
