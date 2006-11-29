@@ -16,10 +16,10 @@
         <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
     {* /if *}
     {* if $SUBJECTS->isMemberOf('Backup') *}
-        <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=export'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Export##</a></li>
+    {*<li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=export'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Export##</a></li>*}
     {* /if *}
     {* if $SUBJECTS->isMemberOf('Restore') *}
-        <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=import'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Import##</a></li>
+    {*<li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=import'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Import##</a></li>*}
     {* /if *}
     </ul>
 </div>
