@@ -28,6 +28,9 @@
 
 ------------------------------------------------------------------------------*/
 
+#ifndef CAMPCASTER_DEBUG_H
+#define CAMPCASTER_DEBUG_H
+
 #include "configure.h"
 
 #include <iostream>
@@ -48,7 +51,7 @@
 namespace LiveSupport {
     namespace Core {
         namespace Debug {
-            int indentAmount = 0;
+            static int indentAmount = 0;
         }
     }
 }
@@ -132,14 +135,14 @@ using namespace LiveSupport::Core;
         NoDebugStream& operator<<(std::string) { return *this; }
 
     };
-    NoDebugStream debug() {  return NoDebugStream(); }
-    NoDebugStream warning() {  return NoDebugStream(); }
-    NoDebugStream error() {  return NoDebugStream(); }
+    static inline NoDebugStream debug()   { return NoDebugStream(); }
+    static inline NoDebugStream warning() { return NoDebugStream(); }
+    static inline NoDebugStream error()   { return NoDebugStream(); }
     inline NoDebugStream &endl( NoDebugStream & s) { return s; }
 #else
-    std::ostream& debug() {  return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX; }
-    std::ostream& warning() {  return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX << "[WARNING!] "; }
-    std::ostream& error() {  return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX << "[ERROR!] "; }
+    static inline std::ostream& debug()   { return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX; }
+    static inline std::ostream& warning() { return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX << "[WARNING!] "; }
+    static inline std::ostream& error()   { return std::cout << std::string(Debug::indentAmount, ' ') << CMP_PREFIX << "[ERROR!] "; }
 #endif
 
 using std::endl;
@@ -246,3 +249,6 @@ namespace Debug
 
 /// Announce a line
 #define DEBUG_LINE_INFO {  debug() << '[' << __PRETTY_FUNCTION__ << ']' << "Line: " << __LINE__ << endl; }
+
+
+#endif //CAMPCASTER_DEBUG_H
