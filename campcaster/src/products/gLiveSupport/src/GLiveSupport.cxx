@@ -602,10 +602,6 @@ GLiveSupport :: login(const std::string & login,
 
     loadWindowPositions();
     
-    if (masterPanel) {
-        masterPanel->createScratchpadWindow();
-    }
-    
     return true;
 }
 
@@ -1758,4 +1754,18 @@ GLiveSupport :: refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
 {
     masterPanel->refreshPlaylistInLiveMode(playlist);
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Preload the Scratchpad window during login.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: createScratchpadWindow(void)
+                                                                    throw ()
+{
+    if (masterPanel) {
+        masterPanel->createScratchpadWindow();
+    }
+}    
 

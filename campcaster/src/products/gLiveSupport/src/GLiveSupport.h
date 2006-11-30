@@ -1266,6 +1266,12 @@ class GLiveSupport : public LocalizedConfigurable,
                 Gtk::Main::iteration();
             }
         }
+
+        /**
+         *  Preload the Scratchpad window during login.
+         */
+        void
+        createScratchpadWindow(void)                            throw ();
 };
 
 /* ================================================= external data structures */

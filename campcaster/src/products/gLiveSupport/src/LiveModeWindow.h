@@ -107,6 +107,21 @@ class LiveModeWindow : public GuiWindow
         CuePlayer *                         cueAudioButtons;
 
         /**
+         *  The label for the cue player.
+         */
+        Gtk::Label *                        cueAudioLabel;
+
+        /**
+         *  The button for removing every item from the window.
+         */
+        Button *                            clearListButton;
+
+        /**
+         *  The button for removing the selected items from the window.
+         */
+        Button *                            removeButton;
+
+        /**
          *  Construct the right-click context menu for local audio clips.
          *
          *  @return the context menu created (already Gtk::manage()'ed).
@@ -389,6 +404,11 @@ class LiveModeWindow : public GuiWindow
             return (treeModel->children().size() != 0);
         }
 
+        /**
+         *  Update the localized strings in the widget.
+         */
+        void
+        updateStrings(void)                                     throw ();
 };
 
 /* ================================================= external data structures */

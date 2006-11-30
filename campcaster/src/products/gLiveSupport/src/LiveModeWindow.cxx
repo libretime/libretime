@@ -132,12 +132,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     
     ImageButton *       outputPlayButton = Gtk::manage(wf->createButton(
                                         WidgetConstants::hugePlayButton ));
-    Button *            clearListButton;
-    Button *            removeButton;
     
     Gtk::VBox *         cueAudioBox = Gtk::manage(new Gtk::VBox);
     Gtk::HBox *         cueAudioLabelBox = Gtk::manage(new Gtk::HBox);
-    Gtk::Label *        cueAudioLabel;
+    
     try {
         cueAudioLabel = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("cuePlayerLabel") ));
@@ -682,6 +680,29 @@ LiveModeWindow :: onTreeModelChanged(void)                          throw ()
         }
         
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the strings in the widget.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: updateStrings(void)                               throw ()
+{
+    try {
+        setBundle(gLiveSupport->getBundle("liveModeWindow"));
+        
+        set_title(*getResourceUstring("windowTitle"));
+        cueAudioLabel->set_label(*getResourceUstring("cuePlayerLabel"));
+        clearListButton->set_label(*getResourceUstring("clearListButtonLabel"));
+        removeButton->set_label(*getResourceUstring("removeButtonLabel"));
+    
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    show_all_children();
 }
 
 

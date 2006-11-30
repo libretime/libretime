@@ -756,8 +756,11 @@ MasterPanelWindow :: showLoggedInUI(void)                           throw ()
     
     setSchedulerAvailable(gLiveSupport->isSchedulerAvailable());
     
-    if (liveModeWindow && liveModeWindow->isNotEmpty()) {
-        liveModeWindow->present();
+    if (liveModeWindow) {
+        liveModeWindow->updateStrings();
+        if (liveModeWindow->isNotEmpty()) {
+            liveModeWindow->present();
+        }
     }
 }
 

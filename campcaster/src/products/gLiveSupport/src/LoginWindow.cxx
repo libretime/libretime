@@ -255,6 +255,17 @@ LoginWindow :: onOkButtonClicked (void)                             throw ()
     }
     
     loggedIn = gLiveSupport->login(*getLogin(), *getPassword());
+    
+    if (loggedIn) {
+        if (selectedLocale->size() > 0) {
+            gLiveSupport->changeLanguage(selectedLocale);
+        } else {
+            // TODO: get and set default locale for user
+        }
+        
+        gLiveSupport->createScratchpadWindow();
+    }
+    
     hide();
 }
 

@@ -202,14 +202,6 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLogoutButtonClicked));
 
-        // update the UI to the possibly selected locale
-        Ptr<const std::string>::Ref   locale = loginWindow->getSelectedLocale();
-        if (locale->size() > 0) {
-            gLiveSupport->changeLanguage(locale);
-        } else {
-            // TODO: get and set default locale for user
-        }
-
         // remove the close button
         remove(*closeButton);
 
