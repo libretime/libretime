@@ -70,6 +70,7 @@ class Crontab
      */
     function readCrontab()
     {
+        @exec("echo | crontab -u {$this->user} -", $crons, $return);
         @exec("crontab -u {$this->user} -l", $crons, $return);
         if($return != 0){
             return PEAR::raiseError("*** Can't read crontab ***\n".
