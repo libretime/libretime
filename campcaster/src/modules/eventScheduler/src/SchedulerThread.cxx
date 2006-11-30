@@ -33,6 +33,9 @@
 #include "configure.h"
 #endif
 
+#define DEBUG_PREFIX "SchedulerThread"
+#include "LiveSupport/Core/Debug.h"
+
 #include "LiveSupport/Core/TimeConversion.h"
 
 #include "SchedulerThread.h"
@@ -60,6 +63,8 @@ SchedulerThread :: SchedulerThread(
                         Ptr<time_duration>::Ref             granularity)
                                                                     throw ()
 {
+    DEBUG_FUNC_INFO
+
     this->eventContainer = eventContainer;
     this->granularity    = granularity;
     this->shouldRun      = false;
@@ -72,6 +77,8 @@ SchedulerThread :: SchedulerThread(
 void
 SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
 {
+    DEBUG_FUNC_INFO
+
     nextEvent = eventContainer->getNextEvent(when);
     if (nextEvent.get()) {
         nextEventTime = nextEvent->getScheduledTime();
@@ -95,6 +102,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
     }
 
     if (imminent(now, nextInitTime)) {
+        debug() << "next event init coming" << std::endl;
         try {
             nextEvent->initialize();
         } catch (std::exception &e) {
@@ -106,11 +114,13 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                       << std::endl;
         }
     } else if (imminent(now, nextEventTime)) {
+        debug() << "next event start coming" << std::endl;
         Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                          - *now));
         TimeConversion::sleep(timeLeft);
         nextEvent->start();
     } else if (imminent(now, nextEventEnd)) {
+        debug() << "next event end coming" << std::endl;
         Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventEnd
                                                          - *now));
         TimeConversion::sleep(timeLeft);
@@ -126,6 +136,8 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 void
 SchedulerThread :: run(void)                                    throw ()
 {
+    DEBUG_FUNC_INFO
+
     shouldRun = true;
     getNextEvent(TimeConversion::now());
 
@@ -152,6 +164,8 @@ SchedulerThread :: run(void)                                    throw ()
 void
 SchedulerThread :: signal(int signalId)                         throw ()
 {
+    DEBUG_FUNC_INFO
+
     switch (signalId) {
         case UpdateSignal:
             getNextEvent(TimeConversion::now());
