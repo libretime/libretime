@@ -1,5 +1,6 @@
 <?php
 /**
+ *  \file put.php
  *  Store PUT data as temporary file.
  *
  *  put.php is remote callable script through HTTP PUT method.
@@ -29,6 +30,8 @@
  * @subpackage ArchiveServer
  */
 
+define('USE_FLOCK', TRUE);
+
 require_once dirname(__FILE__).'/../conf.php';
 require_once 'DB.php';
 require_once dirname(__FILE__).'/../Archive.php';
@@ -38,28 +41,26 @@ $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = new Archive($dbc, $config);
 
-function http_error($code, $err){
+function http_error($code, $err) {
     header("HTTP/1.1 $code");
     header("Content-type: text/plain; charset=UTF-8");
     echo "$err\r\n";
+    flush();
     exit;
 }
 
-if(preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['token'])){
+if (preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['token'])) {
     $token = $_REQUEST['token'];
-}else{
+} else {
     http_error(400, "Error on token parameter. ({$_REQUEST['token']})");
 }
 
 $tc = $gb->bsCheckToken($token, 'put');
 if(PEAR::isError($tc)){ http_error(500, $ex->getMessage()); }
-if(!$tc){ http_error(403, "Token not valid."); }
-#var_dump($tc); exit;
+if(!$tc){ http_error(403, "put.php: Token not valid ($token)."); }
 
 header("Content-type: text/plain");
-#var_dump($_SERVER); var_dump($_REQUEST); exit;
 
-#$destfile = $_SERVER['PATH_TRANSLATED'];
 $destfile = "{$config['accessDir']}/{$token}";
 
 /* PUT data comes in on the input stream */
@@ -70,9 +71,22 @@ $putdata = @fopen("php://input", "r") or
 $fp = @fopen($destfile, "ab") or
     http_error(500, "put.php: Can't write to destination file (token=$token)");
 
+if ( USE_FLOCK ) {
+    // lock the file
+    $lockres = flock($fp,LOCK_EX+LOCK_NB);
+    if ($lockres !== TRUE) {
+        http_error(409, "put.php: file locked (token=$token)");
+    }
+}
+
 /* Read the data 1 KB at a time and write to the file */
 while ($data = fread($putdata, 1024)){
     fwrite($fp, $data);
+}
+
+if ( USE_FLOCK ) {
+    // unlock the file
+    flock($fp,LOCK_UN);
 }
 
 /* Close the streams */

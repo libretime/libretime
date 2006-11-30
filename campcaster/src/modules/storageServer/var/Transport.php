@@ -1118,8 +1118,11 @@ class Transport
         $res = system($command, $status);
         // status 18 - Partial file. Only a part of the file was transported.
         // status 28 - Timeout. Too long/slow upload, try to resume next time rather.
-        // if ($status == 0 || $status == 18) {
-        if ($status == 0 || $status == 18 || $status == 28) {
+        // status 6 - Couldn't resolve host.
+        // status 7 - Failed to connect to host.
+        // status 56 - Failure in receiving network data. Important - this status is
+        //             returned if file is locked on server side
+        if ($status == 0 || $status == 18 || $status == 28 || $status == 6 || $status == 7 || $status == 56) {
             $check = $this->uploadCheck($row['pdtoken']);
             if (PEAR::isError($check)) {
             	return $check;
