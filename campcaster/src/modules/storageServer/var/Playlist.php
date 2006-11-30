@@ -102,20 +102,20 @@ class Playlist extends StoredFile {
     public function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
     {
         $tmpFname = uniqid('');
-        $oid = $this->addObj($tmpFname , 'playlist', $parid);
+        $oid = $gb->addObj($tmpFname , 'playlist', $parid);
         if (PEAR::isError($oid)) {
         	return $oid;
         }
-        $pl =&  Playlist::insert($this, $oid, '', '',
+        $pl =&  Playlist::insert($gb, $oid, '', '',
             dirname(__FILE__).'/emptyPlaylist.xml',
             'file', $plid
         );
         if (PEAR::isError($pl)) {
-            $res = $this->removeObj($oid);
+            $res = $gb->removeObj($oid);
             return $pl;
         }
         $fname = ($fname == '' || is_null($fname) ? "newFile.xml" : $fname );
-        $res = $this->bsRenameFile($oid, $fname);
+        $res = $gb->bsRenameFile($oid, $fname);
         if (PEAR::isError($res)) {
         	return $res;
         }
