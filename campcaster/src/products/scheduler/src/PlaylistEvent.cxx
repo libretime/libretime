@@ -117,7 +117,7 @@ std::cerr << "PlaylistEvent :: initialize acquired playlist\n";
 
 
 /*------------------------------------------------------------------------------
- *  Initialize the event object.
+ *  De-initialize the event object.
  *----------------------------------------------------------------------------*/
 void
 PlaylistEvent :: deInitialize(void)                throw ()
