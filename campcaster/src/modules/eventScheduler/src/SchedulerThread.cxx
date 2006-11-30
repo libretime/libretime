@@ -118,8 +118,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             nextEvent->start();
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
-            Ptr<ptime>::Ref         inASecond(new ptime(*now + seconds(1)));
-            getNextEvent(inASecond);
+            getNextEvent(TimeConversion::now());
         }
     }
     
