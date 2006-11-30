@@ -97,7 +97,6 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
     DEBUG_BLOCK
 
-std::cerr << "PlaylistEvent :: initialize BEGIN\n";
     if (state != created) {
         throw std::logic_error("PlaylistEvent in bad state");
     }
@@ -108,7 +107,6 @@ std::cerr << "PlaylistEvent :: initialize BEGIN\n";
                                                                ->getId()));
     try {
         playlist = storage->acquirePlaylist(sessionId, playlistId);
-std::cerr << "PlaylistEvent :: initialize acquired playlist\n";
     } catch (Core::XmlRpcException &e) {
         std::string     errorMessage = "storage server error: ";
         errorMessage += e.what();
@@ -126,6 +124,8 @@ std::cerr << "PlaylistEvent :: initialize acquired playlist\n";
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
+    DEBUG_BLOCK
+    
     if (state != stopped) {
         // TODO: handle error?
         return;
@@ -139,7 +139,6 @@ PlaylistEvent :: deInitialize(void)                throw ()
     }
     playlist.reset();
     state = deInitialized;
-std::cerr << "PlaylistEvent :: deInitialize END\n";
 }
 
 
@@ -151,7 +150,6 @@ PlaylistEvent :: start(void)                       throw ()
 {
     DEBUG_BLOCK
 
-std::cerr << "PlaylistEvent :: start BEGIN\n";
     if (state != initialized) {
         // TODO: handle error?
         return;
@@ -160,7 +158,6 @@ std::cerr << "PlaylistEvent :: start BEGIN\n";
     try {
         audioPlayer->open(*playlist->getUri());
         audioPlayer->start();
-std::cerr << "PlaylistEvent :: audio player started\n";
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {
@@ -182,7 +179,6 @@ PlaylistEvent :: stop(void)                        throw ()
 {
     DEBUG_BLOCK
 
-std::cerr << "PlaylistEvent :: stop BEGIN\n";
     if (state != running) {
         // TODO: handle error?
         return;
@@ -191,7 +187,6 @@ std::cerr << "PlaylistEvent :: stop BEGIN\n";
     try {
         audioPlayer->stop();
         audioPlayer->close();
-std::cerr << "PlaylistEvent :: audio player stopped\n";
     } catch (std::logic_error &e) {
         // TODO: handle error
         // NOTE: this may not be an error, because the user may have stopped

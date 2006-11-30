@@ -86,6 +86,11 @@ class SchedulerThread : public virtual RunnableInterface
         Ptr<EventContainerInterface>::Ref   eventContainer;
 
         /**
+         *  The event which is being running now.
+         */
+        Ptr<ScheduledEventInterface>::Ref   currentEvent;
+
+        /**
          *  The next event to execute.
          */
         Ptr<ScheduledEventInterface>::Ref   nextEvent;
@@ -99,6 +104,11 @@ class SchedulerThread : public virtual RunnableInterface
          *  The time to start the initialization of the next event.
          */
         Ptr<ptime>::Ref                     nextInitTime;
+
+        /**
+         *  The ending time of the current event.
+         */
+        Ptr<ptime>::Ref                     currentEventEnd;
 
         /**
          *  The ending time of the next event.

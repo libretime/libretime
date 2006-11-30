@@ -97,35 +97,40 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
 void
 SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
-    if (!nextEvent.get()) {
-        return;
-    }
-
-    if (imminent(now, nextInitTime)) {
-        debug() << "next event init coming" << std::endl;
-        try {
-            nextEvent->initialize();
-        } catch (std::exception &e) {
-            // cancel event by getting the next event after this was
-            // supposed to finish
-            getNextEvent(nextEventEnd);
-            // TODO: log error
-            std::cerr << "event initialization error: " << e.what()
-                      << std::endl;
+    if (nextEvent) {
+        if (imminent(now, nextInitTime)) {
+            debug() << "event init coming" << std::endl;
+            try {
+                nextEvent->initialize();
+            } catch (std::exception &e) {
+                // cancel event by getting the next event after this was
+                // supposed to finish
+                getNextEvent(nextEventEnd);
+                // TODO: log error
+                std::cerr << "event initialization error: " << e.what()
+                          << std::endl;
+            }
+        } else if (imminent(now, nextEventTime)) {
+            debug() << "event start coming" << std::endl;
+            Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
+                                                             - *now));
+            TimeConversion::sleep(timeLeft);
+            nextEvent->start();
+            currentEvent = nextEvent;
+            currentEventEnd = nextEventEnd;
+            Ptr<ptime>::Ref         inASecond(new ptime(*now + seconds(1)));
+            getNextEvent(inASecond);
         }
-    } else if (imminent(now, nextEventTime)) {
-        debug() << "next event start coming" << std::endl;
-        Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
+    }
+    
+    if (currentEvent && imminent(now, nextEventEnd)) {
+        debug() << "event end coming" << std::endl;
+        Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
                                                          - *now));
         TimeConversion::sleep(timeLeft);
-        nextEvent->start();
-    } else if (imminent(now, nextEventEnd)) {
-        debug() << "next event end coming" << std::endl;
-        Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventEnd
-                                                         - *now));
-        TimeConversion::sleep(timeLeft);
-        nextEvent->stop();
-        nextEvent->deInitialize();
+        currentEvent->stop();
+        currentEvent->deInitialize();
+        currentEvent.reset();
     }
 }
 
