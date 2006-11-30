@@ -41,6 +41,8 @@
 
 #include <iostream>
 
+#define DEBUG_PREFIX "Scheduler"
+#include "LiveSupport/Core/Debug.h"
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/SessionId.h"
@@ -93,6 +95,8 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
+    DEBUG_BLOCK
+
 std::cerr << "PlaylistEvent :: initialize BEGIN\n";
     if (state != created) {
         throw std::logic_error("PlaylistEvent in bad state");
@@ -145,6 +149,8 @@ std::cerr << "PlaylistEvent :: deInitialize END\n";
 void
 PlaylistEvent :: start(void)                       throw ()
 {
+    DEBUG_BLOCK
+
 std::cerr << "PlaylistEvent :: start BEGIN\n";
     if (state != initialized) {
         // TODO: handle error?
@@ -174,6 +180,8 @@ std::cerr << "PlaylistEvent :: audio player started\n";
 void
 PlaylistEvent :: stop(void)                        throw ()
 {
+    DEBUG_BLOCK
+
 std::cerr << "PlaylistEvent :: stop BEGIN\n";
     if (state != running) {
         // TODO: handle error?
