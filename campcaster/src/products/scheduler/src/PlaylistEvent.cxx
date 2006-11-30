@@ -41,6 +41,7 @@
 
 #include <iostream>
 
+
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/SessionId.h"
 
@@ -80,7 +81,7 @@ PlaylistEvent :: PlaylistEvent(
     this->scheduleEntry = scheduleEntry;
 
     // this init time is a wild guess, say 5 seconds should be enough
-    initTime.reset(new posix_time::time_duration(0, 0, 5, 0));
+    initTime.reset(new posix_time::time_duration(0, 0, 10, 0));
 
     state = created;
 }
@@ -109,6 +110,8 @@ std::cerr << "PlaylistEvent :: initialize acquired playlist\n";
         errorMessage += e.what();
         throw std::logic_error(errorMessage);
     }
+
+    audioPlayer->preload(*playlist->getUri());
     state = initialized;
 }
 
