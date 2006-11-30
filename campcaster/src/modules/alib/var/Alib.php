@@ -96,7 +96,7 @@ class Alib extends Subjects {
     {
         $ct = $this->checkAuthToken($sessid);
         if ($ct === FALSE) {
-            return PEAR::raiseError('Alib::logout: not logged ($ct)',
+            return PEAR::raiseError("Alib::logout: not logged ($sessid)",
                 ALIBERR_NOTLOGGED, PEAR_ERROR_RETURN);
         } elseif (PEAR::isError($ct)) {
             return $ct;
