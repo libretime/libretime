@@ -1093,10 +1093,8 @@ void
 SearchWindow :: onSearchWhereChanged(void)                      throw ()
 {
     if (searchIsLocal()) {
-        browseEntry->setSensitive(true);
         searchResultsTreeView->set_model(localSearchResults);
     } else {
-        browseEntry->setSensitive(false);
         searchResultsTreeView->set_model(remoteSearchResults);
     }
     

@@ -132,23 +132,9 @@ class BrowseEntry : public Gtk::HBox,
          *  @return the signalSelectionChanged() of the last browse item
          */
         sigc::signal<void>
-        signalSelectionChanged(void)                            throw ()
+        signalSelectionChanged(void)                        throw ()
         {
             return browseItemThree->signalSelectionChanged();
-        }
-
-        /**
-         *  Enable or disable the widget.
-         *
-         *  @param  sensitive   if true, the widget is enabled (default);
-         *                      if false, the widget is disabled.
-         */
-        void
-        setSensitive(bool   sensitive = true)                   throw ()
-        {
-            browseItemOne->setSensitive(sensitive);
-            browseItemTwo->setSensitive(sensitive);
-            browseItemThree->setSensitive(sensitive);
         }
 };
 
