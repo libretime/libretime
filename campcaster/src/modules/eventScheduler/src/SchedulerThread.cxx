@@ -122,7 +122,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
         }
     }
     
-    if (currentEvent && imminent(now, nextEventEnd)) {
+    if (currentEvent && imminent(now, currentEventEnd)) {
         debug() << "event end coming" << std::endl;
         Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
                                                          - *now));
