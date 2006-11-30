@@ -117,7 +117,7 @@ class Notebook : public Gtk::Alignment
                 virtual void
                 onTabClicked(void)                              throw ()
                 {
-                    notebook->activatePage(index);
+                    notebook->setActivePage(index);
                 }
 
                 /**
@@ -305,12 +305,33 @@ class Notebook : public Gtk::Alignment
                    const Glib::ustring    & label)          throw ();
 
         /**
+         *  Get the number of the active page.
+         *
+         *  @return the index of the active page.
+         */
+        virtual unsigned int
+        getActivePage(void)                                 throw ()
+        {
+            return activePage;
+        }
+
+        /**
          *  Make a specific page active.
          *
          *  @param pageNo the index of the page to make active.
          */
         virtual void
-        activatePage(unsigned int   pageNo)                 throw ();
+        setActivePage(unsigned int   pageNo)                throw ();
+
+        /**
+         *  Enable or disable a page in the notebook.
+         *
+         *  @param  pageNo      the index of the page to enable or disable.
+         *  @param  sensitive   true (default) to enable, false to disable.
+         */
+        virtual void
+        setPageSensitive(unsigned int   pageNo,
+                         bool           sensitive)          throw ();
 };
 
 

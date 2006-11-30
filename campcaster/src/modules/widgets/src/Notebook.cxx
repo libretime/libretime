@@ -246,7 +246,7 @@ Notebook :: pagesAdded(void)                            throw ()
     }
 
     // reset the active page to 0, and show it
-    activatePage(0);
+    setActivePage(0);
 }
 
 
@@ -254,7 +254,7 @@ Notebook :: pagesAdded(void)                            throw ()
  *  Make a page active
  *----------------------------------------------------------------------------*/
 void
-Notebook :: activatePage(unsigned int   pageNo)         throw ()
+Notebook :: setActivePage(unsigned int   pageNo)        throw ()
 {
     if (pageNo >= pageList.size()) {
         return;
@@ -269,4 +269,16 @@ Notebook :: activatePage(unsigned int   pageNo)         throw ()
     show_all();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Enable or disable a page in the notebook.
+ *----------------------------------------------------------------------------*/
+void
+Notebook :: setPageSensitive(unsigned int   pageNo,
+                             bool           sensitive)  throw ()
+{
+    if (pageNo < pageList.size()) {
+        pageList[pageNo]->button->setDisabled(!sensitive);
+    }
+}
 

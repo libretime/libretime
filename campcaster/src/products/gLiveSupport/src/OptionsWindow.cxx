@@ -967,7 +967,7 @@ OptionsWindow ::  resetEditedKeyBinding(void)                       throw ()
 void
 OptionsWindow :: run(void)                                          throw ()
 {
-    mainNotebook->activatePage(2);      // "Servers"
+    mainNotebook->setActivePage(2);      // "Servers"
     property_window_position().set_value(Gtk::WIN_POS_CENTER_ALWAYS);
     show_all();
     Gtk::Main::run(*this);

@@ -991,7 +991,7 @@ bool
 SearchWindow :: uploadToHub(Ptr<Playable>::Ref  playable)       throw ()
 {
     try {
-        searchInput->activatePage(3);
+        searchInput->setActivePage(3);
         transportList->addUpload(playable);
         
     } catch (XmlRpcException &e) {
@@ -1020,7 +1020,7 @@ SearchWindow :: onDownloadFromHub(void)                         throw ()
         if (playable) {
             if (!gLiveSupport->existsPlayable(playable->getId())) {
                 try {
-                    searchInput->activatePage(3);
+                    searchInput->setActivePage(3);
                     transportList->addDownload(playable);
                     
                 } catch (XmlRpcException &e) {
@@ -1093,8 +1093,13 @@ void
 SearchWindow :: onSearchWhereChanged(void)                      throw ()
 {
     if (searchIsLocal()) {
+        searchInput->setPageSensitive(2, true);
         searchResultsTreeView->set_model(localSearchResults);
     } else {
+        if (searchInput->getActivePage() == 2) {
+            searchInput->setActivePage(0);
+        }
+        searchInput->setPageSensitive(2, false);
         searchResultsTreeView->set_model(remoteSearchResults);
     }
     
