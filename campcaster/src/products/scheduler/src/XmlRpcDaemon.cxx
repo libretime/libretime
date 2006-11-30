@@ -274,6 +274,11 @@ XmlRpcDaemon :: start (void)                         throw (std::logic_error)
 {
     checkForConfiguration();
 
+    if (isRunning()) {
+        std::cout << "Campcaster Scheduler is already running.\n";
+        return;
+    }
+    
     if (background) {
         if (!daemonize()) {
             // return if we're the parent process that should not continue
@@ -318,7 +323,7 @@ XmlRpcDaemon :: isRunning (void)                     throw (std::logic_error)
             pid = 0;
         }
     }
-
+    //std::cerr << "XmlRpcDaemon::isRunning - pid is " << pid << "\n";
     return pid;
 }
 
