@@ -1422,8 +1422,14 @@ class BasicStor extends Alib {
             if (!file_exists($metadata)) {
                 $metadata = NULL;
             }
-            $r = $this->bsExistsFile($gunid, NULL, TRUE);
-            if (!PEAR::isError($res) && !$r) {
+            $exists = $this->bsExistsFile($gunid, NULL, TRUE);
+            if( $exists ) {
+                $res = $this->idFromGunid($gunid);
+                if (!PEAR::isError($res)) {
+                    $res = $this->bsDeleteFile($res, TRUE);
+                }
+            }
+            if (!PEAR::isError($res) ) {
                 $res = $this->bsPutFile($parid, $gunid, $rawMedia, $metadata,
                     $gunid, 'audioclip'
                 );

@@ -83,10 +83,10 @@ class Transport
 	private $cronJobScript;
 
     /**
-     * wget --timeout parameter [s]
+     * wget --read-timeout parameter [s]
      * @var int
      */
-    private $downTimeout = 20;       // 600
+    private $downTimeout = 900;
 
     /**
      * wget --waitretry parameter [s]
@@ -109,19 +109,19 @@ class Transport
      * curl --max-time parameter
      * @var int
      */
-    private $upTrMaxTime = 600;
+    private $upTrMaxTime = 1800;
 
     /**
      * curl --speed-time parameter
      * @var int
      */
-    private $upTrSpeedTime = 20;
+    private $upTrSpeedTime = 30;
 
     /**
      * curl --speed-limit parameter
      * @var int
      */
-    private $upTrSpeedLimit  = 500;
+    private $upTrSpeedLimit  = 30;
 
     /**
      * curl --connect-timeout parameter
@@ -194,6 +194,13 @@ class Transport
         if ( ($trec->row['direction'] == 'down')  && file_exists($trec->row['localfile']) ){
             $res['realsize'] = filesize($trec->row['localfile']);
             $res['realsum']  = $this->_chsum($trec->row['localfile']);
+        }
+        if ( ($trec->row['direction'] == 'up') ){
+            $check = $this->uploadCheck($trec->row['pdtoken']);
+            if (!PEAR::isError($check)) {
+                $res['realsize'] = $check['size'];
+                $res['realsum'] = $check['realsum'];
+            }
         }
         // do not return finished on finished search job upload
         // - whole search is NOT finished
@@ -1110,9 +1117,9 @@ class Transport
         }
         $res = system($command, $status);
         // status 18 - Partial file. Only a part of the file was transported.
-        if ($status == 0 || $status == 18) {
-        // status 28 - timeout
-        // if ($status == 0 || $status == 18 || $status == 28) {
+        // status 28 - Timeout. Too long/slow upload, try to resume next time rather.
+        // if ($status == 0 || $status == 18) {
+        if ($status == 0 || $status == 18 || $status == 28) {
             $check = $this->uploadCheck($row['pdtoken']);
             if (PEAR::isError($check)) {
             	return $check;
@@ -1174,7 +1181,7 @@ class Transport
         $url = escapeshellarg($row['url']);
         $command =
             "wget -q -c".
-            " --timeout={$this->downTimeout}".
+            " --read-timeout={$this->downTimeout}".
             " --waitretry={$this->downWaitretry}".
             " -t {$this->downRetries}".
             (!is_null($this->downLimitRate)?
