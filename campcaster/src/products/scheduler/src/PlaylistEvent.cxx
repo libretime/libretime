@@ -95,7 +95,7 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
-    DEBUG_BLOCK
+    //DEBUG_BLOCK
 
     if (state != created) {
         throw std::logic_error("PlaylistEvent in bad state");
@@ -124,7 +124,7 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
-    DEBUG_BLOCK
+    //DEBUG_BLOCK
     
     if (state != stopped) {
         // TODO: handle error?
@@ -148,7 +148,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
 void
 PlaylistEvent :: start(void)                       throw ()
 {
-    DEBUG_BLOCK
+    //DEBUG_BLOCK
 
     if (state != initialized) {
         // TODO: handle error?
@@ -177,7 +177,7 @@ PlaylistEvent :: start(void)                       throw ()
 void
 PlaylistEvent :: stop(void)                        throw ()
 {
-    DEBUG_BLOCK
+    //DEBUG_BLOCK
 
     if (state != running) {
         // TODO: handle error?

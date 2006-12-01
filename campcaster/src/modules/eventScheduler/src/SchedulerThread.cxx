@@ -63,7 +63,7 @@ SchedulerThread :: SchedulerThread(
                         Ptr<time_duration>::Ref             granularity)
                                                                     throw ()
 {
-    DEBUG_FUNC_INFO
+    //DEBUG_FUNC_INFO
 
     this->eventContainer = eventContainer;
     this->granularity    = granularity;
@@ -77,7 +77,7 @@ SchedulerThread :: SchedulerThread(
 void
 SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
 {
-    DEBUG_FUNC_INFO
+    //DEBUG_FUNC_INFO
 
     nextEvent = eventContainer->getNextEvent(when);
     if (nextEvent.get()) {
@@ -87,6 +87,9 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
                                    - *nextEvent->maxTimeToInitialize()));
         nextEventEnd.reset(new ptime(*nextEventTime
                                    + *nextEvent->eventLength()));
+        debug() << "::getNextEvent() - nextInitTime:  " << to_simple_string(*nextInitTime) << endl;
+        debug() << "                 - nextEventTime: " << to_simple_string(*nextEventTime) << endl;
+        debug() << "                 - nextEventEnd:  " << to_simple_string(*nextEventEnd) << endl;
     }
 }
 
@@ -99,7 +102,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
     if (nextEvent) {
         if (imminent(now, nextInitTime)) {
-            debug() << "event init coming" << endl;
+            debug() << "::nextStep() - Init [" << *TimeConversion::now() << "]" << endl;
             try {
                 nextEvent->initialize();
             } catch (std::exception &e) {
@@ -111,10 +114,10 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                           << std::endl;
             }
         } else if (imminent(now, nextEventTime)) {
-            debug() << "event start coming" << endl;
             Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                              - *now));
             TimeConversion::sleep(timeLeft);
+            debug() << "::nextStep() - Start [" << *TimeConversion::now() << "]" << endl;
             nextEvent->start();
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
@@ -123,13 +126,13 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
     }
     
     if (currentEvent && imminent(now, currentEventEnd)) {
-        debug() << "event end coming" << endl;
         Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
                                                          - *now));
         TimeConversion::sleep(timeLeft);
         currentEvent->stop();
         currentEvent->deInitialize();
         currentEvent.reset();
+        debug() << "::nextStep() - End [" << *TimeConversion::now() << "]" << endl;
     }
 }
 
@@ -140,7 +143,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 void
 SchedulerThread :: run(void)                                    throw ()
 {
-    DEBUG_FUNC_INFO
+    //DEBUG_FUNC_INFO
 
     shouldRun = true;
     getNextEvent(TimeConversion::now());
@@ -168,7 +171,8 @@ SchedulerThread :: run(void)                                    throw ()
 void
 SchedulerThread :: signal(int signalId)                         throw ()
 {
-    DEBUG_FUNC_INFO
+    //DEBUG_FUNC_INFO
+    debug() << "::signal() - [" << *TimeConversion::now() << "]" << endl;
 
     switch (signalId) {
         case UpdateSignal:
