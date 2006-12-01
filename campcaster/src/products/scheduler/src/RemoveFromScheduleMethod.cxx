@@ -44,6 +44,7 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "SchedulerDaemon.h"
 #include "LiveSupport/Core/XmlRpcTools.h"
 
 #include "RemoveFromScheduleMethod.h"
@@ -135,7 +136,10 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
             return;
         }
         schedule->removeFromSchedule(entryId);
-
+        
+        // tell the scheduler daemon to reload the scheduled events
+        Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
+        scheduler->update();
     } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "schedule entry not found", 
                                returnValue);

@@ -44,6 +44,7 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "SchedulerDaemon.h"
 #include "LiveSupport/Core/XmlRpcTools.h"
 
 #include "RescheduleMethod.h"
@@ -153,6 +154,10 @@ RescheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     try {
         schedule->reschedule(entryId, playschedule);
+
+        // tell the scheduler daemon to reload the scheduled events
+        Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
+        scheduler->update();
     } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+5, e.what(),
                                returnValue);
