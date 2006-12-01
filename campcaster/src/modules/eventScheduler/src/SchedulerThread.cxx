@@ -62,12 +62,12 @@ SchedulerThread :: SchedulerThread(
                         Ptr<EventContainerInterface>::Ref   eventContainer,
                         Ptr<time_duration>::Ref             granularity)
                                                                     throw ()
+      : eventContainer(eventContainer),
+        granularity(granularity),
+        shouldRun(false),
+        isPreloading(false)
 {
     //DEBUG_FUNC_INFO
-
-    this->eventContainer = eventContainer;
-    this->granularity    = granularity;
-    this->shouldRun      = false;
 }
 
 
@@ -113,6 +113,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                 std::cerr << "event initialization error: " << e.what()
                           << std::endl;
             }
+            isPreloading = true;
         } else if (imminent(now, nextEventTime)) {
             Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                              - *now));
@@ -122,6 +123,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
             getNextEvent(TimeConversion::now());
+            isPreloading = false;
         }
     }
     
@@ -132,6 +134,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
         currentEvent->stop();
         currentEvent->deInitialize();
         currentEvent.reset();
+        isPreloading = false;
         debug() << "::nextStep() - End [" << *TimeConversion::now() << "]" << endl;
     }
 }
@@ -176,7 +179,9 @@ SchedulerThread :: signal(int signalId)                         throw ()
 
     switch (signalId) {
         case UpdateSignal:
-            getNextEvent(TimeConversion::now());
+            if (!isPreloading) {
+                getNextEvent(TimeConversion::now());
+            }
             break;
 
         default:

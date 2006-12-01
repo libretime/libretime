@@ -128,6 +128,12 @@ class SchedulerThread : public virtual RunnableInterface
         bool                                shouldRun;
 
         /**
+         *  Flag indicating that we are between an initialize() and
+         *  a start() call.
+         */
+        bool                                isPreloading;
+
+        /**
          *  Default constructor.
          */
         SchedulerThread(void)                           throw ()
