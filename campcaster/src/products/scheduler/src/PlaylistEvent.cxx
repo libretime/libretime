@@ -127,6 +127,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
     DEBUG_BLOCK
     
     if (state != stopped) {
+        error() << "::deInitialize() - ERROR: STATE IS NOT STOPPED!  Aborting." << endl;
         // TODO: handle error?
         return;
     }
@@ -151,8 +152,8 @@ PlaylistEvent :: start(void)                       throw ()
     DEBUG_BLOCK
 
     if (state != initialized) {
+        error() << "::start() - ERROR: STATE IS NOT INITIALIZED!  Aborting." << endl;
         // TODO: handle error?
-        error() << "Not initialized. Aborting." << endl;
         return;
     }
 
@@ -181,6 +182,7 @@ PlaylistEvent :: stop(void)                        throw ()
     DEBUG_BLOCK
 
     if (state != running) {
+        error() << "::stop() - ERROR: STATE IS NOT RUNNING!  Aborting." << endl;
         // TODO: handle error?
         return;
     }
