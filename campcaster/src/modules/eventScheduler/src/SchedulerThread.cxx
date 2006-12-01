@@ -139,7 +139,6 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
         currentEvent->stop();
         currentEvent->deInitialize();
         currentEvent.reset();
-        isPreloading = false;
         debug() << "::nextStep() - End [" << *TimeConversion::now()
                 << "]" << endl;
     }
