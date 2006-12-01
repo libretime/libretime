@@ -124,7 +124,7 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
-    //DEBUG_BLOCK
+    DEBUG_BLOCK
     
     if (state != stopped) {
         // TODO: handle error?
@@ -148,10 +148,11 @@ PlaylistEvent :: deInitialize(void)                throw ()
 void
 PlaylistEvent :: start(void)                       throw ()
 {
-    //DEBUG_BLOCK
+    DEBUG_BLOCK
 
     if (state != initialized) {
         // TODO: handle error?
+        error() << "Not initialized. Aborting." << endl;
         return;
     }
 
@@ -177,7 +178,7 @@ PlaylistEvent :: start(void)                       throw ()
 void
 PlaylistEvent :: stop(void)                        throw ()
 {
-    //DEBUG_BLOCK
+    DEBUG_BLOCK
 
     if (state != running) {
         // TODO: handle error?
