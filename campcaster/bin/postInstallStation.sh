@@ -379,7 +379,9 @@ echo "Initializing database...";
 
 # create PHP-related database tables
 cd $install_var_ls/storageServer/var/install
-php -q install.php || exit 1;
+# workaround for ticket #2059; restore to "exit 1" after the ticket is closed
+#php -q install.php || exit 1;
+php -q install.php || true
 cd -
 
 # create scheduler-related database tables
