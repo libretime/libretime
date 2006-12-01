@@ -116,6 +116,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             try {
                 nextEvent->initialize();
             } catch (std::exception &e) {
+                pthread_mutex_unlock(&preloadLock);
                 // cancel event by getting the next event after this was
                 // supposed to finish
                 getNextEvent(nextEventEnd);
