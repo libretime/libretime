@@ -68,6 +68,10 @@ SchedulerThread :: SchedulerThread(
         isPreloading(false)
 {
     //DEBUG_FUNC_INFO
+    pthread_mutexattr_init(&mutexAttr);
+    pthread_mutex_init(&nextEventLock, &mutexAttr);
+    pthread_mutex_init(&preloadLock, &mutexAttr);
+    pthread_mutexattr_destroy(&mutexAttr);
 }
 
 
@@ -103,8 +107,10 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
 void
 SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
+    pthread_mutex_lock(&nextEventLock);
     if (nextEvent) {
         if (imminent(now, nextInitTime)) {
+            pthread_mutex_lock(&preloadLock);
             debug() << "::nextStep() - Init [" << *TimeConversion::now()
                     << "]" << endl;
             try {
@@ -117,7 +123,6 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                 std::cerr << "event initialization error: " << e.what()
                           << std::endl;
             }
-            isPreloading = true;
         } else if (imminent(now, nextEventTime)) {
             Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                              - *now));
@@ -128,9 +133,11 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
             getNextEvent(TimeConversion::now());
-            isPreloading = false;
+            pthread_mutex_unlock(&preloadLock);
         }
     }
+
+    pthread_mutex_unlock(&nextEventLock);
     
     if (currentEvent && imminent(now, currentEventEnd)) {
         Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
@@ -184,8 +191,14 @@ SchedulerThread :: signal(int signalId)                         throw ()
 
     switch (signalId) {
         case UpdateSignal:
-            if (!isPreloading) {
-                getNextEvent(TimeConversion::now());
+            if (!pthread_mutex_trylock(&nextEventLock)) {
+                if (!pthread_mutex_trylock(&preloadLock)) {
+                    getNextEvent(TimeConversion::now());
+                    pthread_mutex_unlock(&preloadLock);
+                    pthread_mutex_unlock(&nextEventLock);
+                } else {
+                    pthread_mutex_unlock(&nextEventLock);
+                }
             }
             break;
 

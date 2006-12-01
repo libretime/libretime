@@ -133,6 +133,10 @@ class SchedulerThread : public virtual RunnableInterface
          */
         bool                                isPreloading;
 
+        pthread_mutex_t nextEventLock;
+        pthread_mutex_t preloadLock;
+        pthread_mutexattr_t mutexAttr;
+        
         /**
          *  Default constructor.
          */
