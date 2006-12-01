@@ -87,9 +87,12 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
                                    - *nextEvent->maxTimeToInitialize()));
         nextEventEnd.reset(new ptime(*nextEventTime
                                    + *nextEvent->eventLength()));
-        debug() << "::getNextEvent() - nextInitTime:  " << to_simple_string(*nextInitTime) << endl;
-        debug() << "                 - nextEventTime: " << to_simple_string(*nextEventTime) << endl;
-        debug() << "                 - nextEventEnd:  " << to_simple_string(*nextEventEnd) << endl;
+        debug() << "::getNextEvent() - nextInitTime:  "
+                << to_simple_string(*nextInitTime) << endl;
+        debug() << "                 - nextEventTime: "
+                << to_simple_string(*nextEventTime) << endl;
+        debug() << "                 - nextEventEnd:  "
+                << to_simple_string(*nextEventEnd) << endl;
     }
 }
 
@@ -102,7 +105,8 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
     if (nextEvent) {
         if (imminent(now, nextInitTime)) {
-            debug() << "::nextStep() - Init [" << *TimeConversion::now() << "]" << endl;
+            debug() << "::nextStep() - Init [" << *TimeConversion::now()
+                    << "]" << endl;
             try {
                 nextEvent->initialize();
             } catch (std::exception &e) {
@@ -118,7 +122,8 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                              - *now));
             TimeConversion::sleep(timeLeft);
-            debug() << "::nextStep() - Start [" << *TimeConversion::now() << "]" << endl;
+            debug() << "::nextStep() - Start [" << *TimeConversion::now()
+                    << "]" << endl;
             nextEvent->start();
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
@@ -135,7 +140,8 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
         currentEvent->deInitialize();
         currentEvent.reset();
         isPreloading = false;
-        debug() << "::nextStep() - End [" << *TimeConversion::now() << "]" << endl;
+        debug() << "::nextStep() - End [" << *TimeConversion::now()
+                << "]" << endl;
     }
 }
 
