@@ -105,7 +105,7 @@ static const std::string confPidFileNameAttr = "pidFileName";
 /**
  *  The umask used by the daemon for file creations
  */
-static const mode_t uMask = 027;
+static const mode_t uMask = 022;
 
 
 /* ===============================================  local function prototypes */
@@ -256,6 +256,7 @@ XmlRpcDaemon :: loadPid(void)                            throw ()
 
     std::ifstream   pidFile(pidFileName.c_str());
     if (pidFile.fail()) {
+        //std::cout << "XmlRpcDaemon::loadPid - Failed to open file " << pidFileName.c_str() << "\n";
         return 0;
     }
 
@@ -323,7 +324,7 @@ XmlRpcDaemon :: isRunning (void)                     throw (std::logic_error)
             pid = 0;
         }
     }
-    //std::cerr << "XmlRpcDaemon::isRunning - pid is " << pid << "\n";
+    //std::cout << "XmlRpcDaemon::isRunning - pid is " << pid << "\n";
     return pid;
 }
 
