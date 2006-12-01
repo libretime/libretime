@@ -35,6 +35,8 @@
 
 #include <iostream>
 #include <sys/time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <XmlRpcValue.h>
 
 #ifndef DEBUG_PREFIX
   #define CMP_PREFIX ""
@@ -100,7 +102,6 @@ using namespace LiveSupport::Core;
         * @return this stream
         */
         NoDebugStream &operator<<(unsigned int )  { return *this; }
-    
         /**
         * Does nothing.
         * @return this stream
@@ -131,9 +132,29 @@ using namespace LiveSupport::Core;
         * @return this stream
         */
         NoDebugStream& operator<<(unsigned long) { return *this; }
-        
+        /**
+        * Does nothing.
+        * @return this stream
+        */
         NoDebugStream& operator<<(std::string) { return *this; }
-
+        /**
+        * Does nothing.
+        * @return this stream
+        */
+        NoDebugStream& operator<<(boost::posix_time::ptime)
+        { return *this; }
+        /**
+        * Does nothing.
+        * @return this stream
+        */
+        NoDebugStream& operator<<(boost::posix_time::time_duration)
+        { return *this; }
+        /**
+        * Does nothing.
+        * @return this stream
+        */
+        NoDebugStream& operator<<(XmlRpc::XmlRpcValue)
+        { return *this; }
     };
     static inline NoDebugStream debug()   { return NoDebugStream(); }
     static inline NoDebugStream warning() { return NoDebugStream(); }

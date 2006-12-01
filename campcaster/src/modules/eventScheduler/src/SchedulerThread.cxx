@@ -99,7 +99,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
     if (nextEvent) {
         if (imminent(now, nextInitTime)) {
-            debug() << "event init coming" << std::endl;
+            debug() << "event init coming" << endl;
             try {
                 nextEvent->initialize();
             } catch (std::exception &e) {
@@ -111,7 +111,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                           << std::endl;
             }
         } else if (imminent(now, nextEventTime)) {
-            debug() << "event start coming" << std::endl;
+            debug() << "event start coming" << endl;
             Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                              - *now));
             TimeConversion::sleep(timeLeft);
@@ -123,7 +123,7 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
     }
     
     if (currentEvent && imminent(now, currentEventEnd)) {
-        debug() << "event end coming" << std::endl;
+        debug() << "event end coming" << endl;
         Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
                                                          - *now));
         TimeConversion::sleep(timeLeft);
