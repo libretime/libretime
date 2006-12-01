@@ -349,13 +349,12 @@ OptionsWindow :: onTestButtonClicked(const EntryBin *    entry)
 
     Ptr<const Glib::ustring>::Ref
         oldDevice = optionsContainer->getOptionItem(OptionsContainer::
-                                                        outputPlayerDeviceName);
+                                                        cuePlayerDeviceName);
     Ptr<const Glib::ustring>::Ref
         newDevice(new Glib::ustring(entry->get_text()));
     
-    gLiveSupport->setCueAudioDevice(newDevice);     // NOTE: we can't use the
-    gLiveSupport->playTestSoundOnCue();             // output player b/c that
-    gLiveSupport->setCueAudioDevice(oldDevice);     // would trigger onStop()
+    // NOTE: we can't use the output player b/c that would trigger onStop()
+    gLiveSupport->playTestSoundOnCue(oldDevice, newDevice);
 }
 
 

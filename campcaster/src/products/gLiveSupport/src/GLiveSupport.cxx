@@ -1622,13 +1622,22 @@ GLiveSupport :: setCueAudioDevice(Ptr<const Glib::ustring>::Ref  deviceName)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: playTestSoundOnCue(void)                            throw ()
+GLiveSupport :: playTestSoundOnCue(Ptr<const Glib::ustring>::Ref  oldDevice,
+                                   Ptr<const Glib::ustring>::Ref  newDevice)
+                                                                    throw ()
 {
     if (cueItemPlayingNow) {
         stopCueAudio();     // stop the audio player and
     }                       // release old resources
     
     try {
+        if (cuePlayer->isOpen()) {
+            if (cuePlayer->isPlaying()) {
+                cuePlayer->stop();
+            }
+            cuePlayer->close();
+        }
+        cuePlayer->setAudioDevice(*newDevice);
         cuePlayer->open(*testAudioUrl);
         cuePlayer->start();
         Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
@@ -1638,8 +1647,11 @@ GLiveSupport :: playTestSoundOnCue(void)                            throw ()
         }
     } catch (std::runtime_error &e) {
         // "invalid device" error from open(); do nothing
+    } catch (std::logic_error &e) {
+        // some other error; do nothing
     }
     cuePlayer->close();
+    cuePlayer->setAudioDevice(*oldDevice);
 }
 
 

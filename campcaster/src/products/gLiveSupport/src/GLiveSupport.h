@@ -988,9 +988,14 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  Play a test sound on the cue audio player.
+         *
+         *  @param  oldDevice   the name of the current audio device.
+         *  @param  oldDevice   the name of the audio device to be tested.
          */
         void
-        playTestSoundOnCue(void)                throw ();
+        playTestSoundOnCue(Ptr<const Glib::ustring>::Ref    oldDevice,
+                           Ptr<const Glib::ustring>::Ref    newDevice)
+                                                throw ();
 
         /**
          *  Search in the local storage.
