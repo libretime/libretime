@@ -64,14 +64,9 @@ SchedulerThread :: SchedulerThread(
                                                                     throw ()
       : eventContainer(eventContainer),
         granularity(granularity),
-        shouldRun(false),
-        isPreloading(false)
+        shouldRun(false)
 {
     //DEBUG_FUNC_INFO
-    pthread_mutexattr_init(&mutexAttr);
-    pthread_mutex_init(&nextEventLock, &mutexAttr);
-    pthread_mutex_init(&preloadLock, &mutexAttr);
-    pthread_mutexattr_destroy(&mutexAttr);
 }
 
 
@@ -107,16 +102,17 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
 void
 SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 {
-    pthread_mutex_lock(&nextEventLock);
+    nextEventMutex.lock();
+    
     if (nextEvent) {
         if (imminent(now, nextInitTime)) {
-            pthread_mutex_lock(&preloadLock);
+            preloadMutex.lock();
             debug() << "::nextStep() - Init [" << *TimeConversion::now()
                     << "]" << endl;
             try {
                 nextEvent->initialize();
             } catch (std::exception &e) {
-                pthread_mutex_unlock(&preloadLock);
+                preloadMutex.unlock();
                 // cancel event by getting the next event after this was
                 // supposed to finish
                 getNextEvent(nextEventEnd);
@@ -134,11 +130,11 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
             getNextEvent(TimeConversion::now());
-            pthread_mutex_unlock(&preloadLock);
+            preloadMutex.unlock();
         }
     }
 
-    pthread_mutex_unlock(&nextEventLock);
+    nextEventMutex.unlock();
     
     if (currentEvent && imminent(now, currentEventEnd)) {
         Ptr<time_duration>::Ref timeLeft(new time_duration(*currentEventEnd
@@ -192,13 +188,13 @@ SchedulerThread :: signal(int signalId)                         throw ()
 
     switch (signalId) {
         case UpdateSignal:
-            if (!pthread_mutex_trylock(&nextEventLock)) {
-                if (!pthread_mutex_trylock(&preloadLock)) {
+            if (nextEventMutex.tryLock()) {
+                if (preloadMutex.tryLock()) {
                     getNextEvent(TimeConversion::now());
-                    pthread_mutex_unlock(&preloadLock);
-                    pthread_mutex_unlock(&nextEventLock);
+                    preloadMutex.unlock();
+                    nextEventMutex.unlock();
                 } else {
-                    pthread_mutex_unlock(&nextEventLock);
+                    nextEventMutex.unlock();
                 }
             }
             break;

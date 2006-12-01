@@ -43,6 +43,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/RunnableInterface.h"
+#include "LiveSupport/Core/Mutex.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
 #include "LiveSupport/EventScheduler/EventContainerInterface.h"
 
@@ -128,14 +129,14 @@ class SchedulerThread : public virtual RunnableInterface
         bool                                shouldRun;
 
         /**
-         *  Flag indicating that we are between an initialize() and
-         *  a start() call.
+         *  A mutex for getting the next event.
          */
-        bool                                isPreloading;
+        Mutex                               nextEventMutex;
 
-        pthread_mutex_t nextEventLock;
-        pthread_mutex_t preloadLock;
-        pthread_mutexattr_t mutexAttr;
+        /**
+         *  A mutex for the preload.
+         */
+        Mutex                               preloadMutex;
         
         /**
          *  Default constructor.
