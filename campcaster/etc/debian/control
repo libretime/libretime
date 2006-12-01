@@ -77,7 +77,7 @@ Description: A radio program automation and support tool.
 Package: campcaster-station
 Architecture: any
 Depends: ${shlibs:Depends},
-         campcaster-libs (>= ${dpkg:Version}),
+         campcaster-libs (= ${dpkg:Version}),
          sed,
          unixodbc (>= 2.2),
          odbc-postgresql,
@@ -112,7 +112,8 @@ Description: A radio program automation and support tool.
 Package: campcaster-studio
 Architecture: any
 Depends: ${shlibs:Depends},
-         campcaster-libs (>= ${dpkg:Version}),
+         campcaster-libs (= ${dpkg:Version}),
+         campcaster-station (= ${dpkg:Version}),
          sed,
          unixodbc (>= 2.2),
          odbc-postgresql,

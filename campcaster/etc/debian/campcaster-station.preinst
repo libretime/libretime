@@ -15,12 +15,13 @@ set -e
 # the debian-policy package
 
 case "$1" in
-    install|upgrade)
-        if [ "$1" = "upgrade" ]; then
-            echo "Stopping the campcaster-scheduler daemon..."
-            /etc/init.d/campcaster-scheduler stop || true
-            /etc/init.d/campcaster-scheduler kill || true
-        fi
+    install)
+    ;;
+
+    upgrade)
+        # stop the Campcaster scheduler daemon
+        /etc/init.d/campcaster-scheduler stop || true
+        /etc/init.d/campcaster-scheduler kill || true
     ;;
 
     abort-upgrade)

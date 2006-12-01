@@ -37,99 +37,44 @@ ls_dbuser=campcaster
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
         return 1;
     fi
 }
 
 
 case "$1" in
-        remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
-            # remove the init script
-            rm -f /etc/init.d/campcaster-scheduler
-            update-rc.d campcaster-scheduler remove
-            
-            # remove the symlink to the campcaster web pages
-            rm -f $apache_docroot/campcaster
-            
-            # restore the old pg_hba.conf file
-            if [ -f $postgresql_dir/pg_hba.conf ] \
-               && [ -f $postgresql_dir/pg_hba.conf.before-campcaster ] ; then
-                mv -f $postgresql_dir/pg_hba.conf \
-                      $postgresql_dir/pg_hba.conf.campcaster ;
-                mv -f $postgresql_dir/pg_hba.conf.before-campcaster \
-                      $postgresql_dir/pg_hba.conf ;
-            fi
-        ;;
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
+    ;;
 
-        purge|disappear)
-            echo "Checking for required tools..."
+    purge|disappear)
+        # check for the required tools
+        check_exe "psql" || psql_found=no
 
-            check_exe "psql" || exit 1;
-            check_exe "odbcinst" || exit 1;
-
-
-            echo "Deleting data files...";
-
-            rm -rf $installdir/etc/campcaster-scheduler.xml
-            rm -rf $installdir/etc/gst-registry.xml
-            rm -rf $installdir/etc/pear.conf
-            rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*
-            rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
-            rm -rf $installdir/var/Campcaster/storageServer/var/stor/*
-            rm -rf $installdir/var/Campcaster/storageServer/var/access/*
-            rm -rf $installdir/var/Campcaster/storageServer/var/trans/*
-            rm -rf $installdir/var/Campcaster/archiveServer/var/stor/*
-            rm -rf $installdir/var/Campcaster/archiveServer/var/access/*
-            rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
-
-
-            echo "Removing ODBC data source and driver...";
-            
-            # kill active connections to database
+        if [ "x$psql_found" != "xno" ] ; then
+            # kill open connections to the Campcaster database
             $postgresql_init_script stop
             $postgresql_init_script start
 
-            echo "Removing Campcaster ODBC data source...";
-            odbcinst -u -s -l -n $ls_database || exit 1;
+            # remove the PostgreSQL database and user
+            su - $postgres_user -c \
+                "echo \"DROP DATABASE \\\"$ls_database\\\" \" | psql template1" \
+                || echo "Couldn't drop database $ls_database.";
+            su - $postgres_user -c \
+                "echo \"DROP USER $ls_dbuser \" | psql template1" \
+                || echo "Couldn't drop database user $ls_dbuser.";
+        fi
 
-            echo "De-registering ODBC PostgreSQL driver...";
-            odbcinst -u -d -n PostgreSQL_Campcaster || exit 1;
-
-
-            echo "Removing database and database user...";
-
-            if [ "x$ls_dbserver" == "xlocalhost" ]; then
-                su - $postgres_user -c \
-                                "echo \"DROP DATABASE \\\"$ls_database\\\" \"\
-                                        | psql template1" \
-                    || echo "Couldn't drop database $ls_database.";
-
-                su - $postgres_user -c "echo \"DROP USER $ls_dbuser \"\
-                                        | psql template1" \
-                    || echo "Couldn't drop database user $ls_dbuser.";
-
-            else
-                echo "Unable to automatically drop database user and table for";
-                echo "remote database $ls_dbserver.";
-                echo "Make sure to drop database user $ls_dbuser on database";
-                echo "server at $ls_dbserver.";
-                echo "Also drop the database called $ld_database.";
-                echo "";
-                echo "The easiest way to achieve this is by issuing the";
-                echo "following SQL commands to PostgreSQL:";
-                echo "DROP DATABASE \"$ls_database\";";
-                echo "DROP USER $ls_dbuser;";
-            fi
-        ;;
+        # remove generated files
+        rm -rf $installdir/var/Campcaster/storageServer/var/stor/*
+        rm -rf $installdir/var/Campcaster/archiveServer/var/stor/*
+    ;;
 
     *)
         echo "postrm called with unknown argument \`$1'" >&2
         exit 1
-
+    ;;
 esac
 
 # dh_installdeb will replace this with shell code automatically

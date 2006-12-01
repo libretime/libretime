@@ -81,8 +81,6 @@ install-arch:
 	          $(CURDIR)/debian/campcaster-libs/opt/campcaster
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/gst-* \
 		      $(CURDIR)/debian/campcaster-libs/opt/campcaster/bin
-	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/usr/lib/pear \
-		      $(CURDIR)/debian/campcaster-libs/opt/campcaster/usr/lib
 
 	# now separate the station (server) files into debian/campcaster-station
 	mkdir -p $(CURDIR)/debian/campcaster-station

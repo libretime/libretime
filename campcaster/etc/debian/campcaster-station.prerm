@@ -16,12 +16,70 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+installdir=/opt/campcaster
+apache_docroot=/var/www
+
+postgres_user=postgres
+postgresql_dir=/etc/postgresql/8.1/main
+postgresql_init_script=/etc/init.d/postgresql-8.1
+
+ls_dbserver=localhost
+ls_database=Campcaster
+ls_dbuser=campcaster
+
+
+#-------------------------------------------------------------------------------
+#  Function to check for the existence of an executable on the PATH
+#
+#  @param $1 the name of the exectuable
+#  @return 0 if the executable exists on the PATH, non-0 otherwise
+#-------------------------------------------------------------------------------
+check_exe() {
+    if [ -x "`which $1 2> /dev/null`" ]; then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
 
 case "$1" in
     remove|upgrade|deconfigure)
         # stop the livesupport scheduler daemon
         /etc/init.d/campcaster-scheduler stop || true
         /etc/init.d/campcaster-scheduler kill || true
+
+        # remove the init script
+        rm -f /etc/init.d/campcaster-scheduler
+        update-rc.d campcaster-scheduler remove || true
+        
+        # remove the ODBC data source and driver
+        check_exe "odbcinst" || odbcinst_found=no
+
+        if [ "x$odbcinst_found" != "xno" ] ; then
+            odbcinst -u -s -l -n $ls_database
+            odbcinst -u -d -n PostgreSQL_Campcaster
+        fi
+
+        # remove the symlink to the campcaster web pages
+        rm -f $apache_docroot/campcaster
+        
+        # restore the old pg_hba.conf file
+        if [ -f $postgresql_dir/pg_hba.conf ] \
+            && [ -f $postgresql_dir/pg_hba.conf.before-campcaster ] ; then
+            mv -f $postgresql_dir/pg_hba.conf.before-campcaster \
+                    $postgresql_dir/pg_hba.conf ;
+        fi
+
+        # remove generated files
+        rm -rf $installdir/etc/gst-registry.xml
+        rm -rf $installdir/etc/pear.conf
+        rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*
+        rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
+        rm -rf $installdir/var/Campcaster/storageServer/var/access/*
+        rm -rf $installdir/var/Campcaster/storageServer/var/trans/*
+        rm -rf $installdir/var/Campcaster/archiveServer/var/access/*
+        rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
     ;;
     
     failed-upgrade)
