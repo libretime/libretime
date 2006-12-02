@@ -5,45 +5,48 @@ Campcaster is the first free and open radio management software that
 provides live studio broadcast capabilities as well as remote automation
 in one integrated system.
 
+Campcaster has three audio outputs: one for live broadcasting, one for
+previewing audio, and one for automated scheduled playback.
+
 Some features of Campcaster:
- * Live, in-studio playout.  The Campcaster Studio program enables
-   station personnel to play out both individual sound files and premade 
-   playlists such as advertising blocks or entire programs.
- * Web-based remote station management.  Authorized personnel can add 
-   program material, create playlists and schedule programming all via
+ * Live, in-studio playout.  Campcaster Studio enables station personnel
+   to play out both individual sound files and playlists such as 
+   advertising blocks or entire programs.
+ * Web-based remote station management.  Authorized personnel can add
+   program material, create playlists, and schedule programming all via 
    Campcaster's web interface.
- * Automation. Campcaster has a scheduler function that enables users to 
+ * Automation.  Campcaster has a scheduler function that enables users to
    set playlists for playback at a date and time of their choosing.
    Playlists can be played back multiple times.
- * Playlists. Campcaster allows users to create playlists that can be 
-   either played in the studio in 'Live Assist' mode or in automated 
-   mode. Playlists can be nested inside each other, so that a playlist 
-   with a block of ads can be inside of a playlist with a music program, 
-   for example.
- * Solid, fast playback. Campcaster uses the popular Gstreamer multimedia 
-   framework under Linux for clean, reliable, fast playback. 
- * Centralized archives of station program material.  Station personnel 
+ * Playlists.  Campcaster allows users to create playlists that can be 
+   either played on-demand in the Studio or in automated mode.  Playlists
+   can be nested inside each other, so for example, a playlist with a 
+   block of ads can be inside of a playlist with a music program.
+ * Centralized archives of station program material.  Station personnel
    have a searchable, browseable central archive that is accessible both
    in the office and via the web.
- * Program sharing. Stations can share both playlists and files with a 
-   designated, centralized 'network hub.' This enables the creation of 
-   'virtual radio networks' connected via the Internet. If stations are 
-   not connected to the net, they can 
- * Search-based backup.  Station archives can be backed up using search 
-   terms, so that backup files can be made of only a certain program, of 
-   all files created by a certain user, or of everything.
- * Localization. Campcaster is multilingual and supports Unicode. It also 
-   is very easy to create language localizations.
- * No restrictions.  Multiple instances of the Campcaster Studio program
+ * Solid, fast playback.  Campcaster uses the popular Gstreamer 
+   multimedia framework under Linux for clean, reliable, fast playback. 
+ * Program sharing.  Stations can share both playlists and files with a 
+   designated, centralized 'network hub.'  This enables the creation of 
+   'virtual radio networks' connected via the Internet. 
+ * Search-based backup.  You can backup all station archives at the click
+   of a button, or only backup certain files based on search terms, so 
+   that backup files can be made of only a certain program or of all 
+   files created by a certain user.
+ * Localization.  Campcaster is multilingual and supports Unicode.  It
+   also is very easy to create language localizations.
+ * No restrictions.  Multiple instances of the Campcaster Studio program 
    can access the same archive on the office network, and there are no 
    worries about hardware dongles or keys limiting access on multiple PCs.
- * Innovative design. Campcaster's user interface – the product of New 
-   York's Parsons School of Design's Design and Communication program -
-   introduces a number of innovations, including the 'Scratchpad', a 
-   listing of recently-used and commonly-used files and playlists
- * Open, extensible architecture.  Stations are free to extend and alter
+ * Innovative design.  Campcaster's user interface – the product of 
+   Parsons School of Design's “Design and Communication” program -  
+   introduces a number of innovations, including the 'Scratchpad', 
+   a list of recently-used files and playlists.
+ * Open, extensible architecture.  Stations are free to extend and alter 
    all parts of the Campcaster program code, which makes extensive use 
    of XML-RPC APIs.
+
 
 INSTALLATION
 ------------
