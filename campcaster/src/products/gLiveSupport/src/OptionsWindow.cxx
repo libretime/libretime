@@ -806,14 +806,16 @@ Gtk::VBox*
 OptionsWindow :: constructAboutSection(void)                        throw ()
 {
     Glib::ustring   aboutLabelContents;
-    aboutLabelContents.append("\n\n");
+    //aboutLabelContents.append("\n");
     aboutLabelContents.append(PACKAGE_NAME);
     aboutLabelContents.append(" ");
     aboutLabelContents.append(PACKAGE_VERSION);
-    aboutLabelContents.append("\n\n");
+    aboutLabelContents.append(" (http://www.campware.org/en/camp/campcaster_news/)\n\n");
     try {
         aboutLabelContents.append(*formatMessage("reportBugsToText",
                                                  PACKAGE_BUGREPORT ));
+        aboutLabelContents.append("\n\nCredits:\nFerenc Gerlits (fgerlits@gmail.com)\n    - Studio GUI, scheduler, installation, packaging\nMark Kretschmann (markey@web.de)\n    - Audio Player\nPaul Baranowski (paul@paulbaranowski.org)\n    - Project manager, HTML UI, storage server, scheduler\nDouglas Arellanes (Douglas.Arellanes@mdlf.org)\n    - Tester and user feedback\nTomáš Hlava (th@red2head.com)\n    - Scheduler, storage server\nJános Csikós (retired)\n    - HTML UI\nÁkos Maróy (retired)\n    - Audio player\n");
+    
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;

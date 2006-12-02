@@ -1,12 +1,19 @@
-Version 1.1
------------
-Ferenc Gerlits
-Ákos Maróy
-János Csikós 
-Mark Kretschmann
-Ian Monroe
-Mugur Rus
-Tomáš Hlava
+Version 1.1.0
+-------------
+Ferenc Gerlits (fgerlits@gmail.com)
+    - Studio GUI, scheduler, installation, packaging
+Mark Kretschmann (markey@web.de)
+    - Audio Player
+Paul Baranowski (paul@paulbaranowski.org)
+    - Project manager, HTML UI, storage server, scheduler
+Douglas Arellanes (Douglas.Arellanes@mdlf.org)
+    - Tester and user feedback
+Tomáš Hlava (th@red2head.com) 
+    - Scheduler, storage server
+János Csikós (retired)
+    - HTML UI
+Ákos Maróy (retired)
+    - Audio player
 
 Version 1.0
 -----------
