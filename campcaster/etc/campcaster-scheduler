@@ -10,7 +10,7 @@ GSTREAMER_DIR=`find $CAMPCASTER_LIB -type d -name "gstreamer-*"`
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:$CAMPCASTER_BIN
 LD_LIBRARY_PATH=$CAMPCASTER_LIB:$LD_LIBRARY_PATH
-DAEMON=$CAMPCASTER_BIN/scheduler
+DAEMON=$CAMPCASTER_BIN/campcaster-scheduler
 NAME=campcaster-scheduler
 DESC="campcaster scheduler"
 
@@ -19,7 +19,7 @@ test -x $DAEMON || exit 0
 export PATH
 export LD_LIBRARY_PATH
 
-DAEMON_OPTS="-c $CAMPCASTER_ETC/scheduler.xml"
+DAEMON_OPTS="-c $CAMPCASTER_ETC/campcaster-scheduler.xml"
 
 set -e
 
