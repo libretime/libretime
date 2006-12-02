@@ -69,18 +69,12 @@ class Mutex
          */
         pthread_mutex_t *                   mutex;
 
-        /**
-         *  The error code returned by tryLockMutex().
-         */
-        int                                 mutexError;
-
 
     public:
         /**
          *  Default constructor.
          */
         Mutex(void)                                                 throw ()
-            : mutexError(0)
         {
             mutex = new pthread_mutex_t;
             pthread_mutex_init(mutex, NULL);
@@ -123,19 +117,22 @@ class Mutex
         bool
         tryLock(void)                                               throw ()
         {
-            mutexError = pthread_mutex_trylock(mutex);
-            return (mutexError == 0);
+            return (pthread_mutex_trylock(mutex) == 0);
         }
 
         /**
-         *  Get the error code (if any) after a call to tryLockMutex().
+         *  Try to lock a mutex.
+         *  If the mutex is already locked, it returns false.
          *
-         *  @return the error code; 0 for no error.
+         *` @param  errorCode   return parameter for the error code;
+         *                      0 for no error.
+         *  @return true if the mutex was successfully locked; false otherwise.
          */
-        int
-        getMutexError(void)                                         throw ()
+        bool
+        tryLock(int &   errorCode)                                  throw ()
         {
-            return mutexError;
+            errorCode = pthread_mutex_trylock(mutex);
+            return (errorCode == 0);
         }
 };
 
