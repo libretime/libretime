@@ -349,6 +349,7 @@ for APACHE_SCRIPT in apache apache2 httpd ; do
         echo "Y"
         AP_SCR_FOUND=yes
         /etc/init.d/$APACHE_SCRIPT restart
+        break
     else
         echo "N"
     fi
