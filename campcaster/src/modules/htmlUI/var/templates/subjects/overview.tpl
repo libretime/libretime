@@ -10,13 +10,14 @@
                 <td style="width: 40px; border: 0; text-align: center">##Type##</td>
             </tr>
 
-        {foreach from=$SUBJECTS->getSubjectsWCnt() item=i}
+        {foreach from=$SUBJECTS->getSubjectsWCnt() item=i}            
             {if $i.type|lower == 'g'}{assign var="_type" value="group"}{else}{assign var="_type" value="user"}{/if}
             <tr class="{cycle values='blue1, blue2'}"
                 style="cursor: pointer"
-                onClick="return contextmenu('id={$i.id}&login={$i.login|escape:'url'}', {if $i.type|lower eq 'g'}'SUBJECTS.manageGroupMember', {else}'SUBJECTS.chgPasswd', {/if} 'SUBJECTS.removeSubj')"
+                {* dont show the scheduler options - we dont want users changing the password or deleting it *}
+                {if $i.login!="scheduler"}onClick="return contextmenu('id={$i.id}&login={$i.login|escape:'url'}', {if $i.type|lower eq 'g'}'SUBJECTS.manageGroupMember', {else}'SUBJECTS.chgPasswd', {/if} 'SUBJECTS.removeSubj')"{/if}
             >
-                <td>{$i.login}</td>
+                <td {if $i.login=="scheduler"}style="color: grey"{/if}>{$i.login}</td>
                 <td style="width: 30px; text-align: center;">
                     {if $i.type|lower == 'g'}
                         {$i.cnt}
