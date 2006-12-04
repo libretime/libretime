@@ -66,14 +66,15 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 USR_TMP_DIR     = ${USR_DIR}/tmp
 STORAGE_TMP_DIR = "/tmp"
 
-HOSTNAME       = @HOSTNAME@
-WWW_PORT       = @WWW_PORT@
-SCHEDULER_PORT = @SCHEDULER_PORT@
-DB_SERVER      = @DB_SERVER@
-DATABASE       = @DATABASE@
-DB_USER        = @DB_USER@
-DB_PASSWORD    = @DB_PASSWORD@
-AUDIO_OUT      = "@AUDIO_OUT@"
+HOSTNAME                = @HOSTNAME@
+WWW_PORT                = @WWW_PORT@
+SCHEDULER_PORT          = @SCHEDULER_PORT@
+SCHEDULER_STORAGE_PASS  = @SCHEDULER_STORAGE_PASS@
+DB_SERVER               = @DB_SERVER@
+DATABASE                = @DATABASE@
+DB_USER                 = @DB_USER@
+DB_PASSWORD             = @DB_PASSWORD@
+AUDIO_OUT               = "@AUDIO_OUT@"
 
 PHP_URL_PREFIX=campcaster
 ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
@@ -101,7 +102,8 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
               s/ls_tmp_dir/${STORAGE_TMP_DIR_S}/; \
               s/ls_audio_output_device/${AUDIO_OUT_S}/; \
               s/ls_scheduler_host/${HOSTNAME}/; \
-              s/ls_scheduler_port/${SCHEDULER_PORT}/;"
+              s/ls_scheduler_port/${SCHEDULER_PORT}/; \
+              s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/;"
 
 VPATH    = ${SRC_DIR}
 

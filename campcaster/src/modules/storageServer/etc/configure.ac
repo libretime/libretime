@@ -187,16 +187,17 @@ AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  specify web document root
+dnl  specify the storage password for the scheduler user
 dnl-----------------------------------------------------------------------------
 AC_SUBST(SCHEDULER_STORAGE_PASS)
 
 AC_ARG_WITH([scheduler-storage-pass],
             AC_HELP_STRING([--with-scheduler-storage-pass],
-                   [set password for scheduler access to storage (change_me)]),
-            [SCHEDULER_STORAGE_PASS=${withval}], [SCHEDULER_STORAGE_PASS=change_me])
+                [set password for scheduler access to storage (change_me)]),
+            [SCHEDULER_STORAGE_PASS=${withval}],
+            [SCHEDULER_STORAGE_PASS=change_me])
 
-AC_MSG_RESULT([scheduler password to storage: ${SCHEDULER_STORAGE_PASS}])
+AC_MSG_RESULT([storage password for the scheduler: ${SCHEDULER_STORAGE_PASS}])
 
 
 dnl display status info on what libraries will get compiled
@@ -204,16 +205,17 @@ dnl display status info on what libraries will get compiled
 AC_MSG_NOTICE(
 [using the following configuration settings:
 
-    hostname:                        ${HOSTNAME}
-    www port:                        ${WWW_PORT}
-    scheduler port:                  ${SCHEDULER_PORT}
-    database server:                 ${DB_SERVER}
-    database name:                   ${DATABASE}
-    database user:                   ${DB_USER}
-    database user password:          ${DB_PASSWORD}
-    creating Campcaster database:   ${CREATE_LS_DATABASE}
-    initialize Campcaster database: ${INIT_LS_DATABASE}
-    www document root:               ${WWW_DOCROOT}
+    hostname:                               ${HOSTNAME}
+    www port:                               ${WWW_PORT}
+    scheduler port:                         ${SCHEDULER_PORT}
+    database server:                        ${DB_SERVER}
+    database name:                          ${DATABASE}
+    database user:                          ${DB_USER}
+    database user password:                 ${DB_PASSWORD}
+    creating Campcaster database:           ${CREATE_LS_DATABASE}
+    initialize Campcaster database:         ${INIT_LS_DATABASE}
+    www document root:                      ${WWW_DOCROOT}
+    storage password for the scheduler:     ${SCHEDULER_STORAGE_PASS}
 
 ])
 

@@ -83,7 +83,7 @@
 
 ]>
 <scheduler>
-    <user login="root" password="q" />
+    <user login="scheduler" password="ls_scheduler_storage_pass" />
 
     <connectionManagerFactory>
         <simpleConnectionManager    dsn      = "ls_database"

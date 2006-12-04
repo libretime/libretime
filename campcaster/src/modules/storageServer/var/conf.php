@@ -87,7 +87,7 @@ $config = array(
     'schedulerXMLRPC'         => 'RC2',
     'schedulerUrlHost'        => 'localhost',
     'schedulerUrlPort'        => 3344,
-    'schedulerPass' => 'ls_scheduler_storage_pass',
+    'schedulerPass'           => 'change_me',
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(

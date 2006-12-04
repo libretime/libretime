@@ -223,6 +223,20 @@ AC_MSG_RESULT([using scheduler port: ${SCHEDULER_PORT}])
 
 
 dnl-----------------------------------------------------------------------------
+dnl  specify the storage password for the scheduler user
+dnl-----------------------------------------------------------------------------
+AC_SUBST(SCHEDULER_STORAGE_PASS)
+
+AC_ARG_WITH([scheduler-storage-pass],
+            AC_HELP_STRING([--with-scheduler-storage-pass],
+                [set password for scheduler access to storage (change_me)]),
+            [SCHEDULER_STORAGE_PASS=${withval}],
+            [SCHEDULER_STORAGE_PASS=change_me])
+
+AC_MSG_RESULT([storage password for the scheduler: ${SCHEDULER_STORAGE_PASS}])
+
+
+dnl-----------------------------------------------------------------------------
 dnl  specify the database server name
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DB_SERVER)
@@ -293,17 +307,18 @@ dnl display status info on what libraries will get compiled
 AC_MSG_NOTICE(
 [using the following configuration settings:
 
-    hostname:                        ${HOSTNAME}
-    www port:                        ${WWW_PORT}
-    scheduler port:                  ${SCHEDULER_PORT}
-    database server:                 ${DB_SERVER}
-    database name:                   ${DATABASE}
-    database user:                   ${DB_USER}
-    database user password:          ${DB_PASSWORD}
-    audio output device:             ${AUDIO_OUT}
-    creating Campcaster database:    ${CREATE_LS_DATABASE}
-    creating ODBC data source:       ${CREATE_ODBC_DATA_SOURCE}
-    initialize Campcaster database:  ${INIT_LS_DATABASE}
+    hostname:                               ${HOSTNAME}
+    www port:                               ${WWW_PORT}
+    scheduler port:                         ${SCHEDULER_PORT}
+    storage password for the scheduler:     ${SCHEDULER_STORAGE_PASS}
+    database server:                        ${DB_SERVER}
+    database name:                          ${DATABASE}
+    database user:                          ${DB_USER}
+    database user password:                 ${DB_PASSWORD}
+    audio output device:                    ${AUDIO_OUT}
+    creating Campcaster database:           ${CREATE_LS_DATABASE}
+    creating ODBC data source:              ${CREATE_ODBC_DATA_SOURCE}
+    initialize Campcaster database:         ${INIT_LS_DATABASE}
 
 ])
 

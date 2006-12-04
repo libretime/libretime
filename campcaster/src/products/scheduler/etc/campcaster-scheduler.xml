@@ -83,7 +83,7 @@
 
 ]>
 <scheduler>
-    <user login="root" password="q" />
+    <user login="scheduler" password="change_me" />
 
     <connectionManagerFactory>
         <simpleConnectionManager    dsn      = "Campcaster-test"

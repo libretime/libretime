@@ -104,6 +104,7 @@ user=`whoami`
 hostname=localhost
 http_port=80
 scheduler_port=`expr $scheduler_base_port + $UID`
+scheduler_storage_pass=change_me
 dbserver=localhost
 database=Campcaster-$user
 dbuser=test
@@ -119,18 +120,19 @@ echo "Configuring Campcaster development environment for user $user.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
-echo "  host name:               $hostname";
-echo "  web server port:         $http_port";
-echo "  scheduler port:          $scheduler_port";
-echo "  database server:         $dbserver";
-echo "  database:                $database";
-echo "  database user:           $dbuser";
-echo "  database user password:  $dbpassword";
-echo "  apache daemon group:     $apache_group";
-echo "  home directory:          $homedir";
-echo "  configuration directory: $configdir";
-echo "  web base directory:      $htmldir";
-echo "  output audio device:     $output_device";
+echo "  host name:                              $hostname";
+echo "  web server port:                        $http_port";
+echo "  scheduler port:                         $scheduler_port";
+echo "  storage password for the scheduler:     $scheduler_storage_pass";
+echo "  database server:                        $dbserver";
+echo "  database:                               $database";
+echo "  database user:                          $dbuser";
+echo "  database user password:                 $dbpassword";
+echo "  apache daemon group:                    $apache_group";
+echo "  home directory:                         $homedir";
+echo "  configuration directory:                $configdir";
+echo "  web base directory:                     $htmldir";
+echo "  output audio device:                    $output_device";
 echo ""
 
 
@@ -210,7 +212,8 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
     s/ls_audio_output_device/$ls_audio_output_device/; \
     s/ls_audio_cue_device/$ls_audio_cue_device/; \
     s/ls_tmp_dir/$ls_tmp_dir_s/; \
-    s/ls_scheduler_daemon_command/$ls_scheduler_daemon_command_s/;"
+    s/ls_scheduler_daemon_command/$ls_scheduler_daemon_command_s/; \
+    s/ls_scheduler_storage_pass/$scheduler_storage_pass/;"
 echo
 echo $replace_sed_string
 echo

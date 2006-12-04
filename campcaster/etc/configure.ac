@@ -182,6 +182,20 @@ AC_MSG_RESULT([using scheduler port: ${SCHEDULER_PORT}])
 
 
 dnl-----------------------------------------------------------------------------
+dnl  specify the storage password for the scheduler user
+dnl-----------------------------------------------------------------------------
+AC_SUBST(SCHEDULER_STORAGE_PASS)
+
+AC_ARG_WITH([scheduler-storage-pass],
+            AC_HELP_STRING([--with-scheduler-storage-pass],
+                [set password for scheduler access to storage (change_me)]),
+            [SCHEDULER_STORAGE_PASS=${withval}],
+            [SCHEDULER_STORAGE_PASS=change_me])
+
+AC_MSG_RESULT([storage password for the scheduler: ${SCHEDULER_STORAGE_PASS}])
+
+
+dnl-----------------------------------------------------------------------------
 dnl  specify the database server name
 dnl-----------------------------------------------------------------------------
 AC_SUBST(DB_SERVER)
@@ -367,22 +381,23 @@ by Campcaster:
 
 using the following configuration settings:
 
-    hostname:                        ${HOSTNAME}
-    apache group:                    ${APACHE_GROUP}
-    www document root:               ${WWW_DOCROOT}
-    www port:                        ${WWW_PORT}
-    scheduler port:                  ${SCHEDULER_PORT}
-    database server:                 ${DB_SERVER}
-    database name:                   ${DATABASE}
-    database user:                   ${DB_USER}
-    database user password:          ${DB_PASSWORD}
-    station audio output device:     ${STATION_AUDIO_OUT}
-    studio audio output device:      ${STUDIO_AUDIO_OUT}
-    studio audio cue device:         ${STUDIO_AUDIO_CUE}
-    creating Campcaster database:    ${CREATE_LS_DATABASE}
-    creating ODBC data source:       ${CREATE_ODBC_DATA_SOURCE}
-    initialize Campcaster database:  ${INIT_LS_DATABASE}
-    configuring apache:              ${CONFIGURE_APACHE}
+    hostname:                               ${HOSTNAME}
+    apache group:                           ${APACHE_GROUP}
+    www document root:                      ${WWW_DOCROOT}
+    www port:                               ${WWW_PORT}
+    scheduler port:                         ${SCHEDULER_PORT}
+    storage password for the scheduler:     ${SCHEDULER_STORAGE_PASS}
+    database server:                        ${DB_SERVER}
+    database name:                          ${DATABASE}
+    database user:                          ${DB_USER}
+    database user password:                 ${DB_PASSWORD}
+    station audio output device:            ${STATION_AUDIO_OUT}
+    studio audio output device:             ${STUDIO_AUDIO_OUT}
+    studio audio cue device:                ${STUDIO_AUDIO_CUE}
+    creating Campcaster database:           ${CREATE_LS_DATABASE}
+    creating ODBC data source:              ${CREATE_ODBC_DATA_SOURCE}
+    initialize Campcaster database:         ${INIT_LS_DATABASE}
+    configuring apache:                     ${CONFIGURE_APACHE}
 
 ])
 

@@ -60,22 +60,23 @@ USR_ETC_DIR = ${USR_DIR}/etc
 USR_LIB_DIR = ${USR_DIR}/lib
 USR_VAR_DIR = ${USR_DIR}/var
 
-HOSTNAME          		= @HOSTNAME@
-APACHE_GROUP      		= @APACHE_GROUP@
-WWW_DOCROOT       		= @WWW_DOCROOT@
-WWW_PORT          		= @WWW_PORT@
-SCHEDULER_PORT    		= @SCHEDULER_PORT@
+HOSTNAME                = @HOSTNAME@
+APACHE_GROUP            = @APACHE_GROUP@
+WWW_DOCROOT             = @WWW_DOCROOT@
+WWW_PORT                = @WWW_PORT@
+SCHEDULER_PORT          = @SCHEDULER_PORT@
+SCHEDULER_STORAGE_PASS  = @SCHEDULER_STORAGE_PASS@
 DB_SERVER         		= @DB_SERVER@
-DATABASE          		= @DATABASE@
-DB_USER           		= @DB_USER@
-DB_PASSWORD       		= @DB_PASSWORD@
+DATABASE                = @DATABASE@
+DB_USER                 = @DB_USER@
+DB_PASSWORD             = @DB_PASSWORD@
 CREATE_LS_DATABASE      = @CREATE_LS_DATABASE@
-INIT_LS_DATABASE  		= @INIT_LS_DATABASE@
+INIT_LS_DATABASE        = @INIT_LS_DATABASE@
 CREATE_ODBC_DATA_SOURCE = @CREATE_ODBC_DATA_SOURCE@
 CONFIGURE_APACHE        = @CONFIGURE_APACHE@
-STATION_AUDIO_OUT 		= "@STATION_AUDIO_OUT@"
-STUDIO_AUDIO_OUT  		= "@STUDIO_AUDIO_OUT@"
-STUDIO_AUDIO_CUE  		= "@STUDIO_AUDIO_CUE@"
+STATION_AUDIO_OUT       = "@STATION_AUDIO_OUT@"
+STUDIO_AUDIO_OUT        = "@STUDIO_AUDIO_OUT@"
+STUDIO_AUDIO_CUE        = "@STUDIO_AUDIO_CUE@"
 
 
 export LD_LIBRARY_PATH:=${prefix}/lib:${LD_LIBRARY_PATH}
@@ -257,17 +258,18 @@ ${TMP_DIR}/modules_setup.stamp:
             --with-storage-server=${prefix}/var/Campcaster/storageServer \
             --with-phppart-dir=${prefix}/var/Campcaster/storageAdmin
 	cd ${STORAGE_SERVER_DIR} && \
-		./configure --prefix=${prefix} \
-	                --with-apache-group=${APACHE_GROUP} \
-	                --with-hostname=${HOSTNAME} \
+        ./configure --prefix=${prefix} \
+                    --with-apache-group=${APACHE_GROUP} \
+                    --with-hostname=${HOSTNAME} \
                     --with-www-docroot=${WWW_DOCROOT} \
-					--with-www-port=${WWW_PORT} \
-					--with-scheduler-port=${SCHEDULER_PORT} \
-					--with-database-server=${DB_SERVER} \
-					--with-database=${DATABASE} \
-					--with-database-user=${DB_USER} \
-					--with-database-password=${DB_PASSWORD} \
-					--with-init-database=${INIT_LS_DATABASE}
+                    --with-www-port=${WWW_PORT} \
+                    --with-scheduler-port=${SCHEDULER_PORT} \
+                    --with-database-server=${DB_SERVER} \
+                    --with-database=${DATABASE} \
+                    --with-database-user=${DB_USER} \
+                    --with-database-password=${DB_PASSWORD} \
+                    --with-init-database=${INIT_LS_DATABASE} \
+                    --with-scheduler-storage-pass=${SCHEDULER_STORAGE_PASS}
 	cd ${CORE_DIR} && \
 	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
 	cd ${AUTHENTICATION_DIR} && \
@@ -296,6 +298,7 @@ ${TMP_DIR}/products_setup.stamp:
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
+					--with-scheduler-storage-pass=${SCHEDULER_STORAGE_PASS} \
 					--with-database-server=${DB_SERVER} \
 					--with-database=${DATABASE} \
 					--with-database-user=${DB_USER} \
