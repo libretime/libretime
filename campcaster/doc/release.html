@@ -105,7 +105,7 @@ with the release version as its single parameter:<br>
 <br>
 <pre><code>./bin/dist.sh --version &lt;ls-version&gt;<br></code></pre>
 <br>
-This will create two tarballs in the current directory:<br>
+This will create two tarballs in the parent of the current directory:<br>
 <ul>
   <li><code>campcaster-&lt;ls-version&gt;.tar.bz2</code></li>
   <li><code>campcaster-libraries-&lt;ls-version&gt;.tar.bz2</code></li>
@@ -132,7 +132,8 @@ plus two more needed for the build process: <code>debhelper</code> and
 <pre>tar xfj campcaster-&lt;ls-version&gt;.tar.bz2
 tar xfj campcaster-libraries-&lt;ls-version&gt;.tar.bz2
 cd campcaster-&lt;ls-version&gt;
-./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -m "Package Maintainer &lt;maintainer@foo.bar&gt;" -o ..
+./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -o .. \
+                -m "Package Maintainer &lt;maintainer@foo.bar&gt;"
 cd ..
 </pre>
 <br>

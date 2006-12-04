@@ -222,8 +222,8 @@ cp -pPR $etcdir/debian $packageName
 cat $etcdir/debian/control | sed -e "$replace_sed_string" \
     > $packageName/debian/control
 
-# get rid of the remnants of the CVS system
-rm -rf `find $packageName -name CVS -type d`
+# get rid of the remnants of the subversion system
+rm -rf `find $packageName -name .svn -type d`
 
 
 #-------------------------------------------------------------------------------

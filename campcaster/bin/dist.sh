@@ -61,7 +61,7 @@ printUsage()
     echo "parameters";
     echo "";
     echo "  -d, --directory     Place the tarballs in the specified directory.";
-    echo "                      [default: current directory]";
+    echo "                      [default: the parent of the current directory]";
     echo "  -h, --help          Print this message and exit.";
     echo "  -v, --version       The version number of the created packages.";
     echo "";
@@ -103,7 +103,7 @@ if [ "x$version" == "x" ]; then
 fi
 
 if [ "x$directory" == "x" ]; then
-    directory=`pwd`;
+    directory=`pwd`/..;
 fi
 
 d=`cd $directory; pwd`
