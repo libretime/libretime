@@ -164,12 +164,29 @@ cd ../..
 <!-- "dpkg-buildpackage -rfakeroot" would be better instead of
 "sudo dpkg-buildpackage", but it does not work because of the strange
 -libraries package -->
-The above commands will result in the following debian packages:<br>
+The above commands will result in the following debian packages:
 <br>
 <pre>campcaster-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
 campcaster-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
 campcaster-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
 </pre>
+
+
+<h1>Uploading the packages to the Campware repository</h1>
+For users to be able to install the packages using <code>apt-get</code>
+or <code>Synaptic</code> etc., they need to be uploaded to the Campware
+package repository on <code>code.campware.org</code>.
+
+To do this, you need to do the following, as real root (sudo is not enough):
+<ul>
+    <li>Copy the three package files to the
+        <code>/var/www/ubuntu/packages/&lt;arch&gt;</code> directory
+        on <code>code.campware.org</code>.
+    <li>Generate the package listing:
+<pre>cd /var/www/ubuntu
+apt-ftparchive packages packages/&lt;arch&gt; /dev/null | gzip -9c \
+        > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
+</ul>
 
 
 <h1>Tagging the sources</h1>
