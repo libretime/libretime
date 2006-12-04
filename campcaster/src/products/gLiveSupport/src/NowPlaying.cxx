@@ -273,7 +273,7 @@ NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
                                 Pango::Attribute::create_attr_font_desc(
                                     fontDescription);
     fontDescriptionAttribute.set_start_index(0);
-    fontDescriptionAttribute.set_end_index(100);
+    fontDescriptionAttribute.set_end_index(255);
     
     Pango::AttrList         attributeList;
     attributeList.insert(fontDescriptionAttribute);
