@@ -397,10 +397,11 @@ cd -
 echo "Creating gstreamer registry...";
 
 gstreamer_dir=`find $install_lib -type d -name "gstreamer-*"`
-export LD_LIBRARY_PATH=$install_lib
+export LD_LIBRARY_PATH=$install_lib                 # is this needed here?
 export GST_REGISTRY=$install_etc/gst-registry.xml
-export GST_PLUGIN_PATH=$gstreamer_dir
-$install_bin/gst-register > /dev/null 2>&1
+export GST_PLUGIN_PATH=$install_lib:$gstreamer_dir
+rm -f ${GST_REGISTRY}
+$install_bin/gst-register
 
 
 #-------------------------------------------------------------------------------
