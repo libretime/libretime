@@ -12,8 +12,8 @@ if (UI_DEBUG) {
 }
 
 
-define('UI_VERSION',                    'Campcaster 1.1.0');
-define('UI_VERSION_FULLNAME',           'Campcaster 1.1.0');
+define('UI_VERSION',                    'Campcaster 1.1.1');
+define('UI_VERSION_FULLNAME',           'Campcaster 1.1.1');
 define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
 // Local settings

@@ -11,8 +11,8 @@ if (UI_DEBUG) {
 	error_reporting(E_ALL);
 }
 
-define('UI_VERSION',                    'Campcaster 1.1.0');
-define('UI_VERSION_FULLNAME',           'Campcaster 1.1.0');
+define('UI_VERSION',                    'Campcaster 1.1.1');
+define('UI_VERSION_FULLNAME',           'Campcaster 1.1.1');
 define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
 ## Scheduler

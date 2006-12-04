@@ -7,7 +7,7 @@
  */
 
 
-define('CAMPCASTER_VERSION', '1.1.0');
+define('CAMPCASTER_VERSION', '1.1.1');
 
 /**
  *  configuration structure:

@@ -8,7 +8,7 @@ in one integrated system.
 Campcaster has three audio outputs: one for live broadcasting, one for
 previewing audio, and one for automated scheduled playback.
 
-Some features of Campcaster:
+Major features of Campcaster:
  * Live, in-studio playout.  Campcaster Studio enables station personnel
    to play out both individual sound files and playlists such as 
    advertising blocks or entire programs.
@@ -26,7 +26,7 @@ Some features of Campcaster:
    have a searchable, browseable central archive that is accessible both
    in the office and via the web.
  * Solid, fast playback.  Campcaster uses the popular Gstreamer 
-   multimedia framework under Linux for clean, reliable, fast playback. 
+   multimedia framework for clean, reliable, fast playback. 
  * Program sharing.  Stations can share both playlists and files with a 
    designated, centralized 'network hub.'  This enables the creation of 
    'virtual radio networks' connected via the Internet. 
