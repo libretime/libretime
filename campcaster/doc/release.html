@@ -86,7 +86,7 @@ Curently, only the debian changelog keeps track of the changes and the
 version of Campcaster. To update the changelog, edit <code>etc/debian/changelog</code>,
 by inserting a section onto the top of the file:<br>
 <br>
-<pre>campcaster (&lt;ls-version&gt;-1) unstable; urgency=low<br><br>  * Changes listed here<br><br> -- <code>Package Maintainer &lt;maintainer@foo.bar&gt;</code>  &lt;timestamp&gt;<br><br></pre>
+<pre>campcaster (&lt;version&gt;-1) unstable; urgency=low<br><br>  * Changes listed here<br><br> -- <code>Package Maintainer &lt;maintainer@foo.bar&gt;</code>  &lt;timestamp&gt;<br><br></pre>
 The timestamp above must be preceeded by two spaces, and must be an RFC
 2822 compliant date string, which is most easily produced by issuing
 the <code>date -R</code> command. Please note that the debian package
@@ -103,12 +103,12 @@ before proceeding.<br>
 To create the release tarballs, invoke the distribution script <code>bin/dist.sh</code>,
 with the release version as its single parameter:<br>
 <br>
-<pre><code>./bin/dist.sh --version &lt;ls-version&gt;<br></code></pre>
+<pre><code>./bin/dist.sh --version &lt;version&gt;<br></code></pre>
 <br>
 This will create two tarballs in the parent of the current directory:<br>
 <ul>
-  <li><code>campcaster-&lt;ls-version&gt;.tar.bz2</code></li>
-  <li><code>campcaster-libraries-&lt;ls-version&gt;.tar.bz2</code></li>
+  <li><code>campcaster-&lt;version&gt;.tar.bz2</code></li>
+  <li><code>campcaster-libraries-&lt;version&gt;.tar.bz2</code></li>
 </ul>
 
 
@@ -129,10 +129,10 @@ Debian system, install the packages needed to install Campcaster,
 plus two more needed for the build process: <code>debhelper</code> and
 <code>fakeroot</code>.  Then do the following:<br>
 <br>
-<pre>tar xfj campcaster-&lt;ls-version&gt;.tar.bz2
-tar xfj campcaster-libraries-&lt;ls-version&gt;.tar.bz2
-cd campcaster-&lt;ls-version&gt;
-./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -o .. \
+<pre>tar xfj campcaster-&lt;version&gt;.tar.bz2
+tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2
+cd campcaster-&lt;version&gt;
+./bin/createDebianPackages.sh -d .. -v &lt;version&gt; -o .. \
                 -m "Package Maintainer &lt;maintainer@foo.bar&gt;"
 cd ..
 </pre>
@@ -141,9 +141,9 @@ The above command will create the Debain source package files next to
 the original source tarballs. The script will generate the following
 files, making up the Debian source package:<br>
 <br>
-<pre>campcaster_&lt;ls-version&gt;-1.dsc
-campcaster_&lt;ls-version&gt;-1.diff.gz
-campcaster_&lt;ls-version&gt;.orig.tar.gz
+<pre>campcaster_&lt;version&gt;-1.dsc
+campcaster_&lt;version&gt;-1.diff.gz
+campcaster_&lt;version&gt;.orig.tar.gz
 </pre>
 Based on the source packages, the Debian package management system can
 build the binaries for the current target platform, provided all the
@@ -158,7 +158,7 @@ rm -rf debian_build
 mkdir debian_build
 cd debian_build
 dpkg-source -x ../campcaster_&lt;ls_version&gt;-1.dsc
-cd campcaster-&lt;ls-version&gt;
+cd campcaster-&lt;version&gt;
 sudo dpkg-buildpackage
 cd ../..
 </pre>
@@ -167,9 +167,9 @@ cd ../..
 -libraries package -->
 The above commands will result in the following debian packages:
 <br>
-<pre>campcaster-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
-campcaster-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
-campcaster-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb
+<pre>campcaster-libs_&lt;version&gt;-1_&lt;arch&gt;.deb
+campcaster-station_&lt;version&gt;-1_&lt;arch&gt;.deb
+campcaster-studio_&lt;version&gt;-1_&lt;arch&gt;.deb
 </pre>
 
 
@@ -198,17 +198,17 @@ release can be retrieved at any later date. To tag the repository,
 issue the following command:<br>
 <br>
 <pre><code>svn copy svn://code.campware.org/campcaster/trunk \
-         svn://code.campware.org/campcaster/tags/campcaster-&lt;ls-version&gt;
+         svn://code.campware.org/campcaster/tags/campcaster-&lt;version&gt;
 </code></pre>
 <br>
-This will tag the current state of the repository with the tag <code>campcaster-&lt;ls-version&gt;</code>,
+This will tag the current state of the repository with the tag <code>campcaster-&lt;version&gt;</code>,
 enabling later retrieval of this specific state.<br>
 
 
 <h1>Updating Trac</h1>
 Add the new version number to the Version pull-down menu in Trac by
 executing
-<pre><code>trac-admin /usr/local/trac-projects/campcaster version add &lt;ls-version&gt;</code></pre>
+<pre><code>trac-admin /usr/local/trac-projects/campcaster version add &lt;version&gt;</code></pre>
 on <code>code.campware.org</code>.
 
 
