@@ -29,15 +29,18 @@ endif
 
 config.status: configure
 	dh_testdir
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
-                                       --build=$(DEB_BUILD_GNU_TYPE) \
-                                       --prefix=/opt/campcaster \
-                                       --with-www-docroot=/var/www \
-                                       --with-apache-group=www-data \
-                                       --with-station-audio-out=hw:0,0 \
-                                       --with-studio-audio-out=hw:1,0 \
-                                       --with-studio-audio-cue=hw:2,0 \
-                                       --with-hostname=localhost
+	SCHEDULER_STORAGE_PASS=`pwgen -N1 -s`
+	CFLAGS="$(CFLAGS)" ./configure \
+                --host=$(DEB_HOST_GNU_TYPE) \
+                --build=$(DEB_BUILD_GNU_TYPE) \
+                --prefix=/opt/campcaster \
+                --with-www-docroot=/var/www \
+                --with-apache-group=www-data \
+                --with-station-audio-out=hw:0,0 \
+                --with-studio-audio-out=hw:1,0 \
+                --with-studio-audio-cue=hw:2,0 \
+                --with-hostname=localhost \
+                --with-scheduler-storage-pass=${SCHEDULER_STORAGE_PASS}
 
 build: build-arch
 
