@@ -405,7 +405,7 @@ $install_bin/gst-register
 
 
 #-------------------------------------------------------------------------------
-#  Generate a random password for the scheduler's to access the storage
+#  Generate a random password for the scheduler's access to the storage
 #-------------------------------------------------------------------------------
 SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
 php -q $install_bin/changeSchedulerPassword.php ${SCHEDULER_STORAGE_PASS}
