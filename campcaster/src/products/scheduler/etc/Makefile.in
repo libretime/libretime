@@ -69,7 +69,6 @@ STORAGE_TMP_DIR = "/tmp"
 HOSTNAME                = @HOSTNAME@
 WWW_PORT                = @WWW_PORT@
 SCHEDULER_PORT          = @SCHEDULER_PORT@
-SCHEDULER_STORAGE_PASS  = @SCHEDULER_STORAGE_PASS@
 DB_SERVER               = @DB_SERVER@
 DATABASE                = @DATABASE@
 DB_USER                 = @DB_USER@
@@ -102,8 +101,7 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
               s/ls_tmp_dir/${STORAGE_TMP_DIR_S}/; \
               s/ls_audio_output_device/${AUDIO_OUT_S}/; \
               s/ls_scheduler_host/${HOSTNAME}/; \
-              s/ls_scheduler_port/${SCHEDULER_PORT}/; \
-              s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/;"
+              s/ls_scheduler_port/${SCHEDULER_PORT}/;"
 
 VPATH    = ${SRC_DIR}
 

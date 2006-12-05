@@ -65,7 +65,6 @@ APACHE_GROUP            = @APACHE_GROUP@
 WWW_DOCROOT             = @WWW_DOCROOT@
 WWW_PORT                = @WWW_PORT@
 SCHEDULER_PORT          = @SCHEDULER_PORT@
-SCHEDULER_STORAGE_PASS  = @SCHEDULER_STORAGE_PASS@
 DB_SERVER         		= @DB_SERVER@
 DATABASE                = @DATABASE@
 DB_USER                 = @DB_USER@
@@ -268,8 +267,7 @@ ${TMP_DIR}/modules_setup.stamp:
                     --with-database=${DATABASE} \
                     --with-database-user=${DB_USER} \
                     --with-database-password=${DB_PASSWORD} \
-                    --with-init-database=${INIT_LS_DATABASE} \
-                    --with-scheduler-storage-pass=${SCHEDULER_STORAGE_PASS}
+                    --with-init-database=${INIT_LS_DATABASE}
 	cd ${CORE_DIR} && \
 	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
 	cd ${AUTHENTICATION_DIR} && \
@@ -298,7 +296,6 @@ ${TMP_DIR}/products_setup.stamp:
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
-					--with-scheduler-storage-pass=${SCHEDULER_STORAGE_PASS} \
 					--with-database-server=${DB_SERVER} \
 					--with-database=${DATABASE} \
 					--with-database-user=${DB_USER} \

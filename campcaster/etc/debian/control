@@ -92,6 +92,7 @@ Architecture: any
 Depends: ${shlibs:Depends},
          campcaster-libs (= ${dpkg:Version}),
          sed,
+         pwgen,
          unixodbc (>= 2.2),
          odbc-postgresql,
          libfontconfig1,

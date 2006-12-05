@@ -405,6 +405,15 @@ $install_bin/gst-register
 
 
 #-------------------------------------------------------------------------------
+#  Generate a random password for the scheduler's to access the storage
+#-------------------------------------------------------------------------------
+SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
+php -q $install_bin/changeSchedulerPassword.php ${SCHEDULER_STORAGE_PASS}
+sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
+    $install_etc/campcaster-scheduler.xml
+
+
+#-------------------------------------------------------------------------------
 #  Say goodbye
 #-------------------------------------------------------------------------------
 echo "Done."

@@ -92,7 +92,6 @@ DB_USER        = @DB_USER@
 DB_PASSWORD    = @DB_PASSWORD@
 SCHEDULER_PORT = @SCHEDULER_PORT@
 WWW_DOCROOT    = @WWW_DOCROOT@
-SCHEDULER_STORAGE_PASS = @SCHEDULER_STORAGE_PASS@
 
 PHP_URL_PREFIX=campcaster
 SCHEDULER_URL_PREFIX =
@@ -114,8 +113,7 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
     		  s/ls_scheduler_urlPrefix/${SCHEDULER_URL_PREFIX}/; \
     		  s/ls_scheduler_xmlRpcPrefix/${SCHEDULER_XML_RPC_PREFIX}/; \
     		  s/ls_scheduler_host/${HOSTNAME}/; \
-     		  s/ls_scheduler_port/${SCHEDULER_PORT}/; \
-     		  s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/;"
+     		  s/ls_scheduler_port/${SCHEDULER_PORT}/;"
 
 
 #-------------------------------------------------------------------------------

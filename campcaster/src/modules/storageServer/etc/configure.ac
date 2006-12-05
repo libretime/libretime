@@ -186,20 +186,6 @@ AC_ARG_WITH([www-docroot],
 AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
 
 
-dnl-----------------------------------------------------------------------------
-dnl  specify the storage password for the scheduler user
-dnl-----------------------------------------------------------------------------
-AC_SUBST(SCHEDULER_STORAGE_PASS)
-
-AC_ARG_WITH([scheduler-storage-pass],
-            AC_HELP_STRING([--with-scheduler-storage-pass],
-                [set password for scheduler access to storage (change_me)]),
-            [SCHEDULER_STORAGE_PASS=${withval}],
-            [SCHEDULER_STORAGE_PASS=change_me])
-
-AC_MSG_RESULT([storage password for the scheduler: ${SCHEDULER_STORAGE_PASS}])
-
-
 dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
@@ -215,7 +201,6 @@ AC_MSG_NOTICE(
     creating Campcaster database:           ${CREATE_LS_DATABASE}
     initialize Campcaster database:         ${INIT_LS_DATABASE}
     www document root:                      ${WWW_DOCROOT}
-    storage password for the scheduler:     ${SCHEDULER_STORAGE_PASS}
 
 ])
 
