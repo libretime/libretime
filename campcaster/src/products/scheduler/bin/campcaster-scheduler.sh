@@ -43,9 +43,8 @@ libdir=$basedir/lib
 #-------------------------------------------------------------------------------
 #  Set up the environment
 #-------------------------------------------------------------------------------
-gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
-
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
+export GST_REGISTRY=$etcdir/gst-registry.xml
 scheduler_exe=$bindir/campcaster-scheduler
 config_file=$etcdir/campcaster-scheduler.xml
 

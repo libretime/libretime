@@ -45,9 +45,8 @@ tmpdir=$basedir/tmp
 #-------------------------------------------------------------------------------
 #  Set up the environment
 #-------------------------------------------------------------------------------
-gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
-
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
+export GST_REGISTRY=$etcdir/gst-registry.xml
 studio_exe=$bindir/campcaster-studio
 
 if [ -f ~/.campcaster/campcaster-studio.xml ]; then
