@@ -53,8 +53,7 @@ Build-Depends: debhelper (>= 4.0.0),
                php-pear,
                php5-gd,
                postgresql-8.1,
-               postgresql-client-8.1,
-               pwgen
+               postgresql-client-8.1
 Standards-Version: 3.6.1
 
 Package: campcaster-libs
