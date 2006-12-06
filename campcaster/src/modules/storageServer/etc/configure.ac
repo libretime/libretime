@@ -186,6 +186,19 @@ AC_ARG_WITH([www-docroot],
 AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
 
 
+dnl-----------------------------------------------------------------------------
+dnl  specify url prefix
+dnl-----------------------------------------------------------------------------
+AC_SUBST(URL_PREFIX)
+
+AC_ARG_WITH([url-prefix],
+            AC_HELP_STRING([--with-url-prefix],
+               [use the specified url prefix (campcaster)]),
+            [URL_PREFIX=${withval}], [URL_PREFIX=campcaster])
+
+AC_MSG_RESULT([using url prefix: ${URL_PREFIX}])
+
+
 dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
@@ -201,6 +214,7 @@ AC_MSG_NOTICE(
     creating Campcaster database:           ${CREATE_LS_DATABASE}
     initialize Campcaster database:         ${INIT_LS_DATABASE}
     www document root:                      ${WWW_DOCROOT}
+    url prefix:                             ${URL_PREFIX}
 
 ])
 

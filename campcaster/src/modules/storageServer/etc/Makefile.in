@@ -29,6 +29,7 @@
 #-------------------------------------------------------------------------------
 #   General command definitions
 #-------------------------------------------------------------------------------
+SHELL   = /bin/bash
 MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
@@ -92,8 +93,8 @@ DB_USER        = @DB_USER@
 DB_PASSWORD    = @DB_PASSWORD@
 SCHEDULER_PORT = @SCHEDULER_PORT@
 WWW_DOCROOT    = @WWW_DOCROOT@
+PHP_URL_PREFIX = @URL_PREFIX@
 
-PHP_URL_PREFIX=campcaster
 SCHEDULER_URL_PREFIX =
 SCHEDULER_XML_RPC_PREFIX = RC2
 
@@ -193,8 +194,8 @@ copy_files:
 	chmod g+sw ${DEST_DIR}/stor/buffer
 	chmod g+sw ${DEST_DIR}/trans
 
-	${RM} ${WWW_DOCROOT}/campcaster
-	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/campcaster
+	${RM} ${WWW_DOCROOT}/${PHP_URL_PREFIX}
+	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/${PHP_URL_PREFIX}
 
 create_database:
 ifeq (@CREATE_LS_DATABASE@,yes)

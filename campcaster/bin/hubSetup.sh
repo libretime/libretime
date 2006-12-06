@@ -43,7 +43,7 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 srcdir=$basedir/src
-toolsdir=$srcdir/tools
+tools_dir=$srcdir/tools
 modules_dir=$srcdir/modules
 
 
@@ -56,6 +56,7 @@ printUsage()
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
+    echo "  -n, --hostname      The remotely accessible hostname [default `hostname -f`].";
     echo "  -D, --database      The name of the Campcaster database.";
     echo "                      [default: CampcasterHub]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
@@ -72,6 +73,8 @@ printUsage()
     echo "                      pg_hba.conf [default: /etc/postgresql]";
     echo "  -i, --postgresql-init-script    The name of the postgresql init";
     echo "                      script [default: /etc/init.d/postgresql]";
+    echo "  -P, --skip-postgresql    Don't modify posgresql configuration.";
+    echo "  -A, --skip-apache    Don't modify apache configuration.";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -82,10 +85,13 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:hi:p:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,help,postgresql-dir:,postgresql-init-script:,www-root: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o Ad:D:g:hi:n:p:Pr:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,help,hostname:,postgresql-dir:,postgresql-init-script:,skip-apache,skip-postgresql,www-root: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
+        -S|--skip-apache)
+            skip_apache="yes";
+            shift;;
         -d|--directory)
             installdir=$2;
             shift; shift;;
@@ -101,9 +107,15 @@ while true; do
         -i|--postgresql-init-script)
             postgresql_init_script=$2;
             shift; shift;;
+        -n|--hostname)
+            hostname=$2;
+            shift; shift;;
         -p|--postgresql-dir)
             postgresql_dir=$2;
             shift; shift;;
+        -P|--skip-postgresql)
+            skip_postgresql="yes";
+            shift;;
         -r|--www-root)
             www_root=$2;
             shift; shift;;
@@ -164,7 +176,10 @@ if [ "x$www_root" == "x" ]; then
     www_root=/var/www;
 fi
 
-hostname=`hostname -f`
+if [ "x$hostname" == "x" ]; then
+    hostname=`hostname -f`
+fi
+
 www_port=80
 
 echo "Installing Campcaster network hub (archiveServer).";
@@ -200,6 +215,7 @@ install_lib=$installdir/lib
 install_usr=$installdir/usr
 install_var_ls=$installdir/var/Campcaster
 
+url_prefix=campcaster_hub
 
 #-------------------------------------------------------------------------------
 #  Function to check for the existence of an executable on the PATH
@@ -255,73 +271,75 @@ rm -f $group_tmp_file;
 #-------------------------------------------------------------------------------
 #  Install the new pg_hba.conf file
 #-------------------------------------------------------------------------------
-echo "Modifying postgresql access permissions...";
+if [ "$skip_postgresql" != "yes" ]; then
+    echo "Modifying postgresql access permissions...";
 
-pg_config_dir=$postgresql_dir
-pg_config_file=pg_hba.conf
-pg_config_file_saved=pg_hba.conf.before-campcaster
+    pg_config_dir=$postgresql_dir
+    pg_config_file=pg_hba.conf
+    pg_config_file_saved=pg_hba.conf.before-campcaster
 
-if [ -f $pg_config_dir/$pg_config_file ] ; then
-    mv -vf $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
+    if [ -f $pg_config_dir/$pg_config_file ] ; then
+        mv -vf $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
+    fi
+    cp -v $etcdir/$pg_config_file $pg_config_dir/$pg_config_file
+    chown root:$postgres_user $pg_config_dir/$pg_config_file
+
+    # don't use restart for the init script, as it might return prematurely
+    # and in the later call to psql we wouldn't be able to connect
+    ${postgresql_init_script} stop
+    ${postgresql_init_script} start
 fi
-cp -v $etcdir/$pg_config_file $pg_config_dir/$pg_config_file
-chown root:$postgres_user $pg_config_dir/$pg_config_file
-
-# don't use restart for the init script, as it might return prematurely
-# and in the later call to psql we wouldn't be able to connect
-${postgresql_init_script} stop
-${postgresql_init_script} start
-
 
 #-------------------------------------------------------------------------------
 #  Configuring Apache
 #-------------------------------------------------------------------------------
-echo "Configuring apache ..."
-CONFFILE=90_php_campcaster.conf
-AP_DDIR_FOUND=no
-for APACHE_DDIR in \
-    /etc/apache/conf.d /etc/apache2/conf.d /etc/apache2/conf/modules.d \
-    /etc/httpd/conf.d /etc/apache2/modules.d
-do
-    echo -n "$APACHE_DDIR "
-    if [ -d $APACHE_DDIR ]; then
-        echo "Y"
-        AP_DDIR_FOUND=yes
-        cp -v $basedir/etc/apache/$CONFFILE $APACHE_DDIR
-        break
-    else
-        echo "N"
-    fi
-done
-if [ "$AP_DDIR_FOUND" != "yes" ]; then
-    echo "###############################"
-    echo " Could not configure Apache"
-    echo "  include following file into apache config manually:"
-    echo "  $basedir/etc/apache/$CONFFILE"
-    echo "###############################"
-else
-    echo "done"
-    echo "Restarting apache...";
-    AP_SCR_FOUND=no
-    for APACHE_SCRIPT in apache apache2 httpd ; do
-        echo -n "$APACHE_SCRIPT "
-        if [ -x /etc/init.d/$APACHE_SCRIPT ]; then
+if [ "$skip_apache" != "yes" ]; then
+    echo "Configuring apache ..."
+    CONFFILE=90_php_campcaster.conf
+    AP_DDIR_FOUND=no
+    for APACHE_DDIR in \
+        /etc/apache/conf.d /etc/apache2/conf.d /etc/apache2/conf/modules.d \
+        /etc/httpd/conf.d /etc/apache2/modules.d
+    do
+        echo -n "$APACHE_DDIR "
+        if [ -d $APACHE_DDIR ]; then
             echo "Y"
-            AP_SCR_FOUND=yes
-            /etc/init.d/$APACHE_SCRIPT restart
+            AP_DDIR_FOUND=yes
+            cp -v $basedir/etc/apache/$CONFFILE $APACHE_DDIR
+            break
         else
             echo "N"
         fi
     done
-    if [ "$AP_SCR_FOUND" != "yes" ]; then
+    if [ "$AP_DDIR_FOUND" != "yes" ]; then
         echo "###############################"
-        echo " Could not reload Apache"
-        echo "  please reload apache manually"
+        echo " Could not configure Apache"
+        echo "  include following file into apache config manually:"
+        echo "  $basedir/etc/apache/$CONFFILE"
         echo "###############################"
+    else
+        echo "done"
+        echo "Restarting apache...";
+        AP_SCR_FOUND=no
+        for APACHE_SCRIPT in apache apache2 httpd ; do
+            echo -n "$APACHE_SCRIPT "
+            if [ -x /etc/init.d/$APACHE_SCRIPT ]; then
+                echo "Y"
+                AP_SCR_FOUND=yes
+                /etc/init.d/$APACHE_SCRIPT restart
+            else
+                echo "N"
+            fi
+        done
+        if [ "$AP_SCR_FOUND" != "yes" ]; then
+            echo "###############################"
+            echo " Could not reload Apache"
+            echo "  please reload apache manually"
+            echo "###############################"
+        fi
+        echo "done"
     fi
-    echo "done"
 fi
-
 
 #-------------------------------------------------------------------------------
 #  Create the necessary database user and database itself
@@ -366,6 +384,7 @@ fi
 #-------------------------------------------------------------------------------
 echo "Configuring modules ...";
 
+cd $tools_dir/pear && ./configure --prefix=$installdir
 cd $modules_dir/alib && ./configure --prefix=$installdir
 cd $modules_dir/archiveServer && \
         ./configure --prefix=$installdir \
@@ -374,7 +393,8 @@ cd $modules_dir/archiveServer && \
                                 --with-database-server=$dbserver \
                                 --with-database=$database \
                                 --with-database-user=$dbuser \
-                                --with-database-password=$dbpassword
+                                --with-database-password=$dbpassword \
+                                --with-url-prefix=$url_prefix
 cd $modules_dir/getid3 && ./configure --prefix=$installdir
 #cd $modules_dir/htmlUI && ./configure --prefix=$installdir \
 #    --with-apache-group=$apache_group \
@@ -393,7 +413,8 @@ cd $modules_dir/storageServer && \
                                 --with-database=$database \
                                 --with-database-user=$dbuser \
                                 --with-database-password=$dbpassword \
-                                --with-init-database=no
+                                --with-init-database=no \
+                                --with-url-prefix=$url_prefix
 
 
 #-------------------------------------------------------------------------------
@@ -401,6 +422,9 @@ cd $modules_dir/storageServer && \
 #-------------------------------------------------------------------------------
 echo "Installing modules ...";
 
+mkdir -p $installdir
+#$tools_dir/pear/bin/install.sh -d $installdir || exit 1
+make -C $tools_dir/pear install
 make -C $modules_dir/alib install
 make -C $modules_dir/getid3 install
 make -C $modules_dir/storageServer install
@@ -419,8 +443,9 @@ done
 echo "Creating symlinks...";
 
 # create symlink for the PHP pages in apache's document root
-rm -f $www_root/campcaster
-ln -vs $install_var_ls $www_root/campcaster
+webentry=$www_root/$url_prefix
+rm -f $webentry
+ln -vs $install_var_ls $webentry
 
 
 #-------------------------------------------------------------------------------

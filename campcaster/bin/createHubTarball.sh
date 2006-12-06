@@ -107,7 +107,7 @@ fi
 #-------------------------------------------------------------------------------
 tarball=$directory/campcaster-hub-$version.tar.bz2
 
-tmpreldir=campcaster-$version
+tmpreldir=campcaster-hub-$version
 ls_tmpdir=$tmpdir/$tmpreldir
 src_tmpdir=$ls_tmpdir/src
 tools_tmpdir=$src_tmpdir/tools

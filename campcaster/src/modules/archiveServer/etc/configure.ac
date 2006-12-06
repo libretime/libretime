@@ -118,6 +118,19 @@ AC_ARG_WITH([database-password],
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 
 
+dnl-----------------------------------------------------------------------------
+dnl  specify url prefix
+dnl-----------------------------------------------------------------------------
+AC_SUBST(URL_PREFIX)
+
+AC_ARG_WITH([url-prefix],
+            AC_HELP_STRING([--with-url-prefix],
+               [use the specified url prefix (campcaster)]),
+            [URL_PREFIX=${withval}], [URL_PREFIX=campcaster])
+
+AC_MSG_RESULT([using url prefix: ${URL_PREFIX}])
+
+
 dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
@@ -129,6 +142,7 @@ AC_MSG_NOTICE(
     database name:             ${DATABASE}
     database user:             ${DB_USER}
     database user password:    ${DB_PASSWORD}
+    url prefix:                ${URL_PREFIX}
 
 ])
 

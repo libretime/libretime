@@ -29,6 +29,7 @@
 #-------------------------------------------------------------------------------
 #   General command definitions
 #-------------------------------------------------------------------------------
+SHELL   = /bin/bash
 MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
@@ -87,8 +88,8 @@ DB_SERVER      = @DB_SERVER@
 DATABASE       = @DATABASE@
 DB_USER        = @DB_USER@
 DB_PASSWORD    = @DB_PASSWORD@
+PHP_URL_PREFIX = @URL_PREFIX@
 
-PHP_URL_PREFIX=campcaster
 
 USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
 PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
