@@ -54,7 +54,7 @@ class uiTransfers
         foreach ($transfers as $transfer) {
             $token = $transfer['trtok'];
             $data = $this->Base->gb->getTransportInfo($token);
-            if ($data['state']!='finished') {
+            if (!PEAR::isError($data) && ($data['state'] != 'finished') ){
             	$this->allItems[] = array_merge($data,array('id' => $token));
             }
         }
