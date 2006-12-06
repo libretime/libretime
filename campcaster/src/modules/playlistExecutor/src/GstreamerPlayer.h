@@ -150,10 +150,24 @@ class GstreamerPlayer : virtual public Configurable,
          */
         std::string             m_audioDevice;
 
+        /**
+         *  The URL of the preloaded file. Empty if nothing is preloaded.
+         */
         std::string             m_preloadUrl;
+
+        /**
+         *  The filesrc element created by the preloader.
+         */
         GstElement            * m_preloadFilesrc;
+
+        /**
+         *  The decoder element created by the preloader
+         */
         GstElement            * m_preloadDecoder;
 
+        /**
+         *  The thread that runs the preloader instance.
+         */
         Ptr<Thread>::Ref        m_preloadThread;
 
         /**
@@ -438,6 +452,16 @@ class GstreamerPlayer : virtual public Configurable,
 
 
 
+/**
+ *  A class for preloading GStreamer SMIL decoder instances.
+ *
+ *  Preloading initializes the decoder element in a helper thread, so
+ *  that most of the initialization overhead is eleminated when playback
+ *  is started.
+ *
+ *  @author  $Author$
+ *  @version $Revision$
+ */
 class Preloader : public RunnableInterface
 {
     public:
@@ -449,7 +473,14 @@ class Preloader : public RunnableInterface
         void stop()                                         throw();
 
     private:
+        /**
+         *  Pointer to GstreamerPlayer class instance.
+         */
         GstreamerPlayer* m_player;
+
+        /**
+         *  The URL of the file to be preloaded.
+         */
         std::string      m_fileUrl;
 };
 
