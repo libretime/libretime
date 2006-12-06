@@ -802,17 +802,18 @@ resizeImage(Gtk::Image* image, int width, int height)               throw ()
     int     imageWidth  = pixbuf->get_width();
     int     imageHeight = pixbuf->get_height();
 
-    // this is integerese for (logoWidth/logoHeight > width/height)
-    if (imageWidth * height > imageHeight * width) {
-        // image is wide: squash horizontally
-        image->set(pixbuf->scale_simple(width,
-                                        (imageHeight * width)/imageWidth,
-                                        Gdk::INTERP_HYPER ));
-    } else {
-        // image is tall: squash vertically
-        image->set(pixbuf->scale_simple((imageWidth * height)/imageHeight,
-                                        height,
-                                        Gdk::INTERP_HYPER ));
+    if (imageWidth > width || imageHeight > height) {
+        if (imageWidth * height > imageHeight * width) {
+            // image is wide: squash horizontally
+            image->set(pixbuf->scale_simple(width,
+                                            (imageHeight * width)/imageWidth,
+                                            Gdk::INTERP_HYPER ));
+        } else {
+            // image is tall: squash vertically
+            image->set(pixbuf->scale_simple((imageWidth * height)/imageHeight,
+                                            height,
+                                            Gdk::INTERP_HYPER ));
+        }
     }
 }
 
