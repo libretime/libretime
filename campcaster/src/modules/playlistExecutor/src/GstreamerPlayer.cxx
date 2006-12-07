@@ -218,7 +218,7 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw (
 {
     DEBUG_BLOCK
 
-    GstreamerPlayer   * player = (GstreamerPlayer*) self;
+    GstreamerPlayer* const player = (GstreamerPlayer*) self;
 
     ListenerVector::iterator    it  = player->m_listeners.begin();
     ListenerVector::iterator    end = player->m_listeners.end();
@@ -243,7 +243,7 @@ GstreamerPlayer :: eosEventHandler(GstElement    * element,
 {
     DEBUG_BLOCK
 
-    GstreamerPlayer   * player = (GstreamerPlayer*) self;
+    GstreamerPlayer* const player = (GstreamerPlayer*) self;
 
     gst_element_set_eos(player->m_pipeline);
     
@@ -389,14 +389,14 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     // connect the eos signal handler
     g_signal_connect(m_decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
+    m_preloadUrl.clear();
+    
     if (gst_element_set_state(m_pipeline,GST_STATE_PAUSED) == GST_STATE_FAILURE) {
         close();
         // the error is most probably caused by not being able to open
         // the audio device (as it might be blocked by an other process
         throw std::runtime_error("can't open audio device " + m_audioDevice);
     }
-
-    m_preloadUrl.clear();
 }
 
 
@@ -720,6 +720,7 @@ void Preloader::signal(int) throw()
 {}
 
 
+// TODO This should be implemented by adding a "abort" property to the minimalaudiosmil element.
 void Preloader::stop() throw()
 {}
 
