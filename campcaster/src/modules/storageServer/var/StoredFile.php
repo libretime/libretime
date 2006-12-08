@@ -9,9 +9,8 @@ require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
  *  Campcaster file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
- *      <li>metada in database - represented by MetaData class</li>
- *      <li>binary media data in real file
- *          - represented by RawMediaData class</li>
+ *      <li>metadata in database - represented by MetaData class</li>
+ *      <li>binary media data in real file - represented by RawMediaData class</li>
  *  </ul>
  *
  * @author Tomas Hlava <th@red2head.com>
@@ -49,9 +48,16 @@ class StoredFile {
 	 */
 	public $accessTable;
 
+	/**
+	 * Unique ID for the file.
+	 *
+	 * @var int
+	 */
 	public $gunid;
 
 	/**
+	 * Directory where the file is located.
+	 * 
 	 * @var string
 	 */
 	private $resDir;
@@ -93,7 +99,6 @@ class StoredFile {
         $this->accessDir = $this->gb->accessDir;
         $this->rmd = new RawMediaData($this->gunid, $this->resDir);
         $this->md = new MetaData($gb, $this->gunid, $this->resDir);
-#        return $this->gunid;
     }
 
 
@@ -216,7 +221,7 @@ class StoredFile {
      * 		optional classname to recall
      * @return StoredFile
      */
-    function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
+    public function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
     {
         $cond = ($oid != ''
             ? "id='".intval($oid)."'"
@@ -302,7 +307,7 @@ class StoredFile {
      * 		new local id
      * @return StoredFile
      */
-    function &copyOf(&$src, $nid)
+    public function &copyOf(&$src, $nid)
     {
         $ac = StoredFile::insert(
             $src->gb, $nid, $src->name, $src->_getRealRADFname(),
@@ -331,7 +336,7 @@ class StoredFile {
      *  @param string $mdataLoc
      * 		'file'|'string'
      */
-    function replace($oid, $name, $mediaFileLP='', $metadata='',
+    public function replace($oid, $name, $mediaFileLP='', $metadata='',
         $mdataLoc='file')
     {
         $this->dbc->query("BEGIN");
@@ -376,7 +381,7 @@ class StoredFile {
      * @return array
      * 		array with: access URL, access token
      */
-    function accessRawMediaData($parent='0')
+    public function accessRawMediaData($parent='0')
     {
         $realFname = $this->_getRealRADFname();
         $ext = $this->_getExt();
@@ -398,7 +403,7 @@ class StoredFile {
      * 		access token
      * @return boolean
      */
-    function releaseRawMediaData($token)
+    public function releaseRawMediaData($token)
     {
         $res = $this->gb->bsRelease($token);
         if (PEAR::isError($res)) {
@@ -414,7 +419,7 @@ class StoredFile {
      * @param string $mediaFileLP
      * 		local path to media file
      */
-    function replaceRawMediaData($mediaFileLP)
+    public function replaceRawMediaData($mediaFileLP)
     {
         $res = $this->rmd->replace($mediaFileLP);
         if (PEAR::isError($res)) {
@@ -447,7 +452,7 @@ class StoredFile {
      *      (NULL = no validation)
      * @return boolean
      */
-    function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
+    public function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
     {
         $this->dbc->query("BEGIN");
         $res = $this->md->replace($metadata, $mdataLoc, $format);
@@ -474,7 +479,7 @@ class StoredFile {
      * @return XML string
      * @see MetaData
      */
-    function getMetadata()
+    public function getMetadata()
     {
         return $this->md->getMetadata();
     }
@@ -488,7 +493,7 @@ class StoredFile {
      * @return array
      * @see MetaData
      */
-    function analyzeMediaFile()
+    public function analyzeMediaFile()
     {
         $ia = $this->rmd->analyze();
         return $ia;
@@ -501,7 +506,7 @@ class StoredFile {
      * @param string $newname
      * @return TRUE/PEAR_Error
      */
-    function rename($newname)
+    public function rename($newname)
     {
         $escapedName = pg_escape_string($newname);
         $res = $this->dbc->query("
@@ -525,7 +530,7 @@ class StoredFile {
      *      (optional)
      * @return TRUE/PEAR_Error
      */
-    function setState($state, $editedby=NULL)
+    public function setState($state, $editedby=NULL)
     {
         $escapedState = pg_escape_string($state);
         $eb = (!is_null($editedby) ? ", editedBy=$editedby" : '');
@@ -548,7 +553,7 @@ class StoredFile {
      * 		mime-type
      * @return boolean or error
      */
-    function setMime($mime)
+    public function setMime($mime)
     {
         if ( !is_string($mime)){
             $mime = 'application/octet-stream';
@@ -571,7 +576,7 @@ class StoredFile {
      * @see RawMediaData
      * @see MetaData
      */
-    function delete()
+    public function delete()
     {
         $res = $this->rmd->delete();
         if (PEAR::isError($res)) {
@@ -618,7 +623,7 @@ class StoredFile {
      * @param string $gunid
      * 		optional (for static call), global unique id
      */
-    function isAccessed($gunid=NULL)
+    public function isAccessed($gunid=NULL)
     {
         if (is_null($gunid)) {
             $gunid = $this->gunid;
@@ -644,7 +649,7 @@ class StoredFile {
      * 		playlist global unique ID
      * @return boolean
      */
-    function isEdited($playlistId=NULL)
+    public function isEdited($playlistId=NULL)
     {
         if (is_null($playlistId)) {
             $playlistId = $this->gunid;
@@ -665,7 +670,7 @@ class StoredFile {
      * @return null or int
      * 		id of user editing it
      */
-    function isEditedBy($playlistId=NULL)
+    public function isEditedBy($playlistId=NULL)
     {
         if (is_null($playlistId)) {
             $playlistId = $this->gunid;
@@ -688,7 +693,7 @@ class StoredFile {
      *  Returns local id of virtual file
      *
      */
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
@@ -698,7 +703,7 @@ class StoredFile {
      *  Returns true if raw media file exists
      *
      */
-    function exists()
+    public function exists()
     {
         $indb = $this->dbc->getRow("
             SELECT to_hex(gunid) FROM {$this->filesTable}
@@ -722,7 +727,7 @@ class StoredFile {
      *  Create new global unique id
      *
      */
-    function _createGunid()
+    public static function _createGunid()
     {
         $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
         $initString =
@@ -739,7 +744,7 @@ class StoredFile {
      *  Create new global unique id
      *
      */
-    function _normalizeGunid($gunid0)
+    public static function _normalizeGunid($gunid0)
     {
         return str_pad($gunid0, 16, "0", STR_PAD_LEFT);
     }
@@ -779,12 +784,12 @@ class StoredFile {
      * @return string
      * 		file extension without a dot
      */
-    function _getExt()
+    public function _getExt()
     {
         $fname = $this->_getFileName();
-        $pos   = strrpos($fname, '.');
+        $pos = strrpos($fname, '.');
         if ($pos !== FALSE) {
-            $ext   = substr($fname, $pos+1);
+            $ext = substr($fname, $pos+1);
             if ($ext !== FALSE) {
                 return $ext;
             }
@@ -817,16 +822,16 @@ class StoredFile {
      * @return string
      * 		mime-type
      */
-    function _getMime($gunid=NULL)
-    {
-        if (is_null($gunid)) {
-            $gunid = $this->gunid;
-        }
-        return $this->dbc->getOne("
-            SELECT mime FROM {$this->filesTable}
-            WHERE gunid=x'$gunid'::bigint
-        ");
-    }
+//    function _getMime($gunid=NULL)
+//    {
+//        if (is_null($gunid)) {
+//            $gunid = $this->gunid;
+//        }
+//        return $this->dbc->getOne("
+//            SELECT mime FROM {$this->filesTable}
+//            WHERE gunid=x'$gunid'::bigint
+//        ");
+//    }
 
 
     /**
@@ -837,7 +842,7 @@ class StoredFile {
      * @return string
      * 		see install()
      */
-    function _getState($gunid=NULL)
+    public function _getState($gunid=NULL)
     {
         if (is_null($gunid)) {
             $gunid = $this->gunid;
@@ -857,7 +862,7 @@ class StoredFile {
      * @return string
      * 		see install()
      */
-    function _getFileName($gunid=NULL)
+    public function _getFileName($gunid=NULL)
     {
         if (is_null($gunid)) {
             $gunid = $this->gunid;
@@ -874,7 +879,7 @@ class StoredFile {
      * raw media data
      *
      */
-    function _getResDir()
+    private function _getResDir()
     {
         $resDir="{$this->gb->storageDir}/".substr($this->gunid, 0, 3);
         #$this->gb->debugLog("$resDir");
@@ -892,7 +897,7 @@ class StoredFile {
      *
      * @see RawMediaData
      */
-    function _getRealRADFname()
+    public function _getRealRADFname()
     {
         return $this->rmd->getFname();
     }
@@ -903,7 +908,7 @@ class StoredFile {
      *
      * @see MetaData
      */
-    function _getRealMDFname()
+    public function _getRealMDFname()
     {
         return $this->md->getFname();
     }
@@ -914,7 +919,7 @@ class StoredFile {
      *
      * @todo Should be more unique
      */
-    function _getAccessFname($token, $ext='EXT')
+    private function _getAccessFname($token, $ext='EXT')
     {
         $token = StoredFile::_normalizeGunid($token);
         return "{$this->accessDir}/$token.$ext";
