@@ -72,7 +72,6 @@ class uiPlaylist
         if (!$this->activeId) {
             return FALSE;
         }
-        #echo '<pre><div align="left">'; print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid)); echo '</div></pre>';
         return $this->getPLArray($this->activeId);
     } // fn getActiveArr
 
@@ -338,6 +337,12 @@ class uiPlaylist
     } // fn create
 
 
+    /**
+     * WARNING: THIS FUNCTION IS REALLY SSSLLLLOOOOWWWW!
+     *
+     * @param unknown_type $id
+     * @return array
+     */
     public function getFlat($id)
     {
     	$this->flat = array();
@@ -423,10 +428,8 @@ class uiPlaylist
                                  );
                 break;
             }
-            #print_r($item);
             foreach ($item as $i=>$val) {
                 $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
-                #print_r($r);
                 if (PEAR::isError($r)) {
                     if (UI_VERBOSE === TRUE) {
                     	print_r($r);
@@ -439,7 +442,6 @@ class uiPlaylist
             // change fade of all clips
             foreach ($this->getFlat($this->activeId) as $v) {
                 $r = $this->Base->gb->changeFadeInfo($this->token, $v['attrs']['id'], $type==='pause'?$pause:$xfade, $type==='pause'?$pause:$xfade, $this->Base->sessid);
-                #print_r($r);
                 if (PEAR::isError($r)) {
                     if (UI_VERBOSE === TRUE) {
                     	print_r($r);
