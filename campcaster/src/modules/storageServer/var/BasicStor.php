@@ -1224,10 +1224,10 @@ class BasicStor extends Alib {
 	                    require_once("LsPlaylist.php");
 	                    $ac = $r = LsPlaylist::recallByGunid($this, $it['gunid']);
 	                    switch ($type) {
-	                        case"smil":
+	                        case "smil":
 	                            $string = $r = $ac->outputToSmil();
 	                            break;
-	                        case"m3u":
+	                        case "m3u":
 	                            $string = $r = $ac->outputToM3u();
 	                            break;
 	                        default:
@@ -1474,6 +1474,7 @@ class BasicStor extends Alib {
      * @param int $id
      * 		Local ID of folder
      * @return array
+     * @todo THERE IS A BUG IN THIS FUNCTION
      */
     public function bsListFolder($id)
     {
@@ -1503,7 +1504,9 @@ class BasicStor extends Alib {
                 return $listArr[$i]['type'];
             }
             $listArr[$i]['gunid'] = $gunid;
-            if (StoredFIle::_getState($gunid) == 'incomplete') {
+            
+            // THE BUG IS HERE - "_getState()" IS NOT A STATIC FUNCTION!
+            if (StoredFile::_getState($gunid) == 'incomplete') {
                 unset($listArr[$i]);
             }
         }
