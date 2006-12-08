@@ -124,7 +124,7 @@ class Backup
      * 		hasharray with field:
      *      token string: backup token
      */
-    function openBackup($sessid, $criteria='')
+    public function openBackup($sessid, $criteria='')
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." openBackup - sessid:$sessid\n");
@@ -188,7 +188,7 @@ class Backup
      *      url     : string - access url
      *      tmpfile : string - access filename
      */
-    function checkBackup($token)
+    public function checkBackup($token)
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." checkBackup - token:$token\n");
@@ -208,7 +208,7 @@ class Backup
                 $r['status']    = $status;
                 $r['faultString'] = $faultString;
                 $r['token']     = $token;
-            break;
+                break;
         }
         return $r;
     }
@@ -220,7 +220,7 @@ class Backup
      * @param unknown $token
      * @return boolean
      */
-    function closeBackup($token)
+    public function closeBackup($token)
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." closeBackup - token:$token\n");
@@ -249,7 +249,7 @@ class Backup
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function listBackups($stat='')
+    public function listBackups($stat='')
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." listBackups - stat:$stat\n");
@@ -268,11 +268,11 @@ class Backup
 
 
     /**
-     * Aet the ids from searchResult
+     * Set the ids from searchResult
      *
      * @param array $searchResult : array of gunids
      */
-    function setIDs($searchResult)
+    private function setIDs($searchResult)
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setIDs\n");
@@ -290,7 +290,7 @@ class Backup
      * Set the filenames from ids.
      *
      */
-    function setFilenames()
+    private function setFilenames()
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
@@ -298,7 +298,7 @@ class Backup
         if (is_array($this->ids)) {
             foreach ($this->ids as $i=>$item) {
                 $gunid = $item['gunid'];
-                # get a stored file object of this gunid
+                // get a stored file object of this gunid
                 $sf = StoredFile::recallByGunid($this->gb, $gunid);
                 if (PEAR::isError($sf)) {
                 	return $sf;
@@ -308,10 +308,10 @@ class Backup
                     $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
                     return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
                 }
-                # if the file is a playlist then it have only meta file
+                // if the file is a playlist then it have only meta file
                 if (strtolower($sf->md->format)!='playlist') {
                     $this->filenames[] = array(
-                        'filename'  => $sf->_getRealRADFname(), # get real filename of raw media data
+                        'filename'  => $sf->_getRealRADFname(), // get real filename of raw media data
                         'format'    => $sf->md->format
                     );
                 }
@@ -335,7 +335,7 @@ class Backup
      * Create the tarball - call the shell script
      *
      */
-    function doIt()
+    private function doIt()
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt\n");
@@ -357,7 +357,7 @@ class Backup
      *  Copy the real files into the tmp dirs to tar they.
      *
      */
-    function copyAllFiles()
+    private function copyAllFiles()
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." copyAllFiles\n");
@@ -386,7 +386,7 @@ class Backup
      *  Figure out the enviroment to the backup
      *
      */
-    function setEnviroment($createDir=false)
+    private function setEnviroment($createDir=false)
     {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment - createDirs:$createDir\n");
@@ -437,7 +437,7 @@ class Backup
      * Generate a new token.
      * @return void
      */
-    function genToken()
+    private function genToken()
     {
         $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
         if ($this->gb->dbc->isError($acc)) {
@@ -453,12 +453,11 @@ class Backup
      * @param string $item
      * 		the new row of log file
      */
-    function addLogItem($item)
+    private function addLogItem($item)
     {
-        $f = fopen ($this->logFile,'a');
+        $f = fopen($this->logFile,'a');
         fwrite($f,$item);
         fclose($f);
-        //echo file_get_contents($this->logFile)."<BR><BR>\n\n";
     }
 
 
@@ -468,7 +467,7 @@ class Backup
      * @param string $dirname
      * 		path of dir.
      */
-    function rRmDir($dirname)
+    private static function rRmDir($dirname)
     {
         if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);
