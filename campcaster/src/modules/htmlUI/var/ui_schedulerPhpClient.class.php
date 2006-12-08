@@ -12,10 +12,6 @@
  *   <li>e</li> array of error codes/messages (not used there at present)
  *  </ul>
  *
- * @package Campcaster
- * @subpackage htmlUI
- * @author $Author$
- * @version $Revision$
  */
 $mdefs = array(
     "listMethods"       => array('m'=>"system.listMethods", 'p'=>NULL, 't'=>NULL),
@@ -163,7 +159,16 @@ $mdefs = array(
 );
 
 /* ======================================================== class definitions */
-
+/**
+ * @author Sebastian Gobel <sebastian.goebel@web.de>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage htmlUI
+ * @version $Revision$
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ */
 class SchedulerPhpClient {
     /**
      * Databases object reference
@@ -242,6 +247,8 @@ class SchedulerPhpClient {
      * Each new method in this subclass accepts parameters according to $mdefs
      * array, call wrapper callMethod(methodname, parameters) and return its
      * result.
+     *
+     * @todo Replace this method by using PHP5 __call method instead.
      *
      * @param DB $dbc
      * @param array $mdefs
