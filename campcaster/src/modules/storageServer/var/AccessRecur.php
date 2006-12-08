@@ -24,7 +24,7 @@ class AccessRecur {
     }
 
 
-    function accessPlaylist(&$ls, $sessid, $plid, $parent='0')
+    public static function accessPlaylist(&$ls, $sessid, $plid, $parent='0')
     {
         $ppa = new AccessRecur($ls, $sessid);
         $r = $ls->accessPlaylist($sessid, $plid, FALSE, $parent);
@@ -51,7 +51,7 @@ class AccessRecur {
     }
 
 
-    function releasePlaylist(&$ls, $sessid, $token)
+    public static function releasePlaylist(&$ls, $sessid, $token)
     {
         $ppa = new AccessRecur($ls, $sessid);
         $r = $ppa->dbc->getAll("
@@ -97,13 +97,13 @@ class AccessRecur {
     }
 
 
-    function processPlaylist($pla, $parent)
+    private function processPlaylist($pla, $parent)
     {
         $res = array();
         foreach ($pla['children'] as $ple) {
             switch ($ple['elementname']) {
                 case "playlistElement":
-                    $r = $this->processPlEl($ple, $parent);
+                    $r = $this->processPlaylistElement($ple, $parent);
                     if (PEAR::isError($r)) {
                     	return $r;
                     }
@@ -117,7 +117,7 @@ class AccessRecur {
     }
 
 
-    function processAc($gunid, $parent)
+    private function processAudioClip($gunid, $parent)
     {
         $r = $this->ls->accessRawAudioData($this->sessid, $gunid, $parent);
         if (PEAR::isError($r)) {
@@ -127,12 +127,12 @@ class AccessRecur {
     }
 
 
-    function processPlEl($ple, $parent='0')
+    private function processPlaylistElement($ple, $parent='0')
     {
         foreach ($ple['children'] as $ac) {
             switch ($ac['elementname']) {
                 case "audioClip":
-                    $r = $this->processAc($ac['attrs']['id'], $parent);
+                    $r = $this->processAudioClip($ac['attrs']['id'], $parent);
                     if (PEAR::isError($r)) {
                     	return $r;
                     }
