@@ -307,89 +307,92 @@ class Transport
      */
     function upload2Hub($gunid, $withContent=TRUE, $pars=array())
     {
+        $this->trLog("upload2Hub start: ".strftime("%H:%M:%S"));
         switch ($ftype = $this->gb->_getType($gunid)) {
-        case "audioclip":
-        case "webstream":
-            $ac = StoredFile::recallByGunid($this->gb, $gunid);
-            if (PEAR::isError($ac)) {
-            	return $ac;
-            }
-            // handle metadata:
-            $mdfpath = $ac->_getRealMDFname();
-            if (PEAR::isError($mdfpath)) {
-            	return $mdfpath;
-            }
-            $mdtrec = $this->_uploadGeneralFileToHub($mdfpath, 'metadata',
-                array_merge(array('gunid'=>$gunid, 'fname'=>'metadata',), $pars)
-            );
-            if (PEAR::isError($mdtrec)) {
-            	return $mdtrec;
-            }
-            // handle raw media file:
-            $fpath = $ac->_getRealRADFname();
-            if (PEAR::isError($fpath)) {
-            	return $fpath;
-            }
-            $fname = $ac->_getFileName();
-            if (PEAR::isError($fname)) {
-            	return $fname;
-            }
-            $trec = $this->_uploadGeneralFileToHub($fpath, 'audioclip',
-                array_merge(array(
-                    'gunid'=>$gunid, 'fname'=>$fname, 'mdtrtok'=>$mdtrec->trtok,
-                ), $pars)
-            );
-            if (PEAR::isError($trec)) {
-            	return $trec;
-            }
-            $this->startCronJobProcess($mdtrec->trtok);
-            break;
-        case "playlist":
-            $plid = $gunid;
-            require_once("Playlist.php");
-            $pl = Playlist::recallByGunid($this->gb, $plid);
-            if (PEAR::isError($pl)) {
-            	return $pl;
-            }
-            $fname = $pl->_getFileName();
-            if (PEAR::isError($fname)) {
-            	return $fname;
-            }
-            if ($withContent) {
-                $res = $this->gb->bsExportPlaylistOpen($plid);
-                if (PEAR::isError($res)) {
-                	return $res;
+            case "audioclip":
+            case "webstream":
+                $ac = StoredFile::recallByGunid($this->gb, $gunid);
+                if (PEAR::isError($ac)) {
+                	return $ac;
                 }
-                $tmpn = tempnam($this->transDir, 'plExport_');
-                $plfpath = "$tmpn.lspl";
-                copy($res['fname'], $plfpath);
-                $res = $this->gb->bsExportPlaylistClose($res['token']);
-                if (PEAR::isError($res)) {
-                	return $res;
+                // handle metadata:
+                $mdfpath = $ac->_getRealMDFname();
+                if (PEAR::isError($mdfpath)) {
+                	return $mdfpath;
                 }
-                $fname = $fname.".lspl";
-                $trtype = 'playlistPkg';
-            } else {
-                $plfpath = $pl->_getRealMDFname();
-                if (PEAR::isError($plfpath)) {
-                	return $plfpath;
+                $mdtrec = $this->_uploadGeneralFileToHub($mdfpath, 'metadata',
+                    array_merge(array('gunid'=>$gunid, 'fname'=>'metadata',), $pars)
+                );
+                if (PEAR::isError($mdtrec)) {
+                	return $mdtrec;
                 }
-                $trtype = 'playlist';
-            }
-            $trec = $this->_uploadGeneralFileToHub($plfpath, $trtype,
-                array_merge(array('gunid'=>$plid,'fname'=>$fname,), $pars)
-            );
-            if (PEAR::isError($trec)) {
-            	return $trec;
-            }
-            break;
-        default:
-            return PEAR::raiseError(
-                "Transport::upload2Hub:".
-                " ftype not supported ($ftype)"
-            );
+                // handle raw media file:
+                $fpath = $ac->_getRealRADFname();
+                if (PEAR::isError($fpath)) {
+                	return $fpath;
+                }
+                $fname = $ac->_getFileName();
+                if (PEAR::isError($fname)) {
+                	return $fname;
+                }
+                $trec = $this->_uploadGeneralFileToHub($fpath, 'audioclip',
+                    array_merge(array(
+                        'gunid'=>$gunid, 'fname'=>$fname, 'mdtrtok'=>$mdtrec->trtok,
+                    ), $pars)
+                );
+                if (PEAR::isError($trec)) {
+                	return $trec;
+                }
+                $this->startCronJobProcess($mdtrec->trtok);
+                break;
+                
+            case "playlist":
+                $plid = $gunid;
+                require_once("Playlist.php");
+                $pl = Playlist::recallByGunid($this->gb, $plid);
+                if (PEAR::isError($pl)) {
+                	return $pl;
+                }
+                $fname = $pl->_getFileName();
+                if (PEAR::isError($fname)) {
+                	return $fname;
+                }
+                if ($withContent) {
+                    $this->trLog("upload2Hub exportPlaylistOpen BEGIN: ".strftime("%H:%M:%S"));
+                    $res = $this->gb->bsExportPlaylistOpen($plid);
+                    $this->trLog("upload2Hub exportPlaylistOpen END: ".strftime("%H:%M:%S"));
+                    if (PEAR::isError($res)) {
+                    	return $res;
+                    }
+                    $tmpn = tempnam($this->transDir, 'plExport_');
+                    $plfpath = "$tmpn.lspl";
+                    $this->trLog("upload2Hub begin copy: ".strftime("%H:%M:%S"));
+                    copy($res['fname'], $plfpath);
+                    $this->trLog("upload2Hub end copy: ".strftime("%H:%M:%S"));
+                    $res = $this->gb->bsExportPlaylistClose($res['token']);
+                    if (PEAR::isError($res)) {
+                    	return $res;
+                    }
+                    $fname = $fname.".lspl";
+                    $trtype = 'playlistPkg';
+                } else {
+                    $plfpath = $pl->_getRealMDFname();
+                    if (PEAR::isError($plfpath)) {
+                    	return $plfpath;
+                    }
+                    $trtype = 'playlist';
+                }
+                $trec = $this->_uploadGeneralFileToHub($plfpath, $trtype,
+                    array_merge(array('gunid'=>$plid,'fname'=>$fname,), $pars));
+                if (PEAR::isError($trec)) {
+                	return $trec;
+                }
+                break;
+            default:
+                return PEAR::raiseError("Transport::upload2Hub: ftype not supported ($ftype)");
         }
         $this->startCronJobProcess($trec->trtok);
+        $this->trLog("upload2Hub end: ".strftime("%H:%M:%S"));
         return $trec->trtok;
     }
 
@@ -412,22 +415,9 @@ class Transport
      */
     function downloadFromHub($uid, $gunid, $withContent=TRUE, $pars=array())
     {
-#    $this->trLog(var_export($gunid, TRUE));
         $trtype = ($withContent ? 'playlistPkg' : 'unknown' );
         $trec = TransportRecord::create($this, $trtype, 'down',
-            array_merge(array('gunid'=>$gunid, 'uid'=>$uid), $pars)
-/* merged !???
-            array(
-                'trtok' =>  '123456789abcdef2',
-            ),
-            array(
-                'trtok' =>  '123456789abcdef3',
-            ),
-            array(
-                'trtok' =>  '123456789abcdef4',
-            ),
-*/
-        );
+            array_merge(array('gunid'=>$gunid, 'uid'=>$uid), $pars));
         if (PEAR::isError($trec)) {
         	return $trec;
         }
@@ -464,7 +454,6 @@ class Transport
             return $r;
         }
         $this->logoutFromArchive($r);
-        // ----------
         $criteria['resultMode'] = $resultMode;
         $localfile = tempnam($this->transDir, 'searchjob_');
         @chmod($localfile, 0660);
@@ -494,7 +483,6 @@ class Transport
         if (PEAR::isError($trec)) {
         	return $trec;
         }
-        //echo"<pre>";print_r($trec);echo "</pre>";
         $row = $trec->row;
         switch ($st = $trec->getState()) {
             case "failed":
