@@ -1,5 +1,5 @@
 <?php
-require_once "BasicStor.php";
+require_once("BasicStor.php");
 
 /**
  * LocStor class
@@ -38,7 +38,7 @@ class LocStor extends BasicStor {
      * @return array
      * 		{url:writable URL for HTTP PUT, token:access token}
      */
-    function storeAudioClipOpen(
+    protected function storeAudioClipOpen(
         $sessid, $gunid, $metadata, $fname, $chsum, $ftype='audioclip'
     )
     {
@@ -115,7 +115,7 @@ class LocStor extends BasicStor {
      * @param string $token
      * @return string gunid|PEAR_Error
      */
-    function storeAudioClipClose($sessid, $token)
+    protected function storeAudioClipClose($sessid, $token)
     {
         $ac =& StoredFile::recallByToken($this, $token);
         if (PEAR::isError($ac)) {
@@ -151,7 +151,7 @@ class LocStor extends BasicStor {
      * @return array
      * 		hash, (status: boolean, size: int - filesize)
      */
-    function uploadCheck($token)
+    protected function uploadCheck($token)
     {
         return $this->bsCheckPut($token);
     }
@@ -173,7 +173,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		gunid
      */
-    function storeWebstream($sessid, $gunid, $metadata, $fname, $url)
+    protected function storeWebstream($sessid, $gunid, $metadata, $fname, $url)
     {
         $a = $this->storeAudioClipOpen(
             $sessid, $gunid, $metadata, $fname, md5(''), 'webstream');
@@ -209,7 +209,7 @@ class LocStor extends BasicStor {
      * @return array
      * 		with: seekable filehandle, access token
      */
-    function accessRawAudioData($sessid, $gunid, $parent='0')
+    public function accessRawAudioData($sessid, $gunid, $parent='0')
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if (PEAR::isError($ac)) {
@@ -230,7 +230,7 @@ class LocStor extends BasicStor {
      * 		access token
      * @return boolean|PEAR_Error
      */
-    function releaseRawAudioData($sessid, $token)
+    public function releaseRawAudioData($sessid, $token)
     {
         $ac =& StoredFile::recallByToken($this, $token);
         if (PEAR::isError($ac)) {
@@ -252,7 +252,7 @@ class LocStor extends BasicStor {
      * 		array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
-    function downloadRawAudioDataOpen($sessid, $gunid)
+    protected function downloadRawAudioDataOpen($sessid, $gunid)
     {
         $ex = $this->existsAudioClip($sessid, $gunid);
         if (PEAR::isError($ex)) {
@@ -280,7 +280,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		gunid
      */
-    function downloadRawAudioDataClose($token)
+    protected function downloadRawAudioDataClose($token)
     {
         return $this->bsCloseDownload($token);
     }
@@ -297,7 +297,7 @@ class LocStor extends BasicStor {
      * 		array with strings:
      *      downloadable URL, download token, chsum, filename
      */
-    function downloadMetadataOpen($sessid, $gunid)
+    protected function downloadMetadataOpen($sessid, $gunid)
     {
 //        $res = $this->existsAudioClip($sessid, $gunid);
 //        if(PEAR::isError($res)) return $res;
@@ -324,7 +324,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		gunid
      */
-    function downloadMetadataClose($token)
+    protected function downloadMetadataClose($token)
     {
         return $this->bsCloseDownload($token, 'metadata');
     }
@@ -337,7 +337,7 @@ class LocStor extends BasicStor {
      * @param string $gunid
      * @return string|PEAR_Error
      */
-    function getAudioClip($sessid, $gunid)
+    protected function getAudioClip($sessid, $gunid)
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if (PEAR::isError($ac)) {
@@ -409,7 +409,7 @@ class LocStor extends BasicStor {
      *   </ul>
      *  @see BasicStor::localSearch
       */
-    function searchMetadata($sessid, $criteria)
+    protected function searchMetadata($sessid, $criteria)
     {
         if (($res = $this->_authorize('read', $this->storId, $sessid)) !== TRUE) {
             return $res;
@@ -425,7 +425,7 @@ class LocStor extends BasicStor {
      * @param mixed $sessid - this variable isnt used
      * @return unknown
      */
-    function localSearch($criteria, $sessid='')
+    protected function localSearch($criteria, $sessid='')
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
@@ -449,7 +449,7 @@ class LocStor extends BasicStor {
      *       cnt : integer - number of matching values
      *  @see BasicStor::bsBrowseCategory
      */
-    function browseCategory($category, $criteria=NULL, $sessid='')
+    protected function browseCategory($category, $criteria=NULL, $sessid='')
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
@@ -466,7 +466,7 @@ class LocStor extends BasicStor {
      * @param string $gunid
      * @return boolean
      */
-    function existsAudioClip($sessid, $gunid)
+    protected function existsAudioClip($sessid, $gunid)
     {
         $ex = $this->existsFile($sessid, $gunid, 'audioclip');
         // webstreams are subset of audioclips - moved to BasicStor
@@ -496,7 +496,7 @@ class LocStor extends BasicStor {
      * 		internal file type
      * @return boolean
      */
-    function existsFile($sessid, $gunid, $ftype=NULL)
+    protected function existsFile($sessid, $gunid, $ftype=NULL)
     {
         $id = $this->idFromGunid($gunid);
         if (is_null($id)) {
@@ -519,7 +519,7 @@ class LocStor extends BasicStor {
      * 		if true, don't use trash
      * @return boolean|PEAR_Error
      */
-    function deleteAudioClip($sessid, $gunid, $forced=FALSE)
+    protected function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if (PEAR::isError($ac)) {
@@ -548,7 +548,7 @@ class LocStor extends BasicStor {
      * 		metadata XML string
      * @return boolean|PEAR_Error
      */
-    function updateAudioClipMetadata($sessid, $gunid, $metadata)
+    protected function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if (PEAR::isError($ac)) {
@@ -574,7 +574,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		playlist global unique ID
      */
-    function createPlaylist($sessid, $playlistId, $fname)
+    public function createPlaylist($sessid, $playlistId, $fname)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if (PEAR::isError($ex)) {
@@ -635,7 +635,7 @@ class LocStor extends BasicStor {
      * @return struct
      *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
-    function editPlaylist($sessid, $playlistId)
+    public function editPlaylist($sessid, $playlistId)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if (PEAR::isError($ex)) {
@@ -684,7 +684,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		playlistId
      */
-    function savePlaylist($sessid, $playlistToken, $newPlaylist)
+    protected function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
         $playlistId = $this->bsCloseDownload($playlistToken, 'metadata');
         if (PEAR::isError($playlistId)) {
@@ -716,7 +716,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		gunid of playlist
      */
-    function revertEditedPlaylist($playlistToken, $sessid='')
+    public function revertEditedPlaylist($playlistToken, $sessid='')
     {
         $gunid = $this->bsCloseDownload($playlistToken, 'metadata');
         if (PEAR::isError($gunid)) {
@@ -751,7 +751,7 @@ class LocStor extends BasicStor {
      * 		if true don't use trash
      * @return boolean
      */
-    function deletePlaylist($sessid, $playlistId, $forced=FALSE)
+    public function deletePlaylist($sessid, $playlistId, $forced=FALSE)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if (PEAR::isError($ex)) {
@@ -800,10 +800,10 @@ class LocStor extends BasicStor {
      *      filename: string mnemonic filename
      *  }
      */
-    function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
+    public function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
     {
         if ($recursive) {
-            require_once"AccessRecur.php";
+            require_once("AccessRecur.php");
             $r = AccessRecur::accessPlaylist($this, $sessid, $playlistId);
             if (PEAR::isError($r)) {
                 return $r;
@@ -842,7 +842,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		playlist ID
      */
-    function releasePlaylist($sessid, $playlistToken, $recursive=FALSE)
+    public function releasePlaylist($sessid, $playlistToken, $recursive=FALSE)
     {
         if ($recursive) {
             require_once"AccessRecur.php";
@@ -873,7 +873,7 @@ class LocStor extends BasicStor {
      *      token string: access token
      *      chsum string: md5 checksum,
      */
-    function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
+    protected function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
         $res = $this->bsExportPlaylistOpen($plids, $type, !$standalone);
         if ($this->dbc->isError($res)) {
@@ -897,7 +897,7 @@ class LocStor extends BasicStor {
      * 		access token obtained from exportPlaylistOpen method call
      * @return boolean|PEAR_Error
      */
-    function exportPlaylistClose($token)
+    protected function exportPlaylistClose($token)
     {
         return $this->bsExportPlaylistClose($token);
     }
@@ -914,7 +914,7 @@ class LocStor extends BasicStor {
      *      url string: writable URL
      *      token string: PUT token
      */
-    function importPlaylistOpen($sessid, $chsum)
+    protected function importPlaylistOpen($sessid, $chsum)
     {
         $userid = $this->getSessUserId($sessid);
         if ($this->dbc->isError($userid)) {
@@ -936,7 +936,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		result file global id (or error object)
      */
-    function importPlaylistClose($token)
+    protected function importPlaylistClose($token)
     {
         $arr = $this->bsClosePut($token);
         if (PEAR::isError($arr)) {
@@ -971,7 +971,7 @@ class LocStor extends BasicStor {
      * 		playlist global unique ID
      * @return boolean
      */
-    function existsPlaylist($sessid, $playlistId)
+    public function existsPlaylist($sessid, $playlistId)
     {
         return $this->existsFile($sessid, $playlistId, 'playlist');
     }
@@ -990,7 +990,7 @@ class LocStor extends BasicStor {
      * 		flag for returning editedby uid
      * @return boolean
      */
-    function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
+    public function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
 //        $ex = $this->existsPlaylist($sessid, $playlistId);
 //        if (PEAR::isError($ex)) {
@@ -1023,9 +1023,9 @@ class LocStor extends BasicStor {
      * @return hasharray
      *      token: string - render token
      */
-    function renderPlaylistToFileOpen($sessid, $plid)
+    protected function renderPlaylistToFileOpen($sessid, $plid)
     {
-        require_once "Renderer.php";
+        require_once("Renderer.php");
         $r = Renderer::rnRender2FileOpen($this, $plid);
         if (PEAR::isError($r)) {
             return $r;
@@ -1043,7 +1043,7 @@ class LocStor extends BasicStor {
      *      status : string - success | working | fault
      *      url : string - readable url
      */
-    function renderPlaylistToFileCheck($token)
+    protected function renderPlaylistToFileCheck($token)
     {
         require_once "Renderer.php";
         $r = Renderer::rnRender2FileCheck($this, $token);
@@ -1061,7 +1061,7 @@ class LocStor extends BasicStor {
      * 		render token
      * @return boolean status
      */
-    function renderPlaylistToFileClose($token)
+    protected function renderPlaylistToFileClose($token)
     {
         require_once "Renderer.php";
         $r = Renderer::rnRender2FileClose($this, $token);
@@ -1082,7 +1082,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		render token
      */
-    function renderPlaylistToStorageOpen($sessid, $plid)
+    protected function renderPlaylistToStorageOpen($sessid, $plid)
     {
         require_once "Renderer.php";
         $owner = $this->getSessUserId($sessid);
@@ -1106,7 +1106,7 @@ class LocStor extends BasicStor {
      *      status : string - success | working | fault
      *      gunid  : string - gunid of result file
      */
-    function renderPlaylistToStorageCheck($token)
+    protected function renderPlaylistToStorageCheck($token)
     {
         require_once "Renderer.php";
         $r = Renderer::rnRender2StorageCheck($this, $token);
@@ -1127,7 +1127,7 @@ class LocStor extends BasicStor {
      * @return string
      * 		render token
      */
-    function renderPlaylistToRSSOpen($sessid, $plid)
+    protected function renderPlaylistToRSSOpen($sessid, $plid)
     {
         $token = '123456789abcdeff';
         $fakeFile = "{$this->accessDir}/$token.rss";
@@ -1145,7 +1145,7 @@ class LocStor extends BasicStor {
      *      status : string - success | working | fault
      *      url    : string - readable url
      */
-    function renderPlaylistToRSSCheck($token)
+    protected function renderPlaylistToRSSCheck($token)
     {
         $fakeFile = "{$this->accessDir}/$token.rss";
         if ($token != '123456789abcdeff' || !file_exists($fakeFile)) {
@@ -1169,7 +1169,7 @@ class LocStor extends BasicStor {
      * @return boolean
      * 		status
      */
-    function renderPlaylistToRSSClose($token)
+    protected function renderPlaylistToRSSClose($token)
     {
         if ($token != '123456789abcdeff') {
             return PEAR::raiseError(
@@ -1196,7 +1196,7 @@ class LocStor extends BasicStor {
      * @return array
      *           token  : string - backup token
      */
-    function createBackupOpen($sessid, $criteria='')
+    protected function createBackupOpen($sessid, $criteria='')
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1225,7 +1225,7 @@ class LocStor extends BasicStor {
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function createBackupCheck($token)
+    protected function createBackupCheck($token)
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1249,7 +1249,7 @@ class LocStor extends BasicStor {
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    function createBackupList($sessid, $stat='')
+    protected function createBackupList($sessid, $stat='')
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1268,7 +1268,7 @@ class LocStor extends BasicStor {
      * @return boolean
      * 		status
      */
-    function createBackupClose($token)
+    protected function createBackupClose($token)
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1294,7 +1294,7 @@ class LocStor extends BasicStor {
      *      fname string: writable local filename
      *      token string: PUT token
      */
-    function restoreBackupOpen($sessid, $chsum)
+    protected function restoreBackupOpen($sessid, $chsum)
     {
         $userid = $this->getSessUserId($sessid);
         if ($this->dbc->isError($userid)) {
@@ -1318,7 +1318,7 @@ class LocStor extends BasicStor {
      * @return string $token
      * 		restore token
      */
-    function restoreBackupClosePut($sessid, $token) {
+    protected function restoreBackupClosePut($sessid, $token) {
         $arr = $this->bsClosePut($token);
         if (PEAR::isError($arr)) {
             return $arr;
@@ -1344,7 +1344,7 @@ class LocStor extends BasicStor {
      *      status: string - working | fault | success
      *      faultString: string - description of fault
      */
-    function restoreBackupCheck($token)
+    protected function restoreBackupCheck($token)
     {
         require_once('Restore.php');
         $rs = new Restore($this);
@@ -1365,7 +1365,7 @@ class LocStor extends BasicStor {
      * 		token:  string - restore token
      *      status: string - working | fault | success
      */
-    function restoreBackupClose($token) {
+    protected function restoreBackupClose($token) {
     	require_once('Restore.php');
     	$rs = new Restore($this);
     	if (PEAR::isError($rs)) {
@@ -1381,7 +1381,7 @@ class LocStor extends BasicStor {
      *
      * @return string
      */
-    function getVersion()
+    protected function getVersion()
     {
         return CAMPCASTER_VERSION;
     }
