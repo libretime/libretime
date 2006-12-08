@@ -586,9 +586,17 @@ class uiScheduler extends uiCalendar {
     } // fn copyPlfromSP
 
 
+    /**
+     * Get the currently playing clip or one that is coming up.
+     * 
+     * Note: just use methods here which work without valid authentification.
+     *
+     * @param int $distance
+     *      0=current clip; 1=next clip ...
+     * @return array
+     */
     public function getNowNextClip($distance=0)
     {
-        // just use methods which work without valid authentification
         $datetime = strftime('%Y-%m-%dT%H:%M:%S');
         $xmldatetime = str_replace('-', '', $datetime);
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
@@ -607,22 +615,20 @@ class uiScheduler extends uiCalendar {
             return FALSE;
         }
 
-        list($duration['h'], $duration['m'], $duration['s'])  = explode(':', Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining'])));
+        $secondsElapsed = Playlist::playlistTimeToSeconds($clip['elapsed']);
+        $secondsRemaining =  Playlist::playlistTimeToSeconds($clip['remaining']);
+        list($duration['h'], $duration['m'], $duration['s']) = explode(':', Playlist::secondsToPlaylistTime($secondsElapsed + $secondsRemaining));
         list($elapsed['h'], $elapsed['m'], $elapsed['s']) = explode(':', $clip['elapsed']);
         list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
         $duration = array_map('round', $duration);
         $elapsed = array_map('round', $elapsed);
         $remaining = array_map('round', $remaining);
-
-        return array(
-                'title'     => $clip['title'],
-                'duration'  => $duration,
-                'elapsed'   => $elapsed,
-                'remaining' => $remaining,
-                'percentage'=> Playlist::playlistTimeToSeconds($clip['elapsed'])
-                                    ? 100 * Playlist::playlistTimeToSeconds($clip['elapsed']) / ( Playlist::playlistTimeToSeconds($clip['elapsed']) + Playlist::playlistTimeToSeconds($clip['remaining']))
-                                    : 100
-               );
+        $percentage =  $secondsElapsed ? (100 * $secondsElapsed / ($secondsElapsed + $secondsRemaining)) : 100;
+        return array('title' => $clip['title'],
+                     'duration'  => $duration,
+                     'elapsed'   => $elapsed,
+                     'remaining' => $remaining,
+                     'percentage'=> $percentage);
     } // fn getNowNextClip
 
 
@@ -897,6 +903,11 @@ class uiScheduler extends uiCalendar {
         $cmd = "{$this->Base->STATIONPREFS['schedulerStartupScript']} status";
         exec($cmd, $output);
 
+        if (empty($output)) {
+           	$this->scriptError = 'Scheduler startup script does not appear to be valid.  Please check the value you have set in "Preferences->System Settings".';
+           	return FALSE;            
+        }
+        $message = "";
         foreach ($output as $line) {
             $message .= trim(addslashes($line)).'\n';
         }
