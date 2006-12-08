@@ -160,9 +160,10 @@ class uiBrowse
         $columnNumber = $parm['col'];
         $next  = $columnNumber + 1;
         $this->col[$columnNumber]['form_value'] = $parm['value'][0];
+        $tmpFiletype = isset($this->criteria['filetype'])?$this->criteria['filetype']:UI_FILETYPE_ANY;
         if ($parm['value'][0] == '%%all%%') {
             $this->col[$next]['criteria'] = array('operator' => 'and',
-            									  'filetype' => $this->criteria['filetype']);
+            									  'filetype' => $tmpFiletype);
         } else {
         	$conditions = array(
 	                        array('cat' => uiBase::formElementDecode($parm['category']),
@@ -182,10 +183,6 @@ class uiBrowse
         $nextCriteria = isset($this->col[$next]['criteria']) ? $this->col[$next]['criteria'] : null;
         $category = isset($this->col[$next]['category']) ? $this->col[$next]['category'] : null;
         $this->col[$next]['values'] = $this->Base->gb->browseCategory($category, $nextCriteria, $this->Base->sessid);
-
-//        echo "cat: ".$this->col[$next]['category']."\n";
-//        echo "criteria: "; print_r($this->col[$next]['criteria']);
-//        echo "\nvalues: "; print_r($this->col[$next]['values']);
 
         $this->setCriteria();
         $this->clearHierarchy($next);
