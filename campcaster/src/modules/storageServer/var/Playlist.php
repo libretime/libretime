@@ -1085,16 +1085,13 @@ class Playlist extends StoredFile {
      * @return string
      * 		time in playlist time format (HH:mm:ss.dddddd)
      */
-    public static function secondsToPlaylistTime($s0)
+    public static function secondsToPlaylistTime($seconds)
     {
-        $m = intval($s0 / 60);
-        $r0 = $s0 - $m*60;
-        $h = $m / 60;
-        $m = $m  % 60;
-        $s = intval($r0);
-        $r = $r0 - $s;
-        $res = sprintf("%02d:%02d:%02d", $h, $m, $s);
-        $res .= str_replace('0.', '.', number_format($r, 6, '.', ''));
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+        $res = sprintf("%02d:%02d:%02d.000000", $hours, $minutes, $seconds);
         return $res;
     }
 
