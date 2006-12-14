@@ -81,6 +81,11 @@
 		<Completed>1</Completed>
 	</item>
 	<item>
+		<Id>pt</Id>
+		<Name>portuguese</Name>
+		<NativeName>português</NativeName>
+	</item>
+	<item>
 		<Id>ru_RU</Id>
 		<Name>Russian (RU)</Name>
 		<NativeName>По-pусски (RU)</NativeName>
