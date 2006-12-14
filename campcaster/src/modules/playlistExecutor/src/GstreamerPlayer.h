@@ -171,6 +171,12 @@ class GstreamerPlayer : virtual public Configurable,
         Ptr<Thread>::Ref        m_preloadThread;
 
         /**
+         *  Flag that indicates that the preloader should abort.  
+         */
+
+        gboolean                m_stopPreloader;
+
+        /**
          *  The type for the vector of listeners.
          *  Just a shorthand notation, to make reference to the type
          *  easier.

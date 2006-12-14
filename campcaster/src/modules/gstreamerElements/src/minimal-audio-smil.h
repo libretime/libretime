@@ -80,6 +80,7 @@ typedef struct _LivesupportMinimalAudioSmilClass
  *  The MinimalAudioSmil object structure.
  */
 struct _LivesupportMinimalAudioSmil {
+    LivesupportMinimalAudioSmilClass* myclass;
     GstBin          parent;
 
     GstPad        * sinkpad;
@@ -99,6 +100,8 @@ struct _LivesupportMinimalAudioSmil {
  */
 struct _LivesupportMinimalAudioSmilClass {
     GstBinClass     parent_class;
+
+    gboolean*       abort;
 };
 
 

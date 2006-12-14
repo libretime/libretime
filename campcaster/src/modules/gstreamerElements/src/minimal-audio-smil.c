@@ -51,6 +51,13 @@
 
 /* ===================================================  local data structures */
 
+
+enum {
+    ARG_0,
+    ARG_ABORT
+};
+
+
 /**
  *  ElementFactory information
  */
@@ -89,6 +96,7 @@ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE (
                                             "rate = (int) [ 8000, 96000 ]"));
 
 
+
 /* ================================================  local constants & macros */
 
 #define NSEC_PER_SEC_FLOAT  1000000000.0
@@ -121,6 +129,10 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
 
 
 /* ===============================================  local function prototypes */
+
+static void
+livesupport_minimal_audio_smil_set_property( GObject * object, guint prop_id, const GValue * value, GParamSpec * pspec );
+
 
 /**
  *  Read the sink stream into memory, using a oneshotreader element.
@@ -272,6 +284,29 @@ livesupport_minimal_audio_smil_class_init(
 
 /* =============================================================  module code */
 
+static void
+livesupport_minimal_audio_smil_set_property( GObject * object, guint prop_id, const GValue * value, GParamSpec * pspec )
+{
+    LivesupportMinimalAudioSmil* smil;
+
+    /* it's not null if we got it, but it might not be ours */
+    g_return_if_fail(LIVESUPPORT_IS_MINIMAL_AUDIO_SMIL(object));
+
+    smil = LIVESUPPORT_MINIMAL_AUDIO_SMIL(object);
+
+    switch ( prop_id )
+    {
+        case ARG_ABORT:
+            smil->myclass->abort = g_value_get_pointer (value);
+            printf("SETTING ABORT POINTER: %d\n", smil->myclass->abort);
+            break;
+
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID ( object, prop_id, pspec );
+            break;
+    }
+}
+
 /*------------------------------------------------------------------------------
  *  Read the sink stream into memory, using a oneshotreader element.
  *----------------------------------------------------------------------------*/
@@ -351,7 +386,7 @@ handle_animate_element(LivesupportMinimalAudioSmil  * smil,
 
     /* handle the attributes */
     for (attr = ((xmlElement*)animate)->attributes;
-         attr;
+         attr && !(*smil->myclass->abort);
          attr = (xmlAttribute*) attr->next) {
 
         xmlNode * node;
@@ -509,7 +544,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
 
     /* handle the attributes */
     for (attr = ((xmlElement*)audio)->attributes;
-         attr;
+         attr && !(*smil->myclass->abort);
          attr = (xmlAttribute*) attr->next) {
 
         xmlNode * node;
@@ -584,7 +619,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
 
     /* now handle the possible animate elements inside this audio element */
     element = pplay;
-    for (ix = 0, node = audio->children; node; node = node->next, ++ix) {
+    for (ix = 0, node = audio->children; node && !(*smil->myclass->abort); node = node->next, ++ix) {
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * elem = 0;
 
@@ -658,7 +693,7 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
     g_value_unset(&gvalue);
 
 
-    for (index = 0, node = par->children; node; node = node->next, ++index) {
+    for (index = 0, node = par->children; node && !(*smil->myclass->abort); node = node->next, ++index) {
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
@@ -731,7 +766,7 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
         return FALSE;
     }
 
-    for (node = node->children; node; node = node->next) {
+    for (node = node->children; node && !(*smil->myclass->abort); node = node->next) {
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
 
@@ -838,6 +873,10 @@ livesupport_minimal_audio_smil_dispose(GObject * object)
 static void
 livesupport_minimal_audio_smil_init(LivesupportMinimalAudioSmil * smil)
 {
+    printf("INIT().\n");
+
+    smil->myclass = (LivesupportMinimalAudioSmilClass*) G_OBJECT_GET_CLASS(smil);
+
     GValue      gvalue = { 0 };
     GstPad    * oneshotReaderSink;
 
@@ -913,6 +952,8 @@ static void
 livesupport_minimal_audio_smil_class_init(
                                     LivesupportMinimalAudioSmilClass  * klass)
 {
+    printf("CLASS_INIT().\n");
+
     GObjectClass      * gobject_class;
     GstElementClass   * gstelement_class;
 
@@ -920,9 +961,13 @@ livesupport_minimal_audio_smil_class_init(
     gstelement_class = (GstElementClass *) klass;
     parent_class     = (GstBinClass*)g_type_class_ref(GST_TYPE_BIN);
 
+    g_object_class_install_property (G_OBJECT_CLASS (klass), ARG_ABORT, g_param_spec_pointer
+                                    ("abort", "abort", "abort", (GParamFlags)G_PARAM_WRITABLE));
+
     gobject_class->dispose         = livesupport_minimal_audio_smil_dispose;
-    gstelement_class->change_state =
-                                    livesupport_minimal_audio_smil_change_state;
+    gobject_class->set_property    = livesupport_minimal_audio_smil_set_property;
+    gstelement_class->change_state = livesupport_minimal_audio_smil_change_state;
+
 
     /* check for the libxml version */
     LIBXML_TEST_VERSION

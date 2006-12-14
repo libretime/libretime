@@ -644,6 +644,8 @@ Preloader::Preloader(GstreamerPlayer* player, const std::string url) throw()
     , m_fileUrl(url)
 {
     DEBUG_FUNC_INFO
+
+    player->m_stopPreloader = false;
 }
 
 
@@ -688,6 +690,7 @@ void Preloader::run() throw()
     gst_element_set(p->m_preloadFilesrc, "location", filePath.c_str(), NULL);
 
     p->m_preloadDecoder = gst_element_factory_make("minimalaudiosmil", NULL);
+    gst_element_set(p->m_preloadDecoder, "abort", &p->m_stopPreloader, NULL);
 
     GstElement* pipe     = gst_pipeline_new("pipe");
     GstElement* fakesink = gst_element_factory_make("fakesink", "fakesink");
@@ -697,12 +700,19 @@ void Preloader::run() throw()
     gst_element_set_state(pipe, GST_STATE_PLAYING);
 
     gint64 position = 0LL;
-    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+    while (position == 0LL && !p->m_stopPreloader && gst_bin_iterate(GST_BIN(pipe))) {
         GstFormat   format = GST_FORMAT_DEFAULT;
         gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
     }
 
     gst_element_set_state(pipe, GST_STATE_PAUSED);
+
+    if (p->m_stopPreloader) {
+        debug() << "Aborting preloader, per request." << endl;
+        g_object_unref(G_OBJECT(p->m_preloadFilesrc));
+        g_object_unref(G_OBJECT(p->m_preloadDecoder));
+        return;
+    }
 
     g_object_ref(G_OBJECT(p->m_preloadFilesrc));
     g_object_ref(G_OBJECT(p->m_preloadDecoder));
@@ -720,8 +730,11 @@ void Preloader::signal(int) throw()
 {}
 
 
-// TODO This should be implemented by adding a "abort" property to the minimalaudiosmil element.
 void Preloader::stop() throw()
-{}
+{
+    DEBUG_FUNC_INFO
+
+    m_player->m_stopPreloader = true;
+}
 
 
