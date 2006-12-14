@@ -339,6 +339,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         m_preloadThread->join();
     }
 
+    m_stopPreloader = false;
+
     const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
     const bool isPreloaded = (m_preloadUrl == fileUrl);
 
