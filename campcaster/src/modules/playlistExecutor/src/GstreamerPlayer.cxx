@@ -339,8 +339,6 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         m_preloadThread->join();
     }
 
-    m_stopPreloader = false;
-
     const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
     const bool isPreloaded = (m_preloadUrl == fileUrl);
 
@@ -367,7 +365,9 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         }
         else {
             debug() << "SMIL file detected." << endl;
+            m_stopPreloader = false;
             m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
+            gst_element_set(m_decoder, "abort", &m_stopPreloader, NULL);
             gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
         }
         if (gst_element_get_parent(m_audiosink) == NULL)
