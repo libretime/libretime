@@ -298,7 +298,7 @@ livesupport_minimal_audio_smil_set_property( GObject * object, guint prop_id, co
     {
         case ARG_ABORT:
             smil->myclass->abort = g_value_get_pointer (value);
-            printf("SETTING ABORT POINTER: %d\n", smil->myclass->abort);
+            printf("SETTING ABORT POINTER.");
             break;
 
         default:
@@ -963,6 +963,10 @@ livesupport_minimal_audio_smil_class_init(
 
     g_object_class_install_property (G_OBJECT_CLASS (klass), ARG_ABORT, g_param_spec_pointer
                                     ("abort", "abort", "abort", (GParamFlags)G_PARAM_WRITABLE));
+
+    // Make sure that the abort pointer is always initialized
+    klass->abort_initial = FALSE;
+    klass->abort = &klass->abort_initial;
 
     gobject_class->dispose         = livesupport_minimal_audio_smil_dispose;
     gobject_class->set_property    = livesupport_minimal_audio_smil_set_property;

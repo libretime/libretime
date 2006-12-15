@@ -101,7 +101,8 @@ struct _LivesupportMinimalAudioSmil {
 struct _LivesupportMinimalAudioSmilClass {
     GstBinClass     parent_class;
 
-    gboolean*       abort;
+    gboolean        abort_initial;
+    gboolean      * abort;
 };
 
 
