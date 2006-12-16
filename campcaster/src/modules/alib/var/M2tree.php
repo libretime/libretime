@@ -162,7 +162,7 @@ class M2tree {
      * @return int|PEAR_Error
      *      New id of inserted object
      */
-    protected static function CopyObj($oid, $newParid, $after=NULL)
+    public static function CopyObj($oid, $newParid, $after=NULL)
     {
         global $CC_CONFIG;
         global $CC_DBC;

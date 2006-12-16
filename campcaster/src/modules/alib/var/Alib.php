@@ -199,7 +199,7 @@ class Alib {
      * @return int
      * 		local object id
      */
-    protected static function GetPermOid($permid)
+    public static function GetPermOid($permid)
     {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT obj FROM ".$CC_CONFIG['permTable']." WHERE permid=$permid";
