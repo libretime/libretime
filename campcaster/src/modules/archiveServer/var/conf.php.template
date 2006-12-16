@@ -1,15 +1,6 @@
 <?php
 /**
  * ArchiveServer configuration file
- *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
- * @package Campcaster
- * @subpackage ArchiveServer
- * @copyright 2006 MDLF, Inc.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 
 define('CAMPCASTER_VERSION', '1.1.1');
@@ -41,7 +32,7 @@ define('CAMPCASTER_VERSION', '1.1.1');
 
 // these are the default values for the config
 
-$config = array(
+$CC_CONFIG = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
         'username'      => 'ls_dbuser',
@@ -105,9 +96,25 @@ $config = array(
     'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
 );
-$config['sysSubjs'] = array(
-    'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
+
+// Add database table names
+$CC_CONFIG['filesTable'] = $CC_CONFIG['tblNamePrefix'].'files';
+$CC_CONFIG['mdataTable'] = $CC_CONFIG['tblNamePrefix'].'mdata';
+$CC_CONFIG['accessTable'] = $CC_CONFIG['tblNamePrefix'].'access';
+$CC_CONFIG['permTable'] = $CC_CONFIG['tblNamePrefix'].'perms';
+$CC_CONFIG['sessTable'] = $CC_CONFIG['tblNamePrefix'].'sess';
+$CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
+$CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
+$CC_CONFIG['classTable'] = $CC_CONFIG['tblNamePrefix'].'classes';
+$CC_CONFIG['cmembTable'] = $CC_CONFIG['tblNamePrefix'].'cmemb';
+$CC_CONFIG['treeTable'] = $CC_CONFIG['tblNamePrefix'].'tree';
+$CC_CONFIG['structTable'] = $CC_CONFIG['tblNamePrefix'].'struct';
+$CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
+$CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
+
+$CC_CONFIG['sysSubjs'] = array(
+    'root', $CC_CONFIG['AdminsGr'], $CC_CONFIG['AllGr'], $CC_CONFIG['StationPrefsGr']
 );
 $old_ip = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
+set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_ip);
 ?>

@@ -67,17 +67,17 @@ class uiSubjects
     */
     function addSubj($request)
     {
-        include dirname(__FILE__). '/formmask/subjects.inc.php';
+        include(dirname(__FILE__). '/formmask/subjects.inc.php');
         $this->setRedir();
 
         if ($this->Base->_validateForm($request, $mask[$request['passwd'] ? 'addUser' : 'addGroup']) !== TRUE) {
             return FALSE;
         }
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE) {
+        if (Alib::CheckPerm($this->Base->userid, 'subjects') !== TRUE) {
             $this->Base->_retMsg('Access denied.');
             return FALSE;
         }
-        if ($this->Base->gb->getSubjId($request['login'])) {
+        if (Subjects::GetSubjId($request['login'])) {
             $this->Base->_retMsg('User or group "$1" already exists.', $request['login']);
             $this->Base->redirUrl = $_SERVER['HTTP_REFERER'];
             return FALSE;
@@ -111,7 +111,7 @@ class uiSubjects
     {
         $this->setReload();
 
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE) {
+        if (Alib::CheckPerm($this->Base->userid, 'subjects') !== TRUE) {
             $this->Base->_retMsg('Access denied.');
             return FALSE;
         }
@@ -138,7 +138,7 @@ class uiSubjects
         include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
         $form = new HTML_QuickForm('chgPasswd', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') === TRUE) {
+        if (Alib::CheckPerm($this->Base->userid, 'subjects') === TRUE) {
             $mask['chgPasswd']['cancel']['attributes'] = array('onClick' => 'location.href="'.UI_BROWSER.'?act=SUBJECTS"');
             unset ($mask['chgPasswd']['oldpasswd']);
         } else {
@@ -168,7 +168,7 @@ class uiSubjects
             return FALSE;
         }
 
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects')) {
+        if (Alib::CheckPerm($this->Base->userid, 'subjects')) {
             $this->setSuRedir();
         } else {
             $this->setRedir();
@@ -177,7 +177,7 @@ class uiSubjects
                 $this->Base->_retMsg('Access denied.');
                 return FALSE;
             }
-            if ($this->Base->gb->authenticate($request['login'], $request['oldpasswd']) === FALSE) {
+            if (Subjects::Authenticate($request['login'], $request['oldpasswd']) === FALSE) {
                 $this->Base->_retMsg('Old password was incorrect.');
                 $this->Base->redirUrl = $_SERVER['HTTP_REFERER'];
                 return FASLE;
@@ -206,7 +206,7 @@ class uiSubjects
      */
     function getSubjectsWCnt()
     {
-        return $this->Base->gb->getSubjectsWCnt();
+        return Subjects::GetSubjectsWCnt();
     }
 
 
@@ -220,7 +220,7 @@ class uiSubjects
      */
     function getGroupMember($id)
     {
-        return $this->Base->gb->listGroup($id);
+        return Subjects::ListGroup($id);
     } // fn getGroupMember
 
 
@@ -233,11 +233,11 @@ class uiSubjects
      */
     function getNonGroupMember($id)
     {
-        foreach ($this->Base->gb->listGroup($id) as $val1) {
+        foreach (Subjects::ListGroup($id) as $val1) {
             $members[$val1['id']] = TRUE;
         }
 
-        $all = $this->Base->gb->getSubjectsWCnt();
+        $all = Subjects::GetSubjectsWCnt();
         foreach ($all as $key2=>$val2) {
             if ($members[$val2['id']]) {
                 unset($all[$key2]);
@@ -268,17 +268,17 @@ class uiSubjects
         // loop for multiple action
         if (is_array($request['id'])) {
             foreach ($request['id'] as $val) {
-                $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
+                $req = array('login' => Subjects::GetSubjName($val), 'gname' => $request['gname']);
                 $this->addSubj2Gr($req);
             }
             return TRUE;
         }
 
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE){
+        if (Alib::CheckPerm($this->Base->userid, 'subjects') !== TRUE){
             $this->Base->_retMsg('Access denied.');
             return FALSE;
         }
-        if (PEAR::isError($res = $this->Base->gb->addSubj2Gr($request['login'], $request['gname']))) {
+        if (PEAR::isError($res = Subjects::AddSubjectToGroup($request['login'], $request['gname']))) {
             $this->Base->_retMsg($res->getMessage());
             return FALSE;
         }
@@ -306,17 +306,17 @@ class uiSubjects
         // loop for multiple action
         if (is_array($request['id'])) {
             foreach ($request['id'] as $val) {
-                $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
+                $req = array('login' => Subjects::GetSubjName($val), 'gname' => $request['gname']);
                 $this->removeSubjFromGr($req);
             }
             return TRUE;
         }
 
-        if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE){
+        if (Alib::CheckPerm($this->Base->userid, 'subjects') !== TRUE){
             $this->Base->_retMsg('Access denied.');
             return FALSE;
         }
-        if (PEAR::isError($res = $this->Base->gb->removeSubjFromGr($request['login'], $request['gname']))) {
+        if (PEAR::isError($res = Subjects::RemoveSubjectFromGroup($request['login'], $request['gname']))) {
             $this->Base->_retMsg($res->getMessage());
             return FALSE;
         }
@@ -333,7 +333,7 @@ class uiSubjects
      */
     function isMemberOf($groupname)
     {
-        if ($gid = $this->Base->gb->getSubjId($groupname)) {
+        if ($gid = Subjects::GetSubjId($groupname)) {
             $members = $this->getGroupMember($gid);
             if (is_array($members)) {
                 foreach($members as $member) {

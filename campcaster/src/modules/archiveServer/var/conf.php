@@ -1,14 +1,9 @@
 <?php
 /**
  * ArchiveServer configuration file
- *
- * @author $Author$
- * @version $Revision$
- * @package Campcaster
- * @subpackage ArchiveServer
  */
 
-define('LS_VERSION', '1.0');
+define('CAMPCASTER_VERSION', '1.1.1');
 
 /**
  *  configuration structure:
@@ -37,14 +32,14 @@ define('LS_VERSION', '1.0');
 
 // these are the default values for the config
 
-$config = array(
+$CC_CONFIG = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
         'username'      => 'test',
         'password'      => 'test',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'Campcaster-test',
+        'database'      => 'Campcaster-paul',
     ),
     'tblNamePrefix' => 'as_',
 
@@ -101,31 +96,49 @@ $config = array(
     'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
 );
-$config['sysSubjs'] = array(
-    'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
+
+// Add database table names
+$CC_CONFIG['filesTable'] = $CC_CONFIG['tblNamePrefix'].'files';
+$CC_CONFIG['mdataTable'] = $CC_CONFIG['tblNamePrefix'].'mdata';
+$CC_CONFIG['accessTable'] = $CC_CONFIG['tblNamePrefix'].'access';
+$CC_CONFIG['permTable'] = $CC_CONFIG['tblNamePrefix'].'perms';
+$CC_CONFIG['sessTable'] = $CC_CONFIG['tblNamePrefix'].'sess';
+$CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
+$CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
+$CC_CONFIG['classTable'] = $CC_CONFIG['tblNamePrefix'].'classes';
+$CC_CONFIG['cmembTable'] = $CC_CONFIG['tblNamePrefix'].'cmemb';
+$CC_CONFIG['treeTable'] = $CC_CONFIG['tblNamePrefix'].'tree';
+$CC_CONFIG['structTable'] = $CC_CONFIG['tblNamePrefix'].'struct';
+$CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
+$CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
+
+$CC_CONFIG['sysSubjs'] = array(
+    'root', $CC_CONFIG['AdminsGr'], $CC_CONFIG['AllGr'], $CC_CONFIG['StationPrefsGr']
 );
 $old_ip = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
+set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_ip);
 
-// see if a ~/.campcaster/archiveServer.conf.php exists, and
-// overwrite the settings from there if any
-
-$this_file         = null;
-if(isset($_SERVER["SCRIPT_FILENAME"])){
-    $this_file         = $_SERVER["SCRIPT_FILENAME"];
-}elseif(isset($argv[0])){
-    $this_file         = $argv[0];
+//
+// See if a ~/.campcaster/archiveServer.conf.php exists, and
+// overwrite the settings from there, if any.
+//
+$this_file = null;
+if (isset($_SERVER["SCRIPT_FILENAME"])) {
+    $this_file = $_SERVER["SCRIPT_FILENAME"];
+} elseif(isset($argv[0])) {
+    $this_file = $argv[0];
 }
-if(!is_null($this_file)){
-    $fileowner_id      = fileowner($this_file);
-    $fileowner_array   = posix_getpwuid($fileowner_id);
+
+if (!is_null($this_file)) {
+    $fileowner_id = fileowner($this_file);
+    $fileowner_array = posix_getpwuid($fileowner_id);
     $fileowner_homedir = $fileowner_array['dir'];
-    $home_conf         = $fileowner_homedir . '/.campcaster/archiveServer.conf.php';
+    $home_conf = $fileowner_homedir . '/.campcaster/archiveServer.conf.php';
     if (file_exists($home_conf)) {
-        $default_config = $config;
-        include $home_conf;
-        $user_config = $config;
-        $config = $user_config + $default_config;
+        $default_config = $CC_CONFIG;
+        include($home_conf);
+        $user_config = $CC_CONFIG;
+        $CC_CONFIG = $user_config + $default_config;
     }
 }
 

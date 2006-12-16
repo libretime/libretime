@@ -67,7 +67,7 @@ class uiHubBrowse extends uiBrowse
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
             // TODO: maybe this getMetaInfo is not correct for the remote results
-            $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
+            $this->results['items'][] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($rec));
         }
         $this->pagination($results);
         return is_array($results);

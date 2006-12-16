@@ -13,8 +13,8 @@ if($pars[0] == '-s'){
     $serverPath = array_shift($pars);
 }else{
     $serverPath =
-      "http://{$config['storageUrlHost']}:{$config['storageUrlPort']}".
-      "{$config['storageUrlPath']}/{$config['storageXMLRPC']}";
+      "http://{$CC_CONFIG['storageUrlHost']}:{$CC_CONFIG['storageUrlPort']}".
+      "{$CC_CONFIG['storageUrlPath']}/{$CC_CONFIG['storageXMLRPC']}";
 }
 $options = array();
 if($pars[0] == '-o'){

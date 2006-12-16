@@ -37,9 +37,9 @@ require_once 'DB.php';
 require_once dirname(__FILE__).'/../LocStor.php';
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new LocStor($dbc, $config);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$gb = new LocStor();
 
 function http_error($code, $err) {
     header("HTTP/1.1 $code");
@@ -61,7 +61,7 @@ if(!$tc){ http_error(403, "put.php: Token not valid ($token)."); }
 
 header("Content-type: text/plain");
 
-$destfile = "{$config['accessDir']}/{$token}";
+$destfile = $CC_CONFIG['accessDir']."/{$token}";
 
 /* PUT data comes in on the input stream */
 $putdata = @fopen("php://input", "r") or

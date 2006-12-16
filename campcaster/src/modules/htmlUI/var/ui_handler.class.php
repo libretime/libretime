@@ -24,12 +24,10 @@ class uiHandler extends uiBase {
      * Initialize a new Browser Class
      * Call uiBase constructor
      *
-     * @param array $config
-     * 		configurartion data
      */
-    public function __construct($config)
+    public function __construct()
     {
-        parent::__construct($config);
+        parent::__construct();
     } // constructor
 
 
@@ -40,7 +38,8 @@ class uiHandler extends uiBase {
      */
     function login($formdata, $mask)
     {
-        #$this->_cleanArray($_SESSION);
+        global $CC_CONFIG;
+        //$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
             $_SESSION['retransferFormData']['login'] = $formdata['login'];
@@ -50,7 +49,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
+        $sessid = Alib::Login($formdata['login'], $formdata['pass']);
 
         if (!$sessid || PEAR::isError($sessid)){
             $this->_retMsg('Login failed.');
@@ -61,11 +60,11 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        #setcookie($this->config['authCookieName'], $sessid);
-        echo "<meta http-equiv='set-cookie' content='".$this->config['authCookieName']."=".$sessid.";'>";
+        #setcookie($CC_CONFIG['authCookieName'], $sessid);
+        echo "<meta http-equiv='set-cookie' content='".$CC_CONFIG['authCookieName']."=".$sessid.";'>";
         ob_flush();
 
-        $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
+        $id = M2tree::GetObjId($formdata['login'], $this->gb->storId);
 
         if (PEAR::isError($id)) {
             $this->_retMsg('Access to home directory failed.');
@@ -90,9 +89,10 @@ class uiHandler extends uiBase {
      */
     function logout($trigger_login = FALSE)
     {
-        $this->gb->logout($this->sessid);
-        #setcookie($this->config['authCookieName'], '');
-        echo "<meta http-equiv='set-cookie' content='".$this->config['authCookieName']."=;'>";
+        global $CC_CONFIG;
+        Alib::Logout($this->sessid);
+        //setcookie($CC_CONFIG['authCookieName'], '');
+        echo "<meta http-equiv='set-cookie' content='".$CC_CONFIG['authCookieName']."=;'>";
         ob_clean();
         session_destroy();
 
@@ -113,6 +113,7 @@ class uiHandler extends uiBase {
      */
     function uploadFile($formdata, $mask, $replace=NULL)
     {
+        global $CC_CONFIG;
         if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
             if (UI_ERROR) {
             	$this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
@@ -124,7 +125,7 @@ class uiHandler extends uiBase {
         $id  = $formdata['id'];
         $folderId = $formdata['folderId'];
 
-        if ($this->gb->getFileType($folderId) != 'Folder') {
+        if (Greenbox::getFileType($folderId) != 'Folder') {
             $this->_retMsg('The target is not a folder.');
             $this->redirUrl = UI_BROWSER."?act=fileList";
             return FALSE;
@@ -143,11 +144,11 @@ class uiHandler extends uiBase {
         }
 
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.campcaster");
-        $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
+        $ntmp = $CC_CONFIG['bufferDir'].'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
         chmod($ntmp, 0664);
 
-//        echo "buffer dir: ".$this->gb->bufferDir."<BR>";
+//        echo "buffer dir: ".$CC_CONFIG['bufferDir']."<BR>";
 //        echo "$ntmp <br>";
 //        print_r($formdata);
 //        exit;
@@ -179,7 +180,8 @@ class uiHandler extends uiBase {
 
     function test4audioType($filename)
     {
-        foreach ($this->config['file_types'] as $t) {
+        global $CC_CONFIG;
+        foreach ($CC_CONFIG['file_types'] as $t) {
             if (preg_match('/'.str_replace('/', '\/', $t).'$/i', $filename)) {
                 return TRUE;
             }
@@ -244,7 +246,7 @@ class uiHandler extends uiBase {
         $id  = $formdata['id'];
         $folderId = $formdata['folderId'];
 
-        if ($this->gb->getFileType($folderId) != 'Folder') {
+        if (Greenbox::getFileType($folderId) != 'Folder') {
             $this->_retMsg ('The target is not a folder.');
             $this->redirUrl = UI_BROWSER."?act=fileList";
             return FALSE;
@@ -430,7 +432,7 @@ class uiHandler extends uiBase {
         $this->redirUrl = UI_BROWSER."?popup[]=_reload_parent&popup[]=_close";
 
         /* no folder support yet
-        if (!($delOverride==$id) && (count($this->gb->getObjType($id)=='Folder'?
+        if (!($delOverride==$id) && (count(BasicStor::GetObjType($id)=='Folder'?
                       $this->gb->listFolder($id, $this->sessid):NULL))) {
             $this->_retMsg("Folder is not empty. You can override this protection by clicking DEL again");
             $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid."&delOverride=$id";
@@ -445,7 +447,7 @@ class uiHandler extends uiBase {
         }
 
         foreach ($ids as $id) {
-            if ($this->gb->getFileType($id) == 'playlist') {
+            if (Greenbox::getFileType($id) == 'playlist') {
                 $r = $this->gb->deletePlaylist($id, $this->sessid);
             } else {
                 $r = $this->gb->deleteFile($id, $this->sessid);

@@ -1,33 +1,45 @@
 <?php
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
-require_once "alib_h.php";
-require_once "alibExTestAuth.php";
 
-if(isset($_GET['id']) && is_numeric($_GET['id'])){   $id = $_GET['id']; $list=false; }
-else $list=true;
+require_once("alib_h.php");
+require_once("alibExTestAuth.php");
+
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {   
+    $id = $_GET['id']; 
+    $list = false; 
+} else {
+    $list = true;
+}
 
 // prefill data structure for template
-if($list){
+if ($list) {
     $d = array(
-        'cls'       => $alib->getClasses(),
+        'cls'       => ObjClasses::GetClasses(),
         'loggedAs'  => $login,
     );
-}else{
+} else {
     $d = array(
-        'rows'      => $alib->listClass($id),
+        'rows'      => ObjClasses::ListClass($id),
         'id'        => $id,
         'loggedAs'  => $login,
-        'cname'     => $alib->getClassName($id),
-        'cls'       => $alib->getClasses(),
-        'objs'      => $alib->getSubTree(null, true)
+        'cname'     => ObjClasses::GetClassName($id),
+        'cls'       => ObjClasses::GetClasses(),
+        'objs'      => M2tree::GetSubTree(null, true)
     );
 }
-$d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
+$d['msg'] = $_SESSION['alertMsg']; 
+unset($_SESSION['alertMsg']);
 
-require_once "alib_f.php";
+require_once("alib_f.php");
 // template follows:
 ?>
 <html><head>

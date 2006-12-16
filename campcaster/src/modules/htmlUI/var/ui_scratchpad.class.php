@@ -81,7 +81,7 @@ class uiScratchPad
 			$arr = array_slice($arr, 0, $maxLength);
             foreach ($arr as $gunid) {
                 if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                	$id = $this->Base->gb->idFromGunid($this->Base->toHex($gunid));
+                	$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
                     if ($id != FALSE) {
                         if ($i = $this->Base->getMetaInfo($id)) {
                             $this->items[] = $i;

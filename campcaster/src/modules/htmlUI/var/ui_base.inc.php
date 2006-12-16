@@ -183,12 +183,7 @@ class uiBase
     /**
      * @var DB
      */
-    public $dbc;
-
-    /**
-     * @var array
-     */
-    public $config;
+    //public $dbc;
 
     /**
      * @var string
@@ -218,36 +213,31 @@ class uiBase
      * @param array $config
      * 		configuration data
      */
-    public function __construct(&$config)
+    public function __construct()
     {
-        $this->dbc = DB::connect($config['dsn'], TRUE);
-        if (DB::isError($this->dbc)) {
-            die($this->dbc->getMessage());
-        }
-        $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb = new GreenBox($this->dbc, $config);
-        $this->config =& $config;
-        $this->config['accessRawAudioUrl'] = $config['storageUrlPath'].'/xmlrpc/simpleGet.php';
-        $this->sessid = isset($_REQUEST[$config['authCookieName']]) ?
-                            $_REQUEST[$config['authCookieName']] : null;
-        $this->userid = $this->gb->getSessUserId($this->sessid);
-        $this->login = $this->gb->getSessLogin($this->sessid);
+        global $CC_DBC, $CC_CONFIG;
+        $this->gb = new GreenBox();
+        $CC_CONFIG['accessRawAudioUrl'] = $CC_CONFIG['storageUrlPath'].'/xmlrpc/simpleGet.php';
+        $this->sessid = isset($_REQUEST[$CC_CONFIG['authCookieName']]) ?
+                            $_REQUEST[$CC_CONFIG['authCookieName']] : null;
+        $this->userid = GreenBox::GetSessUserId($this->sessid);
+        $this->login = Alib::GetSessLogin($this->sessid);
         if (PEAR::isError($this->login)) {
             $this->login = null;
         }
         $this->langid =& $_SESSION['langid'];
 
         if (!is_null($this->login)) {
-            if (isset($_REQUEST['id'])) {
+            if (isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
                 $this->id = $_REQUEST['id'];
             } else {
-                $this->id = $this->gb->getObjId($this->login, $this->gb->storId);
+                $this->id = M2tree::GetObjId($this->login, $this->gb->storId);
             }
-            $this->pid = $this->gb->getparent($this->id) != 1 ?
-                                $this->gb->getparent($this->id) : FALSE;
-            $this->type = $this->gb->getFileType($this->id);
+            $parentId = M2tree::GetParent($this->id);
+            $this->pid = ($parentId != 1) ? $parentId : FALSE;
+            $this->type = Greenbox::getFileType($this->id);
             $this->fid = ($this->type == 'Folder') ? $this->id : $this->pid;
-            $this->homeid = $this->gb->getObjId($this->login, $this->gb->storId);
+            $this->homeid = M2tree::GetObjId($this->login, $this->gb->storId);
         }
 
     }
@@ -286,8 +276,9 @@ class uiBase
                         $this->STATIONPREFS[$val['element']] = $setting;
                     } elseif ($val['required']) {
                         // set default values on first login
-                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $val['default']);
-                        $this->STATIONPREFS[$val['element']] = $val['default'];
+                        $default = isset($val['default'])?$val['default']:null;
+                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $default);
+                        $this->STATIONPREFS[$val['element']] = $default;
                     }
                 }
             }
@@ -473,7 +464,8 @@ class uiBase
 
     public function toHex($gunid)
     {
-        $res = $this->dbc->query("SELECT to_hex($gunid)");
+        global $CC_DBC;
+        $res = $CC_DBC->query("SELECT to_hex($gunid)");
         $row = $res->fetchRow();
         return $row['to_hex'];
     } // fn toHex
@@ -481,7 +473,8 @@ class uiBase
 
     public function toInt8($gunid)
     {
-        $res = $this->dbc->query("SELECT x'$gunid'::bigint");
+        global $CC_DBC;
+        $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
         $row = $res->fetchRow();
         return $row['int8'];
     } // fn toInt8
@@ -504,9 +497,9 @@ class uiBase
 
     public function getMetaInfo($id)
     {
-        $type = strtolower($this->gb->getFileType($id));
+        $type = strtolower(GreenBox::getFileType($id));
         $data = array('id' => $id,
-                      'gunid' => $this->gb->gunidFromId($id),
+                      'gunid' => BasicStor::GunidFromId($id),
                       'title' => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),
                       'creator' => $this->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
                       'duration' => $this->getMetadataValue($id, UI_MDATA_KEY_DURATION),
@@ -549,7 +542,7 @@ class uiBase
      */
     private function _getFileTitle($id)
     {
-        if (is_array($arr = $this->gb->getPath($id))) {
+        if (is_array($arr = GreenBox::GetPath($id))) {
             $file = array_pop($arr);
             return $file['name'];
         }
@@ -559,7 +552,7 @@ class uiBase
 
 //    function _isFolder($id)
 //    {
-//        if (strtolower($this->gb->getFileType($id)) != 'folder') {
+//        if (strtolower(GreenBox::getFileType($id)) != 'folder') {
 //            return FALSE;
 //        }
 //        return TRUE;

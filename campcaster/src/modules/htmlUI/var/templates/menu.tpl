@@ -53,7 +53,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                 <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=week&target=SCHEDULER">##Week##</a></li>
                 <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&target=SCHEDULER">##Day##</a></li>
                 <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1&target=SCHEDULER">##Today##</a></li>
-                {* if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
+                {* if Alib::CheckPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
                     <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=status&target=SCHEDULER">##Status##</a></li>
                 {* /if *}
                 {* if $SUBJECTS->isMemberOf('Backup') *}

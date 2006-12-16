@@ -56,10 +56,12 @@ class Restore {
      * @param GreenBox $gb
      * 		greenbox object reference
      */
-    public function __construct(&$gb) {
+    public function __construct(&$gb)
+    {
+        global $CC_CONFIG;
         $this->gb =& $gb;
         $this->token = null;
-        $this->logFile = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
+        $this->logFile = $CC_CONFIG['bufferDir'].'/'.ACCESS_TYPE.'.log';
         if ($this->loglevel == 'debug') {
         	$this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
         }
@@ -77,14 +79,15 @@ class Restore {
      * 		hasharray with field:
      *      token string: backup token
      */
-    function openRestore($sessid, $backup_file) {
+    function openRestore($sessid, $backup_file)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I-".date("Ymd-H:i:s")." doRestore - sessid:$sessid\n");
         }
         $this->sessid = $sessid;
 
         //generate token
-        $this->token = StoredFile::_createGunid();
+        $this->token = StoredFile::CreateGunid();
 
         // status file -> working
         $this->setEnviroment();
@@ -112,7 +115,8 @@ class Restore {
      *      url     : string - access url
      *      tmpfile : string - access filename
      */
-    function checkRestore($token) {
+    function checkRestore($token)
+    {
         if ($this->loglevel == 'debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." checkBackup - token:$token\n");
         }
@@ -145,7 +149,8 @@ class Restore {
      * 		hasharray with field:
      *      status  : boolean - is susccess
      */
-    function closeRestore($token) {
+    function closeRestore($token)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." checkBackup - token:$token\n");
         }
@@ -170,7 +175,8 @@ class Restore {
      * @param string $sessid
      * 		session id
      */
-    function startRestore($backupfile, $token, $sessid) {
+    function startRestore($backupfile, $token, $sessid)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." startRestore - bufile:$backupfile | token:$token\n");
         }
@@ -181,8 +187,8 @@ class Restore {
         // extract tarball
         $command = 'tar -xf '.$backupfile.' --directory '.$this->tmpDir;
         $res = system($command);
-        #$this->addLogItem('command: '.$command."\n");
-        #$this->addLogItem('res: '.$res."\n");
+        //$this->addLogItem('command: '.$command."\n");
+        //$this->addLogItem('res: '.$res."\n");
 
         //simple check of archive format
         if (is_dir($this->tmpDir.'audioClip/') &&
@@ -221,7 +227,8 @@ class Restore {
      *      type    : stirng - audioClip | playlist
      *      id      : string - the backuped gunid
      */
-    function getMetaFiles() {
+    function getMetaFiles()
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." getMetaFiles - tmpDir:{$this->tmpDir}\n");
         }
@@ -256,7 +263,8 @@ class Restore {
      *  @return mixed
      * 		true if success or PEAR_error
      */
-    function addFileToStorage($file,$type,$gunid) {
+    function addFileToStorage($file,$type,$gunid)
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." addFileToStorage - file:$file | type:$type | id:$gunid\n");
         }
@@ -273,7 +281,7 @@ class Restore {
         }
         if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
             //replace it
-            $id = $this->gb->idFromGunid($gunid);
+            $id = BasicStor::IdFromGunid($gunid);
             $replace = $this->gb->replaceFile(
                 $id,   				# id int, virt.file's local id
                 $mediaFileLP,       # mediaFileLP string, local path of media file
@@ -341,12 +349,13 @@ class Restore {
      * Figure out the environment to the backup.
      *
      */
-    function setEnviroment() {
+    function setEnviroment()
+    {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment\n");
         }
-        $this->statusFile = $this->gb->accessDir.'/'.$this->token.'.status';
-        $this->tmpDir     = '/tmp/ls_restore/'.$this->token.'/';
+        $this->statusFile = $CC_CONFIG['accessDir'].'/'.$this->token.'.status';
+        $this->tmpDir = '/tmp/ls_restore/'.$this->token.'/';
         $this->rMkDir($this->tmpDir);
     }
 
@@ -357,7 +366,8 @@ class Restore {
      * @param string $item
      * 		the new row of log file
      */
-    function addLogItem($item) {
+    function addLogItem($item)
+    {
         $f = fopen ($this->logFile,'a');
         flock($f,LOCK_SH);
         fwrite($f,$item);
@@ -376,7 +386,8 @@ class Restore {
      * @return boolean
      * 		is success
      */
-    function rRmDir($dirname) {
+    function rRmDir($dirname)
+    {
         if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);
         }
@@ -407,7 +418,8 @@ class Restore {
      *
      * @return boolean
      */
-    function rMkDir($dirname,$mode=0777,$recursive=true) {
+    function rMkDir($dirname, $mode=0777, $recursive=true)
+    {
         if (is_null($dirname) || $dirname === "" ) {
             return false;
         }

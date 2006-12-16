@@ -152,7 +152,7 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
             return $r;
         }
-        $res = $this->login($r['login'], $r['pass']);
+        $res = Alib::Login($r['login'], $r['pass']);
         if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 804,
                 "xr_login: ".$res->getMessage().
@@ -203,7 +203,7 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
             return $r;
         }
-        $res = $this->logout($r['sessid']);
+        $res = Alib::Logout($r['sessid']);
         if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 803,
                 "xr_logout: ".$res->getMessage().
@@ -1191,7 +1191,7 @@ class XR_LocStor extends LocStor {
         }
         $res = $this->playlistIsAvailable($r['sessid'], $r['plid'], TRUE);
         $ownerId = ($res === TRUE ? NULL : $res);
-        $ownerLogin = (is_null($ownerId) ? NULL : $this->getSubjName($ownerId));
+        $ownerLogin = (is_null($ownerId) ? NULL : Subjects::GetSubjName($ownerId));
         if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_playlistIsAvailable: ".$res->getMessage().
@@ -3221,7 +3221,7 @@ class XR_LocStor extends LocStor {
         }
         require_once('../Transport.php');
         $tr = new Transport($this);
-        $uid = $this->getSessUserId($par['sessid']); // ###
+        $uid = Alib::GetSessUserId($par['sessid']); 
         $res = $tr->downloadFromHub($uid, $par['gunid']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -3540,7 +3540,7 @@ class XR_LocStor extends LocStor {
         }
         return new XML_RPC_Response(XML_RPC_encode(array(
             'str'=>strtoupper($r['teststring']),
-            'login'=>$this->getSessLogin($r['sessid']),
+            'login' => Alib::GetSessLogin($r['sessid']),
             'sessid'=>$r['sessid']
         )));
     }

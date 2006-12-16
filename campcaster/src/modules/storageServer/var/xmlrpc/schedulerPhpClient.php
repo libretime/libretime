@@ -335,22 +335,10 @@ $mdefs = array(
 
 class SchedulerPhpClient {
     /**
-     * Databases object reference
-     * @var DB
-     */
-    public $dbc = NULL;
-
-    /**
      * Array with methods description
      * @var array
      */
     private $mdefs = array();
-
-    /**
-     * Confiduration array from ../conf.php
-     * @var array
-     */
-    public $config = array();
 
     /**
      * XMLRPC client object reference
@@ -380,20 +368,18 @@ class SchedulerPhpClient {
      * @param boolean $verbose
      * 		verbosity flag
      */
-    public function __construct(
-        &$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
+    public function __construct($mdefs, $debug=0, $verbose=FALSE)
     {
-        $this->dbc = $dbc;
+        global $CC_DBC, $CC_CONFIG;
         $this->mdefs = $mdefs;
-        $this->config = $config;
         $this->debug = $debug;
         $this->verbose = $verbose;
         $confPrefix = "scheduler";
-        # $confPrefix = "storage";
+        //$confPrefix = "storage";
         $serverPath =
-          "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
-          "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
-        #$serverPath = "http://localhost:80/campcasterStorageServerCVS/xmlrpc/xrLocStor.php";
+          "http://{$CC_CONFIG["{$confPrefix}UrlHost"]}:{$CC_CONFIG["{$confPrefix}UrlPort"]}".
+          "{$CC_CONFIG["{$confPrefix}UrlPath"]}/{$CC_CONFIG["{$confPrefix}XMLRPC"]}";
+        //$serverPath = "http://localhost:80/campcasterStorageServerCVS/xmlrpc/xrLocStor.php";
         if ($this->verbose) {
         	echo "serverPath: $serverPath\n";
         }
@@ -413,19 +399,17 @@ class SchedulerPhpClient {
      * array, call wrapper callMethod(methodname, parameters) and return its
      * result.
      *
-     * @param DB $dbc
      * @param array $mdefs
      * 		hash array with methods description
-     * @param array $config
-     * 		hash array with configuration
      * @param int $debug
      * 		XMLRPC debug flag
      * @param boolean $verbose
      * 		verbosity flag
      * @return SchedulerPhpClientCore
      */
-    function &factory(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
+    function &factory($mdefs, $debug=0, $verbose=FALSE)
     {
+        global $CC_DBC, $CC_CONFIG;
         $f = '';
         foreach ($mdefs as $fn => $farr) {
             $f .=
@@ -441,10 +425,9 @@ class SchedulerPhpClient {
             "}\n";
 #        echo $e;
         if (FALSE === eval($e)) {
-        	return $dbc->raiseError("Eval failed");
+        	return $CC_DBC->raiseError("Eval failed");
         }
-        $spc = new SchedulerPhpClientCore(
-            $dbc, $mdefs, $config, $debug, $verbose);
+        $spc = new SchedulerPhpClientCore($mdefs, $debug, $verbose);
         return $spc;
     }
 
@@ -506,13 +489,13 @@ class SchedulerPhpClient {
 
 
 // db object handling:
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
 
 // scheduler client instantiation:
-$spc = SchedulerPhpClient::factory($dbc, $mdefs, $config);
-#$spc = SchedulerPhpClient::factory($dbc, $mdefs, $config, 0, TRUE);
+$spc = SchedulerPhpClient::factory($mdefs);
+#$spc = SchedulerPhpClient::factory($mdefs, 0, TRUE);
 if(PEAR::isError($spc)){ echo $spc->getMessage."\n"; exit; }
 
 // call of chosen function by name according to key values in $mdefs array:

@@ -238,14 +238,14 @@ class SmilPlaylistAudioElement {
             }
         }
         if ($fadeIn > 0 || $fadeOut > 0) {
-            $fiGunid = StoredFile::_createGunid();
+            $fiGunid = StoredFile::CreateGunid();
             $fadeIn  = Playlist::secondsToPlaylistTime($fadeIn);
             $fadeOut = Playlist::secondsToPlaylistTime($fadeOut);
             $fInfo   = "$ind2<fadeInfo id=\"$fiGunid\" fadeIn=\"$fadeIn\" fadeOut=\"$fadeOut\"/>\n";
         } else {
         	$fInfo = '';
         }
-        $plElGunid  = StoredFile::_createGunid();
+        $plElGunid  = StoredFile::CreateGunid();
         $acGunid     = $gunid;
         $type = 'audioClip';
         if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {

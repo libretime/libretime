@@ -12,19 +12,19 @@
      *
      */
 
-    require_once dirname(__FILE__).'/../var/conf.php';
-    require_once dirname(__FILE__).'/../var/GreenBox.php';
-    require_once dirname(__FILE__).'/../var/Restore.php';
-    include_once 'DB.php';
+    require_once(dirname(__FILE__).'/../var/conf.php');
+    require_once(dirname(__FILE__).'/../var/GreenBox.php');
+    require_once(dirname(__FILE__).'/../var/Restore.php');
+    include_once('DB.php');
 
     PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-    $dbc = DB::connect($config['dsn'], TRUE);
-    if (DB::isError($dbc)) {
-        die($dbc->getMessage());
+    $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+    if (DB::isError($CC_DBC)) {
+        die($CC_DBC->getMessage());
     }
-    $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+    $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-    $gb = new GreenBox($dbc, $config);
+    $gb = new GreenBox();
     $rs = new Restore($gb);
 
     if ($rs->loglevel=='debug') {

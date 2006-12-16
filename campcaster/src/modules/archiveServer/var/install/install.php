@@ -1,7 +1,14 @@
 <?php
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
+ * @package Campcaster
+ * @subpackage ArchiveServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ *
  */
 
 // no remote execution
@@ -13,89 +20,16 @@ if (isset($arr["DOCUMENT_ROOT"]) && $arr["DOCUMENT_ROOT"] != "") {
     exit(1);
 }
 
-require_once '../conf.php';
-require_once 'DB.php';
-require_once '../Archive.php';
+echo "*************************\n";
+echo "* ArchiveServer Install *\n";
+echo "*************************\n";
 
-function errCallback($err)
-{
-    if (assert_options(ASSERT_ACTIVE) == 1) {
-    	return;
-    }
-    echo "ERROR:\n";
-    echo "request: "; print_r($_REQUEST);
-    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
-        "\nui:\n".$err->getUserInfo()."\n";
-    exit(1);
-}
+require_once('../conf.php');
+require_once('../../../storageServer/var/GreenBox.php');
+require_once('../../../storageServer/var/install/installMain.php');
 
-if (!function_exists('pg_connect')) {
-  trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
-  exit(2);
-}
+echo "**********************************\n";
+echo "* ArchiveServer Install Complete *\n";
+echo "**********************************\n";
 
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
-    echo $dbc->getMessage()."\n";
-    echo $dbc->getUserInfo()."\n";
-    echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists".
-        " with corresponding permissions.\n";
-    echo "Database access is defined by 'dsn' values in var/conf.php.\n";
-    exit(1);
-}
-
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new Archive($dbc, $config, TRUE);
-$tr = new Transport($gb);
-
-echo "# archiveServer step 2:\n# trying uninstall ...\n";
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$gb->uninstall();
-$tr->uninstall();
-
-echo "# Install ...\n";
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
-$r = $gb->install();
-if (PEAR::isError($r)) {
-	echo $r->getUserInfo()."\n";
-	exit(1);
-}
-
-echo "# Testing ...\n";
-$r = $gb->test();
-if (PEAR::isError($r)) {
-	echo $r->getMessage()."\n";
-	exit(1);
-}
-$log = $gb->test_log;
-if ($log) {
-	echo "# testlog:\n{$log}";
-}
-
-echo "# Delete test data ...\n";
-$gb->deleteData();
-
-if (!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))) {
-    echo "\n<b>make {$config['storageDir']} dir webdaemon-writeable</b>".
-        "\nand run install again\n\n";
-    exit(1);
-} else {
-    fclose($fp); unlink($config['storageDir']."/_writeTest");
-    echo "#archiveServer install: OK\n\n";
-}
-
-echo "# Install Transport submodule ...";
-$r = $tr->install();
-if (PEAR::isError($r)) {
-	echo $r->getMessage()."\n";
-	echo $r->getUserInfo()."\n";
-	exit(1);
-}
-echo "# OK\n";
-
-
-$dbc->disconnect();
 ?>

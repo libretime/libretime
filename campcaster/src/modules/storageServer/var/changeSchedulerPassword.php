@@ -18,13 +18,13 @@
     }
 
     PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-    $dbc = DB::connect($config['dsn'], TRUE);
-    if (DB::isError($dbc)) {
-        die($dbc->getMessage());
+    $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+    if (PEAR::isError($CC_DBC)) {
+        die($CC_DBC->getMessage());
     }
-    $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+    $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-    $bs = new BasicStor($dbc, $config);
+    $bs = new BasicStor();
 
     $pass = $argv[1];
     $r = $bs->passwd('scheduler', NULL, $pass);

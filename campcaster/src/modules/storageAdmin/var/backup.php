@@ -15,9 +15,9 @@ require_once("$storageServerPath/var/BasicStor.php");
 require_once("$storageServerPath/var/Prefs.php");
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$bs = new BasicStor($dbc, $config);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$bs = new BasicStor();
 
 $stid = $bs->storId;
 #var_dump($stid); exit;
@@ -25,17 +25,17 @@ $stid = $bs->storId;
 
 function admDumpFolder(&$bs, $fid, $ind='')
 {
-    $name = $bs->getObjName($fid);
+    $name = M2tree::GetObjName($fid);
     if (PEAR::isError($name)) {
     	echo $name->getMessage();
     	exit;
     }
-    $type = $bs->getObjType($fid);
+    $type = BasicStor::GetObjType($fid);
     if (PEAR::isError($type)) {
     	echo $type->getMessage();
     	exit;
     }
-    $gunid = $bs->gunidFromId($fid);
+    $gunid = BasicStor::GunidFromId($fid);
     if (PEAR::isError($gunid)) {
     	echo $gunid->getMessage();
     	exit;
@@ -100,12 +100,12 @@ function admDumpFolder(&$bs, $fid, $ind='')
 }
 function admDumpGroup(&$bs, $gid, $ind='')
 {
-    $name = $bs->getSubjName($gid);
+    $name = Subjects::GetSubjName($gid);
     if (PEAR::isError($name)) {
     	echo $name->getMessage();
     	exit;
     }
-    $isGr = $bs->isGroup($gid);
+    $isGr = Subjects::IsGroup($gid);
     if (PEAR::isError($isGr)) {
     	echo $isGr->getMessage();
     	exit;
@@ -119,7 +119,7 @@ function admDumpGroup(&$bs, $gid, $ind='')
             'attributes'=> $pars,
         ));
     }
-    $garr = $bs->listGroup($gid);
+    $garr = Subjects::ListGroup($gid);
     if (PEAR::isError($garr)) {
     	echo $garr->getMessage();
     	exit;
@@ -156,7 +156,7 @@ function admDumpGroup(&$bs, $gid, $ind='')
 function admDumpSubjects(&$bs, $ind='')
 {
     $res ='';
-    $subjs = $bs->getSubjects('id, login, pass, type');
+    $subjs = Subjects::GetSubjects('id, login, pass, type');
     foreach ($subjs as $i => $member) {
         switch ($member['type']) {
             case "U":

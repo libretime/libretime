@@ -61,14 +61,14 @@ $old_error_handler = set_error_handler("errHndl", E_ALL);
 
 
 /* ============================================================= runable code */
-$dbc =& DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
-    trigger_error("DB::connect: ".$dbc->getMessage()." ".$dbc->getUserInfo(),E_USER_ERROR);
+$CC_DBC =& DB::connect($CC_CONFIG['dsn'], TRUE);
+if (PEAR::isError($CC_DBC)) {
+    trigger_error("DB::connect: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo(),E_USER_ERROR);
 }
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+$CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$archive = new XR_Archive($dbc, $config);
+$archive = new XR_Archive($CC_DBC, $CC_CONFIG);
 
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.

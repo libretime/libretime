@@ -13,16 +13,16 @@ else $list=true;
 // prefill data structure for template
 if($list){
     $d = array(
-        'subj'       => $alib->getSubjectsWCnt(),
+        'subj'       => Subjects::GetSubjectsWCnt(),
         'loggedAs'  => $login
     );
 }else{
     $d = array(
-        'rows'      => $alib->listGroup($id),
+        'rows'      => Subjects::ListGroup($id),
         'id'        => $id,
         'loggedAs'  => $login,
-        'gname'     => $alib->getSubjName($id),
-        'subj'       => $alib->getSubjects()
+        'gname'     => Subjects::GetSubjName($id),
+        'subj'       => Subjects::GetSubjects()
     );
 }
 $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);

@@ -19,22 +19,20 @@ function errCallback($err)
 }
 
 
-$dbc = DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+if (PEAR::isError($CC_DBC)) {
     echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists with corresponding permissions.\n";
+    echo "Check if database '".$CC_CONFIG['dsn']['database']."' exists with corresponding permissions.\n";
     echo "Database access is defined by 'dsn' values in conf.php.\n";
     exit;
 }
 
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$alib = new Alib($dbc, $config);
+$CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+//$alib = new Alib();
+//
+//echo "Trying to uninstall all ...\n";
+//$alib->uninstall();
 
-#    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-echo "Trying to uninstall all ...\n";
-$alib->uninstall();
-
-$dbc->disconnect();
+$CC_DBC->disconnect();
 ?>

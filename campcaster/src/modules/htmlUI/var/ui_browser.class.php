@@ -10,13 +10,10 @@ class uiBrowser extends uiBase {
     /**
      * Initialize a new Browser Class.
      * Call uiBase constructor.
-     *
-     * @param array $config
-     * 		configurartion data
      */
-    public function __construct(&$config)
+    public function __construct()
     {
-        parent::__construct($config);
+        parent::__construct();
     } // constructor
 
 
@@ -86,8 +83,8 @@ class uiBrowser extends uiBase {
      */
     function getUserInfo()
     {
-        return array('uname'=>$this->gb->getSessLogin($this->sessid),
-                     'uid'  =>$this->gb->getSessUserId($this->sessid));
+        return array('uname'=> Alib::GetSessLogin($this->sessid),
+                     'uid'  => GreenBox::GetSessUserId($this->sessid));
     } // fn getUserInfo
 
 
@@ -102,14 +99,14 @@ class uiBrowser extends uiBase {
     function getStructure($id)
     {
         $data = array(
-                    'pathdata'  => $this->gb->getPath($id, $this->sessid),
-                    'listdata'  => $this->gb->getObjType($id)=='Folder' ? $this->gb->listFolder($id, $this->sessid) : array(),
+                    'pathdata'  => GreenBox::GetPath($id, $this->sessid),
+                    'listdata'  => BasicStor::GetObjType($id)=='Folder' ? $this->gb->listFolder($id, $this->sessid) : array(),
                 );
         $tree = isset($_REQUEST['tree']) ? $_REQUEST['tree'] : null;
         if ($tree == 'Y') {
-            $tmp = $this->gb->getSubTree($id, $this->sessid);
+            $tmp = M2tree::GetSubTree($id, $this->sessid);
             foreach ($tmp as $key=>$val) {
-                $val['type'] = $this->gb->getFileType($val['id']);
+                $val['type'] = Greenbox::getFileType($val['id']);
                 $data['treedata'][$key] = $val;
             }
         }
@@ -213,9 +210,9 @@ class uiBrowser extends uiBase {
      */
     function permissions($id)
     {
-        return array('pathdata'  => $this->gb->getPath($id),
-                     'perms'     => $this->gb->getObjPerms($id),
-                     'actions'   => $this->gb->getAllowedActions($this->gb->getObjType($id)),
+        return array('pathdata'  => GreenBox::GetPath($id),
+                     'perms'     => Alib::GetObjPerms($id),
+                     'actions'   => Alib::GetAllowedActions(BasicStor::GetObjType($id)),
                      'subjects'  => $this->gb->getSubjects(),
                      'id'        => $id,
                      'loggedAs'  => $this->login
@@ -407,7 +404,7 @@ class uiBrowser extends uiBase {
                 if ($type = stristr($val, "content-type:")) {
                     $type = explode(':', $type);
 
-                    foreach ($this->config['stream_types'] as $t) {
+                    foreach ($CC_CONFIG['stream_types'] as $t) {
                         if (preg_match('/'.str_replace('/', '\/', $t).'/i', $type[1])) {
                             $match = TRUE;
                             break;
@@ -447,11 +444,12 @@ class uiBrowser extends uiBase {
      */
     function listen2Audio($clipid)
     {
-        $id   = $this->gb->idFromGunid($clipid);
-        $type = $this->gb->getFileType($id);
+        global $CC_CONFIG;
+        $id   = BasicStor::IdFromGunid($clipid);
+        $type = Greenbox::getFileType($id);
 
         if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
-            $m3u = "http://{$_SERVER['SERVER_NAME']}".$this->config['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n";
+            $m3u = "http://{$_SERVER['SERVER_NAME']}".$CC_CONFIG['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n";
         } else {
             $m3u = $this->getMetadataValue($id, UI_MDATA_KEY_URL);
         }

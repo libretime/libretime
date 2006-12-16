@@ -21,21 +21,8 @@ define('ALIBERR_BADSMEMB', 21);
  * @see ObjClasses
  * @see Alib
  */
-class Subjects extends ObjClasses {
-	/**
-	 * The name of the 'Subjects' database table.
-	 *
-	 * @var string
-	 */
-    public $subjTable;
-
-    /**
-     * The name of a database table.
-     *
-     * @var string
-     */
-    public $smembTable;
-
+class Subjects {
+//class Subjects extends ObjClasses {
 
     /**
      * Constructor
@@ -44,12 +31,10 @@ class Subjects extends ObjClasses {
      * @param array $config
      * @return this
      */
-    public function __construct(&$dbc, $config)
-    {
-        parent::__construct($dbc, $config);
-        $this->subjTable = $config['tblNamePrefix'].'subjs';
-        $this->smembTable = $config['tblNamePrefix'].'smemb';
-    } // constructor
+//    public function __construct(&$dbc, $config)
+//    {
+//        parent::__construct($dbc, $config);
+//    } // constructor
 
 
     /* ======================================================= public methods */
@@ -57,30 +42,31 @@ class Subjects extends ObjClasses {
     /**
      * Add new subject
      *
-     * @param string $login
-     * @param string $pass
-     * @param string $realname
-     * @param boolean $passenc
+     * @param string $p_login
+     * @param string $p_pass
+     * @param string $p_realname
+     * @param boolean $p_passenc
      * 		password already encrypted if true
-     * @return int/err
+     * @return int|PEAR_Error
      */
-    public function addSubj($login, $pass=NULL, $realname='', $passenc=FALSE)
+    public static function AddSubj($p_login, $p_pass=NULL, $p_realname='', $p_passenc=FALSE)
     {
-        if(!$login) {
-            return $this->dbc->raiseError(get_class($this)."::addSubj: empty login");
+        global $CC_CONFIG, $CC_DBC;
+        if (!$p_login) {
+            return $CC_DBC->raiseError("Subjects::AddSubj: empty login");
         }
-        $id = $this->dbc->nextId("{$this->subjTable}_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['subjTable']."_id_seq");
         if (PEAR::isError($id)) {
             return $id;
         }
-        if (!is_null($pass) && !$passenc) {
-            $pass = md5($pass);
+        if (!is_null($p_pass) && !$p_passenc) {
+            $p_pass = md5($p_pass);
         }
-        $sql = "INSERT INTO {$this->subjTable} (id, login, pass, type, realname)
-            VALUES ($id, '$login', ".
-                (is_null($pass) ? "'!', 'G'" : "'$pass', 'U'").",
-                '$realname')";
-        $r = $this->dbc->query($sql);
+        $sql = "INSERT INTO ".$CC_CONFIG['subjTable']." (id, login, pass, type, realname)
+            VALUES ($id, '$p_login', ".
+                (is_null($p_pass) ? "'!', 'G'" : "'$p_pass', 'U'").",
+                '$p_realname')";
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -94,29 +80,30 @@ class Subjects extends ObjClasses {
      * @param string $login
      * @param int $uid
      * 		optional, default: null
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function removeSubj($login, $uid=NULL)
+    public static function RemoveSubj($login, $uid=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         if (is_null($uid)) {
-            $uid = $this->getSubjId($login);
+            $uid = Subjects::GetSubjId($login);
         }
         if (PEAR::isError($uid)) {
             return $uid;
         }
-        $sql = "DELETE FROM {$this->smembTable}
+        $sql = "DELETE FROM ".$CC_CONFIG['smembTable']."
             WHERE (uid='$uid' OR gid='$uid') AND mid is null";
-        $r = $this->dbc->query($sql);
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
-        $sql2 = "DELETE FROM {$this->subjTable}
+        $sql2 = "DELETE FROM ".$CC_CONFIG['subjTable']."
             WHERE login='$login'";
-        $r = $this->dbc->query($sql2);
+        $r = $CC_DBC->query($sql2);
         if (PEAR::isError($r)) {
             return $r;
         }
-        return $this->_rebuildRels();
+        return Subjects::_rebuildRels();
     } // fn removeSubj
 
 
@@ -126,14 +113,15 @@ class Subjects extends ObjClasses {
      * @param string $login
      * @param string $pass
      * 		optional
-     * @return boolean/int/err
+     * @return boolean|int|PEAR_Error
      */
-    public function authenticate($login, $pass='')
+    public static function Authenticate($login, $pass='')
     {
+        global $CC_CONFIG, $CC_DBC;
         $cpass = md5($pass);
-        $sql = "SELECT id FROM {$this->subjTable}
+        $sql = "SELECT id FROM ".$CC_CONFIG['subjTable']."
             WHERE login='$login' AND pass='$cpass' AND type='U'";
-        $id = $this->dbc->getOne($sql);
+        $id = $CC_DBC->getOne($sql);
         if (PEAR::isError($id)) {
             return $id;
         }
@@ -147,14 +135,15 @@ class Subjects extends ObjClasses {
      * @param string $login
      * @param boolean $failed
      * 		true=> set lastfail, false=> set lastlogin
-     * @return boolean/int/err
+     * @return boolean|int|PEAR_Error
      */
-    public function setTimeStamp($login, $failed=FALSE)
+    public static function SetTimeStamp($login, $failed=FALSE)
     {
+        global $CC_CONFIG, $CC_DBC;
         $fld = ($failed ? 'lastfail' : 'lastlogin');
-        $sql = "UPDATE {$this->subjTable} SET $fld=now()
+        $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET $fld=now()
             WHERE login='$login'";
-        $r = $this->dbc->query($sql);
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -172,10 +161,11 @@ class Subjects extends ObjClasses {
      * 		optional
      * @param boolean $passenc
      * 		optional, password already encrypted if true
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
+    public static function Passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
     {
+        global $CC_CONFIG, $CC_DBC;
         if (!$passenc) {
             $cpass = md5($pass);
         } else {
@@ -187,9 +177,9 @@ class Subjects extends ObjClasses {
         } else {
             $oldpCond = '';
         }
-        $sql = "UPDATE {$this->subjTable} SET pass='$cpass'
+        $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET pass='$cpass'
             WHERE login='$login' $oldpCond AND type='U'";
-        $r = $this->dbc->query($sql);
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -205,19 +195,19 @@ class Subjects extends ObjClasses {
      *
      * @param string $login
      * @param string $gname
-     * @return int/err
+     * @return int|PEAR_Error
      */
-    public function addSubj2Gr($login, $gname)
+    public static function AddSubjectToGroup($login, $gname)
     {
-        $uid = $this->getSubjId($login);
+        $uid = Subjects::GetSubjId($login);
         if (PEAR::isError($uid)) {
             return $uid;
         }
-        $gid = $this->getSubjId($gname);
+        $gid = Subjects::GetSubjId($gname);
         if (PEAR::isError($gid)) {
             return $gid;
         }
-        $isgr = $this->isGroup($gid);
+        $isgr = Subjects::IsGroup($gid);
         if (PEAR::isError($isgr)) {
             return $isgr;
         }
@@ -225,17 +215,17 @@ class Subjects extends ObjClasses {
             return PEAR::raiseError("Subjects::addSubj2Gr: Not a group ($gname)", ALIBERR_NOTGR);
         }
         // add subject and all [in]direct members to group $gname:
-        $mid = $this->_plainAddSubj2Gr($uid, $gid);
+        $mid = Subjects::_plainAddSubjectToGroup($uid, $gid);
         if (PEAR::isError($mid)) {
             return $mid;
         }
         // add it to all groups where $gname is [in]direct member:
-        $marr = $this->_listRMemb($gid);
+        $marr = Subjects::_listRMemb($gid);
         if (PEAR::isError($marr)) {
             return $marr;
         }
-        foreach($marr as $k=>$v){
-            $r = $this->_plainAddSubj2Gr(
+        foreach ($marr as $k => $v) {
+            $r = Subjects::_plainAddSubjectToGroup(
                 $uid, $v['gid'], intval($v['level'])+1, $v['id']);
             if (PEAR::isError($r)) {
                 return $r;
@@ -250,21 +240,22 @@ class Subjects extends ObjClasses {
      *
      * @param string $login
      * @param string $gname
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function removeSubjFromGr($login, $gname)
+    public static function RemoveSubjectFromGroup($login, $gname)
     {
-        $uid = $this->getSubjId($login);
+        global $CC_CONFIG, $CC_DBC;
+        $uid = Subjects::GetSubjId($login);
         if (PEAR::isError($uid)) {
             return $uid;
         }
-        $gid = $this->getSubjId($gname);
+        $gid = Subjects::GetSubjId($gname);
         if (PEAR::isError($gid)) {
             return $gid;
         }
-        $sql = "SELECT id FROM {$this->smembTable}
+        $sql = "SELECT id FROM ".$CC_CONFIG['smembTable']."
             WHERE uid='$uid' AND gid='$gid' AND mid is null";
-        $mid = $this->dbc->getOne($sql);
+        $mid = $CC_DBC->getOne($sql);
         if (is_null($mid)) {
             return FALSE;
         }
@@ -272,12 +263,12 @@ class Subjects extends ObjClasses {
             return $mid;
         }
         // remove it:
-        $r = $this->_removeMemb($mid);
+        $r = Subjects::_removeMemb($mid);
         if (PEAR::isError($r)) {
             return $r;
         }
         // and rebuild indirect memberships:
-        $r = $this->_rebuildRels();
+        $r = Subjects::_rebuildRels();
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -291,13 +282,15 @@ class Subjects extends ObjClasses {
      * Get subject id from login
      *
      * @param string $login
-     * @return int/err
+     * @return int|PEAR_Error
      */
-    public function getSubjId($login)
+    public static function GetSubjId($login)
     {
-        $sql = "SELECT id FROM {$this->subjTable}
+        global $CC_CONFIG;
+        global $CC_DBC;
+        $sql = "SELECT id FROM ".$CC_CONFIG['subjTable']."
             WHERE login='$login'";
-        return $this->dbc->getOne($sql);
+        return $CC_DBC->getOne($sql);
     } // fn getSubjId
 
 
@@ -306,13 +299,15 @@ class Subjects extends ObjClasses {
      *
      * @param int $id
      * @param string $fld
-     * @return string/err
+     * @return string|PEAR_Error
      */
-    public function getSubjName($id, $fld='login')
+    public static function GetSubjName($id, $fld='login')
     {
-        $sql = "SELECT $fld FROM {$this->subjTable}
+        global $CC_CONFIG;
+        global $CC_DBC;
+        $sql = "SELECT $fld FROM ".$CC_CONFIG['subjTable']."
             WHERE id='$id'";
-        return $this->dbc->getOne($sql);
+        return $CC_DBC->getOne($sql);
     } // fn getSubjName
 
 
@@ -320,30 +315,32 @@ class Subjects extends ObjClasses {
      * Get all subjects
      *
      * @param string $flds
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    public function getSubjects($flds='id, login')
+    public static function GetSubjects($flds='id, login')
     {
-        $sql = "SELECT $flds FROM {$this->subjTable}";
-        return $this->dbc->getAll($sql);
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT $flds FROM ".$CC_CONFIG['subjTable'];
+        return $CC_DBC->getAll($sql);
     } // fn getSubjects
 
 
     /**
      * Get subjects with count of direct members
      *
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    public function getSubjectsWCnt()
+    public static function GetSubjectsWCnt()
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "
             SELECT count(m.uid)as cnt, s.id, s.login, s.type
-            FROM {$this->subjTable} s
-            LEFT JOIN {$this->smembTable} m ON m.gid=s.id
+            FROM ".$CC_CONFIG['subjTable']." s
+            LEFT JOIN ".$CC_CONFIG['smembTable']." m ON m.gid=s.id
             WHERE m.mid is null
             GROUP BY s.id, s.login, s.type
             ORDER BY s.id";
-        return $this->dbc->getAll($sql);
+        return $CC_DBC->getAll($sql);
     } // fn getSubjectsWCnt
 
 
@@ -351,13 +348,14 @@ class Subjects extends ObjClasses {
      * Return true if subject is a group
      *
      * @param int $gid
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function isGroup($gid)
+    public static function IsGroup($gid)
     {
-        $sql = "SELECT type FROM {$this->subjTable}
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT type FROM ".$CC_CONFIG['subjTable']."
             WHERE id='$gid'";
-        $r = $this->dbc->getOne($sql);
+        $r = $CC_DBC->getOne($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -369,14 +367,15 @@ class Subjects extends ObjClasses {
      * List direct members of group
      *
      * @param int $gid
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    public function listGroup($gid)
+    public static function ListGroup($gid)
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT s.id, s.login, s.type
-            FROM {$this->smembTable} m, {$this->subjTable} s
+            FROM ".$CC_CONFIG['smembTable']." m, ".$CC_CONFIG['subjTable']." s
             WHERE m.uid=s.id AND m.mid is null AND m.gid='$gid'";
-        return $this->dbc->getAll($sql);
+        return $CC_DBC->getAll($sql);
     } // fn listGroup
 
 
@@ -389,14 +388,15 @@ class Subjects extends ObjClasses {
      * 		local group id
      * @return boolean
      */
-    public function isMemberOf($uid, $gid)
+    public static function IsMemberOf($uid, $gid)
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "
             SELECT count(*)as cnt
-            FROM {$this->smembTable}
+            FROM ".$CC_CONFIG['smembTable']."
             WHERE uid='$uid' AND gid='$gid'
         ";
-        $res = $this->dbc->getOne($sql);
+        $res = $CC_DBC->getOne($sql);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -413,16 +413,17 @@ class Subjects extends ObjClasses {
      * @param int $gid
      * @param int $level
      * @param int $mid
-     * @return int/err
+     * @return int|PEAR_Error
      */
-    private function _addMemb($uid, $gid, $level=0, $mid='null')
+    private static function _addMemb($uid, $gid, $level=0, $mid='null')
     {
-        if($uid == $gid)  {
+        global $CC_CONFIG, $CC_DBC;
+        if ($uid == $gid) {
             return PEAR::raiseError("Subjects::_addMemb: uid==gid ($uid)", ALIBERR_BADSMEMB);
         }
-        $sql = "SELECT id, level, mid FROM {$this->smembTable}
+        $sql = "SELECT id, level, mid FROM ".$CC_CONFIG['smembTable']."
             WHERE uid='$uid' AND gid='$gid' ORDER BY level ASC";
-        $a = $this->dbc->getAll($sql);
+        $a = $CC_DBC->getAll($sql);
         if (PEAR::isError($a)) {
             return $a;
         }
@@ -430,23 +431,23 @@ class Subjects extends ObjClasses {
             $a0 = $a[0];
             $id = $a0['id'];
             if ($level < intval($a0['level'])){
-                $sql2 = "UPDATE {$this->smembTable}
+                $sql2 = "UPDATE ".$CC_CONFIG['smembTable']."
                     SET level='$level', mid=$mid WHERE id='{$a0['id']}'";
-                $r = $this->dbc->query($sql2);
+                $r = $CC_DBC->query($sql2);
                 if (PEAR::isError($r)) {
                     return $r;
                 }
             }
         } else {
-            $id = $this->dbc->nextId("{$this->smembTable}_id_seq");
+            $id = $CC_DBC->nextId($CC_CONFIG['smembTable']."_id_seq");
             if (PEAR::isError($id)) {
                 return $id;
             }
             $sql3 = "
-                INSERT INTO {$this->smembTable} (id, uid, gid, level, mid)
+                INSERT INTO ".$CC_CONFIG['smembTable']." (id, uid, gid, level, mid)
                 VALUES ($id, $uid, $gid, $level, $mid)
             ";
-            $r = $this->dbc->query($sql3);
+            $r = $CC_DBC->query($sql3);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -461,11 +462,12 @@ class Subjects extends ObjClasses {
      * @param int $mid
      * @return null|PEAR_Error
      */
-    private function _removeMemb($mid)
+    private static function _removeMemb($mid)
     {
-        $sql = "DELETE FROM {$this->smembTable}
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "DELETE FROM ".$CC_CONFIG['smembTable']."
             WHERE id='$mid'";
-        return $this->dbc->query($sql);
+        return $CC_DBC->query($sql);
     } // fn _removeMemb
 
 
@@ -476,12 +478,13 @@ class Subjects extends ObjClasses {
      * @param int $uid
      * @return array|PEAR_Error
      */
-    private function _listMemb($gid, $uid=NULL)
+    private static function _listMemb($gid, $uid=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "
-            SELECT id, uid, level FROM {$this->smembTable}
+            SELECT id, uid, level FROM ".$CC_CONFIG['smembTable']."
             WHERE gid='$gid'".(is_null($uid) ? '' : " AND uid='$uid'");
-        return $this->dbc->getAll($sql);
+        return $CC_DBC->getAll($sql);
     } // fn _listMemb
 
 
@@ -490,14 +493,15 @@ class Subjects extends ObjClasses {
      *
      * @param int $gid
      * @param int $uid
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    private function _listRMemb($uid, $gid=NULL)
+    private static function _listRMemb($uid, $gid=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "
-            SELECT id, gid, level FROM {$this->smembTable}
+            SELECT id, gid, level FROM ".$CC_CONFIG['smembTable']."
             WHERE uid='$uid'".(is_null($gid) ? '' : " AND gid='$gid'");
-        return $this->dbc->getAll($sql);
+        return $CC_DBC->getAll($sql);
     } // fn listRMemb
 
 
@@ -510,18 +514,18 @@ class Subjects extends ObjClasses {
      * @param int $rmid
      * @return int|PEAR_Error
      */
-    private function _plainAddSubj2Gr($uid, $gid, $level=0, $rmid='null')
+    private static function _plainAddSubjectToGroup($uid, $gid, $level=0, $rmid='null')
     {
-        $mid = $this->_addMemb($uid, $gid, $level, $rmid);
+        $mid = Subjects::_addMemb($uid, $gid, $level, $rmid);
         if (PEAR::isError($mid)) {
             return $mid;
         }
-        $marr = $this->_listMemb($uid);
+        $marr = Subjects::_listMemb($uid);
         if (PEAR::isError($marr)) {
             return $marr;
         }
         foreach ($marr as $k => $v) {
-            $r = $this->_addMemb(
+            $r = Subjects::_addMemb(
                 $v['uid'], $gid, intval($v['level'])+$level+1, $mid
             );
             if (PEAR::isError($r)) {
@@ -529,7 +533,7 @@ class Subjects extends ObjClasses {
             }
         }
         return $mid;
-    } // fn _plainAddSubj2Gr
+    } 
 
 
     /**
@@ -538,30 +542,31 @@ class Subjects extends ObjClasses {
      *
      * @return true|PEAR_Error
      */
-    private function _rebuildRels()
+    private static function _rebuildRels()
     {
-        $this->dbc->query("BEGIN");
-        $r = $this->dbc->query("LOCK TABLE {$this->smembTable}");
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("BEGIN");
+        $r = $CC_DBC->query("LOCK TABLE ".$CC_CONFIG['smembTable']);
         if (PEAR::isError($r)) {
             return $r;
         }
-        $r = $this->dbc->query("DELETE FROM {$this->smembTable}
+        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['smembTable']."
             WHERE mid is not null");
         if (PEAR::isError($r)) {
             return $r;
         }
-        $arr = $this->dbc->getAll("SELECT uid, gid FROM {$this->smembTable}");
+        $arr = $CC_DBC->getAll("SELECT uid, gid FROM ".$CC_CONFIG['smembTable']);
                             //  WHERE mid is null
         if (PEAR::isError($arr)) {
             return $arr;
         }
         foreach ($arr as $it) {
-            $marr = $this->_listRMemb($it['gid']);
+            $marr = Subjects::_listRMemb($it['gid']);
             if (PEAR::isError($marr)) {
                 return $marr;
             }
             foreach ($marr as $k => $v) {
-                $r = $this->_plainAddSubj2Gr(
+                $r = Subjects::_plainAddSubjectToGroup(
                     $it['uid'], $v['gid'], intval($v['level'])+1, $v['id']
                 );
                 if (PEAR::isError($r)) {
@@ -569,7 +574,10 @@ class Subjects extends ObjClasses {
                 }
             }
         }
-        $r = $this->dbc->query("COMMIT");   if(PEAR::isError($r)) return $r;
+        $r = $CC_DBC->query("COMMIT");   
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         return TRUE;
     } // fn _rebuildRels
 
@@ -585,11 +593,11 @@ class Subjects extends ObjClasses {
      * 		actual indentation
      * @return string
      */
-    public function dumpSubjects($indstr='    ', $ind='')
+    public static function DumpSubjects($indstr='    ', $ind='')
     {
         $r = $ind.join(', ', array_map(
             create_function('$v', 'return "{$v[\'login\']}({$v[\'cnt\']})";'),
-            $this->getSubjectsWCnt()
+            Subjects::GetSubjectsWCnt()
         ))."\n";
         return $r;
     } // fn dumpSubjects
@@ -600,11 +608,12 @@ class Subjects extends ObjClasses {
      *
      * @return void
      */
-    public function deleteData()
+    public static function DeleteData()
     {
-        $this->dbc->query("DELETE FROM {$this->subjTable}");
-        $this->dbc->query("DELETE FROM {$this->smembTable}");
-        parent::deleteData();
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['subjTable']);
+        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['smembTable']);
+        ObjClasses::DeleteData();
     } // fn deleteData
 
 
@@ -613,60 +622,62 @@ class Subjects extends ObjClasses {
      *
      * @return array
      */
-    public function testData()
+    public function TestData()
     {
-        parent::testData();
-        $o['root'] = $this->addSubj('root', 'q');
-        $o['test1'] = $this->addSubj('test1', 'a');
-        $o['test2'] = $this->addSubj('test2', 'a');
-        $o['test3'] = $this->addSubj('test3', 'a');
-        $o['test4'] = $this->addSubj('test4', 'a');
-        $o['test5'] = $this->addSubj('test5', 'a');
-        $o['gr1'] = $this->addSubj('gr1');
-        $o['gr2'] = $this->addSubj('gr2');
-        $o['gr3'] = $this->addSubj('gr3');
-        $o['gr4'] = $this->addSubj('gr4');
-        $this->addSubj2Gr('test1', 'gr1');
-        $this->addSubj2Gr('test2', 'gr2');
-        $this->addSubj2Gr('test3', 'gr3');
-        $this->addSubj2Gr('test4', 'gr4');
-        $this->addSubj2Gr('test5', 'gr1');
-        $this->addSubj2Gr('gr4', 'gr3');
-        $this->addSubj2Gr('gr3', 'gr2');
-        return $this->tdata['subjects'] = $o;
-    } // fn testData
+        $tdata = ObjClasses::TestData();
+        $o['root'] = Subjects::AddSubj('root', 'q');
+        $o['test1'] = Subjects::AddSubj('test1', 'a');
+        $o['test2'] = Subjects::AddSubj('test2', 'a');
+        $o['test3'] = Subjects::AddSubj('test3', 'a');
+        $o['test4'] = Subjects::AddSubj('test4', 'a');
+        $o['test5'] = Subjects::AddSubj('test5', 'a');
+        $o['gr1'] = Subjects::AddSubj('gr1');
+        $o['gr2'] = Subjects::AddSubj('gr2');
+        $o['gr3'] = Subjects::AddSubj('gr3');
+        $o['gr4'] = Subjects::AddSubj('gr4');
+        Subjects::AddSubjectToGroup('test1', 'gr1');
+        Subjects::AddSubjectToGroup('test2', 'gr2');
+        Subjects::AddSubjectToGroup('test3', 'gr3');
+        Subjects::AddSubjectToGroup('test4', 'gr4');
+        Subjects::AddSubjectToGroup('test5', 'gr1');
+        Subjects::AddSubjectToGroup('gr4', 'gr3');
+        Subjects::AddSubjectToGroup('gr3', 'gr2');
+        $tdata['subjects'] = $o;
+        return $tdata;
+    } // fn TestData
 
 
     /**
      * Make basic test
      *
      */
-    public function test()
+    public static function Test()
     {
-        if (PEAR::isError($p = parent::test())) {
+        $p = ObjClasses::Test();
+        if (PEAR::isError($p)) {
             return $p;
         }
-        $this->deleteData();
-        $this->testData();
-        $this->test_correct = "root(0), test1(0), test2(0), test3(0),".
+        Subjects::DeleteData();
+        Subjects::TestData();
+        $test_correct = "root(0), test1(0), test2(0), test3(0),".
             " test4(0), test5(0), gr1(2), gr2(2), gr3(2), gr4(1)\n";
-        $this->test_dump = $this->dumpSubjects();
-        $this->removeSubj('test1');
-        $this->removeSubj('test3');
-        $this->removeSubjFromGr('test5', 'gr1');
-        $this->removeSubjFromGr('gr3', 'gr2');
-        $this->test_correct .= "root(0), test2(0), test4(0), test5(0),".
+        $test_dump = Subjects::DumpSubjects();
+        Subjects::RemoveSubj('test1');
+        Subjects::RemoveSubj('test3');
+        Subjects::RemoveSubjectFromGroup('test5', 'gr1');
+        Subjects::RemoveSubjectFromGroup('gr3', 'gr2');
+        $test_correct .= "root(0), test2(0), test4(0), test5(0),".
             " gr1(0), gr2(1), gr3(1), gr4(1)\n";
-        $this->test_dump .= $this->dumpSubjects();
-        $this->deleteData();
-        if ($this->test_dump == $this->test_correct) {
-            $this->test_log.="subj: OK\n";
+        $test_dump .= Subjects::DumpSubjects();
+        Subjects::DeleteData();
+        if ($test_dump == $test_correct) {
+            $test_log .= "subj: OK\n";
             return TRUE;
         } else {
             return PEAR::raiseError(
-            'Subjects::test:', 1, PEAR_ERROR_DIE, '%s'.
-            "<pre>\ncorrect:\n{$this->test_correct}\n".
-            "dump:\n{$this->test_dump}\n</pre>\n");
+                'Subjects::test:', 1, PEAR_ERROR_DIE, '%s'.
+                "<pre>\ncorrect:\n{$test_correct}\n".
+                "dump:\n{$test_dump}\n</pre>\n");
         }
     } // fn test
 
@@ -675,35 +686,35 @@ class Subjects extends ObjClasses {
      * Create tables + initialize
      *
      */
-    public function install()
-    {
-        parent::install();
-        $this->dbc->query("CREATE TABLE {$this->subjTable} (
-            id int not null PRIMARY KEY,
-            login varchar(255) not null default'',
-            pass varchar(255) not null default'',
-            type char(1) not null default 'U',
-            realname varchar(255) not null default'',
-            lastlogin timestamp,
-            lastfail timestamp
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->subjTable}_id_idx
-            ON {$this->subjTable} (id)");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->subjTable}_login_idx
-            ON {$this->subjTable} (login)");
-        $this->dbc->createSequence("{$this->subjTable}_id_seq");
-
-        $this->dbc->query("CREATE TABLE {$this->smembTable} (
-            id int not null PRIMARY KEY,
-            uid int not null default 0,
-            gid int not null default 0,
-            level int not null default 0,
-            mid int
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->smembTable}_id_idx
-            ON {$this->smembTable} (id)");
-        $this->dbc->createSequence("{$this->smembTable}_id_seq");
-    } // fn install
+//    public function install()
+//    {
+//        parent::install();
+//        $CC_DBC->query("CREATE TABLE {$this->subjTable} (
+//            id int not null PRIMARY KEY,
+//            login varchar(255) not null default'',
+//            pass varchar(255) not null default'',
+//            type char(1) not null default 'U',
+//            realname varchar(255) not null default'',
+//            lastlogin timestamp,
+//            lastfail timestamp
+//        )");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->subjTable}_id_idx
+//            ON {$this->subjTable} (id)");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->subjTable}_login_idx
+//            ON {$this->subjTable} (login)");
+//        $CC_DBC->createSequence("{$this->subjTable}_id_seq");
+//
+//        $CC_DBC->query("CREATE TABLE {$this->smembTable} (
+//            id int not null PRIMARY KEY,
+//            uid int not null default 0,
+//            gid int not null default 0,
+//            level int not null default 0,
+//            mid int
+//        )");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->smembTable}_id_idx
+//            ON {$this->smembTable} (id)");
+//        $CC_DBC->createSequence("{$this->smembTable}_id_seq");
+//    } // fn install
 
 
     /**
@@ -711,14 +722,15 @@ class Subjects extends ObjClasses {
      *
      * @return void
      */
-    public function uninstall()
-    {
-        $this->dbc->query("DROP TABLE {$this->subjTable}");
-        $this->dbc->dropSequence("{$this->subjTable}_id_seq");
-        $this->dbc->query("DROP TABLE {$this->smembTable}");
-        $this->dbc->dropSequence("{$this->smembTable}_id_seq");
-        parent::uninstall();
-    } // fn uninstall
+//    public function uninstall()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['subjTable']);
+//        $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id_seq");
+//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['smembTable']);
+//        $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id_seq");
+//        parent::uninstall();
+//    } // fn uninstall
 
 } // class Subjects
 ?>

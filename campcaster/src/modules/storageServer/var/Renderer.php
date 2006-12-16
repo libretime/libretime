@@ -35,6 +35,7 @@ class Renderer
      */
     function rnRender2FileOpen(&$gb, $plid, $owner=NULL)
     {
+        global $CC_CONFIG;
         // recall playlist:
         $pl = LsPlaylist::recallByGunid($gb, $plid);
         if (PEAR::isError($pl)) {
@@ -46,7 +47,7 @@ class Renderer
         	return $smil;
         }
         // temporary file for smil:
-        $tmpn = tempnam($gb->bufferDir, 'plRender_');
+        $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plRender_');
         $smilf = "$tmpn.smil";
         file_put_contents($smilf, $smil);
         $url = "file://$smilf";
@@ -54,11 +55,11 @@ class Renderer
         $outf = "$tmpn.".RENDER_EXT;
         touch($outf);
         // logging:
-        $logf = "{$gb->bufferDir}/renderer.log";
+        $logf = $CC_CONFIG['bufferDir']."/renderer.log";
         file_put_contents($logf, "--- ".date("Ymd-H:i:s")."\n", FILE_APPEND);
         // open access to output file:         /*gunid*/      /*parent*/
         $acc = $gb->bsAccess($outf, RENDER_EXT, $plid, 'render', 0, $owner);
-        if ($gb->dbc->isError($acc)) {
+        if (PEAR::isError($acc)) {
         	return $acc;
         }
         extract($acc);
@@ -118,8 +119,8 @@ class Renderer
      *      url : string - readable url
      */
     function rnRender2FileList(&$gb,$stat='') {
-        # open temporary dir
-        $tokens = $gb->getTokensByType('render');
+        // open temporary dir
+        $tokens = BasicStor::GetTokensByType('render');
         foreach ($tokens as $token) {
             $st = Renderer::rnRender2FileCheck($gb, $token);
             if ( ($stat=='') || ($st['status']==$stat) ) {
@@ -142,12 +143,13 @@ class Renderer
      */
     function rnRender2FileClose(&$gb, $token)
     {
+        global $CC_CONFIG;
         $r = $gb->bsRelease($token, 'render');
         if (PEAR::isError($r)) {
         	return $r;
         }
         $realOgg = $r['realFname'];
-        $tmpn = "{$gb->bufferDir}/".basename($realOgg, '.'.RENDER_EXT);
+        $tmpn = $CC_CONFIG['bufferDir']."/".basename($realOgg, '.'.RENDER_EXT);
         $smilf = "$tmpn.smil";
         $statf = Renderer::getStatusFile($gb, $token);
         @unlink($statf);
@@ -219,7 +221,7 @@ class Renderer
         	return $parid;
         }
         $fileName = 'rendered_playlist';
-        $id = $gb->idFromGunid($gunid);
+        $id = BasicStor::IdFromGunid($gunid);
         if (PEAR::isError($id)) {
         	return $id;
         }
@@ -254,8 +256,9 @@ class Renderer
      */
     function getLocalFile(&$gb, $token)
     {
-        $token = StoredFile::_normalizeGunid($token);
-        return "{$gb->accessDir}/$token.".RENDER_EXT;
+        global $CC_CONFIG;
+        $token = StoredFile::NormalizeGunid($token);
+        return $CC_CONFIG['accessDir']."/$token.".RENDER_EXT;
     }
 
 
@@ -285,8 +288,8 @@ class Renderer
      */
     function getUrl(&$gb, $token)
     {
-        $token = StoredFile::_normalizeGunid($token);
-        return $gb->getUrlPart()."access/$token.".RENDER_EXT;
+        $token = StoredFile::NormalizeGunid($token);
+        return BasicStor::GetUrlPart()."access/$token.".RENDER_EXT;
     }
 
 } // class Renderer

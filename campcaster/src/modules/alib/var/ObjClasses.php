@@ -15,33 +15,18 @@ require_once("M2tree.php");
  * @license http://www.gnu.org/licenses/gpl.txt
  * @link http://www.campware.org
  */
-class ObjClasses extends M2tree {
-	/**
-	 * The name of the database table ("PREFIXclasses")
-	 *
-	 * @var string
-	 */
-    public $classTable;
-
-    /**
-     * The name of a database table ("PREFIXcmemb")
-     *
-     * @var string
-     */
-    public $cmembTable;
-
+class ObjClasses {
+//class ObjClasses extends M2tree {
 
     /**
      * @param object $dbc
      * @param array $config
      * @return this
      */
-    public function __construct(&$dbc, $config)
-    {
-        parent::__construct($dbc, $config);
-        $this->classTable = $config['tblNamePrefix'].'classes';
-        $this->cmembTable = $config['tblNamePrefix'].'cmemb';
-    }
+//    public function __construct(&$dbc, $config)
+//    {
+//        parent::__construct($dbc, $config);
+//    }
 
 
     /* ======================================================= public methods */
@@ -50,16 +35,17 @@ class ObjClasses extends M2tree {
      * Add new class of objects
      *
      * @param string $cname
-     * @return id/error
+     * @return id|PEAR_Error
      */
-    public function addClass($cname)
+    public static function AddClass($cname)
     {
-        $id = $this->dbc->nextId("{$this->treeTable}_id_seq");
+        global $CC_CONFIG, $CC_DBC;
+        $id = $CC_DBC->nextId($CC_CONFIG['treeTable']."_id_seq");
         if (PEAR::isError($id)) {
         	return $id;
         }
-        $r = $this->dbc->query("
-            INSERT INTO {$this->classTable} (id, cname)
+        $r = $CC_DBC->query("
+            INSERT INTO ".$CC_CONFIG['classTable']." (id, cname)
             VALUES ($id, '$cname')
         ");
         if (PEAR::isError($r)) {
@@ -73,32 +59,33 @@ class ObjClasses extends M2tree {
      * Remove class by name
      *
      * @param string $cname
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function removeClass($cname)
-    {
-        $cid = $this->getClassId($cname);
-        if (PEAR::isError($cid)) {
-        	return($cid);
-        }
-        return $this->removeClassById($cid);
-    }
+//    public static function RemoveClass($cname)
+//    {
+//        $cid = ObjClasses::GetClassId($cname);
+//        if (PEAR::isError($cid)) {
+//        	return($cid);
+//        }
+//        return ObjClasses::RemoveClassById($cid);
+//    }
 
 
     /**
      * Remove class by id
      *
      * @param int $cid
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function removeClassById($cid)
+    public static function RemoveClassById($cid)
     {
-        $r = $this->dbc->query("DELETE FROM {$this->cmembTable}
+        global $CC_CONFIG, $CC_DBC;        
+        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']."
             WHERE cid=$cid");
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $this->dbc->query("DELETE FROM {$this->classTable}
+        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['classTable']."
             WHERE id=$cid");
         if (PEAR::isError($r)) {
         	return $r;
@@ -112,11 +99,12 @@ class ObjClasses extends M2tree {
      *
      * @param int $cid
      * @param int $oid
-     * @return boolean/err
+     * @return TRUE|PEAR_Error
      */
-    public function addObj2Class($cid, $oid)
+    public static function AddObjectToClass($cid, $oid)
     {
-        $r = $this->dbc->query("INSERT INTO {$this->cmembTable} (cid, objid)
+        global $CC_CONFIG, $CC_DBC;
+        $r = $CC_DBC->query("INSERT INTO ".$CC_CONFIG['cmembTable']." (cid, objid)
             VALUES ($cid, $oid)");
         if (PEAR::isError($r)) {
         	return $r;
@@ -129,12 +117,13 @@ class ObjClasses extends M2tree {
      * Remove object from class
      *
      * @param int $oid
-     * @param int $cid, optional, default: remove obj from all classes
-     * @return boolean/err
+     * @param int $cid, default: remove obj from all classes
+     * @return TRUE|PEAR_Error
      */
-    public function removeObjFromClass($oid, $cid=NULL)
+    public static function RemoveObjectFromClass($oid, $cid=NULL)
     {
-        $r = $this->dbc->query("DELETE FROM {$this->cmembTable}
+        global $CC_CONFIG, $CC_DBC;
+        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']."
             WHERE objid=$oid".(is_null($cid)? '':" AND cid=$cid"));
         if (PEAR::isError($r)) {
         	return $r;
@@ -149,15 +138,15 @@ class ObjClasses extends M2tree {
      * Remove object from all classes and remove object itself
      *
      * @param int $id
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function removeObj($id)
+    public static function RemoveObj($id)
     {
-        $r = $this->removeObjFromClass($id);
+        $r = ObjClasses::RemoveObjectFromClass($id);
         if (PEAR::isError($r)) {
         	return $r;
         }
-        return parent::removeObj($id);
+        return M2tree::RemoveObj($id);
     }
 
 
@@ -167,12 +156,13 @@ class ObjClasses extends M2tree {
      * Get class id from name
      *
      * @param string $cname
-     * @return int/err
+     * @return int|PEAR_Error
      */
-    public function getClassId($cname)
+    public static function GetClassId($cname)
     {
+        global $CC_CONFIG, $CC_DBC;
         $cname = pg_escape_string($cname);
-        return $this->dbc->getOne($query = "SELECT id FROM {$this->classTable}
+        return $CC_DBC->getOne($query = "SELECT id FROM ".$CC_CONFIG['classTable']."
             WHERE cname='$cname'");
     }
 
@@ -181,12 +171,13 @@ class ObjClasses extends M2tree {
      * Get class name from id
      *
      * @param int $id
-     * @return string/err
+     * @return string|PEAR_Error
      */
-    public function getClassName($id)
+    public static function GetClassName($id)
     {
-        return $this->dbc->getOne(
-            $query = "SELECT cname FROM {$this->classTable} WHERE id=$id");
+        global $CC_DBC, $CC_CONFIG;        
+        $sql = "SELECT cname FROM ".$CC_CONFIG['classTable']." WHERE id=$id";
+        return $CC_DBC->getOne($sql);
     }
 
 
@@ -194,11 +185,12 @@ class ObjClasses extends M2tree {
      * Return true is object is class
      *
      * @param int $id
-     * @return boolean/err
+     * @return boolean|PEAR_Error
      */
-    public function isClass($id)
+    public static function IsClass($id)
     {
-        $r = $this->dbc->getOne("SELECT count(*) FROM {$this->classTable}
+        global $CC_CONFIG, $CC_DBC;
+        $r = $CC_DBC->getOne("SELECT count(*) FROM ".$CC_CONFIG['classTable']."
             WHERE id=$id");
         if (PEAR::isError($r)) {
         	return $r;
@@ -210,11 +202,12 @@ class ObjClasses extends M2tree {
     /**
      * Return all classes
      *
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    public function getClasses()
+    public static function GetClasses()
     {
-        return $this->dbc->getAll("SELECT * FROM {$this->classTable}");
+        global $CC_CONFIG, $CC_DBC;
+        return $CC_DBC->getAll("SELECT * FROM ".$CC_CONFIG['classTable']);
     }
 
 
@@ -222,12 +215,13 @@ class ObjClasses extends M2tree {
      * Return all objects in class
      *
      * @param int $id
-     * @return array/err
+     * @return array|PEAR_Error
      */
-    public function listClass($id)
+    public static function ListClass($id)
     {
-        return $this->dbc->getAll("
-            SELECT t.* FROM {$this->cmembTable} cm, {$this->treeTable} t
+        global $CC_CONFIG, $CC_DBC;        
+        return $CC_DBC->getAll("
+            SELECT t.* FROM ".$CC_CONFIG['cmembTable']." cm, ".$CC_CONFIG['treeTable']." t
             WHERE cm.cid=$id AND cm.objid=t.id");
     }
 
@@ -243,13 +237,14 @@ class ObjClasses extends M2tree {
      * 		actual indentation
      * @return string
      */
-    public function dumpClasses($indstr='    ', $ind='')
+    public static function DumpClasses($indstr='    ', $ind='')
     {
+        global $CC_CONFIG, $CC_DBC;
         $r = $ind.join(', ', array_map(
             create_function('$v', 'return "{$v[\'cname\']} ({$v[\'cnt\']})";'),
-            $this->dbc->getAll("
-                SELECT cname, count(cm.objid)as cnt FROM {$this->classTable} c
-                LEFT JOIN {$this->cmembTable} cm ON c.id=cm.cid
+            $CC_DBC->getAll("
+                SELECT cname, count(cm.objid)as cnt FROM ".$CC_CONFIG['classTable']." c
+                LEFT JOIN ".$CC_CONFIG['cmembTable']." cm ON c.id=cm.cid
                 GROUP BY cname, c.id ORDER BY c.id
             ")
         ))."\n";
@@ -258,14 +253,15 @@ class ObjClasses extends M2tree {
 
 
     /**
-     * Delete all classes and membeship records
+     * Delete all classes and membership records.
      * @return void
      */
-    public function deleteData()
+    public static function DeleteData()
     {
-        $this->dbc->query("DELETE FROM {$this->cmembTable}");
-        $this->dbc->query("DELETE FROM {$this->classTable}");
-        parent::reset();
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']);
+        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['classTable']);
+        M2tree::reset();
     }
 
 
@@ -273,16 +269,17 @@ class ObjClasses extends M2tree {
      * Insert test data
      *
      */
-    public function testData()
+    public static function TestData()
     {
-        parent::testData();
-        $o['cl_sa'] = $this->addClass('Sections a');
-        $o['cl2'] = $this->addClass('Class 2');
-        $this->addObj2Class($o['cl_sa'], $this->tdata['tree']['s1a']);
-        $this->addObj2Class($o['cl_sa'], $this->tdata['tree']['s2a']);
-        $this->addObj2Class($o['cl2'], $this->tdata['tree']['t1']);
-        $this->addObj2Class($o['cl2'], $this->tdata['tree']['pb']);
-        $this->tdata['classes'] = $o;
+        $tdata = M2tree::testData();
+        $o['cl_sa'] = ObjClasses::AddClass('Sections a');
+        $o['cl2'] = ObjClasses::AddClass('Class 2');
+        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s1a']);
+        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s2a']);
+        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['t1']);
+        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['pb']);
+        $tdata['classes'] = $o;
+        return $tdata;
     }
 
 
@@ -290,28 +287,30 @@ class ObjClasses extends M2tree {
      * Make basic test
      *
      */
-    public function test()
+    public static function Test()
     {
-        if (PEAR::isError($p = parent::test())) {
+        $p = M2tree::test();
+        if (PEAR::isError($p)) {
         	return $p;
         }
-        $this->deleteData();
-        $this->testData();
-        $this->test_correct = "Sections a (2), Class 2 (2)\n";
-        $this->test_dump = $this->dumpClasses();
-        $this->removeClass('Sections a');
-        $this->removeObjFromClass($this->tdata['tree']['pb'],
-            $this->tdata['classes']['cl2']);
-        $this->test_correct .= "Class 2 (1)\n";
-        $this->test_dump .= $this->dumpClasses();
-        $this->deleteData();
-        if ($this->test_dump==$this->test_correct) {
-            $this->test_log.="class: OK\n"; return TRUE;
+        ObjClasses::DeleteData();
+        ObjClasses::TestData();
+        $test_correct = "Sections a (2), Class 2 (2)\n";
+        $test_dump = ObjClasses::DumpClasses();
+        //$this->removeClass('Sections a');
+        ObjClasses::RemoveObjectFromClass($tdata['tree']['pb'],
+            $tdata['classes']['cl2']);
+        $test_correct .= "Class 2 (1)\n";
+        $test_dump .= ObjClasses::DumpClasses();
+        ObjClasses::DeleteData();
+        if ($test_dump == $test_correct) {
+            $test_log .= "class: OK\n"; 
+            return TRUE;
         } else {
         	return PEAR::raiseError(
-            'ObjClasses::test:', 1, PEAR_ERROR_DIE, '%s'.
-            "<pre>\ncorrect:\n{$this->test_correct}\n".
-            "dump:\n{$this->test_dump}\n</pre>\n");
+                'ObjClasses::test:', 1, PEAR_ERROR_DIE, '%s'.
+                "<pre>\ncorrect:\n{$test_correct}\n".
+                "dump:\n{$test_dump}\n</pre>\n");
         }
     }
 
@@ -320,36 +319,37 @@ class ObjClasses extends M2tree {
      * Create tables + initialize
      *
      */
-    public function install()
-    {
-        parent::install();
-        $this->dbc->query("CREATE TABLE {$this->classTable} (
-            id int not null PRIMARY KEY,
-            cname varchar(20)
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->classTable}_id_idx
-            ON {$this->classTable} (id)");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->classTable}_cname_idx
-            ON {$this->classTable} (cname)");
-
-        $this->dbc->query("CREATE TABLE {$this->cmembTable} (
-            objid int not null,
-            cid int not null
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->cmembTable}_idx
-            ON {$this->cmembTable} (objid, cid)");
-    }
+//    public function install()
+//    {
+//        parent::install();
+//        $CC_DBC->query("CREATE TABLE {$this->classTable} (
+//            id int not null PRIMARY KEY,
+//            cname varchar(20)
+//        )");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->classTable}_id_idx
+//            ON {$this->classTable} (id)");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->classTable}_cname_idx
+//            ON {$this->classTable} (cname)");
+//
+//        $CC_DBC->query("CREATE TABLE {$this->cmembTable} (
+//            objid int not null,
+//            cid int not null
+//        )");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->cmembTable}_idx
+//            ON {$this->cmembTable} (objid, cid)");
+//    }
 
 
     /**
      * Drop tables etc.
      *
      */
-    public function uninstall()
-    {
-        $this->dbc->query("DROP TABLE {$this->classTable}");
-        $this->dbc->query("DROP TABLE {$this->cmembTable}");
-        parent::uninstall();
-    }
+//    public static function Uninstall()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['classTable']);
+//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['cmembTable']);
+//        parent::uninstall();
+//    }
 } // class ObjClasses
 ?>

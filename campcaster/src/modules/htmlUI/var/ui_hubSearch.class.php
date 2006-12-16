@@ -90,7 +90,7 @@ class uiHubSearch extends uiSearch {
             return FALSE;
         }
         foreach ($results['results'] as $rec) {
-            $tmpId = $this->Base->gb->idFromGunid($rec["gunid"]);
+            $tmpId = BasicStor::IdFromGunid($rec["gunid"]);
             $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
         $this->results['cnt'] = $results['cnt'];
@@ -117,7 +117,7 @@ class uiHubSearch extends uiSearch {
         foreach ($results['results'] as $rec) {
             // TODO: maybe this getMetaInfo is not correct for the remote results
             // yes, right :)
-            // $this->results['items'][] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($rec));
+            // $this->results['items'][] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($rec));
             $this->results['items'][] = $rec;
         }
 */

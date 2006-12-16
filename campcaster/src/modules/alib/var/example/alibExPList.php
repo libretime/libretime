@@ -12,11 +12,11 @@ else $id=1;
 
 // prefill data structure for template
     $d = array(
-        'rows'      => $alib->getSubjPerms($id),
+        'rows'      => Alib::GetSubjPerms($id),
         'id'        => $id,
         'loggedAs'  => $login,
-        'actions'   => $alib->getAllActions(),
-        'name'      => $alib->getSubjName($id)
+        'actions'   => Alib::GetAllActions(),
+        'name'      => Subjects::GetSubjName($id)
     );
     $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 

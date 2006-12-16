@@ -9,7 +9,7 @@ require_once (dirname(__FILE__).'/../conf.php');
  *    $access = $cron->openCrontab('write');
  *    if ($access != 'write') {
  *        do {
- *           $access = $this->forceWriteable();
+ *           $access = $cron->forceWriteable();
  *        } while ($access != 'write');
  *    }
  *    $cron->addCronJob('*','*','*','*','*',
@@ -46,11 +46,11 @@ class Cron {
      * Constructor
      */
     function Cron() {
-        global $config;
-        $this->lockfile = $config['lockfile'];
-        $this->cronfile = $config['cronfile'];
-        $this->paramdir = $config['paramdir'];
-        $this->cronUserName = $config['cronUserName'];
+        global $CC_CONFIG;
+        $this->lockfile = $CC_CONFIG['lockfile'];
+        $this->cronfile = $CC_CONFIG['cronfile'];
+        $this->paramdir = $CC_CONFIG['paramdir'];
+        $this->cronUserName = $CC_CONFIG['cronUserName'];
     }
 
 

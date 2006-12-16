@@ -12,7 +12,7 @@
     <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week')">##Week##</a></li>
     <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month')">##Month##</a></li>
     <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1')">##Today##</a></li>
-    {* if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
+    {* if Alib::CheckPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
         <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=status'); location.href='{$UI_BROWSER}?act=SCHEDULER'">##Status##</a></li>
     {* /if *}
     {* if $SUBJECTS->isMemberOf('Backup') *}

@@ -8,16 +8,16 @@ require_once "alib_h.php";
 require_once "alibExTestAuth.php";
 
 if(isset($_GET['id']) && is_numeric($_GET['id']))   $id = $_GET['id'];
-else   $id = $alib->getRootNode();
+else   $id = M2tree::GetRootNode();
 
 // prefill data structure for template
 $d = array(
     'parid'     => $alib->getParent($id),
-    'oname'     => $alib->getObjName($id),
-    'path'      => $alib->getPath($id, 'id, name'),
-    'rows'      => $alib->getDir($id, 'id, name, type'),
-    'addtypes'  => $alib->getAllowedChildTypes($alib->getObjType($id)),
-    'dump'      => $alib->dumpTree($id),
+    'oname'     => M2tree::GetObjName($id),
+    'path'      => M2tree::GetPath($id, 'id, name'),
+    'rows'      => M2tree::GetDir($id, 'id, name, type'),
+    'addtypes'  => M2tree::GetAllowedChildTypes(M2tree::GetObjType($id)),
+    'dump'      => M2tree::DumpTree($id),
     'id'        => $id,
     'loggedAs'  => $login
 );

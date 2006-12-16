@@ -15,7 +15,9 @@ PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallback');
 
 function errCallback($err)
 {
-	if(assert_options(ASSERT_ACTIVE)==1) return;
+	if (assert_options(ASSERT_ACTIVE)==1) {
+	    return;
+	}
 	echo "<pre>\n";
 	echo "request: "; print_r($_REQUEST);
     echo "\ngm:\n".$err->getMessage()."\nui:\n".$err->getUserInfo()."\n";
@@ -25,7 +27,7 @@ function errCallback($err)
     exit;
 }
 
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$alib = new Alib($dbc, $config);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$alib = new Alib();
 ?>

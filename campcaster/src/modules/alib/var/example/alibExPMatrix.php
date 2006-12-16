@@ -1,27 +1,37 @@
 <?php
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version  $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
-require_once "alib_h.php";
 
-$sid=$_GET['subj'];
+require_once("alib_h.php");
 
-$all = $alib->getAllObjects();
-foreach($alib->getClasses() as $cl)
+$sid = $_GET['subj'];
+
+$all = M2tree::GetAllObjects();
+foreach (ObjClasses::GetClasses() as $cl) {
     $all[] = array('name'=>$cl['cname']." (class)", 'id'=>$cl['id']);
+}
 
-foreach($all as $it){
- $aa=array();
- foreach($alib->getAllActions() as $a){
-  $aa[$a] = $r = $alib->checkPerm($sid, $a, $it['id']);
-  if(PEAR::isError($r)){
-    echo $r->getMessage()." ".$r->getUserInfo()."\n"; exit; }
- }
- $m[]=array($it['name'], $aa);
+foreach ($all as $it) {
+    $aa = array();
+    foreach (Alib::GetAllActions() as $a) {
+        $aa[$a] = $r = Alib::CheckPerm($sid, $a, $it['id']);
+        if (PEAR::isError($r)) {
+            echo $r->getMessage()." ".$r->getUserInfo()."\n"; 
+            exit; 
+        }
+    }
+    $m[] = array($it['name'], $aa);
 }
 #echo"<pre>\n"; var_dump($m);
-$u=$alib->getSubjName($sid);
+$u = Subjects::GetSubjName($sid);
 
 ?>
 <html><head>
@@ -32,7 +42,7 @@ $u=$alib->getSubjName($sid);
 <h2>User: <?php echo$u?></h2>
 <table style="border:1px solid black">
 <tr class="ev"><th>object</th>
-<?php foreach($alib->getAllActions() as $a){?>
+<?php foreach (Alib::GetAllActions() as $a){?>
 <th><?php echo$a?></th>
 <?php }?>
 </tr>
@@ -49,5 +59,5 @@ $u=$alib->getSubjName($sid);
 <a href="javascript:back()">Back</a>
 <hr>
 Tree dump:
-<pre><?php echo$alib->dumpTree()?></pre>
+<pre><?php echo M2tree::DumpTree()?></pre>
 </body></html>

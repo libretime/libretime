@@ -101,9 +101,9 @@ class M3uPlaylist {
         foreach ($arr as $i => $it) {
             list($md, $uri) = preg_split("|\n|", $it);
             list($length, $title) = preg_split("|, *|", $md);
-            // $gunid  = StoredFile::_createGunid();
+            // $gunid  = StoredFile::CreateGunid();
             $gunid = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
-            $acId = $gb->idFromGunid($gunid);
+            $acId = BasicStor::IdFromGunid($gunid);
             if (PEAR::isError($acId)) {
             	return $acId;
             }
@@ -162,8 +162,8 @@ class M3uPlaylist {
         foreach ($arr as $i => $it) {
             list($md, $uri) = preg_split("|\n|", $it);
             list($length, $title) = preg_split("|, *|", $md);
-            $gunid = StoredFile::_createGunid();
-            $gunid2 = StoredFile::_createGunid();
+            $gunid = StoredFile::CreateGunid();
+            $gunid2 = StoredFile::CreateGunid();
             $length = Playlist::secondsToPlaylistTime($length);
             $offset = '???';
             $uri_h = preg_replace("|--|", "&#2d;&#2d;", htmlspecialchars("$uri"));
@@ -225,7 +225,7 @@ class M3uPlaylistBodyElement {
         if (PEAR::isError($res)) {
         	return $res;
         }
-        $gunid = StoredFile::_createGunid();
+        $gunid = StoredFile::CreateGunid();
         $playlength = '???'; // ***
         $res = "$ind<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
             "$ind<playlist id=\"$gunid\" playlength=\"$playlength\" title=\"\">\n".
@@ -313,8 +313,8 @@ class M3uPlaylistAudioElement {
         } else {
         	$fInfo = '';
         }
-        $plElGunid = StoredFile::_createGunid();
-        $aGunid = StoredFile::_createGunid();
+        $plElGunid = StoredFile::CreateGunid();
+        $aGunid = StoredFile::CreateGunid();
         $title = basename($tree->attrs['src']->val);
         $offset = Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
         $playlength = '???'; # ***

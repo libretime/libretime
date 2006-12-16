@@ -2,20 +2,20 @@
 header("Content-type: text/plain");
 echo "\n# Transport test:\n";
 
-require_once '../conf.php';
-require_once 'DB.php';
-require_once '../GreenBox.php';
-require_once '../LocStor.php';
+require_once('../conf.php');
+require_once('DB.php');
+require_once('../GreenBox.php');
+require_once('../LocStor.php');
 
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new GreenBox($dbc, $config);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$gb = new GreenBox();
 $tr = new Transport($gb);
-$ls = new LocStor($dbc, $config);
-@unlink("{$tr->transDir}/activity.log");
-@unlink("{$tr->transDir}/debug.log");
+$ls = new LocStor();
+@unlink($CC_CONFIG['transDir']."/activity.log");
+@unlink($CC_CONFIG['transDir']."/debug.log");
 $tr->_cleanUp();
 
 $gunid     = 'a23456789abcdefb';
@@ -24,25 +24,25 @@ $mdataFile = '../tests/mdata1.xml';
 
 /* ========== PING ========== */
 /*
-echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
 echo"#  Ping: ";
 $r = $tr->pingToArchive();
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 var_export($r); echo"\n";
 
-echo"#  logout: "; $r = $gb->logout($sessid);
+echo"#  logout: "; $r = Alib::Logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
 */
 /* ========== STORE ========== */
-echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
 echo"#  Store: ";
 $parid = $gb->_getHomeDirIdFromSess($sessid);
 $oid = $r = $gb->bsPutFile($parid, "xx1.mp3", $mediaFile, $mdataFile, $gunid, 'audioclip');
 if(PEAR::isError($r)){ if($r->getCode()!=GBERR_GUNID){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }}
-$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+$comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
 echo "$oid\n";
 
 /* ========== DELETE FROM HUB ========== */
@@ -76,7 +76,7 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n
 var_export($r); echo"\n";
 $trtok = $r;
 
-echo"#  logout: "; $r = $gb->logout($sessid);
+echo"#  logout: "; $r = Alib::Logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
 echo "$r\n";
 /*
@@ -97,14 +97,21 @@ for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, 
 if($state=='failed') exit(1);
 
 /* === DELETE LOCAL === */
-echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
-echo"#  Delete: ";    $r = $ls->deleteAudioClip($sessid, $gunid, TRUE);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
+echo "#  Delete: ";    $r = $ls->deleteAudioClip($sessid, $gunid, TRUE);
+if (PEAR::isError($r)) {
+    echo "ERROR: ".$r->getMessage()."\n";
+    exit(1);
+}
 echo "$r\n";
-echo"#  logout: "; $r = $gb->logout($sessid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "#  logout: "; $r = Alib::Logout($sessid);
+if (PEAR::isError($r)) {
+    echo "ERROR: ".$r->getMessage()."\n";
+    exit(1);
+}
 echo "$r\n";
-$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+$comm = "ls -l ".$CC_CONFIG['storageDir']."/a23";
+echo `$comm`;
 /*
 */
 
@@ -114,7 +121,7 @@ $comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
 
 /* === DOWNLOAD === */
 echo "#  DOWNLOAD test:\n";
-echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
 echo"#  downloadAudioClipFromHub: ";
 $r = $gb->downloadFromHub($sessid, $gunid);
@@ -122,7 +129,7 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n
 var_export($r); echo"\n";
 $trtok = $r;
 
-echo"#  logout: "; $r = $gb->logout($sessid);
+echo"#  logout: "; $r = Alib::Logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
 
@@ -139,16 +146,16 @@ for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, 
 }
 if($state=='failed') exit(1);
 
-$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+$comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
 /*
 */
 
 /*
-echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 echo"#  Delete: ";    $r = $ls->deleteAudioClip($sessid, $gunid, TRUE);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
-echo"#  logout: "; $r = $gb->logout($sessid);
+echo"#  logout: "; $r = Alib::Logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
 */

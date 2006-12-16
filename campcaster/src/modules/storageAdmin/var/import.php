@@ -18,13 +18,13 @@ require_once("$storageServerPath/var/GreenBox.php");
 //PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 //PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s\n");
-$dbc = DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
-	echo "ERROR: ".$dbc->getMessage()." ".$dbc->getUserInfo()."\n";
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+if (PEAR::isError($CC_DBC)) {
+	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
 	exit(1);
 }
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new GreenBox($dbc, $config);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$gb = new GreenBox();
 
 $testonly = (isset($argv[1]) && $argv[1] == '-t');
 
@@ -51,7 +51,7 @@ function import_err($p_pearErrorObj, $txt='')
 }
 
 
-$r = $gb->getObjId('import', $gb->storId);
+$r = M2tree::GetObjId('import', $gb->storId);
 if (PEAR::isError($r)) {
 	echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n";
 	exit(1);

@@ -27,17 +27,18 @@
  *
  */
 
-require_once dirname(__FILE__).'/../conf.php';
-require_once 'DB.php';
-require_once dirname(__FILE__).'/../LocStor.php';
+require_once(dirname(__FILE__).'/../conf.php');
+require_once('DB.php');
+require_once(dirname(__FILE__).'/../LocStor.php');
 
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$locStor = new LocStor($dbc, $config);
+$locStor = new LocStor();
 
-function http_error($code, $err){
+function http_error($code, $err)
+{
     header("HTTP/1.1 $code");
     header("Content-type: text/plain; charset=UTF-8");
     echo "$err\r\n";
@@ -45,21 +46,21 @@ function http_error($code, $err){
 }
 
 // parameter checking:
-if(preg_match("|^[0-9a-fA-F]{32}$|", $_REQUEST['sessid'])){
+if (preg_match("|^[0-9a-fA-F]{32}$|", $_REQUEST['sessid'])) {
     $sessid = $_REQUEST['sessid'];
-}else{
+} else {
     http_error(400, "Error on sessid parameter. ({$_REQUEST['sessid']})");
 }
-if(preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['id'])){
+if (preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['id'])) {
     $gunid = $_REQUEST['id'];
-}else{
+} else {
     http_error(400, "Error on id parameter. ({$_REQUEST['id']})");
 }
 
 // stored file recall:
 $ac = StoredFile::recallByGunid($locStor, $gunid);
-if($dbc->isError($ac)){
-    switch($ac->getCode()){
+if (PEAR::isError($ac)) {
+    switch ($ac->getCode()) {
         case GBERR_DENY:
             http_error(403, "403 ".$ac->getMessage());
         case GBERR_FILENEX:
@@ -69,22 +70,26 @@ if($dbc->isError($ac)){
             http_error(500, "500 ".$ac->getMessage());
     }
 }
-$lid = $locStor->idFromGunid($gunid);
-if($dbc->isError($lid)){ http_error(500, $lid->getMessage()); }
-if(($res = $locStor->_authorize('read', $lid, $sessid)) !== TRUE){
+$lid = BasicStor::IdFromGunid($gunid);
+if (PEAR::isError($lid)) {
+    http_error(500, $lid->getMessage());
+}
+if (($res = BasicStor::Authorize('read', $lid, $sessid)) !== TRUE) {
     http_error(403, "403 Access denied");
 }
-$ftype = $locStor->getObjType($lid);
-if($dbc->isError($ftype)){ http_error(500, $ftype->getMessage()); }
-switch($ftype){
-    case"audioclip":
+$ftype = BasicStor::GetObjType($lid);
+if (PEAR::isError($ftype)) {
+    http_error(500, $ftype->getMessage());
+}
+switch ($ftype) {
+    case "audioclip":
         $realFname  = $ac->_getRealRADFname();
         $mime = $ac->rmd->getMime();
         header("Content-type: $mime");
-	header("Content-length: ".filesize($realFname));
+        header("Content-length: ".filesize($realFname));
         readfile($realFname);
         break;
-    case"webstream":
+    case "webstream":
         $url = $locStor->bsGetMetadataValue($lid, 'ls:url');
         if (empty($url)) {
         	http_error(500, "Unable to get ls:url value");
@@ -93,7 +98,7 @@ switch($ftype){
         header($txt);
         // echo "$txt\n";
         break;
-    case"playlist";
+    case "playlist";
         // $md = $locStor->bsGetMetadata($ac->getId(), $sessid);
         $md = $locStor->getAudioClip($sessid, $gunid);
         // header("Content-type: text/xml");

@@ -82,9 +82,9 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
 /* =============================================================== processing */
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$dbc = DB::connect($config['dsn'], TRUE);
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$bs = new BasicStor($dbc, $config);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+$bs = new BasicStor();
 $pr = new Prefs($bs);
 
 $dbxml = file_get_contents($argv[1]);
@@ -101,42 +101,42 @@ $xmlTree = $parser->getTree();
 
 
 /* ----------------------------------------- processing storageServer element */
-$subjArr   = FALSE;
-$tree     = FALSE;
-foreach($xmlTree->children as $i=>$el){
-    switch($el->name){
-        case"subjects":
-            if($subjArr !== FALSE){
-                echo"ERROR: unexpected subjects element\n";
+$subjArr = FALSE;
+$tree = FALSE;
+foreach ($xmlTree->children as $i => $el) {
+    switch ($el->name) {
+        case "subjects":
+            if ($subjArr !== FALSE) {
+                echo "ERROR: unexpected subjects element\n";
             }
-            $subjArr=$el->children;
-        break;
-        case"folder":
-            if($tree !== FALSE){
-                echo"ERROR: unexpected folder element\n";
+            $subjArr = $el->children;
+            break;
+        case "folder":
+            if ($tree !== FALSE) {
+                echo "ERROR: unexpected folder element\n";
             }
             $tree = ls_restore_processObject($el);
-        break;
+            break;
         default:
-            echo"ERROR: unknown element name {$el->name}\n";
+            echo "ERROR: unknown element name {$el->name}\n";
             exit;
     }
-#    echo "{$el->name}\n";
+//    echo "{$el->name}\n";
 }
 
 /* ---------------------------------------------- processing subjects element */
-$subjects   = array();
-$groups     = array();
-foreach($subjArr as $i=>$el){
-    switch($el->name){
-        case"group":
+$subjects = array();
+$groups = array();
+foreach ($subjArr as $i => $el) {
+    switch ($el->name) {
+        case "group":
             $grname = $el->attrs['name']->val;
             $groups[$grname] = $el->children;
             $subjects[$grname] = array(
                 'type'      => 'group',
             );
-        break;
-        case"user":
+            break;
+        case "user":
             $login = $el->attrs['login']->val;
             $subjects[$login] = array(
                 'type'      => 'user',
@@ -145,21 +145,21 @@ foreach($subjArr as $i=>$el){
                 'realname'  => '',
                 'prefs'     => (isset($el->children[0]) ? $el->children[0]->children : NULL),
             );
-        break;
+            break;
     }
 }
 
 /* -------------------------------------------------------- processing groups */
-foreach($groups as $grname=>$group){
-    foreach($group as $i=>$el){
-        switch($el->name){
-            case"member":
+foreach ($groups as $grname => $group) {
+    foreach ($group as $i => $el) {
+        switch ($el->name) {
+            case "member":
                 $groups[$grname][$i] = $el->attrs['name']->val;
-            break;
-            case"preferences":
+                break;
+            case "preferences":
                 $subjects[$grname]['prefs'] = $el->children;
                 unset($groups[$grname][$i]);
-            break;
+                break;
         }
     }
 }
@@ -174,54 +174,64 @@ foreach($groups as $grname=>$group){
 
 /* ================================================================ restoring */
 
-if(VERBOSE) echo " resetting storage ...\n";
+if (VERBOSE) {
+    echo " resetting storage ...\n";
+}
 $bs->resetStorage(FALSE);
 $storId = $bs->storId;
 
 /* ------------------------------------------------------- restoring subjects */
-foreach($subjects as $login=>$subj){
-    $uid0 = $bs->getSubjId($login);
+foreach ($subjects as $login => $subj) {
+    $uid0 = Subjects::GetSubjId($login);
     ls_restore_checkErr($uid0);
-    switch($subj['type']){
-        case"user":
-            if($login=='root'){
+    switch ($subj['type']) {
+        case "user":
+            if ($login=='root') {
                 $r = $bs->passwd($login, NULL, $subj['pass'], TRUE);
                 ls_restore_checkErr($r, __LINE__);
                 $uid = $uid0;
-            }else{
-                if(!is_null($uid0)){
+            } else {
+                if (!is_null($uid0)) {
                     $r = $bs->removeSubj($login);
                     ls_restore_checkErr($r, __LINE__);
                 }
-                if(VERBOSE) echo " adding user $login ...\n";
+                if (VERBOSE) {
+                    echo " adding user $login ...\n";
+                }
                 $uid = $bs->addSubj($login, $subj['pass'], $subj['realname'], TRUE);
                 ls_restore_checkErr($uid, __LINE__);
             }
-        break;
-        case"group":
-            if(!is_null($uid0)){
+            break;
+        case "group":
+            if (!is_null($uid0)) {
                 $r = $bs->removeSubj($login);
-                if(PEAR::isError($r)){ $uid = $uid0; break; }
+                if (PEAR::isError($r)) {
+                    $uid = $uid0;
+                    break;
+                }
                 //ls_restore_checkErr($r, __LINE__);
             }
-            if(VERBOSE) echo " adding group $login ...\n";
+            if (VERBOSE) {
+                echo " adding group $login ...\n";
+            }
             $uid = $bs->addSubj($login, NULL);
             ls_restore_checkErr($uid, __LINE__);
-#            var_export($uid); echo " ";
-        break;
-    }
-#    echo "$login/$uid   :\n";
-    if(isset($subj['prefs'])){
-#        var_dump($subj['prefs']); exit;
-        foreach($subj['prefs'] as $i=>$el){
-            switch($el->name){
-                case"pref":
+//            var_export($uid); echo " ";
+          break;
+    } // switch
+
+//    echo "$login/$uid   :\n";
+    if (isset($subj['prefs'])) {
+//        var_dump($subj['prefs']); exit;
+        foreach ($subj['prefs'] as $i => $el) {
+            switch ($el->name) {
+                case "pref":
                     $prefkey = $el->attrs['name']->val;
                     $prefval = $el->attrs['val']->val;
-#                    echo" PREF($prefkey)=$prefval\n";
+//                    echo" PREF($prefkey)=$prefval\n";
                     $res = $pr->insert($uid, $prefkey, $prefval);
                     ls_restore_checkErr($res, __LINE__);
-                break;
+                    break;
                 default:
                     var_dump($el);
             }
@@ -231,10 +241,12 @@ foreach($subjects as $login=>$subj){
 
 /* --------------------------------------------------------- restoring groups */
 #var_dump($groups);
-foreach($groups as $grname=>$group){
-    foreach($group as $i=>$login){
-        if(VERBOSE) echo " adding subject $login to group $grname ...\n";
-        $r = $bs->addSubj2Gr($login, $grname);
+foreach ($groups as $grname => $group) {
+    foreach ($group as $i => $login) {
+        if (VERBOSE) {
+            echo " adding subject $login to group $grname ...\n";
+        }
+        $r = Subjects::AddSubjectToGroup($login, $grname);
         ls_restore_checkErr($r, __LINE__);
     }
 }

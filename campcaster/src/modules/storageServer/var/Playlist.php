@@ -102,7 +102,7 @@ class Playlist extends StoredFile {
     public function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
     {
         $tmpFname = uniqid('');
-        $oid = $gb->addObj($tmpFname , 'playlist', $parid);
+        $oid = BasicStor::AddObj($tmpFname , 'playlist', $parid);
         if (PEAR::isError($oid)) {
         	return $oid;
         }
@@ -154,7 +154,7 @@ class Playlist extends StoredFile {
                 'Playlist::lock: playlist already locked'
             );
         }
-        $r = $gb->_setEditFlag($this->gunid, $val, NULL, $subjid);
+        $r = $gb->setEditFlag($this->gunid, $val, NULL, $subjid);
         return $r;
     }
 
@@ -248,7 +248,7 @@ class Playlist extends StoredFile {
         } else {
         	$acTit = $acGunid;
         }
-        $elType = $this->gb->getObjType($acId);
+        $elType = BasicStor::GetObjType($acId);
         $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip',
             'playlist'=>'playlist');
         $elType = $trTbl[$elType];
@@ -381,7 +381,7 @@ class Playlist extends StoredFile {
         $plElId = $r;
         // create and insert gunid (id attribute)
         if (is_null($plElGunid)) {
-        	$plElGunid = StoredFile::_createGunid();
+        	$plElGunid = StoredFile::CreateGunid();
         }
         $r = $this->md->insertMetadataEl($plElId, 'id', $plElGunid, 'A');
         if (PEAR::isError($r)) {
@@ -420,7 +420,7 @@ class Playlist extends StoredFile {
             	return $r;
             }
             $fiId = $r;
-            $fiGunid = StoredFile::_createGunid();
+            $fiGunid = StoredFile::CreateGunid();
             $r = $this->md->insertMetadataEl($fiId, 'id', $fiGunid, 'A');
             if (PEAR::isError($r)) {
             	return $r;
@@ -687,7 +687,7 @@ class Playlist extends StoredFile {
             if (PEAR::isError($fiMid)) {
             	return $fiMid;
             }
-            $fiGunid = StoredFile::_createGunid();
+            $fiGunid = StoredFile::CreateGunid();
             $r = $this->_getMidOrInsert('id', $fiMid, $fiGunid, 'A');
             if (PEAR::isError($r)) {
             	return $r;
@@ -773,7 +773,7 @@ class Playlist extends StoredFile {
                         );
                 }
             }
-            $acId = $this->gb->idFromGunid($acGunid);
+            $acId = BasicStor::IdFromGunid($acGunid);
             if (PEAR::isError($acId)) {
             	return $acId;
             }

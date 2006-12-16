@@ -99,7 +99,7 @@ class uiPlaylist
         }
         if (($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
              if (UI_WARNING) {
-             	$this->Base->_retMsg('Playlist has been locked by "$1".', $this->Base->gb->getSubjName($userid));
+             	$this->Base->_retMsg('Playlist has been locked by "$1".', Subjects::GetSubjName($userid));
              }
             return FALSE;
         }
@@ -145,7 +145,7 @@ class uiPlaylist
             return FALSE;
         }
         if ($msg && UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->getMetadataValue($this->Base->gb->idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->getMetadataValue(BasicStor::IdFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         }
         $this->activeId = NULL;
         $this->token    = NULL;
@@ -189,13 +189,13 @@ class uiPlaylist
             return FALSE;
         }
         if (UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->getMetadataValue($this->Base->gb->idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->getMetadataValue(BasicStor::IdFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         }
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
 
-        if ($this->activate($this->Base->gb->idFromGunid($plgunid), FALSE) !== TRUE) {
+        if ($this->activate(BasicStor::IdFromGunid($plgunid), FALSE) !== TRUE) {
             return FALSE;
         }
 
@@ -372,7 +372,7 @@ class uiPlaylist
             if ($sub['elementname']===UI_FILETYPE_AUDIOCLIP || $sub['elementname']===UI_FILETYPE_PLAYLIST) {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
-                $this->flat[$parent] = $this->Base->getMetaInfo($this->Base->gb->idFromGunid($sub['attrs']['id']));
+                $this->flat[$parent] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
                 $this->flat[$parent]['playlength'] = $sub['attrs']['playlength'];
             }
@@ -686,7 +686,7 @@ class uiPlaylist
 
     public function isAvailable($id)
     {
-        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
+        if (Greenbox::getFileType($id) !== UI_FILETYPE_PLAYLIST) {
             return TRUE;
         }
         if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE) {
@@ -698,11 +698,11 @@ class uiPlaylist
 
     function isUsedBy($id)
     {
-        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST) {
+        if (Greenbox::getFileType($id) !== UI_FILETYPE_PLAYLIST) {
             return FALSE;
         }
         if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
-             return $this->Base->gb->getSubjName($userid);
+             return Subjects::GetSubjName($userid);
         }
         return FALSE;
     } // fn isUsedBy

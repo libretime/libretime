@@ -1,11 +1,7 @@
 <?php
 /**
  * StorageServer configuration file
- * @author $Author$
- * @version $Revision$
- */
-
-/**
+ *
  *  configuration structure:
  *
  *  <dl>
@@ -30,7 +26,7 @@
  *           for login to archive
  *  </dl>
  */
-$config = array(
+$CC_CONFIG = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
         'username'      => 'ls_dbuser',

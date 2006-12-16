@@ -19,7 +19,7 @@ class TransportRecord
 	/**
 	 * @var DB
 	 */
-    public $dbc;
+    //public $dbc;
 
     /**
      * @var GreenBox
@@ -29,12 +29,7 @@ class TransportRecord
     /**
      * @var array
      */
-    private $config;
-
-    /**
-     * @var string
-     */
-    private $transTable;
+    //private $config;
 
     /**
      * @var Transport
@@ -60,9 +55,6 @@ class TransportRecord
     {
         $this->tr =& $tr;
         $this->gb =& $tr->gb;
-        $this->dbc =& $tr->gb->dbc;
-        $this->config = $tr->gb->config;
-        $this->transTable = $tr->gb->config['tblNamePrefix'].'trans';
     }
 
 
@@ -80,6 +72,7 @@ class TransportRecord
      */
     function create(&$tr, $trtype, $direction='up', $defaults=array())
     {
+        global $CC_DBC, $CC_CONFIG;
         $trec = new TransportRecord($tr);
         $trec->trtok = $trtok = $tr->_createTransportToken();
         $trec->row = array_merge($defaults,
@@ -91,7 +84,7 @@ class TransportRecord
             	return $defaults['title'];
             }
         }
-        $id = $trec->dbc->nextId("{$trec->transTable}_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['transTable']."_id_seq");
         $names  = "id, trtok, direction, state, trtype, start, ts";
         $values = "$id, '$trtok', '$direction', 'init', '$trtype', now(), now()";
         foreach ($defaults as $k => $v) {
@@ -100,12 +93,12 @@ class TransportRecord
             $values .= ", $sqlVal";
         }
         $query = "
-            INSERT INTO {$trec->transTable}
+            INSERT INTO ".$CC_CONFIG['transTable']."
                 ($names)
             VALUES
                 ($values)
         ";
-        $res = $trec->dbc->query($query);
+        $res = $CC_DBC->query($query);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -123,16 +116,17 @@ class TransportRecord
      */
     function recall(&$tr, $trtok)
     {
+        global $CC_DBC;
         $trec = new TransportRecord($tr);
         $trec->trtok = $trtok;
-        $row = $trec->dbc->getRow("
+        $row = $CC_DBC->getRow("
             SELECT
                 id, trtok, state, trtype, direction,
                 to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
                 fname, localfile, url, rtrtok, mdtrtok, uid,
                 expectedsize, realsize, expectedsum, realsum,
                 errmsg, title
-            FROM {$trec->transTable}
+            FROM ".$CC_CONFIG['transTable']."
             WHERE trtok='$trtok'
         ");
         if (PEAR::isError($row)) {
@@ -143,8 +137,8 @@ class TransportRecord
                 " invalid transport token ($trtok)", TRERR_TOK
             );
         }
-        $row['pdtoken'] = StoredFile::_normalizeGunid($row['pdtoken']);
-        $row['gunid'] = StoredFile::_normalizeGunid($row['gunid']);
+        $row['pdtoken'] = StoredFile::NormalizeGunid($row['pdtoken']);
+        $row['gunid'] = StoredFile::NormalizeGunid($row['gunid']);
         $trec->row = $row;
         $trec->recalled = TRUE;
         return $trec;
@@ -165,6 +159,7 @@ class TransportRecord
      */
     function setState($newState, $data=array(), $oldState=NULL, $lock=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         $set = " state='$newState', ts=now()";
         if (!is_null($lock)) {
             $slock = ($lock ? 'Y' : 'N');
@@ -175,8 +170,8 @@ class TransportRecord
         foreach ($data as $k => $v) {
             $set .= ", $k=".$this->_getSqlVal($k, $v);
         }
-        $r = $this->dbc->query("
-            UPDATE {$this->transTable}
+        $r = $CC_DBC->query("
+            UPDATE ".$CC_CONFIG['transTable']."
             SET $set
             WHERE trtok='{$this->trtok}'".
             (is_null($oldState) ? '' : " AND state='$oldState'").
@@ -186,7 +181,7 @@ class TransportRecord
         	return $r;
         }
         // return TRUE;
-        $affRows = $this->dbc->affectedRows();
+        $affRows = $CC_DBC->affectedRows();
         if (PEAR::isError($affRows)) {
         	return $affRows;
         }
@@ -221,21 +216,22 @@ class TransportRecord
      */
     function setLock($lock)
     {
+        global $CC_CONFIG, $CC_DBC;
         if ($this->dropped) {
         	return TRUE;
         }
         $slock = ($lock ? 'Y' : 'N');
         $nlock = (!$lock);
         $snlock = ($nlock ? 'Y' : 'N');
-        $r = $this->dbc->query("
-            UPDATE {$this->transTable}
+        $r = $CC_DBC->query("
+            UPDATE ".$CC_CONFIG['transTable']."
             SET lock='$slock', ts=now()
             WHERE trtok='{$this->trtok}' AND lock = '$snlock'"
         );
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $affRows = $this->dbc->affectedRows();
+        $affRows = $CC_DBC->affectedRows();
         if (PEAR::isError($affRows)) {
         	return $affRows;
         }
@@ -304,6 +300,7 @@ class TransportRecord
      */
     function close()
     {
+        global $CC_CONFIG, $CC_DBC;
         if (!$this->recalled) {
             return PEAR::raiseError("TransportRecord::close:".
                 " not recalled ({$this->trtok})", TRERR_TOK
@@ -315,8 +312,8 @@ class TransportRecord
             	return $r;
             }
         } else {
-            $r = $this->dbc->query("
-                DELETE FROM {$this->transTable}
+            $r = $CC_DBC->query("
+                DELETE FROM ".$CC_CONFIG['transTable']."
                 WHERE trtok='{$this->trtok}'
             ");
             if (PEAR::isError($r)) {

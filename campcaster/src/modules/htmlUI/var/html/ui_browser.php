@@ -133,7 +133,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 
             case "PL.downloadExportedFile":
 	            $exportedPlaylist = $uiBrowser->gb->exportPlaylistOpen($uiBrowser->sessid,
-	            			$uiBrowser->gb->gunidFromId($_REQUEST['id']),
+	            			BasicStor::GunidFromId($_REQUEST['id']),
 	            			$_REQUEST['playlisttype'],
 	            		    $_REQUEST['exporttype']=='playlistOnly'?true:false);
 	            $fp = fopen($exportedPlaylist['fname'],'r');

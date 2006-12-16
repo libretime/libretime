@@ -23,9 +23,6 @@ require_once "XML/Util.php";
  */
 class MetaData {
 
-	public $config;
-	public $dbc;
-	public $mdataTable;
 	public $gunid;
 	public $resDir;
 	public $fname;
@@ -41,9 +38,6 @@ class MetaData {
      */
     public function __construct(&$gb, $gunid, $resDir)
     {
-        $this->config =& $gb->config;
-        $this->dbc =& $gb->dbc;
-        $this->mdataTable = $gb->mdataTable;
         $this->gunid = $gunid;
         $this->resDir = $resDir;
         $this->fname = $this->makeFname();
@@ -139,11 +133,12 @@ class MetaData {
      */
     public function delete()
     {
+        global $CC_CONFIG, $CC_DBC;
         if (file_exists($this->fname)) {
         	@unlink($this->fname);
         }
-        $res = $this->dbc->query("
-            DELETE FROM {$this->mdataTable}
+        $res = $CC_DBC->query("
+            DELETE FROM ".$CC_CONFIG['mdataTable']."
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if (PEAR::isError($res)) {
@@ -177,10 +172,11 @@ class MetaData {
      */
     public function getAllMetadata()
     {
+        global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT predns, predicate, object
-            	FROM {$this->mdataTable}
+            	FROM ".$CC_CONFIG['mdataTable']."
             	WHERE gunid=x'{$this->gunid}'::bigint";
-        $rows = $this->dbc->getAll($sql);
+        $rows = $CC_DBC->getAll($sql);
         $values = array();
         foreach ($rows as $row) {
         	$values[$row["predns"].":".$row["predicate"]] = $row["object"];
@@ -202,6 +198,7 @@ class MetaData {
      */
     public function getMetadataEl($category, $parid=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         // handle predicate namespace shortcut
         $a = XML_Util::splitQualifiedName($category);
         if (PEAR::isError($a)) {
@@ -217,10 +214,10 @@ class MetaData {
         	$cond .= " AND subjns='_I' AND subject='$parid'";
         }
         $sql = "SELECT id as mid, object as value
-            	FROM {$this->mdataTable}
+            	FROM ".$CC_CONFIG['mdataTable']."
             	WHERE $cond
             	ORDER BY id";
-        $all = $this->dbc->getAll($sql);
+        $all = $CC_DBC->getAll($sql);
         foreach ($all as $i => $v) {
             if (is_null($all[$i]['value'])) {
                 $all[$i]['value'] = '';
@@ -244,11 +241,12 @@ class MetaData {
      */
     public function setMetadataEl($mid, $value=NULL)
     {
-        $info = $this->dbc->getRow("
+        global $CC_CONFIG, $CC_DBC;
+        $info = $CC_DBC->getRow("
             SELECT parmd.predns as parns, parmd.predicate as parname,
                 md.predxml, md.predns as chns, md.predicate as chname
-            FROM {$this->mdataTable} parmd
-            INNER JOIN {$this->mdataTable} md
+            FROM ".$CC_CONFIG['mdataTable']." parmd
+            INNER JOIN ".$CC_CONFIG['mdataTable']." md
                 ON parmd.id=md.subject AND md.subjns='_I'
             WHERE md.id=$mid
         ");
@@ -270,11 +268,11 @@ class MetaData {
         if (!is_null($value)) {
         	$escapedValue = pg_escape_string($value);
             $sql = "
-                UPDATE {$this->mdataTable}
+                UPDATE ".$CC_CONFIG['mdataTable']."
                 SET object='$escapedValue', objns='_L'
                 WHERE id={$mid}
             ";
-            $res = $this->dbc->query($sql);
+            $res = $CC_DBC->query($sql);
         } else {
             $res = $this->deleteRecord($mid);
         }
@@ -301,9 +299,10 @@ class MetaData {
      */
     public function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
     {
+        global $CC_CONFIG, $CC_DBC;
         //$category = strtolower($category);
-        $parent = $this->dbc->getRow("
-            SELECT predns, predicate, predxml FROM {$this->mdataTable}
+        $parent = $CC_DBC->getRow("
+            SELECT predns, predicate, predxml FROM ".$CC_CONFIG['mdataTable']."
             WHERE gunid=x'{$this->gunid}'::bigint AND id=$parid
         ");
         if (PEAR::isError($parent)) {
@@ -526,7 +525,9 @@ class MetaData {
           $atime = trim(`date +%Y-%m-%dT%H:%M:%S`).$tz;
         }
         $r = $this->setMetadataValue('ls:mtime', $atime);
-        if(PEAR::isError($r)) return $r;
+        if (PEAR::isError($r)) {
+            return $r;
+        }
         $fn = $this->fname;
         $xml = $this->genXMLDoc();
         if (PEAR::isError($xml)) {
@@ -589,9 +590,10 @@ class MetaData {
      */
     private function dbCheck($gunid)
     {
-        $cnt = $this->dbc->getOne("
+        global $CC_CONFIG, $CC_DBC;
+        $cnt = $CC_DBC->getOne("
             SELECT count(*)as cnt
-            FROM {$this->mdataTable}
+            FROM ".$CC_CONFIG['mdataTable']."
             WHERE gunid=x'$gunid'::bigint
         ");
         if (PEAR::isError($cnt)) {
@@ -628,7 +630,8 @@ class MetaData {
      */
     private function validate(&$tree)
     {
-        if ($this->config['validate'] && !is_null($this->format)) {
+        global $CC_CONFIG;
+        if ($CC_CONFIG['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
             $val = new Validator($this->format, $this->gunid);
             if (PEAR::isError($val)) {
@@ -658,7 +661,8 @@ class MetaData {
      */
     private function validateOneValue($parName, $category, $predxml, $value)
     {
-        if ($this->config['validate'] && !is_null($this->format)) {
+        global $CC_CONFIG;
+        if ($CC_CONFIG['validate'] && !is_null($this->format)) {
             require_once("Validator.php");
             $val = new Validator($this->format, $this->gunid);
             if (PEAR::isError($val)) {
@@ -682,15 +686,16 @@ class MetaData {
      */
     private function storeDoc(&$tree)
     {
-        $this->dbc->query("BEGIN");
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("BEGIN");
         $res = $this->storeNode($tree);
         if (PEAR::isError($res)) {
-            $this->dbc->query("ROLLBACK");
+            $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        $res = $this->dbc->query("COMMIT");
+        $res = $CC_DBC->query("COMMIT");
         if (PEAR::isError($res)) {
-        	$this->dbc->query("ROLLBACK");
+        	$CC_DBC->query("ROLLBACK");
         	return $res;
         }
         return TRUE;
@@ -759,7 +764,7 @@ class MetaData {
 //    {
 //    	$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
 //    	$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
-//        $res = $this->dbc->query("UPDATE {$this->mdataTable}
+//        $res = $CC_DBC->query("UPDATE {$this->mdataTable}
 //            SET objns = $objns_sql, object = $object_sql
 //            WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
 //        ");
@@ -796,6 +801,7 @@ class MetaData {
     private function storeRecord($subjns, $subject, $predns, $predicate, $predxml='T',
         $objns=NULL, $object=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
         //$predns = strtolower($predns);
         //$predicate = strtolower($predicate);
@@ -805,12 +811,12 @@ class MetaData {
 		$predicate_sql = is_null($predicate) ? "NULL" : "'".pg_escape_string($predicate)."'";
 		$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
 		$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
-        $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['mdataTable']."_id_seq");
         if (PEAR::isError($id)) {
         	return $id;
         }
-        $res = $this->dbc->query("
-            INSERT INTO {$this->mdataTable}
+        $res = $CC_DBC->query("
+            INSERT INTO ".$CC_CONFIG['mdataTable']."
                 (id , gunid, subjns, subject,
                     predns, predicate, predxml,
                     objns, object
@@ -837,10 +843,11 @@ class MetaData {
      */
     private function deleteRecord($mid)
     {
-        $sql = "SELECT id FROM {$this->mdataTable}
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT id FROM ".$CC_CONFIG['mdataTable']."
             	WHERE subjns='_I' AND subject='{$mid}' AND
                 gunid=x'{$this->gunid}'::bigint";
-        $rh = $this->dbc->query($sql);
+        $rh = $CC_DBC->query($sql);
         if (PEAR::isError($rh)) {
         	return $rh;
         }
@@ -851,10 +858,10 @@ class MetaData {
             }
         }
         $rh->free();
-        $sql = "DELETE FROM {$this->mdataTable}
+        $sql = "DELETE FROM ".$CC_CONFIG['mdataTable']."
             	WHERE id={$mid} AND
                 gunid=x'{$this->gunid}'::bigint";
-        $res = $this->dbc->query($sql);
+        $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -871,9 +878,10 @@ class MetaData {
      */
     public function genPhpArray()
     {
+        global $CC_CONFIG, $CC_DBC;
         $res = array();
-        $row = $this->dbc->getRow("
-            SELECT * FROM {$this->mdataTable}
+        $row = $CC_DBC->getRow("
+            SELECT * FROM ".$CC_CONFIG['mdataTable']."
             WHERE gunid=x'{$this->gunid}'::bigint
                 AND subjns='_G' AND subject='{$this->gunid}'
         ");
@@ -899,10 +907,11 @@ class MetaData {
      */
     public function genXMLDoc()
     {
+        global $CC_CONFIG, $CC_DBC;
         require_once("XML/Util.php");
         $res = XML_Util::getXMLDeclaration("1.0", "UTF-8")."\n";
-        $row = $this->dbc->getRow("
-            SELECT * FROM {$this->mdataTable}
+        $row = $CC_DBC->getRow("
+            SELECT * FROM ".$CC_CONFIG['mdataTable']."
             WHERE gunid=x'{$this->gunid}'::bigint
                 AND subjns='_G' AND subject='{$this->gunid}'
         ");
@@ -939,7 +948,7 @@ class MetaData {
     private function genXMLNode($row, $genXML=TRUE)
     {
         if (DEBUG) {
-        	echo"genXMLNode:\n";
+        	echo "genXMLNode:\n";
         }
         if (DEBUG) {
         	var_dump($row);
@@ -990,13 +999,14 @@ class MetaData {
      */
     private function getSubrows($parid, $genXML=TRUE)
     {
+        global $CC_CONFIG, $CC_DBC;
         if (DEBUG) {
         	echo" getSubrows:\n";
         }
-        $qh = $this->dbc->query($q = "
+        $qh = $CC_DBC->query($q = "
             SELECT
                 id, predxml, predns, predicate, objns, object
-            FROM {$this->mdataTable}
+            FROM ".$CC_CONFIG['mdataTable']."
             WHERE
                 subjns='_I' AND subject='$parid' AND
                 gunid=x'{$this->gunid}'::bigint

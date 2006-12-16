@@ -15,11 +15,12 @@
  * @link http://www.campware.org
  */
 class AccessRecur {
+    public $ls;
+    public $sessid;
 
     public function __construct(&$ls, $sessid)
     {
         $this->ls =& $ls;
-        $this->dbc =& $ls->dbc;
         $this->sessid = $sessid;
     }
 
@@ -53,20 +54,21 @@ class AccessRecur {
 
     public static function releasePlaylist(&$ls, $sessid, $token)
     {
+        global $CC_CONFIG, $CC_DBC;
         $ppa = new AccessRecur($ls, $sessid);
-        $r = $ppa->dbc->getAll("
+        $r = $CC_DBC->getAll("
             SELECT to_hex(token)as token2, to_hex(gunid)as gunid
-            FROM {$ppa->ls->accessTable}
+            FROM ".$CC_CONFIG['accessTable']."
             WHERE parent=x'{$token}'::bigint
         ");
-        if ($ppa->dbc->isError($r)) {
+        if (PEAR::isError($r)) {
         	return $r;
         }
         $arr = $r;
         foreach ($arr as $i => $item) {
             extract($item);     // token2, gunid
-            $r = $ppa->ls->_getType($gunid);
-            if ($ppa->dbc->isError($r)) {
+            $r = BasicStor::GetType($gunid);
+            if (PEAR::isError($r)) {
             	return $r;
             }
             $ftype = $r;
@@ -74,14 +76,14 @@ class AccessRecur {
             switch (strtolower($ftype)) {
                 case "audioclip":
                     $r = $ppa->ls->releaseRawAudioData($ppa->sessid, $token2);
-                    if ($ppa->dbc->isError($r)) {
+                    if (PEAR::isError($r)) {
                     	return $r;
                     }
                     # var_dump($r);
                 break;
                 case "playlist":
                     $r = $ppa->releasePlaylist($ppa->ls, $ppa->sessid, $token2);
-                    if ($ppa->dbc->isError($r)) {
+                    if (PEAR::isError($r)) {
                     	return $r;
                     }
                     # var_dump($r);
@@ -90,7 +92,7 @@ class AccessRecur {
             }
         }
         $r = $ppa->ls->releasePlaylist($ppa->sessid, $token, FALSE);
-        if ($ppa->dbc->isError($r)) {
+        if (PEAR::isError($r)) {
         	return $r;
         }
         return $r;

@@ -105,7 +105,7 @@ class XR_Archive extends Archive {
 
 
     /**
-     * @param XMLRPC_strcut $input
+     * @param XML_RPC_Message $input
      * @return XML_RPC_Response
      */
     function xr_downloadOpen($input)

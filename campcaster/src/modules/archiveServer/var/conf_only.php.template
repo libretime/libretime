@@ -1,11 +1,6 @@
 <?php
 /**
  * ArchiveServer configuration file
- *
- * @author $Author$
- * @version $Revision$
- * @package Campcaster
- * @subpackage ArchiveServer
  */
 
 /**
@@ -29,7 +24,7 @@
  *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
  *  </dl>
  */
-$config = array(
+$CC_CONFIG = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
         'username'      => 'ls_dbuser',

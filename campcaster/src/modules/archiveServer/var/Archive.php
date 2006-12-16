@@ -30,12 +30,12 @@ class Archive extends XR_LocStor {
      */
     function uploadOpen($sessid, $chsum)
     {
-        $owner = $this->getSessUserId($sessid);
-        if ($this->dbc->isError($owner)) {
+        $owner = Alib::GetSessUserId($sessid);
+        if (PEAR::isError($owner)) {
         	return $owner;
         }
         $res = $this->bsOpenPut($chsum, NULL, $owner);
-        if ($this->dbc->isError($res)) {
+        if (PEAR::isError($res)) {
         	return $res;
         }
         return array('url'=>$res['url'], 'token'=>$res['token']);
@@ -70,7 +70,7 @@ class Archive extends XR_LocStor {
     function uploadClose($token, $trtype, $pars=array())
     {
         $res = $this->bsClosePut($token);
-        if ($this->dbc->isError($res)) {
+        if (PEAR::isError($res)) {
         	return $res;
         }
         extract($res);  // fname, owner
@@ -78,7 +78,7 @@ class Archive extends XR_LocStor {
             case "audioclip":
                 $mdtoken = $pars['mdpdtoken'];
                 $res = $this->bsClosePut($mdtoken);
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 $mdfname = $res['fname'];
@@ -86,13 +86,13 @@ class Archive extends XR_LocStor {
                 	$gunid = NULL;
                 }
                 $parid = $this->_getHomeDirId($owner);
-                if ($this->dbc->isError($parid)) {
+                if (PEAR::isError($parid)) {
                 	return $parid;
                 }
                 $res = $this->bsPutFile($parid, $pars['name'],
                     $fname, $mdfname,
                     $pars['gunid'], 'audioclip', 'file');
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 @unlink($fname);
@@ -103,13 +103,13 @@ class Archive extends XR_LocStor {
                 	$gunid = NULL;
                 }
                 $parid = $this->_getHomeDirId($owner);
-                if ($this->dbc->isError($parid)) {
+                if (PEAR::isError($parid)) {
                 	return $parid;
                 }
                 $res = $this->bsPutFile($parid, $pars['name'],
                     '', $fname,
                     $pars['gunid'], 'playlist', 'file');
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 @unlink($fname);
@@ -118,14 +118,14 @@ class Archive extends XR_LocStor {
                 $chsum = md5_file($fname);
                 // importPlaylistOpen:
                 $res = $this->bsOpenPut($chsum, NULL, $owner);
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 $dest = $res['fname'];
                 $token = $res['token'];
                 copy($fname, $dest);
                 $r = $this->importPlaylistClose($token);
-                if ($this->dbc->isError($r)) {
+                if (PEAR::isError($r)) {
                 	return $r;
                 }
                 @unlink($fname);
@@ -136,17 +136,17 @@ class Archive extends XR_LocStor {
                 $criteria = unserialize($crits);
                 @unlink($fname);
                 $results = $this->localSearch($criteria);
-                if ($this->dbc->isError($results)) {
+                if (PEAR::isError($results)) {
                 	return $results;
                 }
                 $realfile = tempnam($this->accessDir, 'searchjob_');
                 @chmod($realfile, 0660);
                 $len = file_put_contents($realfile, serialize($results));
                 $acc = $this->bsAccess($realfile, '', NULL, 'download');
-                if ($this->dbc->isError($acc)) {
+                if (PEAR::isError($acc)) {
                 	return $acc;
                 }
-                $url = $this->getUrlPart()."access/".basename($acc['fname']);
+                $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
                 $chsum = md5_file($realfile);
                 $size = filesize($realfile);
                 $res = array(
@@ -179,6 +179,7 @@ class Archive extends XR_LocStor {
      */
     function downloadOpen($sessid, $trtype, $pars=array())
     {
+        global $CC_CONFIG;
         switch ($trtype) {
             case "unknown":
             case "audioclip":
@@ -193,8 +194,8 @@ class Archive extends XR_LocStor {
         $gunid = $pars['gunid'];
         // resolve trtype by object type:
         if ( ($trtype == 'unknown') || ($trtype == 'playlistPkg') ) {
-            $trtype2 = $this->_getType($gunid);
-            if ($this->dbc->isError($trtype2)) {
+            $trtype2 = BasicStor::GetType($gunid);
+            if (PEAR::isError($trtype2)) {
             	return $trtype2;
             }
             // required with content:
@@ -214,10 +215,10 @@ class Archive extends XR_LocStor {
                 break;
             case "playlistPkg":
                 $res = $this->bsExportPlaylistOpen($gunid);
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
-                $tmpn = tempnam($this->transDir, 'plExport_');
+                $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
                 $plfpath = "$tmpn.lspl";
                 copy($res['fname'], $plfpath);
                 $res = $this->bsExportPlaylistClose($res['token']);
@@ -225,12 +226,12 @@ class Archive extends XR_LocStor {
                 	return $res;
                 }
                 $fname = "transported_playlist.lspl";
-                $id = $this->idFromGunid($gunid);
+                $id = BasicStor::IdFromGunid($gunid);
                 $acc = $this->bsAccess($plfpath, 'lspl', NULL, 'download');
-                if ($this->dbc->isError($acc)) {
+                if (PEAR::isError($acc)) {
                 	return $acc;
                 }
-                $url = $this->getUrlPart()."access/".basename($acc['fname']);
+                $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
                 $chsum = md5_file($plfpath);
                 $size = filesize($plfpath);
                 $res = array(
@@ -248,7 +249,7 @@ class Archive extends XR_LocStor {
             default:
                 return PEAR::raiseError("Archive::downloadOpen: NotImpl ($trtype)");
         }
-        if ($this->dbc->isError($res)) {
+        if (PEAR::isError($res)) {
         	return $res;
         }
         switch ($trtype) {
@@ -289,7 +290,7 @@ class Archive extends XR_LocStor {
         switch ($trtype) {
             case "audioclip":
                 $res = $this->downloadRawAudioDataClose($token);
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 return $res;
@@ -301,14 +302,14 @@ class Archive extends XR_LocStor {
                 return $res;
             case "playlistPkg":
                 $res = $this->bsRelease($token, 'download');
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 $realFname = $r['realFname'];
                 @unlink($realFname);
                 if (preg_match("|(plExport_[^\.]+)\.lspl$|", $realFname, $va)) {
                     list(,$tmpn) = $va;
-                    $tmpn = "{$this->transDir}/$tmpn";
+                    $tmpn = $CC_CONFIG['transDir']."/$tmpn";
                     if (file_exists($tmpn)) {
                     	@unlink($tmpn);
                     }

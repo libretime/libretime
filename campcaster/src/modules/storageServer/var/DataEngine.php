@@ -63,9 +63,6 @@ class DataEngine {
     public function __construct(&$gb)
     {
         $this->gb =& $gb;
-        $this->dbc =& $gb->dbc;
-        $this->mdataTable = $gb->mdataTable;
-        $this->filesTable = $gb->filesTable;
         $this->filetypes = array(
             'all'=>NULL,
             'audioclip'=>'audioclip',
@@ -151,16 +148,17 @@ class DataEngine {
     private function _makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         $innerBlocks = array();
         foreach ($whereArr as $i => $v) {
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $lastTbl = ($i==0 ? "f" : "md".($i-1));
-            $innerBlocks[] = "INNER JOIN {$this->mdataTable} md$i ON md$i.gunid = $lastTbl.gunid\n";
+            $innerBlocks[] = "INNER JOIN ".$CC_CONFIG['mdataTable']." md$i ON md$i.gunid = $lastTbl.gunid\n";
         }
         // query construcion:
-        $sql =  "SELECT $fldsPart\nFROM {$this->filesTable} f\n".join("", $innerBlocks);
+        $sql =  "SELECT $fldsPart FROM ".$CC_CONFIG['filesTable']." f ".join("", $innerBlocks);
         if ($browse) {
-            $sql .= "INNER JOIN {$this->mdataTable} br".
+            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." br".
                 "\n ON br.gunid = f.gunid AND br.objns='_L'".
                 " AND br.predicate='{$brFld}' AND br.predxml='T'";
             if (!is_null($brFldNs)) {
@@ -203,6 +201,7 @@ class DataEngine {
     private function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         if (!USE_INTERSECT) {
         	return $this->_makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
@@ -210,20 +209,20 @@ class DataEngine {
         foreach ($whereArr as $i => $v) {
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $isectBlocks[] =
-                " SELECT gunid FROM {$this->mdataTable} md$i\n".
+                " SELECT gunid FROM ".$CC_CONFIG['mdataTable']." md$i\n".
                 " WHERE\n {$whereArr[$i]}";
         }
         // query construcion:
         if (count($isectBlocks)>0) {
             $isectBlock =
                 "FROM\n(\n".join("INTERSECT\n", $isectBlocks).") sq\n".
-                "INNER JOIN {$this->filesTable} f ON f.gunid = sq.gunid";
+                "INNER JOIN ".$CC_CONFIG['filesTable']." f ON f.gunid = sq.gunid";
         } else {
-            $isectBlock = "FROM {$this->filesTable} f";
+            $isectBlock = "FROM ".$CC_CONFIG['filesTable']." f";
         }
         $sql = "SELECT $fldsPart\n".$isectBlock;
         if ($browse) {
-            $sql .= "\nINNER JOIN {$this->mdataTable} br ON br.gunid = f.gunid\n".
+            $sql .= "\nINNER JOIN ".$CC_CONFIG['mdataTable']." br ON br.gunid = f.gunid\n".
             		"WHERE br.objns='_L' AND br.predxml='T' AND br.predicate='{$brFld}'";
             if (!is_null($brFldNs)) {
             	$sql .= " AND br.predns='{$brFldNs}'";
@@ -262,14 +261,15 @@ class DataEngine {
     private function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         //$whereArr[] = " FALSE\n";
         foreach ($whereArr as $i => $v) {
             $whereArr[$i] = sprintf($v, "md", "md", "md", "md", "md");
         }
         // query construcion:
-        $sql = "SELECT $fldsPart\nFROM {$this->filesTable} f\n";
+        $sql = "SELECT $fldsPart FROM ".$CC_CONFIG['filesTable']." f ";
         if ($browse) {
-            $sql .= "INNER JOIN {$this->mdataTable} br".
+            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." br".
                 "\n ON br.gunid = f.gunid AND br.objns='_L'".
                 " AND br.predxml='T' AND br.predicate='{$brFld}'";
             if (!is_null($brFldNs)) {
@@ -278,7 +278,7 @@ class DataEngine {
             $sql .= "\n";
         }
         if (count($whereArr) > 0) {
-            $sql .= "INNER JOIN {$this->mdataTable} md ON md.gunid=f.gunid\n";
+            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." md ON md.gunid=f.gunid\n";
             $sql .= "WHERE\n(\n".join("  OR\n", $whereArr).")";
             $glue = " AND";
         } else {
@@ -347,6 +347,7 @@ class DataEngine {
     private function _localGenSearch($criteria, $limit=0, $offset=0,
         $brFldNs=NULL, $brFld=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
         $filetype = strtolower($filetype);
         if (!array_key_exists($filetype, $this->filetypes)) {
@@ -384,7 +385,7 @@ class DataEngine {
             $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
             $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
             $orderJoinSql[] =
-                "LEFT JOIN {$this->mdataTable} m$i\n".
+                "LEFT JOIN ".$CC_CONFIG['mdataTable']." m$i\n".
                 "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
                 " AND m$i.objns='_L' AND m$i.predxml='T'".
                 (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
@@ -423,7 +424,7 @@ class DataEngine {
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
-        $res = $this->dbc->getAll($sql.$limitPart);
+        $res = $CC_DBC->getAll($sql.$limitPart);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -435,7 +436,7 @@ class DataEngine {
         //$categoryNames = array('dc:title', 'dc:creator', 'dc:source', 'dcterms:extent');
         foreach ($res as $it) {
             if (!$browse) {
-                $gunid = StoredFile::_normalizeGunid($it['gunid']);
+                $gunid = StoredFile::NormalizeGunid($it['gunid']);
                 //$values = $this->gb->bsGetMetadataValue($it['id'], $categoryNames);
                 $values = $this->gb->bsGetMetadataValue($it['id']);
                 $eres[] = array(
@@ -473,6 +474,7 @@ class DataEngine {
      */
     public function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         //$category = strtolower($category);
         $r = XML_Util::splitQualifiedName($category);
         $catNs = $r['namespace'];
@@ -487,14 +489,14 @@ class DataEngine {
         $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
             ($offset != 0 ? " OFFSET $offset" : '' );
         $sql =
-            "SELECT DISTINCT m.object FROM {$this->mdataTable} m\n".
+            "SELECT DISTINCT m.object FROM ".$CC_CONFIG['mdataTable']." m\n".
             "WHERE $sqlCond";
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
-        $res = $this->dbc->getCol($sql.$limitPart);
+        $res = $CC_DBC->getCol($sql.$limitPart);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -515,7 +517,8 @@ class DataEngine {
      */
     private function _getNumRows($query)
     {
-        $rh = $this->dbc->query($query);
+        global $CC_CONFIG, $CC_DBC;
+        $rh = $CC_DBC->query($query);
         if (PEAR::isError($rh)) {
         	return $rh;
         }

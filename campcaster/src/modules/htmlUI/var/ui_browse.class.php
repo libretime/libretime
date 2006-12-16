@@ -250,7 +250,7 @@ class uiBrowse
 
         $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
-            $tmpId = $this->Base->gb->idFromGunid($rec["gunid"]);
+            $tmpId = BasicStor::IdFromGunid($rec["gunid"]);
             $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
         }
 

@@ -5,32 +5,32 @@ function login(&$data)
     include_once(dirname(__FILE__).'/../../../storageServer/var/GreenBox.php');
     include_once('DB.php');
 
-    $dbc = DB::connect($config['dsn'], TRUE);
+    $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 
-    if (DB::isError($dbc)) {
-        die($dbc->getMessage());
+    if (DB::isError($CC_DBC)) {
+        die($CC_DBC->getMessage());
     }
 
-    $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-    $gb = new GreenBox($dbc, $config);
+    $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+    $gb = new GreenBox();
 
     if (!$data['PHP_AUTH_USER'] || !$data['PHP_AUTH_PW']) {
         return FALSE;
     }
 
-    $sessid = $gb->login($data['PHP_AUTH_USER'], $data['PHP_AUTH_PW']);
+    $sessid = Alib::Login($data['PHP_AUTH_USER'], $data['PHP_AUTH_PW']);
 
     if (!$sessid || PEAR::isError($sessid)){
         return FALSE;
     }
 
-    setcookie($config['authCookieName'], $sessid);
+    setcookie($CC_CONFIG['authCookieName'], $sessid);
 
-    if ($gb->isMemberOf($gb->getSessUserId($sessid), $gb->getSubjId('Admins')) !== TRUE) {
+    if (Subjects::IsMemberOf(GreenBox::GetSessUserId($sessid), Subjects::GetSubjId('Admins')) !== TRUE) {
         return FALSE;
     }
 
-    $id = $gb->getObjId($data['PHP_AUTH_USER'], $gb->storId);
+    $id = M2tree::GetObjId($data['PHP_AUTH_USER'], $gb->storId);
 
     if (PEAR::isError($id)) {
         return FALSE;

@@ -7,9 +7,9 @@ require_once "alib_h.php";
 
 // prefill data structure for template
 $d = array(
-    'users'     => $alib->getSubjects(),
-    'actions'   => $alib->getAllActions(),
-    'objects'   => $alib->getAllObjects(),
+    'users'     => Subjects::GetSubjects(),
+    'actions'   => Alib::GetAllActions(),
+    'objects'   => M2tree::GetAllObjects(),
     'msg'       => $_SESSION['alertMsg']
 );
 unset($_SESSION['alertMsg']);

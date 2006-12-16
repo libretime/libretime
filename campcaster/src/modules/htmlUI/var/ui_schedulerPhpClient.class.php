@@ -171,22 +171,10 @@ $mdefs = array(
  */
 class SchedulerPhpClient {
     /**
-     * Databases object reference
-     * @var DB
-     */
-    private $dbc = NULL;
-
-    /**
      * Array with methods description
      * @var array
      */
     private $mdefs = array();
-
-    /**
-     * Confiduration array from ../conf.php
-     * @var array
-     */
-    private $config = array();
 
     /**
      * XMLRPC client object reference
@@ -209,26 +197,22 @@ class SchedulerPhpClient {
     /**
      * Constructor - please DON'T CALL IT, use factory method instead
      *
-     * @param DB $dbc
      * @param array $mdefs
      *		hash array with methods description
-     * @param array $config
-     *		hash array with configuration
      * @param int $debug
      *		XMLRPC debug flag
      * @param boolean $verbose
      * 		verbosity flag
      */
-    public function __construct(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
+    public function __construct($mdefs, $debug=0, $verbose=FALSE)
     {
-        $this->dbc = $dbc;
+        global $CC_CONFIG;
         $this->mdefs = $mdefs;
-        $this->config = $config;
         $this->debug = $debug;
         $this->verbose = $verbose;
         $confPrefix = "scheduler";
-        $serverPath = "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
-                      "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
+        $serverPath = "http://{$CC_CONFIG["{$confPrefix}UrlHost"]}:{$CC_CONFIG["{$confPrefix}UrlPort"]}".
+                      "{$CC_CONFIG["{$confPrefix}UrlPath"]}/{$CC_CONFIG["{$confPrefix}XMLRPC"]}";
         if ($this->verbose) {
         	echo "serverPath: $serverPath\n";
         }
@@ -250,19 +234,17 @@ class SchedulerPhpClient {
      *
      * @todo Replace this method by using PHP5 __call method instead.
      *
-     * @param DB $dbc
      * @param array $mdefs
      * 		hash array with methods description
-     * @param array $config
-     * 		hash array with configuration
      * @param int $debug
      * 		XMLRPC debug flag
      * @param boolean $verbose
      * 		verbosity flag
      * @return object, created object instance
      */
-    public function &factory(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE)
+    public function &factory($mdefs, $debug=0, $verbose=FALSE)
     {
+        global $CC_DBC;
         $f = '';
         foreach ($mdefs as $fn => $farr) {
             $f .=
@@ -276,10 +258,9 @@ class SchedulerPhpClient {
              "$f\n".
              "}\n";
         if (FALSE === eval($e)) {
-        	return $dbc->raiseError("Eval failed");
+        	return $CC_DBC->raiseError("Eval failed");
         }
-        $spc = new SchedulerPhpClientCore(
-            $dbc, $mdefs, $config, $debug, $verbose);
+        $spc = new SchedulerPhpClientCore($mdefs, $debug, $verbose);
         return $spc;
     } // fn factory
 

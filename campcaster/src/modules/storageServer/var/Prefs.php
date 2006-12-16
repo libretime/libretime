@@ -16,6 +16,8 @@
 /* ================== Prefs ================== */
 class Prefs {
 
+    public $gb;
+
     /**
      *  Constructor
      *
@@ -25,8 +27,6 @@ class Prefs {
     public function __construct(&$gb)
     {
         $this->gb =& $gb;
-        $this->dbc =& $gb->dbc;
-        $this->prefTable = $gb->config['tblNamePrefix'].'pref';
     }
 
 
@@ -44,7 +44,7 @@ class Prefs {
      */
     function loadPref($sessid, $key)
     {
-        $subjid = $this->gb->getSessUserId($sessid);
+        $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
         	return $subjid;
         }
@@ -77,7 +77,7 @@ class Prefs {
      */
     function savePref($sessid, $key, $value)
     {
-        $subjid = $this->gb->getSessUserId($sessid);
+        $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
         	return $subjid;
         }
@@ -110,7 +110,7 @@ class Prefs {
      */
     function delPref($sessid, $key)
     {
-        $subjid = $this->gb->getSessUserId($sessid);
+        $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
         	return $subjid;
         }
@@ -146,7 +146,7 @@ class Prefs {
     function loadGroupPref($sessid, $group, $key)
     {
         // if sessid is would be used here fix Transport::cronCallMethod !
-        $subjid = $this->gb->getSubjId($group);
+        $subjid = Subjects::GetSubjId($group);
         if (PEAR::isError($subjid)) {
         	return $subjid;
         }
@@ -181,7 +181,7 @@ class Prefs {
      */
     function saveGroupPref($sessid, $group, $key, $value)
     {
-        $uid = $this->gb->getSessUserId($sessid);
+        $uid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
         	return $uid;
         }
@@ -189,7 +189,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::saveGroupPref: invalid session id", GBERR_SESS);
         }
-        $gid = $this->gb->getSubjId($group);
+        $gid = Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
         	return $gid;
         }
@@ -197,7 +197,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::saveGroupPref: invalid group name", GBERR_SESS);
         }
-        $memb = $this->gb->isMemberOf($uid, $gid);
+        $memb = Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
         	return $memb;
         }
@@ -231,7 +231,7 @@ class Prefs {
      */
     function delGroupPref($sessid, $group, $key)
     {
-        $uid = $this->gb->getSessUserId($sessid);
+        $uid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
         	return $uid;
         }
@@ -239,7 +239,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::delGroupPref: invalid session id", GBERR_SESS);
         }
-        $gid = $this->gb->getSubjId($group);
+        $gid = Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
         	return $gid;
         }
@@ -247,7 +247,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::delGroupPref: invalid group name", GBERR_SESS);
         }
-        $memb = $this->gb->isMemberOf($uid, $gid);
+        $memb = Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
         	return $memb;
         }
@@ -280,14 +280,15 @@ class Prefs {
      * @return int
      * 		local user id
      */
-    function insert($subjid, $keystr, $valstr='')
+    public static function Insert($subjid, $keystr, $valstr='')
     {
-        $id = $this->dbc->nextId("{$this->prefTable}_id_seq");
+        global $CC_CONFIG, $CC_DBC;
+        $id = $CC_DBC->nextId($CC_CONFIG['prefTable']."_id_seq");
         if (PEAR::isError($id)) {
         	return $id;
         }
-        $r = $this->dbc->query("
-            INSERT INTO {$this->prefTable}
+        $r = $CC_DBC->query("
+            INSERT INTO ".$CC_CONFIG['prefTable']."
                 (id, subjid, keystr, valstr)
             VALUES
                 ($id, $subjid, '$keystr', '$valstr')
@@ -311,8 +312,9 @@ class Prefs {
      */
     function readVal($subjid, $keystr)
     {
-        $val = $this->dbc->getOne("
-            SELECT valstr FROM {$this->prefTable}
+        global $CC_CONFIG, $CC_DBC;
+        $val = $CC_DBC->getOne("
+            SELECT valstr FROM ".$CC_CONFIG['prefTable']."
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($val)) {
@@ -335,8 +337,9 @@ class Prefs {
      */
     function readKeys($subjid)
     {
-        $res = $this->dbc->getAll("
-            SELECT keystr FROM {$this->prefTable}
+        global $CC_CONFIG, $CC_DBC;
+        $res = $CC_DBC->getAll("
+            SELECT keystr FROM ".$CC_CONFIG['prefTable']."
             WHERE subjid=$subjid
         ");
         if (PEAR::isError($res)) {
@@ -362,15 +365,16 @@ class Prefs {
      */
     function update($subjid, $keystr, $newvalstr='')
     {
-        $r = $this->dbc->query("
-            UPDATE {$this->prefTable} SET
+        global $CC_CONFIG, $CC_DBC;
+        $r = $CC_DBC->query("
+            UPDATE ".$CC_CONFIG['prefTable']." SET
                 valstr='$newvalstr'
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($r)) {
         	return $r;
         }
-        if ($this->dbc->affectedRows() < 1) {
+        if ($CC_DBC->affectedRows() < 1) {
         	return FALSE;
         }
         return TRUE;
@@ -388,14 +392,15 @@ class Prefs {
      */
     function delete($subjid, $keystr)
     {
-        $r = $this->dbc->query("
-            DELETE FROM {$this->prefTable}
+        global $CC_CONFIG, $CC_DBC;
+        $r = $CC_DBC->query("
+            DELETE FROM ".$CC_CONFIG['prefTable']."
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($r)) {
         	return $r;
         }
-        if ($this->dbc->affectedRows() < 1) {
+        if ($CC_DBC->affectedRows() < 1) {
         	return FALSE;
         }
         return TRUE;
@@ -409,7 +414,8 @@ class Prefs {
      */
     function test()
     {
-        $sessid = $this->gb->login('root', $this->gb->config['tmpRootPass']);
+        global $CC_CONFIG;
+        $sessid = Alib::Login('root', $CC_CONFIG['tmpRootPass']);
         $testkey = 'testKey';
         $testVal = 'abcDef 0123 ěščřžýáíé ĚŠČŘŽÝÁÍÉ';
         $r = savePref($sessid, $testKey, $testVal);
@@ -439,39 +445,40 @@ class Prefs {
      *
      * @return boolean
      */
-    function install()
-    {
-        $this->dbc->createSequence("{$this->prefTable}_id_seq");
-        $r = $this->dbc->query("CREATE TABLE {$this->prefTable} (
-            id int not null,
-            subjid int REFERENCES {$this->gb->subjTable} ON DELETE CASCADE,
-            keystr varchar(255),
-            valstr text
-        )");
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->prefTable}_id_idx
-            ON {$this->prefTable} (id)");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->prefTable}_subj_key_idx
-            ON {$this->prefTable} (subjid, keystr)");
-        $this->dbc->query("CREATE INDEX {$this->prefTable}_subjid_idx
-            ON {$this->prefTable} (subjid)");
-        $stPrefGr = $this->gb->getSubjId($this->gb->config['StationPrefsGr']);
-        if (PEAR::isError($stPrefGr)) {
-        	echo $stPrefGr->getMessage()."\n";
-        }
-        $r = $this->insert($stPrefGr, 'stationName', "Radio Station 1");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()."\n";
-        }
-        $genres = file_get_contents( dirname(__FILE__).'/genres.xml');
-        $r = $this->insert($stPrefGr, 'genres', $genres);
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()."\n";
-        }
-        return TRUE;
-    }
+//    function install()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $CC_DBC->createSequence("{$this->prefTable}_id_seq");
+//        $r = $CC_DBC->query("CREATE TABLE {$this->prefTable} (
+//            id int not null,
+//            subjid int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
+//            keystr varchar(255),
+//            valstr text
+//        )");
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->prefTable}_id_idx
+//            ON {$this->prefTable} (id)");
+//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->prefTable}_subj_key_idx
+//            ON {$this->prefTable} (subjid, keystr)");
+//        $CC_DBC->query("CREATE INDEX {$this->prefTable}_subjid_idx
+//            ON {$this->prefTable} (subjid)");
+//        $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
+//        if (PEAR::isError($stPrefGr)) {
+//        	echo $stPrefGr->getMessage()."\n";
+//        }
+//        $r = Prefs::Insert($stPrefGr, 'stationName', "Radio Station 1");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()."\n";
+//        }
+//        $genres = file_get_contents(dirname(__FILE__).'/../genres.xml');
+//        $r = Prefs::Insert($stPrefGr, 'genres', $genres);
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()."\n";
+//        }
+//        return TRUE;
+//    }
 
 
     /**
@@ -479,11 +486,12 @@ class Prefs {
      *
      * @return boolean
      */
-    function uninstall()
-    {
-        $this->dbc->query("DROP TABLE {$this->prefTable}");
-        $this->dbc->dropSequence("{$this->prefTable}_id_seq");
-    }
+//    function uninstall()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $CC_DBC->query("DROP TABLE {$this->prefTable}");
+//        $CC_DBC->dropSequence("{$this->prefTable}_id_seq");
+//    }
 
 } // class Prefs
 ?>

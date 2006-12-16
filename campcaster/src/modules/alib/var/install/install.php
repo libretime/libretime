@@ -19,47 +19,48 @@ function errCallback($err)
 }
 
 
-$dbc = DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+if (PEAR::isError($CC_DBC)) {
     echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists with corresponding permissions.\n";
+    echo "Check if database '".$CC_CONFIG['dsn']['database']."' exists with corresponding permissions.\n";
     echo "Database access is defined by 'dsn' values in conf.php.\n";
     exit;
 }
-#$dbc->setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-#$$dbc->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+$CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$alib = new Alib($dbc, $config);
+$alib = new Alib();
 
 echo "\n\n======\n".
     "This is Alib standalone installation script, it is NOT needed to run ".
     "for Campcaster.\nAlib is automatically used by storageServer without it.".
     "\n======\n\n";
 
-echo "Alib: uninstall ...\n";
-$alib->uninstall();
+exit;
 
-$dbc->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
-echo "Alib: install ...\n";
-$alib->install();
+//echo "Alib: uninstall ...\n";
+//$alib->uninstall();
 
-#$alib->testData(); echo $alib->dumpTree(); exit;
+$CC_DBC->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
+//echo "Alib: install ...\n";
+//$alib->install();
 
 echo " Testing ...\n";
-$r = $alib->test();
-if($dbc->isError($r)) if($dbc->isError($r)){ echo $r->getMessage()."\n".$r->getUserInfo()."\n"; exit; }
+$r = Alib::Test();
+if (PEAR::isError($r)) { 
+    echo $r->getMessage()."\n".$r->getUserInfo()."\n"; 
+    exit; 
+}
 $log = $alib->test_log;
 echo " TESTS:\n$log\n---\n";
 
 echo " clean up + testdata insert ...\n";
-$alib->deleteData();
-$alib->testData();
+Alib::DeleteData();
+Alib::TestData();
 
 echo " TREE DUMP:\n";
-echo $alib->dumpTree();
+echo M2tree::DumpTree();
 echo "\n Alib is probably installed OK\n";
 
-$dbc->disconnect();
+$CC_DBC->disconnect();
 ?>

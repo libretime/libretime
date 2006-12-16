@@ -51,30 +51,9 @@ include_once("TransportRecord.php");
 class Transport
 {
     /**
-     * Container for db connection instance
-     * @var DB
-     */
-    public $dbc;
-
-    /**
      * @var GreenBox
      */
     public $gb;
-
-    /**
-     * @var array
-     */
-	public $config;
-
-	/**
-	 * @var string
-	 */
-	private $transTable;
-
-	/**
-	 * @var string
-	 */
-	public $transDir;
 
 	/**
 	 * File name
@@ -145,10 +124,6 @@ class Transport
     public function __construct(&$gb)
     {
         $this->gb =& $gb;
-        $this->dbc =& $gb->dbc;
-        $this->config =& $gb->config;
-        $this->transTable = $gb->config['tblNamePrefix'].'trans';
-        $this->transDir = $gb->config['transDir'];
         $this->cronJobScript = realpath(
             dirname(__FILE__).
             '/../../storageServer/var/cron/transportCronJob.php'
@@ -307,8 +282,9 @@ class Transport
      */
     function upload2Hub($gunid, $withContent=TRUE, $pars=array())
     {
+        global $CC_CONFIG, $CC_DBC;
         $this->trLog("upload2Hub start: ".strftime("%H:%M:%S"));
-        switch ($ftype = $this->gb->_getType($gunid)) {
+        switch ($ftype = BasicStor::GetType($gunid)) {
             case "audioclip":
             case "webstream":
                 $ac = StoredFile::recallByGunid($this->gb, $gunid);
@@ -345,7 +321,7 @@ class Transport
                 }
                 $this->startCronJobProcess($mdtrec->trtok);
                 break;
-                
+
             case "playlist":
                 $plid = $gunid;
                 require_once("Playlist.php");
@@ -364,7 +340,7 @@ class Transport
                     if (PEAR::isError($res)) {
                     	return $res;
                     }
-                    $tmpn = tempnam($this->transDir, 'plExport_');
+                    $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
                     $plfpath = "$tmpn.lspl";
                     $this->trLog("upload2Hub begin copy: ".strftime("%H:%M:%S"));
                     copy($res['fname'], $plfpath);
@@ -441,6 +417,7 @@ class Transport
      */
     function globalSearch($criteria, $resultMode='php', $pars=array())
     {
+        global $CC_CONFIG, $CC_DBC;
         // testing of hub availability and hub account configuration.
         // it makes searchjob not async - should be removed for real async
         $r = $this->loginToArchive();
@@ -455,7 +432,7 @@ class Transport
         }
         $this->logoutFromArchive($r);
         $criteria['resultMode'] = $resultMode;
-        $localfile = tempnam($this->transDir, 'searchjob_');
+        $localfile = tempnam($CC_CONFIG['transDir'], 'searchjob_');
         @chmod($localfile, 0660);
         $len = file_put_contents($localfile, serialize($criteria));
         $trec = $this->_uploadGeneralFileToHub($localfile, 'searchjob', $pars);
@@ -579,7 +556,8 @@ class Transport
      */
     function downloadFileFromHub($url, $chsum=NULL, $size=NULL, $pars=array())
     {
-        $tmpn = tempnam($this->transDir, 'HITrans_');
+        global $CC_CONFIG, $CC_DBC;
+        $tmpn = tempnam($CC_CONFIG['transDir'], 'HITrans_');
         $trec = TransportRecord::create($this, 'file', 'down',
             array_merge(array(
                 'url'           => $url,
@@ -730,10 +708,11 @@ class Transport
      */
     function loginToArchive()
     {
+        global $CC_CONFIG;
         $res = $this->xmlrpcCall('archive.login',
             array(
-                'login'=>$this->config['archiveAccountLogin'],
-                'pass'=>$this->config['archiveAccountPass']
+                'login' => $CC_CONFIG['archiveAccountLogin'],
+                'pass' => $CC_CONFIG['archiveAccountPass']
             ));
         if (PEAR::isError($res)) {
             return $res;
@@ -770,6 +749,7 @@ class Transport
      */
     function cronMain($direction=NULL)
     {
+        global $CC_CONFIG;
         if (is_null($direction)) {
             $r = $this->cronMain('up');
             if (PEAR::isError($r)) {
@@ -795,7 +775,7 @@ class Transport
         }
         // ping to archive server:
         $r = $this->pingToArchive();
-        chdir($this->config['transDir']);
+        chdir($CC_CONFIG['transDir']);
         // for all opened transports:
         foreach ($transports as $i => $row) {
             $r = $this->startCronJobProcess($row['trtok']);
@@ -814,8 +794,9 @@ class Transport
      */
     function startCronJobProcess($trtok)
     {
+        global $CC_CONFIG, $CC_DBC;
         if (TR_LOG_LEVEL > 2) {
-        	$redirect = "{$this->transDir}/debug.log";
+        	$redirect = $CC_CONFIG['transDir']."/debug.log";
         } else {
         	$redirect = "/dev/null";
         }
@@ -1029,7 +1010,7 @@ class Transport
 	                'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
 	                'expectedsum'=>$ret['chsum'], 'expectedsize'=>$ret['size'],
 	                'fname'=>$ret['filename'],
-	                'localfile'=>"{$this->transDir}/$trtok",
+	                'localfile'=>$CC_CONFIG['transDir']."/$trtok",
 	            )));
 	            break;
 	        case "audioclip":
@@ -1048,7 +1029,7 @@ class Transport
 	                'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
 	                'expectedsum'=>$ret['chsum'], 'expectedsize'=>$ret['size'],
 	                'fname'=>$ret['filename'], 'title'=>$title,
-	                'localfile'=>"{$this->transDir}/$trtok",
+	                'localfile'=>$CC_CONFIG['transDir']."/$trtok",
 	            )));
         }
         if (PEAR::isError($r)) {
@@ -1311,7 +1292,7 @@ class Transport
                 $ep = $row['localfile'];
                 @unlink($ep);
                 if (preg_match("|/(plExport_[^\.]+)\.lspl$|", $ep, $va)) {
-                    list(,$tmpn) = $va; $tmpn = "{$this->transDir}/$tmpn";
+                    list(,$tmpn) = $va; $tmpn = $CC_CONFIG['transDir']."/$tmpn";
                     if (file_exists($tmpn)) {
                     	@unlink($tmpn);
                     }
@@ -1366,14 +1347,14 @@ class Transport
                         return TRUE;
                     case 'finished':  // metadata finished, close main transport
                         $parid = $this->gb->_getHomeDirId($trec->row['uid']);
-                        if ($this->dbc->isError($parid)) {
+                        if (PEAR::isError($parid)) {
                             $mdtrec->setLock(FALSE);
                             return $parid;
                         }
                         $res = $this->gb->bsPutFile($parid, $row['fname'],
                             $trec->row['localfile'], $mdtrec->row['localfile'],
                             $row['gunid'], 'audioclip', 'file');
-                        if ($this->dbc->isError($res)) {
+                        if (PEAR::isError($res)) {
                             $mdtrec->setLock(FALSE);
                             return $res;
                         }
@@ -1422,13 +1403,13 @@ class Transport
         switch ($row['trtype']) {
             case "playlist":
                 $parid = $this->gb->_getHomeDirId($trec->row['uid']);
-                if ($this->dbc->isError($parid)) {
+                if (PEAR::isError($parid)) {
                 	return $parid;
                 }
                 $res = $this->gb->bsPutFile($parid, $row['fname'],
                     '', $trec->row['localfile'],
                     $row['gunid'], 'playlist', 'file');
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 @unlink($row['localfile']);
@@ -1437,11 +1418,11 @@ class Transport
                 $subjid = $trec->row['uid'];
                 $fname = $trec->row['localfile'];
                 $parid = $this->gb->_getHomeDirId($subjid);
-                if ($this->dbc->isError($parid)) {
+                if (PEAR::isError($parid)) {
                 	return $parid;
                 }
                 $res = $this->gb->bsImportPlaylist($parid, $fname, $subjid);
-                if ($this->dbc->isError($res)) {
+                if (PEAR::isError($res)) {
                 	return $res;
                 }
                 @unlink($fname);
@@ -1532,6 +1513,7 @@ class Transport
      */
     function getTransports($direction=NULL, $target=NULL, $trtok=NULL)
     {
+        global $CC_CONFIG, $CC_DBC;
         switch ($direction) {
             case 'up':
             	$dirCond = "direction='up' AND";
@@ -1553,13 +1535,13 @@ class Transport
         } else {
         	$trtokCond = "trtok='$trtok' AND";
         }
-        $rows = $this->dbc->getAll("
+        $rows = $CC_DBC->getAll("
             SELECT
                 id, trtok, state, trtype, direction,
                 to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
                 fname, localfile, expectedsum, expectedsize, url,
                 uid, target
-            FROM {$this->transTable}
+            FROM ".$CC_CONFIG['transTable']."
             WHERE $dirCond $targetCond $trtokCond
                     state not in ('closed', 'failed', 'paused')
             ORDER BY start DESC
@@ -1568,8 +1550,8 @@ class Transport
         	return $rows;
         }
         foreach ($rows as $i => $row) {
-            $rows[$i]['pdtoken'] = StoredFile::_normalizeGunid($row['pdtoken']);
-            $rows[$i]['gunid'] = StoredFile::_normalizeGunid($row['gunid']);
+            $rows[$i]['pdtoken'] = StoredFile::NormalizeGunid($row['pdtoken']);
+            $rows[$i]['gunid'] = StoredFile::NormalizeGunid($row['gunid']);
         }
         return $rows;
     }
@@ -1617,11 +1599,11 @@ class Transport
      */
     function xmlrpcCall($method, $pars=array())
     {
+        global $CC_CONFIG;
         $xrp = XML_RPC_encode($pars);
         $c = new XML_RPC_Client(
-            "{$this->config['archiveUrlPath']}/".
-                "{$this->config['archiveXMLRPC']}",
-            $this->config['archiveUrlHost'], $this->config['archiveUrlPort']
+            $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],
+            $CC_CONFIG['archiveUrlHost'], $CC_CONFIG['archiveUrlPort']
         );
         $f = new XML_RPC_Message($method, array($xrp));
         $r = $c->send($f);
@@ -1688,9 +1670,10 @@ class Transport
      */
     function _cleanUp($interval='1 minute'/*'1 hour'*/, $forced=FALSE)
     {
+        global $CC_CONFIG, $CC_DBC;
         $cond = ($forced ? '' : " AND state='closed' AND lock = 'N'");
-        $r = $this->dbc->query("
-            DELETE FROM {$this->transTable}
+        $r = $CC_DBC->query("
+            DELETE FROM ".$CC_CONFIG['transTable']."
             WHERE ts < now() - interval '$interval'".$cond
         );
         if (PEAR::isError($r)) {
@@ -1736,7 +1719,7 @@ class Transport
      */
     function trLog($msg)
     {
-        $logfile = "{$this->transDir}/activity.log";
+        $logfile = $CC_CONFIG['transDir']."/activity.log";
         if (FALSE === ($fp = fopen($logfile, "a"))) {
             return PEAR::raiseError(
                 "Transport::trLog: Can't write to log ($logfile)"
@@ -1758,7 +1741,8 @@ class Transport
      */
     function resetData()
     {
-        return $this->dbc->query("DELETE FROM {$this->transTable}");
+        global $CC_CONFIG, $CC_DBC;
+        return $CC_DBC->query("DELETE FROM ".$CC_CONFIG['transTable']);
     }
 
 
@@ -1770,76 +1754,78 @@ class Transport
      *  trtype: audioclip | playlist | playlistPkg | searchjob | metadata | file
      *
      */
-    function install()
-    {
-        $r = $this->dbc->query("CREATE TABLE {$this->transTable} (
-            id int not null,          -- primary key
-            trtok char(16) not null,  -- transport token
-            direction varchar(128) not null,  -- direction: up|down
-            state varchar(128) not null,      -- state
-            trtype varchar(128) not null,     -- transport type
-            lock char(1) not null default 'N',-- running lock
-            target varchar(255) default NULL, -- target system,
-                                              -- if NULL => predefined set
-            rtrtok char(16) default NULL,     -- remote hub's transport token
-            mdtrtok char(16),         -- metadata transport token
-            gunid bigint,             -- global unique id
-            pdtoken bigint,           -- put/download token from archive
-            url varchar(255),         -- url on remote side
-            localfile varchar(255),   -- pathname of local part
-            fname varchar(255),       -- mnemonic filename
-            title varchar(255),       -- dc:title mdata value (or filename ...)
-            expectedsum char(32),     -- expected file checksum
-            realsum char(32),         -- checksum of transported part
-            expectedsize int,         -- expected filesize in bytes
-            realsize int,             -- filesize of transported part
-            uid int,                  -- local user id of transport owner
-            errmsg varchar(255),      -- error message string for failed tr.
-            start timestamp,          -- starttime
-            ts timestamp              -- mtime
-        )");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->createSequence("{$this->transTable}_id_seq");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_id_idx
-            ON {$this->transTable} (id)");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_trtok_idx
-            ON {$this->transTable} (trtok)");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->query("CREATE UNIQUE INDEX {$this->transTable}_token_idx
-            ON {$this->transTable} (pdtoken)");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->query("CREATE INDEX {$this->transTable}_gunid_idx
-            ON {$this->transTable} (gunid)");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-        $r = $this->dbc->query("CREATE INDEX {$this->transTable}_state_idx
-            ON {$this->transTable} (state)");
-        if (PEAR::isError($r)) {
-        	echo $r->getMessage()." ".$r->getUserInfo();
-        }
-    }
+//    function install()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $r = $CC_DBC->query("CREATE TABLE {$this->transTable} (
+//            id int not null,          -- primary key
+//            trtok char(16) not null,  -- transport token
+//            direction varchar(128) not null,  -- direction: up|down
+//            state varchar(128) not null,      -- state
+//            trtype varchar(128) not null,     -- transport type
+//            lock char(1) not null default 'N',-- running lock
+//            target varchar(255) default NULL, -- target system,
+//                                              -- if NULL => predefined set
+//            rtrtok char(16) default NULL,     -- remote hub's transport token
+//            mdtrtok char(16),         -- metadata transport token
+//            gunid bigint,             -- global unique id
+//            pdtoken bigint,           -- put/download token from archive
+//            url varchar(255),         -- url on remote side
+//            localfile varchar(255),   -- pathname of local part
+//            fname varchar(255),       -- mnemonic filename
+//            title varchar(255),       -- dc:title mdata value (or filename ...)
+//            expectedsum char(32),     -- expected file checksum
+//            realsum char(32),         -- checksum of transported part
+//            expectedsize int,         -- expected filesize in bytes
+//            realsize int,             -- filesize of transported part
+//            uid int,                  -- local user id of transport owner
+//            errmsg varchar(255),      -- error message string for failed tr.
+//            start timestamp,          -- starttime
+//            ts timestamp              -- mtime
+//        )");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->createSequence("{$this->transTable}_id_seq");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_id_idx
+//            ON {$this->transTable} (id)");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_trtok_idx
+//            ON {$this->transTable} (trtok)");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_token_idx
+//            ON {$this->transTable} (pdtoken)");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->query("CREATE INDEX {$this->transTable}_gunid_idx
+//            ON {$this->transTable} (gunid)");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//        $r = $CC_DBC->query("CREATE INDEX {$this->transTable}_state_idx
+//            ON {$this->transTable} (state)");
+//        if (PEAR::isError($r)) {
+//        	echo $r->getMessage()." ".$r->getUserInfo();
+//        }
+//    }
 
     /**
      *  Uninstall method
      */
-    function uninstall()
-    {
-        $this->dbc->query("DROP TABLE {$this->transTable}");
-        $this->dbc->dropSequence("{$this->transTable}_id_seq");
-    }
+//    function uninstall()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $CC_DBC->query("DROP TABLE {$this->transTable}");
+//        $CC_DBC->dropSequence("{$this->transTable}_id_seq");
+//    }
 }
 
 ?>

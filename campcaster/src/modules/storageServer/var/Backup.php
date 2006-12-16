@@ -106,9 +106,10 @@ class Backup
      */
     public function __construct(&$gb)
     {
+        global $CC_CONFIG;
         $this->gb =& $gb;
         $this->token = null;
-        $this->logFile = $this->gb->bufferDir.'/'.ACCESS_TYPE.'.log';
+        $this->logFile = $CC_CONFIG['bufferDir'].'/'.ACCESS_TYPE.'.log';
         $this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
     }
 
@@ -190,6 +191,7 @@ class Backup
      */
     public function checkBackup($token)
     {
+        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." checkBackup - token:$token\n");
         }
@@ -201,13 +203,13 @@ class Backup
         }
         switch ($status) {
             case 'success':
-                $r['url']       = $this->gb->getUrlPart()."access/$token.".BACKUP_EXT;
-                $r['tmpfile']   = $this->gb->accessDir."/$token.".BACKUP_EXT;
+                $r['url'] = BasicStor::GetUrlPart()."access/$token.".BACKUP_EXT;
+                $r['tmpfile'] = $CC_CONFIG['accessDir']."/$token.".BACKUP_EXT;
             case 'working':
             case 'fault':
-                $r['status']    = $status;
+                $r['status'] = $status;
                 $r['faultString'] = $faultString;
-                $r['token']     = $token;
+                $r['token'] = $token;
                 break;
         }
         return $r;
@@ -254,9 +256,9 @@ class Backup
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." listBackups - stat:$stat\n");
         }
-        # open temporary dir
-        $tokens = $this->gb->getTokensByType(ACCESS_TYPE);
-        # echo '<XMP>tokens:'; print_r($tokens); echo '</XMP>';
+        // open temporary dir
+        $tokens = BasicStor::GetTokensByType(ACCESS_TYPE);
+        // echo '<XMP>tokens:'; print_r($tokens); echo '</XMP>';
         foreach ($tokens as $token) {
             $st = $this->checkBackup($token);
             if ($stat=='' || $st['status']==$stat) {
@@ -303,8 +305,8 @@ class Backup
                 if (PEAR::isError($sf)) {
                 	return $sf;
                 }
-                $lid = $this->gb->idFromGunid($gunid);
-                if (($res = $this->gb->_authorize('read', $lid, $this->sessid)) !== TRUE) {
+                $lid = BasicStor::IdFromGunid($gunid);
+                if (($res = BasicStor::Authorize('read', $lid, $this->sessid)) !== TRUE) {
                     $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
                     return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
                 }
@@ -388,17 +390,18 @@ class Backup
      */
     private function setEnviroment($createDir=false)
     {
+        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment - createDirs:$createDir\n");
         }
-        # create a temporary directories
+        // create temporary directories
         if (is_null($this->token) && $createDir) {
-            $this->tmpName          = tempnam($this->gb->bufferDir, ACCESS_TYPE.'_');
-            $this->tmpFile          = $this->tmpName.'.'.BACKUP_EXT;
-            $this->tmpDir           = $this->tmpName.'.dir';
-            $this->tmpDirPlaylist   = $this->tmpDir. '/playlist';
-            $this->tmpDirClip       = $this->tmpDir. '/audioClip';
-            $this->tmpDirMeta       = $this->tmpDir. '/meta-inf';
+            $this->tmpName = tempnam($CC_CONFIG['bufferDir'], ACCESS_TYPE.'_');
+            $this->tmpFile = $this->tmpName.'.'.BACKUP_EXT;
+            $this->tmpDir = $this->tmpName.'.dir';
+            $this->tmpDirPlaylist = $this->tmpDir. '/playlist';
+            $this->tmpDirClip = $this->tmpDir. '/audioClip';
+            $this->tmpDirMeta = $this->tmpDir. '/meta-inf';
             touch($this->tmpFile);
             mkdir($this->tmpDir);
             mkdir($this->tmpDirPlaylist);
@@ -406,7 +409,7 @@ class Backup
             mkdir($this->tmpDirMeta);
             $this->genToken();
         } else {
-            $symlink = $this->gb->accessDir.'/'.$this->token.'.'.BACKUP_EXT;
+            $symlink = $CC_CONFIG['accessDir'].'/'.$this->token.'.'.BACKUP_EXT;
             if (is_link($symlink) && is_file(readlink($symlink))) {
                 $this->tmpName          = str_replace('.tar','',readlink($symlink));
                 $this->tmpFile          = $this->tmpName.'.'.BACKUP_EXT;
@@ -419,7 +422,7 @@ class Backup
                 return false;
             }
         }
-        $this->statusFile       = $this->gb->accessDir.'/'.$this->token.'.'.BACKUP_EXT.'.status';
+        $this->statusFile = $CC_CONFIG['accessDir'].'/'.$this->token.'.'.BACKUP_EXT.'.status';
         if ($this->loglevel=='debug') {
             $this->addLogItem("this->tmpName: $this->tmpName\n");
             $this->addLogItem("this->tmpFile: $this->tmpFile\n");
@@ -440,7 +443,7 @@ class Backup
     private function genToken()
     {
         $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
-        if ($this->gb->dbc->isError($acc)) {
+        if (PEAR::isError($acc)) {
         	return $acc;
         }
         $this->token = $acc['token'];

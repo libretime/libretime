@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '64M');
 
-## Warning/Error level
+// Warning/Error level
 define('UI_DEBUG',                      FALSE);
 define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
@@ -15,21 +15,21 @@ define('UI_VERSION',                    'Campcaster 1.1.1');
 define('UI_VERSION_FULLNAME',           'Campcaster 1.1.1');
 define('UI_TESTSTREAM_MU3_TMP',         'img/listen.m3u');
 
-## Scheduler
+// Scheduler
 define('UI_SCHEDULER_DAEMON_CMD',       '/etc/init.d/campcaster-station start >/tmp/scheduler.log 2>&1 &'); ## adjust the start-command here
 define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                     ## this is name of scheduler process to grep in process list for it
 
-## Local settings
+// Local settings
 define('UI_DEFAULT_LANGID',             'en_GB');
-#define('UI_UPLOAD_LANGID',              $_SESSION['langid']);
+//define('UI_UPLOAD_LANGID',              $_SESSION['langid']);
 define('UI_UPLOAD_LANGID',              UI_DEFAULT_LANGID);
 define('UI_TIMEZONEOFFSET',             date('Z'));
 
-## Basic scripts
+// Basic scripts
 define('UI_HANDLER',                    'ui_handler.php');
 define('UI_BROWSER',                    'ui_browser.php');
 
-## HTML Form stuff
+// HTML Form stuff
 define('UI_STANDARD_FORM_METHOD',       'POST');
 define('UI_INPUT_STANDARD_SIZE',        50);
 define('UI_INPUT_STANDARD_MAXLENGTH',   255);
@@ -41,13 +41,13 @@ define('UI_QFORM_REQUIREDNOTE',         '../templates/sub/form_requirednote.tpl'
 define('UI_QFORM_ERROR',                '../templates/sub/form_error.tpl');
 define('UI_REGEX_URL',                  '/^(ht|f)tps?:\/\/[^ ]+$/');
 
-## DB ls_pref keys
+// DB ls_pref keys
 define('UI_PL_ACCESSTOKEN_KEY',         'playlistToken');
 define('UI_SCRATCHPAD_KEY',             'scratchpadContents');
 define('UI_SCRATCHPAD_MAXLENGTH_KEY',   'scratchpadMaxlength');
-#define('UI_SCRATCHPAD_REGEX', '/^[0-9a-f]{16}:[0-9]{4}-[0-9]{2}-[0-9]{2}$/');
+//define('UI_SCRATCHPAD_REGEX', '/^[0-9a-f]{16}:[0-9]{4}-[0-9]{2}-[0-9]{2}$/');
 
-## Session Keys
+// Session Keys
 define('UI_SCRATCHPAD_SESSNAME',        'SCRATCHPAD');
 define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
@@ -59,7 +59,7 @@ define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
 define('UI_LOCALIZER_SESSNAME',         'LOCALIZER');
 define('UI_CALENDAR_SESSNAME',          'CALENDAR');
 
-## Metadata Keys
+// Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
 define('UI_MDATA_KEY_CREATOR',          'dc:creator');
 define('UI_MDATA_KEY_DURATION',         'dcterms:extent');
@@ -73,7 +73,7 @@ define('UI_MDATA_KEY_ENCODER',          'ls:encoder');
 define('UI_MDATA_VALUE_FORMAT_FILE',    'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM',  'live stream');
 
-## Search/Browse preferences
+// Search/Browse preferences
 define('UI_SIMPLESEARCH_FILETYPE',      'File');
 define('UI_SIMPLESEARCH_OPERATOR',      'OR');
 define('UI_SIMPLESEARCH_LIMIT',         10);
@@ -97,33 +97,32 @@ define('UI_BROWSE_DEFAULT_LIMIT',       10);
 
 define('UI_HUB_POLLING_FREQUENCY',      3);
 
-## Scheduler / Calendar
+// Scheduler / Calendar
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
 define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '0 seconds');
 define('UI_SCHEDULER_IMPORTTOKEN_KEY',  'schedulerImportToken');
 define('UI_SCHEDULER_EXPORTTOKEN_KEY',  'schedulerExportToken');
 
-## File types
+// File types
 define('UI_FILETYPE_ANY',               'all');
 define('UI_FILETYPE_PLAYLIST',          'playlist');
 define('UI_FILETYPE_AUDIOCLIP',         'audioClip');
 define('UI_FILETYPE_WEBSTREAM',         'webstream');
 
-## Playlist elements
+// Playlist elements
 define('UI_PL_ELEM_PLAYLIST',           'playlistElement');
 define('UI_PL_ELEM_FADEINFO',           'fadeInfo');
 define('UI_PL_ELEM_FADEIN',             'fadeIn');
 define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
-## Export/Import
+// Export/Import
 define('UI_BACKUPTOKEN_KEY',            'backupToken');
 define('UI_RESTORETOKEN_KEY',           'restoreToken');
 
-## LS stuff
-require_once 'storage_server/var/conf.php';
-## extent config
-$config = array_merge($config,
+require_once('storage_server/var/conf.php');
+// extent config
+$CC_CONFIG = array_merge($CC_CONFIG,
     array(
         'file_types'    => array(
                             '.mp3',
@@ -166,12 +165,11 @@ require_once dirname(__FILE__).'/ui_subjects.class.php';
 require_once dirname(__FILE__).'/ui_jscom.php';
 require_once dirname(__FILE__).'/ui_exchange.class.php';
 
-## well known classes
-require_once 'DB.php';
-require_once 'HTML/QuickForm.php';
+require_once('DB.php');
+require_once('HTML/QuickForm.php');
 
-#PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
-#PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
+//PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
+//PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT);
+//PEAR::setErrorHandling(PEAR_ERROR_PRINT);
 ?>

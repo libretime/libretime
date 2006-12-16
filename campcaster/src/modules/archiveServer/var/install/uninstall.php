@@ -1,52 +1,34 @@
 <?php
 /**
- * @author $Author$
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
+ * @package Campcaster
+ * @subpackage ArchiveServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
-require_once '../conf.php';
-require_once 'DB.php';
-require_once '../Archive.php';
 
-function errCallback($err)
-{
-    if (assert_options(ASSERT_ACTIVE) == 1) {
-    	return;
-    }
-    echo "ERROR:\n";
-    echo "request: "; print_r($_REQUEST);
-    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
-        "\nui:\n".$err->getUserInfo()."\n</pre>\n";
-    exit(1);
+// Do not allow remote execution.
+$arr = array_diff_assoc($_SERVER, $_ENV);
+if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
+    header("HTTP/1.1 400");
+    header("Content-type: text/plain; charset=UTF-8");
+    echo "400 Not executable\r\n";
+    exit;
 }
 
 
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-$dbc = DB::connect($config['dsn'], TRUE);
-if (PEAR::isError($dbc)) {
-    echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists".
-        " with corresponding permissions.\n";
-    echo "Database access is defined by 'dsn' values in conf.php.\n";
-    exit(1);
-}
+echo "***************************\n";
+echo "* ArchiveServer Uninstall *\n";
+echo "***************************\n";
 
-echo "#ArchiveServer uninstall:\n";
-$dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new Archive($dbc, $config, TRUE);
-$tr = new Transport($gb);
+require_once('../conf.php');
+require_once('../../../storageServer/var/install/uninstallMain.php');
 
+echo "************************************\n";
+echo "* ArchiveServer Uninstall Complete *\n";
+echo "************************************\n";
 
-echo "# Uninstall Transport submodule ...";
-$r = $tr->uninstall();
-if (PEAR::isError($r)) {
-	echo $r->getUserInfo()."\n";
-	exit;
-}
-echo "\n";
-
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$gb->uninstall();
-echo "#ArchiveServer uninstall: OK\n";
-
-$dbc->disconnect();
 ?>

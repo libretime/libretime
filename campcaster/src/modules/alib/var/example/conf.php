@@ -4,7 +4,7 @@
  * @version $Revision$
  */
 
-$config = array(
+$CC_CONFIG = array(
     'dsn'       => array(           // data source definition
         'username' => 'test',
         'password' => 'test',

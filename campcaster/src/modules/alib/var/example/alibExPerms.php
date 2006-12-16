@@ -1,6 +1,13 @@
 <?php
 /**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version  $Revision$
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 
 require_once("alib_h.php");
@@ -9,26 +16,26 @@ require_once("alibExTestAuth.php");
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
 } else {
-    $id = $alib->getRootNode();
+    $id = M2tree::GetRootNode();
 }
 
 // prefill data structure for template
-if (!$alib->isClass($id)) {
+if (!ObjClasses::IsClass($id)) {
     $d = array(
-        'path'      => $alib->getPath($id, 'id,name'),
-        'perms'     => $alib->getObjPerms($id),
-        'actions'   => $alib->getAllowedActions($alib->getObjType($id)),
-        'subjects'  => $alib->getSubjects(),
+        'path'      => M2tree::GetPath($id, 'id,name'),
+        'perms'     => Alib::GetObjPerms($id),
+        'actions'   => Alib::GetAllowedActions(M2tree::GetObjType($id)),
+        'subjects'  => Subjects::GetSubjects(),
         'id'        => $id,
         'loggedAs'  => $login
     );
 } else {
     $d = array(
         'path'      => '',
-        'name'      => $alib->getClassName($id),
-        'perms'     => $alib->getObjPerms($id),
-        'actions'   => $alib->getAllowedActions('_class'),
-        'subjects'  => $alib->getSubjects(),
+        'name'      => ObjClasses::GetClassName($id),
+        'perms'     => Alib::GetObjPerms($id),
+        'actions'   => Alib::GetAllowedActions('_class'),
+        'subjects'  => Subjects::GetSubjects(),
         'id'        => $id,
         'loggedAs'  => $login
     );

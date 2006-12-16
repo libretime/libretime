@@ -311,7 +311,7 @@ class uiScheduler extends uiCalendar {
 
         $items = array();
         foreach ($arr as $key => $val) {
-        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
+        	$id = BasicStor::IdFromGunid($val['playlistId']);
         	$startDay = strftime('%d', uiScheduler::datetimeToTimestamp($val['start']));
         	$startHour = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
             $items[$startDay][$startHour][]= array (
@@ -357,7 +357,7 @@ class uiScheduler extends uiCalendar {
             $h = number_format(strftime('%H', $start));
             $M = number_format(strftime('%i', $start));
 
-            $id = $this->Base->gb->idFromGunid($val['playlistId']);
+            $id = BasicStor::IdFromGunid($val['playlistId']);
 
             $startHour = (int)strftime('%H', $start);
             $endHour = (int)strftime('%H', $end);
@@ -404,7 +404,7 @@ class uiScheduler extends uiCalendar {
                 // this section.
                 $skip = false;
                 if (strftime('%Y%m%d', $start) === $thisDay) {
-                    // For the edge case of starting at the end of 
+                    // For the edge case of starting at the end of
                     // today.
                     if ($startHour == 23) {
                         $skip = true;
@@ -451,8 +451,8 @@ class uiScheduler extends uiCalendar {
             $items[date('H', uiScheduler::datetimeToTimestamp($val['start']))][]= array (
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-                'title'     => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue($this->Base->gb->idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'title'     => $this->Base->getMetadataValue(BasicStor::IdFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->getMetadataValue(BasicStor::IdFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
         #print_r($items);
@@ -471,7 +471,7 @@ class uiScheduler extends uiCalendar {
         }
 
         foreach ($arr as $key => $val) {
-        	$id = $this->Base->gb->idFromGunid($val['playlistId']);
+        	$id = BasicStor::IdFromGunid($val['playlistId']);
             $arr[$key]['title'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
             $arr[$key]['creator'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
             $arr[$key]['pos'] = uiScheduler::datetimeToTimestamp($val['start']);
@@ -551,7 +551,7 @@ class uiScheduler extends uiCalendar {
         if ($id) {
             $this->Base->SCRATCHPAD->addItem($id);
             $this->availablePlaylists[] = array(
-                'gunid'     => $this->Base->gb->gunidFromId($id),
+                'gunid'     => BasicStor::GunidFromId($id),
                 'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
                 'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
             );
@@ -588,7 +588,7 @@ class uiScheduler extends uiCalendar {
 
     /**
      * Get the currently playing clip or one that is coming up.
-     * 
+     *
      * Note: just use methods here which work without valid authentification.
      *
      * @param int $distance
@@ -905,7 +905,7 @@ class uiScheduler extends uiCalendar {
 
         if (empty($output)) {
            	$this->scriptError = 'Scheduler startup script does not appear to be valid.  Please check the value you have set in "Preferences->System Settings".';
-           	return FALSE;            
+           	return FALSE;
         }
         $message = "";
         foreach ($output as $line) {
@@ -933,7 +933,7 @@ class uiScheduler extends uiCalendar {
     function initXmlRpc()
     {
         include_once(dirname(__FILE__).'/ui_schedulerPhpClient.class.php');
-        $this->spc =& SchedulerPhpClient::factory($this->Base->dbc, $mdefs, $this->Base->config, FALSE, FALSE);
+        $this->spc =& SchedulerPhpClient::factory($mdefs, FALSE, FALSE);
     } // fn initXmlRpc
 
 
