@@ -39,7 +39,7 @@ $CC_CONFIG = array(
         'password'      => 'test',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'Campcaster-paul',
+        'database'      => 'Campcaster-test',
     ),
     'tblNamePrefix' => 'as_',
 
