@@ -1,3 +1,10 @@
+campcaster (1.1.1-2) dapper; urgency=low
+
+  * 1.1.1 final release, corrected packages
+
+ -- Ferenc Gerlits <fgerlits@campware.org>  Mon, 11 Dec 2006 21:25:39 +0000
+
+
 campcaster (1.1.1-1) dapper; urgency=low
 
   * 1.1.1 final release
