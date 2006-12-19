@@ -233,11 +233,13 @@ class uiBase
             } else {
                 $this->id = M2tree::GetObjId($this->login, $this->gb->storId);
             }
-            $parentId = M2tree::GetParent($this->id);
-            $this->pid = ($parentId != 1) ? $parentId : FALSE;
-            $this->type = Greenbox::getFileType($this->id);
-            $this->fid = ($this->type == 'Folder') ? $this->id : $this->pid;
-            $this->homeid = M2tree::GetObjId($this->login, $this->gb->storId);
+            if (!is_null($this->id)) {
+                $parentId = M2tree::GetParent($this->id);
+                $this->pid = ($parentId != 1) ? $parentId : FALSE;
+                $this->type = Greenbox::getFileType($this->id);
+                $this->fid = ($this->type == 'Folder') ? $this->id : $this->pid;
+                $this->homeid = M2tree::GetObjId($this->login, $this->gb->storId);
+            }
         }
 
     }

@@ -41,7 +41,7 @@ class BasicStor {
 
     public function __construct()
     {
-        $this->rootId = M2tree::GetRootNode();        
+        $this->rootId = M2tree::GetRootNode();
         $this->storId = M2tree::GetObjId('StorageRoot', $this->rootId);
     }
 
@@ -81,19 +81,18 @@ class BasicStor {
      * @param string $mdataLoc
      * 		'file'|'string'
      * @return int
-     * @exception PEAR::error
+     * @exception PEAR_Error
      */
     public function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
-        $gunid=NULL, $ftype='unKnown', $mdataLoc='file')
+        $gunid=NULL, $ftype='unknown', $mdataLoc='file')
     {
         $ftype = strtolower($ftype);
         $id = BasicStor::AddObj($fileName, $ftype, $parid);
         if (PEAR::isError($id)) {
             return $id;
         }
-        $ac = StoredFile::insert(
-            $this, $id, $fileName, $mediaFileLP, $mdataFileLP, $mdataLoc,
-            $gunid, $ftype);
+        $ac = StoredFile::insert($this, $id, $fileName,
+            $mediaFileLP, $mdataFileLP, $mdataLoc, $gunid, $ftype);
         if (PEAR::isError($ac)) {
             $res = $this->removeObj($id);
             // catch constraint violations
@@ -1447,7 +1446,7 @@ class BasicStor {
                 return $listArr[$i]['type'];
             }
             $listArr[$i]['gunid'] = $gunid;
-            
+
             // THE BUG IS HERE - "_getState()" IS NOT A STATIC FUNCTION!
             if (StoredFile::_getState($gunid) == 'incomplete') {
                 unset($listArr[$i]);
@@ -1586,7 +1585,7 @@ class BasicStor {
     public static function GetObjType($oid)
     {
         $type = M2tree::GetObjType($oid);
-        if ($type == 'File') {
+        if ( !PEAR::isError($type) && ($type == 'File') ) {
             $gunid = BasicStor::GunidFromId($oid);
             if (PEAR::isError($gunid)) {
                 return $gunid;
@@ -2295,7 +2294,7 @@ class BasicStor {
      */
     public function debug($va)
     {
-        echo"<pre>\n"; 
+        echo"<pre>\n";
         print_r($va);
     }
 
