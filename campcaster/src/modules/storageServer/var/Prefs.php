@@ -1,5 +1,7 @@
 <?php
 
+require_once("GreenBox.php");
+
 /**
  * Preference storage class.
  *
