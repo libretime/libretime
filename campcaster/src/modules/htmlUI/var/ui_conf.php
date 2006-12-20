@@ -171,7 +171,13 @@ require_once('HTML/QuickForm.php');
 // Connect to the database
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 if (PEAR::isError($CC_DBC)) {
-    die($CC_DBC->getMessage());
+    echo "Could not connect to database.  Your current configuration is:<br>";
+    echo "<table border=1>";
+    echo "<tr><td>Host name:</td><td>".$CC_CONFIG['dsn']['hostspec']."</td></tr>";
+    echo "<tr><td>Database name:</td><td>".$CC_CONFIG['dsn']['database']."</td></tr>";
+    echo "<tr><td>User name:</td><td>".$CC_CONFIG['dsn']['username']."</td></tr>";
+    echo "</table>";
+    exit;
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
