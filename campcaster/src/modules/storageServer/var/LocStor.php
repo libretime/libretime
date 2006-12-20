@@ -49,7 +49,7 @@ class LocStor extends BasicStor {
             );
         }
         // test if specified gunid exists:
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (!PEAR::isError($ac)) {
             // gunid exists - do replace
             $oid = $ac->getId();
@@ -81,12 +81,10 @@ class LocStor extends BasicStor {
             if (PEAR::isError($oid)) {
                 return $oid;
             }
-            $ac =& StoredFile::insert(
-                $this, $oid, '', '', $metadata, 'string',
-                $gunid, $ftype
-            );
+            $ac =& StoredFile::insert($oid, '', '', $metadata,
+                'string', $gunid, $ftype);
             if (PEAR::isError($ac)) {
-                $res = $this->removeObj($oid);
+                $res = BasicStor::RemoveObj($oid);
                 return $ac;
             }
             if (PEAR::isError($res)) {
@@ -117,7 +115,7 @@ class LocStor extends BasicStor {
      */
     protected function storeAudioClipClose($sessid, $token)
     {
-        $ac =& StoredFile::recallByToken($this, $token);
+        $ac =& StoredFile::recallByToken($token);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -184,7 +182,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -211,7 +209,7 @@ class LocStor extends BasicStor {
      */
     public function accessRawAudioData($sessid, $gunid, $parent='0')
     {
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -232,7 +230,7 @@ class LocStor extends BasicStor {
      */
     public function releaseRawAudioData($sessid, $token)
     {
-        $ac =& StoredFile::recallByToken($this, $token);
+        $ac =& StoredFile::recallByToken($token);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -339,7 +337,7 @@ class LocStor extends BasicStor {
      */
     protected function getAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -479,7 +477,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($ex)) {
             return $ex;
         }
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -521,7 +519,7 @@ class LocStor extends BasicStor {
      */
     protected function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             if ($ac->getCode()==GBERR_FOBJNEX && $forced) {
                 return TRUE;
@@ -550,7 +548,7 @@ class LocStor extends BasicStor {
      */
     protected function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -597,12 +595,12 @@ class LocStor extends BasicStor {
         if (PEAR::isError($oid)) {
             return $oid;
         }
-        $ac =&  StoredFile::insert($this, $oid, '', '',
+        $ac =&  StoredFile::insert($oid, '', '',
             dirname(__FILE__).'/emptyPlaylist.xml',
             'file', $playlistId, 'playlist'
         );
         if (PEAR::isError($ac)) {
-            $res = $this->removeObj($oid);
+            $res = BasicStor::RemoveObj($oid);
             return $ac;
         }
         if ($fname == '') {
@@ -651,7 +649,7 @@ class LocStor extends BasicStor {
                 'LocStor::editPlaylist: playlist already edited'
             );
         }
-        $ac =& StoredFile::recallByGunid($this, $playlistId);
+        $ac =& StoredFile::recallByGunid($playlistId);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -690,7 +688,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($playlistId)) {
             return $playlistId;
         }
-        $ac =& StoredFile::recallByGunid($this, $playlistId);
+        $ac =& StoredFile::recallByGunid($playlistId);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -722,7 +720,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
-        $ac =& StoredFile::recallByGunid($this, $gunid);
+        $ac =& StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -766,7 +764,7 @@ class LocStor extends BasicStor {
                 GBERR_FILENEX
             );
         }
-        $ac =& StoredFile::recallByGunid($this, $playlistId);
+        $ac =& StoredFile::recallByGunid($playlistId);
         if (PEAR::isError($ac)) {
             return $ac;
         }

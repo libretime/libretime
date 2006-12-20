@@ -58,7 +58,7 @@ class Renderer
         $logf = $CC_CONFIG['bufferDir']."/renderer.log";
         file_put_contents($logf, "--- ".date("Ymd-H:i:s")."\n", FILE_APPEND);
         // open access to output file:         /*gunid*/      /*parent*/
-        $acc = $gb->bsAccess($outf, RENDER_EXT, $plid, 'render', 0, $owner);
+        $acc = BasicStor::bsAccess($outf, RENDER_EXT, $plid, 'render', 0, $owner);
         if (PEAR::isError($acc)) {
         	return $acc;
         }
@@ -144,7 +144,7 @@ class Renderer
     function rnRender2FileClose(&$gb, $token)
     {
         global $CC_CONFIG;
-        $r = $gb->bsRelease($token, 'render');
+        $r = BasicStor::bsRelease($token, 'render');
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -209,7 +209,7 @@ class Renderer
      */
     function rnRender2StorageCore(&$gb, $token)
     {
-        $r = $gb->bsRelease($token, 'render');
+        $r = BasicStor::bsRelease($token, 'render');
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -237,7 +237,7 @@ class Renderer
         if (PEAR::isError($id)) {
         	return $id;
         }
-        $ac = StoredFile::recall($gb, $id);
+        $ac = StoredFile::recall($id);
         if (PEAR::isError($ac)) {
         	return $ac;
         }

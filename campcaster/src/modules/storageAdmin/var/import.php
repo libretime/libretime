@@ -1,13 +1,22 @@
 <?php
 /**
- * @author $Author$
+ * Mass import of audio files.
+ *
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
+ * @package Campcaster
+ * @subpackage StorageAdmin
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
  */
 ini_set('memory_limit', '64M');
-set_time_limit(30);
-header("Content-type: text/plain");
-echo "\n#StorageServer import script:\n";
-//echo date('H:i:s')."\n";
+set_time_limit(0);
+//header("Content-type: text/plain");
+echo   "===========================\n";
+echo "\nStorageServer Import Script\n";
+echo   "===========================\n";
 $start = intval(date('U'));
 
 require_once('conf.php');
@@ -15,9 +24,7 @@ require_once("$storageServerPath/var/conf.php");
 require_once('DB.php');
 require_once("$storageServerPath/var/GreenBox.php");
 
-//PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-//PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s\n");
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 if (PEAR::isError($CC_DBC)) {
 	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
@@ -57,7 +64,7 @@ if (PEAR::isError($r)) {
 	exit(1);
 }
 if (is_null($r)) {
-    $r = $gb->bsCreateFolder($gb->storId, 'import');
+    $r = BasicStor::bsCreateFolder($gb->storId, 'import');
     if (PEAR::isError($r)) {
     	echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n";
     	exit(1);
@@ -69,11 +76,16 @@ $parid = $r;
 $stdin = fopen('php://stdin', 'r');
 while ($filename = fgets($stdin, 2048)) {
     $filename = rtrim($filename);
-    if (!preg_match('/\.(ogg|wav|mp3|mpg|mpeg)$/', strtolower($filename), $var)) {
+    if (!preg_match('/\.(ogg|mp3)$/i', $filename, $var)) {
         // echo "File extension not supported - skipping file\n";
         continue;
     }
-    echo "$filename:   ";
+    echo "Importing: $filename\n";
+
+    $md5sum = md5_file($filename);
+    echo " * MD5: $md5sum\n";
+
+    // Look up md5sum in database
 
     $mdata = camp_get_audio_metadata($filename, $testonly);
     if (PEAR::isError($mdata)) {
@@ -105,13 +117,12 @@ while ($filename = fgets($stdin, 2048)) {
         echo "======================= ";
     }
 
-    echo "OK\n";
+    echo " * OK\n";
     $filecount++;
 }
 
 fclose($stdin);
 $end = intval(date('U'));
-//echo date('H:i:s')."\n";
 $time = $end - $start;
 if ($time > 0) {
 	$speed = round(($filecount+$g_errors)/$time, 1);

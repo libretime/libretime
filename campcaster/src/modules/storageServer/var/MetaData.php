@@ -36,7 +36,7 @@ class MetaData {
      * @param string $resDir
      * 		resource directory
      */
-    public function __construct(&$gb, $gunid, $resDir)
+    public function __construct($gunid, $resDir)
     {
         $this->gunid = $gunid;
         $this->resDir = $resDir;

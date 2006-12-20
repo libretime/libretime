@@ -17,26 +17,28 @@ require_once "$storageServerPath/var/BasicStor.php";
 require_once "$storageServerPath/var/Prefs.php";
 
 /* =========================================================== misc functions */
-function ls_restore_processObject($el){
+function ls_restore_processObject($el)
+{
     $res = array(
-        'name'      => $el->attrs['name']->val,
-        'type'      => $el->name,
+        'name' => $el->attrs['name']->val,
+        'type' => $el->name,
     );
-    switch($res['type']){
-        case'folder':
-            foreach($el->children as $i=>$o){
+    switch ($res['type']) {
+        case 'folder':
+            foreach ($el->children as $i => $o) {
                 $res['children'][] = ls_restore_processObject($o);
             }
-        break;
+            break;
         default:
             $res['gunid'] = $el->attrs['id']->val;
-        break;
+            break;
     }
     return $res;
 }
 
-function ls_restore_checkErr($r, $ln=''){
-    if(PEAR::isError($r)){
+function ls_restore_checkErr($r, $ln='')
+{
+    if (PEAR::isError($r)) {
         echo "ERROR $ln: ".$r->getMessage()." ".$r->getUserInfo()."\n";
         exit;
     }
@@ -44,32 +46,44 @@ function ls_restore_checkErr($r, $ln=''){
 
 function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
     global $tmpdir, $bs;
-    switch($obj['type']){
-        case"folder";
-            if($reallyInsert){
-                if(VERBOSE) echo " creating folder {$obj['name']} ...\n";
-                $r = $bs->bsCreateFolder($parid, $obj['name']);
+    switch ($obj['type']) {
+        case "folder";
+            if ($reallyInsert) {
+                if (VERBOSE) {
+                    echo " creating folder {$obj['name']} ...\n";
+                }
+                $r = BasicStor::bsCreateFolder($parid, $obj['name']);
                 ls_restore_checkErr($r, __LINE__);
-            }else $r=$parid;
-            if(isset($obj['children']) && is_array($obj['children'])){
-                foreach($obj['children'] as $i=>$ch){
+            } else {
+                $r = $parid;
+            }
+            if (isset($obj['children']) && is_array($obj['children'])) {
+                foreach ($obj['children'] as $i => $ch) {
                     ls_restore_restoreObject($ch, $r);
                 }
             }
-        break;
-        case"audioClip";
-        case"webstream";
-        case"playlist";
+            break;
+        case "audioClip";
+        case "webstream";
+        case "playlist";
             $gunid = $obj['gunid'];
-            if(is_null($gunid)) break;
+            if (is_null($gunid)) {
+                break;
+            }
             $gunid3 = substr($gunid, 0, 3);
             $mediaFile = "$tmpdir/stor/$gunid3/$gunid";
 #            echo "X1 $gunid, $gunid3, $mediaFile\n";
-            if(!file_exists($mediaFile)) $mediaFile = NULL;
+            if (!file_exists($mediaFile)) {
+                $mediaFile = NULL;
+            }
             $mdataFile = "$tmpdir/stor/$gunid3/$gunid.xml";
-            if(!file_exists($mdataFile)) $mdataFile = NULL;
-            if($reallyInsert){
-                if(VERBOSE) echo " creating file {$obj['name']} ...\n";
+            if (!file_exists($mdataFile)) {
+                $mdataFile = NULL;
+            }
+            if ($reallyInsert) {
+                if (VERBOSE) {
+                    echo " creating file {$obj['name']} ...\n";
+                }
                 $r = $bs->bsPutFile($parid, $obj['name'],
                      $mediaFile, $mdataFile, $obj['gunid'],
                      strtolower($obj['type']));

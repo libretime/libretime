@@ -111,7 +111,7 @@ class Playlist extends StoredFile {
             'file', $plid
         );
         if (PEAR::isError($pl)) {
-            $res = $gb->removeObj($oid);
+            $res = BasicStor::RemoveObj($oid);
             return $pl;
         }
         $fname = ($fname == '' || is_null($fname) ? "newFile.xml" : $fname );
@@ -225,7 +225,7 @@ class Playlist extends StoredFile {
      */
     private function getAudioClipInfo($acId)
     {
-        $ac = StoredFile::recall($this->gb, $acId);
+        $ac = StoredFile::recall($acId);
         if (PEAR::isError($ac)) {
         	return $ac;
         }

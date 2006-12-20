@@ -24,19 +24,6 @@ define('ALIBERR_BADSMEMB', 21);
 class Subjects {
 //class Subjects extends ObjClasses {
 
-    /**
-     * Constructor
-     *
-     * @param object $dbc
-     * @param array $config
-     * @return this
-     */
-//    public function __construct(&$dbc, $config)
-//    {
-//        parent::__construct($dbc, $config);
-//    } // constructor
-
-
     /* ======================================================= public methods */
 
     /**
@@ -79,7 +66,6 @@ class Subjects {
      *
      * @param string $login
      * @param int $uid
-     * 		optional, default: null
      * @return boolean|PEAR_Error
      */
     public static function RemoveSubj($login, $uid=NULL)
@@ -533,7 +519,7 @@ class Subjects {
             }
         }
         return $mid;
-    } 
+    }
 
 
     /**
@@ -574,7 +560,7 @@ class Subjects {
                 }
             }
         }
-        $r = $CC_DBC->query("COMMIT");   
+        $r = $CC_DBC->query("COMMIT");
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -680,57 +666,6 @@ class Subjects {
                 "dump:\n{$test_dump}\n</pre>\n");
         }
     } // fn test
-
-
-    /**
-     * Create tables + initialize
-     *
-     */
-//    public function install()
-//    {
-//        parent::install();
-//        $CC_DBC->query("CREATE TABLE {$this->subjTable} (
-//            id int not null PRIMARY KEY,
-//            login varchar(255) not null default'',
-//            pass varchar(255) not null default'',
-//            type char(1) not null default 'U',
-//            realname varchar(255) not null default'',
-//            lastlogin timestamp,
-//            lastfail timestamp
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->subjTable}_id_idx
-//            ON {$this->subjTable} (id)");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->subjTable}_login_idx
-//            ON {$this->subjTable} (login)");
-//        $CC_DBC->createSequence("{$this->subjTable}_id_seq");
-//
-//        $CC_DBC->query("CREATE TABLE {$this->smembTable} (
-//            id int not null PRIMARY KEY,
-//            uid int not null default 0,
-//            gid int not null default 0,
-//            level int not null default 0,
-//            mid int
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->smembTable}_id_idx
-//            ON {$this->smembTable} (id)");
-//        $CC_DBC->createSequence("{$this->smembTable}_id_seq");
-//    } // fn install
-
-
-    /**
-     * Drop tables etc.
-     *
-     * @return void
-     */
-//    public function uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['subjTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id_seq");
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['smembTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id_seq");
-//        parent::uninstall();
-//    } // fn uninstall
 
 } // class Subjects
 ?>

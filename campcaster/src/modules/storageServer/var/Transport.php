@@ -287,7 +287,7 @@ class Transport
         switch ($ftype = BasicStor::GetType($gunid)) {
             case "audioclip":
             case "webstream":
-                $ac = StoredFile::recallByGunid($this->gb, $gunid);
+                $ac = StoredFile::recallByGunid($gunid);
                 if (PEAR::isError($ac)) {
                 	return $ac;
                 }

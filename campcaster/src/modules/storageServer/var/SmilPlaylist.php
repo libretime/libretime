@@ -262,7 +262,7 @@ class SmilPlaylistAudioElement {
                     }
                    //break;
                 default:
-                    $ac = StoredFile::recallByGunid($gb, $gunid);
+                    $ac = StoredFile::recallByGunid($gunid);
                     if (PEAR::isError($ac)) {
                     	return $ac;
                     }

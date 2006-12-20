@@ -56,9 +56,13 @@ if (preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['token'])) {
     http_error(400, "Error on token parameter. ({$_REQUEST['token']})");
 }
 
-$tc = $gb->bsCheckToken($token, 'put');
-if(PEAR::isError($tc)){ http_error(500, $ex->getMessage()); }
-if(!$tc){ http_error(403, "put.php: Token not valid ($token)."); }
+$tc = BasicStor::bsCheckToken($token, 'put');
+if (PEAR::isError($tc)) {
+    http_error(500, $ex->getMessage());
+}
+if (!$tc) {
+    http_error(403, "put.php: Token not valid ($token).");
+}
 
 header("Content-type: text/plain");
 

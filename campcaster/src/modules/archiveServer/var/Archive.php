@@ -142,7 +142,7 @@ class Archive extends XR_LocStor {
                 $realfile = tempnam($this->accessDir, 'searchjob_');
                 @chmod($realfile, 0660);
                 $len = file_put_contents($realfile, serialize($results));
-                $acc = $this->bsAccess($realfile, '', NULL, 'download');
+                $acc = BasicStor::bsAccess($realfile, '', NULL, 'download');
                 if (PEAR::isError($acc)) {
                 	return $acc;
                 }
@@ -227,7 +227,7 @@ class Archive extends XR_LocStor {
                 }
                 $fname = "transported_playlist.lspl";
                 $id = BasicStor::IdFromGunid($gunid);
-                $acc = $this->bsAccess($plfpath, 'lspl', NULL, 'download');
+                $acc = BasicStor::bsAccess($plfpath, 'lspl', NULL, 'download');
                 if (PEAR::isError($acc)) {
                 	return $acc;
                 }
@@ -301,7 +301,7 @@ class Archive extends XR_LocStor {
                 $res = $this->releasePlaylist(NULL/*$sessid*/, $token);
                 return $res;
             case "playlistPkg":
-                $res = $this->bsRelease($token, 'download');
+                $res = BasicStor::bsRelease($token, 'download');
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -316,7 +316,7 @@ class Archive extends XR_LocStor {
                 }
                 return $res;
             case "searchjob":
-                $res = $this->bsRelease($token, 'download');
+                $res = BasicStor::bsRelease($token, 'download');
                 return $res;
             case "file":
                 return array();

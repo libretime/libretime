@@ -58,7 +58,7 @@ if (preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['id'])) {
 }
 
 // stored file recall:
-$ac = StoredFile::recallByGunid($locStor, $gunid);
+$ac = StoredFile::recallByGunid($gunid);
 if (PEAR::isError($ac)) {
     switch ($ac->getCode()) {
         case GBERR_DENY:

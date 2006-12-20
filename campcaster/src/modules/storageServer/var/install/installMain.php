@@ -315,10 +315,10 @@ if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['accessTable']."\n";
 }
 
-echo " * Inserting starting data into tables...";
+echo " * Inserting starting data into tables...\n";
 $gb = new GreenBox();
-$r = $gb->initData();
-echo "done.\n";
+$r = $gb->initData(true);
+//echo "done.\n";
 
 //------------------------------------------------------------------------------
 // Submodules

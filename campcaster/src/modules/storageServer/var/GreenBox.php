@@ -39,7 +39,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsCreateFolder($parid, $folderName);
+        return BasicStor::bsCreateFolder($parid, $folderName);
     } // fn createFolder
 
 
@@ -132,7 +132,7 @@ class GreenBox extends BasicStor {
 //            return $res;
 //        }
 //        $gunid = BasicStor::GunidFromId($id);
-//        $r = $this->bsAccess(NULL, '', $gunid, 'access');
+//        $r = BasicStor::bsAccess(NULL, '', $gunid, 'access');
 //        if (PEAR::isError($r)) {
 //            return $r;
 //        }
@@ -152,7 +152,7 @@ class GreenBox extends BasicStor {
      */
 //    function releaseFile($token, $sessid='')
 //    {
-//        $r = $this->bsRelease($token, 'access');
+//        $r = BasicStor::bsRelease($token, 'access');
 //        if (PEAR::isError($r)) {
 //            return $r;
 //        }
@@ -344,7 +344,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $ac = StoredFile::recall($this, $id);
+        $ac = StoredFile::recall($id);
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -591,7 +591,7 @@ class GreenBox extends BasicStor {
     public function getPlaylistArray($id, $sessid)
     {
         $gunid = BasicStor::GunidFromId($id);
-        $pl = StoredFile::recall($this, $id);
+        $pl = StoredFile::recall($id);
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -638,7 +638,7 @@ class GreenBox extends BasicStor {
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
-        $ac = StoredFile::recallByGunid($this, $gunid);
+        $ac = StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
             return $ac;
         }

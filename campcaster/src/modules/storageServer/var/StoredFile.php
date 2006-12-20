@@ -1,7 +1,7 @@
 <?php
-require_once "RawMediaData.php";
-require_once "MetaData.php";
-require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
+require_once("RawMediaData.php");
+require_once("MetaData.php");
+require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
 
 /**
  *  StoredFile class
@@ -27,26 +27,9 @@ require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
  */
 class StoredFile {
 	/**
-	 * @var GreenBox
-	 */
-	public $gb;
-
-	/**
 	 * @var DB
 	 */
 	public $dbc;
-
-	/**
-	 * Name of a database table.
-	 * @var string
-	 */
-	//public $filesTable;
-
-	/**
-	 * Name of a database table.
-	 * @var string
-	 */
-	//public $accessTable;
 
 	/**
 	 * Unique ID for the file.
@@ -63,11 +46,6 @@ class StoredFile {
 	private $resDir;
 
 	/**
-	 * @var string
-	 */
-	//private $accessDir;
-
-	/**
 	 * @var RawMediaData
 	 */
 	public $rmd;
@@ -79,27 +57,22 @@ class StoredFile {
 
     /* ========================================================== constructor */
     /**
-     *  Constructor, but shouldn't be externally called
+     * Constructor, but shouldn't be externally called
      *
-     *  @param GreenBox $gb
-     *  @param string $gunid
-     * 		globally unique id of file
+     * @param string $gunid
+     *  	globally unique id of file
      */
-    public function __construct(&$gb, $gunid=NULL)
+    public function __construct($gunid=NULL)
     {
         global $CC_CONFIG;
         global $CC_DBC;
-        $this->gb =& $gb;
-        //$this->filesTable = $CC_CONFIG['filesTable'];
-        //$this->accessTable= $CC_CONFIG['accessTable'];
         $this->gunid = $gunid;
         if (is_null($this->gunid)) {
             $this->gunid = StoredFile::CreateGunid();
         }
         $this->resDir = $this->_getResDir($this->gunid);
-        //$this->accessDir = $this->gb->accessDir;
         $this->rmd = new RawMediaData($this->gunid, $this->resDir);
-        $this->md = new MetaData($gb, $this->gunid, $this->resDir);
+        $this->md = new MetaData($this->gunid, $this->resDir);
     }
 
 
@@ -107,7 +80,6 @@ class StoredFile {
     /**
      *  Create instance of StoredFile object and insert new file
      *
-     *  @param GreenBox $gb
      *  @param int $oid
      * 		local object id in the tree
      *  @param string $name
@@ -117,21 +89,21 @@ class StoredFile {
      *  @param string $metadata
      * 		local path to metadata XML file or XML string
      *  @param string $mdataLoc
-     * 		'file'|'string' (optional)
+     * 		'file'|'string'
      *  @param global $gunid
-     * 		unique id (optional) - for insert file with gunid
+     * 		unique id - for insert file with gunid
      *  @param string $ftype
      * 		internal file type
      *  @param string $className
-     * 		class to be constructed (opt.)
+     * 		class to be constructed
      *  @return StoredFile
      */
-    public static function &insert(&$gb, $oid, $name,
+    public static function &insert($oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL, $className='StoredFile')
     {
         global $CC_CONFIG, $CC_DBC;
-        $ac = new $className($gb, ($gunid ? $gunid : NULL));
+        $ac = new $className(($gunid ? $gunid : NULL));
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -184,7 +156,6 @@ class StoredFile {
                 return $res;
             }
             $mime = $ac->rmd->getMime();
-            //$gb->debugLog("gunid={$ac->gunid}, mime=$mime");
             if ($mime !== FALSE) {
                 $res = $ac->setMime($mime);
                 if (PEAR::isError($res)) {
@@ -214,16 +185,15 @@ class StoredFile {
      * Create instance of StoreFile object and recall existing file.<br>
      * Should be supplied with oid OR gunid - not both.
      *
-     * @param GreenBox $gb
      * @param int $oid
-     * 		optional, local object id in the tree
+     * 		local object id in the tree
      * @param string $gunid
-     * 		optional, global unique id of file
+     * 		global unique id of file
      * @param string $className
-     * 		optional classname to recall
+     * 		classname to recall
      * @return StoredFile
      */
-    public static function &recall(&$gb, $oid='', $gunid='', $className='StoredFile')
+    public static function &recall($oid='', $gunid='', $className='StoredFile')
     {
         global $CC_DBC;
         global $CC_CONFIG;
@@ -246,7 +216,7 @@ class StoredFile {
             return $r;
         }
         $gunid = StoredFile::NormalizeGunid($row['gunid']);
-        $ac = new $className($gb, $gunid);
+        $ac = new $className($gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id = $row['id'];
@@ -259,16 +229,15 @@ class StoredFile {
      * Create instance of StoreFile object and recall existing file
      * by gunid.
      *
-     * @param GreenBox $gb
      * @param string $gunid
      * 		optional, global unique id of file
      * @param string $className
      * 		optional classname to recall
      * @return StoredFile
      */
-    public static function &recallByGunid(&$gb, $gunid='', $className='StoredFile')
+    public static function &recallByGunid($gunid='', $className='StoredFile')
     {
-        return StoredFile::recall($gb, '', $gunid, $className);
+        return StoredFile::recall('', $gunid, $className);
     }
 
 
@@ -276,14 +245,13 @@ class StoredFile {
      * Create instance of StoreFile object and recall existing file
      * by access token.
      *
-     * @param GreenBox $gb
      * @param string $token
      * 		access token
      * @param string $className
      * 		optional classname to recall
      * @return StoredFile
      */
-    public static function recallByToken(&$gb, $token, $className='StoredFile')
+    public static function recallByToken($token, $className='StoredFile')
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = $CC_DBC->getOne("
@@ -299,7 +267,7 @@ class StoredFile {
             "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
         }
         $gunid = StoredFile::NormalizeGunid($gunid);
-        return StoredFile::recall($gb, '', $gunid, $className);
+        return StoredFile::recall('', $gunid, $className);
     }
 
 
@@ -314,10 +282,8 @@ class StoredFile {
      */
     public static function &CopyOf(&$src, $nid)
     {
-        $ac = StoredFile::insert(
-            $src->gb, $nid, $src->name, $src->_getRealRADFname(),
-            '', '', NULL, BasicStor::GetType($src->gunid)
-        );
+        $ac = StoredFile::insert($nid, $src->name, $src->_getRealRADFname(),
+            '', '', NULL, BasicStor::GetType($src->gunid));
         if (PEAR::isError($ac)) {
             return $ac;
         }
@@ -391,7 +357,7 @@ class StoredFile {
     {
         $realFname = $this->_getRealRADFname();
         $ext = $this->_getExt();
-        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid, 'access', $parent);
+        $res = BasicStor::bsAccess($realFname, $ext, $this->gunid, 'access', $parent);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -411,7 +377,7 @@ class StoredFile {
      */
     public function releaseRawMediaData($token)
     {
-        $res = $this->gb->bsRelease($token);
+        $res = BasicStor::bsRelease($token);
         if (PEAR::isError($res)) {
             return $res;
         }

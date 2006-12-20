@@ -230,7 +230,7 @@ class Backup
         # post procedures
         $this->token = $token;
         $this->setEnviroment();
-        $this->gb->bsRelease($token,ACCESS_TYPE);
+        BasicStor::bsRelease($token, ACCESS_TYPE);
         Backup::rRmDir($this->tmpDir);
         unlink($this->statusFile);
         unlink($this->tmpFile);
@@ -301,7 +301,7 @@ class Backup
             foreach ($this->ids as $i=>$item) {
                 $gunid = $item['gunid'];
                 // get a stored file object of this gunid
-                $sf = StoredFile::recallByGunid($this->gb, $gunid);
+                $sf = StoredFile::recallByGunid($gunid);
                 if (PEAR::isError($sf)) {
                 	return $sf;
                 }
@@ -442,7 +442,7 @@ class Backup
      */
     private function genToken()
     {
-        $acc = $this->gb->bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
+        $acc = BasicStor::bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
         if (PEAR::isError($acc)) {
         	return $acc;
         }

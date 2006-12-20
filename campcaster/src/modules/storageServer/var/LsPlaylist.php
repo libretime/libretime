@@ -471,7 +471,7 @@ class LsPlaylistAudioClip
     public function outputToSmil(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::recallByGunid($pl->gb, $gunid);
+        $ac = StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
         	return $ac;
         }
@@ -491,7 +491,7 @@ class LsPlaylistAudioClip
     public function outputToM3u(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::recallByGunid($pl->gb, $gunid);
+        $ac = StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
         	return $ac;
         }
@@ -510,7 +510,7 @@ class LsPlaylistAudioClip
     public function outputToRss(&$pl, $plac, $ind='')
     {
         $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::recallByGunid($pl->gb, $gunid);
+        $ac = StoredFile::recallByGunid($gunid);
         if (PEAR::isError($ac)) {
         	return $ac;
         }
