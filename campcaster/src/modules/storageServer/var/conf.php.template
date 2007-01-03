@@ -132,6 +132,9 @@ $CC_CONFIG['treeTable'] = $CC_CONFIG['tblNamePrefix'].'tree';
 $CC_CONFIG['structTable'] = $CC_CONFIG['tblNamePrefix'].'struct';
 $CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
 $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
+$CC_CONFIG['playlogTable'] = 'playlog';
+$CC_CONFIG['scheduleTable'] = 'schedule';
+$CC_CONFIG['backupTable'] = 'backup';
 
 $CC_CONFIG['sysSubjs'] = array(
     'root', $CC_CONFIG['AdminsGr'], $CC_CONFIG['AllGr'], $CC_CONFIG['StationPrefsGr']
