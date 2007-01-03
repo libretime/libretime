@@ -24,16 +24,15 @@ class LsPlaylist extends Playlist
      * Create instance of LsPlaylist object and recall existing file
      * by gunid.
      *
-     * @param Greenbox $gb
      * @param string $gunid
      * 		global unique id
      * @param string $className
      * 		optional classname to recall
      * @return LsPlaylist
      */
-    public static function &recallByGunid(&$gb, $gunid, $className='LsPlaylist')
+    public static function &recallByGunid($gunid, $className='LsPlaylist')
     {
-        return parent::recallByGunid($gb, $gunid, $className);
+        return parent::recallByGunid($gunid, $className);
     }
 
 
@@ -41,16 +40,15 @@ class LsPlaylist extends Playlist
      * Create instance of LsPlaylist object and recall existing file
      * by access token.
      *
-     * @param GreenBox $gb
      * @param string $token
      * 		access token
      * @param string $className
      * 		optional classname to recall
      * @return LsPlaylist
      */
-    public static function &recallByToken(&$gb, $token, $className='LsPlaylist')
+    public static function &recallByToken($token, $className='LsPlaylist')
     {
-        return parent::recallByToken($gb, $token, $className);
+        return parent::recallByToken($token, $className);
     }
 
 
@@ -300,10 +298,10 @@ class LsPlaylistElement {
                     if (!is_null($r)) {
                     	$acOrPl = $r;
                     }
-                break;
+                    break;
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
-                    $pl2 = LsPlaylist::recallByGunid($pl->gb, $gunid);
+                    $pl2 = LsPlaylist::recallByGunid($gunid);
                     if (PEAR::isError($pl2)) {
                     	return $pl2;
                     }
@@ -314,8 +312,8 @@ class LsPlaylistElement {
                     if (!is_null($r)) {
                     	$acOrPl = $r;
                     }
-                break;
-                case"fadeInfo":
+                    break;
+                case "fadeInfo":
                     $r = LsPlaylistFadeInfo::outputToSmil($pl, $ac, $ind2);
                     if (PEAR::isError($r)) {
                     	return $r;
@@ -323,7 +321,7 @@ class LsPlaylistElement {
                     if (!is_null($r)) {
                     	$finfo = $r;
                     }
-                break;
+                    break;
                 default:
                     return PEAR::raiseError(
                         "LsPlaylistElement::outputToSmil:".
@@ -376,7 +374,7 @@ class LsPlaylistElement {
                 	break;
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
-                    $pl2 = LsPlaylist::recallByGunid($pl->gb, $gunid);
+                    $pl2 = LsPlaylist::recallByGunid($gunid);
                     if (PEAR::isError($pl2)) {
                     	return $pl2;
                     }
@@ -420,7 +418,7 @@ class LsPlaylistElement {
                 	break;
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
-                    $pl2 = LsPlaylist::recallByGunid($pl->gb, $gunid);
+                    $pl2 = LsPlaylist::recallByGunid($gunid);
                     if (PEAR::isError($pl2)) {
                     	return $pl2;
                     }

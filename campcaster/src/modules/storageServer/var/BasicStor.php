@@ -1122,7 +1122,7 @@ class BasicStor {
         }
         $gunids = array();
         foreach ($plids as $plid) {
-            $pl = Playlist::recallByGunid($this, $plid);
+            $pl = Playlist::recallByGunid($plid);
             if (PEAR::isError($pl)) {
                 return $pl;
             }
@@ -1163,7 +1163,7 @@ class BasicStor {
                 switch ($it['type']) {
 	                case "playlist":
 	                    require_once("LsPlaylist.php");
-	                    $ac = $r = LsPlaylist::recallByGunid($this, $it['gunid']);
+	                    $ac = $r = LsPlaylist::recallByGunid($it['gunid']);
 	                    switch ($type) {
 	                        case "smil":
 	                            $string = $r = $ac->outputToSmil();

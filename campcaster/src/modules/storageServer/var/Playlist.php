@@ -21,8 +21,6 @@ class Playlist extends StoredFile {
      * Create instance of Playlist object and recall existing file
      * by gunid.<br/>
      *
-     * @param GreenBox $gb
-     * 		reference to GreenBox object
      * @param string $gunid
      * 		global unique id
      * @param string $className
@@ -30,9 +28,9 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    public static function &recallByGunid(&$gb, $gunid, $className='Playlist')
+    public static function &recallByGunid($gunid, $className='Playlist')
     {
-        return parent::recallByGunid($gb, $gunid, $className);
+        return parent::recallByGunid($gunid, $className);
     }
 
 
@@ -40,8 +38,6 @@ class Playlist extends StoredFile {
      * Create instance of Playlist object and recall existing file
      * by access token.<br/>
      *
-     * @param GreenBox $gb
-     * 		reference to GreenBox object
      * @param string $token
      * 		access token
      * @param string $className
@@ -49,9 +45,9 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    public static function &recallByToken(&$gb, $token, $className='Playlist')
+    public static function &recallByToken($token, $className='Playlist')
     {
-        return parent::recallByToken($gb, $token, $className);
+        return parent::recallByToken($token, $className);
     }
 
 
@@ -940,16 +936,16 @@ class Playlist extends StoredFile {
         // cycle over playlistElements inside playlist:
         foreach ($arr['children'] as $i => $plEl) {
             switch ($plEl['elementname']) {
-            case"playlistElement":  // process playlistElement
-                $plElObj = new PlaylistElement($this, $plEl);
-                $plInfo = $plElObj->analyze();
-                $plArr['els'][] = $plInfo;
-                break;
-            default:
+                case "playlistElement":  // process playlistElement
+                    $plElObj = new PlaylistElement($this, $plEl);
+                    $plInfo = $plElObj->analyze();
+                    $plArr['els'][] = $plInfo;
+                    break;
+                default:
             }
         }
-        $res  = array('gunid'=>NULL, 'elapsed'=>NULL,
-            'remaining'=>NULL, 'duration'=>NULL);
+        $res = array('gunid'=>NULL, 'elapsed'=>NULL,
+                     'remaining'=>NULL, 'duration'=>NULL);
         $dd = 0;
         $found = FALSE;
         foreach ($plArr['els'] as $el) {
@@ -960,7 +956,7 @@ class Playlist extends StoredFile {
             if ($found) {               // we've found offset
                 switch ($el['type']) {
                 case "playlist":
-                    $pl = Playlist::recallByGunid($this->gb, $acGunid);
+                    $pl = Playlist::recallByGunid($acGunid);
                     if (PEAR::isError($pl)) {
                     	return $pl;
                     }
@@ -1037,7 +1033,7 @@ class Playlist extends StoredFile {
             extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
             switch ($el['type']) {
             case "playlist":
-                $pl = Playlist::recallByGunid($this->gb, $acGunid);
+                $pl = Playlist::recallByGunid($acGunid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
@@ -1109,7 +1105,7 @@ class Playlist extends StoredFile {
         if ($this->gunid == $insGunid) {
         	return TRUE;
         }
-        $pl = Playlist::recallByGunid($this->gb, $insGunid);
+        $pl = Playlist::recallByGunid($insGunid);
         if (PEAR::isError($pl)) {
         	return $pl;
         }

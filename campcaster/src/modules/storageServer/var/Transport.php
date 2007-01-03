@@ -325,7 +325,7 @@ class Transport
             case "playlist":
                 $plid = $gunid;
                 require_once("Playlist.php");
-                $pl = Playlist::recallByGunid($this->gb, $plid);
+                $pl = Playlist::recallByGunid($plid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }

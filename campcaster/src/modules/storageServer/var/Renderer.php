@@ -37,7 +37,7 @@ class Renderer
     {
         global $CC_CONFIG;
         // recall playlist:
-        $pl = LsPlaylist::recallByGunid($gb, $plid);
+        $pl = LsPlaylist::recallByGunid($plid);
         if (PEAR::isError($pl)) {
         	return $pl;
         }
