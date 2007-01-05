@@ -52,6 +52,7 @@ SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
 
 prefix = @prefix@
+PACKAGE_VERSION = @PACKAGE_VERSION@
 
 USR_DIR     = ${prefix}
 USR_BIN_DIR = ${USR_DIR}/bin
@@ -238,7 +239,8 @@ ${TMP_DIR}/doxytag_setup.stamp:
 
 modules_setup: ${TMP_DIR}/modules_setup.stamp
 ${TMP_DIR}/modules_setup.stamp:
-	cd ${ALIB_DIR} && ./configure --prefix=${prefix}
+	cd ${ALIB_DIR} && ./configure --prefix=${prefix} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${ARCHIVE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-hostname=${HOSTNAME} \
@@ -246,16 +248,20 @@ ${TMP_DIR}/modules_setup.stamp:
 					--with-database-server=${DB_SERVER} \
 					--with-database=${DATABASE} \
 					--with-database-user=${DB_USER} \
-					--with-database-password=${DB_PASSWORD}
-	cd ${GETID3_DIR} && ./configure --prefix=${prefix}
+					--with-database-password=${DB_PASSWORD} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
+	cd ${GETID3_DIR} && ./configure --prefix=${prefix} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${HTML_UI_DIR} && ./configure --prefix=${prefix} \
             --with-apache-group=${APACHE_GROUP} \
             --with-www-docroot=${WWW_DOCROOT} \
             --with-configure-apache=${CONFIGURE_APACHE} \
-            --with-storage-server=${prefix}/var/Campcaster/storageServer
+            --with-storage-server=${prefix}/var/Campcaster/storageServer \
+            PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix} \
             --with-storage-server=${prefix}/var/Campcaster/storageServer \
-            --with-phppart-dir=${prefix}/var/Campcaster/storageAdmin
+            --with-phppart-dir=${prefix}/var/Campcaster/storageAdmin \
+            PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${STORAGE_SERVER_DIR} && \
         ./configure --prefix=${prefix} \
                     --with-apache-group=${APACHE_GROUP} \
@@ -267,25 +273,35 @@ ${TMP_DIR}/modules_setup.stamp:
                     --with-database=${DATABASE} \
                     --with-database-user=${DB_USER} \
                     --with-database-password=${DB_PASSWORD} \
-                    --with-init-database=${INIT_LS_DATABASE}
+                    --with-init-database=${INIT_LS_DATABASE} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${CORE_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${AUTHENTICATION_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${DB_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${STORAGE_CLIENT_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${GSTREAMER_ELEMENTS_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${PLAYLIST_EXECUTOR_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${EVENT_SCHEDULER_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${SCHEDULER_CLIENT_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${WIDGETS_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG}
+	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	touch ${TMP_DIR}/modules_setup.stamp
 
 products_setup: ${TMP_DIR}/products_setup.stamp
@@ -302,7 +318,8 @@ ${TMP_DIR}/products_setup.stamp:
 					--with-database-password=${DB_PASSWORD} \
 					--with-audio-out=${STATION_AUDIO_OUT} \
 					--with-create-odbc-data-source=${CREATE_ODBC_DATA_SOURCE} \
-					--with-init-database=${INIT_LS_DATABASE}
+					--with-init-database=${INIT_LS_DATABASE} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${GLIVESUPPORT_DIR} && \
 		./configure --prefix=${prefix} \
 		            --enable-debug=${DEBUG} \
@@ -314,7 +331,8 @@ ${TMP_DIR}/products_setup.stamp:
 					--with-database-user=${DB_USER} \
 					--with-database-password=${DB_PASSWORD} \
 					--with-audio-out=${STUDIO_AUDIO_OUT} \
-					--with-audio-cue=${STUDIO_AUDIO_CUE}
+					--with-audio-cue=${STUDIO_AUDIO_CUE} \
+                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	touch ${TMP_DIR}/products_setup.stamp
 
 distclean: clean tools_distclean modprod_distclean

@@ -32,7 +32,7 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(StorageClient, 1.1.1, bugs@campware.org)
+AC_INIT(StorageClient, 0.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
