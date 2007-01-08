@@ -75,6 +75,8 @@ from <code>Makefile</code> with <code>boost_version</code> from <code>bin/dist.s
 Make sure to check the versions for all the tools mentioned in these
 files. Also check that there are no tools missing from the distribution
 script that are mentioned in the master <code>Makefile</code>.<br>
+
+
 <h1>Updating release version and changelog</h1>
 Updating the release version and maintining a changelog helps people
 track the progress of the project. Also, building binary packages rely
@@ -82,8 +84,14 @@ on this information, in particular debian packages won't build if there
 is a mismatch between the release version and the topmost entry in the
 debian changelog file.<br>
 <br>
-Curently, only the debian changelog keeps track of the changes and the
-version of Campcaster. To update the changelog, edit <code>etc/debian/changelog</code>,
+You need to update the version information in the following files:
+<ul>
+    <li><code>etc/debian/changelog</code></li>
+    <li><code>etc/configure.ac</code></li>
+    <li><code>etc/doxygen.config</code></li>
+    <li><code>etc/xmlrpc-doxygen.config</code></li>
+</ul>
+To update the changelog, edit <code>etc/debian/changelog</code>,
 by inserting a section onto the top of the file:<br>
 <br>
 <pre>campcaster (&lt;version&gt;-1) unstable; urgency=low<br><br>  * Changes listed here<br><br> -- <code>Package Maintainer &lt;maintainer@foo.bar&gt;</code>  &lt;timestamp&gt;<br><br></pre>
