@@ -96,11 +96,13 @@ class StoredFile {
      * 		internal file type
      *  @param string $className
      * 		class to be constructed
+     *  @param boolean $copyMedia
+     * 		copy the media file if true, make symlink if false
      *  @return StoredFile
      */
     public static function &insert($oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
-        $gunid=NULL, $ftype=NULL, $className='StoredFile')
+        $gunid=NULL, $ftype=NULL, $className='StoredFile', $copyMedia=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
         $ac = new $className(($gunid ? $gunid : NULL));
@@ -150,7 +152,7 @@ class StoredFile {
                 return PEAR::raiseError("StoredFile::insert: ".
                     "media file not found ($mediaFileLP)");
             }
-            $res = $ac->rmd->insert($mediaFileLP);
+            $res = $ac->rmd->insert($mediaFileLP, $copyMedia);
             if (PEAR::isError($res)) {
                 $CC_DBC->query("ROLLBACK");
                 return $res;

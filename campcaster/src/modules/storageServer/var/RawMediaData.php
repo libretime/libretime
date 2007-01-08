@@ -254,10 +254,12 @@ class RawMediaData {
      *
      * @param string $mediaFileLP
      * 		local path
+     * @param boolean $copyMedia
+     * 		copy the media file if true, make symlink if false
      * @return mixed
      * 		true or PEAR::error
      */
-    function insert($mediaFileLP)
+    function insert($mediaFileLP, $copyMedia=TRUE)
     {
         if ($this->exists) {
         	return FALSE;
@@ -268,7 +270,12 @@ class RawMediaData {
             return TRUE;
         }
         umask(0002);
-        if (@copy($mediaFileLP, $this->fname)) {
+        if ($copyMedia) {
+            $r = @copy($mediaFileLP, $this->fname);
+        } else {
+            $r = @symlink($mediaFileLP, $this->fname);
+        }
+        if ( $r ) {
             $this->exists = TRUE;
             return TRUE;
         } else {

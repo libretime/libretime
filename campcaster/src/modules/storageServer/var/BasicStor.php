@@ -80,11 +80,13 @@ class BasicStor {
      * 		Internal file type
      * @param string $mdataLoc
      * 		'file'|'string'
+     * @param boolean $copyMedia
+     * 		copy the media file if true, make symlink if false
      * @return int
      * @exception PEAR_Error
      */
     public function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
-        $gunid=NULL, $ftype='unknown', $mdataLoc='file')
+        $gunid=NULL, $ftype='unknown', $mdataLoc='file', $copyMedia=TRUE)
     {
         $ftype = strtolower($ftype);
         $id = BasicStor::AddObj($fileName, $ftype, $parid);
@@ -92,7 +94,7 @@ class BasicStor {
             return $id;
         }
         $ac = StoredFile::insert($id, $fileName,
-            $mediaFileLP, $mdataFileLP, $mdataLoc, $gunid, $ftype);
+            $mediaFileLP, $mdataFileLP, $mdataLoc, $gunid, $ftype, 'StoredFile', $copyMedia);
         if (PEAR::isError($ac)) {
             $res = BasicStor::RemoveObj($id);
             // catch constraint violations

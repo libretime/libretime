@@ -96,7 +96,7 @@ while ($filename = fgets($stdin, 2048)) {
     unset($mdata['playtime_seconds']);
 
     if (!$testonly) {
-        $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
+        $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip', 'file', FALSE);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsPutFile()");
         	echo var_export($mdata)."\n";
