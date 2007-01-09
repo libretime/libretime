@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Campcaster repository CD creation process documentation</title>
+  <meta content="$Author$" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://campcaster.campware.org/">Campcaster</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author$</li>
+  <li>Version: $Revision$</li>
+  <li>Location: $URL$</li>
+</ul>
+
+
+<h1>Scope</h1>
+This document describes the process of creating a repository CD containing
+the Campcaster deb packages.
+
+
+<h1>Introduction</h1>
+A repository CD is a CD which contains the Campcaster deb packages, plus
+all the other deb packages which Campcaster depends on.  Such a CD can be
+used to install Campcaster on computers with limited or no internet 
+connectivity.
+
+The repository CD creation process consists of the following steps:<br>
+<ul>
+  <li>collect the necessary deb packages</li>
+  <li>create the package listing</li>
+  <li>create the iso image</li>
+  <li>test the iso image</li>
+</ul>
+
+
+<h1>Collect the necessary deb packages</h1>
+Start with a fresh Ubuntu system installed from the install CD, with no additional packages.  Add the universe repository and the campware.org 
+repository
+<pre>deb http://code.campware.org/ubuntu dapper main</pre>
+to <code>/etc/apt/sources.list</code>.
+
+Type
+<pre>sudo apt-get clean</pre>
+to clean the package cache, and install Campcaster normally.  Install any 
+other deb packages you want to be on the repository CD.  Now copy the
+packages into your home directory:
+<pre>cd
+mkdir repository
+cd repository
+mkdir dist
+cp /var/cache/apt/archive/*.deb dist/</pre>
+
+
+<h1>Create the package listing</h1>
+Type
+<pre>cd ~/repository
+apt-ftparchive packages dist > Packages
+gzip --best Packages</pre>
+this will create a <code>Packages.gz</code> file containing the list of
+packages.
+
+
+<h1>Create the iso image</h1>
+Type
+<pre>cd ~/repository
+mkisofs -J -r -pad -v -V "Campcaster repository CD" \
+        -o ../Campcaster-repository.iso .</pre>
+Note the space and dot at the end of the command.  The volume label
+(<code>-V</code>) can be up to 32 characters long.
+
+<p>
+It's OK to add more files to the CD; <code>apt-cdrom</code> (or, equivalently,
+Synaptic's "Add CD-ROM" button) is smart enough to find the repository among
+all the other stuff.
+
+
+<h1>Test the iso image</h1>
+Burn the iso file to a CD:
+<pre>cdrecord -scanbus
+cdrecord -v dev=ATA:1,0,0 ~/Campcaster-repository.iso</pre>
+(change <code>1,0,0</code> to whatever scanbus told you, of course).  Then try adding 
+the CD as a repository with 
+<pre>apt-cdrom add</pre>
+
+<p>
+You can also use Nautilus and Synaptic instead of mkisofs, cdrecord
+and apt-cdrom.
+
+<p>
+TODO: it's probably possible to mount and check the iso without burning it
+to a CD first.
+<br><br>
+
+</body>
+</html>
