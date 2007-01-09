@@ -25,6 +25,7 @@ echo "* ArchiveServer Uninstall *\n";
 echo "***************************\n";
 
 require_once('../conf.php');
+require_once('../../../storageServer/var/install/installInit.php');
 require_once('../../../storageServer/var/install/uninstallMain.php');
 
 echo "************************************\n";
