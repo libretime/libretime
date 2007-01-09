@@ -11,19 +11,25 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
     echo " * Creating database table ".$CC_CONFIG['prefTable']."...";
     $CC_DBC->createSequence($CC_CONFIG['prefTable']."_id_seq");
-    $CC_DBC->query("CREATE TABLE ".$CC_CONFIG['prefTable']." (
+    $sql = "CREATE TABLE ".$CC_CONFIG['prefTable']." (
         id int not null,
         subjid int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
         keystr varchar(255),
         valstr text
-    )");
-    $CC_DBC->query("CREATE UNIQUE INDEX ".$CC_CONFIG['prefTable']."_id_idx
-        ON ".$CC_CONFIG['prefTable']." (id)");
-    $CC_DBC->query("CREATE UNIQUE INDEX ".$CC_CONFIG['prefTable']."_subj_key_idx
-        ON ".$CC_CONFIG['prefTable']." (subjid, keystr)");
-    $CC_DBC->query("CREATE INDEX ".$CC_CONFIG['prefTable']."_subjid_idx
-        ON ".$CC_CONFIG['prefTable']." (subjid)");
-    echo "done.\n";
+    )";
+    camp_install_query($sql, false);
+
+    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['prefTable']."_id_idx
+        ON ".$CC_CONFIG['prefTable']." (id)";
+    camp_install_query($sql, false);
+
+    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['prefTable']."_subj_key_idx
+        ON ".$CC_CONFIG['prefTable']." (subjid, keystr)";
+    camp_install_query($sql, false);
+
+    $sql = "CREATE INDEX ".$CC_CONFIG['prefTable']."_subjid_idx
+        ON ".$CC_CONFIG['prefTable']." (subjid)";
+    camp_install_query($sql);
 
     echo " * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
     $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);

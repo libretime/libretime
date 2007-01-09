@@ -1,6 +1,5 @@
 <?php
 /**
- * @author Tomas Hlava <th@red2head.com>
  * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision: 2458 $
  * @package Campcaster
@@ -22,7 +21,9 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 
 if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
     echo " * Removing database table ".$CC_CONFIG['prefTable']."...";
-    $CC_DBC->query("DROP TABLE ".$CC_CONFIG['prefTable']);
+    $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
+    camp_install_query($sql, false);
+
     $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id_seq");
     echo "done.\n";
 } else {
@@ -30,7 +31,7 @@ if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
 }
 
 
-echo " * Removing all media files in ".$CC_CONFIG['storageDir']."...";
+echo " * Removing all media files in ".$CC_CONFIG['storageDir']."...\n";
 $d = @dir($CC_CONFIG['storageDir']);
 while (is_object($d) && (false !== ($entry = $d->read()))){
     if (filetype($CC_CONFIG['storageDir']."/$entry") == 'dir') {

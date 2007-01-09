@@ -1,6 +1,5 @@
 <?php
 /**
- * @author Tomas Hlava <th@red2head.com>
  * @author Paul Baranowski <paul@paulbaranowski.org>
  * @version $Revision$
  * @package Campcaster
@@ -25,8 +24,9 @@ echo "* StorageServer Uninstall *\n";
 echo "***************************\n";
 
 require_once('../conf.php');
-require_once('uninstallMain.php');
+require_once('installInit.php');
 require_once('uninstallStorage.php');
+require_once('uninstallMain.php');
 
 echo "************************************\n";
 echo "* StorageServer Uninstall Complete *\n";
