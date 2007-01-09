@@ -473,7 +473,7 @@ class LsPlaylistAudioClip
         if (PEAR::isError($ac)) {
         	return $ac;
         }
-        $RADext = $ac->_getExt();
+        $RADext = $ac->getFileExtension();
         if (PEAR::isError($RADext)) {
         	return $RADext;
         }
@@ -493,7 +493,7 @@ class LsPlaylistAudioClip
         if (PEAR::isError($ac)) {
         	return $ac;
         }
-        $RADext = $ac->_getExt();
+        $RADext = $ac->getFileExtension();
         if (PEAR::isError($RADext)) {
         	return $RADext;
         }
@@ -512,7 +512,7 @@ class LsPlaylistAudioClip
         if (PEAR::isError($ac)) {
         	return $ac;
         }
-        $RADext = $ac->_getExt();
+        $RADext = $ac->getFileExtension();
         if (PEAR::isError($RADext)) {
         	return $RADext;
         }

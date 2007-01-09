@@ -313,16 +313,16 @@ class Backup
                 // if the file is a playlist then it have only meta file
                 if (strtolower($sf->md->format)!='playlist') {
                     $this->filenames[] = array(
-                        'filename'  => $sf->_getRealRADFname(), // get real filename of raw media data
+                        'filename'  => $sf->getRealFileName(),
                         'format'    => $sf->md->format
                     );
                 }
                 $this->filenames[] = array(
-                    'filename'  => $sf->_getRealMDFname(), # get real filename of metadata file
+                    'filename'  => $sf->getRealMetadataFileName(),
                     'format'    => $sf->md->format
                 );
                 if ($this->loglevel=='debug') {
-                    $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames - add file: {$sf->md->format}|".$sf->_getRealMDFname()."\n");
+                    $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames - add file: {$sf->md->format}|".$sf->getRealMetadataFileName()."\n");
                 }
             }
             return $this->filenames;

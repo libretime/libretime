@@ -252,6 +252,8 @@ class XR_LocStor extends LocStor {
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
      *      <li> 805  -  xr_storeAudioClipOpen:
      *                      &lt;message from lower layer&gt; </li>
+     *      <li> 888  -  If the file being uploaded is a duplicate of
+     *          a file already in the system.</li>
      * </ul>
      *
      * @param XML_RPC_Message $input
@@ -264,11 +266,14 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
             return $r;
         }
-        $res = $this->storeAudioClipOpen(
-            $r['sessid'], $r['gunid'], $r['metadata'], $r['fname'], $r['chsum']
-        );
+        $res = $this->storeAudioClipOpen($r['sessid'], $r['gunid'],
+            $r['metadata'], $r['fname'], $r['chsum']);
         if (PEAR::isError($res)) {
-            return new XML_RPC_Response(0, 805,
+            $code = 805;
+            if ($res->getCode() == 888) {
+                $code = 888;
+            }
+            return new XML_RPC_Response(0, $code,
                 "xr_storeAudioClipOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -3221,7 +3226,7 @@ class XR_LocStor extends LocStor {
         }
         require_once('../Transport.php');
         $tr = new Transport($this);
-        $uid = Alib::GetSessUserId($par['sessid']); 
+        $uid = Alib::GetSessUserId($par['sessid']);
         $res = $tr->downloadFromHub($uid, $par['gunid']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());

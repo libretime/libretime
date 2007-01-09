@@ -72,9 +72,9 @@ $methods = array(
     'logout'                  => 'Logout from storage.',
     'existsAudioClip'         => 'Checks if an Audio clip with the specified '.
                                   'id is stored in local storage.',
-    'storeAudioClipOpen'      => 'Open channel for store a new audio clip '.
+    'storeAudioClipOpen'      => 'Open channel to store a new audio clip '.
                                     'or replace an existing one.',
-    'storeAudioClipClose'     => 'Close channel for store a new audio clip'.
+    'storeAudioClipClose'     => 'Close channel to store a new audio clip'.
                                     ' or replace an existing one.',
     'downloadRawAudioDataOpen'=> 'Create and return downloadable URL'.
                                     'for audio file',

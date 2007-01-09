@@ -29,8 +29,6 @@ class MetaData {
 	public $exists;
 
     /**
-     * @param Greenbox $gb
-     * 		A reference to GreenBox object
      * @param string $gunid
      * 		global unique id
      * @param string $resDir
@@ -40,7 +38,7 @@ class MetaData {
     {
         $this->gunid = $gunid;
         $this->resDir = $resDir;
-        $this->fname = $this->makeFname();
+        $this->fname = $this->makeFileName();
         $this->exists = null;
     }
 
@@ -554,7 +552,7 @@ class MetaData {
      *
      * @return string
      */
-    private function makeFname()
+    private function makeFileName()
     {
         return "{$this->resDir}/{$this->gunid}.xml";
     }
@@ -565,7 +563,7 @@ class MetaData {
      *
      * @return string
      */
-    public function getFname()
+    public function getFileName()
     {
         return $this->fname;
     }

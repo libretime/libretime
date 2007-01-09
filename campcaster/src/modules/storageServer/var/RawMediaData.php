@@ -17,7 +17,6 @@
  */
 function camp_add_metadata(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859-1')
 {
-    #echo "$key($iEnc): $val\n";
     if (!is_null($p_val)) {
         $data = $p_val;
         $outputEncoding = 'UTF-8';
@@ -69,7 +68,6 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
     if (isset($infoFromFile['error'])) {
     	return new PEAR_Error(array_pop($infoFromFile['error']));
     }
-    #if(!$infoFromFile['fileformat']){ echo "???\n"; continue; }
     if (!$infoFromFile['bitrate']) {
     	return new PEAR_Error("File given is not an audio file.");
     }
@@ -239,13 +237,10 @@ class RawMediaData {
      */
     public function __construct($gunid, $resDir)
     {
-        $this->gunid  = $gunid;
+        $this->gunid = $gunid;
         $this->resDir = $resDir;
-        $this->fname  = $this->makeFname();
-        $this->exists =
-            is_file($this->fname) &&
-            is_readable($this->fname)
-        ;
+        $this->fname = $this->makeFileName();
+        $this->exists = is_file($this->fname) && is_readable($this->fname);
     }
 
 
@@ -256,8 +251,7 @@ class RawMediaData {
      * 		local path
      * @param boolean $copyMedia
      * 		copy the media file if true, make symlink if false
-     * @return mixed
-     * 		true or PEAR::error
+     * @return TRUE|PEAR_Error
      */
     function insert($mediaFileLP, $copyMedia=TRUE)
     {
@@ -292,9 +286,9 @@ class RawMediaData {
     /**
      * Delete and insert media file
      *
-     * @param string $mediaFileLP, local path
-     * @return mixed
-     * 		true or PEAR::error
+     * @param string $mediaFileLP
+     *      local path
+     * @return TRUE|PEAR_Error
      */
     function replace($mediaFileLP)
     {
@@ -326,7 +320,7 @@ class RawMediaData {
      *
      * @return string
      */
-    function getFname()
+    function getFileName()
     {
         return $this->fname;
     }
@@ -335,8 +329,7 @@ class RawMediaData {
     /**
      * Delete media file from filesystem
      *
-     * @return mixed
-     * 		boolean or PEAR::error
+     * @return boolean|PEAR_Error
      */
     function delete()
     {
@@ -399,7 +392,7 @@ class RawMediaData {
      *
      * @return string
      */
-    function makeFname()
+    function makeFileName()
     {
         return "{$this->resDir}/{$this->gunid}";
     }

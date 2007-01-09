@@ -292,7 +292,7 @@ class Transport
                 	return $ac;
                 }
                 // handle metadata:
-                $mdfpath = $ac->_getRealMDFname();
+                $mdfpath = $ac->getRealMetadataFileName();
                 if (PEAR::isError($mdfpath)) {
                 	return $mdfpath;
                 }
@@ -303,11 +303,11 @@ class Transport
                 	return $mdtrec;
                 }
                 // handle raw media file:
-                $fpath = $ac->_getRealRADFname();
+                $fpath = $ac->getRealFileName();
                 if (PEAR::isError($fpath)) {
                 	return $fpath;
                 }
-                $fname = $ac->_getFileName();
+                $fname = $ac->getFileName();
                 if (PEAR::isError($fname)) {
                 	return $fname;
                 }
@@ -329,7 +329,7 @@ class Transport
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
-                $fname = $pl->_getFileName();
+                $fname = $pl->getFileName();
                 if (PEAR::isError($fname)) {
                 	return $fname;
                 }
@@ -352,7 +352,7 @@ class Transport
                     $fname = $fname.".lspl";
                     $trtype = 'playlistPkg';
                 } else {
-                    $plfpath = $pl->_getRealMDFname();
+                    $plfpath = $pl->getRealMetadataFileName();
                     if (PEAR::isError($plfpath)) {
                     	return $plfpath;
                     }

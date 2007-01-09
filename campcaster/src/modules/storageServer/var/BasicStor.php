@@ -239,7 +239,7 @@ class BasicStor {
         }
         if (!empty($mdataFileLP) &&
                 ($mdataLoc!='file' || file_exists($mdataFileLP))) {
-            $r = $ac->replaceMetaData($mdataFileLP, $mdataLoc);
+            $r = $ac->replaceMetadata($mdataFileLP, $mdataLoc);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -521,14 +521,14 @@ class BasicStor {
         $gunid = $ac->gunid;
         switch ($part) {
             case "media":
-                $realfile = $ac->_getRealRADFname();
-                $ext = $ac->_getExt();
-                $filename = $ac->_getFileName();
+                $realfile = $ac->getRealFileName();
+                $ext = $ac->getFileExtension();
+                $filename = $ac->getFileName();
                 break;
             case "metadata":
-                $realfile = $ac->_getRealMDFname();
+                $realfile = $ac->getRealMetadataFileName();
                 $ext = "xml";
-                $filename = $ac->_getFileName();
+                $filename = $ac->getFileName();
                 break;
             default:
                 return PEAR::raiseError(
@@ -599,9 +599,8 @@ class BasicStor {
         }
         $escapedChsum = pg_escape_string($chsum);
         $token = StoredFile::CreateGunid();
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['accessTable']." WHERE token=x'$token'::bigint
-        ");
+        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
+            ." WHERE token=x'$token'::bigint");
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -612,8 +611,7 @@ class BasicStor {
                 (gunid, token, ext, chsum, type, owner, ts)
             VALUES
                 ($gunidSql, x'$token'::bigint,
-                    '', '$escapedChsum', 'put', $ownerSql, now())
-        ");
+                    '', '$escapedChsum', 'put', $ownerSql, now())");
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -639,39 +637,52 @@ class BasicStor {
     {
         global $CC_CONFIG, $CC_DBC;
         $token = StoredFile::NormalizeGunid($token);
+
         if (!BasicStor::bsCheckToken($token, 'put')) {
             return PEAR::raiseError(
-             "BasicStor::bsClosePut: invalid token ($token)",
-             GBERR_TOKEN
-            );
+                "BasicStor::bsClosePut: invalid token ($token)",
+                GBERR_TOKEN);
         }
-        $row = $CC_DBC->getRow("
-            SELECT chsum, owner FROM ".$CC_CONFIG['accessTable']."
-            WHERE token=x'{$token}'::bigint
-        ");
+        $row = $CC_DBC->getRow(
+            "SELECT chsum, owner FROM ".$CC_CONFIG['accessTable']
+            ." WHERE token=x'{$token}'::bigint");
         if (PEAR::isError($row)) {
             return $row;
         }
-        $chsum = $row['chsum'];
-        $owner = $row['owner'];
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['accessTable']." WHERE token=x'$token'::bigint
-        ");
-        if (PEAR::isError($res)) {
-            return $res;
-        }
         $fname = $CC_CONFIG['accessDir']."/$token";
         $md5sum = md5_file($fname);
-        if (trim($chsum) !='' && $chsum != $md5sum) {
+
+        $chsum = $row['chsum'];
+        $owner = $row['owner'];
+        $error = null;
+        if ( (trim($chsum) != '') && ($chsum != $md5sum) ) {
+            // Delete the file if the checksums do not match.
             if (file_exists($fname)) {
                 @unlink($fname);
             }
-            return PEAR::raiseError(
+            $error = new PEAR_Error(
                  "BasicStor::bsClosePut: md5sum does not match (token=$token)".
                  " [$chsum/$md5sum]",
-                 GBERR_PUT
-                );
+                 GBERR_PUT);
+        } else {
+            // Remember the MD5 sum
+            $storedFile = StoredFile::recallByToken($token);
+            if (!PEAR::isError($storedFile)) {
+                $storedFile->setMd5($md5sum);
+            } else {
+                $error = $storedFile;
+            }
         }
+
+        // Delete entry from access table.
+        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
+            ." WHERE token=x'$token'::bigint");
+        if (PEAR::isError($error)) {
+            return $error;
+        } elseif (PEAR::isError($res)) {
+            return $res;
+        }
+
         return array('fname'=>$fname, 'owner'=>$owner);
     }
 
@@ -793,7 +804,7 @@ class BasicStor {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        return $ac->replaceMetaData($mdata, $mdataLoc);
+        return $ac->replaceMetadata($mdata, $mdataLoc);
     }
 
 
@@ -1157,7 +1168,7 @@ class BasicStor {
             if (PEAR::isError($ac)) {
                 return $ac;
             }
-            $MDfname = $ac->md->getFname();
+            $MDfname = $ac->md->getFileName();
             if (PEAR::isError($MDfname)) {
                 return $MDfname;
             }
@@ -1188,11 +1199,11 @@ class BasicStor {
 	                    copy($MDfname, "$tmpdc/{$it['gunid']}.xml"); break;
                 } // switch
             } // if file_exists()
-            $RADfname = $ac->_getRealRADFname();
+            $RADfname = $ac->getRealFileName();
             if (PEAR::isError($RADfname)) {
                 return $RADfname;
             }
-            $RADext = $ac->_getExt();
+            $RADext = $ac->getFileExtension();
             if (PEAR::isError($RADext)) {
                 return $RADext;
             }
@@ -1278,9 +1289,7 @@ class BasicStor {
             case "xml":
             case "lspl":
                 $fname = $plid;
-                $res = $this->bsPutFile($parid, $fname,
-                    NULL, $path, $plid, 'playlist'
-                );
+                $res = $this->bsPutFile($parid, $fname, NULL, $path, $plid, 'playlist');
                 break;
             case "smil":
                 require_once("SmilPlaylist.php");
@@ -1375,8 +1384,7 @@ class BasicStor {
             }
             if (!PEAR::isError($res) ) {
                 $res = $this->bsPutFile($parid, $gunid, $rawMedia, $metadata,
-                    $gunid, 'audioclip'
-                );
+                    $gunid, 'audioclip');
             }
             @unlink("$tmpdc/{$it['rawMedia']}");
             @unlink("$tmpdc/{$it['metadata']}");
@@ -1431,7 +1439,7 @@ class BasicStor {
         if (PEAR::isError($listArr)) {
             return $listArr;
         }
-        foreach ($listArr as $i=>$v) {
+        foreach ($listArr as $i => $v) {
             if ($v['type'] == 'Folder') {
                 break;
             }
@@ -1449,8 +1457,8 @@ class BasicStor {
             }
             $listArr[$i]['gunid'] = $gunid;
 
-            // THE BUG IS HERE - "_getState()" IS NOT A STATIC FUNCTION!
-            if (StoredFile::_getState($gunid) == 'incomplete') {
+            // THE BUG IS HERE - "getState()" IS NOT A STATIC FUNCTION!
+            if (StoredFile::getState($gunid) == 'incomplete') {
                 unset($listArr[$i]);
             }
         }
@@ -1708,15 +1716,11 @@ class BasicStor {
      * @param string $pass
      * @return boolean|sessionId|PEAR_Error
      */
-//    function login($login, $pass)
-//    {
-//        $r = $this->upgradeDbStructure();
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = parent::login($login, $pass);
-//        return $r;
-//    }
+    function login($login, $pass)
+    {
+        $r = Alib::Login($login, $pass);
+        return $r;
+    }
 
 
     /* ================================================== "protected" methods */
@@ -1932,7 +1936,7 @@ class BasicStor {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $state = $ac->_getState();
+        $state = $ac->getState();
         if ($p_val) {
             $r = $ac->setState('edited', $p_subjid);
         } else {
@@ -2135,53 +2139,6 @@ class BasicStor {
     }
 
 
-    /**
-     * Check and optionally upgrade LS db structure.
-     *  (add column suported only now)
-     *
-     * items in array with db changes:
-     *  <ul>
-     *      <li>tbl - table name</li>
-     *      <li>fld - field name</li>
-     *      <li>type - type of field</li>
-     *  </ul>
-     *
-     * @return TRUE/error
-     */
-//    function upgradeDbStructure()
-//    {
-//        $chDb = array(
-//            '1.1 Leon' => array(
-//                array('tbl'=>$this->accessTable, 'fld'=>'owner',
-//                    'type'=>"int REFERENCES {$this->subjTable}"
-//                ),
-//            ),
-//            '1.1 Freetown' => array(
-//                array('tbl'=>$this->filesTable, 'fld'=>'mtime',
-//                    'type'=>'timestamp(6) with time zone'
-//                ),
-//            ),
-//        );
-//        foreach ($chDb as $version => $chArr) {
-//            foreach ($chArr as $change) {
-//                extract($change);   // tbl, op, fld, type
-//                $r = $CC_DBC->tableInfo($tbl, DB_TABLEINFO_ORDERTABLE);
-//                if (PEAR::isError($r)) {
-//                    return $r;
-//                }
-//                if (!isset($r['ordertable'][$tbl][$fld])) {
-//                    $q = "ALTER table $tbl ADD $fld $type";
-//                    $r = $CC_DBC->query($q);
-//                    if (PEAR::isError($r)) {
-//                    	return $r;
-//                    }
-//                }
-//            }
-//        }
-//        return TRUE;
-//    }
-
-
     /* =============================================== test and debug methods */
     /**
      * Reset storageServer for debugging.
@@ -2244,10 +2201,7 @@ class BasicStor {
                     $fname = basename($xml);
                     break;
             }
-            $r = $this->bsPutFile(
-                $rootHD, $fname,
-                $media, $xml, $gunid, $type
-            );
+            $r = $this->bsPutFile($rootHD, $fname, $media, $xml, $gunid, $type);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -2561,164 +2515,6 @@ class BasicStor {
             }
         }
     }
-
-
-    /**
-     * install - create tables
-     *
-     * file states:
-     *  <ul>
-     *      <li>empty</li>
-     *      <li>incomplete</li>
-     *      <li>ready</li>
-     *      <li>edited</li>
-     *      <li>deleted</li>
-     *  </ul>
-     * file types:
-     *  <ul>
-     *      <li>audioclip</li>
-     *      <li>playlist</li>
-     *      <li>webstream</li>
-     *  </ul>
-     * access types:
-     *  <ul>
-     *      <li>access</li>
-     *      <li>download</li>
-     *  </ul>
-     */
-//    public function install()
-//    {
-//        parent::install();
-//        $r = $CC_DBC->query("CREATE TABLE {$this->filesTable} (
-//            id int not null,
-//            gunid bigint not null,                      -- global unique ID
-//            name varchar(255) not null default'',       -- human file id ;)
-//            mime varchar(255) not null default'',       -- mime type
-//            ftype varchar(128) not null default'',      -- file type
-//            state varchar(128) not null default'empty', -- file state
-//            currentlyaccessing int not null default 0,  -- access counter
-//            editedby int REFERENCES {$this->subjTable}, -- who edits it
-//            mtime timestamp(6) with time zone           -- lst modif.time
-//        )");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->filesTable}_id_idx
-//            ON {$this->filesTable} (id)");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->filesTable}_gunid_idx
-//            ON {$this->filesTable} (gunid)");
-//        $CC_DBC->query("CREATE INDEX {$this->filesTable}_name_idx
-//            ON {$this->filesTable} (name)");
-//
-//        $CC_DBC->createSequence("{$this->mdataTable}_id_seq");
-//        $r = $CC_DBC->query("CREATE TABLE {$this->mdataTable} (
-//            id int not null,
-//            gunid bigint,
-//            subjns varchar(255),             -- subject namespace shortcut/uri
-//            subject varchar(255) not null default '',
-//            predns varchar(255),             -- predicate namespace shortcut/uri
-//            predicate varchar(255) not null,
-//            predxml char(1) not null default 'T', -- Tag or Attribute
-//            objns varchar(255),              -- object namespace shortcut/uri
-//            object text
-//        )");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->mdataTable}_id_idx
-//            ON {$this->mdataTable} (id)");
-//        $CC_DBC->query("CREATE INDEX {$this->mdataTable}_gunid_idx
-//            ON {$this->mdataTable} (gunid)");
-//        $CC_DBC->query("CREATE INDEX {$this->mdataTable}_subj_idx
-//            ON {$this->mdataTable} (subjns, subject)");
-//        $CC_DBC->query("CREATE INDEX {$this->mdataTable}_pred_idx
-//            ON {$this->mdataTable} (predns, predicate)");
-//
-//        $r = $CC_DBC->query("CREATE TABLE {$this->accessTable} (
-//            gunid bigint,                             -- global unique id
-//            token bigint,                             -- access token
-//            chsum char(32) not null default'',        -- md5 checksum
-//            ext varchar(128) not null default'',      -- extension
-//            type varchar(20) not null default'',      -- access type
-//            parent bigint,                            -- parent token
-//            owner int REFERENCES {$this->subjTable},  -- subject have started it
-//            ts timestamp
-//        )");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $CC_DBC->query("CREATE INDEX {$this->accessTable}_token_idx
-//            ON {$this->accessTable} (token)");
-//        $CC_DBC->query("CREATE INDEX {$this->accessTable}_gunid_idx
-//            ON {$this->accessTable} (gunid)");
-//        $CC_DBC->query("CREATE INDEX {$this->accessTable}_parent_idx
-//            ON {$this->accessTable} (parent)");
-//        if (!file_exists($this->storageDir)) {
-//            mkdir($this->storageDir, 02775);
-//        }
-//        if (!file_exists($this->bufferDir)) {
-//            mkdir($this->bufferDir, 02775);
-//        }
-//        $this->initData();
-//    }
-
-
-    /**
-     * id  subjns  subject predns  predicate   objns   object
-     * y1  literal xmbf    NULL    namespace   literal http://www.sotf.org/xbmf
-     * x1  gunid   <gunid> xbmf    contributor NULL    NULL
-     * x2  mdid    x1      xbmf    role        literal Editor
-     *
-     * predefined shortcuts:
-     *      _L              = literal
-     *      _G              = gunid (global id of media file)
-     *      _I              = mdid (local id of metadata record)
-     *      _nssshortcut    = namespace shortcut definition
-     *      _blank          = blank node
-     */
-
-    /**
-     * uninstall
-     *
-     * @return void
-     */
-//    public function uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['mdataTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['mdataTable']."_id_seq");
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['filesTable']);
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['accessTable']);
-//        $d = @dir($CC_CONFIG['storageDir']);
-//        while (is_object($d) && (false !== ($entry = $d->read()))){
-//            if (filetype($CC_CONFIG['storageDir']."/$entry")=='dir') {
-//                if ($entry!='CVS' && $entry!='tmp' && strlen($entry)==3) {
-//                    $dd = dir($CC_CONFIG['storageDir']."/$entry");
-//                    while (false !== ($ee = $dd->read())) {
-//                        if (substr($ee, 0, 1)!=='.') {
-//                            unlink($CC_CONFIG['storageDir']."/$entry/$ee");
-//                        }
-//                    }
-//                    $dd->close();
-//                    rmdir($CC_CONFIG['storageDir']."/$entry");
-//                }
-//            }
-//        }
-//        if (is_object($d)) {
-//            $d->close();
-//        }
-//        if (file_exists($this->bufferDir)) {
-//            $d = dir($this->bufferDir);
-//            while (false !== ($entry = $d->read())) {
-//                if(substr($entry,0,1)!='.') {
-//                    unlink("{$this->bufferDir}/$entry");
-//                }
-//            }
-//            $d->close();
-//            @rmdir($this->bufferDir);
-//        }
-//        parent::uninstall();
-//    }
 
 
     /**

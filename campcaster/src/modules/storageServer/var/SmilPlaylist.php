@@ -75,7 +75,7 @@ class SmilPlaylist {
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $pl->replaceMetaData($lspl, 'string', 'playlist');
+        $r = $pl->replaceMetadata($lspl, 'string', 'playlist');
         if (PEAR::isError($r)) {
         	return $r;
         }

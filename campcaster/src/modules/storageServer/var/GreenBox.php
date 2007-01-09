@@ -60,18 +60,15 @@ class GreenBox extends BasicStor {
      * @param string $ftype
      * 		Internal file type
      * @return int
-     * @exception PEAR::error
      */
-    public function putFile($parid, $fileName,
-         $mediaFileLP, $mdataFileLP, $sessid='',
-         $gunid=NULL, $ftype='audioclip')
+    public function putFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
+        $sessid='', $gunid=NULL, $ftype='audioclip')
     {
         if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsPutFile(
-            $parid, $fileName, $mediaFileLP, $mdataFileLP, $gunid, $ftype
-        );
+        return $this->bsPutFile($parid, $fileName, $mediaFileLP,
+            $mdataFileLP, $gunid, $ftype);
     } // fn putFile
 
 

@@ -38,17 +38,25 @@ class LocStor extends BasicStor {
      * @return array
      * 		{url:writable URL for HTTP PUT, token:access token}
      */
-    protected function storeAudioClipOpen(
-        $sessid, $gunid, $metadata, $fname, $chsum, $ftype='audioclip'
-    )
+    protected function storeAudioClipOpen($sessid, $gunid, $metadata,
+        $fname, $chsum, $ftype='audioclip')
     {
-        // test of gunid format:
+        // Check the gunid format
         if (!BasicStor::CheckGunid($gunid)) {
             return PEAR::raiseError(
                 "LocStor::storeAudioClipOpen: Wrong gunid ($gunid)"
             );
         }
-        // test if specified gunid exists:
+
+        // Check if we already have this file.
+        if ($duplicate = StoredFile::RecallByMd5($chsum)) {
+            return PEAR::raiseError(
+                "LocStor::storeAudioClipOpen: Duplicate file"
+                ." - Matched MD5 against '".$duplicate->getFileName()."'",
+                888);
+        }
+
+        // Check if specified gunid exists.
         $ac =& StoredFile::recallByGunid($gunid);
         if (!PEAR::isError($ac)) {
             // gunid exists - do replace
@@ -61,15 +69,13 @@ class LocStor extends BasicStor {
                     'LocStor::storeAudioClipOpen: is accessed'
                 );
             }
-            $res = $ac->replace(
-                $oid, $ac->name, '', $metadata, 'string'
-            );
+            $res = $ac->replace($oid, $ac->name, '', $metadata, 'string');
             if (PEAR::isError($res)) {
                 return $res;
             }
         } else {
-            // gunid doesn't exists - do insert:
-            $tmpFname = uniqid('');
+            // gunid doesn't exist - do insert:
+            $tmpFname = uniqid();
             $parid = $this->_getHomeDirIdFromSess($sessid);
             if (PEAR::isError($parid)) {
                 return $parid;
@@ -555,7 +561,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('write', $ac->getId(), $sessid)) !== TRUE) {
             return $res;
         }
-        return $ac->replaceMetaData($metadata, 'string');
+        return $ac->replaceMetadata($metadata, 'string');
     }
 
 
@@ -692,7 +698,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $res = $ac->replaceMetaData($newPlaylist, 'string', 'playlist');
+        $res = $ac->replaceMetadata($newPlaylist, 'string', 'playlist');
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -729,7 +735,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($mdata)) {
             return $mdata;
         }
-        $res = $ac->replaceMetaData($mdata, 'string');
+        $res = $ac->replaceMetadata($mdata, 'string');
         if (PEAR::isError($res)) {
             return $res;
         }

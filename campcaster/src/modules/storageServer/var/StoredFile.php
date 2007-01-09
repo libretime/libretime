@@ -21,16 +21,10 @@ require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
  * @copyright 2006 MDLF, Inc.
  * @license http://www.gnu.org/licenses/gpl.txt
  * @link http://www.campware.org
- * @see GreenBox
  * @see MetaData
  * @see RawMediaData
  */
 class StoredFile {
-	/**
-	 * @var DB
-	 */
-	public $dbc;
-
 	/**
 	 * Unique ID for the file.
 	 *
@@ -82,9 +76,9 @@ class StoredFile {
      *
      *  @param int $oid
      * 		local object id in the tree
-     *  @param string $name
+     *  @param string $filename
      * 		name of new file
-     *  @param string $mediaFileLP
+     *  @param string $localFilePath
      * 		local path to media file
      *  @param string $metadata
      * 		local path to metadata XML file or XML string
@@ -94,38 +88,35 @@ class StoredFile {
      * 		unique id - for insert file with gunid
      *  @param string $ftype
      * 		internal file type
-     *  @param string $className
-     * 		class to be constructed
      *  @param boolean $copyMedia
      * 		copy the media file if true, make symlink if false
      *  @return StoredFile
      */
-    public static function &insert($oid, $name,
-        $mediaFileLP='', $metadata='', $mdataLoc='file',
-        $gunid=NULL, $ftype=NULL, $className='StoredFile', $copyMedia=TRUE)
+    public static function &insert($oid, $filename, $localFilePath='',
+        $metadata='', $mdataLoc='file', $gunid=NULL, $ftype=NULL, $copyMedia=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
-        $ac = new $className(($gunid ? $gunid : NULL));
+        $ac = new StoredFile(($gunid ? $gunid : NULL));
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $ac->name = $name;
+        $ac->name = $filename;
         $ac->id = $oid;
         $ac->mime = "unknown";
         $emptyState = TRUE;
         if ($ac->name == '') {
             $ac->name = $ac->gunid;
         }
-        $escapedName = pg_escape_string($name);
+        $md5 = md5_file($localFilePath);
+        $escapedName = pg_escape_string($filename);
         $escapedFtype = pg_escape_string($ftype);
         $CC_DBC->query("BEGIN");
-        $res = $CC_DBC->query("
-            INSERT INTO ".$CC_CONFIG['filesTable']."
-                (id, name, gunid, mime, state, ftype, mtime)
-            VALUES
-                ('$oid', '{$escapedName}', x'{$ac->gunid}'::bigint,
-                    '{$ac->mime}', 'incomplete', '$escapedFtype', now())
-        ");
+        $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
+                ."(id, name, gunid, mime, state, ftype, mtime, md5)"
+                ."VALUES ('$oid', '{$escapedName}', x'{$ac->gunid}'::bigint,
+                 '{$ac->mime}', 'incomplete', '$escapedFtype', now(), '$md5')";
+        echo $sql;
+        $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
             return $res;
@@ -147,12 +138,12 @@ class StoredFile {
             return $res;
         }
         // --- media file insert:
-        if ($mediaFileLP != '') {
-            if (!file_exists($mediaFileLP)) {
+        if ($localFilePath != '') {
+            if (!file_exists($localFilePath)) {
                 return PEAR::raiseError("StoredFile::insert: ".
-                    "media file not found ($mediaFileLP)");
+                    "media file not found ($localFilePath)");
             }
-            $res = $ac->rmd->insert($mediaFileLP, $copyMedia);
+            $res = $ac->rmd->insert($localFilePath, $copyMedia);
             if (PEAR::isError($res)) {
                 $CC_DBC->query("ROLLBACK");
                 return $res;
@@ -191,11 +182,9 @@ class StoredFile {
      * 		local object id in the tree
      * @param string $gunid
      * 		global unique id of file
-     * @param string $className
-     * 		classname to recall
      * @return StoredFile
      */
-    public static function &recall($oid='', $gunid='', $className='StoredFile')
+    public static function &recall($oid='', $gunid='')
     {
         global $CC_DBC;
         global $CC_CONFIG;
@@ -218,7 +207,7 @@ class StoredFile {
             return $r;
         }
         $gunid = StoredFile::NormalizeGunid($row['gunid']);
-        $ac = new $className($gunid);
+        $ac = new StoredFile($gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id = $row['id'];
@@ -232,14 +221,12 @@ class StoredFile {
      * by gunid.
      *
      * @param string $gunid
-     * 		optional, global unique id of file
-     * @param string $className
-     * 		optional classname to recall
+     * 		global unique id of file
      * @return StoredFile
      */
-    public static function &recallByGunid($gunid='', $className='StoredFile')
+    public static function &recallByGunid($gunid='')
     {
-        return StoredFile::recall('', $gunid, $className);
+        return StoredFile::recall('', $gunid);
     }
 
 
@@ -249,18 +236,15 @@ class StoredFile {
      *
      * @param string $token
      * 		access token
-     * @param string $className
-     * 		optional classname to recall
      * @return StoredFile
      */
-    public static function recallByToken($token, $className='StoredFile')
+    public static function recallByToken($token)
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = $CC_DBC->getOne("
-            SELECT to_hex(gunid)as gunid
+            SELECT to_hex(gunid) as gunid
             FROM ".$CC_CONFIG['accessTable']."
-            WHERE token=x'$token'::bigint
-        ");
+            WHERE token=x'$token'::bigint");
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
@@ -269,7 +253,32 @@ class StoredFile {
             "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
         }
         $gunid = StoredFile::NormalizeGunid($gunid);
-        return StoredFile::recall('', $gunid, $className);
+        return StoredFile::recall('', $gunid);
+    }
+
+
+    /**
+     * Check if the MD5 value already exists.
+     *
+     * @param string $p_md5sum
+     * @return StoredFile|FALSE|PEAR_Error
+     */
+    public static function RecallByMd5($p_md5sum)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $gunid = $CC_DBC->getOne(
+            "SELECT to_hex(gunid) as gunid
+            FROM ".$CC_CONFIG['filesTable']."
+            WHERE md5='$p_md5sum'");
+        if (PEAR::isError($gunid)) {
+            return $gunid;
+        }
+        if ($gunid) {
+            $gunid = StoredFile::NormalizeGunid($gunid);
+            return StoredFile::recall('', $gunid);
+        } else {
+            return FALSE;
+        }
     }
 
 
@@ -284,7 +293,7 @@ class StoredFile {
      */
     public static function &CopyOf(&$src, $nid)
     {
-        $ac = StoredFile::insert($nid, $src->name, $src->_getRealRADFname(),
+        $ac = StoredFile::insert($nid, $src->name, $src->getRealFileName(),
             '', '', NULL, BasicStor::GetType($src->gunid));
         if (PEAR::isError($ac)) {
             return $ac;
@@ -294,20 +303,20 @@ class StoredFile {
     }
 
 
-    /* ======================================================= public methods */
     /**
-     *  Replace existing file with new data
+     * Replace existing file with new data.
      *
-     *  @param int $oid
+     * @param int $oid
      * 		local id
-     *  @param string $name
+     * @param string $name
      * 		name of file
-     *  @param string $mediaFileLP
+     * @param string $mediaFileLP
      * 		local path to media file
-     *  @param string $metadata
+     * @param string $metadata
      * 		local path to metadata XML file or XML string
-     *  @param string $mdataLoc
+     * @param string $mdataLoc
      * 		'file'|'string'
+     * @return TRUE|PEAR_Error
      */
     public function replace($oid, $name, $mediaFileLP='', $metadata='',
         $mdataLoc='file')
@@ -319,7 +328,7 @@ class StoredFile {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        if ($mediaFileLP != '') {     // media
+        if ($mediaFileLP != '') {
             $res = $this->replaceRawMediaData($mediaFileLP);
         } else {
             $res = $this->rmd->delete();
@@ -328,8 +337,8 @@ class StoredFile {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        if ($metadata != '') {        // metadata
-            $res = $this->replaceMetaData($metadata, $mdataLoc);
+        if ($metadata != '') {
+            $res = $this->replaceMetadata($metadata, $mdataLoc);
         } else {
             $res = $this->md->delete();
         }
@@ -357,8 +366,8 @@ class StoredFile {
      */
     public function accessRawMediaData($parent='0')
     {
-        $realFname = $this->_getRealRADFname();
-        $ext = $this->_getExt();
+        $realFname = $this->getRealFileName();
+        $ext = $this->getFileExtension();
         $res = BasicStor::bsAccess($realFname, $ext, $this->gunid, 'access', $parent);
         if (PEAR::isError($res)) {
             return $res;
@@ -392,6 +401,7 @@ class StoredFile {
      *
      * @param string $mediaFileLP
      * 		local path to media file
+     * @return void|PEAR_Error
      */
     public function replaceRawMediaData($mediaFileLP)
     {
@@ -426,7 +436,7 @@ class StoredFile {
      *      (NULL = no validation)
      * @return boolean
      */
-    public function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
+    public function replaceMetadata($metadata, $mdataLoc='file', $format=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("BEGIN");
@@ -479,7 +489,7 @@ class StoredFile {
      * Rename stored virtual file
      *
      * @param string $newname
-     * @return TRUE/PEAR_Error
+     * @return TRUE|PEAR_Error
      */
     public function rename($newname)
     {
@@ -503,8 +513,7 @@ class StoredFile {
      * 		'empty'|'incomplete'|'ready'|'edited'
      * @param int $editedby
      * 		 user id | 'NULL' for clear editedBy field
-     *      (optional)
-     * @return TRUE/PEAR_Error
+     * @return TRUE|PEAR_Error
      */
     public function setState($state, $editedby=NULL)
     {
@@ -528,7 +537,7 @@ class StoredFile {
      *
      * @param string $mime
      * 		mime-type
-     * @return boolean or error
+     * @return boolean|PEAR_Error
      */
     public function setMime($mime)
     {
@@ -549,10 +558,32 @@ class StoredFile {
 
 
     /**
+     * Set md5 of virtual file
+     *
+     * @param string $p_md5sum
+     * @return boolean|PEAR_Error
+     */
+    public function setMd5($p_md5sum)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $escapedMd5 = pg_escape_string($p_md5sum);
+        $res = $CC_DBC->query("
+            UPDATE ".$CC_CONFIG['filesTable']." SET md5='$escapedMd5', mtime=now()
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+        return TRUE;
+    }
+
+
+    /**
      * Delete stored virtual file
      *
      * @see RawMediaData
      * @see MetaData
+     * @return TRUE|PEAR_Error
      */
     public function delete()
     {
@@ -571,7 +602,7 @@ class StoredFile {
         ");
         if (is_array($tokens)) {
             foreach($tokens as $i=>$item){
-                $file = $this->_getAccessFname($item['token'], $item['ext']);
+                $file = $this->_getAccessFileName($item['token'], $item['ext']);
                 if (file_exists($file)) {
                     @unlink($file);
                 }
@@ -601,6 +632,7 @@ class StoredFile {
      *
      * @param string $gunid
      * 		optional (for static call), global unique id
+     * @return boolean|PEAR_Error
      */
     public function isAccessed($gunid=NULL)
     {
@@ -634,7 +666,7 @@ class StoredFile {
         if (is_null($playlistId)) {
             $playlistId = $this->gunid;
         }
-        $state = $this->_getState($playlistId);
+        $state = $this->getState($playlistId);
         if ($state != 'edited') {
             return FALSE;
         }
@@ -647,7 +679,7 @@ class StoredFile {
      *
      * @param string $playlistId
      * 		playlist global unique ID
-     * @return null or int
+     * @return int|null|PEAR_Error
      * 		id of user editing it
      */
     public function isEditedBy($playlistId=NULL)
@@ -671,8 +703,8 @@ class StoredFile {
 
 
     /**
-     *  Returns local id of virtual file
-     *
+     * Returns local id of virtual file
+     * @return int
      */
     public function getId()
     {
@@ -681,16 +713,15 @@ class StoredFile {
 
 
     /**
-     *  Returns true if raw media file exists
-     *
+     * Returns true if raw media file exists
+     * @return boolean|PEAR_Error
      */
     public function exists()
     {
         global $CC_CONFIG, $CC_DBC;
-        $indb = $CC_DBC->getRow("
-            SELECT to_hex(gunid) FROM ".$CC_CONFIG['filesTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $indb = $CC_DBC->getRow(
+            "SELECT to_hex(gunid) FROM ".$CC_CONFIG['filesTable']
+            ." WHERE gunid=x'{$this->gunid}'::bigint");
         if (PEAR::isError($indb)) {
             return $indb;
         }
@@ -704,16 +735,14 @@ class StoredFile {
     }
 
 
-    /* ==================================================== "private" methods */
     /**
-     *  Create new global unique id
-     *
+     * Create new global unique id
+     * @return string
      */
     public static function CreateGunid()
     {
         $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
-        $initString =
-            microtime().$ip.rand()."org.mdlf.campcaster";
+        $initString = microtime().$ip.rand()."org.mdlf.campcaster";
         $hash = md5($initString);
         // non-negative int8
         $hsd = substr($hash, 0, 1);
@@ -727,9 +756,9 @@ class StoredFile {
      *
      * @return string
      */
-    public static function NormalizeGunid($gunid0)
+    public static function NormalizeGunid($gunid)
     {
-        return str_pad($gunid0, 16, "0", STR_PAD_LEFT);
+        return str_pad($gunid, 16, "0", STR_PAD_LEFT);
     }
 
 
@@ -767,9 +796,9 @@ class StoredFile {
      * @return string
      * 		file extension without a dot
      */
-    public function _getExt()
+    public function getFileExtension()
     {
-        $fname = $this->_getFileName();
+        $fname = $this->getFileName();
         $pos = strrpos($fname, '.');
         if ($pos !== FALSE) {
             $ext = substr($fname, $pos+1);
@@ -801,7 +830,7 @@ class StoredFile {
      * Get mime-type from global id
      *
      * @param string $gunid
-     * 		optional, global unique id of file
+     * 		global unique id of file
      * @return string
      * 		mime-type
      */
@@ -821,11 +850,11 @@ class StoredFile {
      * Get storage-internal file state
      *
      * @param string $gunid
-     * 		optional, global unique id of file
+     * 		global unique id of file
      * @return string
      * 		see install()
      */
-    public function _getState($gunid=NULL)
+    public function getState($gunid=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
         if (is_null($gunid)) {
@@ -842,11 +871,10 @@ class StoredFile {
      * Get mnemonic file name
      *
      * @param string $gunid
-     * 		optional, global unique id of file
+     * 		global unique id of file
      * @return string
-     * 		see install()
      */
-    public function _getFileName($gunid=NULL)
+    public function getFileName($gunid=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
         if (is_null($gunid)) {
@@ -860,9 +888,10 @@ class StoredFile {
 
 
     /**
-     * Get and optionaly create subdirectory in real filesystem for storing
-     * raw media data
+     * Get and optionally create subdirectory in real filesystem for storing
+     * raw media data.
      *
+     * @return string
      */
     private function _getResDir()
     {
@@ -881,22 +910,24 @@ class StoredFile {
     /**
      * Get real filename of raw media data
      *
+     * @return string
      * @see RawMediaData
      */
-    public function _getRealRADFname()
+    public function getRealFileName()
     {
-        return $this->rmd->getFname();
+        return $this->rmd->getFileName();
     }
 
 
     /**
      * Get real filename of metadata file
      *
+     * @return string
      * @see MetaData
      */
-    public function _getRealMDFname()
+    public function getRealMetadataFileName()
     {
-        return $this->md->getFname();
+        return $this->md->getFileName();
     }
 
 
@@ -904,8 +935,9 @@ class StoredFile {
      * Create and return name for temporary symlink.
      *
      * @todo Should be more unique
+     * @return string
      */
-    private function _getAccessFname($token, $ext='EXT')
+    private function _getAccessFileName($token, $ext='EXT')
     {
         global $CC_CONFIG;
         $token = StoredFile::NormalizeGunid($token);
