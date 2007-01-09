@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -275,7 +275,7 @@ SchedulerDaemon :: ~SchedulerDaemon(void)                       throw ()
     }
 }
 
- 
+
 /*------------------------------------------------------------------------------
  *  Register our XML-RPC methods
  *----------------------------------------------------------------------------*/
@@ -303,102 +303,11 @@ SchedulerDaemon :: registerXmlRpcFunctions(
 
 
 /*------------------------------------------------------------------------------
- *  Install the scheduler daemon.
- *----------------------------------------------------------------------------*/
-void
-SchedulerDaemon :: install(void)                throw (std::exception)
-{
-    if (!isInstalled()) {
-        // TODO: check if we have already been configured
-        Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
-        sf->install();
-        Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
-        plf->install();
-        Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
-        bf->install();
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Check to see if the scheduler has been installed.
- *----------------------------------------------------------------------------*/
-bool
-SchedulerDaemon :: isInstalled(void)            throw (std::exception)
-{
-    // TODO: check if we have already been configured
-    Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
-    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
-    Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
-
-    if (!sf || !plf || !bf) {
-        throw std::logic_error("couldn't initialize factories");
-    }
-    
-    return sf->isInstalled() && plf->isInstalled() && bf->isInstalled();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Install the scheduler daemon.
- *----------------------------------------------------------------------------*/
-void
-SchedulerDaemon :: uninstall(void)              throw (std::exception)
-{
-    // TODO: check if we have already been configured
-    Ptr<BackupFactory>::Ref     bf  = BackupFactory::getInstance();
-    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
-    Ptr<ScheduleFactory>::Ref   sf  = ScheduleFactory::getInstance();
-
-    if (!bf || !plf || !sf) {
-        throw std::logic_error("couldn't initialize factories");
-    }
-
-    bool                isOK = true;
-    std::stringstream   errorMessage("error uninstalling factories:\n");
-    
-    try {
-        bf->uninstall();
-    } catch (std::exception &e) {
-        isOK = false;
-        errorMessage << e.what() << std::endl;
-    }
-    
-    try {
-        plf->uninstall();
-    } catch (std::exception &e) {
-        isOK = false;
-        errorMessage << e.what() << std::endl;
-    }
-    
-    try {
-        sf->uninstall();
-    } catch (std::exception &e) {
-        isOK = false;
-        errorMessage << e.what() << std::endl;
-    }
-    
-    if (!isOK) {
-        throw std::logic_error(errorMessage.str());
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Execute daemon startup functions.
  *----------------------------------------------------------------------------*/
 void
 SchedulerDaemon :: startup (void)                   throw (std::logic_error)
 {
-    try {
-        if (!isInstalled()) {
-            install();
-        }
-    } catch (std::exception &e) {
-        throw std::logic_error(std::string("database installation problem: ")
-                               + e.what());
-    }
-
     try {
         sessionId      = authentication->login(login, password);
     } catch (XmlRpcException &e) {

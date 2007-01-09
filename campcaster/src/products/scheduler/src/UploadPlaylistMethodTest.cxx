@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -84,7 +84,6 @@ UploadPlaylistMethodTest :: setUp(void)         throw (CPPUNIT_NS::Exception)
         storage->reset();
 
         schedule = scheduler->getSchedule();
-        schedule->install();
 
     } catch (XmlRpcException &e) {
         std::cerr << "caught XmlRpcException durng setUp" << std::endl
@@ -96,7 +95,7 @@ UploadPlaylistMethodTest :: setUp(void)         throw (CPPUNIT_NS::Exception)
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
-    
+
     authentication = scheduler->getAuthentication();
     try {
         sessionId = authentication->login("root", "q");
@@ -113,8 +112,6 @@ UploadPlaylistMethodTest :: setUp(void)         throw (CPPUNIT_NS::Exception)
 void
 UploadPlaylistMethodTest :: tearDown(void)      throw (CPPUNIT_NS::Exception)
 {
-    schedule->uninstall();
-
     authentication->logout(sessionId);
     sessionId.reset();
     authentication.reset();
@@ -145,7 +142,7 @@ UploadPlaylistMethodTest :: firstTest(void)
     time.tm_min  = 31;
     time.tm_sec  = 1;
     parameters["playtime"] = &time;
-    rootParameter[0]        = parameters;    
+    rootParameter[0]        = parameters;
 
     result.clear();
     try {
@@ -184,7 +181,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0]        = parameters;    
+    rootParameter[0]        = parameters;
 
     result.clear();
     try {
@@ -208,7 +205,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 30;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0]       = parameters;    
+    rootParameter[0]       = parameters;
 
     result.clear();
     try {
@@ -228,7 +225,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 30;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0]       = parameters;    
+    rootParameter[0]       = parameters;
 
     result.clear();
     try {
@@ -251,7 +248,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 45;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0]       = parameters;    
+    rootParameter[0]       = parameters;
 
     result.clear();
     try {

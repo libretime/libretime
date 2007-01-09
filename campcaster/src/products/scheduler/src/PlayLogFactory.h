@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -43,7 +43,6 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/Installable.h"
 #include "PlayLogInterface.h"
 
 
@@ -89,8 +88,7 @@ using namespace LiveSupport::Core;
  *  @version $Revision$
  *  @see PostgresqlPlayLog
  */
-class PlayLogFactory : virtual public Configurable,
-                       virtual public Installable
+class PlayLogFactory : virtual public Configurable
 {
     private:
         /**
@@ -128,7 +126,7 @@ class PlayLogFactory : virtual public Configurable,
         /**
          *  Return the name of the XML element this object expects
          *  to be sent to a call to configure().
-         *  
+         *
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
@@ -158,38 +156,6 @@ class PlayLogFactory : virtual public Configurable,
         configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error);
-
-        /**
-         *  Install the component.
-         *  This step involves creating the environment in which the component
-         *  will run. This may be creation of coniguration files,
-         *  database tables, etc.
-         *
-         *  @exception std::exception on installation problems,
-         *             especially if the PlayLogFactory was not yet configured.
-         */
-        virtual void
-        install(void)                           throw (std::exception);
-
-        /**
-         *  Check to see if the component has already been installed.
-         *
-         *  @return true if the component is properly installed,
-         *          false otherwise
-         *  @exception std::exception on generic problems
-         */
-        virtual bool
-        isInstalled(void)                       throw (std::exception);
-
-        /**
-         *  Uninstall the component.
-         *  Removes all the resources created in the install step.
-         *
-         *  @exception std::exception on unistallation problems,
-         e             especially if the PlayLogFactory was not yet configured.
-         */
-        virtual void
-        uninstall(void)                         throw (std::exception);
 
         /**
          *  Return a play log.

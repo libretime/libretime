@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -105,12 +105,12 @@ class PostgresqlBackup : public Configurable,
          *  The storage client to use for connecting to the storage server.
          */
         Ptr<StorageClientInterface>::Ref        storage;
-        
+
         /**
          *  The schedule to use for reading the schedule entries from.
          */
         Ptr<ScheduleInterface>::Ref             schedule;
-        
+
         /**
          *  The default constructor.
          */
@@ -132,7 +132,7 @@ class PostgresqlBackup : public Configurable,
                             Ptr<ptime>::Ref                     fromTime,
                             Ptr<ptime>::Ref                     toTime)
                                                 throw (std::runtime_error);
-        
+
         /**
          *  Convert a string status to an AsyncState.
          *  It converts
@@ -145,7 +145,7 @@ class PostgresqlBackup : public Configurable,
          */
         AsyncState
         stringToAsyncState(const std::string &      statusString)   throw ();
-        
+
         /**
          *  Convert an AsyncState to a string.
          *  It converts
@@ -190,7 +190,7 @@ class PostgresqlBackup : public Configurable,
         /**
          *  Return the name of the XML element this object expects
          *  to be sent to a call to configure().
-         *  
+         *
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
@@ -216,36 +216,6 @@ class PostgresqlBackup : public Configurable,
                                                        std::logic_error);
 
         /**
-         *  Install the component.
-         *  This step involves creating the environment in which the component
-         *  will run. This may be creation of coniguration files,
-         *  database tables, etc.
-         *
-         *  @exception std::exception on installation problems.
-         */
-        virtual void
-        install(void)                           throw (std::exception);
-
-        /**
-         *  Check to see if the component has already been installed.
-         *
-         *  @return true if the component is properly installed,
-         *          false otherwise
-         *  @exception std::exception on generic problems
-         */
-        virtual bool
-        isInstalled(void)                       throw (std::exception);
-
-        /**
-         *  Uninstall the component.
-         *  Removes all the resources created in the install step.
-         *
-         *  @exception std::exception on unistallation problems.
-         */
-        virtual void
-        uninstall(void)                         throw (std::exception);
-
-        /**
          *  Start to create a backup by calling the storage, and also
          *  adding a backup of the schedule.
          *  To check if the backup procedure is still pending, call
@@ -257,7 +227,7 @@ class PostgresqlBackup : public Configurable,
          *  @param criteria the criteria to use for backing up the storage
          *  @param fromTime entries are included in the schedule export starting
          *         from this time.
-         *  @param toTime entries as included in the schedule export 
+         *  @param toTime entries as included in the schedule export
          *         up to but not including this time.
          *  @return a token, which can be used to query the backup process.
          *  @exception XmlRpcException on XML-RPC issues.
@@ -276,7 +246,7 @@ class PostgresqlBackup : public Configurable,
          *
          *  @param  token   the identifier of this backup task.
          *  @param  url     return parameter;
-         *                      if the status is "success", it contains the 
+         *                      if the status is "success", it contains the
          *                      URL of the created backup file.
          *  @param  path    return parameter;
          *                      if the status is "success", it contains the
@@ -316,10 +286,10 @@ class PostgresqlBackup : public Configurable,
          *  Restore a schedule backup.
          *
          *  All playlist IDs contained in the backup should already be in the
-         *  storage.  If this is a combined backup, with both storage and 
+         *  storage.  If this is a combined backup, with both storage and
          *  schedule components, then restore this backup to the storage
          *  first, and then call this function.
-         *  
+         *
          *  @param  sessionId   a valid session ID to identify the user.
          *  @param  path        the location of the archive to upload.
          *  @exception  XmlRpcException     if there is an error.

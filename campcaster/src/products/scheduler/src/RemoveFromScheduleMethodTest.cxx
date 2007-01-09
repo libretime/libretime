@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -87,7 +87,6 @@ RemoveFromScheduleMethodTest :: setUp(void)     throw (CPPUNIT_NS::Exception)
         storage->reset();
 
         schedule = scheduler->getSchedule();
-        schedule->install();
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -96,7 +95,7 @@ RemoveFromScheduleMethodTest :: setUp(void)     throw (CPPUNIT_NS::Exception)
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
     }
-    
+
     authentication = scheduler->getAuthentication();
     try {
         sessionId = authentication->login("root", "q");
@@ -114,8 +113,6 @@ RemoveFromScheduleMethodTest :: setUp(void)     throw (CPPUNIT_NS::Exception)
 void
 RemoveFromScheduleMethodTest :: tearDown(void)  throw (CPPUNIT_NS::Exception)
 {
-    schedule->uninstall();
-
     authentication->logout(sessionId);
     sessionId.reset();
     authentication.reset();
@@ -162,7 +159,7 @@ RemoveFromScheduleMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
-    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     entryId.reset(new UniqueId(std::string(result["scheduleEntryId"])));
 
@@ -251,7 +248,7 @@ RemoveFromScheduleMethodTest :: currentlyPlayingTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
-    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     entryId.reset(new UniqueId(std::string(result["scheduleEntryId"])));
 

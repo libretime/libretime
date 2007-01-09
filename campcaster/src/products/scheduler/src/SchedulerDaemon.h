@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -58,7 +58,6 @@
 #include <XmlRpc.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Db/ConnectionManagerInterface.h"
@@ -171,21 +170,10 @@ using namespace LiveSupport::PlaylistExecutor;
  *  @see ScheduleFactory
  *  @see XmlRpcDaemon
  */
-class SchedulerDaemon : public Installable,
-                        public Configurable,
+class SchedulerDaemon : public Configurable,
                         public XmlRpcDaemon
 {
     private:
-
-        /**
-         *  The SQL create statement used in the installation step.
-         */
-        static const std::string    createStmt;
-
-        /**
-         *  The SQL drop statement used in the uninstallation step.
-         */
-        static const std::string    dropStmt;
 
         /**
          *  A SQL statement to check if the database can be accessed.
@@ -446,36 +434,6 @@ class SchedulerDaemon : public Installable,
         {
             return audioPlayer;
         }
-
-        /**
-         *  Install the component.
-         *  This step involves creating the environment in which the component
-         *  will run. This may be creation of coniguration files,
-         *  database tables, etc.
-         *
-         *  @exception std::exception on installation problems.
-         */
-        virtual void
-        install(void)                           throw (std::exception);
-
-        /**
-         *  Check to see if the component has already been installed.
-         *
-         *  @return true if the component is properly installed,
-         *          false otherwise
-         *  @exception std::exception on generic problems
-         */
-        virtual bool
-        isInstalled(void)                       throw (std::exception);
-
-        /**
-         *  Uninstall the component.
-         *  Removes all the resources created in the install step.
-         *
-         *  @exception std::exception on unistallation problems.
-         */
-        virtual void
-        uninstall(void)                         throw (std::exception);
 
         /**
          *  Shut down the daemon.

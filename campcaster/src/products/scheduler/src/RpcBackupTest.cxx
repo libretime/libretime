@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -97,8 +97,6 @@ RpcBackupTest :: setUp(void)                    throw (CPPUNIT_NS::Exception)
         }
     }
 
-    daemon->install();
-
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -129,10 +127,8 @@ void
 RpcBackupTest :: tearDown(void)                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
-    
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -146,7 +142,7 @@ RpcBackupTest :: tearDown(void)                 throw (CPPUNIT_NS::Exception)
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
-    
+
     remove(tempBackupTarFileName.c_str());
 }
 
@@ -159,7 +155,7 @@ RpcBackupTest :: createBackup(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue         parameters;
     XmlRpc::XmlRpcValue         result;
 
@@ -172,13 +168,13 @@ RpcBackupTest :: createBackup(void)
     criteria->setLimit(10);
     Ptr<ptime>::Ref from(new ptime(time_from_string("2004-07-23 10:00:00")));
     Ptr<ptime>::Ref to(new ptime(time_from_string("2004-07-23 11:00:00")));
-    
+
     XmlRpcTools::sessionIdToXmlRpcValue(sessionId, parameters);
     XmlRpcTools::searchCriteriaToXmlRpcValue(criteria, parameters);
     XmlRpcTools::fromTimeToXmlRpcValue(from, parameters);
     XmlRpcTools::toTimeToXmlRpcValue(to, parameters);
-    
-    CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupOpen", 
+
+    CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupOpen",
                                         parameters,
                                         result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
@@ -196,11 +192,11 @@ RpcBackupTest :: createBackup(void)
         std::cerr << "-/|\\"[iterations%4] << '\b';
         sleep(1);
         result.clear();
-        CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupCheck", 
+        CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupCheck",
                                             parameters,
                                             result));
         CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-        
+
         CPPUNIT_ASSERT_NO_THROW(
             status = XmlRpcTools::extractBackupStatus(result);
         );
@@ -208,21 +204,21 @@ RpcBackupTest :: createBackup(void)
                          || status == AsyncState::finishedState
                          || status == AsyncState::failedState);
     } while (--iterations && status == AsyncState::pendingState);
-    
+
     CPPUNIT_ASSERT_EQUAL(AsyncState::finishedState, status);
     // TODO: test accessibility of the URL?
-    
+
     Ptr<const Glib::ustring>::Ref       url;
     Ptr<const Glib::ustring>::Ref       path;
     Ptr<const Glib::ustring>::Ref       errorMessage;
-    
+
     CPPUNIT_ASSERT_NO_THROW(
         url = XmlRpcTools::extractUrl(result);
     );
     CPPUNIT_ASSERT_NO_THROW(
         path = XmlRpcTools::extractPath(result);
     );
-    
+
     // copy the backup file
     CPPUNIT_ASSERT_NO_THROW(
         remove(tempBackupTarFileName.c_str());
@@ -230,15 +226,15 @@ RpcBackupTest :: createBackup(void)
         std::ofstream   ofs(tempBackupTarFileName.c_str(),  std::ios::binary);
         ofs << ifs.rdbuf();
     );
-    
+
     parameters.clear();
     XmlRpcTools::tokenToXmlRpcValue(token, parameters);
-    result.clear();    
-    CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupClose", 
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("createBackupClose",
                                         parameters,
                                         result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    
+
     xmlRpcClient.close();
 }
 
@@ -254,7 +250,7 @@ RpcBackupTest :: createBackupTest(void)
     CPPUNIT_ASSERT_NO_THROW(
         createBackup()
     );
-    
+
     // Check the backup file.
     bool    exists;
     std::string     schedulerBackupInTarball = "meta-inf/scheduler.xml";
@@ -263,24 +259,24 @@ RpcBackupTest :: createBackupTest(void)
                                             schedulerBackupInTarball)
     );
     CPPUNIT_ASSERT(exists);
-    
+
     std::string     extractedTempFileName = "tmp/scheduler.tmp.xml";
     FILE *          file;
-    
+
     remove(extractedTempFileName.c_str());
     file = fopen(extractedTempFileName.c_str(), "r");
     CPPUNIT_ASSERT(file == 0);
-    
+
     CPPUNIT_ASSERT_NO_THROW(
         FileTools::extractFileFromTarball(tempBackupTarFileName,
                                           schedulerBackupInTarball,
                                           extractedTempFileName)
     );
-    
+
     file = fopen(extractedTempFileName.c_str(), "r");
     CPPUNIT_ASSERT(file != 0);
     CPPUNIT_ASSERT(fclose(file) == 0);
-    
+
     CPPUNIT_ASSERT(remove(extractedTempFileName.c_str()) == 0);
     file = fopen(extractedTempFileName.c_str(), "r");
     CPPUNIT_ASSERT(file == 0);
@@ -298,7 +294,7 @@ RpcBackupTest :: restoreBackupTest(void)
     CPPUNIT_ASSERT_NO_THROW(
         createBackup()
     );
-    
+
     XmlRpc::XmlRpcValue         parameters;
     XmlRpc::XmlRpcValue         result;
 
@@ -306,19 +302,19 @@ RpcBackupTest :: restoreBackupTest(void)
                                              getXmlRpcPort(),
                                              "/RPC2",
                                              false);
-    
+
     CPPUNIT_ASSERT(sessionId);
     Ptr<const Glib::ustring>::Ref   path(new const Glib::ustring(
                                                 tempBackupTarFileName));
-    
+
     XmlRpcTools::sessionIdToXmlRpcValue(sessionId, parameters);
     XmlRpcTools::pathToXmlRpcValue(path, parameters);
-    
-    CPPUNIT_ASSERT(xmlRpcClient.execute("restoreBackup", 
+
+    CPPUNIT_ASSERT(xmlRpcClient.execute("restoreBackup",
                                         parameters,
                                         result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    
+
     xmlRpcClient.close();
     // TODO: try this with a non-empty backup file, too
 }

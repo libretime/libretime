@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -89,26 +89,6 @@ const std::string PostgresqlSchedule::check1Stmt = "SELECT 1";
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::scheduleCountStmt =
                                         "SELECT COUNT(*) FROM schedule";
-
-/*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string PostgresqlSchedule::createStmt =
-    "CREATE TABLE schedule\n"
-    "(\n"
-    "   id          BIGINT      NOT NULL,\n"
-    "   playlist    BIGINT      NOT NULL,\n"
-    "   starts      TIMESTAMP   NOT NULL,\n"
-    "   ends        TIMESTAMP   NOT NULL,\n"
-    "\n"
-    "   PRIMARY KEY(id)\n"
-    ");";
-
-/*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string PostgresqlSchedule::dropStmt =
-    "DROP TABLE schedule;";
 
 /*------------------------------------------------------------------------------
  *  The SQL statement for querying if a timeframe is available.
@@ -216,97 +196,6 @@ PostgresqlSchedule :: configure(const xmlpp::Element & element)
 
 
 /*------------------------------------------------------------------------------
- *  Install the PostgresqlSchedule.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlSchedule :: install(void)                     throw (std::exception)
-{
-    if (!isInstalled()) {
-        Ptr<Connection>::Ref    conn;
-        try {
-            conn = cm->getConnection();
-            Ptr<Statement>::Ref     stmt(conn->createStatement());
-            stmt->execute(createStmt);
-            cm->returnConnection(conn);
-        } catch (std::exception &e) {
-            if (conn) {
-                cm->returnConnection(conn);
-            }
-            throw;
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Check to see if the PostgresqlSchedule has already been installed.
- *----------------------------------------------------------------------------*/
-bool
-PostgresqlSchedule :: isInstalled(void)                 throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        Ptr<Statement>::Ref     stmt;
-        ResultSet             * res;
-
-        conn = cm->getConnection();
-
-        // see if we can connect at all
-        stmt.reset(conn->createStatement());
-        stmt->execute(check1Stmt);
-        res = stmt->getResultSet();
-        if (!res->next() || (res->getInt(1) != 1)) {
-            throw std::runtime_error("Can't connect to database");
-        }
-
-        // see if the schedule table exists
-        try {
-            stmt.reset(conn->createStatement());
-            stmt->execute(scheduleCountStmt);
-            res = stmt->getResultSet();
-            if (!res->next() || (res->getInt(1) < 0)) {
-                cm->returnConnection(conn);
-                return false;
-            }
-        } catch (std::exception &e) {
-            cm->returnConnection(conn);
-            return false;
-        }
-
-        cm->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            cm->returnConnection(conn);
-        }
-        throw;
-    }
-
-    return true;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Uninstall the PostgresqlSchedule.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlSchedule :: uninstall(void)                   throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        conn = cm->getConnection();
-        Ptr<Statement>::Ref     stmt(conn->createStatement());
-        stmt->execute(dropStmt);
-        cm->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            cm->returnConnection(conn);
-        }
-        throw;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Check if a timeframe is available.
  *----------------------------------------------------------------------------*/
 bool
@@ -369,8 +258,8 @@ PostgresqlSchedule :: schedulePlaylist(
         id = UniqueId::generateId();
         pstmt->setLong(1, id->getId());
         pstmt->setLong(2, playlist->getId()->getId());
- 
-        timestamp = Conversion::ptimeToTimestamp(playtime, 
+
+        timestamp = Conversion::ptimeToTimestamp(playtime,
                                                  Conversion::roundNearest);
         pstmt->setTimestamp(3, *timestamp);
 
@@ -417,7 +306,7 @@ PostgresqlSchedule :: storeScheduleEntry(
 
         pstmt->setLong(1, scheduleEntry->getId()->getId());
         pstmt->setLong(2, scheduleEntry->getPlaylistId()->getId());
- 
+
         timestamp = Conversion::ptimeToTimestamp(scheduleEntry->getStartTime(),
                                                  Conversion::roundDown);
         pstmt->setTimestamp(3, *timestamp);

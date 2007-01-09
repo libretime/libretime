@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -87,11 +87,6 @@ static const struct option longOptions[] = {
 };
 
 /**
- *  The start command: "install"
- */
-static const std::string installCommand = "install";
-
-/**
  *  The start command: "start"
  */
 static const std::string startCommand = "start";
@@ -105,11 +100,6 @@ static const std::string statusCommand = "status";
  *  The stop command: "stop"
  */
 static const std::string stopCommand = "stop";
-
-/**
- *  The stop command: "uninstall"
- */
-static const std::string uninstallCommand = "uninstall";
 
 
 /* ===============================================  local function prototypes */
@@ -183,7 +173,7 @@ int main (  int     argc,
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
     try {
-        std::auto_ptr<xmlpp::DomParser> 
+        std::auto_ptr<xmlpp::DomParser>
                             parser(new xmlpp::DomParser(configFileName, true));
         const xmlpp::Document * document = parser->get_document();
         daemon->configure(*(document->get_root_node()));
@@ -200,9 +190,7 @@ int main (  int     argc,
     daemon->setBackground(!debugMode);
 
     try {
-        if (installCommand == argv[optind]) {
-            daemon->install();
-        } else if (startCommand == argv[optind]) {
+        if (startCommand == argv[optind]) {
             daemon->start();
         } else if (statusCommand == argv[optind]) {
             std::cout << "The Scheduler Daemon is "
@@ -210,8 +198,6 @@ int main (  int     argc,
                       << "running" << std::endl;
         } else if (stopCommand == argv[optind]) {
             daemon->stop();
-        } else if (uninstallCommand == argv[optind]) {
-            daemon->uninstall();
         } else {
             printUsage(argv[0], std::cout);
             exit(EXIT_FAILURE);
@@ -248,7 +234,7 @@ printUsage (    const char      invocation[],
        << std::endl
        << "Usage: " << invocation << " [OPTION] COMMAND"
        << std::endl
-       << "  COMMAND is one of: install, start, stop, status or uninstall"
+       << "  COMMAND is one of: start, stop, or status"
                                                                     << std::endl
        << std::endl
        << "  mandatory options:" << std::endl

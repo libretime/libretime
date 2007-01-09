@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -69,25 +69,6 @@ const std::string PostgresqlPlayLog::logCountStmt =
                                         "SELECT COUNT(*) FROM playLog";
 
 /*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string PostgresqlPlayLog::createStmt =
-    "CREATE TABLE playLog\n"
-    "(\n"
-    "   id            BIGINT      NOT NULL,\n"
-    "   audioClipId   BIGINT      NOT NULL,\n"
-    "   timestamp     TIMESTAMP   NOT NULL,\n"
-    "\n"
-    "   PRIMARY KEY(id)\n"
-    ");";
-
-/*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string PostgresqlPlayLog::dropStmt =
-    "DROP TABLE playLog;";
-
-/*------------------------------------------------------------------------------
  *  The SQL statement for adding a play log entry.
  *  It's a simple insert.
  *----------------------------------------------------------------------------*/
@@ -132,97 +113,6 @@ PostgresqlPlayLog :: configure(const xmlpp::Element & element)
 
 
 /*------------------------------------------------------------------------------
- *  Install the PostgresqlPlayLog.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlPlayLog :: install(void)                     throw (std::exception)
-{
-    if (!isInstalled()) {
-        Ptr<Connection>::Ref    conn;
-        try {
-            conn = cm->getConnection();
-            Ptr<Statement>::Ref     stmt(conn->createStatement());
-            stmt->execute(createStmt);
-            cm->returnConnection(conn);
-        } catch (std::exception &e) {
-            if (conn) {
-                cm->returnConnection(conn);
-            }
-            throw std::logic_error(e.what());
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Check to see if the PostgresqlPlayLog has already been installed.
- *----------------------------------------------------------------------------*/
-bool
-PostgresqlPlayLog :: isInstalled(void)                 throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        Ptr<Statement>::Ref     stmt;
-        ResultSet             * res;
-
-        conn = cm->getConnection();
-
-        // see if we can connect at all
-        stmt.reset(conn->createStatement());
-        stmt->execute(check1Stmt);
-        res = stmt->getResultSet();
-        if (!res->next() || (res->getInt(1) != 1)) {
-            throw std::runtime_error("Can't connect to database");
-        }
-
-        // see if the schedule table exists
-        try {
-            stmt.reset(conn->createStatement());
-            stmt->execute(logCountStmt);
-            res = stmt->getResultSet();
-            if (!res->next() || (res->getInt(1) < 0)) {
-                cm->returnConnection(conn);
-                return false;
-            }
-        } catch (std::exception &e) {
-            cm->returnConnection(conn);
-            return false;
-        }
-
-        cm->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            cm->returnConnection(conn);
-        }
-        throw;
-    }
-
-    return true;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Uninstall the PostgresqlPlayLog.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlPlayLog :: uninstall(void)                   throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        conn = cm->getConnection();
-        Ptr<Statement>::Ref     stmt(conn->createStatement());
-        stmt->execute(dropStmt);
-        cm->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            cm->returnConnection(conn);
-        }
-        throw std::logic_error(e.what());
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Add a new play log entry
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
@@ -244,7 +134,7 @@ PostgresqlPlayLog :: addPlayLogEntry(
         pstmt->setLong(1, id->getId());
 
         pstmt->setLong(2, audioClipId->getId());
- 
+
         timestamp = Conversion::ptimeToTimestamp(clipTimestamp);
         pstmt->setTimestamp(3, *timestamp);
 
@@ -295,7 +185,7 @@ PostgresqlPlayLog :: getPlayLogEntries(
             Ptr<UniqueId>::Ref      audioClipId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
-            Ptr<ptime>::Ref clipTimestamp 
+            Ptr<ptime>::Ref clipTimestamp
                             = Conversion::timestampToPtime(timestamp);
 
             Ptr<PlayLogEntry>::Ref entry(new PlayLogEntry(id,

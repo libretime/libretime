@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -85,7 +85,6 @@ RpcGeneratePlayReportTest :: setUp(void)        throw (CPPUNIT_NS::Exception)
         }
     }
 
-    daemon->install();
     insertEntries();
 
     XmlRpc::XmlRpcValue     parameters;
@@ -118,10 +117,9 @@ void
 RpcGeneratePlayReportTest :: tearDown(void)     throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
-    
+
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -171,7 +169,7 @@ RpcGeneratePlayReportTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
@@ -198,7 +196,7 @@ RpcGeneratePlayReportTest :: firstTest(void)
     time.tm_sec  =  1;
     parameters["to"] = &time;
 
-    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport", 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport",
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() == 0);
@@ -215,7 +213,7 @@ RpcGeneratePlayReportTest :: intervalTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
@@ -242,20 +240,20 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     time.tm_sec  =  0;
     parameters["to"] = &time;
 
-    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport", 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport",
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
     CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
-    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     UniqueId   newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
     CPPUNIT_ASSERT(newAudioClipId.getId() == 10001);
 
     CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
-    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType()
                                         == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
     CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
@@ -284,20 +282,20 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     parameters["to"] = &time;
 
     result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport", 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport",
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
     CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
-    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
     CPPUNIT_ASSERT(newAudioClipId.getId() == 10001);
 
     CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
-    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType()
                                         == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
     CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
@@ -326,20 +324,20 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     parameters["to"] = &time;
 
     result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport", 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport",
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 2);
     CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
-    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
     CPPUNIT_ASSERT(newAudioClipId.getId() == 10017);
 
     CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
-    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType()
                                         == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
     CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
@@ -350,13 +348,13 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_sec  == 0);
 
     CPPUNIT_ASSERT(result[1].hasMember("audioClipId"));
-    CPPUNIT_ASSERT(result[1]["audioClipId"].getType() 
+    CPPUNIT_ASSERT(result[1]["audioClipId"].getType()
                                         == XmlRpc::XmlRpcValue::TypeString);
     newAudioClipId = UniqueId(std::string(result[1]["audioClipId"]));
     CPPUNIT_ASSERT(newAudioClipId.getId() == 10003);
 
     CPPUNIT_ASSERT(result[1].hasMember("timestamp"));
-    CPPUNIT_ASSERT(result[1]["timestamp"].getType() 
+    CPPUNIT_ASSERT(result[1]["timestamp"].getType()
                                         == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[1]["timestamp"];
     CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
@@ -385,7 +383,7 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     parameters["to"] = &time;
 
     result.clear();
-    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport", 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("generatePlayReport",
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 

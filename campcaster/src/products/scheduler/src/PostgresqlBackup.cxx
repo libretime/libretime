@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -110,26 +110,6 @@ const std::string    scheduleExportFileName     = "meta-inf/scheduler.xml";
 const std::string   check1Stmt          = "SELECT 1";
 
 /*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string   createStmt =
-    "CREATE TABLE backup\n"
-    "(\n"
-    "   token       VARCHAR(64)     NOT NULL,\n"
-    "   sessionId   VARCHAR(64)     NOT NULL,\n"
-    "   status      VARCHAR(32)     NOT NULL,\n"
-    "   fromTime    TIMESTAMP       NOT NULL,\n"
-    "   toTime      TIMESTAMP       NOT NULL,\n"
-    "\n"
-    "   PRIMARY KEY(token)\n"
-    ");";
-
-/*------------------------------------------------------------------------------
- *  The SQL create statement, used for installation.
- *----------------------------------------------------------------------------*/
-const std::string   dropStmt            = "DROP TABLE backup;";
-
-/*------------------------------------------------------------------------------
  *  A statement to check if the backup table exists.
  *----------------------------------------------------------------------------*/
 const std::string   backupCountStmt     = "SELECT COUNT(*) FROM backup";
@@ -189,97 +169,6 @@ PostgresqlBackup :: configure(const xmlpp::Element & element)
     }
 
     // nothing to do here, really
-}
-
-
-/*------------------------------------------------------------------------------
- *  Install the PostgresqlBackup.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlBackup :: install(void)                     throw (std::exception)
-{
-    if (!isInstalled()) {
-        Ptr<Connection>::Ref    conn;
-        try {
-            conn = connectionManager->getConnection();
-            Ptr<Statement>::Ref     stmt(conn->createStatement());
-            stmt->execute(createStmt);
-            connectionManager->returnConnection(conn);
-        } catch (std::exception &e) {
-            if (conn) {
-                connectionManager->returnConnection(conn);
-            }
-            throw;
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Check to see if the PostgresqlBackup has already been installed.
- *----------------------------------------------------------------------------*/
-bool
-PostgresqlBackup :: isInstalled(void)                 throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        Ptr<Statement>::Ref     stmt;
-        ResultSet             * res;
-
-        conn = connectionManager->getConnection();
-
-        // see if we can connect at all
-        stmt.reset(conn->createStatement());
-        stmt->execute(check1Stmt);
-        res = stmt->getResultSet();
-        if (!res->next() || (res->getInt(1) != 1)) {
-            throw std::runtime_error("Can't connect to database");
-        }
-
-        // see if the backup table exists
-        try {
-            stmt.reset(conn->createStatement());
-            stmt->execute(backupCountStmt);
-            res = stmt->getResultSet();
-            if (!res->next() || (res->getInt(1) < 0)) {
-                connectionManager->returnConnection(conn);
-                return false;
-            }
-        } catch (std::exception &e) {
-            connectionManager->returnConnection(conn);
-            return false;
-        }
-
-        connectionManager->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            connectionManager->returnConnection(conn);
-        }
-        throw;
-    }
-
-    return true;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Uninstall the PostgresqlBackup.
- *----------------------------------------------------------------------------*/
-void
-PostgresqlBackup :: uninstall(void)                   throw (std::exception)
-{
-    Ptr<Connection>::Ref    conn;
-    try {
-        conn = connectionManager->getConnection();
-        Ptr<Statement>::Ref     stmt(conn->createStatement());
-        stmt->execute(dropStmt);
-        connectionManager->returnConnection(conn);
-    } catch (std::exception &e) {
-        if (conn) {
-            connectionManager->returnConnection(conn);
-        }
-        throw;
-    }
 }
 
 
@@ -364,7 +253,7 @@ PostgresqlBackup ::createBackupCheck(
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
             status = stringToAsyncState(rs->getString(3));
-            
+
             timestamp.reset(new Timestamp(rs->getTimestamp(4)));
             fromTime = Conversion::timestampToPtime(timestamp);
 
@@ -514,7 +403,7 @@ PostgresqlBackup :: restoreBackup(Ptr<SessionId>::Ref               sessionId,
                                                         throw (XmlRpcException)
 {
     //TODO: check the session ID
-    
+
     std::string             tmpFileName = FileTools::tempnam();
     try {
         FileTools::extractFileFromTarball(*path,
@@ -526,7 +415,7 @@ PostgresqlBackup :: restoreBackup(Ptr<SessionId>::Ref               sessionId,
         errorMsg += e.what();
         throw XmlRpcIOException(errorMsg);
     }
-    
+
     Ptr<DomParser>::Ref parser(new DomParser(tmpFileName,
                                              false /* do not expect a DTD */));
     const Document *        document    = parser->get_document();

@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -99,13 +99,6 @@ PlaylistEventContainerTest :: setUp(void)       throw (CPPUNIT_NS::Exception)
         std::cerr << e.what() << std::endl;
         CPPUNIT_FAIL("error parsing configuration file");
     }
-    try {
-        schedule->install();
-        playLog->install();
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("can't install schedule factory");
-    }
     audioPlayer->initialize();
 
     if (!(sessionId = authentication->login("root", "q"))) {
@@ -121,8 +114,6 @@ void
 PlaylistEventContainerTest :: tearDown(void)    throw (CPPUNIT_NS::Exception)
 {
     audioPlayer->deInitialize();
-    schedule->uninstall();
-    playLog->uninstall();
 
     playLog.reset();
     schedule.reset();
@@ -172,7 +163,7 @@ PlaylistEventContainerTest :: scheduleTest(void)
 
     // schedule playlist 1 at 10 seconds from now
     Ptr<UniqueId>::Ref      playlistId(new UniqueId(1));
-    Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId, 
+    Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
                                                             playlistId);
     CPPUNIT_ASSERT(playlist.get());
     Ptr<ptime>::Ref         now = TimeConversion::now();

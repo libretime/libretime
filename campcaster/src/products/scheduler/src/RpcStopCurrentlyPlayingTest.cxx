@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
+
+
     Author   : $Author: fgerlits $
     Version  : $Revision$
     Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/branches/scheduler_export/livesupport/src/products/scheduler/src/RpcStopCurrentlyPlayingTest.cxx $
@@ -84,8 +84,6 @@ RpcStopCurrentlyPlayingTest :: setUp(void)      throw (CPPUNIT_NS::Exception)
         }
     }
 
-    daemon->install();
-
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -104,7 +102,7 @@ RpcStopCurrentlyPlayingTest :: setUp(void)      throw (CPPUNIT_NS::Exception)
     CPPUNIT_ASSERT(result.hasMember("sessionId"));
 
     xmlRpcClient.close();
-    
+
     sessionId.reset(new SessionId(std::string(result["sessionId"])));
 }
 
@@ -116,10 +114,9 @@ void
 RpcStopCurrentlyPlayingTest :: tearDown(void)   throw (CPPUNIT_NS::Exception)
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-    daemon->uninstall();
-    
+
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -144,16 +141,16 @@ RpcStopCurrentlyPlayingTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     schedulePlaylistToPlayNow();
-    
+
     Ptr<SchedulerDaemon>::Ref       daemon = SchedulerDaemon::getInstance();
     CPPUNIT_ASSERT(daemon);
     Ptr<AudioPlayerInterface>::Ref  audioPlayer = daemon->getAudioPlayer();
     CPPUNIT_ASSERT(audioPlayer);
-    
+
     sleep(10);
     CPPUNIT_ASSERT(audioPlayer->isOpen());
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
-    
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
@@ -169,9 +166,9 @@ RpcStopCurrentlyPlayingTest :: simpleTest(void)
     result.clear();
     xmlRpcClient.execute("stopCurrentlyPlaying", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    
+
     xmlRpcClient.close();
-    
+
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
     CPPUNIT_ASSERT(!audioPlayer->isOpen());
 }
@@ -185,7 +182,7 @@ RpcStopCurrentlyPlayingTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     CPPUNIT_ASSERT(sessionId);
-    
+
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 

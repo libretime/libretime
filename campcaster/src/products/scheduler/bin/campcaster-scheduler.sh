@@ -83,12 +83,12 @@ case "$mode" in
 
     'install')
         echo "Installing Campcaster scheduler database tables..."
-        $scheduler_exe -c $config_file install
+        php install.php -c $config_file
         ;;
 
     'uninstall')
         echo "Uninstalling Campcaster scheduler database tables..."
-        $scheduler_exe -c $config_file uninstall
+        php uninstall.php -c $config_file
         ;;
 
     'kill')
