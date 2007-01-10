@@ -14,9 +14,9 @@
 ini_set('memory_limit', '64M');
 set_time_limit(0);
 //header("Content-type: text/plain");
-echo   "===========================\n";
-echo "\nStorageServer Import Script\n";
-echo   "===========================\n";
+echo "===========================\n";
+echo "StorageServer Import Script\n";
+echo "===========================\n";
 $start = intval(date('U'));
 
 require_once('conf.php');
@@ -83,10 +83,14 @@ while ($filename = fgets($stdin, 2048)) {
     echo "Importing: $filename\n";
 
     $md5sum = md5_file($filename);
-    echo " * MD5: $md5sum\n";
+    //echo " * MD5: $md5sum\n";
 
     // Look up md5sum in database
-
+    $file = StoredFile::RecallByMd5($md5sum);
+    if ($file) {
+        echo " * File already exists in the database.\n";
+        continue;
+    }
     $mdata = camp_get_audio_metadata($filename, $testonly);
     if (PEAR::isError($mdata)) {
     	import_err($mdata);
