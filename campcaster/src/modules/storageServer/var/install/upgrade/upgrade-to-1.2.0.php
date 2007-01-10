@@ -31,41 +31,53 @@ require_once("../installInit.php");
 require_once("../../StoredFile.php");
 
 // Check to see if upgrade has already been applied
-//$sql = "SELECT md5 FROM ".$CC_CONFIG['filesTable']." LIMIT 1";
-//$result = $CC_DBC->query($sql);
-//if (!PEAR::isError($result)) {
-//    echo "THIS UPGRADE HAS ALREADY BEEN APPLIED.\n";
-//    exit(0);
-//}
-//
-//echo " * Modifying '".$CC_CONFIG['filesTable']." table...";
-//$sql = "ALTER TABLE ".$CC_CONFIG['filesTable']." ADD COLUMN md5 char(32)";
-//camp_install_query($sql);
-//
-//$sql = "ALTER TABLE ".$CC_CONFIG['filesTable']." ALTER COLUMN md5 SET STORAGE EXTENDED";
-//camp_install_query($sql);
-//
-//$sql = "CREATE INDEX ".$CC_CONFIG['filesTable']."_md5_idx ON ".$CC_CONFIG['filesTable']." (md5)";
-//camp_install_query($sql);
+$sql = "SELECT md5 FROM ".$CC_CONFIG['filesTable']." LIMIT 1";
+$result = $CC_DBC->query($sql);
+if (!PEAR::isError($result)) {
+    echo "THIS UPGRADE HAS ALREADY BEEN APPLIED.\n";
+    exit(0);
+}
+
+echo " * Adding column 'md5' to '".$CC_CONFIG['filesTable']." table...";
+$sql = "ALTER TABLE ".$CC_CONFIG['filesTable']." ADD COLUMN md5 char(32)";
+camp_install_query($sql, false);
+$sql = "ALTER TABLE ".$CC_CONFIG['filesTable']." ALTER COLUMN md5 SET STORAGE EXTENDED";
+camp_install_query($sql);
+
+echo " * Creating index on column 'md5'...";
+$sql = "CREATE INDEX ".$CC_CONFIG['filesTable']."_md5_idx ON ".$CC_CONFIG['filesTable']." (md5)";
+camp_install_query($sql);
 
 // Get MD5 values for all files
-$sql = "SELECT gunid FROM ".$CC_CONFIG['filesTable'] ." WHERE ftype='audioclip'";
+echo " * Computing MD5 sums for all files (this may take a while)...\n";
+$sql = "SELECT to_hex(gunid) as gunid, name FROM ".$CC_CONFIG['filesTable'] ." WHERE ftype='audioclip'";
 $rows = $CC_DBC->GetAll($sql);
+$errorFiles = array();
 foreach ($rows as $row) {
-    echo $row['gunid']."\n";
-    $gunid = StoredFile::NormalizeGunid($gunid);
-    $storedFile = new StoredFile($row['gunid']);
+    $gunid = StoredFile::NormalizeGunid($row['gunid']);
+    $storedFile = new StoredFile($gunid);
     $fileName = $storedFile->getRealFileName();
-    echo $fileName."\n";
+    $humanName = basename($row['name']);
+    echo "   File: $humanName\n";
     if (file_exists($fileName)) {
         $md5 = md5_file($fileName);
         $storedFile->setMd5($md5);
+        //echo "         MD5: $md5\n";
+    } else {
+        $errorFiles[] = "$gunid -- $humanName";
+        echo "         ERROR: file does not exist! (GUNID: $gunid)\n";
     }
 }
 
-
-echo "**********************************\n";
-echo "* StorageServer Install Complete *\n";
-echo "**********************************\n";
+if (count($errorFiles) > 0) {
+    echo "\n\nWARNING\n";
+    echo "The following files were not found:\n";
+    foreach ($errorFiles as $file) {
+        echo $file."\n";
+    }
+}
+echo "*******************************************\n";
+echo "* StorageServer Upgrade to 1.2.0 Complete *\n";
+echo "*******************************************\n";
 
 ?>
