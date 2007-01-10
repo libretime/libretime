@@ -70,9 +70,9 @@ class BasicStor {
      * 		Parent id
      * @param string $fileName
      * 		Name for new file
-     * @param string $mediaFileLP
+     * @param string $localFilePath
      * 		Local path of media file
-     * @param string $mdataFileLP
+     * @param string $metadataFilePath
      * 		Local path of metadata file
      * @param string $gunid
      * 		global unique id
@@ -85,7 +85,7 @@ class BasicStor {
      * @return int
      * @exception PEAR_Error
      */
-    public function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
+    public function bsPutFile($parid, $fileName, $localFilePath, $metadataFilePath,
         $gunid=NULL, $ftype='unknown', $mdataLoc='file', $copyMedia=TRUE)
     {
         $ftype = strtolower($ftype);
@@ -94,7 +94,7 @@ class BasicStor {
             return $id;
         }
         $ac = StoredFile::insert($id, $fileName,
-            $mediaFileLP, $mdataFileLP, $mdataLoc, $gunid, $ftype, 'StoredFile', $copyMedia);
+            $localFilePath, $metadataFilePath, $mdataLoc, $gunid, $ftype, 'StoredFile', $copyMedia);
         if (PEAR::isError($ac)) {
             $res = BasicStor::RemoveObj($id);
             // catch constraint violations
@@ -222,30 +222,30 @@ class BasicStor {
      *
      * @param int $id
      * 		Virtual file's local id
-     * @param string $mediaFileLP
+     * @param string $localFilePath
      * 		Local path of media file
-     * @param string $mdataFileLP
+     * @param string $metadataFilePath
      * 		Local path of metadata file
      * @param string $mdataLoc
      * 		'file'|'string'
      * @return true|PEAR_Error
      * @exception PEAR::error
      */
-    public function bsReplaceFile($id, $mediaFileLP, $mdataFileLP, $mdataLoc='file')
+    public function bsReplaceFile($id, $localFilePath, $metadataFilePath, $mdataLoc='file')
     {
         $ac = StoredFile::recall($id);
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        if (!empty($mdataFileLP) &&
-                ($mdataLoc!='file' || file_exists($mdataFileLP))) {
-            $r = $ac->replaceMetadata($mdataFileLP, $mdataLoc);
+        if (!empty($metadataFilePath) &&
+                ($mdataLoc!='file' || file_exists($metadataFilePath))) {
+            $r = $ac->replaceMetadata($metadataFilePath, $mdataLoc);
             if (PEAR::isError($r)) {
                 return $r;
             }
         }
-        if (!empty($mediaFileLP) && file_exists($mediaFileLP)) {
-            $r = $ac->replaceRawMediaData($mediaFileLP);
+        if (!empty($localFilePath) && file_exists($localFilePath)) {
+            $r = $ac->replaceRawMediaData($localFilePath);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -1479,7 +1479,7 @@ class BasicStor {
         if (PEAR::isError($ac)) {
             return $ac;
         }
-        $ia = $ac->analyzeMediaFile();
+        $ia = $ac->analyzeFile();
         return $ia;
     }
 

@@ -1,7 +1,215 @@
 <?php
-require_once("RawMediaData.php");
 require_once("MetaData.php");
 require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
+
+/**
+ * Add data to the global array $mdata, also sets global variables
+ * $titleHaveSet and $titleKey.
+ *
+ * Converts the given string ($val) into UTF-8.
+ *
+ * @param array $p_mdata
+ * 		The array to add the metadata to.
+ * @param string $p_key
+ * 		Metadata key.
+ * @param string $p_val
+ * 		Metadata value.
+ * @param string $p_inputEncoding
+ * 		Encoding type of the input value.
+ */
+function camp_add_metadata(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859-1')
+{
+    if (!is_null($p_val)) {
+        $data = $p_val;
+        $outputEncoding = 'UTF-8';
+        if (function_exists('iconv') && ($p_inputEncoding != $outputEncoding) ) {
+            $data = @iconv($p_inputEncoding, $outputEncoding, $data);
+            if ($data === FALSE) {
+                echo "Warning: convert $key data to unicode failed\n";
+                $data = $p_val;  // fallback
+            }
+        }
+        $p_mdata[$p_key] = trim($data);
+    }
+}
+
+
+/**
+ * Return an array with the given audio file's ID3 tags.  The keys in the
+ * array can be:
+ * <pre>
+ * 		dc:format
+ * 		ls:bitrate
+ * 		dcterms:extent
+ * 		dc:title
+ * 		dc:creator
+ * 		dc:source
+ * 		ls:encoded_by
+ * 		ls:track_num
+ * 		ls:genre
+ * 		ls:channels
+ * 		ls:year
+ * 		ls:filename
+ * </pre>
+ *
+ * @param string $p_filename
+ * @param boolean $p_testonly
+ * 		For diagnostic and debugging purposes - setting this to TRUE
+ * 		will print out the values found in the file and the ones assigned
+ * 		to the return array.
+ * @return array/PEAR_Error
+ */
+function camp_get_audio_metadata($p_filename, $p_testonly = false)
+{
+    $getID3 = new getID3();
+    $infoFromFile = $getID3->analyze($p_filename);
+    //echo "\n".var_export($infoFromFile)."\n"; exit;
+    if (PEAR::isError($infoFromFile)) {
+    	return $infoFromFile;
+    }
+    if (isset($infoFromFile['error'])) {
+    	return new PEAR_Error(array_pop($infoFromFile['error']));
+    }
+    if (!$infoFromFile['bitrate']) {
+    	return new PEAR_Error("File given is not an audio file.");
+    }
+
+    if ($p_testonly) {
+    	print_r($infoFromFile);
+    }
+	$titleKey = 'dc:title';
+	$flds = array(
+	    'dc:format'     => array(
+	        array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
+	    ),
+	    'ls:bitrate'    => array(
+	        array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
+	    ),
+	    'dcterms:extent'=> array(
+	        array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
+	    ),
+	    'dc:title'	    => array(
+	        array('path'=>"['id3v2']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'dc:creator'	=> array(
+	        array('path'=>"['id3v2']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'dc:source'	    => array(
+	        array('path'=>"['id3v2']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['ogg']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'ls:encoded_by'	=> array(
+	        array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'ls:track_num'	=> array(
+	        array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'ls:genre'	    => array(
+	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'ls:channels'	=> array(
+	        array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
+	    ),
+	    'ls:year'	    => array(
+	    	array('path'=>"['comments']['date']"),
+	        array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	        array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+	    ),
+	    'ls:filename'	=> array(
+	        array('path'=>"['filename']"),
+	    ),
+	/*
+	    'xx:fileformat' => array(array('path'=>"['fileformat']")),
+	    'xx:filesize'   => array(array('path'=>"['filesize']")),
+	    'xx:dataformat' => array(array('path'=>"['audio']['dataformat']")),
+	    'xx:sample_rate'=> array(array('path'=>"['audio']['sample_rate']")),
+	*/
+	);
+    $mdata = array();
+    if (isset($infoFromFile['audio'])) {
+    	$mdata['audio'] = $infoFromFile['audio'];
+    }
+    if (isset($infoFromFile['playtime_seconds'])) {
+		$mdata['playtime_seconds'] = $infoFromFile['playtime_seconds'];
+    }
+
+    $titleHaveSet = FALSE;
+    foreach ($flds as $key => $getid3keys) {
+        if ($p_testonly) {
+        	echo "$key\n";
+        }
+        foreach ($getid3keys as $getid3key) {
+            $path = $getid3key["path"];
+            $ignoreEnc = isset($getid3key["ignoreEnc"])?$getid3key["ignoreEnc"]:FALSE;
+            $dataPath = isset($getid3key["dataPath"])?$getid3key["dataPath"]:"";
+            $encPath = isset($getid3key["encPath"])?$getid3key["encPath"]:"";
+            $enc = "UTF-8";
+
+            $vn = "\$infoFromFile$path$dataPath";
+            if ($p_testonly) {
+            	echo "   $vn   ->   ";
+            }
+            eval("\$vnFl = isset($vn);");
+            if ($vnFl) {
+                eval("\$data = $vn;");
+                if ($p_testonly) {
+                	echo "$data\n";
+                }
+                if (!$ignoreEnc && $encPath != "") {
+                    $encVn = "\$infoFromFile$path$encPath";
+                    eval("\$encVnFl = isset($encVn);");
+                    if ($encVnFl) {
+                    	eval("\$enc = $encVn;");
+                    }
+                }
+                if ($p_testonly) {
+                	echo "        ENC=$enc\n";
+                }
+                camp_add_metadata($mdata, $key, $data, $enc);
+		        if ($key == $titleKey) {
+		        	$titleHaveSet = TRUE;
+		        }
+                break;
+            } else {
+                if ($p_testonly) {
+                	echo "\n";
+                }
+            }
+        }
+    }
+    if ($p_testonly) {
+    	var_dump($mdata);
+    }
+
+    if (!$titleHaveSet || trim($mdata[$titleKey]) == '') {
+    	camp_add_metadata($mdata, $titleKey, basename($p_filename));
+    }
+    return $mdata;
+}
+
 
 /**
  *  StoredFile class
@@ -10,7 +218,7 @@ require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
  *      <li>metadata in database - represented by MetaData class</li>
- *      <li>binary media data in real file - represented by RawMediaData class</li>
+ *      <li>binary media data in real file</li>
  *  </ul>
  *
  * @author Tomas Hlava <th@red2head.com>
@@ -22,13 +230,13 @@ require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
  * @license http://www.gnu.org/licenses/gpl.txt
  * @link http://www.campware.org
  * @see MetaData
- * @see RawMediaData
  */
 class StoredFile {
 	/**
-	 * Unique ID for the file.
+	 * Unique ID for the file.  This is stored in HEX format.  It is
+	 * converted to a bigint whenever it is used in a database call.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	public $gunid;
 
@@ -40,9 +248,14 @@ class StoredFile {
 	private $resDir;
 
 	/**
-	 * @var RawMediaData
+	 * @var string
 	 */
-	public $rmd;
+	private $fname;
+
+	/**
+	 * @var boolean
+	 */
+	private $exists;
 
 	/**
 	 * @var MetaData
@@ -65,7 +278,8 @@ class StoredFile {
             $this->gunid = StoredFile::CreateGunid();
         }
         $this->resDir = $this->_getResDir($this->gunid);
-        $this->rmd = new RawMediaData($this->gunid, $this->resDir);
+        $this->fname = $this->makeFileName();
+        $this->exists = is_file($this->fname) && is_readable($this->fname);
         $this->md = new MetaData($this->gunid, $this->resDir);
     }
 
@@ -92,30 +306,33 @@ class StoredFile {
      * 		copy the media file if true, make symlink if false
      *  @return StoredFile
      */
-    public static function &insert($oid, $filename, $localFilePath='',
+    public static function insert($oid, $filename, $localFilePath='',
         $metadata='', $mdataLoc='file', $gunid=NULL, $ftype=NULL, $copyMedia=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
-        $ac = new StoredFile(($gunid ? $gunid : NULL));
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = new StoredFile(($gunid ? $gunid : NULL));
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $ac->name = $filename;
-        $ac->id = $oid;
-        $ac->mime = "unknown";
+        $storedFile->fname = $filename;
+        $storedFile->id = $oid;
+        $storedFile->mime = "unknown";
         $emptyState = TRUE;
-        if ($ac->name == '') {
-            $ac->name = $ac->gunid;
+        if ($storedFile->fname == '') {
+            $storedFile->fname = $storedFile->gunid;
         }
-        $md5 = md5_file($localFilePath);
+        $storedFile->exists = FALSE;
+        if (file_exists($localFilePath)) {
+            $storedFile->exists = TRUE;
+            $md5 = md5_file($localFilePath);
+        }
         $escapedName = pg_escape_string($filename);
         $escapedFtype = pg_escape_string($ftype);
         $CC_DBC->query("BEGIN");
         $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
                 ."(id, name, gunid, mime, state, ftype, mtime, md5)"
-                ."VALUES ('$oid', '{$escapedName}', x'{$ac->gunid}'::bigint,
-                 '{$ac->mime}', 'incomplete', '$escapedFtype', now(), '$md5')";
-        echo $sql;
+                ."VALUES ('$oid', '{$escapedName}', x'{$storedFile->gunid}'::bigint,
+                 '{$storedFile->mime}', 'incomplete', '$escapedFtype', now(), '$md5')";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -132,7 +349,7 @@ class StoredFile {
             return PEAR::raiseError("StoredFile::insert: ".
                 "metadata file not found ($metadata)");
         }
-        $res = $ac->md->insert($metadata, $mdataLoc, $ftype);
+        $res = $storedFile->md->insert($metadata, $mdataLoc, $ftype);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
             return $res;
@@ -143,14 +360,14 @@ class StoredFile {
                 return PEAR::raiseError("StoredFile::insert: ".
                     "media file not found ($localFilePath)");
             }
-            $res = $ac->rmd->insert($localFilePath, $copyMedia);
+            $res = $storedFile->addFile($localFilePath, $copyMedia);
             if (PEAR::isError($res)) {
                 $CC_DBC->query("ROLLBACK");
                 return $res;
             }
-            $mime = $ac->rmd->getMime();
+            $mime = $storedFile->getMime();
             if ($mime !== FALSE) {
-                $res = $ac->setMime($mime);
+                $res = $storedFile->setMime($mime);
                 if (PEAR::isError($res)) {
                     $CC_DBC->query("ROLLBACK");
                     return $res;
@@ -159,7 +376,7 @@ class StoredFile {
             $emptyState = FALSE;
         }
         if (!$emptyState) {
-            $res = $ac->setState('ready');
+            $res = $storedFile->setState('ready');
             if (PEAR::isError($res)) {
                 $CC_DBC->query("ROLLBACK");
                 return $res;
@@ -170,7 +387,7 @@ class StoredFile {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        return $ac;
+        return $storedFile;
     }
 
 
@@ -184,7 +401,7 @@ class StoredFile {
      * 		global unique id of file
      * @return StoredFile
      */
-    public static function &recall($oid='', $gunid='')
+    public static function recall($oid='', $gunid='')
     {
         global $CC_DBC;
         global $CC_CONFIG;
@@ -207,12 +424,13 @@ class StoredFile {
             return $r;
         }
         $gunid = StoredFile::NormalizeGunid($row['gunid']);
-        $ac = new StoredFile($gunid);
-        $ac->mime = $row['mime'];
-        $ac->name = $row['name'];
-        $ac->id = $row['id'];
-        $ac->md->setFormat($row['ftype']);
-        return $ac;
+        $storedFile = new StoredFile($gunid);
+        $storedFile->mime = $row['mime'];
+        $storedFile->fname = $row['name'];
+        $storedFile->exists = TRUE;
+        $storedFile->id = $row['id'];
+        $storedFile->md->setFormat($row['ftype']);
+        return $storedFile;
     }
 
 
@@ -224,7 +442,7 @@ class StoredFile {
      * 		global unique id of file
      * @return StoredFile
      */
-    public static function &recallByGunid($gunid='')
+    public static function recallByGunid($gunid='')
     {
         return StoredFile::recall('', $gunid);
     }
@@ -283,6 +501,133 @@ class StoredFile {
 
 
     /**
+     * Insert media file to filesystem
+     *
+     * @param string $localFilePath
+     * 		local path
+     * @param boolean $copyMedia
+     * 		copy the media file if true, make symlink if false
+     * @return TRUE|PEAR_Error
+     */
+    function addFile($localFilePath, $copyMedia=TRUE)
+    {
+        if ($this->exists) {
+        	return FALSE;
+        }
+        // for files downloaded from archive:
+        if ($localFilePath == $this->fname) {
+            $this->exists = TRUE;
+            return TRUE;
+        }
+        umask(0002);
+        if ($copyMedia) {
+            $r = @copy($localFilePath, $this->fname);
+        } else {
+            $r = @symlink($localFilePath, $this->fname);
+        }
+        if ( $r ) {
+            $this->exists = TRUE;
+            return TRUE;
+        } else {
+            //@unlink($this->fname);    // maybe useless
+            $this->exists = FALSE;
+            return PEAR::raiseError(
+                "StoredFile::addFile: file save failed".
+                " ($localFilePath, {$this->fname})",GBERR_FILEIO
+            );
+        }
+    }
+
+
+    /**
+     * Delete and insert media file
+     *
+     * @param string $localFilePath
+     *      local path
+     * @return TRUE|PEAR_Error
+     */
+    function replaceFile($localFilePath)
+    {
+        if ($this->exists) {
+        	$r = $this->delete();
+        } else {
+        	$r = NULL;
+        }
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        return $this->addFile($localFilePath);
+    }
+
+
+    /**
+     * Return true if file corresponding to the object exists
+     *
+     * @return boolean
+     */
+    function existsFile()
+    {
+        return $this->exists;
+    }
+
+
+    /**
+     * Delete media file from filesystem
+     *
+     * @return boolean|PEAR_Error
+     */
+    function deleteFile()
+    {
+        if (!$this->exists) {
+        	return FALSE;
+        }
+        if (@unlink($this->fname)) {
+            $this->exists = FALSE;
+            return TRUE;
+        } else {
+            return PEAR::raiseError(
+                "StoredFile::deleteFile: unlink failed ({$this->fname})",
+                GBERR_FILEIO
+            );
+        }
+        return $this->exists;
+    }
+
+
+    /**
+     * Analyze file with getid3 module.<br>
+     * Obtain some metadata stored in media file.<br>
+     * This method should be used for prefilling metadata input form.
+     *
+     * @return array
+     * 		hierarchical hasharray with information about media file
+     */
+    function analyzeFile()
+    {
+        if (!$this->exists) {
+        	return FALSE;
+        }
+        $ia = camp_get_audio_metadata($this->fname);
+//        echo "<pre>";
+//        $ia = camp_get_audio_metadata($this->fname, true);
+//        print_r($ia);
+//        exit;
+        return $ia;
+    }
+
+
+    /**
+     * Contruct filepath of media file
+     *
+     * @return string
+     */
+    function makeFileName()
+    {
+        return "{$this->resDir}/{$this->gunid}";
+    }
+
+
+    /**
      * Create instance of StoredFile object and make copy of existing file
      *
      * @param StoredFile $src
@@ -291,15 +636,15 @@ class StoredFile {
      * 		new local id
      * @return StoredFile
      */
-    public static function &CopyOf(&$src, $nid)
+    public static function CopyOf(&$src, $nid)
     {
-        $ac = StoredFile::insert($nid, $src->name, $src->getRealFileName(),
+        $storedFile = StoredFile::insert($nid, $src->fname, $src->getRealFileName(),
             '', '', NULL, BasicStor::GetType($src->gunid));
-        if (PEAR::isError($ac)) {
-            return $ac;
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $ac->md->replace($src->md->getMetadata(), 'string');
-        return $ac;
+        $storedFile->md->replace($src->md->getMetadata(), 'string');
+        return $storedFile;
     }
 
 
@@ -310,7 +655,7 @@ class StoredFile {
      * 		local id
      * @param string $name
      * 		name of file
-     * @param string $mediaFileLP
+     * @param string $localFilePath
      * 		local path to media file
      * @param string $metadata
      * 		local path to metadata XML file or XML string
@@ -318,7 +663,7 @@ class StoredFile {
      * 		'file'|'string'
      * @return TRUE|PEAR_Error
      */
-    public function replace($oid, $name, $mediaFileLP='', $metadata='',
+    public function replace($oid, $name, $localFilePath='', $metadata='',
         $mdataLoc='file')
     {
         global $CC_CONFIG, $CC_DBC;
@@ -328,10 +673,10 @@ class StoredFile {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        if ($mediaFileLP != '') {
-            $res = $this->replaceRawMediaData($mediaFileLP);
+        if ($localFilePath != '') {
+            $res = $this->replaceRawMediaData($localFilePath);
         } else {
-            $res = $this->rmd->delete();
+            $res = $this->deleteFile();
         }
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -356,8 +701,7 @@ class StoredFile {
 
 
     /**
-     * Increase access counter, create access token, insert access record,
-     * call access method of RawMediaData
+     * Increase access counter, create access token, insert access record.
      *
      * @param int $parent
      * 		parent token
@@ -379,8 +723,7 @@ class StoredFile {
 
 
     /**
-     * Decrease access couter, delete access record,
-     * call release method of RawMediaData
+     * Decrease access couter, delete access record.
      *
      * @param string $token
      * 		access token
@@ -399,17 +742,17 @@ class StoredFile {
     /**
      * Replace media file only with new binary file
      *
-     * @param string $mediaFileLP
+     * @param string $localFilePath
      * 		local path to media file
      * @return void|PEAR_Error
      */
-    public function replaceRawMediaData($mediaFileLP)
+    public function replaceRawMediaData($localFilePath)
     {
-        $res = $this->rmd->replace($mediaFileLP);
+        $res = $this->replaceFile($localFilePath);
         if (PEAR::isError($res)) {
             return $res;
         }
-        $mime = $this->rmd->getMime();
+        $mime = $this->getMime();
         if ($mime !== FALSE) {
             $res = $this->setMime($mime);
             if (PEAR::isError($res)) {
@@ -471,21 +814,6 @@ class StoredFile {
 
 
     /**
-     * Analyze file with getid3 module.<br>
-     * Obtain some metadata stored in media file.<br>
-     * This method should be used for prefilling metadata input form.
-     *
-     * @return array
-     * @see MetaData
-     */
-    public function analyzeMediaFile()
-    {
-        $ia = $this->rmd->analyze();
-        return $ia;
-    }
-
-
-    /**
      * Rename stored virtual file
      *
      * @param string $newname
@@ -542,14 +870,13 @@ class StoredFile {
     public function setMime($mime)
     {
         global $CC_CONFIG, $CC_DBC;
-        if ( !is_string($mime)){
+        if (!is_string($mime)) {
             $mime = 'application/octet-stream';
         }
         $escapedMime = pg_escape_string($mime);
-        $res = $CC_DBC->query("
-            UPDATE ".$CC_CONFIG['filesTable']." SET mime='$escapedMime', mtime=now()
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $res = $CC_DBC->query(
+            "UPDATE ".$CC_CONFIG['filesTable']." SET mime='$escapedMime', mtime=now()
+            WHERE gunid=x'{$this->gunid}'::bigint");
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -567,10 +894,9 @@ class StoredFile {
     {
         global $CC_CONFIG, $CC_DBC;
         $escapedMd5 = pg_escape_string($p_md5sum);
-        $res = $CC_DBC->query("
-            UPDATE ".$CC_CONFIG['filesTable']." SET md5='$escapedMd5', mtime=now()
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $res = $CC_DBC->query(
+            "UPDATE ".$CC_CONFIG['filesTable']." SET md5='$escapedMd5', mtime=now()
+            WHERE gunid=x'{$this->gunid}'::bigint");
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -581,14 +907,13 @@ class StoredFile {
     /**
      * Delete stored virtual file
      *
-     * @see RawMediaData
      * @see MetaData
      * @return TRUE|PEAR_Error
      */
     public function delete()
     {
         global $CC_CONFIG, $CC_DBC;
-        $res = $this->rmd->delete();
+        $res = $this->deleteFile();
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -598,27 +923,24 @@ class StoredFile {
         }
         $tokens = $CC_DBC->getAll("
             SELECT to_hex(token)as token, ext FROM ".$CC_CONFIG['accessTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+            WHERE gunid=x'{$this->gunid}'::bigint");
         if (is_array($tokens)) {
-            foreach($tokens as $i=>$item){
+            foreach ($tokens as $i => $item) {
                 $file = $this->_getAccessFileName($item['token'], $item['ext']);
                 if (file_exists($file)) {
                     @unlink($file);
                 }
             }
         }
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['accessTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $res = $CC_DBC->query(
+            "DELETE FROM ".$CC_CONFIG['accessTable']."
+            WHERE gunid=x'{$this->gunid}'::bigint");
         if (PEAR::isError($res)) {
             return $res;
         }
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['filesTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $res = $CC_DBC->query(
+            "DELETE FROM ".$CC_CONFIG['filesTable']."
+            WHERE gunid=x'{$this->gunid}'::bigint");
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -729,7 +1051,7 @@ class StoredFile {
             return FALSE;
         }
         if (BasicStor::GetType($this->gunid) == 'audioclip') {
-            return $this->rmd->exists();
+            return $this->existsFile();
         }
         return TRUE;
     }
@@ -760,32 +1082,6 @@ class StoredFile {
     {
         return str_pad($gunid, 16, "0", STR_PAD_LEFT);
     }
-
-
-    /**
-     * Get local id from global id.
-     * Static or dynamic call is possible, argument required for
-     * static call.
-     *
-     * @param string $gunid
-     * 		optional (for static call), global unique id of file
-     */
-//    function _idFromGunid($gunid=NULL)
-//    {
-//        if (is_null($gunid)) {
-//            $gunid = $this->$gunid;
-//        }
-//        $id = $CC_DBC->getOne("
-//            SELECT id FROM {$this->filesTable}
-//            WHERE gunid=x'$gunid'::bigint
-//        ");
-//        if (is_null($id)) {
-//            return PEAR::raiseError(
-//            "StoredFile::_idFromGunid: no such global unique id ($gunid)"
-//            );
-//        }
-//        return $id;
-//    }
 
 
     /**
@@ -827,23 +1123,22 @@ class StoredFile {
 
 
     /**
-     * Get mime-type from global id
+     * Get mime-type stored in the file.
+     * Warning: this function is slow!
      *
-     * @param string $gunid
-     * 		global unique id of file
      * @return string
-     * 		mime-type
      */
-//    function _getMime($gunid=NULL)
-//    {
-//        if (is_null($gunid)) {
-//            $gunid = $this->gunid;
-//        }
-//        return $CC_DBC->getOne("
-//            SELECT mime FROM {$this->filesTable}
-//            WHERE gunid=x'$gunid'::bigint
-//        ");
-//    }
+    function getMime()
+    {
+        $a = $this->analyzeFile();
+        if (PEAR::isError($a)) {
+        	return $a;
+        }
+        if (isset($a['dc:format'])) {
+        	return $a['dc:format'];
+        }
+        return '';
+    }
 
 
     /**
@@ -911,11 +1206,10 @@ class StoredFile {
      * Get real filename of raw media data
      *
      * @return string
-     * @see RawMediaData
      */
     public function getRealFileName()
     {
-        return $this->rmd->getFileName();
+        return $this->fname;
     }
 
 

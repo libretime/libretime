@@ -84,7 +84,7 @@ if (PEAR::isError($ftype)) {
 switch ($ftype) {
     case "audioclip":
         $realFname  = $ac->getRealFileName();
-        $mime = $ac->rmd->getMime();
+        $mime = $ac->getMime();
         header("Content-type: $mime");
         header("Content-length: ".filesize($realFname));
         readfile($realFname);
