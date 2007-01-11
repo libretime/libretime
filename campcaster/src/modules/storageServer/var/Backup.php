@@ -301,7 +301,7 @@ class Backup
             foreach ($this->ids as $i=>$item) {
                 $gunid = $item['gunid'];
                 // get a stored file object of this gunid
-                $sf = StoredFile::recallByGunid($gunid);
+                $sf = StoredFile::RecallByGunid($gunid);
                 if (PEAR::isError($sf)) {
                 	return $sf;
                 }

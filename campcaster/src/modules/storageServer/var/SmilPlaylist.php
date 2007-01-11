@@ -75,7 +75,7 @@ class SmilPlaylist {
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $pl->replaceMetadata($lspl, 'string', 'playlist');
+        $r = $pl->setMetadata($lspl, 'string', 'playlist');
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -262,7 +262,7 @@ class SmilPlaylistAudioElement {
                     }
                    //break;
                 default:
-                    $ac = StoredFile::recallByGunid($gunid);
+                    $ac = StoredFile::RecallByGunid($gunid);
                     if (PEAR::isError($ac)) {
                     	return $ac;
                     }

@@ -287,12 +287,12 @@ class Transport
         switch ($ftype = BasicStor::GetType($gunid)) {
             case "audioclip":
             case "webstream":
-                $ac = StoredFile::recallByGunid($gunid);
-                if (PEAR::isError($ac)) {
-                	return $ac;
+                $storedFile = StoredFile::RecallByGunid($gunid);
+                if (PEAR::isError($storedFile)) {
+                	return $storedFile;
                 }
                 // handle metadata:
-                $mdfpath = $ac->getRealMetadataFileName();
+                $mdfpath = $storedFile->getRealMetadataFileName();
                 if (PEAR::isError($mdfpath)) {
                 	return $mdfpath;
                 }
@@ -303,11 +303,11 @@ class Transport
                 	return $mdtrec;
                 }
                 // handle raw media file:
-                $fpath = $ac->getRealFileName();
+                $fpath = $storedFile->getRealFileName();
                 if (PEAR::isError($fpath)) {
                 	return $fpath;
                 }
-                $fname = $ac->getFileName();
+                $fname = $storedFile->getName();
                 if (PEAR::isError($fname)) {
                 	return $fname;
                 }
@@ -325,11 +325,11 @@ class Transport
             case "playlist":
                 $plid = $gunid;
                 require_once("Playlist.php");
-                $pl = Playlist::recallByGunid($plid);
+                $pl = Playlist::RecallByGunid($plid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
-                $fname = $pl->getFileName();
+                $fname = $pl->getName();
                 if (PEAR::isError($fname)) {
                 	return $fname;
                 }

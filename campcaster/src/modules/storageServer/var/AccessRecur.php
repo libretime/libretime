@@ -33,7 +33,7 @@ class AccessRecur {
         	return $r;
         }
         $plRes = $r;
-        $r = StoredFile::recallByGunid($plid);
+        $r = StoredFile::RecallByGunid($plid);
         if (PEAR::isError($r)) {
         	return $r;
         }

@@ -28,9 +28,9 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    public static function &recallByGunid($gunid, $className='Playlist')
+    public static function RecallByGunid($gunid, $className='Playlist')
     {
-        return parent::recallByGunid($gunid, $className);
+        return parent::RecallByGunid($gunid, $className);
     }
 
 
@@ -45,9 +45,9 @@ class Playlist extends StoredFile {
      * @return Playlist
      * 		instance of Playlist object
      */
-    public static function &recallByToken($token, $className='Playlist')
+    public static function RecallByToken($token, $className='Playlist')
     {
-        return parent::recallByToken($token, $className);
+        return parent::RecallByToken($token, $className);
     }
 
 
@@ -221,7 +221,7 @@ class Playlist extends StoredFile {
      */
     private function getAudioClipInfo($acId)
     {
-        $ac = StoredFile::recall($acId);
+        $ac = StoredFile::Recall($acId);
         if (PEAR::isError($ac)) {
         	return $ac;
         }
@@ -956,7 +956,7 @@ class Playlist extends StoredFile {
             if ($found) {               // we've found offset
                 switch ($el['type']) {
                 case "playlist":
-                    $pl = Playlist::recallByGunid($acGunid);
+                    $pl = Playlist::RecallByGunid($acGunid);
                     if (PEAR::isError($pl)) {
                     	return $pl;
                     }
@@ -1033,7 +1033,7 @@ class Playlist extends StoredFile {
             extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
             switch ($el['type']) {
             case "playlist":
-                $pl = Playlist::recallByGunid($acGunid);
+                $pl = Playlist::RecallByGunid($acGunid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
@@ -1105,7 +1105,7 @@ class Playlist extends StoredFile {
         if ($this->gunid == $insGunid) {
         	return TRUE;
         }
-        $pl = Playlist::recallByGunid($insGunid);
+        $pl = Playlist::RecallByGunid($insGunid);
         if (PEAR::isError($pl)) {
         	return $pl;
         }

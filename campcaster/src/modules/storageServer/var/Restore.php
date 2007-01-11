@@ -333,7 +333,7 @@ class Restore {
                 return $put;
             }
         }
-        $ac = StoredFile::recallByGunid($gunid);
+        $ac = StoredFile::RecallByGunid($gunid);
         if (PEAR::isError($ac)) {
         	return $ac;
         }

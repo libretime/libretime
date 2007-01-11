@@ -93,22 +93,22 @@ class BasicStor {
         if (PEAR::isError($id)) {
             return $id;
         }
-        $ac = StoredFile::insert($id, $fileName,
+        $storedFile = StoredFile::insert($id, $fileName,
             $localFilePath, $metadataFilePath, $mdataLoc, $gunid, $ftype, 'StoredFile', $copyMedia);
-        if (PEAR::isError($ac)) {
+        if (PEAR::isError($storedFile)) {
             $res = BasicStor::RemoveObj($id);
             // catch constraint violations
-            switch ($ac->getCode()) {
+            switch ($storedFile->getCode()) {
                 case -3:
                     return PEAR::raiseError(
                         "BasicStor::bsPutFile: gunid duplication",
                         GBERR_GUNID);
                 default:
-                    return $ac;
+                    return $storedFile;
             }
         }
         if ($ftype == 'playlist') {
-            $ac->setMime('application/smil');
+            $storedFile->setMime('application/smil');
         }
         return $id;
     } // fn bsPutFile
@@ -129,13 +129,13 @@ class BasicStor {
             case "audioclip":
             case "playlist":
             case "webstream":
-                $ac = StoredFile::recall($id);
-                if (PEAR::isError($ac)) {
+                $storedFile = StoredFile::Recall($id);
+                if (PEAR::isError($storedFile)) {
                     // catch nonerror exception:
-                    //if($ac->getCode() != GBERR_FOBJNEX)
-                    return $ac;
+                    //if($storedFile->getCode() != GBERR_FOBJNEX)
+                    return $storedFile;
                 }
-                $res = $ac->rename($newName);
+                $res = $storedFile->setName($newName);
                 if (PEAR::isError($res)) {
                     return $res;
                 }
@@ -233,19 +233,19 @@ class BasicStor {
      */
     public function bsReplaceFile($id, $localFilePath, $metadataFilePath, $mdataLoc='file')
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
         if (!empty($metadataFilePath) &&
                 ($mdataLoc!='file' || file_exists($metadataFilePath))) {
-            $r = $ac->replaceMetadata($metadataFilePath, $mdataLoc);
+            $r = $storedFile->setMetadata($metadataFilePath, $mdataLoc);
             if (PEAR::isError($r)) {
                 return $r;
             }
         }
         if (!empty($localFilePath) && file_exists($localFilePath)) {
-            $r = $ac->replaceRawMediaData($localFilePath);
+            $r = $storedFile->setRawMediaData($localFilePath);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -280,15 +280,15 @@ class BasicStor {
             case "audioclip":
             case "playlist":
             case "webstream":
-                $ac = StoredFile::recall($id);
-                if (PEAR::isError($ac)) {
-                    return $ac;
+                $storedFile = StoredFile::Recall($id);
+                if (PEAR::isError($storedFile)) {
+                    return $storedFile;
                 }
                 if (is_null($did)) {
                     return PEAR::raiseError("BasicStor::bsDeleteFile: ".
                         "trash not found", GBERR_NOTF);
                 }
-                $res = $ac->setState('deleted');
+                $res = $storedFile->setState('deleted');
                 if (PEAR::isError($res)) {
                     return $res;
                 }
@@ -514,21 +514,21 @@ class BasicStor {
      */
     public function bsOpenDownload($id, $part='media', $parent='0')
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $gunid = $ac->gunid;
+        $gunid = $storedFile->gunid;
         switch ($part) {
             case "media":
-                $realfile = $ac->getRealFileName();
-                $ext = $ac->getFileExtension();
-                $filename = $ac->getFileName();
+                $realfile = $storedFile->getRealFileName();
+                $ext = $storedFile->getFileExtension();
+                $filename = $storedFile->getName();
                 break;
             case "metadata":
-                $realfile = $ac->getRealMetadataFileName();
+                $realfile = $storedFile->getRealMetadataFileName();
                 $ext = "xml";
-                $filename = $ac->getFileName();
+                $filename = $storedFile->getName();
                 break;
             default:
                 return PEAR::raiseError(
@@ -666,7 +666,7 @@ class BasicStor {
                  GBERR_PUT);
         } else {
             // Remember the MD5 sum
-            $storedFile = StoredFile::recallByToken($token);
+            $storedFile = StoredFile::RecallByToken($token);
             if (!PEAR::isError($storedFile)) {
                 $storedFile->setMd5($md5sum);
             } else {
@@ -800,11 +800,11 @@ class BasicStor {
      */
     public function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        return $ac->replaceMetadata($mdata, $mdataLoc);
+        return $storedFile->setMetadata($mdata, $mdataLoc);
     }
 
 
@@ -817,11 +817,11 @@ class BasicStor {
      */
     public function bsGetMetadata($id)
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        return $ac->getMetadata();
+        return $storedFile->getMetadata();
     }
 
 
@@ -842,14 +842,14 @@ class BasicStor {
     public function bsGetTitle($id, $gunid=NULL, $lang=NULL, $deflang=NULL)
     {
         if (is_null($gunid)) {
-            $ac = StoredFile::recall($id);
+            $storedFile = StoredFile::Recall($id);
         } else {
-            $ac = StoredFile::recallByGunid($gunid);
+            $storedFile = StoredFile::RecallByGunid($gunid);
         }
-        if (PEAR::isError($ac)) {
-            return $ac;
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $r = $ac->md->getMetadataValue('dc:title', $lang, $deflang);
+        $r = $storedFile->md->getMetadataValue('dc:title', $lang, $deflang);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -875,11 +875,11 @@ class BasicStor {
      */
 //    public function bsGetMetadataValue($id, $category, $lang=NULL, $deflang=NULL)
 //    {
-//        $ac = StoredFile::recall($id);
-//        if (PEAR::isError($ac)) {
-//            return $ac;
+//        $storedFile = StoredFile::Recall($id);
+//        if (PEAR::isError($storedFile)) {
+//            return $storedFile;
 //        }
-//        return $ac->md->getMetadataValue($category, $lang, $deflang);
+//        return $storedFile->md->getMetadataValue($category, $lang, $deflang);
 //    }
 
 
@@ -899,20 +899,20 @@ class BasicStor {
      */
     public function bsGetMetadataValue($id, $category = null)
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
         if (is_null($category)) {
-        	return $ac->md->getAllMetadata();
+        	return $storedFile->md->getAllMetadata();
         } elseif (is_array($category)) {
         	$values = array();
 			foreach ($category as $tmpCat) {
-				$values[$tmpCat] = $ac->md->getMetadataValue($tmpCat);
+				$values[$tmpCat] = $storedFile->md->getMetadataValue($tmpCat);
 			}
 			return $values;
         } else {
-        	return $ac->md->getMetadataValue($category);
+        	return $storedFile->md->getMetadataValue($category);
         }
     }
 
@@ -939,19 +939,19 @@ class BasicStor {
     public function bsSetMetadataValue($id, $category, $value,
         $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
         if ($category == 'dcterms:extent') {
             $value = BasicStor::NormalizeExtent($value);
         }
-        $res = $ac->md->setMetadataValue($category, $value, $lang, $mid, $container);
+        $res = $storedFile->md->setMetadataValue($category, $value, $lang, $mid, $container);
         if (PEAR::isError($res)) {
             return $res;
         }
         if ($regen) {
-            $r = $ac->md->regenerateXmlFile();
+            $r = $storedFile->md->regenerateXmlFile();
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -1009,11 +1009,11 @@ class BasicStor {
             }
         }
         if ($regen) {
-            $ac = StoredFile::recall($id);
-            if (PEAR::isError($ac)) {
-                return $ac;
+            $storedFile = StoredFile::Recall($id);
+            if (PEAR::isError($storedFile)) {
+                return $storedFile;
             }
-            $r = $ac->md->regenerateXmlFile();
+            $r = $storedFile->md->regenerateXmlFile();
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -1135,7 +1135,7 @@ class BasicStor {
         }
         $gunids = array();
         foreach ($plids as $plid) {
-            $pl = Playlist::recallByGunid($plid);
+            $pl = Playlist::RecallByGunid($plid);
             if (PEAR::isError($pl)) {
                 return $pl;
             }
@@ -1164,11 +1164,11 @@ class BasicStor {
             mkdir($tmpdc);
         }
         foreach ($gunids as $i => $it) {
-            $ac = StoredFile::recallByGunid($it['gunid']);
-            if (PEAR::isError($ac)) {
-                return $ac;
+            $storedFile = StoredFile::RecallByGunid($it['gunid']);
+            if (PEAR::isError($storedFile)) {
+                return $storedFile;
             }
-            $MDfname = $ac->md->getFileName();
+            $MDfname = $storedFile->md->getName();
             if (PEAR::isError($MDfname)) {
                 return $MDfname;
             }
@@ -1176,16 +1176,16 @@ class BasicStor {
                 switch ($it['type']) {
 	                case "playlist":
 	                    require_once("LsPlaylist.php");
-	                    $ac = $r = LsPlaylist::recallByGunid($it['gunid']);
+	                    $storedFile = $r = LsPlaylist::RecallByGunid($it['gunid']);
 	                    switch ($type) {
 	                        case "smil":
-	                            $string = $r = $ac->outputToSmil();
+	                            $string = $r = $storedFile->outputToSmil();
 	                            break;
 	                        case "m3u":
-	                            $string = $r = $ac->outputToM3u();
+	                            $string = $r = $storedFile->outputToM3u();
 	                            break;
 	                        default:
-	                            $string = $r = $ac->md->genXmlDoc();
+	                            $string = $r = $storedFile->md->genXmlDoc();
 	                    }
 	                    if (PEAR::isError($r)) {
 	                        return $r;
@@ -1199,11 +1199,11 @@ class BasicStor {
 	                    copy($MDfname, "$tmpdc/{$it['gunid']}.xml"); break;
                 } // switch
             } // if file_exists()
-            $RADfname = $ac->getRealFileName();
+            $RADfname = $storedFile->getRealFileName();
             if (PEAR::isError($RADfname)) {
                 return $RADfname;
             }
-            $RADext = $ac->getFileExtension();
+            $RADext = $storedFile->getFileExtension();
             if (PEAR::isError($RADext)) {
                 return $RADext;
             }
@@ -1475,11 +1475,11 @@ class BasicStor {
      */
     public function bsAnalyzeFile($id)
     {
-        $ac = StoredFile::recall($id);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $ia = $ac->analyzeFile();
+        $ia = $storedFile->analyzeFile();
         return $ia;
     }
 
@@ -1556,22 +1556,22 @@ class BasicStor {
     public function bsExistsFile($id, $ftype=NULL, $byGunid=FALSE)
     {
         if ($byGunid) {
-            $ac = StoredFile::recallByGunid($id);
+            $storedFile = StoredFile::RecallByGunid($id);
         } else {
-            $ac = StoredFile::recall($id);
+            $storedFile = StoredFile::Recall($id);
         }
-        if (PEAR::isError($ac)) {
+        if (PEAR::isError($storedFile)) {
             // catch some exceptions
-            switch ($ac->getCode()) {
+            switch ($storedFile->getCode()) {
                 case GBERR_FILENEX:
                 case GBERR_FOBJNEX:
                     return FALSE;
                     break;
                 default:
-                	return $ac;
+                	return $storedFile;
             }
         }
-        $realFtype = BasicStor::GetType($ac->gunid);
+        $realFtype = BasicStor::GetType($storedFile->gunid);
         if (!is_null($ftype) && (
             ($realFtype != $ftype)
             // webstreams are subset of audioclips
@@ -1932,15 +1932,15 @@ class BasicStor {
                 return $p_subjid;
             }
         }
-        $ac = StoredFile::recallByGunid($p_playlistId);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::RecallByGunid($p_playlistId);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        $state = $ac->getState();
+        $state = $storedFile->getState();
         if ($p_val) {
-            $r = $ac->setState('edited', $p_subjid);
+            $r = $storedFile->setState('edited', $p_subjid);
         } else {
-            $r = $ac->setState('ready', 'NULL');
+            $r = $storedFile->setState('ready', 'NULL');
         }
         if (PEAR::isError($r)) {
             return $r;
@@ -1959,14 +1959,14 @@ class BasicStor {
      */
     public function isEdited($p_playlistId)
     {
-        $ac = StoredFile::recallByGunid($p_playlistId);
-        if (PEAR::isError($ac)) {
-            return $ac;
+        $storedFile = StoredFile::RecallByGunid($p_playlistId);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
-        if (!$ac->isEdited($p_playlistId)) {
+        if (!$storedFile->isEdited($p_playlistId)) {
             return FALSE;
         }
-        return $ac->isEditedBy($p_playlistId);
+        return $storedFile->isEditedBy($p_playlistId);
     }
 
 
@@ -1989,12 +1989,12 @@ class BasicStor {
             case "audioclip":
             case "playlist":
             case "webstream":
-                $ac = StoredFile::recall($id);
-                if (PEAR::isError($ac)) {
-                    return $ac;
+                $storedFile = StoredFile::Recall($id);
+                if (PEAR::isError($storedFile)) {
+                    return $storedFile;
                 }
-                $ac2 = StoredFile::CopyOf($ac, $nid);
-                $ac2->rename(M2tree::GetObjName($nid));
+                $ac2 = StoredFile::CopyOf($storedFile, $nid);
+                $ac2->setName(M2tree::GetObjName($nid));
                 break;
             case "File":
             default:
@@ -2016,15 +2016,15 @@ class BasicStor {
             case "audioclip":
             case "playlist":
             case "webstream":
-                $ac = StoredFile::recall($id);
-                if (PEAR::isError($ac)) {
-                    return $ac;
+                $storedFile = StoredFile::Recall($id);
+                if (PEAR::isError($storedFile)) {
+                    return $storedFile;
                 }
-                if ($ac->isEdited()) {
+                if ($storedFile->isEdited()) {
                     return PEAR::raiseError(
                         'BasicStor::MoveObj: file is currently being edited, it cannot be moved.');
                 }
-                if ($ac->isAccessed()) {
+                if ($storedFile->isAccessed()) {
                     return PEAR::raiseError(
                         'BasicStor::MoveObj: file is currently in use, it cannot be moved.');
                 }
@@ -2082,21 +2082,21 @@ class BasicStor {
             case "audioclip":
             case "playlist":
             case "webstream":
-                $ac = StoredFile::recall($id);
-                if (PEAR::isError($ac)) {
-                    return $ac;
+                $storedFile = StoredFile::Recall($id);
+                if (PEAR::isError($storedFile)) {
+                    return $storedFile;
                 }
-                if ($ac->isEdited() && !$forced) {
+                if ($storedFile->isEdited() && !$forced) {
                     return PEAR::raiseError(
                         'BasicStor::RemoveObj(): is edited'
                     );
                 }
-                if ($ac->isAccessed() && !$forced) {
+                if ($storedFile->isAccessed() && !$forced) {
                     return PEAR::raiseError(
                         'BasicStor::RemoveObj(): is accessed'
                     );
                 }
-                $ac->delete();
+                $storedFile->delete();
                 break;
             case "File":
             case "Folder":
