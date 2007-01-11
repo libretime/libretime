@@ -3,5 +3,5 @@
  * @author $Author$
  * @version $Revision$
  */
-$storageServerPath = 'ls_storageServer';
+$STORAGE_SERVER_PATH = 'ls_storageServer';
 ?>

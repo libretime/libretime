@@ -13,30 +13,24 @@
  */
 ini_set('memory_limit', '64M');
 set_time_limit(0);
-//header("Content-type: text/plain");
-echo "===========================\n";
-echo "StorageServer Import Script\n";
-echo "===========================\n";
-$start = intval(date('U'));
+error_reporting(E_ALL);
 
 require_once('conf.php');
-require_once("$storageServerPath/var/conf.php");
+require_once("$STORAGE_SERVER_PATH/var/conf.php");
 require_once('DB.php');
-require_once("$storageServerPath/var/GreenBox.php");
+require_once("$STORAGE_SERVER_PATH/var/GreenBox.php");
+require_once('Console/Getopt.php');
+require_once('File/Find.php');
 
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
-if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
+function printUsage()
+{
+    echo "Parameters:\n";
+    echo "\n";
+    echo "  -t, --test          Test only - do not import, show analyze\n";
+    echo "  -h, --help          Print this message and exit.\n";
+    echo "\n";
 }
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = new GreenBox();
 
-$testonly = (isset($argv[1]) && $argv[1] == '-t');
-
-$g_errors = 0;
-$filecount = 0;
 
 /**
  * Print error to the screen and keep a count of number of errors.
@@ -57,75 +51,140 @@ function import_err($p_pearErrorObj, $txt='')
     $g_errors++;
 }
 
+/**
+ * Import a file or directory into the storage database.
+ * If it is a directory, files will be imported recursively.
+ *
+ * @param string $p_filepath
+ *      You can pass in a directory or file name.
+ * @param GreenBox $p_greenbox
+ * @param int $p_parentId
+ * @param boolean $p_testOnly
+ *
+ * @return int
+ */
+function camp_import_audio_file($p_filepath, $p_greenbox, $p_parentId,
+    $p_testOnly = false)
+{
+    global $STORAGE_SERVER_PATH;
+    $fileCount = 0;
+    $p_filepath = realpath(rtrim($p_filepath));
 
-$r = M2tree::GetObjId('import', $gb->storId);
-if (PEAR::isError($r)) {
-	echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n";
-	exit(1);
-}
-if (is_null($r)) {
-    $r = BasicStor::bsCreateFolder($gb->storId, 'import');
-    if (PEAR::isError($r)) {
-    	echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n";
-    	exit(1);
+    if (!file_exists($p_filepath)) {
+        echo " * WARNING: File does not exist: $p_filepath\n";
+        return 0;
     }
-}
-$parid = $r;
 
-
-$stdin = fopen('php://stdin', 'r');
-while ($filename = fgets($stdin, 2048)) {
-    $filename = rtrim($filename);
-    if (!preg_match('/\.(ogg|mp3)$/i', $filename, $var)) {
-        // echo "File extension not supported - skipping file\n";
-        continue;
+    if (is_dir($p_filepath)) {
+        list(,$fileList) = File_Find::maptree($p_filepath);
+        foreach ($fileList as $tmpFile) {
+            $fileCount += camp_import_audio_file($tmpFile, $p_greenbox, $p_parentId, $p_testOnly);
+        }
+        return $fileCount;
     }
-    echo "Importing: $filename\n";
 
-    $md5sum = md5_file($filename);
-    //echo " * MD5: $md5sum\n";
+    // Check for non-supported file type
+    if (!preg_match('/\.(ogg|mp3)$/i', $p_filepath, $var)) {
+        //echo " * WARNING: File extension not supported - skipping file: $p_filepath\n";
+        return 0;
+    }
+    echo "Importing: $p_filepath\n";
+
+    $md5sum = md5_file($p_filepath);
 
     // Look up md5sum in database
-    $file = StoredFile::RecallByMd5($md5sum);
-    if ($file) {
+    $duplicate = StoredFile::RecallByMd5($md5sum);
+    if ($duplicate) {
         echo " * File already exists in the database.\n";
-        continue;
+        return 0;
     }
-    $mdata = camp_get_audio_metadata($filename, $testonly);
-    if (PEAR::isError($mdata)) {
-    	import_err($mdata);
-    	continue;
+    $metadata = camp_get_audio_metadata($p_filepath, $p_testOnly);
+    if (PEAR::isError($metadata)) {
+    	import_err($metadata);
+    	return 0;
     }
-    unset($mdata['audio']);
-    unset($mdata['playtime_seconds']);
+    unset($metadata['audio']);
+    unset($metadata['playtime_seconds']);
 
-    if (!$testonly) {
-        $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip', 'file', FALSE);
+    if (!$p_testOnly) {
+        $r = $p_greenbox->bsPutFile($p_parentId, $metadata['ls:filename'], "$p_filepath", "$STORAGE_SERVER_PATH/var/emptyMdata.xml", NULL, 'audioclip', 'file', FALSE);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsPutFile()");
-        	echo var_export($mdata)."\n";
-        	continue;
+        	echo var_export($metadata)."\n";
+        	return 0;
         }
         $id = $r;
 
-        $r = $gb->bsSetMetadataBatch($id, $mdata);
+        $r = $p_greenbox->bsSetMetadataBatch($id, $metadata);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsSetMetadataBatch()");
-        	echo var_export($mdata)."\n";
-        	continue;
+        	echo var_export($metadata)."\n";
+        	return 0;
         }
     } else {
         var_dump($infoFromFile);
         echo "======================= ";
-        var_dump($mdata);
+        var_dump($metadata);
         echo "======================= ";
     }
 
     echo " * OK\n";
-    $filecount++;
+    $fileCount++;
+    return $fileCount;
 }
 
-fclose($stdin);
+echo "========================\n";
+echo "Campcaster Import Script\n";
+echo "========================\n";
+$g_errors = 0;
+
+$start = intval(date('U'));
+
+PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+if (PEAR::isError($CC_DBC)) {
+	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+	exit(1);
+}
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+$parsedCommandLine = Console_Getopt::getopt($argv, "th", array("test", "help"));
+$cmdLineOptions = $parsedCommandLine[0];
+if (count($parsedCommandLine[1]) == 0) {
+    printUsage();
+    exit;
+}
+
+//print_r($parsedCommandLine);
+$files = $parsedCommandLine[1];
+
+$testonly = FALSE;
+foreach ($cmdLineOptions as $tmpValue) {
+    $optionName = $tmpValue[0];
+    $optionValue = $tmpValue[1];
+    switch ($optionName) {
+        case "h":
+        case '--help':
+            printUsage();
+            exit;
+        case "t":
+        case "--test":
+            $testonly = TRUE;
+            break;
+    }
+}
+
+$greenbox = new GreenBox();
+$parentId = M2tree::GetObjId(M2tree::GetRootNode());
+
+$filecount = 0;
+//print_r($files);
+//echo "\n";
+if (is_array($files)) {
+    foreach ($files as $filepath) {
+        $filecount += camp_import_audio_file($filepath, $greenbox, $parentId, $testonly);
+    }
+}
 $end = intval(date('U'));
 $time = $end - $start;
 if ($time > 0) {
@@ -133,5 +192,10 @@ if ($time > 0) {
 } else {
 	$speed = "N/A";
 }
-echo " Files ".($testonly ? "analyzed" : "imported").": $filecount, in $time s, $speed files/s, errors: $g_errors\n";
+
+echo "==========================================================================\n";
+echo " * Files ".($testonly ? "analyzed" : "imported").": $filecount in $time s = $speed files/second, errors: $g_errors\n";
+
+echo " * Import completed.\n";
+
 ?>

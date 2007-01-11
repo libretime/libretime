@@ -9,12 +9,12 @@ define('VERBOSE', FALSE);
 
 header("Content-type: text/plain");
 require_once 'conf.php';
-require_once "$storageServerPath/var/conf.php";
+require_once "$STORAGE_SERVER_PATH/var/conf.php";
 require_once 'DB.php';
 require_once "XML/Util.php";
 require_once "XML/Beautifier.php";
-require_once "$storageServerPath/var/BasicStor.php";
-require_once "$storageServerPath/var/Prefs.php";
+require_once "$STORAGE_SERVER_PATH/var/BasicStor.php";
+require_once "$STORAGE_SERVER_PATH/var/Prefs.php";
 
 /* =========================================================== misc functions */
 function ls_restore_processObject($el)
@@ -104,7 +104,7 @@ $pr = new Prefs($bs);
 $dbxml = file_get_contents($argv[1]);
 $tmpdir = $argv[2];
 
-require_once("$storageServerPath/var/XmlParser.php");
+require_once("$STORAGE_SERVER_PATH/var/XmlParser.php");
 $parser = new XmlParser($dbxml);
 if ($parser->isError()) {
     return PEAR::raiseError(

@@ -4,5 +4,5 @@
  * @version $Revision$
  */
 
-$storageServerPath = dirname(__FILE__)."/../../storageServer";
+$STORAGE_SERVER_PATH = dirname(__FILE__)."/../../storageServer";
 ?>
