@@ -65,6 +65,14 @@ OptionsContainer :: OptionsContainer(
 {
     optionsDocument.create_root_node_by_import(&optionsElement, true);
                                                         // true == recursive
+
+    xmlpp::Node::NodeList   nodes = optionsElement.get_children(
+                                        RdsContainer::getConfigElementName());
+    if (nodes.size() > 0) {
+        rdsContainer.reset(new RdsContainer());
+        rdsContainer->configure(
+                        *dynamic_cast<const xmlpp::Element*>(nodes.front()));
+    }
 }
 
 
@@ -153,6 +161,37 @@ OptionsContainer :: setKeyboardShortcutItem(
     } else {
         throw std::invalid_argument("keyboard shortcut not found");
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of an RDS string.
+ *----------------------------------------------------------------------------*/
+void
+OptionsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
+                                 Ptr<const Glib::ustring>::Ref  value)
+                                                                    throw ()
+{
+    if (!rdsContainer) {
+        rdsContainer.reset(new RdsContainer());
+    }
+    
+    rdsContainer->setRdsString(key, value);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the value of an RDS string.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+OptionsContainer :: getRdsString(Ptr<const Glib::ustring>::Ref  key)
+                                                                    throw ()
+{
+    Ptr<const Glib::ustring>::Ref     value;
+    if (rdsContainer) {
+        value = rdsContainer->getRdsString(key);
+    }
+    return value;
 }
 
 
@@ -289,6 +328,16 @@ void
 OptionsContainer :: writeToFile(void)                               throw ()
 {
     if (configFileName) {
+        if (rdsContainer && rdsContainer->isTouched()) {
+            xmlpp::Element *        rootNode = optionsDocument.get_root_node();
+            xmlpp::Node::NodeList   nodes    = rootNode->get_children(
+                                        RdsContainer::getConfigElementName());
+            if (nodes.size() > 0) {
+                rootNode->remove_child(nodes.front());
+            }
+            rootNode->import_node(rdsContainer->toXmlElement(), true);
+        }
+
         std::ofstream   file(configFileName->c_str());
         if (file.good()) {
             optionsDocument.write_to_stream_formatted(file, "utf-8");

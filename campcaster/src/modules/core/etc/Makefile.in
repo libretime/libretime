@@ -147,7 +147,9 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
 				${TMP_DIR}/MetadataConstraint.o \
 				${TMP_DIR}/NumericConstraint.o \
 				${TMP_DIR}/NumericRangeConstraint.o \
-				${TMP_DIR}/EnumerationConstraint.o
+				${TMP_DIR}/EnumerationConstraint.o \
+				${TMP_DIR}/RdsItem.o \
+				${TMP_DIR}/RdsContainer.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/FileToolsTest.o \
@@ -167,7 +169,8 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/XmlRpcToolsTest.o \
                    ${TMP_DIR}/SearchCriteriaTest.o \
                    ${TMP_DIR}/MetadataTypeContainerTest.o \
-                   ${TMP_DIR}/AsyncStateTest.o
+                   ${TMP_DIR}/AsyncStateTest.o \
+                   ${TMP_DIR}/RdsContainer.o
 
 TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_en.res \

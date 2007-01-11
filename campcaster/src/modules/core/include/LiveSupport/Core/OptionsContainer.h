@@ -42,9 +42,10 @@
 
 #include <stdexcept>
 #include <glibmm/ustring.h>
-#include "libxml++/libxml++.h"
+#include <libxml++/libxml++.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/RdsContainer.h"
 
 
 namespace LiveSupport {
@@ -61,6 +62,9 @@ namespace Core {
 /**
  *  A container for the options in gLiveSupport.xml.
  *
+ *  It supports a number of named string options (see OptionItemString),
+ *  plus two special kinds of options: keyboard shortcuts, and RDS strings.
+ *
  *  @author  $Author $
  *  @version $Revision $
  */
@@ -72,8 +76,6 @@ class OptionsContainer
          *  
          *  These are options of type Glib::ustring; any string is accepted
          *  as value, no range checking is done.
-         *  
-         *  For the moment, this is the only kind of option supported. 
          */
         typedef enum { outputPlayerDeviceName,
                        cuePlayerDeviceName,
@@ -103,6 +105,11 @@ class OptionsContainer
          *  Remember if we have been touched.
          */
         bool                            touched;
+        
+        /**
+         *  Container for the RDS settings.
+         */
+        Ptr<RdsContainer>::Ref          rdsContainer;
         
         /**
          *  Default constructor.
@@ -185,7 +192,7 @@ class OptionsContainer
         bool
         isTouched(void)                                             throw ()
         {
-            return touched;
+            return touched || (rdsContainer && rdsContainer->isTouched());
         }
 
         /**
@@ -223,6 +230,31 @@ class OptionsContainer
                                 int                             shortcutNo,
                                 Ptr<const Glib::ustring>::Ref   value)
                                                  throw (std::invalid_argument);
+        
+        /**
+         *  Set the value of an RDS string.
+         *  The key can be any of the RDS data codes, like PS, PI, PTY, RT,
+         *  etc.  If there is already a value set for this code, it gets
+         *  overwritten, otherwise a new key-value pair is added.
+         *
+         *  @param      key     which setting to modify
+         *  @param      value   the new value of the RDS setting
+         */
+        void
+        setRdsString(Ptr<const Glib::ustring>::Ref  key,
+                     Ptr<const Glib::ustring>::Ref  value)          throw ();
+        
+        /**
+         *  Get the value of an RDS string.
+         *  The key can be any of the RDS data codes, like PS, PI, PTY, RT,
+         *  etc.  If there is no value set for this code, a zero pointer is
+         *  returned.
+         *
+         *  @param      key     which setting to modify
+         *  @return     the value of the RDS setting, or a 0 pointer
+         */
+        Ptr<const Glib::ustring>::Ref
+        getRdsString(Ptr<const Glib::ustring>::Ref  key)            throw ();
         
         /**
          *  Save the options to a file.
