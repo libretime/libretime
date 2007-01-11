@@ -97,7 +97,7 @@ RdsItem :: configure(const xmlpp::Element & element)
     xmlpp::Attribute *      valueAttribute = element.get_attribute(
                                                         valueAttributeName);
     if (valueAttribute) {
-        key.reset(new Glib::ustring(valueAttribute->get_value()));
+        value.reset(new Glib::ustring(valueAttribute->get_value()));
     } else {
         throw std::invalid_argument("missing " 
                                     + valueAttributeName + " attribute");

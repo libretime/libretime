@@ -123,7 +123,9 @@ void
 RdsContainerTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const Glib::ustring>::Ref       key(new Glib::ustring("PS"));
-    CPPUNIT_ASSERT(*rdsContainer->getRdsString(key) == "BBC Four");
+    Ptr<const Glib::ustring>::Ref   key(new const Glib::ustring("PS"));
+    Ptr<const Glib::ustring>::Ref   value = rdsContainer->getRdsString(key);
+    CPPUNIT_ASSERT(value);
+    CPPUNIT_ASSERT(*value == "BBC Four");
 }
 
