@@ -93,8 +93,9 @@ class BasicStor {
         if (PEAR::isError($id)) {
             return $id;
         }
-        $storedFile = StoredFile::insert($id, $fileName,
-            $localFilePath, $metadataFilePath, $mdataLoc, $gunid, $ftype, 'StoredFile', $copyMedia);
+        $storedFile = StoredFile::Insert($id, $fileName,
+            $localFilePath, $metadataFilePath, $mdataLoc, $gunid, $ftype,
+            $copyMedia);
         if (PEAR::isError($storedFile)) {
             $res = BasicStor::RemoveObj($id);
             // catch constraint violations
@@ -380,7 +381,7 @@ class BasicStor {
         $token = StoredFile::CreateGunid();
         if (!is_null($realFname)) {
             $linkFname = $CC_CONFIG['accessDir']."/$token.$ext";
-            if (!file_exists($realFname)) {
+            if (!is_file($realFname) && !is_link($realFname)) {
                 return PEAR::raiseError(
                     "BasicStor::bsAccess: real file not found ($realFname)",
                     GBERR_FILEIO);
