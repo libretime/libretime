@@ -333,7 +333,7 @@ class StoredFile {
             $this->gunid = StoredFile::CreateGunid();
         }
         $this->resDir = $this->_getResDir($this->gunid);
-        $this->filepath = $this->makeFileName();
+        $this->filepath = "{$this->resDir}/{$this->gunid}";
         $this->exists = is_file($this->filepath) && is_readable($this->filepath);
         $this->md = new MetaData($this->gunid, $this->resDir);
     }
@@ -361,14 +361,12 @@ class StoredFile {
      * 		copy the media file if true, make symlink if false
      *  @return StoredFile
      */
-    public static function insert($oid, $filename, $localFilePath='',
-        $metadata='', $mdataLoc='file', $gunid=NULL, $ftype=NULL, $copyMedia=TRUE)
+    public static function Insert($oid, $filename, $localFilePath='',
+        $metadata='', $mdataLoc='file', $gunid=NULL, $ftype=NULL,
+        $copyMedia=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
         $storedFile = new StoredFile(($gunid ? $gunid : NULL));
-        if (PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
         $storedFile->name = $filename;
         $storedFile->id = $oid;
         $storedFile->mime = "unknown";
@@ -378,7 +376,6 @@ class StoredFile {
         }
         $storedFile->exists = FALSE;
         if (file_exists($localFilePath)) {
-            $storedFile->exists = TRUE;
             $md5 = md5_file($localFilePath);
         }
         $escapedName = pg_escape_string($filename);
@@ -401,7 +398,7 @@ class StoredFile {
             $emptyState = FALSE;
         }
         if ( ($mdataLoc == 'file') && !file_exists($metadata)) {
-            return PEAR::raiseError("StoredFile::insert: ".
+            return PEAR::raiseError("StoredFile::Insert: ".
                 "metadata file not found ($metadata)");
         }
         $res = $storedFile->md->insert($metadata, $mdataLoc, $ftype);
@@ -412,7 +409,7 @@ class StoredFile {
         // --- media file insert:
         if ($localFilePath != '') {
             if (!file_exists($localFilePath)) {
-                return PEAR::raiseError("StoredFile::insert: ".
+                return PEAR::raiseError("StoredFile::Insert: ".
                     "media file not found ($localFilePath)");
             }
             $res = $storedFile->addFile($localFilePath, $copyMedia);
@@ -423,19 +420,11 @@ class StoredFile {
             $mime = $storedFile->getMime();
             if ($mime !== FALSE) {
                 $res = $storedFile->setMime($mime);
-                if (PEAR::isError($res)) {
-                    $CC_DBC->query("ROLLBACK");
-                    return $res;
-                }
             }
             $emptyState = FALSE;
         }
         if (!$emptyState) {
             $res = $storedFile->setState('ready');
-            if (PEAR::isError($res)) {
-                $CC_DBC->query("ROLLBACK");
-                return $res;
-            }
         }
         $res = $CC_DBC->query("COMMIT");
         if (PEAR::isError($res)) {
@@ -677,17 +666,6 @@ class StoredFile {
 
 
     /**
-     * Contruct filepath of media file
-     *
-     * @return string
-     */
-    public function makeFileName()
-    {
-        return "{$this->resDir}/{$this->gunid}";
-    }
-
-
-    /**
      * Create instance of StoredFile object and make copy of existing file
      *
      * @param StoredFile $src
@@ -698,7 +676,7 @@ class StoredFile {
      */
     public static function CopyOf(&$src, $nid)
     {
-        $storedFile = StoredFile::insert($nid, $src->name, $src->getRealFileName(),
+        $storedFile = StoredFile::Insert($nid, $src->name, $src->getRealFileName(),
             '', '', NULL, BasicStor::GetType($src->gunid));
         if (PEAR::isError($storedFile)) {
             return $storedFile;
