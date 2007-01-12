@@ -39,6 +39,7 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "RdsView.h"
 
 #include "OptionsWindow.h"
 
@@ -102,6 +103,7 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     if (canBackup) {
                     backupSectionBox        = constructBackupSection();
     }
+    Gtk::Box *      rdsSectionBox           = constructRdsSection();
     Gtk::Box *      aboutSectionBox         = constructAboutSection();
 
     try {
@@ -117,6 +119,8 @@ OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
             mainNotebook->appendPage(*backupSectionBox,
                             *getResourceUstring("backupSectionLabel"));
         }
+        mainNotebook->appendPage(*rdsSectionBox,
+                            *getResourceUstring("rdsSectionLabel"));
         mainNotebook->appendPage(*aboutSectionBox,
                             *getResourceUstring("aboutSectionLabel"));
 
@@ -796,6 +800,27 @@ OptionsWindow :: constructBackupSection(void)                       throw ()
     
     backupView = Gtk::manage(new BackupView(gLiveSupport, backupBundle));
     return backupView;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the "RDS" section.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+OptionsWindow :: constructRdsSection(void)                          throw ()
+{
+    Ptr<ResourceBundle>::Ref    rdsBundle;
+    try {
+        rdsBundle = gLiveSupport->getBundle("rdsView");
+        
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    Gtk::VBox *     rdsView = Gtk::manage(new RdsView(gLiveSupport, rdsBundle));
+    return rdsView;
 }
 
 

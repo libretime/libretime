@@ -232,29 +232,44 @@ class OptionsContainer
                                                  throw (std::invalid_argument);
         
         /**
-         *  Set the value of an RDS string.
+         *  Set the value of the RDS options.
          *  The key can be any of the RDS data codes, like PS, PI, PTY, RT,
          *  etc.  If there is already a value set for this code, it gets
          *  overwritten, otherwise a new key-value pair is added.
          *
-         *  @param      key     which setting to modify
-         *  @param      value   the new value of the RDS setting
+         *  @param      key      which setting to modify
+         *  @param      value    the new value of the RDS setting
+         *  @param      enabled  the new enabled/disabled state of the 
+         *                       RDS setting
          */
         void
-        setRdsString(Ptr<const Glib::ustring>::Ref  key,
-                     Ptr<const Glib::ustring>::Ref  value)          throw ();
+        setRdsOptions(Ptr<const Glib::ustring>::Ref     key,
+                      Ptr<const Glib::ustring>::Ref     value,
+                      bool                              enabled)    throw ();
         
         /**
          *  Get the value of an RDS string.
          *  The key can be any of the RDS data codes, like PS, PI, PTY, RT,
-         *  etc.  If there is no value set for this code, a zero pointer is
-         *  returned.
+         *  etc.
          *
          *  @param      key     which setting to modify
-         *  @return     the value of the RDS setting, or a 0 pointer
+         *  @return     the value of the RDS setting
+         *  @exception  std::invalid_argument   if there is no such RDS option.
          */
         Ptr<const Glib::ustring>::Ref
-        getRdsString(Ptr<const Glib::ustring>::Ref  key)            throw ();
+        getRdsValue(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument);
+        
+        /**
+         *  Get the enabled/disabled state of an RDS option.
+         *
+         *  @param      key     which setting to modify
+         *  @return     true if the RDS option is enabled, false otherwise.
+         *  @exception  std::invalid_argument   if there is no such RDS option.
+         */
+        bool
+        getRdsEnabled(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument);
         
         /**
          *  Save the options to a file.

@@ -85,11 +85,12 @@ RdsContainer :: configure(const xmlpp::Element &    element)
 
 
 /*------------------------------------------------------------------------------
- *  Set the value of an RDS string.
+ *  Set the RDS options.
  *----------------------------------------------------------------------------*/
 void
-RdsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
-                             Ptr<const Glib::ustring>::Ref  value)
+RdsContainer :: setRdsOptions(Ptr<const Glib::ustring>::Ref  key,
+                              Ptr<const Glib::ustring>::Ref  value,
+                              bool                           enabled)
                                                                     throw ()
 {
     RdsItemListType::const_iterator     it;
@@ -100,12 +101,13 @@ RdsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
         if (*rdsItem->getKey() == *key) {
             found = true;
             rdsItem->setValue(value);
+            rdsItem->setEnabled(enabled);
             break;
         }
     }
     
     if (!found) {
-        Ptr<RdsItem>::Ref   rdsItem(new RdsItem(key, value));
+        Ptr<RdsItem>::Ref   rdsItem(new RdsItem(key, value, enabled));
         rdsItemList.push_back(rdsItem);
     }
     
@@ -117,8 +119,8 @@ RdsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
  *  Get the value of an RDS string.
  *----------------------------------------------------------------------------*/
 Ptr<const Glib::ustring>::Ref
-RdsContainer :: getRdsString(Ptr<const Glib::ustring>::Ref  key)
-                                                                    throw ()
+RdsContainer :: getRdsValue(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument)
 {
     RdsItemListType::const_iterator     it;
     for(it = rdsItemList.begin(); it != rdsItemList.end(); ++it) {
@@ -128,8 +130,28 @@ RdsContainer :: getRdsString(Ptr<const Glib::ustring>::Ref  key)
         }
     }
     
-    Ptr<const Glib::ustring>::Ref       nullPointer;
-    return nullPointer;
+    Glib::ustring   safeKey = key ? *key : "(null)";
+    throw std::invalid_argument("RDS option " + safeKey + "not found.");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the enabled/disabled state of an RDS option.
+ *----------------------------------------------------------------------------*/
+bool
+RdsContainer :: getRdsEnabled(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument)
+{
+    RdsItemListType::const_iterator     it;
+    for(it = rdsItemList.begin(); it != rdsItemList.end(); ++it) {
+        Ptr<RdsItem>::Ref               rdsItem = *it;
+        if (*rdsItem->getKey() == *key) {
+            return rdsItem->getEnabled();
+        }
+    }
+    
+    Glib::ustring   safeKey = key ? *key : "(null)";
+    throw std::invalid_argument("RDS option " + safeKey + "not found.");
 }
 
 

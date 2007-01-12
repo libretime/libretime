@@ -33,35 +33,20 @@
 #include "configure.h"
 #endif
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#error "Need unistd.h"
-#endif
+#include "LiveSupport/Widgets/WidgetFactory.h"
 
-#include <fstream>
-
-#include "RdsContainerTest.h"
+#include "RdsEntry.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
+using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
 
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(RdsContainerTest);
-
-namespace {
-
-/**
- *  The name of the test RDS container config file.
- */
-const std::string   configFileName  = "etc/rdsContainer.xml";
-
-}
 
 /* ===============================================  local function prototypes */
 
@@ -69,67 +54,74 @@ const std::string   configFileName  = "etc/rdsContainer.xml";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Set up the test environment
+ *  Constructor.
  *----------------------------------------------------------------------------*/
-void
-RdsContainerTest :: setUp(void)             throw (CPPUNIT_NS::Exception)
+RdsEntry :: RdsEntry(Ptr<ResourceBundle>::Ref       bundle,
+                     const Glib::ustring &          type,
+                     int                            width)
+                                                                    throw ()
+          : LocalizedObject(bundle)
 {
-    std::ifstream   ifs;
-    ifs.open(configFileName.c_str());
+    this->type.reset(new const Glib::ustring(type));
     
-    if (!ifs.is_open() || ifs.bad()) {
-        ifs.close();
-        CPPUNIT_FAIL("could not open RDS container config file "
-                     + configFileName);
-    }
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    rdsContainer.reset(new RdsContainer);
+    checkBox = Gtk::manage(new Gtk::CheckButton());
     
+    Gtk::Label *    label;
+    Glib::ustring   labelKey = type + "rdsLabel";
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
-        parser->parse_stream(ifs);
-        parser->set_validate();
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        rdsContainer->configure(*root);
+        label = Gtk::manage(new Gtk::Label(*getResourceUstring(labelKey)));
 
     } catch (std::invalid_argument &e) {
-        ifs.close();
-        CPPUNIT_FAIL("semantic error in RDS container configuration file: "
-                     + std::string(e.what()));
-    } catch (xmlpp::exception &e) {
-        ifs.close();
-        CPPUNIT_FAIL("syntax error in RDS container configuration file: "
-                     + std::string(e.what()));
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
-    ifs.close();
+    
+    entryBin = Gtk::manage(wf->createEntryBin());
+//    entryBin->? // set the size somehow
+    
+    pack_start(*checkBox,   Gtk::PACK_SHRINK, 5);
+    pack_start(*label,      Gtk::PACK_SHRINK, 5);
+    pack_start(*entryBin,   Gtk::PACK_EXPAND_WIDGET, 5);
 }
 
 
 /*------------------------------------------------------------------------------
- *  Clean up the test environment
+ *  Set the state of the widget.
  *----------------------------------------------------------------------------*/
 void
-RdsContainerTest :: tearDown(void)                      throw ()
+RdsEntry :: setValue(bool                           enabled,
+                     Ptr<const Glib::ustring>::Ref  value)          throw ()
 {
+    checkBox->set_active(enabled);
+    entryBin->set_text(*value);
+    
+    checkBoxSaved = enabled;
+    entryBinSaved = value;
 }
 
 
 /*------------------------------------------------------------------------------
- *  A simple test.
+ *  Save the changes made by the user.
  *----------------------------------------------------------------------------*/
-void
-RdsContainerTest :: firstTest(void)
-                                                throw (CPPUNIT_NS::Exception)
+bool
+RdsEntry :: saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)   throw ()
 {
-    Ptr<const Glib::ustring>::Ref   key(new const Glib::ustring("PS"));
-
-    Ptr<const Glib::ustring>::Ref   value = rdsContainer->getRdsValue(key);
-    CPPUNIT_ASSERT(value);
-    CPPUNIT_ASSERT(*value == "BBC Four");
-
-    bool                            enabled = rdsContainer->getRdsEnabled(key);
-    CPPUNIT_ASSERT(enabled);
+    bool            checkBoxNow = checkBox->get_active();
+    Ptr<const Glib::ustring>::Ref
+                    entryBinNow(new const Glib::ustring(entryBin->get_text()));
+    
+    if (!entryBinSaved || checkBoxNow != checkBoxSaved
+                       || entryBinNow != entryBinSaved) {
+        Ptr<OptionsContainer>::Ref      optionsContainer =
+                                        gLiveSupport->getOptionsContainer();
+        optionsContainer->setRdsOptions(type, entryBinNow, checkBoxNow);
+        checkBoxSaved = checkBoxNow;
+        entryBinSaved = entryBinNow;
+        return true;
+    } else {
+        return false;
+    }
 }
 

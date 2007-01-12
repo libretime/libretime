@@ -168,15 +168,16 @@ OptionsContainer :: setKeyboardShortcutItem(
  *  Set the value of an RDS string.
  *----------------------------------------------------------------------------*/
 void
-OptionsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
-                                 Ptr<const Glib::ustring>::Ref  value)
+OptionsContainer :: setRdsOptions(Ptr<const Glib::ustring>::Ref  key,
+                                  Ptr<const Glib::ustring>::Ref  value,
+                                  bool                           enabled)
                                                                     throw ()
 {
     if (!rdsContainer) {
         rdsContainer.reset(new RdsContainer());
     }
     
-    rdsContainer->setRdsString(key, value);
+    rdsContainer->setRdsOptions(key, value, enabled);
 }
 
 
@@ -184,14 +185,29 @@ OptionsContainer :: setRdsString(Ptr<const Glib::ustring>::Ref  key,
  *  Get the value of an RDS string.
  *----------------------------------------------------------------------------*/
 Ptr<const Glib::ustring>::Ref
-OptionsContainer :: getRdsString(Ptr<const Glib::ustring>::Ref  key)
-                                                                    throw ()
+OptionsContainer :: getRdsValue(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument)
 {
-    Ptr<const Glib::ustring>::Ref     value;
     if (rdsContainer) {
-        value = rdsContainer->getRdsString(key);
+        return rdsContainer->getRdsValue(key);
+    } else {
+        throw std::invalid_argument("no RDS container found");
     }
-    return value;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the enabled/disabled state of an RDS option.
+ *----------------------------------------------------------------------------*/
+bool
+OptionsContainer :: getRdsEnabled(Ptr<const Glib::ustring>::Ref  key)
+                                                throw (std::invalid_argument)
+{
+    if (rdsContainer) {
+        return rdsContainer->getRdsEnabled(key);
+    } else {
+        throw std::invalid_argument("no RDS container found");
+    }
 }
 
 

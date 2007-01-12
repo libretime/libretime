@@ -224,7 +224,7 @@ class RdsItem : public Configurable
          *  @return true if the RDS item is enabled, false if not.
          */
         bool
-        isEnabled(void)                                             throw ()
+        getEnabled(void)                                            throw ()
         {
             return enabled;
         }

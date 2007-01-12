@@ -276,6 +276,7 @@ root:table
         serversSectionLabel:string      { "Servers" }
         schedulerSectionLabel:string    { "Scheduler" }
         backupSectionLabel:string       { "Backup" }
+        rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
@@ -350,6 +351,13 @@ root:table
 
         fileChooserDialogTitle:string   { "Save File" }
         backupErrorMsg:string       { "Backup error: " }
+    }
+
+    rdsView:table
+    {
+        PSrdsLabel:string           { "Station name:" }
+        PIrdsLabel:string           { "Station code:" }
+        RTrdsLabel:string           { "Clip info:" }
     }
 
     dateTimeChooserWindow:table
