@@ -26,8 +26,9 @@ function printUsage()
 {
     echo "Parameters:\n";
     echo "\n";
-    echo "  -t, --test          Test only - do not import, show analyze\n";
-    echo "  -h, --help          Print this message and exit.\n";
+    echo "  -c, --copy     Make a copy of the files that are imported.\n";
+    echo "                 This is useful if you are importing from removable media.\n";
+    echo "  -h, --help     Print this message and exit.\n";
     echo "\n";
 }
 
@@ -57,57 +58,64 @@ function import_err($p_pearErrorObj, $txt='')
  *
  * @param string $p_filepath
  *      You can pass in a directory or file name.
- * @param GreenBox $p_greenbox
- * @param int $p_parentId
+ * @param boolean $p_doCopyFiles
  * @param boolean $p_testOnly
  *
  * @return int
  */
-function camp_import_audio_file($p_filepath, $p_greenbox, $p_parentId,
-    $p_testOnly = false)
+function camp_import_audio_file($p_filepath, $p_doCopyFiles = false, $p_testOnly = false)
 {
     global $STORAGE_SERVER_PATH;
+    $greenbox = new GreenBox();
+    $parentId = M2tree::GetObjId(M2tree::GetRootNode());
+
     $fileCount = 0;
+    $duplicates = 0;
     $p_filepath = realpath(rtrim($p_filepath));
 
     if (!file_exists($p_filepath)) {
         echo " * WARNING: File does not exist: $p_filepath\n";
-        return 0;
+        return array($fileCount, $duplicates);
     }
 
     if (is_dir($p_filepath)) {
         list(,$fileList) = File_Find::maptree($p_filepath);
         foreach ($fileList as $tmpFile) {
-            $fileCount += camp_import_audio_file($tmpFile, $p_greenbox, $p_parentId, $p_testOnly);
+            list($tmpCount, $tmpDups) = camp_import_audio_file($tmpFile, $p_doCopyFiles, $p_testOnly);
+            $fileCount += $tmpCount;
+            $duplicates += $tmpDups;
         }
-        return $fileCount;
+        return array($fileCount, $duplicates);
     }
 
     // Check for non-supported file type
     if (!preg_match('/\.(ogg|mp3)$/i', $p_filepath, $var)) {
         //echo " * WARNING: File extension not supported - skipping file: $p_filepath\n";
-        return 0;
+        return array($fileCount, $duplicates);
     }
-    echo "Importing: $p_filepath\n";
 
     $md5sum = md5_file($p_filepath);
 
     // Look up md5sum in database
     $duplicate = StoredFile::RecallByMd5($md5sum);
     if ($duplicate) {
-        echo " * File already exists in the database.\n";
-        return 0;
+        //echo " * File already exists in the database.\n";
+        echo "DUPLICATE: $p_filepath\n";
+        return array($fileCount, $duplicates+1);
     }
+    echo "Importing: $p_filepath\n";
     $metadata = camp_get_audio_metadata($p_filepath, $p_testOnly);
     if (PEAR::isError($metadata)) {
     	import_err($metadata);
-    	return 0;
+    	return array($fileCount, $duplicates);
     }
     unset($metadata['audio']);
     unset($metadata['playtime_seconds']);
 
     if (!$p_testOnly) {
-        $r = $p_greenbox->bsPutFile($p_parentId, $metadata['ls:filename'], "$p_filepath", "$STORAGE_SERVER_PATH/var/emptyMdata.xml", NULL, 'audioclip', 'file', FALSE);
+        $r = $greenbox->bsPutFile($parentId, $metadata['ls:filename'],
+            $p_filepath, "$STORAGE_SERVER_PATH/var/emptyMdata.xml", NULL,
+            'audioclip', 'file', $p_doCopyFiles);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
@@ -115,7 +123,7 @@ function camp_import_audio_file($p_filepath, $p_greenbox, $p_parentId,
         }
         $id = $r;
 
-        $r = $p_greenbox->bsSetMetadataBatch($id, $metadata);
+        $r = $greenbox->bsSetMetadataBatch($id, $metadata);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsSetMetadataBatch()");
         	echo var_export($metadata)."\n";
@@ -128,9 +136,9 @@ function camp_import_audio_file($p_filepath, $p_greenbox, $p_parentId,
         echo "======================= ";
     }
 
-    echo " * OK\n";
+    //echo " * OK\n";
     $fileCount++;
-    return $fileCount;
+    return array($fileCount, $duplicates);
 }
 
 echo "========================\n";
@@ -148,7 +156,11 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$parsedCommandLine = Console_Getopt::getopt($argv, "th", array("test", "help"));
+$parsedCommandLine = Console_Getopt::getopt($argv, "thc", array("test", "help", "copy"));
+if (PEAR::isError($parsedCommandLine)) {
+    printUsage();
+    exit(1);
+}
 $cmdLineOptions = $parsedCommandLine[0];
 if (count($parsedCommandLine[1]) == 0) {
     printUsage();
@@ -159,6 +171,7 @@ if (count($parsedCommandLine[1]) == 0) {
 $files = $parsedCommandLine[1];
 
 $testonly = FALSE;
+$doCopyFiles = FALSE;
 foreach ($cmdLineOptions as $tmpValue) {
     $optionName = $tmpValue[0];
     $optionValue = $tmpValue[1];
@@ -167,6 +180,11 @@ foreach ($cmdLineOptions as $tmpValue) {
         case '--help':
             printUsage();
             exit;
+        case "c":
+        case "--copy":
+            echo " * Working in COPY mode\n";
+            $doCopyFiles = TRUE;
+            break;
         case "t":
         case "--test":
             $testonly = TRUE;
@@ -174,28 +192,30 @@ foreach ($cmdLineOptions as $tmpValue) {
     }
 }
 
-$greenbox = new GreenBox();
-$parentId = M2tree::GetObjId(M2tree::GetRootNode());
 
 $filecount = 0;
-//print_r($files);
-//echo "\n";
+$duplicates = 0;
 if (is_array($files)) {
     foreach ($files as $filepath) {
-        $filecount += camp_import_audio_file($filepath, $greenbox, $parentId, $testonly);
+        list($tmpCount, $tmpDups) = camp_import_audio_file($filepath, $doCopyFiles, $testonly);
+        $filecount += $tmpCount;
+        $duplicates += $tmpDups;
     }
 }
 $end = intval(date('U'));
 $time = $end - $start;
 if ($time > 0) {
-	$speed = round(($filecount+$g_errors)/$time, 1);
+	$speed = round(($filecount+$duplicates)/$time, 1);
 } else {
 	$speed = "N/A";
 }
 
 echo "==========================================================================\n";
-echo " * Files ".($testonly ? "analyzed" : "imported").": $filecount in $time s = $speed files/second, errors: $g_errors\n";
+echo " *** Files imported: $filecount\n";
+echo " *** Duplicate files (not imported): $duplicates\n";
+echo " *** Errors: $g_errors\n";
+echo " *** Total: ".($filecount+$duplicates)." files in $time seconds = $speed files/second.\n";
 
-echo " * Import completed.\n";
+//echo " * Import completed.\n";
 
 ?>
