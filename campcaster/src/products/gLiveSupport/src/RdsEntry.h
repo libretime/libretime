@@ -156,6 +156,12 @@ class RdsEntry : public Gtk::HBox,
          */
         bool
         saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)       throw ();
+
+        /**
+         *  Clear the entries of the widget.
+         */
+        void
+        reset(void)                                                 throw ();
 };
 
 

@@ -125,3 +125,14 @@ RdsEntry :: saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)   throw ()
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Clear the entries of the widget.
+ *----------------------------------------------------------------------------*/
+void
+RdsEntry :: reset(void)                                             throw ()
+{
+    Ptr<const Glib::ustring>::Ref   empty(new const Glib::ustring(""));
+    setOptions(false, empty);
+}
+

@@ -344,7 +344,7 @@ void
 OptionsContainer :: writeToFile(void)                               throw ()
 {
     if (configFileName) {
-        if (rdsContainer) {
+        if (rdsContainer && rdsContainer->isTouched()) {
             xmlpp::Element *        rootNode = optionsDocument.get_root_node();
             xmlpp::Node::NodeList   nodes    = rootNode->get_children(
                                         RdsContainer::getConfigElementName());

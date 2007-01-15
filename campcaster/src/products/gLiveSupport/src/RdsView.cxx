@@ -72,6 +72,34 @@ RdsView :: RdsView (Ptr<GLiveSupport>::Ref    gLiveSupport,
     pack_start(*piEntry, Gtk::PACK_SHRINK, 0);
     pack_start(*rtEntry, Gtk::PACK_SHRINK, 10);
 
+    reset();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the changes made by the user.
+ *----------------------------------------------------------------------------*/
+bool
+RdsView :: saveChanges(void)                                        throw ()
+{
+    bool    touched = false;
+
+    RdsEntryListType::const_iterator    it;
+    for (it = rdsEntryList.begin(); it != rdsEntryList.end(); ++it) {
+        Ptr<RdsEntry>::Ref              rdsEntry = *it;
+        touched |= rdsEntry->saveChanges(gLiveSupport);
+    }
+    
+    return touched;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset the widget to its saved state.
+ *----------------------------------------------------------------------------*/
+void
+RdsView :: reset(void)                                              throw ()
+{
     RdsEntryListType::const_iterator    it;
     for (it = rdsEntryList.begin(); it != rdsEntryList.end(); ++it) {
         fillEntry(*it);
@@ -95,26 +123,8 @@ RdsView :: fillEntry(Ptr<RdsEntry>::Ref     entry)                  throw ()
                                         value   = options->getRdsValue(type);
             entry->setOptions(enabled, value);
         } catch (std::invalid_argument &e) {
-            // there is no such RDS option; it's OK
+            entry->reset();
         }
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Save the changes made by the user.
- *----------------------------------------------------------------------------*/
-bool
-RdsView :: saveChanges(void)                                        throw ()
-{
-    bool    touched = false;
-
-    RdsEntryListType::const_iterator    it;
-    for (it = rdsEntryList.begin(); it != rdsEntryList.end(); ++it) {
-        Ptr<RdsEntry>::Ref              rdsEntry = *it;
-        touched |= rdsEntry->saveChanges(gLiveSupport);
-    }
-    
-    return touched;
 }
 

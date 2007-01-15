@@ -183,6 +183,7 @@ OptionsWindow :: onCancelButtonClicked(void)                        throw ()
 {
     resetEntries();
     resetKeyBindings();
+    resetRds();
     onCloseButtonClicked(false);
 }
 
@@ -904,6 +905,16 @@ OptionsWindow :: resetKeyBindings(void)                             throw ()
     keyBindingsModel->clear();
     fillKeyBindingsModel();
     keyBindingsView->expand_all();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset the RDS settings to their saved state.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: resetRds(void)                                     throw ()
+{
+    rdsView->reset();
 }
 
 

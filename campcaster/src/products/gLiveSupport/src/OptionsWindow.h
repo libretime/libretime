@@ -166,6 +166,12 @@ class OptionsWindow : public GuiWindow
         resetKeyBindings(void)                                      throw ();
 
         /**
+         *  Reset the RDS settings to their saved state.
+         */
+        void
+        resetRds(void)                                              throw ();
+
+        /**
          *  Fill the key bindings model from the KeyboardShortcutList.
          */
         void

@@ -66,8 +66,7 @@ using namespace LiveSupport::Widgets;
 
 /**
  *  The RDS view, a subclass of Gtk::VBox.
- *  This will be contained in another window, most likely
- *  as the contents of a notebook tab.
+ *  This will be contained in another window, currently in the OptionsWindow.
  *
  *  The layout of the view is roughly the following:
  *  <pre><code>
@@ -82,6 +81,11 @@ using namespace LiveSupport::Widgets;
  *  +------------------------------------------------+
  *  </code></pre>
  *  where each item has a checkbox [x] with which one can enable or disable it.
+ *
+ *  On construction, the entries are filled in using the OptionsContainer
+ *  object found in the GLiveSupport object.  The OptionsContainer can be
+ *  updated to the new contents of the entries using saveChanges(), and the
+ *  entries can be re-initialized from the OptionsContainer using reset().
  *
  *  @author $Author$
  *  @version $Revision$
@@ -144,6 +148,12 @@ class RdsView : public Gtk::VBox,
          */
         bool
         saveChanges(void)                                           throw ();
+
+        /**
+         *  Reset the widget to its saved state.
+         */
+        void
+        reset(void)                                                 throw ();
 };
 
 /* ================================================= external data structures */
