@@ -126,14 +126,26 @@ class RdsEntry : public Gtk::HBox,
         }
 
         /**
+         *  Get the type of the widget.
+         *  Returns the RDS option type (PS, PI, RT, ...).
+         *
+         *  @return the "type" parameter passed to the constructor.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getType(void)                                               throw ()
+        {
+            return type;
+        }
+
+        /**
          *  Set the state of the widget.
          *
          *  @param  enabled     the new state of the checkBox.
          *  @param  value       the new contents of the entryBin.
          */
         void
-        setValue(bool                           enabled,
-                 Ptr<const Glib::ustring>::Ref  value)              throw ();
+        setOptions(bool                           enabled,
+                   Ptr<const Glib::ustring>::Ref  value)            throw ();
 
         /**
          *  Save the changes made by the user.

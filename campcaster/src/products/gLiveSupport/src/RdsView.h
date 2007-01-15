@@ -100,6 +100,14 @@ class RdsView : public Gtk::VBox,
          */
         RdsEntryListType                            rdsEntryList;
 
+        /**
+         *  Fill in the entry from the OptionsContainer.
+         *
+         *  @param  entry   the RdsEntry to be filled in.
+         */
+        void
+        fillEntry(Ptr<RdsEntry>::Ref        entry)                  throw ();
+
 
     protected:
         /**

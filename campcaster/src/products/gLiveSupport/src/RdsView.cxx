@@ -71,6 +71,33 @@ RdsView :: RdsView (Ptr<GLiveSupport>::Ref    gLiveSupport,
     pack_start(*psEntry, Gtk::PACK_SHRINK, 10);
     pack_start(*piEntry, Gtk::PACK_SHRINK, 0);
     pack_start(*rtEntry, Gtk::PACK_SHRINK, 10);
+
+    RdsEntryListType::const_iterator    it;
+    for (it = rdsEntryList.begin(); it != rdsEntryList.end(); ++it) {
+        fillEntry(*it);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Fill in the entry from the OptionsContainer.
+ *----------------------------------------------------------------------------*/
+void
+RdsView :: fillEntry(Ptr<RdsEntry>::Ref     entry)                  throw ()
+{
+    Ptr<OptionsContainer>::Ref  options = gLiveSupport->getOptionsContainer();
+    
+    if (options) {
+        Ptr<const Glib::ustring>::Ref   type    = entry->getType();
+        try {
+            bool                        enabled = options->getRdsEnabled(type);
+            Ptr<const Glib::ustring>::Ref
+                                        value   = options->getRdsValue(type);
+            entry->setOptions(enabled, value);
+        } catch (std::invalid_argument &e) {
+            // there is no such RDS option; it's OK
+        }
+    }
 }
 
 

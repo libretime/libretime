@@ -61,6 +61,7 @@
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
 #include "BackupView.h"
+#include "RdsView.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -200,6 +201,12 @@ class OptionsWindow : public GuiWindow
          */
         void
         saveChangesInKeyBindings(void)                              throw ();
+
+        /**
+         *  Save the changes in the RDS settings.
+         */
+        void
+        saveChangesInRds(void)                                      throw ();
 
         /**
          *  Construct the "Sound" section.
@@ -415,6 +422,11 @@ class OptionsWindow : public GuiWindow
          *  The backup view shown in the backup section.
          */
         BackupView *                    backupView;
+
+        /**
+         *  The RdsView shown in the RDS section.
+         */
+        RdsView *                       rdsView;
 
 
     public:

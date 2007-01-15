@@ -39,7 +39,6 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ScrolledNotebook.h"
 #include "LiveSupport/Widgets/EntryBin.h"
-#include "RdsView.h"
 
 #include "OptionsWindow.h"
 
@@ -196,6 +195,7 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
 {
     bool changed = saveChangesInStringEntryFields();
     saveChangesInKeyBindings();                     // no need to restart
+    saveChangesInRds();                             // no need to restart
 
     if (changed) {
         try {
@@ -312,6 +312,16 @@ OptionsWindow :: saveChangesInKeyBindings(void)                     throw ()
             }
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the changes in the RDS settings.
+ *----------------------------------------------------------------------------*/
+void
+OptionsWindow :: saveChangesInRds(void)                             throw ()
+{
+    rdsView->saveChanges();
 }
 
 
@@ -819,7 +829,7 @@ OptionsWindow :: constructRdsSection(void)                          throw ()
         std::exit(1);
     }
     
-    Gtk::VBox *     rdsView = Gtk::manage(new RdsView(gLiveSupport, rdsBundle));
+    rdsView = Gtk::manage(new RdsView(gLiveSupport, rdsBundle));
     return rdsView;
 }
 

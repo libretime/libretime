@@ -91,8 +91,8 @@ RdsEntry :: RdsEntry(Ptr<ResourceBundle>::Ref       bundle,
  *  Set the state of the widget.
  *----------------------------------------------------------------------------*/
 void
-RdsEntry :: setValue(bool                           enabled,
-                     Ptr<const Glib::ustring>::Ref  value)          throw ()
+RdsEntry :: setOptions(bool                           enabled,
+                       Ptr<const Glib::ustring>::Ref  value)        throw ()
 {
     checkBox->set_active(enabled);
     entryBin->set_text(*value);
