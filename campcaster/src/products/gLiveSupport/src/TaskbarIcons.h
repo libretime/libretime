@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_TaskbarIcons_h
-#define LiveSupport_GLiveSupport_TaskbarIcons_h
+#ifndef TaskbarIcons_h
+#define TaskbarIcons_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -167,5 +167,5 @@ class TaskbarIcons : public Configurable
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_TaskbarIcons_h
+#endif // TaskbarIcons_h
 

@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_AdvancedSearchItem_h
-#define LiveSupport_GLiveSupport_AdvancedSearchItem_h
+#ifndef AdvancedSearchItem_h
+#define AdvancedSearchItem_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -191,5 +191,5 @@ class AdvancedSearchItem : public Gtk::HBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_AdvancedSearchItem_h
+#endif // AdvancedSearchItem_h
 

@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_BrowseEntry_h
-#define LiveSupport_GLiveSupport_BrowseEntry_h
+#ifndef BrowseEntry_h
+#define BrowseEntry_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -148,5 +148,5 @@ class BrowseEntry : public Gtk::HBox,
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_BrowseEntry_h
+#endif // BrowseEntry_h
 

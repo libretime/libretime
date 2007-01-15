@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_CuePlayer_h
-#define LiveSupport_GLiveSupport_CuePlayer_h
+#ifndef CuePlayer_h
+#define CuePlayer_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -195,5 +195,5 @@ class CuePlayer : public Gtk::HBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_CuePlayer_h
+#endif // CuePlayer_h
 

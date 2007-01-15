@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_KeyboardShortcutList_h
-#define LiveSupport_GLiveSupport_KeyboardShortcutList_h
+#ifndef KeyboardShortcutList_h
+#define KeyboardShortcutList_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -190,5 +190,5 @@ class KeyboardShortcutList : public Configurable
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_KeyboardShortcutList_h
+#endif // KeyboardShortcutList_h
 

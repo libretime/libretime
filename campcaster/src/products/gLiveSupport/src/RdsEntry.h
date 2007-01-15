@@ -174,5 +174,5 @@ class RdsEntry : public Gtk::HBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_RdsEntry_h
+#endif // RdsEntry_h
 

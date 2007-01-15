@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_AdvancedSearchEntry_h
-#define LiveSupport_GLiveSupport_AdvancedSearchEntry_h
+#ifndef AdvancedSearchEntry_h
+#define AdvancedSearchEntry_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -144,5 +144,5 @@ class AdvancedSearchEntry : public Gtk::VBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_AdvancedSearchEntry_h
+#endif // AdvancedSearchEntry_h
 

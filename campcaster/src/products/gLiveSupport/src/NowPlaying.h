@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_NowPlaying_h
-#define LiveSupport_GLiveSupport_NowPlaying_h
+#ifndef NowPlaying_h
+#define NowPlaying_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -291,5 +291,5 @@ class NowPlaying : public Gtk::HBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_NowPlaying_h
+#endif // NowPlaying_h
 

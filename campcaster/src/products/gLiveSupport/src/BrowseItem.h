@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_BrowseItem_h
-#define LiveSupport_GLiveSupport_BrowseItem_h
+#ifndef BrowseItem_h
+#define BrowseItem_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -263,5 +263,5 @@ class BrowseItem : public Gtk::VBox,
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_BrowseItem_h
+#endif // BrowseItem_h
 
