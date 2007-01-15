@@ -136,6 +136,14 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
+        $md5 = md5_file($formdata['mediafile']['tmp_name']);
+        $duplicate = StoredFile::RecallByMd5($md5);
+        if ($duplicate) {
+            $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
+            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
+            return FALSE;
+        }
+
         $metadata = camp_get_audio_metadata($formdata['mediafile']['tmp_name']);
         if (PEAR::isError($metadata)) {
             $this->_retMsg($metadata->getMessage());
@@ -162,12 +170,12 @@ class uiHandler extends uiBase {
         }
 
         $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
-        $this->transMData($r);
+        $this->translateMetadata($r);
 
 		// set records in default language too
         if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {
             $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
-            $this->transMData($r, UI_UPLOAD_LANGID);
+            $this->translateMetadata($r, UI_UPLOAD_LANGID);
         }
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=$r";
@@ -191,12 +199,11 @@ class uiHandler extends uiBase {
 
 
     /**
-     * @todo Rename this function.
      * @param unknown_type $id
      * @param unknown_type $langid
      * @return void
      */
-    function transMData($id, $langid=UI_DEFAULT_LANGID)
+    function translateMetadata($id, $langid=UI_DEFAULT_LANGID)
     {
         include(dirname(__FILE__).'/formmask/metadata.inc.php');
 
@@ -430,15 +437,6 @@ class uiHandler extends uiBase {
     function delete($id, $delOverride=FALSE)
     {
         $this->redirUrl = UI_BROWSER."?popup[]=_reload_parent&popup[]=_close";
-
-        /* no folder support yet
-        if (!($delOverride==$id) && (count(BasicStor::GetObjType($id)=='Folder'?
-                      $this->gb->listFolder($id, $this->sessid):NULL))) {
-            $this->_retMsg("Folder is not empty. You can override this protection by clicking DEL again");
-            $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid."&delOverride=$id";
-            return FALSE;
-        }
-        */
 
         if (is_array($id)) {
         	$ids = $id;

@@ -2,7 +2,7 @@
 ini_set('memory_limit', '64M');
 
 // Warning/Error level
-define('UI_DEBUG', TRUE);
+define('UI_DEBUG', FALSE);
 define('UI_VERBOSE', FALSE);
 define('UI_WARNING', TRUE);
 define('UI_ERROR', TRUE);

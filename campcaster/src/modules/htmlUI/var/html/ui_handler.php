@@ -25,7 +25,7 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->logout(TRUE);
 	    break;
 
-    ## file/webstream handling
+    // file/webstream handling
     case "addFileData":
 	    if (($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $ui_fmask["file"])) !== FALSE) {
 	    	$uiHandler->SCRATCHPAD->addItem($ui_tmpid);
@@ -260,9 +260,11 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "PL.addItem":
-	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id'], $_REQUEST['playlength']) !== FALSE) {
-	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
-	    }
+        if (isset($_REQUEST['id']) && isset($_REQUEST['playlength'])) {
+    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id'], $_REQUEST['playlength']) !== FALSE) {
+    	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+    	    }
+        }
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
