@@ -381,7 +381,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     }
 
     if (!m_decoder) {
-        throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
+        throw std::runtime_error("GstreamerPlayer: could not create decoder");
     }
 
     gst_bin_add_many(GST_BIN(m_pipeline), m_filesrc, m_decoder, m_audioconvert, m_audioscale, NULL);
@@ -395,9 +395,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     
     if (gst_element_set_state(m_pipeline,GST_STATE_PAUSED) == GST_STATE_FAILURE) {
         close();
-        // the error is most probably caused by not being able to open
-        // the audio device (as it might be blocked by an other process
-        throw std::runtime_error("can't open audio device " + m_audioDevice);
+        throw std::runtime_error("GstreamerPlayer: could not open file");
     }
 }
 
