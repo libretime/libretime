@@ -43,6 +43,7 @@
 #include <fileref.h>
 #include <audioproperties.h>
 
+#include "LiveSupport/Core/Debug.h"
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/FileTools.h"
 
@@ -469,6 +470,11 @@ UploadFileWindow :: uploadAudioClip(void)                       throw ()
 
     try {
         gLiveSupport->uploadAudioClip(audioClip);
+        
+    } catch (XmlRpcMethodFaultException &e) {
+        statusBar->set_text(*processException(e));
+        return;
+        
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
         std::cerr << e.what();
@@ -494,6 +500,11 @@ UploadFileWindow :: uploadPlaylistArchive(void)                 throw ()
     Ptr<Playlist>::Ref              playlist;
     try {
         playlist = gLiveSupport->uploadPlaylistArchive(path);
+        
+    } catch (XmlRpcMethodFaultException &e) {
+        statusBar->set_text(*processException(e));
+        return;
+        
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
         return;
@@ -617,5 +628,27 @@ UploadFileWindow :: clearEverything(void)                       throw ()
     }
     statusBar->set_text("");
     fileType = invalidType;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Handle some known exception types.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+UploadFileWindow :: processException(const XmlRpcMethodFaultException &     e)
+                                                                throw ()
+{
+    Ptr<const Glib::ustring>::Ref   message;
+    
+    if (e.getFaultCode() == 888) {
+        message = getResourceUstring("duplicateFileMsg");
+    
+    } else {
+        message.reset(new const Glib::ustring(e.what()));
+    }
+    
+    std::cerr << e.what() << std::endl;
+    
+    return message;
 }
 

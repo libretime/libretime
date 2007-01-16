@@ -115,6 +115,17 @@ class XmlRpcException : public std::exception
         }
 
         /**
+         *  Set the message of the exception.
+         *
+         *  @param  msg     the new message of the exception.
+         */
+        void
+        setMessage(const std::string &      msg)            throw ()
+        {
+            message.reset(new std::string(msg));
+        }
+
+        /**
          *  Get the message of the exception.
          *
          *  @return the message of the exception.

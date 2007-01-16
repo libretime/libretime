@@ -276,6 +276,17 @@ class UploadFileWindow : public GuiWindow
         void
         clearEverything(void)                               throw ();
 
+        /**
+         *  Handle some known exception types.
+         *
+         *  @param  e   the exception to be processed.
+         *  @return a localized error message if e has one of the recognized
+         *          faultCode values; e.what() if not.
+         */
+        Ptr<const Glib::ustring>::Ref
+        processException(const XmlRpcMethodFaultException &     e)
+                                                            throw ();
+
 
     protected:
         /**

@@ -122,6 +122,8 @@ root:table
         unsupportedFileTypeMsg:string   { "Unsupported file type." }
         missingTitleMsg:string          { "Please enter a title." }
         badMetadataMsg:string           { "Invalid data for {0}." }
+        duplicateFileMsg:string         { "Error: the file is in the storage "
+                                          "already." }
     }
 
     simplePlaylistManagementWindow:table

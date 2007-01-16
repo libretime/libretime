@@ -40,6 +40,8 @@
 #include "configure.h"
 #endif
 
+#include <sstream>
+
 #include "LiveSupport/Core/XmlRpcException.h"
 
 namespace LiveSupport {
@@ -48,6 +50,14 @@ namespace Core {
 
 /* ================================================================ constants */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The default fault code, the value when no fault code is set.
+ *----------------------------------------------------------------------------*/
+const int           defaultFaultCode = -1;
+
+}
 
 /* =================================================================== macros */
 
@@ -63,6 +73,13 @@ namespace Core {
  */
 class XmlRpcMethodFaultException : public XmlRpcException
 {
+    private:
+        /**
+         *  The XML-RPC faultCode of the exception.
+         */
+        int             faultCode;
+
+
     public:
         /**
          *  Constructor based on a string.
@@ -70,7 +87,8 @@ class XmlRpcMethodFaultException : public XmlRpcException
          *  @param msg the message of the exception.
          */
         XmlRpcMethodFaultException(const std::string &msg)      throw ()
-                    : XmlRpcException(msg)
+                    : XmlRpcException(msg),
+                      faultCode(defaultFaultCode)
         {
         }
 
@@ -81,12 +99,13 @@ class XmlRpcMethodFaultException : public XmlRpcException
          */
         XmlRpcMethodFaultException(const std::exception  & parent)
                                                                     throw ()
-                : XmlRpcException(parent)
+                : XmlRpcException(parent),
+                  faultCode(defaultFaultCode)
         {
         }
 
         /**
-         *  Constructor based on a message ant a parent exception.
+         *  Constructor based on a message and a parent exception.
          *
          *  @param msg the message of the exception.
          *  @param parent the parent exception.
@@ -94,17 +113,52 @@ class XmlRpcMethodFaultException : public XmlRpcException
         XmlRpcMethodFaultException(const std::string    & msg,
                                    const std::exception & parent)
                                                                     throw ()
-                : XmlRpcException(msg, parent)
+                : XmlRpcException(msg, parent),
+                  faultCode(defaultFaultCode)
         {
+        }
+
+        /**
+         *  Constructor based on a fault code, fault string pair.
+         *
+         *  @param  methodName  the name of the method throwing the exception.
+         *  @param  faultCode   the code of the exception.
+         *  @param  faultString the message of the exception.
+         */
+        XmlRpcMethodFaultException(const std::string &  methodName,
+                                   int                  faultCode,
+                                   const std::string &  faultString)
+                                                                    throw ()
+                : XmlRpcException(""),
+                  faultCode(faultCode)
+        {
+            std::stringstream   msg;
+            msg << "XML-RPC method '" 
+                << methodName
+                << "' returned error message:\n"
+                << faultCode
+                << " - "
+                << faultString;
+            setMessage(msg.str());
         }
 
         /**
          *  Virtual destructor.
          */
-        ~XmlRpcMethodFaultException(void)                         throw ()
+        ~XmlRpcMethodFaultException(void)                           throw ()
         {
         }
 
+        /**
+         *  Get the XML-RPC faultCode of the exception.
+         *
+         *  @return the fault code, if one is set; or -1 if not.
+         */
+        int
+        getFaultCode(void) const                                    throw ()
+        {
+            return faultCode;
+        }
 };
 
 

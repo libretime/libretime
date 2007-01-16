@@ -1102,12 +1102,11 @@ WebStorageClient :: execute(const std::string &     methodName,
     xmlRpcClient.close();
     
     if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << methodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
+        int                 faultCode   = result[errorCodeParamName];
+        std::string         faultString = result[errorMessageParamName];
+        throw Core::XmlRpcMethodFaultException(methodName,
+                                               faultCode,
+                                               faultString);
     }
 }
 
