@@ -24,10 +24,32 @@ require_once('File/Find.php');
 
 function printUsage()
 {
-    echo "Parameters:\n";
+    echo "There are two ways to import audio files into Campcaster: linking\n";
+    echo "or copying.\n";
     echo "\n";
-    echo "  -c, --copy     Make a copy of the files that are imported.\n";
+    echo "Linking has the advantage that it will not duplicate any files,\n";
+    echo "but you must take care not to move, rename, or delete any of the\n";
+    echo "imported files from their current locations on disk.\n";
+    echo "\n";
+    echo "Copying has the advantage that you can do whatever you like with\n";
+    echo "the source files after you import them, but has the disadvantage\n";
+    echo "that it requires doubling the hard drive space needed to store\n";
+    echo "your files.\n";
+    echo "\n";
+    echo "Usage:\n";
+    echo "  campcaster-import [OPTIONS] FILES_OR_DIRS\n";
+    echo "\n";
+    echo "Options:\n";
+    echo "  -l, --link     Link to specified files.\n";
+    echo "                 Saves storage space, but you cannot move, delete,\n";
+    echo "                 or rename the original files, otherwise there will\n";
+    echo "                 be dead air when Campcaster tries to play the file.\n";
+    echo "\n";
+    echo "  -c, --copy     Copy the specified files.\n";
     echo "                 This is useful if you are importing from removable media.\n";
+    echo "                 If you are importing files on your hard drive, this will\n";
+    echo "                 double the disk space required.\n";
+    echo "\n";
     echo "  -h, --help     Print this message and exit.\n";
     echo "\n";
 }
@@ -58,14 +80,21 @@ function import_err($p_pearErrorObj, $txt='')
  *
  * @param string $p_filepath
  *      You can pass in a directory or file name.
- * @param boolean $p_doCopyFiles
+ * @param string $p_importMode
  * @param boolean $p_testOnly
  *
  * @return int
  */
-function camp_import_audio_file($p_filepath, $p_doCopyFiles = false, $p_testOnly = false)
+function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = false)
 {
     global $STORAGE_SERVER_PATH;
+
+    // Check parameters
+    $p_importMode = strtolower($p_importMode);
+    if (!in_array($p_importMode, array("copy", "link"))) {
+        return array(0, 0);
+    }
+
     $greenbox = new GreenBox();
     $parentId = M2tree::GetObjId(M2tree::GetRootNode());
 
@@ -81,7 +110,7 @@ function camp_import_audio_file($p_filepath, $p_doCopyFiles = false, $p_testOnly
     if (is_dir($p_filepath)) {
         list(,$fileList) = File_Find::maptree($p_filepath);
         foreach ($fileList as $tmpFile) {
-            list($tmpCount, $tmpDups) = camp_import_audio_file($tmpFile, $p_doCopyFiles, $p_testOnly);
+            list($tmpCount, $tmpDups) = camp_import_audio_file($tmpFile, $p_importMode, $p_testOnly);
             $fileCount += $tmpCount;
             $duplicates += $tmpDups;
         }
@@ -113,9 +142,14 @@ function camp_import_audio_file($p_filepath, $p_doCopyFiles = false, $p_testOnly
     unset($metadata['playtime_seconds']);
 
     if (!$p_testOnly) {
+        if ($p_importMode == "copy") {
+            $doCopyFiles = true;
+        } elseif ($p_importMode == "link") {
+            $doCopyFiles = false;
+        }
         $r = $greenbox->bsPutFile($parentId, $metadata['ls:filename'],
             $p_filepath, "$STORAGE_SERVER_PATH/var/emptyMdata.xml", NULL,
-            'audioclip', 'file', $p_doCopyFiles);
+            'audioclip', 'file', $doCopyFiles);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
@@ -156,7 +190,7 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$parsedCommandLine = Console_Getopt::getopt($argv, "thc", array("test", "help", "copy"));
+$parsedCommandLine = Console_Getopt::getopt($argv, "thcl", array("test", "help", "copy", "link"));
 if (PEAR::isError($parsedCommandLine)) {
     printUsage();
     exit(1);
@@ -171,7 +205,7 @@ if (count($parsedCommandLine[1]) == 0) {
 $files = $parsedCommandLine[1];
 
 $testonly = FALSE;
-$doCopyFiles = FALSE;
+$importMode = null;
 foreach ($cmdLineOptions as $tmpValue) {
     $optionName = $tmpValue[0];
     $optionValue = $tmpValue[1];
@@ -182,9 +216,14 @@ foreach ($cmdLineOptions as $tmpValue) {
             exit;
         case "c":
         case "--copy":
-            echo " * Working in COPY mode\n";
-            $doCopyFiles = TRUE;
-            break;
+            //echo " *** Working in copy mode\n";
+            $importMode = "copy";
+            break 2;
+        case 'l':
+        case '--link':
+            //echo " *** Working in link mode\n";
+            $importMode = "link";
+            break 2;
         case "t":
         case "--test":
             $testonly = TRUE;
@@ -192,12 +231,17 @@ foreach ($cmdLineOptions as $tmpValue) {
     }
 }
 
+if (is_null($importMode)) {
+    printUsage();
+    exit(0);
+}
 
+//echo "==========================================================================\n";
 $filecount = 0;
 $duplicates = 0;
 if (is_array($files)) {
     foreach ($files as $filepath) {
-        list($tmpCount, $tmpDups) = camp_import_audio_file($filepath, $doCopyFiles, $testonly);
+        list($tmpCount, $tmpDups) = camp_import_audio_file($filepath, $importMode, $testonly);
         $filecount += $tmpCount;
         $duplicates += $tmpDups;
     }
@@ -211,10 +255,12 @@ if ($time > 0) {
 }
 
 echo "==========================================================================\n";
+echo " *** Import mode: $importMode\n";
 echo " *** Files imported: $filecount\n";
 echo " *** Duplicate files (not imported): $duplicates\n";
 echo " *** Errors: $g_errors\n";
 echo " *** Total: ".($filecount+$duplicates)." files in $time seconds = $speed files/second.\n";
+echo "==========================================================================\n";
 
 //echo " * Import completed.\n";
 
