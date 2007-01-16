@@ -125,8 +125,8 @@ install:
 	${MKDIR} ${DEST_DIR}/bin
 	${CP} ${BIN_DIR}/*.sh ${DEST_DIR}/bin
 	${RM} ${DEST_DIR}/bin/autogen.sh
-	${CAT} ${BIN_DIR}/import.sh | ${SED} -e ${SED_PHPPART_DIR} \
-	       > ${DEST_DIR}/bin/import.sh
+	${CAT} ${BIN_DIR}/campcaster-import | ${SED} -e ${SED_PHPPART_DIR} \
+	       > ${DEST_DIR}/bin/campcaster-import
 	${CAT} ${BIN_DIR}/backup.sh | ${SED} -e ${SED_PHPPART_DIR} \
 	       > ${DEST_DIR}/bin/backup.sh
 	${CAT} ${BIN_DIR}/restore.sh | ${SED} -e ${SED_PHPPART_DIR} \
