@@ -76,10 +76,18 @@ case "$1" in
         rm -rf $installdir/etc/pear.conf
         rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*
         rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
-        rm -rf $installdir/var/Campcaster/storageServer/var/access/*
-        rm -rf $installdir/var/Campcaster/storageServer/var/trans/*
         rm -rf $installdir/var/Campcaster/archiveServer/var/access/*
         rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
+
+        storagedir=$installdir/var/Campcaster/storageServer
+        storage_is_local=yes
+        if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+            storage_is_local=no
+        fi
+        if [ "$storage_is_local" = "yes" ]; then
+            rm -rf $storagedir/var/access/*
+            rm -rf $storagedir/var/trans/*
+        fi
     ;;
     
     failed-upgrade)

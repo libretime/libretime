@@ -200,15 +200,28 @@ rm -f $www_root/campcaster
 
 
 #-------------------------------------------------------------------------------
+#  Check whether the storage server directory has been replaced with a mount
+#  point for an NFS share.
+#-------------------------------------------------------------------------------
+storagedir=$installdir/var/storageServer
+storage_is_local=yes
+if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+    storage_is_local=no
+fi
+
+
+#-------------------------------------------------------------------------------
 #  Delete data files
 #-------------------------------------------------------------------------------
 echo "Deleting data files...";
 
 rm -rf $installdir/var/htmlUI/var/html/img/*
 rm -rf $installdir/var/htmlUI/var/templates_c/*
-rm -rf $installdir/var/storageServer/var/stor/*
-rm -rf $installdir/var/storageServer/var/access/*
-rm -rf $installdir/var/storageServer/var/trans/*
+if [ "$storage_is_local" = "yes" ]; then
+    rm -rf $installdir/var/storageServer/var/stor/*
+    rm -rf $installdir/var/storageServer/var/access/*
+    rm -rf $installdir/var/storageServer/var/trans/*
+fi
 rm -rf $installdir/var/archiveServer/var/stor/*
 rm -rf $installdir/var/archiveServer/var/access/*
 rm -rf $installdir/var/archiveServer/var/trans/*

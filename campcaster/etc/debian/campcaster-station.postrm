@@ -67,8 +67,16 @@ case "$1" in
         fi
 
         # remove generated files
-        rm -rf $installdir/var/Campcaster/storageServer/var/stor/*
         rm -rf $installdir/var/Campcaster/archiveServer/var/stor/*
+
+        storagedir=$installdir/var/Campcaster/storageServer
+        storage_is_local=yes
+        if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+            storage_is_local=no
+        fi
+        if [ "$storage_is_local" = "yes" ]; then
+            rm -rf $storagedir/var/stor/*
+        fi
     ;;
 
     *)

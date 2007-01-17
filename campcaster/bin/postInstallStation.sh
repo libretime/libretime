@@ -283,6 +283,17 @@ ${install_bin}/createOdbcDataSource.sh --database=${ls_database} \
 
 
 #-------------------------------------------------------------------------------
+#  Check whether the storage server directory has been replaced with a mount
+#  point for an NFS share.
+#-------------------------------------------------------------------------------
+storagedir=$installdir/var/storageServer
+storage_is_local=yes
+if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+    storage_is_local=no
+fi
+
+
+#-------------------------------------------------------------------------------
 #  Setup directory permissions
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
@@ -297,15 +308,17 @@ chmod g+sw $install_var_ls/archiveServer/var/access
 chmod g+sw $install_var_ls/archiveServer/var/trans
 chmod g+sw $install_var_ls/archiveServer/var/stor/buffer
 
-chgrp $apache_group $install_var_ls/storageServer/var/stor
-chgrp $apache_group $install_var_ls/storageServer/var/access
-chgrp $apache_group $install_var_ls/storageServer/var/trans
-chgrp $apache_group $install_var_ls/storageServer/var/stor/buffer
+if [ "$storage_is_local" = "yes" ]; then
+    chgrp $apache_group $install_var_ls/storageServer/var/stor
+    chgrp $apache_group $install_var_ls/storageServer/var/access
+    chgrp $apache_group $install_var_ls/storageServer/var/trans
+    chgrp $apache_group $install_var_ls/storageServer/var/stor/buffer
 
-chmod g+sw $install_var_ls/storageServer/var/stor
-chmod g+sw $install_var_ls/storageServer/var/access
-chmod g+sw $install_var_ls/storageServer/var/trans
-chmod g+sw $install_var_ls/storageServer/var/stor/buffer
+    chmod g+sw $install_var_ls/storageServer/var/stor
+    chmod g+sw $install_var_ls/storageServer/var/access
+    chmod g+sw $install_var_ls/storageServer/var/trans
+    chmod g+sw $install_var_ls/storageServer/var/stor/buffer
+fi
 
 chgrp $apache_group $install_var_ls/htmlUI/var/templates_c
 chgrp $apache_group $install_var_ls/htmlUI/var/html/img
@@ -379,12 +392,14 @@ ln -s $install_var_ls $www_root/campcaster
 #-------------------------------------------------------------------------------
 echo "Initializing database...";
 
-# create PHP-related database tables
-cd $install_var_ls/storageServer/var/install
-# workaround for ticket #2059; restore to "exit 1" after the ticket is closed
-#php -q install.php || exit 1;
-php -q install.php || true
-cd -
+if [ "$storage_is_local" = "yes" ]; then
+    # create PHP-related database tables
+    cd $install_var_ls/storageServer/var/install
+    # workaround for #2059; restore to "exit 1" after the ticket is closed
+    #php -q install.php || exit 1;
+    php -q install.php || true
+    cd -
+fi
 
 # create PHP-related database tables
 cd $install_var_ls/archiveServer/var/install
@@ -416,13 +431,15 @@ $install_bin/gst-register
 #-------------------------------------------------------------------------------
 #  Generate a random password for the scheduler's access to the storage
 #-------------------------------------------------------------------------------
-grep -q 'ls_scheduler_storage_pass' $install_etc/campcaster-scheduler.xml
-if [ $? = 0 ]; then
-    SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
-    php -q $install_var_ls/storageServer/var/changeSchedulerPassword.php \
-        ${SCHEDULER_STORAGE_PASS}
-    sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
-        $install_etc/campcaster-scheduler.xml
+if [ "$storage_is_local" = "yes" ]; then
+    grep -q 'ls_scheduler_storage_pass' $install_etc/campcaster-scheduler.xml
+    if [ $? = 0 ]; then
+        SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
+        php -q $install_var_ls/storageServer/var/changeSchedulerPassword.php \
+            ${SCHEDULER_STORAGE_PASS}
+        sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
+            $install_etc/campcaster-scheduler.xml
+    fi
 fi
 
 
