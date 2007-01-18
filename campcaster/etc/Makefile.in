@@ -111,6 +111,8 @@ GSTREAMER_DIR     = ${TOOLS_DIR}/gstreamer
 GSTREAMER_VERSION = gstreamer-0.8.12
 TAGLIB_DIR        = ${TOOLS_DIR}/taglib
 TAGLIB_VERSION    = taglib-1.4
+LIBSERIAL_DIR     = ${TOOLS_DIR}/libserial
+LIBSERIAL_VERSION = libserial-0.5.2
 PEAR_DIR          = ${TOOLS_DIR}/pear
 
 MODULES_DIR            = ${SRC_DIR}/modules
@@ -219,6 +221,9 @@ ${TMP_DIR}/tools_setup.stamp:
 	cd ${TAGLIB_DIR}/${TAGLIB_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${TAGLIB_DIR}/${TAGLIB_VERSION} install
 
+	cd ${LIBSERIAL_DIR}/${LIBSERIAL_VERSION} && ./configure --prefix=${prefix}
+	${MAKE} -C ${LIBSERIAL_DIR}/${LIBSERIAL_VERSION} install
+
 	cd ${PEAR_DIR} && ./configure --prefix=${prefix}
 	${MAKE} -C ${PEAR_DIR} install
 
@@ -230,6 +235,7 @@ tools_distclean:
 	-${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} distclean
 	-${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} distclean
 	-${MAKE} -C ${TAGLIB_DIR}/${TAGLIB_VERSION} distclean
+	-${MAKE} -C ${LIBSERIAL_DIR}/${LIBSERIAL_VERSION} distclean
 	${RM} ${TMP_DIR}/tools_setup.stamp
 
 doxytag_setup: ${TMP_DIR}/doxytag_setup.stamp

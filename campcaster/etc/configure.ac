@@ -364,6 +364,7 @@ by Campcaster:
     libodbc++ 0.2.3
     taglib 1.4
     xmlrpc++ 2004-07-13
+    libstream 0.5.2
 
 using the following configuration settings:
 
