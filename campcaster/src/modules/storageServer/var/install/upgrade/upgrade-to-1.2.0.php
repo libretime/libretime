@@ -26,9 +26,9 @@ echo "**********************************\n";
 echo "* StorageServer Upgrade to 1.2.0 *\n";
 echo "**********************************\n";
 
-require_once('../../conf.php');
-require_once("../installInit.php");
-require_once("../../StoredFile.php");
+require_once(dirname(__FILE__).'/../../conf.php');
+require_once(dirname(__FILE__)."/../installInit.php");
+require_once(dirname(__FILE__)."/../../StoredFile.php");
 
 // Check to see if upgrade has already been applied
 $sql = "SELECT md5 FROM ".$CC_CONFIG['filesTable']." LIMIT 1";
