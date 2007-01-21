@@ -1,7 +1,7 @@
 <?php
 define('RENDER_EXT', 'ogg');
 
-require_once "LsPlaylist.php";
+require_once("Playlist.php");
 
 /**
  * Renderer caller class
@@ -37,7 +37,7 @@ class Renderer
     {
         global $CC_CONFIG;
         // recall playlist:
-        $pl = LsPlaylist::RecallByGunid($plid);
+        $pl = StoredFile::RecallByGunid($plid);
         if (PEAR::isError($pl)) {
         	return $pl;
         }
@@ -232,16 +232,17 @@ class Renderer
         }
         $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
         //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
-        $id = $gb->bsPutFile($parid, $fileName, $realOgg, $mdata,
-            NULL, 'audioclip', 'string');
-        if (PEAR::isError($id)) {
-        	return $id;
+        $values = array(
+            "filename" => $fileName,
+            "filepath" => $realOgg,
+            "metadata" => $mdata,
+            "filetype" => "audioclip"
+        );
+        $storedFile = $gb->bsPutFile($parid, $values);
+        if (PEAR::isError($storedFile)) {
+        	return $storedFile;
         }
-        $ac = StoredFile::Recall($id);
-        if (PEAR::isError($ac)) {
-        	return $ac;
-        }
-        return array('gunid' => $ac->gunid);
+        return array('gunid' => $storedFile->getGunid());
     }
 
 

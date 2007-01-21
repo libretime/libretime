@@ -33,7 +33,7 @@ var_dump($r);
 $id = $r;
 
 echo "#  getMdata: ";
-$r = $gb->getMdata($id, $sessid);
+$r = $gb->getMetadata($id, $sessid);
 if (PEAR::isError($r)) {
     echo "ERROR: ".$r->getMessage()." ".$r->getUserInfo()."\n";
     exit(1);

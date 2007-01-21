@@ -60,15 +60,15 @@ class GreenBox extends BasicStor {
      * @param string $ftype
      * 		Internal file type
      * @return int
+     *      ID of the StoredFile that was created.
      */
-    public function putFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
-        $sessid='', $gunid=NULL, $ftype='audioclip')
+    public function putFile($p_parentId, $p_values, $p_sessionId='')
     {
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', $p_parentId, $p_sessionId)) !== TRUE) {
             return $res;
         }
-        return $this->bsPutFile($parid, $fileName, $mediaFileLP,
-            $mdataFileLP, $gunid, $ftype);
+        $storedFile = $this->bsPutFile($p_parentId, $p_values);
+        return $storedFile;
     } // fn putFile
 
 
@@ -99,12 +99,17 @@ class GreenBox extends BasicStor {
         if (!file_exists($mdataFileLP)) {
             $mdataFileLP = dirname(__FILE__).'/emptyWebstream.xml';
         }
-        $oid = $this->bsPutFile(
-            $parid, $fileName, '', $mdataFileLP, $gunid, 'webstream'
+        $values = array(
+            "filename" => $fileName,
+            "metadata" => $mdataFileLP,
+            "gunid" => $gunid,
+            "filetype" => "webstream"
         );
-        if (PEAR::isError($oid)) {
-            return $oid;
+        $storedFile = $this->bsPutFile($parid, $values);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
         }
+        $oid = $storedFile->getId();
         $r = $this->bsSetMetadataValue(
             $oid, 'ls:url', $url, NULL, NULL, 'metadata');
         if (PEAR::isError($r)) {
@@ -313,13 +318,13 @@ class GreenBox extends BasicStor {
      * @return string|PEAR_Error
      * @todo rename this function to "getMetadata"
      */
-    public function getMdata($id, $sessid='')
+    public function getMetadata($id, $sessid='')
     {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
         return $this->bsGetMetadata($id);
-    } // fn getMdata
+    }
 
 
     /**
@@ -334,9 +339,8 @@ class GreenBox extends BasicStor {
      * @param string $sessid
      *      session ID
      * @return array
-     * @todo rename this function to "getMdataArray"
      */
-    public function getMdataArray($id, $sessid)
+    public function getMetadataArray($id, $sessid)
     {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
@@ -355,7 +359,7 @@ class GreenBox extends BasicStor {
         }
         if ($md === FALSE) {
             return PEAR::raiseError(
-                "GreenBox::getMdataArray: no metadata container found"
+                "GreenBox::getMetadataArray: no metadata container found"
             );
         }
         $res = array();
@@ -369,7 +373,7 @@ class GreenBox extends BasicStor {
             }
         }
         return $res;
-    } // fn getMdataArray
+    }
 
 
     /**
@@ -396,6 +400,9 @@ class GreenBox extends BasicStor {
     public function getMetadataValue($id, $category, $sessid='',
         $lang=NULL, $deflang=NULL)
     {
+        if (!is_numeric($id)) {
+            return null;
+        }
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
@@ -572,7 +579,7 @@ class GreenBox extends BasicStor {
      */
 //    function getPlaylistXml($id, $sessid)
 //    {
-//        return $this->getMdata($id, $sessid);
+//        return $this->getMetadata($id, $sessid);
 //    } // fn getPlaylistXml
 
 
@@ -672,7 +679,7 @@ class GreenBox extends BasicStor {
         $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
     {
         require_once"Playlist.php";
-        $pl = Playlist::RecallByToken($token);
+        $pl = StoredFile::RecallByToken($token);
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -713,7 +720,7 @@ class GreenBox extends BasicStor {
     public function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
         require_once("Playlist.php");
-        $pl = Playlist::RecallByToken($token);
+        $pl = StoredFile::RecallByToken($token);
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -748,7 +755,7 @@ class GreenBox extends BasicStor {
     public function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
     {
         require_once("Playlist.php");
-        $pl = Playlist::RecallByToken($token);
+        $pl = StoredFile::RecallByToken($token);
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -784,7 +791,7 @@ class GreenBox extends BasicStor {
     public function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
     {
         require_once("Playlist.php");
-        $pl = Playlist::RecallByToken($token);
+        $pl = StoredFile::RecallByToken($token);
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -864,7 +871,7 @@ class GreenBox extends BasicStor {
         $lang=NULL, $deflang=NULL)
     {
         require_once("Playlist.php");
-        $pl = Playlist::RecallByGunid($plid);
+        $pl = StoredFile::RecallByGunid($plid);
         if (PEAR::isError($pl)) {
             return $pl;
         }

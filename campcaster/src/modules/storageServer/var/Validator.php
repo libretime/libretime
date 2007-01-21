@@ -109,8 +109,7 @@ class Validator {
      * 		'A' | 'T' (attr or tag)
      * @param string $value
      * 		validated element value
-     * @return mixed
-     * 		TRUE or PEAR::error
+     * @return TRUE|PEAR_Error
      */
     function validateOneValue($fname, $category, $predxml, $value)
     {

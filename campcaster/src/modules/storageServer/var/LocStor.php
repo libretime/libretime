@@ -93,8 +93,12 @@ class LocStor extends BasicStor {
             if (PEAR::isError($oid)) {
                 return $oid;
             }
-            $storedFile =& StoredFile::Insert($oid, '', '', $metadata,
-                'string', $gunid, $ftype);
+            $values = array(
+                "id" => $oid,
+                "metadata" => $metadata,
+                "gunid" => $gunid,
+                "filetype" => $ftype);
+            $storedFile =& StoredFile::Insert($values);
             if (PEAR::isError($storedFile)) {
                 $res = BasicStor::RemoveObj($oid);
                 return $storedFile;
@@ -606,9 +610,12 @@ class LocStor extends BasicStor {
         if (PEAR::isError($oid)) {
             return $oid;
         }
-        $storedFile =&  StoredFile::Insert($oid, '', '',
-            dirname(__FILE__).'/emptyPlaylist.xml',
-            'file', $playlistId, 'playlist');
+        $values = array(
+            "id" => $oid,
+            "metadata" => dirname(__FILE__).'/emptyPlaylist.xml',
+            "gunid" => $playlistId,
+            "filetype" => "playlist");
+        $storedFile = StoredFile::Insert($values);
         if (PEAR::isError($storedFile)) {
             $res = BasicStor::RemoveObj($oid);
             return $storedFile;

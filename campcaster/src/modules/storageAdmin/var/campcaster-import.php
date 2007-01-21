@@ -119,16 +119,19 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     // Check for non-supported file type
     if (!preg_match('/\.(ogg|mp3)$/i', $p_filepath, $var)) {
+        echo "IGNORED: $p_filepath\n";
         //echo " * WARNING: File extension not supported - skipping file: $p_filepath\n";
         return array($fileCount, $duplicates);
     }
 
+//    $timeBegin = microtime(true);
     $md5sum = md5_file($p_filepath);
+//    $timeEnd = microtime(true);
+//    echo " * MD5 time: ".($timeEnd-$timeBegin)."\n";
 
     // Look up md5sum in database
     $duplicate = StoredFile::RecallByMd5($md5sum);
     if ($duplicate) {
-        //echo " * File already exists in the database.\n";
         echo "DUPLICATE: $p_filepath\n";
         return array($fileCount, $duplicates+1);
     }
@@ -138,6 +141,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
     	import_err($metadata);
     	return array($fileCount, $duplicates);
     }
+    // bsSetMetadataBatch doesnt like these values
     unset($metadata['audio']);
     unset($metadata['playtime_seconds']);
 
@@ -147,30 +151,43 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         } elseif ($p_importMode == "link") {
             $doCopyFiles = false;
         }
-        $r = $greenbox->bsPutFile($parentId, $metadata['ls:filename'],
-            $p_filepath, "$STORAGE_SERVER_PATH/var/emptyMdata.xml", NULL,
-            'audioclip', 'file', $doCopyFiles);
-        if (PEAR::isError($r)) {
-        	import_err($r, "Error in bsPutFile()");
+        $values = array(
+            "filename" => $metadata['ls:filename'],
+            "filepath" => $p_filepath,
+            "metadata" => "$STORAGE_SERVER_PATH/var/emptyMdata.xml",
+            "gunid" => NULL,
+            "filetype" => "audioclip",
+            "md5" => $md5sum,
+            "mime" => $metadata['dc:format']
+        );
+//        $timeBegin = microtime(true);
+        $storedFile = $greenbox->bsPutFile($parentId, $values, $doCopyFiles);
+        if (PEAR::isError($storedFile)) {
+        	import_err($storedFile, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
         	return 0;
         }
-        $id = $r;
+        $id = $storedFile->getId();
+//        $timeEnd = microtime(true);
+//        echo " * Store file time: ".($timeEnd-$timeBegin)."\n";
 
+        // Note: the bsSetMetadataBatch() takes up .25 of a second
+        // on my 3Ghz computer.  We should try to speed this up.
+//        $timeBegin = microtime(true);
         $r = $greenbox->bsSetMetadataBatch($id, $metadata);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsSetMetadataBatch()");
         	echo var_export($metadata)."\n";
         	return 0;
         }
+//        $timeEnd = microtime(true);
+//        echo " * Metadata store time: ".($timeEnd-$timeBegin)."\n";
     } else {
-        var_dump($infoFromFile);
-        echo "======================= ";
+        echo "==========================================================================\n";
+        echo "METADATA\n";
         var_dump($metadata);
-        echo "======================= ";
     }
 
-    //echo " * OK\n";
     $fileCount++;
     return array($fileCount, $duplicates);
 }
@@ -201,7 +218,6 @@ if (count($parsedCommandLine[1]) == 0) {
     exit;
 }
 
-//print_r($parsedCommandLine);
 $files = $parsedCommandLine[1];
 
 $testonly = FALSE;
@@ -216,12 +232,10 @@ foreach ($cmdLineOptions as $tmpValue) {
             exit;
         case "c":
         case "--copy":
-            //echo " *** Working in copy mode\n";
             $importMode = "copy";
             break 2;
         case 'l':
         case '--link':
-            //echo " *** Working in link mode\n";
             $importMode = "link";
             break 2;
         case "t":
@@ -236,7 +250,6 @@ if (is_null($importMode)) {
     exit(0);
 }
 
-//echo "==========================================================================\n";
 $filecount = 0;
 $duplicates = 0;
 if (is_array($files)) {
@@ -261,7 +274,5 @@ echo " *** Duplicate files (not imported): $duplicates\n";
 echo " *** Errors: $g_errors\n";
 echo " *** Total: ".($filecount+$duplicates)." files in $time seconds = $speed files/second.\n";
 echo "==========================================================================\n";
-
-//echo " * Import completed.\n";
 
 ?>

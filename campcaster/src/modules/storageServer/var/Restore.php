@@ -312,16 +312,15 @@ class Restore {
                     "$parid, $name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
                 );
             }
-            $put = $this->gb->putFile(
-                $parid,             # parent id
-                $name,              # name of original file
-                $mediaFileLP,       # media file if have
-                $file,              # meta file
-                $this->sessid,      # sessid
-                $gunid,             # gunid
-                $type               # type
+            $values = array(
+                "filename" => $name,
+                "filepath" => $mediaFileLP,
+                "metadata" => $file,
+                "gunid" => $gunid,
+                "filetype" => $type
             );
-         #   $this->addLogItem("add as new \n");
+            $put = $this->gb->putFile($parid, $values, $this->sessid);
+            //$this->addLogItem("add as new \n");
             if (PEAR::isError($put)) {
                 $this->addLogItem("-E- ".date("Ymd-H:i:s").
                     " addFileToStorage - putFile Error ".

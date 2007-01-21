@@ -122,7 +122,6 @@ class uiBrowser extends uiBase {
                 $data['listdata'][$key]['title'] = $val['name'];
             }
         }
-        #print_r($data);
         return $data;
     } // fn getStructure
 
@@ -250,7 +249,7 @@ class uiBrowser extends uiBase {
      */
     function getMdata($id)
     {
-        return ($this->gb->getMdata($id, $this->sessid));
+        return ($this->gb->getMetadata($id, $this->sessid));
     } // getMdata
 
 
@@ -268,7 +267,7 @@ class uiBrowser extends uiBase {
             include dirname(__FILE__).'/formmask/mdata_relations.inc.php';
         }
 
-        $mdata = $this->gb->getMDataArray($id, $this->sessid);
+        $mdata = $this->gb->getMetadataArray($id, $this->sessid);
         if (!is_array($mdata)) {
             return FALSE;
         }
@@ -304,7 +303,7 @@ class uiBrowser extends uiBase {
      */
     function metaDataForm($parms)
     {
-        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        include(dirname(__FILE__).'/formmask/metadata.inc.php');
 
         extract($parms);
         $langid = $langid ? $langid : UI_DEFAULT_LANGID;
@@ -321,8 +320,7 @@ class uiBrowser extends uiBase {
         $form->setConstants(array('act'         => 'editMetaData',
                                   'id'          => $id,
                                   'curr_langid' => $langid,
-                            )
-        );
+                            ));
 
         // Convert element names to be unique over different forms-parts,
         // add javascript to spread values over parts, add existing
@@ -332,9 +330,9 @@ class uiBrowser extends uiBase {
                 if (!is_array($mask['pages'][$key][$k]['attributes'])) {
                 	$mask['pages'][$key][$k]['attributes'] = array();
                 }
-                $mask['pages'][$key][$k]['element']    = $key.'___'.uiBase::formElementEncode($v['element']);
+                $mask['pages'][$key][$k]['element'] = $key.'___'.uiBase::formElementEncode($v['element']);
                 $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".uiBase::formElementEncode($v['element'])."')"));
-                ## load data from GreenBox
+                // load data from GreenBox
                 if ($getval = $this->getMetadataValue($id, $v['element'], $langid, NULL)) {
                     $mask['pages'][$key][$k]['default']                 = $getval;
                     $mask['pages'][$key][$k]['attributes']['onFocus']   = 'MData_confirmChange(this)';

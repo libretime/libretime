@@ -443,11 +443,11 @@ class DataEngine {
                 	'id' => $it['id'],
                     'gunid' => $gunid,
                     'type' => $it['ftype'],
-                    'title' => $values['dc:title'],
-                    'creator' => (isset($values['dc:creator']) ? $values['dc:creator'] : NULL ),
-                    'duration' => $values['dcterms:extent'],
-                    'length' => $values['dcterms:extent'],
-                    'source' => (isset($values['dc:source']) ? $values['dc:source'] : NULL ),
+                    'title' => $values['dc:title']["object"],
+                    'creator' => (isset($values['dc:creator']) ? $values['dc:creator']["object"] : NULL ),
+                    'duration' => $values['dcterms:extent']["object"],
+                    'length' => $values['dcterms:extent']["object"],
+                    'source' => (isset($values['dc:source']) ? $values['dc:source']["object"] : NULL ),
                 );
             } else {
                 $eres[] = $it['txt'];

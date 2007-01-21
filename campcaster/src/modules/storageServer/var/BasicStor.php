@@ -82,20 +82,21 @@ class BasicStor {
      * 		'file'|'string'
      * @param boolean $copyMedia
      * 		copy the media file if true, make symlink if false
-     * @return int
-     * @exception PEAR_Error
+     * @return int|PEAR_Error
+     *      ID of the StoredFile that was created.
      */
-    public function bsPutFile($parid, $fileName, $localFilePath, $metadataFilePath,
-        $gunid=NULL, $ftype='unknown', $mdataLoc='file', $copyMedia=TRUE)
+    public function bsPutFile($p_parentId, $p_values, $p_copyMedia=TRUE)
     {
-        $ftype = strtolower($ftype);
-        $id = BasicStor::AddObj($fileName, $ftype, $parid);
+        if (!isset($p_values['filetype']) || !isset($p_values['filename'])) {
+            return NULL;
+        }
+        $ftype = strtolower($p_values['filetype']);
+        $id = BasicStor::AddObj($p_values['filename'], $ftype, $p_parentId);
         if (PEAR::isError($id)) {
             return $id;
         }
-        $storedFile = StoredFile::Insert($id, $fileName,
-            $localFilePath, $metadataFilePath, $mdataLoc, $gunid, $ftype,
-            $copyMedia);
+        $p_values['id'] = $id;
+        $storedFile = StoredFile::Insert($p_values, $p_copyMedia);
         if (PEAR::isError($storedFile)) {
             $res = BasicStor::RemoveObj($id);
             // catch constraint violations
@@ -108,10 +109,7 @@ class BasicStor {
                     return $storedFile;
             }
         }
-        if ($ftype == 'playlist') {
-            $storedFile->setMime('application/smil');
-        }
-        return $id;
+        return $storedFile;
     } // fn bsPutFile
 
 
@@ -900,8 +898,11 @@ class BasicStor {
      */
     public function bsGetMetadataValue($id, $category = null)
     {
+        if (!is_numeric($id)) {
+            return null;
+        }
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (PEAR::isError($storedFile) || is_null($storedFile)) {
             return $storedFile;
         }
         if (is_null($category)) {
@@ -921,7 +922,7 @@ class BasicStor {
     /**
      * Set metadata element value
      *
-     * @param int $id
+     * @param int|StoredFile $id
      * 		Virtual file's local id
      * @param string $category
      * 		Metadata element identification (e.g. dc:title)
@@ -940,9 +941,16 @@ class BasicStor {
     public function bsSetMetadataValue($id, $category, $value,
         $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)
     {
-        $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
-            return $storedFile;
+        if (!is_string($category) || is_array($value)) {
+            return FALSE;
+        }
+        if (is_a($id, "StoredFile")) {
+            $storedFile =& $id;
+        } else {
+            $storedFile = StoredFile::Recall($id);
+            if (PEAR::isError($storedFile)) {
+                return $storedFile;
+            }
         }
         if ($category == 'dcterms:extent') {
             $value = BasicStor::NormalizeExtent($value);
@@ -1002,9 +1010,13 @@ class BasicStor {
         if (!is_array($values)) {
             $values = array($values);
         }
+        $storedFile = StoredFile::Recall($id);
+        if (PEAR::isError($storedFile)) {
+            return $storedFile;
+        }
         foreach ($values as $category => $oneValue) {
-            $res = $this->bsSetMetadataValue($id, $category, $oneValue,
-                $lang, NULL, $container, FALSE);
+            $res = $this->bsSetMetadataValue($storedFile, $category,
+                $oneValue, $lang, NULL, $container, FALSE);
             if (PEAR::isError($res)) {
                 return $res;
             }
@@ -1136,7 +1148,7 @@ class BasicStor {
         }
         $gunids = array();
         foreach ($plids as $plid) {
-            $pl = Playlist::RecallByGunid($plid);
+            $pl = StoredFile::RecallByGunid($plid);
             if (PEAR::isError($pl)) {
                 return $pl;
             }
@@ -1150,7 +1162,6 @@ class BasicStor {
             }
             $gunids = array_merge($gunids, $gunidsX);
         }
-#        header("Content-type: text/plain"); var_dump($gunids); var_dump($withContent); exit;
         $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
         $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
         $res = array();
@@ -1176,8 +1187,8 @@ class BasicStor {
             if (file_exists($MDfname)) {
                 switch ($it['type']) {
 	                case "playlist":
-	                    require_once("LsPlaylist.php");
-	                    $storedFile = $r = LsPlaylist::RecallByGunid($it['gunid']);
+	                    require_once("Playlist.php");
+	                    $storedFile = $r = StoredFile::RecallByGunid($it['gunid']);
 	                    switch ($type) {
 	                        case "smil":
 	                            $string = $r = $storedFile->outputToSmil();
@@ -1286,11 +1297,18 @@ class BasicStor {
                 "BasicStor::bsImportPlaylistRaw: file doesn't exist ($aPath/$rPath)"
             );
         }
-        switch($ext){
+        switch ($ext) {
             case "xml":
             case "lspl":
                 $fname = $plid;
-                $res = $this->bsPutFile($parid, $fname, NULL, $path, $plid, 'playlist');
+                $values = array(
+                    "filename" => $fname,
+                    "metadata" => $path,
+                    "gunid" => $plid,
+                    "filetype" => "playlist"
+                );
+                $storedFile = $this->bsPutFile($parid, $values);
+                $res = $storedFile->getId();
                 break;
             case "smil":
                 require_once("SmilPlaylist.php");
@@ -1384,8 +1402,15 @@ class BasicStor {
                 }
             }
             if (!PEAR::isError($res) ) {
-                $res = $this->bsPutFile($parid, $gunid, $rawMedia, $metadata,
-                    $gunid, 'audioclip');
+                $values = array(
+                    "filename" => $gunid,
+                    "filepath" => $rawMedia,
+                    "metadata" => $metadata,
+                    "gunid" => $gunid,
+                    "filetype" => "audioclip"
+                );
+                $storedFile = $this->bsPutFile($parid, $values);
+                $res = $storedFile->getId();
             }
             @unlink("$tmpdc/{$it['rawMedia']}");
             @unlink("$tmpdc/{$it['metadata']}");
@@ -2202,7 +2227,14 @@ class BasicStor {
                     $fname = basename($xml);
                     break;
             }
-            $r = $this->bsPutFile($rootHD, $fname, $media, $xml, $gunid, $type);
+            $values = array(
+                "filename" => $fname,
+                "filepath" => $media,
+                "metadata" => $xml,
+                "gunid" => $gunid,
+                "filetype" => $type
+            );
+            $r = $this->bsPutFile($rootHD, $values);
             if (PEAR::isError($r)) {
                 return $r;
             }
@@ -2283,140 +2315,6 @@ class BasicStor {
         $this->deleteFiles();
         Alib::DeleteData();
         $this->initData();
-    }
-
-
-    /**
-     * Create BasicStor object with temporarily changed configuration
-     * to prevent data changes in tests
-     *
-     */
-//    function createTestSpace(&$dbc, $config){
-//        $configBckp = $config;
-//        $config['tblNamePrefix'] .= '_test_';
-//        mkdir($config['storageDir'].'/tmp');
-//        $config['storageDir']    .=  '/tmp/stor';
-//        $config['bufferDir']      =  $config['storageDir'].'/buffer';
-//        $config['transDir']      .=  '/tmp/trans';
-//        $config['accessDir']     .=  '/tmp/access';
-//        mkdir($config['storageDir']);
-//        mkdir($config['bufferDir']);
-//        $bs = new BasicStor($dbc, $config);
-//        $bs->configBckp = $configBckp;
-//        $r = $bs->install();
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        return $bs;
-//    }
-
-
-    /**
-     * Clean up test space
-     *
-     */
-//    function releaseTestSpace() {
-//        $r = $this->uninstall();
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        // rmdir($this->config['bufferDir']);
-//        rmdir($this->config['storageDir']);
-//        $this->config = $this->configBckp;
-//        rmdir($this->config['storageDir'].'/tmp');
-//    }
-
-
-    /**
-     * testData
-     *
-     */
-    public function testData($d='')
-    {
-        $exdir = dirname(__FILE__).'/tests';
-        $o[] = $this->addSubj('test1', 'a');
-        $o[] = $this->addSubj('test2', 'a');
-        $o[] = $this->addSubj('test3', 'a');
-        $o[] = $this->addSubj('test4', 'a');
-
-        $o[] = $t1hd = M2tree::GetObjId('test1', $this->storId);
-        $o[] = $t1d1 = BasicStor::bsCreateFolder($t1hd, 'test1_folder1');
-        $o[] = BasicStor::bsCreateFolder($t1hd, 'test1_folder2');
-        $o[] = BasicStor::bsCreateFolder($t1d1, 'test1_folder1_1');
-        $o[] = $t1d12 = BasicStor::bsCreateFolder($t1d1, 'test1_folder1_2');
-
-        $o[] = $t2hd = M2tree::GetObjId('test2', $this->storId);
-        $o[] = BasicStor::bsCreateFolder($t2hd, 'test2_folder1');
-
-        $o[] = $this->bsPutFile($t1hd, 'file1.mp3', "$exdir/ex1.mp3", '', NULL, 'audioclip');
-        $o[] = $this->bsPutFile($t1d12, 'file2.wav', "$exdir/ex2.wav", '', NULL, 'audioclip');
-        $this->tdata['storage'] = $o;
-    }
-
-    /**
-     * test
-     *
-     */
-    public function test()
-    {
-        global $CC_CONFIG;
-        $this->test_log = '';
-        // if(PEAR::isError($p = parent::test())) return $p;
-        $this->deleteData();
-        $this->testData();
-        if ($CC_CONFIG['useTrash']) {
-            $trash = "\n        ".$CC_CONFIG['TrashName'];
-        } else {
-            $trash = "";
-        }
-        if (!$CC_CONFIG['isArchive']) {
-            $this->test_correct = "    StorageRoot
-        root
-        test1
-            file1.mp3
-            public
-            test1_folder1
-                test1_folder1_1
-                test1_folder1_2
-                    file2.wav
-            test1_folder2
-        test2
-            public
-            test2_folder1
-        test3
-            public
-        test4
-            public{$trash}
-";
-        } else {
-            $this->test_correct = "    StorageRoot
-        root
-        test1
-            file1.mp3
-            test1_folder1
-                test1_folder1_1
-                test1_folder1_2
-                    file2.wav
-            test1_folder2
-        test2
-            test2_folder1
-        test3
-        test4{$trash}
-";
-        }
-        $r = M2tree::DumpTree($this->storId, '    ', '    ', '{name}');
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        $this->test_dump = $r;
-        if ($this->test_dump == $this->test_correct) {
-            $this->test_log .= "# BasicStor::test: OK\n";
-            return true;
-        } else {
-            return PEAR::raiseError(
-                "BasicStor::test:\ncorrect:\n.{$this->test_correct}.\n".
-                "dump:\n.{$this->test_dump}.\n", 1, PEAR_ERROR_RETURN);
-        }
     }
 
 

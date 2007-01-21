@@ -325,7 +325,7 @@ class Transport
             case "playlist":
                 $plid = $gunid;
                 require_once("Playlist.php");
-                $pl = Playlist::RecallByGunid($plid);
+                $pl = StoredFile::RecallByGunid($plid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
@@ -1351,13 +1351,19 @@ class Transport
                             $mdtrec->setLock(FALSE);
                             return $parid;
                         }
-                        $res = $this->gb->bsPutFile($parid, $row['fname'],
-                            $trec->row['localfile'], $mdtrec->row['localfile'],
-                            $row['gunid'], 'audioclip', 'file');
-                        if (PEAR::isError($res)) {
+                        $values = array(
+                            "filename" => $row['fname'],
+                            "filepath" => $trec->row['localfile'],
+                            "metadata" => $mdtrec->row['localfile'],
+                            "gunid" => $row['gunid'],
+                            "filetype" => "audioclip"
+                        );
+                        $storedFile = $this->gb->bsPutFile($parid, $values);
+                        if (PEAR::isError($storedFile)) {
                             $mdtrec->setLock(FALSE);
-                            return $res;
+                            return $storedFile;
                         }
+                        $res = $storedFile->getId();
                         $ret = $this->xmlrpcCall('archive.downloadClose',
                             array(
                                'token'      => $mdtrec->row['pdtoken'] ,
@@ -1406,12 +1412,17 @@ class Transport
                 if (PEAR::isError($parid)) {
                 	return $parid;
                 }
-                $res = $this->gb->bsPutFile($parid, $row['fname'],
-                    '', $trec->row['localfile'],
-                    $row['gunid'], 'playlist', 'file');
-                if (PEAR::isError($res)) {
-                	return $res;
+                $values = array(
+                    "filename" => $row['fname'],
+                    "metadata" => $trec->row['localfile'],
+                    "gunid" => $row['gunid'],
+                    "filetype" => "playlist"
+                );
+                $storedFile = $this->gb->bsPutFile($parid, $values);
+                if (PEAR::isError($storedFile)) {
+                	return $storedFile;
                 }
+                $res = $storedFile->getId();
                 @unlink($row['localfile']);
                 break;
             case "playlistPkg":

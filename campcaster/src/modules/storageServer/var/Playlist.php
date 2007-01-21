@@ -17,68 +17,9 @@ require_once("StoredFile.php");
  */
 class Playlist extends StoredFile {
 
-    /**
-     * Create instance of Playlist object and recall existing file
-     * by gunid.<br/>
-     *
-     * @param string $gunid
-     * 		global unique id
-     * @param string $className
-     * 		optional classname to recall
-     * @return Playlist
-     * 		instance of Playlist object
-     */
-    public static function RecallByGunid($gunid, $className='Playlist')
+    public function __construct($p_gunid=NULL)
     {
-        return parent::RecallByGunid($gunid, $className);
-    }
-
-
-    /**
-     * Create instance of Playlist object and recall existing file
-     * by access token.<br/>
-     *
-     * @param string $token
-     * 		access token
-     * @param string $className
-     * 		optional classname to recall
-     * @return Playlist
-     * 		instance of Playlist object
-     */
-    public static function RecallByToken($token, $className='Playlist')
-    {
-        return parent::RecallByToken($token, $className);
-    }
-
-
-    /**
-     * Create instance of Playlist object and insert new file
-     *
-     * @param GreenBox $gb
-     * 		reference to GreenBox object
-     * @param int $oid
-     * 		local object id in the tree
-     * @param string $fname
-     * 		name of new file
-     * @param string $mediaFileLP
-     * 		ignored
-     * @param string $metadata
-     * 		local path to playlist XML file or XML string
-     * @param string $mdataLoc
-     * 		'file'|'string' (optional)
-     * @param global $plid
-     * 		unique id (optional) - for insert file with gunid
-     * @param string $ftype
-     * 		ignored
-     * @return Playlist
-     * 		instance of Playlist object
-     */
-    public static function &insert(&$gb, $oid, $fname,
-        $mediaFileLP='', $metadata='', $mdataLoc='file',
-        $plid=NULL, $ftype=NULL)
-    {
-        return parent::insert($gb, $oid, $fname,
-            '', $metadata, $mdataLoc, $plid, 'playlist', 'Playlist');
+        parent::__construct($p_gunid);
     }
 
 
@@ -95,17 +36,19 @@ class Playlist extends StoredFile {
      * 		local object id of parent folder
      * @return instance of Playlist object
      */
-    public function &create(&$gb, $plid, $fname=NULL, $parid=NULL)
+    public function create(&$gb, $plid, $fname=NULL, $parid=NULL)
     {
         $tmpFname = uniqid('');
         $oid = BasicStor::AddObj($tmpFname , 'playlist', $parid);
         if (PEAR::isError($oid)) {
         	return $oid;
         }
-        $pl =&  Playlist::insert($gb, $oid, '', '',
-            dirname(__FILE__).'/emptyPlaylist.xml',
-            'file', $plid
-        );
+        $values = array(
+            "id" => $oid,
+            "metadata" => dirname(__FILE__).'/emptyPlaylist.xml',
+            "gunid" => $plid,
+            "filetype" => "playlist");
+        $pl =& StoredFile::Insert($values);
         if (PEAR::isError($pl)) {
             $res = BasicStor::RemoveObj($oid);
             return $pl;
@@ -179,363 +122,6 @@ class Playlist extends StoredFile {
 
 
     /**
-     * Set values of auxiliary metadata
-     *
-     * @return mixed
-     * 		true or error object
-     */
-    private function setAuxMetadata()
-    {
-        // get info about playlist
-        $plInfo = $this->getPlaylistInfo();
-        if (PEAR::isError($plInfo)) {
-        	return $plInfo;
-        }
-        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
-        // set gunid as id attr in playlist tag:
-        $mid = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $this->gunid, $parid,  'id', 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Get audioClip length and title
-     *
-     * @param int $acId
-     * 		local id of audioClip inserted to playlist
-     * @return array with fields:
-     *  <ul>
-     *   <li>acGunid, string - audioClip gunid</li>
-     *   <li>acLen string - length of clip in dcterms:extent format</li>
-     *   <li>acTit string - clip title</li>
-     *   <li>elType string - audioClip | playlist</li>
-     *  </ul>
-     */
-    private function getAudioClipInfo($acId)
-    {
-        $ac = StoredFile::Recall($acId);
-        if (PEAR::isError($ac)) {
-        	return $ac;
-        }
-        $acGunid = $ac->gunid;
-        $r = $ac->md->getMetadataEl('dcterms:extent');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        if (isset($r[0]['value'])) {
-        	$acLen = $r[0]['value'];
-        } else {
-        	$acLen = '00:00:00.000000';
-        }
-        $r = $ac->md->getMetadataEl('dc:title');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        if (isset($r[0]['value'])) {
-        	$acTit = $r[0]['value'];
-        } else {
-        	$acTit = $acGunid;
-        }
-        $elType = BasicStor::GetObjType($acId);
-        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip',
-            'playlist'=>'playlist');
-        $elType = $trTbl[$elType];
-        if ($elType == 'webstream') {
-        	$elType = 'audioClip';
-        }
-        return compact('acGunid', 'acLen', 'acTit', 'elType');
-    }
-
-
-    /**
-     * Get info about playlist
-     *
-     * @return array with fields:
-     *  <ul>
-     *   <li>plLen string - length of playlist in dcterms:extent format</li>
-     *   <li>parid int - metadata record id of playlist container</li>
-     *   <li>metaParid int - metadata record id of metadata container</li>
-     *  </ul>
-     */
-    private function getPlaylistInfo()
-    {
-        $parid = $this->getContainer('playlist');
-        if (PEAR::isError($parid)) {
-        	return $parid;
-        }
-        // get playlist length and record id:
-        $r = $this->md->getMetadataEl('playlength', $parid);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        if (isset($r[0])) {
-            $plLen = $r[0]['value'];
-        } else {
-            $r = $this->md->getMetadataEl('dcterms:extent');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            if (isset($r[0])) {
-                $plLen = $r[0]['value'];
-            } else {
-                $plLen = '00:00:00.000000';
-            }
-        }
-        // get main playlist container
-        $parid = $this->getContainer('playlist');
-        if (PEAR::isError($parid)) {
-        	return $parid;
-        }
-        // get metadata container (optionally insert it)
-        $metaParid = $this->getContainer('metadata', $parid, TRUE);
-        if (PEAR::isError($metaParid)) {
-        	return $metaParid;
-        }
-        return compact('plLen', 'parid', 'metaParid');
-    }
-
-
-    /**
-     * Get container record id, optionally insert new container
-     *
-     * @param string $containerName
-     * @param int $parid
-     * 		parent record id
-     * @param boolean $insertIfNone - flag if insert may be done
-     *      if container wouldn't be found
-     * @return int
-     * 		metadata record id of container
-     */
-    private function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
-    {
-        $r = $this->md->getMetadataEl($containerName, $parid);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $id = $r[0]['mid'];
-        if (!is_null($id)) {
-        	return $id;
-        }
-        if (!$insertIfNone || is_null($parid)) {
-            return PEAR::raiseError(
-                "Playlist::getContainer: can't find container ($containerName)"
-            );
-        }
-        $id = $this->md->insertMetadataEl($parid, $containerName);
-        if (PEAR::isError($id)) {
-        	return $id;
-        }
-        return $id;
-    }
-
-
-    /**
-     * Inserting of new playlistEelement
-     *
-     * @param int $parid
-     * 		parent record id
-     * @param string $offset
-     * 		relative offset in extent format
-     * @param string $acGunid
-     * 		audioClip gunid
-     * @param string $acLen
-     * 		audioClip length in extent format
-     * @param string $acTit
-     * 		audioClip title
-     * @param string $fadeIn
-     * 		fadeIn value in ss.ssssss or extent format
-     * @param string $fadeOut
-     * 		fadeOut value in ss.ssssss or extent format
-     * @param string $plElGunid
-     * 		optional playlist element gunid
-     * @param string $elType
-     * 		optional 'audioClip' | 'playlist'
-     * @return array with fields:
-     *  <ul>
-     *   <li>plElId int - record id of playlistElement</li>
-     *   <li>plElGunid string - gl.unique id of playlistElement</li>
-     *   <li>fadeInId int - record id</li>
-     *   <li>fadeOutId int - record id</li>
-     *  </ul>
-     */
-    private function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
-        $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL, $elType='audioClip')
-    {
-        // insert playlistElement
-        $r = $this->md->insertMetadataEl($parid, 'playlistElement');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $plElId = $r;
-        // create and insert gunid (id attribute)
-        if (is_null($plElGunid)) {
-        	$plElGunid = StoredFile::CreateGunid();
-        }
-        $r = $this->md->insertMetadataEl($plElId, 'id', $plElGunid, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        // insert relativeOffset
-        $r = $this->md->insertMetadataEl(
-            $plElId, 'relativeOffset', $offset, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        // insert audioClip (or playlist) element into playlistElement
-        $r = $this->md->insertMetadataEl($plElId, $elType);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $acId = $r;
-        $r = $this->md->insertMetadataEl($acId, 'id', $acGunid, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $r = $this->md->insertMetadataEl($acId, 'playlength', $acLen, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $r = $this->md->insertMetadataEl($acId, 'title', $acTit, 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $fadeInId=NULL;
-        $fadeOutId=NULL;
-        if (!is_null($fadeIn) || !is_null($fadeOut)) {
-            // insert fadeInfo element into playlistElement
-            $r = $this->md->insertMetadataEl($plElId, 'fadeInfo');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            $fiId = $r;
-            $fiGunid = StoredFile::CreateGunid();
-            $r = $this->md->insertMetadataEl($fiId, 'id', $fiGunid, 'A');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            $r = $this->md->insertMetadataEl($fiId, 'fadeIn', $fadeIn, 'A');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            $fadeInId = $r;
-            $r = $this->md->insertMetadataEl($fiId, 'fadeOut', $fadeOut, 'A');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            $fadeOutId = $r;
-        }
-        return compact('plElId', 'plElGunid', 'fadeInId', 'fadeOutId');
-    }
-
-
-    /**
-     * Return record id, optionally insert new record
-     *
-     * @param string $category
-     * 		qualified name of metadata category
-     * @param int $parid
-     * 		parent record id
-     * @param string $value
-     * 		value for inserted record
-     * @param string $predxml
-     * 		'A' | 'T' (attribute or tag)
-     * @return int
-     * 		metadata record id
-     */
-    private function _getMidOrInsert($category, $parid, $value=NULL, $predxml='T')
-    {
-        $arr = $this->md->getMetadataEl($category, $parid);
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        $mid = NULL;
-        if (isset($arr[0]['mid'])) {
-        	$mid = $arr[0]['mid'];
-        }
-        if (!is_null($mid)) {
-        	return $mid;
-        }
-        $mid = $this->md->insertMetadataEl($parid, $category, $value, $predxml);
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        return $mid;
-    }
-
-
-    /**
-     * Set value of metadata record, optionally insert new record
-     *
-     * @param int $mid
-     * 		record id
-     * @param string $value
-     * 		value for inserted record
-     * @param int $parid
-     * 		parent record id
-     * @param string $category
-     * 		qualified name of metadata category
-     * @param string $predxml
-     * 		'A' | 'T' (attribute or tag)
-     * @return boolean
-     */
-    private function _setValueOrInsert($mid, $value, $parid, $category, $predxml='T')
-    {
-        if (is_null($mid)) {
-            $r = $this->md->insertMetadataEl(
-                $parid, $category, $value, $predxml);
-        } else {
-            $r = $this->md->setMetadataEl($mid, $value);
-        }
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Set playlist length - dcterm:extent
-     *
-     * @param string $newPlLen
-     * 		new length in extent format
-     * @param int $parid
-     * 		playlist container record id
-     * @param int $metaParid
-     * 		metadata container record id
-     * @return boolean
-     */
-    private function setPlaylistLength($newPlLen, $parid, $metaParid)
-    {
-        $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $parid,  'playlength', 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $mid = $this->_getMidOrInsert('dcterms:extent', $metaParid, $newPlLen);
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $metaParid,  'dcterms:extent');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
-    /**
      *  Add audioClip specified by local id to the playlist
      *
      * @param string $acId
@@ -602,30 +188,30 @@ class Playlist extends StoredFile {
         extract($plInfo);   // 'plLen', 'parid', 'metaParid'
 
         // get array of playlist elements:
-        $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
+        $plElArr = $this->md->getMetadataElement('playlistElement', $parid);
         if (PEAR::isError($plElArr)) {
         	return $plElArr;
         }
         $found = FALSE;
         foreach ($plElArr as $el) {
-            $plElGunidArr = $this->md->getMetadataEl('id', $el['mid']);
+            $plElGunidArr = $this->md->getMetadataElement('id', $el['mid']);
             if (PEAR::isError($plElGunidArr)) {
             	return $plElGunidArr;
             }
             // select playlist element to remove
             if ($plElGunidArr[0]['value'] == $plElGunid) {
-                $acArr = $this->md->getMetadataEl('audioClip', $el['mid']);
+                $acArr = $this->md->getMetadataElement('audioClip', $el['mid']);
                 if (PEAR::isError($acArr)) {
                 	return $acArr;
                 }
                 $storedAcMid = $acArr[0]['mid'];
-                $acLenArr = $this->md->getMetadataEl('playlength', $storedAcMid);
+                $acLenArr = $this->md->getMetadataElement('playlength', $storedAcMid);
                 if (PEAR::isError($acLenArr)) {
                 	return $acLenArr;
                 }
                 $acLen = $acLenArr[0]['value'];
                 // remove playlist element:
-                $r = $this->md->setMetadataEl($el['mid'], NULL);
+                $r = $this->md->setMetadataElement($el['mid'], NULL);
                 if (PEAR::isError($r)) {
                 	return $r;
                 }
@@ -664,13 +250,13 @@ class Playlist extends StoredFile {
         extract($plInfo);   // 'plLen', 'parid', 'metaParid'
 
         // get array of playlist elements:
-        $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
+        $plElArr = $this->md->getMetadataElement('playlistElement', $parid);
         if (PEAR::isError($plElArr)) {
         	return $plElArr;
         }
         $found = FALSE;
         foreach ($plElArr as $el) {
-            $plElGunidArr = $this->md->getMetadataEl('id', $el['mid']);
+            $plElGunidArr = $this->md->getMetadataElement('id', $el['mid']);
             if (PEAR::isError($plElGunidArr)) {
             	return $plElGunidArr;
             }
@@ -754,11 +340,11 @@ class Playlist extends StoredFile {
             $fadeOut = NULL;
             foreach ($el['children'] as $j => $af) {
                 switch ($af['elementname']) {
-                    case"audioClip":
-                    case"playlist":
+                    case "audioClip":
+                    case "playlist":
                         $acGunid = $af['attrs']['id'];
                         break;
-                    case"fadeInfo":
+                    case "fadeInfo":
                         $fadeIn = $af['attrs']['fadeIn'];
                         $fadeOut = $af['attrs']['fadeOut'];
                         break;
@@ -788,7 +374,7 @@ class Playlist extends StoredFile {
 
 
     /**
-     * Recalculate total length of playlist and  relativeOffset values
+     * Recalculate total length of playlist and relativeOffset values
      * of all playlistElements according to legth and fadeIn values.
      * FadeOut values adjusted to next fadeIn.
      *
@@ -804,7 +390,7 @@ class Playlist extends StoredFile {
         }
         extract($plInfo);   // 'plLen', 'parid', 'metaParid'
         // get array of playlist elements:
-        $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
+        $plElArr = $this->md->getMetadataElement('playlistElement', $parid);
         if (PEAR::isError($plElArr)) {
         	return $plElArr;
         }
@@ -816,46 +402,46 @@ class Playlist extends StoredFile {
         foreach ($plElArr as $el) {
             $elId = $el['mid'];
             // get playlistElement gunid:
-            $plElGunidArr = $this->md->getMetadataEl('id', $elId);
+            $plElGunidArr = $this->md->getMetadataElement('id', $elId);
             if (PEAR::isError($plElGunidArr)) {
             	return $plElGunidArr;
             }
             $plElGunid = $plElGunidArr[0]['value'];
             // get relativeOffset:
-            $offArr = $this->md->getMetadataEl('relativeOffset', $elId);
+            $offArr = $this->md->getMetadataElement('relativeOffset', $elId);
             if (PEAR::isError($offArr)) {
             	return $offArr;
             }
             $offsetId = $offArr[0]['mid'];
             $offset = $offArr[0]['value'];
             // get audioClip:
-            $acArr = $this->md->getMetadataEl('audioClip', $elId);
+            $acArr = $this->md->getMetadataElement('audioClip', $elId);
             if (is_array($acArr) && (!isset($acArr[0]) || is_null($acArr[0]))) {
-                $acArr = $this->md->getMetadataEl('playlist', $elId);
+                $acArr = $this->md->getMetadataElement('playlist', $elId);
             }
             if (PEAR::isError($acArr)) {
             	return $acArr;
             }
             $storedAcMid = $acArr[0]['mid'];
             // get playlength:
-            $acLenArr = $this->md->getMetadataEl('playlength', $storedAcMid);
+            $acLenArr = $this->md->getMetadataElement('playlength', $storedAcMid);
             if (PEAR::isError($acLenArr)) {
             	return $acLenArr;
             }
             $acLen = $acLenArr[0]['value'];
             // get fadeInfo:
-            $fiArr = $this->md->getMetadataEl('fadeInfo', $elId);
+            $fiArr = $this->md->getMetadataElement('fadeInfo', $elId);
             if (PEAR::isError($fiArr)) {
             	return $fiArr;
             }
             if (isset($fiArr[0]['mid'])) {
                 $fiMid = $fiArr[0]['mid'];
-                $fadeInArr = $this->md->getMetadataEl('fadeIn', $fiMid);
+                $fadeInArr = $this->md->getMetadataElement('fadeIn', $fiMid);
                 if (PEAR::isError($fadeInArr)) {
                 	return $fadeInArr;
                 }
                 $fadeIn = $fadeInArr[0]['value'];
-                $fadeOutArr = $this->md->getMetadataEl('fadeOut', $fiMid);
+                $fadeOutArr = $this->md->getMetadataElement('fadeOut', $fiMid);
                 if (PEAR::isError($fadeOutArr)) {
                 	return $fadeOutArr;
                 }
@@ -956,7 +542,7 @@ class Playlist extends StoredFile {
             if ($found) {               // we've found offset
                 switch ($el['type']) {
                 case "playlist":
-                    $pl = Playlist::RecallByGunid($acGunid);
+                    $pl = StoredFile::RecallByGunid($acGunid);
                     if (PEAR::isError($pl)) {
                     	return $pl;
                     }
@@ -1033,7 +619,7 @@ class Playlist extends StoredFile {
             extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
             switch ($el['type']) {
             case "playlist":
-                $pl = Playlist::RecallByGunid($acGunid);
+                $pl = StoredFile::RecallByGunid($acGunid);
                 if (PEAR::isError($pl)) {
                 	return $pl;
                 }
@@ -1105,7 +691,7 @@ class Playlist extends StoredFile {
         if ($this->gunid == $insGunid) {
         	return TRUE;
         }
-        $pl = Playlist::RecallByGunid($insGunid);
+        $pl = StoredFile::RecallByGunid($insGunid);
         if (PEAR::isError($pl)) {
         	return $pl;
         }
@@ -1135,11 +721,470 @@ class Playlist extends StoredFile {
         return FALSE;
     }
 
+
+    /**
+     * Export playlist as simplified SMIL XML file.
+     *
+     * @param boolean $toString
+     *		if false don't real export,
+     *      return misc info about playlist only
+     * @return string
+     * 		XML string or hasharray with misc info
+     */
+    public function outputToSmil($toString=TRUE)
+    {
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+        if (PEAR::isError($arr)) {
+        	return $arr;
+        }
+        if ($toString) {
+            $r = PlaylistTagExport::OutputToSmil($this, $arr);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            return $r;
+        } else {
+            return array(
+                'type'       => 'playlist',
+                'gunid'      => $plGunid,
+                'src'        => PL_URL_RELPATH."$plGunid.smil",
+                'playlength' => $arr['attrs']['playlength'],
+            );
+        }
+    }
+
+
+    /**
+     * Export playlist as M3U file.
+     *
+     * @param boolean $toString
+     * 		if false don't real export,
+     *      return misc info about playlist only
+     *  @return string|array
+     * 		M3U string or hasharray with misc info
+     */
+    public function outputToM3u($toString=TRUE)
+    {
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+        if (PEAR::isError($arr)) {
+        	return $arr;
+        }
+        if ($toString) {
+            $r = PlaylistTagExport::OutputToM3u($this, $arr);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            return $r;
+        } else {
+            return array(
+                'type'       => 'playlist',
+                'gunid'      => $plGunid,
+                'uri'        => PL_URL_RELPATH."$plGunid.m3u",
+                'playlength' => $arr['attrs']['playlength'],
+                'title'      => $arr['attrs']['title'],
+            );
+        }
+    }
+
+
+    /**
+     * Export playlist as RSS XML file
+     *
+     * @param boolean $toString
+     * 		if false don't really export,
+     *      return misc info about playlist only
+     * @return mixed
+     * 		XML string or hasharray with misc info
+     */
+    public function outputToRss($toString=TRUE)
+    {
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+        if (PEAR::isError($arr)) {
+        	return $arr;
+        }
+        if ($toString) {
+            $r = PlaylistTagExport::OutputToRss($this, $arr);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            return $r;
+        } else {
+            return array(
+                'type'       => 'playlist',
+                'gunid'      => $plGunid,
+                'src'        => PL_URL_RELPATH."$plGunid.smil",
+                'playlength' => $arr['attrs']['playlength'],
+            );
+        }
+    }
+
+
+    /**
+     * Set values of auxiliary metadata
+     *
+     * @return mixed
+     * 		true or error object
+     */
+    private function setAuxMetadata()
+    {
+        // get info about playlist
+        $plInfo = $this->getPlaylistInfo();
+        if (PEAR::isError($plInfo)) {
+        	return $plInfo;
+        }
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
+        // set gunid as id attr in playlist tag:
+        $mid = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
+        if (PEAR::isError($mid)) {
+        	return $mid;
+        }
+        $r = $this->_setValueOrInsert(
+            $mid, $this->gunid, $parid,  'id', 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        return TRUE;
+    }
+
+
+    /**
+     * Get audioClip length and title
+     *
+     * @param int $acId
+     * 		local id of audioClip inserted to playlist
+     * @return array with fields:
+     *  <ul>
+     *   <li>acGunid, string - audioClip gunid</li>
+     *   <li>acLen string - length of clip in dcterms:extent format</li>
+     *   <li>acTit string - clip title</li>
+     *   <li>elType string - audioClip | playlist</li>
+     *  </ul>
+     */
+    private function getAudioClipInfo($acId)
+    {
+        $ac = StoredFile::Recall($acId);
+        if (PEAR::isError($ac)) {
+        	return $ac;
+        }
+        $acGunid = $ac->gunid;
+        $r = $ac->md->getMetadataElement('dcterms:extent');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if (isset($r[0]['value'])) {
+        	$acLen = $r[0]['value'];
+        } else {
+        	$acLen = '00:00:00.000000';
+        }
+        $r = $ac->md->getMetadataElement('dc:title');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if (isset($r[0]['value'])) {
+        	$acTit = $r[0]['value'];
+        } else {
+        	$acTit = $acGunid;
+        }
+        $elType = BasicStor::GetObjType($acId);
+        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip',
+            'playlist'=>'playlist');
+        $elType = $trTbl[$elType];
+        if ($elType == 'webstream') {
+        	$elType = 'audioClip';
+        }
+        return compact('acGunid', 'acLen', 'acTit', 'elType');
+    }
+
+
+    /**
+     * Get info about playlist
+     *
+     * @return array with fields:
+     *  <ul>
+     *   <li>plLen string - length of playlist in dcterms:extent format</li>
+     *   <li>parid int - metadata record id of playlist container</li>
+     *   <li>metaParid int - metadata record id of metadata container</li>
+     *  </ul>
+     */
+    private function getPlaylistInfo()
+    {
+        $parid = $this->getContainer('playlist');
+        if (PEAR::isError($parid)) {
+        	return $parid;
+        }
+        // get playlist length and record id:
+        $r = $this->md->getMetadataElement('playlength', $parid);
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        if (isset($r[0])) {
+            $plLen = $r[0]['value'];
+        } else {
+            $r = $this->md->getMetadataElement('dcterms:extent');
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            if (isset($r[0])) {
+                $plLen = $r[0]['value'];
+            } else {
+                $plLen = '00:00:00.000000';
+            }
+        }
+        // get main playlist container
+        $parid = $this->getContainer('playlist');
+        if (PEAR::isError($parid)) {
+        	return $parid;
+        }
+        // get metadata container (optionally insert it)
+        $metaParid = $this->getContainer('metadata', $parid, TRUE);
+        if (PEAR::isError($metaParid)) {
+        	return $metaParid;
+        }
+        return compact('plLen', 'parid', 'metaParid');
+    }
+
+
+    /**
+     * Get container record id, optionally insert new container
+     *
+     * @param string $containerName
+     * @param int $parid
+     * 		parent record id
+     * @param boolean $insertIfNone - flag if insert may be done
+     *      if container wouldn't be found
+     * @return int
+     * 		metadata record id of container
+     */
+    private function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
+    {
+        $r = $this->md->getMetadataElement($containerName, $parid);
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $id = $r[0]['mid'];
+        if (!is_null($id)) {
+        	return $id;
+        }
+        if (!$insertIfNone || is_null($parid)) {
+            return PEAR::raiseError(
+                "Playlist::getContainer: can't find container ($containerName)"
+            );
+        }
+        $id = $this->md->insertMetadataElement($parid, $containerName);
+        if (PEAR::isError($id)) {
+        	return $id;
+        }
+        return $id;
+    }
+
+
+    /**
+     * Insert a new playlist element.
+     *
+     * @param int $parid
+     * 		parent record id
+     * @param string $offset
+     * 		relative offset in extent format
+     * @param string $acGunid
+     * 		audioClip gunid
+     * @param string $acLen
+     * 		audioClip length in extent format
+     * @param string $acTit
+     * 		audioClip title
+     * @param string $fadeIn
+     * 		fadeIn value in ss.ssssss or extent format
+     * @param string $fadeOut
+     * 		fadeOut value in ss.ssssss or extent format
+     * @param string $plElGunid
+     * 		optional playlist element gunid
+     * @param string $elType
+     * 		optional 'audioClip' | 'playlist'
+     * @return array with fields:
+     *  <ul>
+     *   <li>plElId int - record id of playlistElement</li>
+     *   <li>plElGunid string - gl.unique id of playlistElement</li>
+     *   <li>fadeInId int - record id</li>
+     *   <li>fadeOutId int - record id</li>
+     *  </ul>
+     */
+    private function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
+        $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL, $elType='audioClip')
+    {
+        // insert playlistElement
+        $r = $this->md->insertMetadataElement($parid, 'playlistElement');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $plElId = $r;
+        // create and insert gunid (id attribute)
+        if (is_null($plElGunid)) {
+        	$plElGunid = StoredFile::CreateGunid();
+        }
+        $r = $this->md->insertMetadataElement($plElId, 'id', $plElGunid, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        // insert relativeOffset
+        $r = $this->md->insertMetadataElement(
+            $plElId, 'relativeOffset', $offset, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        // insert audioClip (or playlist) element into playlistElement
+        $r = $this->md->insertMetadataElement($plElId, $elType);
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $acId = $r;
+        $r = $this->md->insertMetadataElement($acId, 'id', $acGunid, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $r = $this->md->insertMetadataElement($acId, 'playlength', $acLen, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $r = $this->md->insertMetadataElement($acId, 'title', $acTit, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $fadeInId=NULL;
+        $fadeOutId=NULL;
+        if (!is_null($fadeIn) || !is_null($fadeOut)) {
+            // insert fadeInfo element into playlistElement
+            $r = $this->md->insertMetadataElement($plElId, 'fadeInfo');
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            $fiId = $r;
+            $fiGunid = StoredFile::CreateGunid();
+            $r = $this->md->insertMetadataElement($fiId, 'id', $fiGunid, 'A');
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            $r = $this->md->insertMetadataElement($fiId, 'fadeIn', $fadeIn, 'A');
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            $fadeInId = $r;
+            $r = $this->md->insertMetadataElement($fiId, 'fadeOut', $fadeOut, 'A');
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            $fadeOutId = $r;
+        }
+        return compact('plElId', 'plElGunid', 'fadeInId', 'fadeOutId');
+    }
+
+
+    /**
+     * Return record id, optionally insert new record
+     *
+     * @param string $category
+     * 		qualified name of metadata category
+     * @param int $parid
+     * 		parent record id
+     * @param string $value
+     * 		value for inserted record
+     * @param string $predxml
+     * 		'A' | 'T' (attribute or tag)
+     * @return int
+     * 		metadata record id
+     */
+    private function _getMidOrInsert($category, $parid, $value=NULL, $predxml='T')
+    {
+        $arr = $this->md->getMetadataElement($category, $parid);
+        if (PEAR::isError($arr)) {
+        	return $arr;
+        }
+        $mid = NULL;
+        if (isset($arr[0]['mid'])) {
+        	$mid = $arr[0]['mid'];
+        }
+        if (!is_null($mid)) {
+        	return $mid;
+        }
+        $mid = $this->md->insertMetadataElement($parid, $category, $value, $predxml);
+        if (PEAR::isError($mid)) {
+        	return $mid;
+        }
+        return $mid;
+    }
+
+
+    /**
+     * Set value of metadata record, optionally insert new record
+     *
+     * @param int $mid
+     * 		record id
+     * @param string $value
+     * 		value for inserted record
+     * @param int $parid
+     * 		parent record id
+     * @param string $category
+     * 		qualified name of metadata category
+     * @param string $predxml
+     * 		'A' | 'T' (attribute or tag)
+     * @return boolean
+     */
+    private function _setValueOrInsert($mid, $value, $parid, $category, $predxml='T')
+    {
+        if (is_null($mid)) {
+            $r = $this->md->insertMetadataElement(
+                $parid, $category, $value, $predxml);
+        } else {
+            $r = $this->md->setMetadataElement($mid, $value);
+        }
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        return TRUE;
+    }
+
+
+    /**
+     * Set playlist length - dcterm:extent
+     *
+     * @param string $newPlLen
+     * 		new length in extent format
+     * @param int $parid
+     * 		playlist container record id
+     * @param int $metaParid
+     * 		metadata container record id
+     * @return boolean
+     */
+    private function setPlaylistLength($newPlLen, $parid, $metaParid)
+    {
+        $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
+        if (PEAR::isError($mid)) {
+        	return $mid;
+        }
+        $r = $this->_setValueOrInsert(
+            $mid, $newPlLen, $parid,  'playlength', 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        $mid = $this->_getMidOrInsert('dcterms:extent', $metaParid, $newPlLen);
+        if (PEAR::isError($mid)) {
+        	return $mid;
+        }
+        $r = $this->_setValueOrInsert(
+            $mid, $newPlLen, $metaParid,  'dcterms:extent');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        return TRUE;
+    }
+
 } // class Playlist
 
 
 /**
  * Auxiliary class for GB playlist editing methods
+ *
  * @author Tomas Hlava <th@red2head.com>
  * @author Paul Baranowski <paul@paulbaranowski.org>
  * @copyright 2006 MDLF, Inc.
@@ -1152,7 +1197,7 @@ class PlaylistElement {
 
     public function PlaylistElement(&$pl, $plEl)
     {
-        $this->pl   = $pl;
+        $this->pl = $pl;
         $this->plEl = $plEl;
     }
 
@@ -1197,5 +1242,447 @@ class PlaylistElement {
         return $plInfo;
     }
 } // class PlaylistElement
+
+
+/**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class PlaylistTag
+ */
+class PlaylistTagExport
+{
+    public static function OutputToSmil(&$pl, $plt, $ind='')
+    {
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
+        $ind4 = $ind3.INDCH;
+        $res = "";
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
+                case "playlistElement":
+                    $r = PlaylistElementExport::OutputToSmil($pl, $ple, $ind4);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
+                    break;
+                case "metadata":
+                    $r = PlaylistMetadataExport::OutputToSmil($pl, $ple, $ind4);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
+                    break;
+                default:
+            }
+        }
+        $res = "$ind<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
+            "$ind<smil xmlns=\"http://www.w3.org/2001/SMIL20/Language\">\n".
+            "$ind2<body>\n".
+            "$ind3<par>\n".
+            "$res".
+            "$ind3</par>\n".
+            "$ind2</body>\n".
+            "$ind</smil>\n";
+        return $res;
+    }
+
+
+    public static function OutputToM3u(&$pl, $plt, $ind='')
+    {
+        $res = "";
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
+                case"playlistElement":
+                    $r = PlaylistElementExport::OutputToM3u($pl, $ple);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
+                break;
+            }
+        }
+        $res = "#EXTM3U\n$res";
+        return $res;
+    }
+
+
+    public static function OutputToRss(&$pl, $plt, $ind='')
+    {
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
+        $res = "";
+        foreach ($plt['children'] as $ple) {
+            switch ($ple['elementname']) {
+                case "playlistElement":
+                    $r = PlaylistElementExport::OutputToRss($pl, $ple, $ind3);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
+                break;
+                case "metadata":
+                    $r = PlaylistMetadataExport::OutputToRss($pl, $ple, $ind3);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$res .= $r;
+                    }
+                break;
+                default:
+            }
+        }
+        $res = "$ind<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
+            "$ind<rss version=\"2.0\">\n".
+            "$ind2<channel>\n".
+            "$res".
+            "$ind2</channel>\n".
+            "$ind</rss>\n";
+        return $res;
+    }
+}
+
+
+/**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class "PlaylistElement"
+ */
+class PlaylistElementExport {
+
+    public static function OutputToSmil(&$pl, $ple, $ind='')
+    {
+        $acOrPl = NULL;
+        $finfo = array('fi'=>0, 'fo'=>0);
+        $ind2 = $ind.INDCH;
+        $ind3 = $ind2.INDCH;
+        $anim = '';
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
+                    $r = PlaylistAudioClipExport::OutputToSmil($pl, $ac, $ind2);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                    break;
+                case "playlist":
+                    $gunid = $ac['attrs']['id'];
+                    $pl2 = StoredFile::RecallByGunid($gunid);
+                    if (PEAR::isError($pl2)) {
+                    	return $pl2;
+                    }
+                    $r = $pl2->outputToSmil(FALSE);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                    break;
+                case "fadeInfo":
+                    $r = PlaylistFadeInfoExport::OutputToSmil($pl, $ac, $ind2);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$finfo = $r;
+                    }
+                    break;
+                default:
+                    return PEAR::raiseError(
+                        "PlaylistElementExport::OutputToSmil:".
+                        " unknown tag {$ac['elementname']}"
+                    );
+            }
+        }
+        $beginS = Playlist::playlistTimeToSeconds($ple['attrs']['relativeOffset']);
+        $playlengthS = Playlist::playlistTimeToSeconds($acOrPl['playlength']);
+        $fadeOutS = Playlist::playlistTimeToSeconds($finfo['fo']);
+        $fiBeginS = 0;
+        $fiEndS = Playlist::playlistTimeToSeconds($finfo['fi']);
+        $foBeginS = ($playlengthS - $fadeOutS);
+        $foEndS = Playlist::playlistTimeToSeconds($acOrPl['playlength']);
+        foreach (array('fi','fo') as $ff) {
+            if (${$ff."EndS"} - ${$ff."BeginS"} > 0) {
+                $anim .= "{$ind2}<animate attributeName = \"soundLevel\"\n".
+                    "{$ind3}from = \"".($ff == 'fi' ? 0 : 100)."%\"\n".
+                    "{$ind3}to = \"".($ff == 'fi' ? 100 : 0)."%\"\n".
+                    "{$ind3}calcMode = \"linear\"\n".
+                    "{$ind3}begin = \"{${$ff."BeginS"}}s\"\n".
+                    "{$ind3}end = \"{${$ff."EndS"}}s\"\n".
+                    "{$ind3}fill = \"freeze\"\n".
+                    "{$ind2}/>\n"
+                ;
+            }
+        }
+        $src = $acOrPl['src'];
+        $str = "$ind<audio src=\"$src\" begin=\"{$beginS}s\"".
+            ($anim ? ">\n$anim$ind</audio>" : " />").
+            " <!-- {$acOrPl['type']}, {$acOrPl['gunid']}, {$acOrPl['playlength']}  -->".
+            "\n";
+        return $str;
+    }
+
+
+    public static function OutputToM3u(&$pl, $ple, $ind='')
+    {
+        $acOrPl = NULL;
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
+                    $r = PlaylistAudioClipExport::OutputToM3u($pl, $ac);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                	break;
+                case "playlist":
+                    $gunid = $ac['attrs']['id'];
+                    $pl2 = StoredFile::RecallByGunid($gunid);
+                    if (PEAR::isError($pl2)) {
+                    	return $pl2;
+                    }
+                    $r = $pl2->outputToM3u(FALSE);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                	break;
+            }
+        }
+        if (is_null($acOrPl)) {
+        	return '';
+        }
+        $playlength = ceil(Playlist::playlistTimeToSeconds($acOrPl['playlength']));
+        $title = $acOrPl['title'];
+        $uri = (isset($acOrPl['uri']) ? $acOrPl['uri'] : '???' );
+        $res  = "#EXTINF: $playlength, $title\n";
+        $res .= "$uri\n";
+        return $res;
+    }
+
+
+    public static function OutputToRss(&$pl, $ple, $ind='')
+    {
+        $acOrPl = NULL;
+        $ind2 = $ind.INDCH;
+        $anim = '';
+        foreach ($ple['children'] as $ac) {
+            switch ($ac['elementname']) {
+                case "audioClip":
+                    $r = PlaylistAudioClipExport::OutputToRss($pl, $ac, $ind2);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                	break;
+                case "playlist":
+                    $gunid = $ac['attrs']['id'];
+                    $pl2 = StoredFile::RecallByGunid($gunid);
+                    if (PEAR::isError($pl2)) {
+                    	return $pl2;
+                    }
+                    $r = $pl2->outputToRss(FALSE);
+                    if (PEAR::isError($r)) {
+                    	return $r;
+                    }
+                    if (!is_null($r)) {
+                    	$acOrPl = $r;
+                    }
+                	break;
+                case "fadeInfo":
+                	break;
+                default:
+                    return PEAR::raiseError(
+                        "PlaylistElementExport::OutputToRss:".
+                        " unknown tag {$ac['elementname']}"
+                    );
+            }
+        }
+        $title = (isset($acOrPl['title']) ? htmlspecialchars($acOrPl['title']) : '' );
+        $desc = (isset($acOrPl['desc']) ? htmlspecialchars($acOrPl['desc']) : '' );
+        $link = htmlspecialchars($acOrPl['src']);
+        $desc = '';
+        $str = "$ind<item>\n".
+            "$ind2<title>$title</title>\n".
+            "$ind2<description>$desc</description>\n".
+            "$ind2<link>$link</link>\n".
+            "$ind</item>\n";
+        return $str;
+    }
+}
+
+
+/**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class to PlaylistAudioClip (notice the caps)
+ */
+class PlaylistAudioClipExport
+{
+
+    public static function OutputToSmil(&$pl, $plac, $ind='')
+    {
+        $gunid = $plac['attrs']['id'];
+        $ac = StoredFile::RecallByGunid($gunid);
+        if (PEAR::isError($ac)) {
+        	return $ac;
+        }
+        $RADext = $ac->getFileExtension();
+        if (PEAR::isError($RADext)) {
+        	return $RADext;
+        }
+        return array(
+            'type'       => 'audioclip',
+            'gunid'      => $gunid,
+            'src'        => AC_URL_RELPATH."$gunid.$RADext",
+            'playlength' => $plac['attrs']['playlength'],
+        );
+    }
+
+
+    public static function OutputToM3u(&$pl, $plac, $ind='')
+    {
+        $gunid = $plac['attrs']['id'];
+        $ac = StoredFile::RecallByGunid($gunid);
+        if (PEAR::isError($ac)) {
+        	return $ac;
+        }
+        $RADext = $ac->getFileExtension();
+        if (PEAR::isError($RADext)) {
+        	return $RADext;
+        }
+        return array(
+            'playlength' => $plac['attrs']['playlength'],
+            'title'      => $plac['attrs']['title'],
+            'uri'        => AC_URL_RELPATH."$gunid.$RADext",
+        );
+    }
+
+
+    public static function OutputToRss(&$pl, $plac, $ind='')
+    {
+        $gunid = $plac['attrs']['id'];
+        $ac = StoredFile::RecallByGunid($gunid);
+        if (PEAR::isError($ac)) {
+        	return $ac;
+        }
+        $RADext = $ac->getFileExtension();
+        if (PEAR::isError($RADext)) {
+        	return $RADext;
+        }
+        $title = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
+        $desc = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
+        return array(
+            'type'       => 'audioclip',
+            'gunid'      => $gunid,
+            'src'        => "http://XXX/YY/$gunid.$RADext",
+            'playlength' => $plac['attrs']['playlength'],
+            'title'      => $title,
+            'desc'      => $desc,
+        );
+    }
+}
+
+
+/**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
+ */
+class PlaylistFadeInfoExport
+{
+
+    public static function OutputToSmil(&$pl, $plfi, $ind='')
+    {
+        $r = array(
+            'fi'=>$plfi['attrs']['fadeIn'],
+            'fo'=>$plfi['attrs']['fadeOut'],
+        );
+        return $r;
+    }
+
+
+    public static function OutputToM3u(&$pl, $plfa, $ind='')
+    {
+    	return '';
+    }
+
+
+    public static function OutputToRss(&$pl, $plfa, $ind='')
+    {
+    	return '';
+    }
+
+}
+
+
+/**
+ * @author Tomas Hlava <th@red2head.com>
+ * @author Paul Baranowski <paul@paulbaranowski.org>
+ * @package Campcaster
+ * @subpackage StorageServer
+ * @copyright 2006 MDLF, Inc.
+ * @license http://www.gnu.org/licenses/gpl.txt
+ * @link http://www.campware.org
+ * @todo Rename this class to PlaylistMetadata (notice the caps)
+ */
+class PlaylistMetadataExport
+{
+    public static function OutputToSmil(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+
+
+    public static function OutputToM3u(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+
+
+    public static function OutputToRss(&$pl, $md, $ind='')
+    {
+    	return NULL;
+    }
+}
 
 ?>

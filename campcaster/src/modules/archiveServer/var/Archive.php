@@ -89,12 +89,18 @@ class Archive extends XR_LocStor {
                 if (PEAR::isError($parid)) {
                 	return $parid;
                 }
-                $res = $this->bsPutFile($parid, $pars['name'],
-                    $fname, $mdfname,
-                    $pars['gunid'], 'audioclip', 'file');
-                if (PEAR::isError($res)) {
-                	return $res;
+                $values = array(
+                    "filename" => $pars['name'],
+                    "filepath" => $fname,
+                    "metadata" => $mdfname,
+                    "gunid" => $pars['gunid'],
+                    "filetype" => "audioclip"
+                );
+                $storedFile = $this->bsPutFile($parid, $values);
+                if (PEAR::isError($storedFile)) {
+                	return $storedFile;
                 }
+                $res = $storedFile->getId();
                 @unlink($fname);
                 @unlink($mdfname);
                 break;
@@ -106,12 +112,17 @@ class Archive extends XR_LocStor {
                 if (PEAR::isError($parid)) {
                 	return $parid;
                 }
-                $res = $this->bsPutFile($parid, $pars['name'],
-                    '', $fname,
-                    $pars['gunid'], 'playlist', 'file');
-                if (PEAR::isError($res)) {
-                	return $res;
+                $values = array(
+                    "filename" => $pars['name'],
+                    "metadata" => $fname,
+                    "gunid" => $pars['gunid'],
+                    "filetype" => "playlist"
+                );
+                $storedFile = $this->bsPutFile($parid, $values);
+                if (PEAR::isError($storedFile)) {
+                	return $storedFile;
                 }
+                $res = $storedFile->getId();
                 @unlink($fname);
                 break;
             case "playlistPkg":

@@ -5,7 +5,7 @@
 
     <div class="container_elements" style="width: 607px;">
         <h1>
-        {if $_REQUEST.act == addFileData || $_REQUEST.act == addFileMData || $_REQUEST.act == addWebstreamData || $_REQUEST.act == addWebstreamMData}
+        {if $_REQUEST.act == addFileData || $_REQUEST.act == addWebstreamData || $_REQUEST.act == addWebstreamMData}
             ##New##
         {else}
             ##Edit##
@@ -21,7 +21,7 @@
                 {assign var="_uploadform" value=null}
         {/if}
         </div>
-        
+
         <div id="div_MData">
             {include file="file/metadataform.tpl"}
         </div>

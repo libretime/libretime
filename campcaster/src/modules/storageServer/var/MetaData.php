@@ -3,7 +3,7 @@ define('DEBUG', FALSE);
 //define('DEBUG', TRUE);
 define('MODIFY_LAST_MATCH', TRUE);
 
-require_once "XML/Util.php";
+require_once("XML/Util.php");
 
 /**
  * File storage support class.
@@ -23,10 +23,38 @@ require_once "XML/Util.php";
  */
 class MetaData {
 
+    /**
+     * @var string
+     */
 	public $gunid;
+
+	/**
+	 * For debugging purposes.
+	 *
+	 * @var string
+	 */
+	public $gunidBigint;
+
+	/**
+	 * @var string
+	 */
 	public $resDir;
+
+	/**
+	 * @var string
+	 */
 	public $fname;
+
+	/**
+	 * @var boolean
+	 */
 	public $exists;
+
+	/**
+	 * @var array
+	 */
+    private $metadata;
+
 
     /**
      * @param string $gunid
@@ -40,6 +68,7 @@ class MetaData {
         $this->resDir = $resDir;
         $this->fname = $this->makeFileName();
         $this->exists = null;
+        $this->getAllMetadata();
     }
 
 
@@ -116,7 +145,7 @@ class MetaData {
     public function exists()
     {
     	if (is_null($this->exists)) {
-	        $this->exists = $this->dbCheck($this->gunid)
+	        $this->exists = ($this->numElements($this->gunid) > 0)
             				&& is_file($this->fname)
             				&& is_readable($this->fname);
     	}
@@ -135,10 +164,9 @@ class MetaData {
         if (file_exists($this->fname)) {
         	@unlink($this->fname);
         }
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['mdataTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
+        $sql = "DELETE FROM ".$CC_CONFIG['mdataTable']
+            ." WHERE gunid=x'{$this->gunid}'::bigint";
+        $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -164,41 +192,54 @@ class MetaData {
 
 
     /**
-     * Return all metadata for this GUNID.
+     * Return all metadata as an array.
      *
      * @return array
      */
     public function getAllMetadata()
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT predns, predicate, object
+        if (!is_string($this->gunid)) {
+            return array();
+        }
+        $sql = "SELECT id, to_hex(gunid), subjns, subject, predns, predicate, predxml, objns, object
             	FROM ".$CC_CONFIG['mdataTable']."
             	WHERE gunid=x'{$this->gunid}'::bigint";
         $rows = $CC_DBC->getAll($sql);
-        $values = array();
+        $this->metadata = array();
         foreach ($rows as $row) {
-        	$values[$row["predns"].":".$row["predicate"]] = $row["object"];
+        	$this->metadata[$row["predns"].":".$row["predicate"]] = $row;
         }
-		return $values;
+		return $this->metadata;
     }
 
 
     /**
      * Get metadata element value and record id
      *
-     * @param string $category
+     * @param string $p_category
      * 		metadata element name
      * @param int $parid
      * 		metadata record id of parent element
      * @return array
      * 		int 'mid': record id
-     * 		string 'value': metadata value}
+     * 		string 'value': metadata value
      */
-    public function getMetadataEl($category, $parid=NULL)
+    public function getMetadataElement($p_category, $parid=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
+
+        // Get cached value if it exists.
+        if (is_null($parid) && isset($this->metadata[$p_category])) {
+            // to be compatible with return values below - yuk
+            $retval = array();
+            $retval[0]['mid'] = $this->metadata[$p_category]["id"];
+            $retval[0]['value'] = $this->metadata[$p_category]["object"];
+            return $retval;
+        }
+
         // handle predicate namespace shortcut
-        $a = XML_Util::splitQualifiedName($category);
+        $a = XML_Util::splitQualifiedName($p_category);
         if (PEAR::isError($a)) {
         	return $a;
         }
@@ -231,13 +272,13 @@ class MetaData {
     /**
      * Set metadata value / delete metadata record
      *
-     * @param int $mid
+     * @param int $p_id
      * 		metadata record id
-     * @param string $value
+     * @param string $p_value
      * 		new metadata value (NULL for delete)
      * @return boolean
      */
-    public function setMetadataEl($mid, $value=NULL)
+    public function setMetadataElement($p_id, $p_value=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
         $info = $CC_DBC->getRow("
@@ -246,33 +287,29 @@ class MetaData {
             FROM ".$CC_CONFIG['mdataTable']." parmd
             INNER JOIN ".$CC_CONFIG['mdataTable']." md
                 ON parmd.id=md.subject AND md.subjns='_I'
-            WHERE md.id=$mid
-        ");
+            WHERE md.id=$p_id");
         if (PEAR::isError($info)) {
         	return $info;
         }
         if (is_null($info)) {
             return PEAR::raiseError(
-                "MetaData::setMetadataEl: parent container not found"
-            );
+                "MetaData::setMetadataElement: parent container not found");
         }
         extract($info);
         $parname = ($parns ? "$parns:" : '').$parname;
         $category = ($chns ? "$chns:" : '').$chname;
-        $r = $this->validateOneValue($parname, $category, $predxml, $value);
+        $r = $this->validateOneValue($parname, $category, $predxml, $p_value);
         if (PEAR::isError($r)) {
         	return $r;
         }
-        if (!is_null($value)) {
-        	$escapedValue = pg_escape_string($value);
-            $sql = "
-                UPDATE ".$CC_CONFIG['mdataTable']."
+        if (!is_null($p_value)) {
+        	$escapedValue = pg_escape_string($p_value);
+            $sql = "UPDATE ".$CC_CONFIG['mdataTable']."
                 SET object='$escapedValue', objns='_L'
-                WHERE id={$mid}
-            ";
+                WHERE id={$p_id}";
             $res = $CC_DBC->query($sql);
         } else {
-            $res = $this->deleteRecord($mid);
+            $res = $this->deleteRecord($p_id);
         }
         if (PEAR::isError($res)) {
         	return $res;
@@ -286,46 +323,46 @@ class MetaData {
      *
      * @param int $parid
      * 		metadata record id of parent element
-     * @param string $category
+     * @param string $p_category
      * 		metadata element name
-     * @param string value
+     * @param string $p_value
      * 		new metadata value (NULL for delete)
      * @param string $predxml
      * 		'T' | 'A' | 'N' (tag, attr., namespace)
      * @return int
      * 		new metadata record id
      */
-    public function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
+    public function insertMetadataElement($parid, $p_category, $p_value=NULL, $predxml='T')
     {
         global $CC_CONFIG, $CC_DBC;
-        //$category = strtolower($category);
-        $parent = $CC_DBC->getRow("
-            SELECT predns, predicate, predxml FROM ".$CC_CONFIG['mdataTable']."
-            WHERE gunid=x'{$this->gunid}'::bigint AND id=$parid
-        ");
+        //$p_category = strtolower($p_category);
+        $sql = "SELECT predns, predicate, predxml "
+            ." FROM ".$CC_CONFIG['mdataTable']
+            ." WHERE gunid=x'{$this->gunid}'::bigint AND id=$parid";
+        $parent = $CC_DBC->getRow($sql);
         if (PEAR::isError($parent)) {
         	return $parent;
         }
         if (is_null($parent)) {
             return PEAR::raiseError(
-                "MetaData::insertMetadataEl: container not found"
+                "MetaData::insertMetadataElement: container not found"
             );
         }
         $parNs = ($parent['predns'] ? "{$parent['predns']}:" : '');
         $parName = $parNs.$parent['predicate'];
-        $r = $this->validateOneValue($parName, $category, $predxml, $value);
+        $r = $this->validateOneValue($parName, $p_category, $predxml, $p_value);
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $a = XML_Util::splitQualifiedName($category);
+        $a = XML_Util::splitQualifiedName($p_category);
         if (PEAR::isError($a)) {
         	return $a;
         }
         $catNs = $a['namespace'];
         $cat = $a['localPart'];
-        $objns = (is_null($value) ? '_blank' : '_L' );
+        $objns = (is_null($p_value) ? '_blank' : '_L' );
         $nid= $this->storeRecord('_I', $parid, $catNs, $cat, $predxml,
-            $objns, $value);
+            $objns, $p_value);
         if (PEAR::isError($nid)) {
         	return $nid;
         }
@@ -336,53 +373,53 @@ class MetaData {
     /**
      * Get metadata element value
      *
-     * @param string $category
+     * @param string $p_category
      * 		metadata element name
-     * @param string $lang
+     * @param string $p_lang
      * 		optional xml:lang value for select language version
      * @param string $deflang
      * 		optional xml:lang for default language
      * @param string $objns
      * 		object namespace prefix - for internal use only
      * @return array
-     * 		array of matching records as hash with fields:
+     * 		array of matching records as an array with fields:
      *   <ul>
-     *      <li>mid int, local metadata record id</li>
-     *      <li>value string, element value</li>
-     *      <li>attrs hasharray of element's attributes indexed by
+     *      <li>"mid" - int, local metadata record id</li>
+     *      <li>"value" - string, element value</li>
+     *      <li>"attrs" - hasharray of element's attributes indexed by
      *          qualified name (e.g. xml:lang)</li>
      *   </ul>
      * @see BasicStor::bsGetMetadataValue
      */
-    private function getMetadataValueWithAttrs($category, $lang=NULL, $deflang=NULL, $objns='_L')
+    private function getMetadataValueWithAttrs($p_category, $p_lang=NULL, $deflang=NULL, $objns='_L')
     {
-        $all = $this->getMetadataEl($category);
+        $all = $this->getMetadataElement($p_category);
         $res = array();
         $exact = NULL;
         $def = NULL;
         $plain = NULL;
         // add attributes to result
-        foreach ($all as $i => $rec) {
-            $pom = $this->getSubrows($rec['mid']);
-            if (PEAR::isError($pom)) {
-            	return $pom;
+        foreach ($all as $key => $rec) {
+            $subrows = $this->getSubrows($rec['mid']);
+            if (PEAR::isError($subrows)) {
+            	return $subrows;
             }
-            $all[$i]['attrs'] = $pom['attrs'];
-            $atlang = (isset($pom['attrs']['xml:lang']) ?
-                $pom['attrs']['xml:lang'] : NULL);
+            $all[$key]['attrs'] = $subrows['attrs'];
+            $atlang = (isset($subrows['attrs']['xml:lang']) ?
+                $subrows['attrs']['xml:lang'] : NULL);
             // select only matching lang (en is default)
-            if (is_null($lang)) {
-                $res[] = $all[$i];
+            if (is_null($p_lang)) {
+                $res[] = $all[$key];
             } else {
                 switch (strtolower($atlang)) {
                     case '':
-                        $plain = array($all[$i]);
+                        $plain = array($all[$key]);
                     	break;
-                    case strtolower($lang):
-                        $exact = array($all[$i]);
+                    case strtolower($p_lang):
+                        $exact = array($all[$key]);
                     	break;
                     case strtolower($deflang):
-                        $def = array($all[$i]);
+                        $def = array($all[$key]);
                     	break;
                 }
             }
@@ -403,14 +440,14 @@ class MetaData {
     /**
      * Get metadata element value.
      *
-     * @param string $category
+     * @param string $p_category
      * 		metadata element name
      * @return string
      * 		If the value doesnt exist, return the empty string.
      */
-    public function getMetadataValue($category)
+    public function getMetadataValue($p_category)
     {
-        $element = $this->getMetadataEl($category);
+        $element = $this->getMetadataElement($p_category);
         $value = (isset($element[0]['value']) ? $element[0]['value'] : '');
         return $value;
     }
@@ -419,64 +456,63 @@ class MetaData {
     /**
      * Set metadata element value
      *
-     * @param string $category
+     * @param string $p_category
      * 		metadata element name (e.g. dc:title)
-     * @param string $value
+     * @param string $p_value
      * 		value to store, if NULL then delete record
-     * @param string $lang
+     * @param string $p_lang
      * 		optional xml:lang value for select language version
-     * @param int $mid
+     * @param int $p_id
      * 		metadata record id (OPTIONAL on unique elements)
-     * @param string $container
+     * @param string $p_container
      * 		container element name for insert
      * @return boolean
      */
-    public function setMetadataValue($category, $value, $lang=NULL, $mid=NULL,
-        $container='metadata')
+    public function setMetadataValue($p_category, $p_value, $p_lang=NULL,
+        $p_id=NULL, $p_container='metadata')
     {
         // resolve actual element:
-        $rows = $this->getMetadataValueWithAttrs($category, $lang);
-        $aktual = NULL;
+        $rows = $this->getMetadataValueWithAttrs($p_category, $p_lang);
+        $currentRow = NULL;
         if (count($rows) > 1) {
-            if (is_null($mid)) {
+            if (is_null($p_id)) {
                 if (MODIFY_LAST_MATCH) {
-                	$aktual = array_pop($rows);
+                	$currentRow = array_pop($rows);
                 } else {
                     return PEAR::raiseError(
-                        "MetaData::setMetadataValue:".
-                        " nonunique category, mid required"
-                    );
+                        "Metadata::setMetadataValue:".
+                        " nonunique category, mid required");
                 }
             } else {
                 foreach ($rows as $i => $row) {
-                    if ($mid == intval($row['mid'])) {
-                    	$aktual = $row;
+                    if ($p_id == intval($row['mid'])) {
+                    	$currentRow = $row;
                     }
                 }
             }
         } else {
-        	$aktual = (isset($rows[0])? $rows[0] : NULL);
+        	$currentRow = (isset($rows[0])? $rows[0] : NULL);
         }
-        if (!is_null($aktual)) {
-            $res = $this->setMetadataEl($aktual['mid'], $value);
+        if (!is_null($currentRow)) {
+            $res = $this->setMetadataElement($currentRow['mid'], $p_value);
             if (PEAR::isError($res)) {
             	return $res;
             }
-            if (!is_null($lang)
-            	&& isset($aktual['attrs']['xml:lang'])
-            	&& $aktual['attrs']['xml:lang'] != $lang)  {
-                $lg = $this->getMetadataEl('xml:lang', $aktual['mid']);
+            if (!is_null($p_lang)
+            	&& isset($currentRow['attrs']['xml:lang'])
+            	&& $currentRow['attrs']['xml:lang'] != $p_lang)  {
+                $lg = $this->getMetadataElement('xml:lang', $currentRow['mid']);
                 if (PEAR::isError($lg)) {
                 	return $lg;
                 }
                 if (isset($lg['mid'])) {
-                    $res = $this->setMetadataEl($lg['mid'], $lang);
+                    $res = $this->setMetadataElement($lg['mid'], $p_lang);
                     if (PEAR::isError($res)) {
                     	return $res;
                     }
                 } else {
-                    $res = $this->insertMetadataEl(
-                        $aktual['mid'], 'xml:lang', $lang, 'A');
+                    $res = $this->insertMetadataElement(
+                        $currentRow['mid'], 'xml:lang', $p_lang, 'A');
                     if (PEAR::isError($res)) {
                     	return $res;
                     }
@@ -484,22 +520,22 @@ class MetaData {
             }
         } else {
             // resolve container:
-            $contArr = $this->getMetadataValueWithAttrs($container, NULL, NULL, '_blank');
+            $contArr = $this->getMetadataValueWithAttrs($p_container, NULL, NULL, '_blank');
             if (PEAR::isError($contArr)) {
             	return $contArr;
             }
             $parid = $contArr[0]['mid'];
             if (is_null($parid)) {
                 return PEAR::raiseError(
-                    "MetaData::setMetadataValue: container ($container) not found"
+                    "MetaData::setMetadataValue: container ($p_container) not found"
                 );
             }
-            $nid = $this->insertMetadataEl($parid, $category, $value);
+            $nid = $this->insertMetadataElement($parid, $p_category, $p_value);
             if (PEAR::isError($nid)) {
             	return $nid;
             }
-            if (!is_null($lang)) {
-                $res = $this->insertMetadataEl($nid, 'xml:lang', $lang, 'A');
+            if (!is_null($p_lang)) {
+                $res = $this->insertMetadataElement($nid, 'xml:lang', $p_lang, 'A');
                 if (PEAR::isError($res) && $res->getCode()!=VAL_UNKNOWNA) {
                 	return $res;
                 }
@@ -586,18 +622,17 @@ class MetaData {
      * 		global unique id
      * @return boolean
      */
-    private function dbCheck($gunid)
+    private function numElements($gunid)
     {
         global $CC_CONFIG, $CC_DBC;
         $cnt = $CC_DBC->getOne("
             SELECT count(*)as cnt
             FROM ".$CC_CONFIG['mdataTable']."
-            WHERE gunid=x'$gunid'::bigint
-        ");
+            WHERE gunid=x'$gunid'::bigint");
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
-        return (intval($cnt) > 0);
+        return intval($cnt);
     }
 
 
@@ -649,15 +684,15 @@ class MetaData {
      *
      * @param string $parName
      * 		parent element name
-     * @param string $category
+     * @param string $p_category
      * 		qualif. category name
      * @param string $predxml
      * 		'A' | 'T' (attr or tag)
-     * @param string $value
+     * @param string $p_value
      * 		validated element value
      * @return true|PEAR_Error
      */
-    private function validateOneValue($parName, $category, $predxml, $value)
+    private function validateOneValue($parName, $p_category, $predxml, $p_value)
     {
         global $CC_CONFIG;
         if ($CC_CONFIG['validate'] && !is_null($this->format)) {
@@ -666,7 +701,7 @@ class MetaData {
             if (PEAR::isError($val)) {
             	return $val;
             }
-            $r = $val->validateOneValue($parName, $category, $predxml, $value);
+            $r = $val->validateOneValue($parName, $p_category, $predxml, $p_value);
             if (PEAR::isError($r)) {
             	return $r;
             }
@@ -817,14 +852,12 @@ class MetaData {
             INSERT INTO ".$CC_CONFIG['mdataTable']."
                 (id , gunid, subjns, subject,
                     predns, predicate, predxml,
-                    objns, object
-                )
+                    objns, object)
             VALUES
                 ($id, x'{$this->gunid}'::bigint, $subjns_sql, $subject_sql,
                     $predns_sql, $predicate_sql, '$predxml',
                     $objns_sql, $object_sql
-                )
-        ");
+                )");
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -835,15 +868,15 @@ class MetaData {
     /**
      * Delete metadata record recursively
      *
-     * @param int $mid
+     * @param int $p_id
      * 		local metadata record id
      * @return boolean
      */
-    private function deleteRecord($mid)
+    private function deleteRecord($p_id)
     {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT id FROM ".$CC_CONFIG['mdataTable']."
-            	WHERE subjns='_I' AND subject='{$mid}' AND
+            	WHERE subjns='_I' AND subject='{$p_id}' AND
                 gunid=x'{$this->gunid}'::bigint";
         $rh = $CC_DBC->query($sql);
         if (PEAR::isError($rh)) {
@@ -857,7 +890,7 @@ class MetaData {
         }
         $rh->free();
         $sql = "DELETE FROM ".$CC_CONFIG['mdataTable']."
-            	WHERE id={$mid} AND
+            	WHERE id={$p_id} AND
                 gunid=x'{$this->gunid}'::bigint";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
@@ -989,7 +1022,7 @@ class MetaData {
      * 		local id of parent metadata record
      * @param boolean $genXML
      * 		if TRUE generate XML else PHP array for children
-     * @return array
+     * @return array|PEAR_Error
      * 		hash with three fields:
      *      - attr hash, attributes
      *      - children array, child nodes
@@ -998,53 +1031,41 @@ class MetaData {
     private function getSubrows($parid, $genXML=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
-        if (DEBUG) {
-        	echo" getSubrows:\n";
-        }
-        $qh = $CC_DBC->query($q = "
-            SELECT
-                id, predxml, predns, predicate, objns, object
-            FROM ".$CC_CONFIG['mdataTable']."
-            WHERE
-                subjns='_I' AND subject='$parid' AND
-                gunid=x'{$this->gunid}'::bigint
-            ORDER BY id
-        ");
-        if (PEAR::isError($qh)) {
-        	return $qh;
+        $sql = "SELECT id, predxml, predns, predicate, objns, object"
+            ." FROM ".$CC_CONFIG['mdataTable']
+            ." WHERE subjns='_I' AND subject='$parid' "
+            ." AND gunid=x'{$this->gunid}'::bigint"
+            ." ORDER BY id";
+        $dbResult = $CC_DBC->query($sql);
+        if (PEAR::isError($dbResult)) {
+        	return $dbResult;
         }
         $attrs = array();
         $children = array();
         $nSpaces = array();
-        if (DEBUG) {
-        	echo "  #=".$qh->numRows()."\n$q\n";
-        }
-        while ($row = $qh->fetchRow()) {
-            if (DEBUG) {
-            	var_dump($row);
-            }
-            extract($row);
-            switch ($predxml) {
+        while ($row = $dbResult->fetchRow()) {
+            switch ($row["predxml"]) {
 	            case "N":
-	                $nSpaces["$predicate"] = $object;
-	//                $nSpaces["$predicate"] = htmlentities($object, ENT_COMPAT, 'UTF-8');
+	                $nSpaces[$row["predicate"]] = $row["object"];
 	            case "A":
-	                $sep=':';
-	                if($predns=='' || $predicate=='') $sep='';
-	                $attrs["{$predns}{$sep}{$predicate}"] = $object;
-	//                $attrs["{$predns}{$sep}{$predicate}"] = htmlentities($object, ENT_COMPAT, 'UTF-8');
+	                $sep = ':';
+	                if ($row["predns"] == '' || $row["predicate"] == '') {
+	                    $sep = '';
+	                }
+	                $key = $row["predns"].$sep.$row["predicate"];
+	                $attrs[$key] = $row["object"];
 	                break;
 	            case "T":
 	                $children[] = $this->genXMLNode($row, $genXML);
 	                break;
 	            default:
 	                return PEAR::raiseError(
-	                    "MetaData::getSubrows: unknown predxml ($predxml)");
+	                    "MetaData::getSubrows: unknown predxml (".$row["predxml"].")");
             } // switch
         }
-        $qh->free();
+        $dbResult->free();
         if ($genXML) {
-        	$children   = join(" ", $children);
+        	$children = join(" ", $children);
         }
         return compact('attrs', 'children', 'nSpaces');
     }

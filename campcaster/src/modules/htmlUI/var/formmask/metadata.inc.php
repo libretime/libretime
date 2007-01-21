@@ -82,7 +82,7 @@ $mask = array(
                 'element'   => 'dc:type',
                 'type'      => 'text',
                 'label'     => 'Genre',
-                'required'  => TRUE,
+                'required'  => FALSE,
                 'id3'       => array('Genre')
             ),
             array(

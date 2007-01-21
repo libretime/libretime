@@ -40,8 +40,21 @@ echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
 echo"#  Store: ";
 $parid = $gb->_getHomeDirIdFromSess($sessid);
-$oid = $r = $gb->bsPutFile($parid, "xx1.mp3", $mediaFile, $mdataFile, $gunid, 'audioclip');
-if(PEAR::isError($r)){ if($r->getCode()!=GBERR_GUNID){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }}
+$values = array(
+    "filename" => "xx1.mp3",
+    "filepath" => $mediaFile,
+    "metadata" => $mdataFile,
+    "gunid" => $gunid,
+    "filetype" => "audioclip"
+);
+$storedFile = $gb->bsPutFile($parid, $values);
+if (PEAR::isError($storedFile)) {
+    if ($storedFile->getCode()!=GBERR_GUNID) {
+        echo "ERROR: ".$storedFile->getMessage()."\n";
+        exit(1);
+    }
+}
+$oid = $storedFile->getId();
 $comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
 echo "$oid\n";
 

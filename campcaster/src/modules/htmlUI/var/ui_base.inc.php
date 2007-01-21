@@ -514,6 +514,9 @@ class uiBase
 
     public function getMetadataValue($id, $key, $langid=NULL, $deflangid=UI_DEFAULT_LANGID)
     {
+        if (!is_numeric($id)) {
+            return null;
+        }
         if (!$langid) {
             $langid = $_SESSION['langid'];
         }
@@ -527,9 +530,9 @@ class uiBase
         if (!$langid) {
             $langid = UI_DEFAULT_LANGID;
         }
-        if (ini_get('magic_quotes_gpc')) {
-            $value = str_replace("\'", "'", $value);
-        }
+//        if (ini_get('magic_quotes_gpc')) {
+//            $value = str_replace("\'", "'", $value);
+//        }
 
         if ($this->gb->setMetadataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;

@@ -84,9 +84,14 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
                 if (VERBOSE) {
                     echo " creating file {$obj['name']} ...\n";
                 }
-                $r = $bs->bsPutFile($parid, $obj['name'],
-                     $mediaFile, $mdataFile, $obj['gunid'],
-                     strtolower($obj['type']));
+                $values = array(
+                    "filename" => $obj['name'],
+                    "filepath" => $mediaFile,
+                    "metadata" => $mdataFile,
+                    "gunid" => $obj['gunid'],
+                    "filetype" => strtolower($obj['type'])
+                );
+                $r = $bs->bsPutFile($parid, $values);
                 ls_restore_checkErr($r, __LINE__);
             }
         break;

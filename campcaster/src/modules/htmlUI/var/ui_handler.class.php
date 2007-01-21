@@ -35,6 +35,9 @@ class uiHandler extends uiBase {
     /**
      * Login to the storageServer.
      * It set sessid to the cookie with name defined in ../conf.php
+     *
+     * @param array $formdata
+     *      The REQUEST array.
      */
     function login($formdata, $mask)
     {
@@ -114,7 +117,7 @@ class uiHandler extends uiBase {
     function uploadFile($formdata, $mask, $replace=NULL)
     {
         global $CC_CONFIG;
-        if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
+        if ($this->testForAudioType($formdata['mediafile']['name']) === FALSE) {
             if (UI_ERROR) {
             	$this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
             }
@@ -139,9 +142,16 @@ class uiHandler extends uiBase {
         $md5 = md5_file($formdata['mediafile']['tmp_name']);
         $duplicate = StoredFile::RecallByMd5($md5);
         if ($duplicate) {
-            $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
-            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
-            return FALSE;
+            if (PEAR::isError($duplicate)) {
+                $this->_retMsg($duplicate->getMessage());
+                $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
+                return FALSE;
+            } else {
+                $duplicate->delete();
+//            $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
+//            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
+//            return FALSE;
+            }
         }
 
         $metadata = camp_get_audio_metadata($formdata['mediafile']['tmp_name']);
@@ -150,43 +160,42 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
             return FALSE;
         }
+        // bsSetMetadataBatch doesnt like these values
+        unset($metadata['audio']);
+        unset($metadata['playtime_seconds']);
 
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.campcaster");
         $ntmp = $CC_CONFIG['bufferDir'].'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
         chmod($ntmp, 0664);
 
-//        echo "buffer dir: ".$CC_CONFIG['bufferDir']."<BR>";
-//        echo "$ntmp <br>";
-//        print_r($formdata);
-//        exit;
-        $r = $this->gb->putFile($folderId, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid, $replace);
+        $values = array(
+            "filename" =>  $formdata['mediafile']['name'],
+            "filepath" => $ntmp,
+            "filetype" => "audioclip",
+            "mime" => $metadata["dc:format"],
+            "md5" => $md5
+        );
+        $storedFile = $this->gb->putFile($folderId, $values, $this->sessid);
         @unlink($ntmp);
 
-        if (PEAR::isError($r)) {
-            $this->_retMsg($r->getMessage());
+        if (PEAR::isError($storedFile)) {
+            $this->_retMsg($storedFile->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
             return FALSE;
         }
 
-        $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
-        $this->translateMetadata($r);
+        $result = $this->gb->bsSetMetadataBatch($storedFile->getId(), $metadata);
 
-		// set records in default language too
-        if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {
-            $this->setMetadataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
-            $this->translateMetadata($r, UI_UPLOAD_LANGID);
-        }
-
-        $this->redirUrl = UI_BROWSER."?act=addFileMData&id=$r";
+        $this->redirUrl = UI_BROWSER."?act=addFileMData&id=".$storedFile->getId();
         if (UI_VERBOSE) {
-        	$this->_retMsg('Data of audiclip saved.');
+        	$this->_retMsg('Data of audioclip saved.');
         }
-        return $r;
+        return $storedFile->getId();
     } // fn uploadFile
 
 
-    function test4audioType($filename)
+    function testForAudioType($filename)
     {
         global $CC_CONFIG;
         foreach ($CC_CONFIG['file_types'] as $t) {
@@ -195,7 +204,7 @@ class uiHandler extends uiBase {
             }
         }
         return FALSE;
-    } // fn test4AudioType
+    }
 
 
     /**
@@ -212,22 +221,24 @@ class uiHandler extends uiBase {
             $this->_retMsg($ia->getMessage());
             return;
         }
+        // This is really confusing: the import script does not do it
+        // this way.  Which way is the right way?
         $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
-        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
+//        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         // some data from raw audio
-        if (isset($ia['audio']['channels'])) {
-        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
-        }
-        if (isset($ia['audio']['sample_rate'])) {
-        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
-        }
-        if (isset($ia['audio']['bitrate'])) {
-        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
-        }
-        if (isset($ia['audio']['codec'])) {
-        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
-        }
+//        if (isset($ia['audio']['channels'])) {
+//        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
+//        }
+//        if (isset($ia['audio']['sample_rate'])) {
+//        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+//        }
+//        if (isset($ia['audio']['bitrate'])) {
+//        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
+//        }
+//        if (isset($ia['audio']['codec'])) {
+//        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
+//        }
 
         // from id3 Tags
         // loop main, music, talk
@@ -489,7 +500,7 @@ class uiHandler extends uiBase {
     function getMdata($id)
     {
         header("Content-type: text/xml");
-        $r = $this->gb->getMdata($id, $this->sessid);
+        $r = $this->gb->getMetadata($id, $this->sessid);
         print_r($r);
     }
 

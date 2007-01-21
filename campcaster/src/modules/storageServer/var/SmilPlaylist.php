@@ -266,7 +266,7 @@ class SmilPlaylistAudioElement {
                     if (PEAR::isError($ac)) {
                     	return $ac;
                     }
-                    $r = $ac->md->getMetadataEl('dcterms:extent');
+                    $r = $ac->md->getMetadataElement('dcterms:extent');
                     if (PEAR::isError($r)) {
                     	return $r;
                     }
