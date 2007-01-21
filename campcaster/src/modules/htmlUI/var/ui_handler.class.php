@@ -147,10 +147,10 @@ class uiHandler extends uiBase {
                 $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
                 return FALSE;
             } else {
-                $duplicate->delete();
-//            $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
-//            $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
-//            return FALSE;
+                //$duplicate->delete();
+                $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
+                $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
+                return FALSE;
             }
         }
 
