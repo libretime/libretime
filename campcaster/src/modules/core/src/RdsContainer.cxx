@@ -156,6 +156,24 @@ RdsContainer :: getRdsEnabled(Ptr<const Glib::ustring>::Ref  key)
 
 
 /*------------------------------------------------------------------------------
+ *  Convert the object to a string.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+RdsContainer :: toString(void)                                      throw ()
+{
+    Ptr<Glib::ustring>::Ref     rdsString(new Glib::ustring);
+    
+    RdsItemListType::const_iterator     it;
+    for(it = rdsItemList.begin(); it != rdsItemList.end(); ++it) {
+        Ptr<RdsItem>::Ref               rdsItem = *it;
+        rdsString->append(*rdsItem->toString());
+    }
+    
+    return rdsString;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Convert the object to XML.
  *----------------------------------------------------------------------------*/
 const xmlpp::Element *

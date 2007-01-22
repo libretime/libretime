@@ -272,6 +272,20 @@ class OptionsContainer
                                                 throw (std::invalid_argument);
         
         /**
+         *  Get a string containing all the RDS values.
+         *  This string can be sent to the RDS encoder.
+         *
+         *  @return     a string which can be sent to the RDS encoder;
+         *              a 0 pointer if no RDS options have been defined.
+         */
+        Ptr<Glib::ustring>::Ref
+        getCompleteRdsString(void)                                  throw ()
+        {
+            return rdsContainer ? rdsContainer->toString()
+                                : Ptr<Glib::ustring>::Ref();
+        }
+
+        /**
          *  Save the options to a file.
          *
          *  This writes the options in XML format to the file specified in the

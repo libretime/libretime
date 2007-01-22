@@ -72,6 +72,7 @@ class RdsContainerTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RdsContainerTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(toStringTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -90,6 +91,14 @@ class RdsContainerTest : public BaseTestMethod
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the toString() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        toStringTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:

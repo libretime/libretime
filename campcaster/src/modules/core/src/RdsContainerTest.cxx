@@ -40,6 +40,7 @@
 #endif
 
 #include <fstream>
+#include <iostream>
 
 #include "RdsContainerTest.h"
 
@@ -131,5 +132,19 @@ RdsContainerTest :: firstTest(void)
 
     bool                            enabled = rdsContainer->getRdsEnabled(key);
     CPPUNIT_ASSERT(enabled);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the toString() method.
+ *----------------------------------------------------------------------------*/
+void
+RdsContainerTest :: toStringTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<const Glib::ustring>::Ref   string = rdsContainer->toString();
+    CPPUNIT_ASSERT(string);
+    CPPUNIT_ASSERT(*string == "PS=BBC Four\n"
+                              "RT=C. Monster - Monsterpiece Theater\n");    
 }
 

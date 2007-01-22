@@ -123,6 +123,25 @@ RdsItem :: configure(const xmlpp::Element & element)
 
 
 /*------------------------------------------------------------------------------
+ *  Convert the object to a string.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+RdsItem :: toString(void)                                           throw ()
+{
+    Ptr<Glib::ustring>::Ref     rdsString(new Glib::ustring);
+    
+    if (enabled) {
+        rdsString->append(*key);
+        rdsString->append("=");
+        rdsString->append(*value);
+        rdsString->append("\n");
+    }
+    
+    return rdsString;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Convert the object to XML.
  *----------------------------------------------------------------------------*/
 const xmlpp::Element *

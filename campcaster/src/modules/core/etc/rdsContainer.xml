@@ -11,4 +11,8 @@
 
 <rdsContainer>
     <rdsItem    key="PS"    value="BBC Four"    enabled="1" />
+    <rdsItem    key="RT"    value="C. Monster - Monsterpiece Theater"
+                                                            enabled="1" />
+    <rdsItem    key="RT"    value="Acme Birdseed for the discerning coyote"
+                                                            enabled="0" />
 </rdsContainer>

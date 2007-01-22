@@ -242,6 +242,14 @@ class RdsItem : public Configurable
         }
 
         /**
+         *  Convert the object to a string.
+         *
+         *  @return a string which can be sent to the RDS encoder.
+         */
+        Ptr<Glib::ustring>::Ref
+        toString(void)                                              throw ();
+
+        /**
          *  Convert the object to XML.
          *
          *  @return an XML Element, which can be passed to configure()
