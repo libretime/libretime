@@ -45,6 +45,7 @@
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
 #include <unicode/resbund.h>
+#include <SerialStream.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedConfigurable.h"
@@ -253,17 +254,27 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  The location of the test audio file.
          */
-        Ptr<Glib::ustring>::Ref        testAudioUrl;
+        Ptr<Glib::ustring>::Ref         testAudioUrl;
 
         /**
          *  The command which starts the scheduler daemon.
          */
-        Ptr<Glib::ustring>::Ref        schedulerDaemonStartCommand;
+        Ptr<Glib::ustring>::Ref         schedulerDaemonStartCommand;
 
         /**
          *  The command which stops the scheduler daemon.
          */
-        Ptr<Glib::ustring>::Ref        schedulerDaemonStopCommand;
+        Ptr<Glib::ustring>::Ref         schedulerDaemonStopCommand;
+
+        /**
+         *  The serial device.
+         */
+        Ptr<std::string>::Ref                   serialDevice;
+
+        /**
+         *  The serial stream object.
+         */
+        Ptr<LibSerial::SerialStream>::Ref       serialStream;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -375,6 +386,7 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             openedAudioClips.reset(new AudioClipMap());
             openedPlaylists.reset(new PlaylistMap());
+            serialStream.reset(new LibSerial::SerialStream());
         }
 
         /**
@@ -1277,6 +1289,12 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         createScratchpadWindow(void)                            throw ();
+
+        /**
+         *  Write a string to the serial device.
+         */
+        void
+        writeToSerial(Ptr<const std::string>::Ref   message)    throw ();
 };
 
 /* ================================================= external data structures */

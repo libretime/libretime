@@ -1,0 +1,21 @@
+diff -aur libserial-0.5.2 libserial-0.5.2-gcc-4.0
+--- libserial-0.5.2/src/SerialStreamBuf.h       2005-10-17 02:19:12.000000000 +0200
++++ libserial-0.5.2-gcc-4.0/src/SerialStreamBuf.h       2007-01-23 14:16:18.000000000 +0100
+@@ -568,6 +568,6 @@
+             return next_ch ;
+         }
+
+-    } ; // namespace LibSerial
++    } // namespace LibSerial
+ } // extern "C++"
+ #endif // #ifndef _SerialStreamBuf_h_
+--- libserial-0.5.2/src/SerialStream.h  2005-10-01 23:24:21.000000000 +0200
++++ libserial-0.5.2-gcc-4.0/src/SerialStream.h  2007-01-23 14:16:23.000000000 +0100
+@@ -346,6 +346,6 @@
+             return mIOBuffer->is_open() ;
+         }
+
+-    } ; // namespace LibSerial
++    } // namespace LibSerial
+ } // extern "C++"
+ #endif // #ifndef _SerialStream_h_

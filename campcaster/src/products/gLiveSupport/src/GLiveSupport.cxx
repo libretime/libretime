@@ -182,6 +182,11 @@ const std::string   authenticationNotReachableKey =
  *----------------------------------------------------------------------------*/
 const std::string   localeNotAvailableKey = "localeNotAvailableMsg";
 
+/*------------------------------------------------------------------------------
+ *  The default serial device
+ *----------------------------------------------------------------------------*/
+const std::string   defaultSerialDevice = "/dev/ttyS0";
+
 }
 
 /* ===============================================  local function prototypes */
@@ -396,6 +401,9 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     testAudioUrl.reset(new Glib::ustring(
                            testAudioUrlElement->get_attribute("path")
                                               ->get_value() ));
+
+    // TODO: make this configurable
+    serialDevice.reset(new std::string(defaultSerialDevice));
 }
 
 
@@ -1780,4 +1788,24 @@ GLiveSupport :: createScratchpadWindow(void)
         masterPanel->createScratchpadWindow();
     }
 }    
+
+
+/*------------------------------------------------------------------------------
+ *  Write a string to the serial device.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: writeToSerial(Ptr<const std::string>::Ref   message)
+                                                                    throw ()
+{
+    try {
+        serialStream->Open(*serialDevice);
+        (*serialStream) << *message;
+        serialStream->flush();
+        serialStream->Close();
+    } catch (...) {
+        // TODO: handle this somehow
+        std::cerr << "IO error in GLiveSupport::writeToSerial()" << std::endl;
+    }
+}
 
