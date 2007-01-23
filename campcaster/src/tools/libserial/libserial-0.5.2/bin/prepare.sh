@@ -48,7 +48,7 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfz ${tar}
     cd $product
-    # patch not submitted yet
+    # see https://sourceforge.net/tracker/index.php?func=detail&aid=1642748&group_id=9432&atid=109432
     patch -p1 < $etcdir/libserial-gcc-4.0-fix.patch
 fi
 
