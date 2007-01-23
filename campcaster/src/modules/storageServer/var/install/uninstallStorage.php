@@ -18,55 +18,38 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit;
 }
 
-
-if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['prefTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
-    camp_install_query($sql, false);
-
-    $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id_seq");
-    echo "done.\n";
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
-}
-
-
-echo " * Removing all media files in ".$CC_CONFIG['storageDir']."...\n";
-$d = @dir($CC_CONFIG['storageDir']);
-while (is_object($d) && (false !== ($entry = $d->read()))){
-    if (filetype($CC_CONFIG['storageDir']."/$entry") == 'dir') {
-        if ( ($entry != 'CVS') && ($entry != 'tmp') && (strlen($entry)==3) ) {
-            $dd = dir($CC_CONFIG['storageDir']."/$entry");
-            while (false !== ($ee = $dd->read())) {
-                if (substr($ee, 0, 1) !== '.') {
-                    $filename = $CC_CONFIG['storageDir']."/$entry/$ee";
-                    echo "   * Removing $filename...";
-                    unlink($filename);
-                    echo "done.\n";
-                }
-            }
-            $dd->close();
-            rmdir($CC_CONFIG['storageDir']."/$entry");
+function camp_uninstall_delete_files($p_path)
+{
+    if (!empty($p_path) && (strlen($p_path) > 4)) {
+        list($dirList,$fileList) = File_Find::maptree($p_path);
+        foreach ($fileList as $filepath) {
+            echo " * Removing $filepath...";
+            @unlink($filepath);
+            echo "done.\n";
+        }
+        foreach ($dirList as $dirpath) {
+            echo " * Removing $dirpath...";
+            @rmdir($dirpath);
+            echo "done.\n";
         }
     }
 }
-if (is_object($d)) {
-    $d->close();
+
+if (!PEAR::isError($CC_DBC)) {
+    if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
+        echo " * Removing database table ".$CC_CONFIG['prefTable']."...";
+        $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
+        camp_install_query($sql, false);
+
+        $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id_seq");
+        echo "done.\n";
+    } else {
+        echo " * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
+    }
 }
-echo "done.\n";
 
-//echo " * Removing all temporary files in ".$CC_CONFIG['bufferDir']."...";
-//if (file_exists($CC_CONFIG['bufferDir'])) {
-//    $d = dir($CC_CONFIG['bufferDir']);
-//    while (false !== ($entry = $d->read())) {
-//        if (substr($entry, 0, 1) != '.') {
-//            unlink($CC_CONFIG['bufferDir']."/$entry");
-//        }
-//    }
-//    $d->close();
-//    @rmdir($this->bufferDir);
-//}
-//echo "done.\n";
-
+camp_uninstall_delete_files($CC_CONFIG['storageDir']);
+camp_uninstall_delete_files($CC_CONFIG['transDir']);
+camp_uninstall_delete_files($CC_CONFIG['accessDir']);
 
 ?>

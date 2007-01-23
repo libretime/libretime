@@ -287,7 +287,7 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
 
     $sql = "CREATE INDEX ".$CC_CONFIG['filesTable']."_name_idx
         ON ".$CC_CONFIG['filesTable']." (name)";
-    camp_install_query($sql);
+    camp_install_query($sql, false);
 
     $sql = "CREATE INDEX ".$CC_CONFIG['filesTable']."_md5_idx
         ON ls_files (md5)";

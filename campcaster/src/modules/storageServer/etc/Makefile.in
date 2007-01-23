@@ -217,11 +217,11 @@ recheck: clean check
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-storage: dir_setup db_init
+storage: db_init dir_setup
 
 storagecheck: storage testonly
 
-dir_setup: ${DOXYGEN_DIR}
+dir_setup:
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_init:

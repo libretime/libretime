@@ -25,8 +25,11 @@ echo "***************************\n";
 
 require_once('../conf.php');
 require_once('installInit.php');
+campcaster_db_connect(false);
 require_once('uninstallStorage.php');
-require_once('uninstallMain.php');
+if (!PEAR::isError($CC_DBC)) {
+    require_once('uninstallMain.php');
+}
 
 echo "************************************\n";
 echo "* StorageServer Uninstall Complete *\n";

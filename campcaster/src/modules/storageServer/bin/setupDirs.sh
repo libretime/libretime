@@ -31,8 +31,8 @@
 #-------------------------------------------------------------------------------
 
 WWW_ROOT=`cd var/install; php -q getWwwRoot.php` || exit $?
-echo "#StorageServer step 1:"
-echo "# root URL: $WWW_ROOT"
+echo " *** StorageServer bin/setupDirs.sh BEGIN"
+echo " *** Root URL: $WWW_ROOT"
 PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
   {
     errno=$?
@@ -42,14 +42,14 @@ PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
     fi
     exit $errno
   }
-echo "# webspace mapping test:"
-echo "#  mod_php : $PHP_PWD"
+echo " *** Webspace mapping test:"
+echo " *** mod_php : $PHP_PWD"
 INSTALL_DIR="$PWD/var/install"
-echo "#  install : $INSTALL_DIR"
+echo " *** install : $INSTALL_DIR"
 if [ $PHP_PWD == $INSTALL_DIR ]; then
- echo "# mapping OK"
+    echo " *** Mapping OK"
 else
- echo "# WARNING: probably problem in webspace mapping !!!"
+    echo " *** WARNING: there was a problem with webspace mapping!!!"
 fi
 
 HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
@@ -57,22 +57,22 @@ HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
   ERN=$?;
   echo $HTTP_GROUP;
   echo " -> Probably wrong setting in var/conf.php: URL configuration";
-  exit $ERN; 
+  exit $ERN;
  }
-echo "# group running http daemon: $HTTP_GROUP"
+echo " *** The system group that is running the http daemon: '$HTTP_GROUP'"
 
 for i in $*
 do
- echo "mkdir $i"
-  mkdir -p $i || exit $?
+  echo " *** chown :$HTTP_GROUP $i"
   chown :$HTTP_GROUP $i || \
-   {
+  {
     ERN=$?;
-    echo " -> You should have permissions to set group owner to group $HTTP_GROUP";
+    echo "ERROR: chown :$HTTP_GROUP $i -> You should have permissions to set group owner to group '$HTTP_GROUP'";
     exit $ERN;
-   }
+  }
+  echo " *** chmod g+sw $i"
   chmod g+sw $i || exit $?
 done
 
-echo "# Directories setup finished OK"
+echo " *** StorageServer bin/setupDirs.sh END"
 exit 0

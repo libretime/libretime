@@ -29,6 +29,7 @@ echo "*************************\n";
 require_once('../conf.php');
 require_once('../GreenBox.php');
 require_once("installInit.php");
+campcaster_db_connect(true);
 require_once('installMain.php');
 require_once('installStorage.php');
 

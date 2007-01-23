@@ -5,6 +5,7 @@ if (!function_exists('pg_connect')) {
 }
 
 require_once('DB.php');
+require_once('File/Find.php');
 
 function camp_db_table_exists($p_name)
 {
@@ -32,18 +33,22 @@ function camp_install_query($sql, $verbose = true)
     }
 }
 
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
-if (PEAR::isError($CC_DBC)) {
-    echo $CC_DBC->getMessage()."\n";
-    echo $CC_DBC->getUserInfo()."\n";
-    echo "Database connection problem.\n";
-    echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-        " with corresponding permissions.\n";
-    exit(1);
-} else {
-    echo " * Connected to database\n";
+function campcaster_db_connect($p_exitOnError = true) {
+    global $CC_DBC, $CC_CONFIG;
+    $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+    if (PEAR::isError($CC_DBC)) {
+        echo $CC_DBC->getMessage()."\n";
+        echo $CC_DBC->getUserInfo()."\n";
+        echo "Database connection problem.\n";
+        echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
+            " with corresponding permissions.\n";
+        if ($p_exitOnError) {
+            exit(1);
+        }
+    } else {
+        echo " * Connected to database\n";
+        $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+    }
 }
-
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 ?>
