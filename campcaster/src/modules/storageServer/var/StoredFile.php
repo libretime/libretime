@@ -444,6 +444,7 @@ class StoredFile {
             }
             $res = $storedFile->addFile($p_values['filepath'], $p_copyMedia);
             if (PEAR::isError($res)) {
+                echo "StoredFile::Insert: ERROR adding file: '".$res->getMessage()."'\n";
                 $CC_DBC->query("ROLLBACK");
                 return $res;
             }
@@ -618,7 +619,6 @@ class StoredFile {
             $this->exists = TRUE;
             return TRUE;
         } else {
-            //@unlink($this->fname);    // maybe useless
             $this->exists = FALSE;
             return PEAR::raiseError(
                 "StoredFile::addFile: file save failed".
