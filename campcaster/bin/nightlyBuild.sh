@@ -48,6 +48,14 @@ ls -l ${logdir}/nightlySvnUpdate.log >> ${logdir}/nightlySvnUpdate.log
 
 
 #-------------------------------------------------------------------------------
+#   Generate the documentation.
+#-------------------------------------------------------------------------------
+mv -f ${logdir}/nightlyMakeDoc.log ${logdir}/nightlyMakeDoc.log~
+make doc &> ${logdir}/nightlyMakeDoc.log
+ls -l ${logdir}/nightlyMakeDoc.log >> ${logdir}/nightlyMakeDoc.log
+
+
+#-------------------------------------------------------------------------------
 #   Recompile the code.
 #-------------------------------------------------------------------------------
 mv -f ${logdir}/nightlyMakeRecompile.log ${logdir}/nightlyMakeRecompile.log~
@@ -61,12 +69,4 @@ ls -l ${logdir}/nightlyMakeRecompile.log >> ${logdir}/nightlyMakeRecompile.log
 mv -f ${logdir}/nightlyMakeCheck.log ${logdir}/nightlyMakeCheck.log~
 make check &> ${logdir}/nightlyMakeCheck.log
 ls -l ${logdir}/nightlyMakeCheck.log >> ${logdir}/nightlyMakeCheck.log
-
-
-#-------------------------------------------------------------------------------
-#   Generate the documentation.
-#-------------------------------------------------------------------------------
-mv -f ${logdir}/nightlyMakeDoc.log ${logdir}/nightlyMakeDoc.log~
-make doc &> ${logdir}/nightlyMakeDoc.log
-ls -l ${logdir}/nightlyMakeDoc.log >> ${logdir}/nightlyMakeDoc.log
 
