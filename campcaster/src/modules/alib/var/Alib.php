@@ -18,21 +18,6 @@ define('ALIBERR_NOTEXISTS', 31);
  * @link http://www.campware.org
  */
 class Alib {
-//class Alib extends Subjects {
-    //public $sessid = NULL;
-
-    /**
-     * Constructor
-     *
-     * @param DB $dbc
-     * @param array $config
-     */
-//    public function __construct(&$dbc, $config)
-//    {
-//        parent::__construct($dbc, $config);
-//    } // constructor
-
-
     /* ======================================================= public methods */
 
     /* ----------------------------------------------- session/authentication */
@@ -56,8 +41,8 @@ class Alib {
             return $sessid;
         }
         $userid = Subjects::GetSubjId($login);
-        $sql = "INSERT INTO ".$CC_CONFIG['sessTable']." (sessid, userid, login, ts)
-            VALUES('$sessid', '$userid', '$login', now())";
+        $sql = "INSERT INTO ".$CC_CONFIG['sessTable']." (sessid, userid, login, ts)"
+            ." VALUES('$sessid', '$userid', '$login', now())";
         $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
@@ -83,8 +68,8 @@ class Alib {
         } elseif (PEAR::isError($ct)) {
             return $ct;
         } else {
-            $sql = "DELETE FROM ".$CC_CONFIG['sessTable']."
-                WHERE sessid='$sessid'";
+            $sql = "DELETE FROM ".$CC_CONFIG['sessTable']
+                ." WHERE sessid='$sessid'";
             $r = $CC_DBC->query($sql);
             if (PEAR::isError($r)) {
                 return $r;
@@ -103,8 +88,8 @@ class Alib {
     private static function CheckAuthToken($sessid)
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['sessTable']."
-            WHERE sessid='$sessid'";
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['sessTable']
+            ." WHERE sessid='$sessid'";
         $c = $CC_DBC->getOne($sql);
         return ($c == 1 ? TRUE : (PEAR::isError($c) ? $c : FALSE ));
     } //fn checkAuthToken
@@ -148,8 +133,8 @@ class Alib {
     {
         global $CC_CONFIG, $CC_DBC;
         $permid = $CC_DBC->nextId($CC_CONFIG['permTable']."_id_seq");
-        $sql = "INSERT INTO ".$CC_CONFIG['permTable']." (permid, subj, action, obj, type)
-                VALUES ($permid, $sid, '$action', $oid, '$type')";
+        $sql = "INSERT INTO ".$CC_CONFIG['permTable']." (permid, subj, action, obj, type)"
+            ." VALUES ($permid, $sid, '$action', $oid, '$type')";
         $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return($r);
@@ -414,8 +399,8 @@ class Alib {
     public static function GetObjPerms($id)
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT s.login, p.* FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['subjTable']." s
-            WHERE s.id=p.subj AND p.obj=$id";
+        $sql = "SELECT s.login, p.* FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['subjTable']." s"
+            ." WHERE s.id=p.subj AND p.obj=$id";
         return $CC_DBC->getAll($sql);
     } // fn GetObjPerms
 
@@ -429,18 +414,16 @@ class Alib {
     public static function GetSubjPerms($sid)
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "
-            SELECT t.name, t.type as otype , p.*
-            FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['treeTable']." t
-            WHERE t.id=p.obj AND p.subj=$sid";
+        $sql = "SELECT t.name, t.type as otype , p.*"
+            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['treeTable']." t"
+            ." WHERE t.id=p.obj AND p.subj=$sid";
         $a1 = $CC_DBC->getAll($sql);
         if (PEAR::isError($a1)) {
             return $a1;
         }
-        $sql2 = "
-            SELECT c.cname as name, 'C'as otype, p.*
-            FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['classTable']." c
-            WHERE c.id=p.obj AND p.subj=$sid";
+        $sql2 = "SELECT c.cname as name, 'C'as otype, p.*"
+            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['classTable']." c"
+            ." WHERE c.id=p.obj AND p.subj=$sid";
         $a2 = $CC_DBC->getAll($sql2);
         if (PEAR::isError($a2)) {
             return $a2;
@@ -492,8 +475,8 @@ class Alib {
         global $CC_CONFIG, $CC_DBC;
         for ($c = 1; $c > 0; ){
             $sessid = md5(uniqid(rand()));
-            $sql = "SELECT count(*) FROM ".$CC_CONFIG['sessTable']."
-                WHERE sessid='$sessid'";
+            $sql = "SELECT count(*) FROM ".$CC_CONFIG['sessTable']
+                ." WHERE sessid='$sessid'";
             $c = $CC_DBC->getOne($sql);
             if (PEAR::isError($c)) {
                 return $c;
@@ -517,12 +500,11 @@ class Alib {
     public static function DumpPerms($indstr='    ', $ind='')
     {
         global $CC_CONFIG, $CC_DBC;
-        $arr = $CC_DBC->getAll("
-            SELECT s.login, p.action, p.type
-            FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['subjTable']." s
-            WHERE s.id=p.subj
-            ORDER BY p.permid
-        ");
+        $sql = "SELECT s.login, p.action, p.type"
+            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['subjTable']." s"
+            ." WHERE s.id=p.subj"
+            ." ORDER BY p.permid";
+        $arr = $CC_DBC->getAll($sql);
         if (PEAR::isError($arr)) {
             return $arr;
         }
@@ -648,59 +630,6 @@ class Alib {
                 "dump:\n{$test_dump}\n</pre>\n");
         }
     } // fn test
-
-
-    /**
-     * Create tables + initialize
-     *
-     * @return void
-     */
-//    public function install()
-//    {
-//        parent::install();
-//        $CC_DBC->query("CREATE TABLE {$this->permTable} (
-//            permid int not null PRIMARY KEY,
-//            subj int REFERENCES {$this->subjTable} ON DELETE CASCADE,
-//            action varchar(20),
-//            obj int,
-//            type char(1)
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->permTable}_permid_idx
-//            ON {$this->permTable} (permid)");
-//        $CC_DBC->query("CREATE INDEX {$this->permTable}_subj_obj_idx
-//            ON {$this->permTable} (subj, obj)");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->permTable}_all_idx
-//            ON {$this->permTable} (subj, action, obj)");
-//        $CC_DBC->createSequence("{$this->permTable}_id_seq");
-//
-//        $CC_DBC->query("CREATE TABLE {$this->sessTable} (
-//            sessid char(32) not null PRIMARY KEY,
-//            userid int REFERENCES {$this->subjTable} ON DELETE CASCADE,
-//            login varchar(255),
-//            ts timestamp
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->sessTable}_sessid_idx
-//            ON {$this->sessTable} (sessid)");
-//        $CC_DBC->query("CREATE INDEX {$this->sessTable}_userid_idx
-//            ON {$this->sessTable} (userid)");
-//        $CC_DBC->query("CREATE INDEX {$this->sessTable}_login_idx
-//            ON {$this->sessTable} (login)");
-//    } // fn install
-
-
-    /**
-     * Drop tables etc.
-     *
-     * @return void
-     */
-//    public function uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['permTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id_seq");
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['sessTable']);
-//        parent::uninstall();
-//    } // fn uninstall
 
 } // class Alib
 ?>

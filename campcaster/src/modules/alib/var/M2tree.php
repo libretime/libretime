@@ -74,10 +74,8 @@ class M2tree {
         }
         $escapedName = pg_escape_string($p_name);
         $escapedType = pg_escape_string($p_type);
-        $r = $CC_DBC->query("
-            INSERT INTO ".$CC_CONFIG['treeTable']." (id, name, type)
-            VALUES ($oid, '$escapedName', '$escapedType')
-        ");
+        $r = $CC_DBC->query("INSERT INTO ".$CC_CONFIG['treeTable']." (id, name, type)"
+            ." VALUES ($oid, '$escapedName', '$escapedType')");
         if (PEAR::isError($r)) {
             return M2tree::_dbRollback($r);
         }
@@ -334,11 +332,10 @@ class M2tree {
         $escapedName = pg_escape_string($name);
         $parcond = (is_null($parId) ? "parid is null" :
             "parid='$parId' AND level=1");
-        $r = $CC_DBC->getOne("
-            SELECT id FROM ".$CC_CONFIG['treeTable']." t
-            LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=objid
-            WHERE name='$escapedName' AND $parcond"
-        );
+        $sql = "SELECT id FROM ".$CC_CONFIG['treeTable']." t"
+            ." LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=objid"
+            ." WHERE name='$escapedName' AND $parcond";
+        $r = $CC_DBC->getOne($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -398,8 +395,8 @@ class M2tree {
         global $CC_DBC;
         $r = 0;
         if (is_numeric($p_oid)) {
-            $sql = "SELECT parid FROM ".$CC_CONFIG['structTable']."
-                WHERE objid=$p_oid AND level=1";
+            $sql = "SELECT parid FROM ".$CC_CONFIG['structTable']
+                ." WHERE objid=$p_oid AND level=1";
             $r = $CC_DBC->getOne($sql);
         }
         return $r;
@@ -419,21 +416,19 @@ class M2tree {
     {
         global $CC_CONFIG;
         global $CC_DBC;
-        $path = $CC_DBC->getAll("
-            SELECT $flds
-            FROM ".$CC_CONFIG['treeTable']."
-            LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=parid
-            WHERE objid=$oid
-            ORDER BY coalesce(level, 0) DESC
-        ");
+        $sql = "SELECT $flds"
+            ." FROM ".$CC_CONFIG['treeTable']
+            ." LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=parid"
+            ." WHERE objid=$oid"
+            ." ORDER BY coalesce(level, 0) DESC";
+        $path = $CC_DBC->getAll($sql);
         if (PEAR::isError($path)) {
         	return $path;
         }
         if ($withSelf) {
-            $r = $CC_DBC->getRow("
-                SELECT $flds FROM ".$CC_CONFIG['treeTable']."
-                WHERE id=$oid
-            ");
+            $sql = "SELECT $flds FROM ".$CC_CONFIG['treeTable']
+                ." WHERE id=$oid";
+            $r = $CC_DBC->getRow($sql);
             if (PEAR::isError($r)) {
             	return $r;
             }
@@ -457,13 +452,12 @@ class M2tree {
     {
         global $CC_CONFIG;
         global $CC_DBC;
-        $r = $CC_DBC->getAll("
-            SELECT $flds
-            FROM ".$CC_CONFIG['treeTable']."
-            INNER JOIN ".$CC_CONFIG['structTable']." ON id=objid AND level=1
-            WHERE parid=$oid
-            ORDER BY $order
-        ");
+        $sql = "SELECT $flds"
+            ." FROM ".$CC_CONFIG['treeTable']
+            ." INNER JOIN ".$CC_CONFIG['structTable']." ON id=objid AND level=1"
+            ." WHERE parid=$oid"
+            ." ORDER BY $order";
+        $r = $CC_DBC->getAll($sql);
         return $r;
     } // fn getDir
 
@@ -487,12 +481,11 @@ class M2tree {
         if (is_null($rootId)) {
             $rootId = M2tree::GetRootNode();
         }
-        $re = $CC_DBC->getRow("
-            SELECT $flds
-            FROM ".$CC_CONFIG['treeTable']."
-            LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=objid AND parid=$rootId
-            WHERE id=$oid
-        ");
+        $sql = "SELECT $flds"
+            ." FROM ".$CC_CONFIG['treeTable']
+            ." LEFT JOIN ".$CC_CONFIG['structTable']." s ON id=objid AND parid=$rootId"
+            ." WHERE id=$oid";
+        $re = $CC_DBC->getRow($sql);
         if (PEAR::isError($re)) {
             return $re;
         }
@@ -643,16 +636,14 @@ class M2tree {
         }
         $lvl = $lvl['level'];
         // release downside structure
-        $r = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['structTable']."
-            WHERE rid IN (
-                SELECT s3.rid FROM ".$CC_CONFIG['structTable']." s1
-                INNER JOIN ".$CC_CONFIG['structTable']." s2 ON s1.objid=s2.objid
-                INNER JOIN ".$CC_CONFIG['structTable']." s3 ON s3.objid=s1.objid
-                WHERE (s1.parid=$oid OR s1.objid=$oid)
-                    AND s2.parid=1 AND s3.level>(s2.level-$lvl)
-            )
-        ");
+        $sql = "DELETE FROM ".$CC_CONFIG['structTable']
+            ." WHERE rid IN ("
+            ." SELECT s3.rid FROM ".$CC_CONFIG['structTable']." s1"
+            ." INNER JOIN ".$CC_CONFIG['structTable']." s2 ON s1.objid=s2.objid"
+            ." INNER JOIN ".$CC_CONFIG['structTable']." s3 ON s3.objid=s1.objid"
+            ." WHERE (s1.parid=$oid OR s1.objid=$oid)"
+            ." AND s2.parid=1 AND s3.level>(s2.level-$lvl) )";
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -750,135 +741,6 @@ class M2tree {
         }
         return $r;
     } // fn dumpTree
-
-
-    /**
-     * Create tables + initialize root node
-     * @return err/void
-     */
-//    public function install()
-//    {
-//        $r = $CC_DBC->query("BEGIN");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE TABLE {$this->treeTable} (
-//            id int not null PRIMARY KEY,
-//            name varchar(255) not null default'',
-//            -- parid int,
-//            type varchar(255) not null default'',
-//            param varchar(255)
-//        )");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->createSequence("{$this->treeTable}_id_seq");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->treeTable}_id_idx
-//            ON {$this->treeTable} (id)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->treeTable}_name_idx
-//            ON {$this->treeTable} (name)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//
-//        $r = $CC_DBC->query("CREATE TABLE {$this->structTable} (
-//            rid int not null PRIMARY KEY,
-//            objid int not null REFERENCES {$this->treeTable} ON DELETE CASCADE,
-//            parid int not null REFERENCES {$this->treeTable} ON DELETE CASCADE,
-//            level int
-//        )");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->createSequence("{$this->structTable}_id_seq");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->structTable}_rid_idx
-//            ON {$this->structTable} (rid)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->structTable}_objid_idx
-//            ON {$this->structTable} (objid)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->structTable}_parid_idx
-//            ON {$this->structTable} (parid)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->structTable}_level_idx
-//            ON {$this->structTable} (level)");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("
-//            CREATE UNIQUE INDEX {$this->structTable}_objid_level_idx
-//            ON {$this->structTable} (objid, level)
-//        ");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("
-//            CREATE UNIQUE INDEX {$this->structTable}_objid_parid_idx
-//            ON {$this->structTable} (objid, parid)
-//        ");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//
-//        $oid = $CC_DBC->nextId("{$this->treeTable}_id_seq");
-//        if (PEAR::isError($oid)) {
-//            return $oid;
-//        }
-//        $r = $CC_DBC->query("
-//            INSERT INTO {$this->treeTable}
-//                (id, name, type)
-//            VALUES
-//                ($oid, '{$this->rootNodeName}', 'RootNode')
-//        ");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//        $r = $CC_DBC->query("COMMIT");
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-//    } // fn install
-
-
-    /**
-     * Drop all tables and sequences.
-     * @return void
-     */
-//    public function uninstall()
-//    {
-//        global $CC_DBC;
-//        global $CC_CONFIG;
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['structTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['structTable']."_id_seq");
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['treeTable']);
-//        $CC_DBC->dropSequence($CC_CONFIG['treeTable']."_id_seq");
-//    } // fn uninstall
-
-
-    /**
-     * Uninstall and install.
-     * @return void
-     */
-//    public function reinstall()
-//    {
-//        $this->uninstall();
-//        $this->install();
-//    } // fn reinstall
 
 
     /**

@@ -18,17 +18,6 @@ require_once("M2tree.php");
 class ObjClasses {
 //class ObjClasses extends M2tree {
 
-    /**
-     * @param object $dbc
-     * @param array $config
-     * @return this
-     */
-//    public function __construct(&$dbc, $config)
-//    {
-//        parent::__construct($dbc, $config);
-//    }
-
-
     /* ======================================================= public methods */
 
     /**
@@ -79,14 +68,16 @@ class ObjClasses {
      */
     public static function RemoveClassById($cid)
     {
-        global $CC_CONFIG, $CC_DBC;        
-        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']."
-            WHERE cid=$cid");
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "DELETE FROM ".$CC_CONFIG['cmembTable']
+            ." WHERE cid=$cid";
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
         	return $r;
         }
-        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['classTable']."
-            WHERE id=$cid");
+        $sql = "DELETE FROM ".$CC_CONFIG['classTable']
+            ." WHERE id=$cid";
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -104,8 +95,9 @@ class ObjClasses {
     public static function AddObjectToClass($cid, $oid)
     {
         global $CC_CONFIG, $CC_DBC;
-        $r = $CC_DBC->query("INSERT INTO ".$CC_CONFIG['cmembTable']." (cid, objid)
-            VALUES ($cid, $oid)");
+        $sql = "INSERT INTO ".$CC_CONFIG['cmembTable']." (cid, objid)"
+            ." VALUES ($cid, $oid)";
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -123,8 +115,9 @@ class ObjClasses {
     public static function RemoveObjectFromClass($oid, $cid=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
-        $r = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']."
-            WHERE objid=$oid".(is_null($cid)? '':" AND cid=$cid"));
+        $sql = "DELETE FROM ".$CC_CONFIG['cmembTable']
+            ." WHERE objid=$oid".(is_null($cid)? '':" AND cid=$cid");
+        $r = $CC_DBC->query($sql);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -162,8 +155,9 @@ class ObjClasses {
     {
         global $CC_CONFIG, $CC_DBC;
         $cname = pg_escape_string($cname);
-        return $CC_DBC->getOne($query = "SELECT id FROM ".$CC_CONFIG['classTable']."
-            WHERE cname='$cname'");
+        $sql = "SELECT id FROM ".$CC_CONFIG['classTable']
+            ." WHERE cname='$cname'";
+        return $CC_DBC->getOne($sql);
     }
 
 
@@ -175,7 +169,7 @@ class ObjClasses {
      */
     public static function GetClassName($id)
     {
-        global $CC_DBC, $CC_CONFIG;        
+        global $CC_DBC, $CC_CONFIG;
         $sql = "SELECT cname FROM ".$CC_CONFIG['classTable']." WHERE id=$id";
         return $CC_DBC->getOne($sql);
     }
@@ -190,8 +184,9 @@ class ObjClasses {
     public static function IsClass($id)
     {
         global $CC_CONFIG, $CC_DBC;
-        $r = $CC_DBC->getOne("SELECT count(*) FROM ".$CC_CONFIG['classTable']."
-            WHERE id=$id");
+        $sql = "SELECT count(*) FROM ".$CC_CONFIG['classTable']
+            ." WHERE id=$id";
+        $r = $CC_DBC->getOne($sql);
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -219,10 +214,10 @@ class ObjClasses {
      */
     public static function ListClass($id)
     {
-        global $CC_CONFIG, $CC_DBC;        
-        return $CC_DBC->getAll("
-            SELECT t.* FROM ".$CC_CONFIG['cmembTable']." cm, ".$CC_CONFIG['treeTable']." t
-            WHERE cm.cid=$id AND cm.objid=t.id");
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT t.* FROM ".$CC_CONFIG['cmembTable']." cm, ".$CC_CONFIG['treeTable']." t"
+            ." WHERE cm.cid=$id AND cm.objid=t.id";
+        return $CC_DBC->getAll($sql);
     }
 
 
@@ -240,13 +235,12 @@ class ObjClasses {
     public static function DumpClasses($indstr='    ', $ind='')
     {
         global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT cname, count(cm.objid)as cnt FROM ".$CC_CONFIG['classTable']." c"
+            ." LEFT JOIN ".$CC_CONFIG['cmembTable']." cm ON c.id=cm.cid"
+            ." GROUP BY cname, c.id ORDER BY c.id";
         $r = $ind.join(', ', array_map(
             create_function('$v', 'return "{$v[\'cname\']} ({$v[\'cnt\']})";'),
-            $CC_DBC->getAll("
-                SELECT cname, count(cm.objid)as cnt FROM ".$CC_CONFIG['classTable']." c
-                LEFT JOIN ".$CC_CONFIG['cmembTable']." cm ON c.id=cm.cid
-                GROUP BY cname, c.id ORDER BY c.id
-            ")
+            $CC_DBC->getAll($sql)
         ))."\n";
         return $r;
     }
@@ -304,7 +298,7 @@ class ObjClasses {
         $test_dump .= ObjClasses::DumpClasses();
         ObjClasses::DeleteData();
         if ($test_dump == $test_correct) {
-            $test_log .= "class: OK\n"; 
+            $test_log .= "class: OK\n";
             return TRUE;
         } else {
         	return PEAR::raiseError(
@@ -314,42 +308,5 @@ class ObjClasses {
         }
     }
 
-
-    /**
-     * Create tables + initialize
-     *
-     */
-//    public function install()
-//    {
-//        parent::install();
-//        $CC_DBC->query("CREATE TABLE {$this->classTable} (
-//            id int not null PRIMARY KEY,
-//            cname varchar(20)
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->classTable}_id_idx
-//            ON {$this->classTable} (id)");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->classTable}_cname_idx
-//            ON {$this->classTable} (cname)");
-//
-//        $CC_DBC->query("CREATE TABLE {$this->cmembTable} (
-//            objid int not null,
-//            cid int not null
-//        )");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->cmembTable}_idx
-//            ON {$this->cmembTable} (objid, cid)");
-//    }
-
-
-    /**
-     * Drop tables etc.
-     *
-     */
-//    public static function Uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['classTable']);
-//        $CC_DBC->query("DROP TABLE ".$CC_CONFIG['cmembTable']);
-//        parent::uninstall();
-//    }
 } // class ObjClasses
 ?>
