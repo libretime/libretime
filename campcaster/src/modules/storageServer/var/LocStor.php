@@ -64,7 +64,7 @@ class LocStor extends BasicStor {
 
         // Check if specified gunid exists.
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (!PEAR::isError($storedFile)) {
+        if (!is_null($storedFile) && !PEAR::isError($storedFile)) {
             // gunid exists - do replace
             $oid = $storedFile->getId();
             if (($res = BasicStor::Authorize('write', $oid, $sessid)) !== TRUE) {
@@ -75,7 +75,7 @@ class LocStor extends BasicStor {
                     'LocStor::storeAudioClipOpen: is accessed'
                 );
             }
-            $res = $storedFile->replace($oid, $storedFile->name, '', $metadata, 'string');
+            $res = $storedFile->replace($oid, $storedFile->getName(), '', $metadata, 'string');
             if (PEAR::isError($res)) {
                 return $res;
             }
@@ -535,6 +535,9 @@ class LocStor extends BasicStor {
     protected function deleteAudioClip($sessid, $gunid, $forced=FALSE)
     {
         $storedFile =& StoredFile::RecallByGunid($gunid);
+        if (is_null($storedFile)) {
+            return TRUE;
+        }
         if (PEAR::isError($storedFile)) {
             if ($storedFile->getCode()==GBERR_FOBJNEX && $forced) {
                 return TRUE;

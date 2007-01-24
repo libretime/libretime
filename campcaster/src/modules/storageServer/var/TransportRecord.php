@@ -116,7 +116,7 @@ class TransportRecord
      */
     function recall(&$tr, $trtok)
     {
-        global $CC_DBC;
+        global $CC_DBC, $CC_CONFIG;
         $trec = new TransportRecord($tr);
         $trec->trtok = $trtok;
         $row = $CC_DBC->getRow("
@@ -125,7 +125,7 @@ class TransportRecord
                 to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
                 fname, localfile, url, rtrtok, mdtrtok, uid,
                 expectedsize, realsize, expectedsum, realsum,
-                errmsg, title
+                errmsg, title, jobpid
             FROM ".$CC_CONFIG['transTable']."
             WHERE trtok='$trtok'
         ");
@@ -207,16 +207,19 @@ class TransportRecord
 
 
     /**
-     * Set lock on transport record
+     * Set lock on transport record and save/clear process id
      *
      * @param boolean $lock
      * 		lock if true, release lock if false
+     * @param int $pid
+     * 		process id
      * @return mixed
      * 		true or error
      */
-    function setLock($lock)
+    function setLock($lock, $pid=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
+        $pidsql = (is_null($pid) ? "NULL" : "$pid" );
         if ($this->dropped) {
         	return TRUE;
         }
@@ -225,7 +228,7 @@ class TransportRecord
         $snlock = ($nlock ? 'Y' : 'N');
         $r = $CC_DBC->query("
             UPDATE ".$CC_CONFIG['transTable']."
-            SET lock='$slock', ts=now()
+            SET lock='$slock', jobpid=$pidsql, ts=now()
             WHERE trtok='{$this->trtok}' AND lock = '$snlock'"
         );
         if (PEAR::isError($r)) {
@@ -235,7 +238,7 @@ class TransportRecord
         if (PEAR::isError($affRows)) {
         	return $affRows;
         }
-        if ($affRows != 1) {
+        if ($affRows === 0) {
             $ltxt = ($lock ? 'lock' : 'unlock' );
             return PEAR::raiseError(
                 "TransportRecord::setLock: can't $ltxt ({$this->trtok})"
@@ -259,6 +262,24 @@ class TransportRecord
             );
         }
         return $this->row['trtype'];
+    }
+
+
+    /**
+     * Kill transport job (on pause or cancel)
+     *
+     * @return string
+     * 		Transport type
+     */
+    function killJob()
+    {
+        if (!$this->recalled) {
+            return PEAR::raiseError("TransportRecord::getTransportType:".
+                " not recalled ({$this->trtok})", TRERR_TOK
+            );
+        }
+        $jobpid = $this->row['jobpid'];
+        $res = system("pkill -P $jobpid", $status);
     }
 
 
@@ -374,6 +395,9 @@ class TransportRecord
             case "playlistPkg":
             case "metadata":
                 $title = $this->gb->bsGetTitle(NULL, $this->row['gunid']);
+                if (is_null($title)) {
+                    $title = $defStr;
+                }
                 if (PEAR::isError($title)) {
                     if ($title->getCode() == GBERR_FOBJNEX) {
                     	$title = $defStr;

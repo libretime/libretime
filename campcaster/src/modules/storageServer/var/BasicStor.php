@@ -669,7 +669,7 @@ class BasicStor {
             if (!PEAR::isError($storedFile)) {
                 $storedFile->setMd5($md5sum);
             } else {
-                $error = $storedFile;
+#                $error = $storedFile;
             }
         }
 
@@ -845,7 +845,7 @@ class BasicStor {
         } else {
             $storedFile = StoredFile::RecallByGunid($gunid);
         }
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $r = $storedFile->md->getMetadataValue('dc:title', $lang, $deflang);
@@ -1180,7 +1180,7 @@ class BasicStor {
             if (PEAR::isError($storedFile)) {
                 return $storedFile;
             }
-            $MDfname = $storedFile->md->getName();
+            $MDfname = $storedFile->md->getFileName();
             if (PEAR::isError($MDfname)) {
                 return $MDfname;
             }
@@ -2104,11 +2104,18 @@ class BasicStor {
      */
     public static function RemoveObj($id, $forced=FALSE)
     {
-        switch ($ot = BasicStor::GetObjType($id)) {
+        $ot = BasicStor::GetObjType($id);
+        if (PEAR::isError($ot)) {
+            return $ot;
+        }
+        switch ($ot) {
             case "audioclip":
             case "playlist":
             case "webstream":
                 $storedFile = StoredFile::Recall($id);
+                if (is_null($storedFile)) {
+                    return TRUE;
+                }
                 if (PEAR::isError($storedFile)) {
                     return $storedFile;
                 }

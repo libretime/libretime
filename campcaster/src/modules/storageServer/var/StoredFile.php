@@ -345,7 +345,7 @@ class StoredFile {
         global $CC_CONFIG;
         global $CC_DBC;
         $this->gunid = $p_gunid;
-        if (is_null($this->gunid)) {
+        if (empty($this->gunid)) {
             $this->gunid = StoredFile::CreateGunid();
         }
         $this->resDir = $this->_getResDir($this->gunid);
@@ -386,14 +386,14 @@ class StoredFile {
         if ($storedFile->ftype == 'playlist') {
             $storedFile->mime = 'application/smil';
         } else {
-            $storedFile->mime = $p_values["mime"];
+            $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
         }
-        $storedFile->filepath = $p_values['filepath'];
+#        $storedFile->filepath = $p_values['filepath'];
         if (isset($p_values['md5'])) {
             $storedFile->md5 = $p_values['md5'];
-        } elseif (file_exists($storedFile->filepath)) {
-            echo "StoredFile::Insert: WARNING: Having to recalculate MD5 value\n";
-            $storedFile->md5 = md5_file($storedFile->filepath);
+        } elseif (file_exists($p_values['filepath'])) {
+#            echo "StoredFile::Insert: WARNING: Having to recalculate MD5 value\n";
+            $storedFile->md5 = md5_file($p_values['filepath']);
         }
 
         $storedFile->exists = FALSE;
@@ -417,7 +417,9 @@ class StoredFile {
 
         // Insert metadata
         $metadata = $p_values['metadata'];
-        $mdataLoc = ($metadata[0]=="/")?"file":"string";
+        // $mdataLoc = ($metadata[0]=="/")? "file":"string";
+        // for non-absolute paths:
+        $mdataLoc = ($metadata[0]!="<")? "file":"string";
         if (is_null($metadata) || ($metadata == '') ) {
             $metadata = dirname(__FILE__).'/emptyMdata.xml';
             $mdataLoc = 'file';
@@ -435,18 +437,18 @@ class StoredFile {
         }
 
         // Save media file
-        if (!empty($storedFile->filepath)) {
-            if (!file_exists($storedFile->filepath)) {
+        if (!empty($p_values['filepath'])) {
+            if (!file_exists($p_values['filepath'])) {
                 return PEAR::raiseError("StoredFile::Insert: ".
-                    "media file not found ($storedFile->filepath)");
+                    "media file not found ({$p_values['filepath']})");
             }
-            $res = $storedFile->addFile($storedFile->filepath, $p_copyMedia);
+            $res = $storedFile->addFile($p_values['filepath'], $p_copyMedia);
             if (PEAR::isError($res)) {
                 $CC_DBC->query("ROLLBACK");
                 return $res;
             }
             if (empty($storedFile->mime)) {
-                echo "StoredFile::Insert: WARNING: Having to recalculate MIME value\n";
+#                echo "StoredFile::Insert: WARNING: Having to recalculate MIME value\n";
                 $storedFile->setMime($storedFile->getMime());
             }
             $emptyState = FALSE;
@@ -514,6 +516,8 @@ class StoredFile {
             $storedFile = new StoredFile($gunid);
         } elseif ($row['ftype'] == 'playlist') {
             $storedFile = new Playlist($gunid);
+        } else {        // fallback
+            $storedFile = new StoredFile($gunid);
         }
         $storedFile->gunidBigint = $row['gunid_bigint'];
         $storedFile->md->gunidBigint = $row['gunid_bigint'];

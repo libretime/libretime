@@ -407,6 +407,7 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
         realsize int,             -- filesize of transported part
         uid int,                  -- local user id of transport owner
         errmsg varchar(255),      -- error message string for failed tr.
+        jobpid int,               -- pid of transport job
         start timestamp,          -- starttime
         ts timestamp              -- mtime
     )";

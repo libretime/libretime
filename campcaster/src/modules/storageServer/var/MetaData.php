@@ -133,6 +133,7 @@ class MetaData {
             	return $res;
             }
         }
+        unset($this->metadata);
         return $this->insert($mdata, $loc, $format);
     }
 
@@ -951,8 +952,11 @@ class MetaData {
         }
         if (is_null($row)) {
             $node = XML_Util::createTagFromArray(array(
-                'localpart'=>'none'
+                'localPart'=>'none'
             ));
+            if (PEAR::isError($node)) {
+            	return $node;
+            }
         } else {
             $node = $this->genXMLNode($row);
             if (PEAR::isError($node)) {

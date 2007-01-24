@@ -217,7 +217,7 @@ class XmlParser {
 	            $parser = new XmlParser($data);
 	            if ($parser->isError()) {
 	                return PEAR::raiseError(
-	                    "SmilPlaylist::parse: ".$parser->getError()
+	                    "XmlParser::parse: ".$parser->getError()
 	                );
 	            }
 	            $tree = $parser->getTree();

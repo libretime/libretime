@@ -77,6 +77,7 @@ class Transport
      * wget --limit-rate parameter
      */
     private $downLimitRate = NULL;
+#    private $downLimitRate = 500;
 
     /**
      * wget -t parameter
@@ -113,6 +114,7 @@ class Transport
      * @var int
      */
     private $upLimitRate  = NULL;
+#    private $upLimitRate  = 500;
 
 
     /**
@@ -262,6 +264,11 @@ class Transport
                 );
         }
         $res = $trec->setState($newState);
+        switch ($action) {
+            case 'pause';
+            case 'cancel';
+                $trec->killJob();
+        }
         return $res;
     }
 
@@ -800,8 +807,11 @@ class Transport
         } else {
         	$redirect = "/dev/null";
         }
-        $command = "{$this->cronJobScript} {$trtok} >> $redirect &";
-        $res = system($command, $status);
+        $redirect_escaped = escapeshellcmd($redirect);
+        $command = "{$this->cronJobScript} {$trtok}";
+        $command_escaped = escapeshellcmd($command);
+        $command_final = "$command_escaped >> $redirect_escaped 2>&1 &";
+        $res = system($command_final, $status);
         if ($res === FALSE) {
             $this->trLog(
                 "cronMain: Error on execute cronJobScript with trtok {$trtok}"
@@ -883,7 +893,8 @@ class Transport
             default:
                 if (method_exists($this, $mname)) {
                     // lock the job:
-                    $r = $trec->setLock(TRUE);
+                    $pid = getmypid();
+                    $r = $trec->setLock(TRUE, $pid);
                     if (PEAR::isError($r)) {
                     	return $r;
                     }
@@ -904,7 +915,7 @@ class Transport
                     $asessid = $r;
                     // method call:
                     if (TR_LOG_LEVEL > 2) {
-                        $this->trLog("cronCallMethod: $mname($trtok) >");
+                        $this->trLog("cronCallMethod($pid): $mname($trtok) >");
                     }
                     $ret = call_user_func(array($this, $mname), $row, $asessid);
                     if (PEAR::isError($ret)) {
@@ -912,7 +923,7 @@ class Transport
                         return $this->_failFatal($ret, $trec);
                     }
                     if (TR_LOG_LEVEL > 2) {
-                        $this->trLog("cronCallMethod: $mname($trtok) <");
+                        $this->trLog("cronCallMethod($pid): $mname($trtok) <");
                     }
                     // unlock the job:
                     $r = $trec->setLock(FALSE);
@@ -980,6 +991,7 @@ class Transport
      */
     function cronDownloadInit($row, $asessid)
     {
+        global $CC_CONFIG;
         $trtok = $row['trtok'];
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
@@ -1085,6 +1097,18 @@ class Transport
         	return TRUE;
         }
         $res = system($command, $status);
+
+        // leave paused and closed transports
+        $trec2 = TransportRecord::recall($this, $trtok);
+        if (PEAR::isError($trec)) {
+        	return $trec;
+        }
+        $state2 = $trec2->row['state'];
+        if ($state2 == 'paused' || $state2 == 'closed' ) {
+            return TRUE;
+        }
+        
+
         // status 18 - Partial file. Only a part of the file was transported.
         // status 28 - Timeout. Too long/slow upload, try to resume next time rather.
         // status 6 - Couldn't resolve host.
@@ -1168,31 +1192,43 @@ class Transport
         	return TRUE;
         }
         $res = system($command, $status);
+
+        // leave paused and closed transports
+        $trec2 = TransportRecord::recall($this, $trtok);
+        if (PEAR::isError($trec)) {
+        	return $trec;
+        }
+        $state2 = $trec2->row['state'];
+        if ($state2 == 'paused' || $state2 == 'closed' ) {
+            return TRUE;
+        }
+        
         // check consistency
         $size = filesize($row['localfile']);
-        if ($status == 0 || ($status == 1 && $size >= $row['expectedsize'])) {
-            $chsum  = $this->_chsum($row['localfile']);
+        if ($size < $row['expectedsize']) {
+            // not finished - return to the 'waiting' state
+            $r = $trec->setState('waiting', array('realsize'=>$size));
+            if (PEAR::isError($r)) {
+                return $r;
+            }
+        } elseif ($size >= $row['expectedsize']) {
+            $chsum = $this->_chsum($row['localfile']);
             if ($chsum == $row['expectedsum']) {
                 // mark download as finished
                 $r = $trec->setState('finished',
                     array('realsum'=>$chsum, 'realsize'=>$size));
                 if (PEAR::isError($r)) {
-                	return $r;
+                    return $r;
                 }
             } else {
-                // bad checksum
+                // bad checksum, retry from the scratch
                 @unlink($row['localfile']);
                 $r = $trec->setState('waiting',
                     array('realsum'=>$chsum, 'realsize'=>$size));
                 if (PEAR::isError($r)) {
-                	return $r;
+                    return $r;
                 }
             }
-        } else {
-            return PEAR::raiseError("Transport::cronDownloadWaiting:".
-                " wrong return status from wget: $status ".
-                "($trtok)"
-            );
         }
         return TRUE;
     }
@@ -1210,6 +1246,7 @@ class Transport
      */
     function cronUploadFinished($row, $asessid)
     {
+        global $CC_CONFIG;
         $trtok = $row['trtok'];
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
@@ -1330,7 +1367,8 @@ class Transport
                 if (PEAR::isError($mdtrec)) {
                 	return $mdtrec;
                 }
-                $r = $mdtrec->setLock(TRUE);
+                $pid = getmypid();
+                $r = $mdtrec->setLock(TRUE, $pid);
                 if (PEAR::isError($r)) {
                 	return $r;
                 }
@@ -1730,6 +1768,7 @@ class Transport
      */
     function trLog($msg)
     {
+        global $CC_CONFIG;
         $logfile = $CC_CONFIG['transDir']."/activity.log";
         if (FALSE === ($fp = fopen($logfile, "a"))) {
             return PEAR::raiseError(
