@@ -264,7 +264,7 @@ $time = $end - $start;
 if ($time > 0) {
 	$speed = round(($filecount+$duplicates)/$time, 1);
 } else {
-	$speed = "N/A";
+	$speed = ($filecount+$duplicates);
 }
 
 echo "==========================================================================\n";
