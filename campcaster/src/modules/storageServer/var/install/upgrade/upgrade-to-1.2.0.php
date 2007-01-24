@@ -52,6 +52,10 @@ echo " * Converting metadata values 'ls:genre' to 'dc:type'...";
 $sql = "UPDATE ".$CC_CONFIG['mdataTable']." SET predns='dc', predicate='type' WHERE predns='ls' and predicate='genre'";
 camp_install_query($sql);
 
+echo " * Adding 'jobpid' to ".$CC_CONFIG['transTable']."...\n";
+$sql = "ALTER TABLE ".$CC_CONFIG['transTable']." ADD COLUMN jobpid int";
+camp_install_query($sql);
+
 // Get MD5 values for all files
 echo " * Computing MD5 sums for all files (this may take a while)...\n";
 $sql = "SELECT to_hex(gunid) as gunid, name FROM ".$CC_CONFIG['filesTable'] ." WHERE ftype='audioclip'";
