@@ -64,14 +64,16 @@ echo " *** The system group that is running the http daemon: '$HTTP_GROUP'"
 for i in $*
 do
   echo " *** chown :$HTTP_GROUP $i"
-  chown :$HTTP_GROUP $i || \
-  {
-    ERN=$?;
-    echo "ERROR: chown :$HTTP_GROUP $i -> You should have permissions to set group owner to group '$HTTP_GROUP'";
-    exit $ERN;
-  }
-  echo " *** chmod g+sw $i"
-  chmod g+sw $i || exit $?
+  if [ -G $i ]; then
+    chown :$HTTP_GROUP $i || \
+    {
+      ERN=$?;
+      echo "ERROR: chown :$HTTP_GROUP $i -> You should have permissions to set group owner to group '$HTTP_GROUP'";
+      exit $ERN;
+    }
+    echo " *** chmod g+sw $i"
+    chmod g+sw $i || exit $?
+  fi
 done
 
 echo " *** StorageServer bin/setupDirs.sh END"
