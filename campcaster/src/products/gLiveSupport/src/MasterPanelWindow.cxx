@@ -441,6 +441,9 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
     // refresh all windows
     gLiveSupport->runMainLoop();
     
+    // refresh the RDS display
+    gLiveSupport->updateRds();
+    
     return true;
 }
 
@@ -781,17 +784,6 @@ MasterPanelWindow :: getNextItemToPlay()                            throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Set the "now playing" display.
- *----------------------------------------------------------------------------*/
-void
-MasterPanelWindow :: setNowPlaying(Ptr<Playable>::Ref    playable)
-                                                                    throw ()
-{
-    nowPlayingWidget->setPlayable(playable);
-}
-
-
-/*------------------------------------------------------------------------------
  *  Resize an image to fit in a box, preserving its aspect ratio.
  *----------------------------------------------------------------------------*/
 void
@@ -876,7 +868,7 @@ MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
                                             searchButton));
     }
     
-    bool    success = searchWindow->uploadToHub(playable);
+    searchWindow->uploadToHub(playable);
     
     searchWindow->present();
 }

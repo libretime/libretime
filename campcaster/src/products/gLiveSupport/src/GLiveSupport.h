@@ -368,6 +368,41 @@ class GLiveSupport : public LocalizedConfigurable,
         refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
                                                                 throw ();
 
+        /**
+         *  Replace the placeholders in the RDS settings with the
+         *  current values.
+         *
+         *  @param  rdsString   the string with the placeholders;
+         *                      they will be replaced in place.
+         */
+        void
+        substituteRdsData(Ptr<Glib::ustring>::Ref   rdsString)
+                                                                throw ();
+
+        /**
+         *  Replace a single placeholders in the RDS settings.
+         *  If the corresponding metadata is not found, a "?" character
+         *  is substituted instead.
+         *
+         *  @param  rdsString   the string with the placeholders;
+         *                      they will be replaced in place.
+         *  @param  placeholder the string to be substituted, e.g. "%t".
+         *  @param  playable    the Playable object whose data is to be used.
+         *  @param  metadataKay the kind of metadata to be substituted.
+         */
+        void
+        substituteRdsItem(Ptr<Glib::ustring>::Ref   rdsString,
+                          const std::string &       placeholder,
+                          Ptr<Playable>::Ref        playable,
+                          const std::string &       metadataKey)
+                                                                    throw ();
+
+        /**
+         *  Write a string to the serial device.
+         */
+        void
+        writeToSerial(Ptr<const Glib::ustring>::Ref     message)    throw ();
+
 
     protected:
         /**
@@ -1291,10 +1326,20 @@ class GLiveSupport : public LocalizedConfigurable,
         createScratchpadWindow(void)                            throw ();
 
         /**
-         *  Write a string to the serial device.
+         *  Read the RDS settings, and send them to the serial port.
+         *
+         *  The following RDS placeholders will be substituted:
+         *
+         * "%c" ---> "dc:creator" (Creator)
+         * "%t" ---> "dc:title" (Title)
+         * "%d" ---> "dc:format:extent" (Duration)
+         * "%s" ---> "dc:source" (Album)
+         * "%y" ---> "ls:year" (Year)
+         *
+         *  @see substituteRdsData()
          */
         void
-        writeToSerial(Ptr<const std::string>::Ref   message)    throw ();
+        updateRds(void)                                         throw ();
 };
 
 /* ================================================= external data structures */

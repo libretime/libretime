@@ -203,7 +203,10 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         playlistLabel->set_text("");
         resetRemainsTimeState();
         this->playable.reset();
+        this->currentInnerPlayable.reset();
     }
+
+    gLiveSupport->updateRds();
 }
 
 
@@ -380,6 +383,8 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
                                                 innerElapsed ));
     remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
                                                 innerRemains ));
+
+    currentInnerPlayable = innerPlayable;
 }
 
 

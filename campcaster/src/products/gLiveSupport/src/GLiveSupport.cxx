@@ -1795,7 +1795,7 @@ GLiveSupport :: createScratchpadWindow(void)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: writeToSerial(Ptr<const std::string>::Ref   message)
+GLiveSupport :: writeToSerial(Ptr<const Glib::ustring>::Ref     message)
                                                                     throw ()
 {
     try {
@@ -1806,6 +1806,67 @@ GLiveSupport :: writeToSerial(Ptr<const std::string>::Ref   message)
     } catch (...) {
         // TODO: handle this somehow
         std::cerr << "IO error in GLiveSupport::writeToSerial()" << std::endl;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Replace the placeholders in the RDS settings with the current values.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: substituteRdsData(Ptr<Glib::ustring>::Ref   rdsString)
+                                                                    throw ()
+{
+    Ptr<Playable>::Ref  playable = masterPanel->getCurrentInnerPlayable();
+    
+    // these substitutions are documented in the doxygen docs of the
+    // public updateRds() function
+    substituteRdsItem(rdsString, "%c", playable, "dc:creator");
+    substituteRdsItem(rdsString, "%t", playable, "dc:title");
+    substituteRdsItem(rdsString, "%d", playable, "dc:format:extent");
+    substituteRdsItem(rdsString, "%s", playable, "dc:source");
+    substituteRdsItem(rdsString, "%y", playable, "ls:year");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Replace a single placeholders in the RDS settings.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: substituteRdsItem(Ptr<Glib::ustring>::Ref   rdsString,
+                                  const std::string &       placeholder,
+                                  Ptr<Playable>::Ref        playable,
+                                  const std::string &       metadataKey)
+                                                                    throw ()
+{
+    unsigned int    pos;
+    while ((pos = rdsString->find(placeholder)) != std::string::npos) {
+        Ptr<const Glib::ustring>::Ref   value;
+        if (playable) {
+            value = playable->getMetadata(metadataKey);
+        }
+        if (!value) {
+            value.reset(new Glib::ustring("?"));
+        }
+        rdsString->replace(pos, placeholder.length(), *value);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read the RDS settings, and send them to the serial port.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: updateRds(void)                                     throw ()
+{
+    Ptr<Glib::ustring>::Ref
+                        rdsString = optionsContainer->getCompleteRdsString();
+    if (rdsString) {
+        substituteRdsData(rdsString);
+        writeToSerial(rdsString);
     }
 }
 

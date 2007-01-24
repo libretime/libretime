@@ -549,9 +549,25 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 
         /**
          *  Set the "now playing" display.
+         *
+         *  @param  playable    the Playable whose data is to be displayed.
          */
         void
-        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ();
+        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ()
+        {
+            nowPlayingWidget->setPlayable(playable);
+        }
+
+        /**
+         *  Get the Playable currently shown in the "now playing" display.
+         *
+         *  @return the currently playing item; 0 if nothing is playing.
+         */
+        Ptr<Playable>::Ref
+        getCurrentInnerPlayable(void)                           throw ()
+        {
+            return nowPlayingWidget->getCurrentInnerPlayable();
+        }
 
         /**
          *  Upload a Playable object to the network hub.
