@@ -185,7 +185,7 @@ const std::string   localeNotAvailableKey = "localeNotAvailableMsg";
 /*------------------------------------------------------------------------------
  *  The default serial device
  *----------------------------------------------------------------------------*/
-const std::string   defaultSerialDevice = "/dev/ttyS0";
+const std::string   serialPortConfigElementName = "serialPort";
 
 }
 
@@ -402,8 +402,15 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
                            testAudioUrlElement->get_attribute("path")
                                               ->get_value() ));
 
-    // TODO: make this configurable
-    serialDevice.reset(new std::string(defaultSerialDevice));
+    // read the serial port's file name
+    nodes = element.get_children(serialPortConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no serial port element");
+    }
+    const xmlpp::Element*  serialPortElement 
+                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
+    serialDevice.reset(new std::string(serialPortElement->get_attribute("path")
+                                                        ->get_value() ));
 }
 
 

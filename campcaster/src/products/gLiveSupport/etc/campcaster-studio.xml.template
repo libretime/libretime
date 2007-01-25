@@ -11,6 +11,9 @@
                                        outputPlayer,
                                        cuePlayer,
                                        stationLogo,
+                                       taskbarIcons,
+                                       testAudioUrl,
+                                       serialPort,
                                        metadataTypeContainer,
                                        keyboardShortcutList) >
 
@@ -92,8 +95,15 @@
 <!ELEMENT stationLogo    EMPTY >
 <!ATTLIST stationLogo    path    CDATA   #REQUIRED >
 
+<!ELEMENT taskbarIcons   (icon+)                   >
+<!ELEMENT icon           EMPTY                     >
+<!ATTLIST icon           path    CDATA   #REQUIRED >
+
 <!ELEMENT testAudioUrl   EMPTY >
 <!ATTLIST testAudioUrl   path    CDATA   #REQUIRED >
+
+<!ELEMENT serialPort     EMPTY                     >
+<!ATTLIST serialPort     path    CDATA   #REQUIRED >
 
 <!ELEMENT metadataTypeContainer           (metadataType+)       >
 
@@ -181,6 +191,8 @@
     </taskbarIcons>
 
     <testAudioUrl   path = "file://ls_var_dir/Campcaster/testAudio.ogg" />
+
+    <serialPort     path = "/dev/ttyS0" />
 
     <metadataTypeContainer>
         <metadataType   dcName          = "dc:title"
