@@ -381,7 +381,7 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  Replace a single placeholders in the RDS settings.
-         *  If the corresponding metadata is not found, a "?" character
+         *  If the corresponding metadata is not found, an empty string
          *  is substituted instead.
          *
          *  @param  rdsString   the string with the placeholders;

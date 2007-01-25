@@ -1855,7 +1855,7 @@ GLiveSupport :: substituteRdsItem(Ptr<Glib::ustring>::Ref   rdsString,
             value = playable->getMetadata(metadataKey);
         }
         if (!value) {
-            value.reset(new Glib::ustring("?"));
+            value.reset(new Glib::ustring(""));
         }
         rdsString->replace(pos, placeholder.length(), *value);
     }
