@@ -3,7 +3,7 @@
  * ArchiveServer configuration file
  */
 
-define('CAMPCASTER_VERSION', '1.1.1');
+include(dirname(__FILE__)."/../../storageServer/var/campcaster_version.php");
 
 /**
  *  configuration structure:

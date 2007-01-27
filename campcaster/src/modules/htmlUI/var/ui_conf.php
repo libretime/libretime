@@ -11,7 +11,6 @@ if (UI_DEBUG) {
 	error_reporting(E_ALL);
 }
 
-define('UI_VERSION', 'Campcaster 1.1.1');
 define('UI_VERSION_FULLNAME', 'Campcaster 1.1.1');
 define('UI_TESTSTREAM_MU3_TMP', 'img/listen.m3u');
 
@@ -118,6 +117,7 @@ define('UI_RESTORETOKEN_KEY', 'restoreToken');
 
 //require_once('PEAR.php');
 require_once('../../../storageServer/var/conf.php');
+define('UI_VERSION', CAMPCASTER_VERSION);
 
 // extent config
 $CC_CONFIG = array_merge($CC_CONFIG,

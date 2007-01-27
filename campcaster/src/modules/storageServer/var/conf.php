@@ -31,7 +31,7 @@
  *  </dl>
  */
 
-define('CAMPCASTER_VERSION', '1.1.1');
+include("campcaster_version.php");
 
 // these are the default values for the config
 global $CC_CONFIG;
