@@ -396,16 +396,16 @@ if [ "$storage_is_local" = "yes" ]; then
     # create PHP-related database tables
     cd $install_var_ls/storageServer/var/install
     # workaround for #2059; restore to "exit 1" after the ticket is closed
-    #php -q install.php || exit 1;
-    php -q install.php || true
+    php -q install.php || exit 1;
+    #php -q install.php || true
     cd -
 fi
 
 # create PHP-related database tables
 cd $install_var_ls/archiveServer/var/install
 # workaround for ticket #2059; restore to "exit 1" after the ticket is closed
-#php -q install.php || exit 1;
-php -q install.php || true
+php -q install.php || exit 1;
+#php -q install.php || true
 cd -
 
 # create scheduler-related database tables
