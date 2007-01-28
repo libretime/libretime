@@ -9,9 +9,9 @@
      *
      */
 
-    require_once dirname(__FILE__).'/../var/conf.php';
-    require_once dirname(__FILE__).'/../var/BasicStor.php';
-    include_once 'DB.php';
+    require_once(dirname(__FILE__).'/../var/conf.php');
+    require_once(dirname(__FILE__).'/../../alib/var/Subjects.php');
+    include_once('DB.php');
 
     if(trim(`whoami`) != 'root') {
         die("Please run this script as root.\n");
@@ -24,10 +24,8 @@
     }
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-    $bs = new BasicStor();
-
     $pass = $argv[1];
-    $r = $bs->passwd('scheduler', NULL, $pass);
+    $r = Subjects::Passwd('scheduler', NULL, $pass);
     if (PEAR::isError($r)) {
         die($r->getMessage());
     }
