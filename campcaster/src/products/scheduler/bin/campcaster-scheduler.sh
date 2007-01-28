@@ -38,6 +38,7 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 libdir=$basedir/lib
+vardir=$basedir/var/Campcaster/scheduler/var
 
 
 #-------------------------------------------------------------------------------
@@ -46,7 +47,14 @@ libdir=$basedir/lib
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
 export GST_REGISTRY=$etcdir/gst-registry.xml
 scheduler_exe=$bindir/campcaster-scheduler
-config_file=$etcdir/campcaster-scheduler.xml
+
+if [ -f ~/.campcaster/campcaster-scheduler.xml ]; then
+    config_file=~/.campcaster/campcaster-scheduler.xml
+elif [ -f $etcdir/campcaster-scheduler.xml ]; then
+    config_file=$etcdir/campcaster-scheduler.xml
+else
+    echo "Can't find configuration file.";
+fi
 
 mode=$1
 
@@ -83,12 +91,12 @@ case "$mode" in
 
     'install')
         echo "Installing Campcaster scheduler database tables..."
-        php install.php -c $config_file
+        php $vardir/install/install.php -c $config_file
         ;;
 
     'uninstall')
         echo "Uninstalling Campcaster scheduler database tables..."
-        php uninstall.php -c $config_file
+        php $vardir/install/uninstall.php -c $config_file
         ;;
 
     'kill')

@@ -327,6 +327,14 @@ make -C $modules_dir/archiveServer storage || exit 1
 
 
 #-------------------------------------------------------------------------------
+#  Setup the database tables for the scheduler
+#-------------------------------------------------------------------------------
+echo "Setting up database tables for the scheduler..."
+
+make -C $products_dir/scheduler init || exit 1
+
+
+#-------------------------------------------------------------------------------
 #  Setup directory permissions
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."

@@ -40,6 +40,7 @@ bindir=$basedir/bin
 etcdir=$basedir/etc
 libdir=$basedir/lib
 tmpdir=$basedir/tmp
+vardir=$basedir/var
 
 usrdir=`cd $basedir/../../../usr; pwd;`
 
@@ -66,9 +67,6 @@ else
 fi
 
 mode=$1
-
-#echo "Using scheduler:           $scheduler_exe";
-#echo "      configuration file:  $config_file";
 
 
 #-------------------------------------------------------------------------------
@@ -109,12 +107,12 @@ case "$mode" in
 
     'install')
         echo "Installing Campcaster scheduler database tables..."
-        $scheduler_exe -c $config_file install
+        php $vardir/install/install.php -c $config_file
         ;;
 
     'uninstall')
         echo "Uninstalling Campcaster scheduler database tables..."
-        $scheduler_exe -c $config_file uninstall
+        php $vardir/install/uninstall.php -c $config_file
         ;;
 
     'kill')
