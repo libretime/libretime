@@ -34,7 +34,7 @@ MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
-CP      = cp -r
+CP      = cp -rP
 SED     = sed
 ECHO    = echo
 CAT     = cat
@@ -172,6 +172,7 @@ copy_files:
 	${MKDIR} ${DEST_DIR}/access
 	${MKDIR} ${DEST_DIR}/cron
 	${MKDIR} ${DEST_DIR}/install
+	${MKDIR} ${DEST_DIR}/install/upgrade
 	${MKDIR} ${DEST_DIR}/stor
 	${MKDIR} ${DEST_DIR}/stor/buffer
 	${MKDIR} ${DEST_DIR}/trans
@@ -180,6 +181,8 @@ copy_files:
 	${CP} ${VAR_DIR}/cron/*.php ${DEST_DIR}/cron
 	${CP} ${VAR_DIR}/install/*.php \
 	      ${DEST_DIR}/install
+	${CP} ${VAR_DIR}/install/upgrade/*.php \
+	      ${DEST_DIR}/install/upgrade
 	${CP} ${VAR_DIR}/xmlrpc/*.php \
 	      ${DEST_DIR}/xmlrpc
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
