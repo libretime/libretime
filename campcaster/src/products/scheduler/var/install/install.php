@@ -19,6 +19,10 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
+$oldIncludePath = get_include_path();
+$pearDir = getenv('BASE_DIR').'/lib/pear';
+set_include_path($pearDir.PATH_SEPARATOR.$oldIncludePath);
+
 require_once('installInit.php');
 require_once('installScheduler.php');
 

@@ -107,12 +107,12 @@ case "$mode" in
 
     'install')
         echo "Installing Campcaster scheduler database tables..."
-        php $vardir/install/install.php -c $config_file
+        BASE_DIR=$usrdir php $vardir/install/install.php -c $config_file
         ;;
 
     'uninstall')
         echo "Uninstalling Campcaster scheduler database tables..."
-        php $vardir/install/uninstall.php -c $config_file
+        BASE_DIR=$usrdir php $vardir/install/uninstall.php -c $config_file
         ;;
 
     'kill')
