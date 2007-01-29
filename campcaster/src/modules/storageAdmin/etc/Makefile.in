@@ -124,15 +124,13 @@ check: all
 install:
 	${MKDIR} ${DEST_DIR}/bin
 	${CP} ${BIN_DIR}/*.sh ${DEST_DIR}/bin
+	${CP} ${BIN_DIR}/campcaster-import ${DEST_DIR}/bin
 	${RM} ${DEST_DIR}/bin/autogen.sh
-	${CAT} ${BIN_DIR}/campcaster-import | ${SED} -e ${SED_PHPPART_DIR} \
-	       > ${DEST_DIR}/bin/campcaster-import
-	${CAT} ${BIN_DIR}/backup.sh | ${SED} -e ${SED_PHPPART_DIR} \
-	       > ${DEST_DIR}/bin/backup.sh
-	${CAT} ${BIN_DIR}/restore.sh | ${SED} -e ${SED_PHPPART_DIR} \
-	       > ${DEST_DIR}/bin/restore.sh
-	${CAT} ${BIN_DIR}/dumpDbSchema.sh | ${SED} -e ${SED_PHPPART_DIR} \
-	       > ${DEST_DIR}/bin/dumpDbSchema.sh
+	${SED} -i -e ${SED_PHPPART_DIR} \
+	       ${DEST_DIR}/bin/backup.sh \
+	       ${DEST_DIR}/bin/restore.sh \
+	       ${DEST_DIR}/bin/dumpDbSchema.sh \
+	       ${DEST_DIR}/bin/campcaster-import
 	${MKDIR} ${PHPPART_DIR}
 	${CP} ${VAR_DIR}/*.php ${PHPPART_DIR}
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${SED_STORAGE_SERVER} \
