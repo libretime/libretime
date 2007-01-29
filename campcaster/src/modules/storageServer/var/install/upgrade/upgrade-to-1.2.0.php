@@ -8,9 +8,6 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  * @link http://www.campware.org
  *
- * Note: This file was broken into two parts: install.php and
- * installMain.php so that the archive server could use the same
- * installation script, but with just a different config file.
  */
 
 // Do not allow remote execution
@@ -22,19 +19,20 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-echo "**********************************\n";
-echo "* StorageServer Upgrade to 1.2.0 *\n";
-echo "**********************************\n";
+echo "*********************************************\n";
+echo "* StorageServer Upgrade from 1.1.X to 1.2.0 *\n";
+echo "*********************************************\n";
 
 require_once(dirname(__FILE__).'/../../conf.php');
 require_once(dirname(__FILE__)."/../installInit.php");
+campcaster_db_connect();
 require_once(dirname(__FILE__)."/../../StoredFile.php");
 
 // Check to see if upgrade has already been applied
 $sql = "SELECT md5 FROM ".$CC_CONFIG['filesTable']." LIMIT 1";
 $result = $CC_DBC->query($sql);
 if (!PEAR::isError($result)) {
-    echo "THIS UPGRADE HAS ALREADY BEEN APPLIED.\n";
+    echo " * THIS UPGRADE HAS ALREADY BEEN APPLIED.\n";
     exit(0);
 }
 
