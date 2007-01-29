@@ -47,4 +47,4 @@ filelistpathname=.
 #-------------------------------------------------------------------------------
 cd $phpdir
 
-php -q campcaster-import.php $@ || exit 1
+php -q campcaster-import.php "$@" || exit 1
