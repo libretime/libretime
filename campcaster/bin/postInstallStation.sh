@@ -435,8 +435,8 @@ if [ "$storage_is_local" = "yes" ]; then
     grep -q 'ls_scheduler_storage_pass' $install_etc/campcaster-scheduler.xml
     if [ $? = 0 ]; then
         SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
-        php -q $install_var_ls/storageServer/var/changeSchedulerPassword.php \
-            ${SCHEDULER_STORAGE_PASS}
+        php -q $install_var_ls/storageServer/var/install/campcaster-user.php \
+            --addupdate scheduler ${SCHEDULER_STORAGE_PASS}
         sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
             $install_etc/campcaster-scheduler.xml
     fi

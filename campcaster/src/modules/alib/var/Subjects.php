@@ -298,6 +298,27 @@ class Subjects {
 
 
     /**
+     * Get one subject from the table.
+     *
+     * @param string $p_fieldValue
+     * @param string $p_fieldName
+     * @return array
+     */
+    public static function GetSubject($p_fieldValue, $p_fieldName='login')
+    {
+        global $CC_CONFIG, $CC_DBC;
+        if (!in_array($p_fieldName, array("login", "id"))) {
+            return null;
+        }
+        $escapedValue = pg_escape_string($p_fieldValue);
+        $sql = "SELECT * FROM ".$CC_CONFIG['subjTable']
+            ." WHERE $p_fieldName='$escapedValue'";
+        $row = $CC_DBC->GetRow($sql);
+        return $row;
+    }
+
+
+    /**
      * Get all subjects
      *
      * @param string $flds

@@ -130,11 +130,6 @@ echo ""
 #-------------------------------------------------------------------------------
 #  The details of installation
 #-------------------------------------------------------------------------------
-ls_dbserver=$dbserver
-ls_dbuser=$dbuser
-ls_dbpassword=$dbpassword
-ls_database=$database
-
 
 postgres_user=postgres
 
@@ -180,31 +175,31 @@ echo "Creating database and database user...";
 
 # FIXME: the below might not work for remote databases
 
-if [ "x$ls_dbserver" == "xlocalhost" ]; then
-    su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
-                                   ENCRYPTED PASSWORD '$ls_dbpassword' \
+if [ "x$dbserver" == "xlocalhost" ]; then
+    su - $postgres_user -c "echo \"CREATE USER $dbuser \
+                                   ENCRYPTED PASSWORD '$dbpassword' \
                                    CREATEDB NOCREATEUSER;\" \
                             | psql template1" \
-        || echo "Couldn't create database user $ls_dbuser.";
+        || echo "Couldn't create database user $dbuser.";
 
-    su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
-                                    OWNER $ls_dbuser ENCODING 'utf-8';\" \
+    su - $postgres_user -c "echo \"CREATE DATABASE \\\"$database\\\" \
+                                    OWNER $dbuser ENCODING 'utf-8';\" \
                             | psql template1" \
-        || echo "Couldn't create database $ls_database.";
+        || echo "Couldn't create database $database.";
 else
     echo "Unable to automatically create database user and table for";
-    echo "remote database $ls_dbserver.";
-    echo "Make sure to create database user $ls_dbuser with password";
-    echo "$ls_dbpassword on database server at $ls_dbserver.";
+    echo "remote database $dbserver.";
+    echo "Make sure to create database user $dbuser with password";
+    echo "$dbpassword on database server at $dbserver.";
     echo "Also create a database called $ld_database, owned by this user.";
     echo "";
     echo "The easiest way to achieve this is by issuing the following SQL";
     echo "commands to PostgreSQL:";
-    echo "CREATE USER $ls_dbuser";
-    echo "    ENCRYPTED PASSWORD '$ls_dbpassword'";
+    echo "CREATE USER $dbuser";
+    echo "    ENCRYPTED PASSWORD '$dbpassword'";
     echo "    CREATEDB NOCREATEUSER;";
-    echo "CREATE DATABASE \"$ls_database\"";
-    echo "    OWNER $ls_dbuser ENCODING 'utf-8';";
+    echo "CREATE DATABASE \"$database\"";
+    echo "    OWNER $dbuser ENCODING 'utf-8';";
 fi
 
 
