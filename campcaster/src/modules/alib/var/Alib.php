@@ -242,7 +242,7 @@ class Alib {
         $q_from = $CC_CONFIG['permTable']." p ";
         // joins for solving users/groups:
         $q_join = "LEFT JOIN ".$CC_CONFIG['subjTable']." s ON s.id=p.subj ";
-        $q_join .= "LEFT JOIN .".$CC_CONFIG['smembTable']." m ON m.gid=p.subj ";
+        $q_join .= "LEFT JOIN ".$CC_CONFIG['smembTable']." m ON m.gid=p.subj ";
         $q_cond = "p.action in('_all', '$action') AND
             (s.id=$sid OR m.uid=$sid) ";
         // coalesce -1 for higher priority of nongroup rows:
