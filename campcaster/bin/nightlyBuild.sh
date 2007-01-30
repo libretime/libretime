@@ -50,9 +50,9 @@ ls -l ${logdir}/nightlySvnUpdate.log >> ${logdir}/nightlySvnUpdate.log
 #-------------------------------------------------------------------------------
 #   Generate the documentation.
 #-------------------------------------------------------------------------------
-mv -f ${logdir}/nightlyMakeDoc.log ${logdir}/nightlyMakeDoc.log~
-make doc &> ${logdir}/nightlyMakeDoc.log
-ls -l ${logdir}/nightlyMakeDoc.log >> ${logdir}/nightlyMakeDoc.log
+mv -f ${logdir}/nightlyMakeDoxygen.log ${logdir}/nightlyMakeDoxygen.log~
+make doxygen &> ${logdir}/nightlyMakeDoxygen.log
+ls -l ${logdir}/nightlyMakeDoxygen.log >> ${logdir}/nightlyMakeDoxygen.log
 
 
 #-------------------------------------------------------------------------------
@@ -69,4 +69,20 @@ ls -l ${logdir}/nightlyMakeRecompile.log >> ${logdir}/nightlyMakeRecompile.log
 mv -f ${logdir}/nightlyMakeCheck.log ${logdir}/nightlyMakeCheck.log~
 make check &> ${logdir}/nightlyMakeCheck.log
 ls -l ${logdir}/nightlyMakeCheck.log >> ${logdir}/nightlyMakeCheck.log
+
+
+#-------------------------------------------------------------------------------
+#   Generate the test results report.
+#-------------------------------------------------------------------------------
+mv -f ${logdir}/nightlyMakeTestResults.log ${logdir}/nightlyMakeTestResults.log~
+make testresults &> ${logdir}/nightlyMakeTestResults.log
+ls -l ${logdir}/nightlyMakeTestResults.log >> ${logdir}/nightlyMakeTestResults.log
+
+
+#-------------------------------------------------------------------------------
+#   Generate the flawfinder report.
+#-------------------------------------------------------------------------------
+mv -f ${logdir}/nightlyMakeFlawfinder.log ${logdir}/nightlyMakeFlawfinder.log~
+make flawfinder &> ${logdir}/nightlyMakeFlawfinder.log
+ls -l ${logdir}/nightlyMakeFlawfinder.log >> ${logdir}/nightlyMakeFlawfinder.log
 

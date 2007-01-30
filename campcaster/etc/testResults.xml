@@ -7,10 +7,8 @@
 <!ENTITY dbResults SYSTEM "../src/modules/db/doc/testResults.xml" >
 <!ENTITY eventSchedulerResults SYSTEM "../src/modules/eventScheduler/doc/testResults.xml" >
 <!ENTITY gstreamerElementsResults SYSTEM "../src/modules/gstreamerElements/doc/testResults.xml" >
-<!ENTITY playlistExecutorResults SYSTEM "../src/modules/playlistExecutor/doc/testResults.xml" >
 <!ENTITY schedulerClientResults SYSTEM "../src/modules/schedulerClient/doc/testResults.xml" >
 <!ENTITY storageClientResults SYSTEM "../src/modules/storageClient/doc/testResults.xml" >
-<!ENTITY schedulerResults SYSTEM "../src/products/scheduler/doc/testResults.xml" >
 
 ]>
 <TestResults>
@@ -19,8 +17,8 @@
 &dbResults;
 &eventSchedulerResults;
 &gstreamerElementsResults;
-&playlistExecutorResults;
+<!-- disabled &playlistExecutorResults; -->
 &schedulerClientResults;
 &storageClientResults;
-&schedulerResults;
+<!-- disabled &schedulerResults; -->
 </TestResults>
