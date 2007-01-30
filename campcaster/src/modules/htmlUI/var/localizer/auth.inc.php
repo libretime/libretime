@@ -4,6 +4,7 @@ function login(&$data)
     include(dirname(__FILE__).'/../../../storageServer/var/conf.php');
     include_once(dirname(__FILE__).'/../../../storageServer/var/GreenBox.php');
     include_once('DB.php');
+    global $CC_DBC, $CC_CONFIG;
 
     $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 
