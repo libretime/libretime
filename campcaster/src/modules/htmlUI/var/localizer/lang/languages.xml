@@ -2,8 +2,8 @@
 <languages>
 	<item>
 		<Id>am_AM</Id>
-		<Name>Armenian (AM)</Name>
-		<NativeName>Armenian (AM)</NativeName>
+		<Name>Armenian</Name>
+		<NativeName>հայերեն</NativeName>
 	</item>
 	<item>
 		<Id>ar_JO</Id>
@@ -12,14 +12,14 @@
 	</item>
 	<item>
 		<Id>cz_CZ</Id>
-		<Name>Czech (CZ)</Name>
-		<NativeName>Čeština (CZ)</NativeName>
+		<Name>Czech</Name>
+		<NativeName>Čeština</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
 		<Id>de_DE</Id>
-		<Name>German (DE)</Name>
-		<NativeName>Deutsch (DE)</NativeName>
+		<Name>German</Name>
+		<NativeName>Deutsch</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
@@ -48,52 +48,52 @@
 	<item>
 		<Id>fr_FR</Id>
 		<Name>French</Name>
-		<NativeName>Français (FR)</NativeName>
+		<NativeName>Français</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
-		<Id>gl</Id>
+		<Id>gl_ES</Id>
 		<Name>Galician</Name>
 		<NativeName>Galego</NativeName>
 	</item>
 	<item>
 		<Id>hu_HU</Id>
-		<Name>Hungarian (HU)</Name>
-		<NativeName>Magyar (HU)</NativeName>
+		<Name>Hungarian</Name>
+		<NativeName>Magyar</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
 		<Id>it_IT</Id>
 		<Name>Italian</Name>
-		<NativeName>Italiano (IT)</NativeName>
+		<NativeName>Italiano</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
 		<Id>nl_NL</Id>
-		<Name>Dutch (NL)</Name>
-		<NativeName>Nederlands (NL)</NativeName>
+		<Name>Dutch</Name>
+		<NativeName>Nederlands</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
 		<Id>pl_PL</Id>
-		<Name>Polish (PL)</Name>
-		<NativeName>Polski (PL)</NativeName>
+		<Name>Polish</Name>
+		<NativeName>Polski</NativeName>
 		<Completed>1</Completed>
 	</item>
 	<item>
-		<Id>pt</Id>
-		<Name>portuguese</Name>
-		<NativeName>português</NativeName>
+		<Id>pt_PT</Id>
+		<Name>Portuguese</Name>
+		<NativeName>Português</NativeName>
 	</item>
 	<item>
 		<Id>ru_RU</Id>
-		<Name>Russian (RU)</Name>
-		<NativeName>По-pусски (RU)</NativeName>
+		<Name>Russian</Name>
+		<NativeName>По-pусски</NativeName>
 	</item>
 	<item>
 		<Id>sr_CS</Id>
-		<Name>Serbian (CS)</Name>
-		<NativeName>Srpski (CS)</NativeName>
+		<Name>Serbian</Name>
+		<NativeName>Srpski</NativeName>
 		<Completed>1</Completed>
 	</item>
 </languages>
