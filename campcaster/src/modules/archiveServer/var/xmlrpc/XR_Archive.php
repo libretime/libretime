@@ -95,11 +95,18 @@ class XR_Archive extends Archive {
         	return $r;
         }
         $res = $this->uploadClose($r['token'], $r['trtype'], $r['pars']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
+        if (PEAR::isError($res)) {
+            $code = 803;
+            // Special case for duplicate file - give back
+            // different error code so we can display nice user message.
+            if ($res->getCode() == GBERR_GUNID) {
+                $code = 888;
+            }
+            return new XML_RPC_Response(0, $code,
                 "xr_uploadClose: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
+        }
         return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
