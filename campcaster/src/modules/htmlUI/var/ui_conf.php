@@ -11,7 +11,6 @@ if (UI_DEBUG) {
 	error_reporting(E_ALL);
 }
 
-define('UI_VERSION_FULLNAME', 'Campcaster 1.1.1');
 define('UI_TESTSTREAM_MU3_TMP', 'img/listen.m3u');
 
 // Local settings
@@ -115,9 +114,9 @@ define('UI_PL_ELEM_FADEOUT', 'fadeOut');
 define('UI_BACKUPTOKEN_KEY', 'backupToken');
 define('UI_RESTORETOKEN_KEY', 'restoreToken');
 
-//require_once('PEAR.php');
 require_once('../../../storageServer/var/conf.php');
 define('UI_VERSION', CAMPCASTER_VERSION);
+define('UI_VERSION_FULLNAME', 'Campcaster '.UI_VERSION);
 
 // extent config
 $CC_CONFIG = array_merge($CC_CONFIG,
