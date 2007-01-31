@@ -80,6 +80,7 @@ function import_err($p_pearErrorObj, $txt='')
  *
  * @param string $p_filepath
  *      You can pass in a directory or file name.
+ *      This must be the full absolute path to the file, not relative.
  * @param string $p_importMode
  * @param boolean $p_testOnly
  *
@@ -100,7 +101,6 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     $fileCount = 0;
     $duplicates = 0;
-    $p_filepath = realpath(rtrim($p_filepath));
 
     if (!file_exists($p_filepath)) {
         echo " * WARNING: File does not exist: $p_filepath\n";
@@ -197,6 +197,7 @@ echo "Campcaster Import Script\n";
 echo "========================\n";
 $g_errors = 0;
 
+//print_r($argv);
 $start = intval(date('U'));
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
@@ -207,7 +208,8 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$parsedCommandLine = Console_Getopt::getopt($argv, "thcl", array("test", "help", "copy", "link"));
+$parsedCommandLine = Console_Getopt::getopt($argv, "thcld", array("test", "help", "copy", "link", "dir="));
+//print_r($parsedCommandLine);
 if (PEAR::isError($parsedCommandLine)) {
     printUsage();
     exit(1);
@@ -222,6 +224,7 @@ $files = $parsedCommandLine[1];
 
 $testonly = FALSE;
 $importMode = null;
+$currentDir = null;
 foreach ($cmdLineOptions as $tmpValue) {
     $optionName = $tmpValue[0];
     $optionValue = $tmpValue[1];
@@ -233,11 +236,14 @@ foreach ($cmdLineOptions as $tmpValue) {
         case "c":
         case "--copy":
             $importMode = "copy";
-            break 2;
+            break;
         case 'l':
         case '--link':
             $importMode = "link";
-            break 2;
+            break;
+        case '--dir':
+            $currentDir = $optionValue;
+            break;
         case "t":
         case "--test":
             $testonly = TRUE;
@@ -254,7 +260,11 @@ $filecount = 0;
 $duplicates = 0;
 if (is_array($files)) {
     foreach ($files as $filepath) {
-        list($tmpCount, $tmpDups) = camp_import_audio_file($filepath, $importMode, $testonly);
+        $fullPath = realpath($filepath);
+        if (!$fullPath && !is_null($currentDir)) {
+            $fullPath = "$currentDir/$filepath";
+        }
+        list($tmpCount, $tmpDups) = camp_import_audio_file($fullPath, $importMode, $testonly);
         $filecount += $tmpCount;
         $duplicates += $tmpDups;
     }
@@ -271,7 +281,9 @@ echo "==========================================================================
 echo " *** Import mode: $importMode\n";
 echo " *** Files imported: $filecount\n";
 echo " *** Duplicate files (not imported): $duplicates\n";
-echo " *** Errors: $g_errors\n";
+if ($g_errors > 0) {
+    echo " *** Errors: $g_errors\n";
+}
 echo " *** Total: ".($filecount+$duplicates)." files in $time seconds = $speed files/second.\n";
 echo "==========================================================================\n";
 

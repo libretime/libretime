@@ -43,8 +43,10 @@ fi
 filelistpathname=.
 
 #-------------------------------------------------------------------------------
-#   Do recursive import
+#   Do import
 #-------------------------------------------------------------------------------
+invokePwd=$PWD
+echo $invokePwd
 cd $phpdir
 
-php -q campcaster-import.php "$@" || exit 1
+php -q campcaster-import.php --dir "$invokePwd" "$@" || exit 1
