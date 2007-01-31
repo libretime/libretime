@@ -20,21 +20,27 @@ class uiSubjects
     }
 
 
-    function setReload()
+    public function setReload()
     {
          $this->Base->redirUrl = $this->reloadUrl;
     }
 
 
-    function setSuRedir()
+    public function setSuRedir()
     {
          $this->Base->redirUrl = $this->suRedirUrl;
     }
 
 
-    function setRedir()
+    public function setRedir()
     {
          $this->Base->redirUrl = $this->redirUrl;
+    }
+
+
+    public function getSubjectName($p_name)
+    {
+        return Subjects::GetSubjName($p_name);
     }
 
 
@@ -44,7 +50,7 @@ class uiSubjects
      * @param unknown $type
      * @return string (html)
      */
-    function getAddSubjForm($type)
+    public function getAddSubjForm($type)
     {
         include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
@@ -65,7 +71,7 @@ class uiSubjects
     * 		passwd - string
     * @return string
     */
-    function addSubj($request)
+    public function addSubj($request)
     {
         include(dirname(__FILE__). '/formmask/subjects.inc.php');
         $this->setRedir();
@@ -107,7 +113,7 @@ class uiSubjects
      * 		a string, the login name of removed user
      * @return boolean
      */
-    function removeSubj($request)
+    public function removeSubj($request)
     {
         $this->setReload();
 
@@ -133,7 +139,7 @@ class uiSubjects
      * @return string
      * 		HTML string
      */
-    function getChgPasswdForm($login, $su = FALSE)
+    public function getChgPasswdForm($login, $su = FALSE)
     {
         include(dirname(__FILE__). '/formmask/subjects.inc.php');
 
@@ -160,7 +166,7 @@ class uiSubjects
      * 		Required array keys: passwd, passwd2, login, oldpasswd
      * @return boolean
      */
-    function chgPasswd($request)
+    public function chgPasswd($request)
     {
         if ($request['passwd'] !== $request['passwd2']) {
             $this->Base->_retMsg("Passwords did not match.");
@@ -204,7 +210,7 @@ class uiSubjects
      * 		subj=>unique id of subject
      * 		loggedAs=>corresponding login name
      */
-    function getSubjectsWCnt()
+    public function getSubjectsWCnt()
     {
         return Subjects::GetSubjectsWCnt();
     }
@@ -218,7 +224,7 @@ class uiSubjects
      * 		local user ID
      * @return array
      */
-    function getGroupMember($id)
+    public function getGroupMember($id)
     {
         return Subjects::ListGroup($id);
     } // fn getGroupMember
@@ -231,7 +237,7 @@ class uiSubjects
      * 		Local user ID
      * @return array
      */
-    function getNonGroupMember($id)
+    public function getNonGroupMember($id)
     {
         foreach (Subjects::ListGroup($id) as $val1) {
             $members[$val1['id']] = TRUE;
@@ -256,7 +262,7 @@ class uiSubjects
      * 		Required array keys: login, id, gname
      * @return boolean
      */
-    function addSubj2Gr(&$request)
+    public function addSubj2Gr(&$request)
     {
         $this->setReload();
 
@@ -294,7 +300,7 @@ class uiSubjects
      * 		Required keys: login, id, gname
      * @return boolean
      */
-    function removeSubjFromGr(&$request)
+    public function removeSubjFromGr(&$request)
     {
         $this->setReload();
 
@@ -331,7 +337,7 @@ class uiSubjects
      * @param string $groupname
      * @return boolean
      */
-    function isMemberOf($groupname)
+    public function isMemberOf($groupname)
     {
         if ($gid = Subjects::GetSubjId($groupname)) {
             $members = $this->getGroupMember($gid);

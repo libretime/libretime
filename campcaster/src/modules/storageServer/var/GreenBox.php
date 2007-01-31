@@ -1844,7 +1844,7 @@ class GreenBox extends BasicStor {
                     "GreenBox::passwd: access denied (oldpass)", GBERR_DENY);
             }
         }
-        $res = parent::passwd($login, $oldpass, $pass);
+        $res = Subjects::Passwd($login, $oldpass, $pass);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -1873,7 +1873,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('editPerms', $parid, $sessid)) !== TRUE) {
             return $res;
         }
-        return parent::addPerm($sid, $action, $oid, $type);
+        return Alib::AddPerm($sid, $action, $oid, $type);
     } // fn addPerm
 
 
