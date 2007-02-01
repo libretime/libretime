@@ -80,11 +80,10 @@ case "$1" in
         rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
 
         storagedir=$installdir/var/Campcaster/storageServer
-        storage_is_local=yes
         if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
-            storage_is_local=no
-        fi
-        if [ "$storage_is_local" = "yes" ]; then
+            umount $storagedir
+            touch $installdir/storageServer.wasMounted
+        else
             rm -rf $storagedir/var/access/*
             rm -rf $storagedir/var/trans/*
         fi
