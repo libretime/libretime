@@ -147,6 +147,17 @@ class TransportList : public Gtk::VBox,
         bool
         update(Gtk::TreeIter    iter)           throw (XmlRpcException);
 
+        /**
+         *  Handle some known exception types.
+         *
+         *  @param  rawMessage  the error message to be processed.
+         *  @return a localized error message if rawMessage contains
+         *          [xxx], where xxx is a recognized error code.
+         */
+        Ptr<const Glib::ustring>::Ref
+        processException(Ptr<const Glib::ustring>::Ref  rawMessage)
+                                                            throw ();
+
 
     protected:
         /**

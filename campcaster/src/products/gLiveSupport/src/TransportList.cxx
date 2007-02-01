@@ -357,7 +357,8 @@ TransportList :: setStatus(Gtk::TreeIter                        iter,
         iter->set_value(modelColumns.statusColumn,
                         faultStatusKey);
         iter->set_value(modelColumns.statusDisplayColumn, 
-                        *formatMessage(faultStatusKey, *errorMsg));
+                        *formatMessage(faultStatusKey,
+                                       *processException(errorMsg)));
         return false;
         
     } else {
@@ -489,5 +490,20 @@ TransportList :: onCancelTransport(void)                            throw ()
                                                 "cannotCancelTransportMsg",
                                                 e.what() ));
     }    
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Handle some known exception types.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+TransportList :: processException(Ptr<const Glib::ustring>::Ref  rawMessage)
+                                                                    throw ()
+{
+    if (rawMessage->find("[888]") != Glib::ustring::npos) {
+        return getResourceUstring("duplicateFileMsg");
+    } else {
+        return rawMessage;
+    }
 }
 

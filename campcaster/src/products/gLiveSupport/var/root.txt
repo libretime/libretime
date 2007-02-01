@@ -394,9 +394,9 @@ root:table
 
     transportList:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "In progress..." }
+        successStatus:string        { "Ready" }
+        faultStatus:string          { "Error: {0}" }
 
         titleColumnLabel:string     { "Title" }
         dateColumnLabel:string      { "Date" }
@@ -406,6 +406,8 @@ root:table
         cancelDownloadMenuItem:string   { "Cancel download" }
 
         cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+        duplicateFileMsg:string         { "the file is in the network "
+                                          "hub already." }
     }
 
     restoreBackupWindow:table
