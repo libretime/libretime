@@ -353,16 +353,18 @@ xmlpp::Node *
 OptionsContainer :: createNode(OptionItemString     optionItem)     throw ()
 {
     xmlpp::Element *    rootNode = optionsDocument.get_root_node();
+    xmlpp::Element *    element = 0;
+    xmlpp::Node *       attribute = 0;
     
     // only supports the serialDeviceName option item, for now
     switch (optionItem) {
         case serialDeviceName :
-            xmlpp::Element *    element = dynamic_cast<xmlpp::Element*>(
+            element = dynamic_cast<xmlpp::Element*>(
                                                 getNode("serialPort"));
             if (!element) {
                 element = rootNode->add_child("serialPort");
             }
-            xmlpp::Node *       attribute = dynamic_cast<xmlpp::Attribute*>(
+            attribute = dynamic_cast<xmlpp::Attribute*>(
                                                 getNode("serialPort/@path"));
             if (!attribute) {
                 attribute = element->set_attribute("path", "");
