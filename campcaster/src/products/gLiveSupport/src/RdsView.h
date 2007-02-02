@@ -119,6 +119,11 @@ class RdsView : public Gtk::VBox,
          */
         Ptr<GLiveSupport>::Ref                      gLiveSupport;
 
+        /**
+         *  The entry field for the serial device.
+         */
+        EntryBin *                                  deviceEntryBin;
+
 
     public:
         /**

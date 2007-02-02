@@ -87,6 +87,10 @@ OptionsContainer :: setOptionItem(OptionItemString                  optionItem,
     bool              isAttribute  = false; // text node or attr node
     xmlpp::Node *     targetNode = selectNode(optionItem, isAttribute);
 
+    if (!targetNode) {
+        targetNode = createNode(optionItem);
+    }
+    
     if (isAttribute) {
         xmlpp::Attribute *  attr = dynamic_cast<xmlpp::Attribute*>(targetNode);
         if (attr != 0) {
@@ -287,6 +291,11 @@ OptionsContainer :: selectNode(OptionItemString     optionItem,
                                   "schedulerDaemonXmlRpcClient/@xmlRpcUri");
             isAttribute = true;
             break;
+        
+        case serialDeviceName :
+            targetNode  = getNode("serialPort/@path");
+            isAttribute = true;
+            break;
     }
     
     return targetNode;
@@ -333,6 +342,35 @@ OptionsContainer :: getNode(const Glib::ustring &   xPath)
         return *it;
     } else {
         return 0;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create the node corresponding to an OptionItemString value.
+ *----------------------------------------------------------------------------*/
+xmlpp::Node *
+OptionsContainer :: createNode(OptionItemString     optionItem)     throw ()
+{
+    xmlpp::Element *    rootNode = optionsDocument.get_root_node();
+    
+    // only supports the serialDeviceName option item, for now
+    switch (optionItem) {
+        case serialDeviceName :
+            xmlpp::Element *    element = dynamic_cast<xmlpp::Element*>(
+                                                getNode("serialPort"));
+            if (!element) {
+                element = rootNode->add_child("serialPort");
+            }
+            xmlpp::Node *       attribute = dynamic_cast<xmlpp::Attribute*>(
+                                                getNode("serialPort/@path"));
+            if (!attribute) {
+                attribute = element->set_attribute("path", "");
+            }
+            return attribute;
+        
+        default:
+            return 0;
     }
 }
 

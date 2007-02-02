@@ -357,6 +357,7 @@ root:table
 
     rdsView:table
     {
+        deviceLabel:string          { "Serial port: " }
         PSrdsLabel:string           { "Station name:" }
         PIrdsLabel:string           { "Station code:" }
         RTrdsLabel:string           { "Clip info:" }

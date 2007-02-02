@@ -183,10 +183,14 @@ const std::string   authenticationNotReachableKey =
 const std::string   localeNotAvailableKey = "localeNotAvailableMsg";
 
 /*------------------------------------------------------------------------------
- *  The default serial device
+ *  The name of the config element for the serial device
  *----------------------------------------------------------------------------*/
 const std::string   serialPortConfigElementName = "serialPort";
 
+/*------------------------------------------------------------------------------
+ *  The default serial device
+ *----------------------------------------------------------------------------*/
+const std::string   serialPortDefaultDevice = "/dev/ttyS0";
 }
 
 /* ===============================================  local function prototypes */
@@ -405,12 +409,11 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     // read the serial port's file name
     nodes = element.get_children(serialPortConfigElementName);
     if (nodes.size() < 1) {
-        throw std::invalid_argument("no serial port element");
+        Ptr<const Glib::ustring>::Ref   serialDevice(new const Glib::ustring(
+                                                    serialPortDefaultDevice));
+        optionsContainer->setOptionItem(OptionsContainer::serialDeviceName,
+                                        serialDevice);
     }
-    const xmlpp::Element*  serialPortElement 
-                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
-    serialDevice.reset(new std::string(serialPortElement->get_attribute("path")
-                                                        ->get_value() ));
 }
 
 
@@ -1805,6 +1808,9 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: writeToSerial(Ptr<const Glib::ustring>::Ref     message)
                                                                     throw ()
 {
+    Ptr<const Glib::ustring>::Ref
+        serialDevice = optionsContainer->getOptionItem(
+                                            OptionsContainer::serialDeviceName);
     try {
         serialStream->Open(*serialDevice);
         (*serialStream) << *message;

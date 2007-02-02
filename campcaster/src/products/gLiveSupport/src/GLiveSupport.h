@@ -267,11 +267,6 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<Glib::ustring>::Ref         schedulerDaemonStopCommand;
 
         /**
-         *  The serial device.
-         */
-        Ptr<std::string>::Ref                   serialDevice;
-
-        /**
          *  The serial stream object.
          */
         Ptr<LibSerial::SerialStream>::Ref       serialStream;

@@ -87,7 +87,8 @@ class OptionsContainer
                        storagePath,
                        schedulerServer,
                        schedulerPort,
-                       schedulerPath }  OptionItemString;
+                       schedulerPath,
+                       serialDeviceName }   OptionItemString;
         
 
     private:
@@ -166,6 +167,23 @@ class OptionsContainer
         xmlpp::Node *
         getNode(const Glib::ustring &   xPath)
                                                  throw (std::invalid_argument);
+        
+        /**
+         *  Create a node corresponding to an option item.
+         *
+         *  So far, this is only implemented for serialDeviceName;
+         *  for all other option items, it returns a 0 pointer.
+         *  The XML element or attribute is created with a value of "".
+         *
+         *  TODO: implement this properly; ideally, the paths would be read
+         *  from the DTD of the default config file, and added to the current
+         *  config file as needed.
+         *
+         *  @param  optionItem  the option item to be created.
+         *  @return a pointer to the node created, or 0.
+         */
+        xmlpp::Node *
+        createNode(OptionItemString     optionItem)                  throw ();
         
         
     public:
