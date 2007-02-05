@@ -151,12 +151,12 @@ install-arch:
 binary-common:
 	dh_testdir
 	dh_testroot
-#	dh_installchangelogs 
+	dh_installchangelogs
 #	dh_installdocs
 #	dh_installexamples
 	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate	
+#	dh_installdebconf
+#	dh_installlogrotate
 #	dh_installemacsen
 #	dh_installpam
 #	dh_installmime
