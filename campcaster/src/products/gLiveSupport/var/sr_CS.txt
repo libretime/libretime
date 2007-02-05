@@ -115,12 +115,14 @@ sr_CS:table
 
         fileChooserDialogTitle:string   { "Izaberi fajl" }
         fileUploadedMsg:string          { "Aploudovan fajl ''{0}''." }
-        couldNotOpenFileMsg:string      { "The file could not be opened." }
-        couldNotReadLengthMsg:string    { "Could not determine audio clip "
-                                          "length." }
-        unsupportedFileTypeMsg:string   { "Unsupported file type." }
-        missingTitleMsg:string          { "Please enter a title." }
-        badMetadataMsg:string           { "Invalid data for {0}." }
+        couldNotOpenFileMsg:string      { "#The file could not be opened.#" }
+        couldNotReadLengthMsg:string    { "#Could not determine audio clip "
+                                          "length.#" }
+        unsupportedFileTypeMsg:string   { "#Unsupported file type.#" }
+        missingTitleMsg:string          { "#Please enter a title.#" }
+        badMetadataMsg:string           { "#Invalid data for {0}.#" }
+        duplicateFileMsg:string         { "#Error: the file is in the storage "
+                                          "already.#" }
     }
 
     simplePlaylistManagementWindow:table
@@ -271,6 +273,7 @@ sr_CS:table
         serversSectionLabel:string      { "Servers" }
         schedulerSectionLabel:string    { "Scheduler" }
         backupSectionLabel:string       { "Backup" }
+        rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
@@ -331,6 +334,14 @@ sr_CS:table
         backupErrorMsg:string       { "Backup error: " }
     }
 
+    rdsView:table
+    {
+        deviceLabel:string          { "#Serial port:#" }
+        PSrdsLabel:string           { "#Station name:#" }
+        PIrdsLabel:string           { "#Station code:#" }
+        RTrdsLabel:string           { "#Clip info:#" }
+    }
+
     dateTimeChooserWindow:table
     {
         windowTitle:string          { "Select the date and time" }
@@ -363,18 +374,20 @@ sr_CS:table
 
     transportList:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "#In progress...#" }
+        successStatus:string        { "#Ready#" }
+        faultStatus:string          { "#Error: {0}#" }
 
-        titleColumnLabel:string     { "Title" }
-        dateColumnLabel:string      { "Date" }
-        statusColumnLabel:string    { "Status" }
+        titleColumnLabel:string     { "#Title#" }
+        dateColumnLabel:string      { "#Date#" }
+        statusColumnLabel:string    { "#Status#" }
 
-        cancelUploadMenuItem:string     { "Cancel upload" }
-        cancelDownloadMenuItem:string   { "Cancel download" }
+        cancelUploadMenuItem:string     { "#Cancel upload#" }
+        cancelDownloadMenuItem:string   { "#Cancel download#" }
 
-        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+        cannotCancelTransportMsg:string { "#Canceling failed: {0}.#" }
+        duplicateFileMsg:string         { "#the file is in the network "
+                                          "hub already.#" }
     }
 
     restoreBackupWindow:table

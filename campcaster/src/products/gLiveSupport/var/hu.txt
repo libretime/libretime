@@ -115,11 +115,13 @@ hu:table
         fileChooserDialogTitle:string   { "File Kiválasztása" }
         fileUploadedMsg:string          { "A ''{0}'' file feltöltve." }
         couldNotOpenFileMsg:string      { "A fájl nem olvasható." }
-        couldNotReadLengthMsg:string    { "Could not determine audio clip "
-                                          "length." }
-        unsupportedFileTypeMsg:string   { "Unsupported file type." }
+        couldNotReadLengthMsg:string    { "#Could not determine audio clip "
+                                          "length.#" }
+        unsupportedFileTypeMsg:string   { "#Unsupported file type.#" }
         missingTitleMsg:string          { "Kérem, adjon meg egy címet." }
-        badMetadataMsg:string           { "Invalid data for {0}." }
+        badMetadataMsg:string           { "#Invalid data for {0}.#" }
+        duplicateFileMsg:string         { "#Error: the file is in the storage "
+                                          "already.#" }
     }
 
     simplePlaylistManagementWindow:table
@@ -274,6 +276,7 @@ hu:table
         serversSectionLabel:string      { "Servers" }
         schedulerSectionLabel:string    { "Scheduler" }
         backupSectionLabel:string       { "Backup" }
+        rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
@@ -334,6 +337,14 @@ hu:table
         backupErrorMsg:string       { "Backup error: " }
     }
 
+    rdsView:table
+    {
+        deviceLabel:string          { "#Serial port:#" }
+        PSrdsLabel:string           { "#Station name:#" }
+        PIrdsLabel:string           { "#Station code:#" }
+        RTrdsLabel:string           { "#Clip info:#" }
+    }
+
     dateTimeChooserWindow:table
     {
         windowTitle:string          { "Select the date and time" }
@@ -366,18 +377,20 @@ hu:table
 
     transportList:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "#In progress...#" }
+        successStatus:string        { "#Ready#" }
+        faultStatus:string          { "#Error: {0}#" }
 
-        titleColumnLabel:string     { "Title" }
-        dateColumnLabel:string      { "Date" }
-        statusColumnLabel:string    { "Status" }
+        titleColumnLabel:string     { "#Title#" }
+        dateColumnLabel:string      { "#Date#" }
+        statusColumnLabel:string    { "#Status#" }
 
-        cancelUploadMenuItem:string     { "Cancel upload" }
-        cancelDownloadMenuItem:string   { "Cancel download" }
+        cancelUploadMenuItem:string     { "#Cancel upload#" }
+        cancelDownloadMenuItem:string   { "#Cancel download#" }
 
-        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+        cannotCancelTransportMsg:string { "#Canceling failed: {0}.#" }
+        duplicateFileMsg:string         { "#the file is in the network "
+                                          "hub already.#" }
     }
 
     restoreBackupWindow:table

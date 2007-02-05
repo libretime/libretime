@@ -20,7 +20,6 @@ es:table
     elapsedTimeLabel:string         { "elapsed" }
     remainingTimeLabel:string       { "remaining" }
 
-
     localeNotAvailableMsg:string    { "Ubicación {0} no disponible" }
     schedulerNotReachableMsg:string { "El servidor del programador no está disponible" }
     storageNotReachableMsg:string   { "El servidor de almacenamiento no está disponible" }
@@ -117,12 +116,14 @@ es:table
 
         fileChooserDialogTitle:string   { "Seleccione un archivo" }
         fileUploadedMsg:string          { "File ''{0}'' cargado." }
-        couldNotOpenFileMsg:string      { "The file could not be opened." }
-        couldNotReadLengthMsg:string    { "Could not determine audio clip "
-                                          "length." }
-        unsupportedFileTypeMsg:string   { "Unsupported file type." }
-        missingTitleMsg:string          { "Please enter a title." }
-        badMetadataMsg:string           { "Invalid data for {0}." }
+        couldNotOpenFileMsg:string      { "#The file could not be opened.#" }
+        couldNotReadLengthMsg:string    { "#Could not determine audio clip "
+                                          "length.#" }
+        unsupportedFileTypeMsg:string   { "#Unsupported file type.#" }
+        missingTitleMsg:string          { "#Please enter a title.#" }
+        badMetadataMsg:string           { "#Invalid data for {0}.#" }
+        duplicateFileMsg:string         { "#Error: the file is in the storage "
+                                          "already.#" }
     }
 
     simplePlaylistManagementWindow:table
@@ -278,6 +279,7 @@ es:table
         serversSectionLabel:string      { "Servers" }
         schedulerSectionLabel:string    { "Scheduler" }
         backupSectionLabel:string       { "Backup" }
+        rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "About" }
 
         cancelButtonLabel:string    { "Cancel" }
@@ -338,6 +340,14 @@ es:table
         backupErrorMsg:string       { "Backup error: " }
     }
 
+    rdsView:table
+    {
+        deviceLabel:string          { "#Serial port:#" }
+        PSrdsLabel:string           { "#Station name:#" }
+        PIrdsLabel:string           { "#Station code:#" }
+        RTrdsLabel:string           { "#Clip info:#" }
+    }
+
     dateTimeChooserWindow:table
     {
         windowTitle:string          { "Select the date and time" }
@@ -370,18 +380,20 @@ es:table
 
     transportList:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "#In progress...#" }
+        successStatus:string        { "#Ready#" }
+        faultStatus:string          { "#Error: {0}#" }
 
-        titleColumnLabel:string     { "Title" }
-        dateColumnLabel:string      { "Date" }
-        statusColumnLabel:string    { "Status" }
+        titleColumnLabel:string     { "#Title#" }
+        dateColumnLabel:string      { "#Date#" }
+        statusColumnLabel:string    { "#Status#" }
 
-        cancelUploadMenuItem:string     { "Cancel upload" }
-        cancelDownloadMenuItem:string   { "Cancel download" }
+        cancelUploadMenuItem:string     { "#Cancel upload#" }
+        cancelDownloadMenuItem:string   { "#Cancel download#" }
 
-        cannotCancelTransportMsg:string { "Canceling failed: {0}." }
+        cannotCancelTransportMsg:string { "#Canceling failed: {0}.#" }
+        duplicateFileMsg:string         { "#the file is in the network "
+                                          "hub already.#" }
     }
 
     restoreBackupWindow:table
