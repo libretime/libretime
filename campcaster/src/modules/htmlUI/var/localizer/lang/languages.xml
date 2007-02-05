@@ -81,6 +81,11 @@
 		<Completed>1</Completed>
 	</item>
 	<item>
+		<Id>pt_BR</Id>
+		<Name>Portuguese Brazilian</Name>
+		<NativeName>Português do Brasil</NativeName>
+	</item>
+	<item>
 		<Id>pt_PT</Id>
 		<Name>Portuguese</Name>
 		<NativeName>Português</NativeName>
