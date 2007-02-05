@@ -357,17 +357,14 @@ chmod g+sw $modules_dir/archiveServer/var/access
 chmod g+sw $modules_dir/archiveServer/var/trans
 chmod g+sw $modules_dir/archiveServer/var/stor/buffer
 
-# Commenting these out because it should already be
-# done by the storageserver install script. -Paul
-#
-#chgrp $apache_group $modules_dir/storageServer/var/stor
-#chgrp $apache_group $modules_dir/storageServer/var/access
-#chgrp $apache_group $modules_dir/storageServer/var/trans
-#chgrp $apache_group $modules_dir/storageServer/var/stor/buffer
-#chmod g+sw $modules_dir/storageServer/var/stor
-#chmod g+sw $modules_dir/storageServer/var/access
-#chmod g+sw $modules_dir/storageServer/var/trans
-#chmod g+sw $modules_dir/storageServer/var/stor/buffer
+chgrp $apache_group $modules_dir/storageServer/var/stor
+chgrp $apache_group $modules_dir/storageServer/var/access
+chgrp $apache_group $modules_dir/storageServer/var/trans
+chgrp $apache_group $modules_dir/storageServer/var/stor/buffer
+chmod g+sw $modules_dir/storageServer/var/stor
+chmod g+sw $modules_dir/storageServer/var/access
+chmod g+sw $modules_dir/storageServer/var/trans
+chmod g+sw $modules_dir/storageServer/var/stor/buffer
 
 chgrp $apache_group $modules_dir/htmlUI/var/templates_c
 chgrp $apache_group $modules_dir/htmlUI/var/html/img
