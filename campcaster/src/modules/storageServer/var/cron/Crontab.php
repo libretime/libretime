@@ -8,7 +8,8 @@ define('CRON_EMPTY',   4);
 /**
  * A class that interfaces with the crontab. (cjpa@audiophile.com)
  *
- * This class lets you manipulate the crontab. It lets you add delete update entries easily.
+ * This class lets you manipulate a user's crontab.
+ * It lets you add delete update entries easily.
  *
  * @author $Author: $
  * @version $Revision: $
@@ -70,9 +71,10 @@ class Crontab
      */
     function readCrontab()
     {
+        // Hmmm...this line looks like it erases the crontab file. -Paul
         @exec("echo | crontab -u {$this->user} -", $crons, $return);
         @exec("crontab -u {$this->user} -l", $crons, $return);
-        if($return != 0){
+        if ($return != 0) {
             return PEAR::raiseError("*** Can't read crontab ***\n".
                 "    Set crontab manually!\n");
         }
@@ -82,32 +84,28 @@ class Crontab
             $line = trim($line); // discarding all prepending spaces and tabs
 
             // empty lines..
-            if (!$line)
-            {
+            if (!$line) {
                 $this->crontabs[] = "empty line";
                 $this->linetypes[] = CRON_EMPTY;
                 continue;
             }
 
             // checking if this is a comment
-            if ($line[0] == "#")
-            {
+            if ($line[0] == "#") {
                 $this->crontabs[] = trim($line);
                 $this->linetypes[] = CRON_COMMENT;
                 continue;
             }
 
             // Checking if this is an assignment
-            if (ereg("(.*)=(.*)", $line, $assign))
-            {
+            if (ereg("(.*)=(.*)", $line, $assign)) {
                 $this->crontabs[] = array ("name" => $assign[1], "value" => $assign[2]);
                 $this->linetypes[] = CRON_ASSIGN;
                 continue;
             }
 
             // Checking if this is a special @-entry. check man 5 crontab for more info
-            if ($line[0] == '@')
-            {
+            if ($line[0] == '@') {
                 $this->crontabs[] = split("[ \t]", $line, 2);
                 $this->linetypes[] = CRON_SPECIAL;
                 continue;
@@ -129,36 +127,34 @@ class Crontab
         $filename = ($DEBUG ? tempnam("$PATH/crons", "cron") : tempnam("/tmp", "cron"));
         $file = fopen($filename, "w");
 
-        for ($i = 0; $i < count($this->linetypes); $i ++)
-        {
-            switch ($this->linetypes[$i])
-            {
-                case CRON_COMMENT :
+        for ($i = 0; $i < count($this->linetypes); $i ++) {
+            switch ($this->linetypes[$i]) {
+                case CRON_COMMENT:
                     $line = $this->crontabs[$i];
                     break;
-                case CRON_ASSIGN :
+                case CRON_ASSIGN:
                     $line = $this->crontabs[$i][name]." = ".$this->crontabs[$i][value];
                     break;
-                case CRON_CMD :
+                case CRON_CMD:
                     $line = implode(" ", $this->crontabs[$i]);
                     break;
-                case CRON_SPECIAL :
+                case CRON_SPECIAL:
                     $line = implode(" ", $this->crontabs[$i]);
                     break;
-                case CRON_EMPTY :
+                case CRON_EMPTY:
                     $line = "\n"; // an empty line in the crontab-file
                     break;
-                default :
-                    unset ($line);
+                default:
+                    unset($line);
                     echo "Something very weird is going on. This line ($i) has an unknown type.\n";
                     break;
             }
 
             // echo "line $i : $line\n";
 
-            if ($line){
+            if ($line) {
                 $r = @fwrite($file, $line."\n");
-                if($r === FALSE){
+                if($r === FALSE) {
                     return PEAR::raiseError("*** Can't write crontab ***\n".
                         "    Set crontab manually!\n");
                 }
@@ -166,27 +162,34 @@ class Crontab
         }
         fclose($file);
 
-        if ($DEBUG)
+        if ($DEBUG) {
             echo "DEBUGMODE: not updating crontab. writing to $filename instead.\n";
-        else
-        {
+        } else {
             exec("crontab -u {$this->user} $filename", $returnar, $return);
-            if ($return != 0)
+            if ($return != 0) {
                 echo "Error running crontab ($return). $filename not deleted\n";
-            else
+            } else {
                 unlink($filename);
+            }
         }
     }
+
 
     /**
      * Add a item of type CRON_CMD to the end of $this->crontabs
      *
-     * @param string    $m     minute
-     * @param string    $h     hour
-     * @param string    $dom   day of month
-     * @param string    $mo    month
-     * @param string    $dow   day of week
-     * @param string    $cmd   command
+     * @param string $m
+     *      minute
+     * @param string $h
+     *      hour
+     * @param string $dom
+     *      day of month
+     * @param string $mo
+     *      month
+     * @param string $dow
+     *      day of week
+     * @param string $cmd
+     *      command
      *
      */
     function addCron($m, $h, $dom, $mo, $dow, $cmd)
@@ -195,16 +198,18 @@ class Crontab
         $this->linetypes[] = CRON_CMD;
     }
 
+
     /**
      * Add a comment to the cron to the end of $this->crontabs
      *
-     * @param string $comment comment
+     * @param string $comment
      */
     function addComment($comment)
     {
         $this->crontabs[] = "# $comment\n";
         $this->linetypes[] = CRON_COMMENT;
     }
+
 
     /**
      * Add a special command (check man 5 crontab for more information)
@@ -228,17 +233,19 @@ class Crontab
         $this->linetypes[] = CRON_SPECIAL;
     }
 
+
     /**
      * Add an assignment (name = value)
      *
-     * @param string $name  name of assingation
-     * @param string $value value
+     * @param string $name
+     * @param string $value
      */
     function addAssign($name, $value)
     {
         $this->crontabs[] = array ("name" => $name, "value" => $value);
         $this->linetypes[] = CRON_ASSIGN;
     }
+
 
     /**
      * Delete a line from the arrays.
@@ -251,10 +258,11 @@ class Crontab
         unset ($this->linetypes[$index]);
     }
 
+
     /**
      * Get all the lines of a certain type in an array
      *
-     * @param string $type linetype
+     * @param string $type
      */
     function getByType($type)
     {

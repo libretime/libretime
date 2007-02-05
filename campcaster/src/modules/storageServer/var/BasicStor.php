@@ -129,7 +129,7 @@ class BasicStor {
             case "playlist":
             case "webstream":
                 $storedFile = StoredFile::Recall($id);
-                if (PEAR::isError($storedFile)) {
+                if (is_null($storedFile) || PEAR::isError($storedFile)) {
                     // catch nonerror exception:
                     //if($storedFile->getCode() != GBERR_FOBJNEX)
                     return $storedFile;
@@ -233,7 +233,7 @@ class BasicStor {
     public function bsReplaceFile($id, $localFilePath, $metadataFilePath, $mdataLoc='file')
     {
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (!empty($metadataFilePath) &&
@@ -280,7 +280,7 @@ class BasicStor {
             case "playlist":
             case "webstream":
                 $storedFile = StoredFile::Recall($id);
-                if (PEAR::isError($storedFile)) {
+                if (is_null($storedFile) || PEAR::isError($storedFile)) {
                     return $storedFile;
                 }
                 if (is_null($did)) {
@@ -514,7 +514,7 @@ class BasicStor {
     public function bsOpenDownload($id, $part='media', $parent='0')
     {
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $gunid = $storedFile->gunid;
@@ -666,7 +666,7 @@ class BasicStor {
         } else {
             // Remember the MD5 sum
             $storedFile = StoredFile::RecallByToken($token);
-            if (!PEAR::isError($storedFile)) {
+            if (!is_null($storedFile) && !PEAR::isError($storedFile)) {
                 $storedFile->setMd5($md5sum);
             } else {
 #                $error = $storedFile;
@@ -800,7 +800,7 @@ class BasicStor {
     public function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
     {
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         return $storedFile->setMetadata($mdata, $mdataLoc);
@@ -817,7 +817,7 @@ class BasicStor {
     public function bsGetMetadata($id)
     {
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         return $storedFile->getMetadata();
@@ -902,7 +902,7 @@ class BasicStor {
             return null;
         }
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile) || is_null($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (is_null($category)) {
@@ -948,7 +948,7 @@ class BasicStor {
             $storedFile =& $id;
         } else {
             $storedFile = StoredFile::Recall($id);
-            if (PEAR::isError($storedFile)) {
+            if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
         }
@@ -1011,7 +1011,7 @@ class BasicStor {
             $values = array($values);
         }
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         foreach ($values as $category => $oneValue) {
@@ -1023,7 +1023,7 @@ class BasicStor {
         }
         if ($regen) {
             $storedFile = StoredFile::Recall($id);
-            if (PEAR::isError($storedFile)) {
+            if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
             $r = $storedFile->md->regenerateXmlFile();
@@ -1149,7 +1149,7 @@ class BasicStor {
         $gunids = array();
         foreach ($plids as $plid) {
             $pl = StoredFile::RecallByGunid($plid);
-            if (PEAR::isError($pl)) {
+            if (is_null($pl) || PEAR::isError($pl)) {
                 return $pl;
             }
             if ($withContent) {
@@ -1177,7 +1177,7 @@ class BasicStor {
         }
         foreach ($gunids as $i => $it) {
             $storedFile = StoredFile::RecallByGunid($it['gunid']);
-            if (PEAR::isError($storedFile)) {
+            if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
             $MDfname = $storedFile->md->getFileName();
@@ -1502,7 +1502,7 @@ class BasicStor {
     public function bsAnalyzeFile($id)
     {
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $ia = $storedFile->analyzeFile();
@@ -1586,6 +1586,9 @@ class BasicStor {
         } else {
             $storedFile = StoredFile::Recall($id);
         }
+        if (is_null($storedFile)) {
+            return $storedFile;
+        }
         if (PEAR::isError($storedFile)) {
             // catch some exceptions
             switch ($storedFile->getCode()) {
@@ -1649,7 +1652,7 @@ class BasicStor {
     public function addSubj($login, $pass=NULL, $realname='')
     {
         global $CC_CONFIG;
-        $uid = Subjects::addSubj($login, $pass, $realname);
+        $uid = Subjects::AddSubj($login, $pass, $realname);
         if (PEAR::isError($uid)) {
             return $uid;
         }
@@ -1671,22 +1674,22 @@ class BasicStor {
                 if (PEAR::isError($res)) {
                     return $res;
                 }
-                $pfid = BasicStor::bsCreateFolder($fid, 'public');
-                if (PEAR::isError($pfid)) {
-                    return $pfid;
-                }
-                $res = Alib::AddPerm($uid, '_all', $pfid, 'A');
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-                $allGrId =  Subjects::GetSubjId($CC_CONFIG['AllGr']);
-                if (PEAR::isError($allGrId)) {
-                    return $allGrId;
-                }
-                $res = Alib::AddPerm($allGrId, 'read', $pfid, 'A');
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
+                //$pfid = BasicStor::bsCreateFolder($fid, 'public');
+                //if (PEAR::isError($pfid)) {
+                //    return $pfid;
+                //}
+                //$res = Alib::AddPerm($uid, '_all', $pfid, 'A');
+                //if (PEAR::isError($res)) {
+                //    return $res;
+                //}
+                //$allGrId = Subjects::GetSubjId($CC_CONFIG['AllGr']);
+                //if (PEAR::isError($allGrId)) {
+                //    return $allGrId;
+                //}
+                //$res = Alib::AddPerm($allGrId, 'read', $pfid, 'A');
+                //if (PEAR::isError($res)) {
+                //    return $res;
+                //}
             }
         }
         return $uid;
@@ -1959,7 +1962,7 @@ class BasicStor {
             }
         }
         $storedFile = StoredFile::RecallByGunid($p_playlistId);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $state = $storedFile->getState();
@@ -1986,7 +1989,7 @@ class BasicStor {
     public function isEdited($p_playlistId)
     {
         $storedFile = StoredFile::RecallByGunid($p_playlistId);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (!$storedFile->isEdited($p_playlistId)) {
@@ -2016,7 +2019,7 @@ class BasicStor {
             case "playlist":
             case "webstream":
                 $storedFile = StoredFile::Recall($id);
-                if (PEAR::isError($storedFile)) {
+                if (is_null($storedFile) || PEAR::isError($storedFile)) {
                     return $storedFile;
                 }
                 $ac2 = StoredFile::CopyOf($storedFile, $nid);
@@ -2043,7 +2046,7 @@ class BasicStor {
             case "playlist":
             case "webstream":
                 $storedFile = StoredFile::Recall($id);
-                if (PEAR::isError($storedFile)) {
+                if (is_null($storedFile) || PEAR::isError($storedFile)) {
                     return $storedFile;
                 }
                 if ($storedFile->isEdited()) {
@@ -2066,8 +2069,7 @@ class BasicStor {
 
 
     /**
-     * Optionaly remove virtual file with the same name and add new one.<br>
-     * Redefined from parent class.
+     * Add a virtual file.
      *
      * @return int
      * 		Database ID of the object.
@@ -2078,7 +2080,6 @@ class BasicStor {
         if (PEAR::isError($exid)) {
             return $exid;
         }
-        //if(!is_null($exid)){ BasicStor::RemoveObj($exid); }
         $name2 = $name;
         for ( ;
             $xid = M2tree::GetObjId($name2, $parid),
@@ -2333,92 +2334,116 @@ class BasicStor {
     {
         global $CC_CONFIG;
         $this->rootId = M2tree::GetRootNode();
-        $this->storId = BasicStor::AddObj('StorageRoot', 'Folder', $this->rootId);
-        $this->wd = $this->storId;
 
-        if (!Subjects::GetSubjId('root')) {
-            if ($p_verbose) {
-                echo "   * Creating user 'root'...";
-            }
-            // Create user 'root'.
-            $rootUid = Subjects::AddSubj('root', $CC_CONFIG['tmpRootPass']);
-            $res = Alib::AddPerm($rootUid, '_all', $this->rootId, 'A');
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-            $res = Alib::AddPerm($rootUid, 'subjects', $this->rootId, 'A');
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-            $allid = Subjects::AddSubj($CC_CONFIG['AllGr']);
-            if (PEAR::isError($allid)) {
-                return $allid;
-            }
-            Subjects::AddSubjectToGroup('root', $CC_CONFIG['AllGr']);
-            Alib::AddPerm($allid, 'read', $this->rootId, 'A');
-            $admid = Subjects::AddSubj($CC_CONFIG['AdminsGr']);
-            if (PEAR::isError($admid)) {
-                return $admid;
-            }
-            $r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-            $res = Alib::AddPerm($admid, '_all', $this->rootId, 'A');
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-            if ($p_verbose) {
-                echo "done.\n";
-            }
-        } elseif ($p_verbose) {
-            echo "   * Skipping: user 'root' already exists.\n";
-        }
-        if ($p_verbose) {
-            echo "   * Creating storage root directory...";
-        }
-        $fid = BasicStor::bsCreateFolder($this->storId, 'root');
-        if (PEAR::isError($fid)) {
-            return $fid;
-        }
-        if ($p_verbose) {
+        // Check if the StorageRoot already exists, if not, create it.
+        $storageRootId = M2tree::GetObjId('StorageRoot', $this->rootId);
+        if (is_null($storageRootId)) {
+            echo "   * Creating 'StorageRoot' node...";
+            $this->storId = BasicStor::AddObj('StorageRoot', 'Folder', $this->rootId);
+            $this->wd = $this->storId;
             echo "done.\n";
+        } else {
+            echo "   * Skipping: StorageRoot already exists.\n";
         }
-        if ($CC_CONFIG['useTrash']) {
-            if ($p_verbose) {
-                echo "   * Creating trashcan...";
-            }
-            $tfid = BasicStor::bsCreateFolder($this->storId, $CC_CONFIG["TrashName"]);
-            if (PEAR::isError($tfid)) {
-                return $tfid;
-            }
-            if ($p_verbose) {
-                echo "done.\n";
-            }
-        }
-        if (!$CC_CONFIG['isArchive']) {
-            if (!Subjects::GetSubjId('scheduler')) {
-                if ($p_verbose) {
-                    echo "   * Creating user 'scheduler'...";
+
+        // Create the Admin group
+        if (!empty($CC_CONFIG['AdminsGr'])) {
+            if (!Subjects::GetSubjId($CC_CONFIG['AdminsGr'])) {
+                echo "   * Creating group '".$CC_CONFIG['AdminsGr']."'...";
+                // Add the admin group
+                $admid = Subjects::AddSubj($CC_CONFIG['AdminsGr']);
+                if (PEAR::isError($admid)) {
+                    return $admid;
                 }
+
+                // Add the "all" permission to the "admin" group
+                $res = Alib::AddPerm($admid, '_all', $this->rootId, 'A');
+                if (PEAR::isError($res)) {
+                    return $res;
+                }
+                echo "done.\n";
+            } else {
+                echo "   * Skipping: group already exists: '".$CC_CONFIG['AdminsGr']."'\n";
+            }
+        }
+
+        // Add the "all" group
+        if (!empty($CC_CONFIG['AllGr'])) {
+            if (!Subjects::GetSubjId($CC_CONFIG['AllGr'])) {
+                echo "   * Creating group '".$CC_CONFIG['AllGr']."'...";
+                $allid = Subjects::AddSubj($CC_CONFIG['AllGr']);
+                if (PEAR::isError($allid)) {
+                    return $allid;
+                }
+
+                // Add the "read" permission to the "all" group.
+                Alib::AddPerm($allid, 'read', $this->rootId, 'A');
+                echo "done.\n";
+            } else {
+                echo "   * Skipping: group already exists: '".$CC_CONFIG['AllGr']."'\n";
+            }
+        }
+
+        // Add the "Station Preferences" group
+        if (!empty($CC_CONFIG['StationPrefsGr'])) {
+            if (!Subjects::GetSubjId('scheduler')) {
+                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
                 $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
                 if (PEAR::isError($stPrefGr)) {
                     return $stPrefGr;
                 }
                 Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
-                // Create the user named 'scheduler'.
-                Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
-                $res = Alib::AddPerm($rootUid, 'read', $this->rootId, 'A');
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-                $r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
-                if ($p_verbose) {
-                    echo "done.\n";
-                }
-            } else if ($p_verbose) {
-                echo "   * Skipping: user 'scheduler' already exists.\n";
+                echo "done.\n";
+            } else {
+                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
             }
+        }
+
+        // Add the root user if it doesnt exist yet.
+        $rootUid = Subjects::GetSubjId('root');
+        if (!$rootUid) {
+            echo "   * Creating user 'root'...";
+            $rootUid = $this->addSubj("root", $CC_CONFIG['tmpRootPass']);
+            if (PEAR::isError($rootUid)) {
+                return $rootUid;
+            }
+
+            // Add root user to the admin group
+            $r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
+            if (PEAR::isError($r)) {
+                return $r;
+            }
+            echo "done.\n";
+        } else {
+            echo "   * Skipping: user already exists: 'root'\n";
+        }
+
+        if (!empty($CC_CONFIG['TrashName'])) {
+            $trashId = M2tree::GetObjId($CC_CONFIG['TrashName'], $this->storId);
+            if (!$trashId) {
+                echo "   * Creating trash can...";
+                $tfid = BasicStor::bsCreateFolder($this->storId, $CC_CONFIG["TrashName"]);
+                if (PEAR::isError($tfid)) {
+                    return $tfid;
+                }
+                echo "done.\n";
+            } else {
+                echo "   * Skipping: trash can already exists.\n";
+            }
+        }
+
+        // Create the user named 'scheduler'.
+        if (!Subjects::GetSubjId('scheduler')) {
+            echo "   * Creating user 'scheduler'...";
+            Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
+            $res = Alib::AddPerm($rootUid, 'read', $this->rootId, 'A');
+            if (PEAR::isError($res)) {
+                return $res;
+            }
+            $r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
+            echo "done.\n";
+        } else {
+            echo "   * Skipping: user already exists: 'scheduler'\n";
         }
     }
 

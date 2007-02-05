@@ -132,7 +132,7 @@ class LocStor extends BasicStor {
     protected function storeAudioClipClose($sessid, $token)
     {
         $storedFile =& StoredFile::RecallByToken($token);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $arr = $this->bsClosePut($token);
@@ -198,7 +198,7 @@ class LocStor extends BasicStor {
             return $gunid;
         }
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $oid = $storedFile->getId();
@@ -225,7 +225,7 @@ class LocStor extends BasicStor {
     public function accessRawAudioData($sessid, $gunid, $parent='0')
     {
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (($res = BasicStor::Authorize('read', $storedFile->getId(), $sessid)) !== TRUE) {
@@ -246,7 +246,7 @@ class LocStor extends BasicStor {
     public function releaseRawAudioData($sessid, $token)
     {
         $storedFile =& StoredFile::RecallByToken($token);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         return $storedFile->releaseRawMediaData($token);
@@ -353,7 +353,7 @@ class LocStor extends BasicStor {
     protected function getAudioClip($sessid, $gunid)
     {
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (($res = BasicStor::Authorize('read', $storedFile->getId(), $sessid)) !== TRUE) {
@@ -493,7 +493,7 @@ class LocStor extends BasicStor {
             return $ex;
         }
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         return $storedFile->exists();
@@ -567,7 +567,7 @@ class LocStor extends BasicStor {
     protected function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (($res = BasicStor::Authorize('write', $storedFile->getId(), $sessid)) !== TRUE) {
@@ -670,7 +670,7 @@ class LocStor extends BasicStor {
             );
         }
         $storedFile =& StoredFile::RecallByGunid($playlistId);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $id = $storedFile->getId();
@@ -709,7 +709,7 @@ class LocStor extends BasicStor {
             return $playlistId;
         }
         $storedFile =& StoredFile::RecallByGunid($playlistId);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $res = $storedFile->setMetadata($newPlaylist, 'string', 'playlist');
@@ -741,7 +741,7 @@ class LocStor extends BasicStor {
             return $gunid;
         }
         $storedFile =& StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $id = $storedFile->getId();
@@ -785,7 +785,7 @@ class LocStor extends BasicStor {
             );
         }
         $storedFile =& StoredFile::RecallByGunid($playlistId);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         if (($res = BasicStor::Authorize('write', $storedFile->getId(), $sessid)) !== TRUE) {

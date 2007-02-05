@@ -166,15 +166,17 @@ if (!is_null($this_file)) {
     }
 }
 
-// make dirpaths better (without ../)
+// make dirpaths better (without "../")
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
     $rp = realpath($CC_CONFIG[$d]);
     // workaround for missing dirs
-    if ( $rp === FALSE ) {
-        mkdir( $CC_CONFIG[$d] );
-        $rp = realpath($CC_CONFIG[$d]);
+//    if ( $rp === FALSE ) {
+//        mkdir( $CC_CONFIG[$d] );
+//        $rp = realpath($CC_CONFIG[$d]);
+//    }
+    if ($rp) {
+        $CC_CONFIG[$d] = $rp;
     }
-    $CC_CONFIG[$d] = $rp;
 }
 
 ?>

@@ -346,7 +346,7 @@ class GreenBox extends BasicStor {
             return $res;
         }
         $storedFile = StoredFile::Recall($id);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $arr = $storedFile->md->genPhpArray();
@@ -596,7 +596,7 @@ class GreenBox extends BasicStor {
     {
         $gunid = BasicStor::GunidFromId($id);
         $pl = StoredFile::Recall($id);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $gunid = $pl->gunid;
@@ -643,7 +643,7 @@ class GreenBox extends BasicStor {
             return $gunid;
         }
         $storedFile = StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($storedFile)) {
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $r = $storedFile->md->regenerateXmlFile();
@@ -678,9 +678,9 @@ class GreenBox extends BasicStor {
     public function addAudioClipToPlaylist($token, $acId, $sessid,
         $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
     {
-        require_once"Playlist.php";
+        require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $acGunid = BasicStor::GunidFromId($acId);
@@ -721,7 +721,7 @@ class GreenBox extends BasicStor {
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $res = $pl->delAudioClip($plElGunid);
@@ -756,7 +756,7 @@ class GreenBox extends BasicStor {
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
@@ -792,7 +792,7 @@ class GreenBox extends BasicStor {
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $res = $pl->moveAudioClip($plElGunid, $newPos);
@@ -872,7 +872,7 @@ class GreenBox extends BasicStor {
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByGunid($plid);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
         $res = $pl->displayPlaylistClipAtOffset($offset, $distance);

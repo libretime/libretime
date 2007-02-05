@@ -97,7 +97,8 @@ class uiPlaylist
             }
             return FALSE;
         }
-        if (($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
+        $userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid);
+        if ($userid !== TRUE) {
              if (UI_WARNING) {
              	$this->Base->_retMsg('Playlist has been locked by "$1".', Subjects::GetSubjName($userid));
              }

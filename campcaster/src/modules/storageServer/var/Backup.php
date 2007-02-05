@@ -302,7 +302,7 @@ class Backup
                 $gunid = $item['gunid'];
                 // get a stored file object of this gunid
                 $sf = StoredFile::RecallByGunid($gunid);
-                if (PEAR::isError($sf)) {
+                if (is_null($sf) || PEAR::isError($sf)) {
                 	return $sf;
                 }
                 $lid = BasicStor::IdFromGunid($gunid);

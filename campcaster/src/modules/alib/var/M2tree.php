@@ -326,8 +326,8 @@ class M2tree {
     {
         global $CC_CONFIG;
         global $CC_DBC;
-        if ( ($name == '') && is_null($parId)) {
-            $name = $CC_CONFIG['RootNode'];
+        if ($name == '') {
+            return null;
         }
         $escapedName = pg_escape_string($name);
         $parcond = (is_null($parId) ? "parid is null" :

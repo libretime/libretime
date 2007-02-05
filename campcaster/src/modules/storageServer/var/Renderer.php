@@ -38,7 +38,7 @@ class Renderer
         global $CC_CONFIG;
         // recall playlist:
         $pl = StoredFile::RecallByGunid($plid);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
         	return $pl;
         }
         // smil export:

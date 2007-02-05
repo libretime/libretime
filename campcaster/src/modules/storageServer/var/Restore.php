@@ -333,7 +333,7 @@ class Restore {
             }
         }
         $ac = StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($ac)) {
+        if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
         $res = $ac->setState('ready');

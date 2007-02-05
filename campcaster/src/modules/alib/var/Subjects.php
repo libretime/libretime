@@ -27,7 +27,7 @@ class Subjects {
     /* ======================================================= public methods */
 
     /**
-     * Add new subject
+     * Add new subject (a.k.a. "user")
      *
      * @param string $p_login
      * @param string $p_pass
@@ -359,6 +359,9 @@ class Subjects {
     public static function IsGroup($gid)
     {
         global $CC_CONFIG, $CC_DBC;
+        if (empty($gid)) {
+            return FALSE;
+        }
         $sql = "SELECT type FROM ".$CC_CONFIG['subjTable']
             ." WHERE id='$gid'";
         $r = $CC_DBC->getOne($sql);

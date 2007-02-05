@@ -543,7 +543,7 @@ class Playlist extends StoredFile {
                 switch ($el['type']) {
                 case "playlist":
                     $pl = StoredFile::RecallByGunid($acGunid);
-                    if (PEAR::isError($pl)) {
+                    if (is_null($pl) || PEAR::isError($pl)) {
                     	return $pl;
                     }
                     if ($dd > 0) {
@@ -620,7 +620,7 @@ class Playlist extends StoredFile {
             switch ($el['type']) {
             case "playlist":
                 $pl = StoredFile::RecallByGunid($acGunid);
-                if (PEAR::isError($pl)) {
+                if (is_null($pl) || PEAR::isError($pl)) {
                 	return $pl;
                 }
                 $res2 = $pl->export();
@@ -692,7 +692,7 @@ class Playlist extends StoredFile {
         	return TRUE;
         }
         $pl = StoredFile::RecallByGunid($insGunid);
-        if (PEAR::isError($pl)) {
+        if (is_null($pl) || PEAR::isError($pl)) {
         	return $pl;
         }
         $arr = $pl->md->genPhpArray();
@@ -866,7 +866,7 @@ class Playlist extends StoredFile {
     private function getAudioClipInfo($acId)
     {
         $ac = StoredFile::Recall($acId);
-        if (PEAR::isError($ac)) {
+        if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
         $acGunid = $ac->gunid;
@@ -1390,7 +1390,7 @@ class PlaylistElementExport {
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (PEAR::isError($pl2)) {
+                    if (is_null($pl2) || PEAR::isError($pl2)) {
                     	return $pl2;
                     }
                     $r = $pl2->outputToSmil(FALSE);
@@ -1463,7 +1463,7 @@ class PlaylistElementExport {
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (PEAR::isError($pl2)) {
+                    if (is_null($pl2) || PEAR::isError($pl2)) {
                     	return $pl2;
                     }
                     $r = $pl2->outputToM3u(FALSE);
@@ -1507,7 +1507,7 @@ class PlaylistElementExport {
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (PEAR::isError($pl2)) {
+                    if (is_null($pl2) || PEAR::isError($pl2)) {
                     	return $pl2;
                     }
                     $r = $pl2->outputToRss(FALSE);
@@ -1558,7 +1558,7 @@ class PlaylistAudioClipExport
     {
         $gunid = $plac['attrs']['id'];
         $ac = StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($ac)) {
+        if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
         $RADext = $ac->getFileExtension();
@@ -1578,7 +1578,7 @@ class PlaylistAudioClipExport
     {
         $gunid = $plac['attrs']['id'];
         $ac = StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($ac)) {
+        if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
         $RADext = $ac->getFileExtension();
@@ -1597,7 +1597,7 @@ class PlaylistAudioClipExport
     {
         $gunid = $plac['attrs']['id'];
         $ac = StoredFile::RecallByGunid($gunid);
-        if (PEAR::isError($ac)) {
+        if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
         $RADext = $ac->getFileExtension();

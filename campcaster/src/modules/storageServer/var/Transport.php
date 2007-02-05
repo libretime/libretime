@@ -295,7 +295,7 @@ class Transport
             case "audioclip":
             case "webstream":
                 $storedFile = StoredFile::RecallByGunid($gunid);
-                if (PEAR::isError($storedFile)) {
+                if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
                 // handle metadata:
@@ -333,7 +333,7 @@ class Transport
                 $plid = $gunid;
                 require_once("Playlist.php");
                 $pl = StoredFile::RecallByGunid($plid);
-                if (PEAR::isError($pl)) {
+                if (is_null($pl) || PEAR::isError($pl)) {
                 	return $pl;
                 }
                 $fname = $pl->getName();
@@ -1107,7 +1107,7 @@ class Transport
         if ($state2 == 'paused' || $state2 == 'closed' ) {
             return TRUE;
         }
-        
+
 
         // status 18 - Partial file. Only a part of the file was transported.
         // status 28 - Timeout. Too long/slow upload, try to resume next time rather.
@@ -1202,7 +1202,7 @@ class Transport
         if ($state2 == 'paused' || $state2 == 'closed' ) {
             return TRUE;
         }
-        
+
         // check consistency
         $size = filesize($row['localfile']);
         if ($size < $row['expectedsize']) {

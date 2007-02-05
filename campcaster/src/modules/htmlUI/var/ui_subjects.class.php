@@ -89,7 +89,9 @@ class uiSubjects
             return FALSE;
         }
 
-        if (PEAR::isError($res = $this->Base->gb->addSubj($request['login'], ($request['passwd']==='' ? NULL : $request['passwd'])))) {
+        $tmpPassword = $request['passwd']==='' ? NULL : $request['passwd'];
+        $res = $this->Base->gb->addSubj($request['login'], $tmpPassword);
+        if (PEAR::isError($res)) {
             $this->Base->_retMsg($res->getMessage());
             return FALSE;
         }

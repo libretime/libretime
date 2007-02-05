@@ -376,6 +376,10 @@ if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
 echo " * Inserting starting data into tables...\n";
 $gb = new GreenBox();
 $r = $gb->initData(true);
+if (PEAR::isError($r)) {
+    echo "\n   * ERROR: ";
+    print_r($r);
+}
 //echo "done.\n";
 
 //------------------------------------------------------------------------------
