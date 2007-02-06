@@ -68,7 +68,7 @@ define('UI_MDATA_VALUE_FORMAT_FILE', 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 
 // Search/Browse preferences
-define('UI_SIMPLESEARCH_FILETYPE', 'File');
+define('UI_SIMPLESEARCH_FILETYPE', 'Audioclip');
 define('UI_SIMPLESEARCH_OPERATOR', 'OR');
 define('UI_SIMPLESEARCH_LIMIT', 10);
 define('UI_SIMPLESEARCH_ROWS', 3);
