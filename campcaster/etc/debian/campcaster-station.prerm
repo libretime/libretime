@@ -45,6 +45,13 @@ check_exe() {
 
 case "$1" in
     remove|upgrade|deconfigure)
+        # unmount the NFS share, if we have a 2-computer setup
+        storagedir=$installdir/var/Campcaster/storageServer
+        if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+            umount $storagedir
+            touch $installdir/storageServer.wasMounted
+        fi
+
         # stop the livesupport scheduler daemon
         /etc/init.d/campcaster-scheduler stop || true
         /etc/init.d/campcaster-scheduler kill || true
@@ -78,15 +85,8 @@ case "$1" in
         rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
         rm -rf $installdir/var/Campcaster/archiveServer/var/access/*
         rm -rf $installdir/var/Campcaster/archiveServer/var/trans/*
-
-        storagedir=$installdir/var/Campcaster/storageServer
-        if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
-            umount $storagedir
-            touch $installdir/storageServer.wasMounted
-        else
-            rm -rf $storagedir/var/access/*
-            rm -rf $storagedir/var/trans/*
-        fi
+        rm -rf $installdir/var/Campcaster/storageServer/var/access/*
+        rm -rf $installdir/var/Campcaster/storageServer/var/trans/*
     ;;
     
     failed-upgrade)

@@ -68,13 +68,8 @@ case "$1" in
 
         # remove generated files
         rm -rf $installdir/var/Campcaster/archiveServer/var/stor/*
-
-        storagedir=$installdir/var/Campcaster/storageServer
-        if [ -f $installdir/storageServer.wasMounted ]; then
-            rmdir $storagedir
-        else
-            rm -rf $storagedir/var/stor/*
-        fi
+        rm -rf $installdir/var/Campcaster/storageServer/var/stor/*
+        rm -f  $installdir/storageServer.wasMounted
     ;;
 
     *)

@@ -21,22 +21,17 @@ installdir=/opt/campcaster
 
 case "$1" in
     configure)
-        if [ -f $installdir/storageServer.wasMounted ]; then
-            storagedir=$installdir/var/Campcaster/storageServer
-            if [ -d $storagedir.bak ]; then
-                rm -rf $storagedir.bak
-            fi
-            mv -f $storagedir $storagedir.bak
-            mkdir $storagedir
-            mount $storagedir
-            rm $installdir/storageServer.wasMounted
-        fi
-        
         # do post-installation configuration
         $installdir/bin/postInstallStation.sh --directory=$installdir \
                         --apache-group=www-data \
                         --postgresql-dir=/etc/postgresql/8.1/main \
                         --postgresql-init-script=/etc/init.d/postgresql-8.1
+
+        # remount the NFS share if we have a 2-computer setup
+        if [ -f $installdir/storageServer.wasMounted ]; then
+            mount $installdir/var/Campcaster/storageServer
+            rm $installdir/storageServer.wasMounted
+        fi
 
         # register and start the Campcaster scheduler daemon
         cp -f $installdir/etc/campcaster-scheduler /etc/init.d
