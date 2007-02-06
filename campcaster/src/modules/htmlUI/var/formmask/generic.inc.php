@@ -339,8 +339,8 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Operator',
             'options'   => array(
-                            'or'    => '##Or##',
                             'and'   => '##And##',
+                            'or'    => '##Or##',
                             )
         ),
         array(
