@@ -260,7 +260,6 @@
                         id3Tag          = "TRCK"
                         localizationKey = "track_number"
                         tab             = "music" >
-            <constraint type            = "numeric" />
         </metadataType>
         <metadataType   dcName          = "ls:disc_num"
                         id3Tag          = "TPOS"
