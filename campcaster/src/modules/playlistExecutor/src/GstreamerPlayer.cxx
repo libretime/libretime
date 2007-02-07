@@ -143,11 +143,14 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
                                 gpointer       self)
                                                                 throw ()
 {
-    std::cerr << "gstreamer error: " << error->message << std::endl;
-
     // Important: We *must* use an idle function call here, so that the signal handler returns 
     // before fireOnStopEvent() is executed.
     g_idle_add(fireOnStopEvent, self);
+
+    std::string str( "Audio Player Error: ");
+    str += error->message;
+
+    throw std::runtime_error(str);
 }
 
 
