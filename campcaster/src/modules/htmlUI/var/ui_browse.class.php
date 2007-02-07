@@ -7,9 +7,47 @@
 class uiBrowse
 {
     public $Base; // uiBase object
+
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * A pointer to the SESSION variable: ['UI_BROWSE_SESSNAME']['col']
+     *
+     * It has the following structure:
+     * The first index denotes which column you are referring to.
+     * There are three possible columns.
+     *
+     * For each column, the following keys are possible:
+     * ['category'] --> selected category
+     * ['value'] --> an array of one value, the selected value
+     * ['values']['cnt'] --> number of values
+     * ['values']['results'] --> array of values, indexed numerically
+     * ['criteria'] --> criteria for one column, see top of DataEngine.php
+     *      for description of these values.  The criteria of all three
+     *      columns are merged together to make $this->criteria.
+     * ['form_value'] --> the value as used in the HTML form
+     *
+     * @var array
+     */
     private $col;
+
+    /**
+     * A pointer to the SESSION variable: ['UI_BROWSE_SESSNAME']['criteria']
+     *
+     * This array ultimately is passed to DataEngine::localSearch().  Look
+     * at the top of the DataEngine.php class for the structure of this
+     * variable.
+     *
+     * @var array
+     */
     private $criteria;
+
+    /**
+     * @var string
+     */
     private $reloadUrl;
 
 
@@ -42,6 +80,12 @@ class uiBrowse
     } // fn setReload
 
 
+    /**
+     * Initialize $this->col.  Each column contains
+     *
+     * @param boolean $reload
+     * @return void
+     */
     public function setDefaults($reload=FALSE)
     {
         $this->col[1]['category'] = UI_BROWSE_DEFAULT_KEY_1;
@@ -69,12 +113,18 @@ class uiBrowse
     } // fn setDefaults
 
 
+    /**
+     * @return array
+     */
     public function getCriteria()
     {
         return $this->criteria;
     } // fn getCriteria
 
 
+    /**
+     * @return array
+     */
     public function getResult()
     {
         $this->searchDB();
@@ -85,7 +135,6 @@ class uiBrowse
     public function browseForm($id, $mask2)
     {
         include(dirname(__FILE__).'/formmask/metadata.inc.php');
-        #$mask2['browse_columns']['category']['options'][0] = tra('Select a Value');
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $v){
                 if (isset($v['type']) && $v['type']) {
@@ -93,7 +142,7 @@ class uiBrowse
                     $mask2['browse_columns']['category']['options'][$tmp] = tra($v['label']);
                 }
             }
-        };
+        }
 
         for ($n = 1; $n <= 3; $n++) {
             $form = new HTML_QuickForm('col'.$n, UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -109,7 +158,7 @@ class uiBrowse
             $output['col'.$n]['dynform'] = $renderer->toArray();
         }
 
-        ## form to change limit and file-type
+        // form to change limit and file-type
         $form = new HTML_QuickForm('switch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $mask2['browse_global']);
         $form->setDefaults(array('limit'    => $this->criteria['limit'],
@@ -124,68 +173,101 @@ class uiBrowse
 
     /**
      * Set the category for audio file browser.  There are three columns
-     * you can set the category for.
+     * you can set the category for.  All columns greater than the current
+     * one will be cleared of their values.
      *
-     * @param array $parm
+     * @param array $p_param
      * 		Has keys:
      * 		int ['col'] - the column you are setting the category for
      * 		string ['category'] - the category for the given column
-     * 		string ['value'] - the search value for the given category
      * @return void
      */
-    public function setCategory($parm)
+    public function setCategory($p_param)
     {
-        $columnNumber = $parm['col'];
-        $category = $parm['category'];
+        // input values
+        $columnNumber = $p_param['col'];
+        $category = uiBase::formElementDecode($p_param['category']);
 
-        $this->col[$columnNumber]['category'] = uiBase::formElementDecode($category);
-        $criteria = isset($this->col[$columnNumber]['criteria']) ? $this->col[$columnNumber]['criteria'] : null;
-        $this->col[$columnNumber]['values'] = $this->Base->gb->browseCategory($this->col[$columnNumber]['category'], $criteria, $this->Base->sessid);
+        // Set the new values for this column.
+        $this->col[$columnNumber]['category'] = $category;
+        $this->col[$columnNumber]['criteria'] = NULL;
+        $this->col[$columnNumber]['form_value'] = '%%all%%';
+
+        // Get the values of this category based on the criteria in the
+        // other columns.
+        $this->setCriteria();
+        $tmpCriteria = $this->criteria;
+        // We put a limit here to because some categories will select
+        // way too many values.
+        $tmpCriteria["limit"] = 1000;
+        $tmpCriteria["offset"] = 0;
+        $browseValues = $this->Base->gb->browseCategory(
+            $category, $tmpCriteria, $this->Base->sessid);
+        if (!PEAR::isError($browseValues)) {
+            $this->col[$columnNumber]['values'] = $browseValues;
+        }
 
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
-        $this->clearHierarchy($columnNumber);
     } // fn setCategory
 
 
     /**
+     * Set the value for a category.  This will cause the
+     * search results to change.
+     *
      * @param array $parm
      * 		contains the following indexes:
      * 		int ['col']: column number
      * 		string ['value'][0]: the search value for the given category
      * 		string ['category']: the category to search
+     * @see DataEngine
+     *      See the top of that file for a description of the search
+     *      criteria structure.
      */
-    public function setValue($parm)
+    public function setValue($p_param)
     {
-        $this->criteria['offset'] = 0;
-        $columnNumber = $parm['col'];
-        $next  = $columnNumber + 1;
-        $this->col[$columnNumber]['form_value'] = $parm['value'][0];
-        $tmpFiletype = isset($this->criteria['filetype'])?$this->criteria['filetype']:UI_FILETYPE_ANY;
-        if ($parm['value'][0] == '%%all%%') {
-            $this->col[$next]['criteria'] = array('operator' => 'and',
-            									  'filetype' => $tmpFiletype);
-        } else {
-        	$conditions = array(
-	                        array('cat' => uiBase::formElementDecode($parm['category']),
-	                              'op' => '=',
-	                              'val' => $parm['value'][0]
-	                        ));
-        	if (isset($this->col[$columnNumber]['criteria']['conditions'])
-        		&& is_array($this->col[$columnNumber]['criteria']['conditions'])) {
-        		$conditions = array_merge($conditions,
-        								  $this->col[$columnNumber]['criteria']['conditions']);
-        	}
-            $this->col[$next]['criteria'] = array(
-                'operator' => 'and',
-                'filetype' => $this->criteria['filetype'],
-                'conditions'  => $conditions);
-        }
-        $nextCriteria = isset($this->col[$next]['criteria']) ? $this->col[$next]['criteria'] : null;
-        $category = isset($this->col[$next]['category']) ? $this->col[$next]['category'] : null;
-        $this->col[$next]['values'] = $this->Base->gb->browseCategory($category, $nextCriteria, $this->Base->sessid);
+        $columnNumber = $p_param['col'];
+        $value = $p_param['value'][0];
+        $category = $p_param['category'];
 
+        $this->criteria['offset'] = 0;
+        $this->col[$columnNumber]['form_value'] = $value;
+
+        if ($value == '%%all%%') {
+            unset($this->col[$columnNumber]['criteria']['conditions']);
+        } else {
+        	$conditions = array('cat' => uiBase::formElementDecode($category),
+                                'op' => '=',
+	                            'val' => $value);
+    	    $this->col[$columnNumber]['criteria']['conditions'] = $conditions;
+        }
+
+        // Update the criteria
         $this->setCriteria();
-        $this->clearHierarchy($next);
+        $tmpCriteria = $this->criteria;
+        // We put a limit here to because some categories will select
+        // way too many values.
+        $tmpCriteria["limit"] = 1000;
+        $tmpCriteria["offset"] = 0;
+
+        // We need to update all other column values for any column
+        // that does not have a selected value.
+        for ($tmpColNum = 1; $tmpColNum <= 3; $tmpColNum++) {
+            // Make sure not to update current column
+            if ($tmpColNum != $columnNumber) {
+                // if the column does not have a selected value
+                if ($this->col[$tmpColNum]['criteria'] == NULL) {
+                    $tmpCategory = $this->col[$tmpColNum]['category'];
+                    $browseValues = $this->Base->gb->browseCategory(
+                        $tmpCategory, $tmpCriteria, $this->Base->sessid);
+                    if (!PEAR::isError($browseValues)) {
+                        $this->col[$tmpColNum]['values'] = $browseValues;
+                        $this->col[$tmpColNum]['criteria'] = NULL;
+                        $this->col[$tmpColNum]['form_value'] = '%%all%%';
+                    }
+                }
+            }
+        }
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
     } // fn setValue
 
@@ -211,31 +293,18 @@ class uiBrowse
 
 
     /**
-     * Clear all categories from the given column number to column 3.
-     *
-     * @param int $columnNumber
+     * Reload the conditions as set in the three columns.
      * @return void
      */
-    private function clearHierarchy($columnNumber)
-    {
-        $this->col[$columnNumber]['form_value'] = NULL;
-        $columnNumber++;
-        for ($col = $columnNumber; $col <= 3; $col++) {
-            $this->col[$col]['criteria']    = NULL;
-            $this->col[$col]['values']      = NULL;
-            $this->col[$col]['form_value']  = NULL;
-        }
-    } // fn clearHierarchy
-
-
     public function setCriteria() {
         unset($this->criteria['conditions']);
+        $conditions = array();
         for ($col = 3; $col >= 1; $col--) {
-            if (is_array($this->col[$col]['criteria'])) {
-                $this->criteria = array_merge($this->col[$col]['criteria'], $this->criteria);
-                break;
+            if (is_array($this->col[$col]['criteria']['conditions'])) {
+                $conditions[] = $this->col[$col]['criteria']['conditions'];
             }
         }
+        $this->criteria['conditions'] = $conditions;
     } // fn setCriteria
 
 
@@ -247,34 +316,9 @@ class uiBrowse
         if (!is_array($results) || !count($results)) {
             return false;
         }
-
         $this->results['cnt'] = $results['cnt'];
-        foreach ($results['results'] as $rec) {
-            $tmpId = BasicStor::IdFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
-        }
-
-        /*
-        ## test
-        for ($n=0; $n<=$this->criteria['limit']; $n++) {
-            $this->results['items'][] = Array
-                (
-                    'id' => 24,
-                    'gunid' => '1cc472228d0cb2ac',
-                    'title' => 'Item '.$n,
-                    'creator' => 'Sebastian',
-                    'duration' => '&nbsp;&nbsp;&nbsp;10:00',
-                    'type' => 'webstream'
-                );
-        }
-        $results['cnt'] = 500;
-        $this->results['cnt'] = $results['cnt'];
-        ## end test
-        */
-
+        $this->results['items'] = $results['results'];
         $this->pagination($results);
-        #print_r($this->criteria);
-        #print_r($this->results);
         return TRUE;
     } // fn searchDB
 
@@ -370,18 +414,31 @@ class uiBrowse
     } // fn setLimit
 
 
-    public function setFiletype($filetype)
+    public function setFiletype($p_filetype)
     {
-        $this->criteria['filetype'] = $filetype;
+        $this->criteria['filetype'] = $p_filetype;
         $this->criteria['offset'] = 0;
 
         for ($n = 1; $n <= 3; $n++) {
-            $this->col[$n]['criteria']['filetype'] = $filetype;
-            $this->col[$n]['values'] = $this->Base->gb->browseCategory($this->col[$n]['category'], $this->col[$n]['criteria'], $this->Base->sessid);
-            $this->clearHierarchy($n);
+            $this->col[$n]['form_value'] = '%%all%%';
+            $this->col[$n]['criteria'] = null;
+        }
+        $this->setCriteria();
+        $tmpCriteria = $this->criteria;
+        $tmpCriteria["limit"] = 1000;
+
+        for ($n = 1; $n <= 3; $n++) {
+            $browseValues = $this->Base->gb->browseCategory(
+                $this->col[$n]['category'],
+                $tmpCriteria,
+                $this->Base->sessid);
+            if (!PEAR::isError($browseValues)) {
+                $this->col[$n]['values'] = $browseValues;
+            }
         }
 
         $this->setReload();
     } // fn setFiletype
+
 } // class uiBrowse
 ?>

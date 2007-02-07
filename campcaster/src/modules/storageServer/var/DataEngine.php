@@ -87,39 +87,41 @@ class DataEngine {
             'prefix'=>"like '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
             '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
         );
-        $whereArr   = array();
+        $whereArr = array();
         if (is_array($conditions)) {
             foreach ($conditions as $cond) {
                 $catQn = $cond['cat'];
                 $op = strtolower($cond['op']);
                 $value = strtolower($cond['val']);
-                $splittedQn = XML_Util::splitQualifiedName($catQn);
-                $catNs = $splittedQn['namespace'];
-                $cat = $splittedQn['localPart'];
-                $opVal = sprintf($ops[$op], pg_escape_string($value));
-                // retype for timestamp value
-                if ($cat == 'mtime') {
-                    switch ($op) {
-                        case 'partial':
-                        case 'prefix':
-                        	break;
-                        default:
-                            $retype = "::timestamp with time zone";
-                            $opVal = "$retype $opVal$retype";
+                if (!empty($value)) {
+                    $splittedQn = XML_Util::splitQualifiedName($catQn);
+                    $catNs = $splittedQn['namespace'];
+                    $cat = $splittedQn['localPart'];
+                    $opVal = sprintf($ops[$op], pg_escape_string($value));
+                    // retype for timestamp value
+                    if ($cat == 'mtime') {
+                        switch ($op) {
+                            case 'partial':
+                            case 'prefix':
+                            	break;
+                            default:
+                                $retype = "::timestamp with time zone";
+                                $opVal = "$retype $opVal$retype";
+                        }
                     }
+                    // escape % for sprintf in whereArr construction:
+                    $cat = str_replace("%", "%%", $cat);
+                    $opVal = str_replace("%", "%%", $opVal);
+                    $sqlCond =
+                        " %s.predicate = '{$cat}' AND".
+                        " %s.objns='_L' AND %s.predxml='T'".
+                        " AND lower(%s.object) {$opVal}\n";
+                    if (!is_null($catNs)) {
+                        $catNs  = str_replace("%", "%%", $catNs);
+                        $sqlCond = " %s.predns = '{$catNs}' AND $sqlCond";
+                    }
+                    $whereArr[] = $sqlCond;
                 }
-                // escape % for sprintf in whereArr construction:
-                $cat = str_replace("%", "%%", $cat);
-                $opVal = str_replace("%", "%%", $opVal);
-                $sqlCond =
-                    " %s.predicate = '{$cat}' AND".
-                    " %s.objns='_L' AND %s.predxml='T'".
-                    " AND lower(%s.object) {$opVal}\n";
-                if (!is_null($catNs)) {
-                    $catNs  = str_replace("%", "%%", $catNs);
-                    $sqlCond = " %s.predns = '{$catNs}' AND $sqlCond";
-                }
-                $whereArr[] = $sqlCond;
             }
         }
         return $whereArr;
@@ -209,33 +211,33 @@ class DataEngine {
         foreach ($whereArr as $i => $v) {
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $isectBlocks[] =
-                " SELECT gunid FROM ".$CC_CONFIG['mdataTable']." md$i\n".
-                " WHERE\n {$whereArr[$i]}";
+                " SELECT gunid FROM ".$CC_CONFIG['mdataTable']." md$i \n".
+                " WHERE {$whereArr[$i]}";
         }
         // query construcion:
-        if (count($isectBlocks)>0) {
+        if (count($isectBlocks) > 0) {
             $isectBlock =
-                "FROM\n(\n".join("INTERSECT\n", $isectBlocks).") sq\n".
-                "INNER JOIN ".$CC_CONFIG['filesTable']." f ON f.gunid = sq.gunid";
+                "FROM (".join("INTERSECT\n", $isectBlocks).") sq \n".
+                " INNER JOIN ".$CC_CONFIG['filesTable']." f ON f.gunid = sq.gunid";
         } else {
-            $isectBlock = "FROM ".$CC_CONFIG['filesTable']." f";
+            $isectBlock = "FROM ".$CC_CONFIG['filesTable']." f \n";
         }
-        $sql = "SELECT $fldsPart\n".$isectBlock;
+        $sql = "SELECT $fldsPart ".$isectBlock;
         if ($browse) {
-            $sql .= "\nINNER JOIN ".$CC_CONFIG['mdataTable']." br ON br.gunid = f.gunid\n".
-            		"WHERE br.objns='_L' AND br.predxml='T' AND br.predicate='{$brFld}'";
+            $sql .= " INNER JOIN ".$CC_CONFIG['mdataTable']." br ON br.gunid = f.gunid \n".
+            		" WHERE br.objns='_L' AND br.predxml='T' AND br.predicate='{$brFld}'";
             if (!is_null($brFldNs)) {
             	$sql .= " AND br.predns='{$brFldNs}'";
             }
             $glue = " AND";
         } else {
-        	$glue = "WHERE";
+        	$glue = " WHERE ";
         }
         if (!is_null($fileCond)) {
-        	$sql .= "\n$glue $fileCond";
+        	$sql .= " $glue $fileCond";
         }
         if ($browse) {
-        	$sql .= "\nORDER BY br.object";
+        	$sql .= " ORDER BY br.object";
         }
         return $sql;
     }
@@ -326,10 +328,6 @@ class DataEngine {
      * 		Limit for result arrays (0 means unlimited)
      * @param int $offset
      * 		Starting point (0 means without offset)
-     * @param string $brFldNs
-     * 		Namespace prefix of category for browse
-     * @param string $brFld
-     * 		Metadata category identifier for browse
      * @return array
      * 		arrays of hashes, fields:
      *       cnt : integer - number of matching gunids
@@ -344,10 +342,11 @@ class DataEngine {
      *     OR (in browse mode)
      *       results: array of strings - browsed values
      */
-    private function _localGenSearch($criteria, $limit=0, $offset=0,
-        $brFldNs=NULL, $brFld=NULL)
+    private function _localGenSearch($criteria, $limit=0, $offset=0)
     {
         global $CC_CONFIG, $CC_DBC;
+
+        // Input values
         $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
         $filetype = strtolower($filetype);
         if (!array_key_exists($filetype, $this->filetypes)) {
@@ -359,71 +358,108 @@ class DataEngine {
         $operator = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
         $operator = strtolower($operator);
         $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
+
+        // Create the WHERE clause - this is the actual search part
         $whereArr = $this->_makeWhereArr($conditions);
+
+        // Metadata values to fetch
+        $metadataNames = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title', 'dcterms:extent');
+
+        // Order by clause
         $orderby = TRUE;
         if ((!isset($criteria['orderby']))
         	|| (is_array($criteria['orderby']) && (count($criteria['orderby'])==0))) {
       		// default ORDER BY
-            $orderbyQns  = array('dc:creator', 'dc:source', 'dc:title');
+            $orderbyQns  = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title');
         } else {
             $orderbyQns  = $criteria['orderby'];
         }
         if (!is_array($orderbyQns)) {
             $orderbyQns = array($orderbyQns);
         }
+
         $descA = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         if (!is_array($descA)) {
             $descA = array($descA);
         }
-        $orderJoinSql = array();
+
+        // This section of code adds the metadata values to the results.
+        // Each metadata value is LEFT JOINED to the results, and has the
+        // name of its qualified name with ":" replaced with "_".
+        // Here we also make the ORDER BY clause.
+        $metadataJoinSql = array();
         $orderBySql = array();
-        foreach ($orderbyQns as $j => $orderbyQn) {
+        // $dataName contains the names of the metadata columns we want to
+        // fetch.  It is indexed numerically starting from 1, and the value
+        // in the array is the qualified name with ":" replaced with "_".
+        // e.g. "dc:creator" becomes "dc_creator".
+        $dataName = array();
+        foreach ($metadataNames as $j => $qname) {
             $i = $j + 1;
-            $obSplitQn = XML_Util::splitQualifiedName($orderbyQn);
+            $obSplitQn = XML_Util::splitQualifiedName($qname);
             $obNs = $obSplitQn['namespace'];
             $obLp = $obSplitQn['localPart'];
             $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
             $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
-            $orderJoinSql[] =
+            $metadataJoinSql[] =
                 "LEFT JOIN ".$CC_CONFIG['mdataTable']." m$i\n".
                 "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
                 " AND m$i.objns='_L' AND m$i.predxml='T'".
                 (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
-            $orderBySql[] =
-                "m$i.object".$retype.($desc? ' DESC':'');
-        }
-        $browse = !is_null($brFld);
-        if (!$browse) {
-            if (!$orderby) {
-                $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id";
-            } else {
-                $fldsPart = "DISTINCT f.gunid, f.ftype, f.id";
+
+            $dataName[$qname] = str_replace(":", "_", $qname);
+            if (in_array($qname, $orderbyQns)) {
+                $orderBySql[] = $dataName[$qname].$retype.($desc? ' DESC':'');
             }
-        } else {
-            $fldsPart = "DISTINCT br.object as txt";
         }
-        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
-            ($offset != 0 ? " OFFSET $offset" : '' );
+
+        if (!$orderby) {
+            $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id ";
+        } else {
+            $fldsPart = "DISTINCT f.gunid, f.ftype, f.id ";
+        }
+
         $fileCond = "f.state='ready'";
         if (!is_null($filetype)) {
         	$fileCond .= " AND f.ftype='$filetype'";
         }
-        if ($operator == 'and') {     // operator: and
-            $sql = $this->_makeAndSql($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
-        } else {          // operator: or
-            $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
+        if ($operator == 'and') {
+            $sql = $this->_makeAndSql($fldsPart, $whereArr, $fileCond, false);
+        } else {
+            $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, false);
         }
-        if (!$browse && $orderby) {
-            $sql = "SELECT to_hex(sq2.gunid)as gunid, m1.object, sq2.ftype, sq2.id\n".
-                   "FROM (\n$sql\n)sq2\n".
-                    join("\n", $orderJoinSql).
+
+        // the actual values to fetch
+        if ($orderby) {
+            $tmpSql = "SELECT to_hex(sq2.gunid)as gunid, sq2.ftype, sq2.id";
+            $i = 1;
+            foreach ($metadataNames as $qname) {
+                // Special case for track number because if we use text
+                // sorting of this value, then 10 comes right after 1.
+                // So we convert track number to an integer for ordering.
+                if ($qname == "ls:track_num") {
+                    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
+                } else {
+                    $tmpSql .= ", m$i.object as ".$dataName[$qname];
+                }
+                $i++;
+            }
+
+            $tmpSql .= "\nFROM (\n$sql\n)sq2\n".
+                    join("\n", $metadataJoinSql).
                    "ORDER BY ".join(",", $orderBySql)."\n";
+            $sql = $tmpSql;
         }
-        // echo "\n---\n$sql\n---\n";
+
+        // Get the number of results
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
+
+        // Get actual results
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+            ($offset != 0 ? " OFFSET $offset" : '' );
         $res = $CC_DBC->getAll($sql.$limitPart);
         if (PEAR::isError($res)) {
         	return $res;
@@ -432,26 +468,19 @@ class DataEngine {
         	$res = array();
         }
         $eres = array();
-        // echo "\n---\n"; var_dump($res); echo"\n---\n";
-        //$categoryNames = array('dc:title', 'dc:creator', 'dc:source', 'dcterms:extent');
         foreach ($res as $it) {
-            if (!$browse) {
-                $gunid = StoredFile::NormalizeGunid($it['gunid']);
-                //$values = $this->gb->bsGetMetadataValue($it['id'], $categoryNames);
-                $values = $this->gb->bsGetMetadataValue($it['id']);
-                $eres[] = array(
-                	'id' => $it['id'],
-                    'gunid' => $gunid,
-                    'type' => $it['ftype'],
-                    'title' => $values['dc:title']["object"],
-                    'creator' => (isset($values['dc:creator']) ? $values['dc:creator']["object"] : NULL ),
-                    'duration' => $values['dcterms:extent']["object"],
-                    'length' => $values['dcterms:extent']["object"],
-                    'source' => (isset($values['dc:source']) ? $values['dc:source']["object"] : NULL ),
-                );
-            } else {
-                $eres[] = $it['txt'];
-            }
+            $gunid = StoredFile::NormalizeGunid($it['gunid']);
+            $eres[] = array(
+            	'id' => $it['id'],
+                'gunid' => $gunid,
+                'type' => strtolower($it['ftype']),
+                'title' => $it['dc_title'],
+                'creator' => $it['dc_creator'],
+                'duration' => $it['dcterms_extent'],
+                'length' => $it['dcterms_extent'],
+                'source' => $it['dc_source'],
+                'track_num' => $it['ls_track_num'],
+            );
         }
         return array('results'=>$eres, 'cnt'=>$cnt);
     }
@@ -461,7 +490,8 @@ class DataEngine {
      * Return values of specified metadata category
      *
      * @param string $category
-     * 		metadata category name, with or without namespace prefix (dc:title, author)
+     * 		metadata category name, with or without namespace prefix
+     *      (dc:title, author)
      * @param int $limit
      * 		limit for result arrays (0 means unlimited)
      * @param int $offset
@@ -480,7 +510,7 @@ class DataEngine {
         $catNs = $r['namespace'];
         $cat = $r['localPart'];
         if (is_array($criteria) && count($criteria) > 0) {
-            return $this->_localGenSearch($criteria, $limit, $offset, $catNs, $cat);
+            return $this->_browseCategory($criteria, $limit, $offset, $catNs, $cat);
         }
         $sqlCond = "m.predicate='$cat' AND m.objns='_L' AND m.predxml='T'";
         if (!is_null($catNs)) {
@@ -491,7 +521,6 @@ class DataEngine {
         $sql =
             "SELECT DISTINCT m.object FROM ".$CC_CONFIG['mdataTable']." m\n".
             "WHERE $sqlCond";
-        // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
@@ -504,6 +533,74 @@ class DataEngine {
         	$res = array();
         }
         return array('results'=>$res, 'cnt'=>$cnt);
+    }
+
+
+    /**
+     * Fetching the list of metadata values for a particular category.
+     *
+     * @param array $criteria
+     * @param int $limit
+     * @param int $offset
+     * @param string $brFldNs
+     * 		Namespace prefix of category for browse
+     * @param string $brFld
+     * 		Metadata category identifier for browse.
+     * @return array|PEAR_Error
+     */
+    private function _browseCategory($criteria, $limit=0, $offset=0,
+        $brFldNs=NULL, $brFld=NULL)
+    {
+        global $CC_CONFIG, $CC_DBC;
+
+        // Input values
+        $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
+        $filetype = strtolower($filetype);
+        if (!array_key_exists($filetype, $this->filetypes)) {
+            return PEAR::raiseError(
+                'DataEngine::_browseCategory: unknown filetype in search criteria'
+            );
+        }
+        $filetype = $this->filetypes[$filetype];
+        $operator = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
+        $operator = strtolower($operator);
+        $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
+
+        // Create the WHERE clause - this is the actual search part
+        $whereArr = $this->_makeWhereArr($conditions);
+
+        $fldsPart = "DISTINCT br.object as txt";
+        $fileCond = "f.state='ready'";
+        if (!is_null($filetype)) {
+        	$fileCond .= " AND f.ftype='$filetype'";
+        }
+        if ($operator == 'and') {
+            $sql = $this->_makeAndSql($fldsPart, $whereArr, $fileCond, true, $brFldNs, $brFld);
+        } else {
+            $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, true, $brFldNs, $brFld);
+        }
+
+        // Get the number of results
+        $cnt = $this->_getNumRows($sql);
+        if (PEAR::isError($cnt)) {
+        	return $cnt;
+        }
+
+        // Get actual results
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+            ($offset != 0 ? " OFFSET $offset" : '' );
+        $res = $CC_DBC->getAll($sql.$limitPart);
+        if (PEAR::isError($res)) {
+        	return $res;
+        }
+        if (!is_array($res)) {
+        	$res = array();
+        }
+        $eres = array();
+        foreach ($res as $it) {
+            $eres[] = $it['txt'];
+        }
+        return array('results'=>$eres, 'cnt'=>$cnt);
     }
 
 

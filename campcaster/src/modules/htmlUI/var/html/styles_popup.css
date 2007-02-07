@@ -1,11 +1,11 @@
-body { 
+body {
     font-family: Arial, Verdana, Helvetica, sans-serif;
     font-size: 12px;
     color: #2C2C2C;
     margin: 10px;
 }
 
-img { 
+img {
     border: none;
 }
 
@@ -137,7 +137,8 @@ table tr.blue_head td { font-size: 12px;
 
 }
 
-A#blue_head { font-size: 12px;
+A#blue_head {
+    font-size: 12px;
     color:#fff;
 }
 
@@ -230,7 +231,7 @@ table tr.red td { font-size: 12px;
     margin-left: 200px;
 }
 
-label { 
+label {
     display: block;
     float: left;
     width: 100px;
@@ -370,14 +371,15 @@ table td { font-size: 12px;
     vertical-align: top;
 }
 
-table tr.blue_head td { font-size: 12px;
+table tr.blue_head td {
+    font-size: 12px;
     background-color: #8baed1;
     color: #FFF;
     font-weight: bold;
-
 }
 
-A#blue_head { font-size: 12px;
+A#blue_head {
+    font-size: 12px;
     color:#fff;
 }
 

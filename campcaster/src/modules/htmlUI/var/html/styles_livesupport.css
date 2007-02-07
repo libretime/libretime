@@ -370,7 +370,7 @@ table {
 
 table td {
     font-size: 12px;
-    padding: 0 6px 0 12px;
+    padding: 2px 6px 0px 6px;
     border-right: 1px solid #333;
     height: 19px;
     vertical-align: top;

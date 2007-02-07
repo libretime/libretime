@@ -511,7 +511,7 @@ class GreenBox extends BasicStor {
      *       cnt : integer - number of matching values
      * @see BasicStor::bsBrowseCategory
      */
-    public function browseCategory($category, $criteria, $sessid = '')
+    public function browseCategory($category, $criteria = null, $sessid = '')
     {
         $limit = 0;
         $offset = 0;

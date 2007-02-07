@@ -8,13 +8,15 @@
 {if $_results.cnt > 0}
     <form name="SEARCHRESULTS">
     <div class="head" style="width:600px; height: 21px;">&nbsp;</div>
-    <div class="container_table"  style="width: 600px; height: auto;">
+    <div class="container_table" style="width: 600px; height: auto;">
 
             <table style="width: 600px;">
                 <tr class="blue_head">
-                    <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
+                    <td style="width: 20px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
                     <td style="width: 200px;"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
                     <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
+                    <td style="width: 195px">##Album##</td>
+                    <td style="width: 25px">##Track##</td>
                     <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
                     <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type', 'order');" id="blue_head">##Type##</a></td>
                 </tr>
@@ -30,6 +32,8 @@
                         {/if}
                     </td>
                     <td {include file=$action_handler} style="cursor: pointer">{$i.creator}</td>
+                    <td {include file=$action_handler} style="cursor: pointer">{$i.source}</td>
+                    <td {include file=$action_handler} style="cursor: pointer" align="center">{$i.track_num}</td>
                     <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
                         <img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />

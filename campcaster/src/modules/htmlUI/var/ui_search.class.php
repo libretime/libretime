@@ -116,7 +116,6 @@ class uiSearch
 
     function newSearch(&$formdata)
     {
-        #print_r($formdata);
         $this->results = NULL;
         $this->criteria['conditions'] = NULL;
         $this->criteria['offset'] = NULL;
@@ -170,7 +169,9 @@ class uiSearch
         $this->criteria['filetype'] = UI_SIMPLESEARCH_FILETYPE;
         $this->criteria['limit'] = UI_SIMPLESEARCH_LIMIT;
         $this->criteria['counter'] = UI_SIMPLESEARCH_ROWS;
-        $this->criteria['form']['operator'] = 'OR';    ## $criteria['form'] is used for retransfer to form ##
+
+        // $criteria['form'] is used for retransfer to form
+        $this->criteria['form']['operator'] = 'OR';
         $this->criteria['form']['filetype'] = UI_SIMPLESEARCH_FILETYPE;
         $this->criteria['form']['limit'] = UI_SIMPLESEARCH_LIMIT;
 
