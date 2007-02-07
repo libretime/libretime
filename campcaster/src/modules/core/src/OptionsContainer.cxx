@@ -354,7 +354,7 @@ OptionsContainer :: createNode(OptionItemString     optionItem)     throw ()
 {
     xmlpp::Element *    rootNode = optionsDocument.get_root_node();
     xmlpp::Element *    element = 0;
-    xmlpp::Node *       attribute = 0;
+    xmlpp::Attribute *  attribute = 0;
     
     // only supports the serialDeviceName option item, for now
     switch (optionItem) {
