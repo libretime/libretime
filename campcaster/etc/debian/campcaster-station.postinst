@@ -29,6 +29,7 @@ case "$1" in
 
         # remount the NFS share if we have a 2-computer setup
         if [ -f $installdir/storageServer.wasMounted ]; then
+            echo "Remounting the remote storage..."
             mount $installdir/var/Campcaster/storageServer
             rm $installdir/storageServer.wasMounted
         fi

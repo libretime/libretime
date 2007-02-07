@@ -48,6 +48,7 @@ case "$1" in
         # unmount the NFS share, if we have a 2-computer setup
         storagedir=$installdir/var/Campcaster/storageServer
         if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+            echo "Unmounting the remote storage..."
             umount $storagedir
             touch $installdir/storageServer.wasMounted
         fi
