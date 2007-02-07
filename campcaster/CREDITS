@@ -1,19 +1,41 @@
-Version 1.1.X
--------------
-Ferenc Gerlits (fgerlits@campware.org)
-    - Studio GUI, scheduler, packaging
-Mark Kretschmann (markey@web.de)
-    - Audio player
-Paul Baranowski (paul@paulbaranowski.org)
-    - Project manager, HTML UI, storage server, scheduler
+Version 1.2.0 - "Kotor"
+-----------------------
+In aplhabetical order:
+
 Douglas Arellanes (Douglas.Arellanes@mdlf.org)
     - Tester and user feedback
-Tomáš Hlava (th@red2head.com) 
-    - Storage server, network hub
+Paul Baranowski (paul@paulbaranowski.org)
+    - Project manager, HTML UI, storage server
+Ferenc Gerlits (fgerlits@campware.org)
+    - Studio GUI, scheduler, packaging
+Tomáš Hlava (th@red2head.com)
+    - Bug fixes
+Mark Kretschmann (markey@web.de)
+    - Audio player
+Sava Tatic
+    - Manager
+
+
+Version 1.1.X - "Freetown"
+--------------------------
+In alphabetical order:
+
+Douglas Arellanes (Douglas.Arellanes@mdlf.org)
+    - Tester and user feedback
+Paul Baranowski (paul@paulbaranowski.org)
+    - Project manager, HTML UI, storage server, scheduler
 János Csikós (retired)
     - HTML UI
+Ferenc Gerlits (fgerlits@campware.org)
+    - Studio GUI, scheduler, packaging
+Tomáš Hlava (th@red2head.com)
+    - Storage server, network hub
+Mark Kretschmann (markey@web.de)
+    - Audio player
 Ákos Maróy (retired)
     - Architecture design, scheduler, audio player
+Sava Tatic
+    - Manager
 
 Version 1.0
 -----------
