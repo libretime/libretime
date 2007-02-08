@@ -143,14 +143,14 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
                                 gpointer       self)
                                                                 throw ()
 {
+    GstreamerPlayer* const player = (GstreamerPlayer*) self;
+    player->m_errorMessage = error->message;
+
+    std::cerr << "gstreamer error: " << error->message << std::endl;
+
     // Important: We *must* use an idle function call here, so that the signal handler returns 
     // before fireOnStopEvent() is executed.
     g_idle_add(fireOnStopEvent, self);
-
-    std::string str( "Audio Player Error: ");
-    str += error->message;
-
-    throw std::runtime_error(str);
 }
 
 
@@ -223,11 +223,16 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw (
 
     GstreamerPlayer* const player = (GstreamerPlayer*) self;
 
+    Ptr<const std::string>::Ref msg;
+    if (!player->m_errorMessage.empty()) {
+        msg.reset(new const std::string(player->m_errorMessage));
+    }
+
     ListenerVector::iterator    it  = player->m_listeners.begin();
     ListenerVector::iterator    end = player->m_listeners.end();
 
     while (it != end) {
-        (*it)->onStop();
+        (*it)->onStop(msg);
         ++it;
     }
 
@@ -324,6 +329,8 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 
     debug() << "Opening URL: " << fileUrl << endl;
     debug() << "Timestamp: " << *TimeConversion::now() << endl;
+
+    m_errorMessage.clear();
 
     std::string filePath;
 

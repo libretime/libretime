@@ -151,6 +151,11 @@ class GstreamerPlayer : virtual public Configurable,
         std::string             m_audioDevice;
 
         /**
+         *  Contains runtime error messages from GStreamer.
+         */
+        std::string             m_errorMessage;
+
+        /**
          *  The URL of the preloaded file. Empty if nothing is preloaded.
          */
         std::string             m_preloadUrl;
