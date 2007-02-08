@@ -83,9 +83,11 @@ class AudioPlayerEventListener
          *  Catch the event when playing has stopped.
          *  This will happen probably due to the fact that the
          *  audio clip has been played to its end.
+         *
+         *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(void)                                        throw () = 0;
+        onStop(Ptr<const std::string>::Ref  errorMessage)   throw () = 0;
 };
 
 
