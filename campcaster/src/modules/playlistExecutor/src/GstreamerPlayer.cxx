@@ -226,6 +226,7 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw (
     Ptr<const std::string>::Ref msg;
     if (!player->m_errorMessage.empty()) {
         msg.reset(new const std::string(player->m_errorMessage));
+        player->m_errorMessage.clear();
     }
 
     ListenerVector::iterator    it  = player->m_listeners.begin();
