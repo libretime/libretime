@@ -684,9 +684,9 @@ WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
  *  Create a dialog window.
  *----------------------------------------------------------------------------*/
 DialogWindow *
-WidgetFactory :: createDialogWindow(Ptr<Glib::ustring>::Ref     message,
-                                    Ptr<ResourceBundle>::Ref    bundle,
-                                    int                         buttons)
+WidgetFactory :: createDialogWindow(Ptr<const Glib::ustring>::Ref   message,
+                                    Ptr<ResourceBundle>::Ref        bundle,
+                                    int                             buttons)
                                                                     throw ()
 {
     return new DialogWindow(message, buttons, bundle);

@@ -205,9 +205,13 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
  *  Event handler for the "cue audio player has stopped" event.
  *----------------------------------------------------------------------------*/
 void
-CuePlayer :: onStop(Ptr<const std::string>::Ref  errorMessage)      throw ()
+CuePlayer :: onStop(Ptr<const Glib::ustring>::Ref  errorMessage)    throw ()
 {
     setAudioState(waitingState);
+    
+    if (errorMessage) {
+        gLiveSupport->displayMessageWindow(errorMessage);
+    }
 }
 
 

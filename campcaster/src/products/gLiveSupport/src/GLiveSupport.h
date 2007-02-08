@@ -486,7 +486,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param message the message to display
          */
         void
-        displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
+        displayMessageWindow(Ptr<const Glib::ustring>::Ref    message)
                                                                 throw ();
 
         /**
@@ -1060,8 +1060,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(Ptr<const std::string>::Ref  errorMessage
-                                            = Ptr<const std::string>::Ref())
+        onStop(Ptr<const Glib::ustring>::Ref  errorMessage
+                                              = Ptr<const Glib::ustring>::Ref())
                                                 throw ();
 
         /**

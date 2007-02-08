@@ -144,7 +144,7 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
                                                                 throw ()
 {
     GstreamerPlayer* const player = (GstreamerPlayer*) self;
-    player->m_errorMessage = error->message;
+    player->m_errorMessage.reset(new const Glib::ustring(error->message));
 
     std::cerr << "gstreamer error: " << error->message << std::endl;
 
@@ -223,19 +223,15 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw (
 
     GstreamerPlayer* const player = (GstreamerPlayer*) self;
 
-    Ptr<const std::string>::Ref msg;
-    if (!player->m_errorMessage.empty()) {
-        msg.reset(new const std::string(player->m_errorMessage));
-        player->m_errorMessage.clear();
-    }
-
     ListenerVector::iterator    it  = player->m_listeners.begin();
     ListenerVector::iterator    end = player->m_listeners.end();
 
     while (it != end) {
-        (*it)->onStop(msg);
+        (*it)->onStop(player->m_errorMessage);
         ++it;
     }
+
+    player->m_errorMessage.reset();
 
     // false == Don't call this idle function again
     return false;
@@ -331,7 +327,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     debug() << "Opening URL: " << fileUrl << endl;
     debug() << "Timestamp: " << *TimeConversion::now() << endl;
 
-    m_errorMessage.clear();
+    m_errorMessage.reset();
 
     std::string filePath;
 

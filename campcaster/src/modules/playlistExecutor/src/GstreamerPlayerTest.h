@@ -248,7 +248,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
          *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(Ptr<const std::string>::Ref  errorMessage)
+        onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
                                                         throw ();
 };
 

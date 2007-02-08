@@ -153,7 +153,7 @@ class GstreamerPlayer : virtual public Configurable,
         /**
          *  Contains runtime error messages from GStreamer.
          */
-        std::string             m_errorMessage;
+        Ptr<const Glib::ustring>::Ref       m_errorMessage;
 
         /**
          *  The URL of the preloaded file. Empty if nothing is preloaded.

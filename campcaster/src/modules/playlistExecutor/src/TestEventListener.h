@@ -96,7 +96,8 @@ class TestEventListener : public AudioPlayerEventListener
          *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(Ptr<const std::string>::Ref  errorMessage)   throw ()
+        onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
+                                                            throw ()
         {
             stopFlag = true;
         }

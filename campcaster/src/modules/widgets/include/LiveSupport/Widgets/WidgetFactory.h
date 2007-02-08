@@ -414,8 +414,8 @@ class WidgetFactory :
          *  @return the DialogWindow object.
          */
         DialogWindow *
-        createDialogWindow(Ptr<Glib::ustring>::Ref     message,
-                           Ptr<ResourceBundle>::Ref    bundle,
+        createDialogWindow(Ptr<const Glib::ustring>::Ref    message,
+                           Ptr<ResourceBundle>::Ref         bundle,
                            int              buttons = DialogWindow::okButton)
                                                                     throw ();
 

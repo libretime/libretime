@@ -58,9 +58,9 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
-                              int                       buttonTypes,
-                              Ptr<ResourceBundle>::Ref  bundle)
+DialogWindow :: DialogWindow (Ptr<const Glib::ustring>::Ref message,
+                              int                           buttonTypes,
+                              Ptr<ResourceBundle>::Ref      bundle)
                                                                     throw ()
           : WhiteWindow(Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),

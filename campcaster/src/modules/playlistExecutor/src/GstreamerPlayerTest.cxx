@@ -622,7 +622,7 @@ GstreamerPlayerTest :: eventListenerOnStopTest(void)
  *  Another, more realistic test of the event listener mechanism.
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayerTest :: onStop(Ptr<const std::string>::Ref  errorMessage)
+GstreamerPlayerTest :: onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
                                                 throw ()
 {
     if (!startNewClipFlag) {

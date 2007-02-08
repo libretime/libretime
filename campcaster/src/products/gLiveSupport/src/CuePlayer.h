@@ -184,8 +184,8 @@ class CuePlayer : public Gtk::HBox,
          *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(Ptr<const std::string>::Ref  errorMessage
-                                            = Ptr<const std::string>::Ref())
+        onStop(Ptr<const Glib::ustring>::Ref  errorMessage
+                                              = Ptr<const Glib::ustring>::Ref())
                                                         throw ();
 };
 

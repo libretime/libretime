@@ -518,7 +518,7 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
+GLiveSupport :: displayMessageWindow(Ptr<const Glib::ustring>::Ref    message)
                                                                     throw ()
 {
     std::cerr << "gLiveSupport: " << *message << std::endl;
@@ -1318,7 +1318,7 @@ GLiveSupport :: stopOutputAudio(void)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: onStop(Ptr<const std::string>::Ref      errorMessage)
+GLiveSupport :: onStop(Ptr<const Glib::ustring>::Ref      errorMessage)
                                                     throw ()
 {
     outputItemPlayingNow.reset();
@@ -1333,6 +1333,10 @@ GLiveSupport :: onStop(Ptr<const std::string>::Ref      errorMessage)
     } catch (std::logic_error) {
         std::cerr << "logic_error caught in GLiveSupport::onStop()\n";
         std::exit(1);
+    }
+    
+    if (errorMessage) {
+        displayMessageWindow(errorMessage);
     }
 }
 

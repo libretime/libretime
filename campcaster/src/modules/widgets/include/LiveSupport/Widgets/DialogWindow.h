@@ -135,9 +135,10 @@ class DialogWindow : public WhiteWindow,
          *  @param bundle   a resource bundle containing the localized
          *                  button labels
          */
-        DialogWindow(Ptr<Glib::ustring>::Ref    message,
-                     int                        buttonTypes,
-                     Ptr<ResourceBundle>::Ref   bundle)     throw ();
+        DialogWindow(Ptr<const Glib::ustring>::Ref  message,
+                     int                            buttonTypes,
+                     Ptr<ResourceBundle>::Ref       bundle)
+                                                            throw ();
 
         /**
          *  Virtual destructor.
