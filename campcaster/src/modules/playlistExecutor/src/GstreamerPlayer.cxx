@@ -143,14 +143,21 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
                                 gpointer       self)
                                                                 throw ()
 {
+    DEBUG_BLOCK
+
     GstreamerPlayer* const player = (GstreamerPlayer*) self;
-    player->m_errorMessage.reset(new const Glib::ustring(error->message));
 
-    std::cerr << "gstreamer error: " << error->message << std::endl;
+    // We make sure that we don't send multiple error messages in a row to the GUI
+    if (!player->m_errorWasRaised) {
+        player->m_errorMessage.reset(new const Glib::ustring(error->message));
+        player->m_errorWasRaised = true;
 
-    // Important: We *must* use an idle function call here, so that the signal handler returns 
-    // before fireOnStopEvent() is executed.
-    g_idle_add(fireOnStopEvent, self);
+        std::cerr << "gstreamer error: " << error->message << std::endl;
+
+        // Important: We *must* use an idle function call here, so that the signal handler returns 
+        // before fireOnStopEvent() is executed.
+        g_idle_add(fireOnStopEvent, self);
+    }
 }
 
 
@@ -328,6 +335,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     debug() << "Timestamp: " << *TimeConversion::now() << endl;
 
     m_errorMessage.reset();
+    m_errorWasRaised = false;
 
     std::string filePath;
 

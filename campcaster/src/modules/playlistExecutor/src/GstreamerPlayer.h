@@ -156,6 +156,11 @@ class GstreamerPlayer : virtual public Configurable,
         Ptr<const Glib::ustring>::Ref       m_errorMessage;
 
         /**
+         *  Flag that indicates that a GStreamer error had previously occured.
+         */
+        bool                    m_errorWasRaised;
+
+        /**
          *  The URL of the preloaded file. Empty if nothing is preloaded.
          */
         std::string             m_preloadUrl;
