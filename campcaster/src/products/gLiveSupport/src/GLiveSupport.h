@@ -1056,9 +1056,13 @@ class GLiveSupport : public LocalizedConfigurable,
 
         /**
          *  Event handler for the "output audio player has stopped" event.
+         *
+         *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(void)                            throw ();
+        onStop(Ptr<const std::string>::Ref  errorMessage
+                                            = Ptr<const std::string>::Ref())
+                                                throw ();
 
         /**
          *  Display the playable item on the master panel as "now playing".

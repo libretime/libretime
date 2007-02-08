@@ -180,9 +180,13 @@ class CuePlayer : public Gtk::HBox,
 
         /**
          *  Event handler for the "cue audio player has stopped" event.
+         *
+         *  @param errorMessage is a 0 pointer if the player stopped normally
          */
         virtual void
-        onStop(void)                                    throw ();
+        onStop(Ptr<const std::string>::Ref  errorMessage
+                                            = Ptr<const std::string>::Ref())
+                                                        throw ();
 };
 
 

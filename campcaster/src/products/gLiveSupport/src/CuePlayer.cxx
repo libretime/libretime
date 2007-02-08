@@ -205,7 +205,7 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
  *  Event handler for the "cue audio player has stopped" event.
  *----------------------------------------------------------------------------*/
 void
-CuePlayer :: onStop(void)                                           throw ()
+CuePlayer :: onStop(Ptr<const std::string>::Ref  errorMessage)      throw ()
 {
     setAudioState(waitingState);
 }

@@ -1318,7 +1318,8 @@ GLiveSupport :: stopOutputAudio(void)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: onStop(void)                                throw ()
+GLiveSupport :: onStop(Ptr<const std::string>::Ref      errorMessage)
+                                                    throw ()
 {
     outputItemPlayingNow.reset();
     try {
