@@ -127,8 +127,8 @@ CuePlayer :: onPlayItem(void)                                       throw ()
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         try {
-            gLiveSupport->playCueAudio(playable);
             setAudioState(playingState);
+            gLiveSupport->playCueAudio(playable);
         } catch (std::runtime_error &e) {
             std::cerr << "GLiveSupport::playCueAudio() error:"
                         << std::endl << e.what() << std::endl;
