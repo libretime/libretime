@@ -229,6 +229,8 @@ dir_setup:
 
 db_init:
 	-cd var/install && php -q install.php
+	chgrp ${APACHE_GROUP} ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
+	chmod g+sw ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_clean:
 	-cd var/install && php -q uninstall.php
