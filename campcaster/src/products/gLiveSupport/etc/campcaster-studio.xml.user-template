@@ -14,6 +14,7 @@
                                        taskbarIcons,
                                        testAudioUrl,
                                        serialPort,
+                                       rdsContainer,
                                        metadataTypeContainer,
                                        keyboardShortcutList) >
 
@@ -105,6 +106,12 @@
 <!ELEMENT serialPort     EMPTY                     >
 <!ATTLIST serialPort     path    CDATA   #REQUIRED >
 
+<!ELEMENT rdsContainer   (rdsItem*) >
+<!ELEMENT rdsItem        EMPTY      >
+<!ATTLIST rdsItem        key        CDATA   #REQUIRED >
+<!ATTLIST rdsItem        value      CDATA   #REQUIRED >
+<!ATTLIST rdsItem        enabled    CDATA   #REQUIRED >
+
 <!ELEMENT metadataTypeContainer           (metadataType+)       >
 
 <!ELEMENT metadataType                    (constraint?)         >
@@ -193,6 +200,12 @@
     <testAudioUrl   path = "file:var/testAudio.ogg" />
 
     <serialPort     path = "/dev/ttyS0" />
+
+    <rdsContainer>
+        <rdsItem key="PS" value="" enabled="0"/>
+        <rdsItem key="PI" value="" enabled="0"/>
+        <rdsItem key="RT" value="" enabled="0"/>
+    </rdsContainer>
 
     <metadataTypeContainer>
         <metadataType   dcName          = "dc:title"

@@ -113,7 +113,7 @@ RdsEntry :: saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)   throw ()
                     entryBinNow(new const Glib::ustring(entryBin->get_text()));
     
     if (!entryBinSaved || checkBoxNow != checkBoxSaved
-                       || entryBinNow != entryBinSaved) {
+                       || *entryBinNow != *entryBinSaved) {
         Ptr<OptionsContainer>::Ref      optionsContainer =
                                         gLiveSupport->getOptionsContainer();
         optionsContainer->setRdsOptions(type, entryBinNow, checkBoxNow);
