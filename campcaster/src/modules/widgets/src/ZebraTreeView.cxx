@@ -109,8 +109,6 @@ ZebraTreeView :: appendColumn(
         viewColumn->set_min_width(minimumWidth);
     }
     
-    viewColumn->set_sort_column(modelColumn);
-    
     return append_column(*viewColumn);
 }
 
@@ -240,8 +238,6 @@ ZebraTreeView :: appendCenteredColumn(
         viewColumn->set_min_width(minimumWidth);
     }
     
-    viewColumn->set_sort_column(modelColumn);
-    
     return append_column(*viewColumn);
 }
 
@@ -352,8 +348,6 @@ ZebraTreeView :: appendEditableColumn(
     if (minimumWidth) {
         viewColumn->set_min_width(minimumWidth);
     }
-    
-    viewColumn->set_sort_column(modelColumn);
     
     return append_column(*viewColumn);
 }
