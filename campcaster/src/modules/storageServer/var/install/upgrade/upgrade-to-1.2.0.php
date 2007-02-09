@@ -54,6 +54,21 @@ echo " * Adding 'jobpid' to ".$CC_CONFIG['transTable']."...";
 $sql = "ALTER TABLE ".$CC_CONFIG['transTable']." ADD COLUMN jobpid int";
 camp_install_query($sql);
 
+echo " * Fixing track numbers...\n";
+$sql = "SELECT id, object as track_num FROM ".$CC_CONFIG['mdataTable']
+    ." WHERE predns='ls' AND predicate='track_num'";
+$rows = $CC_DBC->GetAll($sql);
+foreach ($rows as $row) {
+    $newTrackNum = camp_parse_track_number($row["track_num"]);
+    if ($row["track_num"] != $newTrackNum) {
+        echo "   * Converting '".$row["track_num"]."' --> '$newTrackNum'\n";
+        $sql = "UPDATE ".$CC_CONFIG["mdataTable"]
+            ." SET object='$newTrackNum'"
+            ." WHERE id=".$row["id"];
+        $CC_DBC->query($sql);
+    }
+}
+
 // Get MD5 values for all files
 echo " * Computing MD5 sums for all files (this may take a while)...\n";
 $sql = "SELECT to_hex(gunid) as gunid, name FROM ".$CC_CONFIG['filesTable'] ." WHERE ftype='audioclip'";

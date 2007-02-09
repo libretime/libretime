@@ -367,15 +367,33 @@ class DataEngine {
 
         // Order by clause
         $orderby = TRUE;
+        $orderByAllowedValues = array('dc:creator', 'dc:source', 'dc:title', 'dcterms:extent', "ls:track_num");
+        $orderByDefaults = array('dc:creator', 'dc:source', 'dc:title');
         if ((!isset($criteria['orderby']))
         	|| (is_array($criteria['orderby']) && (count($criteria['orderby'])==0))) {
       		// default ORDER BY
-            $orderbyQns  = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title');
+            // PaulB: track number removed because it doesnt work yet because
+            // if track_num is not an integer (e.g. bad metadata like "1/20",
+            // or if the field is blank) the SQL statement gives an error.
+            //$orderbyQns  = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title');
+            $orderbyQns = $orderByDefaults;
         } else {
-            $orderbyQns  = $criteria['orderby'];
-        }
-        if (!is_array($orderbyQns)) {
-            $orderbyQns = array($orderbyQns);
+            // ORDER BY clause is given in the parameters.
+
+            // Convert the parameter to an array if it isnt already.
+            $orderbyQns = $criteria['orderby'];
+            if (!is_array($orderbyQns)) {
+                $orderbyQns = array($orderbyQns);
+            }
+
+            // Check that it has valid ORDER BY values, if not, revert
+            // to the default ORDER BY values.
+            foreach ($orderbyQns as $metadataTag) {
+                if (!in_array($metadataTag, $orderByAllowedValues)) {
+                    $orderbyQns = $orderByDefaults;
+                    break;
+                }
+            }
         }
 
         $descA = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
@@ -437,11 +455,13 @@ class DataEngine {
                 // Special case for track number because if we use text
                 // sorting of this value, then 10 comes right after 1.
                 // So we convert track number to an integer for ordering.
-                if ($qname == "ls:track_num") {
-                    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
-                } else {
-                    $tmpSql .= ", m$i.object as ".$dataName[$qname];
-                }
+
+                // PaulB: see my note above about why this is commented out.
+                //if ($qname == "ls:track_num") {
+                //    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
+                //} else {
+                $tmpSql .= ", m$i.object as ".$dataName[$qname];
+                //}
                 $i++;
             }
 

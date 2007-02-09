@@ -13,12 +13,12 @@
             <table style="width: 600px;">
                 <tr class="blue_head">
                     <td style="width: 20px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
-                    <td style="width: 200px;"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
-                    <td style="width: 195px">##Album##</td>
-                    <td style="width: 25px">##Track##</td>
-                    <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
-                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type', 'order');" id="blue_head">##Type##</a></td>
+                    <td style="width: 200px;"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:title', 'order');" id="blue_head">##Title##</a></td>
+                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:creator', 'order');" id="blue_head">##Creator##</a></td>
+                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:source', 'order');" id="blue_head">##Album##</a></td>
+                    <td style="width: 25px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=ls:track_num', 'order');" id="blue_head">##Track##</a></td>
+                    <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dcterms:extent', 'order');" id="blue_head">##Duration##</a></td>
+                    <td style="width: 41px; border: 0; text-align: center">{*<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type', 'order');" id="blue_head">*}##Type##{*</a>*}</td>
                 </tr>
                 {foreach from=$_results.items item=i}
             <!-- start item -->

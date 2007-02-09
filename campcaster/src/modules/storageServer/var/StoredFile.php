@@ -4,6 +4,37 @@ require_once("Playlist.php");
 require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
 
 /**
+ * Track numbers in metadata tags can come in many formats:
+ * "1 of 20", "1/20", "20/1".  This function parses the track
+ * number and gets the real number so that we can sort by it
+ * in the database.
+ *
+ * @param string $p_trackNumber
+ * @return int
+ */
+function camp_parse_track_number($p_trackNumber)
+{
+    $num = trim($p_trackNumber);
+    if (!is_numeric($num)) {
+        $matches = preg_match("/\s*([0-9]+)([^0-9]*)([0-9]*)\s*/", $num, $results);
+        $trackNum = 0;
+        foreach ($results as $result) {
+            if (is_numeric($result)) {
+                if ($trackNum == 0) {
+                    $trackNum = $result;
+                } elseif ($result < $trackNum) {
+                    $trackNum = $result;
+                }
+            }
+        }
+    } else {
+        $trackNum = $num;
+    }
+    return $trackNum;
+}
+
+
+/**
  * Add data to the global array $mdata, also sets global variables
  * $titleHaveSet and $titleKey.
  *
@@ -198,6 +229,11 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
                     if ($encodedElementExists) {
                     	eval("\$enc = $encodedElement;");
                     }
+                }
+
+                // Special case handling for track number
+                if ($key == "ls:track_num") {
+                    $data = camp_parse_track_number($data);
                 }
                 camp_add_metadata($mdata, $key, $data, $enc);
 		        if ($key == $titleKey) {

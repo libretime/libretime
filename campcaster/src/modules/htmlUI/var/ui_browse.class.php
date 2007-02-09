@@ -6,7 +6,10 @@
  */
 class uiBrowse
 {
-    public $Base; // uiBase object
+    /**
+     * @var uiBase
+     */
+    public $Base;
 
     /**
      * @var string
@@ -188,23 +191,33 @@ class uiBrowse
         $columnNumber = $p_param['col'];
         $category = uiBase::formElementDecode($p_param['category']);
 
-        // Set the new values for this column.
+        // Set the new category for this column.
         $this->col[$columnNumber]['category'] = $category;
-        $this->col[$columnNumber]['criteria'] = NULL;
-        $this->col[$columnNumber]['form_value'] = '%%all%%';
+        $previousValue = $this->col[$columnNumber]['form_value'];
 
-        // Get the values of this category based on the criteria in the
-        // other columns.
+        // For this column and all columns above this one, reset the values
+        for ($i = $columnNumber; $i <= 3; $i++) {
+            $this->col[$i]['criteria'] = NULL;
+            $this->col[$i]['form_value'] = '%%all%%';
+        }
+
+        // Reload the criteria
         $this->setCriteria();
         $tmpCriteria = $this->criteria;
         // We put a limit here to because some categories will select
         // way too many values.
         $tmpCriteria["limit"] = 1000;
         $tmpCriteria["offset"] = 0;
-        $browseValues = $this->Base->gb->browseCategory(
-            $category, $tmpCriteria, $this->Base->sessid);
-        if (!PEAR::isError($browseValues)) {
-            $this->col[$columnNumber]['values'] = $browseValues;
+
+        // For this column and all columns above this one,
+        // reload the values.
+        for ($i = $columnNumber; $i <= 3; $i++) {
+            $browseValues = $this->Base->gb->browseCategory(
+                $this->col[$i]["category"], $tmpCriteria, $this->Base->sessid);
+            if (!PEAR::isError($browseValues)) {
+                $this->col[$i]['values'] = $browseValues;
+            }
+            $browseValues = null;
         }
 
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
@@ -242,6 +255,12 @@ class uiBrowse
     	    $this->col[$columnNumber]['criteria']['conditions'] = $conditions;
         }
 
+        // Clear all columns above this one of selected values.
+        for ($tmpColNum = $columnNumber + 1; $tmpColNum <= 3; $tmpColNum++) {
+            $this->col[$tmpColNum]['criteria'] = NULL;
+            $this->col[$tmpColNum]['form_value'] = '%%all%%';
+        }
+
         // Update the criteria
         $this->setCriteria();
         $tmpCriteria = $this->criteria;
@@ -250,22 +269,13 @@ class uiBrowse
         $tmpCriteria["limit"] = 1000;
         $tmpCriteria["offset"] = 0;
 
-        // We need to update all other column values for any column
-        // that does not have a selected value.
-        for ($tmpColNum = 1; $tmpColNum <= 3; $tmpColNum++) {
-            // Make sure not to update current column
-            if ($tmpColNum != $columnNumber) {
-                // if the column does not have a selected value
-                if ($this->col[$tmpColNum]['criteria'] == NULL) {
-                    $tmpCategory = $this->col[$tmpColNum]['category'];
-                    $browseValues = $this->Base->gb->browseCategory(
-                        $tmpCategory, $tmpCriteria, $this->Base->sessid);
-                    if (!PEAR::isError($browseValues)) {
-                        $this->col[$tmpColNum]['values'] = $browseValues;
-                        $this->col[$tmpColNum]['criteria'] = NULL;
-                        $this->col[$tmpColNum]['form_value'] = '%%all%%';
-                    }
-                }
+        // For all columns greater than this one, reload the values.
+        for ($tmpColNum = $columnNumber + 1; $tmpColNum <= 3; $tmpColNum++) {
+            $tmpCategory = $this->col[$tmpColNum]['category'];
+            $browseValues = $this->Base->gb->browseCategory(
+                $tmpCategory, $tmpCriteria, $this->Base->sessid);
+            if (!PEAR::isError($browseValues)) {
+                $this->col[$tmpColNum]['values'] = $browseValues;
             }
         }
         $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
@@ -364,17 +374,17 @@ class uiBrowse
     } // fn pagination
 
 
-    public function reorder($by)
+    public function reorder($p_orderBy)
     {
         $this->criteria['offset'] = NULL;
 
-        if ( ($this->criteria['orderby'] == $by) && !$this->criteria['desc']) {
+        if ( ($this->criteria['orderby'] == $p_orderBy) && !$this->criteria['desc']) {
             $this->criteria['desc'] = TRUE;
         } else {
             $this->criteria['desc'] = FALSE;
         }
 
-        $this->criteria['orderby'] = $by;
+        $this->criteria['orderby'] = $p_orderBy;
         $this->setReload();
     } // fn reorder
 

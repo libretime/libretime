@@ -66,20 +66,10 @@ class BasicStor {
     /**
      * Store new file in the storage
      *
-     * @param int $parid
+     * @param int $p_parentId
      * 		Parent id
-     * @param string $fileName
-     * 		Name for new file
-     * @param string $localFilePath
-     * 		Local path of media file
-     * @param string $metadataFilePath
-     * 		Local path of metadata file
-     * @param string $gunid
-     * 		global unique id
-     * @param string $ftype
-     * 		Internal file type
-     * @param string $mdataLoc
-     * 		'file'|'string'
+     * @param array $p_values
+     * 		See StoredFile::Insert() for details.
      * @param boolean $copyMedia
      * 		copy the media file if true, make symlink if false
      * @return int|PEAR_Error
