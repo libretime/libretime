@@ -109,6 +109,8 @@ ZebraTreeView :: appendColumn(
         viewColumn->set_min_width(minimumWidth);
     }
     
+    viewColumn->set_sort_column(modelColumn);
+    
     return append_column(*viewColumn);
 }
 
@@ -238,6 +240,8 @@ ZebraTreeView :: appendCenteredColumn(
         viewColumn->set_min_width(minimumWidth);
     }
     
+    viewColumn->set_sort_column(modelColumn);
+    
     return append_column(*viewColumn);
 }
 
@@ -310,7 +314,7 @@ ZebraTreeView :: lineNumberCellDataFunction(
 
 
 /*------------------------------------------------------------------------------
- *  Add a centered text column to the TreeView.
+ *  Add an editable centered text column to the TreeView.
  *----------------------------------------------------------------------------*/
 int 
 ZebraTreeView :: appendEditableColumn(
@@ -348,6 +352,8 @@ ZebraTreeView :: appendEditableColumn(
     if (minimumWidth) {
         viewColumn->set_min_width(minimumWidth);
     }
+    
+    viewColumn->set_sort_column(modelColumn);
     
     return append_column(*viewColumn);
 }
