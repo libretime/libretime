@@ -117,6 +117,7 @@ define('UI_RESTORETOKEN_KEY', 'restoreToken');
 require_once('../../../storageServer/var/conf.php');
 define('UI_VERSION', CAMPCASTER_VERSION);
 define('UI_VERSION_FULLNAME', 'Campcaster '.UI_VERSION);
+define('UI_COPYRIGHT_DATE', CAMPCASTER_COPYRIGHT_DATE);
 
 // extent config
 $CC_CONFIG = array_merge($CC_CONFIG,

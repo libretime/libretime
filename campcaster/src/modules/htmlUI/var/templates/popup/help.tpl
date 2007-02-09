@@ -85,7 +85,10 @@ DIV.blockquote
 
 <h1>Quick Start - {$UI_VERSION_FULLNAME}</h1>
 <div class="copyright">
-    {$UI_VERSION} &copy;2005 <a href="http://www.mdlf.org" target="_blank">MDLF</a> - maintained and distributed under GNU/GPL by <a href="http://www.campware.org" target="_blank">CAMPWARE</a>
+    {$UI_VERSION} &copy;{$UI_COPYRIGHT_DATE}
+    <a href="http://www.mdlf.org" target="_blank">MDLF</a>
+    - maintained and distributed under GNU/GPL by
+    <a href="http://www.campware.org" target="_blank">CAMPWARE</a>
 </div>
 
 
