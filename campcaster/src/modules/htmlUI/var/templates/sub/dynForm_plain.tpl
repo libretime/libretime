@@ -7,7 +7,7 @@
         {include file="smarty-dynamic-`$element.style`.tpl}
     {/if}
     {*
-    NOTE: Another way ist to have smarty template code in
+    NOTE: Another way is to have smarty template code in
     $element.style. In this case you can do:
 
     {if $element.style}
@@ -26,7 +26,7 @@
                 {if $element.required}<font color="red">*</font>{/if}
                 </label>
             {/if}
-               
+
             {if $element.error}<font color="red">{$element.error}</font><br />{/if}
 
             {if $element.type eq "group"}
