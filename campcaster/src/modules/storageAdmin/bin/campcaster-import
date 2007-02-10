@@ -46,7 +46,7 @@ filelistpathname=.
 #   Do import
 #-------------------------------------------------------------------------------
 invokePwd=$PWD
-echo $invokePwd
+#echo $invokePwd
 cd $phpdir
 
 php -q campcaster-import.php --dir "$invokePwd" "$@" || exit 1
