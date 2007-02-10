@@ -88,7 +88,14 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             </ul>
         </li>
 
-        <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Help##</a></li>
+        <li class="nav-main"><a>##Help##</a>
+            <ul>
+                <li><a href="" onclick="window.open('http://code.campware.org/manuals/campcaster/1.1/', 'help', 'menubar=yes,toolbar=yes,location=yes,status=yes,scrollbars=yes,resizable=yes,width=850,height=800')">##User Manual##</a></li>
+                <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Quickstart##</a></li>
+                <li><a href="" onclick="window.open('http://campcaster.campware.org/', 'help', 'menubar=yes,toolbar=yes,location=yes,status=yes,scrollbars=yes,resizable=yes,width=850,height=800')">##Homepage##</a></li>
+
+            </ul>
+        </li>
     </ul>
 
 {/if}
