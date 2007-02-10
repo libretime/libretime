@@ -435,10 +435,11 @@ class LocStor extends BasicStor {
 
     /**
      * @param array $criteria
-     * @param mixed $sessid - this variable isnt used
+     * @param mixed $sessid
+     *      This variable isnt used.
      * @return unknown
      */
-    protected function localSearch($criteria, $sessid='')
+    public function localSearch($criteria, $sessid='')
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
