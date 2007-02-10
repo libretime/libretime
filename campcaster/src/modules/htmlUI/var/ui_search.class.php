@@ -46,14 +46,13 @@ class uiSearch
 
     function searchForm($id, $mask2)
     {
-        //print_r($this->criteria['form']);
         include(dirname(__FILE__).'/formmask/metadata.inc.php');
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $counter = isset($this->criteria['counter']) ? $this->criteria['counter'] : 1;
         $form->setConstants(array('id'=>$id, 'counter'=>$counter));
 
         foreach ($mask['pages'] as $key=>$val) {
-            foreach ($mask['pages'][$key] as $v){
+            foreach ($mask['pages'][$key] as $v) {
                 if (isset($v['type']) && $v['type']) {
                     $col1[uiBase::formElementEncode($v['element'])] = tra($v['label']);
                     if (isset($val['relation'])) {
@@ -68,8 +67,8 @@ class uiSearch
         for ($n = 1; $n <= UI_SEARCH_MAX_ROWS; $n++) {
             unset($group);
 
-            if (($n > 1) && ($n > $counter) ) {
-                 $activerow = FALSE;
+            if ( ($n > 1) && ($n > $counter) ) {
+                $activerow = FALSE;
             } else {
                 $activerow = TRUE;
             }
@@ -101,6 +100,12 @@ class uiSearch
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
 
+        for ($i = 0; $i < count($mask2['search']); $i++) {
+            if ($mask2['search'][$i]['element'] == "operator") {
+                $mask2['search'][$i]['selected'] = strtolower($this->criteria['operator']);
+                break;
+            }
+        }
         uiBase::parseArrayToForm($form, $mask2['search']);
         $constants = isset($this->criteria['form']) ? $this->criteria['form'] : null;
         $form->setConstants($constants);
@@ -108,8 +113,6 @@ class uiSearch
         $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['dynform'] = $renderer->toArray();
-        //print_r($output);
-        //echo '<XMP>output:'; print_r($output); echo "</XMP>\n";
         return $output;
     }
 
@@ -277,8 +280,8 @@ class uiSearch
 
     function clear()
     {
-        //$this->results    = NULL;
-        $this->criteria['form']    = NULL;
+        $this->criteria["conditions"] = null;
+        $this->criteria['form'] = NULL;
         $this->criteria['counter'] = NULL;
         $this->setReload();
     }
