@@ -126,21 +126,36 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     // Set the file permissions to be world-readable
     if ($p_importMode == "link") {
+        // Check current file permissions
         $fileperms = fileperms($p_filepath);
         $worldReadable = ($fileperms & 0x0004);
-
         if (!$worldReadable) {
+            $permError = false;
+            // Check if we have the ability to change the perms
             if (is_writable($p_filepath)) {
+                // Change the file perms
                 $fileperms = $fileperms | 0x0004;
                 chmod($p_filepath, $fileperms);
+
+                // Check that file perms were changed
+                clearstatcache();
+                $fileperms = fileperms($p_filepath);
+                $worldReadable = ($fileperms & 0x0004);
+                if (!$worldReadable) {
+                    $permError = true;
+                }
             } else {
+                $permError = true;
+            }
+            if ($permError) {
                 global $g_errors;
                 $g_errors++;
-                echo
-"ERROR: $p_filepath
-       When importing with the '--link' option, files must be set
-       world-readable.  The file permissions for the following file
-       cannot be changed.  We suggest running this script with 'sudo'.\n";
+                echo "ERROR: $p_filepath\n"
+                    ."       When importing with the '--link' option, files must be set\n"
+                    ."       world-readable.  The file permissions for the file cannot be\n"
+                    ."       changed.  Check that you are not trying to import from a FAT32\n"
+                    ."       drive.  Otherwise, this problem might be fixed by running this \n"
+                    ."       script with 'sudo'.\n";
                 return array($fileCount, $duplicates);
             }
         }
