@@ -124,6 +124,28 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         return array($fileCount, $duplicates);
     }
 
+    // Set the file permissions to be world-readable
+    if ($p_importMode == "link") {
+        $fileperms = fileperms($p_filepath);
+        $worldReadable = ($fileperms & 0x0004);
+
+        if (!$worldReadable) {
+            if (is_writable($p_filepath)) {
+                $fileperms = $fileperms | 0x0004;
+                chmod($p_filepath, $fileperms);
+            } else {
+                global $g_errors;
+                $g_errors++;
+                echo
+"ERROR: $p_filepath
+       When importing with the '--link' option, files must be set
+       world-readable.  The file permissions for the following file
+       cannot be changed.  We suggest running this script with 'sudo'.\n";
+                return array($fileCount, $duplicates);
+            }
+        }
+    }
+
 //    $timeBegin = microtime(true);
     $md5sum = md5_file($p_filepath);
 //    $timeEnd = microtime(true);
@@ -135,7 +157,9 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         echo "DUPLICATE: $p_filepath\n";
         return array($fileCount, $duplicates+1);
     }
+
     echo "Importing: $p_filepath\n";
+
     $metadata = camp_get_audio_metadata($p_filepath, $p_testOnly);
     if (PEAR::isError($metadata)) {
     	import_err($metadata);
