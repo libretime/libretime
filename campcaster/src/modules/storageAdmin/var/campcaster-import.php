@@ -11,16 +11,23 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  * @link http://www.campware.org
  */
-ini_set('memory_limit', '64M');
+ini_set('memory_limit', '128M');
 set_time_limit(0);
 error_reporting(E_ALL);
+set_error_handler("camp_import_error_handler", E_ALL & !E_NOTICE);
 
 require_once('conf.php');
 require_once("$STORAGE_SERVER_PATH/var/conf.php");
 require_once('DB.php');
 require_once("$STORAGE_SERVER_PATH/var/GreenBox.php");
 require_once('Console/Getopt.php');
-require_once('File/Find.php');
+
+function camp_import_error_handler()
+{
+    echo var_dump(debug_backtrace());
+    exit();
+}
+
 
 function printUsage()
 {
@@ -89,11 +96,13 @@ function import_err($p_pearErrorObj, $txt='')
 function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = false)
 {
     global $STORAGE_SERVER_PATH;
+    global $g_fileCount;
+    global $g_duplicates;
 
     // Check parameters
     $p_importMode = strtolower($p_importMode);
     if (!in_array($p_importMode, array("copy", "link"))) {
-        return array(0, 0);
+        return;
     }
 
     $greenbox = new GreenBox();
@@ -104,26 +113,35 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     if (!file_exists($p_filepath)) {
         echo " * WARNING: File does not exist: $p_filepath\n";
-        return array($fileCount, $duplicates);
+        return;
     }
+
+    //echo "Memory usage:".memory_get_usage()."\n";
 
     // If we are given a directory, get all the files recursively and
     // call this function for each file.
     if (is_dir($p_filepath)) {
-        list(,$fileList) = File_Find::maptree($p_filepath);
-        foreach ($fileList as $tmpFile) {
-            list($tmpCount, $tmpDups) = camp_import_audio_file($tmpFile, $p_importMode, $p_testOnly);
-            $fileCount += $tmpCount;
-            $duplicates += $tmpDups;
+        // NOTE: this method of using opendir() is used over other
+        // techniques because of its low memory usage.  Both PEAR's
+        // File_Find and PHP5's built-in RecursiveDirectoryIterator
+        // use about 5500 bytes per file, while this method uses
+        // about 1100 bytes per file.
+        $d = opendir($p_filepath);
+        while (false !== ($file = readdir($d))) {
+            if ($file != "." && $file != "..") {
+                $path = "$p_filepath/$file";
+                camp_import_audio_file($path, $p_importMode, $p_testOnly);
+            }
         }
-        return array($fileCount, $duplicates);
+        closedir($d);
+        return;
     }
 
     // Check for non-supported file type
     if (!preg_match('/\.(ogg|mp3)$/i', $p_filepath, $var)) {
         echo "IGNORED: $p_filepath\n";
         //echo " * WARNING: File extension not supported - skipping file: $p_filepath\n";
-        return array($fileCount, $duplicates);
+        return;
     }
 
     // Set the file permissions to be world-readable
@@ -163,7 +181,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
                     ."       changed.  Check that you are not trying to import from a FAT32\n"
                     ."       drive.  Otherwise, this problem might be fixed by running this \n"
                     ."       script with 'sudo'.\n";
-                return array($fileCount, $duplicates);
+                return;
             }
         }
     }
@@ -177,15 +195,16 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
     $duplicate = StoredFile::RecallByMd5($md5sum);
     if ($duplicate) {
         echo "DUPLICATE: $p_filepath\n";
-        return array($fileCount, $duplicates+1);
+        $g_duplicates++;
+        return;
     }
 
-    echo "Importing: $p_filepath\n";
+    echo "Importing: [".sprintf("%05d",$g_fileCount+1)."] $p_filepath\n";
 
     $metadata = camp_get_audio_metadata($p_filepath, $p_testOnly);
     if (PEAR::isError($metadata)) {
     	import_err($metadata);
-    	return array($fileCount, $duplicates);
+    	return;
     }
     // bsSetMetadataBatch doesnt like these values
     unset($metadata['audio']);
@@ -211,7 +230,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         if (PEAR::isError($storedFile)) {
         	import_err($storedFile, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
-        	return 0;
+        	return;
         }
         $id = $storedFile->getId();
 //        $timeEnd = microtime(true);
@@ -224,7 +243,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsSetMetadataBatch()");
         	echo var_export($metadata)."\n";
-        	return 0;
+        	return;
         }
 //        $timeEnd = microtime(true);
 //        echo " * Metadata store time: ".($timeEnd-$timeBegin)."\n";
@@ -234,66 +253,82 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         var_dump($metadata);
     }
 
-    $fileCount++;
-    return array($fileCount, $duplicates);
+    $g_fileCount++;
+    return;
 }
+
+$DEBUG_IMPORT = false;
 
 echo "========================\n";
 echo "Campcaster Import Script\n";
 echo "========================\n";
 $g_errors = 0;
-
 //print_r($argv);
 $start = intval(date('U'));
 
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+if ($DEBUG_IMPORT) {
+    $testonly = false;
+    $importMode = "link";
+    $files = array("/home/paul/music/Tom Petty/Anthology - Through the Years disc 2/13 - Into The Great Wide Open.ogg");
+    $dsn =  array('username' => 'test',
+                  'password' => 'test',
+                  'hostspec' => 'localhost',
+                  'phptype' => 'pgsql',
+                  'database' => 'Campcaster-paul');
+} else {
+    $dsn = $CC_CONFIG['dsn'];
+}
+//PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "camp_import_error_handler");
+$CC_DBC = DB::connect($dsn, TRUE);
 if (PEAR::isError($CC_DBC)) {
 	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
 	exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$parsedCommandLine = Console_Getopt::getopt($argv, "thcld", array("test", "help", "copy", "link", "dir="));
-//print_r($parsedCommandLine);
-if (PEAR::isError($parsedCommandLine)) {
-    printUsage();
-    exit(1);
-}
-$cmdLineOptions = $parsedCommandLine[0];
-if (count($parsedCommandLine[1]) == 0) {
-    printUsage();
-    exit;
-}
+if (!$DEBUG_IMPORT) {
+    $parsedCommandLine = Console_Getopt::getopt($argv, "thcld", array("test", "help", "copy", "link", "dir="));
+    //print_r($parsedCommandLine);
+    if (PEAR::isError($parsedCommandLine)) {
+        printUsage();
+        exit(1);
+    }
+    $cmdLineOptions = $parsedCommandLine[0];
+    if (count($parsedCommandLine[1]) == 0) {
+        printUsage();
+        exit;
+    }
 
-$files = $parsedCommandLine[1];
+    $files = $parsedCommandLine[1];
 
-$testonly = FALSE;
-$importMode = null;
-$currentDir = null;
-foreach ($cmdLineOptions as $tmpValue) {
-    $optionName = $tmpValue[0];
-    $optionValue = $tmpValue[1];
-    switch ($optionName) {
-        case "h":
-        case '--help':
-            printUsage();
-            exit;
-        case "c":
-        case "--copy":
-            $importMode = "copy";
-            break;
-        case 'l':
-        case '--link':
-            $importMode = "link";
-            break;
-        case '--dir':
-            $currentDir = $optionValue;
-            break;
-        case "t":
-        case "--test":
-            $testonly = TRUE;
-            break;
+    $testonly = FALSE;
+    $importMode = null;
+    $currentDir = null;
+    foreach ($cmdLineOptions as $tmpValue) {
+        $optionName = $tmpValue[0];
+        $optionValue = $tmpValue[1];
+        switch ($optionName) {
+            case "h":
+            case '--help':
+                printUsage();
+                exit;
+            case "c":
+            case "--copy":
+                $importMode = "copy";
+                break;
+            case 'l':
+            case '--link':
+                $importMode = "link";
+                break;
+            case '--dir':
+                $currentDir = $optionValue;
+                break;
+            case "t":
+            case "--test":
+                $testonly = TRUE;
+                break;
+        }
     }
 }
 
@@ -302,35 +337,33 @@ if (is_null($importMode)) {
     exit(0);
 }
 
-$filecount = 0;
-$duplicates = 0;
+global $g_fileCount;
+global $g_duplicates;
 if (is_array($files)) {
     foreach ($files as $filepath) {
         $fullPath = realpath($filepath);
         if (!$fullPath && !is_null($currentDir)) {
             $fullPath = "$currentDir/$filepath";
         }
-        list($tmpCount, $tmpDups) = camp_import_audio_file($fullPath, $importMode, $testonly);
-        $filecount += $tmpCount;
-        $duplicates += $tmpDups;
+        camp_import_audio_file($fullPath, $importMode, $testonly);
     }
 }
 $end = intval(date('U'));
 $time = $end - $start;
 if ($time > 0) {
-	$speed = round(($filecount+$duplicates)/$time, 1);
+	$speed = round(($g_fileCount+$g_duplicates)/$time, 1);
 } else {
-	$speed = ($filecount+$duplicates);
+	$speed = ($g_fileCount+$g_duplicates);
 }
 
 echo "==========================================================================\n";
 echo " *** Import mode: $importMode\n";
-echo " *** Files imported: $filecount\n";
-echo " *** Duplicate files (not imported): $duplicates\n";
+echo " *** Files imported: $g_fileCount\n";
+echo " *** Duplicate files (not imported): $g_duplicates\n";
 if ($g_errors > 0) {
     echo " *** Errors: $g_errors\n";
 }
-echo " *** Total: ".($filecount+$duplicates)." files in $time seconds = $speed files/second.\n";
+echo " *** Total: ".($g_fileCount+$g_duplicates)." files in $time seconds = $speed files/second.\n";
 echo "==========================================================================\n";
 
 ?>

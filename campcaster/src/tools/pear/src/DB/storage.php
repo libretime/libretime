@@ -18,7 +18,7 @@
  * @author     Stig Bakken <stig@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: storage.php,v 1.21 2005/02/02 02:54:51 danielc Exp $
+ * @version    CVS: $Id: storage.php,v 1.22 2005/07/10 13:38:51 danielc Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -38,7 +38,7 @@ require_once 'DB.php';
  * @author     Stig Bakken <stig@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.6
+ * @version    Release: 1.7.9
  * @link       http://pear.php.net/package/DB
  */
 class DB_storage extends PEAR
@@ -445,6 +445,8 @@ class DB_storage extends PEAR
      */
     function store()
     {
+        $params = array();
+        $vars = array();
         foreach ($this->_changes as $name => $foo) {
             $params[] = &$this->$name;
             $vars[] = $name . ' = ?';

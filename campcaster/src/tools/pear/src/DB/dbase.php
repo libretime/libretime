@@ -20,7 +20,7 @@
  * @author     Daniel Convissor <danielc@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: dbase.php,v 1.39 2005/02/19 23:25:25 danielc Exp $
+ * @version    CVS: $Id: dbase.php,v 1.42 2007/01/11 07:43:09 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -41,7 +41,7 @@ require_once 'DB/common.php';
  * @author     Daniel Convissor <danielc@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.6
+ * @version    Release: 1.7.9
  * @link       http://pear.php.net/package/DB
  */
 class DB_dbase extends DB_common
@@ -214,7 +214,7 @@ class DB_dbase extends DB_common
          * Turn track_errors on for entire script since $php_errormsg
          * is the only way to find errors from the dbase extension.
          */
-        ini_set('track_errors', 1);
+        @ini_set('track_errors', 1);
         $php_errormsg = '';
 
         if (!file_exists($dsn['database'])) {
@@ -326,6 +326,26 @@ class DB_dbase extends DB_common
     }
 
     // }}}
+    // {{{ freeResult()
+
+    /**
+     * Deletes the result set and frees the memory occupied by the result set.
+     *
+     * This method is a no-op for dbase, as there aren't result resources in
+     * the same sense as most other database backends.
+     *
+     * @param resource $result  PHP's query result resource
+     *
+     * @return bool  TRUE on success, FALSE if $result is invalid
+     *
+     * @see DB_result::free()
+     */
+    function freeResult($result)
+    {
+        return true;
+    }
+
+    // }}}
     // {{{ numCols()
 
     /**
@@ -368,41 +388,21 @@ class DB_dbase extends DB_common
     }
 
     // }}}
-    // {{{ quoteSmart()
+    // {{{ quoteBoolean()
 
     /**
-     * Formats input so it can be safely used in a query
+     * Formats a boolean value for use within a query in a locale-independent
+     * manner.
      *
-     * @param mixed $in  the data to be formatted
-     *
-     * @return mixed  the formatted data.  The format depends on the input's
-     *                 PHP type:
-     *                 + null = the string <samp>NULL</samp>
-     *                 + boolean = <samp>T</samp> if true or
-     *                   <samp>F</samp> if false.  Use the <kbd>Logical</kbd>
-     *                   data type.
-     *                 + integer or double = the unquoted number
-     *                 + other (including strings and numeric strings) =
-     *                   the data with single quotes escaped by preceeding
-     *                   single quotes then the whole string is encapsulated
-     *                   between single quotes
-     *
+     * @param boolean the boolean value to be quoted.
+     * @return string the quoted string.
      * @see DB_common::quoteSmart()
-     * @since Method available since Release 1.6.0
+     * @since Method available since release 1.7.8.
      */
-    function quoteSmart($in)
-    {
-        if (is_int($in) || is_double($in)) {
-            return $in;
-        } elseif (is_bool($in)) {
-            return $in ? 'T' : 'F';
-        } elseif (is_null($in)) {
-            return 'NULL';
-        } else {
-            return "'" . $this->escapeSimple($in) . "'";
-        }
+    function quoteBoolean($boolean) {
+        return $boolean ? 'T' : 'F';
     }
-
+     
     // }}}
     // {{{ tableInfo()
 

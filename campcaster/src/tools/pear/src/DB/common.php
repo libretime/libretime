@@ -20,7 +20,7 @@
  * @author     Daniel Convissor <danielc@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: common.php,v 1.137 2005/04/07 14:27:35 danielc Exp $
+ * @version    CVS: $Id: common.php,v 1.140 2007/01/12 02:41:07 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -42,7 +42,7 @@ require_once 'PEAR.php';
  * @author     Daniel Convissor <danielc@php.net>
  * @copyright  1997-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.6
+ * @version    Release: 1.7.9
  * @link       http://pear.php.net/package/DB
  */
 class DB_common extends PEAR
@@ -120,6 +120,21 @@ class DB_common extends PEAR
      * @var array
      */
     var $prepared_queries = array();
+
+    /**
+     * Flag indicating that the last query was a manipulation query.
+     * @access protected
+     * @var boolean
+     */
+    var $_last_query_manip = false;
+
+    /**
+     * Flag indicating that the next query <em>must</em> be a manipulation
+     * query.
+     * @access protected
+     * @var boolean
+     */
+    var $_next_query_manip = false;
 
 
     // }}}
@@ -424,17 +439,56 @@ class DB_common extends PEAR
      */
     function quoteSmart($in)
     {
-        if (is_int($in) || is_double($in)) {
+        if (is_int($in)) {
             return $in;
+        } elseif (is_float($in)) {
+            return $this->quoteFloat($in);
         } elseif (is_bool($in)) {
-            return $in ? 1 : 0;
+            return $this->quoteBoolean($in);
         } elseif (is_null($in)) {
             return 'NULL';
         } else {
+            if ($this->dbsyntax == 'access'
+                && preg_match('/^#.+#$/', $in))
+            {
+                return $this->escapeSimple($in);
+            }
             return "'" . $this->escapeSimple($in) . "'";
         }
     }
 
+    // }}}
+    // {{{ quoteBoolean()
+
+    /**
+     * Formats a boolean value for use within a query in a locale-independent
+     * manner.
+     *
+     * @param boolean the boolean value to be quoted.
+     * @return string the quoted string.
+     * @see DB_common::quoteSmart()
+     * @since Method available since release 1.7.8.
+     */
+    function quoteBoolean($boolean) {
+        return $boolean ? '1' : '0';
+    }
+     
+    // }}}
+    // {{{ quoteFloat()
+
+    /**
+     * Formats a float value for use within a query in a locale-independent
+     * manner.
+     *
+     * @param float the float value to be quoted.
+     * @return string the quoted string.
+     * @see DB_common::quoteSmart()
+     * @since Method available since release 1.7.8.
+     */
+    function quoteFloat($float) {
+        return "'".$this->escapeSimple(str_replace(',', '.', strval(floatval($float))))."'";
+    }
+     
     // }}}
     // {{{ escapeSimple()
 
@@ -2100,6 +2154,52 @@ class DB_common extends PEAR
     function getSpecialQuery($type)
     {
         return $this->raiseError(DB_ERROR_UNSUPPORTED);
+    }
+
+    // }}}
+    // {{{ nextQueryIsManip()
+
+    /**
+     * Sets (or unsets) a flag indicating that the next query will be a
+     * manipulation query, regardless of the usual DB::isManip() heuristics.
+     *
+     * @param boolean true to set the flag overriding the isManip() behaviour,
+     * false to clear it and fall back onto isManip()
+     *
+     * @return void
+     *
+     * @access public
+     */
+    function nextQueryIsManip($manip)
+    {
+        $this->_next_query_manip = $manip;
+    }
+
+    // }}}
+    // {{{ _checkManip()
+
+    /**
+     * Checks if the given query is a manipulation query. This also takes into
+     * account the _next_query_manip flag and sets the _last_query_manip flag
+     * (and resets _next_query_manip) according to the result.
+     *
+     * @param string The query to check.
+     *
+     * @return boolean true if the query is a manipulation query, false
+     * otherwise
+     *
+     * @access protected
+     */
+    function _checkManip($query)
+    {
+        if ($this->_next_query_manip || DB::isManip($query)) {
+            $this->_last_query_manip = true;
+        } else {
+            $this->_last_query_manip = false;
+        }
+        $this->_next_query_manip = false;
+        return $this->_last_query_manip;
+        $manip = $this->_next_query_manip;
     }
 
     // }}}

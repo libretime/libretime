@@ -1,10 +1,11 @@
 Last updated:
-Nov 23, 2006
+ - 2006-11-23: Updated everything to latest version
+ - 2007-02-13: Update DB from 1.7.6 to 1.7.9
 
 * Archive_Tar-1.3.1
 * Calendar-0.5.3
 * Console_Getopt-1.2
-* DB-1.7.6
+* DB-1.7.9
 * File-1.2.2
 * File_Find-1.2.2
 * HTML_Common-1.2.3
