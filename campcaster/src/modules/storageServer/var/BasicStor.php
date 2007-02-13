@@ -1592,7 +1592,7 @@ class BasicStor {
         }
         $realFtype = BasicStor::GetType($storedFile->gunid);
         if (!is_null($ftype) && (
-            ($realFtype != $ftype)
+            (strtolower($realFtype) != strtolower($ftype))
             // webstreams are subset of audioclips
             && !($realFtype == 'webstream' && $ftype == 'audioclip')
         )) {
