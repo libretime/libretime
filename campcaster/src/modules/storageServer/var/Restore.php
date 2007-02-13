@@ -87,7 +87,7 @@ class Restore {
         }
         $this->sessid = $sessid;
 
-        //generate token
+        // generate token
         $this->token = StoredFile::CreateGunid();
 
         // status file -> working
@@ -151,7 +151,7 @@ class Restore {
      * @param string $token
      * @return array
      * 		hasharray with field:
-     *      status  : boolean - is susccess
+     *      status  : boolean - is success
      */
     function closeRestore($token)
     {
@@ -162,7 +162,7 @@ class Restore {
         $this->setEnviroment();
         $this->rRmDir($this->tmpDir);
         unlink($this->statusFile);
-        return !is_file($this->statusFile);
+        return array("status" => !is_file($this->statusFile));
     }
 
 
