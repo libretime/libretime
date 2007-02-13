@@ -54,11 +54,14 @@ function camp_add_metadata(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859
     if (!is_null($p_val)) {
         $data = $p_val;
         $outputEncoding = 'UTF-8';
-        if (function_exists('iconv') && ($p_inputEncoding != $outputEncoding) ) {
-            $data = @iconv($p_inputEncoding, $outputEncoding, $data);
-            if ($data === FALSE) {
+        //if (function_exists('iconv') && ($p_inputEncoding != $outputEncoding) ) {
+        if (function_exists('iconv') && is_string($p_val)) {
+            $newData = @iconv($p_inputEncoding, $outputEncoding, $data);
+            if ($newData === FALSE) {
                 echo "Warning: convert $key data to unicode failed\n";
-                $data = $p_val;  // fallback
+            } elseif ($newData != $data) {
+                echo "Converted string: '$data' (".gettype($data).") -> '$newData' (".gettype($newData).").\n";
+                $data = $newData;
             }
         }
         $p_mdata[$p_key] = trim($data);
@@ -214,7 +217,8 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
     foreach ($flds as $key => $getid3keys) {
         foreach ($getid3keys as $getid3key) {
             $path = $getid3key["path"];
-            $ignoreEnc = isset($getid3key["ignoreEnc"])?$getid3key["ignoreEnc"]:FALSE;
+            $ignoreEnc = isset($getid3key["ignoreEnc"])?
+                $getid3key["ignoreEnc"]:FALSE;
             $dataPath = isset($getid3key["dataPath"])?$getid3key["dataPath"]:"";
             $encPath = isset($getid3key["encPath"])?$getid3key["encPath"]:"";
             $enc = "UTF-8";
@@ -222,6 +226,9 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
             $tagElement = "\$infoFromFile$path$dataPath";
             eval("\$tagExists = isset($tagElement);");
             if ($tagExists) {
+                //echo "ignore encoding: ".($ignoreEnc?"yes":"no")."\n";
+                //echo "tag exists\n";
+                //echo "encode path: $encPath\n";
                 eval("\$data = $tagElement;");
                 if (!$ignoreEnc && $encPath != "") {
                     $encodedElement = "\$infoFromFile$path$encPath";
