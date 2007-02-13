@@ -256,6 +256,7 @@ RestoreBackupWindow :: restoreBackupClose(void)                     throw ()
         
         try {
             storage->restoreBackupClose(*token);
+            token.reset();
             
         } catch (XmlRpcException &e) {
             signalError(e.what());
