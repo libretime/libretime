@@ -70,15 +70,15 @@ function camp_add_metadata(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859
  * Return an array with the given audio file's ID3 tags.  The keys in the
  * array can be:
  * <pre>
- * 		dc:format
- * 		ls:bitrate
- * 		dcterms:extent
+ * 		dc:format ("mime type")
+ * 		dcterms:extent ("duration")
  * 		dc:title
- * 		dc:creator
- * 		dc:source
+ * 		dc:creator ("artist")
+ * 		dc:source ("album")
+ *      dc:type ("genre")
+ * 		ls:bitrate
  * 		ls:encoded_by
  * 		ls:track_num
- * 		ls:genre
  * 		ls:channels
  * 		ls:year
  * 		ls:filename
