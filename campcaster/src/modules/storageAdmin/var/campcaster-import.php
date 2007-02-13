@@ -107,6 +107,8 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         return array($fileCount, $duplicates);
     }
 
+    // If we are given a directory, get all the files recursively and
+    // call this function for each file.
     if (is_dir($p_filepath)) {
         list(,$fileList) = File_Find::maptree($p_filepath);
         foreach ($fileList as $tmpFile) {
@@ -128,20 +130,25 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
     if ($p_importMode == "link") {
         // Check current file permissions
         $fileperms = fileperms($p_filepath);
-        $worldReadable = ($fileperms & 0x0004);
-        if (!$worldReadable) {
+        // Explaination of 0x0124:
+        // 1 => owner readable
+        // 2 => group readable
+        // 4 => world readable
+        // (see: http://php.net/manual/en/function.fileperms.php)
+        $readableByAll = !(($fileperms & 0x0124) ^ 0x0124);
+        if (!$readableByAll) {
             $permError = false;
             // Check if we have the ability to change the perms
             if (is_writable($p_filepath)) {
                 // Change the file perms
-                $fileperms = $fileperms | 0x0004;
+                $fileperms = $fileperms | 0x0124;
                 chmod($p_filepath, $fileperms);
 
                 // Check that file perms were changed
                 clearstatcache();
                 $fileperms = fileperms($p_filepath);
-                $worldReadable = ($fileperms & 0x0004);
-                if (!$worldReadable) {
+                $readableByAll = !(($fileperms & 0x0124) ^ 0x124);
+                if (!$readableByAll) {
                     $permError = true;
                 }
             } else {
