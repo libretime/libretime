@@ -341,9 +341,18 @@ global $g_fileCount;
 global $g_duplicates;
 if (is_array($files)) {
     foreach ($files as $filepath) {
-        $fullPath = realpath($filepath);
-        if (!$fullPath && !is_null($currentDir)) {
-            $fullPath = "$currentDir/$filepath";
+        // absolute path
+        if (($filepath[0] == "/") || ($filepath[0] == "~")) {
+            $fullPath = realpath($filepath);
+        } elseif (!is_null($currentDir)) {
+            $fullPath = realpath("$currentDir/$filepath");
+        } else {
+            $fullPath = null;
+        }
+
+        if (empty($fullPath)) {
+            echo "ERROR: I cant find the given file: $filepath\n\n";
+            exit;
         }
         camp_import_audio_file($fullPath, $importMode, $testonly);
     }
