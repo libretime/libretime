@@ -44,8 +44,9 @@ class Restore {
     /**
      * @var string
      */
-    private $loglevel = 'warn';
-    #private $loglevel = 'debug';
+    // private $loglevel = 'warn';
+    public $loglevel = 'warn';
+    // public $loglevel = 'debug';
 
     /**
      * @var GreenBox
@@ -97,7 +98,10 @@ class Restore {
         $command = dirname(__FILE__).'/../bin/restore.php';
         $runLog = "/dev/null";
         $params = "{$backup_file} {$this->statusFile} {$this->token} {$sessid}>> $runLog &";
-        system("$command $params");
+        $ret = system("$command $params", $st);
+        if ($this->loglevel=='debug') {
+            $this->addLogItem("-I-".date("Ymd-H:i:s")." restore.php call: $st/$ret\n");
+        }
 
         return array('token'=>$this->token);
     }
@@ -185,7 +189,7 @@ class Restore {
         $this->setEnviroment();
 
         // extract tarball
-        $command = 'tar -xf '.$backupfile.' --directory '.$this->tmpDir;
+        $command = 'tar -xf '.$backupfile .' --directory '.$this->tmpDir;
         $res = system($command);
         //$this->addLogItem('command: '.$command."\n");
         //$this->addLogItem('res: '.$res."\n");
@@ -215,6 +219,7 @@ class Restore {
           	return;
         }
         file_put_contents($this->statusFile, 'success');
+        // unlink($backupfile);
     }
 
 
@@ -350,6 +355,7 @@ class Restore {
      */
     function setEnviroment()
     {
+        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." setEnviroment\n");
         }
