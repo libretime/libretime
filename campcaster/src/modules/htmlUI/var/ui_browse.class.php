@@ -100,14 +100,11 @@ class uiBrowse
 
         for ($col = 1; $col <= 3; $col++) {
             $this->setCategory(array('col' => $col,
-                                     'category' => $this->col[$col]['category'],
-                                     'value' => array(0 => '%%all%%')));
+                                     'category' => $this->col[$col]['category']));
             $this->setValue(
                 array('col'      => $col,
                       'category' => $this->col[$col]['category'],
-                      'value'    => $this->col[$col]['value']
-                )
-            );
+                      'value'    => $this->col[$col]['value']));
         }
 
         if ($reload === TRUE) {
