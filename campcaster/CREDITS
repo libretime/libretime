@@ -3,6 +3,8 @@ CREDITS
 =======
 For Campcaster, see http://campcaster.campware.org
 
+The original Campacaster (LiveSupport) concept was drafted by Micz Flor. It was fully developed by Robert Klajn, Douglas Arellanes, Ákos Maróy, and Sava Tatić. The user interface has been designed by Charles Truett, based on the initial work done by a team of his then-fellow Parsons School of Design students Turi McKinley, Catalin Lazia and Sangita Shah. The team was led by then-head of the school's Department of Digital Design Colleen Macklin, assisted by Kunal Jain.
+
 Version 1.2.0 - "Kotor"
 -----------------------
 In alphabetical order:
@@ -15,9 +17,11 @@ Ferenc Gerlits (fgerlits@campware.org)
     - Studio GUI, scheduler, packaging
 Tomáš Hlava (th@red2head.com)
     - Bug fixes
+Robert Klajn (robert.klajn@gmail.com)
+    - Superuser feedback	
 Mark Kretschmann (markey@web.de)
     - Audio player
-Sava Tatic
+Sava Tatić (sava.tatic@mdlf.org)
     - Manager
 
 
@@ -39,14 +43,20 @@ Mark Kretschmann (markey@web.de)
     - Audio player
 Ákos Maróy (retired)
     - Architecture design, scheduler, audio player
-Sava Tatic
+Sava Tatić
     - Manager
 
 Version 1.0
 -----------
 In alphabetical order:
 
+Douglas Arellanes
+Michael Aschauer <mash@re-p.org>
+Micz Flor (micz.flor@web.de)
 Ferenc Gerlits
 Sebastian Göbel
 Tomáš Hlava
-Ákos Maróy
+Nadine Kokot
+Ákos Maróy (darkeye@tyrell.hu)
+Sava Tatić
+Charles Truett
