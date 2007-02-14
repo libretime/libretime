@@ -843,17 +843,16 @@ OptionsWindow :: constructAboutSection(void)                        throw ()
 {
     Glib::ustring   aboutLabelContents;
 
+    aboutLabelContents.append("\n");
     aboutLabelContents.append(PACKAGE_NAME);
     aboutLabelContents.append(" ");
     aboutLabelContents.append(PACKAGE_VERSION);
     try {
-        aboutLabelContents.append(" (");
-        aboutLabelContents.append(*getResourceUstring("webSiteUrlText"));
-        aboutLabelContents.append(")\n\n");
+        aboutLabelContents.append("\n\n");
         aboutLabelContents.append(*formatMessage("reportBugsToText",
                                                  PACKAGE_BUGREPORT ));
         aboutLabelContents.append("\n\n");
-        aboutLabelContents.append(*getResourceUstring("creditsText"));
+        aboutLabelContents.append(*getBinaryResourceAsUstring("creditsText"));
     
     } catch (std::invalid_argument &e) {
         // TODO: signal error

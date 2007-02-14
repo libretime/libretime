@@ -311,23 +311,8 @@ root:table
         schedulerStartButtonLabel:string    { "Start" }
         schedulerStopButtonLabel:string     { "Stop" }
 
-        webSiteUrlText:string       { "http://campcaster.campware.org" }
         reportBugsToText:string     { "Report bugs to: {0}" }
-        creditsText:string          { "Credits:\n"
-                "Ferenc Gerlits (fgerlits@campware.org)\n"
-                "    - Studio GUI, scheduler, packaging\n"
-                "Mark Kretschmann (markey@web.de)\n"
-                "    - Audio player\n"
-                "Paul Baranowski (paul@paulbaranowski.org)\n"
-                "    - Project manager, HTML UI, storage server, scheduler\n"
-                "Douglas Arellanes (Douglas.Arellanes@mdlf.org)\n"
-                "    - Tester and user feedback\n"
-                "Tomáš Hlava (th@red2head.com)\n"
-                "    - Scheduler, storage server\n"
-                "János Csikós (retired)\n"
-                "    - HTML UI\n"
-                "Ákos Maróy (retired)\n"
-                "    - Architecture design, scheduler, audio player" }
+        creditsText:import          { "../../../../CREDITS" }
     }
 
     backupView:table

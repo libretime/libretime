@@ -304,3 +304,38 @@ LocalizedObject :: ustringToUnicodeString(const Glib::ustring   & gString)
     return uString;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Get a string from a resource bundle in the ICU string format
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LocalizedObject :: getBinaryResourceAsUstring(const char *      key)
+                                                throw (std::invalid_argument)
+{
+    Ptr<ResourceBundle>::Ref        rb = getBundle(key);
+    if (rb->getType() == URES_BINARY) {
+        int32_t                     length;
+        UErrorCode                  status = U_ZERO_ERROR;
+        const uint8_t *             data = rb->getBinary(length, status);
+        if (!U_SUCCESS(status)) {
+            throw std::invalid_argument("could not get requested "
+                                        "binary resource");
+        }
+        char *                      strBuf = new char[length + 1];
+        std::memcpy(strBuf, data, length);
+        strBuf[length] = 0;
+        Ptr<Glib::ustring>::Ref string(new Glib::ustring(strBuf));
+        if (string->validate()) {
+            return string;
+        } else {
+            std::string     errorMessage = "invalid UTF-8 sequence found ";
+            errorMessage += "in resource '";
+            errorMessage += key;
+            errorMessage += "'";
+            throw std::invalid_argument(errorMessage);
+        }
+    } else {
+        throw std::invalid_argument("requested resource is not a binary value");
+    }
+}
+

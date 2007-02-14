@@ -456,6 +456,21 @@ class LocalizedObject
         {
             return unicodeStringToUstring(getResourceString(bundle, key) );
         }
+
+        /**
+         *  Get some binary data as a string.
+         *  Reads the binary data either from a <code>binary</code> or from
+         *  an <code>import</code> key, and returns it as a Glib::ustring.
+         *  The binary data is assumed to be in UTF-8 encoding.
+         *
+         *  @param key      the key identifying the requested binary data.
+         *  @return the requested binary data as a string.
+         *  @exception std::invalid_argument if there is no such key, or the
+         *             value is not of binary type, or it isn't valid UTF-8.
+         */
+        Ptr<Glib::ustring>::Ref
+        getBinaryResourceAsUstring(const char *     key)
+                                                throw (std::invalid_argument);
 };
 
 /* ================================================= external data structures */
