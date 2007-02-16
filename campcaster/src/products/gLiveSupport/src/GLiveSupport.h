@@ -1329,11 +1329,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *
          *  The following RDS placeholders will be substituted:
          *
-         * "%c" ---> "dc:creator" (Creator)
-         * "%t" ---> "dc:title" (Title)
-         * "%d" ---> "dc:format:extent" (Duration)
-         * "%s" ---> "dc:source" (Album)
-         * "%y" ---> "ls:year" (Year)
+         *  <ul>
+         *      <li>"%c" ---> "dc:creator" (Creator)</li>
+         *      <li>"%t" ---> "dc:title" (Title)</li>
+         *      <li>"%d" ---> "dc:format:extent" (Duration)</li>
+         *      <li>"%s" ---> "dc:source" (Album)</li>
+         *      <li>"%y" ---> "ls:year" (Year)</li>
+         *  </ul>
          *
          *  @see substituteRdsData()
          */
