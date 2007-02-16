@@ -58,6 +58,7 @@ $CC_CONFIG = array(
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'pearPath'      =>  dirname(__FILE__).'/../../../../usr/lib/pear',
     'cronDir'       =>  dirname(__FILE__).'/../../storageServer/var/cron',
+    'storageBinDir' =>  dirname(__FILE__).'/../bin',
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,

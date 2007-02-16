@@ -82,6 +82,7 @@ class Restore {
      */
     function openRestore($sessid, $backup_file)
     {
+        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I-".date("Ymd-H:i:s")." doRestore - sessid:$sessid\n");
         }
@@ -95,7 +96,7 @@ class Restore {
         file_put_contents($this->statusFile, 'working');
 
         //call the restore script in background
-        $command = dirname(__FILE__).'/../bin/restore.php';
+        $command = $CC_CONFIG['storageBinDir'].'/restore.php';
         $runLog = "/dev/null";
         $params = "{$backup_file} {$this->statusFile} {$this->token} {$sessid}>> $runLog &";
         $ret = system("$command $params", $st);
@@ -273,7 +274,7 @@ class Restore {
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." addFileToStorage - file:$file | type:$type | id:$gunid\n");
         }
-        require_once "XmlParser.php";
+        require_once("XmlParser.php");
         $tree = XmlParser::parse($file);
         $mediaFileLP = str_replace('.xml','',$file);
         $mediaFileLP = ($type=='audioClip' && is_file($mediaFileLP))?$mediaFileLP:'';
@@ -304,7 +305,6 @@ class Restore {
         } else {
             // add as new
             $parid = $this->gb->_getHomeDirIdFromSess($this->sessid);
-            #$this->addLogItem("Parid:$parid\n");
             $name = $tree->children[0]->children[0]->content;
             if (empty($name)) {
             	$name = $tree->attrs['title']->val;
