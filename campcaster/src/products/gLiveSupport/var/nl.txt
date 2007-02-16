@@ -316,27 +316,27 @@ nl:table
 
     backupView:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "#In progress...#" }
+        successStatus:string        { "#Ready#" }
+        faultStatus:string          { "#Error: {0}#" }
 
-        titleColumnLabel:string     { "Title" }
-        dateColumnLabel:string      { "Date" }
-        statusColumnLabel:string    { "Status" }
+        titleColumnLabel:string     { "#Title#" }
+        dateColumnLabel:string      { "#Date#" }
+        statusColumnLabel:string    { "#Status#" }
 
-        mtimeTextLabel:string       { "Modified since:" }
-        chooseTimeButtonLabel:string    { "Choose time" }
-        resetTimeButtonLabel:string     { "Reset" }
+        mtimeTextLabel:string       { "#Modified since:#" }
+        chooseTimeButtonLabel:string    { "#Choose time#" }
+        resetTimeButtonLabel:string     { "#Reset#" }
 
-        backupButtonLabel:string    { "Backup" }
-        deleteButtonLabel:string    { "Delete" }
-        saveButtonLabel:string      { "Save" }
+        backupButtonLabel:string    { "#Backup#" }
+        deleteButtonLabel:string    { "#Delete#" }
+        saveButtonLabel:string      { "#Save#" }
 
-        backupTitleLabel:string     { "Title" }
-        defaultBackupTitle:string   { "new backup" }
+        backupTitleLabel:string     { "#Title#" }
+        defaultBackupTitle:string   { "#new backup#" }
 
-        fileChooserDialogTitle:string   { "Save File" }
-        backupErrorMsg:string       { "Backup error: " }
+        fileChooserDialogTitle:string   { "#Save File#" }
+        backupErrorMsg:string       { "#Backup error: #" }
     }
 
     rdsView:table

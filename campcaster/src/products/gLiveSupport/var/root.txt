@@ -317,9 +317,9 @@ root:table
 
     backupView:table
     {
-        workingStatus:string        { "in progress" }
-        successStatus:string        { "ready" }
-        faultStatus:string          { "error: {0}" }
+        workingStatus:string        { "In progress..." }
+        successStatus:string        { "Ready" }
+        faultStatus:string          { "Error: {0}" }
 
         titleColumnLabel:string     { "Title" }
         dateColumnLabel:string      { "Date" }
