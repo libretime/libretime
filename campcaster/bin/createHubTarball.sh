@@ -187,7 +187,7 @@ done
 #-------------------------------------------------------------------------------
 #cp -pPR $bindir $ls_tmpdir
 #cp -pPR $etcdir $ls_tmpdir
-cp -pPR README INSTALL configure $ls_tmpdir
+cp -pPR README INSTALL CREDITS configure $ls_tmpdir
 
 #-------------------------------------------------------------------------------
 #  Get rid of the remnants of the subversion system

@@ -201,7 +201,7 @@ cp -pPR $products_dir/* $products_tmpdir
 cp -pPR $bindir $ls_tmpdir
 cp -pPR $docdir $ls_tmpdir
 cp -pPR $etcdir $ls_tmpdir
-cp -pPR README INSTALL configure $ls_tmpdir
+cp -pPR README INSTALL CREDITS configure $ls_tmpdir
 
 
 #-------------------------------------------------------------------------------
