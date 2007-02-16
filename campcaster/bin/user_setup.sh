@@ -143,7 +143,8 @@ test_result=`chgrp $apache_group $group_tmp_file 2> /dev/null`
 if [ $? != 0 ]; then
     rm -f $group_tmp_file;
     echo "Unable to use apache deamon group $apache_group.";
-    echo "Please check if $apache_group is a correct user group.";
+    echo "Please check if $apache_group is a correct user group,";
+    echo "and that the current user is a member of this group.";
     exit 1;
 fi
 rm -f $group_tmp_file;
