@@ -1,8 +1,8 @@
-campcaster (1.1.1+1.2.0rc1-1) dapper; urgency=low
+campcaster (1.2.0-1) dapper; urgency=low
 
-  * 1.2.0 first release candidate
+  * 1.2.0 release
 
- -- Ferenc Gerlits <fgerlits@campware.org>  Fri, 16 Feb 2007 17:09:00 +0100
+ -- Ferenc Gerlits <fgerlits@campware.org>  Mon, 19 Feb 2007 16:01:25 +0100
 
 
 campcaster (1.1.1-2) dapper; urgency=low
