@@ -123,9 +123,11 @@ check: all
 
 install:
 	${MKDIR} ${DEST_DIR}/bin
-	${CP} ${BIN_DIR}/*.sh ${DEST_DIR}/bin
-	${CP} ${BIN_DIR}/campcaster-import ${DEST_DIR}/bin
-	${RM} ${DEST_DIR}/bin/autogen.sh
+	${CP} ${BIN_DIR}/campcaster-import \
+	      ${BIN_DIR}/campcaster-backup \
+	      ${BIN_DIR}/campcaster-restore \
+	      ${BIN_DIR}/dumbDbSchema.sh \
+	      ${DEST_DIR}/bin
 	${SED} -i -e ${SED_PHPPART_DIR} \
 	       ${DEST_DIR}/bin/campcaster-backup \
 	       ${DEST_DIR}/bin/campcaster-restore \
