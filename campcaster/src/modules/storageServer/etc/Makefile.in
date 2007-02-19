@@ -82,7 +82,9 @@ TRANS_DIR	= ${PHP_DIR}/trans
 BUFF_DIR	= ${STOR_DIR}/buffer
 TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
-DEST_DIR   = ${USR_VAR_DIR}/Campcaster/storageServer/var
+DEST_DIR   = ${USR_VAR_DIR}/Campcaster/storageServer
+DEST_VAR_DIR   = ${DEST_DIR}/var
+DEST_BIN_DIR   = ${DEST_DIR}/bin
 
 HOSTNAME       = @HOSTNAME@
 APACHE_GROUP   = @APACHE_GROUP@
@@ -169,33 +171,37 @@ install: copy_files create_database init_database
 
 copy_files:
 	${MKDIR} ${DEST_DIR}
-	${MKDIR} ${DEST_DIR}/access
-	${MKDIR} ${DEST_DIR}/cron
-	${MKDIR} ${DEST_DIR}/install
-	${MKDIR} ${DEST_DIR}/install/upgrade
-	${MKDIR} ${DEST_DIR}/stor
-	${MKDIR} ${DEST_DIR}/stor/buffer
-	${MKDIR} ${DEST_DIR}/trans
-	${MKDIR} ${DEST_DIR}/xmlrpc
-	${CP} ${VAR_DIR}/*.{php,xml} ${DEST_DIR}
-	${CP} ${VAR_DIR}/cron/*.php ${DEST_DIR}/cron
+	${MKDIR} ${DEST_VAR_DIR}
+	${MKDIR} ${DEST_BIN_DIR}
+	${MKDIR} ${DEST_VAR_DIR}/access
+	${MKDIR} ${DEST_VAR_DIR}/cron
+	${MKDIR} ${DEST_VAR_DIR}/install
+	${MKDIR} ${DEST_VAR_DIR}/install/upgrade
+	${MKDIR} ${DEST_VAR_DIR}/stor
+	${MKDIR} ${DEST_VAR_DIR}/stor/buffer
+	${MKDIR} ${DEST_VAR_DIR}/trans
+	${MKDIR} ${DEST_VAR_DIR}/xmlrpc
+	${CP} ${VAR_DIR}/*.{php,xml} ${DEST_VAR_DIR}
+	${CP} ${VAR_DIR}/cron/*.php ${DEST_VAR_DIR}/cron
 	${CP} ${VAR_DIR}/install/*.php \
-	      ${DEST_DIR}/install
+	      ${DEST_VAR_DIR}/install
 	${CP} ${VAR_DIR}/install/upgrade/*.php \
-	      ${DEST_DIR}/install/upgrade
+	      ${DEST_VAR_DIR}/install/upgrade
 	${CP} ${VAR_DIR}/xmlrpc/*.php \
-	      ${DEST_DIR}/xmlrpc
+	      ${DEST_VAR_DIR}/xmlrpc
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
-	       > ${DEST_DIR}/conf.php
+	       > ${DEST_VAR_DIR}/conf.php
+	${CP} ${BIN_DIR}/backup.sh ${BIN_DIR}/restore.php \
+	      ${DEST_BIN_DIR}
 
-	chgrp ${APACHE_GROUP} ${DEST_DIR}/access
-	chgrp ${APACHE_GROUP} ${DEST_DIR}/stor
-	chgrp ${APACHE_GROUP} ${DEST_DIR}/stor/buffer
-	chgrp ${APACHE_GROUP} ${DEST_DIR}/trans
-	chmod g+sw ${DEST_DIR}/access
-	chmod g+sw ${DEST_DIR}/stor
-	chmod g+sw ${DEST_DIR}/stor/buffer
-	chmod g+sw ${DEST_DIR}/trans
+	chgrp ${APACHE_GROUP} ${DEST_VAR_DIR}/access
+	chgrp ${APACHE_GROUP} ${DEST_VAR_DIR}/stor
+	chgrp ${APACHE_GROUP} ${DEST_VAR_DIR}/stor/buffer
+	chgrp ${APACHE_GROUP} ${DEST_VAR_DIR}/trans
+	chmod g+sw ${DEST_VAR_DIR}/access
+	chmod g+sw ${DEST_VAR_DIR}/stor
+	chmod g+sw ${DEST_VAR_DIR}/stor/buffer
+	chmod g+sw ${DEST_VAR_DIR}/trans
 
 	${RM} ${WWW_DOCROOT}/${PHP_URL_PREFIX}
 	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/${PHP_URL_PREFIX}
@@ -210,7 +216,7 @@ endif
 
 init_database:
 ifeq (@INIT_LS_DATABASE@,yes)
-	-cd ${DEST_DIR}/install && ${PHP} -q install.php
+	-cd ${DEST_VAR_DIR}/install && ${PHP} -q install.php
 endif
 
 
