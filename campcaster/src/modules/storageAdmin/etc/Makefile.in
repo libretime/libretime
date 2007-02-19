@@ -127,8 +127,8 @@ install:
 	${CP} ${BIN_DIR}/campcaster-import ${DEST_DIR}/bin
 	${RM} ${DEST_DIR}/bin/autogen.sh
 	${SED} -i -e ${SED_PHPPART_DIR} \
-	       ${DEST_DIR}/bin/backup.sh \
-	       ${DEST_DIR}/bin/restore.sh \
+	       ${DEST_DIR}/bin/campcaster-backup \
+	       ${DEST_DIR}/bin/campcaster-restore \
 	       ${DEST_DIR}/bin/dumpDbSchema.sh \
 	       ${DEST_DIR}/bin/campcaster-import
 	${MKDIR} ${PHPPART_DIR}

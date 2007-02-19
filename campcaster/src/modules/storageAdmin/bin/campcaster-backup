@@ -26,7 +26,7 @@
 #   Location : $URL$
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script creates the tar archiv with backup of LS data
+#  This script creates a tgz archive of the Campcaster storage.
 #
 #  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ destfile="storage$datestr.tar"
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "This script creates the tgz archiv with backup of LS data.";
+    echo "This script creates a tgz archive of the Campcaster storage.";
     echo "parameters:";
     echo "";
     echo "  -d, --destination   Destination directory [default:$tmpmaindir].";

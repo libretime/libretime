@@ -108,10 +108,10 @@ install-arch:
           $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/storageServer \
           $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/storageAdmin \
               $(CURDIR)/debian/campcaster-station/opt/campcaster/var/Campcaster
-	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/backup.sh \
+	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-backup \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-import \
 	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/dumpDbSchema.sh \
-	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/restore.sh \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/bin/campcaster-restore \
               $(CURDIR)/debian/campcaster-station/opt/campcaster/bin
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/cache \
               $(CURDIR)/debian/campcaster-station/opt/campcaster/var
