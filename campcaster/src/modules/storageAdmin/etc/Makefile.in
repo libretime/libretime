@@ -126,7 +126,7 @@ install:
 	${CP} ${BIN_DIR}/campcaster-import \
 	      ${BIN_DIR}/campcaster-backup \
 	      ${BIN_DIR}/campcaster-restore \
-	      ${BIN_DIR}/dumbDbSchema.sh \
+	      ${BIN_DIR}/dumpDbSchema.sh \
 	      ${DEST_DIR}/bin
 	${SED} -i -e ${SED_PHPPART_DIR} \
 	       ${DEST_DIR}/bin/campcaster-backup \
