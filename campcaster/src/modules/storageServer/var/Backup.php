@@ -337,11 +337,10 @@ class Backup
      */
     private function doIt()
     {
-        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt\n");
         }
-        $command = $CC_CONFIG['storageBinDir']."/backup.sh"
+        $command = dirname(__FILe__)."/../bin/backup.sh"
             ." {$this->tmpDir}"
             ." {$this->tmpFile}"
             ." {$this->statusFile}"

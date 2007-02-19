@@ -82,7 +82,6 @@ class Restore {
      */
     function openRestore($sessid, $backup_file)
     {
-        global $CC_CONFIG;
         if ($this->loglevel=='debug') {
             $this->addLogItem("-I-".date("Ymd-H:i:s")." doRestore - sessid:$sessid\n");
         }
@@ -96,7 +95,7 @@ class Restore {
         file_put_contents($this->statusFile, 'working');
 
         //call the restore script in background
-        $command = $CC_CONFIG['storageBinDir'].'/restore.php';
+        $command = dirname(__FILE__).'/../bin/restore.php';
         $runLog = "/dev/null";
         $params = "{$backup_file} {$this->statusFile} {$this->token} {$sessid}>> $runLog &";
         $ret = system("$command $params", $st);
