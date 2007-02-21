@@ -46,6 +46,8 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/Core/XmlRpcTools.h"
 #include "SchedulerDaemon.h"
+#include "ScheduleInterface.h"
+#include "ScheduleFactory.h"
 
 #include "StopCurrentlyPlayingMethod.h"
 
@@ -115,8 +117,28 @@ StopCurrentlyPlayingMethod :: execute(XmlRpc::XmlRpcValue &     rootParameter,
     // TODO: check the session ID
 
     Ptr<SchedulerDaemon>::Ref       sd = SchedulerDaemon::getInstance();
+    Ptr<ScheduleFactory>::Ref       sf = ScheduleFactory::getInstance();
+    Ptr<ScheduleInterface>::Ref     schedule = sf->getSchedule();
+    Ptr<ScheduleEntry>::Ref         currentlyPlaying;
+
+    // remove the item from the schedule, so something else can be scheduled
+    try {
+        currentlyPlaying = schedule->getCurrentlyPlaying();
+        if (currentlyPlaying) {
+            schedule->removeFromSchedule(currentlyPlaying->getId());
+            
+            // tell the scheduler daemon to reload the scheduled events
+            sd->update();
+        }
+    } catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "schedule entry not found", 
+                               returnValue);
+        return;
+    }
+
+    // stop the audio player
     Ptr<AudioPlayerInterface>::Ref  audioPlayer = sd->getAudioPlayer();
-    
+
     try {
         audioPlayer->stop();
         audioPlayer->close();

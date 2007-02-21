@@ -69,6 +69,9 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is 
  *  "stopCurrentlyPlaying".
  *
+ *  Stops the audio player, and removes the current item from the schedule,
+ *  so that something else can be scheduled in its place.
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:
  *  <ul>

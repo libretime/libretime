@@ -419,5 +419,7 @@ SchedulerWindow :: onStopCurrentlyPlayingButtonClicked(void)        throw ()
         Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(e.what()));
         gLiveSupport->displayMessageWindow(errorMessage);
     }
+    
+    showContents();
 }
 
