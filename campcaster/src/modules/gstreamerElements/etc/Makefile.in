@@ -175,18 +175,12 @@ PLAY_LIBS = -l${GSTREAMER_ELEMENTS_LIB} -l${CORE_LIB}
 .PHONY: all dir_setup doc clean docclean depclean distclean check install
 
 all: dir_setup ${GSTREAMER_ELEMENTS_LIB_FILE} \
+               ${ONESHOT_READER_LIB_FILE} \
                ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
                ${PARTIAL_PLAY_LIB_FILE} \
                ${SWITCHER_LIB_FILE} \
 			   ${PLAY} \
      gst_register
-#all: dir_setup ${GSTREAMER_ELEMENTS_LIB_FILE} \
-#               ${ONESHOT_READER_LIB_FILE} \
-#               ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
-#               ${PARTIAL_PLAY_LIB_FILE} \
-#               ${SWITCHER_LIB_FILE} \
-#			   ${PLAY} \
-#     gst_register
 
 dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
 
@@ -199,7 +193,7 @@ doc:
 
 clean:
 	${RM} ${GSTREAMER_ELEMENTS_LIB_OBJS} ${GSTREAMER_ELEMENTS_LIB_FILE}
-#	${RM} ${ONESHOT_READER_LIB_OBJS} ${ONESHOT_READER_LIB_FILE}
+	${RM} ${ONESHOT_READER_LIB_OBJS} ${ONESHOT_READER_LIB_FILE}
 	${RM} ${MINIMAL_AUDIO_SMIL_LIB_OBJS} ${MINIMAL_AUDIO_SMIL_LIB_FILE}
 	${RM} ${PARTIAL_PLAY_LIB_OBJS} ${PARTIAL_PLAY_LIB_FILE}
 	${RM} ${SWITCHER_LIB_OBJS} ${SWITCHER_LIB_FILE}
@@ -225,16 +219,11 @@ install: all
 	${CP} ${INCLUDE_DIR}/LiveSupport/GstreamerElements/*.h \
           ${USR_INCLUDE_DIR}/LiveSupport/GstreamerElements
 	${CP} ${GSTREAMER_ELEMENTS_LIB_FILE} \
+          ${ONESHOT_READER_LIB_FILE} \
           ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
           ${PARTIAL_PLAY_LIB_FILE} \
           ${SWITCHER_LIB_FILE} \
 		  ${USR_LIB_DIR}
-#	${CP} ${GSTREAMER_ELEMENTS_LIB_FILE} \
-#          ${ONESHOT_READER_LIB_FILE} \
-#          ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
-#          ${PARTIAL_PLAY_LIB_FILE} \
-#          ${SWITCHER_LIB_FILE} \
-#		  ${USR_LIB_DIR}
 	-GST_PLUGIN_PATH=${USR_LIB_DIR} ${GST_REGISTER}
 
 
