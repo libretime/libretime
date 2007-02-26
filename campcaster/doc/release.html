@@ -194,7 +194,7 @@ To do this, you need to do the following, as real root (sudo is not enough):
         on <code>code.campware.org</code>.
     <li>Generate the package listing:
 <pre>cd /var/www/ubuntu
-apt-ftparchive packages packages/&lt;arch&gt; /dev/null | gzip -9c \
+apt-ftparchive packages packages/&lt;arch&gt; | gzip -9c \
         > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
 </ul>
 

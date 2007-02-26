@@ -52,15 +52,14 @@ packages into your home directory:
 <pre>cd
 mkdir repository
 cd repository
-mkdir dist
-cp /var/cache/apt/archive/*.deb dist/</pre>
+mkdir pool
+cp /var/cache/apt/archive/*.deb pool/</pre>
 
 
 <h1>Create the package listing</h1>
 Type
 <pre>cd ~/repository
-apt-ftparchive packages dist > Packages
-gzip --best Packages</pre>
+apt-ftparchive packages pool | gzip -9c > Packages.gz</pre>
 this will create a <code>Packages.gz</code> file containing the list of
 packages.
 
