@@ -221,8 +221,10 @@ $infos = array(
         'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
 */
 
-    "openPut"       => array('m'=>"locstor.openPut", 'p'=>array()),
-    "closePut"      => array('m'=>"locstor.closePut", 'p'=>array()),
+    "openPut" => array('m'=>"locstor.openPut", 'p'=>array()),
+    "closePut" => array('m'=>"locstor.closePut", 'p'=>array()),
+    "ping" => array('m'=>"locstor.ping", 'p'=>array('par')),
+
 );
 
 
@@ -274,9 +276,12 @@ switch ($method) {
         } elseif(count($pinfo) == 0) {
             $parr = (object)array();
         } else {
-            $parr = array(); $i=0;
-            foreach($pinfo as $it){
-                if(isset($pars[$i])) $parr[$it] = $pars[$i];
+            $parr = array();
+            $i = 0;
+            foreach($pinfo as $it) {
+                if (isset($pars[$i])) {
+                    $parr[$it] = $pars[$i];
+                }
                 $i++;
             }
         }
