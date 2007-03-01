@@ -491,7 +491,7 @@ class Transport
                     $res = file_get_contents($row['localfile']);
                     $results = unserialize($res);
                     if ($andClose) {
-                        $ret = $this->xmlrpcCall('archive.downloadClose',
+                        $ret = $this->xmlrpcCall('locstor.downloadClose',
                             array(
                                'token'     => $row['pdtoken'] ,
                                'trtype'     => $row['trtype'] ,
@@ -590,7 +590,7 @@ class Transport
      */
     function getHubInitiatedTransfers()
     {
-        $ret = $this->xmlrpcCall('archive.listHubInitiatedTransfers',
+        $ret = $this->xmlrpcCall('locstor.listHubInitiatedTransfers',
             array('target' => HOSTNAME));
         if (PEAR::isError($ret)) {
         	return $ret;
@@ -616,7 +616,7 @@ class Transport
      */
     function startHubInitiatedTransfer($uid, $rtrtok)
     {
-        $ret = $this->xmlrpcCall('archive.listHubInitiatedTransfers',
+        $ret = $this->xmlrpcCall('locstor.listHubInitiatedTransfers',
             array(
                 'target'    => HOSTNAME,
                 'trtok'     => $rtrtok,
@@ -690,7 +690,7 @@ class Transport
                 "Transport::startHubInitiatedTransfer: ???"
             );
         }
-        $ret = $this->xmlrpcCall('archive.setHubInitiatedTransfer',
+        $ret = $this->xmlrpcCall('locstor.setHubInitiatedTransfer',
             array(
                 'target'    => HOSTNAME,
                 'trtok'     => $rtrtok,
@@ -716,7 +716,7 @@ class Transport
     function loginToArchive()
     {
         global $CC_CONFIG;
-        $res = $this->xmlrpcCall('archive.login',
+        $res = $this->xmlrpcCall('locstor.login',
             array(
                 'login' => $CC_CONFIG['archiveAccountLogin'],
                 'pass' => $CC_CONFIG['archiveAccountPass']
@@ -738,7 +738,7 @@ class Transport
      */
     function logoutFromArchive($sessid)
     {
-        $res = $this->xmlrpcCall('archive.logout',
+        $res = $this->xmlrpcCall('locstor.logout',
             array('sessid'=>$sessid));
         return $res;
     }
@@ -962,7 +962,7 @@ class Transport
         if (PEAR::isError($trec)) {
         	return $trec;
         }
-        $ret = $this->xmlrpcCall('archive.uploadOpen',
+        $ret = $this->xmlrpcCall('locstor.uploadOpen',
             array(
                'sessid' => $asessid ,
                'chsum' => $row['expectedsum'],
@@ -997,7 +997,7 @@ class Transport
         if (PEAR::isError($trec)) {
         	return $trec;
         }
-        $ret = $this->xmlrpcCall('archive.downloadOpen',
+        $ret = $this->xmlrpcCall('locstor.downloadOpen',
             array(
                 'sessid'=> $asessid,
                 'trtype'=> $row['trtype'],
@@ -1137,7 +1137,7 @@ class Transport
                     }
                 } else {
                     // wrong md5 at finish - TODO: start again
-                    // $this->xmlrpcCall('archive.uploadReset', array());
+                    // $this->xmlrpcCall('locstor.uploadReset', array());
                     $trec->fail('file uploaded with bad md5');
                     return PEAR::raiseError("Transport::cronUploadWaiting:".
                         " file uploaded with bad md5 ".
@@ -1282,7 +1282,7 @@ class Transport
         } else {
         	$mdpdtoken = NULL;
         }
-        $ret = $this->xmlrpcCall('archive.uploadClose',
+        $ret = $this->xmlrpcCall('locstor.uploadClose',
             array(
                 'token'     => $row['pdtoken'] ,
                 'trtype'      => $row['trtype'],
@@ -1402,7 +1402,7 @@ class Transport
                             return $storedFile;
                         }
                         $res = $storedFile->getId();
-                        $ret = $this->xmlrpcCall('archive.downloadClose',
+                        $ret = $this->xmlrpcCall('locstor.downloadClose',
                             array(
                                'token'      => $mdtrec->row['pdtoken'] ,
                                'trtype'     => 'metadata' ,
@@ -1436,7 +1436,7 @@ class Transport
                 return TRUE;     // don't close - getSearchResults should close it
                 break;
         }
-        $ret = $this->xmlrpcCall('archive.downloadClose',
+        $ret = $this->xmlrpcCall('locstor.downloadClose',
             array(
                'token'     => $row['pdtoken'] ,
                'trtype'     => $row['trtype'] ,
@@ -1485,7 +1485,7 @@ class Transport
                 return PEAR::raiseError("DEBUG: NotImpl ".var_export($row,TRUE));
         }
         if (!is_null($rtrtok = $trec->row['rtrtok'])) {
-            $ret = $this->xmlrpcCall('archive.setHubInitiatedTransfer',
+            $ret = $this->xmlrpcCall('locstor.setHubInitiatedTransfer',
                 array(
                     'target'    => HOSTNAME,
                     'trtok'     => $rtrtok,
@@ -1616,7 +1616,7 @@ class Transport
      */
     function uploadCheck($pdtoken)
     {
-        $ret = $this->xmlrpcCall('archive.uploadCheck',
+        $ret = $this->xmlrpcCall('locstor.uploadCheck',
             array('token'=>$pdtoken));
         return $ret;
     }
@@ -1630,7 +1630,7 @@ class Transport
      */
     function pingToArchive()
     {
-        $res = $this->xmlrpcCall('archive.ping',
+        $res = $this->xmlrpcCall('locstor.ping',
             array('par'=>'ping_'.date('H:i:s')));
         return $res;
     }

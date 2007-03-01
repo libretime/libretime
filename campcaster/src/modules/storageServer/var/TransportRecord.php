@@ -70,7 +70,7 @@ class TransportRecord
      * 		default parameters (optional, internal use)
      * @return TransportRecord
      */
-    function create(&$tr, $trtype, $direction='up', $defaults=array())
+    public static function create(&$tr, $trtype, $direction='up', $defaults=array())
     {
         global $CC_DBC, $CC_CONFIG;
         $trec = new TransportRecord($tr);

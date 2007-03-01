@@ -126,7 +126,7 @@ EVENT_SCHEDULER_DIR    = ${MODULES_DIR}/eventScheduler
 SCHEDULER_CLIENT_DIR   = ${MODULES_DIR}/schedulerClient
 WIDGETS_DIR            = ${MODULES_DIR}/widgets
 ALIB_DIR               = ${MODULES_DIR}/alib
-ARCHIVE_SERVER_DIR     = ${MODULES_DIR}/archiveServer
+#ARCHIVE_SERVER_DIR     = ${MODULES_DIR}/archiveServer
 GETID3_DIR             = ${MODULES_DIR}/getid3
 HTML_UI_DIR            = ${MODULES_DIR}/htmlUI
 STORAGE_ADMIN_DIR      = ${MODULES_DIR}/storageAdmin
@@ -247,15 +247,15 @@ modules_setup: ${TMP_DIR}/modules_setup.stamp
 ${TMP_DIR}/modules_setup.stamp:
 	cd ${ALIB_DIR} && ./configure --prefix=${prefix} \
                     PACKAGE_VERSION=${PACKAGE_VERSION}
-	cd ${ARCHIVE_SERVER_DIR} && \
-		./configure --prefix=${prefix} \
-	                --with-hostname=${HOSTNAME} \
-					--with-www-port=${WWW_PORT} \
-					--with-database-server=${DB_SERVER} \
-					--with-database=${DATABASE} \
-					--with-database-user=${DB_USER} \
-					--with-database-password=${DB_PASSWORD} \
-                    PACKAGE_VERSION=${PACKAGE_VERSION}
+#	cd ${ARCHIVE_SERVER_DIR} && \
+#		./configure --prefix=${prefix} \
+#	                --with-hostname=${HOSTNAME} \
+#					--with-www-port=${WWW_PORT} \
+#					--with-database-server=${DB_SERVER} \
+#					--with-database=${DATABASE} \
+#					--with-database-user=${DB_USER} \
+#					--with-database-password=${DB_PASSWORD} \
+#                   PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${GETID3_DIR} && ./configure --prefix=${prefix} \
                     PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${HTML_UI_DIR} && ./configure --prefix=${prefix} \
@@ -371,7 +371,7 @@ depclean:
 	${MAKE} -C ${WIDGETS_DIR} depclean
 	${MAKE} -C ${SCHEDULER_DIR} depclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} depclean
-	-${MAKE} -C ${ARCHIVE_SERVER_DIR} depclean
+#	-${MAKE} -C ${ARCHIVE_SERVER_DIR} depclean
 	-${MAKE} -C ${STORAGE_SERVER_DIR} depclean
 
 compile: ${TMP_DIR}/compile.stamp
@@ -449,7 +449,7 @@ setup_install_dirs:
 
 install_modules:
 	${MAKE} -C ${ALIB_DIR} install
-	${MAKE} -C ${ARCHIVE_SERVER_DIR} install
+#	${MAKE} -C ${ARCHIVE_SERVER_DIR} install
 	${MAKE} -C ${GETID3_DIR} install
 	${MAKE} -C ${HTML_UI_DIR} install
 	${MAKE} -C ${STORAGE_ADMIN_DIR} install
@@ -467,5 +467,5 @@ install_modules:
 install_products:
 	${MAKE} -C ${SCHEDULER_DIR} install
 	${MAKE} -C ${GLIVESUPPORT_DIR} install
-	
+
 

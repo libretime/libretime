@@ -69,8 +69,8 @@ $CC_CONFIG = array(
     'storageUrlPort'        => 80,
 
     /* ================================================ archive configuration */
-    'archiveUrlPath'        => '/campcasterArchiveServer',
-    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'archiveUrlPath'        => '/campcasterStorageServer',
+    'archiveXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'archiveUrlHost'        => 'localhost',
     'archiveUrlPort'        => 80,
     'archiveAccountLogin'   => 'root',
