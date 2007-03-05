@@ -26,16 +26,13 @@ for ($i = 0; $i < $cnt; $i++, sleep(1)) {
     if (PEAR::isError($r)) {
         $tr->trLogPear("transportCronJob($pid): ($trtok): ", $r);
     } else {
-#        $tr->trLog("X transportCronJob: ".var_export($r, TRUE));
         if ($r !== TRUE) {
         	$tr->trLog("transportCronJob($pid): ($trtok): nonTRUE returned");
         }
     }
-    #if(!$r) exit(1);
-    #sleep(2);
 }
 
-if (TR_LOG_LEVEL>1) {
+if (TR_LOG_LEVEL > 1) {
 	$tr->trLog("transportCronJob($pid) end ($trtok)");
 }
 exit(0);

@@ -1,5 +1,6 @@
 <?php
 require_once("BasicStor.php");
+require_once("Transport.php");
 
 /**
  * LocStor class
@@ -114,11 +115,11 @@ class LocStor extends BasicStor {
         if ($fname == '') {
             $fname = "newFile";
         }
-        $res = $this->bsRenameFile($oid, $fname);
+        $res = BasicStor::bsRenameFile($oid, $fname);
         if (PEAR::isError($res)) {
             return $res;
         }
-        return $this->bsOpenPut($chsum, $storedFile->gunid);
+        return BasicStor::bsOpenPut($chsum, $storedFile->gunid);
     }
 
 
@@ -135,7 +136,7 @@ class LocStor extends BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $arr = $this->bsClosePut($token);
+        $arr = BasicStor::bsClosePut($token);
         if (PEAR::isError($arr)) {
             $storedFile->delete();
             return $arr;
@@ -166,7 +167,7 @@ class LocStor extends BasicStor {
      */
     protected function uploadCheck($token)
     {
-        return $this->bsCheckPut($token);
+        return BasicStor::bsCheckPut($token);
     }
 
 
@@ -202,7 +203,7 @@ class LocStor extends BasicStor {
             return $storedFile;
         }
         $oid = $storedFile->getId();
-        $r = $this-> bsSetMetadataValue(
+        $r = BasicStor::bsSetMetadataValue(
             $oid, 'ls:url', $url, NULL, NULL, 'metadata');
         if (PEAR::isError($r)) {
             return $r;
@@ -281,7 +282,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsOpenDownload($id);
+        return BasicStor::bsOpenDownload($id);
     }
 
 
@@ -295,7 +296,7 @@ class LocStor extends BasicStor {
      */
     protected function downloadRawAudioDataClose($token)
     {
-        return $this->bsCloseDownload($token);
+        return BasicStor::bsCloseDownload($token);
     }
 
 
@@ -323,8 +324,8 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $res = $this->bsOpenDownload($id, 'metadata');
-        #unset($res['filename']);
+        $res = BasicStor::bsOpenDownload($id, 'metadata');
+        //unset($res['filename']);
         return $res;
     }
 
@@ -339,7 +340,7 @@ class LocStor extends BasicStor {
      */
     protected function downloadMetadataClose($token)
     {
-        return $this->bsCloseDownload($token, 'metadata');
+        return BasicStor::bsCloseDownload($token, 'metadata');
     }
 
 
@@ -359,7 +360,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $storedFile->getId(), $sessid)) !== TRUE) {
             return $res;
         }
-        $md = $this->bsGetMetadata($storedFile->getId());
+        $md = BasicStor::bsGetMetadata($storedFile->getId());
         if (PEAR::isError($md)) {
             return $md;
         }
@@ -372,8 +373,9 @@ class LocStor extends BasicStor {
     /**
      * Search in metadata database
      *
-     * @param string $sessid
-     * @param array $criteria
+     * @param string $p_sessid
+     *      Session ID
+     * @param array $p_criteria
      * 	with following structure:<br>
      *   <ul>
      *     <li>filetype - string, type of searched files,
@@ -405,7 +407,11 @@ class LocStor extends BasicStor {
      *       </ul>
      *     </li>
      *   </ul>
-     *  @return array of hashes, fields:
+     *
+     * @param boolean $p_searchRemote
+     *      Set this to true if you want to search the remote storage.
+     *
+     * @return array of hashes, fields:
      *   <ul>
      *       <li>cnt : integer - number of matching gunids
      *              of files have been found</li>
@@ -422,14 +428,37 @@ class LocStor extends BasicStor {
      *   </ul>
      *  @see BasicStor::localSearch
       */
-    protected function searchMetadata($sessid, $criteria)
+    protected function searchMetadata($p_sessid, $p_criteria, $p_searchRemote = false)
     {
-        if (($res = BasicStor::Authorize('read', $this->storId, $sessid)) !== TRUE) {
+        if (!$p_searchRemote) {
+            // Local search
+            $res = BasicStor::Authorize('read', $this->storId, $p_sessid);
+            if ($res !== TRUE) {
+                return $res;
+            }
+            $p_criteria['resultMode'] = 'xmlrpc';
+            $res = $this->localSearch($p_criteria, $p_sessid);
             return $res;
+        } else {
+            // Remote search
+            $p_criteria['resultMode'] = 'php';
+            $transport = new Transport($this);
+            $loginSessionId = $transport->loginToArchive();
+            if (PEAR::isError($loginSessionId)) {
+                switch (intval($loginSessionId->getCode())) {
+                    case 802:
+                        return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+                    case TRERR_XR_FAIL:
+                        return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+                }
+                return $loginSessionId;
+            }
+            $results = $transport->xmlrpcCall("locstor.searchMetadata",
+                array("sessid" => $loginSessionId,
+                      "criteria" => $p_criteria));
+            $transport->logoutFromArchive($loginSessionId);
+            return $results;
         }
-        $criteria['resultMode'] = 'xmlrpc';
-        $res = $this->localSearch($criteria, $sessid);
-        return $res;
     }
 
 
@@ -443,7 +472,7 @@ class LocStor extends BasicStor {
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        $res = $this->bsLocalSearch($criteria, $limit, $offset);
+        $res = BasicStor::bsLocalSearch($criteria, $limit, $offset);
         return $res;
     }
 
@@ -467,7 +496,7 @@ class LocStor extends BasicStor {
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
+        $res = BasicStor::bsBrowseCategory($category, $limit, $offset, $criteria);
         return $res;
     }
 
@@ -519,7 +548,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $ex = $this->bsExistsFile($id, $ftype);
+        $ex = BasicStor::bsExistsFile($id, $ftype);
         return $ex;
     }
 
@@ -627,7 +656,7 @@ class LocStor extends BasicStor {
         if ($fname == '') {
             $fname = "newFile.xml";
         }
-        $res = $this->bsRenameFile($oid, $fname);
+        $res = BasicStor::bsRenameFile($oid, $fname);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -678,7 +707,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $res = $this->bsOpenDownload($id, 'metadata');
+        $res = BasicStor::bsOpenDownload($id, 'metadata');
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -705,7 +734,7 @@ class LocStor extends BasicStor {
      */
     protected function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
-        $playlistId = $this->bsCloseDownload($playlistToken, 'metadata');
+        $playlistId = BasicStor::bsCloseDownload($playlistToken, 'metadata');
         if (PEAR::isError($playlistId)) {
             return $playlistId;
         }
@@ -737,7 +766,7 @@ class LocStor extends BasicStor {
      */
     public function revertEditedPlaylist($playlistToken, $sessid='')
     {
-        $gunid = $this->bsCloseDownload($playlistToken, 'metadata');
+        $gunid = BasicStor::bsCloseDownload($playlistToken, 'metadata');
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
@@ -843,8 +872,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $res = $this->bsOpenDownload($id, 'metadata', $parent);
-        #unset($res['filename']);
+        $res = BasicStor::bsOpenDownload($id, 'metadata', $parent);
         return $res;
     }
 
@@ -864,14 +892,14 @@ class LocStor extends BasicStor {
     public function releasePlaylist($sessid, $playlistToken, $recursive=FALSE)
     {
         if ($recursive) {
-            require_once"AccessRecur.php";
+            require_once("AccessRecur.php");
             $r = AccessRecur::releasePlaylist($this, $sessid, $playlistToken);
             if (PEAR::isError($r)) {
                 return $r;
             }
             return $r;
         }
-        return $this->bsCloseDownload($playlistToken, 'metadata');
+        return BasicStor::bsCloseDownload($playlistToken, 'metadata');
     }
 
 
@@ -894,7 +922,7 @@ class LocStor extends BasicStor {
      */
     protected function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        $res = $this->bsExportPlaylistOpen($plids, $type, !$standalone);
+        $res = BasicStor::bsExportPlaylistOpen($plids, $type, !$standalone);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -918,12 +946,12 @@ class LocStor extends BasicStor {
      */
     protected function exportPlaylistClose($token)
     {
-        return $this->bsExportPlaylistClose($token);
+        return BasicStor::bsExportPlaylistClose($token);
     }
 
 
     /**
-     * Open writable handle for import playlist in LS Archive format
+     * Open writable handle for import playlist in CC Archive format
      *
      * @param string $sessid
      * 		session id
@@ -939,7 +967,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($userid)) {
             return $userid;
         }
-        $r = $this->bsOpenPut($chsum, NULL, $userid);
+        $r = BasicStor::bsOpenPut($chsum, NULL, $userid);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -957,7 +985,7 @@ class LocStor extends BasicStor {
      */
     protected function importPlaylistClose($token)
     {
-        $arr = $this->bsClosePut($token);
+        $arr = BasicStor::bsClosePut($token);
         if (PEAR::isError($arr)) {
             return $arr;
         }
@@ -1320,7 +1348,7 @@ class LocStor extends BasicStor {
         if (PEAR::isError($userid)) {
             return $userid;
         }
-        $r = $this->bsOpenPut($chsum, NULL, $userid);
+        $r = BasicStor::bsOpenPut($chsum, NULL, $userid);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -1339,7 +1367,7 @@ class LocStor extends BasicStor {
      * 		restore token
      */
     protected function restoreBackupClosePut($sessid, $token) {
-        $arr = $this->bsClosePut($token);
+        $arr = BasicStor::bsClosePut($token);
         if (PEAR::isError($arr)) {
             return $arr;
         }
@@ -1419,13 +1447,13 @@ class LocStor extends BasicStor {
      *      url string: writable URL
      *      token string: PUT token
      */
-    function uploadOpen($sessid, $chsum)
+    protected function uploadOpen($sessid, $chsum)
     {
         $owner = Alib::GetSessUserId($sessid);
         if (PEAR::isError($owner)) {
         	return $owner;
         }
-        $res = $this->bsOpenPut($chsum, NULL, $owner);
+        $res = BasicStor::bsOpenPut($chsum, NULL, $owner);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -1444,9 +1472,9 @@ class LocStor extends BasicStor {
      * 		transport parameters
      * @return mixed
      */
-    function uploadClose($token, $trtype, $pars=array())
+    protected function uploadClose($token, $trtype, $pars=array())
     {
-        $res = $this->bsClosePut($token);
+        $res = BasicStor::bsClosePut($token);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -1454,7 +1482,7 @@ class LocStor extends BasicStor {
         switch ($trtype) {
             case "audioclip":
                 $mdtoken = $pars['mdpdtoken'];
-                $res = $this->bsClosePut($mdtoken);
+                $res = BasicStor::bsClosePut($mdtoken);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -1473,7 +1501,7 @@ class LocStor extends BasicStor {
                     "gunid" => $pars['gunid'],
                     "filetype" => "audioclip"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = BasicStor::bsPutFile($parid, $values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -1495,7 +1523,7 @@ class LocStor extends BasicStor {
                     "gunid" => $pars['gunid'],
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = BasicStor::bsPutFile($parid, $values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -1505,7 +1533,7 @@ class LocStor extends BasicStor {
             case "playlistPkg":
                 $chsum = md5_file($fname);
                 // importPlaylistOpen:
-                $res = $this->bsOpenPut($chsum, NULL, $owner);
+                $res = BasicStor::bsOpenPut($chsum, NULL, $owner);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -1565,7 +1593,7 @@ class LocStor extends BasicStor {
      *      url string: writable URL
      *      token string: PUT token
      */
-    function downloadOpen($sessid, $trtype, $pars=array())
+    protected function downloadOpen($sessid, $trtype, $pars=array())
     {
         global $CC_CONFIG;
         switch ($trtype) {
@@ -1575,7 +1603,7 @@ class LocStor extends BasicStor {
             case "playlist":
             case "playlistPkg":
                 if (!isset($pars['gunid'])) {
-                    return PEAR::raiseError("Archive::downloadOpen: gunid not set");
+                    return PEAR::raiseError("LocStor::downloadOpen: gunid not set");
                 }
                 break;
         }
@@ -1589,7 +1617,6 @@ class LocStor extends BasicStor {
             // required with content:
             $trtype = ( ($trtype2 == 'playlist') && ($trtype == 'playlistPkg') ?
                 'playlistPkg' : $trtype2);
-			//return PEAR::raiseError("Archive::downloadOpen: TT=$trtype TT2=$trtype2 G=$gunid");
         }
         switch ($trtype) {
             case "audioclip":
@@ -1602,14 +1629,14 @@ class LocStor extends BasicStor {
                 $res = $this->accessPlaylist($sessid, $gunid);
                 break;
             case "playlistPkg":
-                $res = $this->bsExportPlaylistOpen($gunid);
+                $res = BasicStor::bsExportPlaylistOpen($gunid);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
                 $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
                 $plfpath = "$tmpn.lspl";
                 copy($res['fname'], $plfpath);
-                $res = $this->bsExportPlaylistClose($res['token']);
+                $res = BasicStor::bsExportPlaylistClose($res['token']);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -1635,7 +1662,7 @@ class LocStor extends BasicStor {
                 $res = array();
                 break;
             default:
-                return PEAR::raiseError("Archive::downloadOpen: NotImpl ($trtype)");
+                return PEAR::raiseError("LocStor::downloadOpen: NotImpl ($trtype)");
         }
         if (PEAR::isError($res)) {
         	return $res;
@@ -1645,7 +1672,7 @@ class LocStor extends BasicStor {
             case "metadata":
             case "playlist":
             case "playlistPkg":
-                $title = $this->bsGetTitle(NULL, $gunid);
+                $title = BasicStor::bsGetTitle(NULL, $gunid);
                 break;
             case "searchjob":
             	$title = 'searchjob';
@@ -1673,7 +1700,7 @@ class LocStor extends BasicStor {
      *      url string: writable URL
      *      token string: PUT token
      */
-    function downloadClose($token, $trtype)
+    protected function downloadClose($token, $trtype)
     {
         switch ($trtype) {
             case "audioclip":
@@ -1709,7 +1736,7 @@ class LocStor extends BasicStor {
             case "file":
                 return array();
             default:
-                return PEAR::raiseError("Archive::downloadClose: NotImpl ($trtype)");
+                return PEAR::raiseError("LocStor::downloadClose: NotImpl ($trtype)");
         }
     }
 
@@ -1725,9 +1752,9 @@ class LocStor extends BasicStor {
      * 		'up' | 'down'
      * @param array $pars
      * 		transport parameters
-     * @return mixed
+     * @return TransportRecord|PEAR_Error
      */
-    function prepareHubInitiatedTransfer(
+    protected function prepareHubInitiatedTransfer(
         $target, $trtype='file', $direction='up',$pars=array())
     {
         $tr = new Transport($this);
@@ -1749,9 +1776,10 @@ class LocStor extends BasicStor {
      * 		'up' | 'down'
      * @param string $trtok
      * 		transport token
-     * @return mixed
+     * @return array|PEAR_Error
+     * 		array of transportRecords as hasharrays
      */
-    function listHubInitiatedTransfers(
+    protected function listHubInitiatedTransfers(
         $target=NULL, $direction=NULL, $trtok=NULL)
     {
         $tr = new Transport($this);
@@ -1771,7 +1799,7 @@ class LocStor extends BasicStor {
      * 		transport state
      * @return TransportRecord|PEAR_Error
      */
-    function setHubInitiatedTransfer($target, $trtok, $state)
+    protected function setHubInitiatedTransfer($target, $trtok, $state)
     {
         $tr = new Transport($this);
         $trec = TransportRecord::recall($tr, $trtok);

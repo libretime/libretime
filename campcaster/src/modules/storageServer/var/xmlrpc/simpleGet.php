@@ -90,7 +90,7 @@ switch ($ftype) {
         readfile($realFname);
         break;
     case "webstream":
-        $url = $locStor->bsGetMetadataValue($lid, 'ls:url');
+        $url = BasicStor::bsGetMetadataValue($lid, 'ls:url');
         if (empty($url)) {
         	http_error(500, "Unable to get ls:url value");
         }
@@ -99,7 +99,7 @@ switch ($ftype) {
         // echo "$txt\n";
         break;
     case "playlist";
-        // $md = $locStor->bsGetMetadata($ac->getId(), $sessid);
+        // $md = BasicStor::bsGetMetadata($ac->getId(), $sessid);
         $md = $locStor->getAudioClip($sessid, $gunid);
         // header("Content-type: text/xml");
         header("Content-type: application/smil");

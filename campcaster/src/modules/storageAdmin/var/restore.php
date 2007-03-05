@@ -91,7 +91,7 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
                     "gunid" => $obj['gunid'],
                     "filetype" => strtolower($obj['type'])
                 );
-                $r = $bs->bsPutFile($parid, $values);
+                $r = BasicStor::bsPutFile($parid, $values);
                 ls_restore_checkErr($r, __LINE__);
             }
         break;

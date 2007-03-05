@@ -1,6 +1,6 @@
 {literal}
 <script type="text/javascript">
-// www.jjam.de - Kontextmenü mit JavaScript - Version 15.12.2002
+// www.jjam.de - Kontextmenï¿½ mit JavaScript - Version 15.12.2002
 
 //  Browser detection
 ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
@@ -19,7 +19,7 @@ function contextmenu(param) {
 
     var sp2         = "&nbsp;&nbsp;";
     var sp5         = sp2 + sp2 + "&nbsp;";                     // Leerzeichen als Abstandshalter (flexibler und code-sparender als eine aufwendige Tabellenkonstruktion) ;
-    var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um hässlichen Linkrahmen in einigen Browsern zu vermeiden;
+    var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um hï¿½sslichen Linkrahmen in einigen Browsern zu vermeiden;
     var entry       = new Array();
     //contextmenuStatus = 0;
 
@@ -33,11 +33,11 @@ function contextmenu(param) {
             case "PL.addItem":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
             break;
-            
+
             case "PL.addStream":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setItemPlaylengthForm&id="+param+"', 'PL.setStreamPlaylength', 400, 50)\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
             break;
-            
+
             case "PL.changeItemPlaylength":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setItemPlaylengthForm&elemId="+param+"', 'PL.setItemPlaylength', 400, 50)\" "+oF+">&nbsp;##Change playlegth##&nbsp;</a></li>";
             break;
@@ -130,8 +130,8 @@ function contextmenu(param) {
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SUBJECTS.confirmRemoveSubj&"+param+"', 'confirmRemoveSubj', 400, 50)\" "+oF+">&nbsp;##Delete##&nbsp;</a></li>";
             break;
 
-            case "TR.upload2Hub":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmUpload2Hub&id="+param+"', 'confirmUpload2Hub', 400, 50)\" "+oF+">&nbsp;##Transfer to the hub##&nbsp;</a></li>";
+            case "TR.uploadToHub":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=TR.confirmUploadToHub&id="+param+"', 'confirmUploadToHub', 400, 50)\" "+oF+">&nbsp;##Transfer to the hub##&nbsp;</a></li>";
             break;
 
             case "TR.downloadFromHub":

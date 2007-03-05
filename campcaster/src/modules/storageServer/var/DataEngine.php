@@ -54,15 +54,18 @@ require_once("XML/Util.php");
  * @see StoredFile
  */
 class DataEngine {
+    /**
+     * Array of allowed "file types".
+     *
+     * @var array
+     */
+    var $filetypes;
 
     /**
      * Constructor
-     *
-     * @param BasicStor $gb
      */
-    public function __construct(&$gb)
+    public function __construct()
     {
-        $this->gb =& $gb;
         $this->filetypes = array(
             'all'=>NULL,
             'audioclip'=>'audioclip',

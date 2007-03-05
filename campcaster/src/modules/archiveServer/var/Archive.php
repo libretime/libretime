@@ -34,7 +34,7 @@ class Archive extends XR_LocStor {
         if (PEAR::isError($owner)) {
         	return $owner;
         }
-        $res = $this->bsOpenPut($chsum, NULL, $owner);
+        $res = BasicStor::bsOpenPut($chsum, NULL, $owner);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -52,7 +52,7 @@ class Archive extends XR_LocStor {
      */
     function uploadCheck($token)
     {
-        return $this->bsCheckPut($token);
+        return BasicStor::bsCheckPut($token);
     }
 
 
@@ -69,7 +69,7 @@ class Archive extends XR_LocStor {
      */
     function uploadClose($token, $trtype, $pars=array())
     {
-        $res = $this->bsClosePut($token);
+        $res = BasicStor::bsClosePut($token);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -77,7 +77,7 @@ class Archive extends XR_LocStor {
         switch ($trtype) {
             case "audioclip":
                 $mdtoken = $pars['mdpdtoken'];
-                $res = $this->bsClosePut($mdtoken);
+                $res = BasicStor::bsClosePut($mdtoken);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -128,7 +128,7 @@ class Archive extends XR_LocStor {
             case "playlistPkg":
                 $chsum = md5_file($fname);
                 // importPlaylistOpen:
-                $res = $this->bsOpenPut($chsum, NULL, $owner);
+                $res = BasicStor::bsOpenPut($chsum, NULL, $owner);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -225,14 +225,14 @@ class Archive extends XR_LocStor {
                 $res = $this->accessPlaylist($sessid, $gunid);
                 break;
             case "playlistPkg":
-                $res = $this->bsExportPlaylistOpen($gunid);
+                $res = BasicStor::bsExportPlaylistOpen($gunid);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
                 $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
                 $plfpath = "$tmpn.lspl";
                 copy($res['fname'], $plfpath);
-                $res = $this->bsExportPlaylistClose($res['token']);
+                $res = BasicStor::bsExportPlaylistClose($res['token']);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }
@@ -268,7 +268,7 @@ class Archive extends XR_LocStor {
             case "metadata":
             case "playlist":
             case "playlistPkg":
-                $title = $this->bsGetTitle(NULL, $gunid);
+                $title = BasicStor::bsGetTitle(NULL, $gunid);
                 break;
             case "searchjob":
             	$title = 'searchjob';

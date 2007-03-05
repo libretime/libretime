@@ -226,7 +226,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
             "mime" => $metadata['dc:format']
         );
 //        $timeBegin = microtime(true);
-        $storedFile = $greenbox->bsPutFile($parentId, $values, $doCopyFiles);
+        $storedFile = BasicStor::bsPutFile($parentId, $values, $doCopyFiles);
         if (PEAR::isError($storedFile)) {
         	import_err($storedFile, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
@@ -239,7 +239,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         // Note: the bsSetMetadataBatch() takes up .25 of a second
         // on my 3Ghz computer.  We should try to speed this up.
 //        $timeBegin = microtime(true);
-        $r = $greenbox->bsSetMetadataBatch($id, $metadata);
+        $r = BasicStor::bsSetMetadataBatch($id, $metadata);
         if (PEAR::isError($r)) {
         	import_err($r, "Error in bsSetMetadataBatch()");
         	echo var_export($metadata)."\n";

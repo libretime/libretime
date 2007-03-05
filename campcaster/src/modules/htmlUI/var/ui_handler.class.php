@@ -185,7 +185,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $result = $this->gb->bsSetMetadataBatch($storedFile->getId(), $metadata);
+        $result = BasicStor::bsSetMetadataBatch($storedFile->getId(), $metadata);
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=".$storedFile->getId();
         if (UI_VERBOSE) {

@@ -117,9 +117,20 @@ class uiSearch
     }
 
 
-    function newSearch(&$formdata)
+    /**
+     * Enter description here...
+     *
+     * @param array $formdata
+     *      The $_REQUEST array.
+     * @param string $p_host
+     *      Can be "local" or "remote" depending on which
+     *      storage server you want to search.
+     * @return void
+     */
+    function newSearch(&$formdata, $p_host = "local")
     {
         $this->results = NULL;
+        $this->criteria['host'] = $p_host;
         $this->criteria['conditions'] = NULL;
         $this->criteria['offset'] = NULL;
         $this->criteria['form'] = NULL;
@@ -128,7 +139,7 @@ class uiSearch
         $this->criteria['limit'] = $formdata['limit'];
         $this->criteria['counter'] = 0;
 
-        // $criteria['form'] is used for retransfer to form
+        // $criteria['form'] is used for retransfer of the form
         $this->criteria['form']['operator'] = $formdata['operator'];
         $this->criteria['form']['filetype'] = $formdata['filetype'];
         $this->criteria['form']['limit'] = $formdata['limit'];

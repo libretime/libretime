@@ -1,28 +1,28 @@
 onClick="return contextmenu('{$i.id}'
     , 'SP.addItem'
-    
+
     {if $i.type|lower == 'audioclip'}
         , 'listen', '{$i.gunid}'
-        
+
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
             , 'PL.create'
         {/if}
-        
+
         , 'edit'
         , 'delete'
     {/if}
 
     {if $i.type|lower == 'webstream'}
         , 'listen', '{$i.gunid}'
-        
+
         {if $_PL_activeId}
             , 'PL.addStream'
         {else}
             , 'PL.create'
         {/if}
-        
+
         , 'edit'
         , 'delete'
     {/if}
@@ -45,6 +45,6 @@ onClick="return contextmenu('{$i.id}'
         {/if}
     {/if}
 
-    , 'TR.upload2Hub'
+    , 'TR.uploadToHub'
 )"
 

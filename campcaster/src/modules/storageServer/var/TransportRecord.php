@@ -394,7 +394,7 @@ class TransportRecord
             case "playlist":
             case "playlistPkg":
             case "metadata":
-                $title = $this->gb->bsGetTitle(NULL, $this->row['gunid']);
+                $title = BasicStor::bsGetTitle(NULL, $this->row['gunid']);
                 if (is_null($title)) {
                     $title = $defStr;
                 }
