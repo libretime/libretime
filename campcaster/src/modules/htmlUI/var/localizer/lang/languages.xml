@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languages>
 	<item>
+		<Id>ID</Id>
+		<Name>Indonesian</Name>
+		<NativeName>Bahasa Indonesia</NativeName>
+	</item>
+	<item>
 		<Id>am_AM</Id>
 		<Name>Armenian</Name>
 		<NativeName>հայերեն</NativeName>
