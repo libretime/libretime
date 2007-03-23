@@ -23,19 +23,19 @@
 	</item>
 	<item>
 		<key>Cannot create playlist.</key>
-		<value>Ne možete da kreirate plej listu.</value>
+		<value>Ne možete kreirati plej listu.</value>
 	</item>
 	<item>
 		<key>Cannot delete this playlist.</key>
-		<value>Ne možete da obrišete ovu plej listu.</value>
+		<value>Ne možete  obrisati ovu plej listu.</value>
 	</item>
 	<item>
 		<key>Cannot move item.</key>
-		<value>Ne možete da pomerite fajl.</value>
+		<value>Ne možete pomeriti fajl.</value>
 	</item>
 	<item>
 		<key>Cannot remove item from playlist.</key>
-		<value>Ne možete da uklonite fajl iz plej liste.</value>
+		<value>Ne možete ukloniti fajl iz plej liste.</value>
 	</item>
 	<item>
 		<key>Changing fade information failed.</key>
@@ -67,7 +67,7 @@
 	</item>
 	<item>
 		<key>Error while uploading logo.</key>
-		<value>Greška pri aploudu Logoa.</value>
+		<value>Greška pri upucivanju Logoa.</value>
 	</item>
 	<item>
 		<key>Error: $1</key>
@@ -139,7 +139,7 @@
 	</item>
 	<item>
 		<key>Playlist not found in database.</key>
-		<value>Plajlista nije pronadjena u bazi podataka.</value>
+		<value>Plejlista nije pronadjena u bazi podataka.</value>
 	</item>
 	<item>
 		<key>Scheduler did not start. Check setting of &quot;UI_SCHEDULER_DAEMON_CMD&quot; in ui_conf.php. File &quot;/tmp/scheduler.log&quot; could be helpful.</key>
