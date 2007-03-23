@@ -450,14 +450,14 @@ nl:table
 
     keyboardShortcuts:table
     {
-        playAudio:string            { Play }
-        pauseAudio:string           { Pause }
-        stopAudio:string            { Stop }
-        nextTrack:string            { Next track }
-        fadeOut:string              { Fade out }
-        moveItemUp:string           { Move item up }
-        moveItemDown:string         { Move item down }
-        removeItem:string           { Remove item }
+        playAudio:string            { "Play" }
+        pauseAudio:string           { "Pause" }
+        stopAudio:string            { "Stop" }
+        nextTrack:string            { "Next track" }
+        fadeOut:string              { "Fade out" }
+        moveItemUp:string           { "Move item up" }
+        moveItemDown:string         { "Move item down" }
+        removeItem:string           { "Remove item" }
     }
 }
 
