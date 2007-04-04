@@ -134,7 +134,7 @@ sr_CS:table
         fadeOutColumnLabel:string   { "Fade out" }
 
         nameLabel:string            { "Ime" }
-        lengthLabel:string          { "Duration:" }
+        lengthLabel:string          { "#Duration:#" }
         saveButtonLabel:string      { "Sačuvaj" }
         closeButtonLabel:string     { "Zatvori" }
         lockFadesCheckButtonLabel:string
@@ -437,10 +437,10 @@ sr_CS:table
         catalog_number:string       { "Kataloški broj" }
         original_artist:string      { "Originalni izvođač" }
         copyright:string            { "Autorska prava" }
-        report_date_time:string     { "Report date/time" }
-        report_location:string      { "Report location" }
-        report_organizations:string { "Report organizations" }
-        subject:string              { "Subject" }
+        report_date_time:string     { "#Report date/time#" }
+        report_location:string      { "#Report location#" }
+        report_organizations:string { "#Report organizations#" }
+        subject:string              { "#Subject#" }
     }
 
     keyboardShortcuts:table

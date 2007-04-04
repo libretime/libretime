@@ -57,7 +57,7 @@ def cyrillize(word):
     simple = dict(zip(u'abvgdđežzijklmnoprstćufhcčšw',
                       u'абвгдђежзијклмнопрстћуфхцчшв'))
     simple.update(dict(zip(u'ABVGDĐEŽZIJKLMNOPRSTĆUFHCČŠW',
-                           u'АБВГДЂЕЖЗИЈКЛМНОПРСТЋУФХЦЋШВ')))
+                           u'АБВГДЂЕЖЗИЈКЛМНОПРСТЋУФХЦЧШВ')))
     
     for latin, cyrillic in compound.iteritems():
         word = word.replace(latin, cyrillic)
@@ -71,10 +71,13 @@ def cyrillize(word):
     word = word.replace(u'фаде ин',     u'фејд ин')
     word = word.replace(u'фаде оут',    u'фејд аут')
     word = word.replace(u'есцапе',      u'ескејп')
-    word = word.replace(u'Субјецт',     u'Субјект')
     word = word.replace(u'Плаy',        u'Плеј')
     word = word.replace(u'Паусе',       u'Поуз')
     word = word.replace(u'трацк',       u'трак')
+    word = word.replace(u'УРИ',         u'URI')
+    word = word.replace(u'РДС',         u'RDS')
+    word = word.replace(u'БПМ',         u'BPM')
+    word = word.replace(u'ИСРЦ',        u'ISRC')
     return word
 
 for line in oldLines:

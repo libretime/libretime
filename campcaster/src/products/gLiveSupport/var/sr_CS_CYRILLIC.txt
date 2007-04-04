@@ -52,7 +52,7 @@ sr_CS_CYRILLIC:table
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
-        uriColumnLabel:string         { "УРИ" }
+        uriColumnLabel:string         { "URI" }
         tokenColumnLabel:string       { "преузето" }
 
         closeButtonLabel:string       { "затвори" }
@@ -89,7 +89,7 @@ sr_CS_CYRILLIC:table
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
-        uriColumnLabel:string         { "УРИ" }
+        uriColumnLabel:string         { "URI" }
         tokenColumnLabel:string       { "преузето" }
 
         closeButtonLabel:string       { "затвори" }
@@ -134,7 +134,7 @@ sr_CS_CYRILLIC:table
         fadeOutColumnLabel:string   { "Фејд аут" }
 
         nameLabel:string            { "Име" }
-        lengthLabel:string          { "Дуратион:" }
+        lengthLabel:string          { "#Duration:#" }
         saveButtonLabel:string      { "Сачувај" }
         closeButtonLabel:string     { "Затвори" }
         lockFadesCheckButtonLabel:string
@@ -273,7 +273,7 @@ sr_CS_CYRILLIC:table
         serversSectionLabel:string      { "Сервери" }
         schedulerSectionLabel:string    { "Распоред емитовања" }
         backupSectionLabel:string       { "Бекап" }
-        rdsSectionLabel:string          { "РДС" }
+        rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "О апликацији" }
 
         cancelButtonLabel:string    { "Откажи" }
@@ -409,7 +409,7 @@ sr_CS_CYRILLIC:table
         description:string          { "Опис" }
         format:string               { "Формат" }
         length:string               { "Дужина" }
-        bpm:string                  { "БПМ" }
+        bpm:string                  { "BPM" }
         rating:string               { "Оцена" }
         encoded_by:string           { "Енкодирао" }
         track_number:string         { "Редни број снимка" }
@@ -433,14 +433,14 @@ sr_CS_CYRILLIC:table
         audio_source_url:string     { "Веб страна извора" }
         radio_station_url:string    { "Веб страна радио станице" }
         buy_cd_url:string           { "Купи ЦД преко веб стране" }
-        isrc_number:string          { "ИСРЦ број" }
+        isrc_number:string          { "ISRC број" }
         catalog_number:string       { "Каталошки број" }
         original_artist:string      { "Оригинални извођач" }
         copyright:string            { "Ауторска права" }
-        report_date_time:string     { "Репорт дате/тиме" }
-        report_location:string      { "Репорт лоцатион" }
-        report_organizations:string { "Репорт организатионс" }
-        subject:string              { "Субјект" }
+        report_date_time:string     { "#Report date/time#" }
+        report_location:string      { "#Report location#" }
+        report_organizations:string { "#Report organizations#" }
+        subject:string              { "#Subject#" }
     }
 
     keyboardShortcuts:table
