@@ -74,7 +74,7 @@ sr_CS:table
         removeMenuItem:string               { "Ukloni" }
         editPlaylistMenuItem:string         { "Uredi plej listu" }
         schedulePlaylistMenuItem:string     { "Programiraj plej listu" }
-        exportPlaylistMenuItem:string       { "E_xport Playlist" }
+        exportPlaylistMenuItem:string       { "Prebaci plejlistu" }
         uploadToHubMenuItem:string          { "Uputi na centralni server" }
 
         cannotEditPlaylistMsg:string        { "Neuspelo otvaranje plejliste" }
@@ -272,7 +272,7 @@ sr_CS:table
         keyBindingsSectionLabel:string  { "Prečice na tastaturi" }
         serversSectionLabel:string      { "Serveri" }
         schedulerSectionLabel:string    { "Raspored emitovanja" }
-        backupSectionLabel:string       { "Backup" }
+        backupSectionLabel:string       { "Bekap" }
         rdsSectionLabel:string          { "RDS" }
         aboutSectionLabel:string        { "O aplikaciji" }
 
@@ -318,19 +318,19 @@ sr_CS:table
         dateColumnLabel:string      { "Datum" }
         statusColumnLabel:string    { "Status" }
 
-        mtimeTextLabel:string       { "Modified since:" }
+        mtimeTextLabel:string       { "#Modified since:#" }
         chooseTimeButtonLabel:string    { "Izaberi vreme" }
         resetTimeButtonLabel:string     { "Reset" }
 
-        backupButtonLabel:string    { "Backup" }
+        backupButtonLabel:string    { "Bekap" }
         deleteButtonLabel:string    { "Izbriši" }
         saveButtonLabel:string      { "Sačuvaj" }
 
-        backupTitleLabel:string     { "Naslov" }
-        defaultBackupTitle:string   { "novi backup" }
+        backupTitleLabel:string     { "Bekap" }
+        defaultBackupTitle:string   { "novi bekap" }
 
-        fileChooserDialogTitle:string   { "Sačuvaj File" }
-        backupErrorMsg:string       { "Greška u backupu: " }
+        fileChooserDialogTitle:string   { "Sačuvaj fajl" }
+        backupErrorMsg:string       { "Greška u bekapu: " }
     }
 
     rdsView:table
@@ -394,7 +394,7 @@ sr_CS:table
     {
         windowTitle:string          { "Povrati bekap" }
         errorMessage:string         { "Greška: {0}" }
-        pendingMessage:string       { "Uploading backup file\n''{0}''.\n"
+        pendingMessage:string       { "#Uploading backup file\n''{0}''.\n#"
                                       "Sačekajte..." }
         finishedMessage:string      { "Završeno upućivanje." }
     }

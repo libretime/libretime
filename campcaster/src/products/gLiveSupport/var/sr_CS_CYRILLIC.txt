@@ -10,29 +10,28 @@ sr_CS_CYRILLIC:table
     simplePlaylistMgmtButtonLabel:string    { "Плеј листа" }
     schedulerButtonLabel:string             { "Распоред" }
     searchButtonLabel:string                { "Претрага" }
-    optionsButtonLabel:string               { "Options" }
+    optionsButtonLabel:string               { "Опције" }
 
-    cancelButtonLabel:string        { "Cancel" }
-    noButtonLabel:string            { "No" }
-    yesButtonLabel:string           { "Yes" }
-    okButtonLabel:string            { "OK" }
+    cancelButtonLabel:string        { "Откажи" }
+    noButtonLabel:string            { "Не" }
+    yesButtonLabel:string           { "Да" }
+    okButtonLabel:string            { "ОК" }
 
-    elapsedTimeLabel:string         { "elapsed" }
-    remainingTimeLabel:string       { "remaining" }
+    elapsedTimeLabel:string         { "позиција" }
+    remainingTimeLabel:string       { "преостало" }
 
-    localeNotAvailableMsg:string    { "Место {0} није доступно " }
+    localeNotAvailableMsg:string    { "Место {0} није доступно" }
     schedulerNotReachableMsg:string { "Сервер са распоредом није доступан" }
     storageNotReachableMsg:string   { "Сервер није доступан" }
     authenticationNotReachableMsg:string
-                                    { "Сервер за аутентизацију није доступан."
-                                      "Would you like to edit the server "
-                                      "settings?" }
+                                    { "Сервер за аутентизацију није доступан.\n"
+                                      "Да ли бисте желели да промените серверске поставке?" }
     audioErrorMsg                   { "Грешка у аудио плејеру: " }
-    sureToExitMsg:string            { "Are you sure you want to exit?" }
+    sureToExitMsg:string            { "Сигурно желите  да изађете?" }
 
     masterPanelWindow:table
     {
-        windowTitle:string          { "Maстер Панел" }
+        windowTitle:string          { "Главни панел" }
     }
 
     loginWindow:table
@@ -44,7 +43,7 @@ sr_CS_CYRILLIC:table
         okButtonLabel:string        { "У реду" }
         cancelButtonLabel:string    { "Откажи" }
 
-        pleaseWaitMsg:string        { "Logging in, please wait." }
+        pleaseWaitMsg:string        { "Пријава је у току, сачекајте" }
     }
 
     audioClipListWindow:table
@@ -53,10 +52,10 @@ sr_CS_CYRILLIC:table
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
-        uriColumnLabel:string         { "URI" }
-        tokenColumnLabel:string       { "Преузето" }
+        uriColumnLabel:string         { "УРИ" }
+        tokenColumnLabel:string       { "преузето" }
 
-        closeButtonLabel:string       { "Затвори" }
+        closeButtonLabel:string       { "затвори" }
     }
 
     scratchpadWindow:table
@@ -73,25 +72,24 @@ sr_CS_CYRILLIC:table
         addToLiveModeMenuItem:string        { "Додај у Програм Уживо" }
         addToPlaylistMenuItem:string        { "Додај у плеј листу" }
         removeMenuItem:string               { "Уклони" }
-        editPlaylistMenuItem:string         { "_Edit Playlist" }
+        editPlaylistMenuItem:string         { "Уреди плеј листу" }
         schedulePlaylistMenuItem:string     { "Програмирај плеј листу" }
-        exportPlaylistMenuItem:string       { "E_xport Playlist" }
-        uploadToHubMenuItem:string          { "Upload to Network Hub" }
+        exportPlaylistMenuItem:string       { "Пребаци плејлисту" }
+        uploadToHubMenuItem:string          { "Упути на централни сервер" }
 
-        cannotEditPlaylistMsg:string
-                                    { "Could not open playlist for editing." }
+        cannotEditPlaylistMsg:string        { "Неуспело отварање плејлисте" }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string            { "Плеј Листа" }
+        windowTitle:string            { "Плеј листа" }
 
         listBoxLabel                  { "Плеј листе" }
         detailBoxLabel                { "Детаљи плеј листе" }
 
         idColumnLabel:string          { "ид" }
         lengthColumnLabel:string      { "дужина" }
-        uriColumnLabel:string         { "URI" }
+        uriColumnLabel:string         { "УРИ" }
         tokenColumnLabel:string       { "преузето" }
 
         closeButtonLabel:string       { "затвори" }
@@ -105,53 +103,55 @@ sr_CS_CYRILLIC:table
         chooseFileButtonLabel:string    { "Претражи" }
 
         mainSectionLabel:string         { "Главно" }
-        musicSectionLabel:string        { "Music" }
-        voiceSectionLabel:string        { "Voice" }
+        musicSectionLabel:string        { "Музика" }
+        voiceSectionLabel:string        { "Глас" }
 
         lengthLabel:string              { "Трајање" }
 
-        uploadButtonLabel:string        { "Аплоуд" }
+        uploadButtonLabel:string        { "Упути" }
         closeButtonLabel:string         { "Откажи" }
 
         fileChooserDialogTitle:string   { "Изабери фајл" }
-        clipUploadedMsg:string          { "Аплоудован клип ''{0}''." }
-        couldNotOpenFileMsg:string      { "#The file could not be opened.#" }
-        couldNotReadLengthMsg:string    { "#Could not determine audio clip "
-                                          "length.#" }
-        unsupportedFileTypeMsg:string   { "#Unsupported file type.#" }
-        missingTitleMsg:string          { "#Please enter a title.#" }
-        badMetadataMsg:string           { "#Invalid data for {0}#." }
-        duplicateFileMsg:string         { "#Error: the file is in the storage "
-                                          "already.#" }
+        fileUploadedMsg:string          { "Упућен фајл ''{0}''." }
+        couldNotOpenFileMsg:string      { "Фајл се не може отворити." }
+        
+        couldNotReadLengthMsg:string    { "Неуспело одређивање дужине." }
+                                          
+        unsupportedFileTypeMsg:string   { "Неподржавана екстензија." }
+        missingTitleMsg:string          { "Унесите наслов." }
+        badMetadataMsg:string           { "Грешка у подацима за {0}." }
+        duplicateFileMsg:string         { "Грешка:фајл је већ у архиви." }
     }
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string          { "Једноставно управљање плеј листом" }
+        windowTitle:string          { "Плеј листа" }
 
         startColumnLabel:string     { "почни" }
         titleColumnLabel:string     { "наслов" }
         lengthColumnLabel:string    { "дужина" }
-        fadeInColumnLabel:string    { "Fade in" }
-        fadeOutColumnLabel:string   { "Fade out" }
+        fadeInColumnLabel:string    { "Фејд ин" }
+        fadeOutColumnLabel:string   { "Фејд аут" }
 
-        nameLabel:string            { "име" }
-        saveButtonLabel:string      { "сачувај" }
-        closeButtonLabel:string     { "затвори" }
+        nameLabel:string            { "Име" }
+        lengthLabel:string          { "Дуратион:" }
+        saveButtonLabel:string      { "Сачувај" }
+        closeButtonLabel:string     { "Затвори" }
         lockFadesCheckButtonLabel:string
-                                    { "Lock fade-out to following fade-in" }
+                                    { "Подеси фејд аут тако да прати фејд ин" }
 
-        playlistSavedMsg:string         { "сачувана плеј листа {0}" }
-        savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
-        emptyTitleErrorMsg:string       { "Please enter a title." }
+        playlistSavedMsg:string         { "Сачувана плеј листа {0}." }
+        savePlaylistDialogMsg:string    { "Сачувати плејлисту?" }
+        
+        emptyTitleErrorMsg:string       { "Унесите наслов." }
     }
 
     schedulerWindow:table
     {
         windowTitle:string          { "Распоред" }
 
-        scheduleTab:string          { "Schedule" }
-        statusTab:string            { "Status" }
+        scheduleTab:string          { "Распоред емитовања" }
+        statusTab:string            { "Статус" }
 
         startColumnLabel:string     { "почетак" }
         titleColumnLabel:string     { "назив" }
@@ -159,21 +159,21 @@ sr_CS_CYRILLIC:table
         deleteMenuItem:string       { "Обриши" }
 
         stopCurrentlyPlayingText:string
-                                    { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+                                    { "Тренутно се налази у распореду емитовања" }
+        stopCurrentlyPlayingButtonLabel:string      { "Стоп" }
+        stopCurrentlyPlayingDialogMsg:string        { "Да ли сте сигурни?" }
 
-        closeButtonLabel:string     { "затвори" }
+        closeButtonLabel:string     { "Затвори" }
 
     }
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "Програмирање Плеј листе" }
+        windowTitle:string            { "Програмирање Плеј Листе" }
 
         hourLabel:string              { "сат: " }
         minuteLabel:string            { "минут: " }
-        secondLabel:string            { "seconds: " }
+        secondLabel:string            { "секунде: " }
         scheduleButtonLabel:string    { "програмирај" }
         closeButtonLabel:string       { "затвори" }
     }
@@ -182,51 +182,51 @@ sr_CS_CYRILLIC:table
     {
         windowTitle:string          { "Претрага/Преглед" }
 
-        searchWhereLabel:string     { "Search or browse on: " }
-        searchWhereLocal:string     { "local storage" }
-        searchWhereRemote:string    { "network hub" }
+        searchWhereLabel:string     { "Тражи или прегледај на: " }
+        searchWhereLocal:string     { "локална архива" }
+        searchWhereRemote:string    { "централни сервер" }
 
         simpleSearchTab:string      { "Претрага" }
         advancedSearchTab:string    { "Напредна претрага" }
         browseTab:string            { "Преглед" }
-        transportsTab:string        { "Transfers" }
+        transportsTab:string        { "Пренеси" }
 
         searchButtonLabel:string    { "Претражи" }
-        backwardButtonLabel:string  { "⇦ Previous" }
-        forwardButtonLabel:string   { "Next ⇨" }
-        searchResultsCountLabel:string  { "{0}-{1} of {2} results" }
+        backwardButtonLabel:string  { "⇦ Претходно" }
+        forwardButtonLabel:string   { "Следеће ⇨" }
+        searchResultsCountLabel:string  { "{0}-{1} од {2} резултата" }
 
         typeColumnLabel:string      { "Тип" }
         titleColumnLabel:string     { "Наслов" }
         creatorColumnLabel:string   { "Аутор" }
-        sourceColumnLabel:string    { "Album" }
+        sourceColumnLabel:string    { "Албум" }
         lengthColumnLabel:string    { "Дужина" }
 
         allStringForBrowse          { "--- све ---" }
 
         addToScratchpadMenuItem:string  { "Додај у Припрему " }
-        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        addToPlaylistMenuItem:string    { "Додај у плејлисту" }
         addToLiveModeMenuItem:string    { "Додај у Програм Уживо" }
-        editPlaylistMenuItem:string     { "_Edit Playlist" }
-        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
-        exportPlaylistMenuItem:string   { "E_xport Playlist" }
-        uploadToHubMenuItem:string      { "Upload to the network hub" }
-        downloadFromHubMenuItem:string  { "Download from the network hub" }
+        editPlaylistMenuItem:string     { "Уреди плејлисту" }
+        schedulePlaylistMenuItem:string { "Направи распоред плејлисте" }
+        exportPlaylistMenuItem:string   { "Пребаци плејлисту" }
+        uploadToHubMenuItem:string      { "Упути на централни сервер" }
+        downloadFromHubMenuItem:string  { "Преузми са централног сервера" }
 
-        pleaseWaitMsg:string        { "Please wait..." }
-        shortErrorMsg:string        { "Search failed." }
-        longErrorMsg:string         { "Search failed: {0}." }
-        uploadToHubErrorMsg:string      { "Uploading to hub failed: {0}." }
-        downloadFromHubErrorMsg:string  { "Downloading from hub failed: {0}." }
-        nothingFoundMsg:string      { "No files found." }
+        pleaseWaitMsg:string        { "Сачекајте..." }
+        shortErrorMsg:string        { "Неуспела претрага." }
+        longErrorMsg:string         { "Неуспела претрага: {0}." }
+        uploadToHubErrorMsg:string      { "Неуспело упућивање на централни сервер: {0}." }
+        downloadFromHubErrorMsg:string  { "Неуспело преузимање са централног сервера: {0}." }
+        nothingFoundMsg:string      { "Фајлови нису нађени." }
     }
 
     advancedSearchEntry:table
     {
-        fileTypeTextLabel:string    { "File types" }
-        allFileType:string          { "all" }
-        audioClipFileType:string    { "audio clips" }
-        playlistFileType:string     { "playlists" }
+        fileTypeTextLabel:string    { "Тип фајла" }
+        allFileType:string          { "Сви" }
+        audioClipFileType:string    { "аудио клипови" }
+        playlistFileType:string     { "плејлисте" }
 
         searchByTextLabel:string    { "Тражи по" }
 
@@ -243,160 +243,160 @@ sr_CS_CYRILLIC:table
 
         playMenuItem:string             { "Пусти" }
         cueMenuItem:string              { "Проба" }
-        addToPlaylistMenuItem:string    { "_Add to Playlist" }
+        addToPlaylistMenuItem:string    { "Додај у плејлисту" }
         removeMenuItem:string           { "Уклони" }
-        editPlaylistMenuItem:string     { "_Edit Playlist" }
-        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
-        exportPlaylistMenuItem:string   { "E_xport Playlist" }
-        uploadToHubMenuItem:string      { "Upload to Network Hub" }
+        editPlaylistMenuItem:string     { "Уреди плејлисту" }
+        schedulePlaylistMenuItem:string { "Програмирај плејлисту" }
+        exportPlaylistMenuItem:string   { "Пребаци плејлисту" }
+        uploadToHubMenuItem:string      { "Упути на централни сервер" }
 
         cuePlayerLabel:string       { "Проба" }
 
-        clearListButtonLabel:string { "Clear list" }
-        removeButtonLabel:string    { "Remove item(s)" }
+        clearListButtonLabel:string { "Очисти листу" }
+        removeButtonLabel:string    { "Уклони" }
 
         cannotEditPlaylistMsg:string
-                                    { "Could not open playlist for editing." }
+                                    { "Неуспело отварање плејлисте." }
     }
 
     optionsWindow:table
     {
-        windowTitle:string          { "Options" }
+        windowTitle:string          { "Опције" }
 
-        needToRestartMsg:string     { "You will need to restart the "
-                                      "application\nfor the new settings "
-                                      "to take effect." }
-        errorMsg:string             { "Could not save the options: " }
+        needToRestartMsg:string     { "Неопходно је рестартартовати "
+                                      "апликацију\nкако би нове поставке "
+                                      "успеле." }
+        errorMsg:string             { "Неуспело чување опција: " }
 
-        soundSectionLabel:string        { "Sound" }
-        keyBindingsSectionLabel:string  { "Keyboard Shortcuts" }
-        serversSectionLabel:string      { "Servers" }
-        schedulerSectionLabel:string    { "Scheduler" }
-        backupSectionLabel:string       { "Backup" }
-        rdsSectionLabel:string          { "RDS" }
-        aboutSectionLabel:string        { "About" }
+        soundSectionLabel:string        { "Звук" }
+        keyBindingsSectionLabel:string  { "Пречице на тастатури" }
+        serversSectionLabel:string      { "Сервери" }
+        schedulerSectionLabel:string    { "Распоред емитовања" }
+        backupSectionLabel:string       { "Бекап" }
+        rdsSectionLabel:string          { "РДС" }
+        aboutSectionLabel:string        { "О апликацији" }
 
-        cancelButtonLabel:string    { "Cancel" }
-        applyButtonLabel:string     { "Apply" }
-        okButtonLabel:string        { "OK" }
+        cancelButtonLabel:string    { "Откажи" }
+        applyButtonLabel:string     { "Примени" }
+        okButtonLabel:string        { "ОК" }
 
-        cueDeviceLabel:string       { "Cue audio device:" }
-        outputDeviceLabel:string    { "Live Mode audio device:" }
-        testButtonLabel:string      { "Test" }
+        cueDeviceLabel:string       { "Картица за предслушавање:" }
+        outputDeviceLabel:string    { "Картица за емитовање: " }
+        testButtonLabel:string      { "Тест" }
 
-        pressAKeyMsg:string         { "Press a key..." }
+        pressAKeyMsg:string         { "Притисните дугме..." }
         keyBindingsInstructionsText:string
-                                    { "Double-click on the shortcut you want "
-                                      "to change, \n"
-                                      "then press the key for the new "
-                                      "shortcut\n"
-                                      "(or press the Escape key to cancel "
-                                      "the operation)." }
+                                    { "Кликните два пута на пречицу коју "
+                                      "желите,\nзатим притисните тастер за "
+                                      "нову пречицу\n"
+                                      "(или притисните ескејп како бисте "
+                                      "поништили операцију)." }
 
-        authenticationLabel:string  { "Authentication server" }
-        storageLabel:string         { "Storage server" }
-        schedulerLabel:string       { "Scheduler server" }
-        serverLabel:string          { "address:" }
-        portLabel:string            { "port:" }
-        pathLabel:string            { "path:" }
+        authenticationLabel:string  { "Сервер за аутентификацију" }
+        storageLabel:string         { "Сервер за похрањивање" }
+        schedulerLabel:string       { "Сервер за распоред емитовања" }
+        serverLabel:string          { "адреса:" }
+        portLabel:string            { "порт:" }
+        pathLabel:string            { "путања:" }
 
-        schedulerStatusText:string          { "The scheduler is" }
-        schedulerRunningStatus:string       { "running." }
-        schedulerStoppedStatus:string       { "stopped." }
-        schedulerStartButtonLabel:string    { "Start" }
-        schedulerStopButtonLabel:string     { "Stop" }
+        schedulerStatusText:string          { "Распоред емитовања је" }
+        schedulerRunningStatus:string       { "у току." }
+        schedulerStoppedStatus:string       { "заустављен." }
+        schedulerStartButtonLabel:string    { "Почни"}
+        schedulerStopButtonLabel:string     { "Заврши" }
 
-        reportBugsToText:string     { "Report bugs to: {0}" }
+        reportBugsToText:string     { "Пријави грешке: {0}" }
     }
 
     backupView:table
     {
-        workingStatus:string        { "#In progress...#" }
-        successStatus:string        { "#Ready#" }
-        faultStatus:string          { "#Error: {0}#" }
+        workingStatus:string        { "У току..." }
+        successStatus:string        { "Спремно"}
+        faultStatus:string          { "Грешка: {0}" }
 
-        titleColumnLabel:string     { "#Title#" }
-        dateColumnLabel:string      { "#Date#" }
-        statusColumnLabel:string    { "#Status#" }
+        titleColumnLabel:string     { "Наслов" }
+        dateColumnLabel:string      { "Датум" }
+        statusColumnLabel:string    { "Статус" }
 
         mtimeTextLabel:string       { "#Modified since:#" }
-        chooseTimeButtonLabel:string    { "#Choose time#" }
-        resetTimeButtonLabel:string     { "#Reset#" }
+        chooseTimeButtonLabel:string    { "Изабери време" }
+        resetTimeButtonLabel:string     { "Ресет" }
 
-        backupButtonLabel:string    { "#Backup#" }
-        deleteButtonLabel:string    { "#Delete#" }
-        saveButtonLabel:string      { "#Save#" }
+        backupButtonLabel:string    { "Бекап" }
+        deleteButtonLabel:string    { "Избриши" }
+        saveButtonLabel:string      { "Сачувај" }
 
-        backupTitleLabel:string     { "#Title#" }
-        defaultBackupTitle:string   { "#new backup#" }
+        backupTitleLabel:string     { "Бекап" }
+        defaultBackupTitle:string   { "нови бекап" }
 
-        fileChooserDialogTitle:string   { "#Save File#" }
-        backupErrorMsg:string       { "#Backup error: #" }
+        fileChooserDialogTitle:string   { "Сачувај фајл" }
+        backupErrorMsg:string       { "Грешка у бекапу: " }
     }
 
     rdsView:table
     {
-        deviceLabel:string          { "#Serial port:#" }
-        PSrdsLabel:string           { "#Station name:#" }
-        PIrdsLabel:string           { "#Station code:#" }
-        RTrdsLabel:string           { "#Clip info:#" }
+        deviceLabel:string          { "Серијски порт:" }
+        PSrdsLabel:string           { "Име станице:" }
+        PIrdsLabel:string           { "Шифра станице:" }
+        RTrdsLabel:string           { "Информација о клипу:" }
     }
 
     dateTimeChooserWindow:table
     {
-        windowTitle:string          { "Select the date and time" }
+        windowTitle:string          { "Одаберите датум и време" }
 
-        cancelButtonLabel:string    { "Cancel" }
-        okButtonLabel:string        { "OK" }
+        cancelButtonLabel:string    { "Откажи" }
+        okButtonLabel:string        { "ОК" }
 
-        hourLabel:string            { "hour:" }
-        minuteLabel:string          { "minute:" }
+        hourLabel:string            { "сат:" }
+        minuteLabel:string          { "минут:" }
     }
 
     exportPlaylistWindow:table
     {
-        windowTitle:string          { "Export Playlist" }
+        windowTitle:string          { "Пребаци плејлисту" }
 
-        playlistTitleLabel:string   { "Title:" }
-        formatLabel:string          { "Export as:" }
+        playlistTitleLabel:string   { "Наслов:" }
+        formatLabel:string          { "Пребаци као:" }
 
-        cancelButtonLabel:string    { "Cancel" }
-        saveButtonLabel:string      { "Save" }
+        cancelButtonLabel:string    { "Откажи" }
+        saveButtonLabel:string      { "Сачувај" }
 
-        internalFormatName:string   { "Campcaster archive" }
-        smilFormatName:string       { "tar containing a SMIL" }
+        internalFormatName:string   { "Цампцастер архива" }
+        smilFormatName:string       { "тар који садржи СМИЛ" }
 
-        fileChooserDialogTitle:string   { "Save File" }
+        fileChooserDialogTitle:string   { "Сачувај фајл" }
 
-        createExportErrorMsg:string { "Could not export the playlist:" }
-        saveExportErrorMsg:string   { "Could not save the exported playlist." }
+        createExportErrorMsg:string { "Неуспело пребацивање плејлисте:" }
+       
+        saveExportErrorMsg:string   { "Неуспело чување пребачене плејлисте." }
     }
 
     transportList:table
     {
-        workingStatus:string        { "#In progress...#" }
-        successStatus:string        { "#Ready#" }
-        faultStatus:string          { "#Error: {0}#" }
+        workingStatus:string        { "У току..." }
+        successStatus:string        { "Спремно" }
+        faultStatus:string          { "Грешка: {0}" }
 
-        titleColumnLabel:string     { "#Title#" }
-        dateColumnLabel:string      { "#Date#" }
-        statusColumnLabel:string    { "#Status#" }
+        titleColumnLabel:string     { "Наслов" }
+        dateColumnLabel:string      { "Датум" }
+        statusColumnLabel:string    { "Статус" }
 
-        cancelUploadMenuItem:string     { "#Cancel upload#" }
-        cancelDownloadMenuItem:string   { "#Cancel download#" }
+        cancelUploadMenuItem:string     { "Откажи упућивање" }
+        cancelDownloadMenuItem:string   { "Откажи преузимање" }
 
-        cannotCancelTransportMsg:string { "#Canceling failed: {0}.#" }
-        duplicateFileMsg:string         { "#the file is in the network "
-                                          "hub already.#" }
+        cannotCancelTransportMsg:string { "Неуспело отказивање." }
+        duplicateFileMsg:string         { "Фајл је већ на централном "
+                                          "серверу." }
     }
 
     restoreBackupWindow:table
     {
-        windowTitle:string          { "Restore Backup" }
-        errorMessage:string         { "Error: {0}" }
-        pendingMessage:string       { "Uploading backup file\n''{0}''.\n"
-                                      "Please wait..." }
-        finishedMessage:string      { "Upload finished." }
+        windowTitle:string          { "Поврати бекап" }
+        errorMessage:string         { "Грешка: {0}" }
+        pendingMessage:string       { "#Uploading backup file\n''{0}''.\n#"
+                                      "Сачекајте..." }
+        finishedMessage:string      { "Завршено упућивање." }
     }
 
     metadataTypes:table
@@ -411,7 +411,7 @@ sr_CS_CYRILLIC:table
         length:string               { "Дужина" }
         bpm:string                  { "БПМ" }
         rating:string               { "Оцена" }
-        encoded_by:string           { "Eнкодирао" }
+        encoded_by:string           { "Енкодирао" }
         track_number:string         { "Редни број снимка" }
         disc_number:string          { "Редни број диска" }
         mood:string                 { "Расположење" }
@@ -420,8 +420,8 @@ sr_CS_CYRILLIC:table
         bitrate:string              { "Битрејт" }
         channels:string             { "Број канала" }
         sample_rate:string          { "Брзина узорковања" }
-        encoding_software:string    { "Eнкодер" }
-        checksum:string             { "Кoмплетна контрола" }
+        encoding_software:string    { "Енкодер" }
+        checksum:string             { "Комплетна контрола" }
         lyrics:string               { "Текст песме" }
         orchestra_or_band:string    { "Оркестар или бенд" }
         conductor:string            { "Диригент" }
@@ -433,26 +433,26 @@ sr_CS_CYRILLIC:table
         audio_source_url:string     { "Веб страна извора" }
         radio_station_url:string    { "Веб страна радио станице" }
         buy_cd_url:string           { "Купи ЦД преко веб стране" }
-        isrc_number:string          { "ISRC број" }
+        isrc_number:string          { "ИСРЦ број" }
         catalog_number:string       { "Каталошки број" }
         original_artist:string      { "Оригинални извођач" }
         copyright:string            { "Ауторска права" }
-        report_date_time:string     { "Report date/time" }
-        report_location:string      { "Report location" }
-        report_organizations:string { "Report organizations" }
-        subject:string              { "Subject" }
+        report_date_time:string     { "Репорт дате/тиме" }
+        report_location:string      { "Репорт лоцатион" }
+        report_organizations:string { "Репорт организатионс" }
+        subject:string              { "Субјект" }
     }
 
     keyboardShortcuts:table
     {
-        playAudio:string            { "Play" }
-        pauseAudio:string           { "Pause" }
-        stopAudio:string            { "Stop" }
-        nextTrack:string            { "Next track" }
-        fadeOut:string              { "Fade out" }
-        moveItemUp:string           { "Move item up" }
-        moveItemDown:string         { "Move item down" }
-        removeItem:string           { "Remove item" }
+        playAudio:string            { "Плеј" }
+        pauseAudio:string           { "Поуз" }
+        stopAudio:string            { "Стоп" }
+        nextTrack:string            { "Следећ трак" }
+        fadeOut:string              { "Фејд аут" }
+        moveItemUp:string           { "Помери горе" }
+        moveItemDown:string         { "Помери доле" }
+        removeItem:string           { "Уклони" }
     }
 }
 
