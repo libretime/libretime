@@ -58,26 +58,27 @@ def cyrillize(word):
                       u'абвгдђежзијклмнопрстћуфхцчшв'))
     simple.update(dict(zip(u'ABVGDĐEŽZIJKLMNOPRSTĆUFHCČŠW',
                            u'АБВГДЂЕЖЗИЈКЛМНОПРСТЋУФХЦЧШВ')))
+    exceptions = { ur'\н'       :   ur'\n',
+                   u'Фаде ин'   :   u'Фејд ин',
+                   u'Фаде оут'  :   u'Фејд аут',
+                   u'фаде ин'   :   u'фејд ин',
+                   u'фаде оут'  :   u'фејд аут',
+                   u'есцапе'    :   u'ескејп',
+                   u'Плаy'      :   u'Плеј',
+                   u'Паусе'     :   u'Поуз',
+                   u'трацк'     :   u'трак',
+                   u'УРИ'       :   u'URI',
+                   u'РДС'       :   u'RDS',
+                   u'БПМ'       :   u'BPM',
+                   u'ИСРЦ'      :   u'ISRC' }
     
     for latin, cyrillic in compound.iteritems():
         word = word.replace(latin, cyrillic)
     for latin, cyrillic in simple.iteritems():
         word = word.replace(latin, cyrillic)
+    for bad, good in exceptions.iteritems():
+        word = word.replace(bad, good)
     
-    # exceptions
-    word = word.replace(ur'\н',         ur'\n')
-    word = word.replace(u'Фаде ин',     u'Фејд ин')
-    word = word.replace(u'Фаде оут',    u'Фејд аут')
-    word = word.replace(u'фаде ин',     u'фејд ин')
-    word = word.replace(u'фаде оут',    u'фејд аут')
-    word = word.replace(u'есцапе',      u'ескејп')
-    word = word.replace(u'Плаy',        u'Плеј')
-    word = word.replace(u'Паусе',       u'Поуз')
-    word = word.replace(u'трацк',       u'трак')
-    word = word.replace(u'УРИ',         u'URI')
-    word = word.replace(u'РДС',         u'RDS')
-    word = word.replace(u'БПМ',         u'BPM')
-    word = word.replace(u'ИСРЦ',        u'ISRC')
     return word
 
 for line in oldLines:
