@@ -133,7 +133,7 @@ install-arch:
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/etc/campcaster-studio.xml* \
               $(CURDIR)/debian/campcaster-studio/opt/campcaster/etc
 	mv -f $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/Widgets \
-	      $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/campcaster-studio_*.res \
+	      $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/studio-localization \
 		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/campcaster.png \
 		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/icon*.png \
 		  $(CURDIR)/debian/campcaster/opt/campcaster/var/Campcaster/stationLogo.png \

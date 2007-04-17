@@ -113,10 +113,9 @@ REPLACE_SED_STRING="s/ls_var_dir/${USR_VAR_DIR_S}/; \
     s/ls_scheduler_daemon_command/${SCHEDULER_DAEMON_COMMAND_S}/;"
 
 GENRB                   = @GENRB@
-RESOURCE_BUNDLE_NAME    = campcaster-studio
-GENRBOPTS = --destdir ${TMP_DIR} \
+TMP_STUDIO-LOCALIZATION_DIR = ${TMP_DIR}/studio-localization
+GENRBOPTS = --destdir ${TMP_STUDIO-LOCALIZATION_DIR} \
             --encoding utf-8 \
-            --package-name ${RESOURCE_BUNDLE_NAME} \
             --strict
 
 VPATH    = ${SRC_DIR}
@@ -283,14 +282,14 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/RdsView.o \
                      ${TMP_DIR}/RdsEntry.o
 
-G_LIVESUPPORT_RES = ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_root.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_en.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_es.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_hu.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_nl.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_pl.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_sr_CS.res \
-                    ${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_sr_CS_CYRILLIC.res
+G_LIVESUPPORT_RES = ${TMP_STUDIO-LOCALIZATION_DIR}/root.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/en.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/es.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/hu.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/nl.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/pl.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/sr_CS.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/sr_CS_CYRILLIC.res
 
 G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 
@@ -323,13 +322,14 @@ TEST_RUNNER_LIBS = ${G_LIVESUPPORT_EXE_LIBS} -lcppunit -ldl
 
 all: dir_setup ${G_LIVESUPPORT_EXE} ${G_LIVESUPPORT_RES} 
 
-dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
+dir_setup: ${TMP_DIR} ${TMP_STUDIO-LOCALIZATION_DIR} ${DOXYGEN_DIR}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
 
 clean:
 	${RM} ${G_LIVESUPPORT_EXE_OBJS} ${G_LIVESUPPORT_RES} ${G_LIVESUPPORT_EXE}
+	${RMDIR} ${TMP_STUDIO-LOCALIZATION_DIR}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
@@ -361,7 +361,9 @@ install: all
 	${MKDIR} ${USR_BIN_DIR}
 	${MKDIR} ${USR_ETC_DIR}
 	${MKDIR} ${USR_VAR_DIR}/Campcaster
-	${CP} ${TMP_DIR}/*.res ${USR_VAR_DIR}/Campcaster
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/studio-localization
+	${CP} ${TMP_DIR}/studio-localization/*.res \
+	      ${USR_VAR_DIR}/Campcaster/studio-localization/
 	${CP} ${VAR_DIR}/campcaster.png \
 	      ${VAR_DIR}/stationLogo.png \
 	      ${VAR_DIR}/icon*.png \
@@ -416,6 +418,9 @@ ${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
 ${TMP_DIR}:
 	${MKDIR} ${TMP_DIR}
 
+${TMP_STUDIO-LOCALIZATION_DIR}:
+	${MKDIR} ${TMP_STUDIO-LOCALIZATION_DIR}
+
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
@@ -455,6 +460,6 @@ ${PLAYLIST_EXECUTOR_LIB_FILE}:
 ${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
 
-${TMP_DIR}/${RESOURCE_BUNDLE_NAME}_%.res : ${VAR_DIR}/%.txt
+${TMP_STUDIO-LOCALIZATION_DIR}/%.res : ${VAR_DIR}/%.txt
 	${GENRB} ${GENRBOPTS} $^
 
