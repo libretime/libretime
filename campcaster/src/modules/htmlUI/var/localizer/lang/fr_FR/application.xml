@@ -47,11 +47,11 @@
 	</item>
 	<item>
 		<key>Entry $1 is already on the scratchpad. It has been moved to the top of the list.</key>
-		<value>L&apos;élément $1est déjà dans la collection. Il a été déplacé au début de la liste</value>
+		<value>L&apos;élément $1 est déjà dans la collection. Il a été déplacé au début de la liste</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId $2.</key>
-		<value>L&apos;élément a été ajouté à $1, on numéro est $2</value>
+		<value>L&apos;élément a été ajouté à $1, son numéro est $2</value>
 	</item>
 	<item>
 		<key>Entry with ScheduleId $1 removed.</key>
@@ -103,7 +103,7 @@
 	</item>
 	<item>
 		<key>No playlists have been locked by you.</key>
-		<value>Vous ne bloquez ucune playlist</value>
+		<value>Vous ne bloquez aucune playlist</value>
 	</item>
 	<item>
 		<key>Nothing selected.</key>
@@ -191,7 +191,7 @@
 	</item>
 	<item>
 		<key>User &quot;$1&quot; added.</key>
-		<value>L&apos;utulisateur &quot;$1&quot; a été ajouté</value>
+		<value>L&apos;utilisateur &quot;$1&quot; a été ajouté</value>
 	</item>
 	<item>
 		<key>User or group &quot;$1&quot; already exists.</key>
