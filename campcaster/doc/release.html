@@ -190,14 +190,16 @@ package repository on <code>code.campware.org</code>.
 To do this, you need to do the following, as real root (sudo is not enough):
 <ul>
     <li>Copy the three package files to the
-        <code>/var/www/ubuntu/packages/&lt;arch&gt;</code> directory
-        on <code>code.campware.org</code>.
+        <code>/var/www/ubuntu/packages/dapper/&lt;arch&gt;</code> directory
+        on <code>code.campware.org</code>.  If the directory contained earlier
+        versions of the packages, you can delete those.
     <li>Generate the package listing:
 <pre>cd /var/www/ubuntu
-apt-ftparchive packages packages/&lt;arch&gt; | gzip -9c \
+apt-ftparchive packages packages/dapper/&lt;arch&gt; | gzip -9c \
         > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
 </ul>
-
+For other releases, like edgy, feisty, etc, replace 'dapper' accordingly
+everywhere, of course.
 
 <h1>Tagging the sources</h1>
 After the tarballs have been tested, the release can be finalized. As a
