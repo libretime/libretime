@@ -73,7 +73,7 @@ AC_ARG_WITH([pkg-config-path],
             AC_HELP_STRING([--with-pkg-config-path],
                            [use the pkg-config path (prefix/lib/pkgconfig)]),
             [PKG_CONFIG_PATH=${withval}],
-            [PKG_CONFIG_PATH=${prefix}/lib/pkgconfig])
+            [PKG_CONFIG_PATH=${prefix}/lib/pkgconfig:$PKG_CONFIG_PATH])
 
 AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 
