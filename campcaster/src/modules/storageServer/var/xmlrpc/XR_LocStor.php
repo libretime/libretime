@@ -1319,7 +1319,7 @@ class XR_LocStor extends LocStor {
 
     /* ------------------------------------------------------ import playlist */
     /**
-     * Open writable URL for import playlist in CC Archive format
+     * Open writable URL for import playlist in LS Archive format
      *
      * The XML-RPC name of this method is "locstor.importPlaylistOpen".
      *
@@ -1370,7 +1370,7 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     * Open writable URL for import playlist in CC Archive format
+     * Open writable URL for import playlist in LS Archive format
      *
      * The XML-RPC name of this method is "locstor.importPlaylistClose".
      *
@@ -2455,10 +2455,11 @@ class XR_LocStor extends LocStor {
                 " ".$res->getUserInfo()
             );
         }
-        $xv = new XML_RPC_Value();
+#        return new XML_RPC_Response(XML_RPC_encode($res));
+        $xv = new XML_RPC_Value;
         $xv->addStruct(array(
-            'cnt' => XML_RPC_encode($res['cnt']),
-            'results' =>
+            'cnt'      => XML_RPC_encode($res['cnt']),
+            'results'  =>
                 (count($res['results'])==0
                     ? new XML_RPC_Value(array(), 'array')
                     : XML_RPC_encode($res['results'])
@@ -2569,7 +2570,7 @@ class XR_LocStor extends LocStor {
             return $r;
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->loadPref($r['sessid'], $r['key']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -2622,7 +2623,7 @@ class XR_LocStor extends LocStor {
             return $r;
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->savePref($r['sessid'], $r['key'], $r['value']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -2674,7 +2675,7 @@ class XR_LocStor extends LocStor {
             return $r;
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->delPref($r['sessid'], $r['key']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -2728,7 +2729,7 @@ class XR_LocStor extends LocStor {
             return $r;
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -2786,7 +2787,7 @@ class XR_LocStor extends LocStor {
             return $r;
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->saveGroupPref($r['sessid'], $r['group'], $r['key'], $r['value']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
@@ -2965,12 +2966,12 @@ class XR_LocStor extends LocStor {
         return new XML_RPC_Response(XML_RPC_encode(array('state'=>$res)));
     }
 
-    /* ------------------------ methods for cc-archive-format file transports */
+    /* ------------------------ methods for ls-archive-format file transports */
     /**
      * Open async file transfer from local storageServer to network hub,
-     * file should be cc-archive-format file.
+     * file should be ls-archive-format file.
      *
-     * The XML-RPC name of this method is "locstor.uploadFileAsync".
+     * The XML-RPC name of this method is "locstor.uploadFile2Hub".
      *
      * The input parameters are an XML-RPC struct with the following
      * fields:
@@ -2990,7 +2991,7 @@ class XR_LocStor extends LocStor {
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_uploadFileAsync:
+     *      <li> 805  -  xr_uploadFile2Hub:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
      *      <li> 872  -  invalid tranport token.</li>
@@ -2998,9 +2999,9 @@ class XR_LocStor extends LocStor {
      *
      * @param XML_RPC_Message $input
      * @return XML_RPC_Response
-     * @see Transport::uploadFileAsync
+     * @see Transport::uploadFile2Hub
      */
-    public function xr_uploadFileAsync($input)
+    public function xr_uploadFile2Hub($input)
     {
         list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
@@ -3008,12 +3009,13 @@ class XR_LocStor extends LocStor {
         }
         require_once('../Transport.php');
         $tr = new Transport($this);
-        $res = $tr->uploadFileAsync($r['filePath']);
+        $res = $tr->uploadFile2Hub($r['filePath']); // local files on XML-RPC :(
+                        // there should be something as uploadFile2storageServer
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_uploadFileAsync: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_uploadFile2Hub: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
@@ -3132,7 +3134,7 @@ class XR_LocStor extends LocStor {
     /**
      * Start upload of audioclip or playlist from local storageServer to hub
      *
-     * The XML-RPC name of this method is "locstor.uploadToHub".
+     * The XML-RPC name of this method is "locstor.upload2Hub".
      *
      * The input parameters are an XML-RPC struct with the following
      * fields:
@@ -3153,7 +3155,7 @@ class XR_LocStor extends LocStor {
      *      <li> 3    -  Incorrect parameters passed to method:
      *                      Wanted ... , got ... at param </li>
      *      <li> 801  -  wrong 1st parameter, struct expected.</li>
-     *      <li> 805  -  xr_uploadToHub:
+     *      <li> 805  -  xr_upload2Hub:
      *                      &lt;message from lower layer&gt; </li>
      *      <li> 848  -  invalid session id.</li>
      *      <li> 872  -  invalid tranport token.</li>
@@ -3161,9 +3163,9 @@ class XR_LocStor extends LocStor {
      *
      * @param XML_RPC_Message $input
      * @return XML_RPC_Response
-     * @see Transport::uploadToHub
+     * @see Transport::upload2Hub
      */
-    public function xr_uploadToHub($input)
+    public function xr_upload2Hub($input)
     {
         list($ok, $r) = XR_LocStor::xr_getParams($input);
         if (!$ok) {
@@ -3171,12 +3173,12 @@ class XR_LocStor extends LocStor {
         }
         require_once('../Transport.php');
         $tr = new Transport($this);
-        $res = $tr->uploadToHub($r['gunid']);
+        $res = $tr->upload2Hub($r['gunid']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
-                "xr_uploadToHub: ".$res->getMessage()." ".$res->getUserInfo()
+                "xr_upload2Hub: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
@@ -3246,7 +3248,7 @@ class XR_LocStor extends LocStor {
      * fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> criteria : hash, CC criteria format - see searchMetadata method
+     *      <li> criteria : hash, LS criteria format - see searchMetadata method
      *      </li>
      *  </ul>
      *
@@ -3560,7 +3562,7 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
             return $r;
         }
-        $res = BasicStor::bsOpenPut();
+        $res = $this->bsOpenPut();
         if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
@@ -3582,7 +3584,7 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
             return $r;
         }
-        $res = BasicStor::bsClosePut($r['token'], $r['chsum']);
+        $res = $this->bsClosePut($r['token'], $r['chsum']);
         if (PEAR::isError($res)) {
             return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
@@ -3592,204 +3594,6 @@ class XR_LocStor extends LocStor {
             'fname'=>$res['fname'],
             'owner'=>$res['owner'],
         )));
-    }
-
-    /**
-     * Simple ping method - return strtouppered string
-     *
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_ping($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = date("Ymd-H:i:s")." Network hub answer: {$r['par']}";
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_uploadOpen($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->uploadOpen($r['sessid'], $r['chsum']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_uploadOpen: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * Check state of file upload
-     *
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_uploadCheck($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->uploadCheck($r['token']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_uploadCheck: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_uploadClose($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->uploadClose($r['token'], $r['trtype'], $r['pars']);
-        if (PEAR::isError($res)) {
-            $code = 803;
-            // Special case for duplicate file - give back
-            // different error code so we can display nice user message.
-            if ($res->getCode() == GBERR_GUNID) {
-                $code = 888;
-            }
-            return new XML_RPC_Response(0, $code,
-                "xr_uploadClose: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_downloadOpen($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->downloadOpen($r['sessid'], $r['trtype'], $r['pars']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_downloadClose($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->downloadClose($r['token'], $r['trtype']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_downloadClose: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_prepareHubInitiatedTransfer($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        foreach (array('trtype'=>NULL, 'direction'=>'up', 'pars'=>array()) as $k => $dv) {
-        	if (!isset($r[$k])) {
-        		$r[$k] = $dv;
-        	}
-        }
-        $res = $this->prepareHubInitiatedTransfer(
-            $r['target'], $r['trtype'], $r['direction'], $r['pars']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_prepareHubInitiatedTransfer: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_listHubInitiatedTransfers($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        foreach (array('target'=>NULL, 'direction'=>NULL, 'trtok'=>NULL) as $k=>$dv) {
-        	if (!isset($r[$k])) {
-        		$r[$k] = $dv;
-        	}
-        }
-        $res = $this->listHubInitiatedTransfers(
-            $r['target'], $r['direction'], $r['trtok']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_listHubInitiatedTransfers: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
-
-
-    /**
-     * @param XML_RPC_Message $input
-     * @return XML_RPC_Response
-     */
-    function xr_setHubInitiatedTransfer($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        $res = $this->setHubInitiatedTransfer(
-            $r['target'], $r['trtok'], $r['state']);
-        if (PEAR::isError($res))
-            return new XML_RPC_Response(0, 803,
-                "xr_setHubInitiatedTransfer: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /* ==================================================== "private" methods */

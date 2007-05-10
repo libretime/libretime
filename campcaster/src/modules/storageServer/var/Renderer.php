@@ -227,7 +227,7 @@ class Renderer
         }
         $mdata = '';
         foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
-            $val = BasicStor::bsGetMetadataValue($id, $item);
+            $val = $gb->bsGetMetadataValue($id, $item);
             $mdata .= "  <$item>$val</$item>\n";
         }
         $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
@@ -238,7 +238,7 @@ class Renderer
             "metadata" => $mdata,
             "filetype" => "audioclip"
         );
-        $storedFile = BasicStor::bsPutFile($parid, $values);
+        $storedFile = $gb->bsPutFile($parid, $values);
         if (PEAR::isError($storedFile)) {
         	return $storedFile;
         }

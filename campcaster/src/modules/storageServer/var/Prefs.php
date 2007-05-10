@@ -18,11 +18,17 @@ require_once("GreenBox.php");
 /* ================== Prefs ================== */
 class Prefs {
 
+    public $gb;
+
     /**
      *  Constructor
+     *
+     * @param GreenBox $gb
+     * 		GreenBox object reference
      */
-    public function __construct()
+    public function __construct(&$gb)
     {
+        $this->gb =& $gb;
     }
 
 

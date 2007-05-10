@@ -54,7 +54,7 @@ class Playlist extends StoredFile {
             return $pl;
         }
         $fname = ($fname == '' || is_null($fname) ? "newFile.xml" : $fname );
-        $res = BasicStor::bsRenameFile($oid, $fname);
+        $res = $gb->bsRenameFile($oid, $fname);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -1606,8 +1606,8 @@ class PlaylistAudioClipExport
         if (PEAR::isError($RADext)) {
         	return $RADext;
         }
-        $title = BasicStor::bsGetMetadataValue($ac->getId(), 'dc:title');
-        $desc = BasicStor::bsGetMetadataValue($ac->getId(), 'dc:description');
+        $title = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
+        $desc = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
         return array(
             'type'       => 'audioclip',
             'gunid'      => $gunid,

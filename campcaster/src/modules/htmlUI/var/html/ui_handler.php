@@ -202,10 +202,8 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "HUBSEARCH.newSearch":
-	    $uiHandler->SEARCH->newSearch($_REQUEST, "remote");
+	    $uiHandler->HUBSEARCH->newSearch($_REQUEST);
 	    break;
-//	    $uiHandler->HUBSEARCH->newSearch($_REQUEST);
-//	    break;
 
     case "HUBSEARCH.reorder":
 	    $uiHandler->HUBSEARCH->reorder($_REQUEST['by']);

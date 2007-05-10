@@ -43,8 +43,8 @@ $CC_CONFIG = array(
     'storageUrlPort'        => ls_php_port,
 
     /* ================================================ archive configuration */
-    'archiveUrlPath'        => 'ls_storageUrlPath',
-    'archiveXMLRPC'         => 'xmlrpc/xrLocStor.php',
+    'archiveUrlPath'        => 'ls_archiveUrlPath',
+    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
     'archiveUrlHost'        => 'ls_php_host',
     'archiveUrlPort'        => ls_php_port,
     'archiveAccountLogin'   => 'root',

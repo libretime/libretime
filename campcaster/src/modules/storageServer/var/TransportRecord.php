@@ -70,7 +70,7 @@ class TransportRecord
      * 		default parameters (optional, internal use)
      * @return TransportRecord
      */
-    public static function create(&$tr, $trtype, $direction='up', $defaults=array())
+    function create(&$tr, $trtype, $direction='up', $defaults=array())
     {
         global $CC_DBC, $CC_CONFIG;
         $trec = new TransportRecord($tr);
@@ -394,7 +394,7 @@ class TransportRecord
             case "playlist":
             case "playlistPkg":
             case "metadata":
-                $title = BasicStor::bsGetTitle(NULL, $this->row['gunid']);
+                $title = $this->gb->bsGetTitle(NULL, $this->row['gunid']);
                 if (is_null($title)) {
                     $title = $defStr;
                 }

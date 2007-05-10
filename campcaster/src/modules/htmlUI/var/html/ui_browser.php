@@ -193,8 +193,8 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            $uiBrowser->EXCHANGE->createBackupDownload();
 	            break;
 
-            case 'TR.confirmUploadToHub':
-	            $uiBrowser->TRANSFERS->uploadToHub($_REQUEST['id']);
+            case 'TR.confirmUpload2Hub':
+	            $uiBrowser->TRANSFERS->upload2Hub($_REQUEST['id']);
 	            $Smarty->display('popup/TR.confirmTransfer.tpl');
 	            break;
 

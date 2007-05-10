@@ -132,25 +132,25 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
 all:
 
 doc:
-#	${DOXYGEN} ${DOXYGEN_CONFIG}
+	${DOXYGEN} ${DOXYGEN_CONFIG}
 
 clean: db_clean
-#	${RMDIR} ${STOR_DIR}
-#	${RMDIR} ${ACCESS_DIR}
-#	${RMDIR} ${TRANS_DIR}
+	${RMDIR} ${STOR_DIR}
+	${RMDIR} ${ACCESS_DIR}
+	${RMDIR} ${TRANS_DIR}
 
 docclean:
-#	${RMDIR} ${DOXYGEN_DIR}/html
+	${RMDIR} ${DOXYGEN_DIR}/html
 
 depclean: clean
 
 dist:
-#	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
+	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
 
 distclean: clean docclean
 
 testonly: ${TEST_RUNNER}
-#	${TEST_RUNNER}
+	${TEST_RUNNER}
 
 check: all
 #testonly
@@ -158,39 +158,39 @@ check: all
 recheck: clean check
 
 install:
-#	${MKDIR} ${DEST_DIR}
-#	${MKDIR} ${DEST_DIR}/access
-#	${MKDIR} ${DEST_DIR}/install
-#	${MKDIR} ${DEST_DIR}/stor
-#	${MKDIR} ${DEST_DIR}/stor/buffer
-#	${MKDIR} ${DEST_DIR}/trans
-#	${MKDIR} ${DEST_DIR}/xmlrpc
-#	${CP} ${VAR_DIR}/*.{php,template} ${DEST_DIR}
-#	${CP} ${VAR_DIR}/install/*.php ${DEST_DIR}/install
-#	${CP} ${VAR_DIR}/xmlrpc/*.php ${DEST_DIR}/xmlrpc
-#	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
-#	       > ${DEST_DIR}/conf.php
+	${MKDIR} ${DEST_DIR}
+	${MKDIR} ${DEST_DIR}/access
+	${MKDIR} ${DEST_DIR}/install
+	${MKDIR} ${DEST_DIR}/stor
+	${MKDIR} ${DEST_DIR}/stor/buffer
+	${MKDIR} ${DEST_DIR}/trans
+	${MKDIR} ${DEST_DIR}/xmlrpc
+	${CP} ${VAR_DIR}/*.{php,template} ${DEST_DIR}
+	${CP} ${VAR_DIR}/install/*.php ${DEST_DIR}/install
+	${CP} ${VAR_DIR}/xmlrpc/*.php ${DEST_DIR}/xmlrpc
+	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
+	       > ${DEST_DIR}/conf.php
 
-
+	
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
 storage: dir_setup db_init
 
 dir_setup: ${DOXYGEN_DIR}
-#	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
+	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_init:
-#	-cd var/install && php -q install.php
+	-cd var/install && php -q install.php
 
 db_clean:
-#	-cd var/install && php -q uninstall.php
+	-cd var/install && php -q uninstall.php
 
 ${TMP_DIR}:
-#	${MKDIR} ${TMP_DIR}
+	${MKDIR} ${TMP_DIR}
 
 ${DOXYGEN_DIR}:
-#	${MKDIR} ${DOXYGEN_DIR}
+	${MKDIR} ${DOXYGEN_DIR}
 
 ${TEST_RUNNER}:
 

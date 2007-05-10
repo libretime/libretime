@@ -153,7 +153,7 @@ class uiTransfers
     }
 
 
-    function uploadToHub($id)
+    function upload2Hub($id)
     {
         $gunid = BasicStor::GunidFromId($id);
         $type = BasicStor::GetType($gunid);
@@ -161,14 +161,14 @@ class uiTransfers
         switch ($type) {
             case 'audioClip':
             case 'audioclip':
-                $r = $this->Base->gb->uploadToHub($gunid);
+                $r = $this->Base->gb->upload2Hub($gunid);
             break;
             case 'playlist':
-                $this->Base->gb->uploadToHub($gunid);
+                $this->Base->gb->upload2Hub($gunid);
             break;
             default:
                 // TODO: it is not implemented in gb, and this way maybe impossible
-                //$this->Base->gb->uploadFileAsync($gunid);
+                //$this->Base->gb->uploadFile2Hub($gunid);
                 return false;
         }
     }

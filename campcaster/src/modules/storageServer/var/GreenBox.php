@@ -34,7 +34,7 @@ class GreenBox extends BasicStor {
      * 		ID of new folder
      * @exception PEAR::error
      */
-    public static function createFolder($parid, $folderName, $sessid='')
+    public function createFolder($parid, $folderName, $sessid='')
     {
         if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
             return $res;
@@ -62,12 +62,12 @@ class GreenBox extends BasicStor {
      * @return int
      *      ID of the StoredFile that was created.
      */
-    public static function putFile($p_parentId, $p_values, $p_sessionId='')
+    public function putFile($p_parentId, $p_values, $p_sessionId='')
     {
         if (($res = BasicStor::Authorize('write', $p_parentId, $p_sessionId)) !== TRUE) {
             return $res;
         }
-        $storedFile = BasicStor::bsPutFile($p_parentId, $p_values);
+        $storedFile = $this->bsPutFile($p_parentId, $p_values);
         return $storedFile;
     } // fn putFile
 
@@ -90,7 +90,7 @@ class GreenBox extends BasicStor {
      * @return int
      *  @exception PEAR::error
      */
-    public static function storeWebstream($parid, $fileName, $mdataFileLP, $sessid='',
+    public function storeWebstream($parid, $fileName, $mdataFileLP, $sessid='',
          $gunid=NULL, $url)
     {
         if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
@@ -105,18 +105,61 @@ class GreenBox extends BasicStor {
             "gunid" => $gunid,
             "filetype" => "webstream"
         );
-        $storedFile = BasicStor::bsPutFile($parid, $values);
+        $storedFile = $this->bsPutFile($parid, $values);
         if (PEAR::isError($storedFile)) {
             return $storedFile;
         }
         $oid = $storedFile->getId();
-        $r = BasicStor::bsSetMetadataValue(
+        $r = $this->bsSetMetadataValue(
             $oid, 'ls:url', $url, NULL, NULL, 'metadata');
         if (PEAR::isError($r)) {
             return $r;
         }
         return $oid;
     } // fn storeWebstream
+
+
+    /**
+     * Access stored file - increase access counter
+     *
+     * @param int $id
+     *      virt.file's local id
+     * @param string $sessid
+     *      session id
+     * @return string access token
+     */
+//    function accessFile($id, $sessid='')
+//    {
+//        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        $gunid = BasicStor::GunidFromId($id);
+//        $r = BasicStor::bsAccess(NULL, '', $gunid, 'access');
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
+//        $token = $r['token'];
+//        return $token;
+//    } // fn accessFile
+
+
+    /**
+     * Release stored file - decrease access counter
+     *
+     * @param string $token
+     *      access token
+     * @param string $sessid
+     *      session id
+     * @return boolean
+     */
+//    function releaseFile($token, $sessid='')
+//    {
+//        $r = BasicStor::bsRelease($token, 'access');
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
+//        return FALSE;
+//    } // fn releaseFile
 
 
     /**
@@ -128,12 +171,12 @@ class GreenBox extends BasicStor {
      * 		Session id
      * @return array
      */
-    public static function analyzeFile($id, $sessid='')
+    public function analyzeFile($id, $sessid='')
     {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsAnalyzeFile($id);
+        return $this->bsAnalyzeFile($id);
     } // fn analyzeFile
 
 
@@ -147,13 +190,13 @@ class GreenBox extends BasicStor {
      * 		Session id
      * @return boolean|PEAR_Error
      */
-    public static function renameFile($id, $newName, $sessid='')
+    public function renameFile($id, $newName, $sessid='')
     {
         $parid = M2tree::GetParent($id);
         if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsRenameFile($id, $newName);
+        return $this->bsRenameFile($id, $newName);
     } // fn renameFile
 
 
@@ -168,13 +211,13 @@ class GreenBox extends BasicStor {
      *      session id
      * @return boolean|PEAR_Error
      */
-    public static function moveFile($id, $did, $sessid='')
+    public function moveFile($id, $did, $sessid='')
     {
         $res = BasicStor::Authorize(array('read', 'write'), array($id, $did), $sessid);
         if ($res !== TRUE) {
             return $res;
         }
-        return BasicStor::bsMoveFile($id, $did);
+        return $this->bsMoveFile($id, $did);
     } // fn moveFile
 
 
@@ -189,13 +232,13 @@ class GreenBox extends BasicStor {
      *      session id
      * @return boolean|PEAR_Error
      */
-    public static function copyFile($id, $did, $sessid='')
+    public function copyFile($id, $did, $sessid='')
     {
         $res = BasicStor::Authorize(array('read', 'write'), array($id, $did), $sessid);
-        if ($res !== TRUE) {
+        if($res !== TRUE) {
             return $res;
         }
-        return BasicStor::bsCopyFile($id, $did);
+        return $this->bsCopyFile($id, $did);
     } // fn copyFile
 
 
@@ -212,12 +255,12 @@ class GreenBox extends BasicStor {
      *      session id
      * @return TRUE|PEAR_Error
      */
-    public static function replaceFile($id, $mediaFileLP, $mdataFileLP, $sessid='')
+    public function replaceFile($id, $mediaFileLP, $mdataFileLP, $sessid='')
     {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsReplaceFile($id, $mediaFileLP, $mdataFileLP);
+        return $this->bsReplaceFile($id, $mediaFileLP, $mdataFileLP);
     } // fn replaceFile
 
 
@@ -244,6 +287,28 @@ class GreenBox extends BasicStor {
     /* ------------------------------------------------------------- metadata */
 
     /**
+     * Replace metadata with new XML file or string
+     *
+     * @param int $id
+     *      Virtual file's local id
+     * @param string $mdata
+     *      XML string or local path of metadata XML file
+     * @param string $mdataLoc
+     *      metadata location: 'file'|'string'
+     * @param  string $sessid
+     *      session id
+     * @return boolean|PEAR_Error
+     */
+//    public function replaceMetadata($id, $mdata, $mdataLoc='file', $sessid='')
+//    {
+//        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        return $this->bsReplaceMetadata($id, $mdata, $mdataLoc);
+//    } // fn replaceMetadata
+
+
+    /**
      * Get metadata XML tree as string
      *
      * @param int $id
@@ -253,12 +318,12 @@ class GreenBox extends BasicStor {
      * @return string|PEAR_Error
      * @todo rename this function to "getMetadata"
      */
-    public static function getMetadata($id, $sessid='')
+    public function getMetadata($id, $sessid='')
     {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsGetMetadata($id);
+        return $this->bsGetMetadata($id);
     }
 
 
@@ -275,7 +340,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return array
      */
-    public static function getMetadataArray($id, $sessid)
+    public function getMetadataArray($id, $sessid)
     {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
@@ -332,7 +397,7 @@ class GreenBox extends BasicStor {
      *          qualified name (e.g. xml:lang)</li>
      *   </ul>
      */
-    public static function getMetadataValue($id, $category, $sessid='',
+    public function getMetadataValue($id, $category, $sessid='',
         $lang=NULL, $deflang=NULL)
     {
         if (!is_numeric($id)) {
@@ -341,7 +406,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsGetMetadataValue($id, $category);
+        return $this->bsGetMetadataValue($id, $category);
     } // fn getMetadataValue
 
 
@@ -362,12 +427,12 @@ class GreenBox extends BasicStor {
      * 		(optional on unique elements) Metadata record id
      * @return boolean
      */
-    public static function setMetadataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
+    public function setMetadataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
     {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return BasicStor::bsSetMetadataValue($id, $category, $value, $lang, $mid);
+        return $this->bsSetMetadataValue($id, $category, $value, $lang, $mid);
     } // fn setMetadataValue
 
 
@@ -424,11 +489,11 @@ class GreenBox extends BasicStor {
      *   </ul>
      *  @see BasicStor::bsLocalSearch
      */
-    public static function localSearch($criteria, $sessid='')
+    public function localSearch($criteria, $sessid='')
     {
         $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
         $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
-        return BasicStor::bsLocalSearch($criteria, $limit, $offset);
+        return $this->bsLocalSearch($criteria, $limit, $offset);
     } // fn localSearch
 
 
@@ -446,7 +511,7 @@ class GreenBox extends BasicStor {
      *       cnt : integer - number of matching values
      * @see BasicStor::bsBrowseCategory
      */
-    public static function browseCategory($category, $criteria = null, $sessid = '')
+    public function browseCategory($category, $criteria = null, $sessid = '')
     {
         $limit = 0;
         $offset = 0;
@@ -454,7 +519,7 @@ class GreenBox extends BasicStor {
             $limit = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
             $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
         }
-        $res = BasicStor::bsBrowseCategory($category, $limit, $offset, $criteria);
+        $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
         return $res;
     } // fn browseCategory
 
@@ -493,13 +558,29 @@ class GreenBox extends BasicStor {
         }
         // optionally move it to the destination folder:
         if($parid != $hdid && !is_null($parid)){
-            $r = BasicStor::bsMoveFile($id, $parid);
+            $r = $this->bsMoveFile($id, $parid);
             if (PEAR::isError($r)) {
                 return $r;
             }
         }
         return $id;
     } // fn createPlaylist
+
+
+    /**
+     * Return playlist as XML string
+     *
+     * @param int $id
+     *      local object id
+     * @param string $sessid
+     *      session ID
+     * @return string
+     * 		XML
+     */
+//    function getPlaylistXml($id, $sessid)
+//    {
+//        return $this->getMetadata($id, $sessid);
+//    } // fn getPlaylistXml
 
 
     /**
@@ -511,7 +592,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return array
      */
-    public static function getPlaylistArray($id, $sessid)
+    public function getPlaylistArray($id, $sessid)
     {
         $gunid = BasicStor::GunidFromId($id);
         $pl = StoredFile::Recall($id);
@@ -533,7 +614,7 @@ class GreenBox extends BasicStor {
      * @return string
      * 		playlist access token
      */
-    public static function lockPlaylistForEdit($id, $sessid)
+    public function lockPlaylistForEdit($id, $sessid)
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = BasicStor::GunidFromId($id);
@@ -557,7 +638,7 @@ class GreenBox extends BasicStor {
      */
     public function releaseLockedPlaylist($token, $sessid)
     {
-        $gunid = BasicStor::bsCloseDownload($token, 'metadata');
+        $gunid = $this->bsCloseDownload($token, 'metadata');
         if (PEAR::isError($gunid)) {
             return $gunid;
         }
@@ -594,7 +675,7 @@ class GreenBox extends BasicStor {
      *      pause between half-faded points in time format hh:mm:ss.ssssss
      * @return string, generated playlistElement gunid
      */
-    public static function addAudioClipToPlaylist($token, $acId, $sessid,
+    public function addAudioClipToPlaylist($token, $acId, $sessid,
         $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
     {
         require_once("Playlist.php");
@@ -609,11 +690,13 @@ class GreenBox extends BasicStor {
                 " ($type)"
             );
         }
+//        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
         $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length);
         if (PEAR::isError($res)) {
             return $res;
         }
         // recalculate offsets and total length:
+//        $r = $pl->recalculateTimes($pause);
         $r = $pl->recalculateTimes();
         if (PEAR::isError($r)) {
             return $r;
@@ -634,7 +717,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      * @todo rename this function to "deleteAudioClipFromPlaylist"
      */
-    public static function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
+    public function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
@@ -669,7 +752,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public static function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
+    public function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
@@ -705,7 +788,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public static function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
+    public function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
@@ -735,7 +818,7 @@ class GreenBox extends BasicStor {
      * @return string
      * 		gunid of playlist
      */
-    public static function revertEditedPlaylist($token, $sessid='')
+    public function revertEditedPlaylist($token, $sessid='')
     {
         global $CC_CONFIG, $CC_DBC;
         $lc = new LocStor($CC_DBC, $CC_CONFIG);
@@ -752,7 +835,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public static function deletePlaylist($id, $sessid)
+    public function deletePlaylist($id, $sessid)
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = BasicStor::GunidFromId($id);
@@ -784,7 +867,7 @@ class GreenBox extends BasicStor {
      *      <li>duration string, total playlength of clip </li>
      *   </ul>
      */
-    public static function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0,
+    public function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0,
         $lang=NULL, $deflang=NULL)
     {
         require_once("Playlist.php");
@@ -802,7 +885,7 @@ class GreenBox extends BasicStor {
             return $id;
         }
         if (!is_null($id)) {
-            $res['title'] = BasicStor::bsGetMetadataValue($id, "dc:title");
+            $res['title'] = $this->bsGetMetadataValue($id, "dc:title");
         }
         return $res;
     } // fn displayPlaylistClipAtOffset
@@ -826,9 +909,9 @@ class GreenBox extends BasicStor {
      *      fname string: readable fname,
      *      token string: access token
      */
-    public static function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
+    public function exportPlaylistOpen($sessid, $plids, $type='lspl', $standalone=FALSE)
     {
-        return BasicStor::bsExportPlaylistOpen($plids, $type, !$standalone);
+        return $this->bsExportPlaylistOpen($plids, $type, !$standalone);
     } // fn exportPlaylistOpen
 
 
@@ -840,14 +923,14 @@ class GreenBox extends BasicStor {
      *            method call
      * @return TRUE|PEAR_Error
      */
-    public static function exportPlaylistClose($token)
+    public function exportPlaylistClose($token)
     {
-        return BasicStor::bsExportPlaylistClose($token);
+        return $this->bsExportPlaylistClose($token);
     } // fn exportPlaylistClose
 
 
     /**
-     * Open writable handle for import playlist in CC Archive format
+     * Open writable handle for import playlist in LS Archive format
      *
      * @param string $sessid
      *      session id
@@ -857,13 +940,13 @@ class GreenBox extends BasicStor {
      *      fname string: writable local filename
      *      token string: put token
      */
-    public static function importPlaylistOpen($sessid, $chsum='')
+    public function importPlaylistOpen($sessid, $chsum='')
     {
         $userid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($userid)) {
             return $userid;
         }
-        $r = BasicStor::bsOpenPut($chsum, NULL, $userid);
+        $r = $this->bsOpenPut($chsum, NULL, $userid);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -881,7 +964,7 @@ class GreenBox extends BasicStor {
      */
     public function importPlaylistClose($token)
     {
-        $arr = BasicStor::bsClosePut($token);
+        $arr = $this->bsClosePut($token);
         if (PEAR::isError($arr)) {
             return $arr;
         }
@@ -911,7 +994,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public static function existsPlaylist($id, $sessid)
+    public function existsPlaylist($id, $sessid)
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = BasicStor::GunidFromId($id);
@@ -932,13 +1015,44 @@ class GreenBox extends BasicStor {
      * @return TRUE|int
      *      id of user editing it
      */
-    public static function playlistIsAvailable($id, $sessid)
+    public function playlistIsAvailable($id, $sessid)
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = BasicStor::GunidFromId($id);
         $lc = new LocStor($CC_DBC, $CC_CONFIG);
         return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
     } // fn playlistIsAvailable
+
+
+    /* ---------------------------------------------- time conversion methods */
+    /**
+     * Convert playlist time value to float seconds
+     *
+     * @param string $plt
+     *      playlist time value (HH:mm:ss.dddddd)
+     * @return int
+     * 		seconds
+     */
+//    public function playlistTimeToSeconds($plt)
+//    {
+//        require_once("Playlist.php");
+//        return Playlist::playlistTimeToSeconds($plt);
+//    }
+
+
+    /**
+     * Convert float seconds value to playlist time format
+     *
+     * @param int $s0
+     *      seconds
+     * @return string
+     * 		time in playlist time format (HH:mm:ss.dddddd)
+     */
+//    public static function secondsToPlaylistTime($s0)
+//    {
+//        require_once("Playlist.php");
+//        return Playlist::secondsToPlaylistTime($s0);
+//    } // fn secondsToPlaylistTime
 
 
     /* ------------------------------------------------------- render methods */
@@ -952,7 +1066,7 @@ class GreenBox extends BasicStor {
      * @return string $token
      *      render token
      */
-    public static function renderPlaylistToFileOpen($sessid, $plid)
+    public function renderPlaylistToFileOpen($sessid, $plid)
     {
         require_once("Renderer.php");
         $r = Renderer::rnRender2FileOpen($this, $plid);
@@ -972,7 +1086,7 @@ class GreenBox extends BasicStor {
      *      status : string - susccess | working | fault
      *      tmpfile : string - filepath to result temporary file
      */
-    public static function renderPlaylistToFileCheck($token)
+    public function renderPlaylistToFileCheck($token)
     {
         require_once("Renderer.php");
         $r = Renderer::rnRender2FileCheck($this, $token);
@@ -993,7 +1107,7 @@ class GreenBox extends BasicStor {
      *      status : string - susccess | working | fault
      *      tmpfile : string - filepath to result temporary file
      */
-    public static function renderPlaylistToFileList($status='')
+    public function renderPlaylistToFileList($status='')
     {
         require_once("Renderer.php");
         return Renderer::rnRender2FileList($this, $status);
@@ -1008,7 +1122,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      *      status
      */
-    public static function renderPlaylistToFileClose($token)
+    public function renderPlaylistToFileClose($token)
     {
         require_once("Renderer.php");
         $r = Renderer::rnRender2FileClose($this, $token);
@@ -1029,7 +1143,7 @@ class GreenBox extends BasicStor {
      * @return string
      *      render token
      */
-    public static function renderPlaylistToStorageOpen($sessid, $plid)
+    public function renderPlaylistToStorageOpen($sessid, $plid)
     {
         require_once("Renderer.php");
         $owner = GreenBox::getSessUserId($sessid);
@@ -1053,7 +1167,7 @@ class GreenBox extends BasicStor {
      *      status : string - susccess | working | fault
      *      gunid : string - gunid of result file
      */
-    public static function renderPlaylistToStorageCheck($token)
+    public function renderPlaylistToStorageCheck($token)
     {
         require_once("Renderer.php");
         $r = Renderer::rnRender2StorageCheck($this, $token);
@@ -1074,7 +1188,7 @@ class GreenBox extends BasicStor {
      * @return string
      *      render token
      */
-    public static function renderPlaylistToRSSOpen($sessid, $plid)
+    public function renderPlaylistToRSSOpen($sessid, $plid)
     {
         $token = '123456789abcdeff';
         $fakeFile = $CC_CONFIG['accessDir']."/$token.rss";
@@ -1092,7 +1206,7 @@ class GreenBox extends BasicStor {
      *      status : string - susccess | working | fault
      *      tmpfile : string - filepath to result temporary file
      */
-    public static function renderPlaylistToRSSCheck($token)
+    public function renderPlaylistToRSSCheck($token)
     {
         $fakeFile = $CC_CONFIG['accessDir']."/$token.rss";
         if ($token != '123456789abcdeff' || !file_exists($fakeFile)){
@@ -1108,6 +1222,25 @@ class GreenBox extends BasicStor {
 
 
     /**
+     * Render playlist to RSS file (list results)
+     *
+     * @param string $status
+     *      success | working | fault
+     * @return array of hasharray:
+     *      status : string - susccess | working | fault
+     *      tmpfile : string - filepath to result temporary file
+     */
+//    function renderPlaylistToRSSList($status='')
+//    {
+//        $dummytokens = array ('123456789abcdeff');
+//        foreach ($dummytokens as $token) {
+//            $r[] = $this->renderPlaylistToRSSCheck($token);
+//        }
+//        return $r;
+//    } // fn renderPlaylistToRSSList
+
+
+    /**
      * Render playlist to RSS file (close handle)
      *
      * @param string $token
@@ -1115,7 +1248,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      *      status
      */
-    public static function renderPlaylistToRSSClose($token)
+    public function renderPlaylistToRSSClose($token)
     {
         if ($token != '123456789abcdeff'){
             return PEAR::raiseError(
@@ -1140,7 +1273,7 @@ class GreenBox extends BasicStor {
      * @return array
      *           token  : string - backup token
      */
-    public static function createBackupOpen($sessid, $criteria='')
+    public function createBackupOpen($sessid, $criteria='')
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1162,7 +1295,7 @@ class GreenBox extends BasicStor {
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    public static function createBackupCheck($token)
+    public function createBackupCheck($token)
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1185,7 +1318,7 @@ class GreenBox extends BasicStor {
      *      token  : stirng - backup token
      *      url    : string - access url
      */
-    public static function createBackupList($sessid, $stat='')
+    public function createBackupList($sessid, $stat='')
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1204,7 +1337,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      *      status
      */
-    public static function createBackupClose($token)
+    public function createBackupClose($token)
     {
         require_once("Backup.php");
         $bu = new Backup($this);
@@ -1226,7 +1359,7 @@ class GreenBox extends BasicStor {
      * @return string
      *      restore token
      */
-    public static function backupRestoreOpen($sessid, $filename)
+    public function backupRestoreOpen($sessid, $filename)
     {
         require_once('Restore.php');
         $rs = new Restore($this);
@@ -1248,7 +1381,7 @@ class GreenBox extends BasicStor {
      *              status: string - working | fault | success
      *              faultString: string - description of fault
      */
-    public static function backupRestoreCheck($token)
+    public function backupRestoreCheck($token)
     {
         require_once('Restore.php');
         $rs = new Restore($this);
@@ -1267,7 +1400,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      *      is success
      */
-    public static function backupRestoreClose($token) {
+    public function backupRestoreClose($token) {
     	require_once('Restore.php');
     	$rs = new Restore($this);
     	if (PEAR::isError($rs)) {
@@ -1288,9 +1421,9 @@ class GreenBox extends BasicStor {
      * @return string
      * 		preference value
      */
-    public static function loadPref($sessid, $key)
+    public function loadPref($sessid, $key)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->loadPref($sessid, $key);
         return $res;
     } // fn loadPref
@@ -1307,9 +1440,9 @@ class GreenBox extends BasicStor {
      *      preference value
      * @return boolean
      */
-    public static function savePref($sessid, $key, $value)
+    public function savePref($sessid, $key, $value)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->savePref($sessid, $key, $value);
         return $res;
     } // fn savePref
@@ -1324,9 +1457,9 @@ class GreenBox extends BasicStor {
      *      preference key
      * @return boolean
      */
-    public static function delPref($sessid, $key)
+    public function delPref($sessid, $key)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->delPref($sessid, $key);
         return $res;
     } // fn delPref
@@ -1344,9 +1477,9 @@ class GreenBox extends BasicStor {
      * @return string
      * 		preference value
      */
-    public static function loadGroupPref($sessid, $group, $key)
+    public function loadGroupPref($sessid, $group, $key)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->loadGroupPref($sessid, $group, $key);
         return $res;
     } // fn loadGroupPref
@@ -1365,9 +1498,9 @@ class GreenBox extends BasicStor {
      *      preference value
      * @return boolean
      */
-    public static function saveGroupPref($sessid, $group, $key, $value)
+    public function saveGroupPref($sessid, $group, $key, $value)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->saveGroupPref($sessid, $group, $key, $value);
         return $res;
     } // fn saveGroupPref
@@ -1384,9 +1517,9 @@ class GreenBox extends BasicStor {
      *      preference key
      * @return boolean
      */
-    public static function delGroupPref($sessid, $group, $key)
+    public function delGroupPref($sessid, $group, $key)
     {
-        $pr = new Prefs();
+        $pr = new Prefs($this);
         $res = $pr->delGroupPref($sessid, $group, $key);
         return $res;
     } // fn delGroupPref
@@ -1427,7 +1560,7 @@ class GreenBox extends BasicStor {
      * @return boolean
      *      previous state
      */
-    public static function turnOnOffTransports($sessid, $onOff=NULL)
+    public function turnOnOffTransports($sessid, $onOff=NULL)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
@@ -1445,7 +1578,7 @@ class GreenBox extends BasicStor {
      * @return string
      *      resulting transport state
      */
-    public static function doTransportAction($trtok, $action)
+    public function doTransportAction($trtok, $action)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
@@ -1464,12 +1597,12 @@ class GreenBox extends BasicStor {
      * @return string
      *      transport token
      */
-    public static function uploadFileAsync($filePath)
+    public function uploadFile2Hub($filePath)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
-        return $tr->uploadFileAsync($filePath);
-    } // fn uploadFileAsync
+        return $tr->uploadFile2Hub($filePath);
+    } // fn uploadFile2Hub
 
 
     /**
@@ -1479,7 +1612,7 @@ class GreenBox extends BasicStor {
      *      trtok: string transport token
      *      ... ?
      */
-    public static function getHubInitiatedTransfers()
+    public function getHubInitiatedTransfers()
     {
         require_once("Transport.php");
         $tr = new Transport($this);
@@ -1496,7 +1629,7 @@ class GreenBox extends BasicStor {
      * @return string
      *      transport token
      */
-    public static function startHubInitiatedTransfer($trtok)
+    public function startHubInitiatedTransfer($trtok)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
@@ -1518,12 +1651,12 @@ class GreenBox extends BasicStor {
      *      transport token
      * @todo rename this function "uploadToHub"
      */
-    public static function uploadToHub($gunid, $withContent=FALSE)
+    public function upload2Hub($gunid, $withContent=FALSE)
     {
         require_once("Transport.php");
         $tr = new Transport($this);
-        return $tr->uploadToHub($gunid, $withContent);
-    } // fn uploadToHub
+        return $tr->upload2Hub($gunid, $withContent);
+    } // fn upload2Hub
 
 
     /**
@@ -1600,7 +1733,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $listArr = BasicStor::bsListFolder($id);
+        $listArr = $this->bsListFolder($id);
         return $listArr;
     } // fn listFolder
 
@@ -1633,7 +1766,7 @@ class GreenBox extends BasicStor {
     public function existsFile($sessid, $gunid, $ftype=NULL)
     {
         $id = BasicStor::IdFromGunid($gunid);
-        $ex = BasicStor::bsExistsFile($id, $ftype);
+        $ex = $this->bsExistsFile($id, $ftype);
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }

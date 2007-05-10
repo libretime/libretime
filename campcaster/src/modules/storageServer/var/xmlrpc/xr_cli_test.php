@@ -183,13 +183,13 @@ $infos = array(
         'p'=>array('sessid', 'onOff'), 'r'=>array('state')),
     "doTransportAction" => array('m'=>"locstor.doTransportAction",
         'p'=>array('sessid', 'trtok', 'action'), 'r'=>array('state')),
-    "uploadFileAsync" => array('m'=>"locstor.uploadFileAsync",
+    "uploadFile2Hub" => array('m'=>"locstor.uploadFile2Hub",
         'p'=>array('sessid', 'filePath'), 'r'=>array('trtok')),
     "getHubInitiatedTransfers" => array('m'=>"locstor.getHubInitiatedTransfers",
         'p'=>array('sessid'), 'r'=>array()),
     "startHubInitiatedTransfer" => array('m'=>"locstor.startHubInitiatedTransfer",
         'p'=>array('trtok'), 'r'=>array()),
-    "uploadToHub" => array('m'=>"locstor.uploadToHub",
+    "upload2Hub" => array('m'=>"locstor.upload2Hub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
     "downloadFromHub" => array('m'=>"locstor.downloadFromHub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
@@ -221,10 +221,8 @@ $infos = array(
         'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
 */
 
-    "openPut" => array('m'=>"locstor.openPut", 'p'=>array()),
-    "closePut" => array('m'=>"locstor.closePut", 'p'=>array()),
-    "ping" => array('m'=>"locstor.ping", 'p'=>array('par')),
-
+    "openPut"       => array('m'=>"locstor.openPut", 'p'=>array()),
+    "closePut"      => array('m'=>"locstor.closePut", 'p'=>array()),
 );
 
 
@@ -276,12 +274,9 @@ switch ($method) {
         } elseif(count($pinfo) == 0) {
             $parr = (object)array();
         } else {
-            $parr = array();
-            $i = 0;
-            foreach($pinfo as $it) {
-                if (isset($pars[$i])) {
-                    $parr[$it] = $pars[$i];
-                }
+            $parr = array(); $i=0;
+            foreach($pinfo as $it){
+                if(isset($pars[$i])) $parr[$it] = $pars[$i];
                 $i++;
             }
         }

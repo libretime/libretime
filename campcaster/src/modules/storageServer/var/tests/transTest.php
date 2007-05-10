@@ -47,7 +47,7 @@ $values = array(
     "gunid" => $gunid,
     "filetype" => "audioclip"
 );
-$storedFile = BasicStor::bsPutFile($parid, $values);
+$storedFile = $gb->bsPutFile($parid, $values);
 if (PEAR::isError($storedFile)) {
     if ($storedFile->getCode()!=GBERR_GUNID) {
         echo "ERROR: ".$storedFile->getMessage()."\n";
@@ -84,7 +84,7 @@ var_export($r); echo"\n";
 /* ========== UPLOAD ========== */
 echo "#  UPLOAD test:\n";
 echo"#  uploadAudioClip2Hub: ";
-$r = $gb->uploadToHub($gunid);
+$r = $gb->upload2Hub($gunid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
 var_export($r); echo"\n";
 $trtok = $r;

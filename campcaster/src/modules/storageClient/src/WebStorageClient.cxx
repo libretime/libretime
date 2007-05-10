@@ -1,26 +1,26 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
-
+ 
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
-
+ 
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-
+  
     Campcaster is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+ 
     You should have received a copy of the GNU General Public License
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
+ 
+ 
     Author   : $Author$
     Version  : $Revision$
     Location : $URL$
@@ -238,7 +238,7 @@ const std::string    getVersionResultParamName = "version";
 /*------------------------------------------------------------------------------
  *  The name of the reset storage method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    resetStorageMethodName
+const std::string    resetStorageMethodName 
                             = "locstor.resetStorage";
 
 
@@ -247,7 +247,7 @@ const std::string    resetStorageMethodName
 /*------------------------------------------------------------------------------
  *  The name of the search method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    searchMethodName
+const std::string    searchMethodName 
                             = "locstor.searchMetadata";
 
 /*------------------------------------------------------------------------------
@@ -301,7 +301,7 @@ const std::string    searchCountParamName = "cnt";
 /*------------------------------------------------------------------------------
  *  The name of the browse method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    browseMethodName
+const std::string    browseMethodName 
                             = "locstor.browseCategory";
 
 /*------------------------------------------------------------------------------
@@ -337,7 +337,7 @@ const std::string    browseResultCountParamName = "cnt";
 /*------------------------------------------------------------------------------
  *  The name of the create playlist method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    createPlaylistMethodName
+const std::string    createPlaylistMethodName 
                             = "locstor.createPlaylist";
 
 /*------------------------------------------------------------------------------
@@ -361,7 +361,7 @@ const std::string    createPlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the exists playlist method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    existsPlaylistMethodName
+const std::string    existsPlaylistMethodName 
                             = "locstor.existsPlaylist";
 
 /*------------------------------------------------------------------------------
@@ -385,13 +385,13 @@ const std::string    existsPlaylistResultParamName = "exists";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'get playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    getPlaylistOpenMethodName
+const std::string    getPlaylistOpenMethodName 
                             = "locstor.accessPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'get playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    getPlaylistCloseMethodName
+const std::string    getPlaylistCloseMethodName 
                             = "locstor.releasePlaylist";
 
 /*------------------------------------------------------------------------------
@@ -430,7 +430,7 @@ const std::string    getPlaylistContentParamName = "content";
 /*------------------------------------------------------------------------------
  *  The name of the 'edit playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    editPlaylistMethodName
+const std::string    editPlaylistMethodName 
                             = "locstor.editPlaylist";
 
 /*------------------------------------------------------------------------------
@@ -459,7 +459,7 @@ const std::string    editPlaylistTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the 'save playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    savePlaylistMethodName
+const std::string    savePlaylistMethodName 
                             = "locstor.savePlaylist";
 
 /*------------------------------------------------------------------------------
@@ -488,7 +488,7 @@ const std::string    savePlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the 'revert playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    revertPlaylistMethodName
+const std::string    revertPlaylistMethodName 
                             = "locstor.revertEditedPlaylist";
 
 /*------------------------------------------------------------------------------
@@ -514,7 +514,7 @@ const std::string    revertPlaylistResultParamName = "plid";
 /*------------------------------------------------------------------------------
  *  The name of the exists audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    existsAudioClipMethodName
+const std::string    existsAudioClipMethodName 
                             = "locstor.existsAudioClip";
 
 /*------------------------------------------------------------------------------
@@ -538,13 +538,13 @@ const std::string    existsAudioClipResultParamName = "exists";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    getAudioClipOpenMethodName
+const std::string    getAudioClipOpenMethodName 
                             = "locstor.downloadMetadataOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    getAudioClipCloseMethodName
+const std::string    getAudioClipCloseMethodName 
                             = "locstor.downloadMetadataClose";
 
 /*------------------------------------------------------------------------------
@@ -573,13 +573,13 @@ const std::string    getAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'store audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    storeAudioClipOpenMethodName
+const std::string    storeAudioClipOpenMethodName 
                             = "locstor.storeAudioClipOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'store audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    storeAudioClipCloseMethodName
+const std::string    storeAudioClipCloseMethodName 
                             = "locstor.storeAudioClipClose";
 
 /*------------------------------------------------------------------------------
@@ -623,7 +623,7 @@ const std::string    storeAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the acquire audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    acquireAudioClipMethodName
+const std::string    acquireAudioClipMethodName 
                             = "locstor.accessRawAudioData";
 
 /*------------------------------------------------------------------------------
@@ -652,7 +652,7 @@ const std::string    acquireAudioClipTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the release audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    releaseAudioClipMethodName
+const std::string    releaseAudioClipMethodName 
                             = "locstor.releaseRawAudioData";
 
 /*------------------------------------------------------------------------------
@@ -671,19 +671,19 @@ const std::string    releaseAudioClipResultParamName = "status";
 /*------------------------------------------------------------------------------
  *  The name of the 'open' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    createBackupOpenMethodName
+const std::string    createBackupOpenMethodName 
                             = "locstor.createBackupOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'check' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    createBackupCheckMethodName
+const std::string    createBackupCheckMethodName 
                             = "locstor.createBackupCheck";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close' create backup  method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    createBackupCloseMethodName
+const std::string    createBackupCloseMethodName 
                             = "locstor.createBackupClose";
 
 /*------------------------------------------------------------------------------
@@ -727,25 +727,25 @@ const std::string    createBackupFaultStringParamName = "faultString";
 /*------------------------------------------------------------------------------
  *  The name of the 'open' restore backup method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    restoreBackupOpenMethodName
+const std::string    restoreBackupOpenMethodName 
                             = "locstor.restoreBackupOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close put' restore backup method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    restoreBackupClosePutMethodName
+const std::string    restoreBackupClosePutMethodName 
                             = "locstor.restoreBackupClosePut";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'check' restore backup method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    restoreBackupCheckMethodName
+const std::string    restoreBackupCheckMethodName 
                             = "locstor.restoreBackupCheck";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close' restore backup method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    restoreBackupCloseMethodName
+const std::string    restoreBackupCloseMethodName 
                             = "locstor.restoreBackupClose";
 
 /*------------------------------------------------------------------------------
@@ -789,13 +789,13 @@ const std::string    restoreBackupFaultStringParamName  = "faultString";
 /*------------------------------------------------------------------------------
  *  The name of the 'open' export playlist  method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    exportPlaylistOpenMethodName
+const std::string    exportPlaylistOpenMethodName 
                             = "locstor.exportPlaylistOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'close' export playlist  method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    exportPlaylistCloseMethodName
+const std::string    exportPlaylistCloseMethodName 
                             = "locstor.exportPlaylistClose";
 
 /*------------------------------------------------------------------------------
@@ -834,13 +834,13 @@ const std::string    exportPlaylistTokenParamName = "token";
 /*------------------------------------------------------------------------------
  *  The name of the opening 'import playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    importPlaylistOpenMethodName
+const std::string    importPlaylistOpenMethodName 
                             = "locstor.importPlaylistOpen";
 
 /*------------------------------------------------------------------------------
  *  The name of the closing 'import playlist' method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    importPlaylistCloseMethodName
+const std::string    importPlaylistCloseMethodName 
                             = "locstor.importPlaylistClose";
 
 /*------------------------------------------------------------------------------
@@ -948,7 +948,7 @@ const std::string    doTransportActionActionParamName       = "action";
 /*------------------------------------------------------------------------------
  *  The name of the upload to hub method on the storage server
  *----------------------------------------------------------------------------*/
-const std::string    uploadToHubMethodName = "locstor.uploadToHub";
+const std::string    uploadToHubMethodName = "locstor.upload2Hub";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
@@ -1029,7 +1029,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
     localTempStorage = attribute->get_value();
 
     // read the storage server location
-    xmlpp::Node::NodeList   childNodes
+    xmlpp::Node::NodeList   childNodes 
                             = element.get_children(locationConfigElementName);
     xmlpp::Node::NodeList::iterator it = childNodes.begin();
 
@@ -1040,7 +1040,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
 
-    const xmlpp::Element      * locationConfigElement
+    const xmlpp::Element      * locationConfigElement 
                                 = dynamic_cast<const xmlpp::Element*> (*it);
     if (!(attribute = locationConfigElement
                       ->get_attribute(locationServerAttrName))) {
@@ -1058,7 +1058,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
     }
     std::stringstream   storageServerPortValue(attribute->get_value());
     storageServerPortValue >> storageServerPort;
-
+    
     if (!(attribute = locationConfigElement
                       ->get_attribute(locationPathAttrName))) {
         std::string eMsg = "Missing attribute ";
@@ -1088,7 +1088,7 @@ WebStorageClient :: execute(const std::string &     methodName,
 {
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
-
+    
     result.clear();
     if (!xmlRpcClient.execute(methodName.c_str(),
                               parameters,
@@ -1100,7 +1100,7 @@ WebStorageClient :: execute(const std::string &     methodName,
         throw XmlRpcCommunicationException(eMsg);
     }
     xmlRpcClient.close();
-
+    
     if (xmlRpcClient.isFault()) {
         int                 faultCode   = result[errorCodeParamName];
         std::string         faultString = result[errorMessageParamName];
@@ -1123,7 +1123,7 @@ WebStorageClient :: checkStruct(const std::string &     methodName,
 {
     if (!xmlRpcStruct.hasMember(memberName)) {
         std::stringstream eMsg;
-        eMsg << "The return value of the XML-RPC method '"
+        eMsg << "The return value of the XML-RPC method '" 
              << methodName
              << "',\n"
              << xmlRpcStruct
@@ -1132,10 +1132,10 @@ WebStorageClient :: checkStruct(const std::string &     methodName,
              << "'." ;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     if (xmlRpcStruct[memberName].getType() != memberType) {
         std::stringstream eMsg;
-        eMsg << "In the return value of the XML-RPC method '"
+        eMsg << "In the return value of the XML-RPC method '" 
              << methodName
              << "',\n"
              << xmlRpcStruct
@@ -1165,9 +1165,9 @@ WebStorageClient :: getVersion(void)
     // add a dummy parameter, as this is the only way to enforce parameters
     // to be of XML-RPC type struct
     parameters["dummy"] = 0;
-
+    
     execute(getVersionMethodName, parameters, result);
-
+    
     checkStruct(getVersionMethodName,
                 result,
                 getVersionResultParamName,
@@ -1190,33 +1190,33 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[createPlaylistSessionIdParamName]
+    parameters[createPlaylistSessionIdParamName] 
             = sessionId->getId();
 
     execute(createPlaylistMethodName, parameters, result);
-
+    
     checkStruct(createPlaylistMethodName,
                 result,
                 createPlaylistResultParamName,
                 XmlRpcValue::TypeString);
-
+    
     Ptr<UniqueId>::Ref          newId(new UniqueId(std::string(
                                     result[createPlaylistResultParamName] )));
 
     Ptr<const std::string>::Ref url, token;
-
+    
     editPlaylistGetUrl(sessionId, newId, url, token);
-
+    
     Ptr<time_duration>::Ref     playlength(new time_duration(0,0,0,0));
     Ptr<Playlist>::Ref          playlist(new Playlist(newId, playlength));
     playlist->setEditToken(token);
-
+    
     editedPlaylists[newId->getId()] = std::make_pair(sessionId, playlist);
     savePlaylist(sessionId, playlist);
-
+    
     token.reset();
     playlist->setEditToken(token);
-
+    
     return playlist->getId();
 }
 
@@ -1233,21 +1233,21 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref          sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[existsPlaylistSessionIdParamName]
+    parameters[existsPlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[existsPlaylistPlaylistIdParamName]
+    parameters[existsPlaylistPlaylistIdParamName] 
             = std::string(*id);
-
+    
     execute(existsPlaylistMethodName, parameters, result);
-
+    
     checkStruct(existsPlaylistMethodName,
                 result,
                 existsPlaylistResultParamName,
                 XmlRpcValue::TypeBoolean);
-
+    
     return bool(result[existsPlaylistResultParamName]);
 }
-
+ 
 
 /*------------------------------------------------------------------------------
  *  Return a playlist to be displayed.
@@ -1274,20 +1274,20 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref          sessionId,
     parameters[getPlaylistRecursiveParamName]  = false;
 
     execute(getPlaylistOpenMethodName, parameters, result);
-
+    
     checkStruct(getPlaylistOpenMethodName,
                 result,
                 getPlaylistTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     Ptr<const std::string>::Ref     token(new std::string(
                                         result[getPlaylistTokenParamName] ));
-
+    
     checkStruct(getPlaylistOpenMethodName,
                 result,
                 getPlaylistUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     const std::string   url     = result[getPlaylistUrlParamName];
 
     Ptr<UniqueId>::Ref  idNotConst(new UniqueId(id->getId()));
@@ -1312,7 +1312,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref          sessionId,
     playlist->setToken(token);
 
     releasePlaylistFromServer(playlist);
-
+    
     return playlist;
 }
 
@@ -1329,7 +1329,7 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref        sessionId,
         throw XmlRpcInvalidArgumentException("playlist is already"
                                              " being edited");
     }
-
+    
     Ptr<const std::string>::Ref     url, editToken;
 
     editPlaylistGetUrl(sessionId, id, url, editToken);
@@ -1375,23 +1375,23 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref          sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[editPlaylistSessionIdParamName]
+    parameters[editPlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[editPlaylistPlaylistIdParamName]
+    parameters[editPlaylistPlaylistIdParamName] 
             = std::string(*id);
-
+    
     execute(editPlaylistMethodName, parameters, result);
-
+    
     checkStruct(editPlaylistMethodName,
                 result,
                 editPlaylistUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(editPlaylistMethodName,
                 result,
                 editPlaylistTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     url.reset(new const std::string(result[getPlaylistUrlParamName]));
     editToken.reset(new const std::string(result[getPlaylistTokenParamName]));
 }
@@ -1408,11 +1408,11 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     if (!playlist || !playlist->getEditToken()) {
         throw XmlRpcInvalidArgumentException("playlist has no editToken field");
     }
-
+    
     EditedPlaylistsType::iterator
                     editIt = editedPlaylists.find(playlist->getId()->getId());
-
-    if ((editIt == editedPlaylists.end())
+    
+    if ((editIt == editedPlaylists.end()) 
             || *editIt->second.first != *sessionId) {
         throw XmlRpcInvalidArgumentException("savePlaylist() called without "
                                              "editPlaylist()");
@@ -1423,24 +1423,24 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[savePlaylistSessionIdParamName]
+    parameters[savePlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[savePlaylistTokenParamName]
+    parameters[savePlaylistTokenParamName] 
             = *playlist->getEditToken();
-    parameters[savePlaylistNewPlaylistParamName]
+    parameters[savePlaylistNewPlaylistParamName] 
             = std::string(*playlist->getXmlDocumentString());
 
     execute(savePlaylistMethodName, parameters, result);
-
+    
     checkStruct(savePlaylistMethodName,
                 result,
                 savePlaylistResultParamName,
                 XmlRpcValue::TypeString);
-
+    
     if (std::string(result[savePlaylistResultParamName])
                                         != std::string(*playlist->getId())) {
         std::stringstream eMsg;
-        eMsg << "Mismatched playlist ID from XML-RPC method '"
+        eMsg << "Mismatched playlist ID from XML-RPC method '" 
              << savePlaylistMethodName
              << "': "
              << result[savePlaylistResultParamName]
@@ -1465,18 +1465,18 @@ WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref editToken)
     if (!editToken) {
         throw XmlRpcInvalidArgumentException("null pointer in argument");
     }
-
+    
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
     parameters.clear();
     parameters[revertPlaylistSessionIdParamName]        // dummy parameter
             = "";
-    parameters[revertPlaylistTokenParamName]
+    parameters[revertPlaylistTokenParamName] 
             = *editToken;
 
     execute(revertPlaylistMethodName, parameters, result);
-
+    
     checkStruct(revertPlaylistMethodName,
                 result,
                 revertPlaylistResultParamName,
@@ -1501,18 +1501,18 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref         sessionId,
     parameters[getPlaylistRecursiveParamName]  = true;
 
     execute(getPlaylistOpenMethodName, parameters, result);
-
+    
     checkStruct(getPlaylistOpenMethodName,
                 result,
                 getPlaylistTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     Ptr<const std::string>::Ref     token(new std::string(
                                         result[getPlaylistTokenParamName] ));
 
     Ptr<Playlist>::Ref  playlist = acquirePlaylist(id, result);
     playlist->setToken(token);
-
+    
     return playlist;
 }
 
@@ -1530,7 +1530,7 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                 content,
                 getPlaylistUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     const std::string   url     = content[getPlaylistUrlParamName];
 
     Ptr<UniqueId>::Ref  idNotConst(new UniqueId(id->getId()));
@@ -1558,13 +1558,13 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                 content,
                 getPlaylistContentParamName,
                 XmlRpcValue::TypeArray);
-
+    
     XmlRpcValue         innerContent = content[getPlaylistContentParamName];
 
     // construct the SMIL file
     Ptr<xmlpp::Document>::Ref
                         smilDocument(new xmlpp::Document(xmlVersion));
-    xmlpp::Element    * smilRootNode
+    xmlpp::Element    * smilRootNode 
                         = smilDocument->create_root_node(smilRootNodeName);
     smilRootNode->set_attribute(smilLanguageAttrName,
                                 smilLanguageAttrValue);
@@ -1573,7 +1573,7 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                         = smilRootNode->add_child(smilBodyNodeName);
     xmlpp::Element    * smilParNode
                         = smilBodyNode->add_child(smilParNodeName);
-
+    
     // we assume that the playlist is as long as the size of the content array
     Playlist::const_iterator it = playlist->begin();
     int                      index = 0;
@@ -1588,7 +1588,7 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         Ptr<Playable>::Ref              playable;
         Ptr<const std::string>::Ref     url;
         Ptr<UniqueId>::Ref              subPlaylistId;
-
+        
         switch (plElement->getType()) {
             case PlaylistElement::AudioClipType :
                 url.reset(new std::string(
@@ -1610,10 +1610,10 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         xmlpp::Element* smilPlayableNode
                         = smilParNode->add_child(smilPlayableNodeName);
         smilPlayableNode->set_attribute(
-                        smilPlayableUriAttrName,
+                        smilPlayableUriAttrName, 
                         *url );
         smilPlayableNode->set_attribute(
-                        smilRelativeOffsetAttrName,
+                        smilRelativeOffsetAttrName, 
                         *TimeConversion::timeDurationToSmilString(
                                                             relativeOffset ));
 
@@ -1720,11 +1720,11 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
     if (playlist->getToken()) {
         releasePlaylistFromServer(playlist);
     }
-
+    
     releasePlaylistTempFile(playlist);
 }
-
-
+    
+    
 /*------------------------------------------------------------------------------
  *  Release a playlist, step 1: release access URLs at the storage server.
  *----------------------------------------------------------------------------*/
@@ -1743,18 +1743,18 @@ WebStorageClient :: releasePlaylistFromServer(
 
     parameters.clear();
     parameters[getPlaylistTokenParamName] = std::string(*playlist->getToken());
-
+    
     execute(getPlaylistCloseMethodName, parameters, result);
-
+    
     checkStruct(getPlaylistCloseMethodName,
                 result,
                 getPlaylistPlaylistIdParamName,
                 XmlRpcValue::TypeString);
-
+    
     if (std::string(result[getPlaylistPlaylistIdParamName])
                                         != std::string(*playlist->getId())) {
         std::stringstream eMsg;
-        eMsg << "Mismatched playlist ID from XML-RPC method '"
+        eMsg << "Mismatched playlist ID from XML-RPC method '" 
              << getPlaylistCloseMethodName
              << "': "
              << result[getPlaylistPlaylistIdParamName]
@@ -1785,7 +1785,7 @@ WebStorageClient :: releasePlaylistTempFile(Ptr<Playlist>::Ref  playlist) const
     ifs.close();
 
     std::remove(playlist->getUri()->substr(7).c_str());
-
+   
     std::string                 eMsg = "";
     Playlist::const_iterator    it   = playlist->begin();
     while (it != playlist->end()) {
@@ -1805,7 +1805,7 @@ WebStorageClient :: releasePlaylistTempFile(Ptr<Playlist>::Ref  playlist) const
         } else {
             // this should never happen
             eMsg += "unexpected playlist element type\n";
-        }
+        }        
     }
 
     Ptr<std::string>::Ref   nullPointer;
@@ -1830,21 +1830,21 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref         sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[existsAudioClipSessionIdParamName]
+    parameters[existsAudioClipSessionIdParamName] 
             = sessionId->getId();
-    parameters[existsAudioClipAudioClipIdParamName]
+    parameters[existsAudioClipAudioClipIdParamName] 
             = std::string(*id);
-
+    
     execute(existsAudioClipMethodName, parameters, result);
-
+    
     checkStruct(existsAudioClipMethodName,
                 result,
                 existsAudioClipResultParamName,
                 XmlRpcValue::TypeBoolean);
-
+    
     return bool(result[existsAudioClipResultParamName]);
 }
-
+ 
 
 /*------------------------------------------------------------------------------
  *  Retrieve an audio clip from the storage.
@@ -1858,23 +1858,23 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[getAudioClipSessionIdParamName]
+    parameters[getAudioClipSessionIdParamName] 
             = sessionId->getId();
-    parameters[getAudioClipAudioClipIdParamName]
+    parameters[getAudioClipAudioClipIdParamName] 
             = std::string(*id);
-
+    
     execute(getAudioClipOpenMethodName, parameters, result);
-
+    
     checkStruct(getAudioClipOpenMethodName,
                 result,
                 getAudioClipUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(getAudioClipOpenMethodName,
                 result,
                 getAudioClipTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     const std::string   url     = result[getAudioClipUrlParamName];
     const std::string   token   = result[getAudioClipTokenParamName];
 
@@ -1902,18 +1902,18 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref        sessionId,
     parameters.clear();
     parameters[getAudioClipSessionIdParamName] = sessionId->getId();
     parameters[getAudioClipTokenParamName]     = token;
-
+    
     execute(getAudioClipCloseMethodName, parameters, result);
-
+    
     checkStruct(getAudioClipCloseMethodName,
                 result,
                 getAudioClipAudioClipIdParamName,
                 XmlRpcValue::TypeString);
-
+    
     if (std::string(result[getAudioClipAudioClipIdParamName])
                                                     != std::string(*id)) {
         std::stringstream eMsg;
-        eMsg << "Mismatched audio clip ID from XML-RPC method '"
+        eMsg << "Mismatched audio clip ID from XML-RPC method '" 
              << getAudioClipCloseMethodName
              << "': "
              << result[getAudioClipAudioClipIdParamName]
@@ -1939,7 +1939,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcInvalidArgumentException(
                                         "binary audio clip file not found");
     }
-
+    
     // temporary hack; we will expect an absolute file name from getUri()
     //   in the final version
     std::string     binaryFileName = audioClip->getUri()->substr(5);
@@ -1955,59 +1955,59 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[storeAudioClipSessionIdParamName]
+    parameters[storeAudioClipSessionIdParamName] 
             = sessionId->getId();
     if (audioClip->getId()) {
         parameters[storeAudioClipAudioClipIdParamName]
             = std::string(*audioClip->getId());
     }
-    parameters[storeAudioClipMetadataParamName]
+    parameters[storeAudioClipMetadataParamName] 
             = std::string(*audioClip->getXmlDocumentString());
-    parameters[storeAudioClipFileNameParamName]
+    parameters[storeAudioClipFileNameParamName] 
             = std::string(*audioClip->getUri());
-    parameters[storeAudioClipChecksumParamName]
+    parameters[storeAudioClipChecksumParamName] 
             = md5string;
 
     execute(storeAudioClipOpenMethodName, parameters, result);
-
+    
     checkStruct(storeAudioClipOpenMethodName,
                 result,
                 storeAudioClipUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(storeAudioClipOpenMethodName,
                 result,
                 storeAudioClipTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     std::string url     = std::string(result[storeAudioClipUrlParamName]);
     std::string token   = std::string(result[storeAudioClipTokenParamName]);
-
+    
     try {
         FileTools::copyFileToUrl(binaryFileName, url);
-
+        
     } catch (std::runtime_error &e) {
         throw XmlRpcCommunicationException(e.what());
     }
-
+    
     parameters.clear();
-    parameters[storeAudioClipSessionIdParamName]
+    parameters[storeAudioClipSessionIdParamName] 
             = sessionId->getId();
-    parameters[storeAudioClipTokenParamName]
+    parameters[storeAudioClipTokenParamName] 
             = token;
-
+    
     execute(storeAudioClipCloseMethodName, parameters, result);
-
+    
     checkStruct(storeAudioClipCloseMethodName,
                 result,
                 storeAudioClipAudioClipIdParamName,
                 XmlRpcValue::TypeString);
-
+    
     if (audioClip->getId()
             && std::string(result[storeAudioClipAudioClipIdParamName])
                                         != std::string(*audioClip->getId())) {
         std::stringstream eMsg;
-        eMsg << "Mismatched audio clip ID from XML-RPC method '"
+        eMsg << "Mismatched audio clip ID from XML-RPC method '" 
              << storeAudioClipCloseMethodName
              << "': "
              << result[storeAudioClipAudioClipIdParamName]
@@ -2039,32 +2039,32 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[acquireAudioClipSessionIdParamName]
+    parameters[acquireAudioClipSessionIdParamName] 
             = sessionId->getId();
-    parameters[acquireAudioClipAudioClipIdParamName]
+    parameters[acquireAudioClipAudioClipIdParamName] 
             = std::string(*id);
-
+    
     execute(acquireAudioClipMethodName, parameters, result);
-
+    
     checkStruct(acquireAudioClipMethodName,
                 result,
                 acquireAudioClipUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(acquireAudioClipMethodName,
                 result,
                 acquireAudioClipTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     Ptr<const std::string>::Ref uri(new const std::string(
                                     result[acquireAudioClipUrlParamName] ));
-    Ptr<const std::string>::Ref token(new const std::string(
+    Ptr<const std::string>::Ref token(new const std::string( 
                                     result[acquireAudioClipTokenParamName] ));
 
     audioClip->setUri(uri);
     audioClip->setToken(token);
 
-    return audioClip;
+    return audioClip;    
 }
 
 
@@ -2079,24 +2079,24 @@ WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[releaseAudioClipTokenParamName]
+    parameters[releaseAudioClipTokenParamName] 
             = *audioClip->getToken();
-
+    
     execute(releaseAudioClipMethodName, parameters, result);
-
+    
     checkStruct(releaseAudioClipMethodName,
                 result,
                 releaseAudioClipResultParamName,
                 XmlRpcValue::TypeBoolean);
-
+    
     if (! bool(result[releaseAudioClipResultParamName])) {
         std::stringstream eMsg;
-        eMsg << "XML-RPC method '"
+        eMsg << "XML-RPC method '" 
              << releaseAudioClipMethodName
              << "' returned 'false'";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     Ptr<const std::string>::Ref     nullpointer;
     audioClip->setToken(nullpointer);
     audioClip->setUri(nullpointer);
@@ -2114,12 +2114,12 @@ WebStorageClient :: reset(void)
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters["dummy_param"] = "dummy_value";
-
+    parameters["dummy_param"] = "dummy_value"; 
+    
     execute(resetStorageMethodName, parameters, result);
-
+    
     extractSearchResults(resetStorageMethodName, result, localSearchResults);
-
+    
     editedPlaylists.clear();
 }
 
@@ -2136,17 +2136,17 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[searchSessionIdParamName]
+    parameters[searchSessionIdParamName] 
             = sessionId->getId();
-    parameters[searchCriteriaParamName]
+    parameters[searchCriteriaParamName] 
             = *searchCriteria;
 
     execute(searchMethodName, parameters, result);
-
+    
     return extractSearchResults(searchMethodName, result, localSearchResults);
 }
 
-
+    
 /*------------------------------------------------------------------------------
  *  Extract the results returned by search() or remoteSearchClose().
  *----------------------------------------------------------------------------*/
@@ -2161,12 +2161,12 @@ WebStorageClient :: extractSearchResults(
                 xmlRpcStruct,
                 searchResultParamName,
                 XmlRpcValue::TypeArray);
-
+    
     XmlRpcValue resultArray = xmlRpcStruct[searchResultParamName];
-
+    
     searchResults.reset(new SearchResultsType);
     Ptr<Playable>::Ref      playable;
-
+    
     for (int i=0; i < resultArray.size(); i++) {
         if (resultArray[i].getType() != XmlRpcValue::TypeStruct) {
             std::stringstream eMsg;
@@ -2176,10 +2176,10 @@ WebStorageClient :: extractSearchResults(
                  << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
-
+        
         try {
             playable = createPlayable(resultArray[i]);
-
+            
         } catch (std::invalid_argument &e) {
             std::stringstream eMsg;
             eMsg << "Malformed item returned by XML-RPC method '"
@@ -2188,13 +2188,13 @@ WebStorageClient :: extractSearchResults(
                  << resultArray[i];
             throw XmlRpcMethodResponseException(eMsg.str());
         }
-
+        
         if (playable && playable->getPlaylist()) {
                                                     // can be 0 if a web stream
             searchResults->push_back(playable);     // is found
         }
     }
-
+    
     // TODO: REMOVE STARTING HERE (see ticket #1701)
     // <<<
     for (int i=0; i < resultArray.size(); i++) {
@@ -2206,10 +2206,10 @@ WebStorageClient :: extractSearchResults(
                  << xmlRpcStruct;
             throw XmlRpcMethodResponseException(eMsg.str());
         }
-
+        
         try {
             playable = createPlayable(resultArray[i]);
-
+            
         } catch (std::invalid_argument &e) {
             std::stringstream eMsg;
             eMsg << "Malformed item returned by XML-RPC method '"
@@ -2218,7 +2218,7 @@ WebStorageClient :: extractSearchResults(
                  << resultArray[i];
             throw XmlRpcMethodResponseException(eMsg.str());
         }
-
+        
         if (playable && playable->getAudioClip()) {
                                                     // can be 0 if a web stream
             searchResults->push_back(playable);     // is found
@@ -2226,12 +2226,12 @@ WebStorageClient :: extractSearchResults(
     }
     // >>>
     // TODO: REMOVE UNTIL HERE (and fix line x-36)
-
+    
     checkStruct(methodName,
                 xmlRpcStruct,
                 searchCountParamName,
                 XmlRpcValue::TypeInt);
-
+    
     return int(xmlRpcStruct[searchCountParamName]);
 }
 
@@ -2242,31 +2242,31 @@ WebStorageClient :: extractSearchResults(
 Ptr<std::vector<Glib::ustring> >::Ref
 WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
                            Ptr<const Glib::ustring>::Ref    metadataType,
-                           Ptr<SearchCriteria>::Ref         searchCriteria)
+                           Ptr<SearchCriteria>::Ref         searchCriteria) 
                                                 throw (XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[browseSessionIdParamName]
+    parameters[browseSessionIdParamName] 
             = sessionId->getId();
-    parameters[browseMetadataParamName]
+    parameters[browseMetadataParamName] 
             = std::string(*metadataType);
-    parameters[browseCriteriaParamName]
+    parameters[browseCriteriaParamName] 
             = *searchCriteria;
 
     execute(browseMethodName, parameters, result);
-
+    
     checkStruct(browseMethodName,
                 result,
                 browseResultParamName,
                 XmlRpcValue::TypeArray);
-
+    
     XmlRpcValue     metadataValues = result[browseResultParamName];
-    Ptr<std::vector<Glib::ustring> >::Ref
+    Ptr<std::vector<Glib::ustring> >::Ref 
                                     results(new std::vector<Glib::ustring>);
-
+    
     for (int i=0; i < metadataValues.size(); i++) {
         if (metadataValues[i].getType() != XmlRpcValue::TypeString) {
             std::stringstream eMsg;
@@ -2295,21 +2295,21 @@ WebStorageClient :: remoteSearchOpen(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[remoteSearchSessionIdParamName]
+    parameters[remoteSearchSessionIdParamName] 
             = sessionId->getId();
-    parameters[remoteSearchCriteriaParamName]
+    parameters[remoteSearchCriteriaParamName] 
             = *searchCriteria;
 
     execute(remoteSearchOpenMethodName, parameters, result);
-
+    
     checkStruct(remoteSearchOpenMethodName,
                 result,
                 remoteSearchTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[remoteSearchTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2318,18 +2318,18 @@ WebStorageClient :: remoteSearchOpen(Ptr<SessionId>::Ref        sessionId,
  *  Download the search results after the remote search has finished.
  *----------------------------------------------------------------------------*/
 int
-WebStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref     token)
+WebStorageClient :: remoteSearchClose(Ptr<const Glib::ustring>::Ref     token) 
                                                 throw (XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[remoteSearchTokenParamName]
+    parameters[remoteSearchTokenParamName] 
             = std::string(*token);
 
     execute(remoteSearchCloseMethodName, parameters, result);
-
+    
     return extractSearchResults(remoteSearchCloseMethodName,
                                 result,
                                 remoteSearchResults);
@@ -2350,10 +2350,10 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
     criteria->setLimit(limit);
     criteria->setOffset(offset);
     search(sessionId, criteria);
-
+    
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
                                         new std::vector<Ptr<Playlist>::Ref>);
-
+    
     SearchResultsType::const_iterator it;
     for (it = localSearchResults->begin();
                                     it != localSearchResults->end(); ++it) {
@@ -2381,10 +2381,10 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref    sessionId,
     criteria->setLimit(limit);
     criteria->setOffset(offset);
     search(sessionId, criteria);
-
+    
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
                                         new std::vector<Ptr<AudioClip>::Ref>);
-
+    
     SearchResultsType::const_iterator it;
     for (it = localSearchResults->begin();
                                     it != localSearchResults->end(); ++it) {
@@ -2410,21 +2410,21 @@ WebStorageClient :: createBackupOpen(Ptr<SessionId>::Ref        sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[createBackupSessionIdParamName]
+    parameters[createBackupSessionIdParamName] 
             = sessionId->getId();
-    parameters[createBackupCriteriaParamName]
+    parameters[createBackupCriteriaParamName] 
             = *criteria;
 
     execute(createBackupOpenMethodName, parameters, result);
-
+    
     checkStruct(createBackupOpenMethodName,
                 result,
                 createBackupTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[createBackupTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2444,59 +2444,59 @@ WebStorageClient :: createBackupCheck(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[createBackupTokenParamName]
+    parameters[createBackupTokenParamName] 
             = std::string(token);
 
     execute(createBackupCheckMethodName, parameters, result);
-
+    
     checkStruct(createBackupCheckMethodName,
                 result,
                 createBackupStatusParamName,
                 XmlRpcValue::TypeString);
-
-    std::string     stateString = result[createBackupStatusParamName];
+    
+    std::string     stateString = result[createBackupStatusParamName];    
     AsyncState      state       = AsyncState::fromBackupString(stateString);
-
+    
     if (state == AsyncState::finishedState) {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupUrlParamName,
                     XmlRpcValue::TypeString);
-
+        
         url.reset(new const Glib::ustring(
                         std::string(result[createBackupUrlParamName]) ));
-
+        
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupTmpFileParamName,
                     XmlRpcValue::TypeString);
-
+        
         path.reset(new const Glib::ustring(
                         std::string(result[createBackupTmpFileParamName]) ));
-
+            
     } else if (state == AsyncState::failedState) {
         checkStruct(createBackupCheckMethodName,
                     result,
                     createBackupFaultStringParamName,
                     XmlRpcValue::TypeString);
-
+        
         errorMessage.reset(new Glib::ustring(
                         std::string(result[createBackupFaultStringParamName])));
-
+        
     } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Incorrect value '"
              << stateString
-             << "' returned by the XML-RPC method '"
+             << "' returned by the XML-RPC method '" 
              << createBackupCheckMethodName
              << "; expected one of 'working', 'success' or 'fault'.";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     return state;
 }
 
-
+        
 /*------------------------------------------------------------------------------
  *  Close the storage backup process.
  *----------------------------------------------------------------------------*/
@@ -2508,7 +2508,7 @@ WebStorageClient :: createBackupClose(const Glib::ustring &     token) const
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[createBackupTokenParamName]
+    parameters[createBackupTokenParamName] 
             = std::string(token);
 
     execute(createBackupCloseMethodName, parameters, result);
@@ -2536,50 +2536,50 @@ WebStorageClient :: restoreBackupOpen(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[restoreBackupSessionIdParamName]
+    parameters[restoreBackupSessionIdParamName] 
             = sessionId->getId();
-    parameters[restoreBackupChecksumParamName]
+    parameters[restoreBackupChecksumParamName] 
             = md5string;
 
     execute(restoreBackupOpenMethodName, parameters, result);
-
+    
     checkStruct(restoreBackupOpenMethodName,
                 result,
                 restoreBackupUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(restoreBackupOpenMethodName,
                 result,
                 restoreBackupPutTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     std::string url      = std::string(result[restoreBackupUrlParamName]);
     std::string putToken = std::string(result[restoreBackupPutTokenParamName]);
-
+    
     try {
         FileTools::copyFileToUrl(*path, url);
-
+        
     } catch (std::runtime_error &e) {
         throw XmlRpcCommunicationException(e.what());
     }
-
+    
     parameters.clear();
-    parameters[restoreBackupSessionIdParamName]
+    parameters[restoreBackupSessionIdParamName] 
             = sessionId->getId();
     parameters[restoreBackupPutTokenParamName]
             = putToken;
-
+    
     result.clear();
     execute(restoreBackupClosePutMethodName, parameters, result);
-
+    
     checkStruct(restoreBackupClosePutMethodName,
                 result,
                 restoreBackupTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[restoreBackupTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2597,38 +2597,38 @@ WebStorageClient :: restoreBackupCheck(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[restoreBackupTokenParamName]
+    parameters[restoreBackupTokenParamName] 
             = std::string(token);
 
     execute(restoreBackupCheckMethodName, parameters, result);
-
+    
     checkStruct(restoreBackupCheckMethodName,
                 result,
                 restoreBackupStatusParamName,
                 XmlRpcValue::TypeString);
-
-    std::string     stateString = result[restoreBackupStatusParamName];
+       
+    std::string     stateString = result[restoreBackupStatusParamName];    
     AsyncState      state       = AsyncState::fromBackupString(stateString);
-
+    
     if (state == AsyncState::failedState) {
         checkStruct(restoreBackupCheckMethodName,
                     result,
                     restoreBackupFaultStringParamName,
                     XmlRpcValue::TypeString);
-
+        
         errorMessage.reset(new Glib::ustring(
                     std::string(result[restoreBackupFaultStringParamName])));
-
+    
     } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Incorrect value '"
              << stateString
-             << "' returned by the XML-RPC method '"
+             << "' returned by the XML-RPC method '" 
              << restoreBackupCheckMethodName
              << "; expected one of 'working', 'success' or 'fault'.";
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     return state;
 }
 
@@ -2644,7 +2644,7 @@ WebStorageClient :: restoreBackupClose(const Glib::ustring &    token) const
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[restoreBackupTokenParamName]
+    parameters[restoreBackupTokenParamName] 
             = std::string(token);
 
     execute(restoreBackupCloseMethodName, parameters, result);
@@ -2667,41 +2667,41 @@ WebStorageClient :: exportPlaylistOpen(Ptr<SessionId>::Ref      sessionId,
     XmlRpcValue     playlistIdArray;
     playlistIdArray.setSize(1);
     playlistIdArray[0] = std::string(*playlistId);
-
+    
     parameters.clear();
-    parameters[exportPlaylistSessionIdParamName]
+    parameters[exportPlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[exportPlaylistPlaylistIdArrayParamName]
+    parameters[exportPlaylistPlaylistIdArrayParamName] 
             = playlistIdArray;
     switch (format) {
-        case internalFormat:    parameters[exportPlaylistFormatParamName]
+        case internalFormat:    parameters[exportPlaylistFormatParamName] 
                                         = "lspl";
                                 break;
-
-        case smilFormat:        parameters[exportPlaylistFormatParamName]
+                                
+        case smilFormat:        parameters[exportPlaylistFormatParamName] 
                                         = "smil";
                                 break;
     }
     parameters[exportPlaylistStandaloneParamName]
             = false;
-
+    
     execute(exportPlaylistOpenMethodName, parameters, result);
-
+    
     checkStruct(exportPlaylistOpenMethodName,
                 result,
                 exportPlaylistUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     url->assign(std::string(result[exportPlaylistUrlParamName]));
-
+    
     checkStruct(exportPlaylistOpenMethodName,
                 result,
                 exportPlaylistTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[exportPlaylistTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2718,7 +2718,7 @@ WebStorageClient :: exportPlaylistClose(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[exportPlaylistTokenParamName]
+    parameters[exportPlaylistTokenParamName] 
             = std::string(*token);
 
     execute(exportPlaylistCloseMethodName, parameters, result);
@@ -2746,44 +2746,44 @@ WebStorageClient :: importPlaylist(
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[importPlaylistSessionIdParamName]
+    parameters[importPlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[importPlaylistChecksumParamName]
+    parameters[importPlaylistChecksumParamName] 
             = md5string;
 
     execute(importPlaylistOpenMethodName, parameters, result);
-
+    
     checkStruct(importPlaylistOpenMethodName,
                 result,
                 importPlaylistUrlParamName,
                 XmlRpcValue::TypeString);
-
+    
     checkStruct(importPlaylistOpenMethodName,
                 result,
                 importPlaylistTokenParamName,
                 XmlRpcValue::TypeString);
-
+    
     std::string url     = std::string(result[importPlaylistUrlParamName]);
     std::string token   = std::string(result[importPlaylistTokenParamName]);
-
+    
     try {
         FileTools::copyFileToUrl(*path, url);
-
+        
     } catch (std::runtime_error &e) {
         throw XmlRpcCommunicationException(e.what());
     }
-
+    
     parameters.clear();
-    parameters[importPlaylistTokenParamName]
+    parameters[importPlaylistTokenParamName] 
             = token;
-
+    
     execute(importPlaylistCloseMethodName, parameters, result);
-
+    
     checkStruct(importPlaylistCloseMethodName,
                 result,
                 importPlaylistUniqueIdParamName,
                 XmlRpcValue::TypeString);
-
+    
     Ptr<UniqueId>::Ref  id(new UniqueId(std::string(
                                 result[importPlaylistUniqueIdParamName] )));
     return id;
@@ -2802,17 +2802,17 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[checkTransportTokenParamName]
+    parameters[checkTransportTokenParamName] 
             = std::string(*token);
 
     execute(checkTransportMethodName, parameters, result);
-
+    
     checkStruct(checkTransportMethodName,
                 result,
                 checkTransportStateParamName,
                 XmlRpcValue::TypeString);
-
-    std::string     stateString = result[checkTransportStateParamName];
+    
+    std::string     stateString = result[checkTransportStateParamName];    
     AsyncState      state       = AsyncState::fromTransportString(stateString);
 
     if (state == AsyncState::failedState) {
@@ -2824,7 +2824,7 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
             errorMessage->assign(std::string(
                                 result[checkTransportErrorMessageParamName]));
         }
-
+        
     } else if (state == AsyncState::invalidState) {
         std::stringstream eMsg;
         eMsg << "Unrecognized transport state returned by XML-RPC method '"
@@ -2833,7 +2833,7 @@ WebStorageClient :: checkTransport(Ptr<const Glib::ustring>::Ref  token,
                 << result;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     return state;
 }
 
@@ -2850,11 +2850,11 @@ WebStorageClient :: cancelTransport(Ptr<SessionId>::Ref             sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[doTransportActionSessionIdParamName]
+    parameters[doTransportActionSessionIdParamName] 
             = sessionId->getId();
-    parameters[doTransportActionTokenParamName]
+    parameters[doTransportActionTokenParamName] 
             = std::string(*token);
-    parameters[doTransportActionActionParamName]
+    parameters[doTransportActionActionParamName] 
             = "cancel";
 
     execute(doTransportActionMethodName, parameters, result);
@@ -2873,23 +2873,23 @@ WebStorageClient :: uploadToHub(Ptr<const SessionId>::Ref       sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[uploadToHubSessionIdParamName]
+    parameters[uploadToHubSessionIdParamName] 
             = sessionId->getId();
-    parameters[uploadToHubUniqueIdParamName]
+    parameters[uploadToHubUniqueIdParamName] 
             = std::string(*id);
-    parameters[uploadToHubWithContentParamName]
+    parameters[uploadToHubWithContentParamName] 
             = true;
-
+    
     execute(uploadToHubMethodName, parameters, result);
-
+    
     checkStruct(uploadToHubMethodName,
                 result,
                 uploadToHubTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[uploadToHubTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2906,23 +2906,23 @@ WebStorageClient :: downloadFromHub(Ptr<const SessionId>::Ref       sessionId,
     XmlRpcValue     result;
 
     parameters.clear();
-    parameters[downloadFromHubSessionIdParamName]
+    parameters[downloadFromHubSessionIdParamName] 
             = sessionId->getId();
-    parameters[downloadFromHubUniqueIdParamName]
+    parameters[downloadFromHubUniqueIdParamName] 
             = std::string(*id);
-    parameters[downloadFromHubWithContentParamName]
+    parameters[downloadFromHubWithContentParamName] 
             = true;
-
+    
     execute(downloadFromHubMethodName, parameters, result);
-
+    
     checkStruct(downloadFromHubMethodName,
                 result,
                 downloadFromHubTokenParamName,
                 XmlRpcValue::TypeString);
-
-    Ptr<Glib::ustring>::Ref     token(new Glib::ustring(
+    
+    Ptr<Glib::ustring>::Ref     token(new Glib::ustring( 
                                     result[downloadFromHubTokenParamName] ));
-
+    
     return token;
 }
 
@@ -2940,20 +2940,20 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
                 XmlRpcValue::TypeString);
     Ptr<UniqueId>::Ref              uniqueId(new UniqueId(std::string(
                                                             data["gunid"])));
-
+    
     checkStruct("private:createPlayable",
                 data,
                 "title",
                 XmlRpcValue::TypeString);
     Ptr<const Glib::ustring>::Ref   title(new const Glib::ustring(std::string(
                                                             data["title"] )));
-
+    
     Ptr<const Glib::ustring>::Ref   creator(new const Glib::ustring(std::string(
                                                             data["creator"] )));
-
+    
     Ptr<const Glib::ustring>::Ref   source(new const Glib::ustring(std::string(
                                                             data["source"] )));
-
+    
     checkStruct("private:createPlayable",
                 data,
                 "length",
@@ -2963,15 +2963,15 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
     Ptr<time_duration>::Ref         playlength
                                     = TimeConversion::parseTimeDuration(
                                                             playlengthString);
-
+    
     checkStruct("private:createPlayable",
                 data,
                 "type",
                 XmlRpcValue::TypeString);
     std::string         type = data["type"];
-
+    
     Ptr<Playable>::Ref  playable;
-
+    
     if (type == "audioclip") {
         playable.reset(new AudioClip(uniqueId, title, playlength));
         if (*creator != "") {
@@ -2980,7 +2980,7 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
         if (*source != "") {
             playable->setMetadata(source, "dc:source");
         }
-
+    
     } else if (type == "playlist") {
         playable.reset(new Playlist(uniqueId, title, playlength));
         if (*creator != "") {
@@ -2989,19 +2989,19 @@ WebStorageClient :: createPlayable(XmlRpcValue  data)
         if (*source != "") {
             playable->setMetadata(source, "dc:source");
         }
-
+    
     } else if (type == "webstream") {
         // TODO: handle this case
-
+    
     } else {
         std::stringstream   eMsg;
-        eMsg << "Invalid Playable type '"
+        eMsg << "Invalid Playable type '" 
              << type
              << "' found in StorageClient::createPlayable():\n"
              << data;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
-
+    
     return playable;
 }
 

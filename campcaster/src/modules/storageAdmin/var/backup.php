@@ -20,6 +20,8 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 $bs = new BasicStor();
 
 $stid = $bs->storId;
+#var_dump($stid); exit;
+#$farr = $bs->bsListFolder($stid); var_dump($farr); exit;
 
 function admDumpFolder(&$bs, $fid, $ind='')
 {
@@ -45,7 +47,7 @@ function admDumpFolder(&$bs, $fid, $ind='')
     $pars['name'] = "$name";
     switch ($type) {
         case "Folder":
-            $farr = BasicStor::bsListFolder($fid);
+            $farr = $bs->bsListFolder($fid);
             if (PEAR::isError($farr)) {
             	echo $farr->getMessage();
             	exit;

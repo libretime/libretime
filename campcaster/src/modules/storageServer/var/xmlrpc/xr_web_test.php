@@ -174,13 +174,13 @@ $methodDefs = array(
         'p'=>array('sessid', 'onOff'), 'r'=>array('state')),
     "doTransportAction" => array('m'=>"locstor.doTransportAction",
         'p'=>array('sessid', 'trtok', 'action'), 'r'=>array('state')),
-    "uploadFileAsync" => array('m'=>"locstor.uploadFileAsync",
+    "uploadFile2Hub" => array('m'=>"locstor.uploadFile2Hub",
         'p'=>array('sessid', 'filePath'), 'r'=>array('trtok')),
     "getHubInitiatedTransfers" => array('m'=>"locstor.getHubInitiatedTransfers",
         'p'=>array('sessid'), 'r'=>array()),
     "startHubInitiatedTransfer" => array('m'=>"locstor.startHubInitiatedTransfer",
         'p'=>array('trtok'), 'r'=>array()),
-    "uploadToHub" => array('m'=>"locstor.uploadToHub",
+    "upload2Hub" => array('m'=>"locstor.upload2Hub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
     "downloadFromHub" => array('m'=>"locstor.downloadFromHub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
@@ -213,23 +213,8 @@ if (isset($_REQUEST['go_button'])) {
     $methodParams = $methodDefs[$f_selectedMethod]['p'];
     foreach ($methodParams as $methodParamName) {
         $inputParamName = "param_".$methodParamName;
-        if ($methodParamName == "criteria") {
-            $catInputName = $inputParamName."_condition_cat";
-            $valInputName = $inputParamName."_condition_val";
-            $conditions = array();
-            $conditions[0]["cat"] = $_REQUEST[$catInputName];
-            $conditions[0]["op"] = "=";
-            $conditions[0]["val"] = $_REQUEST[$valInputName];
-            $criteriaArray = array(
-                    "filetype" => "audioclip",
-                    "conditions" => $conditions);
-            $xmlParameters[$methodParamName] = $criteriaArray;
-            $_SESSION[$catInputName] = $_REQUEST[$catInputName];
-            $_SESSION[$valInputName] = $_REQUEST[$valInputName];
-        } else {
-            $xmlParameters[$methodParamName] = $_REQUEST[$inputParamName];
-            $_SESSION[$inputParamName] = $_REQUEST[$inputParamName];
-        }
+        $xmlParameters[$methodParamName] = $_REQUEST[$inputParamName];
+        $_SESSION[$inputParamName] = $_REQUEST[$inputParamName];
     }
 
     // Create the XML-RPC message
@@ -245,11 +230,6 @@ if (isset($_REQUEST['go_button'])) {
         // If successful
         $xmlResponse = XML_RPC_decode($sendResult->value());
 
-        if (isset($xmlResponse['token'])) {
-            $_SESSION['xmlrpc_token'] = $xmlResponse['token'];
-            $errorMsg .= "<br>*** Token saved<br>";
-        }
-
         // Special case state handling
         switch ($f_selectedMethod) {
             case "login":
@@ -262,6 +242,7 @@ if (isset($_REQUEST['go_button'])) {
                 unset($_SESSION['xmlrpc_session_id']);
                 break;
             case "storeAudioClipOpen":
+                $_SESSION['xmlrpc_token'] = $xmlResponse['token'];
                 $_SESSION['xmlrpc_put_url'] = $xmlResponse['url'];
                 break;
         }
@@ -341,46 +322,17 @@ if (!is_array($methodParams) || count($methodParams) == 0) {
 } else {
     echo "<table cellpadding=3>";
     foreach ($methodParams as $methodParamName) {
-        // Get the value for the field
         $value = "";
         if ($methodParamName == "sessid" && isset($_SESSION['xmlrpc_session_id'])) {
             $value = $_SESSION['xmlrpc_session_id'];
         } elseif ($methodParamName == "token" && isset($_SESSION['xmlrpc_token'])) {
             $value = $_SESSION['xmlrpc_token'];
-        } elseif ($methodParamName == "criteria") {
-            $value_cond_cat = $_SESSION["param_".$methodParamName."_condition_cat"];
-            $value_cond_val = $_SESSION["param_".$methodParamName."_condition_val"];
         } elseif (isset($_SESSION["param_".$methodParamName])) {
             $value = $_SESSION["param_".$methodParamName];
         }
-
-        // Display the input boxes for the given field
         echo "<tr>";
-        if ($methodParamName == "criteria") {
-            ?>
-            <td><?php echo $methodParamName; ?></td>
-            <td>
-                <table>
-                <tr>
-                <td>
-                    <select name="param_<?php echo $methodParamName; ?>_condition_cat">
-                    <option value="dc:creator" <?php if ($value_cond_cat == "dc:creator") { ?>selected<?php } ?>>artist</option>
-                    <option value="dc:source"<?php if ($value_cond_cat == "dc:source") { ?>selected<?php } ?>>album</option>
-                    <option value="dc:title" <?php if ($value_cond_cat == "dc:title") { ?>selected<?php } ?>>title</option>
-                    </select>
-                <td>=</td>
-                <td><INPUT type="text" name="param_<?php echo $methodParamName; ?>_condition_val" value="<?php echo $value_cond_val; ?>"><td>
-                </tr>
-                </table>
-            </td>
-            <?php
-        } else {
-            ?>
-            <td><?php echo $methodParamName; ?></td>
-            <td><INPUT type="text" name="param_<?php echo $methodParamName; ?>" value="<?php echo $value; ?>"><td>
-            <?php
-        }
-        echo "</tr>";
+        echo "<td>$methodParamName</td>"; ?> <td><INPUT type="text" name="param_<?php echo $methodParamName; ?>" value="<?php echo $value; ?>"><td></tr>
+        <?php
     }
     echo "</table>";
 }
