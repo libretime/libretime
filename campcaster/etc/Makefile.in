@@ -101,8 +101,8 @@ FLAWFINDER_FILE  = ${DOC_DIR}/flawfinderReport.html
 
 TOOLS_DIR  = ${SRC_DIR}/tools
 
-CXXUNIT_DIR       = ${TOOLS_DIR}/cppunit
-CXXUNIT_VERSION   = cppunit-1.10.2
+CPPUNIT_DIR       = ${TOOLS_DIR}/cppunit
+CPPUNIT_VERSION   = cppunit-1.10.2
 LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
 LIBODBCXX_VERSION = libodbc++-0.2.3-20050404
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
@@ -206,8 +206,10 @@ recompile: modprod_distclean modules_setup products_setup compile
 
 tools_setup: ${TMP_DIR}/tools_setup.stamp
 ${TMP_DIR}/tools_setup.stamp:
-	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && ./configure --prefix=${prefix}
-	${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} install
+ifeq ("@COMPILE_CPPUNIT@", "yes")
+	cd ${CPPUNIT_DIR}/${CPPUNIT_VERSION} && ./configure --prefix=${prefix}
+	${MAKE} -C ${CPPUNIT_DIR}/${CPPUNIT_VERSION} install
+endif
 
 	cd ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} install
@@ -230,7 +232,9 @@ ${TMP_DIR}/tools_setup.stamp:
 	touch ${TMP_DIR}/tools_setup.stamp
 
 tools_distclean:
-	-${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} distclean
+ifeq ("@COMPILE_CPPUNIT@", "yes")
+	-${MAKE} -C ${CPPUNIT_DIR}/${CPPUNIT_VERSION} distclean
+endif
 	-${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} distclean
 	-${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} distclean
 	-${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} distclean

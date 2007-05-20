@@ -79,5 +79,9 @@ configure=${tmpdir}/configure
 cp -f ${bindir}/install-sh ${tmpdir}
 cp -f ${configure_ac} ${tmpdir}
 
+echo "  aclocal"
+aclocal
+
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
+
