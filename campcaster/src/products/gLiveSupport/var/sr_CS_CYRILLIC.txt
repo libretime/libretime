@@ -251,6 +251,7 @@ sr_CS_CYRILLIC:table
         uploadToHubMenuItem:string      { "Упути на централни сервер" }
 
         cuePlayerLabel:string       { "Проба" }
+        autoPlayNextLabel:string    { "#Play the next item automatically#" }
 
         clearListButtonLabel:string { "Очисти листу" }
         removeButtonLabel:string    { "Уклони" }

@@ -257,6 +257,7 @@ es:table
         uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
         cuePlayerLabel:string       { "Previsualizar" }
+        autoPlayNextLabel:string    { "#Play the next item automatically#" }
 
         clearListButtonLabel:string { "Clear list" }
         removeButtonLabel:string    { "Remove item(s)" }

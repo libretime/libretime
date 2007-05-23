@@ -52,6 +52,7 @@
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "GuiWindow.h"
+#include "ContentsStorable.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
 #include "ExportPlaylistWindow.h"
@@ -78,7 +79,8 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LiveModeWindow : public GuiWindow
+class LiveModeWindow : public GuiWindow,
+                       public ContentsStorable
 {
     private:
         /**
@@ -90,6 +92,11 @@ class LiveModeWindow : public GuiWindow
          *  A flag used to disable preload() while deleting items.
          */
         bool                                isDeleting;
+
+        /**
+         *  The user preferences key.
+         */
+        Ptr<const Glib::ustring>::Ref       userPreferencesKey;
 
         /**
          *  The Export Playlist pop-up window.
@@ -120,6 +127,12 @@ class LiveModeWindow : public GuiWindow
          *  The button for removing the selected items from the window.
          */
         Button *                            removeButton;
+
+        /**
+         *  If checked, the top item in the window will start playing
+         *  automatically after the current one finishes.
+         */
+        Gtk::CheckButton *                  autoPlayNext;
 
         /**
          *  Construct the right-click context menu for local audio clips.
@@ -364,6 +377,15 @@ class LiveModeWindow : public GuiWindow
                 Ptr<Playable>::Ref          playable)           throw ();
 
         /**
+         *  Add an item to the top of the Live Mode Window, by ID.
+         *
+         *  @param id the id of the item to add.
+         *  @see setContents().
+         */
+        void
+        addItem(Ptr<const UniqueId>::Ref    id)                 throw ();
+
+        /**
          *  "Pop" the first item from the top of the Live Mode Window.
          *
          *  @return the playable object at the top of the window,
@@ -409,6 +431,41 @@ class LiveModeWindow : public GuiWindow
          */
         void
         updateStrings(void)                                     throw ();
+
+        /**
+         *  Return the contents of the Live Mode window.
+         *  This means the list of audio files, plus the state of the
+         *  autoPlayNext checkbox.
+         *
+         *  @return         0 or 1, followed by a space-separated list of the
+         *                  unique IDs, in base 10.
+         */
+        Ptr<Glib::ustring>::Ref
+        getContents(void)                                       throw ();
+
+        /**
+         *  Restore the contents of the Scratchpad.
+         *  The current contents are discarded, and replaced with the items
+         *  listed in the 'contents' parameter.
+         *
+         *  @param contents 0 or 1, followed by a space-separated list of the
+         *                  unique IDs, in base 10.
+         */
+        void
+        setContents(Ptr<const Glib::ustring>::Ref   contents)   throw ();
+
+        /**
+         *  Return the user preferences key.
+         *  The contents of the window will be stored in the user preferences
+         *  under this key.
+         *
+         *  @return the user preference key.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getUserPreferencesKey(void)                             throw ()
+        {
+            return userPreferencesKey;
+        }
 };
 
 /* ================================================= external data structures */

@@ -467,6 +467,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
         liveModeWindow.reset(new LiveModeWindow(gLiveSupport,
                                                 bundle,
                                                 liveModeButton));
+        gLiveSupport->loadWindowContents(liveModeWindow);
     }
     
     liveModeWindow->present();
@@ -678,6 +679,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     optionsButton->hide();
     
     if (liveModeWindow.get()) {
+        gLiveSupport->storeWindowContents(liveModeWindow);
         if (liveModeWindow->is_visible()) {
             liveModeWindow->hide();
         }

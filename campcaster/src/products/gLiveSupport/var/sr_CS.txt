@@ -251,6 +251,7 @@ sr_CS:table
         uploadToHubMenuItem:string      { "Uputi na centralni server" }
 
         cuePlayerLabel:string       { "Proba" }
+        autoPlayNextLabel:string    { "#Play the next item automatically#" }
 
         clearListButtonLabel:string { "Očisti listu" }
         removeButtonLabel:string    { "Ukloni" }

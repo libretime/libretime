@@ -705,7 +705,7 @@ GLiveSupport :: loadWindowContents(ContentsStorable *   window)
                   << std::endl;
         return;
     } catch (std::invalid_argument &e) {
-        // no scratchpad stored for this user yet; no problem
+        // no preferences stored for this user yet; no problem
         return;
     }
     

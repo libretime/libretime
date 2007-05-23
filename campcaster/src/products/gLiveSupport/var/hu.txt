@@ -254,6 +254,7 @@ hu:table
         uploadToHubMenuItem:string      { "Upload to Network Hub" }
 
         cuePlayerLabel:string       { "Belehallgatni" }
+        autoPlayNextLabel:string    { "#Play the next item automatically#" }
 
         clearListButtonLabel:string { "Clear list" }
         removeButtonLabel:string    { "Remove item(s)" }

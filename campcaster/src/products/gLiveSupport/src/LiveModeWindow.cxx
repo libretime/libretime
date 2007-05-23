@@ -61,6 +61,11 @@ namespace {
  */
 const Glib::ustring     windowName = "liveModeWindow";
 
+/*------------------------------------------------------------------------------
+ *  The name of the user preference for storing contents of the window.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     userPreferencesKeyName = "liveModeContents";
+
 }
 
 /* ===============================================  local function prototypes */
@@ -150,6 +155,16 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Gtk::HBox *         cueAudioButtonsBox = Gtk::manage(new Gtk::HBox);
     cueAudioButtons = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));
+
+    Gtk::HBox *         autoPlayNextBox = Gtk::manage(new Gtk::HBox);
+    try {
+        autoPlayNext = Gtk::manage(new Gtk::CheckButton(
+                                *getResourceUstring("autoPlayNextLabel") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    autoPlayNextBox->pack_start(*autoPlayNext, Gtk::PACK_SHRINK, 10);
     
     topButtonBox->pack_start(*outputPlayButton,  Gtk::PACK_EXPAND_PADDING, 10);
     topButtonBox->pack_start(*cueAudioBox,       Gtk::PACK_EXPAND_PADDING, 10);
@@ -165,6 +180,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     bottomButtonBox->pack_start(*removeButton);
     
     vBox.pack_start(*topButtonBox,      Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(*autoPlayNextBox,   Gtk::PACK_SHRINK, 5);
     vBox.pack_start(scrolledWindow,     Gtk::PACK_EXPAND_WIDGET, 5);
     vBox.pack_start(*bottomButtonBox,   Gtk::PACK_SHRINK, 5);
     add(vBox);
@@ -180,6 +196,8 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // create the right-click context menus
     audioClipContextMenu = constructAudioClipContextMenu();
     playlistContextMenu  = constructPlaylistContextMenu();
+
+    userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
 
     // show
     set_name(windowName);
@@ -252,14 +270,37 @@ LiveModeWindow :: addItem(Gtk::TreeModel::iterator  iter,
 
 
 /*------------------------------------------------------------------------------
+ *  Add an item to the Live Mode window, by ID.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: addItem(Ptr<const UniqueId>::Ref    id)
+                                                                    throw ()
+{
+    Ptr<Playable>::Ref  playable;
+    try {
+        playable = gLiveSupport->acquirePlayable(id);
+    } catch (XmlRpcException &e) {
+        std::cerr << "could not acquire playable in LiveModeWindow: "
+                    << e.what() << std::endl;
+        return;
+    }
+    
+    addItem(playable);
+}
+
+
+/*------------------------------------------------------------------------------
  *  "Pop" the first item from the top of the Live Mode Window.
  *----------------------------------------------------------------------------*/
 Ptr<Playable>::Ref
 LiveModeWindow :: popTop(void)                                      throw ()
 {
     Ptr<Playable>::Ref          playable;
+    if (!autoPlayNext->get_active()) {
+        return playable;        // return a 0 pointer if auto is set to off
+    }
+
     Gtk::TreeModel::iterator    iter = treeModel->children().begin();
-    
     if (iter) {
         playable = (*iter)[modelColumns.playableColumn];
         treeModel->erase(iter);
@@ -703,6 +744,68 @@ LiveModeWindow :: updateStrings(void)                               throw ()
     }
     
     show_all_children();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the contents of the Scratchpad.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LiveModeWindow :: getContents(void)                                 throw ()
+{
+    std::ostringstream              contentsStream;
+
+    contentsStream << int(autoPlayNext->get_active()) << " ";
+
+    Gtk::TreeModel::const_iterator  it;
+    for (it = treeModel->children().begin(); 
+                                it != treeModel->children().end(); ++it) {
+        Gtk::TreeRow        row = *it;
+        Ptr<Playable>::Ref  playable = row[modelColumns.playableColumn];
+        contentsStream << playable->getId()->getId() << " ";
+    }
+
+    Ptr<Glib::ustring>::Ref         contents(new Glib::ustring(
+                                                    contentsStream.str() ));
+    return contents;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Restore the contents of the Scratchpad.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: setContents(Ptr<const Glib::ustring>::Ref     contents)
+                                                                    throw ()
+{
+    std::istringstream              contentsStream(*contents);
+    if (contentsStream.eof()) {
+        return;
+    }
+    
+    int     autoPlayNextValue;
+    contentsStream >> autoPlayNextValue;
+    autoPlayNext->set_active(autoPlayNextValue);
+    
+    std::vector<UniqueId::IdType>   contentsVector;
+    while (!contentsStream.eof()) {
+        UniqueId::IdType            nextItem;
+        contentsStream >> nextItem;
+        if (contentsStream.fail()) {
+            contentsStream.clear();
+            contentsStream.ignore();
+        } else {
+            contentsVector.push_back(nextItem);
+        }
+    }
+    
+    treeModel->clear();
+    std::vector<UniqueId::IdType>::reverse_iterator     it;
+    
+    for (it = contentsVector.rbegin(); it != contentsVector.rend(); ++it) {
+        Ptr<const UniqueId>::Ref    id(new const UniqueId(*it));
+        addItem(id);
+    }
 }
 
 
