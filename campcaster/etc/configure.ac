@@ -278,6 +278,7 @@ AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
 dnl-----------------------------------------------------------------------------
 dnl  determine which optional packages will be compiled
 dnl-----------------------------------------------------------------------------
+AC_SUBST(COMPILE_CPPUNIT)
 
 PKG_CHECK_EXISTS([cppunit >= 1.12.0],
 [
