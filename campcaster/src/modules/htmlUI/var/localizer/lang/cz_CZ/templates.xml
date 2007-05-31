@@ -15,7 +15,7 @@
 	</item>
 	<item>
 		<key>Destination folder (relative path)</key>
-		<value>Destinační složka (relativní cesta)</value>
+		<value>Cílová složka (relativní cesta)</value>
 	</item>
 	<item>
 		<key>Mono</key>
@@ -27,7 +27,7 @@
 	</item>
 	<item>
 		<key>Pause</key>
-		<value>Pauzovat</value>
+		<value>Pauza</value>
 	</item>
 	<item>
 		<key>Stereo</key>
@@ -651,11 +651,11 @@
 	</item>
 	<item>
 		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
-		<value>URL adresa je platná</value>
+		<value>URL adresa je &lt;font color=&quot;green&quot;&gt;platná&lt;/font&gt;.</value>
 	</item>
 	<item>
 		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
-		<value>URL adresa vypadá neplatně, Chybový kód je: $1.</value>
+		<value>URL adresa vypadá &lt;font color=&quot;red&quot;&gt;neplatně&lt;/font&gt;, Chybový kód je: $1.</value>
 	</item>
 	<item>
 		<key>Use to create playlist</key>
@@ -796,5 +796,61 @@
 	<item>
 		<key>yesterday</key>
 		<value>včera</value>
+	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value>Exportovat playlist</value>
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value>Importovat Playlist</value>
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value />
+	</item>
+	<item>
+		<key>State</key>
+		<value>Stav</value>
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value>Obnovuji přenos(y)</value>
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value>Pozastavuji přenos(y)</value>
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value>Určitě chcete zrušit přenos(y)?</value>
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value />
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value>Obnovit stav</value>
 	</item>
 </translations>

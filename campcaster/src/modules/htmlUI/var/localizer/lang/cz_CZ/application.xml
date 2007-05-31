@@ -167,7 +167,7 @@
 	</item>
 	<item>
 		<key>There is no playlist available to unlock.</key>
-		<value>Není zde žádný playlist k odem�?ení.</value>
+		<value>Není zde žádný playlist k odemčení.</value>
 	</item>
 	<item>
 		<key>Unable to open playlist &quot;$1&quot;.</key>
@@ -179,7 +179,7 @@
 	</item>
 	<item>
 		<key>Unable to revert to locked state.</key>
-		<value>Nepodařilo se vrátit k zam�?enému stavu.</value>
+		<value>Nepodařilo se vrátit k zamčenému stavu.</value>
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
