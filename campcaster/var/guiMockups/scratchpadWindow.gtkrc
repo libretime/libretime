@@ -1,0 +1,68 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2007 Media Development Loan Fund
+#
+#   This file is part of the Campcaster project.
+#   http://campcaster.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   Campcaster is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   Campcaster is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with Campcaster; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#   Author   : $Author$
+#   Version  : $Revision$
+#   Location : $URL$
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   Gtk+ RC file for the Campcaster project
+#-------------------------------------------------------------------------------
+
+gtk_color_scheme = "fg_color:#5a5a5a\nbg_color:#ffffff\ntext_color:#5a5a5a\nbase_color:#ffffff\nselected_fg_color:#5a5a5a\nselected_bg_color:#97bacf\nprelight_color:#9ebadb"
+
+style "default"
+{
+    fg[NORMAL]          = @fg_color
+    fg[PRELIGHT]        = @fg_color
+    fg[SELECTED]        = @selected_fg_color
+    fg[ACTIVE]          = @fg_color
+    fg[INSENSITIVE]     = darker (@bg_color)
+
+    bg[NORMAL]          = @bg_color
+    bg[PRELIGHT]        = @prelight_color
+    bg[SELECTED]        = @selected_bg_color
+    bg[ACTIVE]          = shade (0.9, @bg_color)
+    bg[INSENSITIVE]     = @bg_color
+
+    text[NORMAL]        = @text_color
+    text[PRELIGHT]      = @text_color
+    text[ACTIVE]        = @selected_fg_color
+    text[SELECTED]      = @selected_fg_color
+    text[INSENSITIVE]   = darker (@base_color)
+
+    base[NORMAL]        = @base_color
+    base[PRELIGHT]      = @prelight_color
+    base[ACTIVE]        = shade (0.9, @selected_bg_color)
+    base[SELECTED]      = @selected_bg_color
+    base[INSENSITIVE]   = @base_color
+}
+
+style "treeView"
+{
+#    GtkTreeView::odd-row-color      = "#eaeaea"
+#    GtkTreeView::even-row-color     = "#c7cdd3"
+}
+
+class "GtkWidget" style "default"
+class "GtkTreeView" style "treeView"
+

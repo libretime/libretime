@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #-------------------------------------------------------------------------------
-#   Copyright (c) 2004 Media Development Loan Fund
+#   Copyright (c) 2007 Media Development Loan Fund
 #
 #   This file is part of the Campcaster project.
 #   http://campcaster.campware.org/
@@ -49,7 +49,8 @@ class ScratchpadWindow
             treeView = @glade["treeview1"]
             treeView.model = @listStore
             
-            audioClipIcon = Gdk::Pixbuf.new("audioClipIcon.png")
+            cwd = File.dirname(__FILE__)
+            audioClipIcon = Gdk::Pixbuf.new(cwd + "/audioClipIcon.png")
             cellRenderer0 = Gtk::CellRendererPixbuf.new
             cellRenderer0.pixbuf = audioClipIcon
             treeViewColumn0 = Gtk::TreeViewColumn.new("Type",
@@ -79,7 +80,8 @@ class ScratchpadWindow
 end
 
 Gtk.init
-path = File.dirname(__FILE__)
-scratchpadWindow = ScratchpadWindow.new(path + "/scratchpadWindow.glade")
+cwd = File.dirname(__FILE__)
+Gtk::RC.parse(cwd + "/scratchpadWindow.gtkrc")
+scratchpadWindow = ScratchpadWindow.new(cwd + "/scratchpadWindow.glade")
 scratchpadWindow.run
 
