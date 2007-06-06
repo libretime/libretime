@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=MacOS-X
+Type=X-GNOME-Metatheme
+Comment=A MacOS-X Look and feel theme for GNOME2\nAuthors: Danny Wu and Steven Young
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=MacOS-X
+MetacityTheme=MacOS-X
+IconTheme=MacOS-X

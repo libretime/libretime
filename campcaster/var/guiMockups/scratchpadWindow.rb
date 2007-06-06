@@ -41,6 +41,21 @@ class ScratchpadWindow
                 |handler| method(handler)
             }
             
+            @mainWindow = @glade["window1"]
+            @mainWindow.signal_connect("hide") {
+                Gtk.main_quit
+            }
+
+            playButton = @glade["button1"]
+            playButtonImage = Gtk::Image.new(Gtk::Stock::MEDIA_PLAY,
+                                             Gtk::IconSize::BUTTON)
+            playButton.image = playButtonImage
+            
+            stopButton = @glade["button2"]
+            stopButtonImage = Gtk::Image.new(Gtk::Stock::MEDIA_STOP,
+                                             Gtk::IconSize::BUTTON)
+            stopButton.image = stopButtonImage
+
             @listStore = Gtk::ListStore.new(String)
             addrow("Song One")
             addrow("Song Two")
@@ -62,6 +77,8 @@ class ScratchpadWindow
                                                       cellRenderer1,
                                                       :text => 0)
             treeView.append_column(treeViewColumn1)
+            
+            treeView.selection.mode = Gtk::SELECTION_MULTIPLE
         end
 
         def addrow(contents)
@@ -70,18 +87,14 @@ class ScratchpadWindow
         end
 
         def run
-            mainWindow = @glade["window1"]
-            mainWindow.signal_connect("hide") do
-                Gtk.main_quit
-            end
-            mainWindow.show_all
+            @mainWindow.show_all
             Gtk.main
         end
 end
 
-Gtk.init
 cwd = File.dirname(__FILE__)
-Gtk::RC.parse(cwd + "/scratchpadWindow.gtkrc")
+Gtk::RC.default_files = [cwd + "/themes/MacOS-X/gtk-2.0/gtkrc"]
+Gtk.init
 scratchpadWindow = ScratchpadWindow.new(cwd + "/scratchpadWindow.glade")
 scratchpadWindow.run
 

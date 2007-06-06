@@ -1,0 +1,285 @@
+#--------------------------------------------------------------------------------------------
+#  Lastest modified by Danny Wu for "MacOS-X Aqua Theme Ver. 1.1 for GTK2" on July, 01, 2004
+#--------------------------------------------------------------------------------------------
+
+style "icon-style"
+{
+#    stock["cdplayer-backward"] = {{ "24x24/stock/cdplayer-backward.png", *, *, * }}
+    stock["cdplayer-eject"] = {{ "gtk-go-forward.png", *, *, * }}
+#    stock["cdplayer-forward"] = {{ "24x24/stock/cdplayer-forward.png", *, *, * }}
+#    stock["cdplayer-next"] = {{ "24x24/stock/cdplayer-next.png", *, *, * }}
+#    stock["cdplayer-pause"] = {{ "24x24/stock/cdplayer-pause.png", *, *, * }}
+#    stock["cdplayer-play"] = {{ "24x24/stock/cdplayer-play.png", *, *, * }}
+#    stock["cdplayer-prev"] = {{ "24x24/stock/cdplayer-prev.png", *, *, * }}
+#    stock["cdplayer-record"] = {{ "24x24/stock/cdplayer-record.png", *, *, * }}
+#    stock["cdplayer-stop"] = {{ "24x24/stock/cdplayer-stop.png", *, *, * }}
+
+    stock["gnome-stock-about"] = {{ "gtk-about.png", *, *, * }}   
+    stock["gnome-stock-connect"] = {{ "gnome-stock-connect.png", *, *, * }}
+    stock["gnome-stock-disconnect"] = {{ "gnome-stock-disconnect.png", *, *, * }}
+    stock["gnome-stock-edit"] = {{ "gtk-cut.png", *, *, * }}
+#    stock["gnome-stock-export"] = {{ "24x24/stock/gnome-stock-export.png", *, *, * }}
+#    stock["gnome-stock-import"] = {{ "24x24/stock/gnome-stock-import.png", *, *, * }}
+#    stock["gnome-stock-insert-image"] = {{ "24x24/stock/gnome-stock-insert-image.png", *, *, * }}
+#    stock["gnome-stock-insert-object"] = {{ "24x24/stock/gnome-stock-insert-object.png", *, *, * }}
+#    stock["gnome-stock-insert-table"] = {{ "24x24/stock/gnome-stock-insert-table.png", *, *, * }}
+#    stock["gnome-stock-line-in"] = {{ "24x24/stock/gnome-stock-line-in.png", *, *, * }}
+#    stock["gnome-stock-lockscreen"] = {{ "24x24/stock/gnome-stock-lockscreen.png", *, *, * }}
+#    stock["gnome-stock-mic"] = {{ "24x24/stock/gnome-stock-mic.png", *, *, * }}
+#    stock["gnome-stock-run"] = {{ "24x24/stock/gnome-stock-run.png", *, *, * }}
+#    stock["gnome-stock-searchtool"] = {{ "24x24/stock/gnome-stock-searchtool.png", *, *, * }}
+#    stock["gnome-stock-volume"] = {{ "24x24/stock/gnome-stock-volume.png", *, *, * }}
+
+    stock["gnome-stock-gnome-run"] = {{ "gnome-stock-gnome-run.png", *, *, * }}
+    stock["gnome-stock-book-blue"] = {{"gaim-account2.png"}}
+
+    stock["gnome-logo-icon"] = {{ "gtk-find.png", *, *, * }}
+    stock["gnome-logo-icon-transparent"] = {{ "gtk-find.png", *, *, * }}
+    stock["gnome-main-menu"] = {{ "gtk-find.png", *, *, * }}
+    stock["gnome-spinner"] = {{ "gtk-cdrom.png", *, *, * }}
+
+    stock["gtk-add"] = {{ "gtk-add.png", *, *, * }}
+    stock["gtk-apply"] = {{ "gtk-ok.png", *, *, * }}
+    stock["gtk-bold"] = {{ "gtk-bold.png", *, *, * }}
+    stock["gtk-cancel"] = {{ "gtk-stop.png", *, *, * }}
+    stock["gtk-cdrom"] = {{ "gtk-cdrom.png", *, *, * }}
+    stock["gtk-clear"] = {{ "cache.png", *, *, * }}
+    stock["gtk-close"] = {{ "gtk-close.png", *, *, * }}
+    stock["gtk-copy"] = {{ "gtk-copy.png", *, *, * }}
+    stock["gtk-cut"] = {{ "gtk-cut.png", *, *, * }}
+    stock["gtk-delete"] = {{ "gtk-delete.png", *, *, * }}
+    stock["gtk-dialog-error"] = {{ "gtk-dialog-error.png", *, *, * }}
+    stock["gtk-dialog-info"] = {{ "gtk-dialog-info.png", *, *, * }}
+    stock["gtk-dialog-question"] = {{ "gtk-dialog-question.png", *, *, * }}
+    stock["gtk-dialog-warning"] = {{ "gtk-dialog-warning.png", *, *, * }} 
+    stock["gtk-execute"] = {{ "gnome-stock-gnome-run.png", *, *, * }}
+    stock["gtk-find"] = {{ "gtk-find.png", *, *, * }}
+    stock["gtk-find-and-replace"] = {{ "gtk-find-and-replace.png", *, *, * }}
+    stock["gtk-floppy"] = {{ "gtk-find.png", *, *, * }}
+#----------------------------------------------------------------------
+    stock["gtk-foot"] = {{ "gtk-find.png", *, *, * }}
+#----------------------------------------------------------------------
+    stock["gtk-go-back"] = {{ "gtk-go-back.png", *, *, * }}
+    stock["gtk-go-down"] = {{ "gtk-go-down.png", *, *, * }}
+    stock["gtk-go-forward"] = {{ "gtk-go-forward.png", *, *, * }}
+    stock["gtk-go-up"] = {{ "gtk-go-up.png", *, *, * }}
+    stock["gtk-goto-bottom"] = {{ "gtk-goto-bottom.png", *, *, * }}
+    stock["gtk-goto-first"] = {{ "gtk-goto-first.png", *, *, * }}
+    stock["gtk-goto-last"] = {{ "gtk-goto-last.png", *, *, * }}
+    stock["gtk-goto-top"] = {{ "gtk-goto-top.png", *, *, * }}
+    stock["gtk-help"] = {{"gtk-help.png"}}
+    stock["gtk-home"] = {{ "gtk-home.png", *, *, * }}
+    stock["gtk-italic"] = {{ "gtk-italic.png", *, *, * }}
+    stock["gtk-jump-to"] = {{ "gtk-jump-to.png", *, *, * }}
+    stock["gtk-justify-center"] = {{ "gtk-justify-center.png", *, *, * }}
+    stock["gtk-justify-fill"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["gtk-justify-left"] = {{ "gtk-justify-left.png", *, *, * }}
+    stock["gtk-justify-right"] = {{ "gtk-justify-right.png", *, *, * }}
+    stock["gtk-missing-image"] = {{ "gtk-missing-image.png", *, *, * }}
+    stock["gtk-new"] = {{ "gtk-new.png", *, *, * }}
+    stock["gtk-no"] = {{ "gtk-delete.png", *, *, * }}
+    stock["gtk-ok"] = {{ "gtk-ok.png", *, *, * }}
+    stock["gtk-open"] = {{ "gtk-open.png", *, *, * }}
+    stock["gtk-paste"] = {{ "gtk-paste.png", *, *, * }}
+    stock["gtk-preferences"] = {{ "gtk-preferences.png", *, *, * }}
+    stock["gtk-print"] = {{ "gtk-print.png", *, *, * }}
+    stock["gtk-print-preview"] = {{ "gtk-print-preview.png", *, *, * }}
+    stock["gtk-properties"] = {{ "gtk-dialog-info.png", *, *, * }}
+    stock["gtk-quit"] = {{ "gtk-quit.png", *, *, * }}
+    stock["gtk-redo"] = {{ "gtk-redo.png", *, *, * }}
+    stock["gtk-refresh"] = {{ "gtk-refresh.png", *, *, * }}
+    stock["gtk-remove"] = {{ "gtk-delete.png", *, *, * }}
+    stock["gtk-revert-to-saved"] = {{ "gtk-revert.png", *, *, * }}
+    stock["gtk-save"] = {{ "gtk-save.png", *, *, * }}
+    stock["gtk-save-as"] = {{ "gtk-save-as.png", *, *, * }}
+    stock["gtk-select-color"] = {{ "gtk-select-color.png", *, *, * }}
+#    stock["gtk-sort-ascending"] = {{ "24x24/stock/gtk-sort-ascending.png", *, *, "*" }}
+#    stock["gtk-sort-descending"] = {{ "24x24/stock/gtk-sort-descending.png", *, *, "*" }}
+    stock["gtk-spell-check"] = {{ "gtk-spell-check.png", *, *, * }}
+    stock["gtk-stop"] = {{ "gtk-stop.png", *, *, * }}
+#    stock["gtk-strikethrough"] = {{ "24x24/stock/gtk-strikethrough.png", *, *, "*" }}
+#    stock["gtk-undelete"] = {{ "24x24/stock/gtk-undelete.png", *, *, "*" }}
+    stock["gtk-underline"] = {{ "gtk-underline.png", *, *, * }}
+    stock["gtk-undo"] = {{ "gtk-undo.png", *, *, * }}
+    stock["gtk-yes"] = {{ "gtk-ok.png", *, *, * }}
+    stock["gtk-zoom-100"] = {{ "gtk-zoom-100.png", *, *, * }}
+    stock["gtk-zoom-fit"] = {{ "gtk-zoom-fit.png", *, *, * }}
+    stock["gtk-zoom-in"] = {{ "gtk-zoom-in.png", *, *, * }}
+    stock["gtk-zoom-out"] = {{ "gtk-zoom-out.png", *, *, * }}
+#----------------------------------------------------------------------
+    stock["gtk-view"] = {{ "gtk-view.png", *, *, * }}
+    stock["gtk-logo-icon"] = {{ "gtk-find.png", *, *, * }}
+    stock["gtk-column"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["gtk-macro-objects"] = {{ "gtk-macro-object.png", *, *, * }}
+    stock["gtk-stop"] = {{ "gtk-stop.png", *, *, * }}
+    stock["gtk-blue-book"] =  {{ "gaim-account.png", *, *, * }}
+    stock["gtk-two-columns"] = {{ "gtk-two-column.png", *, *, * }}
+    stock["gtk-fullscreen"] = {{ "gtk-fullscreen.png", *, *, * }}
+    stock["gtk-full-screen"] = {{ "gtk-help.png", *, *, * }}
+    stock["gtk-netscape"] = {{ "gtk-netscape.png", *, *, * }}	
+    stock["gtk-select-font"] = {{ "gtk-select-font.png", *, *, * }}
+    stock["gtk-index"] = {{ "gtk-index.png", *, *, * }}
+    stock["gtk-info"] = {{ "gtk-find.png", *, *, * }}
+    stock["gtk-edit"] = {{ "gaim-alias.png", *, *, * }}
+#----------------------------------------------------------------------
+
+    stock["gtk-media-eject"] = {{ "media-eject.png", *, *, * }}
+    stock["gtk-media-ffwd"] = {{ "media-fwd.png", *, *, * }}
+    stock["gtk-media-next"] = {{ "media-next.png", *, *, * }}
+    stock["gtk-media-pause"] = {{ "media-pause.png", *, *, * }}
+    stock["gtk-media-play"] = {{ "media-play.png", *, *, * }}
+    stock["gtk-media-prev"] = {{ "media-prev.png", *, *, * }}
+#    stock["media-rec"] = {{ "24x24/stock/media-rec.png", *, *, "*" }}
+    stock["gtk-media-rewind"] = {{ "media-rew.png", *, *, * }}
+    stock["gtk-media-stop"] = {{ "media-stop.png", *, *, * }}
+
+#    stock["panel-accessories"] = {{ "16x16/stock/panel-accessories.png", *, *, * }}
+#    stock["panel-amusements"] = {{ "16x16/stock/panel-amusements.png", *, *, * }}
+#    stock["panel-drawer"] = {{ "48x48/stock/panel-drawer.png", *, *, "*" }}
+#    stock["panel-internet"] = {{ "16x16/stock/panel-internet.png", *, *, * }}
+#    stock["panel-launcher"] = {{ "16x16/stock/panel-launcher.png", *, *, * }}
+#    stock["panel-lockscreen"] = {{ "48x48/stock/panel-lockscreen.png", *, *, "*" }}
+    stock["panel-logout"] = {{ "gtk-quit.png", *, *, * }}
+#    stock["panel-multimedia"] = {{ "16x16/stock/panel-multimedia.png", *, *, * }}
+    stock["panel-run"] = {{ "gnome-stock-gnome-run.png", *, *, * }}
+#    stock["panel-screenshot"] = {{ "48x48/stock/panel-screenshot.png", *, *, "*" }}
+#    stock["panel-searchtool"] = {{ "48x48/stock/panel-searchtool.png", *, *, "*" }}
+#    stock["panel-utility"] = {{ "16x16/stock/panel-utility.png", *, *, * }}
+
+#  stock["printer-broken"] = {{ "64x64/stock/printer-broken.png", *, *, "*" }}
+#  stock["printer-default"] = {{ "64x64/stock/printer-default.png", *, *, "*" }}
+#  stock["printer-inkjet"] = {{ "64x64/stock/printer-inkjet.png", *, *, "*" }}
+#  stock["printer-personal-laser"] = {{ "64x64/stock/printer-personal-laser.png", *, *, "*" }}
+#  stock["printer-workgroup"] = {{ "64x64/stock/printer-workgroup.png", *, *, "*" }}
+
+    stock["volume-max"] = {{ "volume-max.png", *, *, * }}
+    stock["volume-med"] = {{ "volume-med.png", *, *, * }}
+    stock["volume-min"] = {{ "volume-min.png", *, *, * }}
+    stock["volume-mute"] = {{ "volume-mute.png", *, *, * }}
+    stock["volume-zero"] = {{ "volume-zero.png", *, *, * }}
+
+#----------------------------------------------------------------------
+    stock["nautilus-throbber"] = {{ "gaim-info.png", *, *, * }}
+    stock["nautilus-icon"] = {{ "gaim-info.png", *, *, * }}
+#----------------------------------------------------------------------
+}
+class "GtkWidget" style "icon-style"
+
+style "media-icons"
+{
+        stock ["cdplayer-stop"] =       {{"media-stop.png"}}
+        stock ["cdplayer-play"] = 	{{"media-play.png"}}
+        stock ["cdplayer-pause"] = 	{{"media-pause.png"}}
+        stock ["cdplayer-prev"] =       {{"media-prev.png"}}
+        stock ["cdplayer-next"] =       {{"media-next.png"}}
+        stock ["cdplayer-eject"] =      {{"media-eject.png"}}
+
+	stock ["volume-mute"] =      	{{"volume-mute.png"}}
+        stock ["volume-zero"] =      	{{"volume-zero.png"}}
+        stock ["volume-min"] =      	{{"volume-min.png"}}
+        stock ["volume-med"] =      	{{"volume-med.png"}}
+        stock ["volume-max"] =      	{{"volume-max.png"}}
+}
+class "GtkWidget" style "media-icons"
+
+style "cdplayer" 
+{
+    stock["cdplayer-stop"] = {{ "volume-mute.png", *, *, * }}
+}
+class "GtkWidget" style "cdplayer"
+
+style "panel"
+{
+    stock["panel-screenshot"] = {{ "panel-screenshot.png", *, *, * }}
+    stock["panel-lockscreen"] = {{ "panel-lockscreen.png", *, *, * }}
+    stock["panel-searchtool"] = {{ "gtk-find-and-replace.png", *, *, * }}
+    stock ["panel-multimedia"] =    {{"stock_multimedia.png"}}
+    stock ["panel-gnome-logo"] =    {{"gnome-logo.png"}}
+}
+class "GtkWidget" style "panel"
+
+
+style "abiword"
+{
+    stock["abiword-one-column"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-1-column"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-two-columns"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-column"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-1column"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-insert-picture"] = {{ "gtk-one-column.png", *, *, * }}
+    stock["abiword-font-color"] = {{ "gaim-info.png", *, *, * }}
+    stock["abiword-field"] = {{ "gaim-info.png", *, *, * }}
+}
+class "GtkWidget" style "abiword"
+
+style "epiphany"
+{
+    stock["epiphany-bookmark-page"] = {{ "epiphany-bookmark-page.png", *, *, * }}
+    stock["epiphany-bookmarks"] = {{ "epiphany-bookmarks.png", *, *, * }}
+#    stock["epiphany-download"] = {{ "24x24/stock/epiphany-download.png", *, *, "*" }}
+    stock["epiphany-fullscreen"] = {{ "gtk-zoom-fit.png", *, *, * }}
+    stock["epiphany-history"] = {{ "epiphany-history.png", *, *, * }}
+#----------------------------------------------------------------------
+    stock["epiphany-secure"] = {{ "epiphany-secure.png", *, *, * }}
+    stock["epiphany-unsecure"] = {{ "epiphany-unsecure.png", *, *, * }}
+#----------------------------------------------------------------------
+    stock["epiphany-new-tab"] = {{ "epiphany-new-tab.png", *, *, * }}
+#    stock["epiphany-send-link"] = {{ "24x24/stock/epiphany-send-link.png", *, *, "*" }}
+#----------------------------------------------------------------------
+    stock["epiphany-send-to"] = {{ "epiphany-send-to.png", *, *, * }}
+#----------------------------------------------------------------------
+}
+class "GtkWidget" style "epiphany"
+
+style "file-roller"
+{
+    stock["file-roller-add"]= {{"media-stop.png"}}
+}
+class "GtkWidget" style "file-roller"
+
+style "gaim"
+{
+	stock["gaim-info"] = {{ "gaim-info.png", *, *, * }}
+	stock["gaim-send"] = {{ "aim.png", *, *, * }}
+	stock["gaim-chat"] = {{ "gaim-chat.png", *, *, * }}
+	stock["gaim-im"] = {{ "aim.png", *, *, * }}
+	stock["gaim-accounts"] = {{ "gaim-account.png", *, *, * }}
+	stock["gaim-sign-on"] = {{ "gaim-sign-on.png", *, *, * }}
+	stock["gaim-alias-buddy"] = {{ "gaim-alias.png", *, *, * }}
+	stock["gaim-image"] = {{ "gaim-picture.png", *, *, * }}
+	stock["gaim-close"] = {{ "gtk-cdrom.png", *, *, * }}
+	stock["gaim-icon-away"] = {{ "gaim-away.png", *, *, * }}
+	stock["gaim-link"] = {{ "gaim-link.png", *, *, * }}
+	stock["gaim-smiley"] = {{ "gaim-smiley.png", *, *, * }}
+	stock["gaim-typing"] = {{ "gaim-typing.png", *, *, * }}
+	stock["gaim-fgcolor"] = {{ "gaim-fgcolor.png", *, *, * }}
+	stock["gaim-bgcolor"] = {{ "gaim-bgcolor.png", *, *, * }}
+	stock["gaim-edit"] = {{ "gaim-alias.png", *, *, * }}
+	stock["gaim-about"] = {{ "gtk-about.png", *, *, * }}
+}
+class "GtkWidget" style "gaim"
+
+style "galeon" 
+{
+	stock["galeon-fullscreen"] = {{ "gtk-fullscreen.png", *, *, * }}
+  	stock["galeon-go"] = {{ "gtk-jump-toa.png", *, *, * }}
+	stock["galeon-history"] = {{ "epiphany-history.png", *, *, * }}
+	stock["galeon-view-source"] = {{ "epiphany-history.png", *, *, * }}
+	stock["galeon-send-link-to"] = {{ "epiphany-history.png", *, *, * }}
+}
+class "GtkWidget" style "galeon"
+
+style "rhythmbox"
+{
+    stock["rhythmbox-play"] = {{ "rhythmbox-play.png", *, *, * }}
+    stock["rhythmbox-stop"] = {{ "rhythmbox-stop.png", *, *, * }}
+    stock["rhythmbox-previous"] = {{ "rhythmbox-previous.png", *, *, * }}
+    stock["rhythmbox-next"] = {{ "rhythmbox-next.png", *, *, * }}
+    stock["rhythmbox-pause"] = {{ "rhythmbox-pause.png", *, *, * }}
+    stock["rhythmbox-volume-max"] = {{ "volume-max.png", *, *, * }}
+    stock["rhythmbox-volume-medium"] = {{ "volume-med.png", *, *, * }}
+    stock["rhythmbox-volume-min"] = {{ "volume-min.png", *, *, * }}
+    stock["rhythmbox-volume-zero"] = {{ "volume-zero.png", *, *, * }}
+    stock["rhythmbox-volume-mute"] = {{ "volume-mute.png", *, *, * }}
+}
+class "GtkWidget" style "rhythmbox"

@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+
+<metacity_theme>
+
+
+<info>
+  <name>MacOS-X</name>
+  <author>Danny Wu and Steven Young;</author>
+  <copyright>GPL</copyright>
+  <date>April 02 2004</date>
+  <description>
+      Version 1.0 --- Posted on June 18 2004
+      Version 1.1 --- Posted on July 02 2004
+  </description>
+</info>
+
+<frame_geometry name="normal" rounded_top_left="true" rounded_top_right="true" title_scale="medium">
+  <distance name="left_width" value="4"/>
+  <distance name="right_width" value="4"/>
+  <distance name="bottom_height" value="2"/>
+  <distance name="left_titlebar_edge" value="6"/>
+  <distance name="right_titlebar_edge" value="6"/>
+  <distance name="button_width" value="22"/>
+  <distance name="button_height" value="23"/>
+  <distance name="title_vertical_pad" value="4"/>
+  <border name="title_border" left="0" right="0" top="0" bottom="0"/>
+  <border name="button_border" left="0" right="0" top="0" bottom="0"/>
+</frame_geometry>
+
+<frame_geometry name="shaded" rounded_top_left="true" rounded_top_right="true" rounded_bottom_left="true" rounded_bottom_right="true" title_scale="medium">
+  <distance name="left_width" value="4"/>
+  <distance name="right_width" value="4"/>
+  <distance name="bottom_height" value="2"/>
+  <distance name="left_titlebar_edge" value="6"/>
+  <distance name="right_titlebar_edge" value="6"/>
+  <distance name="button_width" value="22"/>
+  <distance name="button_height" value="23"/>
+  <distance name="title_vertical_pad" value="4"/>
+  <border name="title_border" left="0" right="0" top="0" bottom="0"/>
+  <border name="button_border" left="0" right="0" top="0" bottom="0"/>
+</frame_geometry>
+
+<draw_ops name="draw_title_normal">
+  <title x="10" y="30" color="gtk:text[NORMAL]"/>
+</draw_ops>
+
+<draw_ops name="draw_title_tile">
+  <image filename="title_l-active.png" x="0" y="0" width="object_width" height="height" />
+  <image filename="title-active.png" fill_type="tile" x="6" y="0" width="width - 12" height="height"/>
+  <image filename="title_r-active.png" x="width - object_width" y="0" width="object_width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_title_tile_inactive">
+  <image filename="title_l-inactive.png" x="0" y="0" width="object_width" height="height" />
+  <image filename="title-inactive.png" fill_type="tile" x="6" y="0" width="width - 12" height="height"/>
+  <image filename="title_r-inactive.png" x="width - object_width" y="0" width="object_width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_title_tile_shaded">
+  <image filename="title_l-active.png" x="0" y="0" width="object_width" height="height" />
+  <image filename="title-active.png" fill_type="tile" x="6" y="0" width="width - 12" height="height"/>
+  <image filename="title_r-active.png" x="width - object_width" y="0" width="object_width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_title_tile_inactive_shaded">
+  <image filename="title_l-inactive.png" x="0" y="0" width="object_width" height="height" />
+  <image filename="title-inactive.png" fill_type="tile" x="6" y="0" width="width - 12" height="height"/>
+  <image filename="title_r-inactive.png" x="width - object_width" y="0" width="object_width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_title_pill">
+
+  <clip x="0" y="0" width="width - 8" height="height"/>
+
+  <title color="#9f9f9f"
+         x="((0 `max` (width - title_width-mini_icon_width - 2)) / 2 + mini_icon_width + 2) + 1"
+         y="(((height - title_height) / 2) `max` 0) + 1"/>
+
+<!--
+  <title color="#9f9f9f"
+         x="((0 `max` (width - title_width-mini_icon_width - 2)) / 2 + mini_icon_width + 2) + 2"
+         y="(((height - title_height) / 2) `max` 0) + 2"/>
+-->
+
+  <title color="gtk:fg[SELECTED]"
+         x="(0 `max` (width - title_width-mini_icon_width - 2)) / 2 + mini_icon_width + 2"
+         y="((height - title_height) / 2) `max` 0"/>
+
+  <icon  x="(0 `max` (width - title_width-mini_icon_width - 2)) / 2"
+         y="(height-mini_icon_height) / 2"
+         width="mini_icon_width" height="mini_icon_height"/>
+
+</draw_ops>
+
+<draw_ops name="draw_title_pill_inactive">
+     <title color="#6d6d6d"  x="(width - title_width) / 2" y="(height - title_height) / 2"/>
+</draw_ops>
+
+
+<draw_ops name="draw_bottom_edge">
+     <image filename="grabbar-active-left.png" x="0" y="0" width="object_width" height="height" />
+     <image filename="grabbar-active-center.png" x="4" y="0" width="width - 8" height="height" />
+     <image filename="Bottum-Right-3.png" x="width - object_width" y="0" width="object_width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_bottom_edge_inactive">
+     <image filename="grabbar-active-left.png" x="0" y="0" width="object_width" height="height" />
+     <image filename="grabbar-active-center.png" x="4" y="0" width="width - 8" height="height" />
+     <image filename="Bottum-Right-3.png" x="width - object_width" y="0" width="object_width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_close_button">
+   <image filename="close-active.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_min_button">
+   <image filename="iconify-active.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_max_button">
+   <image filename="maximize-active.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_close_prelight_button">
+   <image filename="close-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_min_prelight_button">
+   <image filename="iconify-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_max_prelight_button">
+   <image filename="maximize-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+
+<draw_ops name="draw_close_inactive_button">
+   <image filename="button-inactive.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_min_inactive_button">
+   <image filename="button-inactive.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_max_inactive_button">
+   <image filename="button-inactive.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+
+<draw_ops name="draw_close_inactive_prelight_button">
+   <image filename="close-inactive-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_min_inactive_prelight_button">
+   <image filename="iconify-inactive-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_max_inactive_prelight_button">
+   <image filename="maximize-inactive-highlight.png" x="0" y="0" width="19" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_menu_inactive_prelight_button">
+   <image filename="SystemMenuButton02-2.png" x="0" y="0" width="width" height="height"/>
+</draw_ops>
+
+
+<draw_ops name="draw_menu_button">
+   <image filename="SystemMenuButton01-1.png" x="0" y="0" width="23" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_menu_inactive_button">
+   <image filename="SystemMenuButton03-3.png" x="0" y="0" width="width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_menu_prelight_button">
+   <image filename="SystemMenuButton02-1.png" x="0" y="0" width="width" height="height"/>
+</draw_ops>
+
+<draw_ops name="draw_active_left_edge">
+   <image filename="left-border.png" x="0" y="0" width="width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_active_right_edge">
+   <image filename="right-border.png" x="0" y="0" width="width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_inactive_left_edge">
+   <image filename="left-border.png" x="0" y="0" width="width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_inactive_right_edge">
+   <image filename="right-border.png" x="0" y="0" width="width" height="height" />
+</draw_ops>
+
+<draw_ops name="draw_bg">
+<!--   <image filename="normal_bg.png" x="0" y="0" width="width" height="height"/> -->
+</draw_ops>
+
+
+<frame_style name="normal_focused_style" geometry="normal">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge"/>
+   <piece position="titlebar" draw_ops="draw_title_tile"/>
+   <piece position="left_edge" draw_ops="draw_active_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_active_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_prelight_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_prelight_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_prelight_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_prelight_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_prelight_button"/>
+</frame_style>
+
+
+<frame_style name="normal_unfocused_style" geometry="normal">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill_inactive"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge_inactive"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_inactive"/>
+   <piece position="left_edge" draw_ops="draw_inactive_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_inactive_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_inactive_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_inactive_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_inactive_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_inactive_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_inactive_prelight_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_inactive_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_inactive_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_inactive_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_inactive_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_inactive_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_inactive_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_inactive_button"/>
+</frame_style>
+
+
+<frame_style name="maximized_focused_style" geometry="normal">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge"/>
+   <piece position="titlebar" draw_ops="draw_title_tile"/>
+   <piece position="left_edge" draw_ops="draw_active_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_active_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_prelight_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_prelight_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_prelight_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_prelight_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_prelight_button"/>
+</frame_style>
+
+
+<frame_style name="maximized_unfocused_style" geometry="normal">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill_inactive"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge_inactive"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_inactive"/>
+   <piece position="left_edge" draw_ops="draw_inactive_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_inactive_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_inactive_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_inactive_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_inactive_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_inactive_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_inactive_prelight_button"/> 
+   <button function="minimize" state="pressed" draw_ops="draw_min_inactive_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_inactive_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_inactive_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_inactive_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_inactive_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_inactive_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_inactive_button"/>
+</frame_style>
+
+
+<frame_style name="shaded_focused_style" geometry="shaded">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_shaded"/>
+   <piece position="left_edge" draw_ops="draw_active_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_active_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_prelight_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_prelight_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_prelight_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_prelight_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_prelight_button"/>
+</frame_style>
+
+
+<frame_style name="shaded_unfocused_style" geometry="shaded">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill_inactive"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge_inactive"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_inactive_shaded"/>
+   <piece position="left_edge" draw_ops="draw_inactive_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_inactive_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_inactive_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_inactive_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_inactive_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_inactive_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_inactive_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_inactive_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_inactive_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_inactive_button"/>
+</frame_style>
+
+
+<frame_style name="maximized_shaded_focused_style" geometry="shaded">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_shaded"/>
+   <piece position="left_edge" draw_ops="draw_active_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_active_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_button"/>
+   <button function="close" state="prelight" draw_ops="draw_close_prelight_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_prelight_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_button"/>
+   <button function="minimize" state="prelight" draw_ops="draw_min_prelight_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_prelight_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_button"/>
+   <button function="maximize" state="prelight" draw_ops="draw_max_prelight_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_prelight_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_button"/>
+   <button function="menu" state="prelight" draw_ops="draw_menu_prelight_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_prelight_button"/>
+</frame_style>
+
+
+<frame_style name="maximized_shaded_unfocused_style" geometry="shaded">
+   <!-- We first display the title -->
+   <piece position="title" draw_ops="draw_title_pill_inactive"/>
+   <piece position="entire_background" draw_ops="draw_bg"/>
+   <piece position="bottom_edge" draw_ops="draw_bottom_edge_inactive"/>
+   <piece position="titlebar" draw_ops="draw_title_tile_inactive_shaded"/>
+   <piece position="left_edge" draw_ops="draw_inactive_left_edge"/>
+   <piece position="right_edge" draw_ops="draw_inactive_right_edge"/>
+   <!--buttons-->
+   <button function="close" state="normal" draw_ops="draw_close_inactive_button"/>
+   <button function="close" state="pressed" draw_ops="draw_close_inactive_button"/>
+   <button function="minimize" state="normal" draw_ops="draw_min_inactive_button"/>
+   <button function="minimize" state="pressed" draw_ops="draw_min_inactive_button"/>
+   <button function="maximize" state="normal" draw_ops="draw_max_inactive_button"/>
+   <button function="maximize" state="pressed" draw_ops="draw_max_inactive_button"/>
+   <button function="menu" state="normal" draw_ops="draw_menu_inactive_button"/>
+   <button function="menu" state="pressed" draw_ops="draw_menu_inactive_button"/>
+</frame_style>
+
+
+<frame_style_set name="normal">
+   <frame focus="yes" state="normal" resize="both" style="normal_focused_style"/>
+   <frame focus="no"  state="normal" resize="both" style="normal_unfocused_style"/>
+   <frame focus="yes" state="maximized" 	   style="maximized_focused_style"/>
+   <frame focus="no"  state="maximized" 	   style="maximized_unfocused_style"/>
+   <frame focus="yes" state="shaded" 	  	   style="shaded_focused_style"/>
+   <frame focus="no"  state="shaded" 		   style="shaded_unfocused_style"/>
+   <frame focus="yes" state="maximized_and_shaded" style="maximized_shaded_focused_style"/>
+   <frame focus="no"  state="maximized_and_shaded" style="maximized_shaded_unfocused_style"/>
+</frame_style_set>
+
+
+<window type="normal" style_set="normal"/>
+<window type="dialog" style_set="normal"/>
+<window type="modal_dialog" style_set="normal"/>
+<window type="utility" style_set="normal"/>
+<window type="menu" style_set="normal"/>
+<window type="border" style_set="normal"/>
+
+<menu_icon function="close" state="NORMAL" draw_ops="draw_close_inactive_button"/>
+<menu_icon function="maximize" state="NORMAL" draw_ops="draw_max_inactive_button"/>
+<menu_icon function="minimize" state="NORMAL" draw_ops="draw_min_inactive_button"/>
+<menu_icon function="unmaximize" state="NORMAL" draw_ops="draw_max_inactive_button"/>
+
+<menu_icon function="close" state="PRELIGHT" draw_ops="draw_close_prelight_button"/>
+<menu_icon function="maximize" state="PRELIGHT" draw_ops="draw_max_prelight_button"/>
+<menu_icon function="minimize" state="PRELIGHT" draw_ops="draw_min_prelight_button"/>
+<menu_icon function="unmaximize" state="PRELIGHT" draw_ops="draw_max_prelight_button"/>
+
+
+</metacity_theme>
