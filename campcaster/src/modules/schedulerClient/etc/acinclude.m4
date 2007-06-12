@@ -496,6 +496,7 @@ dnl and sets: HAVE_BOOST_DATE_TIME
 dnl
 dnl Modified for Campcaster:
 dnl * --with-boost-date-time default changed to Yes.
+dnl * added some more recognized suffixes to the library's name, incl. "-st".
 dnl
 dnl Authors:
 dnl Thomas Porschberg <thomas@randspringer.de>
@@ -551,9 +552,11 @@ AC_DEFUN([AX_BOOST_DATE_TIME],
                         AC_DEFINE(HAVE_BOOST_DATE_TIME,,[define if the Boost::Date_Time library is available])
                         BN=boost_date_time
             if test "x$ax_boost_user_date_time_lib" = "x"; then
-                           for ax_lib in $BN $BN-$CC $BN-$CC-mt $BN-$CC-mt-s $BN-$CC-s \
-                               lib$BN lib$BN-$CC lib$BN-$CC-mt lib$BN-$CC-mt-s lib$BN-$CC-s \
-                               $BN-mgw $BN-mgw $BN-mgw-mt $BN-mgw-mt-s $BN-mgw-s ; do
+                           for ax_lib in $BN $BN-st $BN-mt $BN-mt-s $BN-s \
+                               $BN-$CC $BN-$CC-st $BN-$CC-mt $BN-$CC-mt-s $BN-$CC-s \
+                               lib$BN lib$BN-st lib$BN-mt lib$BN-mt-s lib$BN-s \
+                               lib$BN-$CC lib$BN-$CC-st lib$BN-$CC-mt lib$BN-$CC-mt-s lib$BN-$CC-s \
+                               $BN-mgw $BN-mgw $BN-mgw-st $BN-mgw-mt $BN-mgw-mt-s $BN-mgw-s ; do
                               AC_CHECK_LIB($ax_lib, main, [BOOST_DATE_TIME_LIB="-l$ax_lib" AC_SUBST(BOOST_DATE_TIME_LIB) link_date_time="yes" break],
                                [link_date_time="no"])
                            done
