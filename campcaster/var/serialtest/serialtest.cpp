@@ -128,6 +128,8 @@ int main (int       argc,
                     std::exit(1);
         }
     }
+    
+    s.SetCharSize(LibSerial::SerialStreamBuf::CHAR_SIZE_8);
 
     std::cout << "Serial port "
               << sn
