@@ -38,11 +38,13 @@ int main (int       argc,
     
     do {
         if (in) {
+            std::getline(s, str, '\n');
+            if (str.length() > 0) {
+                std::cerr << str << std::endl;
+            }
+        } else {
             std::getline(std::cin, str, '\n');
             s << str << std::endl;
-        } else {
-            std::getline(s, str, '\n');
-            std::cerr << "received: " << str << std::endl;
         }
     } while (true);
 }
