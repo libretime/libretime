@@ -78,6 +78,11 @@ const int               updateTimeConstant = 20;
  */
 const int               asyncUpdateFrequency = 10;
 
+/**
+ *  The delay between two RDS updates (in seconds).
+ */
+const int               rdsUpdateFrequency = 10;
+
 }
 
 /* ===============================================  local function prototypes */
@@ -421,10 +426,6 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
     
     // check on the progress of the async methods
     static int      backupCounter = 0;
-    if (backupCounter++ == updateTimeConstant * asyncUpdateFrequency) {
-        backupCounter = 0;
-    }
-    
     if (backupCounter == 0) {
         if (optionsWindow) {
             BackupList *    backupList    = optionsWindow->getBackupList();
@@ -437,12 +438,21 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
             searchWindow->onTimer();
         }
     }
+    if (++backupCounter == updateTimeConstant * asyncUpdateFrequency) {
+        backupCounter = 0;
+    }
     
     // refresh all windows
     gLiveSupport->runMainLoop();
     
     // refresh the RDS display
-    gLiveSupport->updateRds();
+    static int      rdsCounter = 0;
+    if (rdsCounter == 0) {
+        gLiveSupport->updateRds();
+    }
+    if (++rdsCounter == updateTimeConstant * rdsUpdateFrequency) {
+        rdsCounter = 0;
+    }
     
     return true;
 }
