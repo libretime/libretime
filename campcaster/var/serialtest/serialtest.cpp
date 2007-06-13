@@ -29,6 +29,7 @@
 
 #include <SerialStream.h>
 #include <iostream>
+#include <sstream>
 
 /**
  *  testing the serial ports
@@ -55,16 +56,83 @@ int main (int       argc,
         sn = argv[2];
 
     } else {
-        std::cerr << "Usage: serialtest {in|out} devicename" << std::endl;
+        std::cerr << "Usage: serialtest {in|out} devicename [baud rate]"
+                  << std::endl;
         std::exit(1);
     }
 
     LibSerial::SerialStream     s(sn);
+    
+    if (argc > 3) {
+        int                 baudRate;
+        std::stringstream   baudRateS(argv[3]);
+        baudRateS >> baudRate;
+        switch (baudRate) {
+            case 50:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_50);
+                    break;
+            case 75:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_75);
+                    break;
+            case 110:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_110);
+                    break;
+            case 134:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_134);
+                    break;
+            case 150:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_150);
+                    break;
+            case 200:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_200);
+                    break;
+            case 300:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_300);
+                    break;
+            case 600:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_600);
+                    break;
+            case 1200:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_1200);
+                    break;
+            case 1800:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_1800);
+                    break;
+            case 2400:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_2400);
+                    break;
+            case 4800:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_4800);
+                    break;
+            case 9600:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_9600);
+                    break;
+            case 19200:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_19200);
+                    break;
+            case 38400:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_38400);
+                    break;
+            case 57600:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_57600);
+                    break;
+            case 115200:
+                    s.SetBaudRate(LibSerial::SerialStreamBuf::BAUD_115200);
+                    break;
+            default:
+                    std::cerr << "Invalid baud rate "
+                              << baudRate << "." << std::endl;
+                              << "Pick one of 50, 75, 110, 134, 150, 200, "
+                                 "300, 600, 1200, 1800, 2400, 4800, 9600, "
+                                 "19200, 38400, 57600, or 115200." << std::endl;
+                    std::exit(1);
+        }
+    }
 
     std::cout << "Serial port "
               << sn
               << " is "
-              << (s.bad() ? "bad" : "good") << std::endl
+              << (s.bad() ? "bad." : "good.") << std::endl
               << (in ? "Receiving." : "Sending.") << std::endl;
 
     std::string     str;
