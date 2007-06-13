@@ -53,8 +53,9 @@ int main (int       argc,
         }
         
         sn = argv[2];
+
     } else {
-        std::cerr << "Usage: setserial {in|out} devicename" << std::endl;
+        std::cerr << "Usage: serialtest {in|out} devicename" << std::endl;
         std::exit(1);
     }
 
