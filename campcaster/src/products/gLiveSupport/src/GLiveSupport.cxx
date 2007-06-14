@@ -417,6 +417,10 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     // configure the serial port
     // TODO: make this configurable
     serialStream->SetBaudRate(LibSerial::SerialStreamBuf::BAUD_2400);
+    serialStream->SetCharSize(LibSerial::SerialStreamBuf::CHAR_SIZE_8);
+    serialStream->SetNumOfStopBits(1);
+    serialStream->SetParity(LibSerial::SerialStreamBuf::PARITY_NONE);
+    serialStream->SetFlowControl(LibSerial::SerialStreamBuf::FLOW_CONTROL_NONE);
 }
 
 
