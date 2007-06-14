@@ -414,6 +414,9 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
         optionsContainer->setOptionItem(OptionsContainer::serialDeviceName,
                                         serialDevice);
     }
+    // configure the serial port
+    // TODO: make this configurable
+    serialStream->SetBaudRate(LibSerial::SerialStreamBuf::BAUD_2400);
 }
 
 
