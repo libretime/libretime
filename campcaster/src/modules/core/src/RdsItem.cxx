@@ -134,7 +134,7 @@ RdsItem :: toString(void)                                           throw ()
         rdsString->append(*key);
         rdsString->append("=");
         rdsString->append(*value);
-        rdsString->append("\n");
+        rdsString->append("\r\n");
     }
     
     return rdsString;
