@@ -35,6 +35,8 @@
 
 #include <unicode/resbund.h>
 #include <gtkmm/entry.h>
+#include <sstream>
+#include <iomanip>
 
 #include "LiveSupport/Widgets/Colors.h"
 
@@ -694,17 +696,6 @@ WidgetFactory :: createDialogWindow(Ptr<const Glib::ustring>::Ref   message,
                                                                     throw ()
 {
     return new DialogWindow(message, buttons, bundle);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Create a date/time chooser window.
- *----------------------------------------------------------------------------*/
-DateTimeChooserWindow *
-WidgetFactory :: createDateTimeChooserWindow(Ptr<ResourceBundle>::Ref   bundle)
-                                                                    throw ()
-{
-    return new DateTimeChooserWindow(bundle);
 }
 
 

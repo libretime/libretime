@@ -101,8 +101,7 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref            gLiveSupport,
     constructCriteriaView();
     constructBackupListView();
     
-    dateTimeChooserWindow.reset(new DateTimeChooserWindow(
-                            gLiveSupport->getBundle("dateTimeChooserWindow") ));
+    dateTimeChooserWindow.reset(new DateTimeChooserWindow(gLiveSupport));
 }
 
 

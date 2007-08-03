@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: fgerlits $
     Version  : $Revision$
-    Location : $URL$
+    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/modules/widgets/src/DateTimeChooserWindow.cxx $
 
 ------------------------------------------------------------------------------*/
 
@@ -33,15 +33,9 @@
 #include "configure.h"
 #endif
 
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include "boost/date_time/posix_time/posix_time.hpp"
-
-#include "LiveSupport/Core/TimeConversion.h"
-
-#include "SchedulePlaylistWindow.h"
+#include "DateTimeChooserWindow.h"
 
 
-using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -54,7 +48,7 @@ namespace {
 /*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
-const Glib::ustring     gladeFileName = "SchedulePlaylistWindow.glade";
+const Glib::ustring     gladeFileName = "DateTimeChooserWindow.glade";
 
 }
 
@@ -66,61 +60,43 @@ const Glib::ustring     gladeFileName = "SchedulePlaylistWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-SchedulePlaylistWindow :: SchedulePlaylistWindow (
-                                Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                const Glib::ustring &       gladeDir,
-                                Ptr<Playlist>::Ref          playlist)
+DateTimeChooserWindow :: DateTimeChooserWindow(
+                                Ptr<GLiveSupport>::Ref      gLiveSupport)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
-            playlist(playlist)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
-                                                    "schedulePlaylistWindow");
+    Ptr<ResourceBundle>::Ref
+                    bundle = gLiveSupport->getBundle("dateTimeChooserWindow");
     setBundle(bundle);
-    
-    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
+
+    Glib::ustring   gladeDir = gLiveSupport->getGladeDir();
+    Glib::RefPtr<Gnome::Glade::Xml>
+                    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
 
     glade->get_widget("mainWindow1", mainWindow);
     mainWindow->set_title(*getResourceUstring("windowTitle"));
-
-    Gtk::Label *        playlistLabel;
-    glade->get_widget("playlistLabel1", playlistLabel);
-    playlistLabel->set_label(*playlist->getTitle());
-
-    Gtk::Label *        hourLabel;
-    Gtk::Label *        minuteLabel;
-    Gtk::Label *        secondLabel;
+    
+    Gtk::Label *    hourLabel;
+    Gtk::Label *    minuteLabel;
     glade->get_widget("hourLabel1", hourLabel);
     glade->get_widget("minuteLabel1", minuteLabel);
-    glade->get_widget("secondLabel1", secondLabel);
     hourLabel->set_label(*getResourceUstring("hourLabel"));
-    hourLabel->set_label(*getResourceUstring("minuteLabel"));
-    hourLabel->set_label(*getResourceUstring("secondLabel"));
-
+    minuteLabel->set_label(*getResourceUstring("minuteLabel"));
+    
     glade->get_widget("calendar1", calendar);
-
     glade->get_widget("hourSpinButton1", hourEntry);
     glade->get_widget("minuteSpinButton1", minuteEntry);
-    glade->get_widget("secondSpinButton1", secondEntry);
-    Ptr<boost::posix_time::ptime>::Ref      now = TimeConversion::now();
-    boost::posix_time::time_duration        time = now->time_of_day();
-    hourEntry->set_value(time.hours());
-    minuteEntry->set_value(time.minutes() + 1);
-    secondEntry->set_value(0);
-
-    Gtk::Button *       scheduleButton;
-    glade->get_widget("scheduleButton1", scheduleButton);
-    scheduleButton->set_label(*getResourceUstring("scheduleButtonLabel"));
-    scheduleButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &SchedulePlaylistWindow::onScheduleButtonClicked));
+    
+    glade->get_widget("okButton1", okButton);
+    okButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &DateTimeChooserWindow::onOkButtonClicked));
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the schedule button getting clicked.
+ *  Event handler for the OK button clicked.
  *----------------------------------------------------------------------------*/
 void
-SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
+DateTimeChooserWindow :: onOkButtonClicked(void)                    throw ()
 {
     unsigned int    year;
     unsigned int    month;
@@ -130,20 +106,23 @@ SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
 
     int             hours = hourEntry->get_value_as_int();
     int             minutes = minuteEntry->get_value_as_int();
-    int             seconds = secondEntry->get_value_as_int();
 
-    Ptr<boost::posix_time::ptime>::Ref  dateTime(new boost::posix_time::ptime(
+    chosenDateTime.reset(new boost::posix_time::ptime(
                 boost::gregorian::date(year, month, day),
-                boost::posix_time::time_duration(hours, minutes, seconds) ));
-
-    try {
-        gLiveSupport->schedulePlaylist(playlist, dateTime);
-    } catch (XmlRpcException &e) {
-        // TODO: notify user
-        std::cerr << "scheduling problem: " << e.what() << std::endl;
-        return;
-    }
+                boost::posix_time::time_duration(hours, minutes, 0) ));
 
     mainWindow->hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show the window and return the button clicked.
+ *----------------------------------------------------------------------------*/
+Ptr<const ptime>::Ref
+DateTimeChooserWindow :: run(void)                                  throw ()
+{
+    chosenDateTime.reset();
+    Gtk::Main::run(*mainWindow);
+    return chosenDateTime;
 }
 

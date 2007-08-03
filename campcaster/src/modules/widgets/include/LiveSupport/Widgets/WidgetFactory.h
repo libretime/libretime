@@ -58,7 +58,6 @@
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/DialogWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "LiveSupport/Widgets/DateTimeChooserWindow.h"
 
 
 namespace LiveSupport {
@@ -417,19 +416,6 @@ class WidgetFactory :
         createDialogWindow(Ptr<const Glib::ustring>::Ref    message,
                            Ptr<ResourceBundle>::Ref         bundle,
                            int              buttons = DialogWindow::okButton)
-                                                                    throw ();
-
-        /**
-         *  Create a DateTimeChooserWindow.
-         *  It lets the user select a date/time.
-         *  It is the reponsibility of the caller to dispose of the created
-         *  object properly.
-         *
-         *  @param  bundle  localization for the button(s).
-         *  @return the DateTimeChooserWindow object.
-         */
-        DateTimeChooserWindow *
-        createDateTimeChooserWindow(Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ();
 };
 

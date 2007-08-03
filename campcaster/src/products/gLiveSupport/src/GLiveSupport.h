@@ -1413,6 +1413,17 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         updateRds(void)                                         throw ();
+
+        /**
+         *  Return the directory where the Glade files are.
+         *
+         *  @return the directory where the Glade files are.
+         */
+        Glib::ustring
+        getGladeDir(void)                                       throw ()
+        {
+            return gladeDir;
+        }
 };
 
 /* ================================================= external data structures */

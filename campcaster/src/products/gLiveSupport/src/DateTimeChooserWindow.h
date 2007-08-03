@@ -40,23 +40,20 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
-#include <gtkmm/label.h>
-#include <gtkmm/calendar.h>
-#include <gtkmm/main.h>
+#include <gtkmm.h>
+#include <libglademm.h>
+#include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/EntryBin.h"
+#include "GLiveSupport.h"
 
-#include "LiveSupport/Widgets/WhiteWindow.h"
 
 namespace LiveSupport {
-namespace Widgets {
+namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace boost::posix_time;
 
 /* ================================================================ constants */
 
@@ -69,10 +66,6 @@ using namespace boost::posix_time;
 /**
  *  A dialog window for choosing a date/time.
  *
- *  The constructor is called with a resource bundle.  The resource bundle
- *  is expected to contain keys named cancelButtonLabel, okButtonLabel,
- *  hourLabel and minuteLabel.
- *
  *  The return value of the run() method is a boost::posix_time::ptime value.
  *  The DateTimeChooserWindow object is not destroyed when it returns from 
  *  run(); it is the responsibility of the caller to delete it (or it can be
@@ -81,53 +74,60 @@ using namespace boost::posix_time;
  *  @author $Author: fgerlits $
  *  @version $Revision$
  */
-class DateTimeChooserWindow : public WhiteWindow,
-                              public LocalizedObject
+class DateTimeChooserWindow : public LocalizedObject
 {
     private:
+
+        /**
+         *  The main window for this class.
+         */
+        Gtk::Dialog *                       mainWindow;
+
         /**
          *  The calendar where the date is chosen.
          */
-        Gtk::Calendar *     calendar;
+        Gtk::Calendar *                     calendar;
         
         /**
-         *  The entry field for the hour.
+         *  The entry field for hours.
          */
-        EntryBin *          hourEntry;
+        Gtk::SpinButton *                   hourEntry;
+
+        /**
+         *  The entry field for minutes.
+         */
+        Gtk::SpinButton *                   minuteEntry;
         
         /**
-         *  The entry field for the minute.
+         *  The OK button
          */
-        EntryBin *          minuteEntry;
+        Gtk::Button *                       okButton;
         
         /**
-         *  The return value; set to 0 if the user pressed Cancel.
+         *  The return value; set to 0 if the user closed the window.
          */
-        Ptr<ptime>::Ref     chosenDateTime;
+        Ptr<boost::posix_time::ptime>::Ref  chosenDateTime;
 
 
     protected:
-        /**
-         *  The event handler for the Cancel button clicked.
-         */
-        void
-        onCancelButtonClicked(void)                                 throw ();
 
         /**
          *  The event handler for the OK button clicked.
          */
-        void
+        virtual void
         onOkButtonClicked(void)                                     throw ();
 
 
     public:
+
         /**
          *  Constructor.
          *
-         *  @param bundle   a resource bundle containing the localized
-         *                  button labels
+         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *                          all the vital info.
          */
-        DateTimeChooserWindow(Ptr<ResourceBundle>::Ref   bundle)    throw ();
+        DateTimeChooserWindow(Ptr<GLiveSupport>::Ref    gLiveSupport)
+                                                                    throw ();
 
         /**
          *  A virtual destructor, as this class has virtual functions.
@@ -142,7 +142,7 @@ class DateTimeChooserWindow : public WhiteWindow,
          *  The returned value may be a 0 pointer (if the user pressed Cancel),
          *  and it may be not_a_date_time, if the user's selection is invalid.
          */
-        Ptr<const ptime>::Ref
+        Ptr<const boost::posix_time::ptime>::Ref
         run(void)                                                   throw ();
 
 };
@@ -153,7 +153,7 @@ class DateTimeChooserWindow : public WhiteWindow,
 /* ====================================================== function prototypes */
 
 
-} // namespace Widgets
+} // namespace GLiveSupport
 } // namespace LiveSupport
 
 #endif // DateTimeChooserWindow_h

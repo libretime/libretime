@@ -47,7 +47,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/Widgets/DateTimeChooserWindow.h"
+#include "DateTimeChooserWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BackupList.h"
 #include "GLiveSupport.h"
@@ -159,12 +159,12 @@ class BackupView : public LocalizedObject
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
+        Ptr<GLiveSupport>::Ref              gLiveSupport;
         
         /**
          *  The Glade object, which specifies the visual components.
          */
-        Glib::RefPtr<Gnome::Glade::Xml>      glade;
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
 
         /**
          *  Event handler for the time chooser button being clicked.
