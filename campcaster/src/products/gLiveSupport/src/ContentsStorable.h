@@ -54,7 +54,7 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A virtual class to be implemented by GuiWindows which
+ *  A virtual class to be implemented by GUI windows which
  *  want to store their contents as a user preference item.
  *
  *  @author $Author: fgerlits $

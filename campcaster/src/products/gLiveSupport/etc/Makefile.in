@@ -258,7 +258,6 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/MasterPanelWindow.o \
                      ${TMP_DIR}/NowPlaying.o \
-                     ${TMP_DIR}/GuiWindow.o \
                      ${TMP_DIR}/BasicWindow.o \
                      ${TMP_DIR}/LoginWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
