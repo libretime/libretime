@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
+    Author   : $Author$
     Version  : $Revision$
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/gLiveSupport/src/ContentsStorable.h $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef ContentsStorable_h
@@ -57,7 +57,7 @@ using namespace LiveSupport::Core;
  *  A virtual class to be implemented by GUI windows which
  *  want to store their contents as a user preference item.
  *
- *  @author $Author: fgerlits $
+ *  @author $Author$
  *  @version $Revision$
  */
 class ContentsStorable

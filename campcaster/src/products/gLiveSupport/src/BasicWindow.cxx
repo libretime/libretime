@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 3105 $
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/gLiveSupport/src/BasicWindow.cxx $
+    Author   : $Author$
+    Version  : $Revision$
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

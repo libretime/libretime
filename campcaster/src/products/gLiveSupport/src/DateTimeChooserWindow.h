@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
+    Author   : $Author$
     Version  : $Revision$
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/modules/widgets/include/LiveSupport/Widgets/DateTimeChooserWindow.h $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef DateTimeChooserWindow_h
@@ -71,7 +71,7 @@ using namespace LiveSupport::Core;
  *  run(); it is the responsibility of the caller to delete it (or it can be
  *  reused a few times first).
  *
- *  @author $Author: fgerlits $
+ *  @author $Author$
  *  @version $Revision$
  */
 class DateTimeChooserWindow : public LocalizedObject

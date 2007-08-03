@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
+    Author   : $Author$
     Version  : $Revision$
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/gLiveSupport/src/BackupList.h $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef BackupList_h
@@ -85,7 +85,7 @@ using namespace LiveSupport::Widgets;
  *  
  *  The BackupList is contained in the BackupView.
  *
- *  @author $Author: fgerlits $
+ *  @author $Author$
  *  @version $Revision$
  */
 class BackupList : public LocalizedObject,
@@ -152,7 +152,7 @@ class BackupList : public LocalizedObject,
         /**
          *  The columns model needed by ZebraTreeView.
          *
-         *  @author $Author: fgerlits $
+         *  @author $Author$
          *  @version $Revision$
          */
         class ModelColumns : public ZebraTreeModelColumnRecord

@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
+    Author   : $Author$
     Version  : $Revision$
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/gLiveSupport/src/ExportPlaylistWindow.h $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef ExportPlaylistWindow_h
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  It lets the user select the format of the exported playlist, and the 
  *  location where it will be saved.
  *
- *  @author $Author: fgerlits $
+ *  @author $Author$
  *  @version $Revision$
  */
 class ExportPlaylistWindow : public LocalizedObject

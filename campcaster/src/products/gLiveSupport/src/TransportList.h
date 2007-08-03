@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
+    Author   : $Author$
     Version  : $Revision$
-    Location : $URL: svn+ssh://fgerlits@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/products/gLiveSupport/src/TransportList.h $
+    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef TransportList_h
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *
  *  The TransportList is contained in the SearchWindow.
  *
- *  @author $Author: fgerlits $
+ *  @author $Author$
  *  @version $Revision$
  */
 class TransportList : public LocalizedObject,
@@ -168,7 +168,7 @@ class TransportList : public LocalizedObject,
         /**
          *  The columns model needed by ZebraTreeView.
          *
-         *  @author $Author: fgerlits $
+         *  @author $Author$
          *  @version $Revision$
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
