@@ -40,26 +40,17 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/button.h>
-#include <gtkmm/table.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/box.h>
-#include <gtkmm/window.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/OptionsContainer.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
-#include "LiveSupport/Widgets/Notebook.h"
-#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "GuiWindow.h"
+#include "BasicWindow.h"
 #include "GLiveSupport.h"
-#include "MasterPanelUserInfoWidget.h"
 #include "BackupView.h"
 #include "RdsView.h"
 
@@ -89,50 +80,31 @@ using namespace LiveSupport::Widgets;
  *  | +-- currently ------------------+ |
  *  | +-- selected tab ---------------+ |
  *  | +-------------------------------+ |
- *  +------------(Cancel)-(Apply)-(OK)--+
+ *  +------------(Apply)-(Cancel)-(OK)--+
  *  </code></pre>
  *
  *  @author $Author$
  *  @version $Revision$
  */
-class OptionsWindow : public GuiWindow
+class OptionsWindow : public BasicWindow
 {
     private:
+
         /**
          *  The notepad holding the different sections.
          */
-        Notebook                  * mainNotebook;
-
-        /**
-         *  The button box.
-         */
-        Gtk::ButtonBox            * buttonBox;
-
-        /**
-         *  The Cancel button.
-         */
-        Gtk::Button               * cancelButton;
-
-        /**
-         *  The Apply button.
-         */
-        Gtk::Button               * applyButton;
-
-        /**
-         *  The OK button.
-         */
-        Gtk::Button               * okButton;
+        Gtk::Notebook *             mainNotebook;
 
         /**
          *  The label showing the current status of the scheduler.
          */
-        Gtk::Label                * schedulerStatusLabel;
+        Gtk::Label *                schedulerStatusLabel;
         
         /**
          *  The type for the list of user entry fields of string type.
          */
         typedef std::vector<std::pair<OptionsContainer::OptionItemString,
-                                      EntryBin*> >      StringEntryListType;
+                                      Gtk::Entry*> >    StringEntryListType;
 
         /**
          *  The list of user entry fields of string type.
@@ -142,15 +114,17 @@ class OptionsWindow : public GuiWindow
         /**
          *  Create a new user entry field item.
          *
-         *  This constructs [and Gtk::manage()s] the EntryBin, and
+         *  This gets a reference to the Gtk::Entry from the Glade file, and
          *  sets its text to the current value of the option.
-         *  The EntryBin is then added to the list of user entry fields.
+         *  The Gtk::Entry is then added to the list of user entry fields.
          *
-         *  @param  optionItem  the name of the option item for this entry
-         *  @return the newly created EntryBin
+         *  @param  entryName   the name of the Entry in the Glade file.
+         *  @param  optionItem  the name of the option item for this entry.
+         *  @return the text entry field just processed.
          */
-        EntryBin *
-        createEntry(OptionsContainer::OptionItemString  optionItem)
+        Gtk::Entry *
+        createEntry(const Glib::ustring &               entryName,
+                    OptionsContainer::OptionItemString  optionItem)
                                                                     throw ();
 
         /**
@@ -216,59 +190,45 @@ class OptionsWindow : public GuiWindow
 
         /**
          *  Construct the "Sound" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructSoundSection(void)                                 throw ();
 
         /**
          *  Construct the "Key bindings" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructKeyBindingsSection(void)                           throw ();
 
         /**
          *  Construct the "Servers" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructServersSection(void)                               throw ();
 
         /**
          *  Construct the "Scheduler" section.
          *  This section contains the scheduler start and stop buttons.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructSchedulerSection(void)                             throw ();
 
         /**
          *  Construct the "Backup" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructBackupSection(void)                                throw ();
 
         /**
          *  Construct the "RDS" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructRdsSection(void)                                   throw ();
 
         /**
          *  Construct the "About" section.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructAboutSection(void)                                 throw ();
 
         /**
@@ -279,6 +239,7 @@ class OptionsWindow : public GuiWindow
 
 
     protected:
+
         /**
          *  Event handler for the Cancel button.
          */
@@ -303,7 +264,6 @@ class OptionsWindow : public GuiWindow
          *  @param  needConfirm     if true, we check if changes has been
          *                          made to the input fields, and if yes, then
          *                          a "save changes?" dialog is displayed
-         *  @see    WhiteWindow::onCloseButtonClicked()
          */
         virtual void
         onCloseButtonClicked(bool   needConfirm = true)             throw ();
@@ -316,7 +276,7 @@ class OptionsWindow : public GuiWindow
          *  @see    GLiveSupport::playTestSoundOnCue()
          */
         virtual void
-        onTestButtonClicked(const EntryBin *    entry)              throw ();
+        onTestButtonClicked(const Gtk::Entry *    entry)            throw ();
 
         /**
          *  Event handler for double-clicking a row in the key bindings table.
@@ -366,6 +326,7 @@ class OptionsWindow : public GuiWindow
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
             public:
+            
                 /**
                  *  The column for the name of the action.
                  *  This contains the name of the window (for parent rows),
@@ -422,20 +383,21 @@ class OptionsWindow : public GuiWindow
         /**
          *  The tree view for the key bindings.
          */
-        ZebraTreeView *                 keyBindingsView;
+        ZebraTreeView *                 keyBindingsTreeView;
 
         /**
          *  The backup view shown in the backup section.
          */
-        BackupView *                    backupView;
+        Ptr<BackupView>::Ref            backupView;
 
         /**
          *  The RdsView shown in the RDS section.
          */
-        RdsView *                       rdsView;
+        Ptr<RdsView>::Ref               rdsView;
 
 
     public:
+
         /**
          *  Constructor.
          *
@@ -445,10 +407,12 @@ class OptionsWindow : public GuiWindow
          *                          resources for this window.
          *  @param windowOpenerButton   the button which was pressed to open
          *                              this window.
+         *  @param  gladeDir        the directory where the glade file is.
          */
         OptionsWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
                       Ptr<ResourceBundle>::Ref   bundle,
-                      Button *                   windowOpenerButton)
+                      Gtk::ToggleButton *        windowOpenerButton,
+                      const Glib::ustring &      gladeDir)
                                                                     throw ();
 
         /**
@@ -462,10 +426,11 @@ class OptionsWindow : public GuiWindow
         /**
          *  Return the BackupList object shown by the widget.
          */
-        BackupList *
+        Ptr<BackupList>::Ref
         getBackupList(void)                                         throw ()
         {
-            return backupView ? backupView->getBackupList() : 0;
+            return backupView ? backupView->getBackupList()
+                              : Ptr<BackupList>::Ref();
         }
         
         /**

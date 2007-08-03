@@ -67,14 +67,16 @@ class OperatorComboBoxText : public ComboBoxText,
                              public LocalizedObject
 {
     public:
+
         /**
-         *  Constructor.
+         *  Constructor to be used with Glade::Xml::get_widget_derived().
          *
+         *  @param baseClass    widget of the parent class, created by Glade.
+         *  @param glade        the Glade object.
          */
-        OperatorComboBoxText(Glib::RefPtr<Gdk::Pixbuf>  leftImage, 
-                             Glib::RefPtr<Gdk::Pixbuf>  centerImage, 
-                             Glib::RefPtr<Gdk::Pixbuf>  rightImage,
-                             Ptr<ResourceBundle>::Ref   bundle)
+        OperatorComboBoxText(
+                    GtkComboBox *                              baseClass,
+                    const Glib::RefPtr<Gnome::Glade::Xml> &    glade)
                                                                     throw ();
 
         /**
@@ -82,6 +84,24 @@ class OperatorComboBoxText : public ComboBoxText,
          */
         virtual
         ~OperatorComboBoxText(void)                                 throw ();
+
+        /**
+         *  Set up the contents of the combo box.
+         *
+         *  @param  bundle  the resource bundle which holds the localized
+         *                  operator names.
+         */
+        void
+        setContents(Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ();
+        /**
+         *  Get the currently selected operator.
+         *  This is one of "partial", "prefix", "=", "<=" or ">=".
+         *
+         *  @return the current selection.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getActiveKey(void)                                          throw ();
 };
 
 

@@ -7,7 +7,7 @@ hu:table
     liveModeButtonLabel:string              { "Élő adás" }
     uploadFileButtonLabel:string            { "Filefeltöltés" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Műsorkezelés" }
+    playlistButtonLabel:string              { "Műsorkezelés" }
     schedulerButtonLabel:string             { "Időzítő" }
     searchButtonLabel:string                { "Keresés" }
     optionsButtonLabel:string               { "Beállítások" }
@@ -38,12 +38,11 @@ hu:table
     {
         windowTitle:string          { "Belépés" }
 
-        loginLabel:string           { "Azonosító" }
+        userNameLabel:string        { "Azonosító" }
         passwordLabel:string        { "Jelszó" }
-        okButtonLabel:string        { "Belépés" }
-        cancelButtonLabel:string    { "Mégsem" }
+        languageLabel:string        { "Nyelv" }
 
-        pleaseWaitMsg:string        { "Logging in, please wait." }
+        pleaseWaitMsg:string        { "Kérem, várjon..." }
     }
 
     audioClipListWindow:table
@@ -62,7 +61,7 @@ hu:table
     {
         windowTitle:string                  { "Scratchpad" }
 
-        typeColumnLabel:string              { "Típus" }
+        creatorColumnLabel:string           { "Előadó" }
         titleColumnLabel:string             { "Cím" }
         addToPlaylistButtonLabel:string     { "Műsorhoz hozzáadni" }
         clearListButtonLabel:string         { "Lista törlése" }
@@ -124,7 +123,7 @@ hu:table
                                           "already.#" }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string          { "Műsorszerkesztő" }
 
@@ -147,6 +146,8 @@ hu:table
 
         playlistSavedMessage:string     { "a {0} műsor elmentve" }
         savePlaylistDialogMsg:string    { "El szeretné menteni a műsort?" }
+        closeWithoutSavingButtonLabel:string
+                                        { "Bezárás mentés nélkül" }
         emptyTitleErrorMsg:string       { "Kérem, adjon meg egy címet!" }
     }
 
@@ -162,10 +163,10 @@ hu:table
         endColumnLabel:string       { "vég" }
         deleteMenuItem:string       { "_töröl" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Stop" }
+        stopCurrentlyPlayingText:string         { "what is currently playing "
+                                                  "in the scheduler." }
+        stopCurrentlyPlayingDialogMsg:string    { "Are you sure?" }
 
         closeButtonLabel:string     { "bezár" }
     }
@@ -331,7 +332,7 @@ hu:table
         deleteButtonLabel:string    { "#Delete#" }
         saveButtonLabel:string      { "#Save#" }
 
-        backupTitleLabel:string     { "#Title#" }
+        backupTitleLabel:string     { "#Title:#" }
         defaultBackupTitle:string   { "#new backup#" }
 
         fileChooserDialogTitle:string   { "#Save File#" }

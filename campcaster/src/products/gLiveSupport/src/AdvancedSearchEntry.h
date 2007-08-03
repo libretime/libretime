@@ -40,18 +40,23 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
+#include <vector>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "AdvancedSearchItem.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
     
 /* ================================================================ constants */
 
@@ -62,15 +67,15 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A Gtk::VBox with one or more search input fields in it.
+ *  A sub-window with one or more search input fields in it.
  *
  *  @author  $Author$
  *  @version $Revision$
  */
-class AdvancedSearchEntry : public Gtk::VBox, 
-                            public LocalizedObject
+class AdvancedSearchEntry : public LocalizedObject
 {
     private:
+
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
@@ -85,21 +90,25 @@ class AdvancedSearchEntry : public Gtk::VBox,
          *  The combo box for selecting the file types to search for.
          */
         ComboBoxText *                      fileTypeEntry;
-        
+
         /**
-         *  The box containing the AdvancedSearchItem widgets.
+         *  The AdvancedSearchItem children of the widget.
          */
-        Gtk::VBox *                         searchItemsBox;
-        
-        
+        std::vector<Ptr<AdvancedSearchItem>::Ref>       children;
+
+
     public:
+
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
+         *  @param  gLiveSupport    the GLiveSupport object, containing
          *                          all the vital info.
+         *  @param  glade           the Glade file which specifies the visual
+         *                          components for this class.
          */
-        AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
+        AdvancedSearchEntry(Ptr<GLiveSupport>::Ref            gLiveSupport,
+                            Glib::RefPtr<Gnome::Glade::Xml>   glade)
                                                                 throw ();
 
         /**

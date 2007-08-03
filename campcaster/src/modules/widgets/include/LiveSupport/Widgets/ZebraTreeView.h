@@ -42,18 +42,11 @@
 
 #include <gtkmm/liststore.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/label.h>
-#include <gtkmm/table.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/eventbox.h>
-#include <gtkmm/image.h>
-#include <gtkmm/window.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/WidgetConstants.h"
-#include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/ImageButton.h"
-#include "LiveSupport/Widgets/BlueBin.h"
 
 
 namespace LiveSupport {
@@ -182,7 +175,6 @@ class ZebraTreeView : public Gtk::TreeView
 
 
     protected:
-    
         /**
          *  A signal object to notify people that a cell has been edited.
          */
@@ -260,6 +252,16 @@ class ZebraTreeView : public Gtk::TreeView
          *  @param treeModel the data the treeView will show.
          */
         ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>   treeModel)
+                                                                throw ();
+
+        /**
+         *  Constructor to be used with Glade::Xml::get_widget_derived().
+         *
+         *  @param baseClass    widget of the parent class, created by Glade.
+         *  @param glade        the Glade object.
+         */
+        ZebraTreeView(_GtkTreeView *                            baseClass,
+                      const Glib::RefPtr<Gnome::Glade::Xml> &   glade)
                                                                 throw ();
 
         /**

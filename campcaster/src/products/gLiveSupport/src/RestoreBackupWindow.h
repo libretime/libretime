@@ -40,17 +40,20 @@
 #include "configure.h"
 #endif
 
+#include <unicode/resbund.h>
+#include <gtkmm.h>
+#include <libglademm.h>
+
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/StorageClient/StorageClientInterface.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "GuiWindow.h"
+#include "GLiveSupport.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::StorageClient;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -66,23 +69,29 @@ using namespace LiveSupport::Widgets;
  *  @author $Author: fgerlits $
  *  @version $Revision$
  */
-class RestoreBackupWindow : public GuiWindow
+class RestoreBackupWindow : public LocalizedObject
 {
     private:
+
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref                  gLiveSupport;
+
+        /**
+         *  The main window for this class.
+         */
+        Gtk::Window *                           mainWindow;
+
         /**
          *  The label holding the current message displayed by the window.
          */
         Gtk::Label *                            messageLabel;
 
         /**
-         *  The cancel button.
-         */
-        Button *                                cancelButton;
-
-        /**
          *  The OK button.
          */
-        Button *                                okButton;
+        Gtk::Button *                           okButton;
         
         /**
          *  The file name of the backup file to be uploaded.
@@ -106,6 +115,7 @@ class RestoreBackupWindow : public GuiWindow
 
 
     protected:
+
         /**
          *  Event handler for the cancel button being clicked.
          */
@@ -117,6 +127,12 @@ class RestoreBackupWindow : public GuiWindow
          */
         virtual void
         onOkButtonClicked(void)                                     throw ();
+
+        /**
+         *  Event handler for closing the window from the window manager.
+         */
+        virtual bool
+        onDeleteEvent(GdkEventAny *     event)                      throw ();
 
         /**
          *  Set the text of the label.
@@ -197,32 +213,22 @@ class RestoreBackupWindow : public GuiWindow
          */
         virtual void
         resetTimer(void)                                            throw ();
-        
-        /**
-         *  Hide the window.
-         *  
-         *  This overrides GuiWindow::on_hide(), and adds a call to
-         *  restoreBackupClose() before calling the parent GuiWindow's
-         *  on_hide() function.
-         */
-        virtual void
-        on_hide(void)                                               throw ();
 
 
     public:
+
         /**
          *  Constructor.
          *
          *  @param  gLiveSupport    the gLiveSupport object, containing
          *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param windowOpenerButton   the button which was pressed to open
-         *                              this window.
+         *  @param  glade           the Glade object, which contains the
+         *                          visual design.
+         *  @param  fileName        the file name of the backup to be restored.
          */
-        RestoreBackupWindow(Ptr<GLiveSupport>::Ref          gLiveSupport,
-                            Ptr<ResourceBundle>::Ref        bundle,
-                            Ptr<const Glib::ustring>::Ref   fileName)
+        RestoreBackupWindow(Ptr<GLiveSupport>::Ref              gLiveSupport,
+                            Glib::RefPtr<Gnome::Glade::Xml>     glade,
+                            Ptr<const Glib::ustring>::Ref       fileName)
                                                                     throw ();
 
         /**
@@ -233,6 +239,17 @@ class RestoreBackupWindow : public GuiWindow
         {
         }
 
+        /**
+         *  Show the window.
+         */
+        virtual void
+        show(void)                                                  throw ();
+
+        /**
+         *  Close the connection and hide the window.
+         */
+        virtual void
+        hide(void)                                                  throw ();
 };
 
 /* ================================================= external data structures */

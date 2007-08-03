@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef SimplePlaylistManagementWindow_h
-#define SimplePlaylistManagementWindow_h
+#ifndef PlaylistWindow_h
+#define PlaylistWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,17 +41,15 @@
 #endif
 
 #include <string>
-
 #include <unicode/resbund.h>
-
 #include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "LiveSupport/Widgets/DialogWindow.h"
-#include "GuiWindow.h"
+#include "BasicWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -90,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class SimplePlaylistManagementWindow : public GuiWindow
+class PlaylistWindow : public BasicWindow
 {
     private:
 
@@ -119,24 +117,14 @@ class SimplePlaylistManagementWindow : public GuiWindow
         Gtk::TreeIter               currentItem;
 
         /**
-         *  The label for the name entry.
+         *  The input text field for the name of the playlist.
          */
-        Gtk::Label                * nameLabel;
-
-        /**
-         *  The test input entry for the name of the playlist.
-         */
-        EntryBin                  * nameEntry;
-
-        /**
-         *  A scrolled window, so that the entry list can be scrolled.
-         */
-        Gtk::ScrolledWindow       * entriesScrolledWindow;
+        Gtk::Entry *                nameEntry;
 
         /**
          *  The entry tree view, now only showing rows.
          */
-        ZebraTreeView             * entriesView;
+        ZebraTreeView *             entriesView;
 
         /**
          *  The entry tree model, as a GTK reference.
@@ -146,32 +134,23 @@ class SimplePlaylistManagementWindow : public GuiWindow
         /**
          *  The label containing the length of the playlist.
          */
-        Gtk::Label                * lengthValueLabel;
-        /**
-         *  The save button.
-         */
-        Button                    * saveButton;
-
-        /**
-         *  The close button.
-         */
-        Button                    * closeButton;
+        Gtk::Label *                lengthValueLabel;
 
         /**
          *  The status bar.
          */
-        Gtk::Label                * statusBar;
+        Gtk::Label *                statusBar;
 
         /**
-         *  The "are you sure you want to exit?" dialog window.
+         *  The Save Button.
          */
-        Ptr<DialogWindow>::Ref      dialogWindow;
+        Gtk::Button *               saveButton;
 
         /**
          *  The right-click context menu that comes up when right-clicking
          *  a playlist element.
          */
-        Gtk::Menu *                 rightClickMenu;
+        Ptr<Gtk::Menu>::Ref         rightClickMenu;
 
         /**
          *  Find (an iterator pointing to) the currently selected row.
@@ -254,6 +233,14 @@ class SimplePlaylistManagementWindow : public GuiWindow
          */
         void
         setPlaylistModified(bool    newValue)                   throw ();
+
+        /**
+         *  Run the confirmation dialog.
+         *
+         *  @return the response ID returned by the dialog.
+         */
+        Gtk::ResponseType
+        runConfirmationDialog(void)                             throw ();
 
 
     protected:
@@ -349,7 +336,7 @@ class SimplePlaylistManagementWindow : public GuiWindow
          *  @param event the button event recieved
          */
         void
-        onEntryClicked(GdkEventButton     * event)              throw ();
+        onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
          *  Signal handler for a key pressed at one of the entries.
@@ -403,6 +390,7 @@ class SimplePlaylistManagementWindow : public GuiWindow
 
 
     public:
+
         /**
          *  Constructor.
          *
@@ -410,20 +398,21 @@ class SimplePlaylistManagementWindow : public GuiWindow
          *                          all the vital info.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
-         *  @param windowOpenerButton   the button which was pressed to open
+         *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
+         *  @param  gladeDir        the directory where the glade file is.
          */
-        SimplePlaylistManagementWindow(
-                            Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle,
-                            Button *                    windowOpenerButton)
+        PlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
+                       Ptr<ResourceBundle>::Ref     bundle,
+                       Gtk::ToggleButton *          windowOpenerButton,
+                       const Glib::ustring &        gladeDir)
                                                                 throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~SimplePlaylistManagementWindow(void)                   throw ();
+        ~PlaylistWindow(void)                                   throw ();
 
         /**
          *  Show / update the contents of the playlist management window.
@@ -455,5 +444,5 @@ class SimplePlaylistManagementWindow : public GuiWindow
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // SimplePlaylistManagementWindow_h
+#endif // PlaylistWindow_h
 

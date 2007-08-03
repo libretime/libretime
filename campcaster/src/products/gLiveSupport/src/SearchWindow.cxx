@@ -39,7 +39,6 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 
 #include "SearchWindow.h"
@@ -60,14 +59,9 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
- *  The 'search where' combo box key for local searches.
+ *  The name of the glade file.
  *----------------------------------------------------------------------------*/
-const std::string       searchWhereLocalKey  = "searchWhereLocal";
-
-/*------------------------------------------------------------------------------
- *  The 'search where' combo box key for remote searches.
- *----------------------------------------------------------------------------*/
-const std::string       searchWhereRemoteKey = "searchWhereRemote";
+const Glib::ustring     gladeFileName = "SearchWindow.glade";
 
 /*------------------------------------------------------------------------------
  *  The number of items which can be shown in the search results.
@@ -86,55 +80,38 @@ const int               searchResultsSize = 25;
  *----------------------------------------------------------------------------*/
 SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                               Ptr<ResourceBundle>::Ref    bundle,
-                              Button *                    windowOpenerButton)
-                                                                throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle,
-                      windowOpenerButton)
+                              Gtk::ToggleButton *         windowOpenerButton,
+                              const Glib::ustring &       gladeDir)
+                                                                    throw ()
+          : BasicWindow(gLiveSupport,
+                        bundle,
+                        windowOpenerButton,
+                        gladeDir + gladeFileName),
+            gladeDir(gladeDir)
 {
-    Gtk::Box *          searchWhereBox     = constructSearchWhereBox();
-
-    Gtk::Box *          simpleSearchView   = constructSimpleSearchView();
-    Gtk::Box *          advancedSearchView = constructAdvancedSearchView();
-    Gtk::Box *          browseView         = constructBrowseView();
-    Gtk::Box *          transportsView     = constructTransportsView();
-
-    searchInput = Gtk::manage(new ScrolledNotebook);
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        searchInput->appendPage(*simpleSearchView, *getResourceUstring(
-                                                        "simpleSearchTab"));
-        searchInput->appendPage(*advancedSearchView, *getResourceUstring(
-                                                        "advancedSearchTab"));
-        searchInput->appendPage(*browseView, *getResourceUstring(
-                                                        "browseTab"));
-        searchInput->appendPage(*transportsView, *getResourceUstring(
-                                                        "transportsTab"));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    // set up the search results box
-    Gtk::Box *          searchResultsView = constructSearchResultsView();
-
-    // set the sizes of the two parts of the window
-    searchInput      ->set_size_request(766, 231);
-    searchResultsView->set_size_request(766, 343);
+    glade->get_widget("searchInputNoteBook1", searchInput);
     
-    // put them in one big box
-    Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
-    bigBox->pack_start(*searchWhereBox, Gtk::PACK_SHRINK);
-    bigBox->pack_start(*searchInput,    Gtk::PACK_SHRINK);
-    bigBox->pack_start(*searchResultsView);
-    add(*bigBox);
+    Gtk::Label *    simpleSearchTabLabel;
+    Gtk::Label *    advancedSearchTabLabel;
+    Gtk::Label *    browseTabLabel;
+    Gtk::Label *    transportsTabLabel;
+    glade->get_widget("simpleSearchTabLabel1", simpleSearchTabLabel);
+    glade->get_widget("advancedSearchTabLabel1", advancedSearchTabLabel);
+    glade->get_widget("browseTabLabel1", browseTabLabel);
+    glade->get_widget("transportsTabLabel1", transportsTabLabel);
+    simpleSearchTabLabel->set_label(*getResourceUstring("simpleSearchTab"));
+    advancedSearchTabLabel->set_label(*getResourceUstring("advancedSearchTab"));
+    browseTabLabel->set_label(*getResourceUstring("browseTab"));
+    transportsTabLabel->set_label(*getResourceUstring("transportsTab"));
+
+    constructSearchWhereBox();
     
-    // show
-    set_name("searchWindow");
-    set_modal(false);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
+    constructSimpleSearchView();
+    constructAdvancedSearchView();
+    constructBrowseView();
+    constructTransportsView();
     
-    show_all_children();
+    constructSearchResultsView();
 }
 
 
@@ -149,265 +126,130 @@ SearchWindow :: ~SearchWindow (void)                            throw ()
 /*------------------------------------------------------------------------------
  *  Construct the transport type selection box.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 SearchWindow :: constructSearchWhereBox(void)                   throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
     Gtk::Label *                searchWhereLabel;
-    try {
-        searchWhereLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("searchWhereLabel") ));
-        searchWhereEntry = Gtk::manage(wf->createComboBoxText());
-        
-        Ptr<Glib::ustring>::Ref localKey(new Glib::ustring(
-                                                searchWhereLocalKey));
-        Ptr<Glib::ustring>::Ref remoteKey(new Glib::ustring(
-                                                searchWhereRemoteKey));
-        
-        searchWhereEntry->appendPair(getResourceUstring(searchWhereLocalKey),
-                                     localKey);
-        searchWhereEntry->appendPair(getResourceUstring(searchWhereRemoteKey),
-                                     remoteKey);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
+    glade->get_widget("searchWhereLabel1", searchWhereLabel);
+    searchWhereLabel->set_label(*getResourceUstring("searchWhereLabel"));
+
+    glade->get_widget_derived("searchWhereEntry1", searchWhereEntry);
+    searchWhereEntry->append_text(*getResourceUstring("searchWhereLocal"));
+    searchWhereEntry->append_text(*getResourceUstring("searchWhereRemote"));
     searchWhereEntry->set_active(0);
-    searchWhereEntry->signalSelectionChanged().connect(sigc::mem_fun(
-                                *this, &SearchWindow::onSearchWhereChanged ));
-    
-    Gtk::HBox *         hBox = Gtk::manage(new Gtk::HBox);
-    hBox->pack_start(*searchWhereLabel, Gtk::PACK_SHRINK, 5);
-    hBox->pack_start(*searchWhereEntry, Gtk::PACK_SHRINK);
-    
-    Gtk::HBox *         padding = Gtk::manage(new Gtk::HBox);
-    
-    Gtk::VBox *         vBox = Gtk::manage(new Gtk::VBox);
-    vBox->pack_start(*hBox,    Gtk::PACK_SHRINK, 5);
-    vBox->pack_start(*padding, Gtk::PACK_SHRINK, 5);
-    
-    return vBox;
+    searchWhereEntry->signal_changed().connect(sigc::mem_fun(*this,
+                                    &SearchWindow::onSearchWhereChanged));
 }    
 
 
 /*------------------------------------------------------------------------------
  *  Construct the simple search view.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 SearchWindow :: constructSimpleSearchView(void)                 throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-
-    // set up the entry box
-    simpleSearchEntry = Gtk::manage(wf->createEntryBin());
+    glade->get_widget("simpleSearchEntry1", simpleSearchEntry);
+    simpleSearchEntry->signal_activate().connect(sigc::mem_fun(*this,
+                                            &SearchWindow::onSimpleSearch));
     
-    Button *        searchButton;
-    try {
-        searchButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("searchButtonLabel") ));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    simpleSearchEntry->signal_activate().connect(sigc::mem_fun(
-                                    *this, &SearchWindow::onSimpleSearch ));
-    searchButton->signal_clicked().connect(sigc::mem_fun(
-                                    *this, &SearchWindow::onSimpleSearch ));
-
-    Gtk::HBox *         entryBox = Gtk::manage(new Gtk::HBox);
-    entryBox->pack_start(*simpleSearchEntry, Gtk::PACK_EXPAND_WIDGET,  5);
-    entryBox->pack_start(*searchButton,      Gtk::PACK_SHRINK,         5);
-
-    // make the search entry + button take up 50% of the window horizontally
-    Gtk::Alignment *    entryAlignment = Gtk::manage(new Gtk::Alignment(
-                                                           0, 0, 0.5, 0));
-    entryAlignment->add(*entryBox);
-
-    // make a new box and pack the main components into it
-    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*entryAlignment, Gtk::PACK_SHRINK, 5);
-    
-    return view;
+    Gtk::Button *       simpleSearchButton;
+    glade->get_widget("simpleSearchButton1", simpleSearchButton);
+    simpleSearchButton->set_label(*getResourceUstring("searchButtonLabel"));
+    simpleSearchButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                            &SearchWindow::onSimpleSearch));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the advanced search view.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 SearchWindow :: constructAdvancedSearchView(void)               throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-
-    // the two main components of the window
-    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(gLiveSupport));
-    Gtk::Box *  searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
-                                    Gtk::BUTTONBOX_END ));
+    advancedSearchEntry.reset(new AdvancedSearchEntry(gLiveSupport, glade));
+    advancedSearchEntry->connectCallback(sigc::mem_fun(*this,
+                                            &SearchWindow::onAdvancedSearch ));
     
-    // set up the callback function for the entry field
-    advancedSearchEntry->connectCallback(sigc::mem_fun(
-                                    *this, &SearchWindow::onAdvancedSearch ));
-    
-    // set up the search button box
-    try {
-        Button *        searchButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("searchButtonLabel") ));
-        searchButton->signal_clicked().connect(sigc::mem_fun(
-                                    *this, &SearchWindow::onAdvancedSearch ));
-        searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    // make a new box and pack the main components into it
-    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*advancedSearchEntry,    Gtk::PACK_SHRINK,         5);
-    view->pack_start(*searchButtonBox,        Gtk::PACK_SHRINK,         5);
-    
-    return view;
+    Gtk::Button *   advancedSearchButton;
+    glade->get_widget("advancedSearchButton1", advancedSearchButton);
+    advancedSearchButton->set_label(*getResourceUstring("searchButtonLabel"));
+    advancedSearchButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                            &SearchWindow::onAdvancedSearch));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the browse view.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 SearchWindow :: constructBrowseView(void)                       throw ()
 {
-    // set up the browse input fields
-    browseEntry = Gtk::manage(new BrowseEntry(gLiveSupport, getBundle()));
-    
-    browseEntry->signalSelectionChanged().connect(sigc::mem_fun(
-                                            *this, &SearchWindow::onBrowse ));
-
-    // make a new box and pack the main components into it
-    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*browseEntry,    Gtk::PACK_EXPAND_WIDGET, 5);
-    return view;
+    browseEntry.reset(new BrowseEntry(gLiveSupport, getBundle(), glade));    
+    browseEntry->signalChanged().connect(sigc::mem_fun(*this,
+                                                &SearchWindow::onBrowse));
 }
 
 
 /*------------------------------------------------------------------------------
- *  Construct the advanced search view.
+ *  Construct the transports view.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 SearchWindow :: constructTransportsView(void)                   throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    try {
-        transportList = Gtk::manage(new TransportList(
+    transportList.reset(new TransportList(
                                     gLiveSupport,
-                                    gLiveSupport->getBundle("transportList") ));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    ScrolledWindow *    scrolledWindow = Gtk::manage(new ScrolledWindow);
-    scrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    scrolledWindow->add(*transportList);
-    
-    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*scrolledWindow);
-    
-    return view;
+                                    gLiveSupport->getBundle("transportList"),
+                                    glade));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the search results display.
  *----------------------------------------------------------------------------*/
-Gtk::Box *
+void
 SearchWindow :: constructSearchResultsView(void)                throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
     localSearchResults  = Gtk::ListStore::create(modelColumns);
     remoteSearchResults = Gtk::ListStore::create(modelColumns);
     
-    searchResultsTreeView = Gtk::manage(wf->createTreeView(localSearchResults));
+    glade->get_widget_derived("searchResultsTreeView1", searchResultsTreeView);
+    searchResultsTreeView->set_model(localSearchResults);
+    searchResultsTreeView->connectModelSignals(localSearchResults);
     searchResultsTreeView->connectModelSignals(remoteSearchResults);
 
-    // add the TreeView's view columns
-    try {
-        searchResultsTreeView->appendColumn(
-                                    *getResourceUstring("typeColumnLabel"),
-                                    modelColumns.typeColumn, 20);
-        searchResultsTreeView->appendColumn(
-                                    *getResourceUstring("titleColumnLabel"),
-                                    modelColumns.titleColumn, 300);
-        searchResultsTreeView->appendColumn(
-                                    *getResourceUstring("creatorColumnLabel"),
-                                    modelColumns.creatorColumn, 200);
-        searchResultsTreeView->appendColumn(
-                                    *getResourceUstring("sourceColumnLabel"),
-                                    modelColumns.sourceColumn, 145);
-        searchResultsTreeView->appendCenteredColumn(
-                                    *getResourceUstring("lengthColumnLabel"),
-                                    modelColumns.lengthColumn, 55);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    searchResultsTreeView->appendColumn(
+                                *getResourceUstring("typeColumnLabel"),
+                                modelColumns.typeColumn, 20);
+    searchResultsTreeView->appendColumn(
+                                *getResourceUstring("titleColumnLabel"),
+                                modelColumns.titleColumn, 300);
+    searchResultsTreeView->appendColumn(
+                                *getResourceUstring("creatorColumnLabel"),
+                                modelColumns.creatorColumn, 200);
+    searchResultsTreeView->appendColumn(
+                                *getResourceUstring("sourceColumnLabel"),
+                                modelColumns.sourceColumn, 145);
+    searchResultsTreeView->appendCenteredColumn(
+                                *getResourceUstring("lengthColumnLabel"),
+                                modelColumns.lengthColumn, 55);
     
-    // register the signal handler for treeview entries being clicked
     searchResultsTreeView->signal_button_press_event().connect_notify(
-                                sigc::mem_fun(
-                                    *this, &SearchWindow::onEntryClicked));
-    searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(
-                                    *this, &SearchWindow::onDoubleClick));
+                                sigc::mem_fun(*this,
+                                            &SearchWindow::onEntryClicked));
+    searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(*this,
+                                            &SearchWindow::onDoubleClick));
     
-    // create the right-click context menus
     audioClipContextMenu    = constructAudioClipContextMenu();
     playlistContextMenu     = constructPlaylistContextMenu();
     remoteContextMenu       = constructRemoteContextMenu();
     
-    // put the tree view inside a scrolled window
-    ScrolledWindow *    resultsWindow = Gtk::manage(new ScrolledWindow);
-    resultsWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    resultsWindow->add(*searchResultsTreeView);
-    
-    // create the paging toolbar
-    try {
-        backwardButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("backwardButtonLabel")));
-        forwardButton  = Gtk::manage(wf->createButton(
-                                *getResourceUstring("forwardButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget("searchResultsCountLabel1", searchResultsCountLabel);
+    glade->get_widget("backwardButton1", backwardButton);
+    glade->get_widget("forwardButton1", forwardButton);
     backwardButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &SearchWindow::onBackwardButtonClicked));
     forwardButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &SearchWindow::onForwardButtonClicked));
-    
-    Gtk::Box *  pagingButtonBox = Gtk::manage(new Gtk::HButtonBox(
-                                    Gtk::BUTTONBOX_DEFAULT_STYLE, 5));
-    pagingButtonBox->add(*backwardButton);
-    pagingButtonBox->add(*forwardButton);
-    
-    searchResultsCountLabel = Gtk::manage(new Gtk::Label());
-    
-    Gtk::Box *  pagingToolbar = Gtk::manage(new Gtk::HBox);
-    pagingToolbar->pack_start(*searchResultsCountLabel,
-                                                Gtk::PACK_EXPAND_WIDGET, 5);
-    pagingToolbar->pack_start(*pagingButtonBox, Gtk::PACK_SHRINK,        5);
-    
-    updatePagingToolbar();
-
-    // pack everything in a box
-    Gtk::Box *      view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*pagingToolbar,  Gtk::PACK_SHRINK,         5);
-    view->pack_start(*resultsWindow,  Gtk::PACK_EXPAND_WIDGET,  0);
-    
-    return   view;
 }
 
 
@@ -684,8 +526,8 @@ SearchWindow :: remoteSearchClose(void)
             
         } else if (state == AsyncState::failedState) {
             remoteSearchToken.reset();
-            gLiveSupport->displayMessageWindow(formatMessage("longErrorMsg",
-                                                             *errorMessage ));
+            gLiveSupport->displayMessageWindow(*formatMessage("longErrorMsg",
+                                                              *errorMessage ));
             displayMessage("shortErrorMsg", remoteSearchResults);
         }
     }
@@ -717,8 +559,8 @@ SearchWindow :: displayError(const XmlRpcException &        error,
                              Glib::RefPtr<Gtk::ListStore>   treeModel)
                                                                 throw ()
 {
-    gLiveSupport->displayMessageWindow(formatMessage("longErrorMsg",
-                                                     error.what() ));
+    gLiveSupport->displayMessageWindow(*formatMessage("longErrorMsg",
+                                                      error.what() ));
     displayMessage("shortErrorMsg", treeModel);
 }
 
@@ -814,7 +656,7 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
                 Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
                             "error in SearchWindow::onAddToScratchpad(): "));
                 errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(errorMessage);
+                gLiveSupport->displayMessageWindow(*errorMessage);
             }
         }
     }
@@ -841,7 +683,7 @@ SearchWindow :: onAddToPlaylist(void)                           throw ()
                 Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
                             "error in SearchWindow::onAddToPlaylist(): "));
                 errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(errorMessage);
+                gLiveSupport->displayMessageWindow(*errorMessage);
         }
     }
 }
@@ -869,7 +711,7 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
                 Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
                             "error in SearchWindow::onAddToLiveMode(): "));
                 errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(errorMessage);
+                gLiveSupport->displayMessageWindow(*errorMessage);
             }
         }
     }
@@ -895,8 +737,8 @@ SearchWindow :: onEditPlaylist(void)                            throw ()
             try {
                 gLiveSupport->openPlaylistForEditing(playlist->getId());
             } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(getResourceUstring(
-                                                    "cannotEditPlaylistMsg" ));
+                gLiveSupport->displayMessageWindow(*getResourceUstring(
+                                                   "cannotEditPlaylistMsg" ));
             }
         }
     }
@@ -921,10 +763,10 @@ SearchWindow :: onSchedulePlaylist(void)                        throw ()
         if (playlist) {
             schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
                             gLiveSupport,
-                            gLiveSupport->getBundle("schedulePlaylistWindow"),
+                            gladeDir,
                             playlist));
-            schedulePlaylistWindow->set_transient_for(*this);
-            Gtk::Main::run(*schedulePlaylistWindow);
+            schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+            Gtk::Main::run(*schedulePlaylistWindow->getWindow());
         }
     }
 }
@@ -949,14 +791,14 @@ SearchWindow :: onExportPlaylist(void)                          throw ()
                 try {
                     exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gLiveSupport->getBundle("exportPlaylistWindow"),
+                                gladeDir,
                                 playlist));
                 } catch (std::invalid_argument &e) {
                     std::cerr << e.what() << std::endl;
                     return;
                 }
-                exportPlaylistWindow->set_transient_for(*this);
-                Gtk::Main::run(*exportPlaylistWindow);
+                exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+                Gtk::Main::run(*exportPlaylistWindow->getWindow());
             }
         }
     }
@@ -991,12 +833,12 @@ bool
 SearchWindow :: uploadToHub(Ptr<Playable>::Ref  playable)       throw ()
 {
     try {
-        searchInput->setActivePage(3);
+        searchInput->set_current_page(3);
         transportList->addUpload(playable);
         
     } catch (XmlRpcException &e) {
-        gLiveSupport->displayMessageWindow(formatMessage("uploadToHubErrorMsg",
-                                                         e.what() ));
+        gLiveSupport->displayMessageWindow(*formatMessage("uploadToHubErrorMsg",
+                                                          e.what() ));
         return false;
     }
     
@@ -1020,11 +862,11 @@ SearchWindow :: onDownloadFromHub(void)                         throw ()
         if (playable) {
             if (!gLiveSupport->existsPlayable(playable->getId())) {
                 try {
-                    searchInput->setActivePage(3);
+                    searchInput->set_current_page(3);
                     transportList->addDownload(playable);
                     
                 } catch (XmlRpcException &e) {
-                    gLiveSupport->displayMessageWindow(formatMessage(
+                    gLiveSupport->displayMessageWindow(*formatMessage(
                                         "downloadFromHubErrorMsg", e.what() ));
                     return;
                 }
@@ -1056,16 +898,16 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
  *  Event handler called when the the window gets hidden.
  *----------------------------------------------------------------------------*/
 void
-SearchWindow :: on_hide(void)                                   throw ()
+SearchWindow :: hide(void)                                      throw ()
 {
     if (exportPlaylistWindow) {
-        exportPlaylistWindow->hide();
+        exportPlaylistWindow->getWindow()->hide();
     }
     if (schedulePlaylistWindow) {
-        schedulePlaylistWindow->hide();
+        schedulePlaylistWindow->getWindow()->hide();
     }
     
-    GuiWindow::on_hide();
+    BasicWindow::hide();
 }
 
 
@@ -1075,13 +917,20 @@ SearchWindow :: on_hide(void)                                   throw ()
 bool
 SearchWindow :: searchIsLocal(void)                             throw ()
 {
-    Ptr<const Glib::ustring>::Ref   searchWhere
-                                    = searchWhereEntry->getActiveKey();
+    int     searchWhere = searchWhereEntry->get_active_row_number();
     
-    if (*searchWhere == searchWhereLocalKey) {
-        return true;
-    } else {
-        return false;
+    switch (searchWhere) {
+        case 0: return true;
+                break;
+        
+        case 1: return false;
+                break;
+        
+        default:
+                std::cerr << "impossible value in SearchWindow::searchIsLocal()"
+                          << std::endl;
+                std::exit(1);
+                break;
     }
 }
 
@@ -1093,13 +942,13 @@ void
 SearchWindow :: onSearchWhereChanged(void)                      throw ()
 {
     if (searchIsLocal()) {
-        searchInput->setPageSensitive(2, true);
+        searchInput->get_nth_page(2)->set_sensitive(true);
         searchResultsTreeView->set_model(localSearchResults);
     } else {
-        if (searchInput->getActivePage() == 2) {
-            searchInput->setActivePage(0);
+        if (searchInput->get_current_page() == 2) {
+            searchInput->set_current_page(0);
         }
-        searchInput->setPageSensitive(2, false);
+        searchInput->get_nth_page(2)->set_sensitive(false);
         searchResultsTreeView->set_model(remoteSearchResults);
     }
     
@@ -1121,36 +970,31 @@ SearchWindow :: onTimer(void)                                   throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local audio clips.
  *----------------------------------------------------------------------------*/
-Gtk::Menu *
+Ptr<Gtk::Menu>::Ref
 SearchWindow :: constructAudioClipContextMenu(void)             throw ()
 {
-    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Ptr<Gtk::Menu>::Ref     contextMenu(new Gtk::Menu());
     Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToLiveModeMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToLiveMode)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToScratchpadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToScratchpad)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("uploadToHubMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToLiveModeMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToLiveMode)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToPlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToScratchpadMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToScratchpad)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("uploadToHubMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onUploadToHub)));
 
-    contextMenu->accelerate(*this);
+    contextMenu->accelerate(*mainWindow);
     return contextMenu;
 }    
 
@@ -1158,49 +1002,44 @@ SearchWindow :: constructAudioClipContextMenu(void)             throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local playlists.
  *----------------------------------------------------------------------------*/
-Gtk::Menu *
+Ptr<Gtk::Menu>::Ref
 SearchWindow :: constructPlaylistContextMenu(void)              throw ()
 {
-    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Ptr<Gtk::Menu>::Ref     contextMenu(new Gtk::Menu());
     Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToLiveModeMenuItem"),
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToLiveModeMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToLiveMode)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToPlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToScratchpadMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onAddToScratchpad)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("editPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToLiveMode)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToScratchpadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToScratchpad)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("editPlaylistMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &SearchWindow::onEditPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("schedulePlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onSchedulePlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("exportPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onExportPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("uploadToHubMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+                                    &SearchWindow::onEditPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("schedulePlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onSchedulePlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("exportPlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onExportPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("uploadToHubMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onUploadToHub)));
 
-    contextMenu->accelerate(*this);
+    contextMenu->accelerate(*mainWindow);
     return contextMenu;
 }    
 
@@ -1208,23 +1047,18 @@ SearchWindow :: constructPlaylistContextMenu(void)              throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for remote audio clips & playlists.
  *----------------------------------------------------------------------------*/
-Gtk::Menu *
+Ptr<Gtk::Menu>::Ref
 SearchWindow :: constructRemoteContextMenu(void)                throw ()
 {
-    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Ptr<Gtk::Menu>::Ref     contextMenu(new Gtk::Menu());
     Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("downloadFromHubMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onDownloadFromHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("downloadFromHubMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &SearchWindow::onDownloadFromHub)));
 
-    contextMenu->accelerate(*this);
+    contextMenu->accelerate(*mainWindow);
     return contextMenu;
 }    
 
@@ -1302,25 +1136,12 @@ SearchWindow :: updatePagingToolbar(void)                       throw ()
             std::cerr << e.what() << std::endl;
             std::exit(1);
         }
-        backwardButton->setDisabled(offset == 0);
-        forwardButton->setDisabled(offset + getSearchResultsSize() >= count);
+        backwardButton->set_sensitive(offset == 0);
+        forwardButton->set_sensitive(offset + getSearchResultsSize() >= count);
     } else {
         searchResultsCountLabel->set_text("");
-        backwardButton->setDisabled(true);
-        forwardButton->setDisabled(true);
+        backwardButton->set_sensitive(false);
+        forwardButton->set_sensitive(false);
     }        
-}
-
-
-/*------------------------------------------------------------------------------
- *  Convert an integer to a string.
- *----------------------------------------------------------------------------*/
-Glib::ustring
-SearchWindow :: itoa(int    number)                             throw ()
-{
-    std::ostringstream  stream;
-    stream << number;
-    Glib::ustring       string = stream.str();
-    return string;
 }
 

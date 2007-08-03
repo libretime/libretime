@@ -41,17 +41,16 @@
 #endif
 
 #include <string>
-
 #include <boost/date_time/gregorian/gregorian.hpp>
-
 #include <unicode/resbund.h>
-
 #include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/DialogWindow.h"
-#include "GuiWindow.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
+#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "BasicWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -71,7 +70,8 @@ using namespace LiveSupport::Core;
  *  The Scheduler window, showing and allowing scheduling of playlists.
  *  
  *  The window is tabbed, with a main Schedule tab, and a Status tab showing
- *  the status of the scheduler daemon (running/stopped).
+ *  the status of the scheduler daemon (running/stopped).  In the Status tab,
+ *  one can send a Stop signal to the Scheduler, to stop the audio player.
  *  
  *  The rough layout of the Schedule tab:
  *  <code><pre>
@@ -95,27 +95,32 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulerWindow : public GuiWindow
+class SchedulerWindow : public BasicWindow
 {
     private:
+
         /**
          *  Construct the Schedule view.
          *  This displays the list of scheduled playlists.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructScheduleView(void)                                 throw ();
 
         /**
          *  Construct the Status view.
          *  This shows the status of the scheduler daemon.
-         *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        void
         constructStatusView(void)                                   throw ();
         
+        /**
+         *  Run the confirmation dialog.
+         *
+         *  @return the response ID returned by the dialog.
+         */
+        Gtk::ResponseType
+        runConfirmationDialog(void)                                 throw ();
+
 
     protected:
 
@@ -126,7 +131,7 @@ class SchedulerWindow : public GuiWindow
          *  @author $Author$
          *  @version $Revision$
          */
-        class ModelColumns : public Gtk::TreeModel::ColumnRecord
+        class ModelColumns : public ZebraTreeModelColumnRecord
         {
             public:
                 /**
@@ -168,30 +173,25 @@ class SchedulerWindow : public GuiWindow
         Ptr<boost::gregorian::date>::Ref        selectedDate;
 
         /**
-         *  The main container in the window.
-         */
-        Gtk::Table                * layout;
-
-        /**
          *  The calendar to select a specific date from.
          */
-        Gtk::Calendar             * calendar;
+        Gtk::Calendar *             calendar;
 
         /**
          *  The label saying which day is being displayed.
          */
-        Gtk::Label                * dateLabel;
+        Gtk::Label *                dateLabel;
 
         /**
          *  The column model.
          */
-        Ptr<ModelColumns>::Ref          entryColumns;
+        ModelColumns                entryColumns;
 
         /**
          *  The tree view, now only showing rows, each scheduled entry for a
          *  specific day.
          */
-        Gtk::TreeView                 * entriesView;
+        ZebraTreeView *             entriesTreeView;
 
         /**
          *  The tree model, as a GTK reference.
@@ -201,18 +201,7 @@ class SchedulerWindow : public GuiWindow
         /**
          *  The right-click context menu for schedule entries.
          */
-        Gtk::Menu                     * entryMenu;
-
-        /**
-         *  The close button.
-         */
-        Gtk::Button                   * closeButton;
-
-        /**
-         *  The "are you sure you want to stop the currently playing item?"
-         *  dialog window.
-         */
-        Ptr<DialogWindow>::Ref          dialogWindow;
+        Ptr<Gtk::Menu>::Ref         entryMenu;
 
         /**
          *  Signal handler for when a date is selected in the calendar.
@@ -244,6 +233,7 @@ class SchedulerWindow : public GuiWindow
 
 
     public:
+
         /**
          *  Constructor.
          *
@@ -253,10 +243,12 @@ class SchedulerWindow : public GuiWindow
          *                          resources for this window.
          *  @param windowOpenerButton   the button which was pressed to open
          *                              this window.
+         *  @param  gladeDir        the directory where the glade file is.
          */
         SchedulerWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Ptr<ResourceBundle>::Ref    bundle,
-                        Button *                    windowOpenerButton)
+                        Gtk::ToggleButton *         windowOpenerButton,
+                        const Glib::ustring &       gladeDir)
                                                     throw (XmlRpcException);
 
         /**

@@ -40,13 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "RdsEntry.h"
 #include "GLiveSupport.h"
 
@@ -54,7 +53,6 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -90,10 +88,10 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class RdsView : public Gtk::VBox,
-                public LocalizedObject
+class RdsView : public LocalizedObject
 {
     private:
+
         /**
          *  The type for the list of entry widgets.
          */
@@ -114,6 +112,7 @@ class RdsView : public Gtk::VBox,
 
 
     protected:
+
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
@@ -122,7 +121,7 @@ class RdsView : public Gtk::VBox,
         /**
          *  The entry field for the serial device.
          */
-        EntryBin *                                  deviceEntryBin;
+        Gtk::Entry *                                deviceEntry;
 
 
     public:
@@ -131,11 +130,11 @@ class RdsView : public Gtk::VBox,
          *
          *  @param  gLiveSupport    the gLiveSupport object, containing
          *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
+         *  @param glade            the Glade file which specifies the visual
+         *                          components for this class.
          */
-        RdsView(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                Ptr<ResourceBundle>::Ref   bundle)
+        RdsView(Ptr<GLiveSupport>::Ref              gLiveSupport,
+                Glib::RefPtr<Gnome::Glade::Xml>     glade)
                                                                     throw ();
 
         /**

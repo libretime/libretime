@@ -7,7 +7,7 @@ sr_CS:table
     liveModeButtonLabel:string              { "Uživo" }
     uploadFileButtonLabel:string            { "Aploud" }
     scratchpadButtonLabel:string            { "Priprema" }
-    simplePlaylistMgmtButtonLabel:string    { "Plej lista" }
+    playlistButtonLabel:string              { "Plej lista" }
     schedulerButtonLabel:string             { "Raspored" }
     searchButtonLabel:string                { "Pretraga" }
     optionsButtonLabel:string               { "Opcije" }
@@ -38,10 +38,9 @@ sr_CS:table
     {
         windowTitle:string          { "PRIJAVA" }
 
-        loginLabel:string           { "Prijavi se" }
+        userNameLabel:string        { "Prijavi se" }
         passwordLabel:string        { "Lozinka" }
-        okButtonLabel:string        { "U redu" }
-        cancelButtonLabel:string    { "Otkaži" }
+        languageLabel:string        { "#Language#" }
 
         pleaseWaitMsg:string        { "Prijava je u toku, sačekajte" }
     }
@@ -62,7 +61,7 @@ sr_CS:table
     {
         windowTitle:string                  { "Priprema" }
 
-        typeColumnLabel:string              { "Tip" }
+        creatorColumnLabel:string           { "Autor" }
         titleColumnLabel:string             { "Naslov" }
         addToPlaylistButtonLabel:string     { "Dodaj u plej listu" }
         clearListButtonLabel:string         { "Obriši listu" }
@@ -123,7 +122,7 @@ sr_CS:table
         duplicateFileMsg:string         { "Greška:fajl je već u arhivi." }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string          { "Plej lista" }
 
@@ -142,7 +141,8 @@ sr_CS:table
 
         playlistSavedMsg:string         { "Sačuvana plej lista {0}." }
         savePlaylistDialogMsg:string    { "Sačuvati plejlistu?" }
-        
+        closeWithoutSavingButtonLabel:string
+                                        { "#Close without Saving#" }
         emptyTitleErrorMsg:string       { "Unesite naslov." }
     }
 
@@ -158,10 +158,10 @@ sr_CS:table
         endColumnLabel:string       { "kraj" }
         deleteMenuItem:string       { "Obriši" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Trenutno se nalazi u rasporedu emitovanja" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Da li ste sigurni?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Stop" }
+        stopCurrentlyPlayingText:string         { "trenutno se nalazi u "
+                                                  "rasporedu emitovanja." }
+        stopCurrentlyPlayingDialogMsg:string    { "Da li ste sigurni?" }
 
         closeButtonLabel:string     { "Zatvori" }
 
@@ -327,7 +327,7 @@ sr_CS:table
         deleteButtonLabel:string    { "Izbriši" }
         saveButtonLabel:string      { "Sačuvaj" }
 
-        backupTitleLabel:string     { "Bekap" }
+        backupTitleLabel:string     { "Bekap:" }
         defaultBackupTitle:string   { "novi bekap" }
 
         fileChooserDialogTitle:string   { "Sačuvaj fajl" }

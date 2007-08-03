@@ -39,19 +39,12 @@
 #error need pwd.h
 #endif
 
-#include <gtkmm/filechooserdialog.h>
-#include <gtkmm/stock.h>
-
 #include "LiveSupport/Core/FileTools.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
 
 #include "ExportPlaylistWindow.h"
 
 
-using namespace Glib;
-
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -62,9 +55,9 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
- *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
+ *  The name of the glade file.
  *----------------------------------------------------------------------------*/
-const Glib::ustring     windowName = "exportPlaylistWindow";
+const Glib::ustring     gladeFileName = "ExportPlaylistWindow.glade";
 
 }
 
@@ -78,71 +71,41 @@ const Glib::ustring     windowName = "exportPlaylistWindow";
  *----------------------------------------------------------------------------*/
 ExportPlaylistWindow :: ExportPlaylistWindow(
                         Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
+                        const Glib::ustring &       gladeDir,
                         Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle),
+          : gLiveSupport(gLiveSupport),
             playlist(playlist)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
+                                                        "exportPlaylistWindow");
+    setBundle(bundle);
     
-    Gtk::Label *    playlistTitleLabel;
-    Gtk::Label *    formatLabel;
-    Button *        cancelButton;
-    Button *        saveButton;
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        playlistTitleLabel  = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("playlistTitleLabel")));
-        formatLabel         = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("formatLabel")));
-        cancelButton        = Gtk::manage(wf->createButton(
-                                *getResourceUstring("cancelButtonLabel")));
-        saveButton          = Gtk::manage(wf->createButton(
-                                *getResourceUstring("saveButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    cancelButton->signal_clicked().connect(sigc::mem_fun(
-                        *this, &ExportPlaylistWindow::onCancelButtonClicked ));
-    saveButton->signal_clicked().connect(sigc::mem_fun(
-                        *this, &ExportPlaylistWindow::onSaveButtonClicked ));
-    
-    Gtk::Box *      playlistTitleBox = Gtk::manage(new Gtk::HBox);
-    Gtk::Label *    playlistTitle    = Gtk::manage(new Gtk::Label(
-                                                    *playlist->getTitle() ));
-    playlistTitleBox->pack_start(*playlistTitleLabel, Gtk::PACK_SHRINK, 5);
-    playlistTitleBox->pack_start(*playlistTitle,      Gtk::PACK_SHRINK, 5);
-    
-    formatButtons   = Gtk::manage(new ExportFormatRadioButtons(bundle));
-    
-    Gtk::Box *      formatBox = Gtk::manage(new Gtk::HBox);
-    formatBox->pack_start(*formatLabel,   Gtk::PACK_SHRINK, 5);
-    formatBox->pack_start(*formatButtons, Gtk::PACK_SHRINK, 5);
-    
-    Gtk::Box *      buttonBox = Gtk::manage(new Gtk::HButtonBox(
-                                                        Gtk::BUTTONBOX_END, 5));
-    buttonBox->pack_start(*cancelButton);
-    buttonBox->pack_start(*saveButton);
-    
-    Gtk::Box *      extraSpace = Gtk::manage(new Gtk::HBox);
-    Gtk::Label *    statusBar  = Gtk::manage(new Gtk::Label(""));
-    
-    Gtk::Box *      layout = Gtk::manage(new Gtk::VBox);
-    layout->pack_start(*extraSpace,       Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*playlistTitleBox, Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*formatBox,        Gtk::PACK_SHRINK, 0);
-    layout->pack_start(*statusBar,        Gtk::PACK_SHRINK, 10);
-    layout->pack_start(*buttonBox,        Gtk::PACK_SHRINK, 0);
+    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
 
-    add(*layout);
+    glade->get_widget("mainWindow1", mainWindow);
+    mainWindow->set_title(*getResourceUstring("windowTitle"));
+    mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
+                                    &ExportPlaylistWindow::onDeleteEvent));
+
+    Gtk::Label *            playlistTitleTextLabel;
+    Gtk::Label *            formatLabel;
+    glade->get_widget("playlistTitleTextLabel1", playlistTitleTextLabel);
+    glade->get_widget("formatLabel1", formatLabel);
+    playlistTitleTextLabel->set_label(*getResourceUstring(
+                                                        "playlistTitleLabel"));
+    formatLabel->set_label(*getResourceUstring("formatLabel"));
+
+    Gtk::Label *            playlistTitleValueLabel;
+    glade->get_widget("playlistTitleValueLabel1", playlistTitleValueLabel);
+    playlistTitleValueLabel->set_label(*playlist->getTitle());
+
+    glade->connect_clicked("cancelButton1", sigc::mem_fun(*this,
+                                &ExportPlaylistWindow::onCancelButtonClicked));
+    glade->connect_clicked("saveButton1", sigc::mem_fun(*this,
+                                &ExportPlaylistWindow::onSaveButtonClicked));
     
-    set_name(windowName);
-    
-    show_all_children();
+    formatButtons.reset(new ExportFormatRadioButtons(bundle, glade));
 }
 
 
@@ -152,7 +115,7 @@ ExportPlaylistWindow :: ExportPlaylistWindow(
 void
 ExportPlaylistWindow :: onCancelButtonClicked(void)                 throw ()
 {
-    hide();
+    mainWindow->hide();
 }
 
 
@@ -181,7 +144,7 @@ ExportPlaylistWindow :: onSaveButtonClicked(void)                   throw ()
         Ptr<Glib::ustring>::Ref errorMsg = getResourceUstring(
                                                     "createExportErrorMsg");
         errorMsg->append(e.what());
-        gLiveSupport->displayMessageWindow(errorMsg);
+        gLiveSupport->displayMessageWindow(*errorMsg);
         return;
     }
     
@@ -220,19 +183,19 @@ ExportPlaylistWindow :: onSaveButtonClicked(void)                   throw ()
         } catch (std::runtime_error &e) {
             Ptr<Glib::ustring>::Ref errorMsg = getResourceUstring(
                                                     "saveExportErrorMsg");
-            gLiveSupport->displayMessageWindow(errorMsg);
+            gLiveSupport->displayMessageWindow(*errorMsg);
         }
     }
     
     // close the exporting operation
     resetToken();
     
-    hide();
+    mainWindow->hide();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler called when the the window gets hidden.
+ *  Cancel the current operation.
  *----------------------------------------------------------------------------*/
 void
 ExportPlaylistWindow :: resetToken(void)                            throw ()
@@ -247,7 +210,7 @@ ExportPlaylistWindow :: resetToken(void)                            throw ()
         Ptr<Glib::ustring>::Ref         errorMsg = getResourceUstring(
                                                     "createExportErrorMsg");
         errorMsg->append(e.what());
-        gLiveSupport->displayMessageWindow(errorMsg);
+        gLiveSupport->displayMessageWindow(*errorMsg);
     }
 }
 
@@ -255,13 +218,14 @@ ExportPlaylistWindow :: resetToken(void)                            throw ()
 /*------------------------------------------------------------------------------
  *  Event handler called when the the window gets hidden.
  *----------------------------------------------------------------------------*/
-void
-ExportPlaylistWindow :: on_hide(void)                               throw ()
+bool
+ExportPlaylistWindow :: onDeleteEvent(GdkEventAny *     event)      throw ()
 {
+std::cerr << "ExportPlaylistWindow :: onDeleteEvent called\n";
     if (token) {
         resetToken();
     }
         
-    GuiWindow::on_hide();
+    return false;
 }
 

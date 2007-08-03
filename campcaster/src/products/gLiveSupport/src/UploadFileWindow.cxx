@@ -36,12 +36,9 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <unicode/msgfmt.h>
-#include <gtkmm/label.h>
-#include <gtkmm/stock.h>
-#include <gtkmm/filechooserdialog.h>
-#include <fileref.h>
-#include <audioproperties.h>
+#include <unicode/msgfmt.h>     // for ICU
+#include <fileref.h>            // for TagLib
+#include <audioproperties.h>    // for TagLib
 
 #include "LiveSupport/Core/Debug.h"
 #include "LiveSupport/Core/TimeConversion.h"
@@ -50,7 +47,6 @@
 #include "UploadFileWindow.h"
 
 
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -58,6 +54,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "UploadFileWindow.glade";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -70,200 +74,129 @@ using namespace LiveSupport::GLiveSupport;
 UploadFileWindow :: UploadFileWindow (
                                 Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 Ptr<ResourceBundle>::Ref    bundle,
-                                Button *                    windowOpenerButton)
+                                Gtk::ToggleButton *         windowOpenerButton,
+                                const Glib::ustring &       gladeDir)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle,
-                      windowOpenerButton),
+          : BasicWindow(gLiveSupport,
+                        bundle,
+                        windowOpenerButton,
+                        gladeDir + gladeFileName),
             fileType(invalidType)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    try {
-        // generic resources
-        set_title(*getResourceUstring("windowTitle"));
-        chooseFileLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("chooseFileLabel")));
-        fileNameEntryBin = Gtk::manage(wf->createEntryBin());
-        fileNameEntry    = fileNameEntryBin->getEntry();
-        chooseFileButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("chooseFileButtonLabel")));
-
-        // add the metadata entry fields
-        mainTable   = Gtk::manage(new Gtk::Table());
-        musicTable  = Gtk::manage(new Gtk::Table());
-        voiceTable   = Gtk::manage(new Gtk::Table());
-                
-        Ptr<MetadataTypeContainer>::Ref
-                    metadataTypes = gLiveSupport->getMetadataTypeContainer();
-        MetadataTypeContainer::Vector::const_iterator   it;
-        int     mainCounter  = 0;
-        int     musicCounter = 0;
-        int     voiceCounter  = 0;
-        for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
-            Ptr<const MetadataType>::Ref    metadata = *it;
-            
-            MetadataType::TabType           tab = metadata->getTab();
-            if (tab == MetadataType::noTab) {
-                continue;
-            }
-            
-            Gtk::Label *    metadataName = Gtk::manage(new Gtk::Label(
-                                            *metadata->getLocalizedName() ));
-            EntryBin *      metadataEntryBin = Gtk::manage(
-                                            wf->createEntryBin() );
-            
-            metadataKeys.push_back(metadata->getDcName());
-            metadataEntries.push_back(metadataEntryBin->getEntry());
-            
-            switch (tab) {
-                case MetadataType::mainTab :
-                        mainTable->attach(*metadataName, 0, 1,
-                                           mainCounter, mainCounter + 1);
-                        mainTable->attach(*metadataEntryBin, 1, 2,
-                                           mainCounter, mainCounter + 1);
-                        ++mainCounter;
-                        break;
-                        
-                case MetadataType::musicTab :
-                        musicTable->attach(*metadataName, 0, 1,
-                                           musicCounter, musicCounter + 1);
-                        musicTable->attach(*metadataEntryBin, 1, 2,
-                                           musicCounter, musicCounter + 1);
-                        ++musicCounter;
-                        break;
-                        
-                case MetadataType::voiceTab :
-                        voiceTable->attach(*metadataName, 0, 1,
-                                           voiceCounter, voiceCounter + 1);
-                        voiceTable->attach(*metadataEntryBin, 1, 2,
-                                           voiceCounter, voiceCounter + 1);
-                        ++voiceCounter;
-                        break;
-                        
-                case MetadataType::noTab :      // added to prevent compiler
-                        break;                  // warning about missing case
-            }
-        }
-
-        // set up the length label, and add it to the main tab
-        lengthLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("lengthLabel") ));
-        lengthValueLabel = Gtk::manage(new Gtk::Label());
-
-        mainTable->attach(*lengthLabel,      0, 1, mainCounter, mainCounter+1);
-        mainTable->attach(*lengthValueLabel, 1, 2, mainCounter, mainCounter+1);
-        
-        // buttons, etc.
-        uploadButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("uploadButtonLabel")));
-        closeButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("closeButtonLabel")));
-        statusBar = Gtk::manage(new Gtk::Label(""));
-        statusBar->set_ellipsize(Pango::ELLIPSIZE_END);
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    // build up the notepad for the different metadata sections
-    metadataNotebook = Gtk::manage(new Notebook());
-    
-    mainTable->set_row_spacings(2);
-    mainTable->set_col_spacings(5);
-    musicTable->set_row_spacings(2);
-    musicTable->set_col_spacings(5);
-    voiceTable->set_row_spacings(2);
-    voiceTable->set_col_spacings(5);
-      
-    // expand the input fields horizontally, but shrink-wrap vertically
-    Gtk::Alignment *    mainAlignment  = Gtk::manage(new Gtk::Alignment(
-                                                0.0, 0.0, 1.0, 0.0));
-    Gtk::Alignment *    musicAlignment = Gtk::manage(new Gtk::Alignment(
-                                                0.0, 0.0, 1.0, 0.0));
-    Gtk::Alignment *    voiceAlignment  = Gtk::manage(new Gtk::Alignment(
-                                                0.0, 0.0, 1.0, 0.0));
-
-    mainAlignment->add(*mainTable);
-    musicAlignment->add(*musicTable);
-    voiceAlignment->add(*voiceTable);
-    
-    ScrolledWindow *   mainScrolledWindow 
-                            = Gtk::manage(new ScrolledWindow());
-    ScrolledWindow *   musicScrolledWindow 
-                            = Gtk::manage(new ScrolledWindow());
-    ScrolledWindow *   voiceScrolledWindow 
-                            = Gtk::manage(new ScrolledWindow());
-
-    mainScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
-                                   Gtk::POLICY_AUTOMATIC);
-    musicScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
-                                    Gtk::POLICY_AUTOMATIC);
-    voiceScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, 
-                                   Gtk::POLICY_AUTOMATIC);
-
-    mainScrolledWindow->add(*mainAlignment);
-    musicScrolledWindow->add(*musicAlignment);
-    voiceScrolledWindow->add(*voiceAlignment);
-       
-    try {
-        metadataNotebook->appendPage(*mainScrolledWindow,
-                                *getResourceUstring("mainSectionLabel"));
-        metadataNotebook->appendPage(*musicScrolledWindow,
-                                *getResourceUstring("musicSectionLabel"));
-        metadataNotebook->appendPage(*voiceScrolledWindow,
-                                *getResourceUstring("voiceSectionLabel"));
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    // build up the button box
-    buttonBox   = Gtk::manage(new Gtk::HButtonBox());
-    buttonBox->set_layout(Gtk::BUTTONBOX_END);
-    buttonBox->set_spacing(5);
-    buttonBox->pack_start(*closeButton);
-    buttonBox->pack_start(*uploadButton);
-
-    // set up the main window, and show everything
-    Gtk::Box *      topBox = Gtk::manage(new Gtk::HBox);
-    topBox->pack_start(*chooseFileLabel,  Gtk::PACK_SHRINK, 5);
-    topBox->pack_start(*fileNameEntryBin, Gtk::PACK_EXPAND_WIDGET, 5);
-    topBox->pack_start(*chooseFileButton, Gtk::PACK_SHRINK, 5);
-    
-    Gtk::Box *      extraSpace = Gtk::manage(new Gtk::HBox);
-        
-    layout = Gtk::manage(new Gtk::VBox());
-    layout->pack_start(*extraSpace, Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*topBox,     Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*metadataNotebook, Gtk::PACK_EXPAND_WIDGET, 5);
-    layout->pack_start(*buttonBox,  Gtk::PACK_SHRINK, 5);
-    layout->pack_start(*statusBar,  Gtk::PACK_SHRINK, 5);
-
-    add(*layout);
-
-    // bind events
-    chooseFileButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &UploadFileWindow::onChooseFileButtonClicked));
+    Gtk::Label *    fileNameLabel;
+    glade->get_widget("fileNameLabel1", fileNameLabel);
+    glade->get_widget("fileNameEntry1", fileNameEntry);
+    glade->get_widget("browseButton1", browseButton);
+    fileNameLabel->set_label(*getResourceUstring("chooseFileLabel"));
+    browseButton->set_label(*getResourceUstring("chooseFileButtonLabel"));
     fileNameEntry->signal_focus_out_event().connect(sigc::mem_fun(*this,
                                 &UploadFileWindow::onFileNameEntryLeave));
-    uploadButton->signal_clicked().connect(sigc::mem_fun(*this,
+    browseButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &UploadFileWindow::onBrowseButtonClicked));
+
+    Gtk::Label *    mainTabLabel;
+    Gtk::Label *    musicTabLabel;
+    Gtk::Label *    voiceTabLabel;
+    glade->get_widget("mainTabLabel1", mainTabLabel);
+    glade->get_widget("musicTabLabel1", musicTabLabel);
+    glade->get_widget("voiceTabLabel1", voiceTabLabel);
+    mainTabLabel->set_label(*getResourceUstring("mainSectionLabel"));
+    musicTabLabel->set_label(*getResourceUstring("musicSectionLabel"));
+    voiceTabLabel->set_label(*getResourceUstring("voiceSectionLabel"));
+
+    Ptr<MetadataTypeContainer>::Ref
+                metadataTypes = gLiveSupport->getMetadataTypeContainer();
+
+    mainCounter = 0;
+    musicCounter = 0;
+    voiceCounter = 0;
+    MetadataTypeContainer::Vector::const_iterator   it;
+    for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
+        Ptr<const MetadataType>::Ref    metadata = *it;
+        Gtk::Entry *    metadataEntry = constructMetadataItem(metadata);
+        if (metadataEntry) {
+            metadataKeys.push_back(metadata->getDcName());
+            metadataEntries.push_back(metadataEntry);
+        }
+    }
+
+    Gtk::Label *    lengthLabel;
+    glade->get_widget("lengthLabel1", lengthLabel);
+    glade->get_widget("lengthValueLabel1", lengthValueLabel);
+    lengthLabel->set_label(*getResourceUstring("lengthLabel"));
+    lengthValueLabel->set_label("00:00:00");
+
+    glade->get_widget("statusBar1", statusBar);
+    statusBar->set_text("");
+
+    glade->connect_clicked("uploadButton1", sigc::mem_fun(*this,
                                 &UploadFileWindow::onUploadButtonClicked));
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &UploadFileWindow::onCloseButtonClicked));
+    glade->connect_clicked("cancelButton1", sigc::mem_fun(*this,
+                                &UploadFileWindow::onCancelButtonClicked));
 
-    // set the file chooser's default folder to the user's home directory
     fileChooserFolder = Glib::get_home_dir();
+}
 
-    // show everything
-    set_name("uploadFileWindow");
-    set_default_size(350, 500);
-    set_modal(false);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
+
+/*------------------------------------------------------------------------------
+ *  Display the given metadata entry field in the appropriate tab.
+ *----------------------------------------------------------------------------*/
+Gtk::Entry *
+UploadFileWindow :: constructMetadataItem(
+                            Ptr<const MetadataType>::Ref   metadata)
+                                                                    throw ()
+{
+    Gtk::Entry *    entry = 0;
+
+    MetadataType::TabType   tab = metadata->getTab();
+
+    switch (tab) {
+        case MetadataType::mainTab :
+                entry = constructMetadataItem(metadata, "main", mainCounter);
+                ++mainCounter;
+                break;
+                
+        case MetadataType::musicTab :
+                entry = constructMetadataItem(metadata, "music", musicCounter);
+                ++musicCounter;
+                break;
+                
+        case MetadataType::voiceTab :
+                entry = constructMetadataItem(metadata, "voice", voiceCounter);
+                ++voiceCounter;
+                break;
+                
+        case MetadataType::noTab :      // added to prevent compiler
+                break;                  // warning about missing case
+    }
     
-    show_all_children();
+    return entry;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display the given metadata entry field in the appropriate tab.
+ *----------------------------------------------------------------------------*/
+Gtk::Entry *
+UploadFileWindow :: constructMetadataItem(
+                            Ptr<const MetadataType>::Ref    metadata,
+                            const Glib::ustring &           tabName,
+                            int                             index)
+                                                                    throw ()
+{
+    Gtk::Box *          metadataBox;
+    Gtk::Label *        metadataLabel;
+    Gtk::Entry *        metadataEntry;
+    
+    glade->get_widget(tabName + "Box" + itoa(index + 1),    metadataBox);
+    glade->get_widget(tabName + "MetadataLabel" + itoa(index + 1),
+                                                            metadataLabel);
+    glade->get_widget(tabName + "MetadataEntry" + itoa(index + 1),
+                                                            metadataEntry);
+
+    metadataBox->show();
+    metadataLabel->set_label(*metadata->getLocalizedName());
+    return metadataEntry;
 }
 
 
@@ -271,24 +204,16 @@ UploadFileWindow :: UploadFileWindow (
  *  The event when the choose file button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
+UploadFileWindow :: onBrowseButtonClicked(void)                     throw ()
 {
-    Ptr<Gtk::FileChooserDialog>::Ref    dialog;
-
-    try {
-        dialog.reset(new Gtk::FileChooserDialog(
-                        *getResourceUstring("fileChooserDialogTitle"),
-                        Gtk::FILE_CHOOSER_ACTION_OPEN));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
+    Ptr<Gtk::FileChooserDialog>::Ref    dialog(new Gtk::FileChooserDialog(
+                                *getResourceUstring("fileChooserDialogTitle"),
+                                Gtk::FILE_CHOOSER_ACTION_OPEN));
     dialog->set_name("uploadFileChooserDialog");
     gLiveSupport->getWindowPosition(dialog);
 
     dialog->set_current_folder(fileChooserFolder);
-    dialog->set_transient_for(*this);
+    dialog->set_transient_for(*mainWindow);
 
     //Add response buttons the the dialog:
     dialog->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
@@ -312,11 +237,15 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 void
 UploadFileWindow :: updateFileInfo(void)                        throw ()
 {
-    Ptr<Glib::ustring>::Ref fileName(new Glib::ustring(
-                                        fileNameEntry->get_text() ));
+    Glib::ustring       fileName = fileNameEntry->get_text();
+
+    // do not display bogus error msg for point-to-focus users
+    if (fileName == "") {
+        return;
+    }
 
     // see if the file exists, and is readable
-    std::ifstream   file(fileName->c_str());
+    std::ifstream   file(fileName.c_str());
     if (!file.good()) {
         file.close();
         statusBar->set_text(*getResourceUstring("couldNotOpenFileMsg"));
@@ -348,11 +277,11 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
  *  Read the playlength and metadata info from the binary audio file.
  *----------------------------------------------------------------------------*/
 void
-UploadFileWindow :: readAudioClipInfo(Ptr<const Glib::ustring>::Ref   fileName)
+UploadFileWindow :: readAudioClipInfo(const Glib::ustring &         fileName)
                                                                 throw ()
 {
     Ptr<std::string>::Ref   newUri(new std::string("file://"));
-    newUri->append(*fileName);
+    newUri->append(fileName);
     
     Ptr<time_duration>::Ref     playlength;
     try {
@@ -526,18 +455,10 @@ UploadFileWindow :: uploadStorageArchive(void)                  throw ()
     Ptr<const Glib::ustring>::Ref   path(new const Glib::ustring(
                                                 fileNameEntry->get_text() ));
     
-    Ptr<ResourceBundle>::Ref        restoreBackupBundle;
-    try {
-        restoreBackupBundle = gLiveSupport->getBundle("restoreBackupWindow");
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
     Ptr<RestoreBackupWindow>::Ref   restoreBackupWindow(
                                                 new RestoreBackupWindow(
                                                         gLiveSupport,
-                                                        restoreBackupBundle,
+                                                        glade,
                                                         path));
     restoreBackupWindow->show();
     restoreBackupWindowList.push_back(restoreBackupWindow);
@@ -551,7 +472,7 @@ UploadFileWindow :: uploadStorageArchive(void)                  throw ()
  *  The event when the close button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
+UploadFileWindow :: onCancelButtonClicked(void)                 throw ()
 {
     clearEverything();
     hide();
@@ -562,12 +483,12 @@ UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
  *  Determine the length of an audio file
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
-UploadFileWindow :: readPlaylength(Ptr<const Glib::ustring>::Ref    fileName)
+UploadFileWindow :: readPlaylength(const Glib::ustring &        fileName)
                                                 throw (std::invalid_argument)
 {
     // TODO: use the appropriate TagLib::X::File subclass constructors,
     // once we find some way of determining the MIME type.
-    TagLib::FileRef             fileRef(fileName->c_str());
+    TagLib::FileRef             fileRef(fileName.c_str());
     if (fileRef.isNull()) {
         throw std::invalid_argument("unsupported file type");
     }
@@ -587,23 +508,23 @@ UploadFileWindow :: readPlaylength(Ptr<const Glib::ustring>::Ref    fileName)
  *  Determine the type of the given file.
  *----------------------------------------------------------------------------*/
 UploadFileWindow::FileType
-UploadFileWindow :: determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
+UploadFileWindow :: determineFileType(const Glib::ustring &         fileName)
                                                                 throw ()
 {
-    unsigned int    dotPosition = fileName->rfind('.');
+    unsigned int    dotPosition = fileName.rfind('.');
     if (dotPosition == std::string::npos) {
         return invalidType;
     }
     
-    Glib::ustring   extension = fileName->substr(dotPosition).lowercase();
+    Glib::ustring   extension = fileName.substr(dotPosition).lowercase();
     if (extension == ".mp3" || extension == ".ogg") {
         return audioClipType;
         
     } else if (extension == ".tar") {
-        if (FileTools::existsInTarball(*fileName, "exportedPlaylist.lspl")) {
+        if (FileTools::existsInTarball(fileName, "exportedPlaylist.lspl")) {
             return playlistArchiveType;
         } else if (FileTools::existsInTarball(
-                                       *fileName, "meta-inf/storage.xml")) {
+                                       fileName, "meta-inf/storage.xml")) {
             return storageArchiveType;
         } else {
             return invalidType;
@@ -622,7 +543,7 @@ void
 UploadFileWindow :: clearEverything(void)                       throw ()
 {
     fileNameEntry->set_text("");
-    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
+    for (unsigned int i = 0; i < metadataEntries.size(); ++i) {
         Gtk::Entry *    metadataEntry = metadataEntries[i];
         metadataEntry->set_text("");
     }
@@ -651,4 +572,5 @@ UploadFileWindow :: processException(const XmlRpcMethodFaultException &     e)
     
     return message;
 }
+
 

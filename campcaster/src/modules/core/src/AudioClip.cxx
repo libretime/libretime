@@ -426,7 +426,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getMetadata(const string &key) const
+AudioClip :: getMetadata(const std::string &    key) const
                                                 throw ()
 {
     std::string name, prefix;

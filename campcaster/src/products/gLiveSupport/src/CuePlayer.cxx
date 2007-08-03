@@ -35,13 +35,10 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
-
 #include "CuePlayer.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -49,6 +46,19 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/**
+ *  The string which identifies the Play stock image.
+ */
+const Glib::ustring     playStockImageName = "gtk-media-play";
+
+/**
+ *  The string which identifies the Pause stock image.
+ */
+const Glib::ustring     pauseStockImageName = "gtk-media-pause";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -60,30 +70,20 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 CuePlayer :: CuePlayer(Ptr<GLiveSupport>::Ref                   gLiveSupport,
                        Gtk::TreeView *                          treeView,
-                       const PlayableTreeModelColumnRecord &    modelColumns)
+                       const PlayableTreeModelColumnRecord &    modelColumns,
+                       Glib::RefPtr<Gnome::Glade::Xml>          glade)
                                                                     throw ()
           : gLiveSupport(gLiveSupport),
             treeView(treeView),
             modelColumns(modelColumns)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    playButton = Gtk::manage(wf->createButton(
-                                    WidgetConstants::smallPlayButton ));
-    pauseButton = Gtk::manage(wf->createButton(
-                                    WidgetConstants::smallPauseButton ));
-    stopButton = Gtk::manage(wf->createButton(
-                                    WidgetConstants::smallStopButton ));
+    glade->get_widget("cuePlayButton1", playButton);
+    glade->get_widget("cueStopButton1", stopButton);
 
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &CuePlayer::onPlayButtonClicked ));
-    pauseButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                        &CuePlayer::onPauseButtonClicked ));
     stopButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &CuePlayer::onStopButtonClicked ));
-
-    pack_end(*stopButton, Gtk::PACK_SHRINK, 3);
-    pack_end(*playButton, Gtk::PACK_SHRINK, 3);
 
     audioState = waitingState;
     
@@ -138,6 +138,22 @@ CuePlayer :: onPlayItem(void)                                       throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Pause the song.
+ *----------------------------------------------------------------------------*/
+void
+CuePlayer :: onPauseItem(void)                                      throw ()
+{
+    try {
+        gLiveSupport->pauseCueAudio();
+        setAudioState(pausedState);
+    } catch (std::logic_error &e) {
+        std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
+                    << e.what() << std::endl;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Event handler for the Play button getting clicked
  *----------------------------------------------------------------------------*/
 void
@@ -148,10 +164,8 @@ CuePlayer :: onPlayButtonClicked(void)                              throw ()
             onPlayItem();
             break;
             
-        case playingState:      // should never happen
-            std::cerr << "Assertion failed in CuePlayer:" << std::endl
-                      << "play button clicked when it should not be visible."
-                      << std::endl;
+        case playingState:
+            onPauseItem();
             break;
             
         case pausedState:
@@ -163,22 +177,6 @@ CuePlayer :: onPlayButtonClicked(void)                              throw ()
                             << e.what() << std::endl;
             }
             break;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Pause button getting clicked
- *----------------------------------------------------------------------------*/
-void
-CuePlayer :: onPauseButtonClicked(void)                             throw ()
-{
-    try {
-        gLiveSupport->pauseCueAudio();
-        setAudioState(pausedState);
-    } catch (std::logic_error &e) {
-        std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
-                    << e.what() << std::endl;
     }
 }
 
@@ -210,7 +208,7 @@ CuePlayer :: onStop(Ptr<const Glib::ustring>::Ref  errorMessage)    throw ()
     setAudioState(waitingState);
     
     if (errorMessage) {
-        gLiveSupport->displayMessageWindow(errorMessage);
+        gLiveSupport->displayMessageWindow(*errorMessage);
     }
 }
 
@@ -223,17 +221,11 @@ CuePlayer :: setAudioState(AudioState    newState)                  throw ()
 {
     if ((audioState == waitingState || audioState == pausedState)
                 && newState == playingState) {
-        remove(*playButton);
-        pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
-        pauseButton->show();
-        gLiveSupport->runMainLoop();
+        playButton->set_label(pauseStockImageName);
         
     } else if (audioState == playingState
                 && (newState == waitingState || newState == pausedState)) {
-        remove(*pauseButton);
-        pack_end(*playButton, Gtk::PACK_SHRINK, 3);
-        playButton->show();
-        gLiveSupport->runMainLoop();
+        playButton->set_label(playStockImageName);
     }
     
     audioState = newState;

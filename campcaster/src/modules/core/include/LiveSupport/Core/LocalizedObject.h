@@ -172,7 +172,7 @@ class LocalizedObject
         /**
          *  Change the resource bundle for this object.
          *
-         *  @param the new resource bundle used by the object.
+         *  @param  bundle  the new resource bundle used by the object.
          */
         virtual void
         setBundle(Ptr<ResourceBundle>::Ref  bundle)             throw ()

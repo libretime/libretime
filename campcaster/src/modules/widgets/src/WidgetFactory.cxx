@@ -470,9 +470,10 @@ WidgetFactory :: createButton(const Glib::ustring &         label,
 ComboBoxText *
 WidgetFactory :: createComboBoxText(void)                           throw ()
 {
-    return new ComboBoxText(comboBoxLeftImage,
-                            comboBoxCenterImage,
-                            comboBoxRightImage);
+    return 0;
+//    return new ComboBoxText(comboBoxLeftImage,
+//                            comboBoxCenterImage,
+//                            comboBoxRightImage);
 }
 
 
@@ -484,10 +485,11 @@ WidgetFactory :: createMetadataComboBoxText(
                         Ptr<MetadataTypeContainer>::Ref     metadataTypes)
                                                                     throw ()
 {
-    return new MetadataComboBoxText(comboBoxLeftImage,
-                                    comboBoxCenterImage,
-                                    comboBoxRightImage,
-                                    metadataTypes);
+    return 0;
+//    return new MetadataComboBoxText(comboBoxLeftImage,
+//                                    comboBoxCenterImage,
+//                                    comboBoxRightImage,
+//                                    metadataTypes);
 }
 
 
@@ -499,10 +501,11 @@ WidgetFactory :: createOperatorComboBoxText(
                         Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
 {
-    return new OperatorComboBoxText(comboBoxLeftImage,
-                                    comboBoxCenterImage,
-                                    comboBoxRightImage,
-                                    bundle);
+    return 0;
+//    return new OperatorComboBoxText(comboBoxLeftImage,
+//                                    comboBoxCenterImage,
+//                                    comboBoxRightImage,
+//                                    bundle);
 }
 
 
@@ -515,13 +518,14 @@ WidgetFactory :: createNumericComboBoxText(int  lowerLimit,
                                            int  minLength)
                                                                     throw ()
 {
-    ComboBoxText *  comboBox = new ComboBoxText(comboBoxLeftImage,
-                                                comboBoxCenterImage,
-                                                comboBoxRightImage);
-    for (int i = lowerLimit; i <= upperLimit; ++i) {
-        comboBox->append_text(itoa(i, minLength));
-    }
-    return comboBox;
+    return 0;
+//    ComboBoxText *  comboBox = new ComboBoxText(comboBoxLeftImage,
+//                                                comboBoxCenterImage,
+//                                                comboBoxRightImage);
+//    for (int i = lowerLimit; i <= upperLimit; ++i) {
+//        comboBox->append_text(itoa(i, minLength));
+//    }
+//    return comboBox;
 }
 
 

@@ -33,16 +33,13 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
-#include <stdexcept>
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include "boost/date_time/posix_time/posix_time.hpp"
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
+
 #include "SchedulePlaylistWindow.h"
 
-
-using namespace boost;
-using namespace Glib;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
@@ -52,6 +49,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "SchedulePlaylistWindow.glade";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -63,69 +68,51 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                 Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                Ptr<ResourceBundle>::Ref    bundle,
+                                const Glib::ustring &       gladeDir,
                                 Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle),
+          : gLiveSupport(gLiveSupport),
             playlist(playlist)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
+                                                    "schedulePlaylistWindow");
+    setBundle(bundle);
     
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        hourLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                                "hourLabel")));
-        minuteLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                            "minuteLabel")));
-        secondLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                            "secondLabel")));
-        scheduleButton = Gtk::manage(wf->createButton(
-                                  *getResourceUstring("scheduleButtonLabel")));
-        closeButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("closeButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
 
-    playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
-    calendar      = Gtk::manage(new Gtk::Calendar());
-    hourEntry     = Gtk::manage(wf->createNumericComboBoxText(0, 23));
-    minuteEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59, 2));
-    secondEntry   = Gtk::manage(wf->createNumericComboBoxText(0, 59, 2));
+    glade->get_widget("mainWindow1", mainWindow);
+    mainWindow->set_title(*getResourceUstring("windowTitle"));
 
-    layout = Gtk::manage(new Gtk::Table());
+    Gtk::Label *        playlistLabel;
+    glade->get_widget("playlistLabel1", playlistLabel);
+    playlistLabel->set_label(*playlist->getTitle());
 
-    layout->attach(*playlistLabel,  0, 6, 0, 1);
-    layout->attach(*calendar,       0, 6, 1, 2);
-    layout->attach(*hourLabel,      0, 1, 2, 3);
-    layout->attach(*hourEntry,      1, 2, 2, 3);
-    layout->attach(*minuteLabel,    2, 3, 2, 3);
-    layout->attach(*minuteEntry,    3, 4, 2, 3);
-    layout->attach(*secondLabel,    4, 5, 2, 3);
-    layout->attach(*secondEntry,    5, 6, 2, 3);
-    layout->attach(*scheduleButton, 4, 6, 3, 4);
-    layout->attach(*closeButton   , 4, 6, 4, 5);
+    Gtk::Label *        hourLabel;
+    Gtk::Label *        minuteLabel;
+    Gtk::Label *        secondLabel;
+    glade->get_widget("hourLabel1", hourLabel);
+    glade->get_widget("minuteLabel1", minuteLabel);
+    glade->get_widget("secondLabel1", secondLabel);
+    hourLabel->set_label(*getResourceUstring("hourLabel"));
+    hourLabel->set_label(*getResourceUstring("minuteLabel"));
+    hourLabel->set_label(*getResourceUstring("secondLabel"));
 
-    // register the signal handler for the schedule getting clicked.
+    glade->get_widget("calendar1", calendar);
+
+    glade->get_widget("hourSpinButton1", hourEntry);
+    glade->get_widget("minuteSpinButton1", minuteEntry);
+    glade->get_widget("secondSpinButton1", secondEntry);
+    Ptr<boost::posix_time::ptime>::Ref      now = TimeConversion::now();
+    boost::posix_time::time_duration        time = now->time_of_day();
+    hourEntry->set_value(time.hours());
+    minuteEntry->set_value(time.minutes() + 1);
+    secondEntry->set_value(0);
+
+    Gtk::Button *       scheduleButton;
+    glade->get_widget("scheduleButton1", scheduleButton);
+    scheduleButton->set_label(*getResourceUstring("scheduleButtonLabel"));
     scheduleButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &SchedulePlaylistWindow::onScheduleButtonClicked));
-    // register the signal handler for the button getting clicked.
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                              &SchedulePlaylistWindow::onCloseButtonClicked));
-
-    add(*layout);
-    
-    show_all_children();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Destructor.
- *----------------------------------------------------------------------------*/
-SchedulePlaylistWindow :: ~SchedulePlaylistWindow (void)              throw ()
-{
 }
 
 
@@ -135,53 +122,33 @@ SchedulePlaylistWindow :: ~SchedulePlaylistWindow (void)              throw ()
 void
 SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
 {
-    // get the date from the calendar
-    guint   year;
-    guint   month;
-    guint   day;
-
+    unsigned int    year;
+    unsigned int    month;
+    unsigned int    day;
     calendar->get_date(year, month, day);
+    ++month;    // Gtk+ months are 0-based, Boost months are 1-based
 
-    // get the hour and minute from the entries
-    // and construct an HH:MM:00.00 string from it
-    Ptr<std::string>::Ref   timeStr(new std::string(
-                                                hourEntry->get_active_text()));
-    *timeStr += ":";
-    Glib::ustring   minutes = minuteEntry->get_active_text();
-    if (minutes == "") {
-        minutes = "00";
-    }
-    *timeStr += minutes;
-    *timeStr += ":";
-    Glib::ustring   seconds = secondEntry->get_active_text();
-    if (seconds == "") {
-        seconds = "00";
-    }
-    *timeStr += seconds;
-    *timeStr += ".00";
-    
-    Ptr<posix_time::ptime>::Ref selectedTime;
+    int             hours = hourEntry->get_value_as_int();
+    int             minutes = minuteEntry->get_value_as_int();
+    int             seconds = secondEntry->get_value_as_int();
+
+    Ptr<boost::posix_time::ptime>::Ref  dateTime(new boost::posix_time::ptime(
+                                            boost::gregorian::date(year,
+                                                                   month,
+                                                                   day),
+                                            boost::posix_time::time_duration(
+                                                                    hours,
+                                                                    minutes,
+                                                                    seconds) ));
 
     try {
-        gregorian::date     date(year, month+1, day);
-        Ptr<posix_time::time_duration>::Ref 
-                            time = TimeConversion::parseTimeDuration(timeStr);
-        selectedTime.reset(new posix_time::ptime(date, *time));
-    } catch (std::exception &e) {
-        // most probably duration_from_string failed
-        // TODO: notify user
-        std::cerr << "date format problem: " << e.what() << std::endl;
-        return;
-    }
-
-    try {
-        gLiveSupport->schedulePlaylist(playlist, selectedTime);
+        gLiveSupport->schedulePlaylist(playlist, dateTime);
     } catch (XmlRpcException &e) {
         // TODO: notify user
         std::cerr << "scheduling problem: " << e.what() << std::endl;
         return;
     }
 
-    hide();
+    mainWindow->hide();
 }
 

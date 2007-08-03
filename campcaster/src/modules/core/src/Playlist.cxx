@@ -639,7 +639,7 @@ Playlist::revertToSavedCopy(void)               throw (std::invalid_argument)
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-Playlist :: getMetadata(const string &key) const
+Playlist :: getMetadata(const std::string &     key) const
                                                 throw ()
 {
     std::string name, prefix;

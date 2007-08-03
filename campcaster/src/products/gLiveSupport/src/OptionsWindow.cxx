@@ -33,18 +33,10 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-
-#include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ScrolledNotebook.h"
-#include "LiveSupport/Widgets/EntryBin.h"
-
 #include "OptionsWindow.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -54,10 +46,10 @@ using namespace LiveSupport::GLiveSupport;
 
 namespace {
 
-/**
- *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
- */
-const Glib::ustring     windowName = "optionsWindow";
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "OptionsWindow.glade";
 
 }
 
@@ -71,107 +63,61 @@ const Glib::ustring     windowName = "optionsWindow";
  *----------------------------------------------------------------------------*/
 OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 Ptr<ResourceBundle>::Ref  bundle,
-                                Button *                  windowOpenerButton)
+                                Gtk::ToggleButton *       windowOpenerButton,
+                                const Glib::ustring &     gladeDir)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle,
-                      windowOpenerButton),
-            backupView(0)
+          : BasicWindow(gLiveSupport,
+                        bundle,
+                        windowOpenerButton,
+                        gladeDir + gladeFileName)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
     bool    canBackup = (gLiveSupport->getSessionId()
                             && gLiveSupport->isStorageAvailable());
 
     // build up the notepad for the various sections
-    mainNotebook = Gtk::manage(new ScrolledNotebook);
-    Gtk::Box *      soundSectionBox         = constructSoundSection();
-    Gtk::Box *      keyBindingsSectionBox   = constructKeyBindingsSection();
-    Gtk::Box *      serversSectionBox       = constructServersSection();
-    Gtk::Box *      schedulerSectionBox     = constructSchedulerSection();
-    Gtk::Box *      backupSectionBox        = 0;
+    glade->get_widget("mainNotebook1", mainNotebook);
+    constructSoundSection();
+    constructKeyBindingsSection();
+    constructServersSection();
+    constructSchedulerSection();
     if (canBackup) {
-                    backupSectionBox        = constructBackupSection();
+        constructBackupSection();
     }
-    Gtk::Box *      rdsSectionBox           = constructRdsSection();
-    Gtk::Box *      aboutSectionBox         = constructAboutSection();
+    constructRdsSection();
+    constructAboutSection();
 
-    try {
-        mainNotebook->appendPage(*soundSectionBox,
-                            *getResourceUstring("soundSectionLabel"));
-        mainNotebook->appendPage(*keyBindingsSectionBox,
-                            *getResourceUstring("keyBindingsSectionLabel"));
-        mainNotebook->appendPage(*serversSectionBox,
-                            *getResourceUstring("serversSectionLabel"));
-        mainNotebook->appendPage(*schedulerSectionBox,
-                            *getResourceUstring("schedulerSectionLabel"));
-        if (canBackup) {
-            mainNotebook->appendPage(*backupSectionBox,
-                            *getResourceUstring("backupSectionLabel"));
-        }
-        mainNotebook->appendPage(*rdsSectionBox,
-                            *getResourceUstring("rdsSectionLabel"));
-        mainNotebook->appendPage(*aboutSectionBox,
-                            *getResourceUstring("aboutSectionLabel"));
-
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
+    Gtk::Label *        soundTabLabel;
+    Gtk::Label *        keyBindingsTabLabel;
+    Gtk::Label *        serversTabLabel;
+    Gtk::Label *        schedulerTabLabel;
+    Gtk::Label *        backupTabLabel;
+    Gtk::Label *        rdsTabLabel;
+    Gtk::Label *        aboutTabLabel;
+    glade->get_widget("soundTabLabel1", soundTabLabel);
+    glade->get_widget("keyBindingsTabLabel1", keyBindingsTabLabel);
+    glade->get_widget("serversTabLabel1", serversTabLabel);
+    glade->get_widget("schedulerTabLabel1", schedulerTabLabel);
+    glade->get_widget("backupTabLabel1", backupTabLabel);
+    glade->get_widget("rdsTabLabel1", rdsTabLabel);
+    glade->get_widget("aboutTabLabel1", aboutTabLabel);
+    soundTabLabel->set_label(*getResourceUstring("soundSectionLabel"));
+    keyBindingsTabLabel->set_label(*getResourceUstring(
+                                                 "keyBindingsSectionLabel"));
+    serversTabLabel->set_label(*getResourceUstring("serversSectionLabel"));
+    schedulerTabLabel->set_label(*getResourceUstring("schedulerSectionLabel"));
+    if (canBackup) {
+        backupTabLabel->set_label(*getResourceUstring("backupSectionLabel"));
     }
-
-    // build up the button box
-    buttonBox = Gtk::manage(new Gtk::HButtonBox);
-    buttonBox->set_layout(Gtk::BUTTONBOX_END);
-    buttonBox->set_spacing(5);
-
-    try {
-        cancelButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("cancelButtonLabel") ));
-        applyButton  = Gtk::manage(wf->createButton(
-                                *getResourceUstring("applyButtonLabel") ));
-        okButton     = Gtk::manage(wf->createButton(
-                                *getResourceUstring("okButtonLabel") ));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    buttonBox->pack_start(*cancelButton);
-    buttonBox->pack_start(*applyButton);
-    buttonBox->pack_start(*okButton);
-
-    // set up the main window
-    Gtk::Box *      layout = Gtk::manage(new Gtk::VBox);
-    layout->pack_start(*mainNotebook, Gtk::PACK_EXPAND_WIDGET, 5);
-    layout->pack_start(*buttonBox,  Gtk::PACK_SHRINK, 5);
-    add(*layout);
+    rdsTabLabel->set_label(*getResourceUstring("rdsSectionLabel"));
+    aboutTabLabel->set_label(*getResourceUstring("aboutSectionLabel"));
 
     // bind events
-    cancelButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &OptionsWindow::onCancelButtonClicked));
-    applyButton->signal_clicked().connect(sigc::mem_fun(*this,
+    glade->connect_clicked("applyButton1", sigc::mem_fun(*this,
                                 &OptionsWindow::onApplyButtonClicked));
-    okButton->signal_clicked().connect(sigc::mem_fun(*this,
+    glade->connect_clicked("cancelButton1", sigc::mem_fun(*this,
+                                &OptionsWindow::onCancelButtonClicked));
+    glade->connect_clicked("okButton1", sigc::mem_fun(*this,
                                 &OptionsWindow::onOkButtonClicked));
-
-    // show everything
-    set_name(windowName);
-    set_default_size(700, 500);
-    set_modal(false);
-    
-    show_all_children();
 }
 
 
@@ -199,16 +145,8 @@ OptionsWindow :: onApplyButtonClicked(void)                         throw ()
     saveChangesInRds();                             // no need to restart
 
     if (changed) {
-        try {
-            Ptr<Glib::ustring>::Ref
-                    restartMessage(new Glib::ustring(
-                                *getResourceUstring("needToRestartMsg") ));
-            gLiveSupport->displayMessageWindow(restartMessage);
-        } catch (std::invalid_argument &e) {
-            // TODO: signal error
-            std::cerr << e.what() << std::endl;
-            std::exit(1);
-        }
+        gLiveSupport->displayMessageWindow(*getResourceUstring(
+                                                    "needToRestartMsg"));
     }
 }
 
@@ -227,7 +165,7 @@ OptionsWindow :: saveChangesInStringEntryFields(void)               throw ()
     for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
     
         OptionsContainer::OptionItemString  optionItem = it->first;
-        EntryBin *                          entry      = it->second;
+        Gtk::Entry *                        entry      = it->second;
         
         Ptr<const Glib::ustring>::Ref
             oldValue = optionsContainer->getOptionItem(optionItem);
@@ -244,7 +182,7 @@ OptionsWindow :: saveChangesInStringEntryFields(void)               throw ()
                             errorMessage(new Glib::ustring(
                                         *getResourceUstring("errorMsg") ));
                     errorMessage->append(e.what());
-                    gLiveSupport->displayMessageWindow(errorMessage);
+                    gLiveSupport->displayMessageWindow(*errorMessage);
                 } catch (std::invalid_argument &e) {
                     std::cerr << e.what() << std::endl;
                     std::exit(1);
@@ -304,7 +242,7 @@ OptionsWindow :: saveChangesInKeyBindings(void)                     throw ()
                                 errorMessage(new Glib::ustring(
                                             *getResourceUstring("errorMsg") ));
                         errorMessage->append(e.what());
-                        gLiveSupport->displayMessageWindow(errorMessage);
+                        gLiveSupport->displayMessageWindow(*errorMessage);
                     } catch (std::invalid_argument &e) {
                         std::cerr << e.what() << std::endl;
                         std::exit(1);
@@ -356,7 +294,7 @@ OptionsWindow :: onCloseButtonClicked(bool     needConfirm)         throw ()
  *  Event handler for the test button
  *----------------------------------------------------------------------------*/
 void
-OptionsWindow :: onTestButtonClicked(const EntryBin *    entry)
+OptionsWindow :: onTestButtonClicked(const Gtk::Entry *     entry)
                                                                     throw ()
 {
     Ptr<OptionsContainer>::Ref  optionsContainer
@@ -376,15 +314,16 @@ OptionsWindow :: onTestButtonClicked(const EntryBin *    entry)
 /*------------------------------------------------------------------------------
  *  Create a new user entry field item.
  *----------------------------------------------------------------------------*/
-EntryBin *
-OptionsWindow :: createEntry(OptionsContainer::OptionItemString  optionItem)
+Gtk::Entry *
+OptionsWindow :: createEntry(const Glib::ustring &                  entryName,
+                             OptionsContainer::OptionItemString     optionItem)
                                                                     throw ()
 {
     Ptr<OptionsContainer>::Ref  optionsContainer
                                    = gLiveSupport->getOptionsContainer();
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    EntryBin *  entry = Gtk::manage(wf->createEntryBin());
+    Gtk::Entry *    entry;
+    glade->get_widget(entryName, entry);
 
     try {
         entry->set_text(*optionsContainer->getOptionItem(optionItem));
@@ -395,7 +334,7 @@ OptionsWindow :: createEntry(OptionsContainer::OptionItemString  optionItem)
     }
     
     stringEntryList.push_back(std::make_pair(optionItem, entry));
-
+    
     return entry;
 }
 
@@ -403,145 +342,75 @@ OptionsWindow :: createEntry(OptionsContainer::OptionItemString  optionItem)
 /*------------------------------------------------------------------------------
  *  Construct the "Sound" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructSoundSection(void)                        throw ()
 {
     Ptr<OptionsContainer>::Ref  optionsContainer
                                    = gLiveSupport->getOptionsContainer();
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
-    Gtk::Table *    audioDeviceTable = Gtk::manage(new Gtk::Table);
-    audioDeviceTable->set_row_spacings(10);
-    audioDeviceTable->set_col_spacings(5);
-    
-    // display the settings for the cue player device
-    Glib::ustring   cuePlayerLabelContents;
-    try {
-        cuePlayerLabelContents.append(*getResourceUstring("cueDeviceLabel"));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::Label *    cuePlayerLabel = Gtk::manage(
-                                    new Gtk::Label(cuePlayerLabelContents) );
-    audioDeviceTable->attach(*cuePlayerLabel, 
-                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
-    
-    EntryBin *      cuePlayerEntry = createEntry(
-                                    OptionsContainer::cuePlayerDeviceName);
-    audioDeviceTable->attach(*cuePlayerEntry, 1, 2, 0, 1);
-    
-    Button *        cueTestButton;
-    try {
-        cueTestButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("testButtonLabel") ));
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    cueTestButton->signal_clicked().connect(sigc::bind<EntryBin*>(
-                sigc::mem_fun(*this,&OptionsWindow::onTestButtonClicked),
-                cuePlayerEntry));
-    audioDeviceTable->attach(*cueTestButton, 2, 3, 0, 1);
-    
-    // display the settings for the output player device
-    Glib::ustring   outputPlayerLabelContents;
-    try {
-        outputPlayerLabelContents.append(*getResourceUstring(
-                                                        "outputDeviceLabel"));
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::Label *    outputPlayerLabel = Gtk::manage(
-                                    new Gtk::Label(outputPlayerLabelContents) );
-    audioDeviceTable->attach(*outputPlayerLabel, 
-                                    0, 1, 1, 2, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
-    
-    EntryBin *      outputPlayerEntry = createEntry(
+    Gtk::Label *        cueDeviceLabel;
+    Gtk::Label *        outputDeviceLabel;
+    glade->get_widget("cueDeviceLabel1", cueDeviceLabel);
+    glade->get_widget("outputDeviceLabel1", outputDeviceLabel);
+    cueDeviceLabel->set_label(*getResourceUstring("cueDeviceLabel"));
+    outputDeviceLabel->set_label(*getResourceUstring("outputDeviceLabel"));
+
+    Gtk::Entry *        cueDeviceEntry;
+    Gtk::Entry *        outputDeviceEntry;
+    cueDeviceEntry = createEntry("cueDeviceEntry1",
+                                 OptionsContainer::cuePlayerDeviceName);
+    outputDeviceEntry = createEntry("outputDeviceEntry1",
                                     OptionsContainer::outputPlayerDeviceName);
-    audioDeviceTable->attach(*outputPlayerEntry, 1, 2, 1, 2);
 
-    Button *        outputTestButton;
-    try {
-        outputTestButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("testButtonLabel") ));
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    outputTestButton->signal_clicked().connect(sigc::bind<EntryBin*>(
+    Gtk::Button *       cueTestButton;
+    Gtk::Button *       outputTestButton;
+    glade->get_widget("cueTestButton1", cueTestButton);
+    glade->get_widget("outputTestButton1", outputTestButton);
+    cueTestButton->set_label(*getResourceUstring("testButtonLabel"));
+    outputTestButton->set_label(*getResourceUstring("testButtonLabel"));
+    cueTestButton->signal_clicked().connect(sigc::bind<Gtk::Entry*>(
                 sigc::mem_fun(*this, &OptionsWindow::onTestButtonClicked),
-                outputPlayerEntry));
-    audioDeviceTable->attach(*outputTestButton, 2, 3, 1, 2);
-
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*audioDeviceTable,   Gtk::PACK_SHRINK, 5);
-    
-    return section;
+                cueDeviceEntry));
+    outputTestButton->signal_clicked().connect(sigc::bind<Gtk::Entry*>(
+                sigc::mem_fun(*this, &OptionsWindow::onTestButtonClicked),
+                outputDeviceEntry));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the "Key bindings" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructKeyBindingsSection(void)                  throw ()
 {
     // create the TreeView
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
     keyBindingsModel = Gtk::TreeStore::create(keyBindingsColumns);
-    keyBindingsView  = Gtk::manage(wf->createTreeView(keyBindingsModel));
+    glade->get_widget_derived("keyBindingsTreeView1", keyBindingsTreeView);
+    keyBindingsTreeView->set_model(keyBindingsModel);
+    keyBindingsTreeView->connectModelSignals(keyBindingsModel);
     
-    keyBindingsView->appendColumn("", keyBindingsColumns.actionColumn);
-    keyBindingsView->appendColumn("", keyBindingsColumns.keyDisplayColumn);
+    keyBindingsTreeView->appendColumn("", keyBindingsColumns.actionColumn);
+    keyBindingsTreeView->appendColumn("", keyBindingsColumns.keyDisplayColumn);
     
-    // fill in the data
     fillKeyBindingsModel();
-        
-    // set TreeView properties
-    keyBindingsView->set_headers_visible(false);
-    keyBindingsView->set_enable_search(false);
-    keyBindingsView->columns_autosize();
-    keyBindingsView->expand_all();
+    
+    keyBindingsTreeView->columns_autosize();
+    keyBindingsTreeView->expand_all();
     
     // connect the callbacks
-    keyBindingsView->signal_row_activated().connect(sigc::mem_fun(*this,
-                                &OptionsWindow::onKeyBindingsRowActivated ));
-    keyBindingsView->signal_key_press_event().connect(sigc::mem_fun(*this,
-                                &OptionsWindow::onKeyBindingsKeyPressed ));
-    keyBindingsView->signal_focus_out_event().connect_notify(sigc::mem_fun(
+    keyBindingsTreeView->signal_row_activated().connect(sigc::mem_fun(*this,
+                                &OptionsWindow::onKeyBindingsRowActivated));
+    keyBindingsTreeView->signal_key_press_event().connect(sigc::mem_fun(*this,
+                                &OptionsWindow::onKeyBindingsKeyPressed));
+    keyBindingsTreeView->signal_focus_out_event().connect_notify(sigc::mem_fun(
                                 *this,
-                                &OptionsWindow::onKeyBindingsFocusOut ));
+                                &OptionsWindow::onKeyBindingsFocusOut));
     
     // add instructions
-    Ptr<const Glib::ustring>::Ref   instructionsText;
-    try {
-        instructionsText = getResourceUstring("keyBindingsInstructionsText");
-        
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::Label *    instructionsLabel = Gtk::manage(new Gtk::Label(
-                                                            *instructionsText,
-                                                            Gtk::ALIGN_CENTER,
-                                                            Gtk::ALIGN_CENTER));
-    instructionsLabel->set_justify(Gtk::JUSTIFY_CENTER);
-    
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*instructionsLabel, Gtk::PACK_SHRINK, 5);
-    section->pack_start(*keyBindingsView,   Gtk::PACK_SHRINK, 5);
-    
-    return section;
+    Gtk::Label *    instructionsLabel;
+    glade->get_widget("keyBindingsInstructionsLabel1", instructionsLabel);
+    instructionsLabel->set_label(*getResourceUstring(
+                                            "keyBindingsInstructionsText"));
 }
 
 
@@ -554,40 +423,34 @@ OptionsWindow :: fillKeyBindingsModel(void)                         throw ()
     Ptr<const KeyboardShortcutList>::Ref
                             list    = gLiveSupport->getKeyboardShortcutList();
 
-    try {
-        KeyboardShortcutList::iterator it;
-        for (it = list->begin(); it != list->end(); ++it) {
-            Ptr<const KeyboardShortcutContainer>::Ref   
-                            container   = *it;
+    KeyboardShortcutList::iterator it;
+    for (it = list->begin(); it != list->end(); ++it) {
+        Ptr<const KeyboardShortcutContainer>::Ref   
+                        container   = *it;
+        Ptr<const Glib::ustring>::Ref
+                        windowName  = container->getWindowName();
+        Gtk::TreeRow    parent      = *keyBindingsModel->append();
+        parent[keyBindingsColumns.actionColumn]   
+                = *gLiveSupport->getLocalizedWindowName(windowName);
+        
+        KeyboardShortcutContainer::iterator iter;
+        for (iter = container->begin(); iter != container->end(); ++iter) {
+            Ptr<const KeyboardShortcut>::Ref
+                        shortcut    = *iter;
             Ptr<const Glib::ustring>::Ref
-                            windowName  = container->getWindowName();
-            Gtk::TreeRow    parent      = *keyBindingsModel->append();
-            parent[keyBindingsColumns.actionColumn]   
-                    = *gLiveSupport->getLocalizedWindowName(windowName);
-            
-            KeyboardShortcutContainer::iterator iter;
-            for (iter = container->begin(); iter != container->end(); ++iter) {
-                Ptr<const KeyboardShortcut>::Ref
-                            shortcut    = *iter;
-                Ptr<const Glib::ustring>::Ref
-                            actionString    = shortcut->getActionString();
-                Ptr<const Glib::ustring>::Ref
-                            keyString       = shortcut->getKeyString();
-                Gtk::TreeRow    child
-                                = *keyBindingsModel->append(parent.children());
-                child[keyBindingsColumns.actionColumn]
-                    = *gLiveSupport->getLocalizedKeyboardActionName(
-                                                                actionString);
-                child[keyBindingsColumns.keyNameColumn]
-                    = *keyString;                       // TODO: localize this?
-                child[keyBindingsColumns.keyDisplayColumn]
-                    = Glib::Markup::escape_text(*keyString);
-            }
+                        actionString    = shortcut->getActionString();
+            Ptr<const Glib::ustring>::Ref
+                        keyString       = shortcut->getKeyString();
+            Gtk::TreeRow    child
+                            = *keyBindingsModel->append(parent.children());
+            child[keyBindingsColumns.actionColumn]
+                = *gLiveSupport->getLocalizedKeyboardActionName(
+                                                            actionString);
+            child[keyBindingsColumns.keyNameColumn]
+                = *keyString;                       // TODO: localize this?
+            child[keyBindingsColumns.keyDisplayColumn]
+                = Glib::Markup::escape_text(*keyString);
         }
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
     }
 }
 
@@ -595,250 +458,124 @@ OptionsWindow :: fillKeyBindingsModel(void)                         throw ()
 /*------------------------------------------------------------------------------
  *  Construct the "Servers" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructServersSection(void)                      throw ()
 {
     Ptr<OptionsContainer>::Ref  optionsContainer
                                    = gLiveSupport->getOptionsContainer();
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
-    // the settings for the authentication server
-    Gtk::Table *    authenticationTable = Gtk::manage(new Gtk::Table);
-    authenticationTable->set_row_spacings(5);
-    authenticationTable->set_col_spacings(5);
-    
+    // authentication server
     Gtk::Label *    authenticationLabel;
     Gtk::Label *    authenticationServerLabel;
     Gtk::Label *    authenticationPortLabel;
     Gtk::Label *    authenticationPathLabel;
-    try {
-        authenticationLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("authenticationLabel") ));
-        authenticationServerLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("serverLabel") ));
-        authenticationPortLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("portLabel") ));
-        authenticationPathLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("pathLabel") ));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    authenticationTable->attach(*authenticationLabel,
-                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
-    authenticationTable->attach(*authenticationServerLabel,
-                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-    authenticationTable->attach(*authenticationPortLabel,
-                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
-    authenticationTable->attach(*authenticationPathLabel,
-                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
+    glade->get_widget("authenticationServerLabel1", authenticationLabel);
+    glade->get_widget("authenticationServerServerLabel1",
+                                                    authenticationServerLabel);
+    glade->get_widget("authenticationServerPortLabel1",
+                                                    authenticationPortLabel);
+    glade->get_widget("authenticationServerPathLabel1",
+                                                    authenticationPathLabel);
+    authenticationLabel->set_label(*getResourceUstring("authenticationLabel"));
+    authenticationServerLabel->set_label(*getResourceUstring("serverLabel"));
+    authenticationPortLabel->set_label(*getResourceUstring("portLabel"));
+    authenticationPathLabel->set_label(*getResourceUstring("pathLabel"));
     
-    EntryBin *  authenticationServerEntry = createEntry(
+    createEntry("authenticationServerServerEntry1",
                                     OptionsContainer::authenticationServer);
-    EntryBin *  authenticationPortEntry   = createEntry(
+    createEntry("authenticationServerPortEntry1",
                                     OptionsContainer::authenticationPort);
-    EntryBin *  authenticationPathEntry   = createEntry(
+    createEntry("authenticationServerPathEntry1",
                                     OptionsContainer::authenticationPath);
-    
-    authenticationTable->attach(*authenticationServerEntry, 2, 3, 0, 1);
-    authenticationTable->attach(*authenticationPortEntry,   2, 3, 1, 2);
-    authenticationTable->attach(*authenticationPathEntry,   2, 3, 2, 3);
-    
-    // the settings for the storage server
-    Gtk::Table *    storageTable = Gtk::manage(new Gtk::Table);
-    storageTable->set_row_spacings(5);
-    storageTable->set_col_spacings(5);
-    
+
+    // storage server
     Gtk::Label *    storageLabel;
     Gtk::Label *    storageServerLabel;
     Gtk::Label *    storagePortLabel;
     Gtk::Label *    storagePathLabel;
-    try {
-        storageLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("storageLabel") ));
-        storageServerLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("serverLabel") ));
-        storagePortLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("portLabel") ));
-        storagePathLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("pathLabel") ));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget("storageServerLabel1", storageLabel);
+    glade->get_widget("storageServerServerLabel1", storageServerLabel);
+    glade->get_widget("storageServerPortLabel1", storagePortLabel);
+    glade->get_widget("storageServerPathLabel1", storagePathLabel);
+    storageLabel->set_label(*getResourceUstring("storageLabel"));
+    storageServerLabel->set_label(*getResourceUstring("serverLabel"));
+    storagePortLabel->set_label(*getResourceUstring("portLabel"));
+    storagePathLabel->set_label(*getResourceUstring("pathLabel"));
+    
+    createEntry("storageServerServerEntry1", OptionsContainer::storageServer);
+    createEntry("storageServerPortEntry1", OptionsContainer::storagePort);
+    createEntry("storageServerPathEntry1", OptionsContainer::storagePath);
 
-    storageTable->attach(*storageLabel,
-                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
-    storageTable->attach(*storageServerLabel,
-                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-    storageTable->attach(*storagePortLabel,
-                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
-    storageTable->attach(*storagePathLabel,
-                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
-    
-    EntryBin *  storageServerEntry = createEntry(
-                                            OptionsContainer::storageServer);
-    EntryBin *  storagePortEntry   = createEntry(
-                                            OptionsContainer::storagePort);
-    EntryBin *  storagePathEntry   = createEntry(
-                                            OptionsContainer::storagePath);
-    
-    storageTable->attach(*storageServerEntry, 2, 3, 0, 1);
-    storageTable->attach(*storagePortEntry,   2, 3, 1, 2);
-    storageTable->attach(*storagePathEntry,   2, 3, 2, 3);
-    
-    // the settings for the scheduler
-    Gtk::Table *    schedulerTable = Gtk::manage(new Gtk::Table);
-    schedulerTable->set_row_spacings(5);
-    schedulerTable->set_col_spacings(5);
-    
+    // scheduler server
     Gtk::Label *    schedulerLabel;
     Gtk::Label *    schedulerServerLabel;
     Gtk::Label *    schedulerPortLabel;
     Gtk::Label *    schedulerPathLabel;
-    try {
-        schedulerLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("schedulerLabel") ));
-        schedulerServerLabel = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("serverLabel") ));
-        schedulerPortLabel   = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("portLabel") ));
-        schedulerPathLabel   = Gtk::manage(new Gtk::Label(
-                            *getResourceUstring("pathLabel") ));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    schedulerTable->attach(*schedulerLabel,
-                                    0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 0);
-    schedulerTable->attach(*schedulerServerLabel,
-                                    1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
-    schedulerTable->attach(*schedulerPortLabel,
-                                    1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
-    schedulerTable->attach(*schedulerPathLabel,
-                                    1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
+    glade->get_widget("schedulerServerLabel1", schedulerLabel);
+    glade->get_widget("schedulerServerServerLabel1", schedulerServerLabel);
+    glade->get_widget("schedulerServerPortLabel1", schedulerPortLabel);
+    glade->get_widget("schedulerServerPathLabel1", schedulerPathLabel);
+    schedulerLabel->set_label(*getResourceUstring("schedulerLabel"));
+    schedulerServerLabel->set_label(*getResourceUstring("serverLabel"));
+    schedulerPortLabel->set_label(*getResourceUstring("portLabel"));
+    schedulerPathLabel->set_label(*getResourceUstring("pathLabel"));
     
-    EntryBin *  schedulerServerEntry = createEntry(
-                                            OptionsContainer::schedulerServer);
-    EntryBin *  schedulerPortEntry   = createEntry(
-                                            OptionsContainer::schedulerPort);
-    EntryBin *  schedulerPathEntry   = createEntry(
-                                            OptionsContainer::schedulerPath);
-    
-    schedulerTable->attach(*schedulerServerEntry, 2, 3, 0, 1);
-    schedulerTable->attach(*schedulerPortEntry,   2, 3, 1, 2);
-    schedulerTable->attach(*schedulerPathEntry,   2, 3, 2, 3);
-    
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*authenticationTable,   Gtk::PACK_SHRINK, 10);
-    section->pack_start(*storageTable,          Gtk::PACK_SHRINK, 10);
-    section->pack_start(*schedulerTable,        Gtk::PACK_SHRINK, 10);
-    
-    return section;
+    createEntry("schedulerServerServerEntry1",
+                                             OptionsContainer::schedulerServer);
+    createEntry("schedulerServerPortEntry1", OptionsContainer::schedulerPort);
+    createEntry("schedulerServerPathEntry1", OptionsContainer::schedulerPath);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the "Scheduler" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructSchedulerSection(void)                    throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    Gtk::Label *    statusTextLabel;
-    Button *        startButton;
-    Button *        stopButton;
-    try {
-        statusTextLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                "schedulerStatusText")));
-        startButton = Gtk::manage(wf->createButton(*getResourceUstring(
-                                                "schedulerStartButtonLabel")));
-        stopButton = Gtk::manage(wf->createButton(*getResourceUstring(
-                                                "schedulerStopButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    Gtk::Label *    schedulerTextLabel;
+    Gtk::Button *   startButton;
+    Gtk::Button *   stopButton;
+    glade->get_widget("schedulerTextLabel1", schedulerTextLabel);
+    glade->get_widget("schedulerStatusLabel1", schedulerStatusLabel);
+    glade->get_widget("schedulerStartButton1", startButton);
+    glade->get_widget("schedulerStopButton1", stopButton);
+    schedulerTextLabel->set_label(*getResourceUstring("schedulerStatusText"));
+    updateSchedulerStatus();    // sets the schedulerStatusLabel
+    startButton->set_label(*getResourceUstring("schedulerStartButtonLabel"));
+    stopButton->set_label(*getResourceUstring("schedulerStopButtonLabel"));
+
     startButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &OptionsWindow::onSchedulerStartButtonClicked));
     stopButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &OptionsWindow::onSchedulerStopButtonClicked));
-    
-    Gtk::HBox *         statusReportBox = Gtk::manage(new Gtk::HBox);
-    statusReportBox->pack_start(*statusTextLabel,      Gtk::PACK_SHRINK, 5);
-    schedulerStatusLabel = Gtk::manage(new Gtk::Label);
-    statusReportBox->pack_start(*schedulerStatusLabel, Gtk::PACK_SHRINK, 0);
-    
-    Gtk::ButtonBox *    startStopButtons = Gtk::manage(new Gtk::HButtonBox(
-                                                    Gtk::BUTTONBOX_SPREAD, 20));
-    startStopButtons->pack_start(*startButton);
-    startStopButtons->pack_start(*stopButton);
-
-    Gtk::VBox *         section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*statusReportBox,  Gtk::PACK_SHRINK, 20);
-    section->pack_start(*startStopButtons, Gtk::PACK_SHRINK);
-    
-    updateSchedulerStatus();
-    return section;
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the "Backup" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructBackupSection(void)                       throw ()
 {
-    Ptr<ResourceBundle>::Ref    backupBundle;
-    try {
-        backupBundle = gLiveSupport->getBundle("backupView");
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    backupView = Gtk::manage(new BackupView(gLiveSupport, backupBundle));
-    return backupView;
+    backupView.reset(new BackupView(gLiveSupport, glade));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the "RDS" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructRdsSection(void)                          throw ()
 {
-    Ptr<ResourceBundle>::Ref    rdsBundle;
-    try {
-        rdsBundle = gLiveSupport->getBundle("rdsView");
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    rdsView = Gtk::manage(new RdsView(gLiveSupport, rdsBundle));
-    return rdsView;
+    rdsView.reset(new RdsView(gLiveSupport, glade));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the "About" section.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+void
 OptionsWindow :: constructAboutSection(void)                        throw ()
 {
     Glib::ustring   aboutLabelContents;
@@ -847,26 +584,15 @@ OptionsWindow :: constructAboutSection(void)                        throw ()
     aboutLabelContents.append(PACKAGE_NAME);
     aboutLabelContents.append(" ");
     aboutLabelContents.append(PACKAGE_VERSION);
-    try {
-        aboutLabelContents.append("\n\n");
-        aboutLabelContents.append(*formatMessage("reportBugsToText",
-                                                 PACKAGE_BUGREPORT ));
-        aboutLabelContents.append("\n\n");
-        aboutLabelContents.append(*getBinaryResourceAsUstring("creditsText"));
-    
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::Label *    aboutLabel = Gtk::manage(
-                                    new Gtk::Label(aboutLabelContents) );
+    aboutLabelContents.append("\n\n");
+    aboutLabelContents.append(*formatMessage("reportBugsToText",
+                                                PACKAGE_BUGREPORT ));
+    aboutLabelContents.append("\n\n");
+    aboutLabelContents.append(*getBinaryResourceAsUstring("creditsText"));
 
-    // make a new box and pack the components into it
-    Gtk::VBox *     section = Gtk::manage(new Gtk::VBox);
-    section->pack_start(*aboutLabel, Gtk::PACK_SHRINK, 5);
-    
-    return section;
+    Gtk::Label *    aboutLabel;
+    glade->get_widget("aboutLabel1", aboutLabel);
+    aboutLabel->set_label(aboutLabelContents);
 }
 
 
@@ -882,8 +608,8 @@ OptionsWindow :: resetEntries()                                     throw ()
     StringEntryListType::iterator   it;
     for (it = stringEntryList.begin(); it != stringEntryList.end(); ++it) {
         OptionsContainer::OptionItemString  optionItem = it->first;
-        EntryBin *                          entry      = it->second;
-     
+        Gtk::Entry *                        entry      = it->second;
+        
         try {
             entry->set_text(*optionsContainer->getOptionItem(optionItem));
 
@@ -903,7 +629,7 @@ OptionsWindow :: resetKeyBindings(void)                             throw ()
 {
     keyBindingsModel->clear();
     fillKeyBindingsModel();
-    keyBindingsView->expand_all();
+    keyBindingsTreeView->expand_all();
 }
 
 
@@ -933,14 +659,8 @@ OptionsWindow ::  onKeyBindingsRowActivated(const Gtk::TreePath &     path,
         editedKeyName.reset(new const Glib::ustring(
                                         row[keyBindingsColumns.keyNameColumn]));
         editedKeyRow = row;
-        try {
-            row[keyBindingsColumns.keyDisplayColumn]
+        row[keyBindingsColumns.keyDisplayColumn]
                                         = *getResourceUstring("pressAKeyMsg");
-        } catch (std::invalid_argument &e) {
-            // TODO: signal error
-            std::cerr << e.what() << std::endl;
-            std::exit(1);
-        }
     }
 }
 
@@ -1016,10 +736,11 @@ OptionsWindow ::  resetEditedKeyBinding(void)                       throw ()
 void
 OptionsWindow :: run(void)                                          throw ()
 {
-    mainNotebook->setActivePage(2);      // "Servers"
-    property_window_position().set_value(Gtk::WIN_POS_CENTER_ALWAYS);
-    show_all();
-    Gtk::Main::run(*this);
+    mainNotebook->set_current_page(2);      // "Servers"
+    mainWindow->property_window_position().set_value(
+                                                Gtk::WIN_POS_CENTER_ALWAYS);
+    mainWindow->show_all();
+    Gtk::Main::run(*mainWindow);
 }
 
 
@@ -1058,17 +779,12 @@ void
 OptionsWindow :: updateSchedulerStatus(void)                        throw ()
 {
     gLiveSupport->checkSchedulerClient();
-    try {
-        if (gLiveSupport->isSchedulerAvailable()) {
-            schedulerStatusLabel->set_text(
-                                *getResourceUstring("schedulerRunningStatus"));
-        } else {
-            schedulerStatusLabel->set_text(
-                                *getResourceUstring("schedulerStoppedStatus"));
-        }
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
+    if (gLiveSupport->isSchedulerAvailable()) {
+        schedulerStatusLabel->set_text(
+                            *getResourceUstring("schedulerRunningStatus"));
+    } else {
+        schedulerStatusLabel->set_text(
+                            *getResourceUstring("schedulerStoppedStatus"));
     }
 }
 

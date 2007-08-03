@@ -45,6 +45,7 @@ Build-Depends: debhelper (>= 4.0.0),
                libboost-date-time-dev (>= 1.33.1),
                libgtk2.0-dev (>= 2.6.10),
                libgtkmm-2.4-dev (>= 2.6.5),
+               libglademm-2.4-dev (>= 2.6.2),
                libxml++2.6-dev (>= 2.8.1),
                libicu34-dev,
                apache2,
@@ -164,6 +165,7 @@ Depends: ${shlibs:Depends},
          libicu34,
          libgtk2.0-0 (>= 2.6.10),
          libgtkmm-2.4-1c2a (>= 2.6.5)
+         libglademm-2.4-1c2a (>= 2.6.2)
 Description: A radio program automation and support tool.
  Campcaster is the first free and open radio management software that 
  provides live studio broadcast capabilities as well as remote automation

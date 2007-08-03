@@ -33,6 +33,9 @@
 #include "configure.h"
 #endif
 
+#include <iostream>
+#include <libglademm.h>
+
 #include "LiveSupport/Widgets/OperatorComboBoxText.h"
 
 
@@ -54,37 +57,72 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 OperatorComboBoxText :: OperatorComboBoxText(
-                                Glib::RefPtr<Gdk::Pixbuf>   leftImage, 
-                                Glib::RefPtr<Gdk::Pixbuf>   centerImage, 
-                                Glib::RefPtr<Gdk::Pixbuf>   rightImage,
-                                Ptr<ResourceBundle>::Ref    bundle)
+                        GtkComboBox *                             baseClass,
+                        const Glib::RefPtr<Gnome::Glade::Xml> &   glade)
                                                                     throw ()
-        : ComboBoxText(leftImage, centerImage, rightImage),
-          LocalizedObject(bundle)
+          : ComboBoxText(baseClass, glade)
 {
-    Ptr<Glib::ustring>::Ref   partialOperator(new Glib::ustring("partial"));
-    appendPair(getResourceUstring("partialOperatorDisplay"), partialOperator);
-
-    Ptr<Glib::ustring>::Ref   prefixOperator(new Glib::ustring("prefix"));
-    appendPair(getResourceUstring("prefixOperatorDisplay"), prefixOperator);
-
-    Ptr<Glib::ustring>::Ref   equalsOperator(new Glib::ustring("="));
-    appendPair(getResourceUstring("=OperatorDisplay"), equalsOperator);
-
-    Ptr<Glib::ustring>::Ref   lessOrEqualOperator(new Glib::ustring("<="));
-    appendPair(getResourceUstring("<=OperatorDisplay"), lessOrEqualOperator);
-
-    Ptr<Glib::ustring>::Ref   greaterOrEqualOperator(new Glib::ustring(">="));
-    appendPair(getResourceUstring(">=OperatorDisplay"), greaterOrEqualOperator);
-
-    set_active(0);  // select the first item
 }
 
 
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-OperatorComboBoxText :: ~OperatorComboBoxText(void)                            throw ()
+OperatorComboBoxText :: ~OperatorComboBoxText(void)                 throw ()
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the contents of the combo box.
+ *----------------------------------------------------------------------------*/
+void
+OperatorComboBoxText :: setContents(Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ()
+{
+    setBundle(bundle);
+    append_text(*getResourceUstring("partialOperatorDisplay"));
+    append_text(*getResourceUstring("prefixOperatorDisplay"));
+    append_text(*getResourceUstring("=OperatorDisplay"));
+    append_text(*getResourceUstring("<=OperatorDisplay"));
+    append_text(*getResourceUstring(">=OperatorDisplay"));
+    set_active(0);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the contents of the combo box.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+OperatorComboBoxText :: getActiveKey(void)                          throw ()
+{
+    Ptr<Glib::ustring>::Ref   selectedOperator(new Glib::ustring);
+    int                       selectedRow = get_active_row_number();
+    
+    switch (selectedRow) {
+        case 0:         selectedOperator->assign("partial");
+                        break;
+        
+        case 1:         selectedOperator->assign("prefix");
+                        break;
+        
+        case 2:         selectedOperator->assign("=");
+                        break;
+        
+        case 3:         selectedOperator->assign("<=");
+                        break;
+        
+        case 4:         selectedOperator->assign(">=");
+                        break;
+        
+        default:        std::cerr << "impossible value '"
+                                  << selectedRow
+                                  << "' in OperatorComboBoxText::getActiveKey"
+                                  << std::endl;
+                        std::exit(1);
+                        break;
+    }
+    
+    return selectedOperator;
 }
 

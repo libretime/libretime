@@ -29,10 +29,13 @@
 
 /* ============================================================ include files */
 
+#ifdef HAVE_CONFIG_H
+#include "configure.h"
+#endif
+
 #include "RestoreBackupWindow.h"
 
 
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -58,66 +61,34 @@ const unsigned int      timerInterval = 10000;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 RestoreBackupWindow :: RestoreBackupWindow (
-                                Ptr<GLiveSupport>::Ref          gLiveSupport,
-                                Ptr<ResourceBundle>::Ref        bundle,
-                                Ptr<const Glib::ustring>::Ref   fileName)
+                            Ptr<GLiveSupport>::Ref              gLiveSupport,
+                            Glib::RefPtr<Gnome::Glade::Xml>     glade,
+                            Ptr<const Glib::ustring>::Ref       fileName)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle),
+          : gLiveSupport(gLiveSupport),
             fileName(fileName),
             currentState(AsyncState::pendingState)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
+                                                        "restoreBackupWindow");
+    setBundle(bundle);
     
-    messageLabel        = Gtk::manage(new Gtk::Label());
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        cancelButton    = Gtk::manage(wf->createButton(
-                                *gLiveSupport->getResourceUstring(
-                                                        "cancelButtonLabel")));
-        okButton        = Gtk::manage(wf->createButton(
-                                *gLiveSupport->getResourceUstring(
-                                                        "okButtonLabel")));
-        
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget("restoreBackupWindow1", mainWindow);
+    mainWindow->set_title(*getResourceUstring("windowTitle"));
+
+    Gtk::Button *       cancelButton;
+    glade->get_widget("restoreBackupMessageLabel1", messageLabel);
+    glade->get_widget("restoreBackupCancelButton1", cancelButton);
+    glade->get_widget("restoreBackupOkButton1", okButton);
     
-    // pack the widgets
-    Gtk::Box *          messageBox = Gtk::manage(new Gtk::HBox());
-    messageBox->pack_start(*messageLabel, Gtk::PACK_EXPAND_WIDGET, 10);
-    
-    Gtk::ButtonBox *    buttonBox = Gtk::manage(new Gtk::HButtonBox(
-                                                        Gtk::BUTTONBOX_END, 5));
-    buttonBox->pack_start(*cancelButton);
-    buttonBox->pack_start(*okButton);
-    
-    Gtk::Box *          layout = Gtk::manage(new Gtk::VBox());
-    layout->pack_start(*messageBox, Gtk::PACK_EXPAND_PADDING, 10);
-    layout->pack_start(*buttonBox,  Gtk::PACK_SHRINK,         0);
-    
-    add(*layout);
-    
-    // set widget properties
-    messageLabel->set_justify(Gtk::JUSTIFY_CENTER);
-    okButton->set_sensitive(false);
-    
-    //connect callbacks
-    cancelButton->signal_clicked().connect(sigc::mem_fun(
-                                *this,
+    mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
+                                &RestoreBackupWindow::onDeleteEvent));
+    cancelButton->signal_clicked().connect(sigc::mem_fun(*this,
                                 &RestoreBackupWindow::onCancelButtonClicked));
-    okButton->signal_clicked().connect(sigc::mem_fun(
-                                *this,
+    okButton->signal_clicked().connect(sigc::mem_fun(*this,
                                 &RestoreBackupWindow::onOkButtonClicked));
 
-    // start the restore backup operation
     restoreBackupOpen();
-    
-    // set name, size, etc. and show the widgets (not the window itself yet)
-    set_name("restoreBackupWindow");
-    show_all_children();
 }
 
 
@@ -149,12 +120,7 @@ inline void
 RestoreBackupWindow :: displayMessage(const Glib::ustring &     messageKey)
                                                                     throw ()
 {
-    try {
-        setLabelText(*getResourceUstring(messageKey));
-        
-    } catch (std::invalid_argument &e) {
-        messageLabel->set_text(e.what());
-    }
+    setLabelText(*getResourceUstring(messageKey));
 }
 
 
@@ -166,12 +132,7 @@ RestoreBackupWindow :: displayMessage(const Glib::ustring &     messageKey,
                                       const Glib::ustring &     argument)
                                                                     throw ()
 {
-    try {
-        setLabelText(*formatMessage(messageKey, argument));
-        
-    } catch (std::invalid_argument &e) {
-        messageLabel->set_text(e.what());
-    }
+    setLabelText(*formatMessage(messageKey, argument));
 }
 
 
@@ -220,7 +181,6 @@ RestoreBackupWindow :: restoreBackupCheck(void)                     throw ()
 {
     Ptr<StorageClientInterface>::Ref 
                             storage     = gLiveSupport->getStorageClient();
-    Ptr<SessionId>::Ref     sessionId   = gLiveSupport->getSessionId();
 
     Ptr<const Glib::ustring>::Ref           errorMessage;
     try {
@@ -252,7 +212,6 @@ RestoreBackupWindow :: restoreBackupClose(void)                     throw ()
     if (token) {
         Ptr<StorageClientInterface>::Ref 
                                 storage     = gLiveSupport->getStorageClient();
-        Ptr<SessionId>::Ref     sessionId   = gLiveSupport->getSessionId();
         
         try {
             storage->restoreBackupClose(*token);
@@ -307,12 +266,33 @@ RestoreBackupWindow :: resetTimer(void)                             throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Detach the timer when the window is hidden.
+ *  Show the window.
  *----------------------------------------------------------------------------*/
 void
-RestoreBackupWindow :: on_hide(void)                                throw ()
+RestoreBackupWindow :: show(void)                                   throw ()
+{
+    mainWindow->show();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close the connection and hide the window.
+ *----------------------------------------------------------------------------*/
+void
+RestoreBackupWindow :: hide(void)                                   throw ()
 {
     restoreBackupClose();
-    GuiWindow::on_hide();
+    mainWindow->hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for closing the window from the window manager.
+ *----------------------------------------------------------------------------*/
+bool
+RestoreBackupWindow :: onDeleteEvent(GdkEventAny *     event)       throw ()
+{
+    restoreBackupClose();
+    return false;
 }
 

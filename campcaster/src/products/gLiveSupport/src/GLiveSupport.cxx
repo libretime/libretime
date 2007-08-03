@@ -121,6 +121,16 @@ const std::string   localeAttrName = "locale";
 const std::string   nameAttrName = "name";
 
 /*------------------------------------------------------------------------------
+ *  The name of the config element for the directory where the Glade files are
+ *----------------------------------------------------------------------------*/
+const std::string   gladeDirConfigElementName = "gladeDirectory";
+
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const std::string   gladeFileName = "GLiveSupport.glade";
+
+/*------------------------------------------------------------------------------
  *  The name of the config element for the scheduler daemon start command
  *----------------------------------------------------------------------------*/
 const std::string   schedulerDaemonCommandsElementName
@@ -191,6 +201,7 @@ const std::string   serialPortConfigElementName = "serialPort";
  *  The default serial device
  *----------------------------------------------------------------------------*/
 const std::string   serialPortDefaultDevice = "/dev/ttyS0";
+
 }
 
 /* ===============================================  local function prototypes */
@@ -252,6 +263,17 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     stcf->configure(*dynamic_cast<const xmlpp::Element*>(nodes.front()));
 
     storage = stcf->getStorageClient();
+
+    // configure the directory where the Glade files are
+    nodes = element.get_children(gladeDirConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no gladeDirectory element");
+    }
+    const xmlpp::Element*  gladeDirElement 
+                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
+    gladeDir = gladeDirElement->get_attribute("path")
+                              ->get_value();
+    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
 
     // configure the WidgetFactory
     nodes = element.get_children(WidgetFactory::getConfigElementName());
@@ -474,7 +496,7 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
         Ptr<UnicodeString>::Ref uLanguage = ustringToUnicodeString(language);
         Ptr<Glib::ustring>::Ref msg = formatMessage(localeNotAvailableKey,
                                                     (*it).first);
-        displayMessageWindow(msg);
+        displayMessageWindow(*msg);
 
         changeLocale("");
         return false;
@@ -496,7 +518,7 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
         storageAvailable = true;
     } catch (XmlRpcException &e) {
         storageAvailable = false;
-        displayMessageWindow(getResourceUstring(storageNotReachableKey));
+        displayMessageWindow(*getResourceUstring(storageNotReachableKey));
     }
 
     // no need to check the widget factory
@@ -504,7 +526,7 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
     // check the scheduler client
     checkSchedulerClient();
     if (!isSchedulerAvailable()) {
-        displayMessageWindow(getResourceUstring(schedulerNotReachableKey));
+        displayMessageWindow(*getResourceUstring(schedulerNotReachableKey));
     }
 
     // TODO: check the audio player?
@@ -516,17 +538,62 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
 /*------------------------------------------------------------------------------
  *  Display a message window.
  *----------------------------------------------------------------------------*/
-void
+inline void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: displayMessageWindow(Ptr<const Glib::ustring>::Ref    message)
+GLiveSupport :: displayMessageWindow(const Glib::ustring &      message)
                                                                     throw ()
 {
-    std::cerr << "gLiveSupport: " << *message << std::endl;
+    runOkDialog(message);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Run a dialog window with No and Yes buttons.
+ *----------------------------------------------------------------------------*/
+inline Gtk::ResponseType
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: runNoYesDialog(const Glib::ustring &    message)
+                                                                    throw ()
+{
+    return runDialog("noYesDialog", message);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Run a dialog window with just an OK button.
+ *----------------------------------------------------------------------------*/
+inline Gtk::ResponseType
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: runOkDialog(const Glib::ustring &       message)
+                                                                    throw ()
+{
+    return runDialog("okDialog", message);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Run a dialog window.
+ *----------------------------------------------------------------------------*/
+Gtk::ResponseType
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: runDialog(const Glib::ustring &         dialogName,
+                          const Glib::ustring &         message)
+                                                                    throw ()
+{
+    Gtk::Dialog *       dialog;
+    Gtk::Label *        dialogLabel;
+    glade->get_widget(dialogName + "1", dialog);
+    glade->get_widget(dialogName + "Label1", dialogLabel);
     
-    Ptr<DialogWindow>::Ref  window(widgetFactory->createDialogWindow(
-                                                                message,
-                                                                getBundle()));
-    window->run();
+    Glib::ustring       formattedMessage = "<span weight=\"bold\" ";
+    formattedMessage += " size=\"larger\">";
+    formattedMessage += message;
+    formattedMessage += "</span>";
+    dialogLabel->set_label(formattedMessage);
+
+    Gtk::ResponseType   response = Gtk::ResponseType(dialog->run());
+    dialog->hide();
+    return response;
 }
 
 
@@ -537,13 +604,16 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                              throw ()
 {
-    masterPanel.reset(new MasterPanelWindow(shared_from_this(), getBundle()));
+    masterPanel.reset(new MasterPanelWindow(shared_from_this(),
+                                            getBundle(),
+                                            gladeDir));
 
-    masterPanel->set_icon_list(taskbarIcons->getIconList());
-    masterPanel->set_default_icon_list(taskbarIcons->getIconList());
+    masterPanel->getWindow()->set_icon_list(taskbarIcons->getIconList());
+    masterPanel->getWindow()->set_default_icon_list(
+                                            taskbarIcons->getIconList());
 
     // Shows the window and returns when it is closed.
-    Gtk::Main::run(*masterPanel);
+    Gtk::Main::run(*masterPanel->getWindow());
 
     masterPanel.reset();
 }
@@ -635,12 +705,12 @@ GLiveSupport :: logout(void)                                throw ()
         return false;
     }
     
-    if (masterPanel && !masterPanel->cancelEditedPlaylist()) {
+    if (!masterPanel->cancelEditedPlaylist()) {
         return false;   // do nothing if the user presses the cancel button
     }
     
     stopCueAudio();
-    showAnonymousUI();
+    masterPanel->showAnonymousUI();
     
     storeWindowPositions();
     windowPositions.clear();
@@ -710,32 +780,6 @@ GLiveSupport :: loadWindowContents(ContentsStorable *   window)
     }
     
     window->setContents(windowContents);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Show the anonymous UI
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: showAnonymousUI(void)                       throw ()
-{
-    if (masterPanel.get()) {
-        masterPanel->showAnonymousUI();
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Show the UI when someone is logged in
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: showLoggedInUI(void)                        throw ()
-{
-    if (masterPanel.get()) {
-        masterPanel->showLoggedInUI();
-    }
 }
 
 
@@ -1028,7 +1072,10 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
                                                             throw ()
 {
-    masterPanel->setNowPlaying(playable);
+    // test needed: this gets called indirectly from ~MasterPanelWindow
+    if (masterPanel) {
+        masterPanel->setNowPlaying(playable);
+    }
 }
 
 
@@ -1068,7 +1115,7 @@ GLiveSupport :: openPlaylistForEditing(Ptr<const UniqueId>::Ref   playlistId)
         
     editedPlaylist->createSavedCopy();
 
-    masterPanel->updateSimplePlaylistMgmtWindow();
+    masterPanel->updatePlaylistWindow();
 }
 
 
@@ -1121,7 +1168,7 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
         editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
     }
 
-    masterPanel->updateSimplePlaylistMgmtWindow();
+    masterPanel->updatePlaylistWindow();
     emitSignalEditedPlaylistModified();
 }
 
@@ -1252,21 +1299,21 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     }
 
@@ -1336,7 +1383,7 @@ GLiveSupport :: onStop(Ptr<const Glib::ustring>::Ref      errorMessage)
     }
     
     if (errorMessage) {
-        displayMessageWindow(errorMessage);
+        displayMessageWindow(*errorMessage);
     }
 }
 
@@ -1382,21 +1429,21 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     } catch (std::invalid_argument &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     } catch (std::runtime_error &e) {
         Ptr<Glib::ustring>::Ref     eMsg 
                                     = getResourceUstring("audioErrorMsg");
         eMsg->append("\n");
         eMsg->append(e.what());
-        displayMessageWindow(eMsg);
+        displayMessageWindow(*eMsg);
         throw std::runtime_error(e.what());
     }
     
@@ -1436,7 +1483,10 @@ GLiveSupport :: stopCueAudio(void)
         cuePlayerIsPaused = false;
         cueItemPlayingNow.reset();
         
-        masterPanel->showCuePlayerStopped();
+        // test needed: this gets called indirectly from ~MasterPanelWindow
+        if (masterPanel) {
+            masterPanel->showCuePlayerStopped();
+        }
     }
 }
 
@@ -1468,11 +1518,11 @@ GLiveSupport :: detachCueAudioListener(AudioPlayerEventListener *   listener)
 /*------------------------------------------------------------------------------
  *  Return an image containing the radio station logo.
  *----------------------------------------------------------------------------*/
-Gtk::Image *
+Glib::RefPtr<Gdk::Pixbuf>
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: getStationLogoImage(void)       throw()
+GLiveSupport :: getStationLogoPixbuf(void)      throw()
 {
-    return new Gtk::Image(stationLogoPixbuf);
+    return stationLogoPixbuf;
 }
 
 
@@ -1535,6 +1585,60 @@ GLiveSupport :: getWindowPosition(Ptr<Gtk::Window>::Ref         window)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Save the position and size of the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: putWindowPosition(const BasicWindow *       window)
+                                                                    throw ()
+{
+    WindowPositionType  pos;
+    window->getWindow()->get_position(pos.x, pos.y);
+    window->getWindow()->get_size(pos.width, pos.height);
+
+    windowPositions[replaceSpaces(window->getTitle())] = pos;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Apply saved position and size data to the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getWindowPosition(BasicWindow *     window)
+                                                                    throw ()
+{
+    WindowPositionsListType::const_iterator it = windowPositions.find(
+                                        replaceSpaces(window->getTitle()));
+    if (it != windowPositions.end()) {
+        WindowPositionType  pos = it->second;
+        window->getWindow()->move(pos.x, pos.y);
+        window->getWindow()->resize(pos.width, pos.height);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Replace spaces with underscore characters.
+ *----------------------------------------------------------------------------*/
+Glib::ustring
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: replaceSpaces(Ptr<const Glib::ustring>::Ref     string)
+                                                                    throw ()
+{
+    Glib::ustring   copy = *string;
+
+    for (unsigned int i = 0; i < copy.size(); ++i) {
+        if (copy[i] == ' ') {
+            copy.replace(i, 1, 1, '_');
+        }
+    }
+
+    return copy;
+}
+        
 
 /*------------------------------------------------------------------------------
  *  Store the saved window positions.
@@ -1741,40 +1845,23 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayAuthenticationServerMissingMessage(void)     throw ()
 {
-    Ptr<Glib::ustring>::Ref     message;
-    try {
-        message = getResourceUstring("authenticationNotReachableMsg");
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
     // "authentication not available -- would you like to edit the options?"
-    Ptr<DialogWindow>::Ref      question(widgetFactory->createDialogWindow(
-                                                message,
-                                                getBundle(),
-                                                DialogWindow::noButton
-                                                | DialogWindow::yesButton ));
-    DialogWindow::ButtonType    answer = question->run();
+    Gtk::ResponseType   answer = runNoYesDialog(*getResourceUstring(
+                                            "authenticationNotReachableMsg"));
     
-    if (answer == DialogWindow::yesButton) {
-        Ptr<ResourceBundle>::Ref    bundle;
-        try {
-            bundle  = getBundle("optionsWindow");
-        } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
-            return;
-        }
-
+    if (answer == Gtk::RESPONSE_YES) {
+/* DISABLED TEMPORARILY
         Ptr<OptionsWindow>::Ref     optionsWindow(new OptionsWindow(
-                                                            shared_from_this(),
-                                                            bundle,
-                                                            0));
+                                                    shared_from_this(),
+                                                    getBundle("optionsWindow"),
+                                                    0,
+                                                    gladeDir));
         optionsWindow->run();
         
         if (optionsContainer->isTouched()) {
             optionsContainer->writeToFile();
         }
+*/
     }
 }
 

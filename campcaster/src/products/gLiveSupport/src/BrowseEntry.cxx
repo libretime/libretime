@@ -39,7 +39,6 @@
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -56,34 +55,36 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BrowseEntry :: BrowseEntry(
-        Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
-        Ptr<ResourceBundle>::Ref                            bundle)
-                                                        throw ()
+BrowseEntry :: BrowseEntry(Ptr<GLiveSupport>::Ref           gLiveSupport,
+                           Ptr<ResourceBundle>::Ref         bundle,
+                           Glib::RefPtr<Gnome::Glade::Xml>  glade)
+                                                                    throw ()
           : LocalizedObject(bundle)
 {
-    browseItemOne   = Gtk::manage(new BrowseItem(gLiveSupport, 
-                                                 bundle,
-                                                 4 /* Genre */));
-    browseItemTwo   = Gtk::manage(new BrowseItem(gLiveSupport, 
-                                                 bundle,
-                                                 1 /* Creator */));
-    browseItemThree = Gtk::manage(new BrowseItem(gLiveSupport, 
-                                                 bundle,
-                                                 2 /* Album */));
+    browseItemOne.reset(new BrowseItem(0,
+                                       gLiveSupport, 
+                                       bundle,
+                                       glade,
+                                       4 /* Genre */));
+    browseItemTwo.reset(new BrowseItem(1,
+                                       gLiveSupport, 
+                                       bundle,
+                                       glade,
+                                       1 /* Creator */));
+    browseItemThree.reset(new BrowseItem(2,
+                                         gLiveSupport, 
+                                         bundle,
+                                         glade,
+                                         2 /* Album */));
     // TODO: change hard-coded indices to stuff read from config
 
-    browseItemOne->signalSelectionChanged().connect(
-        sigc::bind<BrowseItem*>(
+    browseItemOne->signalChanged().connect(
+        sigc::bind<Ptr<BrowseItem>::Ref>(
             sigc::mem_fun(*browseItemTwo, &BrowseItem::onParentChangedShow),
             browseItemOne ));
-    browseItemTwo->signalSelectionChanged().connect(
-        sigc::bind<BrowseItem*>(
+    browseItemTwo->signalChanged().connect(
+        sigc::bind<Ptr<BrowseItem>::Ref>(
             sigc::mem_fun(*browseItemThree, &BrowseItem::onParentChangedShow),
             browseItemTwo ));
-                                 
-    pack_start(*browseItemOne,   Gtk::PACK_EXPAND_WIDGET, 5);
-    pack_start(*browseItemTwo,   Gtk::PACK_EXPAND_WIDGET, 5);
-    pack_start(*browseItemThree, Gtk::PACK_EXPAND_WIDGET, 5);
 }
 

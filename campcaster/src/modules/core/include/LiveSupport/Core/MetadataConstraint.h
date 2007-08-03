@@ -146,7 +146,7 @@ class MetadataConstraint : public Configurable
         /**
          *  Configure the metadata object based on an XML configuration element.
          *
-         *  @param elemen the XML configuration element.
+         *  @param  element  the XML configuration element.
          *  @exception std::invalid_argument of the supplied XML element
          *             contains bad configuration information
          */

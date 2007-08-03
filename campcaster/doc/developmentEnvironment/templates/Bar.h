@@ -66,6 +66,7 @@ using namespace LiveSupport::Core;
 class Bar
 {
     private:
+
         /**
          *  A static member variable.
          */
@@ -76,25 +77,38 @@ class Bar
          */
         int                             barInt;
 
+
     public:
+
         /**
          *  Default constructor.
          */
-        Bar (void)                                      throw ()
+        Bar (void)                                                  throw ()
         {
         }
 
         /**
          *  Say something.
          *
-         *  @param parameter a parameter we don't care about.
          *  @return the bar string.
          *  @exception std::exception on some problems.
          */
         const std::string
-        sayBar (void)                           throw (std::exception)
+        sayBar(void)                            throw (std::exception);
+
+        /**
+         *  Say something else.
+         *
+         *  @param  firstParam  the first parameter (a pointer).
+         *  @param  secondParam the second parameter (a smart pointer).
+         *  @return the bar string.
+         */
+        void
+        sayFoo(ClassOne *               firstParam,
+               Ptr<ClassTwo>::Ref       secondParam)
+                                                              throw ()
         {
-            return barStr;
+            // TODO: implement this important function.
         }
 };
 

@@ -45,7 +45,6 @@
 
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
-#include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/WidgetConstants.h"
 #include "GLiveSupport.h"
 
@@ -76,7 +75,7 @@ class GuiWindow : public WhiteWindow,
         /**
          *  The button which was pressed to open this window.
          */
-        Button *                    windowOpenerButton;
+        Gtk::ToggleButton *         windowOpenerButton;
 
     protected:
         /**
@@ -103,7 +102,6 @@ class GuiWindow : public WhiteWindow,
          *  button.
          *
          *  @see LiveSupport::GLiveSupport::GLiveSupport::putWindowPosition()
-         *  @see LiveSupport::Widgets::Button::setSelected()
          */
         virtual void
         on_hide(void)                                               throw ();
@@ -122,7 +120,7 @@ class GuiWindow : public WhiteWindow,
          */
         GuiWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
                   Ptr<ResourceBundle>::Ref      bundle,
-                  Button *                      windowOpenerButton = 0,
+                  Gtk::ToggleButton *           windowOpenerButton = 0,
                   int                           properties = 0)
                                                                     throw ();
 

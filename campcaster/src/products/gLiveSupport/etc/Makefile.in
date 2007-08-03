@@ -184,6 +184,9 @@ CURL_LIBS=@CURL_LIBS@
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
+LIBGLADEMM_CFLAGS=@LIBGLADEMM_CFLAGS@
+LIBGLADEMM_LIBS=@LIBGLADEMM_LIBS@
+
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
@@ -219,6 +222,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${GTKMM_CFLAGS} \
+                             ${LIBGLADEMM_CFLAGS} \
 							 ${GSTREAMER_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
@@ -235,6 +239,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
                      ${CURL_LIBS} \
                      ${GTKMM_LIBS} \
+                     ${LIBGLADEMM_LIBS} \
 					 ${GSTREAMER_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
@@ -253,12 +258,12 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/MasterPanelWindow.o \
                      ${TMP_DIR}/NowPlaying.o \
-                     ${TMP_DIR}/MasterPanelUserInfoWidget.o \
                      ${TMP_DIR}/GuiWindow.o \
+                     ${TMP_DIR}/BasicWindow.o \
                      ${TMP_DIR}/LoginWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
                      ${TMP_DIR}/ScratchpadWindow.o \
-                     ${TMP_DIR}/SimplePlaylistManagementWindow.o \
+                     ${TMP_DIR}/PlaylistWindow.o \
                      ${TMP_DIR}/SchedulerWindow.o \
                      ${TMP_DIR}/SchedulePlaylistWindow.o \
                      ${TMP_DIR}/SearchWindow.o \

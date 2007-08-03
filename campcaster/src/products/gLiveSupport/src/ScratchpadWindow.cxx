@@ -37,12 +37,9 @@
 #include <stdexcept>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/ZebraTreeView.h"
 
 #include "ScratchpadWindow.h"
 
-
-using namespace Glib;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
@@ -55,10 +52,10 @@ using namespace LiveSupport::GLiveSupport;
 
 namespace {
 
-/**
- *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
- */
-const Glib::ustring     windowName = "scratchpadWindow";
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "ScratchpadWindow.glade";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing Scratchpad contents
@@ -78,232 +75,109 @@ const Glib::ustring     userPreferencesKeyName = "scratchpadContents";
 ScratchpadWindow :: ScratchpadWindow (
                         Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Ptr<ResourceBundle>::Ref    bundle,
-                        Button *                    windowOpenerButton)
+                        Gtk::ToggleButton *         windowOpenerButton,
+                        const Glib::ustring &       gladeDir)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle, 
-                      windowOpenerButton)
+          : BasicWindow(gLiveSupport,
+                        bundle,
+                        windowOpenerButton,
+                        gladeDir + gladeFileName),
+            gladeDir(gladeDir)
 {
-    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
-
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-        addToPlaylistButton = Gtk::manage(widgetFactory->createButton(
-                            *getResourceUstring("addToPlaylistButtonLabel")));
-        clearListButton = Gtk::manage(widgetFactory->createButton(
-                            *getResourceUstring("clearListButtonLabel")));
-        removeButton = Gtk::manage(widgetFactory->createButton(
-                            *getResourceUstring("removeButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    addToPlaylistButton->set_name("addToPlaylistButton");
-    addToPlaylistButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &ScratchpadWindow::onAddToPlaylistButtonClicked));
-
-    clearListButton->set_name("clearListButton");
-    clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &ScratchpadWindow::onClearListButtonClicked));
-
-    removeButton->set_name("removeButton");
-    removeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &ScratchpadWindow::onRemoveItemButtonClicked));
-
-    add(vBox);
-
-    // Create the Tree model:
-    treeModel = Gtk::ListStore::create(modelColumns);
-    treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
+    // create the tree view
+    glade->get_widget_derived("treeView1", treeView);
     treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
-    treeView->set_reorderable(true);
-    treeView->set_enable_search(false);
 
-    // Add the TreeView's view columns:
-    try {
-        treeView->appendColumn(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn, 20);
-        treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 200);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    treeView->appendColumn("",
+                           modelColumns.typeColumn);
+    treeView->appendColumn(*getResourceUstring("creatorColumnLabel"),
+                           modelColumns.creatorColumn);
+    treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
+                           modelColumns.titleColumn);
 
-    // register the signal handler for treeview entries being clicked
+    treeModel = Gtk::ListStore::create(modelColumns);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
+
+    // register the signal handlers for treeview
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onEntryClicked));
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onDoubleClick));
-
-    // register the signal handler for keyboard key presses
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onKeyPressed));
 
-    // Add the TreeView, inside a ScrolledWindow, with the button underneath:
-    scrolledWindow.add(*treeView);
-
-    // Only show the scrollbars when they are necessary:
-    scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-
-    cueAudioButtons = Gtk::manage(new CuePlayer(
-                                    gLiveSupport, treeView, modelColumns ));
-    topButtonBox.pack_start(*cueAudioButtons, Gtk::PACK_EXPAND_PADDING);
-    
-    middleButtonBox.set_layout(Gtk::BUTTONBOX_END);
-    middleButtonBox.set_spacing(5);
-    middleButtonBox.pack_start(*addToPlaylistButton);
-
-    bottomButtonBox.set_layout(Gtk::BUTTONBOX_END);
-    bottomButtonBox.set_spacing(5);
-    bottomButtonBox.pack_start(*clearListButton);
-    bottomButtonBox.pack_start(*removeButton);
-
-    // pack everything in the main box
-    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
-    vBox.pack_start(middleButtonBox, Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK, 5);
+    // create the cue player widget
+    cuePlayer.reset(new CuePlayer(gLiveSupport,
+                                  treeView,
+                                  modelColumns,
+                                  glade));
 
     // create the right-click entry context menu for audio clips
-    audioClipMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& audioClipMenuList = audioClipMenu->items();
-    // register the signal handlers for the popup menu
-    try {
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("cueMenuItem"),
-                                sigc::mem_fun(*cueAudioButtons,
-                                        &CuePlayer::onPlayItem)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToLiveModeMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onAddToLiveMode)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onAddToPlaylist)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onRemoveMenuOption)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("uploadToHubMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    audioClipMenu->accelerate(*this);
+    audioClipMenu.reset(new Gtk::Menu());
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("cueMenuItem"),
+                        sigc::mem_fun(*cuePlayer,
+                                      &CuePlayer::onPlayItem)));
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("addToLiveModeMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onAddToLiveMode)));
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("addToPlaylistMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onAddToPlaylist)));
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("removeMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onRemoveMenuOption)));
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
+    audioClipMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("uploadToHubMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onUploadToHub)));
+    audioClipMenu->accelerate(*mainWindow);
 
     // create the right-click entry context menu for playlists
-    playlistMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& playlistMenuList = playlistMenu->items();
-    // register the signal handlers for the popup menu
-
-    try{
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("cueMenuItem"),
-                                sigc::mem_fun(*cueAudioButtons,
-                                    &CuePlayer::onPlayItem)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToLiveModeMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onAddToLiveMode)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                    &ScratchpadWindow::onAddToPlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onRemoveMenuOption)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("editPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onEditPlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("schedulePlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                    &ScratchpadWindow::onSchedulePlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("exportPlaylistMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onExportPlaylist)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("uploadToHubMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    playlistMenu->accelerate(*this);
+    playlistMenu.reset(new Gtk::Menu());
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("cueMenuItem"),
+                        sigc::mem_fun(*cuePlayer,
+                                      &CuePlayer::onPlayItem)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("addToLiveModeMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onAddToLiveMode)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("addToPlaylistMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onAddToPlaylist)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("removeMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onRemoveMenuOption)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("editPlaylistMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onEditPlaylist)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("schedulePlaylistMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onSchedulePlaylist)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("exportPlaylistMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onExportPlaylist)));
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
+    playlistMenu->items().push_back(Gtk::Menu_Helpers::MenuElem(
+                        *getResourceUstring("uploadToHubMenuItem"),
+                        sigc::mem_fun(*this,
+                                      &ScratchpadWindow::onUploadToHub)));
+    playlistMenu->accelerate(*mainWindow);
     
+    // set the user preferences key
     userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
-    
-    // show
-    set_name(windowName);
-    set_default_size(300, 330);
-    set_modal(false);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
-    
-    show_all_children();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the add to playlist button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onAddToPlaylistButtonClicked (void)         throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection> 
-                    selection       = treeView->get_selection();
-    std::vector<Gtk::TreePath> 
-                    selectedRows    = selection->get_selected_rows();
-
-    std::vector<Gtk::TreePath>::iterator    iter;
-    for (iter = selectedRows.begin(); iter != selectedRows.end(); ++iter) {
-        Gtk::TreeIter   ti = treeModel->get_iter(*iter);
-        if (ti) {
-            Ptr<Playable>::Ref  playable = (*ti)[modelColumns.playableColumn];
-            try {
-                gLiveSupport->addToPlaylist(playable->getId());
-            } catch (XmlRpcException &e) {
-                // just ignore the bad items
-                std::cerr << "error in ScratchpadWindow::"
-                             "onAddToPlaylistButtonClicked(): "
-                          << e.what() << std::endl;
-            }
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the clear list button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onClearListButtonClicked (void)             throw ()
-{
-    treeModel->clear();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Remove menu button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onRemoveItemButtonClicked(void)             throw ()
-{
-    treeView->onRemoveMenuOption();
 }
 
 
@@ -311,7 +185,7 @@ ScratchpadWindow :: onRemoveItemButtonClicked(void)             throw ()
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
+ScratchpadWindow :: onEntryClicked (GdkEventButton     * event)     throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         Gtk::TreePath           currentPath;
@@ -353,7 +227,7 @@ ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
  *  Select the row which contains the playable specified.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: selectRow(Ptr<Playable>::Ref    playable)   throw ()
+ScratchpadWindow :: selectRow(Ptr<Playable>::Ref    playable)       throw ()
 {
     Gtk::TreeModel::const_iterator  it;
 
@@ -377,7 +251,7 @@ ScratchpadWindow :: selectRow(Ptr<Playable>::Ref    playable)   throw ()
  *  Remove an item from the Scratchpad
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref  id)    throw ()
+ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref  id)        throw ()
 {
     Gtk::TreeModel::const_iterator  it;
 
@@ -400,13 +274,13 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref  id)    throw ()
  *  entry context menu
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onEditPlaylist(void)                        throw ()
+ScratchpadWindow :: onEditPlaylist(void)                            throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     try {
         gLiveSupport->openPlaylistForEditing(playable->getId());
     } catch (XmlRpcException &e) {
-        gLiveSupport->displayMessageWindow(getResourceUstring(
+        gLiveSupport->displayMessageWindow(*getResourceUstring(
                                                     "cannotEditPlaylistMsg" ));
     }
 }
@@ -417,12 +291,11 @@ ScratchpadWindow :: onEditPlaylist(void)                        throw ()
  *  entry context menu
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
+ScratchpadWindow :: onSchedulePlaylist(void)                        throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<UniqueId>::Ref  uid      = playable->getId();
     
-    Ptr<ResourceBundle>::Ref    bundle;
     Ptr<Playlist>::Ref          playlist;
     
     try {
@@ -431,8 +304,6 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
         }
 
         playlist    = gLiveSupport->getPlaylist(uid);
-
-        bundle      = gLiveSupport->getBundle("schedulePlaylistWindow");
 
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -444,10 +315,10 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
     }
     
     schedulePlaylistWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
-                                                            bundle,
+                                                            gladeDir,
                                                             playlist));
 
-    Gtk::Main::run(*schedulePlaylistWindow);
+    Gtk::Main::run(*schedulePlaylistWindow->getWindow());
 }
 
 
@@ -455,7 +326,7 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
  *  Signal handler for "export playlist" in the context menu.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onExportPlaylist(void)                      throw ()
+ScratchpadWindow :: onExportPlaylist(void)                          throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
@@ -464,10 +335,10 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
         if (playlist) {
             exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gLiveSupport->getBundle("exportPlaylistWindow"),
+                                gladeDir,
                                 playlist));
-            exportPlaylistWindow->set_transient_for(*this);
-            Gtk::Main::run(*exportPlaylistWindow);
+            exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+            Gtk::Main::run(*exportPlaylistWindow->getWindow());
         }
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -480,7 +351,7 @@ ScratchpadWindow :: onExportPlaylist(void)                      throw ()
  *  entry context menu
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
+ScratchpadWindow :: onAddToPlaylist(void)                           throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     try {
@@ -498,7 +369,7 @@ ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
  *  entry context menu
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
+ScratchpadWindow :: onAddToLiveMode(void)                           throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     gLiveSupport->addToLiveMode(playable);
@@ -509,10 +380,44 @@ ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
  *  Signal handler for "upload to hub" in the context menu.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: onUploadToHub(void)                         throw ()
+ScratchpadWindow :: onUploadToHub(void)                             throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     gLiveSupport->uploadToHub(playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onRemoveMenuOption(void)                        throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = treeView->get_selection();
+    std::vector<Gtk::TreePath>              selectedPaths
+                                            = selection->get_selected_rows();
+    
+    std::vector<Gtk::TreeModel::iterator>   selectedIters;
+    for (std::vector<Gtk::TreePath>::iterator pathIt = selectedPaths.begin();
+                                              pathIt != selectedPaths.end();
+                                              ++pathIt) {
+        selectedIters.push_back(treeModel->get_iter(*pathIt));
+    }
+    
+    Gtk::TreeModel::iterator                newSelection;
+    for (std::vector<Gtk::TreeModel::iterator>::iterator
+                                                iterIt = selectedIters.begin();
+                                                iterIt != selectedIters.end();
+                                                ++iterIt) {
+        newSelection = *iterIt;
+        ++newSelection;
+        treeModel->erase(*iterIt);
+    }
+    
+    if (newSelection) {
+        selection->select(newSelection);
+    }
 }
 
 
@@ -522,7 +427,7 @@ ScratchpadWindow :: onUploadToHub(void)                         throw ()
 void
 ScratchpadWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                                   const Gtk::TreeViewColumn *     column)
-                                                                throw ()
+                                                                    throw ()
 {
     Gtk::TreeIter   iter = treeModel->get_iter(path);
     if (iter) {
@@ -536,11 +441,11 @@ ScratchpadWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
  *  Event handler for a key pressed.
  *----------------------------------------------------------------------------*/
 bool
-ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
+ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)            throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
         KeyboardShortcut::Action    action = gLiveSupport->findAction(
-                                                windowName,
+                                                "scratchpadWindow",
                                                 Gdk::ModifierType(event->state),
                                                 event->keyval);
         switch (action) {
@@ -559,7 +464,7 @@ ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
                                     break;
             
             case KeyboardShortcut::removeItem :
-                                    onRemoveItemButtonClicked();
+                                    onRemoveMenuOption();
                                     return true;
             
             default :               break;
@@ -574,7 +479,7 @@ ScratchpadWindow :: onKeyPressed(GdkEventKey *    event)        throw ()
  *  Check whether exactly one row is selected.
  *----------------------------------------------------------------------------*/
 bool
-ScratchpadWindow :: isSelectionSingle(void)                     throw ()
+ScratchpadWindow :: isSelectionSingle(void)                         throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> 
                     selection       = treeView->get_selection();
@@ -596,7 +501,7 @@ ScratchpadWindow :: isSelectionSingle(void)                     throw ()
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
-                                                                throw ()
+                                                                    throw ()
 {
     // cache the item if it hasn't been cached yet
     if (!playable->getToken()) {
@@ -611,7 +516,7 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
     
     removeItem(playable->getId());
     
-    Gtk::TreeModel::Row     row = *treeModel->prepend();
+    Gtk::TreeModel::Row     row = *(treeModel->prepend());
     
     row[modelColumns.playableColumn]        = playable;
     
@@ -629,6 +534,12 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
             break;
     }
     
+    Ptr<const Glib::ustring>::Ref   creator = playable->getMetadata(
+                                                        "dc:creator");
+    if (creator) {
+        row[modelColumns.creatorColumn]   = Glib::Markup::escape_text(
+                                                        *creator);
+    }
     row[modelColumns.titleColumn]         = Glib::Markup::escape_text(
                                                         *playable->getTitle());
 }
@@ -639,7 +550,7 @@ ScratchpadWindow :: addItem(Ptr<Playable>::Ref    playable)
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
-                                                                throw ()
+                                                                    throw ()
 {
     Ptr<Playable>::Ref  playable;
     try {
@@ -658,7 +569,7 @@ ScratchpadWindow :: addItem(Ptr<const UniqueId>::Ref    id)
  *  Return the contents of the Scratchpad.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-ScratchpadWindow :: getContents(void)                           throw ()
+ScratchpadWindow :: getContents(void)                               throw ()
 {
     std::ostringstream              contentsStream;
     Gtk::TreeModel::const_iterator  it;
@@ -681,7 +592,7 @@ ScratchpadWindow :: getContents(void)                           throw ()
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: setContents(Ptr<const Glib::ustring>::Ref       contents)
-                                                                throw ()
+                                                                    throw ()
 {
     std::vector<UniqueId::IdType>   contentsVector;
     std::istringstream              contentsStream(*contents);
@@ -710,15 +621,15 @@ ScratchpadWindow :: setContents(Ptr<const Glib::ustring>::Ref       contents)
  *  Event handler called when the the window gets hidden.
  *----------------------------------------------------------------------------*/
 void
-ScratchpadWindow :: on_hide(void)                               throw ()
+ScratchpadWindow :: hide(void)                                      throw ()
 {
     if (exportPlaylistWindow) {
-        exportPlaylistWindow->hide();
+        exportPlaylistWindow->getWindow()->hide();
     }
     if (schedulePlaylistWindow) {
-        schedulePlaylistWindow->hide();
+        schedulePlaylistWindow->getWindow()->hide();
     }
         
-    GuiWindow::on_hide();
+    BasicWindow::hide();
 }
 

@@ -91,6 +91,9 @@ ICU_LIBS=@ICU_LIBS@
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
+LIBGLADEMM_CFLAGS=@LIBGLADEMM_CFLAGS@
+LIBGLADEMM_LIBS=@LIBGLADEMM_LIBS@
+
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
@@ -115,6 +118,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              ${LIBXMLPP_CFLAGS} \
                              ${ICU_CFLAGS} \
                              ${GTKMM_CFLAGS} \
+                             ${LIBGLADEMM_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
@@ -123,6 +127,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
                      ${ICU_LIBS} \
                      ${GTKMM_LIBS} \
+                     ${LIBGLADEMM_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${LIB_DIR}

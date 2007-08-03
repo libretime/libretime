@@ -38,7 +38,6 @@
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -78,34 +77,26 @@ const Glib::ustring      userPreferencesKeyName  = "activeBackups";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BackupList :: BackupList (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                          Ptr<ResourceBundle>::Ref  bundle)
+BackupList :: BackupList (Ptr<GLiveSupport>::Ref            gLiveSupport,
+                          Ptr<ResourceBundle>::Ref          bundle,
+                          Glib::RefPtr<Gnome::Glade::Xml>   glade)
                                                                     throw ()
           : LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
-
     // create the tree view
     treeModel = Gtk::ListStore::create(modelColumns);
-    treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
-    treeView->set_enable_search(false);
+    glade->get_widget_derived("backupListTreeView1", treeView);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
 
     // Add the TreeView's view columns:
-    try {
-        treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 300);
-        treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
-                               modelColumns.dateColumn, 180);
-        treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
-                               modelColumns.statusDisplayColumn, 50);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    // add the tree view to this widget
-    Gtk::VBox::add(*treeView);
+    treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
+                           modelColumns.titleColumn, 300);
+    treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
+                           modelColumns.dateColumn, 180);
+    treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
+                           modelColumns.statusDisplayColumn, 50);
 
     userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
 }
@@ -342,7 +333,7 @@ BackupList :: setStatus(Gtk::TreeIter                       iter,
         
     } else {
         std::cerr << "Impossible status: '" << status
-                    << "' in BackupList::setStatus()." << std::endl;
+                  << "' in BackupList::setStatus()." << std::endl;
     }
     
     return false;

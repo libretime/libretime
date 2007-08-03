@@ -35,12 +35,10 @@
 
 #include <iostream>
 
-#include "AdvancedSearchItem.h"
 #include "AdvancedSearchEntry.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -51,39 +49,9 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
- *  The localization key for "File type: " before the file type selector box.
+ *  The maximum number of AdvancedSearchItem children.
  *----------------------------------------------------------------------------*/
-const std::string    fileTypeLabelKey = "fileTypeTextLabel";
-
-/*------------------------------------------------------------------------------
- *  The localization key for "all" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    allLocalizationKey = "allFileType";
-
-/*------------------------------------------------------------------------------
- *  The localization key for "playlist" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    playlistLocalizationKey = "playlistFileType";
-
-/*------------------------------------------------------------------------------
- *  The localization key for "audioClip" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    audioClipLocalizationKey = "audioClipFileType";
-
-/*------------------------------------------------------------------------------
- *  The search key for "all" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    allSearchKey = "all";
-
-/*------------------------------------------------------------------------------
- *  The search key for "playlist" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    playlistSearchKey = "playlist";
-
-/*------------------------------------------------------------------------------
- *  The search key for "audioClip" in the file type selector box.
- *----------------------------------------------------------------------------*/
-const std::string    audioClipSearchKey = "audioClip";
+const int           maxChildren = 5;
 
 }
 
@@ -95,61 +63,39 @@ const std::string    audioClipSearchKey = "audioClip";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
+AdvancedSearchEntry :: AdvancedSearchEntry(
+                            Ptr<GLiveSupport>::Ref              gLiveSupport,
+                            Glib::RefPtr<Gnome::Glade::Xml>     glade)
                                                                     throw ()
           : gLiveSupport(gLiveSupport)
 {
-    Ptr<ResourceBundle>::Ref    bundle;
-    try {
-        bundle = gLiveSupport->getBundle("advancedSearchEntry");
-    } catch (std::invalid_argument &e) {
-        // TODO: signal error
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
+                                                        "advancedSearchEntry");
     setBundle(bundle);
 
     metadataTypes = gLiveSupport->getMetadataTypeContainer();
-    Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance(); 
     
     Gtk::Label *            fileTypeLabel;
-    try {
-        fileTypeLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring(fileTypeLabelKey) ));
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
+    glade->get_widget("advancedFileTypeLabel1", fileTypeLabel);
+    fileTypeLabel->set_label(*getResourceUstring("fileTypeTextLabel"));
+    
+    glade->get_widget_derived("advancedFileTypeEntry1", fileTypeEntry);
+    fileTypeEntry->append_text(*getResourceUstring("allFileType"));
+    fileTypeEntry->append_text(*getResourceUstring("audioClipFileType"));
+    fileTypeEntry->append_text(*getResourceUstring("playlistFileType"));
+    fileTypeEntry->set_active(0);
+    
+    for (int i = 0; i < maxChildren; ++i) {
+        Ptr<AdvancedSearchItem>::Ref    searchItem(new AdvancedSearchItem(
+                                                                i, 
+                                                                metadataTypes,
+                                                                getBundle(),
+                                                                glade));
+        children.push_back(searchItem);
     }
     
-    fileTypeEntry = Gtk::manage(wf->createComboBoxText());
-    Ptr<Glib::ustring>::Ref allKey(new Glib::ustring(allSearchKey));
-    Ptr<Glib::ustring>::Ref audioClipKey(new Glib::ustring(audioClipSearchKey));
-    Ptr<Glib::ustring>::Ref playlistKey( new Glib::ustring(playlistSearchKey));
-    fileTypeEntry->appendPair(getResourceUstring(allLocalizationKey),
-                              allKey);
-    fileTypeEntry->appendPair(getResourceUstring(audioClipLocalizationKey),
-                              audioClipKey);
-    fileTypeEntry->appendPair(getResourceUstring(playlistLocalizationKey),
-                              playlistKey);
-    fileTypeEntry->set_active(0);
-        
-    AdvancedSearchItem *    searchItem = Gtk::manage(new AdvancedSearchItem(
-                                                                true, 
-                                                                metadataTypes,
-                                                                getBundle() ));
-    searchItem->signalAddNew().connect(sigc::mem_fun(*this, 
+    children.at(0)->signalAddNew().connect(sigc::mem_fun(*this,
                                     &AdvancedSearchEntry::onAddNewCondition ));
-    
-    Gtk::HBox *     fileTypeBox = Gtk::manage(new Gtk::HBox);
-    fileTypeBox->pack_start(*fileTypeLabel, Gtk::PACK_SHRINK, 5);
-    fileTypeBox->pack_start(*fileTypeEntry, Gtk::PACK_SHRINK, 5);
-    
-    searchItemsBox = Gtk::manage(new Gtk::VBox);
-    searchItemsBox->pack_start(*searchItem, Gtk::PACK_SHRINK, 0);
-
-    pack_start(*fileTypeBox,    Gtk::PACK_SHRINK, 5);
-    pack_start(*searchItemsBox, Gtk::PACK_SHRINK, 5);  
 }
 
 
@@ -159,14 +105,20 @@ AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<GLiveSupport>::Ref  gLiveSupport)
 void
 AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
 {
-    AdvancedSearchItem *    searchItem = Gtk::manage(new AdvancedSearchItem(
-                                                                false, 
-                                                                metadataTypes,
-                                                                getBundle() ));
-    searchItemsBox->pack_start(*searchItem, Gtk::PACK_SHRINK, 5);
-
-    searchItem->show_all_children();
-    searchItem->show();
+    bool                            foundAvailableChild = false;
+    Ptr<AdvancedSearchItem>::Ref    child;
+    
+    for (int i = 1; i < maxChildren; ++i) {
+        child = children.at(i);
+        if (!child->is_visible()) {
+            foundAvailableChild = true;
+            break;
+        }
+    }
+    
+    if (foundAvailableChild) {
+        child->show();
+    }
 }
 
 
@@ -176,16 +128,26 @@ AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
 Ptr<SearchCriteria>::Ref
 AdvancedSearchEntry :: getSearchCriteria(void)                      throw ()
 {
-    Ptr<const Glib::ustring>::Ref   fileType = fileTypeEntry->getActiveKey();
-    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria(*fileType));
+    Glib::ustring   fileType;
+    switch (fileTypeEntry->get_active_row_number()) {
+        case 0:     fileType = "all";
+                    break;
+        case 1:     fileType = "audioClip";
+                    break;
+        case 2:     fileType = "playlist";
+                    break;
+        default:    std::cerr << "impossible value in AdvancedSearchEntry::"
+                              << "getSearchCriteria()" << std::endl;
+                    break;
+    }
 
-    Gtk::Box_Helpers::BoxList       children = searchItemsBox->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator      it;
-    
-    for (it = children.begin(); it != children.end(); ++it) {
-        AdvancedSearchItem *    child = dynamic_cast<AdvancedSearchItem *>(
-                                                            it->get_widget() );
-        criteria->addCondition(child->getSearchCondition());
+    Ptr<SearchCriteria>::Ref        criteria(new SearchCriteria(fileType));
+
+    for (int i = 0; i < maxChildren; ++i) {
+        Ptr<AdvancedSearchItem>::Ref    child = children.at(i);
+        if (child->is_visible()) {
+            criteria->addCondition(child->getSearchCondition());
+        }
     }
     
     return criteria;
@@ -199,12 +161,8 @@ void
 AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &  callback)
                                                                     throw ()
 {
-    Gtk::Box_Helpers::BoxList       children = searchItemsBox->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator      it;
-    
-    for (it = children.begin(); it != children.end(); ++it) {
-        AdvancedSearchItem *    child = dynamic_cast<AdvancedSearchItem *>(
-                                                            it->get_widget() );
+    for (int i = 0; i < maxChildren; ++i) {
+        Ptr<AdvancedSearchItem>::Ref    child = children.at(i);
         child->signal_activate().connect(callback);
     }
 }

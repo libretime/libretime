@@ -40,31 +40,26 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/button.h>
-#include <gtkmm/table.h>
-#include <gtkmm/image.h>
-#include <gtkmm/window.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 
 #include "GLiveSupport.h"
 #include "NowPlaying.h"
-#include "MasterPanelUserInfoWidget.h"
 #include "LiveModeWindow.h"
 #include "UploadFileWindow.h"
 #include "ScratchpadWindow.h"
-#include "SimplePlaylistManagementWindow.h"
+#include "PlaylistWindow.h"
 #include "SchedulerWindow.h"
 #include "SearchWindow.h"
 #include "OptionsWindow.h"
-
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -92,172 +87,156 @@ using namespace LiveSupport::Widgets;
  *  +--------------------------------------------------+
  *  </code></pre>
  *
+ *  The layout of the window is contained in the file
+ *  "var/glade/MasterPanelWindow.glade".
+ *
  *  @author $Author$
  *  @version $Revision$
  */
-class MasterPanelWindow : public Gtk::Window, public LocalizedObject
+class MasterPanelWindow : public LocalizedObject
 {
+    private:
+
+        /**
+         *  The directory where the Glade files are.
+         */
+        Glib::ustring                       gladeDir;
+
+        /**
+         *  The Glade object, containing the visual design.
+         */
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
+
+        /**
+         *  The gLiveSupport object, handling the logic of the application.
+         */
+        Ptr<GLiveSupport>::Ref              gLiveSupport;
+
+        /**
+         *  Whether a user is currently logged in.
+         */
+        bool                                userIsLoggedIn;
+
+        /**
+         *  Log in.
+         */
+        void
+        login(void)                                         throw ();
+
+        /**
+         *  Log out.
+         */
+        void
+        logout(void)                                        throw ();
+
+
     protected:
-        /**
-         *  The layout used in the window.
-         */
-        Gtk::Table                * layout;
 
         /**
-         *  The background color.
+         *  The main window.
          */
-        Gdk::Color                  bgColor;
-
-        /**
-         *  The container for the time widget
-         */
-        BlueBin                   * timeBin;
+        Gtk::Window *                       masterPanelWindow;
 
         /**
          *  The time display
          */
-        Gtk::Label                * timeWidget;
+        Gtk::Label *                        timeLabel;
 
         /**
          *  The signal connection, that is notified by the GTK timer each
          *  second, and will update the time display on each wakeup.
          */
-        Ptr<sigc::connection>::Ref  timer;
-
-        /**
-         *  The container for the now playing widget
-         */
-        BlueBin                   * nowPlayingBin;
+        Ptr<sigc::connection>::Ref          timer;
 
         /**
          *  The 'now playing' display.
          */
-        NowPlaying                * nowPlayingWidget;
+        Ptr<NowPlaying>::Ref                nowPlayingWidget;
 
         /**
-         *  The container for the VU meter widget
+         *  The button to invoke the Live Mode window.
          */
-//        BlueBin                   * vuMeterBin;
+        Gtk::ToggleButton *                 liveModeButton;
 
         /**
-         *  The VU meter display.
+         *  The button to invoke the Upload File window.
          */
-//        Gtk::Widget               * vuMeterWidget;
-
-        /**
-         *  The container for the next playing widget.
-         */
-//        BlueBin                   * nextPlayingBin;
-
-        /**
-         *  The 'next playing' display.
-         */
-//        Gtk::Widget               * nextPlayingWidget;
-
-        /**
-         *  The user info alignment helper.
-         */
-        Gtk::Alignment            * userInfoAlignment;
-
-        /**
-         *  The user info widget.
-         */
-        MasterPanelUserInfoWidget * userInfoWidget;
-
-        /**
-         *  The radio logo.
-         */
-        Gtk::Image                * radioLogoWidget;
-
-        /**
-         *  The bottom bar.
-         */
-        Gtk::HBox                 * bottomBar;
-
-        /**
-         *  The button bar alignment helper
-         */
-        Gtk::Alignment            * buttonBarAlignment;
-
-        /**
-         *  The button bar.
-         */
-        Gtk::Table                * buttonBar;
-
-        /**
-         *  The button to invoke the live mode window.
-         */
-        Button                    * liveModeButton;
-
-        /**
-         *  The button to invoke the upload file window.
-         */
-        Button                    * uploadFileButton;
+        Gtk::ToggleButton *                 uploadFileButton;
 
         /**
          *  The button to invoke the Scratchpad window.
          */
-        Button                    * scratchpadButton;
+        Gtk::ToggleButton *                 scratchpadButton;
 
         /**
-         *  The button to invoke the Simple Playlist Management Window.
+         *  The button to invoke the Playlist Window.
          */
-        Button                    * simplePlaylistMgmtButton;
+        Gtk::ToggleButton *                 playlistButton;
 
         /**
          *  The button to invoke the Scheduler Window.
          */
-        Button                    * schedulerButton;
+        Gtk::ToggleButton *                 schedulerButton;
 
         /**
          *  The button to invoke the Search Window.
          */
-        Button                    * searchButton;
+        Gtk::ToggleButton *                 searchButton;
 
         /**
-         *  The button to invoke the Options Window.
+         *  The button to invoke the Options window.
          */
-        Button                    * optionsButton;
+        Gtk::ToggleButton *                 optionsButton;
 
         /**
-         *  The gLiveSupport object, handling the logic of the application.
+         *  The box containing the window opener buttons.
          */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
+        Gtk::ButtonBox *                    mainButtonBox;
+
+        /**
+         *  The label for the "logged in as" info.
+         */
+        Gtk::Label *                        userInfoLabel;
+
+        /**
+         *  The button to log in or log out.
+         */
+        Gtk::Button *                       loginButton;
 
         /**
          *  The one and only Live Mode window.
          */
-        Ptr<LiveModeWindow>::Ref    liveModeWindow;
+        Ptr<LiveModeWindow>::Ref            liveModeWindow;
 
         /**
          *  The one and only Upload File window.
          */
-        Ptr<UploadFileWindow>::Ref  uploadFileWindow;
+        Ptr<UploadFileWindow>::Ref          uploadFileWindow;
 
         /**
          *  The one and only Scratchpad window.
          */
-        Ptr<ScratchpadWindow>::Ref  scratchpadWindow;
+        Ptr<ScratchpadWindow>::Ref          scratchpadWindow;
 
         /**
          *  The one and only simple playlist management window.
          */
-        Ptr<SimplePlaylistManagementWindow>::Ref    simplePlaylistMgmtWindow;
+        Ptr<PlaylistWindow>::Ref            playlistWindow;
 
         /**
          *  The one and only scheduler window.
          */
-        Ptr<SchedulerWindow>::Ref   schedulerWindow;
+        Ptr<SchedulerWindow>::Ref           schedulerWindow;
 
         /**
          *  The one and only search window.
          */
-        Ptr<SearchWindow>::Ref      searchWindow;
+        Ptr<SearchWindow>::Ref              searchWindow;
 
         /**
          *  The one and only options window.
          */
-        Ptr<OptionsWindow>::Ref     optionsWindow;
+        Ptr<OptionsWindow>::Ref             optionsWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -294,7 +273,8 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onUploadFileButtonClicked(void)                     throw ()
         {
             if (!uploadFileWindow ||
-                    uploadFileWindow && !uploadFileWindow->is_visible()) {
+                    uploadFileWindow && !uploadFileWindow->getWindow()
+                                                         ->is_visible()) {
                 updateUploadFileWindow();
             } else {
                 uploadFileWindow->hide();
@@ -309,7 +289,8 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onLiveModeButtonClicked(void)                       throw ()
         {
             if (!liveModeWindow ||
-                    liveModeWindow && !liveModeWindow->is_visible()) {
+                    liveModeWindow && !liveModeWindow->getWindow()
+                                                     ->is_visible()) {
                 updateLiveModeWindow();
             } else {
                 liveModeWindow->hide();
@@ -324,7 +305,8 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onScratchpadButtonClicked(void)                     throw ()
         {
             if (!scratchpadWindow ||
-                    scratchpadWindow && !scratchpadWindow->is_visible()) {
+                    scratchpadWindow && !scratchpadWindow->getWindow()
+                                                         ->is_visible()) {
                 updateScratchpadWindow();
             } else {
                 scratchpadWindow->hide();
@@ -336,14 +318,14 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Management button being pressed.
          */
         virtual void
-        onSimplePlaylistMgmtButtonClicked(void)         throw ()
+        onPlaylistButtonClicked(void)                       throw ()
         {
-            if (!simplePlaylistMgmtWindow ||
-                    simplePlaylistMgmtWindow &&
-                                 !simplePlaylistMgmtWindow->is_visible()) {
-                updateSimplePlaylistMgmtWindow();
+            if (!playlistWindow ||
+                    playlistWindow && !playlistWindow->getWindow()
+                                                     ->is_visible()) {
+                updatePlaylistWindow();
             } else {
-                simplePlaylistMgmtWindow->hide();
+                playlistWindow->hide();
             }
         }
 
@@ -352,10 +334,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  button being pressed.
          */
         virtual void
-        onSchedulerButtonClicked(void)                  throw ()
+        onSchedulerButtonClicked(void)                      throw ()
         {
             if (!schedulerWindow ||
-                    schedulerWindow && !schedulerWindow->is_visible()) {
+                    schedulerWindow && !schedulerWindow->getWindow()
+                                                       ->is_visible()) {
                 updateSchedulerWindow();
             } else {
                 schedulerWindow->hide();
@@ -370,7 +353,8 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onSearchButtonClicked(void)                             throw ()
         {
             if (!searchWindow ||
-                    searchWindow && !searchWindow->is_visible()) {
+                    searchWindow && !searchWindow->getWindow()
+                                                 ->is_visible()) {
                 updateSearchWindow();
             } else {
                 searchWindow->hide();
@@ -385,12 +369,20 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onOptionsButtonClicked(void)                            throw ()
         {
             if (!optionsWindow ||
-                    optionsWindow && !optionsWindow->is_visible()) {
+                    optionsWindow && !optionsWindow->getWindow()
+                                                   ->is_visible()) {
                 updateOptionsWindow();
             } else {
                 optionsWindow->hide();
             }
         }
+
+        /**
+         *  Function to catch the event of the Login/Logout button
+         *  button being pressed.
+         */
+        virtual void
+        onLoginButtonClicked(void)                            throw ();
 
         /**
          *  Signal handler for a key pressed at one of the entries.
@@ -406,31 +398,55 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         bool
         onKeyPressed(GdkEventKey *          event)              throw ();
 
+        /**
+         *  Event handler for when the user closes the master panel.
+         *  It pops up a confirmation dialog.
+         *
+         *  @param      event   attributes for the event (?)
+         *  @return     true if handled the event, false to continue deleting
+         */
+        bool
+        onDeleteEvent(GdkEventAny *    event)                   throw ();
+        
 
     public:
+
         /**
          *  Constructor.
          *
-         *  @param gLiveSupport the gLiveSupport object, handling the
-         *         logic of the application
-         *  @param bundle the resource bundle holding localized resources
+         *  @param  gLiveSupport    the gLiveSupport object, handling the
+         *                          logic of the application.
+         *  @param  bundle      the resource bundle holding localized resources.
+         *  @param  gladeDir    the directory where the Glade files are.
          */
         MasterPanelWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                          Ptr<ResourceBundle>::Ref   bundle)
+                          Ptr<ResourceBundle>::Ref   bundle,
+                          const Glib::ustring &      gladeDir)
                                                                 throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~MasterPanelWindow(void)                             throw ();
+        ~MasterPanelWindow(void)                                throw ();
+
+        /**
+         *  Give access to the Gtk::Window of the window.
+         *  The caller does not get ownership of the widget, and he
+         *  should not / does not need to dispose of it.
+         */
+        Gtk::Window *
+        getWindow(void)                                         throw ()
+        {
+            return masterPanelWindow;
+        }
 
         /**
          *  Change the user interface language of the application
          *  by providing a new resource bundle.
-         *  This call assumes that only the MasterPanel is visilbe,
+         *  This call assumes that only the MasterPanelWindow is visible,
          *  and will only change the language of the currently open
-         *  MasterPanel. No other open windows will be affected by
+         *  MasterPanelWindow. No other open windows will be affected by
          *  this call, but subsequently opened windows are.
          *
          *  @param bundle the new resource bundle.
@@ -445,11 +461,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         showAnonymousUI(void)                                   throw ();
 
         /**
-         *  Cancel the playlist edited in the SimplePlaylistMgmtWindow.
+         *  Cancel the playlist edited in the PlaylistWindow.
          *
          *  @return true if the canceling worked (or if there was nothing 
          *          to cancel); false if the user canceled the canceling
-         *  @see SimplePlaylistManagementWindow::cancelPlaylist()
+         *  @see PlaylistWindow::cancelPlaylist()
          */
         bool
         cancelEditedPlaylist(void)                              throw ();
@@ -513,7 +529,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Update the Simple Playlist Management Window
          */
         void
-        updateSimplePlaylistMgmtWindow(void)                    throw ();
+        updatePlaylistWindow(void)                              throw ();
 
         /**
          *  Update the Scheduler Window, optionally to display a new time.
@@ -538,6 +554,16 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         updateOptionsWindow(void)                               throw ();
 
         /**
+         *  Update the User info.
+         *
+         *  @param  loginName   the login name (only when userIsLoggedIn).
+         */
+        void
+        updateUserInfo(Ptr<const Glib::ustring>::Ref    loginName
+                                            = Ptr<const Glib::ustring>::Ref())
+                                                                throw ();
+
+        /**
          *  Get the next item from the top of the Live Mode window.
          *  The item is removed from the Live Mode window.
          *
@@ -556,6 +582,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         setNowPlaying(Ptr<Playable>::Ref    playable)           throw ()
         {
             nowPlayingWidget->setPlayable(playable);
+            gLiveSupport->updateRds();
         }
 
         /**

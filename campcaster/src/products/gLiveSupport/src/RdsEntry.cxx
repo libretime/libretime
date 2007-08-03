@@ -33,13 +33,11 @@
 #include "configure.h"
 #endif
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
 
 #include "RdsEntry.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -56,34 +54,21 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-RdsEntry :: RdsEntry(Ptr<ResourceBundle>::Ref       bundle,
-                     const Glib::ustring &          type,
-                     int                            width)
+RdsEntry :: RdsEntry(Ptr<ResourceBundle>::Ref           bundle,
+                     Glib::RefPtr<Gnome::Glade::Xml>    glade,
+                     int                                index,
+                     const Glib::ustring &              type,
+                     int                                width)
                                                                     throw ()
           : LocalizedObject(bundle)
 {
     this->type.reset(new const Glib::ustring(type));
     
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    glade->get_widget(addIndex("rdsCheckButton", index), checkButton);
+    checkButton->set_label(*getResourceUstring(type + "rdsLabel"));
 
-    checkBox = Gtk::manage(new Gtk::CheckButton());
-    
-    Gtk::Label *    label;
-    Glib::ustring   labelKey = type + "rdsLabel";
-    try {
-        label = Gtk::manage(new Gtk::Label(*getResourceUstring(labelKey)));
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    entryBin = Gtk::manage(wf->createEntryBin());
-//    entryBin->? // set the size somehow
-    
-    pack_start(*checkBox,   Gtk::PACK_SHRINK, 5);
-    pack_start(*label,      Gtk::PACK_SHRINK, 5);
-    pack_start(*entryBin,   Gtk::PACK_EXPAND_WIDGET, 5);
+    glade->get_widget(addIndex("rdsEntry", index), entry);
+    entry->set_width_chars(width);
 }
 
 
@@ -94,11 +79,11 @@ void
 RdsEntry :: setOptions(bool                           enabled,
                        Ptr<const Glib::ustring>::Ref  value)        throw ()
 {
-    checkBox->set_active(enabled);
-    entryBin->set_text(*value);
+    checkButton->set_active(enabled);
+    entry->set_text(*value);
     
-    checkBoxSaved = enabled;
-    entryBinSaved = value;
+    checkButtonSaved = enabled;
+    entrySaved = value;
 }
 
 
@@ -108,17 +93,17 @@ RdsEntry :: setOptions(bool                           enabled,
 bool
 RdsEntry :: saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)   throw ()
 {
-    bool            checkBoxNow = checkBox->get_active();
+    bool            checkButtonNow = checkButton->get_active();
     Ptr<const Glib::ustring>::Ref
-                    entryBinNow(new const Glib::ustring(entryBin->get_text()));
+                    entryNow(new const Glib::ustring(entry->get_text()));
     
-    if (!entryBinSaved || checkBoxNow != checkBoxSaved
-                       || *entryBinNow != *entryBinSaved) {
+    if (!entrySaved || checkButtonNow != checkButtonSaved
+                    || *entryNow != *entrySaved) {
         Ptr<OptionsContainer>::Ref      optionsContainer =
                                         gLiveSupport->getOptionsContainer();
-        optionsContainer->setRdsOptions(type, entryBinNow, checkBoxNow);
-        checkBoxSaved = checkBoxNow;
-        entryBinSaved = entryBinNow;
+        optionsContainer->setRdsOptions(type, entryNow, checkButtonNow);
+        checkButtonSaved = checkButtonNow;
+        entrySaved = entryNow;
         return true;
     } else {
         return false;

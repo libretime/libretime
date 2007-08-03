@@ -7,7 +7,7 @@ es:table
     liveModeButtonLabel:string              { "En vivo" }
     uploadFileButtonLabel:string            { "Cargar archivo" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Lista de repr." }
+    playlistButtonLabel:string              { "Lista de repr." }
     schedulerButtonLabel:string             { "Programador" }
     searchButtonLabel:string                { "Búsqueda" }
     optionsButtonLabel:string               { "Options" }
@@ -40,10 +40,9 @@ es:table
     {
         windowTitle:string          { "INGRESO" }
 
-        loginLabel:string           { "Identificador" }
+        userNameLabel:string        { "Identificador" }
         passwordLabel:string        { "Clave de acceso" }
-        okButtonLabel:string        { "OK" }
-        cancelButtonLabel:string    { "Cancelar" }
+        languageLabel:string        { "#Language#" }
 
         pleaseWaitMsg:string        { "Logging in, please wait." }
     }
@@ -64,7 +63,7 @@ es:table
     {
         windowTitle:string              { "Scratchpad" }
 
-        typeColumnLabel:string          { "Tipo" }
+        creatorColumnLabel:string       { "Creador" }
         titleColumnLabel:string         { "Título" }
         addToPlaylistButtonLabel:string { "Añadir a lista de reproducción" }
         clearListButtonLabel:string     { "Limpiar la lista" }
@@ -126,7 +125,7 @@ es:table
                                           "already.#" }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string          { "Lista de reproducción" }
 
@@ -149,6 +148,8 @@ es:table
 
         playlistSavedMsg:string         { "lista de reproducción guardada {0}" }
         savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        closeWithoutSavingButtonLabel:string
+                                        { "#Close without Saving#" }
         emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
@@ -164,10 +165,10 @@ es:table
         endColumnLabel:string       { "fin" }
         deleteMenuItem:string       { "eliminar" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Stop" }
+        stopCurrentlyPlayingText:string         { "what is currently playing "
+                                                  "in the scheduler." }
+        stopCurrentlyPlayingDialogMsg:string    { "Are you sure?" }
 
         closeButtonLabel:string       { "cerrar" }
 
@@ -334,7 +335,7 @@ es:table
         deleteButtonLabel:string    { "#Delete#" }
         saveButtonLabel:string      { "#Save#" }
 
-        backupTitleLabel:string     { "#Title#" }
+        backupTitleLabel:string     { "#Title:#" }
         defaultBackupTitle:string   { "#new backup#" }
 
         fileChooserDialogTitle:string   { "#Save File#" }

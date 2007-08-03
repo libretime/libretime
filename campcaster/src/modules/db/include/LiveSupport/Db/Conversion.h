@@ -90,9 +90,11 @@ class Conversion
                        roundNearest }               RoundingType;
 
         /**
-         *  Convert a boost::ptime to a odbc::Timestamp, rounding down.
+         *  Convert a boost::ptime to a odbc::Timestamp.
          *
          *  @param ptime the boost ptime to convert.
+         *  @param round specify how to round the fractional part
+         *               (default: down).
          *  @return an odbc::Timestamp, holding the same time.
          */
         static Ptr<odbc::Timestamp>::Ref

@@ -67,7 +67,7 @@ const Glib::ustring     applicationTitle = "Campcaster";
  *----------------------------------------------------------------------------*/
 GuiWindow :: GuiWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                         Ptr<ResourceBundle>::Ref    bundle,
-                        Button *                    windowOpenerButton,
+                        Gtk::ToggleButton *         windowOpenerButton,
                         int                         properties)
                                                                     throw ()
           : WhiteWindow(Colors::White,
@@ -89,7 +89,7 @@ GuiWindow :: on_show (void)                                         throw ()
     gLiveSupport->getWindowPosition(shared_from_this());
     
     if (windowOpenerButton) {
-        windowOpenerButton->setSelected(true);
+        windowOpenerButton->set_active(true);
     }
     
     WhiteWindow::on_show();
@@ -105,7 +105,7 @@ GuiWindow :: on_hide (void)                                         throw ()
     gLiveSupport->putWindowPosition(shared_from_this());
     
     if (windowOpenerButton) {
-        windowOpenerButton->setSelected(false);
+        windowOpenerButton->set_active(false);
     }
 
     WhiteWindow::on_hide();

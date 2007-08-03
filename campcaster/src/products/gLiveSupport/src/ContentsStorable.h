@@ -44,7 +44,6 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -64,6 +63,7 @@ using namespace LiveSupport::Widgets;
 class ContentsStorable
 {
     public:
+
         /**
          *  Virtual destructor.
          */

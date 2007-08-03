@@ -155,7 +155,7 @@ class RdsContainer : public Configurable
         /**
          *  Configure the object based on an XML configuration element.
          *
-         *  @param elemen the XML configuration element.
+         *  @param element the XML configuration element.
          *  @exception std::invalid_argument if the supplied XML element
          *             contains bad configuration information.
          */
@@ -171,6 +171,7 @@ class RdsContainer : public Configurable
          *
          *  @param      key     which setting to modify.
          *  @param      value   the new value of the RDS setting.
+         *  @param      enabled whether this value will be broadcast.
          */
         void
         setRdsOptions(Ptr<const Glib::ustring>::Ref  key,

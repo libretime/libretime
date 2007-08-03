@@ -41,9 +41,11 @@
 #endif
 
 #include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/Mutex.h"
 
 #include "GLiveSupport.h"
 
@@ -52,7 +54,6 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
     
 /* ================================================================ constants */
 
@@ -68,11 +69,15 @@ using namespace LiveSupport::Widgets;
  *  @author  $Author$
  *  @version $Revision$
  */
-class NowPlaying : public Gtk::HBox,
-                   public LocalizedObject
+class NowPlaying : public LocalizedObject
 {
     private:
     
+        /**
+         *  The Glade object, containing the visual design.
+         */
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
+
         /**
          *  Whether anything is shown in the widget.
          */
@@ -111,14 +116,24 @@ class NowPlaying : public Gtk::HBox,
         Gtk::Label *            playlistLabel;
 
         /**
+         *  The label which says "elapsed time".
+         */
+        Gtk::Label *            elapsedTimeText;
+
+        /**
          *  The label holding the elapsed time.
          */
-        Gtk::Label *            elapsedTime;
+        Gtk::Label *            elapsedTimeLabel;
+
+        /**
+         *  The label which says "remaining time".
+         */
+        Gtk::Label *            remainsTimeText;
 
         /**
          *  The label holding the remaining time.
          */
-        Gtk::Label *            remainsTime;
+        Gtk::Label *            remainsTimeLabel;
 
         /**
          *  A box around the remaining time label, so we can modify its color.
@@ -128,17 +143,12 @@ class NowPlaying : public Gtk::HBox,
         /**
          *  The play button.
          */
-        ImageButton *           playButton;
-
-        /**
-         *  The pause button.
-         */
-        ImageButton *           pauseButton;
+        Gtk::Button *           playButton;
 
         /**
          *  The stop button.
          */
-        ImageButton *           stopButton;
+        Gtk::Button *           stopButton;
 
         /**
          *  The possible states of the 'time remains' label.
@@ -160,7 +170,13 @@ class NowPlaying : public Gtk::HBox,
          *  The GLiveSupport object, holding the state of the application.
          */
         Ptr<GLiveSupport>::Ref  gLiveSupport;
-         
+
+        /**
+         *  A mutex to make the writing, and some reading, of the
+         *  'playable' variable atomic.
+         */
+        Mutex                   playableMutex;
+
         /**
          *  Default constructor.
          */
@@ -173,26 +189,10 @@ class NowPlaying : public Gtk::HBox,
         onPlayButtonClicked(void)                       throw ();
 
         /**
-         *  Event handler for the Pause button being clicked.
-         */
-        void
-        onPauseButtonClicked(void)                      throw ();
-
-        /**
          *  Event handler for the Stop button being clicked.
          */
         void
         onStopButtonClicked(void)                       throw ();
-
-        /**
-         *  Return a Gtk::manage'd Gtk::Label*, with the Bitstream Vera
-         *  font attributes set.
-         *
-         *  @param  fontSize    the size of the text in the label, in points
-         *  @return the new label
-         */
-        Gtk::Label *
-        createFormattedLabel(int    fontSize)           throw ();
 
         /**
          *  Set the color of the 'remains time' label.
@@ -225,9 +225,12 @@ class NowPlaying : public Gtk::HBox,
          *  @param gLiveSupport the GLiveSupport, application object.
          *  @param bundle the resource bundle holding the localized
          *         resources for this widget
+         *  @param glade    the Glade file which specifies the visual
+         *                  components for this class.
          */
-        NowPlaying(Ptr<GLiveSupport>::Ref       gLiveSupport,
-                   Ptr<ResourceBundle>::Ref     bundle)
+        NowPlaying(Ptr<GLiveSupport>::Ref           gLiveSupport,
+                   Ptr<ResourceBundle>::Ref         bundle,
+                   Glib::RefPtr<Gnome::Glade::Xml>  glade)
                                                         throw ();
 
         /**
@@ -265,17 +268,6 @@ class NowPlaying : public Gtk::HBox,
         }
 
         /**
-         *  Public interface for pausing the audio.
-         *
-         *  This is used by MasterPanelWindow::onKeyPressed().
-         */
-        void
-        onPauseAudio(void)                              throw ()
-        {
-            onPauseButtonClicked();
-        }
-
-        /**
          *  Public interface for stopping the audio.
          *
          *  This is used by MasterPanelWindow::onKeyPressed().
@@ -300,6 +292,14 @@ class NowPlaying : public Gtk::HBox,
         {
             return currentInnerPlayable;
         }
+
+        /**
+         *  Change the user interface language of the widget.
+         *
+         *  @param  bundle  the new resource bundle.
+         */
+        void
+        changeLanguage(Ptr<ResourceBundle>::Ref     bundle)         throw ();
 };
 
 

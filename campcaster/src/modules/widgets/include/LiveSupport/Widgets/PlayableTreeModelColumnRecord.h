@@ -40,11 +40,16 @@
 #include "configure.h"
 #endif
 
+
+#include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playable.h"
-#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include <LiveSupport/Widgets/ZebraTreeModelColumnRecord.h>
+
 
 namespace LiveSupport {
 namespace Widgets {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 

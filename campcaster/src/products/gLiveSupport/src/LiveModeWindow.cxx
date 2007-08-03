@@ -38,7 +38,6 @@
 #include <glibmm.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
 
 #include "LiveModeWindow.h"
 
@@ -46,7 +45,6 @@
 using namespace Glib;
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -56,10 +54,10 @@ using namespace LiveSupport::GLiveSupport;
 
 namespace {
 
-/**
- *  The name of the window, used by the keyboard shortcuts (or by the .gtkrc).
- */
-const Glib::ustring     windowName = "liveModeWindow";
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "LiveModeWindow.glade";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing contents of the window.
@@ -78,42 +76,24 @@ const Glib::ustring     userPreferencesKeyName = "liveModeContents";
  *----------------------------------------------------------------------------*/
 LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                   Ptr<ResourceBundle>::Ref  bundle,
-                                  Button *                  windowOpenerButton)
+                                  Gtk::ToggleButton *       windowOpenerButton,
+                                  const Glib::ustring &     gladeDir)
                                                                     throw ()
-          : GuiWindow(gLiveSupport,
-                      bundle, 
-                      windowOpenerButton),
+          : BasicWindow(gLiveSupport,
+                        bundle,
+                        windowOpenerButton,
+                        gladeDir + gladeFileName),
+            gladeDir(gladeDir),
             isDeleting(false)
 {
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    // Create the tree model:
+    glade->get_widget_derived("treeView1", treeView);
     treeModel = Gtk::ListStore::create(modelColumns);
-    
-    // ... and the tree view:
-    treeView = Gtk::manage(wf->createTreeView(treeModel));
-    treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
-    treeView->set_reorderable(true);
-    treeView->set_headers_visible(false);
-    treeView->set_enable_search(false);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
 
-    // Add the TreeView's view columns:
-    try {
-        treeView->appendLineNumberColumn("", 2 /* offset */, 50);
-        treeView->appendColumn("", modelColumns.infoColumn, 200);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    treeView->appendLineNumberColumn("", 2 /* offset */, 50);
+    treeView->appendColumn("", modelColumns.infoColumn, 200);
 
-    // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                         &LiveModeWindow::onEntryClicked));
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
@@ -121,91 +101,26 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     treeView->signalTreeModelChanged().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onTreeModelChanged));
     
-    // register the signal handler for keyboard key presses
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
-                                            &LiveModeWindow::onKeyPressed));
+                                        &LiveModeWindow::onKeyPressed));
 
-    // Add the TreeView, inside a ScrolledWindow, with the button underneath:
-    scrolledWindow.add(*treeView);
+    glade->get_widget("cueLabel1", cueLabel);
+    cueLabel->set_label(*getResourceUstring("cuePlayerLabel"));
+    cuePlayer.reset(new CuePlayer(gLiveSupport,
+                                  treeView,
+                                  modelColumns,
+                                  glade));
 
-    // Only show the scrollbars when they are necessary:
-    scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    glade->get_widget("autoPlayNext1", autoPlayNext);
+    autoPlayNext->set_label(*getResourceUstring("autoPlayNextLabel"));
+    
+    glade->connect_clicked("outputPlayButton1", sigc::mem_fun(*this,
+                                        &LiveModeWindow::onOutputPlay));
 
-    // Create the play etc buttons:
-    Gtk::HBox *         topButtonBox = Gtk::manage(new Gtk::HBox);
-    Gtk::HButtonBox *   bottomButtonBox = Gtk::manage(new Gtk::HButtonBox);
-    
-    ImageButton *       outputPlayButton = Gtk::manage(wf->createButton(
-                                        WidgetConstants::hugePlayButton ));
-    
-    Gtk::VBox *         cueAudioBox = Gtk::manage(new Gtk::VBox);
-    Gtk::HBox *         cueAudioLabelBox = Gtk::manage(new Gtk::HBox);
-    
-    try {
-        cueAudioLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("cuePlayerLabel") ));
-        clearListButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("clearListButtonLabel")));
-        removeButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("removeButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    Gtk::HBox *         cueAudioButtonsBox = Gtk::manage(new Gtk::HBox);
-    cueAudioButtons = Gtk::manage(new CuePlayer(
-                                    gLiveSupport, treeView, modelColumns ));
-
-    Gtk::HBox *         autoPlayNextBox = Gtk::manage(new Gtk::HBox);
-    try {
-        autoPlayNext = Gtk::manage(new Gtk::CheckButton(
-                                *getResourceUstring("autoPlayNextLabel") ));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    autoPlayNextBox->pack_start(*autoPlayNext, Gtk::PACK_SHRINK, 10);
-    
-    topButtonBox->pack_start(*outputPlayButton,  Gtk::PACK_EXPAND_PADDING, 10);
-    topButtonBox->pack_start(*cueAudioBox,       Gtk::PACK_EXPAND_PADDING, 10);
-    cueAudioBox->pack_start(*cueAudioLabelBox,   Gtk::PACK_SHRINK, 6);
-    cueAudioLabelBox->pack_start(*cueAudioLabel, Gtk::PACK_EXPAND_PADDING, 1);
-    cueAudioBox->pack_start(*cueAudioButtonsBox, Gtk::PACK_SHRINK, 0);
-    cueAudioButtonsBox->pack_start(*cueAudioButtons, 
-                                                 Gtk::PACK_EXPAND_PADDING, 1);
-    
-    bottomButtonBox->set_layout(Gtk::BUTTONBOX_END);
-    bottomButtonBox->set_spacing(5);
-    bottomButtonBox->pack_start(*clearListButton);
-    bottomButtonBox->pack_start(*removeButton);
-    
-    vBox.pack_start(*topButtonBox,      Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(*autoPlayNextBox,   Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(scrolledWindow,     Gtk::PACK_EXPAND_WIDGET, 5);
-    vBox.pack_start(*bottomButtonBox,   Gtk::PACK_SHRINK, 5);
-    add(vBox);
-
-    // connect the signal handlers for the buttons
-    outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &LiveModeWindow::onOutputPlay ));
-    clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &LiveModeWindow::onClearListButtonClicked));
-    removeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &LiveModeWindow::onRemoveItemButtonClicked));
-
-    // create the right-click context menus
     audioClipContextMenu = constructAudioClipContextMenu();
     playlistContextMenu  = constructPlaylistContextMenu();
 
     userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
-
-    // show
-    set_name(windowName);
-    set_default_size(400, 500);
-    set_modal(false);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
-    
-    show_all_children();
 }
 
 
@@ -424,7 +339,7 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
         
         if (iter) {
             KeyboardShortcut::Action    action = gLiveSupport->findAction(
-                                            windowName,
+                                            "liveModeWindow",
                                             Gdk::ModifierType(event->state),
                                             event->keyval);
             switch (action) {
@@ -469,7 +384,7 @@ LiveModeWindow :: onEditPlaylist(void)                              throw ()
             try {
                 gLiveSupport->openPlaylistForEditing(playlist->getId());
             } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(getResourceUstring(
+                gLiveSupport->displayMessageWindow(*getResourceUstring(
                                                     "cannotEditPlaylistMsg" ));
             }
         }
@@ -492,10 +407,10 @@ LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
         if (playlist) {
             schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
                             gLiveSupport,
-                            gLiveSupport->getBundle("schedulePlaylistWindow"),
+                            gladeDir,
                             playlist));
-            schedulePlaylistWindow->set_transient_for(*this);
-            Gtk::Main::run(*schedulePlaylistWindow);
+            schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+            Gtk::Main::run(*schedulePlaylistWindow->getWindow());
         }
     }
 }
@@ -515,10 +430,10 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
         if (playlist) {
             exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gLiveSupport->getBundle("exportPlaylistWindow"),
+                                gladeDir,
                                 playlist));
-            exportPlaylistWindow->set_transient_for(*this);
-            Gtk::Main::run(*exportPlaylistWindow);
+            exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+            Gtk::Main::run(*exportPlaylistWindow->getWindow());
         }
     }
 }
@@ -580,40 +495,35 @@ LiveModeWindow :: refreshPlaylist(Ptr<Playlist>::Ref    playlist)   throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local audio clips.
  *----------------------------------------------------------------------------*/
-Gtk::Menu *
+Ptr<Gtk::Menu>::Ref
 LiveModeWindow :: constructAudioClipContextMenu(void)           throw ()
 {
-    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Ptr<Gtk::Menu>::Ref     contextMenu(new Gtk::Menu());
     Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("playMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onOutputPlay)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("cueMenuItem"),
-                                  sigc::mem_fun(*cueAudioButtons,
-                                        &CuePlayer::onPlayItem)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
-                                        &LiveModeWindow::onAddToPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("removeMenuItem"),
-                                  sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onRemoveMenuOption)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("uploadToHubMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+                                    &LiveModeWindow::onOutputPlay)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("cueMenuItem"),
+                                sigc::mem_fun(*cuePlayer,
+                                    &CuePlayer::onPlayItem)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToPlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &LiveModeWindow::onAddToPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("removeMenuItem"),
+                                sigc::mem_fun(*treeView,
+                                    &ZebraTreeView::onRemoveMenuOption)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("uploadToHubMenuItem"),
+                                sigc::mem_fun(*this,
+                                    &LiveModeWindow::onUploadToHub)));
 
-    contextMenu->accelerate(*this);
+    contextMenu->accelerate(*mainWindow);
     return contextMenu;
 }    
 
@@ -621,68 +531,50 @@ LiveModeWindow :: constructAudioClipContextMenu(void)           throw ()
 /*------------------------------------------------------------------------------
  *  Construct the right-click context menu for local playlists.
  *----------------------------------------------------------------------------*/
-Gtk::Menu *
+Ptr<Gtk::Menu>::Ref
 LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
 {
-    Gtk::Menu *             contextMenu = Gtk::manage(new Gtk::Menu());
+    Ptr<Gtk::Menu>::Ref     contextMenu(new Gtk::Menu());
     Gtk::Menu::MenuList &   contextMenuList = contextMenu->items();
 
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("playMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onOutputPlay)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("cueMenuItem"),
-                                  sigc::mem_fun(*cueAudioButtons,
-                                        &CuePlayer::onPlayItem)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
-                                        &LiveModeWindow::onAddToPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("removeMenuItem"),
-                                  sigc::mem_fun(*treeView,
-                                        &ZebraTreeView::onRemoveMenuOption)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("editPlaylistMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onEditPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("schedulePlaylistMenuItem"),
+                                    &LiveModeWindow::onOutputPlay)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("cueMenuItem"),
+                                sigc::mem_fun(*cuePlayer,
+                                    &CuePlayer::onPlayItem)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("addToPlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &LiveModeWindow::onAddToPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("removeMenuItem"),
+                                sigc::mem_fun(*treeView,
+                                    &ZebraTreeView::onRemoveMenuOption)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("editPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
-                                        &LiveModeWindow::onSchedulePlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("exportPlaylistMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onExportPlaylist)));
-        contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                 *getResourceUstring("uploadToHubMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onUploadToHub)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+                                    &LiveModeWindow::onEditPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("schedulePlaylistMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &LiveModeWindow::onSchedulePlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("exportPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                    &LiveModeWindow::onExportPlaylist)));
+    contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
+    contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("uploadToHubMenuItem"),
+                                sigc::mem_fun(*this,
+                                    &LiveModeWindow::onUploadToHub)));
 
-    contextMenu->accelerate(*this);
+    contextMenu->accelerate(*mainWindow);
     return contextMenu;
 }    
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the clear list button getting clicked.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onClearListButtonClicked (void)                   throw ()
-{
-    isDeleting = true;
-    treeModel->clear();
-    isDeleting = false;
-    onTreeModelChanged();
-}
 
 
 /*------------------------------------------------------------------------------
@@ -730,20 +622,10 @@ LiveModeWindow :: onTreeModelChanged(void)                          throw ()
 void
 LiveModeWindow :: updateStrings(void)                               throw ()
 {
-    try {
-        setBundle(gLiveSupport->getBundle("liveModeWindow"));
-        
-        set_title(*getResourceUstring("windowTitle"));
-        cueAudioLabel->set_label(*getResourceUstring("cuePlayerLabel"));
-        clearListButton->set_label(*getResourceUstring("clearListButtonLabel"));
-        removeButton->set_label(*getResourceUstring("removeButtonLabel"));
+    setBundle(gLiveSupport->getBundle("liveModeWindow"));
     
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    show_all_children();
+    setTitle(getResourceUstring("windowTitle"));
+    cueLabel->set_label(*getResourceUstring("cuePlayerLabel"));
 }
 
 
@@ -813,15 +695,15 @@ LiveModeWindow :: setContents(Ptr<const Glib::ustring>::Ref     contents)
  *  Event handler called when the the window gets hidden.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: on_hide(void)                                     throw ()
+LiveModeWindow :: hide(void)                                        throw ()
 {
     if (exportPlaylistWindow) {
-        exportPlaylistWindow->hide();
+        exportPlaylistWindow->getWindow()->hide();
     }
     if (schedulePlaylistWindow) {
-        schedulePlaylistWindow->hide();
+        schedulePlaylistWindow->getWindow()->hide();
     }
         
-    GuiWindow::on_hide();
+    BasicWindow::hide();
 }
 

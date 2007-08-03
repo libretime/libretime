@@ -7,7 +7,7 @@ nl:table
     liveModeButtonLabel:string              { "Live mode" }
     uploadFileButtonLabel:string            { "Bestand toevoegen" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Playlist" }
+    playlistButtonLabel:string              { "Playlist" }
     schedulerButtonLabel:string             { "Scheduler" }
     searchButtonLabel:string                { "Zoeken" }
     optionsButtonLabel:string               { "Options" }
@@ -40,10 +40,9 @@ nl:table
     {
         windowTitle:string          { "AANMELDEN" }
 
-        loginLabel:string           { "Gebruikersnaam" }
+        userNameLabel:string        { "Gebruikersnaam" }
         passwordLabel:string        { "Wachtwoord" }
-        okButtonLabel:string        { "OK" }
-        cancelButtonLabel:string    { "Annuleer" }
+        languageLabel:string        { "#Language#" }
 
         pleaseWaitMsg:string        { "Logging in, please wait." }
     }
@@ -64,7 +63,7 @@ nl:table
     {
         windowTitle:string                  { "Scratchpad" }
 
-        typeColumnLabel:string              { "Type" }
+        creatorColumnLabel:string           { "Maker" }
         titleColumnLabel:string             { "Titel" }
         addToPlaylistButtonLabel:string     { "Toevoegen aan Playlist" }
         clearListButtonLabel:string         { "Lijst leeg maken" }
@@ -126,7 +125,7 @@ nl:table
                                           "already.#" }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string            { "Playlist beheer" }
 
@@ -148,6 +147,8 @@ nl:table
 
         playlistSavedMsg:string         { "playlist {0} opgeslagen" }
         savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        closeWithoutSavingButtonLabel:string
+                                        { "#Close without Saving#" }
         emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
@@ -163,10 +164,10 @@ nl:table
         endColumnLabel:string       { "einde" }
         deleteMenuItem:string       { "_Verwijder" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Stop" }
+        stopCurrentlyPlayingText:string         { "what is currently playing "
+                                                  "in the scheduler." }
+        stopCurrentlyPlayingDialogMsg:string    { "Are you sure?" }
 
         closeButtonLabel:string     { "sluiten" }
 
@@ -333,7 +334,7 @@ nl:table
         deleteButtonLabel:string    { "#Delete#" }
         saveButtonLabel:string      { "#Save#" }
 
-        backupTitleLabel:string     { "#Title#" }
+        backupTitleLabel:string     { "#Title:#" }
         defaultBackupTitle:string   { "#new backup#" }
 
         fileChooserDialogTitle:string   { "#Save File#" }

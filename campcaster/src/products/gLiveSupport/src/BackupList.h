@@ -40,13 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/XmlRpcException.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "GLiveSupport.h"
@@ -89,11 +88,11 @@ using namespace LiveSupport::Widgets;
  *  @author $Author: fgerlits $
  *  @version $Revision$
  */
-class BackupList : public Gtk::VBox,
-                   public LocalizedObject,
+class BackupList : public LocalizedObject,
                    public ContentsStorable
 {
     private:
+
         /**
          *  The user preferences key.
          */
@@ -144,6 +143,7 @@ class BackupList : public Gtk::VBox,
 
 
     protected:
+
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
@@ -220,6 +220,7 @@ class BackupList : public Gtk::VBox,
 
 
     public:
+
         /**
          *  Constructor.
          *
@@ -227,9 +228,12 @@ class BackupList : public Gtk::VBox,
          *                          all the vital info.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
+         *  @param  glade           the Glade file which specifies the visual
+         *                          components for this class.
          */
-        BackupList(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                   Ptr<ResourceBundle>::Ref   bundle)
+        BackupList(Ptr<GLiveSupport>::Ref               gLiveSupport,
+                   Ptr<ResourceBundle>::Ref             bundle,
+                   Glib::RefPtr<Gnome::Glade::Xml>      glade)
                                                                     throw ();
 
         /**

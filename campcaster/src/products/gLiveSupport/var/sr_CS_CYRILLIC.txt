@@ -7,7 +7,7 @@ sr_CS_CYRILLIC:table
     liveModeButtonLabel:string              { "Уживо" }
     uploadFileButtonLabel:string            { "Аплоуд" }
     scratchpadButtonLabel:string            { "Припрема" }
-    simplePlaylistMgmtButtonLabel:string    { "Плеј листа" }
+    playlistButtonLabel:string              { "Плеј листа" }
     schedulerButtonLabel:string             { "Распоред" }
     searchButtonLabel:string                { "Претрага" }
     optionsButtonLabel:string               { "Опције" }
@@ -38,10 +38,9 @@ sr_CS_CYRILLIC:table
     {
         windowTitle:string          { "ПРИЈАВА" }
 
-        loginLabel:string           { "Пријави се" }
+        userNameLabel:string        { "Пријави се" }
         passwordLabel:string        { "Лозинка" }
-        okButtonLabel:string        { "У реду" }
-        cancelButtonLabel:string    { "Откажи" }
+        languageLabel:string        { "#Language#" }
 
         pleaseWaitMsg:string        { "Пријава је у току, сачекајте" }
     }
@@ -62,7 +61,7 @@ sr_CS_CYRILLIC:table
     {
         windowTitle:string                  { "Припрема" }
 
-        typeColumnLabel:string              { "Тип" }
+        creatorColumnLabel:string           { "Аутор" }
         titleColumnLabel:string             { "Наслов" }
         addToPlaylistButtonLabel:string     { "Додај у плеј листу" }
         clearListButtonLabel:string         { "Обриши листу" }
@@ -123,7 +122,7 @@ sr_CS_CYRILLIC:table
         duplicateFileMsg:string         { "Грешка:фајл је већ у архиви." }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string          { "Плеј листа" }
 
@@ -142,7 +141,8 @@ sr_CS_CYRILLIC:table
 
         playlistSavedMsg:string         { "Сачувана плеј листа {0}." }
         savePlaylistDialogMsg:string    { "Сачувати плејлисту?" }
-        
+        closeWithoutSavingButtonLabel:string
+                                        { "#Close without Saving#" }
         emptyTitleErrorMsg:string       { "Унесите наслов." }
     }
 
@@ -158,10 +158,10 @@ sr_CS_CYRILLIC:table
         endColumnLabel:string       { "крај" }
         deleteMenuItem:string       { "Обриши" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Тренутно се налази у распореду емитовања" }
-        stopCurrentlyPlayingButtonLabel:string      { "Стоп" }
-        stopCurrentlyPlayingDialogMsg:string        { "Да ли сте сигурни?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Стоп" }
+        stopCurrentlyPlayingText:string         { "тренутно се налази у "
+                                                  "распореду емитовања" }
+        stopCurrentlyPlayingDialogMsg:string    { "Да ли сте сигурни?" }
 
         closeButtonLabel:string     { "Затвори" }
 
@@ -327,7 +327,7 @@ sr_CS_CYRILLIC:table
         deleteButtonLabel:string    { "Избриши" }
         saveButtonLabel:string      { "Сачувај" }
 
-        backupTitleLabel:string     { "Бекап" }
+        backupTitleLabel:string     { "Бекап:" }
         defaultBackupTitle:string   { "нови бекап" }
 
         fileChooserDialogTitle:string   { "Сачувај фајл" }

@@ -40,24 +40,17 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/button.h>
-#include <gtkmm/table.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/box.h>
-#include <gtkmm/window.h>
+#include <gtkmm.h>
+#include <libglademm.h>
+
+#include "BasicWindow.h"
+#include "LiveSupport/Core/NumericTools.h"
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
-#include "LiveSupport/Widgets/Notebook.h"
-#include "LiveSupport/Widgets/ScrolledWindow.h"
 #include "RestoreBackupWindow.h"
-#include "GuiWindow.h"
 #include "GLiveSupport.h"
-#include "MasterPanelUserInfoWidget.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -76,107 +69,72 @@ using namespace LiveSupport::Widgets;
 /**
  *  The upload file window.
  *
- *  The layout of the window is roughly the following:
- *  <pre><code>
- *  +--- upload file window ----------------+
- *  | choose file:     +-- file browser --+ |
- *  | name:            +-- name input ----+ |
- *  |                  +-- upload button -+ |
- *  |                  +-- close button --+ |
- *  | +-- status bar ---------------------+ |
- *  +---------------------------------------+
- *  </code></pre>
+ *  It allows one to select a file from the file system, add metadata,
+ *  and upload it to the storage server.
  *
  *  @author $Author$
  *  @version $Revision$
  */
-class UploadFileWindow : public GuiWindow
+class UploadFileWindow : public  BasicWindow,
+                         private NumericTools
 {
     private:
-        /**
-         *  The layout used in the window.
-         */
-        Gtk::Box                 * layout;
-
-        /**
-         *  The choose file label
-         */
-        Gtk::Label                * chooseFileLabel;
-
-        /**
-         *  A container holding the file name entry field.
-         */
-        EntryBin                  * fileNameEntryBin;
 
         /**
          *  The text entry for selecting a file name
          */
-        Gtk::Entry                * fileNameEntry;
+        Gtk::Entry *                fileNameEntry;
 
         /**
          *  The file browser button.
          */
-        Button                    * chooseFileButton;
-
-        /**
-         *  The notepad holding the different sections of metadata.
-         */
-        Notebook                  * metadataNotebook;
-
-        /**
-         *  The layout of the main section.
-         */
-        Gtk::Table                * mainTable;
-
-        /**
-         *  The layout of the music section.
-         */
-        Gtk::Table                * musicTable;
-
-        /**
-         *  The layout of the voice section.
-         */
-        Gtk::Table                * voiceTable;
+        Gtk::Button *               browseButton;
 
         /**
          *  A list of the Dublin Core names of the metadata fields.
          */
-        std::vector<Ptr<const Glib::ustring>::Ref>  metadataKeys;
+        std::vector<Ptr<const Glib::ustring>::Ref>
+                                    metadataKeys;
         
         /**
          *  A list of the metadata entry fields.
          */
-        std::vector<Gtk::Entry *>                   metadataEntries;
+        std::vector<Gtk::Entry *>   metadataEntries;
 
         /**
-         *  The label containing the "Length: " text.
+         *  A counter for the metadata entries in the Main tab.
          */
-        Gtk::Label                * lengthLabel;
+        int                         mainCounter;
+
+        /**
+         *  A counter for the metadata entries in the Music tab.
+         */
+        int                         musicCounter;
+
+        /**
+         *  A counter for the metadata entries in the Voice tab.
+         */
+        int                         voiceCounter;
 
         /**
          *  The length value label.
          */
-        Gtk::Label                * lengthValueLabel;
-
-        /**
-         *  The button box.
-         */
-        Gtk::ButtonBox            * buttonBox;
+        Gtk::Label *                lengthValueLabel;
 
         /**
          *  The upload button.
          */
-        Gtk::Button               * uploadButton;
+        Gtk::Button *               uploadButton;
 
         /**
-         *  The close button.
+         *  The cancel button.
          */
-        Gtk::Button               * closeButton;
+        Gtk::Button *               cancelButton;
 
         /**
          *  The status bar.
          */
-        Gtk::Label                * statusBar;
+        Gtk::Label *                statusBar;
 
         /**
          *  The audio clip to be uploaded.
@@ -209,6 +167,32 @@ class UploadFileWindow : public GuiWindow
         Glib::ustring               fileChooserFolder;
 
         /**
+         *  Construct the metadata entry item.
+         *
+         *  @param  metadata    the metadata to display in the entry.
+         *  @return the entry field for the metadata.
+         */
+        Gtk::Entry *
+        constructMetadataItem(Ptr<const MetadataType>::Ref   metadata)
+                                                            throw ();
+
+        /**
+         *  Construct the metadata entry item.
+         *  This is an auxiliary method, called by the other method with
+         *  the same name.
+         *
+         *  @param  metadata    the metadata to display in the entry.
+         *  @param  tabName     the name of the tab: "main", "music" or "voice".
+         *  @param  index       the index of the item in its tab.
+         *  @return the entry field for the metadata.
+         */
+        Gtk::Entry *
+        constructMetadataItem(Ptr<const MetadataType>::Ref      metadata,
+                              const Glib::ustring &             tabName,
+                              int                               index)
+                                                            throw ();
+
+        /**
          *  Update the information for the file to upload, based on the
          *  value of the fileNameEntry text entry field.
          */
@@ -222,7 +206,7 @@ class UploadFileWindow : public GuiWindow
          *                      binary audio file.
          */
         void
-        readAudioClipInfo(Ptr<const Glib::ustring>::Ref fileName)
+        readAudioClipInfo(const Glib::ustring &     fileName)
                                                             throw ();
 
         /**
@@ -235,7 +219,7 @@ class UploadFileWindow : public GuiWindow
          *                                   format is not supported by TagLib
          */
         Ptr<time_duration>::Ref
-        readPlaylength(Ptr<const Glib::ustring>::Ref    fileName)
+        readPlaylength(const Glib::ustring &        fileName)
                                                 throw (std::invalid_argument);
 
         /**
@@ -267,7 +251,7 @@ class UploadFileWindow : public GuiWindow
          *  @return the type of the file.
          */
         FileType
-        determineFileType(Ptr<const Glib::ustring>::Ref   fileName)
+        determineFileType(const Glib::ustring &     fileName)
                                                             throw ();
 
         /**
@@ -289,12 +273,13 @@ class UploadFileWindow : public GuiWindow
 
 
     protected:
+
         /**
          *  Function to catch the event of the choose file button being
          *  pressed.
          */
         virtual void
-        onChooseFileButtonClicked(void)                     throw ();
+        onBrowseButtonClicked(void)                         throw ();
 
         /**
          *  Function to catch the event of the upload button being
@@ -314,13 +299,14 @@ class UploadFileWindow : public GuiWindow
         onFileNameEntryLeave(GdkEventFocus    * event)      throw ();
 
         /**
-         *  Function to catch the event of the close button being pressed.
+         *  Function to catch the event of the cancel button being pressed.
          */
         virtual void
-        onCloseButtonClicked(void)                          throw ();
+        onCancelButtonClicked(void)                         throw ();
 
 
     public:
+
         /**
          *  Constructor.
          *
@@ -328,12 +314,14 @@ class UploadFileWindow : public GuiWindow
          *                          all the vital info.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
-         *  @param windowOpenerButton   the button which was pressed to open
+         *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
+         *  @param  gladeDir        the directory where the glade file is.
          */
         UploadFileWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
                          Ptr<ResourceBundle>::Ref   bundle,
-                         Button *                   windowOpenerButton)
+                         Gtk::ToggleButton *        windowOpenerButton,
+                         const Glib::ustring &      gladeDir)
                                                                 throw ();
 
         /**

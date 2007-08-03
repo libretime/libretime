@@ -132,7 +132,7 @@ class UniqueId
          *  2^31-1 (inclusive), the value of the UniqueId will be 
          *  bogus.
          *
-         *  @param strValue the id in base 10, in string from.
+         *  @param idStr the id in base 10, in string from.
          *  @return a new UniqueId with the specified ID value.
          */
         static Ptr<UniqueId>::Ref

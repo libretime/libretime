@@ -37,7 +37,6 @@
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -54,38 +53,27 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-RdsView :: RdsView (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                    Ptr<ResourceBundle>::Ref  bundle)
+RdsView :: RdsView (Ptr<GLiveSupport>::Ref              gLiveSupport,
+                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : gLiveSupport(gLiveSupport)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    Gtk::Label *    deviceLabel;
-    try {
-        deviceLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                    "deviceLabel" )));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    deviceEntryBin = Gtk::manage(wf->createEntryBin());
-    Gtk::Box *      deviceBox = Gtk::manage(new Gtk::HBox());
-    deviceBox->pack_start(*deviceLabel,     Gtk::PACK_SHRINK, 5);
-    deviceBox->pack_start(*deviceEntryBin,  Gtk::PACK_EXPAND_WIDGET, 5);
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle("rdsView");
+    setBundle(bundle);
 
-    Ptr<RdsEntry>::Ref  psEntry(new RdsEntry(getBundle(), "PS", 8));
-    Ptr<RdsEntry>::Ref  piEntry(new RdsEntry(getBundle(), "PI", 4));
-    Ptr<RdsEntry>::Ref  rtEntry(new RdsEntry(getBundle(), "RT", 32));
+    Gtk::Label *    deviceLabel;
+    glade->get_widget("rdsDeviceLabel1", deviceLabel);
+    deviceLabel->set_label(*getResourceUstring("deviceLabel"));
+
+    glade->get_widget("rdsDeviceEntry1", deviceEntry);
+
+    Ptr<RdsEntry>::Ref  psEntry(new RdsEntry(getBundle(), glade, 0, "PS", 8));
+    Ptr<RdsEntry>::Ref  piEntry(new RdsEntry(getBundle(), glade, 1, "PI", 4));
+    Ptr<RdsEntry>::Ref  rtEntry(new RdsEntry(getBundle(), glade, 2, "RT", 32));
     
     rdsEntryList.push_back(psEntry);
     rdsEntryList.push_back(piEntry);
     rdsEntryList.push_back(rtEntry);
-    
-    pack_start(*deviceBox,  Gtk::PACK_SHRINK, 5);
-    pack_start(*psEntry,    Gtk::PACK_SHRINK, 5);
-    pack_start(*piEntry,    Gtk::PACK_SHRINK, 5);
-    pack_start(*rtEntry,    Gtk::PACK_SHRINK, 5);
 
     reset();
 }
@@ -103,7 +91,7 @@ RdsView :: saveChanges(void)                                        throw ()
     Ptr<const Glib::ustring>::Ref   oldDevice = options->getOptionItem(
                                         OptionsContainer::serialDeviceName);
     Ptr<const Glib::ustring>::Ref   newDevice(new const Glib::ustring(
-                                        deviceEntryBin->get_text() ));
+                                        deviceEntry->get_text() ));
     if (*oldDevice != *newDevice) {
         options->setOptionItem(OptionsContainer::serialDeviceName, newDevice);
         touched = true;
@@ -126,7 +114,7 @@ void
 RdsView :: reset(void)                                              throw ()
 {
     Ptr<OptionsContainer>::Ref  options = gLiveSupport->getOptionsContainer();
-    deviceEntryBin->set_text(*options->getOptionItem(
+    deviceEntry->set_text(*options->getOptionItem(
                                         OptionsContainer::serialDeviceName));
     
     RdsEntryListType::const_iterator    it;

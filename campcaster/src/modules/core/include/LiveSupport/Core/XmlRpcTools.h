@@ -357,7 +357,7 @@ class XmlRpcTools
         static void
         fromTimeToXmlRpcValue(
                 Ptr<const boost::posix_time::ptime>::Ref    from,
-                XmlRpc::XmlRpcValue                       & xmlRpcValue)
+                XmlRpc::XmlRpcValue                       & returnValue)
                                                                     throw ();
 
         /**
@@ -370,7 +370,7 @@ class XmlRpcTools
         static void
         toTimeToXmlRpcValue(
                 Ptr<const boost::posix_time::ptime>::Ref    to,
-                XmlRpc::XmlRpcValue                       & xmlRpcValue)
+                XmlRpc::XmlRpcValue                       & returnValue)
                                                                     throw ();
 
         /**
@@ -575,7 +575,7 @@ class XmlRpcTools
          *  Convert a SearchCriteria to an XmlRpcValue.
          *
          *  @param  criteria    the SearchCriteria to convert.
-         *  @param  xmlRpcValue the output parameter holding the result of
+         *  @param  returnValue the output parameter holding the result of
          *                      the conversion.
          */
         static void
@@ -599,8 +599,8 @@ class XmlRpcTools
         /**
          *  Convert a string token to an XmlRpcValue.
          *
-         *  @param  criteria    the string token to convert.
-         *  @param  xmlRpcValue the output parameter holding the result of
+         *  @param  token       the string token to convert.
+         *  @param  returnValue the output parameter holding the result of
          *                      the conversion.
          */
         static void
@@ -625,7 +625,7 @@ class XmlRpcTools
          *  of the backup methods to an XmlRpcValue.
          *
          *  @param  status      the AsyncState to convert.
-         *  @param  xmlRpcValue the output parameter holding the result of
+         *  @param  returnValue the output parameter holding the result of
          *                      the conversion.
          */
         static void
@@ -649,7 +649,7 @@ class XmlRpcTools
          *  Convert a URL string to an XmlRpcValue.
          *
          *  @param  url         the URL string to convert.
-         *  @param  xmlRpcValue the output parameter holding the result of
+         *  @param  returnValue the output parameter holding the result of
          *                      the conversion.
          */
         static void
@@ -673,7 +673,7 @@ class XmlRpcTools
          *  Convert a path string to an XmlRpcValue.
          *
          *  @param  path        the path string to convert.
-         *  @param  xmlRpcValue the output parameter holding the result of
+         *  @param  returnValue the output parameter holding the result of
          *                      the conversion.
          */
         static void
@@ -696,7 +696,7 @@ class XmlRpcTools
         /**
          *  Convert a fault string to an XmlRpcValue.
          *
-         *  @param  path        the fault string to convert.
+         *  @param  faultString the fault string to convert.
          *  @param  xmlRpcValue the output parameter holding the result of
          *                      the conversion.
          */

@@ -214,7 +214,7 @@ class SchedulerThread : public virtual RunnableInterface
          *  </ul>
          *
          *  @param signalId a value from SignalTypes.
-         *  @see #signalTypes
+         *  @see #SignalTypes
          */
         virtual void
         signal(int signalId)                            throw ();

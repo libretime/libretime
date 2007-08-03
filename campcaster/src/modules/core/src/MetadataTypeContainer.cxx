@@ -158,6 +158,22 @@ MetadataTypeContainer :: getById3Tag(const Glib::ustring    id3Tag)
 
 
 /*------------------------------------------------------------------------------
+ *  Look for a metadata type object by the ID3v2 tag name.
+ *----------------------------------------------------------------------------*/
+Ptr<const MetadataType>::Ref
+MetadataTypeContainer :: getByIndex(unsigned int    index)  const
+                                                throw (std::invalid_argument)
+{
+    if (index < 0 || index >= vector.size()) {
+        throw std::invalid_argument("index out of range in "
+                                    "MetadataTypeContainer::getByIndex()");
+    }
+
+    return vector.at(index);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Check that the given value satisfies the constraint of a metadata type.
  *----------------------------------------------------------------------------*/
 bool

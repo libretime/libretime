@@ -36,9 +36,11 @@
 
 /* ============================================================ include files */
 
+#include <gtkmm.h>
+#include <libglademm.h>
+
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/StorageClient/StorageClientInterface.h"
-#include "LiveSupport/Widgets/RadioButtons.h"
 
 
 namespace LiveSupport {
@@ -46,7 +48,6 @@ namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::StorageClient;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -63,17 +64,31 @@ using namespace LiveSupport::Widgets;
  *  @author $Author: fgerlits $
  *  @version $Revision$
  */
-class ExportFormatRadioButtons : public RadioButtons,
-                                 public LocalizedObject
+class ExportFormatRadioButtons : public LocalizedObject
 {
+    private:
+
+        /**
+         *  The radio button for the internal Campcaster format.
+         */
+        Gtk::RadioButton *          internalFormatRadioButton;
+
+        /**
+         *  The radio button for the SMIL format.
+         */
+        Gtk::RadioButton *          smilFormatRadioButton;
+
+
     public:
+
         /**
          *  Constructor.
          *
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
          */
-        ExportFormatRadioButtons(Ptr<ResourceBundle>::Ref   bundle)
+        ExportFormatRadioButtons(Ptr<ResourceBundle>::Ref         bundle,
+                                 Glib::RefPtr<Gnome::Glade::Xml>  glade)
                                                                     throw ();
         
         /**

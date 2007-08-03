@@ -108,6 +108,10 @@ PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5])
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 
+PKG_CHECK_MODULES(LIBGLADEMM,[libglademm-2.4 >= 2.6.2])
+AC_SUBST(LIBGLADEMM_CFLAGS)
+AC_SUBST(LIBGLADEMM_LIBS)
+
 
 dnl-----------------------------------------------------------------------------
 dnl enable compilaton for code coverage data

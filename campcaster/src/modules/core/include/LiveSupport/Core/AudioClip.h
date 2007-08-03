@@ -281,6 +281,7 @@ class AudioClip : public Configurable,
          *  use the constructor with (title, playlength, uri) arguments.
          *
          *  @param id the id of the audio clip.
+         *  @param title the title of the audio clip.
          *  @param playlength the playing length of the audio clip.
          *  @param uri the location of the sound file corresponding to
          *             this audio clip object (optional)
@@ -397,7 +398,7 @@ class AudioClip : public Configurable,
          *  Set the ID of the object.  This is only allowed if the ID was
          *  a null pointer; once the ID is set, it can not be changed.
          *
-         *  @param the new unique id of the audio clip.
+         *  @param  id  the new unique id of the audio clip.
          */
         void
         setId(Ptr<UniqueId>::Ref id)            throw (std::invalid_argument)

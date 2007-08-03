@@ -3,6 +3,7 @@
 
 <!ELEMENT gLiveSupport                (resourceBundle,
                                        supportedLanguages,
+                                       gladeDirectory,
                                        widgetFactory,
                                        authenticationClientFactory,
                                        storageClientFactory,
@@ -25,8 +26,11 @@
 <!ELEMENT supportedLanguages    (language+) >
 
 <!ELEMENT language          EMPTY >
-<!ATTLIST language          locale          CDATA #REQUIRED >
-<!ATTLIST language          name            CDATA #REQUIRED >
+<!ATTLIST language          locale          CDATA   #REQUIRED >
+<!ATTLIST language          name            CDATA   #REQUIRED >
+
+<!ELEMENT gladeDirectory    EMPTY >
+<!ATTLIST gladeDirectory    path            CDATA   #REQUIRED >
 
 <!ELEMENT widgetFactory   EMPTY >
 <!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
@@ -149,6 +153,8 @@
         <language locale="sr_CS"            name="Srpski"/>
         <language locale="sr_CS_CYRILLIC"   name="Српски"/>
     </supportedLanguages>
+
+    <gladeDirectory     path = "./var/glade/" />
 
     <widgetFactory    path = "var/widgets/" />
 
@@ -430,7 +436,7 @@
         </keyboardShortcutContainer>
 
         <keyboardShortcutContainer
-                    windowName ="simplePlaylistManagementWindow">
+                    windowName ="playlistWindow">
             <keyboardShortcut   action  = "moveItemUp"
                                 key     = "&lt;Alt&gt;Up"   />
             <keyboardShortcut   action  = "moveItemDown"

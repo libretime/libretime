@@ -35,13 +35,10 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
-
 #include "AdvancedSearchItem.h"
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -59,46 +56,39 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 AdvancedSearchItem :: AdvancedSearchItem(
-                            bool                             isFirst,
-                            Ptr<MetadataTypeContainer>::Ref  metadataTypes,
-                            Ptr<ResourceBundle>::Ref         bundle)
+                            int                                 index,
+                            Ptr<MetadataTypeContainer>::Ref     metadataTypes,
+                            Ptr<ResourceBundle>::Ref            bundle,
+                            Glib::RefPtr<Gnome::Glade::Xml>     glade)
                                                                     throw ()
           : LocalizedObject(bundle)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    glade->get_widget(addIndex("advancedSearchItem", index), enclosingBox);
 
     Gtk::Label *    searchByLabel;
-    try {
-        searchByLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("searchByTextLabel") ));
+    glade->get_widget(addIndex("advancedSearchByLabel", index), searchByLabel);
+    searchByLabel->set_label(*getResourceUstring("searchByTextLabel"));
 
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget_derived(addIndex("advancedMetadataEntry", index),
+                              metadataEntry);
+    metadataEntry->setContents(metadataTypes);
+
+    glade->get_widget_derived(addIndex("advancedOperatorEntry", index),
+                              operatorEntry);
+    operatorEntry->setContents(bundle);
+
+    glade->get_widget(addIndex("advancedValueEntry", index), valueEntry);
     
-    pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
-
-    metadataEntry = Gtk::manage(wf->createMetadataComboBoxText(metadataTypes));
-    pack_start(*metadataEntry, Gtk::PACK_SHRINK, 5);
-
-    operatorEntry = Gtk::manage(wf->createOperatorComboBoxText(bundle));
-    pack_start(*operatorEntry,  Gtk::PACK_SHRINK, 5);
-
-    valueEntry = Gtk::manage(wf->createEntryBin());
-    pack_start(*valueEntry,     Gtk::PACK_EXPAND_WIDGET, 5);
-    
-    if (isFirst) {
-        plusButton = Gtk::manage(wf->createButton(WidgetConstants::plusButton));
-        pack_start(*plusButton, Gtk::PACK_SHRINK, 5);
+    if (index == 0) {
+        glade->get_widget(addIndex("advancedPlusMinusButton", index),
+                                   plusButton);
         plusButton->signal_clicked().connect(sigc::mem_fun(*this, 
-                                    &AdvancedSearchItem::onPlusButtonClicked ));
+                                    &AdvancedSearchItem::onPlusButtonClicked));
     } else {
-        closeButton = Gtk::manage(wf->createButton(
-                                                WidgetConstants::minusButton));
+        glade->get_widget(addIndex("advancedPlusMinusButton", index),
+                                   closeButton);
         closeButton->signal_clicked().connect(sigc::mem_fun(*this, 
-                                    &AdvancedSearchItem::destroy_ ));
-        pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
+                                    &AdvancedSearchItem::onCloseButtonClicked));
     }
 }
 
@@ -107,7 +97,7 @@ AdvancedSearchItem :: AdvancedSearchItem(
  *  Return the current state of the search fields.
  *----------------------------------------------------------------------------*/
 Ptr<SearchCriteria::SearchConditionType>::Ref
-AdvancedSearchItem :: getSearchCondition(void)                  throw ()
+AdvancedSearchItem :: getSearchCondition(void)                      throw ()
 {
     Ptr<const Glib::ustring>::Ref  metadataKey = metadataEntry->getActiveKey();
     Ptr<const Glib::ustring>::Ref  operatorKey = operatorEntry->getActiveKey();

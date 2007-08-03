@@ -398,6 +398,7 @@ class Playlist : public Configurable,
          *  see the note at the default constructor.
          *
          *  @param id the id of the playlist.
+         *  @param title the title of the playlist.
          *  @param playlength the playing length of the playlist.
          *  @param uri the location of the SMIL file representing this
          *             playlist (optional)

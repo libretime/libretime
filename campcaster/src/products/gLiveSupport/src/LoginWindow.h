@@ -41,22 +41,13 @@
 #endif
 
 #include <string>
-
 #include <unicode/resbund.h>
-
-#include <gtkmm/window.h>
-#include <gtkmm/button.h>
-#include <gtkmm/buttonbox.h>
-#include <gtkmm/label.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/table.h>
-#include <gtkmm/combo.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
-#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -79,77 +70,52 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LoginWindow : public GuiWindow
+class LoginWindow : public LocalizedObject
 {
-
-    protected:
-        /**
-         *  The table, which provides the layout for the window.
-         */
-        Gtk::Table                * table;
+    private:
 
         /**
-         *  The login label in the window.
+         *  The Glade object, containing the visual design.
          */
-        Gtk::Label            * loginLabel;
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
 
         /**
-         *  The password label in the window.
+         *  The GLiveSupport object, holding the state of the application.
          */
-        Gtk::Label            * passwordLabel;
+        Ptr<GLiveSupport>::Ref  gLiveSupport;
 
         /**
-         *  The container for the login text entry area.
+         *  The window itself.
          */
-        EntryBin              * loginEntryBin;
+        Gtk::Dialog *           loginWindow;
 
         /**
-         *  The login text entry area.
+         *  The user name text entry area.
          */
-        Gtk::Entry            * loginEntry;
-
-        /**
-         *  The container for the password text entry area.
-         */
-        EntryBin              * passwordEntryBin;
+        Gtk::Entry *            userNameEntry;
 
         /**
          *  The password text entry area.
          */
-        Gtk::Entry            * passwordEntry;
+        Gtk::Entry *            passwordEntry;
 
         /**
          *  The drop-down list to select the desired language.
          */
-        ComboBoxText          * languageList;
-
-        /**
-         *  The horizontal box for the buttons.
-         */
-        Gtk::HButtonBox       * buttonBox;
-
-        /**
-         *  The OK button.
-         */
-        Button                * okButton;
-
-        /**
-         *  The Cancel button.
-         */
-        Button                * cancelButton;
+        ComboBoxText *          languageEntry;
 
         /**
          *  The status bar.
          */
-        Gtk::Label            * statusBar;
+        Gtk::Label *            statusBar;
 
         /**
-         *  The login text, that was entered by the user.
+         *  The user name text entered by the user.
          */
-        Ptr<Glib::ustring>::Ref     loginText;
+        Ptr<Glib::ustring>::Ref     userNameText;
 
         /**
-         *  The password text, that was entered by the user.
+         *  The password text entered by the user.
          */
         Ptr<Glib::ustring>::Ref     passwordText;
 
@@ -164,6 +130,18 @@ class LoginWindow : public GuiWindow
         bool                        loggedIn;
 
         /**
+         *  Signal handler for the Enter key pressed in the user name entry.
+         */
+        virtual void
+        onUserNameEntryActivated(void)                      throw ();
+
+        /**
+         *  Signal handler for the Enter key pressed in the password entry.
+         */
+        virtual void
+        onPasswordEntryActivated(void)                      throw ();
+
+        /**
          *  Signal handler for the ok button clicked.
          */
         virtual void
@@ -176,14 +154,18 @@ class LoginWindow : public GuiWindow
         onCancelButtonClicked(void)                         throw ();
 
         /**
-         *  Set the text of the status bar.
+         *  Get the password entered by the user.
+         *
+         *  @return the password entered by the user.
          */
-        virtual void
-        setStatusBarText(Ptr<const Glib::ustring>::Ref  text)
-                                                            throw ();
-
+        Ptr<const Glib::ustring>::Ref
+        getPassword(void) const                             throw ()
+        {
+            return passwordText;
+        }
 
     public:
+
         /**
          *  Constructor.
          *
@@ -191,12 +173,11 @@ class LoginWindow : public GuiWindow
          *                          all the vital info.
          *  @param  bundle          the resource bundle holding the localized
          *                          resources for this window.
-         *  @param windowOpenerButton   the button which was pressed to open
-         *                              this window.
+         *  @param  gladeDir        the directory where the glade file is.
          */
         LoginWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
                     Ptr<ResourceBundle>::Ref    bundle,
-                    Button *                    windowOpenerButton)
+                    const Glib::ustring &       gladeDir)
                                                             throw ();
 
         /**
@@ -213,30 +194,7 @@ class LoginWindow : public GuiWindow
         Ptr<const Glib::ustring>::Ref
         getLogin(void) const                                throw ()
         {
-            return loginText;
-        }
-
-        /**
-         *  Get the password entered by the user.
-         *
-         *  @return the password entered by the user.
-         */
-        Ptr<const Glib::ustring>::Ref
-        getPassword(void) const                             throw ()
-        {
-            return passwordText;
-        }
-
-        /**
-         *  Get the locale selected by the user.
-         *
-         *  @return the locale selected by the user. if this is an empty
-         *          string, the user selected the default locale.
-         */
-        Ptr<const std::string>::Ref
-        getSelectedLocale(void) const                       throw ()
-        {
-            return selectedLocale;
+            return userNameText;
         }
 
         /**

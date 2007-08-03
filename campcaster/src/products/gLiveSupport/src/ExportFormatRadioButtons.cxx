@@ -38,7 +38,6 @@
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::StorageClient;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -56,18 +55,17 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 ExportFormatRadioButtons :: ExportFormatRadioButtons(
-                                    Ptr<ResourceBundle>::Ref    bundle)
+                                    Ptr<ResourceBundle>::Ref            bundle,
+                                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
                                                                     throw ()
-          : RadioButtons(),
-            LocalizedObject(bundle)
+          : LocalizedObject(bundle)
 {
-    try {
-        add(getResourceUstring("internalFormatName"));
-        add(getResourceUstring("smilFormatName"));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget("internalFormatRadioButton1", internalFormatRadioButton);
+    glade->get_widget("smilFormatRadioButton1", smilFormatRadioButton);
+    internalFormatRadioButton->set_label(*getResourceUstring(
+                                                    "internalFormatName"));
+    smilFormatRadioButton->set_label(*getResourceUstring(
+                                                    "smilFormatName"));
 }
 
 
@@ -77,7 +75,16 @@ ExportFormatRadioButtons :: ExportFormatRadioButtons(
 StorageClientInterface::ExportFormatType
 ExportFormatRadioButtons :: getFormat(void)                         throw ()
 {
-    int button  = getActiveButton();
-    return StorageClientInterface::ExportFormatType(button);
+    if (internalFormatRadioButton->get_active()) {
+        return StorageClientInterface::internalFormat;
+    
+    } else if (smilFormatRadioButton->get_active()) {
+        return StorageClientInterface::smilFormat;
+    
+    } else {
+        std::cerr << "impossible value in ExportFormatRadioButtons::getFormat()"
+                  << std::endl;
+        std::exit(1);
+    }
 }
 

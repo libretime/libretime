@@ -40,7 +40,8 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
@@ -68,8 +69,7 @@ using namespace LiveSupport::Core;
  *  @author  $Author$
  *  @version $Revision$
  */
-class BrowseEntry : public Gtk::HBox,
-                    public LocalizedObject
+class BrowseEntry : public LocalizedObject
 {
     private:
     
@@ -81,34 +81,40 @@ class BrowseEntry : public Gtk::HBox,
         /**
          *  The first BrowseItem entry field.
          */
-        BrowseItem *        browseItemOne;
+        Ptr<BrowseItem>::Ref    browseItemOne;
 
         /**
          *  The second BrowseItem entry field.
          */
-        BrowseItem *        browseItemTwo;
+        Ptr<BrowseItem>::Ref    browseItemTwo;
 
         /**
          *  The third BrowseItem entry field.
          */
-        BrowseItem *        browseItemThree;
+        Ptr<BrowseItem>::Ref    browseItemThree;
 
 
     public:
     
         /**
          *  Constructor with localization parameter.
+         *
+         *  @param gLiveSupport the GLiveSupport object, containing
+         *                      all the vital info.
+         *  @param bundle       the resource bundle for localization.
+         *  @param glade        the Glade file which specifies the visual
+         *                      components for this class.
          */
-        BrowseEntry(
-            Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
-            Ptr<ResourceBundle>::Ref                            bundle)
-                                                        throw ();
+        BrowseEntry(Ptr<GLiveSupport>::Ref              gLiveSupport,
+                    Ptr<ResourceBundle>::Ref            bundle,
+                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
+                                                                throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~BrowseEntry(void)                              throw ()
+        ~BrowseEntry(void)                                      throw ()
         {
         }
 
@@ -129,12 +135,12 @@ class BrowseEntry : public Gtk::HBox,
          *  The signal raised when either the combo box or the tree view
          *  selection has changed.
          *
-         *  @return the signalSelectionChanged() of the last browse item
+         *  @return the signalChanged() of the last browse item
          */
         sigc::signal<void>
-        signalSelectionChanged(void)                        throw ()
+        signalChanged(void)                                     throw ()
         {
-            return browseItemThree->signalSelectionChanged();
+            return browseItemThree->signalChanged();
         }
 };
 
@@ -145,7 +151,7 @@ class BrowseEntry : public Gtk::HBox,
 /* ====================================================== function prototypes */
 
 
-} // namespace Widgets
+} // namespace GLiveSupport
 } // namespace LiveSupport
 
 #endif // BrowseEntry_h

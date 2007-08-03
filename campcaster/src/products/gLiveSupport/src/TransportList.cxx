@@ -39,7 +39,6 @@
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::StorageClient;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -89,63 +88,52 @@ const Glib::ustring      downloadSymbol  = "⇩";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-TransportList :: TransportList (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                Ptr<ResourceBundle>::Ref  bundle)
+TransportList :: TransportList(Ptr<GLiveSupport>::Ref           gLiveSupport,
+                               Ptr<ResourceBundle>::Ref         bundle,
+                               Glib::RefPtr<Gnome::Glade::Xml>  glade)
                                                                     throw ()
           : LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
-
     // create the tree view
     treeModel = Gtk::ListStore::create(modelColumns);
-    treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
-    treeView->set_enable_search(false);
+    glade->get_widget_derived("transportsTreeView1", treeView);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
 
     // Add the TreeView's view columns:
-    try {
-        treeView->appendColumn("",
-                               modelColumns.directionColumn, 20);
-        treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 300);
-        treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
-                               modelColumns.dateColumn, 180);
-        treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
-                               modelColumns.statusDisplayColumn, 50);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    treeView->appendColumn("",
+                           modelColumns.directionColumn, 20);
+    treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
+                           modelColumns.titleColumn, 300);
+    treeView->appendColumn(*getResourceUstring("dateColumnLabel"),
+                           modelColumns.dateColumn, 180);
+    treeView->appendColumn(*getResourceUstring("statusColumnLabel"),
+                           modelColumns.statusDisplayColumn, 50);
     
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                         &TransportList::onEntryClicked));
 
     // create the right-click entry context menu
-    uploadMenu      = Gtk::manage(new Gtk::Menu());
-    downloadMenu    = Gtk::manage(new Gtk::Menu());
+    uploadMenu.reset(new Gtk::Menu());
+    downloadMenu.reset(new Gtk::Menu());
     Gtk::Menu::MenuList&    uploadMenuList      = uploadMenu->items();
     Gtk::Menu::MenuList&    downloadMenuList    = downloadMenu->items();
     
-    try{
-        uploadMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("cancelUploadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &TransportList::onCancelTransport)));
-        downloadMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("cancelDownloadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &TransportList::onCancelTransport)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    uploadMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("cancelUploadMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &TransportList::onCancelTransport)));
+    downloadMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                            *getResourceUstring("cancelDownloadMenuItem"),
+                            sigc::mem_fun(*this,
+                                    &TransportList::onCancelTransport)));
     
-    uploadMenu->accelerate(*this);
-    downloadMenu->accelerate(*this);
-
-    // add the tree view to this widget
-    Gtk::VBox::pack_start(*treeView);
+    Gtk::Window *       mainWindow;
+    glade->get_widget("mainWindow1", mainWindow);
+    uploadMenu->accelerate(*mainWindow);
+    downloadMenu->accelerate(*mainWindow);
 
     userPreferencesKey.reset(new const Glib::ustring(userPreferencesKeyName));
 }
@@ -486,7 +474,7 @@ TransportList :: onCancelTransport(void)                            throw ()
         removeSelected();
 
     } catch (XmlRpcException &e) {
-        gLiveSupport->displayMessageWindow(formatMessage(
+        gLiveSupport->displayMessageWindow(*formatMessage(
                                                 "cannotCancelTransportMsg",
                                                 e.what() ));
     }    

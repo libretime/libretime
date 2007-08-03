@@ -164,10 +164,10 @@ class ScheduleEntry
          *  A constructor based on a DOM element
          *
          *  @param element a DOM element returned earlier by a
-         *         getDom() call from another schedule entry.
+         *         toDom() call from another schedule entry.
          *  @throws std::invalid_argument in case of a bad DOM element
          *  @see #getElementName
-         *  @see #getDom
+         *  @see #toDom
          */
         ScheduleEntry(xmlpp::Element      * element)
                                                 throw (std::invalid_argument);

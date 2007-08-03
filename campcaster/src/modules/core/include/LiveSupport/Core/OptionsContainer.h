@@ -216,6 +216,7 @@ class OptionsContainer
         /**
          *  Set a string type option.
          *
+         *  @param      optionItem              which option to set
          *  @param      value                   the new value of the option
          *  @exception  std::invalid_argument   if the option name is not found
          */

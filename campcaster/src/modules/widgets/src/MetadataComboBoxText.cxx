@@ -54,26 +54,50 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 MetadataComboBoxText :: MetadataComboBoxText(
-                    Glib::RefPtr<Gdk::Pixbuf>           leftImage, 
-                    Glib::RefPtr<Gdk::Pixbuf>           centerImage, 
-                    Glib::RefPtr<Gdk::Pixbuf>           rightImage,
-                    Ptr<MetadataTypeContainer>::Ref     metadataTypes)
+                        GtkComboBox *                             baseClass,
+                        const Glib::RefPtr<Gnome::Glade::Xml> &   glade)
                                                                     throw ()
-          : ComboBoxText(leftImage, centerImage, rightImage)
+          : ComboBoxText(baseClass, glade)
 {
-    MetadataTypeContainer::Vector::const_iterator   it;
-    for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
-        Ptr<const MetadataType>::Ref  metadata = *it;
-        appendPair(metadata->getLocalizedName(), metadata->getDcName());
-    }
-    set_active(0);  // select the first item
 }
 
 
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-MetadataComboBoxText :: ~MetadataComboBoxText(void)                            throw ()
+MetadataComboBoxText :: ~MetadataComboBoxText(void)                 throw ()
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the contents of the combo box.
+ *----------------------------------------------------------------------------*/
+void
+MetadataComboBoxText :: setContents(
+                        Ptr<const MetadataTypeContainer>::Ref   metadataTypes)
+                                                                    throw ()
+{
+    this->metadataTypes = metadataTypes;
+
+    MetadataTypeContainer::Vector::const_iterator   it;
+    for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
+        Ptr<const MetadataType>::Ref  metadata = *it;
+        append_text(*metadata->getLocalizedName());
+    }
+    set_active(0);  // select the first item
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the contents of the combo box.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+MetadataComboBoxText :: getActiveKey(void)
+                                                                    throw ()
+{
+    Ptr<const MetadataType>::Ref    metadata = metadataTypes->getByIndex(
+                                                    get_active_row_number());
+    return metadata->getDcName();
 }
 

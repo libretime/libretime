@@ -42,17 +42,16 @@
 
 #include <vector>
 #include <utility>
-
-#include <gtkmm/box.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/NumericTools.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "LiveSupport/Widgets/MetadataComboBoxText.h"
 #include "LiveSupport/Widgets/OperatorComboBoxText.h"
-#include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/ImageButton.h"
 
 
 namespace LiveSupport {
@@ -75,47 +74,45 @@ using namespace LiveSupport::Widgets;
  *  @author  $Author$
  *  @version $Revision$
  */
-class AdvancedSearchItem : public Gtk::HBox, 
-                           public LocalizedObject
+class AdvancedSearchItem : public  LocalizedObject,
+                           private NumericTools
 {
     private:
-    
-        /**
-         *  The type for storing both the metadata and the comparison operator
-         *  localizations.
-         */
-        typedef std::vector<std::pair<Glib::ustring, Glib::ustring> >
-                                MapVector;
 
+        /**
+         *  The enclosing box.
+         */
+        Gtk::Box *                  enclosingBox;
+        
         /**
          *  The metadata field.
          */
-        MetadataComboBoxText *  metadataEntry;
+        MetadataComboBoxText *      metadataEntry;
 
         /**
          *  The operator field.
          */
-        OperatorComboBoxText *  operatorEntry;
+        OperatorComboBoxText *      operatorEntry;
 
         /**
          *  The "search for this value" field.
          */
-        EntryBin *              valueEntry;
+        Gtk::Entry *                valueEntry;
         
         /**
          *  The "add new search item" button.
          */
-        ImageButton *           plusButton;
+        Gtk::Button *               plusButton;
         
         /**
          *  The "remove this item" button.
          */
-        ImageButton *           closeButton;
+        Gtk::Button *               closeButton;
         
         /**
          *  A signal object emitted when the plus button is pressed.
          */
-        sigc::signal<void>      signalAddNewObject;
+        sigc::signal<void>          signalAddNewObject;
 
         /**
          *  Event handler for the Plus button getting clicked.
@@ -126,19 +123,33 @@ class AdvancedSearchItem : public Gtk::HBox,
             signalAddNew().emit();
         }
 
+        /**
+         *  Event handler for the Close button getting clicked.
+         */
+        void
+        onCloseButtonClicked()                                  throw ()
+        {
+            hide();
+        }
+
 
     public:
-    
+
         /**
          *  Constructor.
          *
-         *  @param isFirst        true if this is the first search condition
-         *                            (so it does not need a Close button)
+         *  @param index          the position of this item in the list of
+         *                        advanced search items.
          *  @param metadataTypes  container holding all known metadata types
+         *  @param bundle         the resource bundle holding the localized
+         *                        resources for this widget.
+         *  @param glade          the Glade file which specifies the visual
+         *                        components for this class.
          */
-        AdvancedSearchItem(bool                             isFirst,
-                           Ptr<MetadataTypeContainer>::Ref  metadataTypes,
-                           Ptr<ResourceBundle>::Ref         bundle)
+        AdvancedSearchItem(int                                index,
+                           Ptr<MetadataTypeContainer>::Ref    metadataTypes,
+                           Ptr<ResourceBundle>::Ref           bundle,
+                           Glib::RefPtr<Gnome::Glade::Xml>    glade)
                                                                 throw ();
 
         /**
@@ -178,6 +189,35 @@ class AdvancedSearchItem : public Gtk::HBox,
         signalAddNew(void)                                      throw ()
         {
             return signalAddNewObject;
+        }
+
+        /**
+         *  Is the widget visible?
+         *
+         *  return true if visible, false if not.
+         */
+        bool
+        is_visible(void)                                        throw ()
+        {
+            return enclosingBox->is_visible();
+        }
+
+        /**
+         *  Show the widget.
+         */
+        void
+        show(void)                                              throw ()
+        {
+            enclosingBox->show();
+        }
+
+        /**
+         *  Hide the widget.
+         */
+        void
+        hide(void)                                              throw ()
+        {
+            enclosingBox->hide();
         }
 };
 

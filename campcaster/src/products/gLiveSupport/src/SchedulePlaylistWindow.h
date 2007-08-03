@@ -41,19 +41,14 @@
 #endif
 
 #include <string>
-
-#include <boost/date_time/gregorian/gregorian.hpp>
-
 #include <unicode/resbund.h>
-
 #include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/Button.h"
-#include "GuiWindow.h"
 #include "GLiveSupport.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -89,90 +84,72 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulePlaylistWindow : public GuiWindow
+class SchedulePlaylistWindow : public LocalizedObject
 {
+    private:
 
-    protected:
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref                  gLiveSupport;
+
+        /**
+         *  The Glade object, containing the visual design.
+         */
+        Glib::RefPtr<Gnome::Glade::Xml>         glade;
+
+        /**
+         *  The main window for this class.
+         */
+        Gtk::Window *                           mainWindow;
 
         /**
          *  The playlist to schedule.
          */
-        Ptr<Playlist>::Ref          playlist;
-
-        /**
-         *  The main container in the window.
-         */
-        Gtk::Table                * layout;
-
-        /**
-         *  The label displaying the name of the playlist to schedule.
-         */
-        Gtk::Label                * playlistLabel;
+        Ptr<Playlist>::Ref                      playlist;
 
         /**
          *  The calendar to select a specific date from.
          */
-        Gtk::Calendar             * calendar;
+        Gtk::Calendar *                         calendar;
 
         /**
-         *  The hour label.
+         *  The entry field for hours.
          */
-        Gtk::Label                * hourLabel;
+        Gtk::SpinButton *                       hourEntry;
 
         /**
-         *  The entry field for hour.
+         *  The entry field for minutes.
          */
-        ComboBoxText              * hourEntry;
+        Gtk::SpinButton *                       minuteEntry;
 
         /**
-         *  The minute label.
+         *  The entry field for seconds.
          */
-        Gtk::Label                * minuteLabel;
+        Gtk::SpinButton *                       secondEntry;
+
+
+    protected:
 
         /**
-         *  The minute entry field.
-         */
-        ComboBoxText              * minuteEntry;
-
-        /**
-         *  The second label.
-         */
-        Gtk::Label                * secondLabel;
-
-        /**
-         *  The second entry field.
-         */
-        ComboBoxText              * secondEntry;
-
-        /**
-         *  The schedule button.
-         */
-        Button                    * scheduleButton;
-
-        /**
-         *  The close button.
-         */
-        Button                    * closeButton;
-
-        /**
-         *  Signal handler for the schedule button clicked.
+         *  Event handler for the schedule button clicked.
          */
         virtual void
         onScheduleButtonClicked(void)                           throw ();
 
 
     public:
+
         /**
          *  Constructor.
          *
          *  @param  gLiveSupport    the gLiveSupport object, containing
          *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
+         *  @param  gladeDir        the directory where the Glade files are.
          *  @param  playlist        the playlist to schedule.
          */
         SchedulePlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
-                               Ptr<ResourceBundle>::Ref     bundle,
+                               const Glib::ustring &        gladeDir,
                                Ptr<Playlist>::Ref           playlist)
                                                                     throw ();
 
@@ -180,8 +157,18 @@ class SchedulePlaylistWindow : public GuiWindow
          *  Virtual destructor.
          */
         virtual
-        ~SchedulePlaylistWindow(void)                               throw ();
+        ~SchedulePlaylistWindow(void)                               throw ()
+        {
+        }
 
+        /**
+         *  Get the underlying Gtk::Window.
+         */
+        virtual Gtk::Window *
+        getWindow(void)                                             throw ()
+        {
+            return mainWindow;
+        }
 };
 
 /* ================================================= external data structures */

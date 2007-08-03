@@ -40,16 +40,19 @@
 #include "configure.h"
 #endif
 
-#include "LiveSupport/Core/Playlist.h"
-#include "ExportFormatRadioButtons.h"
+#include <gtkmm.h>
+#include <libglademm.h>
 
-#include "GuiWindow.h"
+#include "LiveSupport/Core/Playlist.h"
+#include "LiveSupport/Core/LocalizedObject.h"
+#include "ExportFormatRadioButtons.h"
+#include "GLiveSupport.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -60,7 +63,7 @@ using namespace LiveSupport::Widgets;
 /* =============================================================== data types */
 
 /**
- *  The ExportPlaylist window.  This is a pop-up window accessible from the
+ *  The Export Playlist window.  This is a pop-up window accessible from the
  *  right-click menus of the Scratchpad, Live Mode and Search/Browse windows.
  *  It lets the user select the format of the exported playlist, and the 
  *  location where it will be saved.
@@ -68,23 +71,39 @@ using namespace LiveSupport::Widgets;
  *  @author $Author: fgerlits $
  *  @version $Revision$
  */
-class ExportPlaylistWindow : public GuiWindow
+class ExportPlaylistWindow : public LocalizedObject
 {
     private:
+
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref                  gLiveSupport;
+
+        /**
+         *  The Glade object, containing the visual design.
+         */
+        Glib::RefPtr<Gnome::Glade::Xml>         glade;
+
+        /**
+         *  The main window for this class.
+         */
+        Gtk::Window *                           mainWindow;
+
         /**
          *  The playlist to be exported.
          */
-        Ptr<Playlist>::Ref              playlist;
+        Ptr<Playlist>::Ref                      playlist;
         
         /**
          *  The playlist to be exported.
          */
-        Ptr<const Glib::ustring>::Ref   token;
+        Ptr<const Glib::ustring>::Ref           token;
         
         /**
          *  The radio buttons for selecting the export format.
          */
-        ExportFormatRadioButtons *      formatButtons;
+        Ptr<ExportFormatRadioButtons>::Ref      formatButtons;
         
         /**
          *  Cancel the current operation.
@@ -95,6 +114,7 @@ class ExportPlaylistWindow : public GuiWindow
 
 
     protected:
+
         /**
          *  Event handler for the Cancel button being clicked.
          */
@@ -110,26 +130,25 @@ class ExportPlaylistWindow : public GuiWindow
         /**
          *  Event handler called when the the window gets hidden.
          *
-         *  This overrides GuiWindow::on_hide(), and closes the exporting
-         *  operations, if there is one in progress.
+         *  It closes the exporting operations, if there is one in progress.
          */
-        virtual void
-        on_hide(void)                                               throw ();
+        virtual bool
+        onDeleteEvent(GdkEventAny *     event)                      throw ();
 
 
     public:
+
         /**
          *  Constructor.
          *
          *  @param  gLiveSupport    the gLiveSupport object, containing
          *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
+         *  @param  gladeDir        the directory where the Glade files are.
          *  @param  playlist        the playlist to be exported.
          */
-        ExportPlaylistWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                             Ptr<ResourceBundle>::Ref   bundle,
-                             Ptr<Playlist>::Ref         playlist)
+        ExportPlaylistWindow(Ptr<GLiveSupport>::Ref             gLiveSupport,
+                             const Glib::ustring &              gladeDir,
+                             Ptr<Playlist>::Ref                 playlist)
                                                                     throw ();
 
         /**
@@ -138,6 +157,15 @@ class ExportPlaylistWindow : public GuiWindow
         virtual
         ~ExportPlaylistWindow(void)                                 throw ()
         {
+        }
+
+        /**
+         *  Get the underlying Gtk::Window.
+         */
+        virtual Gtk::Window *
+        getWindow(void)                                             throw ()
+        {
+            return mainWindow;
         }
 };
 

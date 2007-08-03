@@ -7,7 +7,7 @@ root:table
     liveModeButtonLabel:string              { "Live Mode" }
     uploadFileButtonLabel:string            { "Upload File" }
     scratchpadButtonLabel:string            { "Scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "Playlist" }
+    playlistButtonLabel:string              { "Playlist" }
     schedulerButtonLabel:string             { "Scheduler" }
     searchButtonLabel:string                { "Search" }
     optionsButtonLabel:string               { "Options" }
@@ -40,10 +40,9 @@ root:table
     {
         windowTitle:string          { "Login" }
 
-        loginLabel:string           { "User name:" }
-        passwordLabel:string        { "Password:" }
-        okButtonLabel:string        { "OK" }
-        cancelButtonLabel:string    { "Cancel" }
+        userNameLabel:string        { "User name" }
+        passwordLabel:string        { "Password" }
+        languageLabel:string        { "Language" }
 
         pleaseWaitMsg:string        { "Logging in, please wait." }
     }
@@ -64,7 +63,7 @@ root:table
     {
         windowTitle:string              { "Scratchpad" }
 
-        typeColumnLabel:string          { "Type" }
+        creatorColumnLabel:string       { "Creator" }
         titleColumnLabel:string         { "Title" }
         addToPlaylistButtonLabel:string { "Add to playlist" }
         clearListButtonLabel:string     { "Clear list" }
@@ -126,7 +125,7 @@ root:table
                                           "already." }
     }
 
-    simplePlaylistManagementWindow:table
+    playlistWindow:table
     {
         windowTitle:string          { "Edit Playlist" }
 
@@ -149,6 +148,8 @@ root:table
 
         playlistSavedMsg:string         { "Saved playlist ''{0}''." }
         savePlaylistDialogMsg:string    { "Do you want to save the playlist?" }
+        closeWithoutSavingButtonLabel:string
+                                        { "Close without Saving" }
         emptyTitleErrorMsg:string       { "Please enter a title." }
     }
 
@@ -164,10 +165,10 @@ root:table
         endColumnLabel:string       { "end" }
         deleteMenuItem:string       { "_Delete" }
 
-        stopCurrentlyPlayingText:string
-                                    { "Currently playing in scheduler:" }
-        stopCurrentlyPlayingButtonLabel:string      { "Stop" }
-        stopCurrentlyPlayingDialogMsg:string        { "Are you sure?" }
+        stopCurrentlyPlayingButtonLabel:string  { "Stop" }
+        stopCurrentlyPlayingText:string         { "what is currently playing "
+                                                  "in the scheduler." }
+        stopCurrentlyPlayingDialogMsg:string    { "Are you sure?" }
 
         closeButtonLabel:string     { "Close" }
     }
@@ -334,7 +335,7 @@ root:table
         deleteButtonLabel:string    { "Delete" }
         saveButtonLabel:string      { "Save" }
 
-        backupTitleLabel:string     { "Title" }
+        backupTitleLabel:string     { "Title:" }
         defaultBackupTitle:string   { "new backup" }
 
         fileChooserDialogTitle:string   { "Save File" }

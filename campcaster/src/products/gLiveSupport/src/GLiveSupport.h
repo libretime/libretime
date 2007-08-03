@@ -59,6 +59,7 @@
 #include "KeyboardShortcutList.h"
 #include "TaskbarIcons.h"
 #include "ContentsStorable.h"
+#include "BasicWindow.h"
 
 
 namespace LiveSupport {
@@ -122,6 +123,7 @@ class GLiveSupport : public LocalizedConfigurable,
                      public AudioPlayerEventListener
 {
     public:
+
         /**
          *  A type for the map of supported languages.
          *  This is an STL map, containing const Glib::ustring as keys, which
@@ -147,8 +149,9 @@ class GLiveSupport : public LocalizedConfigurable,
 
 
     private:
+
         /**
-         *  The name of the configuration XML elmenent used by Playlist.
+         *  The name of the configuration XML elmenent used by this class.
          */
         static const std::string                    configElementNameStr;
 
@@ -161,6 +164,17 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The storage client used by the application.
          */
         Ptr<StorageClientInterface>::Ref            storage;
+
+        /**
+         *  The directory where the Glade files are.
+         */
+        Glib::ustring                               gladeDir;
+
+        /**
+         *  The Glade object, containing the visual design.
+         *  For this class, it only contains some pop-up windows.
+         */
+        Glib::RefPtr<Gnome::Glade::Xml>             glade;
 
         /**
          *  The widget factory, containing our own widgets.
@@ -398,8 +412,30 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         writeToSerial(Ptr<const Glib::ustring>::Ref     message)    throw ();
 
+        /**
+         *  Replace spaces with underscore characters.
+         *
+         *  @param  string the original string, eg: "one two three".
+         *  @return the new string, eg: "one_two_three".
+         */
+        Glib::ustring
+        replaceSpaces(Ptr<const Glib::ustring>::Ref     string)     throw ();
+
+        /**
+         *  Run a dialog window.
+         *
+         *  @param  dialogName  the type of the dialog; can be "noYesDialog"
+         *                      or "okDialog".
+         *  @param  message     the text to be displayed by the dialog.
+         *  @return the response ID returned by the dialog.
+         */
+        Gtk::ResponseType
+        runDialog(const Glib::ustring &     dialogName,
+                  const Glib::ustring &     message)                throw ();
+
 
     protected:
+
         /**
          *  A signal object to notify people that the edited playlist changed.
          */
@@ -407,6 +443,7 @@ class GLiveSupport : public LocalizedConfigurable,
 
 
     public:
+
         /**
          *  Constructor.
          */
@@ -486,8 +523,26 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param message the message to display
          */
         void
-        displayMessageWindow(Ptr<const Glib::ustring>::Ref    message)
+        displayMessageWindow(const Glib::ustring &      message)
                                                                 throw ();
+
+        /**
+         *  Run a dialog window with No and Yes buttons.
+         *
+         *  @param  message the text to be displayed by the dialog.
+         *  @return the response ID returned by the dialog.
+         */
+        Gtk::ResponseType
+        runNoYesDialog(const Glib::ustring &    message)            throw ();
+
+        /**
+         *  Run a dialog window with just an OK button.
+         *
+         *  @param  message the text to be displayed by the dialog.
+         *  @return the response ID returned by the dialog.
+         */
+        Gtk::ResponseType
+        runOkDialog(const Glib::ustring &    message)               throw ();
 
         /**
          *  Show the main window, and run the application.
@@ -582,18 +637,6 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return metadataTypeContainer;
         }
-
-        /**
-         *  Show the UI components that are visible when no one is logged in.
-         */
-        void
-        showAnonymousUI(void)                                   throw ();
-
-        /**
-         *  Show the UI components that are visible when someone is logged in.
-         */
-        void
-        showLoggedInUI(void)                                    throw ();
 
         /**
          *  Upload an audio clip to the storage.
@@ -816,7 +859,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  to return a non-0 value.
          *
          *  If there is a playlist being edited, the
-         *  SimplePlaylistManagementWindow's confirmation message is displayed.
+         *  PlaylistWindow's confirmation message is displayed.
          *  If the user presses "Cancel", then this function does nothing.
          *
          *  @param playlistId the id of the playlist to open for editing.
@@ -1072,13 +1115,12 @@ class GLiveSupport : public LocalizedConfigurable,
                                                 throw ();
 
         /**
-         *  Return an image containing the radio station logo.
-         *  It is the responsibility of the caller to dispose of this object.
+         *  Return a pixbuf containing the radio station logo.
          *
-         *  @return the station logo image.
+         *  @return a pixbuf containing the station logo image.
          */
-        Gtk::Image*
-        getStationLogoImage()                   throw ();
+        Glib::RefPtr<Gdk::Pixbuf>
+        getStationLogoPixbuf()                  throw ();
 
         /**
          *  The signal raised when the edited playlist is modified.
@@ -1151,6 +1193,8 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  Save the position and size of the window.
          *
+         *  TODO: remove this function, and only use its overloaded pair.
+         *
          *  The coordinates of the window's North-West corner and the
          *  size of the window are read, and stored in a variable of the
          *  GLiveSupport object, indexed by the window's get_name().
@@ -1164,6 +1208,8 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  Apply saved position and size data to the window.
          *
+         *  TODO: remove this function, and only use its overloaded pair.
+         *
          *  If position and size data were previously saved for a window
          *  with the same get_name(), then these data are read and applied to
          *  the window, restoring its position and size.
@@ -1173,6 +1219,32 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         getWindowPosition(Ptr<Gtk::Window>::Ref    window)         throw ();
+
+        /**
+         *  Save the position and size of the window.
+         *
+         *  The coordinates of the window's North-West corner and the
+         *  size of the window are read, and stored in a variable of the
+         *  GLiveSupport object, indexed by the window's get_name().
+         *
+         *  @param  window   the window to save the position and size of.
+         *  @see    getWindowPosition()
+         */
+        void
+        putWindowPosition(const BasicWindow *   window)             throw ();
+        
+        /**
+         *  Apply saved position and size data to the window.
+         *
+         *  If position and size data were previously saved for a window
+         *  with the same get_name(), then these data are read and applied to
+         *  the window, restoring its position and size.
+         *
+         *  @param  window   the window to apply the position and size info to.
+         *  @see    putWindowPosition()
+         */
+        void
+        getWindowPosition(BasicWindow *         window)             throw ();
 
         /**
          *  Store the saved window positions.

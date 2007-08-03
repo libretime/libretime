@@ -40,6 +40,8 @@
 #include "configure.h"
 #endif
 
+#include <libglademm.h>
+
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 
@@ -65,22 +67,53 @@ using namespace LiveSupport::Core;
  */
 class MetadataComboBoxText : public ComboBoxText
 {
-    public:
-        /**
-         *  Constructor.
-         *
-         */
-        MetadataComboBoxText(Glib::RefPtr<Gdk::Pixbuf>          leftImage, 
-                             Glib::RefPtr<Gdk::Pixbuf>          centerImage, 
-                             Glib::RefPtr<Gdk::Pixbuf>          rightImage,
-                             Ptr<MetadataTypeContainer>::Ref    metadataTypes)
-                                                                    throw ();
+    private:
 
+        /**
+         *  The list of metadata types.
+         */
+        Ptr<const MetadataTypeContainer>::Ref   metadataTypes;
+
+
+    public:
+
+        /**
+         *  Constructor to be used with Glade::Xml::get_widget_derived().
+         *
+         *  @param baseClass    widget of the parent class, created by Glade.
+         *  @param glade        the Glade object.
+         */
+        MetadataComboBoxText(
+                    GtkComboBox *                              baseClass,
+                    const Glib::RefPtr<Gnome::Glade::Xml> &    glade)
+                                                                    throw ();
         /**
          *  A virtual destructor.
          */
         virtual
         ~MetadataComboBoxText(void)                                 throw ();
+
+        /**
+         *  Set up the contents of the combo box.
+         *
+         *  @param  metadataTypes   contains the metadata keys and values.
+         */
+        void
+        setContents(Ptr<const MetadataTypeContainer>::Ref   metadataTypes)
+                                                                    throw ();
+
+        /**
+         *  Get the DC name for the currently selected metadata type.
+         *  This is either a standard Dublin Core metadata type like
+         *  "dc:title" or "dc:creator", or one of the Campcaster
+         *  (née LiveSupport) extensions like "ls:year" or "ls:bpm".
+         *  See the Studio config files for a list of all metadata types.
+         *
+         *  @return the DC name for the current selection.
+         */
+        Ptr<const Glib::ustring>::Ref
+        getActiveKey(void)
+                                                                    throw ();
 };
 
 

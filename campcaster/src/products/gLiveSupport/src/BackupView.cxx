@@ -49,7 +49,6 @@
 
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 using namespace boost::posix_time;
 
@@ -67,71 +66,42 @@ using namespace boost::posix_time;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                          Ptr<ResourceBundle>::Ref  bundle)
+BackupView :: BackupView (Ptr<GLiveSupport>::Ref            gLiveSupport,
+                          Glib::RefPtr<Gnome::Glade::Xml>   glade)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : gLiveSupport(gLiveSupport),
+            glade(glade)
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
+    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle("backupView");
+    setBundle(bundle);
+
     Gtk::Label *        backupTitleLabel;
     Gtk::Label *        mtimeLabel;
     Gtk::Button *       chooseTimeButton;
     Gtk::Button *       resetTimeButton;
-    try {
-        backupTitleLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("backupTitleLabel")));
-        mtimeLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("mtimeTextLabel")));
-        chooseTimeButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("chooseTimeButtonLabel")));
-        resetTimeButton = Gtk::manage(wf->createButton(
-                                *getResourceUstring("resetTimeButtonLabel")));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
+    glade->get_widget("backupTitleLabel1", backupTitleLabel);
+    glade->get_widget("backupMtimeLabel1", mtimeLabel);
+    glade->get_widget("backupMtimeChooseButton1", chooseTimeButton);
+    glade->get_widget("backupMtimeResetButton1", resetTimeButton);
+    backupTitleLabel->set_label(*getResourceUstring("backupTitleLabel"));
+    mtimeLabel->set_label(*getResourceUstring("mtimeTextLabel"));
+    chooseTimeButton->set_label(*getResourceUstring("chooseTimeButtonLabel"));
+    resetTimeButton->set_label(*getResourceUstring("resetTimeButtonLabel"));
     
-    chooseTimeButton->signal_clicked().connect(sigc::mem_fun(
-                            *this, &BackupView::onChooseTimeButtonClicked ));
-    resetTimeButton->signal_clicked().connect(sigc::mem_fun(
-                            *this, &BackupView::onResetTimeButtonClicked ));
+    chooseTimeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &BackupView::onChooseTimeButtonClicked));
+    resetTimeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &BackupView::onResetTimeButtonClicked));
 
-    backupTitleEntry = Gtk::manage(wf->createEntryBin());
-    mtimeEntry       = Gtk::manage(wf->createEntryBin());
+    glade->get_widget("backupTitleEntry1", backupTitleEntry);
+    glade->get_widget("backupMtimeEntry1", mtimeEntry);
     
-    mtimeEntry->getEntry()->set_editable(false);
-    mtimeEntry->getEntry()->set_alignment(0.5);
-    mtimeEntry->getEntry()->set_width_chars(20);
     writeMtimeEntry();
+
+    constructCriteriaView();
+    constructBackupListView();
     
-    Gtk::Box *          backupTitleBox  = Gtk::manage(new Gtk::HBox);
-    backupTitleBox->pack_start(*backupTitleLabel, Gtk::PACK_SHRINK, 5);
-    backupTitleBox->pack_start(*backupTitleEntry, Gtk::PACK_SHRINK, 5);
-    
-    Gtk::Box *          mtimeBox        = Gtk::manage(new Gtk::HBox);
-    mtimeBox->pack_start(*mtimeLabel,       Gtk::PACK_SHRINK, 5);
-    mtimeBox->pack_start(*mtimeEntry,       Gtk::PACK_SHRINK, 5);
-    mtimeBox->pack_start(*chooseTimeButton, Gtk::PACK_SHRINK, 5);
-    mtimeBox->pack_start(*resetTimeButton,  Gtk::PACK_SHRINK, 5);
-    
-    Gtk::Box *          criteriaView    = constructCriteriaView();
-    
-    Gtk::Box *          topPane         = Gtk::manage(new Gtk::VBox);
-    topPane->pack_start(*backupTitleBox, Gtk::PACK_SHRINK,        5);
-    topPane->pack_start(*mtimeBox,       Gtk::PACK_SHRINK,        5);
-    topPane->pack_start(*criteriaView,   Gtk::PACK_EXPAND_WIDGET, 5);
-    
-    Gtk::Box *          bottomPane      = constructBackupListView();
-    
-    Gtk::VPaned *       twoPanedView    = Gtk::manage(new Gtk::VPaned);
-    twoPanedView->pack1(*topPane,    Gtk::PACK_EXPAND_WIDGET, 5);
-    twoPanedView->pack2(*bottomPane, Gtk::PACK_EXPAND_WIDGET, 5);
-    
-    add(*twoPanedView);
-    
-    dateTimeChooserWindow.reset(wf->createDateTimeChooserWindow(
+    dateTimeChooserWindow.reset(new DateTimeChooserWindow(
                             gLiveSupport->getBundle("dateTimeChooserWindow") ));
 }
 
@@ -139,86 +109,33 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref    gLiveSupport,
 /*------------------------------------------------------------------------------
  *  Construct the box for entering the backup criteria.
  *----------------------------------------------------------------------------*/
-Gtk::Box *
+void
 BackupView :: constructCriteriaView(void)                           throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    
-    criteriaEntry = Gtk::manage(new AdvancedSearchEntry(gLiveSupport));
-    criteriaEntry->connectCallback(sigc::mem_fun(
-                                    *this, &BackupView::onCreateBackup ));
+    criteriaEntry.reset(new AdvancedSearchEntry(gLiveSupport, glade));
+    criteriaEntry->connectCallback(sigc::mem_fun(*this,
+                                            &BackupView::onCreateBackup));
 
-    Button *    backupButton;
-    try {
-        backupButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("backupButtonLabel") ));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    backupButton->signal_clicked().connect(sigc::mem_fun(
-                                    *this, &BackupView::onCreateBackup ));
-    
-    Gtk::Box *  criteriaButtonBox = Gtk::manage(new Gtk::HButtonBox(
-                                                        Gtk::BUTTONBOX_END ));
-    criteriaButtonBox->pack_start(*backupButton, Gtk::PACK_SHRINK, 5);
-    
-    ScrolledWindow *    criteriaWindow    = Gtk::manage(new ScrolledWindow);
-    criteriaWindow->add(*criteriaEntry);
-    // NOTE: criteriaWindow->setShadowType() causes Gtk warnings here
-    // TODO: find out why and fix it
-    criteriaWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    
-    Gtk::Box *  criteriaView = Gtk::manage(new Gtk::VBox);
-    criteriaView->pack_start(*criteriaWindow,    Gtk::PACK_EXPAND_WIDGET, 0);
-    criteriaView->pack_start(*criteriaButtonBox, Gtk::PACK_SHRINK,        5);
-    
-    return criteriaView;
+    Gtk::Button *       backupButton;
+    glade->get_widget("backupButton1", backupButton);
+    backupButton->set_label(*getResourceUstring("backupButtonLabel"));
+    backupButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                            &BackupView::onCreateBackup));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Construct the box for listing the pending backups.
  *----------------------------------------------------------------------------*/
-Gtk::Box *
+void
 BackupView :: constructBackupListView(void)                         throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    backupList.reset(new BackupList(gLiveSupport, getBundle(), glade));
     
-    backupList = Gtk::manage(new BackupList(gLiveSupport, getBundle()));
-    // TODO: connect callbacks
-    
-    Button *    deleteButton;
-    Button *    saveButton;
-    try {
-        deleteButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("deleteButtonLabel") ));
-        saveButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("saveButtonLabel") ));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    deleteButton->signal_clicked().connect(sigc::mem_fun(
-                                    *this, &BackupView::onDeleteButtonClicked));
-    saveButton->signal_clicked().connect(sigc::mem_fun(
-                                    *this, &BackupView::onSaveButtonClicked));
-    
-    Gtk::Box *  backupListButtonBox = Gtk::manage(new Gtk::HButtonBox(
-                                                        Gtk::BUTTONBOX_END ));
-    backupListButtonBox->pack_start(*deleteButton, Gtk::PACK_SHRINK, 5);
-    backupListButtonBox->pack_start(*saveButton, Gtk::PACK_SHRINK, 5);
-
-    ScrolledWindow *    backupListWindow  = Gtk::manage(new ScrolledWindow);
-    backupListWindow->add(*backupList);
-    backupListWindow->setShadowType(Gtk::SHADOW_NONE);
-    backupListWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    
-    Gtk::Box *  backupListView = Gtk::manage(new Gtk::VBox);
-    backupListView->pack_start(*backupListWindow, Gtk::PACK_EXPAND_WIDGET, 5);
-    backupListView->pack_start(*backupListButtonBox,     Gtk::PACK_SHRINK, 5);
-    
-    return backupListView;
+    glade->connect_clicked("backupDeleteButton1", sigc::mem_fun(*this,
+                                        &BackupView::onDeleteButtonClicked));
+    glade->connect_clicked("backupSaveButton1", sigc::mem_fun(*this,
+                                        &BackupView::onSaveButtonClicked));
 }
 
 
@@ -268,7 +185,7 @@ BackupView :: onCreateBackup(void)                                  throw ()
         Ptr<Glib::ustring>::Ref     errorMsg
                                     = getResourceUstring("backupErrorMsg");
         errorMsg->append(e.what());
-        gLiveSupport->displayMessageWindow(errorMsg);
+        gLiveSupport->displayMessageWindow(*errorMsg);
     }
 }
 
@@ -286,7 +203,7 @@ BackupView :: onDeleteButtonClicked(void)                           throw ()
         Ptr<Glib::ustring>::Ref     errorMsg
                                     = getResourceUstring("backupErrorMsg");
         errorMsg->append(e.what());
-        gLiveSupport->displayMessageWindow(errorMsg);
+        gLiveSupport->displayMessageWindow(*errorMsg);
     }
 }
 
@@ -305,7 +222,7 @@ BackupView :: onSaveButtonClicked(void)                             throw ()
         Ptr<Glib::ustring>::Ref     errorMsg
                                     = getResourceUstring("backupErrorMsg");
         errorMsg->append(e.what());
-        gLiveSupport->displayMessageWindow(errorMsg);
+        gLiveSupport->displayMessageWindow(*errorMsg);
     }
     
     if (!url) {
@@ -358,16 +275,8 @@ BackupView :: readTitle(void)                                       throw ()
 {
     Ptr<Glib::ustring>::Ref     title(new Glib::ustring(
                                                 backupTitleEntry->get_text() ));
-    if (*title != "") {
-        return title;
-    }
-    
-    try {
+    if (*title == "") {
         title = getResourceUstring("defaultBackupTitle");
-        
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
     }
     
     return title;
