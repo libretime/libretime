@@ -50,46 +50,17 @@ namespace Widgets {
 /**
  *  A collection of constants used by the widgets.
  *
- *  Constants which are either used by more than one widget or used by
- *  the WidgetFactory class are collected here.  This way widget headers
- *  do not need to include each other's or WidgetFactory's header.
- *
  *  @author  $Author $
  *  @version $Revision $
  */
 class WidgetConstants
 {
     public:
-        /**
-         *  The types of available buttons.
-         *
-         *  A pushButton is a button like OK, Cancel, etc.
-         *  A radioButton is a button with an "in" and an "out" state,
-         *  like the window opener buttons on the Master Panel.
-         *  A tabButton is one of selection tabs at the top of a Notebook.
-         */
-        typedef enum { pushButton,
-                       radioButton,
-                       tabButton }                  ButtonType;
-
-        /**
-         *  The types of available image buttons.
-         */
-        typedef enum { deleteButton, plusButton, minusButton,
-                       smallPlayButton, smallPauseButton, smallStopButton,
-                       hugePlayButton, 
-                       cuePlayButton, cueStopButton,
-                       masterPlayButton, masterPauseButton, masterStopButton,
-                       windowMinimizeButton, windowMaximizeButton,
-                                             windowCloseButton }
-                                                    ImageButtonType;
 
         /**
          *  The list of available miscellaneous images.
          */
-        typedef enum { resizeImage,
-                       windowTitleLogoImage,
-                       audioClipIconImage,
+        typedef enum { audioClipIconImage,
                        playlistIconImage }          ImageType;
 };
 

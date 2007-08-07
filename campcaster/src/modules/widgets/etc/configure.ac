@@ -37,7 +37,7 @@ AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../include/LiveSupport/Widgets/ImageButton.h)
+AC_CONFIG_SRCDIR(../src/ComboBoxText.cxx)
 
 AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CXX()

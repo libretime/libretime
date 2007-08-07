@@ -38,6 +38,7 @@
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/Colors.h"
 
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 
@@ -150,46 +151,6 @@ ZebraTreeView :: appendColumn(
                                 
     // and then we associate this renderer with the model column
     viewColumn->add_attribute(renderer->property_pixbuf(), modelColumn);
-
-    // this cell data function will do the blue-gray zebra stripes
-    viewColumn->set_cell_data_func(
-                    *renderer,
-                    sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
-    
-    // set the minimum width of the column
-    if (minimumWidth) {
-        viewColumn->set_min_width(minimumWidth);
-    }
-    
-    return append_column(*viewColumn);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Add a button column to the TreeView.
- *----------------------------------------------------------------------------*/
-int 
-ZebraTreeView :: appendColumn(
-                    const Glib::ustring &           title, 
-                    WidgetConstants::ImageButtonType  buttonType,
-                    int                             minimumWidth)
-                                                                throw ()
-{
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    ImageButton *               button = Gtk::manage(wf->createButton(
-                                                                buttonType ));
-    Glib::RefPtr<Gdk::Pixbuf>   passiveImage = button->getPassiveImage();
-
-    // a standard cell renderer
-    Gtk::CellRendererPixbuf*    renderer 
-                                = Gtk::manage(new Gtk::CellRendererPixbuf);
-    
-    // set the image of the renderer
-    renderer->property_pixbuf() = passiveImage;
-    
-    // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
-                                new Gtk::TreeViewColumn(title, *renderer) );
 
     // this cell data function will do the blue-gray zebra stripes
     viewColumn->set_cell_data_func(

@@ -46,7 +46,6 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/WidgetConstants.h"
-#include "LiveSupport/Widgets/ImageButton.h"
 
 
 namespace LiveSupport {
@@ -289,7 +288,7 @@ class ZebraTreeView : public Gtk::TreeView
          *  Add an image column to the TreeView.
          *
          *  @param title        the title of the column
-         *  @param image        the type of button this view will display
+         *  @param modelColumn  the model column this view will display
          *  @param minimumWidth the minimum width of the column, in pixels
          *                      (optional)
          *  @return the number of columns after adding this one
@@ -300,21 +299,6 @@ class ZebraTreeView : public Gtk::TreeView
                     const Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > &
                                                        modelColumn,
                     int                                minimumWidth = 0)
-                                                                throw ();
-
-        /**
-         *  Add a button column to the TreeView.
-         *
-         *  @param title        the title of the column
-         *  @param buttonType   the type of button this view will display
-         *  @param minimumWidth the minimum width of the column, in pixels
-         *                      (optional)
-         *  @return the number of columns after adding this one
-         */
-        int 
-        appendColumn(const Glib::ustring&               title, 
-                     WidgetConstants::ImageButtonType   buttonType,
-                     int                                minimumWidth = 0)
                                                                 throw ();
 
         /**

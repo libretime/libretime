@@ -136,26 +136,13 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
-				   ${TMP_DIR}/Button.o \
-				   ${TMP_DIR}/BlueBin.o \
-				   ${TMP_DIR}/EntryBin.o \
-				   ${TMP_DIR}/WhiteWindow.o \
-				   ${TMP_DIR}/CornerImages.o \
-				   ${TMP_DIR}/ButtonImages.o \
-				   ${TMP_DIR}/ComboBoxText.o \
+WIDGETS_LIB_OBJS = ${TMP_DIR}/ComboBoxText.o \
 				   ${TMP_DIR}/MetadataComboBoxText.o \
 				   ${TMP_DIR}/OperatorComboBoxText.o \
-				   ${TMP_DIR}/Notebook.o \
 				   ${TMP_DIR}/WidgetFactory.o \
-				   ${TMP_DIR}/ZebraTreeView.o \
-				   ${TMP_DIR}/ZebraCellRenderer.o \
 				   ${TMP_DIR}/Colors.o \
-				   ${TMP_DIR}/DialogWindow.o \
-				   ${TMP_DIR}/ScrolledWindow.o \
-				   ${TMP_DIR}/ScrolledNotebook.o \
-				   ${TMP_DIR}/RadioButtons.o \
-				   ${TMP_DIR}/MasterPanelBin.o \
+				   ${TMP_DIR}/ZebraTreeView.o \
+				   ${TMP_DIR}/ZebraCellRenderer.o
 				   
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o
@@ -204,34 +191,9 @@ install: all
 	${CP} ${INCLUDE_DIR}/LiveSupport/Widgets/*.h \
           ${USR_INCLUDE_DIR}/LiveSupport/Widgets
 	${CP} ${WIDGETS_LIB_FILE} ${USR_LIB_DIR}
-	${MKDIR} ${USR_VAR_DIR}/Campcaster/Widgets
-	${MKDIR} ${USR_VAR_DIR}/Campcaster/Widgets/blueBin \
-             ${USR_VAR_DIR}/Campcaster/Widgets/button \
-             ${USR_VAR_DIR}/Campcaster/Widgets/combo \
-             ${USR_VAR_DIR}/Campcaster/Widgets/darkBlueBin \
-             ${USR_VAR_DIR}/Campcaster/Widgets/entryBin \
-             ${USR_VAR_DIR}/Campcaster/Widgets/icons \
-             ${USR_VAR_DIR}/Campcaster/Widgets/imageButton \
-             ${USR_VAR_DIR}/Campcaster/Widgets/tabButton \
-             ${USR_VAR_DIR}/Campcaster/Widgets/whiteWindow
-	${CP} ${VAR_DIR}/blueBin/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/blueBin
-	${CP} ${VAR_DIR}/button/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/button
-	${CP} ${VAR_DIR}/combo/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/combo
-	${CP} ${VAR_DIR}/darkBlueBin/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/darkBlueBin
-	${CP} ${VAR_DIR}/entryBin/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/entryBin
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/Widgets/icons
 	${CP} ${VAR_DIR}/icons/*.png \
           ${USR_VAR_DIR}/Campcaster/Widgets/icons
-	${CP} ${VAR_DIR}/imageButton/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/imageButton
-	${CP} ${VAR_DIR}/tabButton/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/tabButton
-	${CP} ${VAR_DIR}/whiteWindow/*.png \
-          ${USR_VAR_DIR}/Campcaster/Widgets/whiteWindow
 
 
 #-------------------------------------------------------------------------------

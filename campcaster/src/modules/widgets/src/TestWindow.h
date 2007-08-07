@@ -40,20 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/entry.h>
-#include <gtkmm/window.h>
-#include <gtkmm/table.h>
+#include <gtkmm.h>
+#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
-#include "LiveSupport/Widgets/BlueBin.h"
-#include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/Notebook.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
-#include "LiveSupport/Widgets/DialogWindow.h"
 
 
 namespace LiveSupport {
@@ -75,9 +67,10 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class TestWindow : public WhiteWindow
+class TestWindow : public LocalizedObject
 {
     private:
+
         /**
          *  Change the image from "play" to "stop" on the button when pressed.
          */
@@ -91,71 +84,42 @@ class TestWindow : public WhiteWindow
         onStopButtonClicked(void)                           throw ();
     
         /**
-         *  The resource bundle.
-         */
-        Ptr<ResourceBundle>::Ref    bundle;
-    
-        /**
          *  The "are you sure?" dialog window.
          */
-        Ptr<DialogWindow>::Ref      dialogWindow;
+        Ptr<Gtk::Dialog>::Ref       dialogWindow;
     
 
     protected:
-        /**
-         *  The layout used in the window.
-         */
-        Gtk::Table                * layout;
 
         /**
-         *  A notebook, to tab through pages.
+         *  A large button.
          */
-        Notebook                  * notebook;
+        Gtk::Button *               largeButton;
 
         /**
-         *  An image button with transparent background.
+         *  A button showing a "play" icon.
          */
-        ImageButton               * hugeImageButton;
+        Gtk::Button *               cuePlayButton;
 
         /**
-         *  A clickable image button showing a "play" icon.
+         *  A button showing a "stop" icon.
          */
-        ImageButton               * cuePlayImageButton;
-
-        /**
-         *  A clickable image button showing a "stop" icon.
-         */
-        ImageButton               * cueStopImageButton;
+        Gtk::Button *               cueStopButton;
 
         /**
          *  A button.
          */
-        Button                    * button;
+        Gtk::Button *               button;
 
         /**
          *  A button which sometimes gets disabled.
          */
-        Button                    * disableTestButton;
+        Gtk::Button *               disableTestButton;
 
         /**
          *  A combo box.
          */
-        ComboBoxText              * comboBoxText;
-
-        /**
-         *  A text entry.
-         */
-        Gtk::Entry                * entry;
-
-        /**
-         *  A container holding a text entry.
-         */
-        EntryBin                  * entryBin;
-
-        /**
-         *  A blue container.
-         */
-        BlueBin                   * blueBin;
+        ComboBoxText *              comboBoxText;
 
         /**
          *  Event handler for the large button being clicked.
@@ -172,6 +136,7 @@ class TestWindow : public WhiteWindow
 
 
     public:
+
         /**
          *  Constructor.
          */
