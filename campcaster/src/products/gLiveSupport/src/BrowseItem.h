@@ -49,7 +49,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/NumericTools.h"
 #include "LiveSupport/Core/SearchCriteria.h"
-#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/MetadataComboBoxText.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 
