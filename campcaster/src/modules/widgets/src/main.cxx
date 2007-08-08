@@ -28,7 +28,7 @@
 ------------------------------------------------------------------------------*/
 
 /** @file
- *  This file contains the main entry point to the Scheduler daemon.
+ *  This file is the main entry point for the TestWindow in the Widgets module.
  */
 
 /* ============================================================ include files */
@@ -168,7 +168,7 @@ int main (  int     argc,
 
     {
         TestWindow      testWindow;
-        Gtk::Main::run(testWindow);
+        testWindow.run();
     }
 
     exit(EXIT_SUCCESS);

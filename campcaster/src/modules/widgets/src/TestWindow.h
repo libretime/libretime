@@ -43,9 +43,12 @@
 #include <gtkmm.h>
 #include <libglademm.h>
 
+#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/Ptr.h"
 
 #include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
+#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 
 
 namespace LiveSupport {
@@ -72,67 +75,95 @@ class TestWindow : public LocalizedObject
     private:
 
         /**
-         *  Change the image from "play" to "stop" on the button when pressed.
+         *  Configure the resource bundle.
          */
         void
-        onPlayButtonClicked(void)                           throw ();
-    
+        configureBundle (void)                                      throw ();
+        
         /**
-         *  Change the image from "stop" to "play" on the button when pressed.
+         *  Fill the tree model.
          */
         void
-        onStopButtonClicked(void)                           throw ();
-    
-        /**
-         *  The "are you sure?" dialog window.
-         */
-        Ptr<Gtk::Dialog>::Ref       dialogWindow;
-    
+        fillTreeModel (void)                                        throw ();
+
 
     protected:
 
         /**
-         *  A large button.
+         *  The window itself.
          */
-        Gtk::Button *               largeButton;
+        Gtk::Window *                   mainWindow;
 
         /**
-         *  A button showing a "play" icon.
+         *  The combo box.
          */
-        Gtk::Button *               cuePlayButton;
+        ComboBoxText *                  comboBox;
 
         /**
-         *  A button showing a "stop" icon.
+         *  The tree view.
          */
-        Gtk::Button *               cueStopButton;
+        ZebraTreeView *                 treeView;
 
         /**
-         *  A button.
+         *  The OK button.
          */
-        Gtk::Button *               button;
+        Gtk::Button *                   okButton;
 
         /**
-         *  A button which sometimes gets disabled.
+         *  The columns model needed by Gtk::TreeView.
          */
-        Gtk::Button *               disableTestButton;
+        class ModelColumns : public ZebraTreeModelColumnRecord
+        {
+            public:
+
+                /**
+                 *  A column showing a Pixbuf.
+                 */
+                Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
+                                                            pixbufColumn;
+
+                /**
+                 *  A text column.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         textColumn;
+
+                /**
+                 *  Constructor.
+                 */
+                ModelColumns(void)                                  throw ()
+                {
+                    add(pixbufColumn);
+                    add(textColumn);
+                }
+        };
 
         /**
-         *  A combo box.
+         *  The column model.
          */
-        ComboBoxText *              comboBoxText;
+        ModelColumns                    modelColumns;
 
         /**
-         *  Event handler for the large button being clicked.
+         *  The tree model, as a GTK reference.
+         */
+        Glib::RefPtr<Gtk::ListStore>    treeModel;
+
+        /**
+         *  Event handler for selection change in the combo box.
          */
         virtual void
-        onButtonClicked(void)                               throw ();
+        onComboBoxSelectionChanged (void)                           throw ();
 
         /**
-         *  Event handler for the close button being clicked
-         *  (overrides WhiteWindow::onCloseButtonClicked()).
+         *  Event handler for the OK button being clicked.
          */
         virtual void
-        onCloseButtonClicked(void)                          throw ();
+        onOkButtonClicked (void)                                    throw ();
+
+        /**
+         *  Event handler for the window being hidden.
+         */
+        virtual bool
+        onDeleteEvent (GdkEventAny *     event)                     throw ();
 
 
     public:
@@ -140,14 +171,21 @@ class TestWindow : public LocalizedObject
         /**
          *  Constructor.
          */
-        TestWindow(void)                                    throw ();
+        TestWindow (void)                                           throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~TestWindow(void)                                   throw ();
+        ~TestWindow (void)                                          throw ()
+        {
+        }
 
+        /**
+         *  Run the window.
+         */
+        void
+        run (void)                                                  throw ();
 };
 
 /* ================================================= external data structures */

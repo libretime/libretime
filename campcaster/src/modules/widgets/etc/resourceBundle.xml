@@ -6,6 +6,6 @@
 <!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
 
 ]>
-<resourceBundle path   = "./tmp/Widgets"
+<resourceBundle path   = "./tmp/localization"
                 locale = "en"
 />

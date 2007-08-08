@@ -1,8 +1,16 @@
 hu:table
 {
-    cancelButtonLabel:string    { "Mégsem" }
-    noButtonLabel:string        { "Nem" }
-    yesButtonLabel:string       { "Igen" }
-    okButtonLabel:string        { "OK" }
+    windowTitle:string          { "Próbaablak" }
+    
+    pixbufColumnTitle:string    { "Kép" }
+    textColumnTitle:string      { "Szöveg" }
+    
+    firstOption:string          { "Első lehetőség" }
+    secondOption:string         { "Második lehetőség" }
+    thirdOption:string          { "Harmadik lehetőség" }
+    
+    textOne:string              { "Egy - megérett a meggy." }
+    textTwo:string              { "Kettő - csipkebokor vessző." }
+    textThree:string            { "Három - te leszel a párom. " }
 }
 

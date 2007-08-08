@@ -34,13 +34,13 @@
 #endif
 
 #include <iostream>
-#include <gtkmm/main.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Colors.h"
 #include "TestWindow.h"
 
 
+using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
 
 /* ===================================================  local data structures */
@@ -48,11 +48,19 @@ using namespace LiveSupport::Widgets;
 
 /* ================================================  local constants & macros */
 
-/**
- *  The name of the configuration file for the resource bundle.
- */
-static const std::string bundleConfigFileName = "etc/resourceBundle.xml";
+namespace {
 
+/*------------------------------------------------------------------------------
+ *  The name of the configuration file for the resource bundle.
+ *----------------------------------------------------------------------------*/
+const std::string       bundleConfigFileName = "etc/resourceBundle.xml";
+
+/*------------------------------------------------------------------------------
+ *  The name of the Glade file.
+ *----------------------------------------------------------------------------*/
+const std::string       gladeFileName = "var/glade/TestWindow.glade";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -62,75 +70,55 @@ static const std::string bundleConfigFileName = "etc/resourceBundle.xml";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-TestWindow :: TestWindow (void)
-                                                                throw ()
-          : WhiteWindow(Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners())
+TestWindow :: TestWindow (void)                                     throw ()
 {
-    Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
+    configureBundle();
 
-    setTitle("test widget", "Test App");
+    Glib::RefPtr<Gnome::Glade::Xml>     glade = Gnome::Glade::Xml::create(
+                                                                gladeFileName);
     
-    // init the imageButtons
-    hugeImageButton = Gtk::manage(
-                widgetFactory->createButton(WidgetConstants::hugePlayButton));
-    cuePlayImageButton = Gtk::manage(
-                widgetFactory->createButton(WidgetConstants::cuePlayButton));
-    cuePlayImageButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                            &TestWindow::onPlayButtonClicked));
-    cueStopImageButton = Gtk::manage(
-                widgetFactory->createButton(WidgetConstants::cueStopButton));
-    cueStopImageButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                            &TestWindow::onStopButtonClicked));
+    glade->get_widget("mainWindow1", mainWindow);
+    mainWindow->set_title(*getResourceUstring("windowTitle"));
+    mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onDeleteEvent));
 
-    // create a button
-    button = Gtk::manage(widgetFactory->createButton(
-                                                "Hello, World!",
-                                                WidgetConstants::radioButton));
-    button->signal_clicked().connect(sigc::mem_fun(*this,
-                                                &TestWindow::onButtonClicked));
+    glade->get_widget_derived("comboBox1", comboBox);
+    comboBox->append_text(*getResourceUstring("firstOption"));
+    comboBox->append_text(*getResourceUstring("secondOption"));
+    comboBox->append_text(*getResourceUstring("thirdOption"));
+    comboBox->set_active(0);
+    comboBox->signal_changed().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onComboBoxSelectionChanged));
 
-    // and another button
-    disableTestButton = Gtk::manage(widgetFactory->createButton(
-                                                "I can be disabled",
-                                                WidgetConstants::radioButton));
+    treeModel = Gtk::ListStore::create(modelColumns);
 
-    // create a combo box
-    comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
-    comboBoxText->append_text("item1");
-    comboBoxText->append_text("long item2");
-    comboBoxText->append_text("very very very long item3");
-    comboBoxText->set_active_text("item2");
+    glade->get_widget_derived("treeView1", treeView);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
+    treeView->appendColumn(*getResourceUstring("pixbufColumnTitle"),
+                           modelColumns.pixbufColumn);
+    treeView->appendColumn(*getResourceUstring("textColumnTitle"),
+                           modelColumns.textColumn);
+    fillTreeModel();
 
-    // create a text entry, ant put it inside a blue bin
-    entryBin = Gtk::manage(widgetFactory->createEntryBin());
-    entry    = entryBin->getEntry();
+    glade->connect_clicked("okButton1", sigc::mem_fun(*this,
+                                    &TestWindow::onOkButtonClicked));
+}
 
-    // create a notebook
-    notebook = Gtk::manage(new Notebook());
-    notebook->appendPage(*button, "first page");
-    notebook->appendPage(*comboBoxText, "second page");
-    notebook->appendPage(*entryBin, "third page");
 
-    // create a blue container
-    blueBin = Gtk::manage(widgetFactory->createBlueBin());
-
-    // create and set up the layout
-    layout = Gtk::manage(new Gtk::Table());
-    layout->attach(*hugeImageButton,    0, 1, 0, 2);
-    layout->attach(*cuePlayImageButton, 1, 2, 0, 1);
-    layout->attach(*disableTestButton,  1, 2, 1, 2);
-    layout->attach(*notebook,           0, 2, 2, 3);
-    blueBin->add(*layout);
-    add(*blueBin);
-    show_all();
-    layout->attach(*cueStopImageButton, 1, 2, 0, 1);
+/*------------------------------------------------------------------------------
+ *  Configure the resource bundle.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: configureBundle (void)                                throw ()
+{
+    Ptr<ResourceBundle>::Ref        bundle;
     
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
                               new xmlpp::DomParser(bundleConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
+        const xmlpp::Document *     document = parser->get_document();
+        const xmlpp::Element *      root     = document->get_root_node();
 
         bundle = LocalizedObject::getBundle(*root);
 
@@ -143,80 +131,83 @@ TestWindow :: TestWindow (void)
                   << e.what() << std::endl;
         exit(1);
     }
-
-    Ptr<Glib::ustring>::Ref     confirmationMessage(new Glib::ustring(
-                                                            "Are you sure?" ));
-    dialogWindow.reset(new DialogWindow(confirmationMessage,
-                                        DialogWindow::noButton |
-                                        DialogWindow::yesButton,
-                                        bundle ));
+    
+    setBundle(bundle);
 }
 
 
 /*------------------------------------------------------------------------------
- *  Destructor.
- *----------------------------------------------------------------------------*/
-TestWindow :: ~TestWindow (void)                                throw ()
-{
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the button being clicked.
+ *  Fill the tree model.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: onButtonClicked(void)                                 throw ()
+TestWindow :: fillTreeModel (void)                                  throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    Ptr<Glib::ustring>::Ref     message(new Glib::ustring("Hello, World!"));
-
-    DialogWindow   * helloWindow = wf->createDialogWindow(message, bundle);
-    helloWindow->run();
-    button->setSelected(false);
-    delete helloWindow;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Change the image from "play" to "stop" on the button when clicked.
- *----------------------------------------------------------------------------*/
-void
-TestWindow :: onPlayButtonClicked(void)                         throw ()
-{
-    cuePlayImageButton->hide();
-    cueStopImageButton->show();
-    disableTestButton->setDisabled(true);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Change the image from "stop" to "play" on the button when clicked.
- *----------------------------------------------------------------------------*/
-void
-TestWindow :: onStopButtonClicked(void)                         throw ()
-{
-    cueStopImageButton->hide();
-    cuePlayImageButton->show();
-    disableTestButton->setDisabled(false);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Override the close button functionality.
- *----------------------------------------------------------------------------*/
-void
-TestWindow :: onCloseButtonClicked(void)                        throw ()
-{
-    DialogWindow::ButtonType    result = dialogWindow->run();
-    switch (result) {
-        case DialogWindow::noButton:
-                    return;
-
-        case DialogWindow::yesButton:
-                    hide();
-                    break;
-
-        default:    std::cerr << "This can never happen." << std::endl;
+    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
+                                        WidgetConstants::audioClipIconImage);
+    Glib::ustring               text;
+    switch (comboBox->get_active_row_number()) {
+        case -1:        break;
+        
+        case 0:         text = *getResourceUstring("textOne");
+                        break;
+        
+        case 1:         text = *getResourceUstring("textTwo");
+                        break;
+        
+        case 2:         text = *getResourceUstring("textThree");
+                        break;
+        
+        default:        break;
     }
+
+    treeModel->clear();
+    Gtk::TreeModel::Row     row = *treeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = text;
 }
-    
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for selection change in the combo box.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onComboBoxSelectionChanged (void)                     throw ()
+{
+    fillTreeModel();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the OK button being clicked.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onOkButtonClicked (void)                              throw ()
+{
+    std::cerr << "TestWindow::onOkButtonClicked() called." << std::endl;
+    mainWindow->hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the window being hidden.
+ *----------------------------------------------------------------------------*/
+bool
+TestWindow :: onDeleteEvent (GdkEventAny *      event)              throw ()
+{
+    // We could add a confirmation dialog here.
+    std::cerr << "TestWindow::onDeleteEvent() called." << std::endl;
+    return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Run the window.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: run (void)                                            throw ()
+{
+    Gtk::Main::run(*mainWindow);
+}
+
+

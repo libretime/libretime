@@ -70,9 +70,9 @@ CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
 GENRB     = @GENRB@
-GENRBOPTS = --destdir ${TMP_DIR} \
+TMP_LOCALIZATION_DIR = ${TMP_DIR}/localization
+GENRBOPTS = --destdir ${TMP_LOCALIZATION_DIR} \
             --encoding utf-8 \
-            --package-name ${PACKAGE_NAME} \
             --strict
 
 VPATH    = ${SRC_DIR}
@@ -147,9 +147,9 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ComboBoxText.o \
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o
 
-TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
-                  ${TMP_DIR}/${PACKAGE_NAME}_en.res \
-                  ${TMP_DIR}/${PACKAGE_NAME}_hu.res
+TEST_RUNNER_RES = ${TMP_LOCALIZATION_DIR}/root.res \
+                  ${TMP_LOCALIZATION_DIR}/en.res \
+                  ${TMP_LOCALIZATION_DIR}/hu.res
 
 TEST_EXE_LIBS = -l${WIDGETS_LIB} -l${CORE_LIB} ${ICU_LIBS} \
                 ${BOOST_DATE_TIME_LIB} -lxmlrpc++ -lssl
@@ -161,7 +161,7 @@ TEST_EXE_LIBS = -l${WIDGETS_LIB} -l${CORE_LIB} ${ICU_LIBS} \
 
 all: dir_setup ${WIDGETS_LIB_FILE}
 
-dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
+dir_setup: ${TMP_DIR} ${TMP_LOCALIZATION_DIR} ${DOXYGEN_DIR}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
@@ -170,6 +170,7 @@ clean:
 	${RM} ${WIDGETS_LIB_OBJS} ${WIDGETS_LIB_FILE}
 	${RM} ${TEST_EXE_OBJS} ${TEST_EXE}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
+	${RMDIR} ${TMP_LOCALIZATION_DIR}
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
@@ -205,6 +206,9 @@ ${WIDGETS_LIB_FILE}: ${WIDGETS_LIB_OBJS}
 ${TMP_DIR}:
 	${MKDIR} ${TMP_DIR}
 
+${TMP_LOCALIZATION_DIR}:
+	${MKDIR} ${TMP_LOCALIZATION_DIR}
+
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
@@ -222,6 +226,6 @@ ${CORE_LIB_FILE}:
 ${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
 
-${TMP_DIR}/${PACKAGE_NAME}_%.res : ${VAR_DIR}/%.txt
+${TMP_LOCALIZATION_DIR}/%.res : ${VAR_DIR}/%.txt
 	${GENRB} ${GENRBOPTS} $^
 

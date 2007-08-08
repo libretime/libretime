@@ -145,6 +145,7 @@ class ScratchpadWindow : public BasicWindow,
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
             public:
+
                 /**
                  *  The column for the type of the entry in the list
                  */

@@ -1,8 +1,16 @@
 root:table
 {
-    cancelButtonLabel:string    { "Cancel" }
-    noButtonLabel:string        { "No" }
-    yesButtonLabel:string       { "Yes" }
-    okButtonLabel:string        { "OK" }
+    windowTitle:string          { "Test Window" }
+    
+    pixbufColumnTitle:string    { "Pixbuf" }
+    textColumnTitle:string      { "Text" }
+    
+    firstOption:string          { "First option" }
+    secondOption:string         { "Second option" }
+    thirdOption:string          { "Third option" }
+    
+    textOne:string              { "When I was One, I had just begun." }
+    textTwo:string              { "When I was Two, I was nearly new." }
+    textThree:string            { "When I was Three, I was hardly me." }
 }
 

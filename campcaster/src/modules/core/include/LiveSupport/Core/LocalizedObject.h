@@ -138,7 +138,7 @@ class LocalizedObject
          *  a sample configuration element is as follows:
          *
          *  <pre><code>
-         *  <resourceBundle path   = "./tmp/Core"
+         *  <resourceBundle path   = "./tmp/localization"
          *                  locale = "en"
          *  />
          *  </code></pre>
