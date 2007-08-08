@@ -82,7 +82,7 @@ PlaylistEvent :: PlaylistEvent(
     this->playLog       = playLog;
     this->scheduleEntry = scheduleEntry;
 
-    // this init time is a wild guess, say 5 seconds should be enough
+    // this init time is a wild guess, say 10 seconds should be enough
     initTime.reset(new posix_time::time_duration(0, 0, 10, 0));
 
     state = created;
