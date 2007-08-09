@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef BasicWindow_h
-#define BasicWindow_h
+#ifndef GuiWindow_h
+#define GuiWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,18 +40,13 @@
 #include "configure.h"
 #endif
 
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
+#include "GuiObject.h"
 
-#include "LiveSupport/Core/LocalizedObject.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
-
-class GLiveSupport;
 
 /* ================================================================ constants */
 
@@ -62,12 +57,12 @@ class GLiveSupport;
 /* =============================================================== data types */
 
 /**
- *  The common ancestor of all openable and closable windows in the GUI.
+ *  The common ancestor of all standalone windows in the GUI.
  *
  *  @author $Author$
  *  @version $Revision$
  */
-class BasicWindow : public LocalizedObject
+class GuiWindow : public GuiObject
 {
     private:
 
@@ -92,9 +87,9 @@ class BasicWindow : public LocalizedObject
     protected:
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
+         *  The Glade object, containing the visual design.
          */
-        Ptr<GLiveSupport>::Ref              gLiveSupport;
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
 
         /**
          *  The button which was used to open this window.
@@ -107,40 +102,33 @@ class BasicWindow : public LocalizedObject
         Gtk::Window *                       mainWindow;
 
         /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
-
-        /**
          *  Signal handler for the close button getting clicked.
          */
         virtual bool
         onDeleteEvent(GdkEventAny *     event)                      throw ();
 
-
-    public:
-
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the GLiveSupport application object.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
+         *  @param  bundleName      the name of the sub-bundle for this object;
+         *                          can be "" to indicate the outermost bundle.
+         *  @param  gladeFileName   the name of the Glade file for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
-         *                              this window.
-         *  @param  gladeFileName   the Glade file for this window.
+         *                              this window (optional).
          */
-        BasicWindow(Ptr<GLiveSupport>::Ref        gLiveSupport,
-                    Ptr<ResourceBundle>::Ref      bundle,
-                    Gtk::ToggleButton *           windowOpenerButton,
-                    const Glib::ustring &         gladeFileName)
+        GuiWindow(const Glib::ustring &         bundleName,
+                  const Glib::ustring &         gladeFileName,
+                  Gtk::ToggleButton *           windowOpenerButton = 0)
                                                                     throw ();
+
+
+    public:
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~BasicWindow(void)                                          throw ()
+        ~GuiWindow(void)                                          throw ()
         {
         }
 
@@ -206,5 +194,5 @@ class BasicWindow : public LocalizedObject
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // BasicWindow_h
+#endif // GuiWindow_h
 

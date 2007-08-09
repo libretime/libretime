@@ -54,6 +54,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "playlistWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "PlaylistWindow.glade";
@@ -68,15 +73,11 @@ const Glib::ustring     gladeFileName = "PlaylistWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-PlaylistWindow :: PlaylistWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                 Ptr<ResourceBundle>::Ref    bundle,
-                                 Gtk::ToggleButton *         windowOpenerButton,
-                                 const Glib::ustring &       gladeDir)
+PlaylistWindow :: PlaylistWindow(Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName),
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton),
             isPlaylistModified(false)
 {
     // set up the file name entry

@@ -97,8 +97,8 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                         const Glib::ustring &     gladeDir)
                                                                     throw ()
                         : LocalizedObject(bundle),
-                          gLiveSupport(gLiveSupport),
                           gladeDir(gladeDir),
+                          gLiveSupport(gLiveSupport),
                           userIsLoggedIn(false)                          
 {
     glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
@@ -350,12 +350,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
                                                                     throw ()
 {
     if (!liveModeWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("liveModeWindow");
-
-        liveModeWindow.reset(new LiveModeWindow(gLiveSupport,
-                                                bundle,
-                                                liveModeButton,
-                                                gladeDir));
+        liveModeWindow.reset(new LiveModeWindow(liveModeButton));
         gLiveSupport->loadWindowContents(liveModeWindow);
     }
     
@@ -375,12 +370,7 @@ void
 MasterPanelWindow :: updateUploadFileWindow(void)                   throw ()
 {
     if (!uploadFileWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("uploadFileWindow");
-
-        uploadFileWindow.reset(new UploadFileWindow(gLiveSupport,
-                                                    bundle,
-                                                    uploadFileButton,
-                                                    gladeDir));
+        uploadFileWindow.reset(new UploadFileWindow(uploadFileButton));
     }
 
     uploadFileWindow->show();
@@ -396,12 +386,7 @@ MasterPanelWindow :: createScratchpadWindow(void)
                                                                     throw ()
 {
     if (!scratchpadWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("scratchpadWindow");
-
-        scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport,
-                                                    bundle,
-                                                    scratchpadButton,
-                                                    gladeDir));
+        scratchpadWindow.reset(new ScratchpadWindow(scratchpadButton));
         gLiveSupport->loadWindowContents(scratchpadWindow);
     }
 }
@@ -432,12 +417,7 @@ void
 MasterPanelWindow :: updatePlaylistWindow(void)                     throw ()
 {
     if (!playlistWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("playlistWindow");
-
-        playlistWindow.reset(new PlaylistWindow(gLiveSupport,
-                                                bundle,
-                                                playlistButton,
-                                                gladeDir));
+        playlistWindow.reset(new PlaylistWindow(playlistButton));
     }
     
     playlistWindow->showContents();
@@ -456,13 +436,9 @@ MasterPanelWindow :: updateSchedulerWindow(
                                                                     throw ()
 {
     if (!schedulerWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("schedulerWindow");
-        
         try {
-            schedulerWindow.reset(new SchedulerWindow(gLiveSupport,
-                                                      bundle,
-                                                      schedulerButton,
-                                                      gladeDir));
+            schedulerWindow.reset(new SchedulerWindow(schedulerButton));
+            
         } catch (XmlRpcException &e) {
             std::cerr << e.what() << std::endl;
             return;
@@ -492,12 +468,7 @@ void
 MasterPanelWindow :: updateSearchWindow(void)                       throw ()
 {
     if (!searchWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("searchWindow");
-
-        searchWindow.reset(new SearchWindow(gLiveSupport,
-                                            bundle,
-                                            searchButton,
-                                            gladeDir));
+        searchWindow.reset(new SearchWindow(searchButton));
     }
     
     searchWindow->show();
@@ -512,12 +483,7 @@ void
 MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
 {
     if (!optionsWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("optionsWindow");
-
-        optionsWindow.reset(new OptionsWindow(gLiveSupport,
-                                              bundle,
-                                              optionsButton,
-                                              gladeDir));
+        optionsWindow.reset(new OptionsWindow(optionsButton));
         Ptr<BackupList>::Ref    backupList = optionsWindow->getBackupList();    
         if (backupList) {
             gLiveSupport->loadWindowContents(backupList.get());
@@ -715,12 +681,7 @@ MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
                                                                     throw ()
 {
     if (!searchWindow.get()) {
-        Ptr<ResourceBundle>::Ref    bundle = getBundle("searchWindow");
-
-        searchWindow.reset(new SearchWindow(gLiveSupport,
-                                            bundle,
-                                            searchButton,
-                                            gladeDir));
+        searchWindow.reset(new SearchWindow(searchButton));
     }
     
     searchWindow->uploadToHub(playable);

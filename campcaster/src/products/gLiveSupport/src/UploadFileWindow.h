@@ -40,10 +40,7 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 #include "LiveSupport/Core/NumericTools.h"
 
 #include "LiveSupport/Core/Ptr.h"
@@ -75,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class UploadFileWindow : public  BasicWindow,
+class UploadFileWindow : public  GuiWindow,
                          private NumericTools
 {
     private:
@@ -310,18 +307,10 @@ class UploadFileWindow : public  BasicWindow,
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        UploadFileWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                         Ptr<ResourceBundle>::Ref   bundle,
-                         Gtk::ToggleButton *        windowOpenerButton,
-                         const Glib::ustring &      gladeDir)
+        UploadFileWindow(Gtk::ToggleButton *        windowOpenerButton)
                                                                 throw ();
 
         /**

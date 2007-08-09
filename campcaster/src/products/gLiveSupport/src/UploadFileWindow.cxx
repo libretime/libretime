@@ -57,6 +57,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "uploadFileWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "UploadFileWindow.glade";
@@ -72,15 +77,11 @@ const Glib::ustring     gladeFileName = "UploadFileWindow.glade";
  *  Constructor.
  *----------------------------------------------------------------------------*/
 UploadFileWindow :: UploadFileWindow (
-                                Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                Ptr<ResourceBundle>::Ref    bundle,
-                                Gtk::ToggleButton *         windowOpenerButton,
-                                const Glib::ustring &       gladeDir)
+                                Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName),
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton),
             fileType(invalidType)
 {
     Gtk::Label *    fileNameLabel;
@@ -210,7 +211,6 @@ UploadFileWindow :: onBrowseButtonClicked(void)                     throw ()
                                 *getResourceUstring("fileChooserDialogTitle"),
                                 Gtk::FILE_CHOOSER_ACTION_OPEN));
     dialog->set_name("uploadFileChooserDialog");
-    gLiveSupport->getWindowPosition(dialog);
 
     dialog->set_current_folder(fileChooserFolder);
     dialog->set_transient_for(*mainWindow);
@@ -226,7 +226,6 @@ UploadFileWindow :: onBrowseButtonClicked(void)                     throw ()
         fileNameEntry->set_text(dialog->get_filename());
         updateFileInfo();
         fileChooserFolder = dialog->get_current_folder();
-        gLiveSupport->putWindowPosition(dialog);
     }
 }
 

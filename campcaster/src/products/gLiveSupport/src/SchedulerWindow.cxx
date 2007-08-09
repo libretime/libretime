@@ -54,6 +54,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "schedulerWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "SchedulerWindow.glade";
@@ -69,15 +74,11 @@ const Glib::ustring     gladeFileName = "SchedulerWindow.glade";
  *  Constructor.
  *----------------------------------------------------------------------------*/
 SchedulerWindow :: SchedulerWindow (
-                            Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle,
-                            Gtk::ToggleButton *         windowOpenerButton,
-                            const Glib::ustring &       gladeDir)
+                            Gtk::ToggleButton *         windowOpenerButton)
                                                     throw (XmlRpcException)
-          : BasicWindow(gLiveSupport,
-                        bundle, 
-                        windowOpenerButton,
-                        gladeDir + gladeFileName)
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton)
 {
     constructScheduleView();
     constructStatusView();

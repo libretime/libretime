@@ -53,6 +53,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "scratchpadWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "ScratchpadWindow.glade";
@@ -73,16 +78,11 @@ const Glib::ustring     userPreferencesKeyName = "scratchpadContents";
  *  Constructor.
  *----------------------------------------------------------------------------*/
 ScratchpadWindow :: ScratchpadWindow (
-                        Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
-                        Gtk::ToggleButton *         windowOpenerButton,
-                        const Glib::ustring &       gladeDir)
+                        Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName),
-            gladeDir(gladeDir)
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton)
 {
     // create the tree view
     glade->get_widget_derived("treeView1", treeView);
@@ -315,8 +315,8 @@ ScratchpadWindow :: onSchedulePlaylist(void)                        throw ()
     }
     
     schedulePlaylistWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
-                                                            gladeDir,
-                                                            playlist));
+                                           gLiveSupport->getGladeDir(),
+                                           playlist));
 
     Gtk::Main::run(*schedulePlaylistWindow->getWindow());
 }
@@ -335,7 +335,7 @@ ScratchpadWindow :: onExportPlaylist(void)                          throw ()
         if (playlist) {
             exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gladeDir,
+                                gLiveSupport->getGladeDir(),
                                 playlist));
             exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
             Gtk::Main::run(*exportPlaylistWindow->getWindow());
@@ -630,6 +630,6 @@ ScratchpadWindow :: hide(void)                                      throw ()
         schedulePlaylistWindow->getWindow()->hide();
     }
         
-    BasicWindow::hide();
+    GuiWindow::hide();
 }
 

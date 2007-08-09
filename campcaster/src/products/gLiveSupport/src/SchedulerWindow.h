@@ -40,17 +40,13 @@
 #include "configure.h"
 #endif
 
-#include <string>
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -95,7 +91,7 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulerWindow : public BasicWindow
+class SchedulerWindow : public GuiWindow
 {
     private:
 
@@ -237,18 +233,10 @@ class SchedulerWindow : public BasicWindow
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
          *  @param windowOpenerButton   the button which was pressed to open
          *                              this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        SchedulerWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle,
-                        Gtk::ToggleButton *         windowOpenerButton,
-                        const Glib::ustring &       gladeDir)
+        SchedulerWindow(Gtk::ToggleButton *         windowOpenerButton)
                                                     throw (XmlRpcException);
 
         /**

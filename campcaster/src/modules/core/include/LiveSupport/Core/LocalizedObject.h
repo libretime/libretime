@@ -188,6 +188,20 @@ class LocalizedObject
          *             the specified key
          */
         Ptr<ResourceBundle>::Ref
+        getBundle(const Glib::ustring &     key)            
+                                                throw (std::invalid_argument)
+        {
+            return getBundle(getBundle(), key.c_str());
+        }
+
+        /**
+         *  Get a resource bundle nested inside our bundle.
+         *
+         *  @param key the name of the resource bundle to get.
+         *  @exception std::invalid_argument if there is no bundle by
+         *             the specified key
+         */
+        Ptr<ResourceBundle>::Ref
         getBundle(const char  * key)            throw (std::invalid_argument)
         {
             return getBundle(getBundle(), key);

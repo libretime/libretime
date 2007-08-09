@@ -41,14 +41,11 @@
 #endif
 
 #include <string>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 #include "ContentsStorable.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
@@ -76,15 +73,10 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LiveModeWindow : public BasicWindow,
+class LiveModeWindow : public GuiWindow,
                        public ContentsStorable
 {
     private:
-
-        /**
-         *  The directory where the Glade files are.
-         */
-        Glib::ustring                       gladeDir;
 
         /**
          *  The Playable item at the top of the window.
@@ -310,18 +302,10 @@ class LiveModeWindow : public BasicWindow,
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        LiveModeWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                       Ptr<ResourceBundle>::Ref    bundle,
-                       Gtk::ToggleButton *         windowOpenerButton,
-                       const Glib::ustring &       gladeDir)
+        LiveModeWindow(Gtk::ToggleButton *         windowOpenerButton)
                                                                 throw ();
 
         /**
@@ -444,7 +428,7 @@ class LiveModeWindow : public BasicWindow,
         /**
          *  Hide the window.
          *
-         *  This overrides BasicWindow::hide(), and closes the Export Playlist
+         *  This overrides GuiWindow::hide(), and closes the Export Playlist
          *  and Schedule Playlist pop-up windows, if they are still open.
          */
         virtual void

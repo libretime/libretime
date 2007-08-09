@@ -59,7 +59,7 @@
 #include "KeyboardShortcutList.h"
 #include "TaskbarIcons.h"
 #include "ContentsStorable.h"
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -1206,8 +1206,6 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  Save the position and size of the window.
          *
-         *  TODO: remove this function, and only use its overloaded pair.
-         *
          *  The coordinates of the window's North-West corner and the
          *  size of the window are read, and stored in a variable of the
          *  GLiveSupport object, indexed by the window's get_name().
@@ -1216,35 +1214,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see    getWindowPosition()
          */
         void
-        putWindowPosition(Ptr<const Gtk::Window>::Ref    window)   throw ();
-        
-        /**
-         *  Apply saved position and size data to the window.
-         *
-         *  TODO: remove this function, and only use its overloaded pair.
-         *
-         *  If position and size data were previously saved for a window
-         *  with the same get_name(), then these data are read and applied to
-         *  the window, restoring its position and size.
-         *
-         *  @param  window   the window to apply the position and size info to.
-         *  @see    putWindowPosition()
-         */
-        void
-        getWindowPosition(Ptr<Gtk::Window>::Ref    window)         throw ();
-
-        /**
-         *  Save the position and size of the window.
-         *
-         *  The coordinates of the window's North-West corner and the
-         *  size of the window are read, and stored in a variable of the
-         *  GLiveSupport object, indexed by the window's get_name().
-         *
-         *  @param  window   the window to save the position and size of.
-         *  @see    getWindowPosition()
-         */
-        void
-        putWindowPosition(const BasicWindow *   window)             throw ();
+        putWindowPosition(const GuiWindow *     window)             throw ();
         
         /**
          *  Apply saved position and size data to the window.
@@ -1257,7 +1227,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see    putWindowPosition()
          */
         void
-        getWindowPosition(BasicWindow *         window)             throw ();
+        getWindowPosition(GuiWindow *           window)             throw ();
 
         /**
          *  Store the saved window positions.

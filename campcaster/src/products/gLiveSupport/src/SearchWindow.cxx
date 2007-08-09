@@ -59,6 +59,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "searchWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "SearchWindow.glade";
@@ -78,16 +83,11 @@ const int               searchResultsSize = 25;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                              Ptr<ResourceBundle>::Ref    bundle,
-                              Gtk::ToggleButton *         windowOpenerButton,
-                              const Glib::ustring &       gladeDir)
+SearchWindow :: SearchWindow (Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName),
-            gladeDir(gladeDir)
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton)
 {
     glade->get_widget("searchInputNoteBook1", searchInput);
     
@@ -763,7 +763,7 @@ SearchWindow :: onSchedulePlaylist(void)                        throw ()
         if (playlist) {
             schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
                             gLiveSupport,
-                            gladeDir,
+                            gLiveSupport->getGladeDir(),
                             playlist));
             schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
             Gtk::Main::run(*schedulePlaylistWindow->getWindow());
@@ -791,13 +791,14 @@ SearchWindow :: onExportPlaylist(void)                          throw ()
                 try {
                     exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gladeDir,
+                                gLiveSupport->getGladeDir(),
                                 playlist));
                 } catch (std::invalid_argument &e) {
                     std::cerr << e.what() << std::endl;
                     return;
                 }
-                exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+                exportPlaylistWindow->getWindow()->set_transient_for(
+                                                                *mainWindow);
                 Gtk::Main::run(*exportPlaylistWindow->getWindow());
             }
         }
@@ -907,7 +908,7 @@ SearchWindow :: hide(void)                                      throw ()
         schedulePlaylistWindow->getWindow()->hide();
     }
     
-    BasicWindow::hide();
+    GuiWindow::hide();
 }
 
 

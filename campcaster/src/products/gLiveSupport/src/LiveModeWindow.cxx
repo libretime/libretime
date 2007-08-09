@@ -55,6 +55,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "liveModeWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "LiveModeWindow.glade";
@@ -74,16 +79,11 @@ const Glib::ustring     userPreferencesKeyName = "liveModeContents";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                  Ptr<ResourceBundle>::Ref  bundle,
-                                  Gtk::ToggleButton *       windowOpenerButton,
-                                  const Glib::ustring &     gladeDir)
+LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName),
-            gladeDir(gladeDir),
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton),
             isDeleting(false)
 {
     glade->get_widget_derived("treeView1", treeView);
@@ -407,7 +407,7 @@ LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
         if (playlist) {
             schedulePlaylistWindow.reset(new SchedulePlaylistWindow(
                             gLiveSupport,
-                            gladeDir,
+                            gLiveSupport->getGladeDir(),
                             playlist));
             schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
             Gtk::Main::run(*schedulePlaylistWindow->getWindow());
@@ -430,7 +430,7 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
         if (playlist) {
             exportPlaylistWindow.reset(new ExportPlaylistWindow(
                                 gLiveSupport,
-                                gladeDir,
+                                gLiveSupport->getGladeDir(),
                                 playlist));
             exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
             Gtk::Main::run(*exportPlaylistWindow->getWindow());
@@ -704,6 +704,6 @@ LiveModeWindow :: hide(void)                                        throw ()
         schedulePlaylistWindow->getWindow()->hide();
     }
         
-    BasicWindow::hide();
+    GuiWindow::hide();
 }
 

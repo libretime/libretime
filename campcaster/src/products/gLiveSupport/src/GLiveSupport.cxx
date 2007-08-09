@@ -1579,41 +1579,7 @@ GLiveSupport :: getLocalizedWindowName(
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: putWindowPosition(Ptr<const Gtk::Window>::Ref    window)
-                                                                    throw ()
-{
-    WindowPositionType  pos;
-    window->get_position(pos.x, pos.y);
-    window->get_size(pos.width, pos.height);
-
-    windowPositions[window->get_name()] = pos;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Apply saved position and size data to the window.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: getWindowPosition(Ptr<Gtk::Window>::Ref         window)
-                                                                    throw ()
-{
-    WindowPositionsListType::const_iterator it = windowPositions.find(
-                                                        window->get_name());
-    if (it != windowPositions.end()) {
-        WindowPositionType  pos = it->second;
-        window->move(pos.x, pos.y);
-        window->resize(pos.width, pos.height);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Save the position and size of the window.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: putWindowPosition(const BasicWindow *       window)
+GLiveSupport :: putWindowPosition(const GuiWindow *     window)
                                                                     throw ()
 {
     WindowPositionType  pos;
@@ -1629,7 +1595,7 @@ GLiveSupport :: putWindowPosition(const BasicWindow *       window)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: getWindowPosition(BasicWindow *     window)
+GLiveSupport :: getWindowPosition(GuiWindow *       window)
                                                                     throw ()
 {
     WindowPositionsListType::const_iterator it = windowPositions.find(

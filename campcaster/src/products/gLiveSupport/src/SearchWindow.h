@@ -40,12 +40,7 @@
 #include "configure.h"
 #endif
 
-#include <string>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
-
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 #include "LiveSupport/Core/NumericTools.h"
 
 #include "LiveSupport/Core/Ptr.h"
@@ -79,15 +74,10 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class SearchWindow : public  BasicWindow,
+class SearchWindow : public  GuiWindow,
                      private NumericTools
 {
     private:
-
-        /**
-         *  The directory where the Glade files are.
-         */
-        Glib::ustring               gladeDir;
 
         /**
          *  The criteria for the last local search.
@@ -600,18 +590,10 @@ class SearchWindow : public  BasicWindow,
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        SearchWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                     Ptr<ResourceBundle>::Ref    bundle,
-                     Gtk::ToggleButton *         windowOpenerButton,
-                     const Glib::ustring &       gladeDir)
+        SearchWindow(Gtk::ToggleButton *         windowOpenerButton)
                                                                 throw ();
 
         /**
@@ -641,7 +623,7 @@ class SearchWindow : public  BasicWindow,
         /**
          *  Hide the window.
          *
-         *  This overrides BasicWindow::hide(), and closes the Export Playlist
+         *  This overrides GuiWindow::hide(), and closes the Export Playlist
          *  and Schedule Playlist windows, if they are still open.
          */
         virtual void

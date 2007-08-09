@@ -34,7 +34,7 @@
 #endif
 
 #include "GLiveSupport.h"
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 
 
 using namespace LiveSupport::Core;
@@ -62,22 +62,21 @@ const Glib::ustring     applicationTitle = "Campcaster";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BasicWindow :: BasicWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle,
-                            Gtk::ToggleButton *         windowOpenerButton,
-                            const Glib::ustring &       gladeFileName)
+GuiWindow :: GuiWindow (const Glib::ustring &       bundleName,
+                        const Glib::ustring &       gladeFileName,
+                        Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
+          : GuiObject(bundleName),
             windowOpenerButton(windowOpenerButton)
 {
-    glade = Gnome::Glade::Xml::create(gladeFileName);
+    glade = Gnome::Glade::Xml::create(gLiveSupport->getGladeDir() +
+                                      gladeFileName);
 
     glade->get_widget("mainWindow1", mainWindow);
     setTitle(getResourceUstring("windowTitle"));
     
     mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
-                                                &BasicWindow::onDeleteEvent));
+                                                &GuiWindow::onDeleteEvent));
 }
 
 
@@ -85,7 +84,7 @@ BasicWindow :: BasicWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
  *  Restore the window position and show the window.
  *----------------------------------------------------------------------------*/
 void
-BasicWindow :: show (void)                                          throw ()
+GuiWindow :: show (void)                                          throw ()
 {
     preShow();
     mainWindow->show();
@@ -96,7 +95,7 @@ BasicWindow :: show (void)                                          throw ()
  *  Stuff to do before showing the window.
  *----------------------------------------------------------------------------*/
 void
-BasicWindow :: preShow (void)                                       throw ()
+GuiWindow :: preShow (void)                                       throw ()
 {
     gLiveSupport->getWindowPosition(this);
     if (windowOpenerButton) {
@@ -109,7 +108,7 @@ BasicWindow :: preShow (void)                                       throw ()
  *  Save the window position and hide the window.
  *----------------------------------------------------------------------------*/
 void
-BasicWindow :: hide (void)                                          throw ()
+GuiWindow :: hide (void)                                          throw ()
 {
     preHide();
     mainWindow->hide();
@@ -120,7 +119,7 @@ BasicWindow :: hide (void)                                          throw ()
  *  Signal handler for the close button getting clicked.
  *----------------------------------------------------------------------------*/
 bool
-BasicWindow :: onDeleteEvent (GdkEventAny *     event)              throw ()
+GuiWindow :: onDeleteEvent (GdkEventAny *     event)              throw ()
 {
     preHide();
     return false;
@@ -131,7 +130,7 @@ BasicWindow :: onDeleteEvent (GdkEventAny *     event)              throw ()
  *  Stuff to do before hiding the window.
  *----------------------------------------------------------------------------*/
 void
-BasicWindow :: preHide (void)                                       throw ()
+GuiWindow :: preHide (void)                                       throw ()
 {
     gLiveSupport->putWindowPosition(this);
     if (windowOpenerButton) {
@@ -144,7 +143,7 @@ BasicWindow :: preHide (void)                                       throw ()
  *  Set the title of the window.
  *----------------------------------------------------------------------------*/
 void
-BasicWindow :: setTitle (Ptr<const Glib::ustring>::Ref      title)
+GuiWindow :: setTitle (Ptr<const Glib::ustring>::Ref      title)
                                                                     throw ()
 {
     windowTitle = title;

@@ -47,6 +47,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "optionsWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "OptionsWindow.glade";
@@ -61,15 +66,11 @@ const Glib::ustring     gladeFileName = "OptionsWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-OptionsWindow :: OptionsWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                Ptr<ResourceBundle>::Ref  bundle,
-                                Gtk::ToggleButton *       windowOpenerButton,
-                                const Glib::ustring &     gladeDir)
+OptionsWindow :: OptionsWindow (Gtk::ToggleButton *       windowOpenerButton)
                                                                     throw ()
-          : BasicWindow(gLiveSupport,
-                        bundle,
-                        windowOpenerButton,
-                        gladeDir + gladeFileName)
+          : GuiWindow(bundleName,
+                      gladeFileName,
+                      windowOpenerButton)
 {
     bool    canBackup = (gLiveSupport->getSessionId()
                             && gLiveSupport->isStorageAvailable());

@@ -40,16 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <string>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "BasicWindow.h"
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -88,7 +83,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class PlaylistWindow : public BasicWindow
+class PlaylistWindow : public GuiWindow
 {
     private:
 
@@ -394,18 +389,10 @@ class PlaylistWindow : public BasicWindow
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        PlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
-                       Ptr<ResourceBundle>::Ref     bundle,
-                       Gtk::ToggleButton *          windowOpenerButton,
-                       const Glib::ustring &        gladeDir)
+        PlaylistWindow(Gtk::ToggleButton *          windowOpenerButton)
                                                                 throw ();
 
         /**
