@@ -113,7 +113,7 @@ GLiveSupportTest :: setUp(void)                 throw (CPPUNIT_NS::Exception)
 {
     Gtk::Main kit(0, 0);
 
-    gLiveSupport.reset(new GLiveSupport());
+    gLiveSupport = GLiveSupport::getInstance();
 
     uid_t           uid = getuid();
     struct passwd * pwd = getpwuid(uid);

@@ -85,8 +85,15 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
-const std::string LiveSupport :: GLiveSupport ::
-                  GLiveSupport :: configElementNameStr = "gLiveSupport";
+const std::string
+            LiveSupport :: GLiveSupport :: GLiveSupport :: configElementNameStr
+                        = "gLiveSupport";
+
+/*------------------------------------------------------------------------------
+ *  The singleton instance of GLiveSupport
+ *----------------------------------------------------------------------------*/
+Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
+            LiveSupport :: GLiveSupport :: GLiveSupport :: singleton;
 
 namespace {
 
@@ -208,6 +215,21 @@ const std::string   serialPortDefaultDevice = "/dev/ttyS0";
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  Return the singleton instance to WidgetFactory
+ *----------------------------------------------------------------------------*/
+Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getInstance(void)                                   throw ()
+{
+    if (!singleton.get()) {
+        singleton.reset(new LiveSupport::GLiveSupport::GLiveSupport());
+    }
+
+    return singleton;
+}
+
 
 /*------------------------------------------------------------------------------
  *  Configure the gLiveSupport object
@@ -478,7 +500,7 @@ GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
  *----------------------------------------------------------------------------*/
 bool
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: checkConfiguration(void)                    throw ()
+GLiveSupport :: checkConfiguration(void)                            throw ()
 {
     // === FATAL ERRORS ===
 
@@ -602,7 +624,7 @@ GLiveSupport :: runDialog(const Glib::ustring &         dialogName,
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: show(void)                              throw ()
+GLiveSupport :: show(void)                                          throw ()
 {
     masterPanel.reset(new MasterPanelWindow(shared_from_this(),
                                             getBundle(),
@@ -699,7 +721,7 @@ GLiveSupport :: login(const std::string & login,
  *----------------------------------------------------------------------------*/
 bool
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: logout(void)                                throw ()
+GLiveSupport :: logout(void)                                        throw ()
 {
     if (!sessionId) {
         return false;
@@ -733,7 +755,7 @@ GLiveSupport :: logout(void)                                throw ()
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: storeWindowContents(ContentsStorable *  window)
-                                                            throw ()
+                                                                    throw ()
 {
     Ptr<const Glib::ustring>::Ref   userPreferencesKey       
                                             = window->getUserPreferencesKey();
@@ -759,7 +781,7 @@ GLiveSupport :: storeWindowContents(ContentsStorable *  window)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: loadWindowContents(ContentsStorable *   window)
-                                                            throw ()
+                                                                    throw ()
 {
     Ptr<const Glib::ustring>::Ref   userPreferencesKey       
                                             = window->getUserPreferencesKey();
@@ -1058,7 +1080,7 @@ GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref    playable)
-                                                            throw ()
+                                                                    throw ()
 {
     masterPanel->updateLiveModeWindow(playable);
 }
@@ -1070,7 +1092,7 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref    playable)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
-                                                            throw ()
+                                                                    throw ()
 {
     // test needed: this gets called indirectly from ~MasterPanelWindow
     if (masterPanel) {
@@ -1242,7 +1264,7 @@ GLiveSupport :: removeFromSchedule(Ptr<const UniqueId>::Ref   scheduleEntryId)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: preload(Ptr<const Playable>::Ref    playable)
-                                                    throw ()
+                                                                    throw ()
 {
     Ptr<const std::string>::Ref     uri = playable->getUri();
     if (uri) {
@@ -1366,7 +1388,7 @@ GLiveSupport :: stopOutputAudio(void)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(Ptr<const Glib::ustring>::Ref      errorMessage)
-                                                    throw ()
+                                                                    throw ()
 {
     outputItemPlayingNow.reset();
     try {
@@ -1497,7 +1519,7 @@ GLiveSupport :: stopCueAudio(void)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: attachCueAudioListener(AudioPlayerEventListener *   listener)
-                                                throw ()
+                                                                    throw ()
 {
     cuePlayer->attachListener(listener);
 }
@@ -1520,7 +1542,7 @@ GLiveSupport :: detachCueAudioListener(AudioPlayerEventListener *   listener)
  *----------------------------------------------------------------------------*/
 Glib::RefPtr<Gdk::Pixbuf>
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: getStationLogoPixbuf(void)      throw()
+GLiveSupport :: getStationLogoPixbuf(void)                          throw()
 {
     return stationLogoPixbuf;
 }

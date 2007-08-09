@@ -156,6 +156,11 @@ class GLiveSupport : public LocalizedConfigurable,
         static const std::string                    configElementNameStr;
 
         /**
+         *  The singleton instance of this object.
+         */
+        static Ptr<GLiveSupport>::Ref               singleton;
+
+        /**
          *  The authentication client used by the application.
          */
         Ptr<AuthenticationClientInterface>::Ref     authentication;
@@ -301,7 +306,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Emit the "edited playlist has been modified" signal.
          */
         void
-        emitSignalEditedPlaylistModified(void)                  throw ()
+        emitSignalEditedPlaylistModified(void)                      throw ()
         {
             signalEditedPlaylistModified().emit();
         }
@@ -358,11 +363,23 @@ class GLiveSupport : public LocalizedConfigurable,
         bool                        schedulerAvailable;
 
         /**
+         *  Private constructor.
+         */
+        GLiveSupport(void)                                          throw ()
+                : outputPlayerIsPaused(false),
+                  cuePlayerIsPaused(false)
+        {
+            openedAudioClips.reset(new AudioClipMap());
+            openedPlaylists.reset(new PlaylistMap());
+            serialStream.reset(new LibSerial::SerialStream());
+        }
+
+        /**
          *  Display a message that the authentication server is not available.
          *  And offer a chance to edit the options to fix it.
          */
         void
-        displayAuthenticationServerMissingMessage(void)         throw ();
+        displayAuthenticationServerMissingMessage(void)             throw ();
 
         /**
          *  Refresh the playlist in the Live Mode window.
@@ -375,7 +392,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Replace the placeholders in the RDS settings with the
@@ -386,7 +403,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         substituteRdsData(Ptr<Glib::ustring>::Ref   rdsString)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Replace a single placeholders in the RDS settings.
@@ -445,22 +462,10 @@ class GLiveSupport : public LocalizedConfigurable,
     public:
 
         /**
-         *  Constructor.
-         */
-        GLiveSupport(void)                                      throw ()
-                : outputPlayerIsPaused(false),
-                  cuePlayerIsPaused(false)
-        {
-            openedAudioClips.reset(new AudioClipMap());
-            openedPlaylists.reset(new PlaylistMap());
-            serialStream.reset(new LibSerial::SerialStream());
-        }
-
-        /**
          *  Virtual destructor.
          */
         virtual
-        ~GLiveSupport(void)                                     throw ()
+        ~GLiveSupport(void)                                         throw ()
         {
             if (outputPlayer.get()) {
                 outputPlayer->deInitialize();
@@ -485,10 +490,18 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                              throw ()
+        getConfigElementName(void)                                  throw ()
         {
             return configElementNameStr;
         }
+
+        /**
+         *  Returns the singleton instance of this object.
+         *
+         *  @return the singleton instance of this object.
+         */
+        static Ptr<GLiveSupport>::Ref
+        getInstance()                                               throw ();
 
         /**
          *  Configure the scheduler daemon based on the XML element
@@ -514,7 +527,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *         false otherwise
          */
         bool
-        checkConfiguration(void)                                throw ();
+        checkConfiguration(void)                                    throw ();
 
         /**
          *  Display a message window.
@@ -524,7 +537,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         displayMessageWindow(const Glib::ustring &      message)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Run a dialog window with No and Yes buttons.
@@ -549,7 +562,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  This call will only return after the main window has been closed.
          */
         void
-        show(void)                                              throw ();
+        show(void)                                                  throw ();
 
         /**
          *  Change the language of the application.
@@ -576,7 +589,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         bool
         login(const std::string & login,
-              const std::string & password)                     throw ();
+              const std::string & password)                         throw ();
 
         /**
          *  Return the session id for the user.
@@ -588,7 +601,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #login
          */
         Ptr<SessionId>::Ref
-        getSessionId(void) const                                throw ()
+        getSessionId(void) const                                    throw ()
         {
             return sessionId;
         }
@@ -603,7 +616,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #logout
          */
         bool
-        logout(void)                                            throw ();
+        logout(void)                                                throw ();
 
         /**
          *  Accessor function to the scheduler client held by this object.
@@ -611,7 +624,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the scheduler client held by this object.
          */
         Ptr<SchedulerClientInterface>::Ref
-        getScheduler(void)                                      throw ()
+        getScheduler(void)                                          throw ()
         {
             return scheduler;
         }
@@ -622,7 +635,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the map of supported languages.
          */
         Ptr<const LanguageMap>::Ref
-        getSupportedLanguages(void) const                       throw ()
+        getSupportedLanguages(void) const                           throw ()
         {
             return supportedLanguages;
         }
@@ -633,7 +646,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the metadata type container
          */
         Ptr<MetadataTypeContainer>::Ref
-        getMetadataTypeContainer(void) const                    throw ()
+        getMetadataTypeContainer(void) const                        throw ()
         {
             return metadataTypeContainer;
         }
@@ -675,7 +688,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception XmlRpcException on communication problems.
          */
         void
-        resetStorage(void)                              throw (XmlRpcException)
+        resetStorage(void)                          throw (XmlRpcException)
         {
             storage->reset();
         }
@@ -833,7 +846,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param playable the audio clip or playlist to be added
          */
         void
-        addToLiveMode(Ptr<Playable>::Ref  playable)             throw ();
+        addToLiveMode(Ptr<Playable>::Ref  playable)                 throw ();
 
         /**
          *  Return the currently edited playlist.
@@ -842,7 +855,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *          if no playlist is edited
          */
         Ptr<Playlist>::Ref
-        getEditedPlaylist(void)                                 throw ()
+        getEditedPlaylist(void)                                     throw ()
         {
             return editedPlaylist;
         }
@@ -963,7 +976,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         preload(Ptr<const Playable>::Ref    playable)
-                                                throw ();
+                                                                    throw ();
 
         /**
          *  Play a Playable object using the output audio player.
@@ -1080,7 +1093,7 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         playTestSoundOnCue(Ptr<const Glib::ustring>::Ref    oldDevice,
                            Ptr<const Glib::ustring>::Ref    newDevice)
-                                                throw ();
+                                                                    throw ();
 
         /**
          *  Search in the local storage.
@@ -1105,14 +1118,14 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual void
         onStop(Ptr<const Glib::ustring>::Ref  errorMessage
                                               = Ptr<const Glib::ustring>::Ref())
-                                                throw ();
+                                                                    throw ();
 
         /**
          *  Display the playable item on the master panel as "now playing".
          */
         void
         setNowPlaying(Ptr<Playable>::Ref    playable)
-                                                throw ();
+                                                                    throw ();
 
         /**
          *  Return a pixbuf containing the radio station logo.
@@ -1120,7 +1133,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return a pixbuf containing the station logo image.
          */
         Glib::RefPtr<Gdk::Pixbuf>
-        getStationLogoPixbuf()                  throw ();
+        getStationLogoPixbuf()                                      throw ();
 
         /**
          *  The signal raised when the edited playlist is modified.
@@ -1128,7 +1141,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the signal object (a protected member of this class)
          */
         sigc::signal<void>
-        signalEditedPlaylistModified(void)      throw ()
+        signalEditedPlaylistModified(void)                          throw ()
         {
             return signalEditedPlaylistModifiedObject;
         }
@@ -1285,7 +1298,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         storeWindowContents(Ptr<ContentsStorable>::Ref  window)
-                                                                throw ()
+                                                                    throw ()
         {
             storeWindowContents(window.get());
         }
@@ -1297,7 +1310,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         loadWindowContents(Ptr<ContentsStorable>::Ref   window)
-                                                                throw ()
+                                                                    throw ()
         {
             loadWindowContents(window.get());
         }
@@ -1308,7 +1321,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param  window  the window to get the contents of.
          */
         void
-        storeWindowContents(ContentsStorable *      window)     throw ();
+        storeWindowContents(ContentsStorable *      window)         throw ();
 
         /**
          *  Load the contents of a window as a user preference.
@@ -1316,13 +1329,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param  window  the window to restore the contents of.
          */
         void
-        loadWindowContents(ContentsStorable *       window)     throw ();
+        loadWindowContents(ContentsStorable *       window)         throw ();
 
         /**
          *  Return whether the storage component is available.
          */
         bool
-        isStorageAvailable(void)                                throw()
+        isStorageAvailable(void)                                    throw()
         {
             return storageAvailable;
         }
@@ -1331,7 +1344,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Return whether the scheduler component is available.
          */
         bool
-        isSchedulerAvailable(void)                              throw()
+        isSchedulerAvailable(void)                                  throw()
         {
             return schedulerAvailable;
         }
@@ -1340,7 +1353,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Access the StorageClientInterface object.
          */
         Ptr<StorageClientInterface>::Ref
-        getStorageClient(void)                                  throw()
+        getStorageClient(void)                                      throw()
         {
             return storage;
         }
@@ -1350,19 +1363,19 @@ class GLiveSupport : public LocalizedConfigurable,
          *  This updates the schedulerAvailable variable accordingly.
          */
         void
-        checkSchedulerClient(void)                              throw();
+        checkSchedulerClient(void)                                  throw();
         
         /**
          *  Start the scheduler client.
          */
         void
-        startSchedulerClient(void)                              throw();
+        startSchedulerClient(void)                                  throw();
         
         /**
          *  Stop the scheduler client.
          */
         void
-        stopSchedulerClient(void)                               throw();
+        stopSchedulerClient(void)                                   throw();
 
         /**
          *  Upload a Playable object to the network hub.
@@ -1373,7 +1386,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param playable the audio clip or playlist to be uploaded.
          */
         void
-        uploadToHub(Ptr<Playable>::Ref  playable)               throw ();
+        uploadToHub(Ptr<Playable>::Ref  playable)                   throw ();
         
         /**
          *  Take a break.
@@ -1383,7 +1396,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  make sure your window gets redrawn.
          */
         void
-        runMainLoop(void)                                       throw ()
+        runMainLoop(void)                                           throw ()
         {
             while (Gtk::Main::events_pending()) {
                 Gtk::Main::iteration();
@@ -1394,7 +1407,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Preload the Scratchpad window during login.
          */
         void
-        createScratchpadWindow(void)                            throw ();
+        createScratchpadWindow(void)                                throw ();
 
         /**
          *  Read the RDS settings, and send them to the serial port.
@@ -1412,7 +1425,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see substituteRdsData()
          */
         void
-        updateRds(void)                                         throw ();
+        updateRds(void)                                             throw ();
 
         /**
          *  Return the directory where the Glade files are.
@@ -1420,7 +1433,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the directory where the Glade files are.
          */
         Glib::ustring
-        getGladeDir(void)                                       throw ()
+        getGladeDir(void)                                           throw ()
         {
             return gladeDir;
         }

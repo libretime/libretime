@@ -28,7 +28,7 @@
 ------------------------------------------------------------------------------*/
 
 /** @file
- *  This file contains the main entry point to the Scheduler daemon.
+ *  This file contains the main entry point to the Studio client.
  */
 
 /* ============================================================ include files */
@@ -155,7 +155,7 @@ int main (  int     argc,
     }
 
     Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
-                    gLiveSupport(new LiveSupport::GLiveSupport::GLiveSupport());
+        gLiveSupport = LiveSupport::GLiveSupport::GLiveSupport::getInstance();
 
     try {
         std::auto_ptr<xmlpp::DomParser> 
