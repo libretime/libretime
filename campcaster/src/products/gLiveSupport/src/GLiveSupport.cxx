@@ -217,7 +217,7 @@ const std::string   serialPortDefaultDevice = "/dev/ttyS0";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Return the singleton instance to WidgetFactory
+ *  Return the singleton instance
  *----------------------------------------------------------------------------*/
 Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
 LiveSupport :: GLiveSupport ::
