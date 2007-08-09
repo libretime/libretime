@@ -44,8 +44,8 @@
 #include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 
+#include "GuiWindow.h"
 #include "GLiveSupport.h"
 #include "NowPlaying.h"
 #include "LiveModeWindow.h"
@@ -93,24 +93,9 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class MasterPanelWindow : public LocalizedObject
+class MasterPanelWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The directory where the Glade files are.
-         */
-        Glib::ustring                       gladeDir;
-
-        /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
-
-        /**
-         *  The gLiveSupport object, handling the logic of the application.
-         */
-        Ptr<GLiveSupport>::Ref              gLiveSupport;
 
         /**
          *  Whether a user is currently logged in.
@@ -131,11 +116,6 @@ class MasterPanelWindow : public LocalizedObject
 
 
     protected:
-
-        /**
-         *  The main window.
-         */
-        Gtk::Window *                       masterPanelWindow;
 
         /**
          *  The time display
@@ -413,16 +393,8 @@ class MasterPanelWindow : public LocalizedObject
 
         /**
          *  Constructor.
-         *
-         *  @param  gLiveSupport    the gLiveSupport object, handling the
-         *                          logic of the application.
-         *  @param  bundle      the resource bundle holding localized resources.
-         *  @param  gladeDir    the directory where the Glade files are.
          */
-        MasterPanelWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
-                          Ptr<ResourceBundle>::Ref   bundle,
-                          const Glib::ustring &      gladeDir)
-                                                                throw ();
+        MasterPanelWindow(void)                                 throw ();
 
         /**
          *  Virtual destructor.
@@ -431,28 +403,17 @@ class MasterPanelWindow : public LocalizedObject
         ~MasterPanelWindow(void)                                throw ();
 
         /**
-         *  Give access to the Gtk::Window of the window.
-         *  The caller does not get ownership of the widget, and he
-         *  should not / does not need to dispose of it.
-         */
-        Gtk::Window *
-        getWindow(void)                                         throw ()
-        {
-            return masterPanelWindow;
-        }
-
-        /**
-         *  Change the user interface language of the application
-         *  by providing a new resource bundle.
-         *  This call assumes that only the MasterPanelWindow is visible,
+         *  Change the user interface language of the application.
+         *
+         *  This is called by GLiveSupport, when its own locale changes.
+         *
+         *  This method assumes that only the MasterPanelWindow is visible,
          *  and will only change the language of the currently open
          *  MasterPanelWindow. No other open windows will be affected by
          *  this call, but subsequently opened windows are.
-         *
-         *  @param bundle the new resource bundle.
          */
         void
-        changeLanguage(Ptr<ResourceBundle>::Ref     bundle)     throw ();
+        changeLanguage(void)                                    throw ();
 
         /**
          *  Show the UI components that are visible when no one is logged in.

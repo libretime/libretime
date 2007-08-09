@@ -40,15 +40,10 @@
 #include "configure.h"
 #endif
 
-#include <string>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
-#include "GLiveSupport.h"
+#include "GuiWindow.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -70,24 +65,9 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class LoginWindow : public LocalizedObject
+class LoginWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref  gLiveSupport;
-
-        /**
-         *  The window itself.
-         */
-        Gtk::Dialog *           loginWindow;
 
         /**
          *  The user name text entry area.
@@ -168,17 +148,8 @@ class LoginWindow : public LocalizedObject
 
         /**
          *  Constructor.
-         *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param  gladeDir        the directory where the glade file is.
          */
-        LoginWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                    Ptr<ResourceBundle>::Ref    bundle,
-                    const Glib::ustring &       gladeDir)
-                                                            throw ();
+        LoginWindow(void)                                   throw ();
 
         /**
          *  Virtual destructor.

@@ -55,26 +55,31 @@ using namespace LiveSupport::GLiveSupport;
 
 namespace {
 
-/**
+/*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "masterPanelWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
- */
+ *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName   = "MasterPanelWindow.glade";
 
-/**
+/*------------------------------------------------------------------------------
  *  The name of the application, shown on the task bar.
- */
+ *----------------------------------------------------------------------------*/
 const Glib::ustring     applicationTitleSuffix = " - Campcaster";
 
-/**
+/*------------------------------------------------------------------------------
  *  Number of times per second that onUpdateTime() is called.
  *  It's a good idea to make this a divisor of 1000.
- */
+ *----------------------------------------------------------------------------*/
 const int               updateTimeConstant = 20;
 
-/**
+/*------------------------------------------------------------------------------
  *  The delay between two checks on the progress of an asynchronous method
  *  (in seconds).
- */
+ *----------------------------------------------------------------------------*/
 const int               asyncUpdateFrequency = 10;
 
 /**
@@ -92,17 +97,12 @@ const int               rdsUpdateFrequency = 10;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
-                                        Ptr<ResourceBundle>::Ref  bundle,
-                                        const Glib::ustring &     gladeDir)
+MasterPanelWindow :: MasterPanelWindow (void)
                                                                     throw ()
-                        : LocalizedObject(bundle),
-                          gladeDir(gladeDir),
-                          gLiveSupport(gLiveSupport),
-                          userIsLoggedIn(false)                          
+          : GuiWindow(bundleName,
+                      gladeFileName),
+            userIsLoggedIn(false)                          
 {
-    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
-    
     // load the station logo image
     Gtk::Image *        stationLogoImage;
     glade->get_widget("stationLogoImage1", stationLogoImage);
@@ -121,11 +121,11 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeLabel->set_attributes(timeLabelAttributes);
 
     // register the signal handlers for the main window
-    glade->get_widget("mainWindow1", masterPanelWindow);
-    masterPanelWindow->signal_key_press_event().connect(sigc::mem_fun(
+    glade->get_widget("mainWindow1", mainWindow);
+    mainWindow->signal_key_press_event().connect(sigc::mem_fun(
                                         *this,
                                         &MasterPanelWindow::onKeyPressed));
-    masterPanelWindow->signal_delete_event().connect(sigc::mem_fun(
+    mainWindow->signal_delete_event().connect(sigc::mem_fun(
                                         *this,
                                         &MasterPanelWindow::onDeleteEvent));
 
@@ -133,7 +133,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Gtk::Box *      nowPlayingBox;
     glade->get_widget("nowPlayingWidget1", nowPlayingBox);
     nowPlayingWidget.reset(new NowPlaying(gLiveSupport,
-                                          bundle,
+                                          getBundle(),
                                           glade));
 
     // get a reference for the window-opener buttons
@@ -178,9 +178,9 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 &MasterPanelWindow::onLoginButtonClicked));
 
     // set the size and location of the window, according to the screen size
-    Glib::RefPtr<Gdk::Screen>   screen = masterPanelWindow->get_screen();
-    masterPanelWindow->set_default_size(screen->get_width(), -1);
-    masterPanelWindow->move(0, 0);
+    Glib::RefPtr<Gdk::Screen>   screen = mainWindow->get_screen();
+    mainWindow->set_default_size(screen->get_width(), -1);
+    mainWindow->move(0, 0);
 
     // show what's there to see
     showAnonymousUI();
@@ -206,18 +206,15 @@ MasterPanelWindow :: ~MasterPanelWindow (void)                      throw ()
  *  Change the language of the panel
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
+MasterPanelWindow :: changeLanguage(void)
                                                                     throw ()
 {
-    setBundle(bundle);
+    Ptr<ResourceBundle>::Ref    newBundle = gLiveSupport->getBundle(
+                                                                bundleName);
+    setBundle(newBundle);
+    nowPlayingWidget->changeLanguage(newBundle);
 
-    Glib::ustring               title = *getResourceUstring(
-                                                "masterPanelWindow",
-                                                "windowTitle");
-    title += applicationTitleSuffix;
-    masterPanelWindow->set_title(title);
-
-    nowPlayingWidget->changeLanguage(bundle);
+    setTitle(getResourceUstring("windowTitle"));
 
     liveModeButton->set_label(*getResourceUstring(
                                         "liveModeButtonLabel"));
@@ -745,11 +742,7 @@ MasterPanelWindow :: onLoginButtonClicked(void)                     throw ()
 void
 MasterPanelWindow :: login(void)                                    throw ()
 {
-    Ptr<ResourceBundle>::Ref    loginBundle = getBundle("loginWindow");
-
-    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
-                                                            loginBundle,
-                                                            gladeDir));
+    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow());
     userIsLoggedIn = loginWindow->run();
 
     if (userIsLoggedIn) {

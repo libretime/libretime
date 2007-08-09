@@ -1,24 +1,9 @@
 root:table
 {
-    notLoggedInMsg:string           { "Not logged in" }
-    loggedInMsg:string              { "User: {0}" }
-    loginButtonLabel:string         { "Log in" }
-    logoutButtonLabel:string        { "Log out" }
-    liveModeButtonLabel:string              { "Live Mode" }
-    uploadFileButtonLabel:string            { "Upload File" }
-    scratchpadButtonLabel:string            { "Scratchpad" }
-    playlistButtonLabel:string              { "Playlist" }
-    schedulerButtonLabel:string             { "Scheduler" }
-    searchButtonLabel:string                { "Search" }
-    optionsButtonLabel:string               { "Options" }
-
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
     yesButtonLabel:string           { "Yes" }
     okButtonLabel:string            { "OK" }
-
-    elapsedTimeLabel:string         { "elapsed" }
-    remainingTimeLabel:string       { "remaining" }
 
     localeNotAvailableMsg:string    { "Locale {0} is not available." }
     schedulerNotReachableMsg:string { "The scheduler server is not available." }
@@ -29,11 +14,27 @@ root:table
                                       "Would you like to edit the server "
                                       "settings?" }
     audioErrorMsg                   { "Audio player error: " }
-    sureToExitMsg:string            { "Are you sure you want to exit?" }
 
     masterPanelWindow:table
     {
         windowTitle:string          { "Master Panel" }
+
+        notLoggedInMsg:string           { "Not logged in" }
+        loggedInMsg:string              { "User: {0}" }
+        loginButtonLabel:string         { "Log in" }
+        logoutButtonLabel:string        { "Log out" }
+        liveModeButtonLabel:string      { "Live Mode" }
+        uploadFileButtonLabel:string    { "Upload File" }
+        scratchpadButtonLabel:string    { "Scratchpad" }
+        playlistButtonLabel:string      { "Playlist" }
+        schedulerButtonLabel:string     { "Scheduler" }
+        searchButtonLabel:string        { "Search" }
+        optionsButtonLabel:string       { "Options" }
+
+        elapsedTimeLabel:string     { "elapsed" }
+        remainingTimeLabel:string   { "remaining" }
+
+        sureToExitMsg:string        { "Are you sure you want to exit?" }
     }
 
     loginWindow:table

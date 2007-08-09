@@ -626,9 +626,7 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                                          throw ()
 {
-    masterPanel.reset(new MasterPanelWindow(shared_from_this(),
-                                            getBundle(),
-                                            gladeDir));
+    masterPanel.reset(new MasterPanelWindow());
 
     masterPanel->getWindow()->set_icon_list(taskbarIcons->getIconList());
     masterPanel->getWindow()->set_default_icon_list(
@@ -654,7 +652,7 @@ GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
     metadataTypeContainer->setBundle(getBundle("metadataTypes"));
 
     if (masterPanel.get()) {
-        masterPanel->changeLanguage(getBundle());
+        masterPanel->changeLanguage();
     }
 }
 

@@ -33,9 +33,7 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
-#include <stdexcept>
-
+#include "GLiveSupport.h"
 #include "LoginWindow.h"
 
 
@@ -52,6 +50,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "loginWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "LoginWindow.glade";
@@ -66,20 +69,13 @@ const Glib::ustring     gladeFileName = "LoginWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle,
-                            const Glib::ustring &       gladeDir)
+LoginWindow :: LoginWindow (void)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
+          : GuiWindow(bundleName,
+                      gladeFileName),
             loggedIn(false)
 {
-    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
-
     // localize everything
-    glade->get_widget("mainWindow1", loginWindow);
-    loginWindow->set_title(*getResourceUstring("windowTitle"));
-
     Gtk::Label *    userNameLabel;
     Gtk::Label *    passwordLabel;
     Gtk::Label *    languageLabel;
@@ -118,11 +114,6 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // clear the status bar
     glade->get_widget("statusBar1", statusBar);
     statusBar->set_text("");
-    
-    // set the OK button as the default action, when the user presses Enter;
-    // this does not work when one of the entry fields have focus,
-    // so we need to connect the 'activate' signals explicitly above
-    loginWindow->set_default_response(Gtk::RESPONSE_OK);
 }
 
 
@@ -161,7 +152,7 @@ void
 LoginWindow :: onOkButtonClicked (void)                             throw ()
 {
     statusBar->set_text(*getResourceUstring("pleaseWaitMsg"));
-    loginWindow->set_sensitive(false);
+    mainWindow->set_sensitive(false);
     gLiveSupport->runMainLoop();    // redraw the window
     
     userNameText.reset(new Glib::ustring(userNameEntry->get_text()));
@@ -186,7 +177,7 @@ LoginWindow :: onOkButtonClicked (void)                             throw ()
         gLiveSupport->createScratchpadWindow();
     }
     
-    loginWindow->hide();
+    mainWindow->hide();
 }
 
 
@@ -194,9 +185,9 @@ LoginWindow :: onOkButtonClicked (void)                             throw ()
  *  Event handler for the cancel button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-LoginWindow :: onCancelButtonClicked (void)                  throw ()
+LoginWindow :: onCancelButtonClicked (void)                         throw ()
 {
-    loginWindow->hide();
+    mainWindow->hide();
 }
 
 
@@ -206,7 +197,7 @@ LoginWindow :: onCancelButtonClicked (void)                  throw ()
 bool
 LoginWindow :: run(void)                                            throw ()
 {
-    Gtk::Main::run(*loginWindow);
+    Gtk::Main::run(*mainWindow);
     return loggedIn;
 }
 

@@ -1,24 +1,9 @@
 hu:table
 {
-    notLoggedInMsg:string           { "Nincs bejelentkezve" }
-    loggedInMsg:string              { "Bejelentkezve: {0}" }
-    loginButtonLabel:string         { "Log in" }
-    logoutButtonLabel:string        { "Log out" }
-    liveModeButtonLabel:string              { "Élő adás" }
-    uploadFileButtonLabel:string            { "Filefeltöltés" }
-    scratchpadButtonLabel:string            { "Scratchpad" }
-    playlistButtonLabel:string              { "Műsorkezelés" }
-    schedulerButtonLabel:string             { "Időzítő" }
-    searchButtonLabel:string                { "Keresés" }
-    optionsButtonLabel:string               { "Beállítások" }
-
     cancelButtonLabel:string        { "Mégsem" }
     noButtonLabel:string            { "Nem" }
     yesButtonLabel:string           { "Igen" }
     okButtonLabel:string            { "OK" }
-
-    elapsedTimeLabel:string         { "elapsed" }
-    remainingTimeLabel:string       { "remaining" }
 
     localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
     schedulerNotReachableMsg:string     { "Az időzítő szerver nem elérhető" }
@@ -27,11 +12,27 @@ hu:table
                                         { "A beléptető szerver nem elérhető.\n"
                                           "Szerver beállítások szerkesztése?" }
     audioErrorMsg                       { "Hiba történt a lejátszáskor: " }
-    sureToExitMsg:string                { "Biztos, hogy ki szeretne lépni?" }
 
     masterPanelWindow:table
     {
-    windowTitle:string              { "Fő Panel" }
+        windowTitle:string          { "Fő Panel" }
+
+        notLoggedInMsg:string           { "Nincs bejelentkezve" }
+        loggedInMsg:string              { "Bejelentkezve: {0}" }
+        loginButtonLabel:string         { "Log in" }
+        logoutButtonLabel:string        { "Log out" }
+        liveModeButtonLabel:string      { "Élő adás" }
+        uploadFileButtonLabel:string    { "Filefeltöltés" }
+        scratchpadButtonLabel:string    { "Scratchpad" }
+        playlistButtonLabel:string      { "Műsorkezelés" }
+        schedulerButtonLabel:string     { "Időzítő" }
+        searchButtonLabel:string        { "Keresés" }
+        optionsButtonLabel:string       { "Beállítások" }
+
+        elapsedTimeLabel:string     { "eltelt" }
+        remainingTimeLabel:string   { "hátralevő" }
+
+        sureToExitMsg:string        { "Biztos, hogy ki szeretne lépni?" }
     }
 
     loginWindow:table

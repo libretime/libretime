@@ -1,24 +1,9 @@
 sr_CS:table
 {
-    notLoggedInMsg:string           { "Niste prijavljeni" }
-    loggedInMsg:string              { "Prijavljeni: {0}" }
-    loginButtonLabel:string         { "Prijava" }
-    logoutButtonLabel:string        { "Odjava" }
-    liveModeButtonLabel:string              { "Uživo" }
-    uploadFileButtonLabel:string            { "Aploud" }
-    scratchpadButtonLabel:string            { "Priprema" }
-    playlistButtonLabel:string              { "Plej lista" }
-    schedulerButtonLabel:string             { "Raspored" }
-    searchButtonLabel:string                { "Pretraga" }
-    optionsButtonLabel:string               { "Opcije" }
-
     cancelButtonLabel:string        { "Otkaži" }
     noButtonLabel:string            { "Ne" }
     yesButtonLabel:string           { "Da" }
     okButtonLabel:string            { "OK" }
-
-    elapsedTimeLabel:string         { "pozicija" }
-    remainingTimeLabel:string       { "preostalo" }
 
     localeNotAvailableMsg:string    { "Mesto {0} nije dostupno" }
     schedulerNotReachableMsg:string { "Server sa rasporedom nije dostupan" }
@@ -27,11 +12,27 @@ sr_CS:table
                                     { "Server za autentizaciju nije dostupan.\n"
                                       "Da li biste želeli da promenite serverske postavke?" }
     audioErrorMsg                   { "Greška u audio plejeru: " }
-    sureToExitMsg:string            { "Sigurno želite  da izađete?" }
 
     masterPanelWindow:table
     {
         windowTitle:string          { "Glavni panel" }
+
+        notLoggedInMsg:string           { "Niste prijavljeni" }
+        loggedInMsg:string              { "Prijavljeni: {0}" }
+        loginButtonLabel:string         { "Prijava" }
+        logoutButtonLabel:string        { "Odjava" }
+        liveModeButtonLabel:string      { "Uživo" }
+        uploadFileButtonLabel:string    { "Aploud" }
+        scratchpadButtonLabel:string    { "Priprema" }
+        playlistButtonLabel:string      { "Plej lista" }
+        schedulerButtonLabel:string     { "Raspored" }
+        searchButtonLabel:string        { "Pretraga" }
+        optionsButtonLabel:string       { "Opcije" }
+
+        elapsedTimeLabel:string     { "pozicija" }
+        remainingTimeLabel:string   { "preostalo" }
+
+        sureToExitMsg:string        { "Sigurno želite da izađete?" }
     }
 
     loginWindow:table

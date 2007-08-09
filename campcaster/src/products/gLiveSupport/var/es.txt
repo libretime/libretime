@@ -1,24 +1,9 @@
 es:table
 {
-    notLoggedInMsg:string           { "No ha ingresado al sistema" }
-    loggedInMsg:string              { "Ingresó: {0}" }
-    loginButtonLabel:string         { "Accesar" }
-    logoutButtonLabel:string        { "Salir" }
-    liveModeButtonLabel:string              { "En vivo" }
-    uploadFileButtonLabel:string            { "Cargar archivo" }
-    scratchpadButtonLabel:string            { "Scratchpad" }
-    playlistButtonLabel:string              { "Lista de repr." }
-    schedulerButtonLabel:string             { "Programador" }
-    searchButtonLabel:string                { "Búsqueda" }
-    optionsButtonLabel:string               { "Options" }
-
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
     yesButtonLabel:string           { "Yes" }
     okButtonLabel:string            { "OK" }
-
-    elapsedTimeLabel:string         { "elapsed" }
-    remainingTimeLabel:string       { "remaining" }
 
     localeNotAvailableMsg:string    { "Ubicación {0} no disponible" }
     schedulerNotReachableMsg:string { "El servidor del programador no está disponible" }
@@ -29,11 +14,27 @@ es:table
                                       "Would you like to edit the server "
                                       "settings?" }
     audioErrorMsg                   { "Error del reproductor de audio: " }
-    sureToExitMsg:string            { "Are you sure you want to exit?" }
 
     masterPanelWindow:table
     {
-    windowTitle:string              { "Panel maestro" }
+        windowTitle:string          { "Panel maestro" }
+
+        notLoggedInMsg:string           { "No ha ingresado al sistema" }
+        loggedInMsg:string              { "Ingresó: {0}" }
+        loginButtonLabel:string         { "Accesar" }
+        logoutButtonLabel:string        { "Salir" }
+        liveModeButtonLabel:string      { "En vivo" }
+        uploadFileButtonLabel:string    { "Cargar archivo" }
+        scratchpadButtonLabel:string    { "Scratchpad" }
+        playlistButtonLabel:string      { "Lista de repr." }
+        schedulerButtonLabel:string     { "Programador" }
+        searchButtonLabel:string        { "Búsqueda" }
+        optionsButtonLabel:string       { "Options" }
+
+        elapsedTimeLabel:string     { "elapsed" }
+        remainingTimeLabel:string   { "remaining" }
+
+        sureToExitMsg:string        { "Are you sure you want to exit?" }
     }
 
     loginWindow:table
