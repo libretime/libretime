@@ -385,7 +385,7 @@ class MasterPanelWindow : public GuiWindow
          *  @param      event   attributes for the event (?)
          *  @return     true if handled the event, false to continue deleting
          */
-        bool
+        virtual bool
         onDeleteEvent(GdkEventAny *    event)                   throw ();
         
 

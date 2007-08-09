@@ -125,9 +125,6 @@ MasterPanelWindow :: MasterPanelWindow (void)
     mainWindow->signal_key_press_event().connect(sigc::mem_fun(
                                         *this,
                                         &MasterPanelWindow::onKeyPressed));
-    mainWindow->signal_delete_event().connect(sigc::mem_fun(
-                                        *this,
-                                        &MasterPanelWindow::onDeleteEvent));
 
     // create the Now Playing widget
     Gtk::Box *      nowPlayingBox;
