@@ -108,10 +108,9 @@ ScratchpadWindow :: ScratchpadWindow (
                                             &ScratchpadWindow::onKeyPressed));
 
     // create the cue player widget
-    cuePlayer.reset(new CuePlayer(gLiveSupport,
+    cuePlayer.reset(new CuePlayer(this,
                                   treeView,
-                                  modelColumns,
-                                  glade));
+                                  modelColumns));
 
     // create the right-click entry context menu for audio clips
     audioClipMenu.reset(new Gtk::Menu());

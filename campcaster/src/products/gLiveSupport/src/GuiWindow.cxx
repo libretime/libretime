@@ -60,15 +60,21 @@ const Glib::ustring     applicationTitle = "Campcaster";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Constructor.
+ *  Protected constructor.
  *----------------------------------------------------------------------------*/
 GuiWindow :: GuiWindow (const Glib::ustring &       bundleName,
                         const Glib::ustring &       gladeFileName,
                         Gtk::ToggleButton *         windowOpenerButton)
                                                                     throw ()
-          : GuiObject(bundleName),
+          : GuiObject(),
             windowOpenerButton(windowOpenerButton)
 {
+    if (bundleName == "") {
+        setBundle(gLiveSupport->getBundle());
+    } else {
+        setBundle(gLiveSupport->getBundle(bundleName));
+    }
+
     glade = Gnome::Glade::Xml::create(gLiveSupport->getGladeDir() +
                                       gladeFileName);
 

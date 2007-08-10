@@ -68,12 +68,11 @@ const Glib::ustring     pauseStockImageName = "gtk-media-pause";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-CuePlayer :: CuePlayer(Ptr<GLiveSupport>::Ref                   gLiveSupport,
+CuePlayer :: CuePlayer(GuiObject *                              parent,
                        Gtk::TreeView *                          treeView,
-                       const PlayableTreeModelColumnRecord &    modelColumns,
-                       Glib::RefPtr<Gnome::Glade::Xml>          glade)
+                       const PlayableTreeModelColumnRecord &    modelColumns)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
+          : GuiComponent(parent),
             treeView(treeView),
             modelColumns(modelColumns)
 {

@@ -559,7 +559,7 @@ OptionsWindow :: constructSchedulerSection(void)                    throw ()
 void
 OptionsWindow :: constructBackupSection(void)                       throw ()
 {
-    backupView.reset(new BackupView(gLiveSupport, glade));
+    backupView.reset(new BackupView(this));
 }
 
 
@@ -569,7 +569,7 @@ OptionsWindow :: constructBackupSection(void)                       throw ()
 void
 OptionsWindow :: constructRdsSection(void)                          throw ()
 {
-    rdsView.reset(new RdsView(gLiveSupport, glade));
+    rdsView.reset(new RdsView(this));
 }
 
 

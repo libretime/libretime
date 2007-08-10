@@ -40,17 +40,17 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/TimeConversion.h"
 #include "DateTimeChooserWindow.h"
 #include "AdvancedSearchEntry.h"
 #include "BackupList.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -88,7 +88,7 @@ using namespace boost::posix_time;
  *  @author $Author$
  *  @version $Revision$
  */
-class BackupView : public LocalizedObject
+class BackupView : public GuiComponent
 {
     private:
 
@@ -157,16 +157,6 @@ class BackupView : public LocalizedObject
     protected:
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref              gLiveSupport;
-        
-        /**
-         *  The Glade object, which specifies the visual components.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
-
-        /**
          *  Event handler for the time chooser button being clicked.
          */
         void
@@ -202,13 +192,9 @@ class BackupView : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param glade            the Glade file which specifies the visual
-         *                          components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        BackupView(Ptr<GLiveSupport>::Ref               gLiveSupport,
-                   Glib::RefPtr<Gnome::Glade::Xml>      glade)
+        BackupView(GuiObject *         parent)
                                                                     throw ();
 
         /**

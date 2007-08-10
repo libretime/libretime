@@ -40,14 +40,14 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "RdsEntry.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -88,7 +88,7 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class RdsView : public LocalizedObject
+class RdsView : public GuiComponent
 {
     private:
 
@@ -114,27 +114,19 @@ class RdsView : public LocalizedObject
     protected:
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref                      gLiveSupport;
-
-        /**
          *  The entry field for the serial device.
          */
         Gtk::Entry *                                deviceEntry;
 
 
     public:
+
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param glade            the Glade file which specifies the visual
-         *                          components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        RdsView(Ptr<GLiveSupport>::Ref              gLiveSupport,
-                Glib::RefPtr<Gnome::Glade::Xml>     glade)
+        RdsView(GuiObject *         parent)
                                                                     throw ();
 
         /**

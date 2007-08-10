@@ -87,11 +87,6 @@ class GuiWindow : public GuiObject
     protected:
 
         /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
-
-        /**
          *  The button which was used to open this window.
          */
         Gtk::ToggleButton *                 windowOpenerButton;
@@ -108,7 +103,7 @@ class GuiWindow : public GuiObject
         onDeleteEvent(GdkEventAny *     event)                      throw ();
 
         /**
-         *  Constructor.
+         *  Protected constructor.
          *
          *  @param  bundleName      the name of the sub-bundle for this object;
          *                          can be "" to indicate the outermost bundle.

@@ -40,14 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "BrowseItem.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -69,7 +67,7 @@ using namespace LiveSupport::Core;
  *  @author  $Author$
  *  @version $Revision$
  */
-class BrowseEntry : public LocalizedObject
+class BrowseEntry : public GuiComponent
 {
     private:
     
@@ -99,15 +97,9 @@ class BrowseEntry : public LocalizedObject
         /**
          *  Constructor with localization parameter.
          *
-         *  @param gLiveSupport the GLiveSupport object, containing
-         *                      all the vital info.
-         *  @param bundle       the resource bundle for localization.
-         *  @param glade        the Glade file which specifies the visual
-         *                      components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        BrowseEntry(Ptr<GLiveSupport>::Ref              gLiveSupport,
-                    Ptr<ResourceBundle>::Ref            bundle,
-                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
+        BrowseEntry(GuiObject *         parent)
                                                                 throw ();
 
         /**

@@ -44,6 +44,14 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "rdsView";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -53,23 +61,20 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-RdsView :: RdsView (Ptr<GLiveSupport>::Ref              gLiveSupport,
-                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
+RdsView :: RdsView (GuiObject *      parent)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport)
+          : GuiComponent(parent,
+                         bundleName)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle("rdsView");
-    setBundle(bundle);
-
     Gtk::Label *    deviceLabel;
     glade->get_widget("rdsDeviceLabel1", deviceLabel);
     deviceLabel->set_label(*getResourceUstring("deviceLabel"));
 
     glade->get_widget("rdsDeviceEntry1", deviceEntry);
 
-    Ptr<RdsEntry>::Ref  psEntry(new RdsEntry(getBundle(), glade, 0, "PS", 8));
-    Ptr<RdsEntry>::Ref  piEntry(new RdsEntry(getBundle(), glade, 1, "PI", 4));
-    Ptr<RdsEntry>::Ref  rtEntry(new RdsEntry(getBundle(), glade, 2, "RT", 32));
+    Ptr<RdsEntry>::Ref  psEntry(new RdsEntry(this, 0, "PS", 8));
+    Ptr<RdsEntry>::Ref  piEntry(new RdsEntry(this, 1, "PI", 4));
+    Ptr<RdsEntry>::Ref  rtEntry(new RdsEntry(this, 2, "RT", 32));
     
     rdsEntryList.push_back(psEntry);
     rdsEntryList.push_back(piEntry);
@@ -100,7 +105,7 @@ RdsView :: saveChanges(void)                                        throw ()
     RdsEntryListType::const_iterator    it;
     for (it = rdsEntryList.begin(); it != rdsEntryList.end(); ++it) {
         Ptr<RdsEntry>::Ref              rdsEntry = *it;
-        touched |= rdsEntry->saveChanges(gLiveSupport);
+        touched |= rdsEntry->saveChanges();
     }
     
     return touched;

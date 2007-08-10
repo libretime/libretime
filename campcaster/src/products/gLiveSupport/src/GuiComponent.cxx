@@ -21,9 +21,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 3204 $
+    Location : $URL: svn://code.campware.org/campcaster/trunk/campcaster/src/products/gLiveSupport/src/GuiComponent.cxx $
 
 ------------------------------------------------------------------------------*/
 
@@ -34,7 +34,7 @@
 #endif
 
 #include "GLiveSupport.h"
-#include "GuiObject.h"
+#include "GuiComponent.h"
 
 
 using namespace LiveSupport::Core;
@@ -54,10 +54,18 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Protected constructor.
  *----------------------------------------------------------------------------*/
-GuiObject :: GuiObject (void)
+GuiComponent :: GuiComponent (GuiObject *               parent,
+                              const Glib::ustring &     bundleName)
                                                                     throw ()
-          : LocalizedObject()
+          : GuiObject(),
+            parent(parent)
 {
-    gLiveSupport = GLiveSupport::getInstance();
+    if (bundleName == "") {
+        setBundle(parent->getBundle());
+    } else {
+        setBundle(gLiveSupport->getBundle(bundleName));
+    }
+
+    glade = parent->getGlade();
 }
 

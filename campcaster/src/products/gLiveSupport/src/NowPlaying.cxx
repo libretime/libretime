@@ -77,13 +77,9 @@ const Glib::ustring     pauseStockImageName = "gtk-media-pause";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref             gLiveSupport,
-                         Ptr<ResourceBundle>::Ref           bundle,
-                         Glib::RefPtr<Gnome::Glade::Xml>    glade)
+NowPlaying :: NowPlaying(GuiObject *      parent)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            glade(glade),
-            gLiveSupport(gLiveSupport)
+          : GuiComponent(parent)
 {
     glade->get_widget("playButton1", playButton);
     glade->get_widget("stopButton1", stopButton);
@@ -352,10 +348,10 @@ NowPlaying :: resetRemainsTimeState(void)                           throw ()
  *  Change the language of the widget.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
+NowPlaying :: changeLanguage(void)
                                                                     throw ()
 {
-    setBundle(bundle);
+    setBundle(parent->getBundle());
 
     elapsedTimeText->set_text(*getResourceUstring("elapsedTimeLabel"));
     remainsTimeText->set_text(*getResourceUstring("remainingTimeLabel"));

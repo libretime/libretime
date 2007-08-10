@@ -49,6 +49,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring      bundleName          = "transportList";
+
+/*------------------------------------------------------------------------------
  *  The localization key for the 'working' status.
  *----------------------------------------------------------------------------*/
 const Glib::ustring      workingStatusKey    = "workingStatus";
@@ -88,12 +93,10 @@ const Glib::ustring      downloadSymbol  = "⇩";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-TransportList :: TransportList(Ptr<GLiveSupport>::Ref           gLiveSupport,
-                               Ptr<ResourceBundle>::Ref         bundle,
-                               Glib::RefPtr<Gnome::Glade::Xml>  glade)
+TransportList :: TransportList(GuiObject *      parent)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiComponent(parent,
+                         bundleName)
 {
     // create the tree view
     treeModel = Gtk::ListStore::create(modelColumns);

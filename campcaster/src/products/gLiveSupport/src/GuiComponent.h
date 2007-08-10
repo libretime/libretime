@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
-#define LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
+#ifndef GuiComponent_h
+#define GuiComponent_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,17 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <exception>
-#include <stdexcept>
-#include <glibmm/ustring.h>
-
-#include "LiveSupport/Core/Ptr.h"
+#include "GuiObject.h"
 
 
 namespace LiveSupport {
-namespace PlaylistExecutor {
-
-using namespace boost;
+namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
 
@@ -63,35 +57,45 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An event listener interface, for catching events of an audio player.
+ *  The common ancestor of all window components in the GUI.
+ *  These are non-standalone sub-windows, like the AdvancedSearchEntry, and
+ *  sub-widgets of those, like the AdvancedSearchItem.
  *
- *  @author  $Author$
+ *  @author $Author$
  *  @version $Revision$
- *  @see AudioPlayerInterface
  */
-class AudioPlayerEventListener
+class GuiComponent : public GuiObject
 {
-    public:
+    protected:
+
         /**
-         *  A virtual destructor, as this class has virtual functions.
+         *  The parent object.
+         */
+        GuiObject *                     parent;
+
+        /**
+         *  Protected constructor.
+         *
+         *  @param  parent      the GuiObject which contains this one.
+         *  @param  bundleName  the name of the localization resource bundle
+         *                      (optional); if missing, the parent's bundle
+         *                      is used.
+         */
+        GuiComponent(GuiObject *                parent,
+                     const Glib::ustring &      bundleName = "")
+                                                                    throw ();
+
+
+    public:
+
+        /**
+         *  Virtual destructor.
          */
         virtual
-        ~AudioPlayerEventListener(void)                     throw ()
+        ~GuiComponent(void)                                          throw ()
         {
         }
-
-        /**
-         *  Catch the event when playing has stopped.
-         *  This will happen probably due to the fact that the
-         *  audio clip has been played to its end.
-         *
-         *  @param errorMessage is a 0 pointer if the player stopped normally
-         */
-        virtual void
-        onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
-                                                            throw () = 0;
 };
-
 
 /* ================================================= external data structures */
 
@@ -99,9 +103,8 @@ class AudioPlayerEventListener
 /* ====================================================== function prototypes */
 
 
-} // namespace PlaylistExecutor
+} // namespace GLiveSupport
 } // namespace LiveSupport
 
-
-#endif // LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
+#endif // GuiComponent_h
 

@@ -55,26 +55,18 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BrowseEntry :: BrowseEntry(Ptr<GLiveSupport>::Ref           gLiveSupport,
-                           Ptr<ResourceBundle>::Ref         bundle,
-                           Glib::RefPtr<Gnome::Glade::Xml>  glade)
+BrowseEntry :: BrowseEntry(GuiObject *      parent)
                                                                     throw ()
-          : LocalizedObject(bundle)
+          : GuiComponent(parent)
 {
-    browseItemOne.reset(new BrowseItem(0,
-                                       gLiveSupport, 
-                                       bundle,
-                                       glade,
+    browseItemOne.reset(new BrowseItem(this,
+                                       0,
                                        4 /* Genre */));
-    browseItemTwo.reset(new BrowseItem(1,
-                                       gLiveSupport, 
-                                       bundle,
-                                       glade,
+    browseItemTwo.reset(new BrowseItem(this,
+                                       1,
                                        1 /* Creator */));
-    browseItemThree.reset(new BrowseItem(2,
-                                         gLiveSupport, 
-                                         bundle,
-                                         glade,
+    browseItemThree.reset(new BrowseItem(this,
+                                         2,
                                          2 /* Album */));
     // TODO: change hard-coded indices to stuff read from config
 

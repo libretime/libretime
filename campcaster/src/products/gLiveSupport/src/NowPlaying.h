@@ -40,14 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/Mutex.h"
-
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -69,14 +66,9 @@ using namespace LiveSupport::Core;
  *  @author  $Author$
  *  @version $Revision$
  */
-class NowPlaying : public LocalizedObject
+class NowPlaying : public GuiComponent
 {
     private:
-    
-        /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>     glade;
 
         /**
          *  Whether anything is shown in the widget.
@@ -167,11 +159,6 @@ class NowPlaying : public LocalizedObject
         int                     remainsTimeCounter;
         
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref  gLiveSupport;
-
-        /**
          *  A mutex to make the writing, and some reading, of the
          *  'playable' variable atomic.
          */
@@ -180,19 +167,19 @@ class NowPlaying : public LocalizedObject
         /**
          *  Default constructor.
          */
-        NowPlaying(void)                                throw ();
+        NowPlaying(void)                                            throw ();
 
         /**
          *  Event handler for the Play button being clicked.
          */
         void
-        onPlayButtonClicked(void)                       throw ();
+        onPlayButtonClicked(void)                                   throw ();
 
         /**
          *  Event handler for the Stop button being clicked.
          */
         void
-        onStopButtonClicked(void)                       throw ();
+        onStopButtonClicked(void)                                   throw ();
 
         /**
          *  Set the color of the 'remains time' label.
@@ -205,7 +192,7 @@ class NowPlaying : public LocalizedObject
          */
         void
         setRemainsTimeColor(RemainsTimeStateType  state)
-                                                        throw ();
+                                                                    throw ();
 
         /**
          *  Reset all remains-time-blinking related variables.
@@ -214,7 +201,7 @@ class NowPlaying : public LocalizedObject
          *  and the background color of the label to blue.
          */
         void inline
-        resetRemainsTimeState(void)                     throw ();
+        resetRemainsTimeState(void)                                 throw ();
  
     
     public:
@@ -222,22 +209,16 @@ class NowPlaying : public LocalizedObject
         /**
          *  Constructor with parent and localization parameter.
          *
-         *  @param gLiveSupport the GLiveSupport, application object.
-         *  @param bundle the resource bundle holding the localized
-         *         resources for this widget
-         *  @param glade    the Glade file which specifies the visual
-         *                  components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        NowPlaying(Ptr<GLiveSupport>::Ref           gLiveSupport,
-                   Ptr<ResourceBundle>::Ref         bundle,
-                   Glib::RefPtr<Gnome::Glade::Xml>  glade)
-                                                        throw ();
+        NowPlaying(GuiObject *         parent)
+                                                                    throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~NowPlaying(void)                               throw ()
+        ~NowPlaying(void)                                           throw ()
         {
         }
 
@@ -247,14 +228,14 @@ class NowPlaying : public LocalizedObject
          *  @param playable     the playable to be displayed
          */
         void
-        setPlayable(Ptr<Playable>::Ref  playable)       throw ();
+        setPlayable(Ptr<Playable>::Ref  playable)                   throw ();
 
         /**
          *  Function that updates the elapsed and remaining time displays.
          *  This is called by the MasterPanelWindow every second.
          */
         void
-        onUpdateTime(void)                              throw ();
+        onUpdateTime(void)                                          throw ();
 
         /**
          *  Public interface for restarting the audio.
@@ -262,7 +243,7 @@ class NowPlaying : public LocalizedObject
          *  This is used by MasterPanelWindow::onKeyPressed().
          */
         void
-        onPlayAudio(void)                               throw ()
+        onPlayAudio(void)                                           throw ()
         {
             onPlayButtonClicked();
         }
@@ -273,7 +254,7 @@ class NowPlaying : public LocalizedObject
          *  This is used by MasterPanelWindow::onKeyPressed().
          */
         void
-        onStopAudio(void)                               throw ()
+        onStopAudio(void)                                           throw ()
         {
             onStopButtonClicked();
         }
@@ -288,7 +269,7 @@ class NowPlaying : public LocalizedObject
          *  @return the currently playing item; 0 if nothing is playing.
          */
         Ptr<Playable>::Ref
-        getCurrentInnerPlayable(void)                   throw ()
+        getCurrentInnerPlayable(void)                               throw ()
         {
             return currentInnerPlayable;
         }
@@ -296,10 +277,11 @@ class NowPlaying : public LocalizedObject
         /**
          *  Change the user interface language of the widget.
          *
-         *  @param  bundle  the new resource bundle.
+         *  This is called by the parent when its locale has changed;
+         *  NowPlaying then updates its own bundle to match the parent's.
          */
         void
-        changeLanguage(Ptr<ResourceBundle>::Ref     bundle)         throw ();
+        changeLanguage()                                            throw ();
 };
 
 

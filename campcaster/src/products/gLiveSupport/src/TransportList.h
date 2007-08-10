@@ -40,16 +40,15 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/XmlRpcException.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -90,7 +89,7 @@ using namespace LiveSupport::Widgets;
  *  @author $Author$
  *  @version $Revision$
  */
-class TransportList : public LocalizedObject,
+class TransportList : public GuiComponent,
                       public ContentsStorable
 {
     private:
@@ -159,11 +158,6 @@ class TransportList : public LocalizedObject,
 
 
     protected:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The columns model needed by ZebraTreeView.
@@ -266,16 +260,9 @@ class TransportList : public LocalizedObject,
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
-         *  @param glade            the Glade file which specifies the visual
-         *                          components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        TransportList(Ptr<GLiveSupport>::Ref            gLiveSupport,
-                      Ptr<ResourceBundle>::Ref          bundle,
-                      Glib::RefPtr<Gnome::Glade::Xml>   glade)      throw ();
+        TransportList(GuiObject *         parent)                   throw ();
 
         /**
          *  Virtual destructor.

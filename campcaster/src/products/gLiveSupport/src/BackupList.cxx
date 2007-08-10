@@ -77,12 +77,9 @@ const Glib::ustring      userPreferencesKeyName  = "activeBackups";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BackupList :: BackupList (Ptr<GLiveSupport>::Ref            gLiveSupport,
-                          Ptr<ResourceBundle>::Ref          bundle,
-                          Glib::RefPtr<Gnome::Glade::Xml>   glade)
+BackupList :: BackupList (GuiObject *      parent)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiComponent(parent)
 {
     // create the tree view
     treeModel = Gtk::ListStore::create(modelColumns);

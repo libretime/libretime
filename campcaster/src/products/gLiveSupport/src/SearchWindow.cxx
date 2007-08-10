@@ -166,7 +166,7 @@ SearchWindow :: constructSimpleSearchView(void)                 throw ()
 void
 SearchWindow :: constructAdvancedSearchView(void)               throw ()
 {
-    advancedSearchEntry.reset(new AdvancedSearchEntry(gLiveSupport, glade));
+    advancedSearchEntry.reset(new AdvancedSearchEntry(this));
     advancedSearchEntry->connectCallback(sigc::mem_fun(*this,
                                             &SearchWindow::onAdvancedSearch ));
     
@@ -184,7 +184,7 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
 void
 SearchWindow :: constructBrowseView(void)                       throw ()
 {
-    browseEntry.reset(new BrowseEntry(gLiveSupport, getBundle(), glade));    
+    browseEntry.reset(new BrowseEntry(this));    
     browseEntry->signalChanged().connect(sigc::mem_fun(*this,
                                                 &SearchWindow::onBrowse));
 }
@@ -196,10 +196,7 @@ SearchWindow :: constructBrowseView(void)                       throw ()
 void
 SearchWindow :: constructTransportsView(void)                   throw ()
 {
-    transportList.reset(new TransportList(
-                                    gLiveSupport,
-                                    gLiveSupport->getBundle("transportList"),
-                                    glade));
+    transportList.reset(new TransportList(this));
 }
 
 

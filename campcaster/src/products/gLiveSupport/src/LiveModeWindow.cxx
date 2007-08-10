@@ -106,10 +106,9 @@ LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
 
     glade->get_widget("cueLabel1", cueLabel);
     cueLabel->set_label(*getResourceUstring("cuePlayerLabel"));
-    cuePlayer.reset(new CuePlayer(gLiveSupport,
+    cuePlayer.reset(new CuePlayer(this,
                                   treeView,
-                                  modelColumns,
-                                  glade));
+                                  modelColumns));
 
     glade->get_widget("autoPlayNext1", autoPlayNext);
     autoPlayNext->set_label(*getResourceUstring("autoPlayNextLabel"));

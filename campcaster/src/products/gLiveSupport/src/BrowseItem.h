@@ -42,18 +42,16 @@
 
 #include <vector>
 #include <utility>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/NumericTools.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "LiveSupport/Widgets/MetadataComboBoxText.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
-
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -83,7 +81,7 @@ using namespace LiveSupport::Widgets;
  *  @author  $Author$
  *  @version $Revision$
  */
-class BrowseItem : public  LocalizedObject,
+class BrowseItem : public  GuiComponent,
                    private NumericTools
 {
     private:
@@ -151,11 +149,6 @@ class BrowseItem : public  LocalizedObject,
         Glib::ustring                   allString;
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref          gLiveSupport;
-         
-        /**
          *  The criteria from the browse items to the left of this one.
          */
         Ptr<SearchCriteria>::Ref        parentCriteria;
@@ -188,20 +181,15 @@ class BrowseItem : public  LocalizedObject,
         /**
          *  Constructor with parent and localization parameter.
          *
-         *  @param index        the position of this item in the list of
-         *                      browse items.
-         *  @param gLiveSupport the main program object
-         *  @param bundle       the resource bundle for localization
-         *  @param glade        the Glade file which specifies the visual
-         *                      components for this class.
-         *  @param defaultIndex the index of the metadata entry to display
-         *                      initially
+         *  @param  parent          the GuiObject which contains this one.
+         *  @param  index           the position of this item in the list of
+         *                          browse items.
+         *  @param  defaultIndex    the index of the metadata entry to display
+         *                          initially
          */
-        BrowseItem(int                              index,
-                   Ptr<GLiveSupport>::Ref           gLiveSupport,
-                   Ptr<ResourceBundle>::Ref         bundle,
-                   Glib::RefPtr<Gnome::Glade::Xml>  glade,
-                   int                              defaultIndex)
+        BrowseItem(GuiObject *         parent,
+                   int                 index,
+                   int                 defaultIndex)
                                                                     throw ();
 
         /**

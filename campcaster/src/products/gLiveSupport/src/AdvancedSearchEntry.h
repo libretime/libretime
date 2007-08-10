@@ -41,16 +41,16 @@
 #endif
 
 #include <vector>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "AdvancedSearchItem.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -72,14 +72,9 @@ using namespace LiveSupport::Widgets;
  *  @author  $Author$
  *  @version $Revision$
  */
-class AdvancedSearchEntry : public LocalizedObject
+class AdvancedSearchEntry : public GuiComponent
 {
     private:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref              gLiveSupport;
         
         /**
          *  A container holding all known metadata types.
@@ -102,13 +97,9 @@ class AdvancedSearchEntry : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the GLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  glade           the Glade file which specifies the visual
-         *                          components for this class.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        AdvancedSearchEntry(Ptr<GLiveSupport>::Ref            gLiveSupport,
-                            Glib::RefPtr<Gnome::Glade::Xml>   glade)
+        AdvancedSearchEntry(GuiObject *         parent)
                                                                 throw ();
 
         /**

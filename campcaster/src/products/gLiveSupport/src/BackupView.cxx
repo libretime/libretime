@@ -39,10 +39,6 @@
 #error need pwd.h
 #endif
 
-#include <gtkmm/filechooserdialog.h>
-#include <gtkmm/stock.h>
-#include <gtkmm/paned.h>
-
 #include "LiveSupport/Core/FileTools.h"
 
 #include "BackupView.h"
@@ -57,6 +53,14 @@ using namespace boost::posix_time;
 
 /* ================================================  local constants & macros */
 
+namespace {
+
+/*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "backupView";
+
+}
 
 /* ===============================================  local function prototypes */
 
@@ -66,15 +70,11 @@ using namespace boost::posix_time;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BackupView :: BackupView (Ptr<GLiveSupport>::Ref            gLiveSupport,
-                          Glib::RefPtr<Gnome::Glade::Xml>   glade)
+BackupView :: BackupView (GuiObject *       parent)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
-            glade(glade)
+          : GuiComponent(parent,
+                         bundleName)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle("backupView");
-    setBundle(bundle);
-
     Gtk::Label *        backupTitleLabel;
     Gtk::Label *        mtimeLabel;
     Gtk::Button *       chooseTimeButton;
@@ -111,7 +111,7 @@ BackupView :: BackupView (Ptr<GLiveSupport>::Ref            gLiveSupport,
 void
 BackupView :: constructCriteriaView(void)                           throw ()
 {
-    criteriaEntry.reset(new AdvancedSearchEntry(gLiveSupport, glade));
+    criteriaEntry.reset(new AdvancedSearchEntry(this));
     criteriaEntry->connectCallback(sigc::mem_fun(*this,
                                             &BackupView::onCreateBackup));
 
@@ -129,7 +129,7 @@ BackupView :: constructCriteriaView(void)                           throw ()
 void
 BackupView :: constructBackupListView(void)                         throw ()
 {
-    backupList.reset(new BackupList(gLiveSupport, getBundle(), glade));
+    backupList.reset(new BackupList(this));
     
     glade->connect_clicked("backupDeleteButton1", sigc::mem_fun(*this,
                                         &BackupView::onDeleteButtonClicked));

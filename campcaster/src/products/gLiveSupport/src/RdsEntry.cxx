@@ -54,13 +54,12 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-RdsEntry :: RdsEntry(Ptr<ResourceBundle>::Ref           bundle,
-                     Glib::RefPtr<Gnome::Glade::Xml>    glade,
-                     int                                index,
-                     const Glib::ustring &              type,
-                     int                                width)
+RdsEntry :: RdsEntry(GuiObject *                parent,
+                     int                        index,
+                     const Glib::ustring &      type,
+                     int                        width)
                                                                     throw ()
-          : LocalizedObject(bundle)
+          : GuiComponent(parent)
 {
     this->type.reset(new const Glib::ustring(type));
     
@@ -91,7 +90,7 @@ RdsEntry :: setOptions(bool                           enabled,
  *  Save the changes made by the user.
  *----------------------------------------------------------------------------*/
 bool
-RdsEntry :: saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)   throw ()
+RdsEntry :: saveChanges(void)                                       throw ()
 {
     bool            checkButtonNow = checkButton->get_active();
     Ptr<const Glib::ustring>::Ref

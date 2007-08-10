@@ -56,14 +56,11 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BrowseItem :: BrowseItem(int                                index,
-                         Ptr<GLiveSupport>::Ref             gLiveSupport,
-                         Ptr<ResourceBundle>::Ref           bundle,
-                         Glib::RefPtr<Gnome::Glade::Xml>    glade,
-                         int                                defaultIndex)
+BrowseItem :: BrowseItem(GuiObject *      parent,
+                         int              index,
+                         int              defaultIndex)
                                                                     throw ()
-          : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+          : GuiComponent(parent)
 {
     parentCriteria.reset(new SearchCriteria);
     

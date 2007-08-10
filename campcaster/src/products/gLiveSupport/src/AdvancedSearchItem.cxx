@@ -56,12 +56,11 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 AdvancedSearchItem :: AdvancedSearchItem(
+                            GuiObject *                         parent,
                             int                                 index,
-                            Ptr<MetadataTypeContainer>::Ref     metadataTypes,
-                            Ptr<ResourceBundle>::Ref            bundle,
-                            Glib::RefPtr<Gnome::Glade::Xml>     glade)
+                            Ptr<MetadataTypeContainer>::Ref     metadataTypes)
                                                                     throw ()
-          : LocalizedObject(bundle)
+          : GuiComponent(parent)
 {
     glade->get_widget(addIndex("advancedSearchItem", index), enclosingBox);
 
@@ -75,7 +74,7 @@ AdvancedSearchItem :: AdvancedSearchItem(
 
     glade->get_widget_derived(addIndex("advancedOperatorEntry", index),
                               operatorEntry);
-    operatorEntry->setContents(bundle);
+    operatorEntry->setContents(getBundle());
 
     glade->get_widget(addIndex("advancedValueEntry", index), valueEntry);
     

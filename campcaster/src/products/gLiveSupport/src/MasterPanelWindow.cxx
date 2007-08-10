@@ -129,9 +129,7 @@ MasterPanelWindow :: MasterPanelWindow (void)
     // create the Now Playing widget
     Gtk::Box *      nowPlayingBox;
     glade->get_widget("nowPlayingWidget1", nowPlayingBox);
-    nowPlayingWidget.reset(new NowPlaying(gLiveSupport,
-                                          getBundle(),
-                                          glade));
+    nowPlayingWidget.reset(new NowPlaying(this));
 
     // get a reference for the window-opener buttons
     glade->get_widget("liveModeButton1", liveModeButton);
@@ -209,7 +207,7 @@ MasterPanelWindow :: changeLanguage(void)
     Ptr<ResourceBundle>::Ref    newBundle = gLiveSupport->getBundle(
                                                                 bundleName);
     setBundle(newBundle);
-    nowPlayingWidget->changeLanguage(newBundle);
+    nowPlayingWidget->changeLanguage();
 
     setTitle(getResourceUstring("windowTitle"));
 

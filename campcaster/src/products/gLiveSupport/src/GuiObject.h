@@ -77,12 +77,14 @@ class GuiObject : public LocalizedObject
         Ptr<GLiveSupport>::Ref              gLiveSupport;
 
         /**
-         *  Constructor.
-         *
-         *  @param  bundleName  the name of the sub-bundle for this object;
-         *                      can be "" to indicate the outermost bundle.
+         *  The Glade object, containing the visual design.
          */
-        GuiObject(const Glib::ustring &     bundleName)             throw ();
+        Glib::RefPtr<Gnome::Glade::Xml>     glade;
+
+        /**
+         *  Protected constructor.
+         */
+        GuiObject(void)                                             throw ();
 
 
     public:
@@ -93,6 +95,15 @@ class GuiObject : public LocalizedObject
         virtual
         ~GuiObject(void)                                            throw ()
         {
+        }
+
+        /**
+         *  Get the Glade object.
+         */
+        virtual Glib::RefPtr<Gnome::Glade::Xml>
+        getGlade(void) const                                        throw ()
+        {
+            return glade;
         }
 };
 

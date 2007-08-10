@@ -49,9 +49,14 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "advancedSearchEntry";
+
+/*------------------------------------------------------------------------------
  *  The maximum number of AdvancedSearchItem children.
  *----------------------------------------------------------------------------*/
-const int           maxChildren = 5;
+const int               maxChildren = 5;
 
 }
 
@@ -63,16 +68,11 @@ const int           maxChildren = 5;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-AdvancedSearchEntry :: AdvancedSearchEntry(
-                            Ptr<GLiveSupport>::Ref              gLiveSupport,
-                            Glib::RefPtr<Gnome::Glade::Xml>     glade)
+AdvancedSearchEntry :: AdvancedSearchEntry(GuiObject *      parent)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport)
+          : GuiComponent(parent,
+                         bundleName)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
-                                                        "advancedSearchEntry");
-    setBundle(bundle);
-
     metadataTypes = gLiveSupport->getMetadataTypeContainer();
     
     Gtk::Label *            fileTypeLabel;
@@ -87,10 +87,9 @@ AdvancedSearchEntry :: AdvancedSearchEntry(
     
     for (int i = 0; i < maxChildren; ++i) {
         Ptr<AdvancedSearchItem>::Ref    searchItem(new AdvancedSearchItem(
-                                                                i, 
-                                                                metadataTypes,
-                                                                getBundle(),
-                                                                glade));
+                                                                this,
+                                                                i,
+                                                                metadataTypes));
         children.push_back(searchItem);
     }
     

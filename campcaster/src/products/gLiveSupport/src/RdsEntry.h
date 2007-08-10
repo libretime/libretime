@@ -40,13 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/NumericTools.h"
 #include "GLiveSupport.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -69,7 +67,7 @@ using namespace LiveSupport::GLiveSupport;
  *  @author  $Author$
  *  @version $Revision$
  */
-class RdsEntry : public  LocalizedObject,
+class RdsEntry : public  GuiComponent,
                  private NumericTools
 {
     private:
@@ -110,20 +108,16 @@ class RdsEntry : public  LocalizedObject,
          *  The type parameter is a string of 2 or 3 upper-case characters,
          *  see http://en.wikipedia.org/wiki/Radio_Data_System.
          *
-         *  @param  bundle      the resource bundle holding the localized
-         *                      resources for this window.
-         *  @param  glade       the Glade file which specifies the visual
-         *                      components for this class.
+         *  @param  parent      the GuiObject which contains this one.
          *  @param  index       the position of this item in the list of
          *                      RDS entries.
          *  @param  type        the type of RDS data (PS, PI, RT, etc).
          *  @param  width       the width of the entry, in characters.
          */
-        RdsEntry(Ptr<ResourceBundle>::Ref           bundle,
-                 Glib::RefPtr<Gnome::Glade::Xml>    glade,
-                 int                                index,
-                 const Glib::ustring &              type,
-                 int                                width)          throw ();
+        RdsEntry(GuiObject *                parent,
+                 int                        index,
+                 const Glib::ustring &      type,
+                 int                        width)                  throw ();
 
         /**
          *  A virtual destructor.
@@ -158,12 +152,10 @@ class RdsEntry : public  LocalizedObject,
         /**
          *  Save the changes made by the user.
          *
-         *  @param  gLiveSupport    the GLiveSupport object holding the 
-         *                          RDS options to be modified.
          *  @return true if any changes were saved; false otherwise.
          */
         bool
-        saveChanges(Ptr<GLiveSupport>::Ref      gLiveSupport)       throw ();
+        saveChanges(void)                                           throw ();
 
         /**
          *  Clear the entries of the widget.

@@ -42,16 +42,15 @@
 
 #include <vector>
 #include <utility>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/NumericTools.h"
 #include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
 #include "LiveSupport/Widgets/MetadataComboBoxText.h"
 #include "LiveSupport/Widgets/OperatorComboBoxText.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -74,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  @author  $Author$
  *  @version $Revision$
  */
-class AdvancedSearchItem : public  LocalizedObject,
+class AdvancedSearchItem : public  GuiComponent,
                            private NumericTools
 {
     private:
@@ -138,18 +137,14 @@ class AdvancedSearchItem : public  LocalizedObject,
         /**
          *  Constructor.
          *
+         *  @param parent         the GuiObject which contains this one.
          *  @param index          the position of this item in the list of
          *                        advanced search items.
          *  @param metadataTypes  container holding all known metadata types
-         *  @param bundle         the resource bundle holding the localized
-         *                        resources for this widget.
-         *  @param glade          the Glade file which specifies the visual
-         *                        components for this class.
          */
-        AdvancedSearchItem(int                                index,
-                           Ptr<MetadataTypeContainer>::Ref    metadataTypes,
-                           Ptr<ResourceBundle>::Ref           bundle,
-                           Glib::RefPtr<Gnome::Glade::Xml>    glade)
+        AdvancedSearchItem(GuiObject *                        parent,
+                           int                                index,
+                           Ptr<MetadataTypeContainer>::Ref    metadataTypes)
                                                                 throw ();
 
         /**
