@@ -293,31 +293,13 @@ void
 ScratchpadWindow :: onSchedulePlaylist(void)                        throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    Ptr<UniqueId>::Ref  uid      = playable->getId();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
-    Ptr<Playlist>::Ref          playlist;
-    
-    try {
-        if (!gLiveSupport->existsPlaylist(uid)) {
-            return;
-        }
-
-        playlist    = gLiveSupport->getPlaylist(uid);
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        return;
-    } catch (XmlRpcException &e) {
-        std::cerr << "error in ScratchpadWindow::onSchedulePlaylist(): "
-                  << e.what() << std::endl;
-        return;
+    if (playlist) {
+        schedulePlaylistWindow.reset(new SchedulePlaylistWindow(playlist));
+        schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+        Gtk::Main::run(*schedulePlaylistWindow->getWindow());
     }
-    
-    schedulePlaylistWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
-                                           gLiveSupport->getGladeDir(),
-                                           playlist));
-
-    Gtk::Main::run(*schedulePlaylistWindow->getWindow());
 }
 
 
@@ -330,17 +312,10 @@ ScratchpadWindow :: onExportPlaylist(void)                          throw ()
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
-    try {
-        if (playlist) {
-            exportPlaylistWindow.reset(new ExportPlaylistWindow(
-                                gLiveSupport,
-                                gLiveSupport->getGladeDir(),
-                                playlist));
-            exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
-            Gtk::Main::run(*exportPlaylistWindow->getWindow());
-        }
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
+    if (playlist) {
+        exportPlaylistWindow.reset(new ExportPlaylistWindow(playlist));
+        exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
+        Gtk::Main::run(*exportPlaylistWindow->getWindow());
     }
 }
 

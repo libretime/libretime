@@ -54,11 +54,9 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-ExportFormatRadioButtons :: ExportFormatRadioButtons(
-                                    Ptr<ResourceBundle>::Ref            bundle,
-                                    Glib::RefPtr<Gnome::Glade::Xml>     glade)
+ExportFormatRadioButtons :: ExportFormatRadioButtons(GuiObject *    parent)
                                                                     throw ()
-          : LocalizedObject(bundle)
+          : GuiComponent(parent)
 {
     glade->get_widget("internalFormatRadioButton1", internalFormatRadioButton);
     glade->get_widget("smilFormatRadioButton1", smilFormatRadioButton);

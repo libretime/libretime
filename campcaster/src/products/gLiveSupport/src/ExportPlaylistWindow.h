@@ -40,13 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Playlist.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "ExportFormatRadioButtons.h"
 #include "GLiveSupport.h"
+
+#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -71,24 +69,9 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class ExportPlaylistWindow : public LocalizedObject
+class ExportPlaylistWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref                  gLiveSupport;
-
-        /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>         glade;
-
-        /**
-         *  The main window for this class.
-         */
-        Gtk::Window *                           mainWindow;
 
         /**
          *  The playlist to be exported.
@@ -129,8 +112,12 @@ class ExportPlaylistWindow : public LocalizedObject
 
         /**
          *  Event handler called when the the window gets hidden.
-         *
          *  It closes the exporting operations, if there is one in progress.
+         *
+         *  Overrides GuiWindow::onDeleteEvent().
+         *
+         *  @param  event   attributes of the event.
+         *  @return true if handled the event, false to continue deleting.
          */
         virtual bool
         onDeleteEvent(GdkEventAny *     event)                      throw ();
@@ -141,14 +128,9 @@ class ExportPlaylistWindow : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  gladeDir        the directory where the Glade files are.
          *  @param  playlist        the playlist to be exported.
          */
-        ExportPlaylistWindow(Ptr<GLiveSupport>::Ref             gLiveSupport,
-                             const Glib::ustring &              gladeDir,
-                             Ptr<Playlist>::Ref                 playlist)
+        ExportPlaylistWindow(Ptr<Playlist>::Ref                 playlist)
                                                                     throw ();
 
         /**
@@ -157,15 +139,6 @@ class ExportPlaylistWindow : public LocalizedObject
         virtual
         ~ExportPlaylistWindow(void)                                 throw ()
         {
-        }
-
-        /**
-         *  Get the underlying Gtk::Window.
-         */
-        virtual Gtk::Window *
-        getWindow(void)                                             throw ()
-        {
-            return mainWindow;
         }
 };
 

@@ -52,6 +52,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "schedulePlaylistWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "SchedulePlaylistWindow.glade";
@@ -66,23 +71,12 @@ const Glib::ustring     gladeFileName = "SchedulePlaylistWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-SchedulePlaylistWindow :: SchedulePlaylistWindow (
-                                Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                const Glib::ustring &       gladeDir,
-                                Ptr<Playlist>::Ref          playlist)
+SchedulePlaylistWindow :: SchedulePlaylistWindow (Ptr<Playlist>::Ref  playlist)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
+          : GuiWindow(bundleName,
+                      gladeFileName),
             playlist(playlist)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
-                                                    "schedulePlaylistWindow");
-    setBundle(bundle);
-    
-    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
-
-    glade->get_widget("mainWindow1", mainWindow);
-    mainWindow->set_title(*getResourceUstring("windowTitle"));
-
     Gtk::Label *        playlistLabel;
     glade->get_widget("playlistLabel1", playlistLabel);
     playlistLabel->set_label(*playlist->getTitle());

@@ -40,14 +40,13 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm.h>
-#include <libglademm.h>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "GLiveSupport.h"
+
+#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -74,14 +73,9 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class DateTimeChooserWindow : public LocalizedObject
+class DateTimeChooserWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The main window for this class.
-         */
-        Gtk::Dialog *                       mainWindow;
 
         /**
          *  The calendar where the date is chosen.
@@ -122,11 +116,8 @@ class DateTimeChooserWindow : public LocalizedObject
 
         /**
          *  Constructor.
-         *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
          */
-        DateTimeChooserWindow(Ptr<GLiveSupport>::Ref    gLiveSupport)
+        DateTimeChooserWindow(void)
                                                                     throw ();
 
         /**

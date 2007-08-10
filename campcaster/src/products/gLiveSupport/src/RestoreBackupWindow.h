@@ -40,13 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
-
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/StorageClient/StorageClientInterface.h"
 #include "GLiveSupport.h"
+
+#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -69,19 +67,9 @@ using namespace LiveSupport::StorageClient;
  *  @author $Author$
  *  @version $Revision$
  */
-class RestoreBackupWindow : public LocalizedObject
+class RestoreBackupWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref                  gLiveSupport;
-
-        /**
-         *  The main window for this class.
-         */
-        Gtk::Window *                           mainWindow;
 
         /**
          *  The label holding the current message displayed by the window.
@@ -130,6 +118,12 @@ class RestoreBackupWindow : public LocalizedObject
 
         /**
          *  Event handler for closing the window from the window manager.
+         *  Calls StorageClientInterface::restoreBackupClose().
+         *
+         *  Overrides GuiWindow::onDeleteEvent().
+         *
+         *  @param  event   attributes of the event.
+         *  @return true if handled the event, false to continue deleting.
          */
         virtual bool
         onDeleteEvent(GdkEventAny *     event)                      throw ();
@@ -220,15 +214,9 @@ class RestoreBackupWindow : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  glade           the Glade object, which contains the
-         *                          visual design.
          *  @param  fileName        the file name of the backup to be restored.
          */
-        RestoreBackupWindow(Ptr<GLiveSupport>::Ref              gLiveSupport,
-                            Glib::RefPtr<Gnome::Glade::Xml>     glade,
-                            Ptr<const Glib::ustring>::Ref       fileName)
+        RestoreBackupWindow(Ptr<const Glib::ustring>::Ref       fileName)
                                                                     throw ();
 
         /**
@@ -240,13 +228,10 @@ class RestoreBackupWindow : public LocalizedObject
         }
 
         /**
-         *  Show the window.
-         */
-        virtual void
-        show(void)                                                  throw ();
-
-        /**
          *  Close the connection and hide the window.
+         *  Calls StorageClientInterface::restoreBackupClose().
+         *
+         *  Overrides GuiWindow::hide().
          */
         virtual void
         hide(void)                                                  throw ();

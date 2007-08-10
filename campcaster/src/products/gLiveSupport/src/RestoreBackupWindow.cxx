@@ -44,6 +44,15 @@ using namespace LiveSupport::GLiveSupport;
 /* ================================================  local constants & macros */
 
 namespace {
+/*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "restoreBackupWindow";
+
+/*------------------------------------------------------------------------------
+ *  The name of the glade file.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     gladeFileName = "RestoreBackupWindow.glade";
 
 /*------------------------------------------------------------------------------
  *  The interval between two calls to restoreBackupCheck(), in milliseconds.
@@ -61,28 +70,18 @@ const unsigned int      timerInterval = 10000;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 RestoreBackupWindow :: RestoreBackupWindow (
-                            Ptr<GLiveSupport>::Ref              gLiveSupport,
-                            Glib::RefPtr<Gnome::Glade::Xml>     glade,
                             Ptr<const Glib::ustring>::Ref       fileName)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
+          : GuiWindow(bundleName,
+                      gladeFileName),
             fileName(fileName),
             currentState(AsyncState::pendingState)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
-                                                        "restoreBackupWindow");
-    setBundle(bundle);
-    
-    glade->get_widget("restoreBackupWindow1", mainWindow);
-    mainWindow->set_title(*getResourceUstring("windowTitle"));
-
     Gtk::Button *       cancelButton;
     glade->get_widget("restoreBackupMessageLabel1", messageLabel);
     glade->get_widget("restoreBackupCancelButton1", cancelButton);
     glade->get_widget("restoreBackupOkButton1", okButton);
     
-    mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
-                                &RestoreBackupWindow::onDeleteEvent));
     cancelButton->signal_clicked().connect(sigc::mem_fun(*this,
                                 &RestoreBackupWindow::onCancelButtonClicked));
     okButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -266,23 +265,13 @@ RestoreBackupWindow :: resetTimer(void)                             throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Show the window.
- *----------------------------------------------------------------------------*/
-void
-RestoreBackupWindow :: show(void)                                   throw ()
-{
-    mainWindow->show();
-}
-
-
-/*------------------------------------------------------------------------------
  *  Close the connection and hide the window.
  *----------------------------------------------------------------------------*/
 void
 RestoreBackupWindow :: hide(void)                                   throw ()
 {
     restoreBackupClose();
-    mainWindow->hide();
+    GuiWindow::hide();
 }
 
 

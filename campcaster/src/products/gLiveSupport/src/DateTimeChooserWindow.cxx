@@ -46,6 +46,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "dateTimeChooserWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "DateTimeChooserWindow.glade";
@@ -60,21 +65,11 @@ const Glib::ustring     gladeFileName = "DateTimeChooserWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-DateTimeChooserWindow :: DateTimeChooserWindow(
-                                Ptr<GLiveSupport>::Ref      gLiveSupport)
+DateTimeChooserWindow :: DateTimeChooserWindow (void)
                                                                     throw ()
+          : GuiWindow(bundleName,
+                      gladeFileName)
 {
-    Ptr<ResourceBundle>::Ref
-                    bundle = gLiveSupport->getBundle("dateTimeChooserWindow");
-    setBundle(bundle);
-
-    Glib::ustring   gladeDir = gLiveSupport->getGladeDir();
-    Glib::RefPtr<Gnome::Glade::Xml>
-                    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
-
-    glade->get_widget("mainWindow1", mainWindow);
-    mainWindow->set_title(*getResourceUstring("windowTitle"));
-    
     Gtk::Label *    hourLabel;
     Gtk::Label *    minuteLabel;
     glade->get_widget("hourLabel1", hourLabel);

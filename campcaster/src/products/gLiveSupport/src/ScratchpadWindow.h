@@ -45,11 +45,13 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "GuiWindow.h"
 #include "CuePlayer.h"
 #include "ContentsStorable.h"
 #include "ExportPlaylistWindow.h"
 #include "SchedulePlaylistWindow.h"
+
+#include "GuiWindow.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {

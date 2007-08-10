@@ -101,7 +101,7 @@ BackupView :: BackupView (GuiObject *       parent)
     constructCriteriaView();
     constructBackupListView();
     
-    dateTimeChooserWindow.reset(new DateTimeChooserWindow(gLiveSupport));
+    dateTimeChooserWindow.reset(new DateTimeChooserWindow());
 }
 
 

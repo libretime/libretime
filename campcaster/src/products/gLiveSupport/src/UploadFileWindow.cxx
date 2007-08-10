@@ -455,10 +455,7 @@ UploadFileWindow :: uploadStorageArchive(void)                  throw ()
                                                 fileNameEntry->get_text() ));
     
     Ptr<RestoreBackupWindow>::Ref   restoreBackupWindow(
-                                                new RestoreBackupWindow(
-                                                        gLiveSupport,
-                                                        glade,
-                                                        path));
+                                                new RestoreBackupWindow(path));
     restoreBackupWindow->show();
     restoreBackupWindowList.push_back(restoreBackupWindow);
     

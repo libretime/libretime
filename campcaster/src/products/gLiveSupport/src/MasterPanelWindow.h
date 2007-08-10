@@ -382,8 +382,10 @@ class MasterPanelWindow : public GuiWindow
          *  Event handler for when the user closes the master panel.
          *  It pops up a confirmation dialog.
          *
-         *  @param      event   attributes for the event (?)
-         *  @return     true if handled the event, false to continue deleting
+         *  Overrides GuiWindow::onDeleteEvent().
+         *
+         *  @param  event   attributes of the event.
+         *  @return true if handled the event, false to continue deleting.
          */
         virtual bool
         onDeleteEvent(GdkEventAny *    event)                   throw ();

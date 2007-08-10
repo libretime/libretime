@@ -55,6 +55,11 @@ using namespace LiveSupport::GLiveSupport;
 namespace {
 
 /*------------------------------------------------------------------------------
+ *  The name of the localization resource bundle.
+ *----------------------------------------------------------------------------*/
+const Glib::ustring     bundleName = "exportPlaylistWindow";
+
+/*------------------------------------------------------------------------------
  *  The name of the glade file.
  *----------------------------------------------------------------------------*/
 const Glib::ustring     gladeFileName = "ExportPlaylistWindow.glade";
@@ -69,25 +74,12 @@ const Glib::ustring     gladeFileName = "ExportPlaylistWindow.glade";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-ExportPlaylistWindow :: ExportPlaylistWindow(
-                        Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        const Glib::ustring &       gladeDir,
-                        Ptr<Playlist>::Ref          playlist)
+ExportPlaylistWindow :: ExportPlaylistWindow(Ptr<Playlist>::Ref   playlist)
                                                                     throw ()
-          : gLiveSupport(gLiveSupport),
+          : GuiWindow(bundleName,
+                      gladeFileName),
             playlist(playlist)
 {
-    Ptr<ResourceBundle>::Ref    bundle = gLiveSupport->getBundle(
-                                                        "exportPlaylistWindow");
-    setBundle(bundle);
-    
-    glade = Gnome::Glade::Xml::create(gladeDir + gladeFileName);
-
-    glade->get_widget("mainWindow1", mainWindow);
-    mainWindow->set_title(*getResourceUstring("windowTitle"));
-    mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
-                                    &ExportPlaylistWindow::onDeleteEvent));
-
     Gtk::Label *            playlistTitleTextLabel;
     Gtk::Label *            formatLabel;
     glade->get_widget("playlistTitleTextLabel1", playlistTitleTextLabel);
@@ -105,7 +97,7 @@ ExportPlaylistWindow :: ExportPlaylistWindow(
     glade->connect_clicked("saveButton1", sigc::mem_fun(*this,
                                 &ExportPlaylistWindow::onSaveButtonClicked));
     
-    formatButtons.reset(new ExportFormatRadioButtons(bundle, glade));
+    formatButtons.reset(new ExportFormatRadioButtons(this));
 }
 
 

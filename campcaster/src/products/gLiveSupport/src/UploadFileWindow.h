@@ -40,14 +40,14 @@
 #include "configure.h"
 #endif
 
-#include "GuiWindow.h"
-#include "LiveSupport/Core/NumericTools.h"
-
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "RestoreBackupWindow.h"
 #include "GLiveSupport.h"
+
+#include "GuiWindow.h"
+#include "LiveSupport/Core/NumericTools.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {

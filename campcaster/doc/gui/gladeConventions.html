@@ -37,7 +37,8 @@ based on the design documentation <code>styleguide.pdf</code>.
 <p>Each toplevel has its own file, named the same as the C++ class which
 controls it, with the extension <code>.glade</code>.  For example:
 <code>ScratchpadWindow.glade</code>, <code>LiveModeWindow.glade</code>.
-Pop-up dialogs go into the Glade file of the toplevel which pops them up.
+Pop-up dialogs which do not have their own class go into the Glade file
+of the toplevel which pops them up.
 
 <p>Each toplevel should be a GtkWindow, except for pop-ups like the Login
 window, confirmation dialogs etc., which are GtkDialogs or subclasses of it.</p>

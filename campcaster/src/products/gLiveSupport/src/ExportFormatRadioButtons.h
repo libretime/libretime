@@ -36,11 +36,9 @@
 
 /* ============================================================ include files */
 
-#include <gtkmm.h>
-#include <libglademm.h>
-
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/StorageClient/StorageClientInterface.h"
+
+#include "GuiComponent.h"
 
 
 namespace LiveSupport {
@@ -64,7 +62,7 @@ using namespace LiveSupport::StorageClient;
  *  @author $Author$
  *  @version $Revision$
  */
-class ExportFormatRadioButtons : public LocalizedObject
+class ExportFormatRadioButtons : public GuiComponent
 {
     private:
 
@@ -84,11 +82,9 @@ class ExportFormatRadioButtons : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  bundle          the resource bundle holding the localized
-         *                          resources for this window.
+         *  @param  parent  the GuiObject which contains this one.
          */
-        ExportFormatRadioButtons(Ptr<ResourceBundle>::Ref         bundle,
-                                 Glib::RefPtr<Gnome::Glade::Xml>  glade)
+        ExportFormatRadioButtons(GuiObject *        parent)
                                                                     throw ();
         
         /**

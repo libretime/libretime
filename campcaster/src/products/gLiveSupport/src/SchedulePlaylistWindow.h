@@ -41,13 +41,11 @@
 #endif
 
 #include <string>
-#include <unicode/resbund.h>
-#include <gtkmm.h>
-#include <libglademm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
 #include "GLiveSupport.h"
+
+#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -84,24 +82,9 @@ using namespace LiveSupport::Core;
  *  @author $Author$
  *  @version $Revision$
  */
-class SchedulePlaylistWindow : public LocalizedObject
+class SchedulePlaylistWindow : public GuiWindow
 {
     private:
-
-        /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref                  gLiveSupport;
-
-        /**
-         *  The Glade object, containing the visual design.
-         */
-        Glib::RefPtr<Gnome::Glade::Xml>         glade;
-
-        /**
-         *  The main window for this class.
-         */
-        Gtk::Window *                           mainWindow;
 
         /**
          *  The playlist to schedule.
@@ -143,14 +126,9 @@ class SchedulePlaylistWindow : public LocalizedObject
         /**
          *  Constructor.
          *
-         *  @param  gLiveSupport    the gLiveSupport object, containing
-         *                          all the vital info.
-         *  @param  gladeDir        the directory where the Glade files are.
          *  @param  playlist        the playlist to schedule.
          */
-        SchedulePlaylistWindow(Ptr<GLiveSupport>::Ref       gLiveSupport,
-                               const Glib::ustring &        gladeDir,
-                               Ptr<Playlist>::Ref           playlist)
+        SchedulePlaylistWindow(Ptr<Playlist>::Ref           playlist)
                                                                     throw ();
 
         /**
@@ -159,15 +137,6 @@ class SchedulePlaylistWindow : public LocalizedObject
         virtual
         ~SchedulePlaylistWindow(void)                               throw ()
         {
-        }
-
-        /**
-         *  Get the underlying Gtk::Window.
-         */
-        virtual Gtk::Window *
-        getWindow(void)                                             throw ()
-        {
-            return mainWindow;
         }
 };
 
