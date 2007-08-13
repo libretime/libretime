@@ -69,11 +69,7 @@ GuiWindow :: GuiWindow (const Glib::ustring &       bundleName,
           : GuiObject(),
             windowOpenerButton(windowOpenerButton)
 {
-    if (bundleName == "") {
-        setBundle(gLiveSupport->getBundle());
-    } else {
-        setBundle(gLiveSupport->getBundle(bundleName));
-    }
+    setBundle(gLiveSupport->getBundle(bundleName));
 
     glade = Gnome::Glade::Xml::create(gLiveSupport->getGladeDir() +
                                       gladeFileName);

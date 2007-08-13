@@ -105,8 +105,7 @@ class GuiWindow : public GuiObject
         /**
          *  Protected constructor.
          *
-         *  @param  bundleName      the name of the sub-bundle for this object;
-         *                          can be "" to indicate the outermost bundle.
+         *  @param  bundleName      the name of the sub-bundle for this object.
          *  @param  gladeFileName   the name of the Glade file for this window.
          *  @param  windowOpenerButton  the button which was pressed to open
          *                              this window (optional).
