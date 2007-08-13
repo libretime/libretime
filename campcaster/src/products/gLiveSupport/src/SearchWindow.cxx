@@ -247,6 +247,8 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
                                     &SearchWindow::onBackwardButtonClicked));
     forwardButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &SearchWindow::onForwardButtonClicked));
+
+    updatePagingToolbar();
 }
 
 
@@ -1126,8 +1128,8 @@ SearchWindow :: updatePagingToolbar(void)                       throw ()
             std::cerr << e.what() << std::endl;
             std::exit(1);
         }
-        backwardButton->set_sensitive(offset == 0);
-        forwardButton->set_sensitive(offset + getSearchResultsSize() >= count);
+        backwardButton->set_sensitive(offset != 0);
+        forwardButton->set_sensitive(offset + getSearchResultsSize() < count);
     } else {
         searchResultsCountLabel->set_text("");
         backwardButton->set_sensitive(false);
