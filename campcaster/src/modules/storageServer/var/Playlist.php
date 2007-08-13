@@ -1,6 +1,8 @@
 <?php
 require_once("StoredFile.php");
 
+define("INDCH", " ");
+
 /**
  * Auxiliary class for GreenBox playlist editing methods.
  *
