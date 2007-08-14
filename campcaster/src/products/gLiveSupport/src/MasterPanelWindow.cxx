@@ -35,9 +35,6 @@
 
 #include <iostream>
 #include <unicode/msgfmt.h>
-#include <gtkmm/label.h>
-#include <gtkmm/main.h>
-#include <gdkmm/pixbuf.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LoginWindow.h"
@@ -201,7 +198,7 @@ MasterPanelWindow :: ~MasterPanelWindow (void)                      throw ()
  *  Change the language of the panel
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: changeLanguage(void)
+MasterPanelWindow :: changeLanguage (void)
                                                                     throw ()
 {
     Ptr<ResourceBundle>::Ref    newBundle = gLiveSupport->getBundle(
@@ -244,7 +241,7 @@ MasterPanelWindow :: changeLanguage(void)
  *  Set the timer
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: setTimer(void)                                 throw ()
+MasterPanelWindow :: setTimer (void)                                throw ()
 {
     sigc::slot<bool>    slot = sigc::bind(sigc::mem_fun(*this,
                                             &MasterPanelWindow::onUpdateTime),
@@ -260,7 +257,7 @@ MasterPanelWindow :: setTimer(void)                                 throw ()
  *  Clear the timer
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: resetTimer(void)                               throw ()
+MasterPanelWindow :: resetTimer (void)                              throw ()
 {
     timer->disconnect();
     timer.reset();
@@ -271,7 +268,7 @@ MasterPanelWindow :: resetTimer(void)                               throw ()
  *  Update the timeLabel display, with the current time
  *----------------------------------------------------------------------------*/
 bool
-MasterPanelWindow :: onUpdateTime(int   dummy)                      throw ()
+MasterPanelWindow :: onUpdateTime (int   dummy)                     throw ()
 {
     Ptr<const ptime>::Ref   now;
 
@@ -338,7 +335,7 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                      throw ()
  *  The event when the Live Mode button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
+MasterPanelWindow :: updateLiveModeWindow (Ptr<Playable>::Ref    playable)
                                                                     throw ()
 {
     if (!liveModeWindow.get()) {
@@ -359,7 +356,7 @@ MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
  *  The event when the upload file button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateUploadFileWindow(void)                   throw ()
+MasterPanelWindow :: updateUploadFileWindow (void)                  throw ()
 {
     if (!uploadFileWindow.get()) {
         uploadFileWindow.reset(new UploadFileWindow(uploadFileButton));
@@ -374,7 +371,7 @@ MasterPanelWindow :: updateUploadFileWindow(void)                   throw ()
  *  Create the Scratchpad window.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: createScratchpadWindow(void)
+MasterPanelWindow :: createScratchpadWindow (void)
                                                                     throw ()
 {
     if (!scratchpadWindow.get()) {
@@ -388,7 +385,7 @@ MasterPanelWindow :: createScratchpadWindow(void)
  *  The event when the Scratchpad button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
+MasterPanelWindow :: updateScratchpadWindow (Ptr<Playable>::Ref  playable)
                                                                     throw ()
 {
     createScratchpadWindow();
@@ -406,7 +403,7 @@ MasterPanelWindow :: updateScratchpadWindow(Ptr<Playable>::Ref  playable)
  *  The event when the Playlist button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updatePlaylistWindow(void)                     throw ()
+MasterPanelWindow :: updatePlaylistWindow (void)                    throw ()
 {
     if (!playlistWindow.get()) {
         playlistWindow.reset(new PlaylistWindow(playlistButton));
@@ -423,7 +420,7 @@ MasterPanelWindow :: updatePlaylistWindow(void)                     throw ()
  *  The event when the Scheduler button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateSchedulerWindow(
+MasterPanelWindow :: updateSchedulerWindow (
                         Ptr<boost::posix_time::ptime>::Ref time)
                                                                     throw ()
 {
@@ -457,7 +454,7 @@ MasterPanelWindow :: updateSchedulerWindow(
  *  The event when the Search button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateSearchWindow(void)                       throw ()
+MasterPanelWindow :: updateSearchWindow (void)                      throw ()
 {
     if (!searchWindow.get()) {
         searchWindow.reset(new SearchWindow(searchButton));
@@ -472,7 +469,7 @@ MasterPanelWindow :: updateSearchWindow(void)                       throw ()
  *  The event when the Options button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
+MasterPanelWindow :: updateOptionsWindow (void)                     throw ()
 {
     if (!optionsWindow.get()) {
         optionsWindow.reset(new OptionsWindow(optionsButton));
@@ -491,7 +488,7 @@ MasterPanelWindow :: updateOptionsWindow(void)                      throw ()
  *  Show only the UI components that are visible when no one is logged in
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: showAnonymousUI(void)                          throw ()
+MasterPanelWindow :: showAnonymousUI (void)                         throw ()
 {
     mainButtonBox->hide();
     
@@ -550,7 +547,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
  *  Cancel the playlist edited in the PlaylistWindow, if any.
  *----------------------------------------------------------------------------*/
 bool
-MasterPanelWindow :: cancelEditedPlaylist(void)                     throw ()
+MasterPanelWindow :: cancelEditedPlaylist (void)                    throw ()
 {
     if (playlistWindow) {
         return playlistWindow->cancelPlaylist();
@@ -564,7 +561,7 @@ MasterPanelWindow :: cancelEditedPlaylist(void)                     throw ()
  *  Show the UI components that are visible to a specific user.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: showLoggedInUI(void)                           throw ()
+MasterPanelWindow :: showLoggedInUI (void)                          throw ()
 {
     mainButtonBox->show();
     
@@ -592,7 +589,7 @@ MasterPanelWindow :: showLoggedInUI(void)                           throw ()
  *  Get the next item from the top of the Live Mode window.
  *----------------------------------------------------------------------------*/
 Ptr<Playable>::Ref
-MasterPanelWindow :: getNextItemToPlay()                            throw ()
+MasterPanelWindow :: getNextItemToPlay (void)                       throw ()
 {
     if (liveModeWindow) {
         return liveModeWindow->popTop();
@@ -608,7 +605,7 @@ MasterPanelWindow :: getNextItemToPlay()                            throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport::GLiveSupport::
-resizeImage(Gtk::Image* image, int width, int height)               throw ()
+resizeImage (Gtk::Image* image, int width, int height)              throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   pixbuf = image->get_pixbuf();
     int     imageWidth  = pixbuf->get_width();
@@ -634,7 +631,7 @@ resizeImage(Gtk::Image* image, int width, int height)               throw ()
  *  Event handler for a key pressed.
  *----------------------------------------------------------------------------*/
 bool
-MasterPanelWindow :: onKeyPressed(GdkEventKey *    event)           throw ()
+MasterPanelWindow :: onKeyPressed (GdkEventKey *    event)          throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
         KeyboardShortcut::Action    action = gLiveSupport->findAction(
@@ -669,7 +666,7 @@ MasterPanelWindow :: onKeyPressed(GdkEventKey *    event)           throw ()
  *  The event when the Search button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
+MasterPanelWindow :: uploadToHub (Ptr<Playable>::Ref     playable)
                                                                     throw ()
 {
     if (!searchWindow.get()) {
@@ -687,7 +684,7 @@ MasterPanelWindow :: uploadToHub(Ptr<Playable>::Ref     playable)
  *  Show or hide the Scheduler button.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: setSchedulerAvailable(bool  status)            throw ()
+MasterPanelWindow :: setSchedulerAvailable (bool  status)           throw ()
 {
     if (status == false) {
         if (schedulerWindow && schedulerWindow->getWindow()->is_visible()) {
@@ -705,7 +702,7 @@ MasterPanelWindow :: setSchedulerAvailable(bool  status)            throw ()
  *  Update the cue player displays to show a stopped state.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: showCuePlayerStopped(void)                     throw ()
+MasterPanelWindow :: showCuePlayerStopped (void)                    throw ()
 {
     if (scratchpadWindow) {
         scratchpadWindow->showCuePlayerStopped();
@@ -721,7 +718,7 @@ MasterPanelWindow :: showCuePlayerStopped(void)                     throw ()
  *  Handle the event of the Login/Logout button being clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onLoginButtonClicked(void)                     throw ()
+MasterPanelWindow :: onLoginButtonClicked (void)                    throw ()
 {
     if (userIsLoggedIn) {
         logout();
@@ -735,7 +732,7 @@ MasterPanelWindow :: onLoginButtonClicked(void)                     throw ()
  *  Let the user log in.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: login(void)                                    throw ()
+MasterPanelWindow :: login (void)                                   throw ()
 {
     Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow());
     userIsLoggedIn = loginWindow->run();
@@ -755,7 +752,7 @@ MasterPanelWindow :: login(void)                                    throw ()
  *  Let the user log out.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: logout(void)                                   throw ()
+MasterPanelWindow :: logout (void)                                  throw ()
 {
     bool userCanceledTheLogout = !gLiveSupport->logout();
     if (userCanceledTheLogout) {
@@ -771,7 +768,7 @@ MasterPanelWindow :: logout(void)                                   throw ()
  *  Show the user info and the login button.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateUserInfo(Ptr<const Glib::ustring>::Ref   loginName)
+MasterPanelWindow :: updateUserInfo (Ptr<const Glib::ustring>::Ref   loginName)
                                                                     throw ()
 {
     if (userIsLoggedIn) {
@@ -801,7 +798,7 @@ MasterPanelWindow :: updateUserInfo(Ptr<const Glib::ustring>::Ref   loginName)
  *  Event handler for when the user closes the master panel.
  *----------------------------------------------------------------------------*/
 bool
-MasterPanelWindow :: onDeleteEvent(GdkEventAny *    event)          throw ()
+MasterPanelWindow :: onDeleteEvent (GdkEventAny *    event)         throw ()
 {
     Gtk::ResponseType   response = gLiveSupport->runNoYesDialog(
                                         *getResourceUstring("sureToExitMsg"));

@@ -106,13 +106,13 @@ class MasterPanelWindow : public GuiWindow
          *  Log in.
          */
         void
-        login(void)                                         throw ();
+        login (void)                                                throw ();
 
         /**
          *  Log out.
          */
         void
-        logout(void)                                        throw ();
+        logout (void)                                               throw ();
 
 
     protected:
@@ -227,7 +227,7 @@ class MasterPanelWindow : public GuiWindow
          *          false if the timer should be canceled
          */
         virtual bool
-        onUpdateTime(int  dummy)                            throw ();
+        onUpdateTime (int  dummy)                                   throw ();
 
         /**
          *  Register onUpdateTime with the GTK timer.
@@ -235,7 +235,7 @@ class MasterPanelWindow : public GuiWindow
          *  @see #resetTimer
          */
         virtual void
-        setTimer(void)                                      throw ();
+        setTimer (void)                                             throw ();
 
         /**
          *  Stop the timer, which was set by setTimer().
@@ -243,14 +243,14 @@ class MasterPanelWindow : public GuiWindow
          *  @see #setTimer
          */
         virtual void
-        resetTimer(void)                                    throw ();
+        resetTimer (void)                                           throw ();
 
         /**
          *  Function to catch the event of the file upload button being
          *  pressed.
          */
         virtual void
-        onUploadFileButtonClicked(void)                     throw ()
+        onUploadFileButtonClicked (void)                            throw ()
         {
             if (!uploadFileWindow ||
                     uploadFileWindow && !uploadFileWindow->getWindow()
@@ -266,7 +266,7 @@ class MasterPanelWindow : public GuiWindow
          *  pressed.
          */
         virtual void
-        onLiveModeButtonClicked(void)                       throw ()
+        onLiveModeButtonClicked (void)                              throw ()
         {
             if (!liveModeWindow ||
                     liveModeWindow && !liveModeWindow->getWindow()
@@ -282,7 +282,7 @@ class MasterPanelWindow : public GuiWindow
          *  pressed.
          */
         virtual void
-        onScratchpadButtonClicked(void)                     throw ()
+        onScratchpadButtonClicked (void)                            throw ()
         {
             if (!scratchpadWindow ||
                     scratchpadWindow && !scratchpadWindow->getWindow()
@@ -298,7 +298,7 @@ class MasterPanelWindow : public GuiWindow
          *  Management button being pressed.
          */
         virtual void
-        onPlaylistButtonClicked(void)                       throw ()
+        onPlaylistButtonClicked (void)                              throw ()
         {
             if (!playlistWindow ||
                     playlistWindow && !playlistWindow->getWindow()
@@ -314,7 +314,7 @@ class MasterPanelWindow : public GuiWindow
          *  button being pressed.
          */
         virtual void
-        onSchedulerButtonClicked(void)                      throw ()
+        onSchedulerButtonClicked (void)                             throw ()
         {
             if (!schedulerWindow ||
                     schedulerWindow && !schedulerWindow->getWindow()
@@ -330,7 +330,7 @@ class MasterPanelWindow : public GuiWindow
          *  button being pressed.
          */
         virtual void
-        onSearchButtonClicked(void)                             throw ()
+        onSearchButtonClicked (void)                                throw ()
         {
             if (!searchWindow ||
                     searchWindow && !searchWindow->getWindow()
@@ -346,7 +346,7 @@ class MasterPanelWindow : public GuiWindow
          *  button being pressed.
          */
         virtual void
-        onOptionsButtonClicked(void)                            throw ()
+        onOptionsButtonClicked (void)                               throw ()
         {
             if (!optionsWindow ||
                     optionsWindow && !optionsWindow->getWindow()
@@ -362,7 +362,7 @@ class MasterPanelWindow : public GuiWindow
          *  button being pressed.
          */
         virtual void
-        onLoginButtonClicked(void)                            throw ();
+        onLoginButtonClicked (void)                                 throw ();
 
         /**
          *  Signal handler for a key pressed at one of the entries.
@@ -376,7 +376,7 @@ class MasterPanelWindow : public GuiWindow
          *  @return true if the key press was fully handled, false if not
          */
         bool
-        onKeyPressed(GdkEventKey *          event)              throw ();
+        onKeyPressed (GdkEventKey *         event)                  throw ();
 
         /**
          *  Event handler for when the user closes the master panel.
@@ -388,7 +388,7 @@ class MasterPanelWindow : public GuiWindow
          *  @return true if handled the event, false to continue deleting.
          */
         virtual bool
-        onDeleteEvent(GdkEventAny *    event)                   throw ();
+        onDeleteEvent (GdkEventAny *    event)                      throw ();
         
 
     public:
@@ -396,13 +396,13 @@ class MasterPanelWindow : public GuiWindow
         /**
          *  Constructor.
          */
-        MasterPanelWindow(void)                                 throw ();
+        MasterPanelWindow (void)                                    throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~MasterPanelWindow(void)                                throw ();
+        ~MasterPanelWindow (void)                                   throw ();
 
         /**
          *  Change the user interface language of the application.
@@ -415,13 +415,13 @@ class MasterPanelWindow : public GuiWindow
          *  this call, but subsequently opened windows are.
          */
         void
-        changeLanguage(void)                                    throw ();
+        changeLanguage (void)                                       throw ();
 
         /**
          *  Show the UI components that are visible when no one is logged in.
          */
         void
-        showAnonymousUI(void)                                   throw ();
+        showAnonymousUI (void)                                      throw ();
 
         /**
          *  Cancel the playlist edited in the PlaylistWindow.
@@ -431,13 +431,13 @@ class MasterPanelWindow : public GuiWindow
          *  @see PlaylistWindow::cancelPlaylist()
          */
         bool
-        cancelEditedPlaylist(void)                              throw ();
+        cancelEditedPlaylist (void)                                 throw ();
 
         /**
          *  Show the UI components that are visible when someone is logged in.
          */
         void
-        showLoggedInUI(void)                                    throw ();
+        showLoggedInUI (void)                                       throw ();
 
         /**
          *  Update the Live Mode window.
@@ -446,9 +446,9 @@ class MasterPanelWindow : public GuiWindow
          *                      the live mode window.
          */
         void
-        updateLiveModeWindow(Ptr<Playable>::Ref     playable
+        updateLiveModeWindow (Ptr<Playable>::Ref    playable
                                                     = Ptr<Playable>::Ref())
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Refresh the playlist in the Live Mode window.
@@ -460,8 +460,8 @@ class MasterPanelWindow : public GuiWindow
          *  @param  playlist    the new version of the playlist.
          */
         void
-        refreshPlaylistInLiveMode(Ptr<Playlist>::Ref    playlist)
-                                                                throw ()
+        refreshPlaylistInLiveMode (Ptr<Playlist>::Ref    playlist)
+                                                                    throw ()
         {
             if (liveModeWindow) {
                 liveModeWindow->refreshPlaylist(playlist);
@@ -472,27 +472,27 @@ class MasterPanelWindow : public GuiWindow
          *  Create the Scratchpad window.
          */
         void
-        createScratchpadWindow(void)                            throw ();
+        createScratchpadWindow (void)                               throw ();
 
         /**
          *  Update the Upload File window.
          */
         void
-        updateUploadFileWindow(void)                            throw ();
+        updateUploadFileWindow (void)                               throw ();
 
         /**
          *  Update the Scratchpad window.
          */
         void
-        updateScratchpadWindow(Ptr<Playable>::Ref   playable
+        updateScratchpadWindow (Ptr<Playable>::Ref  playable
                                                     = Ptr<Playable>::Ref())
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Update the Simple Playlist Management Window
          */
         void
-        updatePlaylistWindow(void)                              throw ();
+        updatePlaylistWindow (void)                                 throw ();
 
         /**
          *  Update the Scheduler Window, optionally to display a new time.
@@ -500,21 +500,21 @@ class MasterPanelWindow : public GuiWindow
          *  @param time the time to display in the scheduler window.
          */
         void
-        updateSchedulerWindow(Ptr<boost::posix_time::ptime>::Ref time =
-                                        Ptr<boost::posix_time::ptime>::Ref())
-                                                                throw ();
+        updateSchedulerWindow (Ptr<boost::posix_time::ptime>::Ref   time
+                                        = Ptr<boost::posix_time::ptime>::Ref())
+                                                                    throw ();
 
         /**
          *  Update the Search Window.
          */
         void
-        updateSearchWindow(void)                                throw ();
+        updateSearchWindow (void)                                   throw ();
 
         /**
          *  Update the Options Window
          */
         void
-        updateOptionsWindow(void)                               throw ();
+        updateOptionsWindow (void)                                  throw ();
 
         /**
          *  Update the User info.
@@ -522,9 +522,9 @@ class MasterPanelWindow : public GuiWindow
          *  @param  loginName   the login name (only when userIsLoggedIn).
          */
         void
-        updateUserInfo(Ptr<const Glib::ustring>::Ref    loginName
+        updateUserInfo (Ptr<const Glib::ustring>::Ref   loginName
                                             = Ptr<const Glib::ustring>::Ref())
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Get the next item from the top of the Live Mode window.
@@ -534,7 +534,7 @@ class MasterPanelWindow : public GuiWindow
          *          if there is no Live Mode window, or it is empty.
          */
         Ptr<Playable>::Ref
-        getNextItemToPlay()                                     throw ();
+        getNextItemToPlay (void)                                    throw ();
 
         /**
          *  Set the "now playing" display.
@@ -542,7 +542,7 @@ class MasterPanelWindow : public GuiWindow
          *  @param  playable    the Playable whose data is to be displayed.
          */
         void
-        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ()
+        setNowPlaying (Ptr<Playable>::Ref   playable)               throw ()
         {
             nowPlayingWidget->setPlayable(playable);
             gLiveSupport->updateRds();
@@ -554,7 +554,7 @@ class MasterPanelWindow : public GuiWindow
          *  @return the currently playing item; 0 if nothing is playing.
          */
         Ptr<Playable>::Ref
-        getCurrentInnerPlayable(void)                           throw ()
+        getCurrentInnerPlayable (void)                              throw ()
         {
             return nowPlayingWidget->getCurrentInnerPlayable();
         }
@@ -566,7 +566,7 @@ class MasterPanelWindow : public GuiWindow
          *  @param  playable    the audio clip or playlist to be uploaded.
          */
         void
-        uploadToHub(Ptr<Playable>::Ref      playable)           throw ();
+        uploadToHub (Ptr<Playable>::Ref     playable)               throw ();
 
         /**
          *  Show or hide the Scheduler button.
@@ -574,7 +574,7 @@ class MasterPanelWindow : public GuiWindow
          *  @param  status  true means show the button, false means hide.
          */
         void
-        setSchedulerAvailable(bool  status)                     throw ();
+        setSchedulerAvailable (bool     status)                     throw ();
 
         /**
          *  Update the cue player displays to show a stopped state.
@@ -582,7 +582,7 @@ class MasterPanelWindow : public GuiWindow
          *  one in the Scratchpad, and one in the Live Mode window.
          */
         void
-        showCuePlayerStopped(void)                              throw ();
+        showCuePlayerStopped (void)                                 throw ();
 };
 
 /* ================================================= external data structures */

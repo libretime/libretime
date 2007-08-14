@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.2.0 on Tue Jul 24 18:14:45 2007 by fgerlits@fgerlits-laptop-->
+<!--Generated with glade3 3.2.0 on Tue Aug 14 14:08:34 2007 by fgerlits@desktop-->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow1">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -93,36 +93,47 @@
                       <widget class="GtkVBox" id="nowPlayingWidget.1">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="border_width">8</property>
+                        <property name="spacing">3</property>
                         <child>
                           <widget class="GtkLabel" id="titleLabel1">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="xalign">0</property>
+                            <property name="ypad">3</property>
                             <property name="label" translatable="yes">title</property>
+                            <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
+                            <property name="single_line_mode">True</property>
                           </widget>
                         </child>
                         <child>
                           <widget class="GtkLabel" id="creatorLabel1">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">creator</property>
+                            <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
+                            <property name="single_line_mode">True</property>
                           </widget>
                           <packing>
                             <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkHBox" id="nowPlayingWidget.1.1">
+                          <widget class="GtkHBox" id="nowPlayingTimeBox1">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="spacing">10</property>
                             <child>
-                              <widget class="GtkVBox" id="nowPlayingWidget.1.1.1">
+                              <widget class="GtkVBox" id="elapsedTimeBox1">
+                                <property name="width_request">200</property>
                                 <property name="visible">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <child>
                                   <widget class="GtkLabel" id="elapsedTimeText1">
                                     <property name="visible">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                    <property name="xalign">0</property>
                                     <property name="label" translatable="yes">elapsed:</property>
                                   </widget>
                                 </child>
@@ -130,6 +141,7 @@
                                   <widget class="GtkLabel" id="elapsedTimeLabel1">
                                     <property name="visible">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                    <property name="xalign">0</property>
                                     <property name="label" translatable="yes">elapsed time</property>
                                   </widget>
                                   <packing>
@@ -137,35 +149,53 @@
                                   </packing>
                                 </child>
                               </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                              </packing>
                             </child>
                             <child>
-                              <widget class="GtkVBox" id="nowPlayingWidget.1.1.2">
+                              <widget class="GtkVBox" id="remainsTimeBox1">
                                 <property name="visible">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <child>
-                                  <widget class="GtkLabel" id="remainsTimeText1">
-                                    <property name="visible">True</property>
-                                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                    <property name="label" translatable="yes">remains:</property>
-                                  </widget>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="nowPlayingWidget.1.1.2.1">
+                                  <widget class="GtkHBox" id="remainsTimeTextBox1">
                                     <property name="visible">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                     <child>
-                                      <widget class="GtkEventBox" id="remainsTimeBox1">
+                                      <widget class="GtkLabel" id="remainsTimeText1">
+                                        <property name="visible">True</property>
+                                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">remains:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="padding">5</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                </child>
+                                <child>
+                                  <widget class="GtkHBox" id="remainsTimeValueBox1">
+                                    <property name="visible">True</property>
+                                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                    <child>
+                                      <widget class="GtkEventBox" id="remainsTimeEventBox1">
                                         <property name="visible">True</property>
                                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                         <child>
                                           <widget class="GtkLabel" id="remainsTimeLabel1">
                                             <property name="visible">True</property>
                                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                            <property name="xalign">0</property>
                                             <property name="label" translatable="yes">remaining time</property>
                                           </widget>
                                         </child>
                                       </widget>
                                       <packing>
+                                        <property name="expand">False</property>
                                         <property name="fill">False</property>
                                         <property name="padding">5</property>
                                       </packing>
@@ -177,6 +207,8 @@
                                 </child>
                               </widget>
                               <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -189,7 +221,10 @@
                           <widget class="GtkLabel" id="playlistLabel1">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">playlist</property>
+                            <property name="ellipsize">PANGO_ELLIPSIZE_MIDDLE</property>
+                            <property name="single_line_mode">True</property>
                           </widget>
                           <packing>
                             <property name="position">3</property>

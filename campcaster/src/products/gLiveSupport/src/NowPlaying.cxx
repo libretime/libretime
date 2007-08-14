@@ -77,7 +77,7 @@ const Glib::ustring     pauseStockImageName = "gtk-media-pause";
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-NowPlaying :: NowPlaying(GuiObject *      parent)
+NowPlaying :: NowPlaying (GuiObject *      parent)
                                                                     throw ()
           : GuiComponent(parent)
 {
@@ -95,12 +95,19 @@ NowPlaying :: NowPlaying(GuiObject *      parent)
     glade->get_widget("titleLabel1", titleLabel);
     glade->get_widget("creatorLabel1", creatorLabel);
     glade->get_widget("elapsedTimeLabel1", elapsedTimeLabel);
-    glade->get_widget("remainsTimeBox1", remainsTimeBox);
+    glade->get_widget("remainsTimeEventBox1", remainsTimeBox);
     glade->get_widget("remainsTimeLabel1", remainsTimeLabel);
     glade->get_widget("playlistLabel1", playlistLabel);
+    setStyle(titleLabel, 14);
+    setStyle(creatorLabel, 8);
+    setStyle(elapsedTimeLabel, 16);
+    setStyle(remainsTimeLabel, 16);
+    setStyle(playlistLabel, 8);
 
     glade->get_widget("elapsedTimeText1", elapsedTimeText);
     glade->get_widget("remainsTimeText1", remainsTimeText);
+    setStyle(elapsedTimeText, 7);
+    setStyle(remainsTimeText, 7);
     elapsedTimeText->set_text(*getResourceUstring("elapsedTimeLabel"));
     remainsTimeText->set_text(*getResourceUstring("remainingTimeLabel"));
     
@@ -110,10 +117,34 @@ NowPlaying :: NowPlaying(GuiObject *      parent)
 
 
 /*------------------------------------------------------------------------------
+ *  Set the font and size of a label.
+ *----------------------------------------------------------------------------*/
+void
+NowPlaying :: setStyle (Gtk::Label *       label,
+                        int                fontSize)                throw ()
+{
+    Pango::FontDescription  fontDescription;
+    fontDescription.set_family("Bitstream Vera Sans");
+    fontDescription.set_weight(Pango::WEIGHT_BOLD);
+    fontDescription.set_size(fontSize * Pango::SCALE);
+    
+    Pango::Attribute        fontDescriptionAttribute = 
+                                Pango::Attribute::create_attr_font_desc(
+                                    fontDescription);
+    fontDescriptionAttribute.set_start_index(0);
+    fontDescriptionAttribute.set_end_index(255);
+    
+    Pango::AttrList         attributeList;
+    attributeList.insert(fontDescriptionAttribute);
+    label->set_attributes(attributeList);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Set the title etc. of the playable shown in the widget.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
+NowPlaying :: setPlayable (Ptr<Playable>::Ref  playable)            throw ()
 {
     playableMutex.lock();
     // BEGIN synchronized block
@@ -158,7 +189,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
  *  Event handler for the Play button being clicked.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: onPlayButtonClicked(void)                             throw ()
+NowPlaying :: onPlayButtonClicked (void)                            throw ()
 {
     if (isActive) {
         if (isPaused) {
@@ -178,7 +209,7 @@ NowPlaying :: onPlayButtonClicked(void)                             throw ()
  *  Event handler for the Stop button being clicked.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: onStopButtonClicked(void)                             throw ()
+NowPlaying :: onStopButtonClicked (void)                            throw ()
 {
     if (isActive) {
         gLiveSupport->stopOutputAudio();    // triggers a call to GLiveSupport::
@@ -190,7 +221,7 @@ NowPlaying :: onStopButtonClicked(void)                             throw ()
  *  Update the timer displays. This is called every second by the master panel.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: onUpdateTime(void)                                    throw ()
+NowPlaying :: onUpdateTime (void)                                   throw ()
 {
     if (!isActive) {
         return;
@@ -304,7 +335,7 @@ NowPlaying :: onUpdateTime(void)                                    throw ()
  *  Set the background color of the "remains time" label.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: setRemainsTimeColor(RemainsTimeStateType  state)      throw ()
+NowPlaying :: setRemainsTimeColor (RemainsTimeStateType  state)     throw ()
 {
     bool        isBlinkOn = (remainsTimeCounter < blinkingConstant);
 
@@ -336,7 +367,7 @@ NowPlaying :: setRemainsTimeColor(RemainsTimeStateType  state)      throw ()
  *  Reset all remains-time-blinking related variables.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: resetRemainsTimeState(void)                           throw ()
+NowPlaying :: resetRemainsTimeState (void)                          throw ()
 {
     remainsTimeState   = TIME_GREEN;
     remainsTimeCounter = 0;
@@ -348,7 +379,7 @@ NowPlaying :: resetRemainsTimeState(void)                           throw ()
  *  Change the language of the widget.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: changeLanguage(void)
+NowPlaying :: changeLanguage (void)
                                                                     throw ()
 {
     setBundle(parent->getBundle());

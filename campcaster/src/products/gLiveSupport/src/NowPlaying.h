@@ -167,19 +167,19 @@ class NowPlaying : public GuiComponent
         /**
          *  Default constructor.
          */
-        NowPlaying(void)                                            throw ();
+        NowPlaying (void)                                           throw ();
 
         /**
          *  Event handler for the Play button being clicked.
          */
         void
-        onPlayButtonClicked(void)                                   throw ();
+        onPlayButtonClicked (void)                                  throw ();
 
         /**
          *  Event handler for the Stop button being clicked.
          */
         void
-        onStopButtonClicked(void)                                   throw ();
+        onStopButtonClicked (void)                                  throw ();
 
         /**
          *  Set the color of the 'remains time' label.
@@ -191,7 +191,7 @@ class NowPlaying : public GuiComponent
          *  @param state    the new state of the label.
          */
         void
-        setRemainsTimeColor(RemainsTimeStateType  state)
+        setRemainsTimeColor (RemainsTimeStateType  state)
                                                                     throw ();
 
         /**
@@ -201,7 +201,18 @@ class NowPlaying : public GuiComponent
          *  and the background color of the label to blue.
          */
         void inline
-        resetRemainsTimeState(void)                                 throw ();
+        resetRemainsTimeState (void)                                throw ();
+ 
+        /**
+         *  Sets the font and size of the label.
+         *
+         *  @param  label       the label the style of which we want to set.
+         *  @param  fontSize    the font size for the label.
+         */
+        void
+        setStyle (Gtk::Label *      label,
+                  int               fontSize)
+                                                                    throw ();
  
     
     public:
@@ -211,14 +222,14 @@ class NowPlaying : public GuiComponent
          *
          *  @param  parent  the GuiObject which contains this one.
          */
-        NowPlaying(GuiObject *         parent)
+        NowPlaying (GuiObject *         parent)
                                                                     throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~NowPlaying(void)                                           throw ()
+        ~NowPlaying (void)                                          throw ()
         {
         }
 
@@ -228,14 +239,14 @@ class NowPlaying : public GuiComponent
          *  @param playable     the playable to be displayed
          */
         void
-        setPlayable(Ptr<Playable>::Ref  playable)                   throw ();
+        setPlayable (Ptr<Playable>::Ref  playable)                  throw ();
 
         /**
          *  Function that updates the elapsed and remaining time displays.
          *  This is called by the MasterPanelWindow every second.
          */
         void
-        onUpdateTime(void)                                          throw ();
+        onUpdateTime (void)                                         throw ();
 
         /**
          *  Public interface for restarting the audio.
@@ -243,7 +254,7 @@ class NowPlaying : public GuiComponent
          *  This is used by MasterPanelWindow::onKeyPressed().
          */
         void
-        onPlayAudio(void)                                           throw ()
+        onPlayAudio (void)                                          throw ()
         {
             onPlayButtonClicked();
         }
@@ -254,7 +265,7 @@ class NowPlaying : public GuiComponent
          *  This is used by MasterPanelWindow::onKeyPressed().
          */
         void
-        onStopAudio(void)                                           throw ()
+        onStopAudio (void)                                          throw ()
         {
             onStopButtonClicked();
         }
@@ -269,7 +280,7 @@ class NowPlaying : public GuiComponent
          *  @return the currently playing item; 0 if nothing is playing.
          */
         Ptr<Playable>::Ref
-        getCurrentInnerPlayable(void)                               throw ()
+        getCurrentInnerPlayable (void)                              throw ()
         {
             return currentInnerPlayable;
         }
@@ -281,7 +292,7 @@ class NowPlaying : public GuiComponent
          *  NowPlaying then updates its own bundle to match the parent's.
          */
         void
-        changeLanguage()                                            throw ();
+        changeLanguage (void)                                       throw ();
 };
 
 
