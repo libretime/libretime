@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.2.0 on Thu Jul 19 13:01:53 2007 by fgerlits@fgerlits-laptop-->
+<!--Generated with glade3 3.2.0 on Tue Aug 14 15:25:58 2007 by fgerlits@desktop-->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow1">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -30,6 +30,10 @@
                     <property name="label" translatable="yes">gtk-media-play</property>
                     <property name="use_stock">True</property>
                   </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkButton" id="cueStopButton1">
@@ -42,6 +46,8 @@
                     <property name="use_stock">True</property>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -51,6 +57,10 @@
               </packing>
             </child>
           </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox2">
