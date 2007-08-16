@@ -101,6 +101,10 @@ TestWindow :: TestWindow (void)                                     throw ()
                            modelColumns.textColumn);
     fillTreeModel();
 
+    glade->get_widget("label1", label);
+    label->set_label(*getResourceUstring("dropHereText"));
+    setupDndCallbacks();
+
     glade->connect_clicked("okButton1", sigc::mem_fun(*this,
                                     &TestWindow::onOkButtonClicked));
 }
@@ -165,6 +169,40 @@ TestWindow :: fillTreeModel (void)                                  throw ()
     Gtk::TreeModel::Row     row = *treeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
     row[modelColumns.textColumn] = text;
+
+    row = *treeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "1";
+
+    row = *treeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "2";
+
+    row = *treeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "3";
+
+    row = *treeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "4";
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the D'n'D callbacks.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: setupDndCallbacks (void)                              throw ()
+{
+    std::list<Gtk::TargetEntry>     targets;
+    targets.push_back(Gtk::TargetEntry("STRING"));
+    
+    treeView->drag_source_set(targets);
+    treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onTreeViewDragDataGet));
+    label->drag_dest_set(targets);
+    label->signal_drag_data_received().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onLabelDragDataReceived));
 }
 
 
@@ -210,4 +248,51 @@ TestWindow :: run (void)                                            throw ()
     Gtk::Main::run(*mainWindow);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  The callback for the start of the drag.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = treeView->get_selection();
+    Gtk::TreeModel::Row     row = *selection->get_selected();
+    Glib::ustring           dropString = row[modelColumns.textColumn];
+
+    selectionData.set(selectionData.get_target(),
+                      8 /* 8 bits format*/,
+                      (const guchar *) dropString.c_str(),
+                      dropString.bytes());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for the end of the drag.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onLabelDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
+        Glib::ustring   data = selectionData.get_data_as_string();
+        label->set_label(data);
+        
+    } else {
+        label->set_label(*getResourceUstring("dropHereText"));
+    }
+
+    context->drag_finish(false, false, time);
+}
 

@@ -12,5 +12,7 @@ root:table
     textOne:string              { "When I was One, I had just begun." }
     textTwo:string              { "When I was Two, I was nearly new." }
     textThree:string            { "When I was Three, I was hardly me." }
+
+    dropHereText:string         { "You can drop things here." }
 }
 

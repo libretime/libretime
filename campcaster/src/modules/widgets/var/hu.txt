@@ -12,5 +12,7 @@ hu:table
     textOne:string              { "Egy - megérett a meggy." }
     textTwo:string              { "Kettő - csipkebokor vessző." }
     textThree:string            { "Három - te leszel a párom. " }
+
+    dropHereText:string         { "Ide lehet húzni dolgokat." }
 }
 

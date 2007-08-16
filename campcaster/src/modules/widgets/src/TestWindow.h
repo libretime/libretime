@@ -79,12 +79,18 @@ class TestWindow : public LocalizedObject
          */
         void
         configureBundle (void)                                      throw ();
-        
+
         /**
          *  Fill the tree model.
          */
         void
         fillTreeModel (void)                                        throw ();
+
+        /**
+         *  Set up the D'n'D callbacks.
+         */
+        void
+        setupDndCallbacks (void)                                    throw ();
 
 
     protected:
@@ -103,6 +109,11 @@ class TestWindow : public LocalizedObject
          *  The tree view.
          */
         ZebraTreeView *                 treeView;
+
+        /**
+         *  The drop target label.
+         */
+        Gtk::Label *                    label;
 
         /**
          *  The OK button.
@@ -164,6 +175,30 @@ class TestWindow : public LocalizedObject
          */
         virtual bool
         onDeleteEvent (GdkEventAny *     event)                     throw ();
+
+        /**
+         *  The callback for the start of the drag.
+         */
+        virtual void
+        onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
+
+        /**
+         *  The callback for the end of the drag.
+         */
+        virtual void
+        onLabelDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
 
 
     public:
