@@ -200,6 +200,9 @@ TestWindow :: setupDndCallbacks (void)                              throw ()
     treeView->drag_source_set(targets);
     treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
                                     &TestWindow::onTreeViewDragDataGet));
+    treeView->drag_dest_set(targets);
+    treeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onTreeViewDragDataReceived));
     label->drag_dest_set(targets);
     label->signal_drag_data_received().connect(sigc::mem_fun(*this,
                                     &TestWindow::onLabelDragDataReceived));
@@ -276,6 +279,31 @@ TestWindow :: onTreeViewDragDataGet(
  *  The callback for the end of the drag.
  *----------------------------------------------------------------------------*/
 void
+TestWindow :: onTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
+        Glib::ustring   data = selectionData.get_data_as_string();
+        std::cerr << "string '" << data << "' dropped on tree view\n";
+        context->drag_finish(true, false, time);
+        
+    } else {
+        std::cerr << "unknown type of data dropped on tree view\n";
+        context->drag_finish(false, false, time);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for the end of the drag.
+ *----------------------------------------------------------------------------*/
+void
 TestWindow :: onLabelDragDataReceived(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             int                                         x,
@@ -288,11 +316,11 @@ TestWindow :: onLabelDragDataReceived(
     if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
         Glib::ustring   data = selectionData.get_data_as_string();
         label->set_label(data);
+        context->drag_finish(true, false, time);
         
     } else {
         label->set_label(*getResourceUstring("dropHereText"));
+        context->drag_finish(false, false, time);
     }
-
-    context->drag_finish(false, false, time);
 }
 

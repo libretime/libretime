@@ -191,6 +191,19 @@ class TestWindow : public LocalizedObject
          *  The callback for the end of the drag.
          */
         virtual void
+        onTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
+
+        /**
+         *  The callback for the end of the drag.
+         */
+        virtual void
         onLabelDragDataReceived(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             int                                         x,
