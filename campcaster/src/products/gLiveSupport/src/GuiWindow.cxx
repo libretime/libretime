@@ -88,8 +88,10 @@ GuiWindow :: GuiWindow (const Glib::ustring &       bundleName,
 void
 GuiWindow :: show (void)                                          throw ()
 {
-    preShow();
-    mainWindow->show();
+    if (!mainWindow->is_visible()) {
+        preShow();
+        mainWindow->show();
+    }
 }
 
 
@@ -112,8 +114,10 @@ GuiWindow :: preShow (void)                                       throw ()
 void
 GuiWindow :: hide (void)                                          throw ()
 {
-    preHide();
-    mainWindow->hide();
+    if (mainWindow->is_visible()) {
+        preHide();
+        mainWindow->hide();
+    }
 }
 
 

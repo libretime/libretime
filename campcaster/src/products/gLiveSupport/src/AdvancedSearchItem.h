@@ -203,7 +203,9 @@ class AdvancedSearchItem : public  GuiComponent,
         void
         show(void)                                              throw ()
         {
-            enclosingBox->show();
+            if (!enclosingBox->is_visible()) {
+                enclosingBox->show();
+            }
         }
 
         /**
@@ -212,7 +214,9 @@ class AdvancedSearchItem : public  GuiComponent,
         void
         hide(void)                                              throw ()
         {
-            enclosingBox->hide();
+            if (enclosingBox->is_visible()) {
+                enclosingBox->hide();
+            }
         }
 };
 
