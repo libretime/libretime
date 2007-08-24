@@ -82,7 +82,7 @@ TestWindow :: TestWindow (void)                                     throw ()
     mainWindow->signal_delete_event().connect(sigc::mem_fun(*this,
                                     &TestWindow::onDeleteEvent));
 
-    glade->get_widget_derived("comboBox1", comboBox);
+    glade->get_widget_derived("combobox1", comboBox);
     comboBox->append_text(*getResourceUstring("firstOption"));
     comboBox->append_text(*getResourceUstring("secondOption"));
     comboBox->append_text(*getResourceUstring("thirdOption"));
@@ -90,22 +90,32 @@ TestWindow :: TestWindow (void)                                     throw ()
     comboBox->signal_changed().connect(sigc::mem_fun(*this,
                                     &TestWindow::onComboBoxSelectionChanged));
 
-    treeModel = Gtk::ListStore::create(modelColumns);
+    leftTreeModel = Gtk::ListStore::create(modelColumns);
+    glade->get_widget_derived("treeview1", leftTreeView);
+    leftTreeView->set_model(leftTreeModel);
+    leftTreeView->connectModelSignals(leftTreeModel);
+    leftTreeView->appendColumn(*getResourceUstring("pixbufColumnTitle"),
+                               modelColumns.pixbufColumn);
+    leftTreeView->appendColumn(*getResourceUstring("textColumnTitle"),
+                               modelColumns.textColumn);
+    fillLeftTreeModel();
 
-    glade->get_widget_derived("treeView1", treeView);
-    treeView->set_model(treeModel);
-    treeView->connectModelSignals(treeModel);
-    treeView->appendColumn(*getResourceUstring("pixbufColumnTitle"),
-                           modelColumns.pixbufColumn);
-    treeView->appendColumn(*getResourceUstring("textColumnTitle"),
-                           modelColumns.textColumn);
-    fillTreeModel();
+    rightTreeModel = Gtk::ListStore::create(modelColumns);
+    glade->get_widget_derived("treeview2", rightTreeView);
+    rightTreeView->set_model(rightTreeModel);
+    rightTreeView->connectModelSignals(rightTreeModel);
+    rightTreeView->appendColumn(*getResourceUstring("pixbufColumnTitle"),
+                                modelColumns.pixbufColumn);
+    rightTreeView->appendColumn(*getResourceUstring("textColumnTitle"),
+                                modelColumns.textColumn);
+    fillRightTreeModel();
 
     glade->get_widget("label1", label);
     label->set_label(*getResourceUstring("dropHereText"));
+
     setupDndCallbacks();
 
-    glade->connect_clicked("okButton1", sigc::mem_fun(*this,
+    glade->connect_clicked("button1", sigc::mem_fun(*this,
                                     &TestWindow::onOkButtonClicked));
 }
 
@@ -141,10 +151,10 @@ TestWindow :: configureBundle (void)                                throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Fill the tree model.
+ *  Fill the left tree model.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: fillTreeModel (void)                                  throw ()
+TestWindow :: fillLeftTreeModel (void)                              throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
@@ -165,26 +175,55 @@ TestWindow :: fillTreeModel (void)                                  throw ()
         default:        break;
     }
 
-    treeModel->clear();
-    Gtk::TreeModel::Row     row = *treeModel->append();
+    leftTreeModel->clear();
+    Gtk::TreeModel::Row     row = *leftTreeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
     row[modelColumns.textColumn] = text;
 
-    row = *treeModel->append();
+    row = *leftTreeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
-    row[modelColumns.textColumn] = "1";
+    row[modelColumns.textColumn] = "1111111111";
 
-    row = *treeModel->append();
+    row = *leftTreeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
-    row[modelColumns.textColumn] = "2";
+    row[modelColumns.textColumn] = "2222222222";
 
-    row = *treeModel->append();
+    row = *leftTreeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
-    row[modelColumns.textColumn] = "3";
+    row[modelColumns.textColumn] = "3333333333";
 
-    row = *treeModel->append();
+    row = *leftTreeModel->append();
     row[modelColumns.pixbufColumn] = pixbuf;
-    row[modelColumns.textColumn] = "4";
+    row[modelColumns.textColumn] = "4444444444";
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Fill the right tree model.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: fillRightTreeModel (void)                             throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
+                                        WidgetConstants::audioClipIconImage);
+
+    rightTreeModel->clear();
+    Gtk::TreeModel::Row     row = *rightTreeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "AAAAAAAAAA";
+
+    row = *rightTreeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "BBBBBBBBBB";
+
+    row = *rightTreeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "CCCCCCCCCC";
+
+    row = *rightTreeModel->append();
+    row[modelColumns.pixbufColumn] = pixbuf;
+    row[modelColumns.textColumn] = "DDDDDDDDDDD";
 }
 
 
@@ -197,12 +236,20 @@ TestWindow :: setupDndCallbacks (void)                              throw ()
     std::list<Gtk::TargetEntry>     targets;
     targets.push_back(Gtk::TargetEntry("STRING"));
     
-    treeView->drag_source_set(targets);
-    treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
-                                    &TestWindow::onTreeViewDragDataGet));
-    treeView->drag_dest_set(targets);
-    treeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
-                                    &TestWindow::onTreeViewDragDataReceived));
+    leftTreeView->drag_source_set(targets);
+    leftTreeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onLeftTreeViewDragDataGet));
+    leftTreeView->drag_dest_set(targets);
+    leftTreeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onLeftTreeViewDragDataReceived));
+
+    rightTreeView->drag_source_set(targets);
+    rightTreeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onRightTreeViewDragDataGet));
+    rightTreeView->drag_dest_set(targets);
+    rightTreeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
+                                    &TestWindow::onRightTreeViewDragDataReceived));
+
     label->drag_dest_set(targets);
     label->signal_drag_data_received().connect(sigc::mem_fun(*this,
                                     &TestWindow::onLabelDragDataReceived));
@@ -215,7 +262,7 @@ TestWindow :: setupDndCallbacks (void)                              throw ()
 void
 TestWindow :: onComboBoxSelectionChanged (void)                     throw ()
 {
-    fillTreeModel();
+    fillLeftTreeModel();
 }
 
 
@@ -256,7 +303,7 @@ TestWindow :: run (void)                                            throw ()
  *  The callback for the start of the drag.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: onTreeViewDragDataGet(
+TestWindow :: onLeftTreeViewDragDataGet(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             Gtk::SelectionData &                        selectionData,
             guint                                       info,
@@ -264,7 +311,7 @@ TestWindow :: onTreeViewDragDataGet(
                                                                     throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection>  selection
-                                            = treeView->get_selection();
+                                            = leftTreeView->get_selection();
     Gtk::TreeModel::Row     row = *selection->get_selected();
     Glib::ustring           dropString = row[modelColumns.textColumn];
 
@@ -279,7 +326,7 @@ TestWindow :: onTreeViewDragDataGet(
  *  The callback for the end of the drag.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: onTreeViewDragDataReceived(
+TestWindow :: onLeftTreeViewDragDataReceived(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             int                                         x,
             int                                         y,
@@ -290,11 +337,59 @@ TestWindow :: onTreeViewDragDataReceived(
 {
     if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
         Glib::ustring   data = selectionData.get_data_as_string();
-        std::cerr << "string '" << data << "' dropped on tree view\n";
+        std::cerr << "string '" << data << "' dropped on LEFT tree view\n";
         context->drag_finish(true, false, time);
         
     } else {
-        std::cerr << "unknown type of data dropped on tree view\n";
+        std::cerr << "unknown type of data dropped on LEFT tree view\n";
+        context->drag_finish(false, false, time);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for the start of the drag.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onRightTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = rightTreeView->get_selection();
+    Gtk::TreeModel::Row     row = *selection->get_selected();
+    Glib::ustring           dropString = row[modelColumns.textColumn];
+
+    selectionData.set(selectionData.get_target(),
+                      8 /* 8 bits format*/,
+                      (const guchar *) dropString.c_str(),
+                      dropString.bytes());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for the end of the drag.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onRightTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
+        Glib::ustring   data = selectionData.get_data_as_string();
+        std::cerr << "string '" << data << "' dropped on RIGHT tree view\n";
+        context->drag_finish(true, false, time);
+        
+    } else {
+        std::cerr << "unknown type of data dropped on RIGHT tree view\n";
         context->drag_finish(false, false, time);
     }
 }

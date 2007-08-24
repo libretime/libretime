@@ -81,10 +81,16 @@ class TestWindow : public LocalizedObject
         configureBundle (void)                                      throw ();
 
         /**
-         *  Fill the tree model.
+         *  Fill the left tree model.
          */
         void
-        fillTreeModel (void)                                        throw ();
+        fillLeftTreeModel (void)                                    throw ();
+
+        /**
+         *  Fill the right tree model.
+         */
+        void
+        fillRightTreeModel (void)                                   throw ();
 
         /**
          *  Set up the D'n'D callbacks.
@@ -106,9 +112,14 @@ class TestWindow : public LocalizedObject
         ComboBoxText *                  comboBox;
 
         /**
-         *  The tree view.
+         *  The left tree view.
          */
-        ZebraTreeView *                 treeView;
+        ZebraTreeView *                 leftTreeView;
+
+        /**
+         *  The right tree view.
+         */
+        ZebraTreeView *                 rightTreeView;
 
         /**
          *  The drop target label.
@@ -154,9 +165,14 @@ class TestWindow : public LocalizedObject
         ModelColumns                    modelColumns;
 
         /**
-         *  The tree model, as a GTK reference.
+         *  The left tree model, as a GTK reference.
          */
-        Glib::RefPtr<Gtk::ListStore>    treeModel;
+        Glib::RefPtr<Gtk::ListStore>    leftTreeModel;
+
+        /**
+         *  The right tree model, as a GTK reference.
+         */
+        Glib::RefPtr<Gtk::ListStore>    rightTreeModel;
 
         /**
          *  Event handler for selection change in the combo box.
@@ -180,7 +196,7 @@ class TestWindow : public LocalizedObject
          *  The callback for the start of the drag.
          */
         virtual void
-        onTreeViewDragDataGet(
+        onLeftTreeViewDragDataGet(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             Gtk::SelectionData &                        selectionData,
             guint                                       info,
@@ -191,7 +207,31 @@ class TestWindow : public LocalizedObject
          *  The callback for the end of the drag.
          */
         virtual void
-        onTreeViewDragDataReceived(
+        onLeftTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
+
+        /**
+         *  The callback for the start of the drag.
+         */
+        virtual void
+        onRightTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
+
+        /**
+         *  The callback for the end of the drag.
+         */
+        virtual void
+        onRightTreeViewDragDataReceived(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             int                                         x,
             int                                         y,
