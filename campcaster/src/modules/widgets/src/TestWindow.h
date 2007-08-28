@@ -81,22 +81,33 @@ class TestWindow : public LocalizedObject
         configureBundle (void)                                      throw ();
 
         /**
-         *  Fill the left tree model.
+         *  Fill one of the tree models.
+         *
+         *  @param  index   which tree model to fill.
          */
         void
-        fillLeftTreeModel (void)                                    throw ();
-
-        /**
-         *  Fill the right tree model.
-         */
-        void
-        fillRightTreeModel (void)                                   throw ();
+        fillTreeModel (int  index)                                  throw ();
 
         /**
          *  Set up the D'n'D callbacks.
          */
         void
         setupDndCallbacks (void)                                    throw ();
+        
+        /**
+         *  Return either "left" or "right".
+         *
+         *  @param  index   0 for left, 1 for right.
+         */
+        Glib::ustring
+        leftOrRight (int index)                                     throw ()
+        {
+            if (index == 0) {
+                return "left";
+            } else {
+                return "right";
+            }
+        }
 
 
     protected:
@@ -112,14 +123,9 @@ class TestWindow : public LocalizedObject
         ComboBoxText *                  comboBox;
 
         /**
-         *  The left tree view.
+         *  The tree views.
          */
-        ZebraTreeView *                 leftTreeView;
-
-        /**
-         *  The right tree view.
-         */
-        ZebraTreeView *                 rightTreeView;
+        ZebraTreeView *                 treeView[2];
 
         /**
          *  The drop target label.
@@ -165,14 +171,9 @@ class TestWindow : public LocalizedObject
         ModelColumns                    modelColumns;
 
         /**
-         *  The left tree model, as a GTK reference.
+         *  The tree models, as GTK references.
          */
-        Glib::RefPtr<Gtk::ListStore>    leftTreeModel;
-
-        /**
-         *  The right tree model, as a GTK reference.
-         */
-        Glib::RefPtr<Gtk::ListStore>    rightTreeModel;
+        Glib::RefPtr<Gtk::ListStore>    treeModel[2];
 
         /**
          *  Event handler for selection change in the combo box.
@@ -194,50 +195,32 @@ class TestWindow : public LocalizedObject
 
         /**
          *  The callback for the start of the drag.
+         *
+         *  @param  index   which tree view to drag from.
          */
         virtual void
-        onLeftTreeViewDragDataGet(
+        onTreeViewDragDataGet(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             Gtk::SelectionData &                        selectionData,
             guint                                       info,
-            guint                                       time)
+            guint                                       time,
+            int                                         index)
                                                                     throw ();
 
         /**
          *  The callback for the end of the drag.
+         *
+         *  @param  index   which tree view to drop to.
          */
         virtual void
-        onLeftTreeViewDragDataReceived(
+        onTreeViewDragDataReceived(
             const Glib::RefPtr<Gdk::DragContext> &      context,
             int                                         x,
             int                                         y,
             const Gtk::SelectionData &                  selectionData,
             guint                                       info,
-            guint                                       time)
-                                                                    throw ();
-
-        /**
-         *  The callback for the start of the drag.
-         */
-        virtual void
-        onRightTreeViewDragDataGet(
-            const Glib::RefPtr<Gdk::DragContext> &      context,
-            Gtk::SelectionData &                        selectionData,
-            guint                                       info,
-            guint                                       time)
-                                                                    throw ();
-
-        /**
-         *  The callback for the end of the drag.
-         */
-        virtual void
-        onRightTreeViewDragDataReceived(
-            const Glib::RefPtr<Gdk::DragContext> &      context,
-            int                                         x,
-            int                                         y,
-            const Gtk::SelectionData &                  selectionData,
-            guint                                       info,
-            guint                                       time)
+            guint                                       time,
+            int                                         index)
                                                                     throw ();
 
         /**
