@@ -34,6 +34,7 @@
 #endif
 
 #include <iostream>
+#include <cassert>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Colors.h"
@@ -322,12 +323,12 @@ TestWindow :: onTreeViewDragDataGet(
     std::list<Gtk::TreePath>    rows = selection->get_selected_rows();
     Glib::ustring               dropString = leftOrRight(index);
     // we can assume there is only one row selected, due to bug
-    // ...
-    if (rows.size() >= 1) {
-        Gtk::TreeRow    row = *treeModel[index]->get_iter(rows.front());
-        dropString += " ";
-        dropString += row[modelColumns.textColumn];
-    }
+    // http://bugzilla.gnome.org/show_bug.cgi?id=70479
+    assert (rows.size() == 1);
+
+    Gtk::TreeRow    row = *treeModel[index]->get_iter(rows.front());
+    dropString += " ";
+    dropString += row[modelColumns.textColumn];
 
     selectionData.set(selectionData.get_target(),
                       8 /* 8 bits format*/,
@@ -350,37 +351,147 @@ TestWindow :: onTreeViewDragDataReceived(
             int                                         index)
                                                                     throw ()
 {
-    if (selectionData.get_length() >= 0 && selectionData.get_format() == 8) {
-        Glib::ustring   data = selectionData.get_data_as_string();
-        if (data.find("left") == 0) {
-            std::cerr << "left -> "
-                      << leftOrRight(index)
-                      << ": "
-                      << data.substr(5)
-                      << std::endl;
-            context->drag_finish(true, false, time);
-        } else if (data.find("right") == 0) {
-            std::cerr << "right -> "
-                      << leftOrRight(index)
-                      << ": " 
-                      << data.substr(6)
-                      << std::endl;
-            context->drag_finish(true, false, time);
-        } else {
-            std::cerr << "unknown string dropped on "
-                      << leftOrRight(index)
-                      << " tree view: "
-                      << data
-                      << std::endl;
-            context->drag_finish(false, false, time);
-        }
-    } else {
+    if (selectionData.get_length() < 0 || selectionData.get_format() != 8) {
         std::cerr << "unknown type of data dropped on "
                   << leftOrRight(index)
                   << " tree view"
                   << std::endl;
         context->drag_finish(false, false, time);
+        return;
     }
+
+    Glib::ustring   data = selectionData.get_data_as_string();
+    Glib::ustring   stripped;
+
+    int             source = -1;
+    int             destination = index;
+
+    if (data.find("left") == 0) {
+        std::cerr << "left -> "
+                    << leftOrRight(index)
+                    << ": "
+                    << data.substr(5)
+                    << std::endl;
+        stripped = data.substr(5);
+        source = 0;
+        
+    } else if (data.find("right") == 0) {
+        std::cerr << "right -> "
+                    << leftOrRight(index)
+                    << ": " 
+                    << data.substr(6)
+                    << std::endl;
+        stripped = data.substr(6);
+        source = 1;
+        
+    } else {
+        std::cerr << "unknown string dropped on "
+                    << leftOrRight(index)
+                    << " tree view: "
+                    << data
+                    << std::endl;
+        context->drag_finish(false, false, time);
+        return;
+    }
+    
+    if (source == destination) {
+        moveRow(destination, x, y, stripped);
+        context->drag_finish(true, true, time);
+        
+    } else {
+        insertRow(destination, x, y, stripped);
+        context->drag_finish(true, false, time);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Move the selected row to the given position.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: moveRow (int              index,
+                       int              x,
+                       int              y,
+                       Glib::ustring    value)                      throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = treeView[index]->get_selection();
+    std::list<Gtk::TreePath>    rows = selection->get_selected_rows();
+    assert (rows.size() == 1);
+    Gtk::TreeIter       source = treeModel[index]->get_iter(rows.front());
+
+    Gtk::TreePath               destPath;
+    Gtk::TreeViewDropPosition   destPos;
+    treeView[index]->get_dest_row_at_pos(x, y, destPath, destPos);
+std::cerr << "path: " << destPath.to_string()
+          << ", pos: " << int(destPos)
+          << std::endl;
+    Gtk::TreeIter       destination = treeModel[index]->get_iter(destPath);
+
+    Gtk::TreeRow        newRow;
+    switch (destPos) {
+        case Gtk::TREE_VIEW_DROP_BEFORE:
+        case Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE:
+                    newRow = *treeModel[index]->insert(destination);
+                    break;
+                
+        case Gtk::TREE_VIEW_DROP_AFTER:
+        case Gtk::TREE_VIEW_DROP_INTO_OR_AFTER:
+                    newRow = *treeModel[index]->insert_after(destination);
+                    break;
+                
+        default:    std::cerr << "oops in moveRow()" << std::endl;
+                    return;
+    }
+    
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
+                                        WidgetConstants::audioClipIconImage);
+    newRow[modelColumns.pixbufColumn] = pixbuf;
+    newRow[modelColumns.textColumn] = value;
+    
+    treeModel[index]->erase(source);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Insert a string row into a tree view.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: insertRow (int    index,
+                         int    x,
+                         int    y,
+                         Glib::ustring      value)                  throw ()
+{
+    Gtk::TreePath               destPath;
+    Gtk::TreeViewDropPosition   destPos;
+    treeView[index]->get_dest_row_at_pos(x, y, destPath, destPos);
+std::cerr << "path: " << destPath.to_string()
+          << ", pos: " << int(destPos)
+          << std::endl;
+    Gtk::TreeIter       destination = treeModel[index]->get_iter(destPath);
+
+    Gtk::TreeRow        newRow;
+    switch (destPos) {
+        case Gtk::TREE_VIEW_DROP_BEFORE:
+        case Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE:
+                    newRow = *treeModel[index]->insert(destination);
+                    break;
+                
+        case Gtk::TREE_VIEW_DROP_AFTER:
+        case Gtk::TREE_VIEW_DROP_INTO_OR_AFTER:
+                    newRow = *treeModel[index]->insert_after(destination);
+                    break;
+                
+        default:    std::cerr << "oops in insertRow()" << std::endl;
+                    return;
+    }
+    
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
+                                        WidgetConstants::audioClipIconImage);
+    newRow[modelColumns.pixbufColumn] = pixbuf;
+    newRow[modelColumns.textColumn] = value;
 }
 
 
