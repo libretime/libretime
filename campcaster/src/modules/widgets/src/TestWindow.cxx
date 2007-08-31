@@ -414,14 +414,12 @@ TestWindow :: insertRow (int                index,
 {
     Gtk::TreePath               destPath;
     Gtk::TreeViewDropPosition   destPos;
-    treeView[index]->get_dest_row_at_pos(x, y, destPath, destPos);
+    bool    pathIsValid = treeView[index]->get_dest_row_at_pos(
+                                                x, y, destPath, destPos);
     // get_drag_dest_row() does not work here, for some strange reason
     Gtk::TreeRow        newRow;
 
-    if (destPath.gobj() == 0) {
-        newRow = *treeModel[index]->append();
-        
-    } else {
+    if (pathIsValid) {
         assert (!destPath.empty());
         Gtk::TreeIter   destination = treeModel[index]->get_iter(destPath);
 
@@ -437,6 +435,8 @@ TestWindow :: insertRow (int                index,
             assert (false);
             return;
         }
+    } else {
+        newRow = *treeModel[index]->append();
     }
 
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
