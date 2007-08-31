@@ -72,6 +72,15 @@ using namespace LiveSupport::Core;
  */
 class TestWindow : public LocalizedObject
 {
+    public:
+
+        /**
+         *  The possible DnD operations.
+         */
+        typedef enum { ROW_COPY,
+                       ROW_MOVE }       RowOperation;
+
+
     private:
 
         /**
@@ -110,32 +119,20 @@ class TestWindow : public LocalizedObject
         }
 
         /**
-         *  Move the selected row to the given position.
-         *
-         *  @param  index   which tree view to work on.
-         *  @param  x       the x coordinate of the new location of the row.
-         *  @param  y       the y coordinate of the new location of the row.
-         *  @param  value   the string to put into the new row.
-         */
-        void
-        moveRow (int                index,
-                 int                x,
-                 int                y,
-                 Glib::ustring      value)                          throw ();
-
-        /**
          *  Insert a string row into a tree view.
          *
          *  @param  index   which tree view to work on.
          *  @param  x       the x coordinate of the location of the new row.
          *  @param  y       the y coordinate of the location of the new row.
          *  @param  value   the string to put into the new row.
+         *  @param  operation   whether to copy or move the row.
          */
         void
         insertRow (int              index,
                    int              x,
                    int              y,
-                   Glib::ustring    value)                          throw ();
+                   Glib::ustring    value,
+                   RowOperation     operation)                      throw ();
 
 
     protected:

@@ -222,33 +222,30 @@ TestWindow :: setupDndCallbacks (void)                              throw ()
                                        Gtk::TARGET_SAME_APP));
     
     // set up the left tree view
-    treeView[0]->drag_source_set(targets,
-                                 Gdk::MODIFIER_MASK,
-                                 Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[0]->enable_model_drag_source(targets,
+                                          Gdk::MODIFIER_MASK,
+                                          Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
     treeView[0]->signal_drag_data_get().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataGet),
                     0));
-    treeView[0]->drag_dest_set(targets,
-                               Gtk::DEST_DEFAULT_ALL,
-                               Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[0]->enable_model_drag_dest(targets,
+                                        Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
     treeView[0]->signal_drag_data_received().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataReceived),
                     0));
 
     // set up the right tree view
-    treeView[1]->drag_source_set(targets,
-                                 Gdk::MODIFIER_MASK,
-                                 Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
-
+    treeView[1]->enable_model_drag_source(targets,
+                                          Gdk::MODIFIER_MASK,
+                                          Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
     treeView[1]->signal_drag_data_get().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataGet),
                     1));
-    treeView[1]->drag_dest_set(targets,
-                               Gtk::DEST_DEFAULT_ALL,
-                               Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[1]->enable_model_drag_dest(targets,
+                                        Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
     treeView[1]->signal_drag_data_received().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataReceived),
@@ -395,62 +392,13 @@ TestWindow :: onTreeViewDragDataReceived(
     }
     
     if (source == destination) {
-        moveRow(destination, x, y, stripped);
+        insertRow(destination, x, y, stripped, ROW_MOVE);
         context->drag_finish(true, true, time);
         
     } else {
-        insertRow(destination, x, y, stripped);
+        insertRow(destination, x, y, stripped, ROW_COPY);
         context->drag_finish(true, false, time);
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Move the selected row to the given position.
- *----------------------------------------------------------------------------*/
-void
-TestWindow :: moveRow (int              index,
-                       int              x,
-                       int              y,
-                       Glib::ustring    value)                      throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection>  selection
-                                            = treeView[index]->get_selection();
-    std::list<Gtk::TreePath>    rows = selection->get_selected_rows();
-    assert (rows.size() == 1);
-    Gtk::TreeIter       source = treeModel[index]->get_iter(rows.front());
-
-    Gtk::TreePath               destPath;
-    Gtk::TreeViewDropPosition   destPos;
-    treeView[index]->get_dest_row_at_pos(x, y, destPath, destPos);
-std::cerr << "path: " << destPath.to_string()
-          << ", pos: " << int(destPos)
-          << std::endl;
-    Gtk::TreeIter       destination = treeModel[index]->get_iter(destPath);
-
-    Gtk::TreeRow        newRow;
-    switch (destPos) {
-        case Gtk::TREE_VIEW_DROP_BEFORE:
-        case Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE:
-                    newRow = *treeModel[index]->insert(destination);
-                    break;
-                
-        case Gtk::TREE_VIEW_DROP_AFTER:
-        case Gtk::TREE_VIEW_DROP_INTO_OR_AFTER:
-                    newRow = *treeModel[index]->insert_after(destination);
-                    break;
-                
-        default:    std::cerr << "oops in moveRow()" << std::endl;
-                    return;
-    }
-    
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
-                                        WidgetConstants::audioClipIconImage);
-    newRow[modelColumns.pixbufColumn] = pixbuf;
-    newRow[modelColumns.textColumn] = value;
-    
-    treeModel[index]->erase(source);
 }
 
 
@@ -458,40 +406,55 @@ std::cerr << "path: " << destPath.to_string()
  *  Insert a string row into a tree view.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: insertRow (int    index,
-                         int    x,
-                         int    y,
-                         Glib::ustring      value)                  throw ()
+TestWindow :: insertRow (int                index,
+                         int                x,
+                         int                y,
+                         Glib::ustring      value,
+                         RowOperation       operation)              throw ()
 {
     Gtk::TreePath               destPath;
     Gtk::TreeViewDropPosition   destPos;
     treeView[index]->get_dest_row_at_pos(x, y, destPath, destPos);
-std::cerr << "path: " << destPath.to_string()
-          << ", pos: " << int(destPos)
-          << std::endl;
-    Gtk::TreeIter       destination = treeModel[index]->get_iter(destPath);
-
+    // get_drag_dest_row() does not work here, for some strange reason
     Gtk::TreeRow        newRow;
-    switch (destPos) {
-        case Gtk::TREE_VIEW_DROP_BEFORE:
-        case Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE:
-                    newRow = *treeModel[index]->insert(destination);
-                    break;
-                
-        case Gtk::TREE_VIEW_DROP_AFTER:
-        case Gtk::TREE_VIEW_DROP_INTO_OR_AFTER:
-                    newRow = *treeModel[index]->insert_after(destination);
-                    break;
-                
-        default:    std::cerr << "oops in insertRow()" << std::endl;
-                    return;
+
+    if (destPath.gobj() == 0) {
+        newRow = *treeModel[index]->append();
+        
+    } else {
+        assert (!destPath.empty());
+        Gtk::TreeIter   destination = treeModel[index]->get_iter(destPath);
+
+        if (destPos == Gtk::TREE_VIEW_DROP_BEFORE
+                    || destPos == Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE) {
+            newRow = *treeModel[index]->insert(destination);
+            
+        } else if (destPos == Gtk::TREE_VIEW_DROP_AFTER
+                        || destPos == Gtk::TREE_VIEW_DROP_INTO_OR_AFTER) {
+            newRow = *treeModel[index]->insert_after(destination);
+            
+        } else {
+            assert (false);
+            return;
+        }
     }
-    
+
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     Glib::RefPtr<Gdk::Pixbuf>   pixbuf = wf->getPixbuf(
                                         WidgetConstants::audioClipIconImage);
     newRow[modelColumns.pixbufColumn] = pixbuf;
     newRow[modelColumns.textColumn] = value;
+    
+    if (operation == ROW_MOVE) {
+        Glib::RefPtr<Gtk::TreeView::Selection>
+                        selection = treeView[index]->get_selection();
+        std::list<Gtk::TreePath>
+                        rows = selection->get_selected_rows();
+        assert (rows.size() == 1);
+        Gtk::TreeIter   source = treeModel[index]->get_iter(rows.front());
+
+        treeModel[index]->erase(source);
+    }
 }
 
 
@@ -514,6 +477,8 @@ TestWindow :: onLabelDragDataReceived(
         context->drag_finish(true, true, time);
         
     } else {
+        std::cerr << "unknown type of data dropped on the label"
+                  << std::endl;
         label->set_label(*getResourceUstring("dropHereText"));
         context->drag_finish(false, false, time);
     }
