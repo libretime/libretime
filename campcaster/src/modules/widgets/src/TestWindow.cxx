@@ -222,39 +222,31 @@ TestWindow :: setupDndCallbacks (void)                              throw ()
                                        Gtk::TARGET_SAME_APP));
     
     // set up the left tree view
-    treeView[0]->enable_model_drag_source(targets,
-                                          Gdk::MODIFIER_MASK,
-                                          Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[0]->enable_model_drag_source(targets);
     treeView[0]->signal_drag_data_get().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataGet),
                     0));
-    treeView[0]->enable_model_drag_dest(targets,
-                                        Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[0]->enable_model_drag_dest(targets);
     treeView[0]->signal_drag_data_received().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataReceived),
                     0));
 
     // set up the right tree view
-    treeView[1]->enable_model_drag_source(targets,
-                                          Gdk::MODIFIER_MASK,
-                                          Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[1]->enable_model_drag_source(targets);
     treeView[1]->signal_drag_data_get().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataGet),
                     1));
-    treeView[1]->enable_model_drag_dest(targets,
-                                        Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    treeView[1]->enable_model_drag_dest(targets);
     treeView[1]->signal_drag_data_received().connect(sigc::bind<int>(
                     sigc::mem_fun(*this,
                                   &TestWindow::onTreeViewDragDataReceived),
                     1));
 
     // set up the label
-    label->drag_dest_set(targets,
-                         Gtk::DEST_DEFAULT_ALL,
-                         Gdk::ACTION_COPY | Gdk::ACTION_MOVE);
+    label->drag_dest_set(targets);
     label->signal_drag_data_received().connect(sigc::mem_fun(*this,
                                 &TestWindow::onLabelDragDataReceived));
 }
