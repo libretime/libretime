@@ -47,14 +47,14 @@ Build-Depends: debhelper (>= 4.0.0),
                libgtkmm-2.4-dev (>= 2.6.5),
                libglademm-2.4-dev (>= 2.6.2),
                libxml++2.6-dev (>= 2.8.1),
-               libicu34-dev,
+               libicu34-dev | libicu36-dev,
                apache2,
                php5-pgsql,
                libapache2-mod-php5,
                php-pear,
                php5-gd,
-               postgresql-8.1,
-               postgresql-client-8.1
+               postgresql-8.1 | postgresql-8.2,
+               postgresql-client-8.1 | postgresql-client-8.2
 Standards-Version: 3.6.1
 
 Package: campcaster-libs
@@ -91,7 +91,7 @@ Description: A radio program automation and support tool.
 Package: campcaster-station
 Architecture: any
 Depends: ${shlibs:Depends},
-         campcaster-libs (= ${dpkg:Version}),
+         campcaster-libs (= ${binary:Version}),
          sed,
          pwgen,
          unixodbc (>= 2.2),
@@ -113,14 +113,14 @@ Depends: ${shlibs:Depends},
          libcurl3,
          libboost-date-time1.33.1,
          libxml++2.6c2a (>= 2.8.1),
-         libicu34,
+         libicu34 | libicu36,
          apache2,
          php5-pgsql,
          libapache2-mod-php5,
          php-pear,
          php5-gd,
-         postgresql-8.1,
-         postgresql-client-8.1
+         postgresql-8.1 | postgresql-8.2,
+         postgresql-client-8.1 | postgresql-client-8.2
 Description: A radio program automation and support tool.
  Campcaster is the first free and open radio management software that 
  provides live studio broadcast capabilities as well as remote automation
@@ -141,8 +141,8 @@ Description: A radio program automation and support tool.
 Package: campcaster-studio
 Architecture: any
 Depends: ${shlibs:Depends},
-         campcaster-libs (= ${dpkg:Version}),
-         campcaster-station (= ${dpkg:Version}),
+         campcaster-libs (= ${binary:Version}),
+         campcaster-station (= ${binary:Version}),
          sed,
          unixodbc (>= 2.2),
          odbc-postgresql,
@@ -162,7 +162,7 @@ Depends: ${shlibs:Depends},
          libcurl3 (>= 7.12.3),
          libboost-date-time1.33.1,
          libxml++2.6c2a (>= 2.8.1),
-         libicu34,
+         libicu34 | libicu36,
          libgtk2.0-0 (>= 2.6.10),
          libgtkmm-2.4-1c2a (>= 2.6.5)
          libglademm-2.4-1c2a (>= 2.6.2)
