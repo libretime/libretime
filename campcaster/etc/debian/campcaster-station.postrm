@@ -18,13 +18,19 @@ set -e
 # the debian-policy package
 
 installdir=/opt/campcaster
-apache_docroot=/var/www
 
+if [ -f /etc/postgresql/8.1 ]; then
+    postgresql_dir=/etc/postgresql/8.1/main
+    postgresql_init_script=/etc/init.d/postgresql-8.1
+elif [ -f /etc/postgresql/8.2 ]; then
+    postgresql_dir=/etc/postgresql/8.2/main
+    postgresql_init_script=/etc/init.d/postgresql-8.2
+else
+    echo "no postgresql 8.1 or 8.2 found" >&2
+    exit 1
+fi
 postgres_user=postgres
-postgresql_dir=/etc/postgresql/8.1/main
-postgresql_init_script=/etc/init.d/postgresql-8.1
 
-ls_dbserver=localhost
 ls_database=Campcaster
 ls_dbuser=campcaster
 
