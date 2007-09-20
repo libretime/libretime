@@ -19,10 +19,10 @@ set -e
 
 installdir=/opt/campcaster
 
-if [ -f /etc/postgresql/8.1 ]; then
+if [ -d /etc/postgresql/8.1 ]; then
     postgresql_dir=/etc/postgresql/8.1/main
     postgresql_init_script=/etc/init.d/postgresql-8.1
-elif [ -f /etc/postgresql/8.2 ]; then
+elif [ -d /etc/postgresql/8.2 ]; then
     postgresql_dir=/etc/postgresql/8.2/main
     postgresql_init_script=/etc/init.d/postgresql-8.2
 else
