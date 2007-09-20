@@ -51,7 +51,7 @@ The release process boils down to the following steps:<br>
 It is assumed that the person doing the release has a read/write access
 to the Campcaster version control system. As a first step of the
 release process, a fresh copy of the version control repository is
-exported, so as to insure that:<br>
+checked out, so as to insure that:<br>
 <ul>
   <li>the release contains exactly the files that are in the version
 control system</li>
@@ -59,7 +59,7 @@ control system</li>
 </ul>
 To get a fresh copy of the Campcaster repository, execute the
 following in an empty directory:
-<pre><code>svn export svn://code.campware.org/campcaster/trunk/campcaster</code><br></pre>
+<pre><code>svn checkout svn://code.campware.org/campcaster/trunk/campcaster</code><br></pre>
 
 
 <h1>Checking the distribution script</h1>
@@ -96,7 +96,12 @@ To update the changelog, edit <code>etc/debian/changelog</code>,
 by inserting a section onto the top of the file:<br>
 <br>
 <pre>campcaster (&lt;version&gt;-1) unstable; urgency=low<br><br>  * Changes listed here<br><br> -- <code>Package Maintainer &lt;maintainer@foo.bar&gt;</code>  &lt;timestamp&gt;<br><br></pre>
-The timestamp above must be preceeded by two spaces, and must be an RFC
+You can change the "-1" part (to "-2" or "-0distro1" etc).  Note that the
+<code>&lt;version&gt;</code> string, which will be referred to below,
+is <i>without</i> this extension; the extension will be read from the
+<code>changelog</code> file by the Debian packaging scripts.<br>
+<br>
+The <code>&lt;timestamp&gt;</code> must be preceeded by two spaces, and must be an RFC
 2822 compliant date string, which is most easily produced by issuing
 the <code>date -R</code> command. Please note that the debian package
 manager is quite picky on the format of the changelog file. See <a
@@ -141,8 +146,7 @@ plus two more needed for the build process: <code>debhelper</code> and
 <pre>tar xfj campcaster-&lt;version&gt;.tar.bz2
 tar xfj campcaster-libraries-&lt;version&gt;.tar.bz2
 cd campcaster-&lt;version&gt;
-./bin/createDebianPackages.sh -d .. -v &lt;version&gt; -o .. \
-                -m "Package Maintainer &lt;maintainer@foo.bar&gt;"
+./bin/createDebianPackages.sh -d .. -v &lt;version&gt; -o .. -m "Joe Maintainer &lt;joe@foo.bar&gt;"
 cd ..
 </pre>
 <br>
@@ -157,19 +161,20 @@ campcaster_&lt;version&gt;.orig.tar.gz
 Based on the source packages, the Debian package management system can
 build the binaries for the current target platform, provided all the
 necessary packages required to build are installed on the system. For a
-list of the necessary packages, please consult the debian/control file
-in extracted debianized source tree generated below.<br>
-Building is best done
-in an empty directory as follows:<br>
+list of the necessary packages, please consult the control file
+in the extracted debianized source tree generated below
+(<code>build/campcaster-&lt;version&gt;/debian/control</code>).<br>
+<br>
+Building is best done in an empty directory as follows:<br>
 <br>
 <pre>rm -rf /opt/campcaster
-rm -rf debian_build
-mkdir debian_build
-cd debian_build
-dpkg-source -x ../campcaster_&lt;ls_version&gt;-1.dsc
+rm -rf build
+mkdir build
+cd build
+dpkg-source -x ../campcaster_&lt;version&gt;-1.dsc
 cd campcaster-&lt;version&gt;
-sudo dpkg-buildpackage
-cd ../..
+sudo dpkg-buildpackage &> ../build.log
+cd ..
 </pre>
 <!-- "dpkg-buildpackage -rfakeroot" would be better instead of
 "sudo dpkg-buildpackage", but it does not work because of the strange
@@ -195,8 +200,7 @@ To do this, you need to do the following, as real root (sudo is not enough):
         versions of the packages, you can delete those.
     <li>Generate the package listing:
 <pre>cd /var/www/ubuntu
-apt-ftparchive packages packages/dapper/&lt;arch&gt; | gzip -9c \
-        > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
+apt-ftparchive packages packages/dapper/&lt;arch&gt; | gzip -9c > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
 </ul>
 For other releases, like edgy, feisty, etc, replace 'dapper' accordingly
 everywhere, of course.
@@ -226,11 +230,10 @@ on <code>code.campware.org</code>.
 <h1>Publishing the tarballs</h1>
 To make the release available to the public, the created tarballs have
 to be published. This is done by making the files accessible under the
-Campcaster project page on SourceForge: <code>http://sourceforge.net/projects/campcaster</code><span
- style="font-family: monospace;"></span><code></code>. Currently, only
-MDLF support staff have access to publish into this
-space, so after creating the tarballs, one should contact them
-personally to publish the files.<br>
+Campcaster project page on SourceForge:
+<code>http://sourceforge.net/projects/campcaster</code>.<br>
+
+
 <h1>Announcing the release</h1>
 For the public to be aware of the new release, it has to be announced.
 This is primarily done on the Campware site, but also on other
