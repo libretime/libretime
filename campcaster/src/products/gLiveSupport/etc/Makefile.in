@@ -292,6 +292,7 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
 G_LIVESUPPORT_RES = ${TMP_STUDIO-LOCALIZATION_DIR}/root.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/en.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/es.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/fr.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/hu.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/nl.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/pl.res \

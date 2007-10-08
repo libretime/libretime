@@ -147,6 +147,7 @@
     <supportedLanguages>
         <language locale="en"               name="English"/>
         <language locale="es"               name="Español"/>
+        <language locale="fr"               name="Français"/>
         <language locale="hu"               name="Magyar"/>
         <language locale="nl"               name="Nederlands"/>
         <language locale="pl"               name="Polski"/>

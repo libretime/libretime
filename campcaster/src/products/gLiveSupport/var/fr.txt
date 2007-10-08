@@ -1,0 +1,467 @@
+fr:table
+{
+    cancelButtonLabel:string        { "Annuler" }
+    noButtonLabel:string            { "Non" }
+    yesButtonLabel:string           { "Oui" }
+    okButtonLabel:string            { "OK" }
+
+    localeNotAvailableMsg:string    { "Locale {0} n'est pas disponible." }
+    schedulerNotReachableMsg:string { "Le serveur de programmation est inaccessible." }
+    storageNotReachableMsg:string   { "Le serveur de stockage est inaccessible." }
+    authenticationNotReachableMsg:string
+                                    { "Le serveur d'authentification est "
+                                      "inaccessible.\n"
+                                      "Voulez vous éditer les paramètres "
+                                      "du serveur?" }
+    audioErrorMsg                   { "Erreur Lecteur Audio: " }
+
+    masterPanelWindow:table
+    {
+        windowTitle:string          { "Fenêtre Principale" }
+
+        notLoggedInMsg:string           { "Pas connecté" }
+        loggedInMsg:string              { "Utilisateur: {0}" }
+        loginButtonLabel:string         { "Connexion" }
+        logoutButtonLabel:string        { "Déconnexion" }
+        liveModeButtonLabel:string      { "Mode Live" }
+        uploadFileButtonLabel:string    { "Transfert" }
+        scratchpadButtonLabel:string    { "Console" }
+        playlistButtonLabel:string      { "Sélection" }
+        schedulerButtonLabel:string     { "Planificateur" }
+        searchButtonLabel:string        { "Recherche" }
+        optionsButtonLabel:string       { "Options" }
+
+        elapsedTimeLabel:string     { "écoulé" }
+        remainingTimeLabel:string   { "restant" }
+
+        sureToExitMsg:string        { "Etes vous sûr de vouloir quitter?" }
+    }
+
+    loginWindow:table
+    {
+        windowTitle:string          { "Connexion" }
+
+        userNameLabel:string        { "Nom d'utilisateur" }
+        passwordLabel:string        { "Mot de passe" }
+        languageLabel:string        { "Langue" }
+
+        pleaseWaitMsg:string        { "Connexion en cours, veuillez patienter." }
+    }
+
+    audioClipListWindow:table
+    {
+        windowTitle:string          { "Liste des Clips Audio" }
+
+        idColumnLabel:string        { "id" }
+        lengthColumnLabel:string    { "durée" }
+        uriColumnLabel:string       { "URI" }
+        tokenColumnLabel:string     { "jeton" }
+
+        closeButtonLabel:string     { "Fermer" }
+    }
+
+    scratchpadWindow:table
+    {
+        windowTitle:string              { "Console de mixage" }
+
+        creatorColumnLabel:string       { "Auteur" }
+        titleColumnLabel:string         { "Titre" }
+        addToPlaylistButtonLabel:string { "Ajouter à la sélection" }
+        clearListButtonLabel:string     { "Effacer la liste" }
+        removeButtonLabel:string        { "Supprimer" }
+
+        cueMenuItem:string              { "Ape_rçu" }
+        addToLiveModeMenuItem:string    { "Ajouter au _Mode Live " }
+        addToPlaylistMenuItem:string    { "_Ajouter à la sélection" }
+        removeMenuItem:string           { "_Supprimer" }
+        editPlaylistMenuItem:string     { "_Editer la sélection" }
+        schedulePlaylistMenuItem:string { "_Programmer la sélection" }
+        exportPlaylistMenuItem:string   { "E_xporter la sélection" }
+        uploadToHubMenuItem:string      { "Transférer vers le Network Hub" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Ne peut ouvrir la sélection pour modification." }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string          { "Sélection" }
+
+        listBoxLabel                { "Sélections" }
+        detailBoxLabel              { "Détails" }
+
+        idColumnLabel:string        { "id" }
+        lengthColumnLabel:string    { "durée" }
+        uriColumnLabel:string       { "URI" }
+        tokenColumnLabel:string     { "jeton" }
+
+        closeButtonLabel:string     { "Fermer" }
+    }
+
+    uploadFileWindow:table
+    {
+        windowTitle:string              { "Transfert de fichiers" }
+
+        chooseFileLabel:string          { "Nom de fichier" }
+        chooseFileButtonLabel:string    { "Parcourir" }
+
+        mainSectionLabel:string         { "Principal" }
+        musicSectionLabel:string        { "Musique" }
+        voiceSectionLabel:string        { "Voix" }
+
+        lengthLabel:string              { "Durée" }
+
+        uploadButtonLabel:string        { "Transfert" }
+        closeButtonLabel:string         { "Annuler" }
+
+        fileChooserDialogTitle:string   { "Ouvrir Fichier" }
+        fileUploadedMsg:string          { "''{0}'' transféré." }
+        couldNotOpenFileMsg:string      { "Le fichier ne peut être ouvert." }
+        couldNotReadLengthMsg:string    { "Ne peut déterminer la durée du"
+                                          "clip audio." }
+        unsupportedFileTypeMsg:string   { "Type de fichier non pris en charge." }
+        missingTitleMsg:string          { "Veuillez entrer un titre." }
+        badMetadataMsg:string           { "Métadonnées invalides pour {0}." }
+        duplicateFileMsg:string         { "Erreur: le fichier a déjà été  "
+                                          "stocké." }
+    }
+
+    playlistWindow:table
+    {
+        windowTitle:string          { "Editer la sélection" }
+
+        startColumnLabel:string     { "Lire" }
+        titleColumnLabel:string     { "Titre" }
+        lengthColumnLabel:string    { "durée" }
+        fadeInColumnLabel:string    { "Fade in" }
+        fadeOutColumnLabel:string   { "Fade out" }
+
+        nameLabel:string            { "Nom" }
+        lengthLabel:string          { "Durée:" }
+        saveButtonLabel:string      { "Enregistrer" }
+        closeButtonLabel:string     { "Fermer" }
+        lockFadesCheckButtonLabel:string
+                                    { "Verrouiller la fin sur le début en fondu (non stop)" }
+
+        upMenuItem:string           { "_Haut" }
+        downMenuItem:string         { "_Bas" }
+        removeMenuItem:string       { "_Supprimer" }
+
+        playlistSavedMsg:string         { "Enregistrer la sélection ''{0}''." }
+        savePlaylistDialogMsg:string    { "Voulez-vous enregistrer la sélection?" }
+        closeWithoutSavingButtonLabel:string
+                                        { "Fermer sans sauvergarder" }
+        emptyTitleErrorMsg:string       { "Veuillez entrer un titre." }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string          { "Planificateur" }
+
+        scheduleTab:string          { "Programme" }
+        statusTab:string            { "Etat" }
+
+        startColumnLabel:string     { "Lire" }
+        titleColumnLabel:string     { "titre" }
+        endColumnLabel:string       { "fin" }
+        deleteMenuItem:string       { "_Supprimer" }
+
+        stopCurrentlyPlayingButtonLabel:string  { "Arrêter" }
+        stopCurrentlyPlayingText:string         { "la lecture en cours"
+                                                  "dans le planificateur." }
+        stopCurrentlyPlayingDialogMsg:string    { "En êtes vous sûr?" }
+
+        closeButtonLabel:string     { "Fermer" }
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string          { "Programmer la sélection" }
+
+        hourLabel:string            { "heure: " }
+        minuteLabel:string          { "minute: " }
+        secondLabel:string          { "secondes: " }
+        scheduleButtonLabel:string  { "programmer" }
+        closeButtonLabel:string     { "Fermer" }
+    }
+
+    searchWindow:table
+    {
+        windowTitle:string          { "Recherche/Parcourir" }
+
+        searchWhereLabel:string     { "Rechercher ou parcourir: " }
+        searchWhereLocal:string     { "archive locale" }
+        searchWhereRemote:string    { "archive distante" }
+
+        simpleSearchTab:string      { "Recherche" }
+        advancedSearchTab:string    { "Recherche Avancée" }
+        browseTab:string            { "Parcourir" }
+        transportsTab:string        { "Transfers" }
+
+        searchButtonLabel:string    { "Recherche" }
+        backwardButtonLabel:string  { "⇦ Précédent" }
+        forwardButtonLabel:string   { "Suivant ⇨" }
+        searchResultsCountLabel:string  { "{0}-{1} of {2} résultats" }
+
+        typeColumnLabel:string      { "Type" }
+        titleColumnLabel:string     { "Titre" }
+        creatorColumnLabel:string   { "Auteur" }
+        sourceColumnLabel:string    { "Album" }
+        lengthColumnLabel:string    { "Durée" }
+
+        allStringForBrowse          { "--- tout ---" }
+
+        addToScratchpadMenuItem:string  { "Ajouter à la _Console de Mixage" }
+        addToPlaylistMenuItem:string    { "_Ajouter à la sélection" }
+        addToLiveModeMenuItem:string    { "Ajouter au Mode _Live " }
+        editPlaylistMenuItem:string     { "_Editer la sélection" }
+        schedulePlaylistMenuItem:string { "_Programmer la sélection" }
+        exportPlaylistMenuItem:string   { "E_xporter la sélection" }
+        uploadToHubMenuItem:string      { "Transférer vers l'archive distante" }
+        downloadFromHubMenuItem:string  { "Télécharger à partir de l'archive distante" }
+
+        pleaseWaitMsg:string        { "Veuillez patienter..." }
+        shortErrorMsg:string        { "Echec de la recherche." }
+        longErrorMsg:string         { "Echec de la recherche: {0}." }
+        uploadToHubErrorMsg:string      { "Echec du transfert vers l'archive distante: {0}." }
+        downloadFromHubErrorMsg:string  { "Echec du téléchargement à partir de l'archive distante: {0}." }
+        nothingFoundMsg:string      { "Fichiers introuvables." }
+    }
+
+    advancedSearchEntry:table
+    {
+        fileTypeTextLabel:string    { "Types de fichier" }
+        allFileType:string          { "tout" }
+        audioClipFileType:string    { "clips audio" }
+        playlistFileType:string     { "sélections" }
+
+        searchByTextLabel:string    { "Recherche par" }
+
+        partialOperatorDisplay:string   { "contient" }
+        prefixOperatorDisplay:string    { "commence par" }
+        =OperatorDisplay:string         { "égal" }
+        <=OperatorDisplay:string        { "<=" }
+        >=OperatorDisplay:string        { ">=" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string          { "Mode Live" }
+
+        playMenuItem:string             { "_Lire" }
+        cueMenuItem:string              { "Ape_rçu" }
+        addToPlaylistMenuItem:string    { "_Ajouter à la sélection" }
+        removeMenuItem:string           { "_Supprimer" }
+        editPlaylistMenuItem:string     { "_Editer la sélection" }
+        schedulePlaylistMenuItem:string { "_Programmer la sélection" }
+        exportPlaylistMenuItem:string   { "E_xporter la sélection" }
+        uploadToHubMenuItem:string      { "Transférer vers l'\archive distante" }
+
+        cuePlayerLabel:string       { "Aperçu" }
+        autoPlayNextLabel:string    { "Lire automatiquement le morceau suivant" }
+
+        clearListButtonLabel:string { "Effacer la liste" }
+        removeButtonLabel:string    { "Supprimer" }
+
+        cannotEditPlaylistMsg:string
+                                    { "Ne peut ouvrir la sélection pour modification." }
+    }
+
+    optionsWindow:table
+    {
+        windowTitle:string          { "Options" }
+
+        needToRestartMsg:string     { "Vous devez redémarrer "
+                                      "l'application\npour que les nouveaux paramètres "
+                                      "soient effectifs." }
+        errorMsg:string             { "Ne peut sauvegarder les options: " }
+
+        soundSectionLabel:string        { "Son" }
+        keyBindingsSectionLabel:string  { "Raccourcis clavier" }
+        serversSectionLabel:string      { "Serveurs" }
+        schedulerSectionLabel:string    { "Planificateur" }
+        backupSectionLabel:string       { "Sauvegarde" }
+        rdsSectionLabel:string          { "RDS" }
+        aboutSectionLabel:string        { "A propos" }
+
+        cancelButtonLabel:string    { "Annuler" }
+        applyButtonLabel:string     { "Appliquer" }
+        okButtonLabel:string        { "OK" }
+
+        cueDeviceLabel:string       { "Périphérique audio 'Cue':" }
+        outputDeviceLabel:string    { "Périphérique audio Mode Live:" }
+        testButtonLabel:string      { "Test" }
+
+        pressAKeyMsg:string         { "Appuyer sur une touche..." }
+        keyBindingsInstructionsText:string
+                                    { "Double-cliquer le raccourci que vous voulez "
+                                      "modifier, \n"
+                                      "puis appuyer sur la touche du nouveau "
+                                      "raccourci\n"
+                                      "(ou appuyer la touche Echap pour annuler "
+                                      "l'opération)." }
+
+        authenticationLabel:string  { "Serveur d'authentification" }
+        storageLabel:string         { "Serveur de stockage" }
+        schedulerLabel:string       { "Serveur de programmation" }
+        serverLabel:string          { "adresse:" }
+        portLabel:string            { "port:" }
+        pathLabel:string            { "chemin:" }
+
+        schedulerStatusText:string          { "Le Planificateur est" }
+        schedulerRunningStatus:string       { "en cours d'exécution." }
+        schedulerStoppedStatus:string       { "arrêter." }
+        schedulerStartButtonLabel:string    { "Démarrer" }
+        schedulerStopButtonLabel:string     { "Arrêter" }
+
+        reportBugsToText:string     { "Rapporter les bugs à: {0}" }
+        creditsText:import          { "../../../../CREDITS" }
+    }
+
+    backupView:table
+    {
+        workingStatus:string        { "En cours..." }
+        successStatus:string        { "Prêt" }
+        faultStatus:string          { "Erreur: {0}" }
+
+        titleColumnLabel:string     { "Titre" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Etat" }
+
+        mtimeTextLabel:string       { "Modifié depuis:" }
+        chooseTimeButtonLabel:string    { "Choisir le moment" }
+        resetTimeButtonLabel:string     { "Réinitialiser" }
+
+        backupButtonLabel:string    { "Sauvegarde" }
+        deleteButtonLabel:string    { "Supprimer" }
+        saveButtonLabel:string      { "Enregistrer" }
+
+        backupTitleLabel:string     { "Titre:" }
+        defaultBackupTitle:string   { "nouvelle sauvegarde" }
+
+        fileChooserDialogTitle:string   { "Enregister le fichier" }
+        backupErrorMsg:string       { "Erreur de sauvegarde: " }
+    }
+
+    rdsView:table
+    {
+        deviceLabel:string          { "Port série:" }
+        PSrdsLabel:string           { "Nom de la station:" }
+        PIrdsLabel:string           { "Code de la station:" }
+        RTrdsLabel:string           { "Infos clip:" }
+    }
+
+    dateTimeChooserWindow:table
+    {
+        windowTitle:string          { "Choisir la date et l'heure" }
+
+        cancelButtonLabel:string    { "Annuler" }
+        okButtonLabel:string        { "OK" }
+
+        hourLabel:string            { "heure:" }
+        minuteLabel:string          { "minute:" }
+    }
+
+    exportPlaylistWindow:table
+    {
+        windowTitle:string          { "Exporter la sélection" }
+
+        playlistTitleLabel:string   { "Titre:" }
+        formatLabel:string          { "Exporter sous:" }
+
+        cancelButtonLabel:string    { "Annuler" }
+        saveButtonLabel:string      { "Enregistrer" }
+
+        internalFormatName:string   { "Archive Campcaster " }
+        smilFormatName:string       { "tar contenant du SMIL" }
+
+        fileChooserDialogTitle:string   { "Enregistrer le Fichier" }
+
+        createExportErrorMsg:string { "Ne peut exporter la sélection:" }
+        saveExportErrorMsg:string   { "Ne peut enregistrer la sélection exportée." }
+    }
+
+    transportList:table
+    {
+        workingStatus:string        { "En cours..." }
+        successStatus:string        { "Prêt" }
+        faultStatus:string          { "Erreur: {0}" }
+
+        titleColumnLabel:string     { "Titre" }
+        dateColumnLabel:string      { "Date" }
+        statusColumnLabel:string    { "Etat" }
+
+        cancelUploadMenuItem:string     { "Annuler le transfert" }
+        cancelDownloadMenuItem:string   { "Annuler le télechargement" }
+
+        cannotCancelTransportMsg:string { "Echec de l'annulation: {0}." }
+        duplicateFileMsg:string         { "le fichier existe déjà sur  "
+                                          "l'archive distante." }
+    }
+
+    restoreBackupWindow:table
+    {
+        windowTitle:string          { "Restaurer la sauvegarde" }
+        errorMessage:string         { "Erreur: {0}" }
+        pendingMessage:string       { "Transfert du fichier de sauvegarde\n''{0}''.\n"
+                                      "Veuillez patienter..." }
+        finishedMessage:string      { "Transfert terminé." }
+    }
+
+    metadataTypes:table
+    {
+        title:string                { "Titre" }
+        creator:string              { "Auteur" }
+        album:string                { "Album" }
+        year:string                 { "Année" }
+        genre:string                { "Genre" }
+        description:string          { "Description" }
+        format:string               { "Format" }
+        length:string               { "Durée" }
+        bpm:string                  { "BPM" }
+        rating:string               { "Classement" }
+        encoded_by:string           { "Encodé par" }
+        track_number:string         { "Numéro de piste" }
+        disc_number:string          { "Numéro de disque" }
+        mood:string                 { "Mode" }
+        publishing_label:string     { "Etiquette de publication" }
+        composer:string             { "Compositeur" }
+        bitrate:string              { "Vitesse de transmission" }
+        channels:string             { "Canaux" }
+        sample_rate:string          { "Jeu de classement" }
+        encoding_software:string    { "Logiciel d'encodage" }
+        checksum:string             { "Checksum" }
+        lyrics:string               { "Paroles" }
+        orchestra_or_band:string    { "Orchestre ou groupe" }
+        conductor:string            { "Chef d'orchestre" }
+        lyricist:string             { "Paroles" }
+        original_lyricist:string    { "Paroles originales" }
+        radio_station_name:string   { "Nom de la station radio" }
+        audio_file_info_url:string  { "Page web du fichier audio" }
+        artist_url:string           { "Page web de l'artiste" }
+        audio_source_url:string     { "Page web de la source audio" }
+        radio_station_url:string    { "Page web de la station radio" }
+        buy_cd_url:string           { "Page web pour acheter le CD" }
+        isrc_number:string          { "Numéro ISRC" }
+        catalog_number:string       { "Numéro Catalogue" }
+        original_artist:string      { "Artiste original" }
+        copyright:string            { "Copyright" }
+        report_date_time:string     { "Date/heure du rapport" }
+        report_location:string      { "Emplacement du rapport" }
+        report_organizations:string { "Organisations" }
+        subject:string              { "Sujet" }
+    }
+
+    keyboardShortcuts:table
+    {
+        playAudio:string            { "Lire" }
+        pauseAudio:string           { "Suspendre" }
+        stopAudio:string            { "Arrêt" }
+        nextTrack:string            { "Piste suivante" }
+        fadeOut:string              { "Terminer en fondu" }
+        moveItemUp:string           { "Haut" }
+        moveItemDown:string         { "Bas" }
+        removeItem:string           { "Supprimer" }
+    }
+}
+
