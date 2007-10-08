@@ -2,7 +2,7 @@
 <translations>
 	<Id>sr_CS</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Aploudovan fajl je veci nego što je dozvoljeno u sistemskim podešavanjima. Za dodatne informacije, pogledaj &quot;Pomoc&quot;, poglavlje &quot;Rešavanje problema&quot;.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Greška u Mix Fade vrednostima.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Podaci o audio fajlu su sačuvani.</value>
 	</item>
 	<item>

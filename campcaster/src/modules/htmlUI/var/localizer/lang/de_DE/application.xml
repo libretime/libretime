@@ -2,7 +2,7 @@
 <translations>
 	<Id>de_DE</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Die hochzuladende Datei ist größer als in den Systemeinstallungen erlaubt. Siehe &quot;Hilfe&quot;, Kapitel &quot;Fehlersuche&quot; für mehr Informationen.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Konnte die fade Informationen nicht ändern.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Audioclip Daten wurden gespeichert.</value>
 	</item>
 	<item>
@@ -99,7 +99,7 @@
 	</item>
 	<item>
 		<key>No item(s) selected.</key>
-		<value>Es waren keine Detei(en) ausgewählt.</value>
+		<value>Es waren keine Datei(en) ausgewählt.</value>
 	</item>
 	<item>
 		<key>No playlists have been locked by you.</key>

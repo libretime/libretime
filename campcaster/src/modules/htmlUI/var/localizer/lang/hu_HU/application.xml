@@ -2,7 +2,7 @@
 <translations>
 	<Id>hu_HU</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>A feltöltött fájl nagyobb, mint a rendszerbeállításokban megengedett. További információt a Súgó Hibaelhárítás fejezetében találhat.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Nem tudtam módosítani a le- vagy felkeverés hosszát.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Elmentettem a hangfájl adatait.</value>
 	</item>
 	<item>

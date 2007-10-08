@@ -2,7 +2,7 @@
 <translations>
 	<Id>cz_CZ</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Nahrávaný soubor je větší než je dovoleno v systémovém nastavení. Více informací v kapitole &quot;Řešení problémů&quot; v &quot;Nápovědě&quot;.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Změna prolínání nebyla úspěšná.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Data audioklipu uložena.</value>
 	</item>
 	<item>

@@ -2,7 +2,7 @@
 <translations>
 	<Id>ru_RU</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Загруженный файл больше, чем позволяют настройки системы. Более подробную информацию смотри в разделе &quot;Помощь&quot;, глава &quot;Устранение неполадок&quot;.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Неудача изменения информации о затухании.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Данные аудиозаписи сохранены.</value>
 	</item>
 	<item>

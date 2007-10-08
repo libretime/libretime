@@ -2,7 +2,7 @@
 <translations>
 	<Id>en_GB</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value />
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Changing fade information failed.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Data of audiclip saved.</value>
 	</item>
 	<item>

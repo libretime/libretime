@@ -2,7 +2,7 @@
 <translations>
 	<Id>pl_PL</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Rozmiar pliku jest większy niż dopuszczalne maksimum w ustawieniach systemowych. Zobacz roździał &quot;Troubleshooting&quot; w pomocy (&quot;Help&quot;).</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Nie udało się zmienić tagów</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Zapisano dane pliku</value>
 	</item>
 	<item>

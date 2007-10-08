@@ -2,7 +2,7 @@
 <translations>
 	<Id>nl_NL</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>Het te versturen item is groter dan toegestaan in de systeem eigenschappen. Zie &quot;Help&quot;, in het hoofdstuk &quot;Problemen oplossen&quot; voor meer informatie.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Veranderen van fade informatie mislukt.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Audioclip informatie opgeslagen.</value>
 	</item>
 	<item>

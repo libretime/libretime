@@ -2,7 +2,7 @@
 <translations>
 	<Id>es_CO</Id>
 	<item>
-		<key>The uploaded filer is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
 		<value>El archivo que intenta subir es más grande de lo permitido en la configuración del sistema. Vea en la &quot;Ayuda&quot; el capítulo &quot;Problemas&quot; para más información.</value>
 	</item>
 	<item>
@@ -42,7 +42,7 @@
 		<value>Fallo al cambiar la información.</value>
 	</item>
 	<item>
-		<key>Data of audiclip saved.</key>
+		<key>Data of audioclip saved.</key>
 		<value>Se ha guardado la Informacion del archivo de audio.</value>
 	</item>
 	<item>

@@ -106,4 +106,9 @@
 		<NativeName>Srpski</NativeName>
 		<Completed>1</Completed>
 	</item>
+	<item>
+		<Id>sv_SE</Id>
+		<Name>Swedish</Name>
+		<NativeName>Svenska</NativeName>
+	</item>
 </languages>
