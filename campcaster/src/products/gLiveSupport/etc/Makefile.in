@@ -297,7 +297,8 @@ G_LIVESUPPORT_RES = ${TMP_STUDIO-LOCALIZATION_DIR}/root.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/nl.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/pl.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/sr_CS.res \
-                    ${TMP_STUDIO-LOCALIZATION_DIR}/sr_CS_CYRILLIC.res
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/sr_CS_CYRILLIC.res \
+                    ${TMP_STUDIO-LOCALIZATION_DIR}/sv.res
 
 G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 
