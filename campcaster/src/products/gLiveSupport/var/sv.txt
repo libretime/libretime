@@ -75,7 +75,7 @@ sv:table
         addToPlaylistMenuItem:string    { "Lägg till i _Spellista" }
         removeMenuItem:string           { "_Avlägsna" }
         editPlaylistMenuItem:string     { "_Redigera Spellista" }
-        schedulePlaylistMenuItem:string { "_Schemalägg Spellista" }
+        schedulePlaylistMenuItem:string { "S_chemalägg Spellista" }
         exportPlaylistMenuItem:string   { "E_xportera Spellista" }
         uploadToHubMenuItem:string      { "Ladda upp till nätverksnav" }
 
@@ -215,7 +215,7 @@ sv:table
         addToPlaylistMenuItem:string    { "Lägg till i _Spellista" }
         addToLiveModeMenuItem:string    { "Lägg till i _Liveläge" }
         editPlaylistMenuItem:string     { "_Redigera Spellista" }
-        schedulePlaylistMenuItem:string { "_Schemalägg Spellista" }
+        schedulePlaylistMenuItem:string { "S_chemalägg Spellista" }
         exportPlaylistMenuItem:string   { "E_xportera Spellista" }
         uploadToHubMenuItem:string      { "Ladda upp till nätverksnav" }
         downloadFromHubMenuItem:string  { "Ladda ner från nätverksnav" }
@@ -248,12 +248,12 @@ sv:table
     {
         windowTitle:string          { "Liveläge" }
 
-        playMenuItem:string             { "_Spela" }
+        playMenuItem:string             { "S_pela" }
         cueMenuItem:string              { "_Förhandskoll" }
         addToPlaylistMenuItem:string    { "Lägg till i _Spellista" }
         removeMenuItem:string           { "_Avlägsna" }
         editPlaylistMenuItem:string     { "_Redigera Spellista" }
-        schedulePlaylistMenuItem:string { "_Schemalägg Spellista" }
+        schedulePlaylistMenuItem:string { "S_chemalägg Spellista" }
         exportPlaylistMenuItem:string   { "E_xportera Spellista" }
         uploadToHubMenuItem:string      { "Ladda upp till nätverksnav" }
 
