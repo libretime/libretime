@@ -143,7 +143,7 @@
 	</item>
 	<item>
 		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value>Duración. Ingrese 0 para Flujo en Vivo</value>
+		<value>Duración&lt;br&gt;&lt;small&gt;Ingrese 0 para Flujo en Vivo&lt;/small&gt;</value>
 	</item>
 	<item>
 		<key>Login</key>
@@ -211,7 +211,7 @@
 	</item>
 	<item>
 		<key>Radio station web page</key>
-		<value>Pagina web de la estación de radio</value>
+		<value>Página web de la estación de radio</value>
 	</item>
 	<item>
 		<key>Rating</key>
@@ -311,7 +311,7 @@
 	</item>
 	<item>
 		<key>Track number</key>
-		<value>Número de track</value>
+		<value>Número de pista</value>
 	</item>
 	<item>
 		<key>Type</key>
