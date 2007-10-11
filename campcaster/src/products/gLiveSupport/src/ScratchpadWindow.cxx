@@ -100,8 +100,9 @@ ScratchpadWindow :: ScratchpadWindow (
     treeView->connectModelSignals(treeModel);
 
     // register the signal handlers for treeview
-    treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
-                                            &ScratchpadWindow::onEntryClicked));
+    treeView->signal_button_press_event().connect(sigc::mem_fun(*this,
+                                            &ScratchpadWindow::onEntryClicked),
+                                            false /* call this first */);
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onDoubleClick));
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
@@ -183,66 +184,62 @@ ScratchpadWindow :: ScratchpadWindow (
 /*------------------------------------------------------------------------------
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
-void
+bool
 ScratchpadWindow :: onEntryClicked (GdkEventButton     * event)     throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Gtk::TreePath           currentPath;
-        Gtk::TreeViewColumn *   column;
-        int     cell_x,
-                cell_y;
-        bool foundValidRow = treeView->get_path_at_pos(
-                                            int(event->x), int(event->y),
-                                            currentPath, column,
-                                            cell_x, cell_y);
+        Glib::RefPtr<Gtk::TreeView::Selection> 
+                                    selection = treeView->get_selection();
+        selectedPaths.reset(new std::vector<Gtk::TreePath>(
+                                    selection->get_selected_rows()));
 
-        if (foundValidRow) {
-            Gtk::TreeIter   iter = treeModel->get_iter(currentPath);
-            if (iter) {
-                currentRow = *iter;
-                
+        if (selectedPaths->size() > 0) {
+            selectedIter = selectedPaths->begin();
+
+            if (selectedPaths->size() == 1) {
+                Gtk::TreeRow    row = *(treeModel->get_iter(*selectedIter));
                 Ptr<Playable>::Ref 
-                            playable = currentRow[modelColumns.playableColumn];
+                                playable = row[modelColumns.playableColumn];
                 
-                switch (playable->getType()) {
-                    case Playable::AudioClipType:
-                        audioClipMenu->popup(event->button, event->time);
-                        break;
-                        
-                    case Playable::PlaylistType:
-                        playlistMenu->popup(event->button, event->time);
-                        break;
-    
-                    default:
-                        break;
+                if (playable->getType() == Playable::AudioClipType) {
+                    audioClipMenu->popup(event->button, event->time);
+                    return true;
+                    
+                } else if (playable->getType() ==  Playable::PlaylistType) {
+                    playlistMenu->popup(event->button, event->time);
+                    return true;
                 }
+                
+            } else { // selectedPaths.size() > 1
+                audioClipMenu->popup(event->button, event->time);
+                return true;
             }
         }
     }
+    
+    return false;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Select the row which contains the playable specified.
+ *  Return the next selected playable item.
  *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: selectRow(Ptr<Playable>::Ref    playable)       throw ()
+Ptr<Playable>::Ref
+ScratchpadWindow :: getNextSelectedPlayable(void)                   throw ()
 {
-    Gtk::TreeModel::const_iterator  it;
-
-    for (it = treeModel->children().begin(); 
-                                it != treeModel->children().end(); ++it) {
-        
-        Gtk::TreeRow        row = *it;
-        Ptr<Playable>::Ref  currentPlayable = row[modelColumns.playableColumn];
-        
-        if (*playable->getId() == *currentPlayable->getId()) {
-            Glib::RefPtr<Gtk::TreeView::Selection> 
-                            selection = treeView->get_selection();
-            selection->select(it);
-            return;
+    Ptr<Playable>::Ref  playable;
+    
+    if (selectedPaths) {
+        if (selectedIter != selectedPaths->end()) {
+            Gtk::TreeRow    row = *(treeModel->get_iter(*selectedIter));
+            playable = row[modelColumns.playableColumn];
+            ++selectedIter;
+        } else {
+            selectedPaths.reset();
         }
     }
+    
+    return playable;
 }
 
 
@@ -275,7 +272,8 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref  id)        throw ()
 void
 ScratchpadWindow :: onEditPlaylist(void)                            throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+
     try {
         gLiveSupport->openPlaylistForEditing(playable->getId());
     } catch (XmlRpcException &e) {
@@ -292,7 +290,7 @@ ScratchpadWindow :: onEditPlaylist(void)                            throw ()
 void
 ScratchpadWindow :: onSchedulePlaylist(void)                        throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
     if (playlist) {
@@ -309,7 +307,7 @@ ScratchpadWindow :: onSchedulePlaylist(void)                        throw ()
 void
 ScratchpadWindow :: onExportPlaylist(void)                          throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
     
     if (playlist) {
@@ -327,13 +325,16 @@ ScratchpadWindow :: onExportPlaylist(void)                          throw ()
 void
 ScratchpadWindow :: onAddToPlaylist(void)                           throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    try {
-        gLiveSupport->addToPlaylist(playable->getId());
-    } catch (XmlRpcException &e) {
-        std::cerr << "error in ScratchpadWindow::onAddToPlaylist(): "
-                    << e.what() << std::endl;
-        return;
+    Ptr<Playable>::Ref  playable;
+
+    while ((playable = getNextSelectedPlayable())) {
+        try {
+            gLiveSupport->addToPlaylist(playable->getId());
+        } catch (XmlRpcException &e) {
+            std::cerr << "error in ScratchpadWindow::onAddToPlaylist(): "
+                        << e.what() << std::endl;
+            return;
+        }
     }
 }
 
@@ -345,8 +346,11 @@ ScratchpadWindow :: onAddToPlaylist(void)                           throw ()
 void
 ScratchpadWindow :: onAddToLiveMode(void)                           throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    gLiveSupport->addToLiveMode(playable);
+    Ptr<Playable>::Ref  playable;
+
+    while ((playable = getNextSelectedPlayable())) {
+        gLiveSupport->addToLiveMode(playable);
+    }
 }
 
 
@@ -356,8 +360,11 @@ ScratchpadWindow :: onAddToLiveMode(void)                           throw ()
 void
 ScratchpadWindow :: onUploadToHub(void)                             throw ()
 {
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    gLiveSupport->uploadToHub(playable);
+    Ptr<Playable>::Ref  playable;
+
+    while ((playable = getNextSelectedPlayable())) {
+        gLiveSupport->uploadToHub(playable);
+    }
 }
 
 
@@ -403,9 +410,13 @@ ScratchpadWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                                   const Gtk::TreeViewColumn *     column)
                                                                     throw ()
 {
-    Gtk::TreeIter   iter = treeModel->get_iter(path);
-    if (iter) {
-        currentRow = *iter;
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                                selection = treeView->get_selection();
+    selectedPaths.reset(new std::vector<Gtk::TreePath>(
+                                selection->get_selected_rows()));
+
+    if (selectedPaths->size() > 0) {
+        selectedIter = selectedPaths->begin();
         onAddToLiveMode();
     }
 }
@@ -460,13 +471,7 @@ ScratchpadWindow :: isSelectionSingle(void)                         throw ()
     std::vector<Gtk::TreePath> 
                     selectedRows    = selection->get_selected_rows();
 
-    if (selectedRows.size() == 1) {
-        Gtk::TreeIter   iter = treeModel->get_iter(selectedRows.at(0));
-        currentRow = *iter;
-        return true;
-    } else {
-        return false;
-    }
+    return (selectedRows.size() == 1);
 }
 
 

@@ -95,24 +95,25 @@ class ScratchpadWindow : public GuiWindow,
         Ptr<SchedulePlaylistWindow>::Ref    schedulePlaylistWindow;
 
         /**
-         *  Check whether exactly one row is selected, and if so, set
-         *  the currentRow variable to point to it.
+         *  Used to iterate over the selected rows.
+         *  Reset to the first row by onEntryClicked().
+         *  Returns a 0 pointer if nothing is selected or we have reached
+         *  the end of the list of selected rows.
+         *
+         *  @return the next selected item.
+         */
+        Ptr<Playable>::Ref
+        getNextSelectedPlayable(void)                               throw ();
+
+        /**
+         *  Check whether exactly one row is selected.
          *
          *  This is an auxilliary function used by onKeyPressed().
          *
          *  @return true if a single row is selected, false if not.
          */
         bool
-        isSelectionSingle(void)                                 throw ();
-
-        /**
-         *  Select the (first) row which contains the playable specified.
-         *  If no such row is found, then it does nothing.
-         *
-         *  @param playable     the playable to be selected.
-         */
-        void
-        selectRow(Ptr<Playable>::Ref    playable)               throw ();
+        isSelectionSingle(void)                                     throw ();
 
         /**
          *  Remove an item from the Scratchpad.
@@ -124,7 +125,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @param id the id of the item to remove.
          */
         void
-        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
+        removeItem(Ptr<const UniqueId>::Ref     id)                 throw ();
 
 
     protected:
@@ -184,9 +185,16 @@ class ScratchpadWindow : public GuiWindow,
         ZebraTreeView *                 treeView;
 
         /**
-         *  The model row at the mouse pointer, set by onEntryClicked()
+         *  The list of selected rows, as path references (row numbers).
+         *  Reset by onEntryClicked();
          */
-        Gtk::TreeRow                    currentRow;
+        Ptr<std::vector<Gtk::TreePath> >::Ref
+                                        selectedPaths;
+        /**
+         *  One of the selected rows, set to the first one by onEntryClicked().
+         */
+        std::vector<Gtk::TreePath>::const_iterator
+                                        selectedIter;
 
         /**
          *  The cue player widget controlling the audio buttons.
@@ -210,8 +218,10 @@ class ScratchpadWindow : public GuiWindow,
          *  This is used to pop up the right-click context menu.
          *
          *  @param event the button event recieved
+         *  @return true if the event has been handled (a popup displayed),
+         *          false otherwise
          */
-        virtual void
+        virtual bool
         onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
