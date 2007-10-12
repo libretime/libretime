@@ -377,12 +377,7 @@ void
 LiveModeWindow :: onOutputPlay(void)                                throw ()
 {
     Ptr<Playable>::Ref  playable = getFirstSelectedPlayable();
-std::cerr << "got playable: ";
-if (playable) {
-std::cerr << *playable->getTitle() << std::endl;
-} else {
-std::cerr << "null" << std::endl;
-}
+
     if (playable) {
         try {
             gLiveSupport->playOutputAudio(playable);
