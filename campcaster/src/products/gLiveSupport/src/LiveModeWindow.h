@@ -120,12 +120,23 @@ class LiveModeWindow : public GuiWindow,
         Gtk::CheckButton *                  autoPlayNext;
 
         /**
+         *  The list of selected rows, as path references (row numbers).
+         *  Reset by onEntryClicked().
+         */
+        Ptr<std::vector<Gtk::TreePath> >::Ref           selectedPaths;
+        /**
+         *  One of the selected rows, set to the first one by onEntryClicked().
+         *  Incremented by getNextSelectedPlayable().
+         */
+        std::vector<Gtk::TreePath>::const_iterator      selectedIter;
+
+        /**
          *  Construct the right-click context menu for local audio clips.
          *
          *  @return the context menu created.
          */
         Ptr<Gtk::Menu>::Ref
-        constructAudioClipContextMenu(void)                     throw ();
+        constructAudioClipContextMenu(void)                         throw ();
 
         /**
          *  Construct the right-click context menu for local playlists.
@@ -133,17 +144,39 @@ class LiveModeWindow : public GuiWindow,
          *  @return the context menu created.
          */
         Ptr<Gtk::Menu>::Ref
-        constructPlaylistContextMenu(void)                      throw ();
+        constructPlaylistContextMenu(void)                          throw ();
 
         /**
-         *  Find the selected row.
-         *  If more than one row is selected, it returns the first one.
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
          *
-         *  @return an iterator for the selected row; may be invalid
-         *          if nothing is selected.
+         *  @return the first selected playable item.
          */
-        Gtk::TreeModel::iterator
-        getSelected(void)                                       throw ();
+        Ptr<Playable>::Ref
+        getFirstSelectedPlayable(void)                              throw ();
+
+        /**
+         *  Used to iterate over the selected rows.
+         *  Can only be called after onEntryClicked() has set the selectedPaths
+         *  and selectedIter variables.
+         *  Returns a 0 pointer if nothing is selected or we have reached the
+         *  end of the list of selected rows.
+         *  Increments selectedIter after reading it.
+         *
+         *  @return the next selected playable item.
+         */
+        Ptr<Playable>::Ref
+        getNextSelectedPlayable(void)                               throw ();
+
+        /**
+         *  Check whether exactly one row is selected.
+         *
+         *  This is an auxilliary function used by onKeyPressed().
+         *
+         *  @return true if a single row is selected, false if not.
+         */
+        bool
+        selectionIsSingle(void)                                     throw ();
 
 
     protected:
@@ -220,15 +253,18 @@ class LiveModeWindow : public GuiWindow,
          *  This brings up the right-click context menu.
          *
          *  @param event the button event recieved
+         *  @return true if the event has been handled (a popup displayed),
+         *          false otherwise
          */
-        void
+        bool
         onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
          *  Signal handler for the user double-clicking, or pressing Enter
          *  on one of the entries.
          *
-         *  @param event the button event recieved
+         *  @param  path    the TreePath of the row clicked on (ignored).
+         *  @param  column  the TreeViewColumn clicked on (ignored).
          */
         void
         onDoubleClick(const Gtk::TreeModel::Path &      path,
@@ -285,10 +321,11 @@ class LiveModeWindow : public GuiWindow,
         onUploadToHub(void)                                     throw ();
 
         /**
-         *  Signal handler for the remove item button clicked.
+         *  Signal handler for the "remove" menu item selected from
+         *  the entry context menu.
          */
         virtual void
-        onRemoveItemButtonClicked(void)                         throw ();
+        onRemoveMenuOption(void)                                throw ();
 
         /**
          *  Signal handler for a change in the tree model.

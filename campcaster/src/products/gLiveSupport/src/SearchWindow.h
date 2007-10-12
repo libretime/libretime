@@ -100,6 +100,17 @@ class SearchWindow : public  GuiWindow,
         int                         remoteSearchResultsCount;
 
         /**
+         *  The list of selected rows, as path references (row numbers).
+         *  Reset by onEntryClicked().
+         */
+        Ptr<std::vector<Gtk::TreePath> >::Ref           selectedPaths;
+        /**
+         *  One of the selected rows, set to the first one by onEntryClicked().
+         *  Incremented by getNextSelectedPlayable().
+         */
+        std::vector<Gtk::TreePath>::const_iterator      selectedIter;
+
+        /**
          *  The "search where" input field.
          */
         ComboBoxText *              searchWhereEntry;
@@ -339,7 +350,7 @@ class SearchWindow : public  GuiWindow,
         displaySearchResults(
                     Ptr<SearchResultsType>::Ref     searchResults,
                     Glib::RefPtr<Gtk::ListStore>    treeModel)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Update the paging portion of the search results view.
@@ -347,7 +358,7 @@ class SearchWindow : public  GuiWindow,
          *  the Backward and Forward buttons.
          */
         void
-        updatePagingToolbar(void)                               throw ();
+        updatePagingToolbar(void)                                   throw ();
 
         /**
          *  Display a (usually error) message in the search results tree view.
@@ -358,7 +369,7 @@ class SearchWindow : public  GuiWindow,
         void
         displayMessage(const Glib::ustring &          messageKey,
                        Glib::RefPtr<Gtk::ListStore>   treeModel)
-                                                                throw ();
+                                                                    throw ();
         
         /**
          *  Display an error message which occurred during a search.
@@ -369,7 +380,7 @@ class SearchWindow : public  GuiWindow,
         void
         displayError(const XmlRpcException &        error,
                      Glib::RefPtr<Gtk::ListStore>   treeModel)
-                                                                throw ();
+                                                                    throw ();
         
         /**
          *  Display an error message which occurred during a local search.
@@ -378,7 +389,7 @@ class SearchWindow : public  GuiWindow,
          */
         void
         displayLocalSearchError(const XmlRpcException &     error)
-                                                                throw ();
+                                                                    throw ();
         
         /**
          *  Display an error message which occurred during a remote search.
@@ -387,7 +398,27 @@ class SearchWindow : public  GuiWindow,
          */
         void
         displayRemoteSearchError(const XmlRpcException &    error)
-                                                                throw ();
+                                                                    throw ();
+
+        /**
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
+         *
+         *  @return the first selected playable item.
+         */
+        Ptr<Playable>::Ref
+        getFirstSelectedPlayable(void)                              throw ();
+
+        /**
+         *  Used to iterate over the selected rows.
+         *  Reset to the first row by onEntryClicked().
+         *  Returns a 0 pointer if nothing is selected or we have reached
+         *  the end of the list of selected rows.
+         *
+         *  @return the next selected playable item.
+         */
+        Ptr<Playable>::Ref
+        getNextSelectedPlayable(void)                               throw ();
 
 
     protected:
@@ -505,15 +536,18 @@ class SearchWindow : public  GuiWindow,
          *  Signal handler for the mouse clicked on one of the entries.
          *
          *  @param event the button event received
+         *  @return true if the event has been handled (a popup displayed),
+         *          false otherwise
          */
-        void
+        bool
         onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
          *  Signal handler for the user double-clicking, or pressing Enter
          *  on one of the entries.
          *
-         *  @param event the button event recieved
+         *  @param  path    the TreePath of the row clicked on (ignored).
+         *  @param  column  the TreeViewColumn clicked on (ignored).
          */
         void
         onDoubleClick(const Gtk::TreeModel::Path &      path,

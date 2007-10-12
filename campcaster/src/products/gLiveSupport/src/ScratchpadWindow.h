@@ -95,12 +95,32 @@ class ScratchpadWindow : public GuiWindow,
         Ptr<SchedulePlaylistWindow>::Ref    schedulePlaylistWindow;
 
         /**
+         *  The list of selected rows, as path references (row numbers).
+         *  Reset by onEntryClicked().
+         */
+        Ptr<std::vector<Gtk::TreePath> >::Ref           selectedPaths;
+        /**
+         *  One of the selected rows, set to the first one by onEntryClicked().
+         *  Incremented by getNextSelectedPlayable().
+         */
+        std::vector<Gtk::TreePath>::const_iterator      selectedIter;
+
+        /**
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
+         *
+         *  @return the first selected playable item.
+         */
+        Ptr<Playable>::Ref
+        getFirstSelectedPlayable(void)                              throw ();
+
+        /**
          *  Used to iterate over the selected rows.
          *  Reset to the first row by onEntryClicked().
          *  Returns a 0 pointer if nothing is selected or we have reached
          *  the end of the list of selected rows.
          *
-         *  @return the next selected item.
+         *  @return the next selected playable item.
          */
         Ptr<Playable>::Ref
         getNextSelectedPlayable(void)                               throw ();
@@ -113,7 +133,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @return true if a single row is selected, false if not.
          */
         bool
-        isSelectionSingle(void)                                     throw ();
+        selectionIsSingle(void)                                     throw ();
 
         /**
          *  Remove an item from the Scratchpad.
@@ -185,18 +205,6 @@ class ScratchpadWindow : public GuiWindow,
         ZebraTreeView *                 treeView;
 
         /**
-         *  The list of selected rows, as path references (row numbers).
-         *  Reset by onEntryClicked();
-         */
-        Ptr<std::vector<Gtk::TreePath> >::Ref
-                                        selectedPaths;
-        /**
-         *  One of the selected rows, set to the first one by onEntryClicked().
-         */
-        std::vector<Gtk::TreePath>::const_iterator
-                                        selectedIter;
-
-        /**
          *  The cue player widget controlling the audio buttons.
          */
         Ptr<CuePlayer>::Ref             cuePlayer;
@@ -205,13 +213,13 @@ class ScratchpadWindow : public GuiWindow,
          *  The right-click context menu for audio clips,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Ptr<Gtk::Menu>::Ref             audioClipMenu;
+        Ptr<Gtk::Menu>::Ref             audioClipContextMenu;
 
         /**
          *  The right-click context menu for playlists,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Ptr<Gtk::Menu>::Ref             playlistMenu;
+        Ptr<Gtk::Menu>::Ref             playlistContextMenu;
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.
@@ -228,7 +236,8 @@ class ScratchpadWindow : public GuiWindow,
          *  Signal handler for the user double-clicking, or pressing Enter
          *  on one of the entries.
          *
-         *  @param event the button event recieved
+         *  @param  path    the TreePath of the row clicked on (ignored).
+         *  @param  column  the TreeViewColumn clicked on (ignored).
          */
         void
         onDoubleClick(const Gtk::TreeModel::Path &      path,

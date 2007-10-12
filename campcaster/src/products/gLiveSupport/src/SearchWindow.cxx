@@ -210,6 +210,7 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     remoteSearchResults = Gtk::ListStore::create(modelColumns);
     
     glade->get_widget_derived("searchResultsTreeView1", searchResultsTreeView);
+    searchResultsTreeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
     searchResultsTreeView->set_model(localSearchResults);
     searchResultsTreeView->connectModelSignals(localSearchResults);
     searchResultsTreeView->connectModelSignals(remoteSearchResults);
@@ -230,9 +231,10 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
                                 *getResourceUstring("lengthColumnLabel"),
                                 modelColumns.lengthColumn, 55);
     
-    searchResultsTreeView->signal_button_press_event().connect_notify(
+    searchResultsTreeView->signal_button_press_event().connect(
                                 sigc::mem_fun(*this,
-                                            &SearchWindow::onEntryClicked));
+                                              &SearchWindow::onEntryClicked),
+                                false /* call this first */);
     searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &SearchWindow::onDoubleClick));
     
@@ -589,49 +591,78 @@ SearchWindow :: displayRemoteSearchError(const XmlRpcException &    error)
 /*------------------------------------------------------------------------------
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
-void
+bool
 SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Gtk::TreePath           currentPath;
-        Gtk::TreeViewColumn *   column;
-        int     cell_x,
-                cell_y;
-        bool foundValidRow = searchResultsTreeView->get_path_at_pos(
-                                            int(event->x), int(event->y),
-                                            currentPath, column,
-                                            cell_x, cell_y);
+        Ptr<Playable>::Ref      playable = getFirstSelectedPlayable();
 
-        if (foundValidRow) {
-            Gtk::TreeIter   iter = searchResultsTreeView->get_model()
-                                                        ->get_iter(currentPath);
-            if (iter) {
-                Ptr<Playable>::Ref  playable =
-                                         (*iter)[modelColumns.playableColumn];
+        if (selectedPaths->size() == 1) {
+            if (playable->getType() == Playable::AudioClipType) {
+                audioClipContextMenu->popup(event->button, event->time);
+                return true;
                 
-                if (playable) {
-                    if (searchIsLocal()) {
-                        switch (playable->getType()) {
-                            case Playable::AudioClipType:
-                                audioClipContextMenu->popup(event->button,
-                                                            event->time);
-                                break;
-                                
-                            case Playable::PlaylistType:
-                                playlistContextMenu->popup(event->button,
-                                                           event->time);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    } else {
-                        remoteContextMenu->popup(event->button, event->time);
-                    }
-                }
+            } else if (playable->getType() ==  Playable::PlaylistType) {
+                playlistContextMenu->popup(event->button, event->time);
+                return true;
             }
+            
+        } else if (selectedPaths->size() > 1) {
+            audioClipContextMenu->popup(event->button, event->time);
+            return true;
         }
     }
+    
+    return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the first selected playable item.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+SearchWindow :: getFirstSelectedPlayable(void)                      throw ()
+{
+    Ptr<Playable>::Ref      playable;
+    
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                            selection = searchResultsTreeView->get_selection();
+    selectedPaths.reset(new std::vector<Gtk::TreePath>(
+                            selection->get_selected_rows()));
+
+    if (selectedPaths->size() > 0) {
+        selectedIter = selectedPaths->begin();
+        Glib::RefPtr<Gtk::TreeModel>
+                            treeModel = searchResultsTreeView->get_model();
+        Gtk::TreeRow        row = *(treeModel->get_iter(*selectedIter));
+        playable = row[modelColumns.playableColumn];
+    }
+    
+    return playable;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the next selected playable item.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+SearchWindow :: getNextSelectedPlayable(void)                       throw ()
+{
+    Ptr<Playable>::Ref      playable;
+    
+    if (selectedPaths) {
+        if (selectedIter != selectedPaths->end()) {
+            Glib::RefPtr<Gtk::TreeModel>
+                            treeModel = searchResultsTreeView->get_model();
+            Gtk::TreeRow    row = *(treeModel->get_iter(*selectedIter));
+            playable = row[modelColumns.playableColumn];
+            ++selectedIter;
+        } else {
+            selectedPaths.reset();
+        }
+    }
+    
+    return playable;
 }
 
 
@@ -641,22 +672,16 @@ SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
 void
 SearchWindow :: onAddToScratchpad(void)                         throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
-    
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        if (playable) {
-            try {
-                gLiveSupport->addToScratchpad(playable);
-            } catch (XmlRpcException &e) {
-                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
-                            "error in SearchWindow::onAddToScratchpad(): "));
-                errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(*errorMessage);
-            }
+    Ptr<Playable>::Ref  playable;
+
+    while ((playable = getNextSelectedPlayable())) {
+        try {
+            gLiveSupport->addToScratchpad(playable);
+        } catch (XmlRpcException &e) {
+            Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                        "error in SearchWindow::onAddToScratchpad(): "));
+            errorMessage->append(e.what());
+            gLiveSupport->displayMessageWindow(*errorMessage);
         }
     }
 }
@@ -669,20 +694,16 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
 void
 SearchWindow :: onAddToPlaylist(void)                           throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
+    Ptr<Playable>::Ref  playable;
 
-    if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+    while ((playable = getNextSelectedPlayable())) {
         try {
             gLiveSupport->addToPlaylist(playable->getId());
         } catch (XmlRpcException &e) {
-                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
-                            "error in SearchWindow::onAddToPlaylist(): "));
-                errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(*errorMessage);
+            Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                        "error in SearchWindow::onAddToPlaylist(): "));
+            errorMessage->append(e.what());
+            gLiveSupport->displayMessageWindow(*errorMessage);
         }
     }
 }
@@ -694,24 +715,18 @@ SearchWindow :: onAddToPlaylist(void)                           throw ()
 void
 SearchWindow :: onAddToLiveMode(void)                           throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
-    
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        if (playable) {
-            try {
-                gLiveSupport->addToScratchpad(playable);
-                playable = gLiveSupport->getPlayable(playable->getId());
-                gLiveSupport->addToLiveMode(playable);
-            } catch (XmlRpcException &e) {
-                Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
-                            "error in SearchWindow::onAddToLiveMode(): "));
-                errorMessage->append(e.what());
-                gLiveSupport->displayMessageWindow(*errorMessage);
-            }
+    Ptr<Playable>::Ref  playable;
+
+    while ((playable = getNextSelectedPlayable())) {
+        try {
+            gLiveSupport->addToScratchpad(playable);
+            playable = gLiveSupport->getPlayable(playable->getId());
+            gLiveSupport->addToLiveMode(playable);
+        } catch (XmlRpcException &e) {
+            Ptr<Glib::ustring>::Ref     errorMessage(new Glib::ustring(
+                        "error in SearchWindow::onAddToLiveMode(): "));
+            errorMessage->append(e.what());
+            gLiveSupport->displayMessageWindow(*errorMessage);
         }
     }
 }
@@ -724,21 +739,15 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
 void
 SearchWindow :: onEditPlaylist(void)                            throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
 
-    if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
-        if (playlist) {
-            try {
-                gLiveSupport->openPlaylistForEditing(playlist->getId());
-            } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(*getResourceUstring(
-                                                   "cannotEditPlaylistMsg" ));
-            }
+    if (playlist) {
+        try {
+            gLiveSupport->openPlaylistForEditing(playlist->getId());
+        } catch (XmlRpcException &e) {
+            gLiveSupport->displayMessageWindow(*getResourceUstring(
+                                                "cannotEditPlaylistMsg" ));
         }
     }
 }
@@ -751,16 +760,7 @@ SearchWindow :: onEditPlaylist(void)                            throw ()
 void
 SearchWindow :: onSchedulePlaylist(void)                        throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
-
-    if (!iter) {
-        return;
-    }
-
-    Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
     Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
 
     if (playlist) {
@@ -777,17 +777,8 @@ SearchWindow :: onSchedulePlaylist(void)                        throw ()
 void
 SearchWindow :: onExportPlaylist(void)                          throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
-
-    if (!iter) {
-        return;
-    }
-
-    Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-    Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
 
     if (playlist) {
         exportPlaylistWindow.reset(new ExportPlaylistWindow(playlist));
@@ -803,16 +794,10 @@ SearchWindow :: onExportPlaylist(void)                          throw ()
 void
 SearchWindow :: onUploadToHub(void)                             throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
+    Ptr<Playable>::Ref  playable;
 
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        if (playable) {
-            uploadToHub(playable);
-        }
+    while ((playable = getNextSelectedPlayable())) {
+        uploadToHub(playable);
     }
 }
 
@@ -844,27 +829,21 @@ SearchWindow :: uploadToHub(Ptr<Playable>::Ref  playable)       throw ()
 void
 SearchWindow :: onDownloadFromHub(void)                         throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection>
-                        refSelection = searchResultsTreeView->get_selection();
-    Gtk::TreeModel::iterator
-                        iter         = refSelection->get_selected();
+    Ptr<Playable>::Ref  playable;
 
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        if (playable) {
-            if (!gLiveSupport->existsPlayable(playable->getId())) {
-                try {
-                    searchInput->set_current_page(3);
-                    transportList->addDownload(playable);
-                    
-                } catch (XmlRpcException &e) {
-                    gLiveSupport->displayMessageWindow(*formatMessage(
-                                        "downloadFromHubErrorMsg", e.what() ));
-                    return;
-                }
-            } else {
-                onAddToScratchpad();
+    while ((playable = getNextSelectedPlayable())) {
+        if (!gLiveSupport->existsPlayable(playable->getId())) {
+            try {
+                searchInput->set_current_page(3);
+                transportList->addDownload(playable);
+                
+            } catch (XmlRpcException &e) {
+                gLiveSupport->displayMessageWindow(*formatMessage(
+                                    "downloadFromHubErrorMsg", e.what() ));
+                return;
             }
+        } else {
+            onAddToScratchpad();
         }
     }
 }
@@ -878,10 +857,14 @@ SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
                               const Gtk::TreeViewColumn *     column)
                                                                 throw ()
 {
-    if (searchIsLocal()) {
-        onAddToScratchpad();
-    } else {
-        onDownloadFromHub();
+    Ptr<Playable>::Ref      playable = getFirstSelectedPlayable();
+
+    if (playable) {
+        if (searchIsLocal()) {
+            onAddToScratchpad();
+        } else {
+            onDownloadFromHub();
+        }
     }
 }
 

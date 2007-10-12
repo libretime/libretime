@@ -87,15 +87,14 @@ LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
             isDeleting(false)
 {
     glade->get_widget_derived("treeView1", treeView);
-    treeModel = Gtk::ListStore::create(modelColumns);
-    treeView->set_model(treeModel);
-    treeView->connectModelSignals(treeModel);
+    treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
     treeView->appendLineNumberColumn("", 2 /* offset */, 50);
     treeView->appendColumn("", modelColumns.infoColumn, 200);
 
-    treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
-                                        &LiveModeWindow::onEntryClicked));
+    treeView->signal_button_press_event().connect(sigc::mem_fun(*this,
+                                        &LiveModeWindow::onEntryClicked),
+                                        false /* call this first */);
     treeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onDoubleClick));
     treeView->signalTreeModelChanged().connect(sigc::mem_fun(*this,
@@ -103,6 +102,10 @@ LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
     
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onKeyPressed));
+
+    treeModel = Gtk::ListStore::create(modelColumns);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
 
     glade->get_widget("cueLabel1", cueLabel);
     cueLabel->set_label(*getResourceUstring("cuePlayerLabel"));
@@ -226,92 +229,76 @@ LiveModeWindow :: popTop(void)                                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Find the selected row.
- *----------------------------------------------------------------------------*/
-Gtk::TreeModel::iterator
-LiveModeWindow :: getSelected(void)                                 throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection>  selection
-                                            = treeView->get_selection();
-    std::vector<Gtk::TreeModel::Path>       selectedPaths
-                                            = selection->get_selected_rows();
-    
-    Gtk::TreeModel::iterator                it;
-    if (selectedPaths.size() > 0) {
-        it = treeModel->get_iter(selectedPaths.front());
-    }
-    return it;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Signal handler for the output play button clicked.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onOutputPlay(void)                                throw ()
-{
-    Gtk::TreeModel::iterator        iter = getSelected();
-
-    if (!iter) {
-        iter = treeModel->children().begin();
-    }
-    
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        try {
-            gLiveSupport->playOutputAudio(playable);
-            gLiveSupport->setNowPlaying(playable);
-            treeView->removeItem(iter);
-            gLiveSupport->runMainLoop();
-        } catch (std::runtime_error &e) {
-            std::cerr << "cannot play on live mode output device: "
-                      << e.what() << std::endl;
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Event handler for an entry being clicked in the list.
  *----------------------------------------------------------------------------*/
-void
+bool
 LiveModeWindow :: onEntryClicked(GdkEventButton *   event)          throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Gtk::TreePath           currentPath;
-        Gtk::TreeViewColumn *   column;
-        int     cell_x,
-                cell_y;
-        bool foundValidRow = treeView->get_path_at_pos(
-                                            int(event->x), int(event->y),
-                                            currentPath, column,
-                                            cell_x, cell_y);
+        Ptr<Playable>::Ref      playable = getFirstSelectedPlayable();
 
-        if (foundValidRow) {
-            Gtk::TreeIter   iter = treeModel->get_iter(currentPath);
-            if (iter) {
-                Ptr<Playable>::Ref  playable =
-                                         (*iter)[modelColumns.playableColumn];
+        if (selectedPaths->size() == 1) {
+            if (playable->getType() == Playable::AudioClipType) {
+                audioClipContextMenu->popup(event->button, event->time);
+                return true;
                 
-                if (playable) {
-                    switch (playable->getType()) {
-                        case Playable::AudioClipType:
-                            audioClipContextMenu->popup(event->button,
-                                                        event->time);
-                            break;
-                            
-                        case Playable::PlaylistType:
-                            playlistContextMenu->popup(event->button,
-                                                        event->time);
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
+            } else if (playable->getType() ==  Playable::PlaylistType) {
+                playlistContextMenu->popup(event->button, event->time);
+                return true;
             }
+            
+        } else if (selectedPaths->size() > 1) {
+            audioClipContextMenu->popup(event->button, event->time);
+            return true;
         }
     }
+    
+    return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the first selected playable item.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+LiveModeWindow :: getFirstSelectedPlayable(void)                    throw ()
+{
+    Ptr<Playable>::Ref          playable;
+    
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                                selection = treeView->get_selection();
+    selectedPaths.reset(new std::vector<Gtk::TreePath>(
+                                selection->get_selected_rows()));
+
+    if (selectedPaths->size() > 0) {
+        selectedIter = selectedPaths->begin();
+        Gtk::TreeRow            row = *(treeModel->get_iter(*selectedIter));
+        playable = row[modelColumns.playableColumn];
+    }
+    
+    return playable;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the next selected playable item.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+LiveModeWindow :: getNextSelectedPlayable(void)                     throw ()
+{
+    Ptr<Playable>::Ref          playable;
+    
+    if (selectedPaths) {
+        if (selectedIter != selectedPaths->end()) {
+            Gtk::TreeRow        row = *(treeModel->get_iter(*selectedIter));
+            playable = row[modelColumns.playableColumn];
+            ++selectedIter;
+        } else {
+            selectedPaths.reset();
+        }
+    }
+    
+    return playable;
 }
 
 
@@ -334,36 +321,83 @@ bool
 LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 {
     if (event->type == GDK_KEY_PRESS) {
-        Gtk::TreeModel::iterator        iter = getSelected();
-        
-        if (iter) {
-            KeyboardShortcut::Action    action = gLiveSupport->findAction(
-                                            "liveModeWindow",
-                                            Gdk::ModifierType(event->state),
-                                            event->keyval);
-            switch (action) {
-                case KeyboardShortcut::moveItemUp :
+        KeyboardShortcut::Action    action = gLiveSupport->findAction(
+                                        "liveModeWindow",
+                                        Gdk::ModifierType(event->state),
+                                        event->keyval);
+        switch (action) {
+            case KeyboardShortcut::moveItemUp :
+                                    if (selectionIsSingle()) {
                                         treeView->onUpMenuOption();
                                         return true;
+                                    }
+                                    break;
 
-                case KeyboardShortcut::moveItemDown :
+            case KeyboardShortcut::moveItemDown :
+                                    if (selectionIsSingle()) {
                                         treeView->onDownMenuOption();
                                         return true;
-                
-                case KeyboardShortcut::removeItem :
-                                        onRemoveItemButtonClicked();
-                                        return true;
-                
-                case KeyboardShortcut::playAudio :
-                                        onOutputPlay();
-                                        return true;
-                
-                default :               break;
-            }
+                                    }
+                                    break;
+            
+            case KeyboardShortcut::removeItem :
+                                    onRemoveMenuOption();
+                                    return true;
+                                    break;
+            
+            case KeyboardShortcut::playAudio :
+                                    onOutputPlay();
+                                    return true;
+                                    break;
+            
+            default :               break;
         }
     }
     
     return false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check whether exactly one row is selected.
+ *----------------------------------------------------------------------------*/
+bool
+LiveModeWindow :: selectionIsSingle(void)                           throw ()
+{
+    getFirstSelectedPlayable();
+
+    return (selectedPaths->size() == 1);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the output play button clicked.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onOutputPlay(void)                                throw ()
+{
+    Ptr<Playable>::Ref  playable = getFirstSelectedPlayable();
+std::cerr << "got playable: ";
+if (playable) {
+std::cerr << *playable->getTitle() << std::endl;
+} else {
+std::cerr << "null" << std::endl;
+}
+    if (playable) {
+        try {
+            gLiveSupport->playOutputAudio(playable);
+            gLiveSupport->setNowPlaying(playable);
+
+            Gtk::TreeIter   iter = treeModel->get_iter(*selectedIter);
+            treeView->removeItem(iter);
+
+            gLiveSupport->runMainLoop();
+            
+        } catch (std::runtime_error &e) {
+            std::cerr << "cannot play on live mode output device: "
+                      << e.what() << std::endl;
+        }
+    }
 }
 
 
@@ -374,18 +408,15 @@ LiveModeWindow :: onKeyPressed(GdkEventKey *    event)              throw ()
 void
 LiveModeWindow :: onEditPlaylist(void)                              throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelected();
-
-    if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-        Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
-        if (playlist) {
-            try {
-                gLiveSupport->openPlaylistForEditing(playlist->getId());
-            } catch (XmlRpcException &e) {
-                gLiveSupport->displayMessageWindow(*getResourceUstring(
-                                                    "cannotEditPlaylistMsg" ));
-            }
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+    
+    if (playlist) {
+        try {
+            gLiveSupport->openPlaylistForEditing(playlist->getId());
+        } catch (XmlRpcException &e) {
+            gLiveSupport->displayMessageWindow(*getResourceUstring(
+                                                "cannotEditPlaylistMsg" ));
         }
     }
 }
@@ -398,15 +429,9 @@ LiveModeWindow :: onEditPlaylist(void)                              throw ()
 void
 LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelected();
-
-    if (!iter) {
-        return;
-    }
-
-    Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-    Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
-
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+    
     if (playlist) {
         schedulePlaylistWindow.reset(new SchedulePlaylistWindow(playlist));
         schedulePlaylistWindow->getWindow()->set_transient_for(*mainWindow);
@@ -421,15 +446,9 @@ LiveModeWindow :: onSchedulePlaylist(void)                          throw ()
 void
 LiveModeWindow :: onExportPlaylist(void)                            throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelected();
-
-    if (!iter) {
-        return;
-    }
-
-    Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
-    Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
-
+    Ptr<Playable>::Ref  playable = getNextSelectedPlayable();
+    Ptr<Playlist>::Ref  playlist = playable->getPlaylist();
+    
     if (playlist) {
         exportPlaylistWindow.reset(new ExportPlaylistWindow(playlist));
         exportPlaylistWindow->getWindow()->set_transient_for(*mainWindow);
@@ -445,10 +464,9 @@ LiveModeWindow :: onExportPlaylist(void)                            throw ()
 void
 LiveModeWindow :: onAddToPlaylist(void)                             throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelected();
+    Ptr<Playable>::Ref  playable;
 
-    if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+    while ((playable = getNextSelectedPlayable())) {
         try {
             gLiveSupport->addToPlaylist(playable->getId());
         } catch (XmlRpcException &e) {
@@ -466,10 +484,9 @@ LiveModeWindow :: onAddToPlaylist(void)                             throw ()
 void
 LiveModeWindow :: onUploadToHub(void)                               throw ()
 {
-    Gtk::TreeModel::iterator    iter = getSelected();
+    Ptr<Playable>::Ref  playable;
 
-    if (iter) {
-        Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
+    while ((playable = getNextSelectedPlayable())) {
         gLiveSupport->uploadToHub(playable);
     }
 }
@@ -514,8 +531,8 @@ LiveModeWindow :: constructAudioClipContextMenu(void)           throw ()
                                     &LiveModeWindow::onAddToPlaylist)));
     contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onRemoveMenuOption)));
+                                sigc::mem_fun(*this,
+                                    &LiveModeWindow::onRemoveMenuOption)));
     contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
     contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("uploadToHubMenuItem"),
@@ -550,8 +567,8 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
                                     &LiveModeWindow::onAddToPlaylist)));
     contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
-                                sigc::mem_fun(*treeView,
-                                    &ZebraTreeView::onRemoveMenuOption)));
+                                sigc::mem_fun(*this,
+                                    &LiveModeWindow::onRemoveMenuOption)));
     contextMenuList.push_back(Gtk::Menu_Helpers::SeparatorElem());
     contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("editPlaylistMenuItem"),
@@ -577,13 +594,39 @@ LiveModeWindow :: constructPlaylistContextMenu(void)            throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Remove menu button getting clicked.
+ *  Event handler for the Remove menu item selected from the context menu.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: onRemoveItemButtonClicked(void)                   throw ()
+LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
 {
     isDeleting = true;
-    treeView->onRemoveMenuOption();
+
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection
+                                            = treeView->get_selection();
+    std::vector<Gtk::TreePath>              selectedPaths
+                                            = selection->get_selected_rows();
+    
+    std::vector<Gtk::TreeModel::iterator>   selectedIters;
+    for (std::vector<Gtk::TreePath>::iterator pathIt = selectedPaths.begin();
+                                              pathIt != selectedPaths.end();
+                                              ++pathIt) {
+        selectedIters.push_back(treeModel->get_iter(*pathIt));
+    }
+    
+    Gtk::TreeModel::iterator                newSelection;
+    for (std::vector<Gtk::TreeModel::iterator>::iterator
+                                                iterIt = selectedIters.begin();
+                                                iterIt != selectedIters.end();
+                                                ++iterIt) {
+        newSelection = *iterIt;
+        ++newSelection;
+        treeModel->erase(*iterIt);
+    }
+    
+    if (newSelection) {
+        selection->select(newSelection);
+    }
+
     isDeleting = false;
     onTreeModelChanged();
 }
