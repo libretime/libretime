@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cassert>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
@@ -687,26 +688,106 @@ ScratchpadWindow :: onTreeViewDragDataReceived(
         return;
     }
 
-//    Glib::ustring       data = selectionData.get_data_as_string();
-Glib::ustring       data = "searchWindow 123 456 789 abc";
+    Glib::ustring       data = selectionData.get_data_as_string();
     std::stringstream   dataStream(data);
     Glib::ustring       sourceWindow;
     dataStream >> sourceWindow;
-    
-    
-    Glib::ustring       playableId;
-    while (dataStream >> playableId) {
-        if (sourceWindow == bundleName) {
-            //insertRow(destination, x, y, stripped, ROW_MOVE);
-            std::cerr << "same window; move " << playableId << std::endl;
-            context->drag_finish(true, true, time);
-            
-        } else {
-            //insertRow(destination, x, y, stripped, ROW_COPY);
-            std::cerr << "other window: " << sourceWindow
-                      << "; copy " << playableId << std::endl;
-            context->drag_finish(true, false, time);
-        }
+
+    Gtk::TreeIter       iter = insertRowAtPos(x, y);
+    Glib::ustring       idAsString;
+    dataStream >> idAsString;               // only works for 1 item, for now
+    Ptr<UniqueId>::Ref  id(new UniqueId(idAsString));
+    addItem(iter, id);
+
+    if (sourceWindow == bundleName) {
+        context->drag_finish(true, true, time);     // delete the original
+        
+    } else {
+        context->drag_finish(true, false, time);    // don't delete the original
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Insert a row into the tree model at the given tree view position.
+ *----------------------------------------------------------------------------*/
+Gtk::TreeIter
+ScratchpadWindow :: insertRowAtPos (int     x,
+                                    int     y)                      throw ()
+{
+    Gtk::TreePath               destPath;
+    Gtk::TreeViewDropPosition   destPos;
+    bool                        pathIsValid = treeView->get_dest_row_at_pos(
+                                                    x, y, destPath, destPos);
+    // get_drag_dest_row() does not work here, for some strange reason
+    Gtk::TreeIter       newIter;
+
+    if (pathIsValid) {
+        assert (!destPath.empty());
+        Gtk::TreeIter   destination = treeModel->get_iter(destPath);
+
+        if (destPos == Gtk::TREE_VIEW_DROP_BEFORE
+                        || destPos == Gtk::TREE_VIEW_DROP_INTO_OR_BEFORE) {
+            newIter = treeModel->insert(destination);
+            
+        } else if (destPos == Gtk::TREE_VIEW_DROP_AFTER
+                        || destPos == Gtk::TREE_VIEW_DROP_INTO_OR_AFTER) {
+            newIter = treeModel->insert_after(destination);
+            
+        } else {
+            assert (false);
+        }
+    } else {
+        newIter = treeModel->append();
+    }
+
+    return newIter;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add an item to the Scratchpad at the given position.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: addItem(Gtk::TreeIter               iter,
+                            Ptr<const UniqueId>::Ref    id)
+                                                                    throw ()
+{
+    Ptr<Playable>::Ref      playable;
+    try {
+        playable = gLiveSupport->acquirePlayable(id);
+    } catch (XmlRpcException &e) {
+        std::cerr << "could not acquire playable in ScratchpadWindow: "
+                    << e.what() << std::endl;
+        return;
+    }
+    
+    Gtk::TreeModel::Row     row = *iter;
+    
+    row[modelColumns.playableColumn] = playable;
+    
+    Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
+    
+    switch (playable->getType()) {
+        case Playable::AudioClipType:
+            row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                          WidgetConstants::audioClipIconImage);
+            break;
+
+        case Playable::PlaylistType:
+            row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                          WidgetConstants::playlistIconImage);
+            break;
+    }
+    
+    Ptr<const Glib::ustring>::Ref   creator = playable->getMetadata(
+                                                        "dc:creator");
+    if (creator) {
+        row[modelColumns.creatorColumn]   = Glib::Markup::escape_text(
+                                                        *creator);
+    }
+    row[modelColumns.titleColumn]         = Glib::Markup::escape_text(
+                                                        *playable->getTitle());
+}
+
 

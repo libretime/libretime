@@ -153,6 +153,28 @@ class ScratchpadWindow : public GuiWindow,
         void
         setupDndCallbacks (void)                                    throw ();
 
+        /**
+         *  Insert a row into the tree model at the given tree view position.
+         *  Creates the new row; the caller should fill it with data.
+         *
+         *  @param  x   the x coordinate of the location of the new row.
+         *  @param  y   the y coordinate of the location of the new row.
+         *  @return an iterator pointing to the newly created row.
+         */
+        Gtk::TreeIter
+        insertRowAtPos (int     x,
+                        int     y)                                  throw ();
+
+        /**
+         *  Add an item to the Scratchpad at the given position.
+         *
+         *  @param  iter    the iterator pointing to the row to be filled in.
+         *  @param  id      the ID of the item to add.
+         */
+        void
+        addItem(Gtk::TreeIter               iter,
+                Ptr<const UniqueId>::Ref    id)                     throw ();
+
 
     protected:
 
