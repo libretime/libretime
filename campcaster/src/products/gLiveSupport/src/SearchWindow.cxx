@@ -237,6 +237,7 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
                                 false /* call this first */);
     searchResultsTreeView->signal_row_activated().connect(sigc::mem_fun(*this,
                                             &SearchWindow::onDoubleClick));
+    setupDndCallbacks();
     
     audioClipContextMenu    = constructAudioClipContextMenu();
     playlistContextMenu     = constructPlaylistContextMenu();
@@ -1118,5 +1119,48 @@ SearchWindow :: updatePagingToolbar(void)                       throw ()
         backwardButton->set_sensitive(false);
         forwardButton->set_sensitive(false);
     }        
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the D'n'D callbacks.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: setupDndCallbacks (void)                            throw ()
+{
+    std::list<Gtk::TargetEntry>     targets;
+    targets.push_back(Gtk::TargetEntry("STRING",
+                                       Gtk::TARGET_SAME_APP));
+    
+    // set up the tree view as a d'n'd source
+    searchResultsTreeView->enable_model_drag_source(targets);
+    searchResultsTreeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+                                &SearchWindow::onTreeViewDragDataGet));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for supplying the data for the drag and drop.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    Glib::ustring       dropString = bundleName;
+    Ptr<Playable>::Ref  playable = getFirstSelectedPlayable();
+
+    while ((playable = getNextSelectedPlayable())) {
+        dropString += " ";
+        dropString += std::string(*playable->getId());
+    }
+
+    selectionData.set(selectionData.get_target(),
+                        8 /* 8 bits format*/,
+                        (const guchar *) dropString.c_str(),
+                        dropString.bytes());
 }
 

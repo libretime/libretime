@@ -107,6 +107,7 @@ ScratchpadWindow :: ScratchpadWindow (
                                             &ScratchpadWindow::onDoubleClick));
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onKeyPressed));
+    setupDndCallbacks();
 
     // create the cue player widget
     cuePlayer.reset(new CuePlayer(this,
@@ -616,5 +617,96 @@ ScratchpadWindow :: hide(void)                                      throw ()
     }
         
     GuiWindow::hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set up the D'n'D callbacks.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: setupDndCallbacks (void)                        throw ()
+{
+    std::list<Gtk::TargetEntry>     targets;
+    targets.push_back(Gtk::TargetEntry("STRING",
+                                       Gtk::TARGET_SAME_APP));
+    
+    // set up the tree view as a d'n'd source
+    treeView->enable_model_drag_source(targets);
+    treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+                                &ScratchpadWindow::onTreeViewDragDataGet));
+
+    // set up the tree view as a d'n'd target
+    treeView->enable_model_drag_dest(targets);
+    treeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
+                                &ScratchpadWindow::onTreeViewDragDataReceived));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback for supplying the data for the drag and drop.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    Glib::ustring       dropString = bundleName;
+    Ptr<Playable>::Ref  playable = getFirstSelectedPlayable();
+
+    while ((playable = getNextSelectedPlayable())) {
+        dropString += " ";
+        dropString += std::string(*playable->getId());
+    }
+
+    selectionData.set(selectionData.get_target(),
+                        8 /* 8 bits format*/,
+                        (const guchar *) dropString.c_str(),
+                        dropString.bytes());
+}
+
+/*------------------------------------------------------------------------------
+ *  The callback for processing the data delivered by drag and drop.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ()
+{
+    if (selectionData.get_length() < 0 || selectionData.get_format() != 8) {
+        std::cerr << "unknown type of data dropped on the tree view in "
+                  << bundleName << std::endl;
+        context->drag_finish(false, false, time);
+        return;
+    }
+
+//    Glib::ustring       data = selectionData.get_data_as_string();
+Glib::ustring       data = "searchWindow 123 456 789 abc";
+    std::stringstream   dataStream(data);
+    Glib::ustring       sourceWindow;
+    dataStream >> sourceWindow;
+    
+    
+    Glib::ustring       playableId;
+    while (dataStream >> playableId) {
+        if (sourceWindow == bundleName) {
+            //insertRow(destination, x, y, stripped, ROW_MOVE);
+            std::cerr << "same window; move " << playableId << std::endl;
+            context->drag_finish(true, true, time);
+            
+        } else {
+            //insertRow(destination, x, y, stripped, ROW_COPY);
+            std::cerr << "other window: " << sourceWindow
+                      << "; copy " << playableId << std::endl;
+            context->drag_finish(true, false, time);
+        }
+    }
 }
 

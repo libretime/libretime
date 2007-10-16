@@ -420,6 +420,12 @@ class SearchWindow : public  GuiWindow,
         Ptr<Playable>::Ref
         getNextSelectedPlayable(void)                               throw ();
 
+        /**
+         *  Set up the D'n'D callbacks.
+         */
+        void
+        setupDndCallbacks (void)                                    throw ();
+        
 
     protected:
 
@@ -617,6 +623,22 @@ class SearchWindow : public  GuiWindow,
          */
         void
         onForwardButtonClicked(void)                            throw ();
+
+        /**
+         *  The callback for supplying the data for the drag and drop.
+         *
+         *  @param  context         the drag context.
+         *  @param  selectionData   the data (filled in by this function).
+         *  @param  info            not used.
+         *  @param  time            timestamp for the d'n'd operation.
+         */
+        void
+        onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
 
 
     public:

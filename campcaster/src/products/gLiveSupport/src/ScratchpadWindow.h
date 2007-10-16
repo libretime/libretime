@@ -147,6 +147,12 @@ class ScratchpadWindow : public GuiWindow,
         void
         removeItem(Ptr<const UniqueId>::Ref     id)                 throw ();
 
+        /**
+         *  Set up the D'n'D callbacks.
+         */
+        void
+        setupDndCallbacks (void)                                    throw ();
+
 
     protected:
 
@@ -242,7 +248,7 @@ class ScratchpadWindow : public GuiWindow,
         void
         onDoubleClick(const Gtk::TreeModel::Path &      path,
                       const Gtk::TreeViewColumn *       column)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Signal handler for a key pressed at one of the entries.
@@ -255,56 +261,92 @@ class ScratchpadWindow : public GuiWindow,
          *  @return true if the key press was fully handled, false if not
          */
         bool
-        onKeyPressed(GdkEventKey *          event)              throw ();
+        onKeyPressed(GdkEventKey *          event)                  throw ();
 
         /**
          *  Signal handler for the "edit playlist" menu item selected from
          *  the entry context menu.  For playlists only.
          */
         virtual void
-        onEditPlaylist(void)                                    throw ();
+        onEditPlaylist(void)                                        throw ();
 
         /**
          *  Signal handler for the "schedule playlist" menu item selected
          *  from the entry context menu.  For playlists only.
          */
         virtual void
-        onSchedulePlaylist(void)                                throw ();
+        onSchedulePlaylist(void)                                    throw ();
 
         /**
          *  Signal handler for the "export playlist" menu item selected from
          *  the entry context menu.  For playlists only.
          */
         virtual void
-        onExportPlaylist(void)                                  throw ();
+        onExportPlaylist(void)                                      throw ();
         
         /**
          *  Signal handler for the "add to playlist" menu item selected from
          *  the entry context menu.
          */
         virtual void
-        onAddToPlaylist(void)                                   throw ();
+        onAddToPlaylist(void)                                       throw ();
 
         /**
          *  Signal handler for the "add to live mode" menu item selected from
          *  the entry context menu.
          */
         virtual void
-        onAddToLiveMode(void)                                   throw ();
+        onAddToLiveMode(void)                                       throw ();
 
         /**
          *  Signal handler for the "upload to hub" menu item selected from
          *  the entry context menu.
          */
         virtual void
-        onUploadToHub(void)                                     throw ();
+        onUploadToHub(void)                                         throw ();
         
         /**
          *  Event handler for the Remove menu item selected from
          *  the entry conext menu.
          */
         virtual void
-        onRemoveMenuOption(void)                                throw ();
+        onRemoveMenuOption(void)                                    throw ();
+
+        /**
+         *  The callback for supplying the data for the drag and drop.
+         *
+         *  @param  context         the drag context.
+         *  @param  selectionData   the data (filled in by this function).
+         *  @param  info            not used.
+         *  @param  time            timestamp for the d'n'd operation.
+         */
+        void
+        onTreeViewDragDataGet(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            Gtk::SelectionData &                        selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
+
+        /**
+         *  The callback for processing the data delivered by drag and drop.
+         *
+         *  @param  context         the drag context.
+         *  @param  x               the x coord where the data was dropped.
+         *  @param  y               the y coord where the data was dropped.
+         *  @param  selectionData   the data.
+         *  @param  info            not used.
+         *  @param  time            timestamp for the d'n'd operation.
+         */
+        virtual void
+        onTreeViewDragDataReceived(
+            const Glib::RefPtr<Gdk::DragContext> &      context,
+            int                                         x,
+            int                                         y,
+            const Gtk::SelectionData &                  selectionData,
+            guint                                       info,
+            guint                                       time)
+                                                                    throw ();
 
 
     public:
@@ -316,13 +358,13 @@ class ScratchpadWindow : public GuiWindow,
          *                              this window.
          */
         ScratchpadWindow(Gtk::ToggleButton *        windowOpenerButton)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~ScratchpadWindow(void)                                 throw ()
+        ~ScratchpadWindow(void)                                     throw ()
         {
         }
 
@@ -333,7 +375,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @param playable the Playable object to add.
          */
         void
-        addItem(Ptr<Playable>::Ref    playable)                 throw ();
+        addItem(Ptr<Playable>::Ref    playable)                     throw ();
 
         /**
          *  Add an item to the Scratchpad.
@@ -342,7 +384,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @param id the id of the item to add.
          */
         void
-        addItem(Ptr<const UniqueId>::Ref    id)                 throw ();
+        addItem(Ptr<const UniqueId>::Ref    id)                     throw ();
 
         /**
          *  Return the contents of the Scratchpad.
@@ -350,7 +392,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @return a space-separated list of the unique IDs, in base 10.
          */
         Ptr<Glib::ustring>::Ref
-        getContents(void)                                       throw ();
+        getContents(void)                                           throw ();
 
         /**
          *  Restore the contents of the Scratchpad.
@@ -360,7 +402,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @param contents a space-separated list of unique IDs, in base 10.
          */
         void
-        setContents(Ptr<const Glib::ustring>::Ref   contents)   throw ();
+        setContents(Ptr<const Glib::ustring>::Ref   contents)       throw ();
 
         /**
          *  Return the user preferences key.
@@ -370,7 +412,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @return the user preference key.
          */
         Ptr<const Glib::ustring>::Ref
-        getUserPreferencesKey(void)                             throw ()
+        getUserPreferencesKey(void)                                 throw ()
         {
             return userPreferencesKey;
         }
@@ -379,7 +421,7 @@ class ScratchpadWindow : public GuiWindow,
          *  Update the cue player display to show a stopped state.
          */
         void
-        showCuePlayerStopped(void)                              throw ()
+        showCuePlayerStopped(void)                                  throw ()
         {
             cuePlayer->onStop();
         }
@@ -391,7 +433,7 @@ class ScratchpadWindow : public GuiWindow,
          *  and Schedule Playlist pop-up windows, if they are still open.
          */
         virtual void
-        hide(void)                                              throw ();
+        hide(void)                                                  throw ();
 };
 
 /* ================================================= external data structures */
