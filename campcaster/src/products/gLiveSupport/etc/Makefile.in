@@ -287,7 +287,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/RestoreBackupWindow.o \
                      ${TMP_DIR}/TaskbarIcons.o \
                      ${TMP_DIR}/RdsView.o \
-                     ${TMP_DIR}/RdsEntry.o
+                     ${TMP_DIR}/RdsEntry.o \
+                     ${TMP_DIR}/DndMethods.o 
 
 G_LIVESUPPORT_RES = ${TMP_STUDIO-LOCALIZATION_DIR}/root.res \
                     ${TMP_STUDIO-LOCALIZATION_DIR}/en.res \

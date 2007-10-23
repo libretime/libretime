@@ -49,6 +49,7 @@
 #include "ContentsStorable.h"
 #include "ExportPlaylistWindow.h"
 #include "SchedulePlaylistWindow.h"
+#include "DndMethods.h"
 
 #include "GuiWindow.h"
 
@@ -75,7 +76,8 @@ using namespace LiveSupport::Widgets;
  *  @version $Revision$
  */
 class ScratchpadWindow : public GuiWindow,
-                         public ContentsStorable
+                         public ContentsStorable,
+                         public DndMethods
 {
     private:
 
@@ -106,26 +108,6 @@ class ScratchpadWindow : public GuiWindow,
         std::vector<Gtk::TreePath>::const_iterator      selectedIter;
 
         /**
-         *  Return the topmost selected row.
-         *  Sets selectedPaths and selectedIter; does not increment it.
-         *
-         *  @return the first selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getFirstSelectedPlayable(void)                              throw ();
-
-        /**
-         *  Used to iterate over the selected rows.
-         *  Reset to the first row by onEntryClicked().
-         *  Returns a 0 pointer if nothing is selected or we have reached
-         *  the end of the list of selected rows.
-         *
-         *  @return the next selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getNextSelectedPlayable(void)                               throw ();
-
-        /**
          *  Check whether exactly one row is selected.
          *
          *  This is an auxilliary function used by onKeyPressed().
@@ -146,34 +128,6 @@ class ScratchpadWindow : public GuiWindow,
          */
         void
         removeItem(Ptr<const UniqueId>::Ref     id)                 throw ();
-
-        /**
-         *  Set up the D'n'D callbacks.
-         */
-        void
-        setupDndCallbacks (void)                                    throw ();
-
-        /**
-         *  Insert a row into the tree model at the given tree view position.
-         *  Creates the new row; the caller should fill it with data.
-         *
-         *  @param  x   the x coordinate of the location of the new row.
-         *  @param  y   the y coordinate of the location of the new row.
-         *  @return an iterator pointing to the newly created row.
-         */
-        Gtk::TreeIter
-        insertRowAtPos (int     x,
-                        int     y)                                  throw ();
-
-        /**
-         *  Add an item to the Scratchpad at the given position.
-         *
-         *  @param  iter    the iterator pointing to the row to be filled in.
-         *  @param  id      the ID of the item to add.
-         */
-        void
-        addItem(Gtk::TreeIter               iter,
-                Ptr<const UniqueId>::Ref    id)                     throw ();
 
 
     protected:
@@ -335,40 +289,49 @@ class ScratchpadWindow : public GuiWindow,
         onRemoveMenuOption(void)                                    throw ();
 
         /**
-         *  The callback for supplying the data for the drag and drop.
-         *
-         *  @param  context         the drag context.
-         *  @param  selectionData   the data (filled in by this function).
-         *  @param  info            not used.
-         *  @param  time            timestamp for the d'n'd operation.
+         *  The tree view we want to implement d'n'd on.
          */
-        void
-        onTreeViewDragDataGet(
-            const Glib::RefPtr<Gdk::DragContext> &      context,
-            Gtk::SelectionData &                        selectionData,
-            guint                                       info,
-            guint                                       time)
-                                                                    throw ();
+        virtual Gtk::TreeView *
+        getTreeViewForDnd (void)                                    throw ()
+        {
+            return treeView;
+        }
 
         /**
-         *  The callback for processing the data delivered by drag and drop.
+         *  The name of the window for the d'n'd methods.
+         */
+        virtual Glib::ustring
+        getWindowNameForDnd (void)                                  throw ();
+
+        /**
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
          *
-         *  @param  context         the drag context.
-         *  @param  x               the x coord where the data was dropped.
-         *  @param  y               the y coord where the data was dropped.
-         *  @param  selectionData   the data.
-         *  @param  info            not used.
-         *  @param  time            timestamp for the d'n'd operation.
+         *  @return the first selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getFirstSelectedPlayable(void)                              throw ();
+
+        /**
+         *  Used to iterate over the selected rows.
+         *  Reset to the first row by onEntryClicked().
+         *  Returns a 0 pointer if nothing is selected or we have reached
+         *  the end of the list of selected rows.
+         *
+         *  @return the next selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getNextSelectedPlayable(void)                               throw ();
+
+        /**
+         *  Add an item to the Scratchpad at the given position.
+         *
+         *  @param  iter    the iterator pointing to the row to be filled in.
+         *  @param  id      the ID of the item to add.
          */
         virtual void
-        onTreeViewDragDataReceived(
-            const Glib::RefPtr<Gdk::DragContext> &      context,
-            int                                         x,
-            int                                         y,
-            const Gtk::SelectionData &                  selectionData,
-            guint                                       info,
-            guint                                       time)
-                                                                    throw ();
+        addItem(Gtk::TreeIter               iter,
+                Ptr<const UniqueId>::Ref    id)                     throw ();
 
 
     public:
