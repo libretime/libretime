@@ -42,15 +42,18 @@
 
 #include <string>
 
+#include "GuiWindow.h"
+#include "ContentsStorable.h"
+#include "DndMethods.h"
+
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
-#include "GuiWindow.h"
-#include "ContentsStorable.h"
 #include "CuePlayer.h"
 #include "GLiveSupport.h"
 #include "ExportPlaylistWindow.h"
 #include "SchedulePlaylistWindow.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -74,7 +77,8 @@ using namespace LiveSupport::Widgets;
  *  @version $Revision$
  */
 class LiveModeWindow : public GuiWindow,
-                       public ContentsStorable
+                       public ContentsStorable,
+                       public DndMethods
 {
     private:
 
@@ -147,28 +151,6 @@ class LiveModeWindow : public GuiWindow,
         constructPlaylistContextMenu(void)                          throw ();
 
         /**
-         *  Return the topmost selected row.
-         *  Sets selectedPaths and selectedIter; does not increment it.
-         *
-         *  @return the first selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getFirstSelectedPlayable(void)                              throw ();
-
-        /**
-         *  Used to iterate over the selected rows.
-         *  Can only be called after onEntryClicked() has set the selectedPaths
-         *  and selectedIter variables.
-         *  Returns a 0 pointer if nothing is selected or we have reached the
-         *  end of the list of selected rows.
-         *  Increments selectedIter after reading it.
-         *
-         *  @return the next selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getNextSelectedPlayable(void)                               throw ();
-
-        /**
          *  Check whether exactly one row is selected.
          *
          *  This is an auxilliary function used by onKeyPressed().
@@ -210,16 +192,6 @@ class LiveModeWindow : public GuiWindow,
          *  The column model.
          */
         ModelColumns                modelColumns;
-
-        /**
-         *  The main container in the window.
-         */
-        Gtk::VBox                   vBox;
-
-        /**
-         *  A scrolled window, so that the list can be scrolled.
-         */
-        Gtk::ScrolledWindow         scrolledWindow;
 
         /**
          *  The tree view, now only showing rows.
@@ -333,6 +305,51 @@ class LiveModeWindow : public GuiWindow,
         virtual void
         onTreeModelChanged(void)                                throw ();
 
+        /**
+         *  The tree view we want to implement d'n'd on.
+         */
+        virtual Gtk::TreeView *
+        getTreeViewForDnd (void)                                    throw ()
+        {
+            return treeView;
+        }
+
+        /**
+         *  The name of the window for the d'n'd methods.
+         */
+        virtual Glib::ustring
+        getWindowNameForDnd (void)                                  throw ();
+
+        /**
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
+         *
+         *  @return the first selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getFirstSelectedPlayable (void)                             throw ();
+
+        /**
+         *  Used to iterate over the selected rows.
+         *  Reset to the first row by onEntryClicked().
+         *  Returns a 0 pointer if nothing is selected or we have reached
+         *  the end of the list of selected rows.
+         *
+         *  @return the next selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getNextSelectedPlayable (void)                              throw ();
+
+        /**
+         *  Add an item to the d'n'd tree view at the given position.
+         *
+         *  @param  iter    the iterator pointing to the row to be filled in.
+         *  @param  id      the ID of the item to add.
+         */
+        virtual void
+        addItem (Gtk::TreeIter              iter,
+                 Ptr<const UniqueId>::Ref   id)                     throw ();
+
 
     public:
 
@@ -368,7 +385,7 @@ class LiveModeWindow : public GuiWindow,
          *  @param  playable    the playable object to be added.
          */
         void
-        addItem(Gtk::TreeModel::iterator    iter,
+        addItem(Gtk::TreeIter               iter,
                 Ptr<Playable>::Ref          playable)           throw ();
 
         /**

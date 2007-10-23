@@ -92,6 +92,11 @@ LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
     treeView->appendLineNumberColumn("", 2 /* offset */, 50);
     treeView->appendColumn("", modelColumns.infoColumn, 200);
 
+    treeModel = Gtk::ListStore::create(modelColumns);
+    treeView->set_model(treeModel);
+    treeView->connectModelSignals(treeModel);
+    setupDndCallbacks();
+
     treeView->signal_button_press_event().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onEntryClicked),
                                         false /* call this first */);
@@ -99,13 +104,8 @@ LiveModeWindow :: LiveModeWindow (Gtk::ToggleButton *       windowOpenerButton)
                                         &LiveModeWindow::onDoubleClick));
     treeView->signalTreeModelChanged().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onTreeModelChanged));
-    
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                         &LiveModeWindow::onKeyPressed));
-
-    treeModel = Gtk::ListStore::create(modelColumns);
-    treeView->set_model(treeModel);
-    treeView->connectModelSignals(treeModel);
 
     glade->get_widget("cueLabel1", cueLabel);
     cueLabel->set_label(*getResourceUstring("cuePlayerLabel"));
@@ -133,7 +133,6 @@ void
 LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
     addItem(treeModel->append(), playable);
-    onTreeModelChanged();
 }
 
 
@@ -141,7 +140,7 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
  *  Add a new item as the given row in the Live Mode Window.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: addItem(Gtk::TreeModel::iterator  iter,
+LiveModeWindow :: addItem(Gtk::TreeIter             iter,
                           Ptr<Playable>::Ref        playable)       throw ()
 {
     
@@ -182,7 +181,8 @@ LiveModeWindow :: addItem(Gtk::TreeModel::iterator  iter,
     infoString->append("</span>");
 
     row[modelColumns.infoColumn] = *infoString;
-    gLiveSupport->runMainLoop();
+
+    onTreeModelChanged();
 }
 
 
@@ -207,6 +207,27 @@ LiveModeWindow :: addItem(Ptr<const UniqueId>::Ref    id)
 
 
 /*------------------------------------------------------------------------------
+ *  Add an item to the Live Mode window at the given position, by ID.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: addItem(Gtk::TreeIter                 iter,
+                          Ptr<const UniqueId>::Ref      id)
+                                                                    throw ()
+{
+    Ptr<Playable>::Ref  playable;
+    try {
+        playable = gLiveSupport->acquirePlayable(id);
+    } catch (XmlRpcException &e) {
+        std::cerr << "could not acquire playable in LiveModeWindow: "
+                    << e.what() << std::endl;
+        return;
+    }
+    
+    addItem(iter, playable);
+}
+
+
+/*------------------------------------------------------------------------------
  *  "Pop" the first item from the top of the Live Mode Window.
  *----------------------------------------------------------------------------*/
 Ptr<Playable>::Ref
@@ -217,7 +238,7 @@ LiveModeWindow :: popTop(void)                                      throw ()
         return playable;        // return a 0 pointer if auto is set to off
     }
 
-    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
+    Gtk::TreeIter               iter = treeModel->children().begin();
     if (iter) {
         playable = (*iter)[modelColumns.playableColumn];
         treeModel->erase(iter);
@@ -493,11 +514,11 @@ LiveModeWindow :: onUploadToHub(void)                               throw ()
 void
 LiveModeWindow :: refreshPlaylist(Ptr<Playlist>::Ref    playlist)   throw ()
 {
-    for (Gtk::TreeModel::iterator   iter = treeModel->children().begin();
-                iter != treeModel->children().end(); ++iter) {
+    for (Gtk::TreeIter iter = treeModel->children().begin();
+                       iter != treeModel->children().end(); ++iter) {
         Ptr<Playable>::Ref  currentItem = (*iter)[modelColumns.playableColumn];
         if (*currentItem->getId() == *playlist->getId()) {
-            addItem(iter, playlist);
+            addItem(iter, currentItem);
         }
     }
 }
@@ -601,16 +622,15 @@ LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
     std::vector<Gtk::TreePath>              selectedPaths
                                             = selection->get_selected_rows();
     
-    std::vector<Gtk::TreeModel::iterator>   selectedIters;
+    std::vector<Gtk::TreeIter>              selectedIters;
     for (std::vector<Gtk::TreePath>::iterator pathIt = selectedPaths.begin();
                                               pathIt != selectedPaths.end();
                                               ++pathIt) {
         selectedIters.push_back(treeModel->get_iter(*pathIt));
     }
     
-    Gtk::TreeModel::iterator                newSelection;
-    for (std::vector<Gtk::TreeModel::iterator>::iterator
-                                                iterIt = selectedIters.begin();
+    Gtk::TreeIter                           newSelection;
+    for (std::vector<Gtk::TreeIter>::iterator   iterIt = selectedIters.begin();
                                                 iterIt != selectedIters.end();
                                                 ++iterIt) {
         newSelection = *iterIt;
@@ -637,18 +657,17 @@ LiveModeWindow :: onTreeModelChanged(void)                          throw ()
         return;
     }
     
-    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
+    Gtk::TreeIter               iter = treeModel->children().begin();
     
     if (iter) {
         Ptr<Playable>::Ref      playable = (*iter)[modelColumns.playableColumn];
         if (playable) {
-            if (!savedTopPlayable || savedTopPlayable &&
+            if (!savedTopPlayable ||
                     *savedTopPlayable->getId() != *playable->getId()) {
                 gLiveSupport->preload(playable);
             }
             savedTopPlayable = playable;
         }
-        
     }
 }
 
@@ -742,5 +761,15 @@ LiveModeWindow :: hide(void)                                        throw ()
     }
         
     GuiWindow::hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The name of the window for the d'n'd methods.
+ *----------------------------------------------------------------------------*/
+Glib::ustring
+LiveModeWindow :: getWindowNameForDnd (void)                        throw ()
+{
+    return bundleName;
 }
 

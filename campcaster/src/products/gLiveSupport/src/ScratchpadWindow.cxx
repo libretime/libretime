@@ -99,6 +99,7 @@ ScratchpadWindow :: ScratchpadWindow (
     treeModel = Gtk::ListStore::create(modelColumns);
     treeView->set_model(treeModel);
     treeView->connectModelSignals(treeModel);
+    setupDndCallbacks();
 
     // register the signal handlers for treeview
     treeView->signal_button_press_event().connect(sigc::mem_fun(*this,
@@ -108,7 +109,6 @@ ScratchpadWindow :: ScratchpadWindow (
                                             &ScratchpadWindow::onDoubleClick));
     treeView->signal_key_press_event().connect(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onKeyPressed));
-    setupDndCallbacks();
 
     // create the cue player widget
     cuePlayer.reset(new CuePlayer(this,

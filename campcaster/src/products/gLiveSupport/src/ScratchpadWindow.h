@@ -42,16 +42,16 @@
 
 #include <string>
 
+#include "GuiWindow.h"
+#include "ContentsStorable.h"
+#include "DndMethods.h"
+
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "CuePlayer.h"
-#include "ContentsStorable.h"
 #include "ExportPlaylistWindow.h"
 #include "SchedulePlaylistWindow.h"
-#include "DndMethods.h"
-
-#include "GuiWindow.h"
 
 
 namespace LiveSupport {
@@ -310,7 +310,7 @@ class ScratchpadWindow : public GuiWindow,
          *  @return the first selected playable item.
          */
         virtual Ptr<Playable>::Ref
-        getFirstSelectedPlayable(void)                              throw ();
+        getFirstSelectedPlayable (void)                             throw ();
 
         /**
          *  Used to iterate over the selected rows.
@@ -321,17 +321,17 @@ class ScratchpadWindow : public GuiWindow,
          *  @return the next selected playable item.
          */
         virtual Ptr<Playable>::Ref
-        getNextSelectedPlayable(void)                               throw ();
+        getNextSelectedPlayable (void)                              throw ();
 
         /**
-         *  Add an item to the Scratchpad at the given position.
+         *  Add an item to the d'n'd tree view at the given position.
          *
          *  @param  iter    the iterator pointing to the row to be filled in.
          *  @param  id      the ID of the item to add.
          */
         virtual void
-        addItem(Gtk::TreeIter               iter,
-                Ptr<const UniqueId>::Ref    id)                     throw ();
+        addItem (Gtk::TreeIter              iter,
+                 Ptr<const UniqueId>::Ref   id)                     throw ();
 
 
     public:
