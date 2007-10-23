@@ -124,10 +124,21 @@ class DndMethods
                         int     y)                                  throw ();
 
         /**
-         *  Set up the D'n'D callbacks.
+         *  Types of d'n'd.
+         */
+        typedef enum {  DND_SOURCE = 1,
+                        DND_DEST   = 2
+                     }                      DndType;
+
+        /**
+         *  Set up the d'n'd callbacks.
+         *
+         *  @param  type    set up callbacks for d'n'd source or destination
+         *                  (default: both).
          */
         void
-        setupDndCallbacks (void)                                    throw ();
+        setupDndCallbacks (DndType  type = DndType(DND_SOURCE | DND_DEST))
+                                                                    throw ();
 
         /**
          *  The callback for supplying the data for the drag and drop.

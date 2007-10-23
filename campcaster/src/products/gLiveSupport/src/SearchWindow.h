@@ -41,6 +41,7 @@
 #endif
 
 #include "GuiWindow.h"
+#include "DndMethods.h"
 #include "LiveSupport/Core/NumericTools.h"
 
 #include "LiveSupport/Core/Ptr.h"
@@ -75,6 +76,7 @@ using namespace LiveSupport::Widgets;
  *  @version $Revision$
  */
 class SearchWindow : public  GuiWindow,
+                     public  DndMethods,
                      private NumericTools
 {
     private:
@@ -399,32 +401,6 @@ class SearchWindow : public  GuiWindow,
         void
         displayRemoteSearchError(const XmlRpcException &    error)
                                                                     throw ();
-
-        /**
-         *  Return the topmost selected row.
-         *  Sets selectedPaths and selectedIter; does not increment it.
-         *
-         *  @return the first selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getFirstSelectedPlayable(void)                              throw ();
-
-        /**
-         *  Used to iterate over the selected rows.
-         *  Reset to the first row by onEntryClicked().
-         *  Returns a 0 pointer if nothing is selected or we have reached
-         *  the end of the list of selected rows.
-         *
-         *  @return the next selected playable item.
-         */
-        Ptr<Playable>::Ref
-        getNextSelectedPlayable(void)                               throw ();
-
-        /**
-         *  Set up the D'n'D callbacks.
-         */
-        void
-        setupDndCallbacks (void)                                    throw ();
         
 
     protected:
@@ -625,20 +601,52 @@ class SearchWindow : public  GuiWindow,
         onForwardButtonClicked(void)                            throw ();
 
         /**
-         *  The callback for supplying the data for the drag and drop.
-         *
-         *  @param  context         the drag context.
-         *  @param  selectionData   the data (filled in by this function).
-         *  @param  info            not used.
-         *  @param  time            timestamp for the d'n'd operation.
+         *  The tree view we want to implement d'n'd on.
          */
-        void
-        onTreeViewDragDataGet(
-            const Glib::RefPtr<Gdk::DragContext> &      context,
-            Gtk::SelectionData &                        selectionData,
-            guint                                       info,
-            guint                                       time)
-                                                                    throw ();
+        virtual Gtk::TreeView *
+        getTreeViewForDnd (void)                                    throw ()
+        {
+            return searchResultsTreeView;
+        }
+
+        /**
+         *  The name of the window for the d'n'd methods.
+         */
+        virtual Glib::ustring
+        getWindowNameForDnd (void)                                  throw ();
+
+        /**
+         *  Return the topmost selected row.
+         *  Sets selectedPaths and selectedIter; does not increment it.
+         *
+         *  @return the first selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getFirstSelectedPlayable(void)                              throw ();
+
+        /**
+         *  Used to iterate over the selected rows.
+         *  Reset to the first row by onEntryClicked().
+         *  Returns a 0 pointer if nothing is selected or we have reached
+         *  the end of the list of selected rows.
+         *
+         *  @return the next selected playable item.
+         */
+        virtual Ptr<Playable>::Ref
+        getNextSelectedPlayable(void)                               throw ();
+
+        /**
+         *  Add an item to the tree view at the given position.
+         *  Required to implement by DndMethods, does not do anything here.
+         *
+         *  @param  iter    the iterator pointing to the row to be filled in.
+         *  @param  id      the ID of the item to add.
+         */
+        virtual void
+        addItem(Gtk::TreeIter               iter,
+                Ptr<const UniqueId>::Ref    id)                     throw ()
+        {
+        }
 
 
     public:

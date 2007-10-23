@@ -54,7 +54,7 @@ using namespace LiveSupport::GLiveSupport;
  *  Set up the D'n'D callbacks.
  *----------------------------------------------------------------------------*/
 void
-DndMethods :: setupDndCallbacks (void)                              throw ()
+DndMethods :: setupDndCallbacks (DndType    type)                   throw ()
 {
     Gtk::TreeView *                 treeView = getTreeViewForDnd();
 
@@ -62,15 +62,17 @@ DndMethods :: setupDndCallbacks (void)                              throw ()
     targets.push_back(Gtk::TargetEntry("STRING",
                                        Gtk::TARGET_SAME_APP));
     
-    // set up the tree view as a d'n'd source
-    treeView->enable_model_drag_source(targets);
-    treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
+    if (type | DND_SOURCE) {
+        treeView->enable_model_drag_source(targets);
+        treeView->signal_drag_data_get().connect(sigc::mem_fun(*this,
                                     &DndMethods::onTreeViewDragDataGet));
+    }
 
-    // set up the tree view as a d'n'd target
-    treeView->enable_model_drag_dest(targets);
-    treeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
+    if (type | DND_DEST) {
+        treeView->enable_model_drag_dest(targets);
+        treeView->signal_drag_data_received().connect(sigc::mem_fun(*this,
                                     &DndMethods::onTreeViewDragDataReceived));
+    }
 }
 
 
