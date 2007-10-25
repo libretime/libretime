@@ -287,6 +287,7 @@ UploadFileWindow :: readAudioClipInfo(const Glib::ustring &         fileName)
         playlength = readPlaylength(fileName);
     } catch (std::invalid_argument &e) {
         statusBar->set_text(*getResourceUstring("unsupportedFileTypeMsg"));
+        fileType = invalidType;
         return;
     }
     if (!playlength) {
