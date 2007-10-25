@@ -397,15 +397,24 @@ LiveModeWindow :: selectionIsSingle(void)                           throw ()
 void
 LiveModeWindow :: onOutputPlay(void)                                throw ()
 {
+    Gtk::TreeIter       itemPlayed;
     Ptr<Playable>::Ref  playable = getFirstSelectedPlayable();
+    
+    if (playable) {
+        itemPlayed = treeModel->get_iter(*selectedIter);
+    } else {
+        itemPlayed = treeModel->children().begin();
+        if (itemPlayed) {
+            playable = (*itemPlayed)[modelColumns.playableColumn];
+        }
+    }
 
     if (playable) {
         try {
             gLiveSupport->playOutputAudio(playable);
             gLiveSupport->setNowPlaying(playable);
 
-            Gtk::TreeIter   iter = treeModel->get_iter(*selectedIter);
-            treeView->removeItem(iter);
+            treeView->removeItem(itemPlayed);
 
             gLiveSupport->runMainLoop();
             
