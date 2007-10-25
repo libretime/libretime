@@ -202,7 +202,12 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<AudioPlayerInterface>::Ref              cuePlayer;
 
         /**
-         *  The session id for the user.
+         *  The user id for the logged-in user.
+         */
+        Ptr<Glib::ustring>::Ref         userName;
+
+        /**
+         *  The session id for the logged-in user.
          */
         Ptr<SessionId>::Ref             sessionId;
 

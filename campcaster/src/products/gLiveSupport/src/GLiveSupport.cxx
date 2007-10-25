@@ -662,14 +662,16 @@ GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
  *----------------------------------------------------------------------------*/
 bool
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: login(const std::string & login,
-                      const std::string & password)          throw ()
+GLiveSupport :: login(const std::string &   login,
+                      const std::string &   password)               throw ()
 {
     try {
         sessionId = authentication->login(login, password);
     } catch (XmlRpcException &e) {
         return false;
     }
+
+    userName.reset(new Glib::ustring(login));
 
     Ptr<const Glib::ustring>::Ref   editedPlaylistToken;
     Ptr<const std::string>::Ref     editedPlaylistTokenString;
@@ -1118,6 +1120,7 @@ GLiveSupport :: openPlaylistForEditing(Ptr<const UniqueId>::Ref   playlistId)
     }
 
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);
+    editedPlaylist->setMetadata(userName, "dc:creator");
 
     try {
         Ptr<const Glib::ustring>::Ref   editToken(new const Glib::ustring(
