@@ -110,7 +110,9 @@ NowPlaying :: NowPlaying (GuiObject *      parent)
     setStyle(remainsTimeText, 7);
     elapsedTimeText->set_text(*getResourceUstring("elapsedTimeLabel"));
     remainsTimeText->set_text(*getResourceUstring("remainingTimeLabel"));
-    
+
+    glade->get_widget("progressBar1", progressBar);
+
     Ptr<Playable>::Ref      nullPointer;
     setPlayable(nullPointer);
 }
@@ -175,6 +177,7 @@ NowPlaying :: setPlayable (Ptr<Playable>::Ref  playable)            throw ()
         elapsedTimeLabel->set_text("");
         remainsTimeLabel->set_text("");
         playlistLabel->set_text("");
+        progressBar->set_fraction(0);
         resetRemainsTimeState();
         this->playable.reset();
         this->currentInnerPlayable.reset();
@@ -323,6 +326,18 @@ NowPlaying :: onUpdateTime (void)                                   throw ()
                                                         innerElapsed ));
     remainsTimeLabel->set_text(*TimeConversion::timeDurationToHhMmSsString(
                                                         innerRemains ));
+
+    long    elapsedMilliSec = innerElapsed->total_milliseconds();
+    long    totalMilliSec = elapsedMilliSec
+                            + innerRemains->total_milliseconds();
+    double  fraction = double(elapsedMilliSec) / double(totalMilliSec);
+    if (fraction < 0.0) {
+        fraction = 0.0;     // can't happen afaik
+    }
+    if (fraction > 1.0) {
+        fraction = 1.0;     // can and does happen!
+    }
+    progressBar->set_fraction(fraction);
 
     currentInnerPlayable = innerPlayable;
     

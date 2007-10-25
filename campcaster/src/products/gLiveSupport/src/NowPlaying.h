@@ -108,6 +108,11 @@ class NowPlaying : public GuiComponent
         Gtk::Label *            playlistLabel;
 
         /**
+         *  The progress bar.
+         */
+        Gtk::ProgressBar *      progressBar;
+
+        /**
          *  The label which says "elapsed time".
          */
         Gtk::Label *            elapsedTimeText;
