@@ -369,22 +369,25 @@ install: all
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} install
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
 	${MKDIR} ${USR_BIN_DIR}
+	${CP} ${BIN_DIR}/campcaster-studio.sh ${USR_BIN_DIR}
+	${CP} ${G_LIVESUPPORT_EXE} ${USR_BIN_DIR}
 	${MKDIR} ${USR_ETC_DIR}
+	${CP} ${ETC_DIR}/campcaster-studio.xml.template ${USR_ETC_DIR}
+	${CAT} ${ETC_DIR}/campcaster-studio.xml.template | \
+	       ${SED} -e ${REPLACE_SED_STRING} \
+	       > ${USR_ETC_DIR}/campcaster-studio.xml
 	${MKDIR} ${USR_VAR_DIR}/Campcaster
-	${MKDIR} ${USR_VAR_DIR}/Campcaster/studio-localization
-	${CP} ${TMP_DIR}/studio-localization/*.res \
-	      ${USR_VAR_DIR}/Campcaster/studio-localization/
 	${CP} ${VAR_DIR}/campcaster.png \
 	      ${VAR_DIR}/stationLogo.png \
 	      ${VAR_DIR}/icon*.png \
 	      ${VAR_DIR}/testAudio.ogg \
 	      ${VAR_DIR}/testAudio.ogg.license ${USR_VAR_DIR}/Campcaster
-	${CP} ${BIN_DIR}/campcaster-studio.sh ${USR_BIN_DIR}
-	${CP} ${G_LIVESUPPORT_EXE} ${USR_BIN_DIR}
-	${CP} ${ETC_DIR}/campcaster-studio.xml.template ${USR_ETC_DIR}
-	${CAT} ${ETC_DIR}/campcaster-studio.xml.template | \
-	       ${SED} -e ${REPLACE_SED_STRING} \
-	       > ${USR_ETC_DIR}/campcaster-studio.xml
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/studio-localization
+	${CP} ${TMP_DIR}/studio-localization/*.res \
+	      ${USR_VAR_DIR}/Campcaster/studio-localization/
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/glade
+	${CP} ${VAR_DIR}/glade/*.glade \
+	      ${USR_VAR_DIR}/Campcaster/glade/
 
 run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
