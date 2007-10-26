@@ -560,7 +560,7 @@ GLiveSupport :: checkConfiguration(void)                            throw ()
 /*------------------------------------------------------------------------------
  *  Display a message window.
  *----------------------------------------------------------------------------*/
-inline void
+void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: displayMessageWindow(const Glib::ustring &      message)
                                                                     throw ()
@@ -572,7 +572,7 @@ GLiveSupport :: displayMessageWindow(const Glib::ustring &      message)
 /*------------------------------------------------------------------------------
  *  Run a dialog window with No and Yes buttons.
  *----------------------------------------------------------------------------*/
-inline Gtk::ResponseType
+Gtk::ResponseType
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: runNoYesDialog(const Glib::ustring &    message)
                                                                     throw ()
@@ -584,7 +584,7 @@ GLiveSupport :: runNoYesDialog(const Glib::ustring &    message)
 /*------------------------------------------------------------------------------
  *  Run a dialog window with just an OK button.
  *----------------------------------------------------------------------------*/
-inline Gtk::ResponseType
+Gtk::ResponseType
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: runOkDialog(const Glib::ustring &       message)
                                                                     throw ()
