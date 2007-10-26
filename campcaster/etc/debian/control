@@ -164,7 +164,7 @@ Depends: ${shlibs:Depends},
          libxml++2.6c2a (>= 2.8.1),
          libicu34 | libicu36,
          libgtk2.0-0 (>= 2.6.10),
-         libgtkmm-2.4-1c2a (>= 2.6.5)
+         libgtkmm-2.4-1c2a (>= 2.6.5),
          libglademm-2.4-1c2a (>= 2.6.2)
 Description: A radio program automation and support tool.
  Campcaster is the first free and open radio management software that 
