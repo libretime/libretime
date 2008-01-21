@@ -339,10 +339,6 @@ dnl set up the storage client module
 AC_CONFIG_COMMANDS([../src/modules/storageClient/tmp/configure],
                    [../src/modules/storageClient/bin/autogen.sh])
 
-dnl set up the gstreamer elements module
-AC_CONFIG_COMMANDS([../src/modules/gstreamerElements/tmp/configure],
-                   [../src/modules/gstreamerElements/bin/autogen.sh])
-
 dnl set up the playlist executor module
 AC_CONFIG_COMMANDS([../src/modules/playlistExecutor/tmp/configure],
                    [../src/modules/playlistExecutor/bin/autogen.sh])
@@ -376,7 +372,7 @@ AC_MSG_NOTICE(
 by Campcaster:
 
     cppunit 1.10.2          ${COMPILE_CPPUNIT}
-    gstreamer 0.8.12        yes
+    gstreamer 0.10.15       yes
     libodbc++ 0.2.3         yes
     taglib 1.4              yes
     xmlrpc++ 2004-07-13     yes

@@ -157,7 +157,7 @@ xmlrpcxx_version=xmlrpc++-20040713
 xmlrpcxx_tmpdir=$tools_tmpdir/xmlrpc++
 
 gstreamer_dir=$toolsdir/gstreamer
-gstreamer_version=gstreamer-0.8.12
+gstreamer_version=gstreamer-0.10.15
 gstreamer_tmpdir=$tools_tmpdir/gstreamer
 
 taglib_dir=$toolsdir/taglib

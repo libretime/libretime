@@ -37,6 +37,7 @@
 #include "LiveSupport/Core/Debug.h"
 
 #include "LiveSupport/Core/TimeConversion.h"
+
 #include "GstreamerPlayer.h"
 
 
@@ -64,6 +65,42 @@ static const std::string    audioDeviceName = "audioDevice";
 
 
 /* =============================================================  module code */
+
+static gboolean my_bus_callback (GstBus *bus, GstMessage *message, gpointer data)
+{
+
+    GstreamerPlayer* const player = (GstreamerPlayer*) data;
+
+    switch (GST_MESSAGE_TYPE (message)) {
+        case GST_MESSAGE_EOS:
+            if(player->playNextSmil()){
+                break;
+            }
+            player->close();
+            // Important: We *must* use an idle function call here, so that the signal handler returns
+            // before fireOnStopEvent() is executed.
+            g_idle_add(GstreamerPlayer::fireOnStopEvent, data);
+            break;
+        case GST_MESSAGE_ERROR:
+            // We make sure that we don't send multiple error messages in a row to the GUI
+            if (!player->m_errorWasRaised) {
+                GError *gerror;
+                gchar *debug;
+                gst_message_parse_error (message, &gerror, &debug);
+                player->m_errorMessage.reset(new const Glib::ustring(gerror->message));
+                player->m_errorWasRaised = true;
+                
+                std::cerr << "gstreamer error: " << gerror->message << std::endl;
+                g_error_free (gerror);
+                g_free (debug);
+                // Important: We *must* use an idle function call here, so that the signal handler returns 
+                // before fireOnStopEvent() is executed.
+                g_idle_add(GstreamerPlayer::fireOnStopEvent, data);
+            }
+            break;
+    }
+}
+
 
 /*------------------------------------------------------------------------------
  *  Configure the Audio Player.
@@ -102,62 +139,16 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     }
 
     // initialize the gstreamer library
-    if (!gst_init_check(0, 0)) {
+    if (!gst_init_check(0, 0, 0)) {
         throw std::runtime_error("couldn't initialize the gstreamer library");
     }
 
-    // create the pipeline container (threaded)
-    m_pipeline   = gst_thread_new("audio-player");
+    m_playContext = new GstreamerPlayContext();
 
-    m_filesrc         = 0;
-    m_decoder         = 0;
-    m_audioconvert    = 0;
-    m_audioscale      = 0;
-
-    g_signal_connect(m_pipeline, "error", G_CALLBACK(errorHandler), this);
-
-    // TODO: read the caps from the config file
-    m_sinkCaps = gst_caps_new_simple("audio/x-raw-int",
-                                   "width", G_TYPE_INT, 16,
-                                   "depth", G_TYPE_INT, 16,
-                                   "endiannes", G_TYPE_INT, G_BYTE_ORDER,
-                                   "channels", G_TYPE_INT, 2,
-                                   "rate", G_TYPE_INT, 44100,
-                                   NULL);
-
-    setAudioDevice(m_audioDevice);
+    m_playContext->setParentData(this);
 
     // set up other variables
     m_initialized = true;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Handler for gstreamer errors.
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: errorHandler(GstElement   * pipeline,
-                                GstElement   * source,
-                                GError       * error,
-                                gchar        * debug,
-                                gpointer       self)
-                                                                throw ()
-{
-    DEBUG_BLOCK
-
-    GstreamerPlayer* const player = (GstreamerPlayer*) self;
-
-    // We make sure that we don't send multiple error messages in a row to the GUI
-    if (!player->m_errorWasRaised) {
-        player->m_errorMessage.reset(new const Glib::ustring(error->message));
-        player->m_errorWasRaised = true;
-
-        std::cerr << "gstreamer error: " << error->message << std::endl;
-
-        // Important: We *must* use an idle function call here, so that the signal handler returns 
-        // before fireOnStopEvent() is executed.
-        g_idle_add(fireOnStopEvent, self);
-    }
 }
 
 
@@ -170,22 +161,12 @@ GstreamerPlayer :: deInitialize(void)                       throw ()
     DEBUG_FUNC_INFO
 
     if (m_initialized) {
-        gst_element_set_state(m_pipeline, GST_STATE_NULL);
-        gst_bin_sync_children_state(GST_BIN(m_pipeline));
-
-        if (!gst_element_get_parent(m_audiosink)) {
-            // delete manually, if audiosink wasn't added to the pipeline
-            // for some reason
-            gst_object_unref(GST_OBJECT(m_audiosink));
-        }
-        gst_object_unref(GST_OBJECT(m_pipeline));
-        gst_caps_free(m_sinkCaps);
-
-        m_audiosink   = 0;
+        m_playContext->closeContext();
+        delete m_playContext;
+        m_playContext = NULL;
         m_initialized = false;
     }
 }
-
 
 /*------------------------------------------------------------------------------
  *  Attach an event listener.
@@ -224,15 +205,15 @@ GstreamerPlayer :: detachListener(AudioPlayerEventListener*     eventListener)
  *  Send the onStop event to all attached listeners.
  *----------------------------------------------------------------------------*/
 gboolean
-GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw ()
+GstreamerPlayer :: fireOnStopEvent(gpointer self)                       throw ()
 {
     DEBUG_BLOCK
+
 
     GstreamerPlayer* const player = (GstreamerPlayer*) self;
 
     ListenerVector::iterator    it  = player->m_listeners.begin();
     ListenerVector::iterator    end = player->m_listeners.end();
-
     while (it != end) {
         (*it)->onStop(player->m_errorMessage);
         ++it;
@@ -246,51 +227,6 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                        throw (
 
 
 /*------------------------------------------------------------------------------
- *  An EOS event handler, that will put the pipeline to EOS as well.
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: eosEventHandler(GstElement    * element,
-                                   gpointer        self)
-                                                                throw ()
-{
-    DEBUG_BLOCK
-
-    GstreamerPlayer* const player = (GstreamerPlayer*) self;
-
-    gst_element_set_eos(player->m_pipeline);
-    
-    // Important: We *must* use an idle function call here, so that the signal handler returns 
-    // before fireOnStopEvent() is executed.
-    g_idle_add(fireOnStopEvent, player);
-}
-
-
-/*------------------------------------------------------------------------------
- * NewPad event handler. Links the decoder after decodebin's autoplugging. 
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer::newpadEventHandler(GstElement*, GstPad* pad, gboolean, gpointer self) throw ()
-{
-    DEBUG_BLOCK
-
-    GstreamerPlayer* const player = (GstreamerPlayer*) self;
-    GstPad* const audiopad = gst_element_get_pad(player->m_audioconvert, "sink");
-
-    if (GST_PAD_IS_LINKED(audiopad)) {
-        debug() << "audiopad is already linked. Unlinking old pad." << endl;
-        gst_pad_unlink(audiopad, GST_PAD_PEER(audiopad));
-    }
-
-    gst_pad_link(pad, audiopad);
-
-    if (gst_element_get_parent(player->m_audiosink) == NULL)
-        gst_bin_add(GST_BIN(player->m_pipeline), player->m_audiosink);
-
-    gst_bin_sync_children_state(GST_BIN(player->m_pipeline));
-}
-
-
-/*------------------------------------------------------------------------------
  * Preload a file, to speed up the subsequent open() call. 
  *----------------------------------------------------------------------------*/
 void
@@ -299,18 +235,10 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
                                                        std::runtime_error)
 {
     DEBUG_BLOCK
-
-    if (m_preloadThread) {
-        m_preloadThread->stop();
-        m_preloadThread->join();
-        m_preloadThread.reset();
-    }
-
-    Ptr<Preloader>::Ref loader;
-    loader.reset(new Preloader(this, fileUrl));
-
-    m_preloadThread.reset(new Thread(loader));
-    m_preloadThread->start();
+    //According to the Gstreamer documentation, stream buffering happens
+    //automatically when the pipeline is set to GST_STATE_PAUSED.
+    //As this state is now set automatically in the open function,
+    //we no longer have a need for preloading.
 }
 
 
@@ -318,100 +246,61 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayer :: open(const std::string   fileUrl)
+GstreamerPlayer :: open(const std::string   fileUri)
                                                 throw (std::invalid_argument,
                                                        std::runtime_error)
 {
-    // GStreamer pipeline overview:
-    // filesrc -> decoder -> audioconvert -> audioscale -> audiosink
-
     DEBUG_BLOCK
 
     if (isOpen()) {
         close();
     }
+    
+    m_smilOffset = 0L;
 
-    debug() << "Opening URL: " << fileUrl << endl;
+    debug() << "Opening URL: " << fileUri << endl;
     debug() << "Timestamp: " << *TimeConversion::now() << endl;
 
     m_errorMessage.reset();
     m_errorWasRaised = false;
 
-    std::string filePath;
-
-    if (fileUrl.find("file://") == 0) {
-        filePath = fileUrl.substr(7, fileUrl.size());
-    }
-    else if (fileUrl.find("file:") == 0) {
-        filePath = fileUrl.substr(5, fileUrl.size());
-    }
-    else {
-        throw std::invalid_argument("badly formed URL or unsupported protocol");
+    m_playContext->setAudioDevice(m_audioDevice);
+    if (fileUri.find(std::string(".smil")) != std::string::npos) {
+        m_smilHandler = new SmilHandler();
+        m_smilHandler->openSmilFile(fileUri.c_str());
+        AudioDescription *audioDescription = m_smilHandler->getNext();
+        m_open=m_playContext->openSource(audioDescription);
+    }else{
+        m_open=m_playContext->openSource(fileUri.c_str());
     }
 
-    if (m_preloadThread) {
-        debug() << "Waiting for Preloader thread to finish..." << endl;
-        m_preloadThread->join();
+    if(!m_open){
+      m_errorMessage.reset(new const Glib::ustring("GstreamerPlayer :: open failed! Please consult console output for details."));
+      m_errorWasRaised = true;
+      fireOnStopEvent(this);
     }
+}
 
-    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
-    const bool isPreloaded = (m_preloadUrl == fileUrl);
-
-    if (isPreloaded)
-        m_filesrc = m_preloadFilesrc;
-    else {
-        m_filesrc    = gst_element_factory_make("filesrc", "file-source");
-        gst_element_set(m_filesrc, "location", filePath.c_str(), NULL);
+bool 
+GstreamerPlayer :: playNextSmil(void)                                    throw ()
+{
+    DEBUG_BLOCK
+    m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
+    m_playContext->closeContext();
+    if(m_smilHandler == NULL){
+        return false;
     }
-
-    // converts between different audio formats (e.g. bitrate) 
-    m_audioconvert    = gst_element_factory_make("audioconvert", NULL);
-
-    // scale the sampling rate, if necessary
-    m_audioscale      = gst_element_factory_make("audioscale", NULL);
-
-    // Due to bugs in the minimalaudiosmil element, it does not currently work with decodebin.
-    // Therefore we instantiate it manually if the file has the .smil extension. 
-    if (isSmil) {
-        if (isPreloaded) {
-            debug() << "Using preloaded SMIL element instance." << endl;
-            m_decoder = m_preloadDecoder;
-            gst_element_link(m_decoder, m_audioconvert);
-        }
-        else {
-            debug() << "SMIL file detected." << endl;
-            m_stopPreloader = false;
-            m_decoder = gst_element_factory_make("minimalaudiosmil", NULL);
-            gst_element_set(m_decoder, "abort", &m_stopPreloader, NULL);
-            gst_element_link_many(m_filesrc, m_decoder, m_audioconvert, NULL);
-        }
-        if (gst_element_get_parent(m_audiosink) == NULL)
-            gst_bin_add(GST_BIN(m_pipeline), m_audiosink);
+    AudioDescription *audioDescription = m_smilHandler->getNext();
+    if(audioDescription == NULL){//no more audio entries to play
+        delete m_smilHandler;
+        m_smilHandler = NULL;
+        return false;
     }
-    // Using GStreamer's decodebin autoplugger for everything else
-    else {
-        m_decoder = gst_element_factory_make("decodebin", NULL);
-        gst_element_link(m_filesrc, m_decoder);
-        g_signal_connect(m_decoder, "new-decoded-pad", G_CALLBACK(newpadEventHandler), this);
+    if(!m_playContext->openSource(audioDescription)){
+        return false;
     }
-
-    if (!m_decoder) {
-        throw std::runtime_error("GstreamerPlayer: could not create decoder");
-    }
-
-    gst_bin_add_many(GST_BIN(m_pipeline), m_filesrc, m_decoder, m_audioconvert, m_audioscale, NULL);
-
-    gst_element_link_many(m_audioconvert, m_audioscale, m_audiosink, NULL);
-
-    // connect the eos signal handler
-    g_signal_connect(m_decoder, "eos", G_CALLBACK(eosEventHandler), this);
-
-    m_preloadUrl.clear();
-    
-    if (gst_element_set_state(m_pipeline,GST_STATE_PAUSED) == GST_STATE_FAILURE) {
-        close();
-        throw std::runtime_error("GstreamerPlayer: could not open file");
-    }
+    m_smilOffset += m_currentPlayLength;
+    m_playContext->playContext();
 }
 
 
@@ -421,34 +310,30 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 bool
 GstreamerPlayer :: isOpen(void)                                 throw ()
 {
-    return m_decoder != 0;
+    return m_open;
 }
 
 
 /*------------------------------------------------------------------------------
  *  Get the length of the current audio clip.
+ *  Currently not used by the Studio, but may be used later on.
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
 GstreamerPlayer :: getPlaylength(void)              throw (std::logic_error)
 {
-    Ptr<time_duration>::Ref   length;
-    gint64                    ns;
-    GstFormat                 format = GST_FORMAT_TIME;
-
+    DEBUG_BLOCK
+    
     if (!isOpen()) {
         throw std::logic_error("player not open");
     }
+    
+    Ptr<time_duration>::Ref   length;
+    
+    gint64 ns = m_playContext->getPlayLength();
+ 
+    length.reset(new time_duration(microsec(ns / 1000LL)));
 
-    if (m_decoder
-     && gst_element_query(m_decoder, GST_QUERY_TOTAL, &format, &ns)
-     && format == GST_FORMAT_TIME) {
-
-        // use microsec, as nanosec() is not found by the compiler (?)
-        length.reset(new time_duration(microsec(ns / 1000LL)));
-    } else {
-        length.reset(new time_duration(microsec(0LL)));
-    }
-
+    debug() << length << endl;
     return length;
 }
 
@@ -460,16 +345,14 @@ Ptr<time_duration>::Ref
 GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 {
     Ptr<time_duration>::Ref   length;
-    gint64                    ns = 0;
 
     if (!isOpen()) {
         throw std::logic_error("player not open");
     }
-    
-    GstFormat fmt = GST_FORMAT_TIME;
-    gst_element_query(m_audiosink, GST_QUERY_POSITION, &fmt, &ns);
-    
-    length.reset(new time_duration(microseconds(ns / 1000LL)));
+
+    gint64                    ns = m_playContext->getPosition();
+
+    length.reset(new time_duration(microseconds((m_smilOffset + ns) / 1000LL)));
 
     return length;
 }
@@ -488,7 +371,9 @@ GstreamerPlayer :: start(void)                      throw (std::logic_error)
     }
 
     if (!isPlaying()) {
-        gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
+        m_playContext->playContext();
+    }else{
+        error() << "Already playing!" << endl;
     }
 }
 
@@ -499,8 +384,10 @@ GstreamerPlayer :: start(void)                      throw (std::logic_error)
 void
 GstreamerPlayer :: pause(void)                      throw (std::logic_error)
 {
+    DEBUG_BLOCK
+
     if (isPlaying()) {
-        gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
+        m_playContext->pauseContext();
     }
 }
 
@@ -511,7 +398,7 @@ GstreamerPlayer :: pause(void)                      throw (std::logic_error)
 bool
 GstreamerPlayer :: isPlaying(void)                  throw ()
 {
-    return gst_element_get_state(m_pipeline) == GST_STATE_PLAYING;
+    return m_playContext->isPlaying();
 }
 
 
@@ -521,12 +408,14 @@ GstreamerPlayer :: isPlaying(void)                  throw ()
 void
 GstreamerPlayer :: stop(void)                       throw (std::logic_error)
 {
+    DEBUG_BLOCK
+
     if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");
     }
 
     if (isPlaying()) {
-        gst_element_set_state(m_pipeline, GST_STATE_READY);
+        m_playContext->stopContext();
     }
 }
  
@@ -539,48 +428,14 @@ GstreamerPlayer :: close(void)                       throw (std::logic_error)
 {
     DEBUG_BLOCK
 
-    if (isPlaying()) {
-        stop();
+    m_playContext->stopContext();
+    m_playContext->closeContext();
+    if(m_smilHandler != NULL){
+        delete m_smilHandler;
+        m_smilHandler = NULL;
     }
 
-    gst_element_set_state(m_pipeline, GST_STATE_NULL);
-
-    // Unlink elements:
-    if (m_filesrc && m_decoder) {
-        gst_element_unlink(m_filesrc, m_decoder);
-    }
-    if (m_decoder && m_audioconvert) {
-        gst_element_unlink(m_decoder, m_audioconvert);
-    }
-    if (m_audioconvert && m_audioscale ) {
-        gst_element_unlink(m_audioconvert, m_audioscale);
-    }
-    if (m_audioscale && m_audiosink) {
-        gst_element_unlink(m_audioscale, m_audiosink);
-    }
-
-    // Remove elements from pipeline:
-    if (m_audioscale) {
-        gst_bin_remove(GST_BIN(m_pipeline), m_audioscale);
-    }
-    if (m_audioconvert) {
-        gst_bin_remove(GST_BIN(m_pipeline), m_audioconvert);
-    }
-    if (m_decoder) {
-        gst_bin_remove(GST_BIN(m_pipeline), m_decoder);
-    }
-    if (m_filesrc) {
-        gst_bin_remove(GST_BIN(m_pipeline), m_filesrc);
-    }
-    if (m_audiosink && gst_element_get_parent(m_audiosink) == GST_OBJECT(m_pipeline)) {
-        gst_object_ref(GST_OBJECT(m_audiosink));
-        gst_bin_remove(GST_BIN(m_pipeline), m_audiosink);
-    }
-
-    m_filesrc         = 0;
-    m_decoder         = 0;
-    m_audioconvert    = 0;
-    m_audioscale      = 0;
+    m_open            = false;
 }
 
 
@@ -611,145 +466,14 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
 {
     DEBUG_BLOCK
 
+    debug() << "Using device: " << deviceName << endl;
+
     if (deviceName.size() == 0) {
         return false;
     }
 
-    const bool oss = deviceName.find("/dev") == 0;
-
-    if (m_audiosink) {
-        debug() << "Destroying old sink." << endl;
-        if (m_audioscale) {
-            gst_element_unlink(m_audioscale, m_audiosink);
-        }
-        if (gst_element_get_parent(m_audiosink) == NULL)
-            gst_object_unref(GST_OBJECT(m_audiosink));
-        else
-            gst_bin_remove(GST_BIN(m_pipeline), m_audiosink);
-        m_audiosink = 0;
-    }
-
-    if (!m_audiosink) {
-        m_audiosink = (oss ? gst_element_factory_make("osssink", "osssink")
-                           : gst_element_factory_make("alsasink", "alsasink"));
-    }
-    if (!m_audiosink) {
-        return false;
-    }
-
-    // it's the same property, "device" for both alsasink and osssink
-    gst_element_set(m_audiosink, "device", deviceName.c_str(), NULL);
-
-    if (m_audioscale) {
-        gst_element_link_filtered(m_audioscale, m_audiosink, m_sinkCaps);
-    }
+    m_playContext->setAudioDevice(deviceName);
 
     return true;
 }
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// CLASS Preloader
-//////////////////////////////////////////////////////////////////////////////
-
-Preloader::Preloader(GstreamerPlayer* player, const std::string url) throw()
-    : RunnableInterface()
-    , m_player(player)
-    , m_fileUrl(url)
-{
-    DEBUG_FUNC_INFO
-
-    player->m_stopPreloader = false;
-}
-
-
-Preloader::~Preloader() throw()
-{
-    DEBUG_FUNC_INFO
-}
-
-
-void Preloader::run() throw()
-{
-    DEBUG_BLOCK
-
-    GstreamerPlayer* const p = m_player;
-    const std::string fileUrl(m_fileUrl);
-
-    const bool isSmil = fileUrl.substr(fileUrl.size()-5, fileUrl.size()) == ".smil" ? true : false;
-    if (!isSmil)
-        return;
-
-    debug() << "Preloading SMIL file: " << fileUrl << endl;
-
-    std::string filePath;
-
-    if (fileUrl.find("file://") == 0) {
-        filePath = fileUrl.substr(7, fileUrl.size());
-    }
-    else if (fileUrl.find("file:") == 0) {
-        filePath = fileUrl.substr(5, fileUrl.size());
-    }
-    else {
-        return;
-    }
-
-    if (!p->m_preloadUrl.empty()) {
-        p->m_preloadUrl.clear();
-        g_object_unref(G_OBJECT(p->m_preloadFilesrc));
-        g_object_unref(G_OBJECT(p->m_preloadDecoder));
-    }
-
-    p->m_preloadFilesrc = gst_element_factory_make("filesrc", NULL);
-    gst_element_set(p->m_preloadFilesrc, "location", filePath.c_str(), NULL);
-
-    p->m_preloadDecoder = gst_element_factory_make("minimalaudiosmil", NULL);
-    gst_element_set(p->m_preloadDecoder, "abort", &p->m_stopPreloader, NULL);
-
-    GstElement* pipe     = gst_pipeline_new("pipe");
-    GstElement* fakesink = gst_element_factory_make("fakesink", "fakesink");
-    gst_element_link_many(p->m_preloadFilesrc, p->m_preloadDecoder, fakesink, NULL);
-    gst_bin_add_many(GST_BIN(pipe), p->m_preloadFilesrc, p->m_preloadDecoder, fakesink, NULL);
-
-    gst_element_set_state(pipe, GST_STATE_PLAYING);
-
-    gint64 position = 0LL;
-    while (position == 0LL && !p->m_stopPreloader && gst_bin_iterate(GST_BIN(pipe))) {
-        GstFormat   format = GST_FORMAT_DEFAULT;
-        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
-    }
-
-    gst_element_set_state(pipe, GST_STATE_PAUSED);
-
-    if (p->m_stopPreloader) {
-        debug() << "Aborting preloader, per request." << endl;
-        g_object_unref(G_OBJECT(p->m_preloadFilesrc));
-        g_object_unref(G_OBJECT(p->m_preloadDecoder));
-        return;
-    }
-
-    g_object_ref(G_OBJECT(p->m_preloadFilesrc));
-    g_object_ref(G_OBJECT(p->m_preloadDecoder));
-    gst_bin_remove_many(GST_BIN(pipe), p->m_preloadFilesrc, p->m_preloadDecoder, NULL);
-    gst_element_unlink(p->m_preloadFilesrc, fakesink);
-    gst_object_unref(GST_OBJECT(pipe));
-   
-    p->m_preloadUrl = fileUrl;
-
-    p->m_preloadThread.reset();
-}
-
-
-void Preloader::signal(int) throw()
-{}
-
-
-void Preloader::stop() throw()
-{
-    DEBUG_FUNC_INFO
-
-    m_player->m_stopPreloader = true;
-}
-
 

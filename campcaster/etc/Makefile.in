@@ -108,7 +108,7 @@ LIBODBCXX_VERSION = libodbc++-0.2.3-20050404
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
 GSTREAMER_DIR     = ${TOOLS_DIR}/gstreamer
-GSTREAMER_VERSION = gstreamer-0.8.12
+GSTREAMER_VERSION = gstreamer-0.10.15
 TAGLIB_DIR        = ${TOOLS_DIR}/taglib
 TAGLIB_VERSION    = taglib-1.4
 LIBSERIAL_DIR     = ${TOOLS_DIR}/libserial
@@ -120,7 +120,6 @@ CORE_DIR               = ${MODULES_DIR}/core
 AUTHENTICATION_DIR     = ${MODULES_DIR}/authentication
 DB_DIR                 = ${MODULES_DIR}/db
 STORAGE_CLIENT_DIR     = ${MODULES_DIR}/storageClient
-GSTREAMER_ELEMENTS_DIR = ${MODULES_DIR}/gstreamerElements
 PLAYLIST_EXECUTOR_DIR  = ${MODULES_DIR}/playlistExecutor
 EVENT_SCHEDULER_DIR    = ${MODULES_DIR}/eventScheduler
 SCHEDULER_CLIENT_DIR   = ${MODULES_DIR}/schedulerClient
@@ -181,8 +180,6 @@ flawfinder:
                   ${AUTHENTICATION_DIR}/include ${AUTHENTICATION_DIR}/src \
                   ${DB_DIR}/include ${DB_DIR}/src \
                   ${STORAGE_CLIENT_DIR}/include ${STORAGE_CLIENT_DIR}/src \
-                  ${GSTREAMER_ELEMENTS_DIR}/include \
-                  ${GSTREAMER_ELEMENTS_DIR}/src \
                   ${PLAYLIST_EXECUTOR_DIR}/include \
                   ${PLAYLIST_EXECUTOR_DIR}/src \
                   ${EVENT_SCHEDULER_DIR}/include ${EVENT_SCHEDULER_DIR}/src \
@@ -297,9 +294,6 @@ ${TMP_DIR}/modules_setup.stamp:
 	cd ${STORAGE_CLIENT_DIR} && \
 	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
                     PACKAGE_VERSION=${PACKAGE_VERSION}
-	cd ${GSTREAMER_ELEMENTS_DIR} && \
-	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
-                    PACKAGE_VERSION=${PACKAGE_VERSION}
 	cd ${PLAYLIST_EXECUTOR_DIR} && \
 	   ./configure --prefix=${prefix} --enable-debug=${DEBUG} \
                     PACKAGE_VERSION=${PACKAGE_VERSION}
@@ -352,7 +346,6 @@ modprod_distclean:
 	${MAKE} -C ${AUTHENTICATION_DIR} distclean
 	${MAKE} -C ${DB_DIR} distclean
 	${MAKE} -C ${STORAGE_CLIENT_DIR} distclean
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} distclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} distclean
@@ -368,7 +361,6 @@ depclean:
 	${MAKE} -C ${AUTHENTICATION_DIR} depclean
 	${MAKE} -C ${DB_DIR} depclean
 	${MAKE} -C ${STORAGE_CLIENT_DIR} depclean
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} depclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} depclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} depclean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} depclean
@@ -384,7 +376,6 @@ ${TMP_DIR}/compile.stamp:
 	${MAKE} -C ${AUTHENTICATION_DIR} all
 	${MAKE} -C ${DB_DIR} all
 	${MAKE} -C ${STORAGE_CLIENT_DIR} all
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} all
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} all
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} all
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} all
@@ -398,7 +389,6 @@ check:
 	-${MAKE} -C ${AUTHENTICATION_DIR} check
 	-${MAKE} -C ${DB_DIR} check
 	-${MAKE} -C ${STORAGE_CLIENT_DIR} check
-	-${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} check
 #	-${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} check          # hangs on edge.campware.org
 	-${MAKE} -C ${EVENT_SCHEDULER_DIR} check
 	-${MAKE} -C ${SCHEDULER_CLIENT_DIR} check
@@ -462,7 +452,6 @@ install_modules:
 	${MAKE} -C ${AUTHENTICATION_DIR} install
 	${MAKE} -C ${DB_DIR} install
 	${MAKE} -C ${STORAGE_CLIENT_DIR} install
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} install
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} install
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} install
