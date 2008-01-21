@@ -68,12 +68,6 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
-GSTREAMER_ELEMENTS_DIR         = ${MODULES_DIR}/gstreamerElements
-GSTREAMER_ELEMENTS_INCLUDE_DIR = ${GSTREAMER_ELEMENTS_DIR}/include
-GSTREAMER_ELEMENTS_LIB_DIR     = ${GSTREAMER_ELEMENTS_DIR}/lib
-GSTREAMER_ELEMENTS_LIB         = livesupport_gstreamerelements
-GSTREAMER_ELEMENTS_LIB_FILE    = ${GSTREAMER_ELEMENTS_LIB_DIR}/lib${GSTREAMER_ELEMENTS_LIB}.a
-GST_REAL_LIB_DIR=${REAL_BASE_DIR}/modules/gstreamerElements/lib
 
 VPATH    = ${SRC_DIR}
 
@@ -91,6 +85,9 @@ ICU_LIBS=@ICU_LIBS@
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
+GSTCONTROLLER_CFLAGS=@GSTCONTROLLER_CFLAGS@
+GSTCONTROLLER_LIBS=@GSTCONTROLLER_LIBS@
+
 TAGLIB_CFLAGS=@TAGLIB_CFLAGS@
 TAGLIB_LIBS=@TAGLIB_LIBS@
 
@@ -106,7 +103,6 @@ TWOTEST_RUNNER   = ${TMP_DIR}/twoTestRunner
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
 export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
-export GST_PLUGIN_PATH=${GST_REAL_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -118,8 +114,8 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              ${BOOST_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${GSTREAMER_CFLAGS} \
+                             ${GSTCONTROLLER_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
-                             -I${GSTREAMER_ELEMENTS_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
@@ -127,10 +123,10 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
                      ${ICU_LIBS} \
                      ${GSTREAMER_LIBS} \
+                     ${GSTCONTROLLER_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
-                     -L${GSTREAMER_ELEMENTS_LIB_DIR} \
                      -L${LIB_DIR}
 
 
@@ -140,10 +136,9 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 PLAYLIST_EXECUTOR_LIB_OBJS = ${TMP_DIR}/AudioPlayerFactory.o \
  							 ${TMP_DIR}/GstreamerPlayer.o
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/AudioPlayerFactoryGstreamerTest.o \
-                   ${TMP_DIR}/GstreamerPlayerTest.o
+                   ${TMP_DIR}/AudioPlayerFactoryGstreamerTest.o 
+#                   ${TMP_DIR}/GstreamerPlayerTest.o
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
-                   -l${GSTREAMER_ELEMENTS_LIB} \
                    ${TAGLIB_LIBS} \
                    ${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lm -lxmlrpc++
 
@@ -203,19 +198,16 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}: ${CORE_LIB_FILE} ${GSTREAMER_ELEMENTS_LIB_FILE} \
+${TEST_RUNNER}: ${CORE_LIB_FILE} \
                 ${TEST_RUNNER_OBJS} ${PLAYLIST_EXECUTOR_LIB_FILE}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
-${TWOTEST_RUNNER}: ${CORE_LIB_FILE} ${GSTREAMER_ELEMENTS_LIB_FILE} \
+${TWOTEST_RUNNER}: ${CORE_LIB_FILE} \
                    ${TWOTEST_RUNNER_OBJS} ${PLAYLIST_EXECUTOR_LIB_FILE}
 	${CXX} ${LDFLAGS} -o $@ ${TWOTEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
-
-${GSTREAMER_ELEMENTS_LIB_FILE}:
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR}
 
 
 #-------------------------------------------------------------------------------

@@ -185,31 +185,6 @@ diff -Naur --exclude=.svn --exclude=tmp --exclude=lib --exclude=Makefile --exclu
                               ${TAGLIB_CFLAGS} \
                               ${LIBXMLPP_CFLAGS} \
                               -I${USR_INCLUDE_DIR} \
-diff -Naur --exclude=.svn --exclude=tmp --exclude=lib --exclude=Makefile --exclude=var --exclude=doc --exclude=src livesupport/modules/gstreamerElements/etc/configure.ac livesupport-x/modules/gstreamerElements/etc/configure.ac
---- livesupport/modules/gstreamerElements/etc/configure.ac	2005-09-20 12:46:18.000000000 +0200
-+++ livesupport-x/modules/gstreamerElements/etc/configure.ac	2005-09-19 17:11:47.000000000 +0200
-@@ -63,6 +63,9 @@
- AC_SUBST(GSTREAMER_CFLAGS)
- AC_SUBST(GSTREAMER_LIBS)
- 
-+AC_PATH_PROG(GST_REGISTER, gst-register-0.8)
-+AC_SUBST(GST_REGISTER)
-+
- 
- dnl-----------------------------------------------------------------------------
- dnl enable compilaton for code coverage data
-diff -Naur --exclude=.svn --exclude=tmp --exclude=lib --exclude=Makefile --exclude=var --exclude=doc --exclude=src livesupport/modules/gstreamerElements/etc/Makefile.in livesupport-x/modules/gstreamerElements/etc/Makefile.in
---- livesupport/modules/gstreamerElements/etc/Makefile.in	2005-09-20 12:46:18.000000000 +0200
-+++ livesupport-x/modules/gstreamerElements/etc/Makefile.in	2005-09-19 17:06:03.000000000 +0200
-@@ -74,7 +74,7 @@
- 
- GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
- GSTREAMER_LIBS=@GSTREAMER_LIBS@
--GST_REGISTER=${USR_BIN_DIR}/gst-register
-+GST_REGISTER=@GST_REGISTER@
- 
- TEST_RESULTS = ${DOC_DIR}/testResults.xml
- # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 diff -Naur --exclude=.svn --exclude=tmp --exclude=lib --exclude=Makefile --exclude=var --exclude=doc --exclude=src livesupport/modules/playlistExecutor/etc/acinclude.m4 livesupport-x/modules/playlistExecutor/etc/acinclude.m4
 --- livesupport/modules/playlistExecutor/etc/acinclude.m4	2005-09-20 12:45:15.000000000 +0200
 +++ livesupport-x/modules/playlistExecutor/etc/acinclude.m4	2005-09-19 17:25:54.000000000 +0200

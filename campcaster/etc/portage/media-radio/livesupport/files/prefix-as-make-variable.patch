@@ -96,20 +96,6 @@ diff -Naur livesupport-1.0/modules/getid3/etc/Makefile.in livesupport-1.0-gentoo
  USR_INCLUDE_DIR = ${USR_DIR}/include
  USR_VAR_DIR     = ${USR_DIR}/var
  
-diff -Naur livesupport-1.0/modules/gstreamerElements/etc/Makefile.in livesupport-1.0-gentoo/modules/gstreamerElements/etc/Makefile.in
---- livesupport-1.0/modules/gstreamerElements/etc/Makefile.in	2005-09-21 11:57:28.000000000 +0200
-+++ livesupport-1.0-gentoo/modules/gstreamerElements/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200
-@@ -56,7 +56,9 @@
- REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
- 
- 
--USR_DIR         = @prefix@
-+prefix = @prefix@
-+
-+USR_DIR         = ${prefix}
- USR_INCLUDE_DIR = ${USR_DIR}/include
- USR_BIN_DIR     = ${USR_DIR}/bin
- USR_LIB_DIR     = ${USR_DIR}/lib
 diff -Naur livesupport-1.0/modules/htmlUI/etc/Makefile.in livesupport-1.0-gentoo/modules/htmlUI/etc/Makefile.in
 --- livesupport-1.0/modules/htmlUI/etc/Makefile.in	2005-08-10 00:03:11.000000000 +0200
 +++ livesupport-1.0-gentoo/modules/htmlUI/etc/Makefile.in	2005-09-21 11:56:57.000000000 +0200

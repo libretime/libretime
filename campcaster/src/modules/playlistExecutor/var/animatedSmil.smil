@@ -2,7 +2,7 @@
 <smil xmlns    = "http://www.w3.org/2001/SMIL20/Language">
     <body>
         <par>
-            <audio src="file:var/test10001.mp3" begin="0s">
+          <audio src="file:///home/nebojsa/src/campcaster/src/modules/playlistExecutor/var/test10001.mp3" begin="0s">
                 <animate attributeName = "soundLevel"
                          from          = "100%"
                          to            = "0%"
@@ -12,7 +12,7 @@
                          fill          = "freeze"
                 />
             </audio>
-            <audio src="file:var/test10002.mp3" begin="6.23s"> 
+            <audio src="file:///home/nebojsa/src/campcaster/src/modules/playlistExecutor/var/test10002.mp3" begin="6.23s"> 
                 <animate attributeName = "soundLevel"
                          from          = "0%"
                          to            = "100%"
@@ -22,7 +22,7 @@
                          fill          = "freeze"
                 />
             </audio>
-            <audio src="file:var/test10003.mp3" begin="18.45s">
+            <audio src="file:///home/nebojsa/src/campcaster/src/modules/playlistExecutor/var/test10003.mp3" begin="18.45s">
             </audio> 
         </par>
     </body>

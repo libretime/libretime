@@ -120,6 +120,8 @@ LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
+GSTCONTROLLER_CFLAGS=@GSTCONTROLLER_CFLAGS@
+GSTCONTROLLER_LIBS=@GSTCONTROLLER_LIBS@
 
 CURL_CFLAGS=@CURL_CFLAGS@
 CURL_LIBS=@CURL_LIBS@
@@ -159,13 +161,6 @@ STORAGE_CLIENT_LIB_FILE    = ${STORAGE_CLIENT_LIB_DIR}/lib${STORAGE_CLIENT_LIB}.
 
 STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
 
-GSTREAMER_ELEMENTS_DIR         = ${MODULES_DIR}/gstreamerElements
-GSTREAMER_ELEMENTS_INCLUDE_DIR = ${GSTREAMER_ELEMENTS_DIR}/include
-GSTREAMER_ELEMENTS_LIB_DIR     = ${GSTREAMER_ELEMENTS_DIR}/lib
-GSTREAMER_ELEMENTS_LIB         = livesupport_gstreamerelements
-GSTREAMER_ELEMENTS_LIB_FILE    = ${GSTREAMER_ELEMENTS_LIB_DIR}/lib${GSTREAMER_ELEMENTS_LIB}.a
-GST_REAL_LIB_DIR=${REAL_BASE_DIR}/modules/gstreamerElements/lib
-
 PLAYLIST_EXECUTOR_DIR         = ${MODULES_DIR}/playlistExecutor
 PLAYLIST_EXECUTOR_INCLUDE_DIR = ${PLAYLIST_EXECUTOR_DIR}/include
 PLAYLIST_EXECUTOR_LIB_DIR     = ${PLAYLIST_EXECUTOR_DIR}/lib
@@ -192,7 +187,6 @@ TEST_RUNNER_SH      = ${BIN_DIR}/run_tests.sh
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
 export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
-export GST_PLUGIN_PATH=${GST_REAL_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -205,6 +199,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              ${LIBXMLPP_CFLAGS} \
 							 ${LIBODBCXX_CFLAGS} \
 							 ${GSTREAMER_CFLAGS} \
+							 ${GSTCONTROLLER_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              ${LIBTAR_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
@@ -212,7 +207,6 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${DB_INCLUDE_DIR} \
                              -I${STORAGE_CLIENT_INCLUDE_DIR} \
-                             -I${GSTREAMER_ELEMENTS_INCLUDE_DIR} \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${EVENT_SCHEDULER_INCLUDE_DIR} \
                              -I${TMP_DIR}
@@ -221,6 +215,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
 					 ${LIBODBCXX_LIBS} \
 					 ${GSTREAMER_LIBS} \
+					 ${GSTCONTROLLER_LIBS} \
                      ${CURL_LIBS} \
                      ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
@@ -230,7 +225,6 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${DB_LIB_DIR} \
                      -L${STORAGE_CLIENT_LIB_DIR} \
-                     -L${GSTREAMER_ELEMENTS_LIB_DIR} \
                      -L${PLAYLIST_EXECUTOR_LIB_DIR} \
                      -L${EVENT_SCHEDULER_LIB_DIR}
 
@@ -269,7 +263,6 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
 SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
-                     -l${GSTREAMER_ELEMENTS_LIB} \
                      -l${STORAGE_CLIENT_LIB} -l${DB_LIB} \
 					 -l${AUTHENTICATION_LIB} \
                      -l${CORE_LIB} \
@@ -479,9 +472,6 @@ ${DB_LIB_FILE}:
 
 ${STORAGE_CLIENT_LIB_FILE}:
 	${MAKE} -C ${STORAGE_CLIENT_DIR}
-
-${GSTREAMER_ELEMENTS_LIB_FILE}:
-	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR}
 
 ${PLAYLIST_EXECUTOR_LIB_FILE}:
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR}

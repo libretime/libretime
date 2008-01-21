@@ -64,7 +64,7 @@ namespace PlaylistExecutor {
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
                             public AudioPlayerEventListener
 {
-    CPPUNIT_TEST_SUITE(GstreamerPlayerTest);
+/*    CPPUNIT_TEST_SUITE(GstreamerPlayerTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(getPositionTest);
@@ -80,7 +80,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
     CPPUNIT_TEST(pauseResumeTest);
     CPPUNIT_TEST(openSoundcardTwiceTest);
     CPPUNIT_TEST_SUITE_END();
-
+*/
     private:
 
         /**

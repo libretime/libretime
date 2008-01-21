@@ -1807,7 +1807,7 @@ class BasicStor {
         }
         if (is_null($parid)) {
             return PEAR::raiseError("BasicStor::_getHomeDirId: ".
-                "homedir not found ($subjid)", GBERR_NOTF);
+                "homedir not found ($subjid) ($login)", GBERR_NOTF);
         }
         return $parid;
     }

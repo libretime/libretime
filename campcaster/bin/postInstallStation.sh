@@ -424,7 +424,7 @@ export LD_LIBRARY_PATH=$install_lib                 # is this needed here?
 export GST_REGISTRY=$install_etc/gst-registry.xml
 export GST_PLUGIN_PATH=$install_lib:$gstreamer_dir
 rm -f ${GST_REGISTRY}
-rm -f $install_var/cache/gstreamer-0.8/registry.xml
+rm -f $install_var/cache/gstreamer-0.10/registry.xml
 $install_bin/gst-register
 
 

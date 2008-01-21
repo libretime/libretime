@@ -53,11 +53,7 @@ DEPEND=">=dev-db/unixODBC-2.2
 	>=dev-cpp/libxmlpp-2.8.1
 	=dev-db/libodbc++-0.2.3-r2
 	=dev-libs/xmlrpc++-0.7
-	=media-libs/gst-plugins-0.8.10-r1
 	=media-libs/taglib-1.3.1-r3
-	=media-plugins/gst-plugins-mad-0.8.10-r1
-	=media-plugins/gst-plugins-ogg-0.8.10
-	=media-libs/gstreamer-0.8.10"
 
 src_unpack() {
 	unpack ${A}

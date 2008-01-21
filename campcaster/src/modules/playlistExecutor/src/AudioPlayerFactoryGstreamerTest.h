@@ -66,7 +66,7 @@ namespace PlaylistExecutor {
 class AudioPlayerFactoryGstreamerTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AudioPlayerFactoryGstreamerTest);
-    CPPUNIT_TEST(firstTest);
+//    CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST_SUITE_END();
 
