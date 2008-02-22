@@ -32,12 +32,12 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(gstreamer, 0.10.15, bugs@campware.org)
+AC_INIT(gstreamer, 0.10.17, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../src/gstreamer-0.10.15.tar.bz2)
+AC_CONFIG_SRCDIR(../src/gstreamer-0.10.17.tar.bz2)
 
 
 dnl untar the sources before anything happens

@@ -29,12 +29,12 @@
 # Run this script to prepare gstreamer to be configured and compiled.
 # To read more about gstreamer, see http://gstreamer.freedesktop.org/
 #-------------------------------------------------------------------------------
-liboil=liboil-0.3.10
-gstreamer=gstreamer-0.10.15
-plugins_base=gst-plugins-base-0.10.15
-plugins_good=gst-plugins-good-0.10.5
-plugins_bad=gst-plugins-bad-0.10.5
-plugins_ugly=gst-plugins-ugly-0.10.6
+liboil=liboil-0.3.12
+gstreamer=gstreamer-0.10.17
+plugins_base=gst-plugins-base-0.10.17
+plugins_good=gst-plugins-good-0.10.7
+plugins_bad=gst-plugins-bad-0.10.6
+plugins_ugly=gst-plugins-ugly-0.10.7
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
