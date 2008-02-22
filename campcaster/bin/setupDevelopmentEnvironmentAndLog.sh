@@ -24,7 +24,8 @@
 #   Author   : $Author$
 #   Version  : $Revision$
 #   Location : $URL$
-#-------------------------------------------------------------------------------                                                                                
+#-------------------------------------------------------------------------------
+
 #-------------------------------------------------------------------------------
 #  A script to set up the development environment for Campcaster
 #
@@ -52,11 +53,10 @@ printUsage()
     echo "parameters";
     echo "";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
-    echo "                      [default: apache]";
+    echo "                      [default: www-data]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
-
 
 #-------------------------------------------------------------------------------
 #  Process command line parameters
@@ -84,9 +84,8 @@ while true; do
 done
 
 if [ "x$apache_group" = "x" ]; then
-    apache_group=apache;
+    apache_group=www-data;
 fi
-
 
 #------------------------------------------------------------------------------
 #  All steps are being logged
@@ -113,42 +112,34 @@ ls -l $logdir/make_modprod_distclean_setup.log \
 #  --with-hostname=localhost        --with-apache-group=$apache_group
 #  --enable-debug                   --with-configure-apache=no =yes
 #
-#  --with-check-boost=no =yes       --with-check-gtk=yes =no
-#  --with-check-gtkmm=yes =no       --with-check-icu=yes =no
-#  --with-check-libxmlpp=yes =no
-#
 #  --with-create-database=no =yes   --with-create-odbc-data-source=no =yes
-#  --with-init-database=no =yes
-#
-#  --with-database=Campcaster =Campcaster-test
-#  --with-database-user=campcaster =test
-#  --with-database-password=campcaster =test
+#  --with-init-database=no =yes     --with-database=Campcaster-name
+#  --with-database-user=test        --with-database-password=test
 #
 #  --with-station-audio-out=default
 #  --with-studio-audio-out=default
 #  --with-studio-audio-cue=default
+#
 
 rm -rf $tmpdir/configure
-echo "Now Configure ... ";
-mv -f $logdir/configure_development_environment_autogen.log \
-      $logdir/configure_development_environment_autogen.log~
+echo "Now Configure ... Development Environment";
 mv -f $logdir/configure_development_environment.log \
       $logdir/configure_development_environment.log~
 $bindir/autogen.sh \
-    > $logdir/configure_development_environment_autogen.log 2>&1
-$basedir/configure --with-hostname=localhost --with-www-docroot=$usrdir/var \
-                   --prefix=$usrdir --with-apache-group=$apache_group \
-                   --with-check-boost=yes --with-check-gtk=yes \
-                   --with-check-gtkmm=yes --with-check-icu=yes \
-                   --with-check-libxmlpp=yes --enable-debug \
-                   > $logdir/configure_development_environment.log 2>&1
+    > $logdir/configure_development_environment.log 2>&1
+$basedir/configure --prefix=$usrdir --enable-debug \
+                   --with-hostname=localhost \
+                   --with-www-docroot=$usrdir/var \
+                   --with-apache-group=$apache_group \
+   >> $logdir/configure_development_environment.log 2>&1
+ls -l $logdir/configure_development_environment.log \
+   >> $logdir/configure_development_environment.log
 echo "";
-echo "Configure is done, configure_development_environment.log is created";
+echo "Configure is done, the configure_development_environment.log is created";
 echo "";
-
 
 #-------------------------------------------------------------------------------
-#  Compile step by step, including the tools
+#  Compile step by step
 #-------------------------------------------------------------------------------
 echo "Now Compiling ... Tools";
 mv -f $logdir/make_install_tools_setup.log \
@@ -157,7 +148,7 @@ make -C $basedir tools_setup \
     > $logdir/make_install_tools_setup.log 2>&1
 ls -l $logdir/make_install_tools_setup.log \
    >> $logdir/make_install_tools_setup.log
-echo "Done Tools Setup, make_install_tools_setup.log is created";
+echo "Done Tools Setup, the make_install_tools_setup.log is created";
 echo "";
 echo "Now Compiling ... Doxytag";
 mv -f $logdir/make_doxytag_setup.log \
@@ -166,7 +157,7 @@ make -C $basedir doxytag_setup \
     > $logdir/make_doxytag_setup.log 2>&1
 ls -l $logdir/make_doxytag_setup.log \
    >> $logdir/make_doxytag_setup.log
-echo "Done Doxytag Setup, make_doxytag_setup.log is created";
+echo "Done Doxytag Setup, the make_doxytag_setup.log is created";
 echo "";
 echo "Now Configure ... Modules ... Products";
 mv -f $logdir/make_configure_modules_setup.log \
@@ -175,24 +166,31 @@ make -C $basedir modules_setup \
     > $logdir/make_configure_modules_setup.log 2>&1
 ls -l $logdir/make_configure_modules_setup.log \
    >> $logdir/make_configure_modules_setup.log
-echo "Configure the Modules is done, make_configure_modules_setup.log is created";
+echo "Configure Modules is done, the make_configure_modules_setup.log is created";
 mv -f $logdir/make_configure_products_setup.log \
       $logdir/make_configure_products_setup.log~
 make -C $basedir products_setup \
     > $logdir/make_configure_products_setup.log 2>&1
 ls -l $logdir/make_configure_products_setup.log \
    >> $logdir/make_configure_products_setup.log
-echo "Configure the Products is done, make_configure_products_setup.log is created";
+echo "Configure Products is done, the make_configure_products_setup.log is created";
 echo "";
-echo "Now Compiling ...";
+echo "Now Compiling ... Modules ... Products";
 mv -f $logdir/make_compile_setup.log \
       $logdir/make_compile_setup.log~
 make -C $basedir compile \
     > $logdir/make_compile_setup.log 2>&1
 ls -l $logdir/make_compile_setup.log \
    >> $logdir/make_compile_setup.log
-echo "Compiling is done, make_compile_setup.log is created";
+echo "Compiling is done, the make_compile_setup.log is created";
 echo "";
+
+#-------------------------------------------------------------------------------
+#  User setup
+#-------------------------------------------------------------------------------
+echo "Setting up user settings ...";
+
+$bindir/user_setup.sh --apache-group=$apache_group || exit 1
 
 #-------------------------------------------------------------------------------
 #  Checking what we have done
@@ -204,16 +202,8 @@ make -C $basedir check \
     > $logdir/make_check_setup.log 2>&1
 ls -l $logdir/make_check_setup.log \
    >> $logdir/make_check_setup.log
-echo "Checking is be done, make_check_setup.log is created";
+echo "Checking is be done, the make_check_setup.log is created";
 echo "";
-
-#-------------------------------------------------------------------------------
-#  User setup
-#-------------------------------------------------------------------------------
-echo "Setting up user settings ...";
-
-$bindir/user_setup.sh --apache-group=$apache_group || exit 1
-
 
 #-------------------------------------------------------------------------------
 #  We're done
