@@ -151,7 +151,7 @@ TwoGstreamerPlayersTest :: simplePlay1Test(void)
 
     player1->initialize();
     try {
-        player1->open("file:var/test10001.mp3");
+        player1->open("file:///tmp/campcaster/test10001.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -178,7 +178,7 @@ TwoGstreamerPlayersTest :: simplePlay2Test(void)
 
     player2->initialize();
     try {
-        player2->open("file:var/test.mp3");
+        player2->open("file:///tmp/campcaster/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -208,7 +208,7 @@ TwoGstreamerPlayersTest :: playBothTest(void)
 
     // start playing on player1
     try {
-        player1->open("file:var/test10001.mp3");
+        player1->open("file:///tmp/campcaster/test10001.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -223,7 +223,7 @@ TwoGstreamerPlayersTest :: playBothTest(void)
 
     // start playing on player2
     try {
-        player2->open("file:var/test.mp3");
+        player2->open("file:///tmp/campcaster/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
