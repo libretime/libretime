@@ -131,7 +131,7 @@ GstreamerPlayerTest :: simplePlayTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -167,7 +167,7 @@ GstreamerPlayerTest :: getPositionTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     start = TimeConversion::now();
@@ -217,7 +217,7 @@ GstreamerPlayerTest :: setDeviceTest(void)
     // check on an ALSA device
     CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test-short.mp3");
+        player->open("file:///tmp/campcaster/test-short.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -237,7 +237,7 @@ GstreamerPlayerTest :: setDeviceTest(void)
     // check on an OSS DSP device
     CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test-short.mp3");
+        player->open("file:///tmp/campcaster/test-short.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -255,7 +255,7 @@ GstreamerPlayerTest :: setDeviceTest(void)
     // check changing from ALSA to OSS after opening
     CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test-short.mp3");
+        player->open("file:///tmp/campcaster/test-short.mp3");
     );
     CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -277,7 +277,7 @@ GstreamerPlayerTest :: setDeviceTest(void)
     player->close();
     CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test-short.mp3")
+        player->open("file:///tmp/campcaster/test-short.mp3")
     );
     CPPUNIT_ASSERT_NO_THROW(
         player->start();
@@ -305,7 +305,7 @@ GstreamerPlayerTest :: simpleSmilTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/simpleSmil.smil");
+        player->open("file:///tmp/campcaster/simpleSmil.smil");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -334,7 +334,7 @@ GstreamerPlayerTest :: secondSmilTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/sequentialSmil.smil");
+        player->open("file:///tmp/campcaster/sequentialSmil.smil");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -364,7 +364,7 @@ GstreamerPlayerTest :: animatedSmilTest(void)
     );
     
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/animatedSmil.smil");
+        player->open("file:///tmp/campcaster/animatedSmil.smil");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -432,7 +432,7 @@ GstreamerPlayerTest :: checkErrorConditions(void)
 
     // check for opening a wrong URL after opening a proper one
     try {
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     } catch (std::runtime_error &e) {
@@ -506,7 +506,7 @@ GstreamerPlayerTest :: eventListenerTest(void)
     // try with one listener
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
@@ -531,7 +531,7 @@ GstreamerPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT(!listener2->stopFlag);
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
@@ -560,7 +560,7 @@ GstreamerPlayerTest :: eventListenerTest(void)
     );
     CPPUNIT_ASSERT(!listener2->stopFlag);
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener2->stopFlag);
@@ -594,7 +594,7 @@ GstreamerPlayerTest :: eventListenerOnStopTest(void)
 
     // start the first clip
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test-short.mp3");
+        player->open("file:///tmp/campcaster/test-short.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -635,7 +635,7 @@ GstreamerPlayerTest :: onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
         );
 
         CPPUNIT_ASSERT_NO_THROW(
-            player->open("file:var/test-short.mp3");
+            player->open("file:///tmp/campcaster/test-short.mp3");
         );
         CPPUNIT_ASSERT(!player->isPlaying());
 
@@ -711,11 +711,11 @@ GstreamerPlayerTest :: openTimeTest(void)
         player->initialize();
     );
 
-    timeSteps("file:var/test.mp3");
+    timeSteps("file:///tmp/campcaster/test.mp3");
 
-    timeSteps("file:var/simpleSmil.smil");
+    timeSteps("file:///tmp/campcaster/simpleSmil.smil");
 
-    timeSteps("file:var/sequentialSmil.smil");
+    timeSteps("file:///tmp/campcaster/sequentialSmil.smil");
 
     player->deInitialize();
 }
@@ -734,7 +734,7 @@ GstreamerPlayerTest :: pauseResumeTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test10001.mp3");
+        player->open("file:///tmp/campcaster/test10001.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     
@@ -805,7 +805,7 @@ GstreamerPlayerTest :: openSoundcardTwiceTest(void)
         player->initialize();
     );
     CPPUNIT_ASSERT_NO_THROW(
-        player->open("file:var/test.mp3");
+        player->open("file:///tmp/campcaster/test.mp3");
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT_NO_THROW(
@@ -818,7 +818,7 @@ GstreamerPlayerTest :: openSoundcardTwiceTest(void)
         player2->initialize();
     );
     try {
-        player2->open("file:var/test.mp3");
+        player2->open("file:///tmp/campcaster/test.mp3");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     } catch (std::runtime_error &e) {
