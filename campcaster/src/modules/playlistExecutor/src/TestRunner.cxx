@@ -187,7 +187,7 @@ my_bus_callback (GstBus     *bus,
       if(cnt<0){
 //      if(cnt<5){
           char tmp[255]={0};
-          sprintf(tmp, "file:///tmp/campcaster/%d.mp3", cnt+1);//use when file name needed
+          sprintf(tmp, "file:///tmp/campcaster/%d.ogg", cnt+1);//use when file name needed
             if(pContext){
                 pContext->closeContext();
                 delete pContext;
@@ -267,7 +267,7 @@ main(   int     argc,
   bin = gst_pipeline_new ("pipeline");
   clock = gst_pipeline_get_clock (GST_PIPELINE (bin));
   src = gst_element_factory_make ("audiotestsrc", "gen_audio");
-//  src = gst_element_make_from_uri (GST_URI_SRC, "file:///usr/share/sounds/kubuntu-login.ogg", NULL);
+//  src = gst_element_make_from_uri (GST_URI_SRC, "file:///tmp/campcaster/login.ogg", NULL);
   sink = gst_element_factory_make ("alsasink", "play_audio");
   gst_bin_add_many (GST_BIN (bin), src, sink, NULL);
   if (!gst_element_link (src, sink)) {
