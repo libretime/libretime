@@ -419,9 +419,9 @@ Error:
     pContext=new GstreamerPlayContext();
     pContext->setParentData((gpointer)pContext);
 //    pContext->setAudioDevice("default");
-//    pContext->openSource("file:///tmp/campcaster/kubuntu-login.ogg");
-    pContext->openSource("file:///tmp/campcaster/B92 - Brian Eno.ogg");
-//    pContext->openSource("file:///tmp/campcaster/LS Live FEED.ogg");
+//    pContext->openSource("file:///tmp/campcaster/login.ogg");
+    pContext->openSource("file:///tmp/campcaster/introduction.ogg");
+//    pContext->openSource("file:///tmp/campcaster/starter.ogg");
 
 //    pContext->openSource("http://www.sicksiteradio.com/contents/radio_shows/sicksiteradio57.mp3");
 
