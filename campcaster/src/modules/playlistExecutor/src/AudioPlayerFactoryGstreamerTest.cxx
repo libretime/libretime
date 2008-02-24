@@ -156,7 +156,7 @@ AudioPlayerFactoryGstreamerTest :: simplePlayTest(void)
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
 
 //    CPPUNIT_ASSERT_NO_THROW(
-        audioPlayer->open("file:///home/nebojsa/testFiles/simple.smil");
+        audioPlayer->open("file:///tmp/campcaster/simple.smil");
 //    );
 //    CPPUNIT_ASSERT(!audioPlayer->isPlaying());
 //    CPPUNIT_ASSERT_NO_THROW(

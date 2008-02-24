@@ -187,7 +187,7 @@ my_bus_callback (GstBus     *bus,
       if(cnt<0){
 //      if(cnt<5){
           char tmp[255]={0};
-          sprintf(tmp, "file:///home/nebojsa/testFiles/%d.ogg", cnt+1);//use when file name needed
+          sprintf(tmp, "file:///tmp/campcaster/%d.mp3", cnt+1);//use when file name needed
             if(pContext){
                 pContext->closeContext();
                 delete pContext;
@@ -398,7 +398,7 @@ Error:
     loop = g_main_loop_new (NULL, FALSE);
     //quick test for smil parser
     smil = new SmilHandler();
-    smil->openSmilFile("file:///home/nebojsa/src/campcaster/src/modules/playlistExecutor/var/animatedSmil.smil");
+    smil->openSmilFile("file:///tmp/campcaster/animatedSmil.smil");
     
     pContext=new GstreamerPlayContext();
     pContext->setParentData((gpointer)pContext);
@@ -419,15 +419,14 @@ Error:
     pContext=new GstreamerPlayContext();
     pContext->setParentData((gpointer)pContext);
 //    pContext->setAudioDevice("default");
-//    pContext->openSource("/usr/share/sounds/kubuntu-login.ogg");
-//    pContext->openSource("file:///usr/share/sounds/kubuntu-login.ogg");
-    pContext->openSource("file:///home/nebojsa/src/campcaster/var/jingles/B92 - Brian Eno.ogg");
-//    pContext->openSource("file:///home/nebojsa/src/campcaster/var/jingles/LS Live FEED.ogg");
+//    pContext->openSource("file:///tmp/campcaster/kubuntu-login.ogg");
+    pContext->openSource("file:///tmp/campcaster/B92 - Brian Eno.ogg");
+//    pContext->openSource("file:///tmp/campcaster/LS Live FEED.ogg");
 
 //    pContext->openSource("http://www.sicksiteradio.com/contents/radio_shows/sicksiteradio57.mp3");
 
-//    pContext->openSource("file:///home/nebojsa/testFiles/3n.mp3");
-//    pContextNext=new GstreamerPlayContext("file:///home/nebojsa/testFiles/1.ogg");
+//    pContext->openSource("file:///tmp/campcaster/test-short.mp3");
+//    pContextNext=new GstreamerPlayContext("file:///tmp/campcaster/test.mp3");
 //    cnt++;
     pContext->playContext();
 

@@ -50,6 +50,9 @@ LIB_DIR      = ${BASE_DIR}/lib
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
 
+VAR_DIR      = ${BASE_DIR}/var
+TMP_CC_DIR   = /tmp/campcaster
+
 REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
 
 
@@ -174,6 +177,8 @@ distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/ac*.m4
 
 check: all ${TEST_RUNNER}
+	${MKDIR} ${TMP_CC_DIR}
+	${CP} ${VAR_DIR}/* ${TMP_CC_DIR}/
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 check_two: all ${TWOTEST_RUNNER}
