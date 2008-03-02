@@ -333,7 +333,7 @@ GstreamerPlayer :: getPlaylength(void)              throw (std::logic_error)
  
     length.reset(new time_duration(microsec(ns / 1000LL)));
 
-    debug() << length << endl;
+    debug() << "playlength is: " << *length << endl; 
     return length;
 }
 
