@@ -263,7 +263,13 @@ private:
 
         GstPad *audiopad;
 
-        const bool oss = m_audioDevice.find("/dev") == 0;
+        // this constant checks if the audio device configuration contains the string
+        // "/dev", if so the below pipeline definition uses oss.
+        // Perhaps the logic can go three ways and check if the device is labled jack.
+        // Or keep the if-else logic and eliminate OSS as an option as it is obsolete anyway
+        // and ALSA can emulate it.
+        // const bool oss = m_audioDevice.find("/dev") == 0;
+        const bool autosink = m_audioDevice.find("auto") == 0;
 
         m_sink = gst_bin_new ("audiobin");
         if(m_sink == NULL){
@@ -272,7 +278,8 @@ private:
         GstElement *conv = gst_element_factory_make ("audioconvert", "aconv");
         audiopad = gst_element_get_pad (conv, "sink");
 
-        GstElement *sink = (oss ? gst_element_factory_make("osssink", NULL) : gst_element_factory_make("alsasink", NULL));
+        // set the string to be sent to gstreamer. the option here is to set it to autoaudiosink.
+        GstElement *sink = (autosink ? gst_element_factory_make("autoaudiosink", NULL) : gst_element_factory_make("alsasink", NULL));
         if(sink == NULL){
             return false;
         }
