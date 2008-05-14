@@ -287,7 +287,7 @@ class MetaData {
                 md.predxml, md.predns as chns, md.predicate as chname
             FROM ".$CC_CONFIG['mdataTable']." parmd
             INNER JOIN ".$CC_CONFIG['mdataTable']." md
-                ON parmd.id=md.subject AND md.subjns='_I'
+                ON parmd.id=md.subject::integer AND md.subjns='_I'
             WHERE md.id=$p_id");
         if (PEAR::isError($info)) {
         	return $info;
