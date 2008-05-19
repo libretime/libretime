@@ -53,8 +53,8 @@ Build-Depends: debhelper (>= 4.0.0),
                libapache2-mod-php5,
                php-pear,
                php5-gd,
-               postgresql-8.1 | postgresql-8.2 | postgresql-8.3,
-               postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3
+               postgresql-8.1 | postgresql-8.2 | postgresql-8.3 | postgresql,
+               postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3 | postgresql-client
 Standards-Version: 3.6.1
 
 Package: campcaster-libs
@@ -119,8 +119,8 @@ Depends: ${shlibs:Depends},
          libapache2-mod-php5,
          php-pear,
          php5-gd,
-         postgresql-8.1 | postgresql-8.2 | postgresql-8.3,
-         postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3
+         postgresql-8.1 | postgresql-8.2 | postgresql-8.3 | postgresql,
+         postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3 | postgresql-client
 Description: A radio program automation and support tool.
  Campcaster is the first free and open radio management software that 
  provides live studio broadcast capabilities as well as remote automation
