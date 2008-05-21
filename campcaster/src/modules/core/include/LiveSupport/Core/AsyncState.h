@@ -36,6 +36,7 @@
 
 /* ============================================================ include files */
 
+#include <ostream>
 #include <string>
 #include "LiveSupport/Core/Ptr.h"
 
