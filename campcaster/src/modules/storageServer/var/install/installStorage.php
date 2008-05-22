@@ -45,14 +45,14 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
 // Install storage directories
 //------------------------------------------------------------------------
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
-    $rp = realpath($CC_CONFIG[$d]);
+    $rp = file_exists($CC_CONFIG[$d]);
     if ( $rp === FALSE ) {
         echo " * Creating directory ".$CC_CONFIG[$d]."...";
         mkdir($CC_CONFIG[$d], 02775);
         echo "done.\n";
         $rp = realpath($CC_CONFIG[$d]);
     } else {
-        echo " * Skipping: directory already exists: $rp\n";
+        echo " * Skipping: directory already exists: ".$CC_CONFIG[$d]."\n";
     }
     $CC_CONFIG[$d] = $rp;
 }
