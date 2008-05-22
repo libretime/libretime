@@ -168,7 +168,7 @@ if (!is_null($this_file)) {
 
 // make dirpaths better (without "../")
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
-    $rp = realpath($CC_CONFIG[$d]);
+    $rp = file_exists($CC_CONFIG[$d]);
     // workaround for missing dirs
 //    if ( $rp === FALSE ) {
 //        mkdir( $CC_CONFIG[$d] );
