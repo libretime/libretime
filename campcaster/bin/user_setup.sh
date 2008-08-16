@@ -376,6 +376,7 @@ chmod g+sw $modules_dir/htmlUI/var/html/img
 cp $modules_dir/htmlUI/var/redirect.php $modules_dir/index.php
 cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/index.php
 cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/var/index.php
+cp $modules_dir/htmlUI/var/redirect.php $modules_dir/htmlUI/var/html/index.php
 
 
 #-------------------------------------------------------------------------------
