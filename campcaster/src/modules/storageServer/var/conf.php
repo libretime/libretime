@@ -166,17 +166,22 @@ if (!is_null($this_file)) {
     }
 }
 
-// make dirpaths better (without "../")
+// workaround for missing folders
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
-    $rp = realpath($CC_CONFIG[$d]);
-    // workaround for missing dirs
-//    if ( $rp === FALSE ) {
-//        mkdir( $CC_CONFIG[$d] );
-//        $rp = realpath($CC_CONFIG[$d]);
-//    }
-    if ($rp) {
-        $CC_CONFIG[$d] = $rp;
+    $test = file_exists($CC_CONFIG[$d]);
+    if ( $test === FALSE ) {
+        @mkdir($CC_CONFIG[$d], 02775);
+        if (file_exists($CC_CONFIG[$d])) {
+            $rp = realpath($CC_CONFIG[$d]);
+            //echo " * Directory $rp created\n";
+        } else {
+            echo " * Failed creating {$CC_CONFIG[$d]}\n";
+            exit(1);
+        }
+    } else {
+        $rp = realpath($CC_CONFIG[$d]);
     }
+    $CC_CONFIG[$d] = $rp;
 }
 
 ?>

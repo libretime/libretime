@@ -45,14 +45,23 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
 // Install storage directories
 //------------------------------------------------------------------------
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
-    $rp = file_exists($CC_CONFIG[$d]);
-    if ( $rp === FALSE ) {
-        echo " * Creating directory ".$CC_CONFIG[$d]."...";
-        mkdir($CC_CONFIG[$d], 02775);
-        echo "done.\n";
+    $test = file_exists($CC_CONFIG[$d]);
+    if ( $test === FALSE ) {
+        @mkdir($CC_CONFIG[$d], 02775);
+        if (file_exists($CC_CONFIG[$d])) {
+            $rp = realpath($CC_CONFIG[$d]);
+            echo " * Directory $rp created\n";
+        } else {
+            echo " * Failed creating {$CC_CONFIG[$d]}\n";
+            exit(1);
+        }
+    } elseif (is_writable($CC_CONFIG[$d])) {
         $rp = realpath($CC_CONFIG[$d]);
+        echo " * Skipping directory already exists: $rp\n";
     } else {
-        echo " * Skipping: directory already exists: $rp\n";
+        $rp = realpath($CC_CONFIG[$d]);
+        echo " * ERROR. Directory already exists, but is not writable: $rp\n";
+        exit(1);
     }
     $CC_CONFIG[$d] = $rp;
 }

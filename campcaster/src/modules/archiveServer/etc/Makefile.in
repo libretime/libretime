@@ -181,10 +181,10 @@ dir_setup: ${DOXYGEN_DIR}
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_init:
-	-cd var/install && php -q install.php
+	cd var/install && php -q install.php
 
 db_clean:
-	-cd var/install && php -q uninstall.php
+	cd var/install && php -q uninstall.php
 
 ${TMP_DIR}:
 	${MKDIR} ${TMP_DIR}
