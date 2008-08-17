@@ -107,8 +107,6 @@ LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
 LIBODBCXX_VERSION = libodbc++-0.2.3-20050404
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
-GSTREAMER_DIR     = ${TOOLS_DIR}/gstreamer
-GSTREAMER_VERSION = gstreamer-0.10.17
 TAGLIB_DIR        = ${TOOLS_DIR}/taglib
 TAGLIB_VERSION    = taglib-1.4
 LIBSERIAL_DIR     = ${TOOLS_DIR}/libserial
@@ -213,9 +211,6 @@ endif
 
 	cd ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} install
-
-	cd ${GSTREAMER_DIR}/${GSTREAMER_VERSION} && ./configure --prefix=${prefix}
-	${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} install
 
 	cd ${TAGLIB_DIR}/${TAGLIB_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${TAGLIB_DIR}/${TAGLIB_VERSION} install
