@@ -229,7 +229,6 @@ ifeq ("@COMPILE_CPPUNIT@", "yes")
 endif
 	-${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} distclean
 	-${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} distclean
-	-${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} distclean
 	-${MAKE} -C ${TAGLIB_DIR}/${TAGLIB_VERSION} distclean
 	-${MAKE} -C ${LIBSERIAL_DIR}/${LIBSERIAL_VERSION} distclean
 	${RM} ${TMP_DIR}/tools_setup.stamp

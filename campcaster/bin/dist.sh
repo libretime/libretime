@@ -156,10 +156,6 @@ xmlrpcxx_dir=$toolsdir/xmlrpc++
 xmlrpcxx_version=xmlrpc++-20040713
 xmlrpcxx_tmpdir=$tools_tmpdir/xmlrpc++
 
-gstreamer_dir=$toolsdir/gstreamer
-gstreamer_version=gstreamer-0.10.17
-gstreamer_tmpdir=$tools_tmpdir/gstreamer
-
 taglib_dir=$toolsdir/taglib
 taglib_version=taglib-1.4
 taglib_tmpdir=$tools_tmpdir/taglib
@@ -251,9 +247,6 @@ cp -pPR $libodbcxx_dir/$libodbcxx_version $libodbcxx_tmpdir
 
 mkdir -p $xmlrpcxx_tmpdir
 cp -pPR $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
-
-mkdir -p $gstreamer_tmpdir
-cp -pPR $gstreamer_dir/$gstreamer_version $gstreamer_tmpdir
 
 mkdir -p $taglib_tmpdir
 cp -pPR $taglib_dir/$taglib_version $taglib_tmpdir

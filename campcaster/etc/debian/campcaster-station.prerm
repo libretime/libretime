@@ -90,7 +90,6 @@ case "$1" in
         fi
 
         # remove generated files
-        rm -rf $installdir/etc/gst-registry.xml
         rm -rf $installdir/etc/pear.conf
         rm -rf $installdir/var/Campcaster/htmlUI/var/html/img/*
         rm -rf $installdir/var/Campcaster/htmlUI/var/templates_c/*
