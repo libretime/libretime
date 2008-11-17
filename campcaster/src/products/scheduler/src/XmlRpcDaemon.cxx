@@ -72,9 +72,12 @@
 #include "SignalDispatcher.h"
 #include "XmlRpcDaemonShutdownSignalHandler.h"
 #include "XmlRpcDaemon.h"
+#include <glib.h>
 
 
 using namespace LiveSupport::Scheduler;
+
+GMainLoop      *loop;
 
 /* ===================================================  local data structures */
 
@@ -303,7 +306,16 @@ XmlRpcDaemon :: startup (void)                       throw (std::logic_error)
     // bind & run
     xmlRpcServer->enableIntrospection(true);
     xmlRpcServer->bindAndListen(xmlRpcPort);
-    xmlRpcServer->work(-1.0);
+    active = true;
+    loop = g_main_loop_new (NULL, FALSE);
+    GMainContext*       maincontext = g_main_context_default();
+    while(active)
+    {
+        g_main_context_iteration(maincontext, FALSE);
+        xmlRpcServer->work(0.);
+    }
+
+//    xmlRpcServer->work(-1.0);
 }
 
 
@@ -350,6 +362,7 @@ XmlRpcDaemon :: stop (void)                          throw (std::logic_error)
 void
 XmlRpcDaemon :: shutdown (void)                      throw (std::logic_error)
 {
+    active = false;
     checkForConfiguration();
 
     xmlRpcServer->shutdown();

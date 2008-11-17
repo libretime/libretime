@@ -188,6 +188,8 @@ class XmlRpcDaemon
          */
         pid_t
         loadPid(void)                                   throw();
+        
+        bool                        active;
 
     protected:
         /**
@@ -197,6 +199,7 @@ class XmlRpcDaemon
         {
             background = true;
             configured = false;
+            active = false;
             xmlRpcServer.reset(new XmlRpcServer());
         }
 

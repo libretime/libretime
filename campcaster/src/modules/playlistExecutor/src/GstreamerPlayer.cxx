@@ -301,6 +301,7 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
     }
     m_smilOffset += m_currentPlayLength;
     m_playContext->playContext();
+    return true;
 }
 
 
