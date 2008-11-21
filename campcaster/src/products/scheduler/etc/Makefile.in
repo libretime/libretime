@@ -391,7 +391,7 @@ run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER_SH} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 init: ${SCHEDULER_EXE}
-	${SCHEDULER_SH} install
+	-${SCHEDULER_SH} install
 
 start: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} start
@@ -408,7 +408,7 @@ status: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} status
 
 deinit: ${SCHEDULER_EXE}
-	${SCHEDULER_SH} uninstall
+	-${SCHEDULER_SH} uninstall
 
 init_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} install

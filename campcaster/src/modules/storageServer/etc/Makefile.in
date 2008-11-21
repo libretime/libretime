@@ -216,7 +216,7 @@ endif
 
 init_database:
 ifeq (@INIT_LS_DATABASE@,yes)
-	cd ${DEST_VAR_DIR}/install && ${PHP} -q install.php
+	-cd ${DEST_VAR_DIR}/install && ${PHP} -q install.php
 endif
 
 
@@ -234,12 +234,12 @@ dir_setup:
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_init:
-	cd var/install && php -q install.php
+	-cd var/install && php -q install.php
 	chgrp ${APACHE_GROUP} ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 	chmod g+sw ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 db_clean:
-	cd var/install && php -q uninstall.php
+	-cd var/install && php -q uninstall.php
 
 reset:
 	./bin/resetStorage.sh
