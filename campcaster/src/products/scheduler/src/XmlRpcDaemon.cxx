@@ -311,8 +311,11 @@ XmlRpcDaemon :: startup (void)                       throw (std::logic_error)
     GMainContext*       maincontext = g_main_context_default();
     while(active)
     {
-        g_main_context_iteration(maincontext, FALSE);
+	while (active && g_main_context_pending (maincontext)) {
+		g_main_context_iteration(maincontext, FALSE);
+	}
         xmlRpcServer->work(0.);
+	g_usleep(G_USEC_PER_SEC/20);
     }
 
 //    xmlRpcServer->work(-1.0);
