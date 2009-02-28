@@ -186,6 +186,9 @@ GSTREAMER_LIBS=@GSTREAMER_LIBS@
 GSTCONTROLLER_CFLAGS=@GSTCONTROLLER_CFLAGS@
 GSTCONTROLLER_LIBS=@GSTCONTROLLER_LIBS@
 
+LIBSERIAL_CFLAGS=@LIBSERIAL_CFLAGS@
+LIBSERIAL_LIBS=@LIBSERIAL_LIBS@
+
 ICU_CFLAGS=@ICU_CFLAGS@
 ICU_CXXFLAGS=@ICU_CXXFLAGS@
 ICU_LIBS=@ICU_LIBS@
@@ -218,8 +221,9 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              ${LIBXMLPP_CFLAGS} \
                              ${GTKMM_CFLAGS} \
                              ${LIBGLADEMM_CFLAGS} \
-							 ${GSTREAMER_CFLAGS} \
-							 ${GSTCONTROLLER_CFLAGS} \
+                             ${GSTREAMER_CFLAGS} \
+                             ${GSTCONTROLLER_CFLAGS} \
+                             ${LIBSERIAL_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
@@ -235,8 +239,9 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${CURL_LIBS} \
                      ${GTKMM_LIBS} \
                      ${LIBGLADEMM_LIBS} \
-					 ${GSTREAMER_LIBS} \
-					 ${GSTCONTROLLER_LIBS} \
+                     ${GSTREAMER_LIBS} \
+                     ${GSTCONTROLLER_LIBS} \
+                     ${LIBSERIAL_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
@@ -307,7 +312,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
                          ${BOOST_DATE_TIME_LIB} \
-                         -lxmlrpc++ -lssl -ltar -lserial
+                         -lxmlrpc++ -lssl -ltar
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \
                    ${TMP_DIR}/TestRunner.o \

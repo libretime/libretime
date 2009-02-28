@@ -375,7 +375,6 @@ by Campcaster:
     libodbc++ 0.2.3         yes
     taglib 1.4              yes
     xmlrpc++ 2004-07-13     yes
-    libserial 0.5.2         yes
 
 using the following configuration settings:
 
