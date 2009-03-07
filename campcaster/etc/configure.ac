@@ -372,7 +372,7 @@ AC_MSG_NOTICE(
 by Campcaster:
 
     cppunit 1.10.2          ${COMPILE_CPPUNIT}
-    libodbc++ 0.2.3         yes
+    libodbc++ 0.2.4pre4     yes
     taglib 1.4              yes
     xmlrpc++ 2004-07-13     yes
 

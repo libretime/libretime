@@ -24,11 +24,6 @@ src_unpack() {
 	unpack ${A}
 	cd ${S}
 
-	epatch ${FILESDIR}/libodbc++-0.2.3-to-cvs-20050404.patch
-	epatch ${FILESDIR}/libodbc++-no-namespace-closing-colon.patch
-	epatch ${FILESDIR}/libodbc++-no-thread-dmaccess-mutex-fix.patch
-	epatch ${FILESDIR}/libodbc++-dont-install-some-docs.patch
-
 	# toch the programmers reference stamp, so that it is not re-generated
 	touch doc/progref/progref-stamp
 }

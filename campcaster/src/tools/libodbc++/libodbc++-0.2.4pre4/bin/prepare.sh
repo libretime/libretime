@@ -29,7 +29,7 @@
 # Run this script to prepare libodbc++ 2.3 to be configured and compiled.
 # To read more about libodbc++, see http://libodbcxx.sourceforge.net/
 #-------------------------------------------------------------------------------
-product=libodbc++-0.2.3-20050404
+product=libodbc++-0.2.4pre4
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
@@ -48,16 +48,5 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${tar}
     cd $product
-    # see http://sourceforge.net/tracker/index.php?func=detail&aid=1176652&group_id=19075&atid=319075
-    patch -p1 < $etcdir/libodbc++-no-namespace-closing-colon.patch
-    # see http://sourceforge.net/tracker/index.php?func=detail&aid=1176656&group_id=19075&atid=319075
-    patch -p1 < $etcdir/libodbc++-no-thread-dmaccess-mutex-fix.patch
-    # patch not submitted
-    patch -p1 < $etcdir/libodbc++-dont-install-some-docs.patch
-    # patch to fix bug #1545 (not submitted; already fixed in 0.2.4)
-    patch -p1 < $etcdir/libodbc++-gcc-4.0-fix.patch
-    # a similar patch submitted by somebody else:
-    # http://sourceforge.net/tracker/index.php?func=detail&aid=1595055&group_id=19075&atid=319075
-    patch -p1 < $etcdir/libodbc++-x64-fix.patch
 fi
 
