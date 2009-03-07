@@ -160,10 +160,6 @@ taglib_dir=$toolsdir/taglib
 taglib_version=taglib-1.4
 taglib_tmpdir=$tools_tmpdir/taglib
 
-libserial_dir=$toolsdir/libserial
-libserial_version=libserial-0.5.2
-libserial_tmpdir=$tools_tmpdir/libserial
-
 pear_dir=$toolsdir/pear
 pear_tmpdir=$tools_tmpdir/pear
 
@@ -250,9 +246,6 @@ cp -pPR $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
 
 mkdir -p $taglib_tmpdir
 cp -pPR $taglib_dir/$taglib_version $taglib_tmpdir
-
-mkdir -p $libserial_tmpdir
-cp -pPR $libserial_dir/$libserial_version $libserial_tmpdir
 
 mkdir -p $pear_tmpdir
 cp -pPR $pear_dir/* $pear_tmpdir
