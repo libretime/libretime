@@ -93,7 +93,7 @@ FileTools :: copyUrlToFile(const std::string &      url,
     
     int    status =   curl_easy_setopt(handle, CURLOPT_URL, url.c_str()); 
     status |=   curl_easy_setopt(handle, CURLOPT_WRITEDATA, file);
-    status |=   curl_easy_setopt(handle, CURLOPT_HTTPGET);
+    status |=   curl_easy_setopt(handle, CURLOPT_HTTPGET, 1);
 
     if (status) {
         fclose(file);

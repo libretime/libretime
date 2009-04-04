@@ -34,7 +34,7 @@
 #endif
 
 #include <unicode/msgfmt.h>
-
+#include <string.h>
 #include "LiveSupport/Core/LocalizedObject.h"
 
 
@@ -322,7 +322,7 @@ LocalizedObject :: getBinaryResourceAsUstring(const char *      key)
                                         "binary resource");
         }
         char *                      strBuf = new char[length + 1];
-        std::memcpy(strBuf, data, length);
+        memcpy(strBuf, data, length);
         strBuf[length] = 0;
         Ptr<Glib::ustring>::Ref string(new Glib::ustring(strBuf));
         if (string->validate()) {

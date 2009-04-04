@@ -49,7 +49,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
-
+#include <string.h>
 #include "LiveSupport/Core/Uuid.h"
 
 

@@ -377,6 +377,8 @@ class uiBrowser extends uiBase {
      */
     function testStream($url)
     {
+        global $CC_CONFIG;
+        
         touch(UI_TESTSTREAM_MU3_TMP);
         $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
         fwrite($handle, $url);
@@ -403,7 +405,7 @@ class uiBrowser extends uiBase {
                     $type = explode(':', $type);
 
                     foreach ($CC_CONFIG['stream_types'] as $t) {
-                        if (preg_match('/'.str_replace('/', '\/', $t).'/i', $type[1])) {
+                        if (stripos($type[1], $t) !== false) {
                             $match = TRUE;
                             break;
                         }

@@ -28,11 +28,11 @@
     </p>
     <br>
 
-    <div>
     {if $data.header}
-        Returned connection header:<pre>{$data.header}</pre>
+        ##Connection header:##
+        <br>
+        <textarea rows="6" cols="45" readonly>{$data.header}</textarea>
     {/if}
-    </div>
 
 {else}
      <div>{tra str='Connection to $1 port $2 $3' 1=$data.host 2=$data.port 3='<font color="red">failed</font>'}</div>

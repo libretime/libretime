@@ -21,7 +21,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         <li class="nav-main"><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Add Audio##</a>
             <ul>
                 <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData">##Audioclip##</a></li>
-                {* <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li> *}
+                <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li>
             </ul>
         </li>
         <li class="nav-main"><a>##Media Library##</a>
