@@ -41,11 +41,6 @@ tar=$basedir/src/$product.tar.gz
 
 mkdir -p ${tmpdir}
 
-# copy over install-sh, as AC_CONFIG_SUBDIRS will be looking for it
-cp -r $bindir/install-sh $tmpdir
-# copy over mkinstalldir, as some automakes will refer to it there :(
-cp -r $bindir/mkinstalldirs $tmpdir
-
 cd ${tmpdir}
 if [ ! -d xmlrpc++ ]; then
     tar xfz ${tar}

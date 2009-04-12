@@ -41,9 +41,6 @@ tar=$basedir/src/$product.tar.bz2
 
 mkdir -p ${tmpdir}
 
-# copy over install-sh, as AC_CONFIG_SUBDIRS will be looking for it
-cp -r $bindir/install-sh $tmpdir
-
 cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${tar}
