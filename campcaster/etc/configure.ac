@@ -276,22 +276,6 @@ AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
 
 
 dnl-----------------------------------------------------------------------------
-dnl  determine which optional packages will be compiled
-dnl-----------------------------------------------------------------------------
-AC_SUBST(COMPILE_CPPUNIT)
-
-PKG_CHECK_EXISTS([cppunit >= 1.12.0],
-[
-    AC_MSG_RESULT([using cppunit found on the system])
-    COMPILE_CPPUNIT="no"
-],
-[
-    AC_MSG_RESULT([did not find cppunit >= 1.12.0, will compile from our own])
-    COMPILE_CPPUNIT="yes"
-])
-
-
-dnl-----------------------------------------------------------------------------
 dnl  set up the individual components
 dnl
 dnl unfortunately for both AC_CONFIG_COMMANDS and AC_CONFIG_SUBDIRS, the
@@ -371,7 +355,6 @@ AC_MSG_NOTICE(
 [compiling the following external libraries that are needed
 by Campcaster:
 
-    cppunit 1.10.2          ${COMPILE_CPPUNIT}
     libodbc++ 0.2.4pre4     yes
     taglib 1.4              yes
     xmlrpc++ 2004-07-13     yes

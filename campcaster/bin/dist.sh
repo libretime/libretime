@@ -144,10 +144,6 @@ doc_tmpdir=$ls_tmpdir/doc
 etc_tmpdir=$ls_tmpdir/etc
 tmp_tmpdir=$ls_tmpdir/tmp
 
-cxxunit_dir=$toolsdir/cppunit
-cxxunit_version=cppunit-1.10.2
-cxxunit_tmpdir=$tools_tmpdir/cppunit
-
 libodbcxx_dir=$toolsdir/libodbc++
 libodbcxx_version=libodbc++-0.2.4pre4
 libodbcxx_tmpdir=$tools_tmpdir/libodbc++
