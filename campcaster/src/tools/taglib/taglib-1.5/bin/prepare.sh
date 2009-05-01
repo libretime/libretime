@@ -30,7 +30,7 @@
 # For more information on taglib,
 # see http://freshmeat.net/redir/taglib/47265/url_homepage/taglib
 #-------------------------------------------------------------------------------
-product=taglib-1.4
+product=taglib-1.5
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
@@ -48,6 +48,6 @@ if [ ! -d $product ]; then
     cd $product
     # see https://bugs.kde.org/show_bug.cgi?id=112728 
     # and http://mail.kde.org/pipermail/taglib-devel/2005-June/000149.html
-    patch -p1 < $etcdir/taglib-1.3.1-length-in-microseconds.patch
+    patch -p1 < $etcdir/taglib-1.5-length-in-microseconds.patch
 fi
 

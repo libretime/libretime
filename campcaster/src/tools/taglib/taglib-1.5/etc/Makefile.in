@@ -49,7 +49,7 @@ COVERAGE_DIR = ${DOC_DIR}/coverage
 ETC_DIR      = ${BASE_DIR}/etc
 TMP_DIR      = ${BASE_DIR}/tmp
 
-TAGLIB_VERSION    = taglib-1.4
+TAGLIB_VERSION    = taglib-1.5
 TAGLIB_DIR        = ${TMP_DIR}/${TAGLIB_VERSION}
 
 prefix = @prefix@
@@ -66,7 +66,7 @@ ${TMP_DIR}/all.stamp:
 	${MAKE} -C ${TAGLIB_DIR}
 	# make the reference documentation and install that as well, as the
 	# autoconf thing doesn't :(
-	cd ${TAGLIB_DIR}/taglib-api && ${DOXYGEN} taglib.doxygen
+	cd ${TAGLIB_DIR}/doc && ${DOXYGEN} taglib.doxygen
 	touch ${TMP_DIR}/all.stamp
 
 install: all ${TMP_DIR}/install.stamp
@@ -75,7 +75,7 @@ ${TMP_DIR}/install.stamp:
 	# make the reference documentation and install that as well, as the
 	# autoconf thing doesn't :(
 	${MKDIR} ${docdir}
-	cp -pPR ${TAGLIB_DIR}/taglib-api/* ${docdir}
+	cp -pPR ${TAGLIB_DIR}/doc/* ${docdir}
 	touch ${TMP_DIR}/install.stamp
 
 clean:

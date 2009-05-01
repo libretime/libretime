@@ -32,18 +32,18 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(taglib, 1.4, bugs@campware.org)
+AC_INIT(taglib, 1.5, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../src/taglib-1.4.tar.gz)
+AC_CONFIG_SRCDIR(../src/taglib-1.5.tar.gz)
 
 
 dnl untar the sources before anything happens
 ../bin/prepare.sh
 
-cd ../tmp/taglib-1.4
+cd ../tmp/taglib-1.5
 ./configure --prefix=$prefix
 cd -
 

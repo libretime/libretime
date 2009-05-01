@@ -153,7 +153,7 @@ xmlrpcxx_version=xmlrpc++-20040713
 xmlrpcxx_tmpdir=$tools_tmpdir/xmlrpc++
 
 taglib_dir=$toolsdir/taglib
-taglib_version=taglib-1.4
+taglib_version=taglib-1.5
 taglib_tmpdir=$tools_tmpdir/taglib
 
 pear_dir=$toolsdir/pear

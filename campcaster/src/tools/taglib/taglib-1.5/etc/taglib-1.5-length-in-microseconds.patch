@@ -1,0 +1,127 @@
+diff -ur taglib-1.5/taglib/audioproperties.h taglib-1.5-microseconds/taglib/audioproperties.h
+--- taglib-1.5/taglib/audioproperties.h	2008-02-04 16:14:46.000000000 +0100
++++ taglib-1.5-microseconds/taglib/audioproperties.h	2009-05-01 21:19:11.000000000 +0200
+@@ -65,10 +65,15 @@
+     virtual ~AudioProperties();
+ 
+     /*!
+-     * Returns the length of the file in seconds.
++     * Returns the length of the file in seconds (rounded down).
+      */
+     virtual int length() const = 0;
+ 
++     /*!
++     * Returns the fractional part of the length of the file, in microseconds.
++     */
++    virtual int length_microseconds() const { return 0; }
++
+     /*!
+      * Returns the most appropriate bit rate for the file in kb/s.  For constant
+      * bitrate formats this is simply the bitrate of the file.  For variable
+diff -ur taglib-1.5/taglib/mpeg/mpegproperties.cpp taglib-1.5-microseconds/taglib/mpeg/mpegproperties.cpp
+--- taglib-1.5/taglib/mpeg/mpegproperties.cpp	2008-02-04 16:14:46.000000000 +0100
++++ taglib-1.5-microseconds/taglib/mpeg/mpegproperties.cpp	2009-05-01 21:22:36.000000000 +0200
+@@ -58,7 +58,7 @@
+   File *file;
+   XingHeader *xingHeader;
+   ReadStyle style;
+-  int length;
++  long long length;
+   int bitrate;
+   int sampleRate;
+   int channels;
+@@ -89,7 +89,12 @@
+ 
+ int MPEG::Properties::length() const
+ {
+-  return d->length;
++  return int(d->length / 1000000);
++}
++
++int MPEG::Properties::length_microseconds() const
++{
++  return int(d->length % 1000000);
+ }
+ 
+ int MPEG::Properties::bitrate() const
+@@ -218,8 +223,9 @@
+       double timePerFrame =
+         double(firstHeader.samplesPerFrame()) / firstHeader.sampleRate();
+ 
+-      d->length = int(timePerFrame * d->xingHeader->totalFrames());
+-      d->bitrate = d->length > 0 ? d->xingHeader->totalSize() * 8 / d->length / 1000 : 0;
++      d->length = (long long)(
++                        timePerFrame * d->xingHeader->totalFrames() * 1000000 + 0.5);
++      d->bitrate = d->length > 0 ? d->xingHeader->totalSize() * 8000 / d->length : 0;
+   }
+   else {
+     // Since there was no valid Xing header found, we hope that we're in a constant
+@@ -234,8 +240,9 @@
+     if(firstHeader.frameLength() > 0 && firstHeader.bitrate() > 0) {
+       int frames = (last - first) / firstHeader.frameLength() + 1;
+ 
+-      d->length = int(float(firstHeader.frameLength() * frames) /
+-                      float(firstHeader.bitrate() * 125) + 0.5);
++      d->length = (long long)(
++                      (double(firstHeader.frameLength()) * frames * 1000000) /
++                      (double(firstHeader.bitrate()) * 125) + 0.5);
+       d->bitrate = firstHeader.bitrate();
+     }
+   }
+diff -ur taglib-1.5/taglib/mpeg/mpegproperties.h taglib-1.5-microseconds/taglib/mpeg/mpegproperties.h
+--- taglib-1.5/taglib/mpeg/mpegproperties.h	2008-02-04 16:14:46.000000000 +0100
++++ taglib-1.5-microseconds/taglib/mpeg/mpegproperties.h	2009-05-01 18:52:04.000000000 +0200
+@@ -62,6 +62,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
+diff -ur taglib-1.5/taglib/ogg/vorbis/vorbisproperties.cpp taglib-1.5-microseconds/taglib/ogg/vorbis/vorbisproperties.cpp
+--- taglib-1.5/taglib/ogg/vorbis/vorbisproperties.cpp	2008-02-04 16:14:46.000000000 +0100
++++ taglib-1.5-microseconds/taglib/ogg/vorbis/vorbisproperties.cpp	2009-05-01 19:01:15.000000000 +0200
+@@ -50,7 +50,7 @@
+ 
+   File *file;
+   ReadStyle style;
+-  int length;
++  long long length;
+   int bitrate;
+   int sampleRate;
+   int channels;
+@@ -85,7 +85,12 @@
+ 
+ int Vorbis::Properties::length() const
+ {
+-  return d->length;
++  return int(d->length / 1000000);
++}
++
++int Vorbis::Properties::length_microseconds() const
++{
++  return int(d->length % 1000000);
+ }
+ 
+ int Vorbis::Properties::bitrate() const
+@@ -173,7 +178,7 @@
+     long long end = last->absoluteGranularPosition();
+ 
+     if(start >= 0 && end >= 0 && d->sampleRate > 0)
+-      d->length = (end - start) / (long long) d->sampleRate;
++      d->length = ((end - start) * 1000000) / (long long) d->sampleRate;
+     else
+       debug("Vorbis::Properties::read() -- Either the PCM values for the start or "
+             "end of this file was incorrect or the sample rate is zero.");
+diff -ur taglib-1.5/taglib/ogg/vorbis/vorbisproperties.h taglib-1.5-microseconds/taglib/ogg/vorbis/vorbisproperties.h
+--- taglib-1.5/taglib/ogg/vorbis/vorbisproperties.h	2008-02-04 16:14:46.000000000 +0100
++++ taglib-1.5-microseconds/taglib/ogg/vorbis/vorbisproperties.h	2009-05-01 18:58:46.000000000 +0200
+@@ -70,6 +70,7 @@
+       // Reimplementations.
+ 
+       virtual int length() const;
++      virtual int length_microseconds() const;
+       virtual int bitrate() const;
+       virtual int sampleRate() const;
+       virtual int channels() const;
