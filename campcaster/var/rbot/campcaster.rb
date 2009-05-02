@@ -26,7 +26,7 @@ class CampcasterPlugin < Plugin
   def handle_ticket( m, params )
     ticket = params[:ticket]
     if ticket.to_i > 0
-      url = "http://code.campware.org/projects/campcaster/ticket/#{ticket}"
+      url = "http://trac.campware.org/campcaster/ticket/#{ticket}"
       uri = URI.parse( url )
     else
       m.reply "Usage: #{help nil}"

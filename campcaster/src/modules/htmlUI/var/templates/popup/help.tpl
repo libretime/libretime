@@ -275,7 +275,7 @@ DIV.blockquote
 	allowed in the PHP system settings of the machine you are running
 	Campcaster on. Please increase the settings of
 	&quot;upload_max_filesize&quot; and &quot;post_max_size&quot; in
-	php.ini. For more information, consult the <A HREF="http://code.campware.org/manuals/campcaster/1.0/index.php?id=42" TARGET="_blank">Campcaster
+	php.ini. For more information, consult the <A HREF="http://manuals.campware.org/campcaster" TARGET="_blank">Campcaster
 	manual</A> chapter 4.12.
 	</P>
 	<H2>Where to go for help</H2>

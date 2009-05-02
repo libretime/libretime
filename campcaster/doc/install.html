@@ -33,9 +33,9 @@ versions, if they are provided for your distribution; or you can download
 them from the URLs listed, and compile them yourself (follow the instructions
 included with each tool and library).
 
-<p>If you are using Ubuntu Dapper (or later), then the easiest way of doing this
+<p>If you are using Ubuntu 8.04 (hardy) or later, then the easiest way of doing this
 is to run the
-<a href="http://code.campware.org/projects/campcaster/wiki/DevelopmentEnvironment#a1.Installpackages">
+<a href="http://trac.campware.org/campcaster/wiki/DevelopmentEnvironment#a1.Installpackages">
 <code>apt-get install</code> command</a> given on our wiki page.
 
 
@@ -108,16 +108,15 @@ Ubuntu, this is <code>www-data</code>.
                             [default: /etc/postgresql]
 </pre>
 The directory containing the PostgreSQL configuration file
-<code>pg_hba.conf</code>.  On Ubuntu Dapper and Edgy, this is 
-<code>/etc/postgresql/8.1/main</code>.  On some distributions, it may be
-<code>/var/lib/postgres/data/</code>.
+<code>pg_hba.conf</code>.  On Ubuntu 8.04 (hardy), this is 
+<code>/etc/postgresql/8.3/main</code>.  On other distributions, it may be
+different, for example <code>/var/lib/postgres/data/</code>.
 
 <p><pre>
   --postgresql-init-script  the start/stop command for the PostgreSQL daemon
                             [default: /etc/init.d/postgresql]
 </pre>
-The init script used to start and stop the PostgreSQL daemon.  On Ubuntu Dapper
-and Edgy, this is <code>/etc/init.d/postgresql-8.1</code>.
+The init script used to start and stop the PostgreSQL daemon.  On Ubuntu 8.04 (hardy), this is <code>/etc/init.d/postgresql-8.3</code>.
 
 <p>There are several more options; type
 <code>./bin/postInstallStation.sh --help</code>

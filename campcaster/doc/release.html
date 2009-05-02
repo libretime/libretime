@@ -59,7 +59,7 @@ control system</li>
 </ul>
 To get a fresh copy of the Campcaster repository, execute the
 following in an empty directory:
-<pre><code>svn checkout svn://code.campware.org/campcaster/trunk/campcaster</code><br></pre>
+<pre><code>svn checkout svn://source.campware.org/campcaster/trunk/campcaster</code><br></pre>
 
 
 <h1>Checking the distribution script</h1>
@@ -190,19 +190,19 @@ campcaster-studio_&lt;version&gt;-1_&lt;arch&gt;.deb
 <h1>Uploading the packages to the Campware repository</h1>
 For users to be able to install the packages using <code>apt-get</code>
 or <code>Synaptic</code> etc., they need to be uploaded to the Campware
-package repository on <code>code.campware.org</code>.
+package repository on <code>packages.campware.org</code>.
 
 To do this, you need to do the following, as real root (sudo is not enough):
 <ul>
     <li>Copy the three package files to the
-        <code>/var/www/ubuntu/packages/dapper/&lt;arch&gt;</code> directory
-        on <code>code.campware.org</code>.  If the directory contained earlier
+        <code>/var/www/ubuntu/packages/hardy/&lt;arch&gt;</code> directory
+        on <code>packages.campware.org</code>.  If the directory contained earlier
         versions of the packages, you can delete those.
     <li>Generate the package listing:
 <pre>cd /var/www/ubuntu
-apt-ftparchive packages packages/dapper/&lt;arch&gt; | gzip -9c > dists/dapper/main/binary-&lt;arch&gt;/Packages.gz</pre>
+apt-ftparchive packages packages/hardy/&lt;arch&gt; | gzip -9c > dists/hardy/main/binary-&lt;arch&gt;/Packages.gz</pre>
 </ul>
-For other releases, like edgy, feisty, etc, replace 'dapper' accordingly
+For other releases, like intrepid, jaunty, karmic etc. replace 'hardy' accordingly
 everywhere, of course.
 
 <h1>Tagging the sources</h1>
@@ -212,8 +212,8 @@ repository has to be tagged, so that the the very versions in the
 release can be retrieved at any later date. To tag the repository,
 issue the following command:<br>
 <br>
-<pre><code>svn copy svn://code.campware.org/campcaster/trunk \
-         svn://code.campware.org/campcaster/tags/campcaster-&lt;version&gt;
+<pre><code>svn copy svn://source.campware.org/campcaster/trunk \
+         svn://source.campware.org/campcaster/tags/campcaster-&lt;version&gt;
 </code></pre>
 <br>
 This will tag the current state of the repository with the tag <code>campcaster-&lt;version&gt;</code>,
@@ -224,7 +224,7 @@ enabling later retrieval of this specific state.<br>
 Add the new version number to the Version pull-down menu in Trac by
 executing
 <pre><code>trac-admin /usr/local/trac-projects/campcaster version add &lt;version&gt;</code></pre>
-on <code>code.campware.org</code>.
+on <code>trac.campware.org</code>.
 
 
 <h1>Publishing the tarballs</h1>

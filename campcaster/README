@@ -50,23 +50,23 @@ Major features of Campcaster:
 
 INSTALLATION
 ------------
-If you have a Debian-based system, the easiest way to install is to add:
+If you are running Ubuntu 8.04 (hardy), the easiest way to install is to add:
 
-  deb http://code.campware.org/ubuntu dapper main
+  deb http://packages.campware.org/ubuntu hardy main
 
 to your sources.list file, and then type:
 
   sudo apt-get update
   sudo apt-get install campcaster-studio campcaster-station campcaster-libs
 
- * Building & Installing on Ubuntu Dapper
+ * Building & Installing on all versions of Ubuntu/Kubuntu etc.
    doc/installUbuntu.html
 
  * Installing on other platforms
    doc/install.html
 
- * Developing on Ubuntu Dapper
-   http://code.campware.org/projects/campcaster/wiki/DevelopmentEnvironment
+ * Developing on all versions of Ubuntu/Kubuntu etc.
+   http://trac.campware.org/campcaster/wiki/DevelopmentEnvironment
 
  * Developing on other platforms
    doc/gettingStarted.html
@@ -74,7 +74,7 @@ to your sources.list file, and then type:
 Documentation
 -------------
  * User manual
-   http://code.campware.org/manuals/campcaster/1.1/
+   http://manuals.campware.org/campcaster/
 
 
 -------------------------------------------------------------------------
