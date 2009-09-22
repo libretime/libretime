@@ -1288,7 +1288,7 @@ GLiveSupport :: preload(Ptr<const Playable>::Ref    playable)
 /*------------------------------------------------------------------------------
  *  Play a Playable object using the output audio player.
  *----------------------------------------------------------------------------*/
-void
+bool
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
                                                     throw (std::logic_error,
@@ -1298,7 +1298,10 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
         switch (playable->getType()) {
             case Playable::AudioClipType:
                 outputItemPlayingNow = acquireAudioClip(playable->getId());
-                outputPlayer->open(*outputItemPlayingNow->getUri());
+                if(false == outputPlayer->open(*outputItemPlayingNow->getUri()))
+				{
+					return false;
+				}
                 outputPlayer->start();
                 std::cerr << "gLiveSupport: Live Mode playing audio clip '"
                           << *playable->getTitle()
@@ -1341,6 +1344,7 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
     }
 
     outputPlayerIsPaused = false;
+	return true;
 }
     
 

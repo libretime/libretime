@@ -285,7 +285,7 @@ public:
          *  @see #close
          *  @see #start
          */
-        virtual void
+        virtual bool
         open(const std::string  fileUrl)        throw (std::invalid_argument,
                                                        std::runtime_error);
 

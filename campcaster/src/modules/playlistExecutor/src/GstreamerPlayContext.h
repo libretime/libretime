@@ -131,7 +131,7 @@ public:
             delete m_audioDescription;
             m_audioDescription = NULL;
         }
-    }
+   }
 
     void playContext(){
         gst_element_set_state (m_pipeline, GST_STATE_PLAYING);
@@ -151,6 +151,13 @@ public:
     void setParentData(gpointer data){
         m_data = data;
     }
+	
+	void forceEOS(){
+        GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (m_pipeline));
+		gst_bus_post (bus, gst_message_new_eos(GST_OBJECT(m_sink)));
+        gst_object_unref (bus);
+	}
+
     /*------------------------------------------------------------------------------
     *  Set the audio device.
     *----------------------------------------------------------------------------*/
@@ -338,7 +345,6 @@ private:
         if(m_audioDescription && m_audioDescription->m_animations.size() > 0){
             m_ctrl = gst_controller_new (G_OBJECT (m_volume), "volume", NULL);
             if (m_ctrl == NULL) {
-                std::cout << "prepareAnimations: element not controllable!" << std::endl;
                 return false;
             }
             GValue vol = { 0, };

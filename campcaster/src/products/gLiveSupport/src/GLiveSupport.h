@@ -990,7 +990,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception std::logic_error in case of audio player errors.
          *  @exception std::runtime_error in case of audio player errors.
          */
-        virtual void
+        virtual bool
         playOutputAudio(Ptr<Playable>::Ref   playable)
                                                 throw (std::logic_error,
                                                        std::runtime_error);

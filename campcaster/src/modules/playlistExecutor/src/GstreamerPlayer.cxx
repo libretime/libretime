@@ -72,31 +72,16 @@ static gboolean my_bus_callback (GstBus *bus, GstMessage *message, gpointer data
     GstreamerPlayer* const player = (GstreamerPlayer*) data;
 
     switch (GST_MESSAGE_TYPE (message)) {
+		//we shall handle errors as non critical events as we should not stop playback in any case
         case GST_MESSAGE_EOS:
+        case GST_MESSAGE_ERROR:
             if(player->playNextSmil()){
                 break;
             }
             player->close();
-            // Important: We *must* use an idle function call here, so that the signal handler returns
-            // before fireOnStopEvent() is executed.
-            g_idle_add(GstreamerPlayer::fireOnStopEvent, data);
-            break;
-        case GST_MESSAGE_ERROR:
-            // We make sure that we don't send multiple error messages in a row to the GUI
-            if (!player->m_errorWasRaised) {
-                GError *gerror;
-                gchar *debug;
-                gst_message_parse_error (message, &gerror, &debug);
-                player->m_errorMessage.reset(new const Glib::ustring(gerror->message));
-                player->m_errorWasRaised = true;
-                
-                std::cerr << "gstreamer error: " << gerror->message << std::endl;
-                g_error_free (gerror);
-                g_free (debug);
-                // Important: We *must* use an idle function call here, so that the signal handler returns 
-                // before fireOnStopEvent() is executed.
-                g_idle_add(GstreamerPlayer::fireOnStopEvent, data);
-            }
+			// Important: We *must* use an idle function call here, so that the signal handler returns 
+			// before fireOnStopEvent() is executed.
+			g_idle_add(GstreamerPlayer::fireOnStopEvent, data);
             break;
     }
 }
@@ -245,7 +230,7 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
 /*------------------------------------------------------------------------------
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
-void
+bool
 GstreamerPlayer :: open(const std::string   fileUri)
                                                 throw (std::invalid_argument,
                                                        std::runtime_error)
@@ -275,16 +260,23 @@ GstreamerPlayer :: open(const std::string   fileUri)
     }
 
     if(!m_open){
-      m_errorMessage.reset(new const Glib::ustring("GstreamerPlayer :: open failed! Please consult console output for details."));
-      m_errorWasRaised = true;
-      fireOnStopEvent(this);
+	  close();
+	  deInitialize();
+	  initialize();
+	  m_playContext->forceEOS();
+	  return false;
     }
+	return true;
 }
 
 bool 
 GstreamerPlayer :: playNextSmil(void)                                    throw ()
 {
     DEBUG_BLOCK
+	if(NULL == m_playContext)
+	{
+		return false;
+	}
     m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
     m_playContext->closeContext();
     if(m_smilHandler == NULL){
@@ -297,7 +289,13 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
         return false;
     }
     if(!m_playContext->openSource(audioDescription)){
-        return false;
+		m_playContext->stopContext();
+		m_playContext->closeContext();
+		m_open            = false;
+		deInitialize();
+		initialize();
+		m_playContext->forceEOS();
+        return true;
     }
     m_smilOffset += m_currentPlayLength;
     m_playContext->playContext();
