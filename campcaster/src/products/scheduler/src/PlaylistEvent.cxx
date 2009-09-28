@@ -158,7 +158,7 @@ PlaylistEvent :: start(void)                       throw ()
     }
 
     try {
-        audioPlayer->open(*playlist->getUri());
+        audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId());
         audioPlayer->start();
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());

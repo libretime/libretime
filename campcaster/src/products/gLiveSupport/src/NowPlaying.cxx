@@ -141,6 +141,20 @@ NowPlaying :: setStyle (Gtk::Label *       label,
     label->set_attributes(attributeList);
 }
 
+void
+NowPlaying :: setCurrentInnerPlayable (gint64 id)                              throw ()
+{
+    playableMutex.lock();
+	if((gint64)currentInnerPlayable->getId()->getId() != id)
+	{
+		//we are not playing a correct file, must have had an error - adjust the playlist
+std::cout << "NowPlaying :: setCurrentInnerPlayable ERROR DETECTED! called = " << id << ", current = " << (gint64)currentInnerPlayable->getId()->getId() << std::endl;
+	}
+	else{
+std::cout << "NowPlaying :: setCurrentInnerPlayable CORRECT!" << std::endl;
+	}
+    playableMutex.unlock();
+}
 
 /*------------------------------------------------------------------------------
  *  Set the title etc. of the playable shown in the widget.
@@ -162,8 +176,99 @@ NowPlaying :: setPlayable (Ptr<Playable>::Ref  playable)            throw ()
         isActive = true;
         isPaused = false;
         resetRemainsTimeState();
-        onUpdateTime();
-        
+
+		remainsTimeCounter++;
+		if (remainsTimeCounter == 2*blinkingConstant) {
+			remainsTimeCounter = 0;
+		}
+
+		Ptr<time_duration>::Ref     elapsed;
+		try {
+			elapsed = gLiveSupport->getOutputAudioPosition();
+		} catch (std::logic_error &e) {
+			elapsed.reset(new time_duration(microseconds(0)));
+		}
+		
+		Ptr<time_duration>::Ref     totalLength
+									= TimeConversion::roundToNearestSecond(
+														playable->getPlaylength());
+		Ptr<time_duration>::Ref     remains(new time_duration(
+														*totalLength - *elapsed));
+		switch (remainsTimeState) {
+			case TIME_GREEN :
+				if (*remains <= seconds(20)) {
+					remainsTimeState = TIME_YELLOW;
+				}
+				break;
+			
+			case TIME_YELLOW :
+				if (*remains <= seconds(10)) {
+					remainsTimeState = TIME_RED;
+				}
+				break;
+			
+			case TIME_RED :
+				break;
+		}
+		setRemainsTimeColor(remainsTimeState);
+		
+		Ptr<Playable>::Ref          innerPlayable   = playable;
+		Ptr<time_duration>::Ref     innerElapsed    = elapsed;
+		Ptr<time_duration>::Ref     innerRemains    = remains;
+		Glib::ustring               playlistInfo;
+		bool                        isFirst      = true;
+		
+		while (innerPlayable->getType() == Playable::PlaylistType) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				playlistInfo += "   >>>   ";
+			}
+			playlistInfo += *innerPlayable->getTitle();
+			playlistInfo += " [";
+			playlistInfo += *TimeConversion::timeDurationToHhMmSsString(innerRemains);
+			playlistInfo += "/";
+			playlistInfo += *TimeConversion::timeDurationToHhMmSsString(innerPlayable->getPlaylength());
+			playlistInfo += "]";
+			
+			Ptr<PlaylistElement>::Ref   element = innerPlayable->getPlaylist()->findAtOffset(elapsed);
+			 if (!element) {
+				break;
+			}
+			innerPlayable = element->getPlayable();
+			*innerElapsed -= *element->getRelativeOffset();
+			*innerRemains = *TimeConversion::roundToNearestSecond(
+													innerPlayable->getPlaylength()) - *innerElapsed;
+		}
+
+		playlistLabel->set_text(playlistInfo);
+
+		titleLabel->set_text(*innerPlayable->getTitle());
+
+		Ptr<Glib::ustring>::Ref
+						creator = innerPlayable->getMetadata("dc:creator");
+		if (creator) {
+			creatorLabel->set_text(*creator);
+		} else {
+			creatorLabel->set_text("");
+		}
+		
+		elapsedTimeLabel->set_text(*TimeConversion::timeDurationToHhMmSsString(innerElapsed ));
+		remainsTimeLabel->set_text(*TimeConversion::timeDurationToHhMmSsString(innerRemains ));
+
+		long    elapsedMilliSec = innerElapsed->total_milliseconds();
+		long    totalMilliSec = elapsedMilliSec
+								+ innerRemains->total_milliseconds();
+		double  fraction = double(elapsedMilliSec) / double(totalMilliSec);
+		if (fraction < 0.0) {
+			fraction = 0.0;     // can't happen afaik
+		}
+		if (fraction > 1.0) {
+			fraction = 1.0;     // can and does happen!
+		}
+		progressBar->set_fraction(fraction);
+
+		currentInnerPlayable = innerPlayable;
     } else {
         if (isActive && !isPaused) {
             playButton->set_label(playStockImageName);

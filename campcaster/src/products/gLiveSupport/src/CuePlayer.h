@@ -175,6 +175,15 @@ class CuePlayer : public GuiComponent,
         onStop(Ptr<const Glib::ustring>::Ref  errorMessage
                                               = Ptr<const Glib::ustring>::Ref())
                                                         throw ();
+
+        /**
+         *  Event handler for the "cue audio player has started" event.
+         *
+         *  @param fileName
+         */
+        virtual void
+        onStart(gint64 id)
+                                                        throw ();
 };
 
 

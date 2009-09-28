@@ -1126,6 +1126,15 @@ class GLiveSupport : public LocalizedConfigurable,
                                                                     throw ();
 
         /**
+         *  Event handler for the "output audio player has started" event.
+         *
+         *  @param fileName
+         */
+        virtual void
+        onStart(gint64 id)
+                                                                    throw ();
+
+        /**
          *  Display the playable item on the master panel as "now playing".
          */
         void

@@ -153,9 +153,8 @@ class AudioPlayerInterface
          *  @see #start
          */
         virtual bool
-        open(const std::string  fileUrl)        throw (std::invalid_argument,
-                                                       std::runtime_error)
-                                                                        = 0;
+        open(const std::string  fileUrl, gint64 id)
+				throw (std::invalid_argument, std::runtime_error) = 0;
 
         /**
          *  Tell if the audio player has been openned.

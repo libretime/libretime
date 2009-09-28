@@ -147,6 +147,11 @@ const std::string    smilPlayableNodeName = "audio";
 const std::string    smilPlayableUriAttrName = "src";
 
 /*------------------------------------------------------------------------------
+ *  The name of the attribute containing the Id of the Playable element.
+ *----------------------------------------------------------------------------*/
+const std::string    smilPlayableIdAttrName = "id";
+
+/*------------------------------------------------------------------------------
  *  The name of the attribute containing the relative offset of the element.
  *----------------------------------------------------------------------------*/
 const std::string    smilRelativeOffsetAttrName = "begin";
@@ -1591,9 +1596,13 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         
         switch (plElement->getType()) {
             case PlaylistElement::AudioClipType :
+				{
                 url.reset(new std::string(
                                     contentElement[getPlaylistUrlParamName]));
                 playable = plElement->getAudioClip();
+				Ptr<Playable>::Ref audioClip = playable;
+				subPlaylistId = audioClip->getId();
+				}
                 break;
             case PlaylistElement::PlaylistType :
                 subPlaylistId = plElement->getPlaylist()->getId();
@@ -1612,6 +1621,9 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         smilPlayableNode->set_attribute(
                         smilPlayableUriAttrName, 
                         *url );
+        smilPlayableNode->set_attribute(
+                        smilPlayableIdAttrName, 
+                        *subPlaylistId->toDecimalString() );
         smilPlayableNode->set_attribute(
                         smilRelativeOffsetAttrName, 
                         *TimeConversion::timeDurationToSmilString(

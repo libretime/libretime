@@ -84,11 +84,9 @@ public:
         m_begin(0),
         m_end(0)
     {
-//        std::cout << "AnimationDescription created!" << std::endl;
     }
     ~AnimationDescription()
     {
-//        std::cout << "AnimationDescription destroyed!" << std::endl;
     }
 };
 
@@ -101,19 +99,19 @@ public:
     gint64 m_begin;
     gint64 m_clipBegin;
     gint64 m_clipEnd;
+	gint64 m_Id;
     std::vector<AnimationDescription*> m_animations;
     
     AudioDescription():
         m_src(NULL),
         m_begin(0),
         m_clipBegin(0),
-        m_clipEnd(0)
+        m_clipEnd(0),
+		m_Id(0)
     {
-//        std::cout << "AudioDescription created!" << std::endl;
     }
     ~AudioDescription()
     {
-//        std::cout << "AudioDescription destroyed!" << std::endl;
     }
     
     void release()
@@ -287,6 +285,7 @@ private:
         gchar             * begin     = 0;
         gchar             * clipBegin = 0;
         gchar             * clipEnd   = 0;
+        gchar             * idStr     = 0;
     
         /* handle the attributes */
         for (attr = ((xmlElement*)audio)->attributes; attr; attr = (xmlAttribute*) attr->next) {
@@ -295,6 +294,10 @@ private:
             if (!strcmp((const char*)attr->name, "src")) {
                 if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                     src = (gchar*) node->content;
+                }
+            } else if (!strcmp((const char*)attr->name, "id")) {
+                if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                    idStr = (gchar*) node->content;
                 }
             } else if (!strcmp((const char*)attr->name, "begin")) {
                 if ((node = attr->children) && node->type == XML_TEXT_NODE) {
@@ -328,6 +331,11 @@ private:
         audioDescription->m_begin = su_smil_clock_value_to_nanosec(begin);
         audioDescription->m_clipBegin = su_smil_clock_value_to_nanosec(clipBegin);
         audioDescription->m_clipEnd = su_smil_clock_value_to_nanosec(clipEnd);
+		if(idStr)
+		{
+			std::stringstream    idReader(idStr);
+			idReader >> audioDescription->m_Id;
+		}
         // now handle the possible animate elements inside this audio element
         for (node = audio->children; node; node = node->next) {
             if (node->type == XML_ELEMENT_NODE) {

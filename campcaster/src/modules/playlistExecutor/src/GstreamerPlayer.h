@@ -122,14 +122,10 @@ class GstreamerPlayer : virtual public Configurable,
          *  The audio device to play on.
          */
         std::string             m_audioDevice;
-
-        /**
-         *  The URL of the preloaded file. Empty if nothing is preloaded.
-         */
-        std::string             m_preloadUrl;
         
         gint64                  m_smilOffset;
         gint64                  m_currentPlayLength;
+		gint64					m_Id;
 
 public:
 
@@ -163,6 +159,12 @@ public:
          */
         static gboolean
         fireOnStopEvent(gpointer self)                            throw ();
+
+        /**
+         *  Send the onStart event to all attached listeners.
+         */
+        static gboolean
+        fireOnStartEvent(gpointer self)                            throw ();
 
 
     public:
@@ -286,8 +288,8 @@ public:
          *  @see #start
          */
         virtual bool
-        open(const std::string  fileUrl)        throw (std::invalid_argument,
-                                                       std::runtime_error);
+        open(const std::string  fileUrl, gint64 id)
+				throw (std::invalid_argument, std::runtime_error);
 
         /**
          *  Tell if the object is currently opened (has a file source to

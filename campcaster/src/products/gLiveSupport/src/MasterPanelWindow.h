@@ -560,6 +560,17 @@ class MasterPanelWindow : public GuiWindow
         }
 
         /**
+         *  Set the Playable currently shown in the "now playing" display.
+         *
+         *  @return the currently playing item; 0 if nothing is playing.
+         */
+        void
+        setCurrentInnerPlayable (gint64 id)                              throw ()
+        {
+            nowPlayingWidget->setCurrentInnerPlayable(id);
+        }
+
+        /**
          *  Upload a Playable object to the network hub.
          *  And display it in the Transports tab of the Search Window.
          *

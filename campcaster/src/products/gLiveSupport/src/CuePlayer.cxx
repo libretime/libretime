@@ -211,6 +211,14 @@ CuePlayer :: onStop(Ptr<const Glib::ustring>::Ref  errorMessage)    throw ()
     }
 }
 
+/*------------------------------------------------------------------------------
+ *  Event handler for the "cue audio player has started" event.
+ *----------------------------------------------------------------------------*/
+void
+CuePlayer :: onStart(gint64 id)    throw ()
+{
+}
+
 
 /*------------------------------------------------------------------------------
  *  Set the state of the widget.

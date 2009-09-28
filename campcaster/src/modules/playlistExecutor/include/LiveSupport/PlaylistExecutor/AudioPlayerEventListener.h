@@ -90,6 +90,17 @@ class AudioPlayerEventListener
         virtual void
         onStop(Ptr<const Glib::ustring>::Ref  errorMessage)
                                                             throw () = 0;
+
+        /**
+         *  Catch the event when playback started.
+         *  Every time player plays a new file, it sends this event at the beginning.
+         *  App should use this to synchronize playback
+         *
+         *  @param id represents the file that just started
+         */
+        virtual void
+        onStart(gint64 id)
+                                                            throw () = 0;
 };
 
 

@@ -291,6 +291,18 @@ class NowPlaying : public GuiComponent
         }
 
         /**
+         *  Set the Playable object which is playing now.
+         *  If a playlist is playing, does not return the playlist, but
+         *  the audio clip inside the playlist (possibly several levels deep).
+         *
+         *  This is used by GLiveSupport::substituteRdsData().
+         *
+         *  @return void
+         */
+        void
+        setCurrentInnerPlayable (gint64 id)                              throw ();
+
+        /**
          *  Change the user interface language of the widget.
          *
          *  This is called by the parent when its locale has changed;

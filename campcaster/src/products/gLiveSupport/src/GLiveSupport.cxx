@@ -1298,7 +1298,7 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
         switch (playable->getType()) {
             case Playable::AudioClipType:
                 outputItemPlayingNow = acquireAudioClip(playable->getId());
-                if(false == outputPlayer->open(*outputItemPlayingNow->getUri()))
+                if(false == outputPlayer->open(*outputItemPlayingNow->getUri(), (gint64)outputItemPlayingNow->getId()->getId()))
 				{
 					return false;
 				}
@@ -1310,7 +1310,7 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
     
             case Playable::PlaylistType:
                 outputItemPlayingNow = acquirePlaylist(playable->getId());
-                outputPlayer->open(*outputItemPlayingNow->getUri());
+                outputPlayer->open(*outputItemPlayingNow->getUri(), (gint64)outputItemPlayingNow->getId()->getId());
                 outputPlayer->start();
                 std::cerr << "gLiveSupport: Live Mode playing playlist '"
                           << *playable->getTitle()
@@ -1414,6 +1414,17 @@ GLiveSupport :: onStop(Ptr<const Glib::ustring>::Ref      errorMessage)
     }
 }
 
+/*------------------------------------------------------------------------------
+ *  Event handler for the "output audio player has started" event.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: onStart(gint64 id)
+                                                                    throw ()
+{
+	masterPanel->setCurrentInnerPlayable(id);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Play a Playable object using the cue audio player.
@@ -1432,7 +1443,7 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
         switch (playable->getType()) {
             case Playable::AudioClipType:
                 cueItemPlayingNow = acquireAudioClip(playable->getId());
-                cuePlayer->open(*cueItemPlayingNow->getUri());
+                cuePlayer->open(*cueItemPlayingNow->getUri(), (gint64)cueItemPlayingNow->getId()->getId());
                 cuePlayer->start();
                 std::cerr << "gLiveSupport: Cue playing audio clip '"
                           << *playable->getTitle()
@@ -1441,7 +1452,7 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
     
             case Playable::PlaylistType:
                 cueItemPlayingNow = acquirePlaylist(playable->getId());
-                cuePlayer->open(*cueItemPlayingNow->getUri());
+                cuePlayer->open(*cueItemPlayingNow->getUri(), (gint64)cueItemPlayingNow->getId()->getId());
                 cuePlayer->start();
                 std::cerr << "gLiveSupport: Cue playing playlist '"
                           << *playable->getTitle()
@@ -1758,7 +1769,7 @@ GLiveSupport :: playTestSoundOnCue(Ptr<const Glib::ustring>::Ref  oldDevice,
             cuePlayer->close();
         }
         cuePlayer->setAudioDevice(*newDevice);
-        cuePlayer->open(*testAudioUrl);
+        cuePlayer->open(*testAudioUrl, (gint64)0);
         cuePlayer->start();
         Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
         while (cuePlayer->isPlaying()) {

@@ -73,8 +73,8 @@ static gboolean my_bus_callback (GstBus *bus, GstMessage *message, gpointer data
 
     switch (GST_MESSAGE_TYPE (message)) {
 		//we shall handle errors as non critical events as we should not stop playback in any case
-        case GST_MESSAGE_EOS:
         case GST_MESSAGE_ERROR:
+        case GST_MESSAGE_EOS:
             if(player->playNextSmil()){
                 break;
             }
@@ -210,6 +210,28 @@ GstreamerPlayer :: fireOnStopEvent(gpointer self)                       throw ()
     return false;
 }
 
+/*------------------------------------------------------------------------------
+ *  Send the onStart event to all attached listeners.
+ *----------------------------------------------------------------------------*/
+gboolean
+GstreamerPlayer :: fireOnStartEvent(gpointer self)                       throw ()
+{
+    DEBUG_BLOCK
+
+
+    GstreamerPlayer* const player = (GstreamerPlayer*) self;
+	
+    ListenerVector::iterator    it  = player->m_listeners.begin();
+    ListenerVector::iterator    end = player->m_listeners.end();
+    while (it != end) {
+        (*it)->onStart(player->m_Id);
+        ++it;
+    }
+
+    // false == Don't call this idle function again
+    return false;
+}
+
 
 /*------------------------------------------------------------------------------
  * Preload a file, to speed up the subsequent open() call. 
@@ -231,9 +253,8 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 bool
-GstreamerPlayer :: open(const std::string   fileUri)
-                                                throw (std::invalid_argument,
-                                                       std::runtime_error)
+GstreamerPlayer :: open(const std::string   fileUri, gint64 id)
+										throw (std::invalid_argument, std::runtime_error)
 {
     DEBUG_BLOCK
 
@@ -254,9 +275,13 @@ GstreamerPlayer :: open(const std::string   fileUri)
         m_smilHandler = new SmilHandler();
         m_smilHandler->openSmilFile(fileUri.c_str());
         AudioDescription *audioDescription = m_smilHandler->getNext();
+		m_Id = audioDescription->m_Id;
         m_open=m_playContext->openSource(audioDescription);
+		m_url = (const char*) audioDescription->m_src;
     }else{
         m_open=m_playContext->openSource(fileUri.c_str());
+		m_url = fileUri;
+		m_Id = id;
     }
 
     if(!m_open){
@@ -266,6 +291,7 @@ GstreamerPlayer :: open(const std::string   fileUri)
 	  m_playContext->forceEOS();
 	  return false;
     }
+	g_idle_add(GstreamerPlayer::fireOnStartEvent, this);
 	return true;
 }
 
@@ -297,6 +323,9 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
 		m_playContext->forceEOS();
         return true;
     }
+	m_Id = audioDescription->m_Id;
+	m_url = (const char*) audioDescription->m_src;
+	g_idle_add(GstreamerPlayer::fireOnStartEvent, this);
     m_smilOffset += m_currentPlayLength;
     m_playContext->playContext();
     return true;

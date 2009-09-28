@@ -411,12 +411,12 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
 
     if (playable) {
         try {
+            gLiveSupport->setNowPlaying(playable);
             if(false == gLiveSupport->playOutputAudio(playable))
 			{
 				treeView->removeItem(itemPlayed);
 				return;
 			}
-            gLiveSupport->setNowPlaying(playable);
 
             treeView->removeItem(itemPlayed);
 
