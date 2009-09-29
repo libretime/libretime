@@ -303,7 +303,7 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
 	{
 		return false;
 	}
-    m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
+//    m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
     m_playContext->closeContext();
     if(m_smilHandler == NULL){
         return false;
@@ -326,7 +326,8 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
 	m_Id = audioDescription->m_Id;
 	m_url = (const char*) audioDescription->m_src;
 	g_idle_add(GstreamerPlayer::fireOnStartEvent, this);
-    m_smilOffset += m_currentPlayLength;
+	m_smilOffset = audioDescription->m_begin;
+//    m_smilOffset += m_currentPlayLength;
     m_playContext->playContext();
     return true;
 }

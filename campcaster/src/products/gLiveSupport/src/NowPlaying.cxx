@@ -145,13 +145,14 @@ void
 NowPlaying :: setCurrentInnerPlayable (gint64 id)                              throw ()
 {
     playableMutex.lock();
+	//keep this for future use
 	if((gint64)currentInnerPlayable->getId()->getId() != id)
 	{
 		//we are not playing a correct file, must have had an error - adjust the playlist
-std::cout << "NowPlaying :: setCurrentInnerPlayable ERROR DETECTED! called = " << id << ", current = " << (gint64)currentInnerPlayable->getId()->getId() << std::endl;
+//std::cout << "NowPlaying :: setCurrentInnerPlayable ERROR DETECTED! called = " << id << ", current = " << (gint64)currentInnerPlayable->getId()->getId() << std::endl;
 	}
 	else{
-std::cout << "NowPlaying :: setCurrentInnerPlayable CORRECT!" << std::endl;
+//std::cout << "NowPlaying :: setCurrentInnerPlayable CORRECT!" << std::endl;
 	}
     playableMutex.unlock();
 }
