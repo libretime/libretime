@@ -88,8 +88,8 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (Ptr<Playlist>::Ref  playlist)
     glade->get_widget("minuteLabel1", minuteLabel);
     glade->get_widget("secondLabel1", secondLabel);
     hourLabel->set_label(*getResourceUstring("hourLabel"));
-    hourLabel->set_label(*getResourceUstring("minuteLabel"));
-    hourLabel->set_label(*getResourceUstring("secondLabel"));
+    minuteLabel->set_label(*getResourceUstring("minuteLabel"));
+    secondLabel->set_label(*getResourceUstring("secondLabel"));
 
     glade->get_widget("calendar1", calendar);
 
