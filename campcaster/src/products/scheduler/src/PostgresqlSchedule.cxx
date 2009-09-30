@@ -97,10 +97,15 @@ const std::string PostgresqlSchedule::scheduleCountStmt =
  *  Basically checks if the starts or ends value falls within the queried frame
  *  or starts before and ends after the queried timeframe.
  *----------------------------------------------------------------------------*/
+//const std::string PostgresqlSchedule::isTimeframaAvailableStmt =
+//    "SELECT COUNT(*) FROM schedule WHERE "
+//    "((starts <= ? AND ? < ends) OR (starts < ? AND ? <= ends)) "
+//    "OR (? <= starts AND ends <= ?)";
+
+//new criteria is that playlists cannot start at the same time
 const std::string PostgresqlSchedule::isTimeframaAvailableStmt =
     "SELECT COUNT(*) FROM schedule WHERE "
-    "((starts <= ? AND ? < ends) OR (starts < ? AND ? <= ends)) "
-    "OR (? <= starts AND ends <= ?)";
+    "starts = ?";
 
 /*------------------------------------------------------------------------------
  *  The SQL statement for scheduling a playlist.
@@ -213,13 +218,13 @@ PostgresqlSchedule :: isTimeframeAvailable(
                                             isTimeframaAvailableStmt));
         timestamp = Conversion::ptimeToTimestamp(from, Conversion::roundDown);
         pstmt->setTimestamp(1, *timestamp);
-        pstmt->setTimestamp(2, *timestamp);
-        pstmt->setTimestamp(5, *timestamp);
-
-        timestamp = Conversion::ptimeToTimestamp(to, Conversion::roundUp);
-        pstmt->setTimestamp(3, *timestamp);
-        pstmt->setTimestamp(4, *timestamp);
-        pstmt->setTimestamp(6, *timestamp);
+//        pstmt->setTimestamp(2, *timestamp);
+//        pstmt->setTimestamp(5, *timestamp);
+//
+//        timestamp = Conversion::ptimeToTimestamp(to, Conversion::roundUp);
+//        pstmt->setTimestamp(3, *timestamp);
+//        pstmt->setTimestamp(4, *timestamp);
+//        pstmt->setTimestamp(6, *timestamp);
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         result = (rs->next()) ? (rs->getLong(1) == 0) : false;
