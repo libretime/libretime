@@ -21,7 +21,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: Kapil Agrawal$
     Version  : $Revision$
     Location : $URL$
 
@@ -303,7 +303,7 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
 	{
 		return false;
 	}
-//    m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
+    m_currentPlayLength = m_playContext->getPosition();//this gets the length of the stream that just completed
     m_playContext->closeContext();
     if(m_smilHandler == NULL){
         return false;
@@ -327,7 +327,14 @@ GstreamerPlayer :: playNextSmil(void)                                    throw (
 	m_url = (const char*) audioDescription->m_src;
 	g_idle_add(GstreamerPlayer::fireOnStartEvent, this);
 	m_smilOffset = audioDescription->m_begin;
-//    m_smilOffset += m_currentPlayLength;
+  //    m_smilOffset += m_currentPlayLength;
+    m_start_time = m_start_time - (m_currentPlayLength/GST_SECOND);
+    if(m_start_time > 0){     
+        m_playContext->start_time (m_start_time);
+    }
+    else {
+        m_start_time = 0;
+    }
     m_playContext->playContext();
     return true;
 }
@@ -391,15 +398,16 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
  *  Start playing
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayer :: start(void)                      throw (std::logic_error)
+GstreamerPlayer :: start(int start_time)                      throw (std::logic_error)
 {
     DEBUG_BLOCK
-
+    m_start_time = start_time;
     if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");
     }
 
     if (!isPlaying()) {
+        m_playContext->start_time (m_start_time);
         m_playContext->playContext();
     }else{
         error() << "Already playing!" << endl;
@@ -452,19 +460,22 @@ GstreamerPlayer :: stop(void)                       throw (std::logic_error)
 /*------------------------------------------------------------------------------
  *  Close the currently opened audio file.
  *----------------------------------------------------------------------------*/
-void
+int
 GstreamerPlayer :: close(void)                       throw (std::logic_error)
 {
     DEBUG_BLOCK
-
+    gint64 ns;
+    int stop_time;
+    ns = m_playContext->getPosition();
     m_playContext->stopContext();
     m_playContext->closeContext();
     if(m_smilHandler != NULL){
         delete m_smilHandler;
         m_smilHandler = NULL;
     }
-
+    stop_time = ns/GST_SECOND;
     m_open            = false;
+    return (stop_time + (m_smilOffset/GST_SECOND));
 }
 
 

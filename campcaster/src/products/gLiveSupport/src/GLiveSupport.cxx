@@ -1302,7 +1302,7 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
 				{
 					return false;
 				}
-                outputPlayer->start();
+                outputPlayer->start(0);
                 std::cerr << "gLiveSupport: Live Mode playing audio clip '"
                           << *playable->getTitle()
                           << "'" << std::endl;
@@ -1311,7 +1311,7 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
             case Playable::PlaylistType:
                 outputItemPlayingNow = acquirePlaylist(playable->getId());
                 outputPlayer->open(*outputItemPlayingNow->getUri(), (gint64)outputItemPlayingNow->getId()->getId());
-                outputPlayer->start();
+                outputPlayer->start(0);
                 std::cerr << "gLiveSupport: Live Mode playing playlist '"
                           << *playable->getTitle()
                           << "'" << std::endl;
@@ -1361,7 +1361,7 @@ GLiveSupport :: pauseOutputAudio(void)
         outputPlayerIsPaused = true;
 
     } else if (outputPlayerIsPaused) {
-        outputPlayer->start();
+        outputPlayer->start(0);
         outputPlayerIsPaused = false;
     }
 }
@@ -1444,7 +1444,7 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
             case Playable::AudioClipType:
                 cueItemPlayingNow = acquireAudioClip(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri(), (gint64)cueItemPlayingNow->getId()->getId());
-                cuePlayer->start();
+                cuePlayer->start(0);
                 std::cerr << "gLiveSupport: Cue playing audio clip '"
                           << *playable->getTitle()
                           << "'" << std::endl;
@@ -1453,7 +1453,7 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
             case Playable::PlaylistType:
                 cueItemPlayingNow = acquirePlaylist(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri(), (gint64)cueItemPlayingNow->getId()->getId());
-                cuePlayer->start();
+                cuePlayer->start(0);
                 std::cerr << "gLiveSupport: Cue playing playlist '"
                           << *playable->getTitle()
                           << "'" << std::endl;
@@ -1502,7 +1502,7 @@ GLiveSupport :: pauseCueAudio(void)
         cuePlayerIsPaused = true;
 
     } else if (cuePlayerIsPaused) {
-        cuePlayer->start();
+        cuePlayer->start(0);
         cuePlayerIsPaused = false;
     }
 }
@@ -1770,7 +1770,7 @@ GLiveSupport :: playTestSoundOnCue(Ptr<const Glib::ustring>::Ref  oldDevice,
         }
         cuePlayer->setAudioDevice(*newDevice);
         cuePlayer->open(*testAudioUrl, (gint64)0);
-        cuePlayer->start();
+        cuePlayer->start(0);
         Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
         while (cuePlayer->isPlaying()) {
             runMainLoop();

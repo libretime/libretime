@@ -21,7 +21,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author$
+    Author   : $Author: Kapil Agrawal$
     Version  : $Revision$
     Location : $URL$
 
@@ -233,6 +233,23 @@ public:
         }
         return ns;
     }
+    /*------------------------------------------------------------------------------
+     * Seeks to the passed argument seek
+     *---------------------------------------------------------------------------*/
+    void 
+    start_time (gint start_time){
+        GstState state;
+        GstState pending;
+        gst_element_set_state (m_pipeline, GST_STATE_PAUSED);
+        gst_element_get_state (m_pipeline, &state, &pending, 50000000);
+        if (!gst_element_seek (m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, 
+            start_time*GST_SECOND, GST_SEEK_TYPE_END, 0)) {
+           g_print ("\nstart_time seek failed\n");
+        }
+        else
+           g_print ("\n start_time seek succces\n"); 
+    }
+    
     /*------------------------------------------------------------------------------
     *  Returns current stream's position.
     *----------------------------------------------------------------------------*/

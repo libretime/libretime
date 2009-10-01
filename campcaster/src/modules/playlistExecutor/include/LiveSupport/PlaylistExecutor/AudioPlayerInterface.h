@@ -170,7 +170,7 @@ class AudioPlayerInterface
          *
          *  @see #open
          */
-        virtual void
+        virtual int
         close(void)                             throw (std::logic_error) = 0;
 
         /**
@@ -204,7 +204,7 @@ class AudioPlayerInterface
          *  @see #stop
          */
         virtual void
-        start(void)                             throw (std::logic_error)
+        start(int)                             throw (std::logic_error)
                                                                       = 0;
 
         /**

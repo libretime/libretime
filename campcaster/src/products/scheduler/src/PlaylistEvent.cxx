@@ -159,7 +159,7 @@ PlaylistEvent :: start(void)                       throw ()
 
     try {
         audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId());
-        audioPlayer->start();
+        audioPlayer->start(0);
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {

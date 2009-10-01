@@ -128,7 +128,7 @@ class GstreamerPlayer : virtual public Configurable,
 		gint64					m_Id;
 
 public:
-
+        gint                    m_start_time;
         /**
          *  Contains runtime error messages from GStreamer.
          */
@@ -314,7 +314,7 @@ public:
          *
          *  @see #open
          */
-        virtual void
+        virtual int
         close(void)                             throw (std::logic_error);
 
         /**
@@ -329,7 +329,7 @@ public:
          *  @see #stop
          */
         virtual void
-        start(void)                             throw (std::logic_error);
+        start(int)                             throw (std::logic_error);
 
         /**
          *  Pause the player.
