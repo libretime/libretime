@@ -386,8 +386,14 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
         throw std::logic_error("player not open");
     }
 
-    gint64                    ns = m_playContext->getPosition();
-
+    gint64 ns = m_playContext->getPosition();
+#if 0
+    if (((ns/GST_SECOND) + (m_smilOffset/GST_SECOND)) >= m_stop_time){
+       m_playContext->stopContext();
+       m_playContext->closeContext();
+       g_idle_add(GstreamerPlayer::fireOnStopEvent, this);
+    }
+#endif
     length.reset(new time_duration(microseconds((m_smilOffset + ns) / 1000LL)));
 
     return length;
@@ -398,9 +404,10 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
  *  Start playing
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayer :: start(int start_time)                      throw (std::logic_error)
+GstreamerPlayer :: start(int start_time, int stop_time)                      throw (std::logic_error)
 {
     DEBUG_BLOCK
+    m_stop_time = stop_time;
     m_start_time = start_time;
     if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");

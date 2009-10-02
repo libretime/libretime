@@ -204,7 +204,7 @@ class AudioPlayerInterface
          *  @see #stop
          */
         virtual void
-        start(int)                             throw (std::logic_error)
+        start(int,int)                             throw (std::logic_error)
                                                                       = 0;
 
         /**

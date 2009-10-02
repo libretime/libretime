@@ -54,6 +54,8 @@ using namespace boost;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
 
+#define START_TIME 0
+#define STOP_TIME 30
 /* ===================================================  local data structures */
 
 
@@ -159,7 +161,7 @@ PlaylistEvent :: start(void)                       throw ()
 
     try {
         audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId());
-        audioPlayer->start(0);
+        audioPlayer->start(START_TIME, STOP_TIME);
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {
