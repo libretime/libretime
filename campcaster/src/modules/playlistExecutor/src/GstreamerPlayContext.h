@@ -241,7 +241,7 @@ public:
         GstState state;
         GstState pending;
         gst_element_set_state (m_pipeline, GST_STATE_PAUSED);
-        gst_element_get_state (m_pipeline, &state, &pending, 50000000);
+        gst_element_get_state (m_pipeline, &state, &pending, GST_CLOCK_TIME_NONE);
         if (!gst_element_seek (m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, 
             start_time*GST_SECOND, GST_SEEK_TYPE_END, 0)) {
            g_print ("\nstart_time seek failed\n");
