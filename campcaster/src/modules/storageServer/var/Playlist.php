@@ -414,6 +414,16 @@ class Playlist extends StoredFile {
             if (PEAR::isError($offArr)) {
             	return $offArr;
             }
+            // get clipStart:
+            $startArr = $this->md->getMetadataElement('clipStart', $elId);
+            if (PEAR::isError($startArr)) {
+            	return $startArr;
+            }
+            // get clipEnd:
+            $endArr = $this->md->getMetadataElement('clipEnd', $elId);
+            if (PEAR::isError($endArr)) {
+            	return $endArr;
+            }
             $offsetId = $offArr[0]['mid'];
             $offset = $offArr[0]['value'];
             // get audioClip:
@@ -460,10 +470,6 @@ class Playlist extends StoredFile {
                         "Playlist::recalculateTimes: fadeIn too big");
                 }
             }
-            // $peArr[] = array('id'=>$elId, 'gunid'=>$plElGunid, 'len'=>$acLen,
-            //    'offset'=>$offset, 'offsetId'=>$offsetId,
-            //    'fadeIn'=>$fadeIn, 'fadeOut'=>$fadeOut);
-            // set relativeOffset:
             if ($len > 0) {
             	$len = $len - $fadeInS;
             }

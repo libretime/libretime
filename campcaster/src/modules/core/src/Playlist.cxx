@@ -545,6 +545,50 @@ Playlist::setFadeInfo(Ptr<UniqueId>::Ref    playlistElementId,
     it->second->setFadeInfo(fadeInfo);
 }
 
+/*------------------------------------------------------------------------------
+ *  Change clipStart of a playlist element.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::setClipStart(Ptr<UniqueId>::Ref      playlistElementId,
+                    Ptr<time_duration>::Ref   newStart)
+                                                throw (std::invalid_argument)
+{
+    Playlist::iterator it = this->find(playlistElementId);
+
+    if (it == this->end()) {
+        throw std::invalid_argument("no playlist element with this ID");
+    }
+
+    Ptr<time_duration>::Ref     endOffset(new time_duration(
+                                                *it->second->getRelativeOffset() 
+                                              + *it->second->getPlayable()->getPlaylength() - *newStart));
+	setPlaylength(endOffset);
+
+    it->second->setClipStart(newStart);
+}
+
+/*------------------------------------------------------------------------------
+ *  Change clipEnd of a playlist element.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::setClipEnd(Ptr<UniqueId>::Ref      playlistElementId,
+                    Ptr<time_duration>::Ref   newEnd)
+                                                throw (std::invalid_argument)
+{
+    Playlist::iterator it = this->find(playlistElementId);
+
+    if (it == this->end()) {
+        throw std::invalid_argument("no playlist element with this ID");
+    }
+
+    Ptr<time_duration>::Ref     endOffset(new time_duration(
+                                                *it->second->getRelativeOffset() 
+                                              + *newEnd - *it->second->getClipStart()));
+	setPlaylength(endOffset);
+
+    it->second->setClipEnd(newEnd);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Remove a playlist element from the playlist.

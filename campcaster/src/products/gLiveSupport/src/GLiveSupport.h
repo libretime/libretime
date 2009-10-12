@@ -906,7 +906,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #releaseEditedPlaylist
          */
         void
-        addToPlaylist(Ptr<const UniqueId>::Ref  id)
+        addToPlaylist(Ptr<UniqueId>::Ref  id)
                                                       throw (XmlRpcException);
         /**
          *  Save the currently edited playlist in storage.

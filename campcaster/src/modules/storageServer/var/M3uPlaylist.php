@@ -166,6 +166,8 @@ class M3uPlaylist {
             $gunid2 = StoredFile::CreateGunid();
             $length = Playlist::secondsToPlaylistTime($length);
             $offset = '???';
+            $clipStart = '???';
+            $clipEnd = '???';
             $uri_h = preg_replace("|--|", "&#2d;&#2d;", htmlspecialchars("$uri"));
             if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
                 switch (strtolower($ext = $va[1])) {
@@ -184,7 +186,7 @@ class M3uPlaylist {
                         break;
                 }
             }
-            $res .= "$ind2<playlistElement id=\"$gunid\" relativeOffset=\"$offset\">\n".
+            $res .= "$ind2<playlistElement id=\"$gunid\" relativeOffset=\"$offset\" clipStart=\"$clipStart\" clipEnd=\"$clipEnd\">\n".
                 $acOrPl.
                 "$ind2</playlistElement>\n";
         }

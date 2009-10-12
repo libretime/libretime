@@ -26,8 +26,8 @@ $mdefs = array(
     "listMethods"       => array('m'=>"system.listMethods", 'p'=>NULL, 't'=>NULL),
     "AddAudioClipToPlaylistMethod" => array(
         'm'=>'addAudioClipToPlaylist',
-        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'audioClipId'/*string*/, 'relativeOffset'/*int*/),
-        't'=>array('string', 'string', 'string', 'int'),
+        'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'audioClipId'/*string*/, 'relativeOffset'/*int*/, 'clipStart'/*int*/, 'clipEnd'/*int*/),
+        't'=>array('string', 'string', 'string', 'int', 'int', 'int'),
         'r'=>array('playlistElementId'/*string*/),
         'e'=>array(
             '301'=>'invalid argument format',

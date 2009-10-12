@@ -134,7 +134,19 @@ public:
    }
 
     void playContext(){
-        gst_element_set_state (m_pipeline, GST_STATE_PLAYING);
+        GstStateChangeReturn st = gst_element_set_state (m_pipeline, GST_STATE_PLAYING);
+		if(NULL != m_audioDescription)
+		{
+			//enforce PLAYING state in case this was an asynch state change
+			//this is essential for seek to succeed
+			if(GST_STATE_CHANGE_ASYNC == st)
+			{
+				GstState state, pending;
+				gst_element_get_state (m_pipeline, &state, &pending, 2000000000);//just in case, do not wait for more than 2 sec				
+			}
+			gst_element_seek(m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, 
+				m_audioDescription->m_clipBegin*GST_NSECOND, GST_SEEK_TYPE_SET, m_audioDescription->m_clipEnd*GST_NSECOND);
+		}
         g_object_set(G_OBJECT(m_volume), "volume", 1.0, NULL);
     }
 
@@ -359,7 +371,7 @@ private:
     *  Prepare animations bin.
     *----------------------------------------------------------------------------*/
     bool prepareAnimations(){
-        if(m_audioDescription && m_audioDescription->m_animations.size() > 0){
+       if(m_audioDescription && m_audioDescription->m_animations.size() > 0){
             m_ctrl = gst_controller_new (G_OBJECT (m_volume), "volume", NULL);
             if (m_ctrl == NULL) {
                 return false;

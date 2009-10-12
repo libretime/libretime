@@ -130,6 +130,8 @@ class PlaylistElement : public Configurable
          *  The starting time of the event.
          */
         Ptr<time_duration>::Ref     relativeOffset;
+        Ptr<time_duration>::Ref     clipStart;
+        Ptr<time_duration>::Ref     clipEnd;
 
         /**
          *  The type of the entry (audio clip or sub-playlist).
@@ -204,6 +206,9 @@ class PlaylistElement : public Configurable
             this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
             this->type           = AudioClipType;
+			
+			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
         }
 
         /**
@@ -228,7 +233,10 @@ class PlaylistElement : public Configurable
             this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
             this->type           = AudioClipType;
-        }
+			
+			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+         }
 
         /**
          *  Create a new sub-playlist playlist element, with a new UniqueId,
@@ -252,7 +260,10 @@ class PlaylistElement : public Configurable
             this->playable       = playlist;
             this->fadeInfo       = fadeInfo;
             this->type           = PlaylistType;
-        }
+			
+			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+       }
 
         /**
          *  A virtual destructor, as this class has virtual functions.
@@ -322,6 +333,40 @@ class PlaylistElement : public Configurable
         getRelativeOffset(void) const                      throw ()
         {
             return relativeOffset;
+        }
+
+        /**
+         */
+        void
+        setClipStart(Ptr<time_duration>::Ref   newStart)
+                                                            throw ()
+        {
+            clipStart = newStart;
+        }
+
+        /**
+         */
+        Ptr<time_duration>::Ref
+        getClipStart(void) const                      throw ()
+        {
+            return clipStart;
+        }
+
+        /**
+         */
+        void
+        setClipEnd(Ptr<time_duration>::Ref   newEnd)
+                                                            throw ()
+        {
+            clipEnd = newEnd;
+        }
+
+        /**
+         */
+        Ptr<time_duration>::Ref
+        getClipEnd(void) const                      throw ()
+        {
+            return clipEnd;
         }
 
         /**

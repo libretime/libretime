@@ -64,6 +64,14 @@ static const std::string    idAttrName = "id";
 static const std::string    relativeOffsetAttrName = "relativeOffset";
 
 /**
+ */
+static const std::string    clipStartAttrName = "clipStart";
+
+/**
+ */
+static const std::string    clipEndAttrName = "clipEnd";
+
+/**
  *  The name of the audio clip child element of the playlist element.
  */
 static const std::string    audioClipElementName = "audioClip";
@@ -116,6 +124,24 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     Ptr<std::string>::Ref   relativeOffsetString(new std::string(
                                                     attribute->get_value() ));
     relativeOffset = TimeConversion::parseTimeDuration(relativeOffsetString);
+
+    // set clip start
+    if (attribute = element.get_attribute(clipStartAttrName)) {
+		Ptr<std::string>::Ref   clipStartString(new std::string(
+														attribute->get_value() ));
+		clipStart = TimeConversion::parseTimeDuration(clipStartString);
+    } else {
+		setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	}
+
+    // set clip end
+    if (attribute = element.get_attribute(clipEndAttrName)) {
+		Ptr<std::string>::Ref   clipEndString(new std::string(
+														attribute->get_value() ));
+		clipEnd = TimeConversion::parseTimeDuration(clipEndString);
+    } else {
+		setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	}
 
     // set audio clip
     xmlpp::Node::NodeList       childNodes 
@@ -202,6 +228,12 @@ PlaylistElement :: getXmlElementString(void)    throw ()
                                  + "\" ");
     xmlString->append(relativeOffsetAttrName + "=\"" 
                                         + toFixedString(relativeOffset)
+                                        + "\" ");
+    xmlString->append(clipStartAttrName + "=\"" 
+                                        + toFixedString(clipStart)
+                                        + "\" ");
+    xmlString->append(clipEndAttrName + "=\"" 
+                                        + toFixedString(clipEnd)
                                         + "\">\n");
 
     xmlString->append(*getPlayable()->getXmlElementString() + "\n");

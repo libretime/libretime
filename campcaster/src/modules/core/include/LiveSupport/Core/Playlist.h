@@ -749,6 +749,24 @@ class Playlist : public Configurable,
                                                 throw (std::invalid_argument);
 
         /**
+         *  Set clipStart for a playlist element.
+         *
+         */
+        void
+        setClipStart(Ptr<UniqueId>::Ref      playlistElementId,
+                    Ptr<time_duration>::Ref   newStart)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Set clipEnd for a playlist element.
+         *
+         */
+        void
+        setClipEnd(Ptr<UniqueId>::Ref      playlistElementId,
+                    Ptr<time_duration>::Ref   newEnd)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Remove a playlist element from the playlist.
          *
          *  @param playlistElementId the ID of the playlist element

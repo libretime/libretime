@@ -1175,7 +1175,7 @@ GLiveSupport :: cancelEditedPlaylist(void)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
+GLiveSupport :: addToPlaylist(Ptr<UniqueId>::Ref  id)
                                                     throw (XmlRpcException)
 {
     if (!editedPlaylist.get()) {
@@ -1188,7 +1188,11 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
         editedPlaylist->addPlaylist(playlist, editedPlaylist->getPlaylength());
     } else if (existsAudioClip(id)) {
         Ptr<AudioClip>::Ref clip = getAudioClip(id);
-        editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
+        Ptr<UniqueId>::Ref elid = editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
+		
+		//TODO: for testing only!!!!!!!!!
+//        editedPlaylist->setClipStart(elid, Ptr<time_duration>::Ref(new time_duration(seconds(5))));
+//        editedPlaylist->setClipEnd(elid, Ptr<time_duration>::Ref(new time_duration(seconds(10))));
     }
 
     masterPanel->updatePlaylistWindow();

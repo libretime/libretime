@@ -181,6 +181,30 @@ class XmlRpcTools
                                                 throw (std::invalid_argument);
 
         /**
+         *  Extract the relative offset from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a time_duration that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no relativeOffset
+         *             member in xmlRpcValue
+         */
+        static Ptr<time_duration>::Ref
+        extractClipStart(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the relative offset from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a time_duration that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no relativeOffset
+         *             member in xmlRpcValue
+         */
+        static Ptr<time_duration>::Ref
+        extractClipEnd(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Convert a Playlist to an XmlRpcValue
          *
          *  @param playlist the Playlist to convert.

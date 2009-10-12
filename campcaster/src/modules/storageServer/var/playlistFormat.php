@@ -29,7 +29,7 @@ $playlistFormat = array(
             'optional'=>array('fadeInfo'),
         ),
         'attrs'=>array(
-            'required'=>array('id', 'relativeOffset'),
+            'required'=>array('id', 'relativeOffset', 'clipStart', 'clipEnd'),
         ),
     ),
     'audioClip'=>array(
