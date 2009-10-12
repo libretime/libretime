@@ -152,6 +152,16 @@ const std::string    smilPlayableUriAttrName = "src";
 const std::string    smilPlayableIdAttrName = "id";
 
 /*------------------------------------------------------------------------------
+ *  The name of the attribute containing the clipBegin of the Playable element.
+ *----------------------------------------------------------------------------*/
+const std::string    smilPlayableStartAttrName = "clipBegin";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute containing the clipEnd of the Playable element.
+ *----------------------------------------------------------------------------*/
+const std::string    smilPlayableEndAttrName = "clipEnd";
+
+/*------------------------------------------------------------------------------
  *  The name of the attribute containing the relative offset of the element.
  *----------------------------------------------------------------------------*/
 const std::string    smilRelativeOffsetAttrName = "begin";
@@ -1586,6 +1596,11 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         Ptr<time_duration>::Ref     relativeOffset
                                               = plElement->getRelativeOffset();
+        Ptr<time_duration>::Ref     clipStart
+                                              = plElement->getClipStart();
+        Ptr<time_duration>::Ref     clipEnd
+                                              = plElement->getClipEnd();
+											  
         Ptr<FadeInfo>::Ref          fadeInfo  = plElement->getFadeInfo();
 
         XmlRpcValue     contentElement = innerContent[index];
@@ -1628,6 +1643,17 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                         smilRelativeOffsetAttrName, 
                         *TimeConversion::timeDurationToSmilString(
                                                             relativeOffset ));
+		if(PlaylistElement::AudioClipType == plElement->getType())
+		{
+			smilPlayableNode->set_attribute(
+							smilPlayableStartAttrName, 
+							*TimeConversion::timeDurationToSmilString(
+																clipStart ));
+			smilPlayableNode->set_attribute(
+							smilPlayableEndAttrName, 
+							*TimeConversion::timeDurationToSmilString(
+																clipEnd ));
+		}
 
         if (fadeInfo) {
             Ptr<time_duration>::Ref     fadeIn  = fadeInfo->getFadeIn();
