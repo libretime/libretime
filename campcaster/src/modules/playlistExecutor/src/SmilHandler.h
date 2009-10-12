@@ -316,26 +316,30 @@ private:
                             attr->name);
             }
         }
-    
-        if (!begin) {
-            begin = "0s";
-        }
-        if (!clipBegin) {
-            clipBegin = "0s";
-        }
-        if (!clipEnd) {
-            clipEnd = "0s";
-        }
-        audioDescription = new AudioDescription();
-        audioDescription->m_src = src;
-        audioDescription->m_begin = su_smil_clock_value_to_nanosec(begin);
-        audioDescription->m_clipBegin = su_smil_clock_value_to_nanosec(clipBegin);
-        audioDescription->m_clipEnd = su_smil_clock_value_to_nanosec(clipEnd);
+
+		audioDescription = new AudioDescription();
+		if(begin)
+		{
+			audioDescription->m_begin = su_smil_clock_value_to_nanosec(begin);
+		}
+		if(clipBegin)
+		{
+			audioDescription->m_clipBegin = su_smil_clock_value_to_nanosec(clipBegin);
+		}
+		if(clipEnd)
+		{
+			audioDescription->m_clipEnd = su_smil_clock_value_to_nanosec(clipEnd);
+			if(audioDescription->m_clipEnd <= 0)//clip end can never be 0, force it to -1
+			{
+				audioDescription->m_clipEnd = -1;
+			}
+		}
 		if(idStr)
 		{
 			std::stringstream    idReader(idStr);
 			idReader >> audioDescription->m_Id;
 		}
+        audioDescription->m_src = src;
         // now handle the possible animate elements inside this audio element
         for (node = audio->children; node; node = node->next) {
             if (node->type == XML_ELEMENT_NODE) {
