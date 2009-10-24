@@ -156,11 +156,11 @@ AudioPlayerFactoryGstreamerTest :: simplePlayTest(void)
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
 
 //    CPPUNIT_ASSERT_NO_THROW(
-        audioPlayer->open("file:///tmp/campcaster/simple.smil");
+        audioPlayer->open("file:///tmp/campcaster/simple.smil", 0);
 //    );
 //    CPPUNIT_ASSERT(!audioPlayer->isPlaying());
 //    CPPUNIT_ASSERT_NO_THROW(
-        audioPlayer->start();
+        audioPlayer->start(0, -1);
     
 
     g_main_loop_run(loop);
