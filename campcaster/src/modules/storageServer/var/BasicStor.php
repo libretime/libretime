@@ -369,11 +369,13 @@ class BasicStor {
         $token = StoredFile::CreateGunid();
         if (!is_null($realFname)) {
             $linkFname = $CC_CONFIG['accessDir']."/$token.$ext";
-            if (!is_file($realFname) && !is_link($realFname)) {
+			//broken links are ignored by the player, do not worry about it here
+/*            if (!is_file($realFname) && !is_link($realFname)) {
                 return PEAR::raiseError(
                     "BasicStor::bsAccess: real file not found ($realFname)",
                     GBERR_FILEIO);
             }
+*/
             if (! @symlink($realFname, $linkFname)) {
                 return PEAR::raiseError(
                     "BasicStor::bsAccess: symlink create failed ($linkFname)",
