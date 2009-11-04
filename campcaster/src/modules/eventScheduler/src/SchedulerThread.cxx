@@ -182,7 +182,7 @@ SchedulerThread :: run(void)                                    throw ()
 
     shouldRun = true;
 //    getCurrentEvent();
-    getNextEvent();
+    getNextEvent(TimeConversion::now());
 
     while (shouldRun) {
         Ptr<ptime>::Ref     start = TimeConversion::now();
