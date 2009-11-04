@@ -154,6 +154,14 @@ class SchedulerThread : public virtual RunnableInterface
         getNextEvent(Ptr<ptime>::Ref    when)           throw ();
 
         /**
+         *  Get the current event.
+         *
+         *  @param 
+         */
+        void
+        getCurrentEvent()           throw ();
+
+        /**
          *  Tell if the specified time falls within now and the next
          *  waking up. Basically tells if it is within now and
          *  now + granularity.

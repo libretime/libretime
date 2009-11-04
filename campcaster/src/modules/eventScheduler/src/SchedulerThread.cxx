@@ -95,6 +95,29 @@ SchedulerThread :: getNextEvent(Ptr<ptime>::Ref     when)       throw ()
     }
 }
 
+/*------------------------------------------------------------------------------
+ *  Get the next event from the eventContainer
+ *----------------------------------------------------------------------------*/
+void
+SchedulerThread :: getCurrentEvent()       throw ()
+{
+    //DEBUG_FUNC_INFO
+
+    nextEvent = eventContainer->getCurrentEvent();
+    if (nextEvent.get()) {
+        nextEventTime = TimeConversion::now();
+        nextInitTime.reset(new ptime(*nextEventTime));
+        nextEventEnd.reset(new ptime(*nextEvent->getScheduledTime()
+                                   + *nextEvent->eventLength()));
+        debug() << "::getCurrentEvent() - nextInitTime:  "
+                << to_simple_string(*nextInitTime) << endl;
+        debug() << "                 - nextEventTime: "
+                << to_simple_string(*nextEventTime) << endl;
+        debug() << "                 - nextEventEnd:  "
+                << to_simple_string(*nextEventEnd) << endl;
+    }
+}
+
 
 /*------------------------------------------------------------------------------
  *  The main execution body of the thread.
@@ -158,7 +181,8 @@ SchedulerThread :: run(void)                                    throw ()
     //DEBUG_FUNC_INFO
 
     shouldRun = true;
-    getNextEvent(TimeConversion::now());
+//    getCurrentEvent();
+    getNextEvent();
 
     while (shouldRun) {
         Ptr<ptime>::Ref     start = TimeConversion::now();

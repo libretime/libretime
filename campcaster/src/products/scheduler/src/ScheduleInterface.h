@@ -179,6 +179,19 @@ class ScheduleInterface
                                                                     = 0;
 
         /**
+         *  Return the current schedule entry.
+         *  
+         *
+         *  @param 
+         *          
+         *  @return the current schedule entry
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getCurrentEntry()
+                                                            throw ()
+                                                                    = 0;
+
+        /**
          *  Tell if a schedule entry exists by the give name.
          *
          *  @param entryId the id of the schedule entry to check for.

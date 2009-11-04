@@ -98,3 +98,23 @@ PlaylistEventContainer :: getNextEvent(Ptr<ptime>::Ref  when)       throw ()
     return event;
 }
 
+/*------------------------------------------------------------------------------
+ *  Return the first scheduled event after the specified timepoint
+ *----------------------------------------------------------------------------*/
+Ptr<ScheduledEventInterface>::Ref
+PlaylistEventContainer :: getCurrentEvent()       throw ()
+{
+    Ptr<ScheduleEntry>::Ref     entry = schedule->getCurrentEntry();
+    Ptr<PlaylistEvent>::Ref     event;
+
+    if (entry.get()) {
+        event.reset(new PlaylistEvent(sessionId,
+                                      audioPlayer,
+                                      storage,
+                                      playLog,
+                                      entry));
+    }
+
+    return event;
+}
+

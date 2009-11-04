@@ -89,6 +89,17 @@ class EventContainerInterface
          */
         virtual Ptr<ScheduledEventInterface>::Ref
         getNextEvent(Ptr<ptime>::Ref    when)               throw ()    = 0;
+
+
+        /**
+         *  Return current event
+         *
+         *  @param 
+         *  @return the first event to schedule at this point in time
+         *          may be a reference to 0, if there are no known events at this time
+         */
+        virtual Ptr<ScheduledEventInterface>::Ref
+        getCurrentEvent()               throw ()    = 0;
 };
 
 

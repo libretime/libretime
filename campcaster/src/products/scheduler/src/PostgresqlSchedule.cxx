@@ -162,6 +162,16 @@ const std::string PostgresqlSchedule::getNextEntryStmt =
     "ORDER BY starts";
 
 /*------------------------------------------------------------------------------
+ *  The SQL statement for querying current scheduled entry
+ *  The parameters for this call are: from
+ *  and returns the properties: id, playlist, starts, ends for the current
+ *  schedule entry
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::getCurrentEntryStmt =
+    "SELECT id, playlist, starts, ends FROM schedule WHERE starts <= ? AND ? < ends "
+    "ORDER BY starts";
+
+/*------------------------------------------------------------------------------
  *  The SQL statement for querying if a schedule entry exists.
  *  Expects a single argument, the id of the schedule to check.
  *  Returns 1 if the entry exists, 0 otherwise.
@@ -541,6 +551,53 @@ PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
     return result;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Get current schedule entry
+ *----------------------------------------------------------------------------*/
+Ptr<ScheduleEntry>::Ref
+PostgresqlSchedule :: getCurrentEntry()
+                                                                throw ()
+{
+    Ptr<Connection>::Ref        conn;
+    Ptr<ScheduleEntry>::Ref     result;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                            getCurrentEntryStmt));
+        timestamp = Conversion::ptimeToTimestamp(TimeConversion::now(),
+                                                 Conversion::roundDown);
+
+		pstmt->setTimestamp(1, *timestamp);
+        pstmt->setTimestamp(2, *timestamp);
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        if (rs->next()) {
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
+
+            *timestamp = rs->getTimestamp(3);
+            Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
+
+            *timestamp = rs->getTimestamp(4);
+            Ptr<ptime>::Ref endTime = Conversion::timestampToPtime(timestamp);
+
+            result.reset(new ScheduleEntry(id, playlistId, startTime, endTime));
+        }
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        // TODO: report error
+        return result;
+    }
+
+    return result;
+}
 
 /*------------------------------------------------------------------------------
  *  Tell if a schedule entry exists.

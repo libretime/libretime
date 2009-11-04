@@ -155,6 +155,11 @@ class PostgresqlSchedule : public Configurable,
         static const std::string    getNextEntryStmt;
 
         /**
+         *  The SQL statement for getting current schedule entry
+         */
+        static const std::string    getCurrentEntryStmt;
+
+        /**
          *  The SQL statement for telling if a schedule entry exists.
          */
         static const std::string    scheduleEntryExistsStmt;
@@ -318,6 +323,17 @@ class PostgresqlSchedule : public Configurable,
          */
         virtual Ptr<ScheduleEntry>::Ref
         getNextEntry(Ptr<ptime>::Ref  fromTime)
+                                                            throw ();
+
+        /**
+         *  Return current schedule entry
+         *
+         *  @param 
+         *
+         *  @return the first schedule entry at this point in time
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getCurrentEntry()
                                                             throw ();
 
         /**
