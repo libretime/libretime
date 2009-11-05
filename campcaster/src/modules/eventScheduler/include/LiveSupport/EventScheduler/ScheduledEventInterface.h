@@ -134,7 +134,7 @@ class ScheduledEventInterface
          *  a separate thread, and return immediately.
          */
         virtual void
-        start(void)                                 throw ()              = 0;
+        start(Ptr<time_duration>::Ref offset)    throw ()              = 0;
 
         /**
          *  The length of the event.

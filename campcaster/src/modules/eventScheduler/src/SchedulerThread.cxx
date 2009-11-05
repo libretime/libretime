@@ -105,8 +105,9 @@ SchedulerThread :: getCurrentEvent()       throw ()
 
     nextEvent = eventContainer->getCurrentEvent();
     if (nextEvent.get()) {
-        nextEventTime = TimeConversion::now();
-        nextInitTime.reset(new ptime(*nextEventTime));
+		//fake these events here so we can preload
+        nextInitTime.reset(new ptime(*TimeConversion::now() + *granularity));
+        nextEventTime.reset(new ptime(*nextInitTime + *nextEvent->maxTimeToInitialize()));
         nextEventEnd.reset(new ptime(*nextEvent->getScheduledTime()
                                    + *nextEvent->eventLength()));
         debug() << "::getCurrentEvent() - nextInitTime:  "
@@ -144,12 +145,21 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
                           << std::endl;
             }
         } else if (imminent(now, nextEventTime)) {
-            Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
-                                                             - *now));
-            TimeConversion::sleep(timeLeft);
-            debug() << "::nextStep() - Start [" << *TimeConversion::now()
-                    << "]" << endl;
-            nextEvent->start();
+            Ptr<time_duration>::Ref timePassed(new time_duration(*now
+                                                             - *nextEvent->getScheduledTime()));
+            Ptr<time_duration>::Ref timeNull(new time_duration(0, 0, 0, 0));
+			if(*timePassed > *timeNull) {
+				debug() << "::nextStep() with offset - Start [" << *TimeConversion::now()
+						<< "]" << endl;
+				nextEvent->start(timePassed);
+			} else {
+				Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
+																 - *now));
+				TimeConversion::sleep(timeLeft);
+				debug() << "::nextStep() - Start [" << *TimeConversion::now()
+						<< "]" << endl;
+				nextEvent->start(timeNull);
+			}
             currentEvent = nextEvent;
             currentEventEnd = nextEventEnd;
             getNextEvent(TimeConversion::now());

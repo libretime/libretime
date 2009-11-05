@@ -207,7 +207,7 @@ class PlaylistEvent : public virtual ScheduledEventInterface
          *  a separate thread, and return immediately.
          */
         virtual void
-        start(void)                                 throw ();
+        start(Ptr<time_duration>::Ref offset)                                 throw ();
 
         /**
          *  The length of the event.

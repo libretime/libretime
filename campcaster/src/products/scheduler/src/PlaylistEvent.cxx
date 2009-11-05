@@ -149,7 +149,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
  *  Initialize the event object.
  *----------------------------------------------------------------------------*/
 void
-PlaylistEvent :: start(void)                       throw ()
+PlaylistEvent :: start(Ptr<time_duration>::Ref offset)                       throw ()
 {
     DEBUG_BLOCK
 
