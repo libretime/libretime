@@ -253,7 +253,7 @@ GstreamerPlayer :: preload(const std::string   fileUrl)
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 bool
-GstreamerPlayer :: open(const std::string   fileUri, gint64 id)
+GstreamerPlayer :: open(const std::string   fileUri, gint64 id, gint64 offset)
 										throw (std::invalid_argument, std::runtime_error)
 {
     DEBUG_BLOCK
@@ -273,8 +273,10 @@ GstreamerPlayer :: open(const std::string   fileUri, gint64 id)
     m_playContext->setAudioDevice(m_audioDevice);
     if (fileUri.find(std::string(".smil")) != std::string::npos) {
         m_smilHandler = new SmilHandler();
-        m_smilHandler->openSmilFile(fileUri.c_str());
+        m_smilHandler->openSmilFile(fileUri.c_str(), offset);
         AudioDescription *audioDescription = m_smilHandler->getNext();
+		gint64 clipOffset = m_smilHandler->getClipOffset();
+        m_playContext->setClipOffset(clipOffset);
 		m_Id = audioDescription->m_Id;
         m_open=m_playContext->openSource(audioDescription);
 		m_url = (const char*) audioDescription->m_src;
@@ -383,19 +385,11 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
     return length;
 }
 
-gint64 
-GstreamerPlayer :: offsetSmil(gint64 startTime)
-{
-	//have to take start_time, offset the smilHandler based on it (remove all clips that fall before start_time)
-	//and calculate clip offset as a reminder, then set that offset to the player somehow
-	return 0;
-}
-
 /*------------------------------------------------------------------------------
  *  Start playing
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayer :: start(gint64 startTime)                      throw (std::logic_error)
+GstreamerPlayer :: start()                      throw (std::logic_error)
 {
     DEBUG_BLOCK
     if (!isOpen()) {
@@ -403,8 +397,6 @@ GstreamerPlayer :: start(gint64 startTime)                      throw (std::logi
     }
 
     if (!isPlaying()) {
-		gint64 clipOffset = offsetSmil(startTime);
-        m_playContext->setClipOffset(clipOffset);
         m_playContext->playContext();
     }else{
         error() << "Already playing!" << endl;

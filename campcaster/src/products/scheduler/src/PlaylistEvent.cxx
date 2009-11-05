@@ -158,8 +158,8 @@ PlaylistEvent :: start(Ptr<time_duration>::Ref offset)                       thr
     }
 
     try {
-        audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId());
-        audioPlayer->start(offset->total_microseconds());
+        audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId(), offset->total_microseconds());
+        audioPlayer->start();
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {

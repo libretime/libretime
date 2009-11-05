@@ -162,6 +162,11 @@ const std::string    smilPlayableStartAttrName = "clipBegin";
 const std::string    smilPlayableEndAttrName = "clipEnd";
 
 /*------------------------------------------------------------------------------
+ *  The name of the attribute containing the clipLength of the Playable element.
+ *----------------------------------------------------------------------------*/
+const std::string    smilPlayableLengthAttrName = "clipLength";
+
+/*------------------------------------------------------------------------------
  *  The name of the attribute containing the relative offset of the element.
  *----------------------------------------------------------------------------*/
 const std::string    smilRelativeOffsetAttrName = "begin";
@@ -1600,6 +1605,8 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
                                               = plElement->getClipStart();
         Ptr<time_duration>::Ref     clipEnd
                                               = plElement->getClipEnd();
+        Ptr<time_duration>::Ref     clipLength
+                                              = plElement->getClipLength();
 											  
         Ptr<FadeInfo>::Ref          fadeInfo  = plElement->getFadeInfo();
 
@@ -1652,8 +1659,13 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref    id,
 			smilPlayableNode->set_attribute(
 							smilPlayableEndAttrName, 
 							*TimeConversion::timeDurationToSmilString(
-																clipEnd ));
+															clipEnd ));
 		}
+		
+		smilPlayableNode->set_attribute(
+						smilPlayableLengthAttrName, 
+						*TimeConversion::timeDurationToSmilString(
+															clipLength ));
 
         if (fadeInfo) {
             Ptr<time_duration>::Ref     fadeIn  = fadeInfo->getFadeIn();

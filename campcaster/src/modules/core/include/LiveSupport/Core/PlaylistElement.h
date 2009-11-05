@@ -132,6 +132,7 @@ class PlaylistElement : public Configurable
         Ptr<time_duration>::Ref     relativeOffset;
         Ptr<time_duration>::Ref     clipStart;
         Ptr<time_duration>::Ref     clipEnd;
+        Ptr<time_duration>::Ref     clipLength;
 
         /**
          *  The type of the entry (audio clip or sub-playlist).
@@ -195,6 +196,7 @@ class PlaylistElement : public Configurable
          */
         PlaylistElement(Ptr<UniqueId>::Ref       id,
                         Ptr<time_duration>::Ref  relativeOffset,
+                        Ptr<time_duration>::Ref  clipLength,
                         Ptr<AudioClip>::Ref      audioClip,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
@@ -202,6 +204,7 @@ class PlaylistElement : public Configurable
         {
             this->id             = id;
             this->relativeOffset = relativeOffset;
+            this->clipLength	 = clipLength;
             this->audioClip      = audioClip;
             this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
@@ -222,6 +225,7 @@ class PlaylistElement : public Configurable
          *  @param fadeInfo       fade in / fade out information (optional)
          */
         PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                        Ptr<time_duration>::Ref  clipLength,
                         Ptr<AudioClip>::Ref      audioClip,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
@@ -229,6 +233,7 @@ class PlaylistElement : public Configurable
         {
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
+            this->clipLength	 = clipLength;
             this->audioClip      = audioClip;
             this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
@@ -249,6 +254,7 @@ class PlaylistElement : public Configurable
          *  @param fadeInfo       fade in / fade out information (optional)
          */
         PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                        Ptr<time_duration>::Ref  clipLength,
                         Ptr<Playlist>::Ref       playlist,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
@@ -256,6 +262,7 @@ class PlaylistElement : public Configurable
         {
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
+            this->clipLength	 = clipLength;
             this->playlist       = playlist;
             this->playable       = playlist;
             this->fadeInfo       = fadeInfo;
@@ -367,6 +374,23 @@ class PlaylistElement : public Configurable
         getClipEnd(void) const                      throw ()
         {
             return clipEnd;
+        }
+
+        /**
+         */
+        void
+        setClipLength(Ptr<time_duration>::Ref   newLength)
+                                                            throw ()
+        {
+            clipLength = newLength;
+        }
+
+        /**
+         */
+        Ptr<time_duration>::Ref
+        getClipLength(void) const                      throw ()
+        {
+            return clipLength;
         }
 
         /**

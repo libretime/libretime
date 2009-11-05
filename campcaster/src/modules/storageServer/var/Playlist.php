@@ -424,6 +424,11 @@ class Playlist extends StoredFile {
             if (PEAR::isError($endArr)) {
             	return $endArr;
             }
+            // get clipLength:
+            $lenArr = $this->md->getMetadataElement('clipLength', $elId);
+            if (PEAR::isError($lenArr)) {
+            	return $lenArr;
+            }
             $offsetId = $offArr[0]['mid'];
             $offset = $offArr[0]['value'];
             // get audioClip:

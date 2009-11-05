@@ -278,7 +278,8 @@ class SmilPlaylistAudioElement {
         $offset = Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
         $clipStart = Playlist::secondsToPlaylistTime($tree->attrs['clipStart']->val);
         $clipEnd = Playlist::secondsToPlaylistTime($tree->attrs['clipEnd']->val);
-        $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\" clipStart=\"$clipStart\" clipEnd=\"$clipEnd\">\n".
+        $clipLength = Playlist::secondsToPlaylistTime($tree->attrs['clipLength']->val);
+        $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\" clipStart=\"$clipStart\" clipEnd=\"$clipEnd\" clipLength=\"$clipLength\">\n".
             "$ind2<$type id=\"$acGunid\" playlength=\"$playlength\" title=\"$title\"/>\n".
             $fInfo.
             "$ind</playlistElement>\n";

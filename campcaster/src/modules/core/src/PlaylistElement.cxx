@@ -72,6 +72,10 @@ static const std::string    clipStartAttrName = "clipStart";
 static const std::string    clipEndAttrName = "clipEnd";
 
 /**
+ */
+static const std::string    clipLengthAttrName = "clipLength";
+
+/**
  *  The name of the audio clip child element of the playlist element.
  */
 static const std::string    audioClipElementName = "audioClip";
@@ -141,6 +145,15 @@ PlaylistElement :: configure(const xmlpp::Element & element)
 		clipEnd = TimeConversion::parseTimeDuration(clipEndString);
     } else {
 		setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	}
+
+    // set clip length
+    if (attribute = element.get_attribute(clipLengthAttrName)) {
+		Ptr<std::string>::Ref   clipLengthString(new std::string(
+														attribute->get_value() ));
+		clipLength = TimeConversion::parseTimeDuration(clipLengthString);
+    } else {
+		setClipLength(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
 	}
 
     // set audio clip
@@ -234,6 +247,9 @@ PlaylistElement :: getXmlElementString(void)    throw ()
                                         + "\" ");
     xmlString->append(clipEndAttrName + "=\"" 
                                         + toFixedString(clipEnd)
+                                        + "\">\n");
+    xmlString->append(clipLengthAttrName + "=\"" 
+                                        + toFixedString(clipLength)
                                         + "\">\n");
 
     xmlString->append(*getPlayable()->getXmlElementString() + "\n");

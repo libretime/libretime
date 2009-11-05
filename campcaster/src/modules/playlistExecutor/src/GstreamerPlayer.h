@@ -127,7 +127,6 @@ class GstreamerPlayer : virtual public Configurable,
         gint64                  m_currentPlayLength;
 		gint64					m_Id;
 
-		gint64 offsetSmil(gint64);//private helper to handle playback offset
 public:
         /**
          *  Contains runtime error messages from GStreamer.
@@ -287,7 +286,7 @@ public:
          *  @see #start
          */
         virtual bool
-        open(const std::string  fileUrl, gint64 id)
+        open(const std::string  fileUrl, gint64 id, gint64 offset)
 				throw (std::invalid_argument, std::runtime_error);
 
         /**
@@ -328,7 +327,7 @@ public:
          *  @see #stop
          */
         virtual void
-        start(gint64)                             throw (std::logic_error);
+        start()                             throw (std::logic_error);
 
         /**
          *  Pause the player.

@@ -153,7 +153,7 @@ class AudioPlayerInterface
          *  @see #start
          */
         virtual bool
-        open(const std::string  fileUrl, gint64 id)
+        open(const std::string  fileUrl, gint64 id, gint64 offset)
 				throw (std::invalid_argument, std::runtime_error) = 0;
 
         /**
@@ -204,7 +204,7 @@ class AudioPlayerInterface
          *  @see #stop
          */
         virtual void
-        start(gint64)                             throw (std::logic_error)
+        start()                             throw (std::logic_error)
                                                                       = 0;
 
         /**

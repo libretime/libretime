@@ -99,6 +99,7 @@ public:
     gint64 m_begin;
     gint64 m_clipBegin;
     gint64 m_clipEnd;
+    gint64 m_clipLength;
 	gint64 m_Id;
     std::vector<AnimationDescription*> m_animations;
     
@@ -107,6 +108,7 @@ public:
         m_begin(0),
         m_clipBegin(0),
         m_clipEnd(0),
+		m_clipLength(0),
 		m_Id(0)
     {
     }
@@ -147,6 +149,7 @@ class SmilHandler
     xmlNode *m_bodyChildren;
     xmlNode *m_parChildren;
     SmilHandler *m_subSmil;
+	gint64 m_smilOffset;
 
 public:
 
@@ -155,6 +158,7 @@ public:
         m_bodyChildren = NULL;
         m_parChildren = NULL;
         m_subSmil = NULL;
+		m_smilOffset = 0L;
     }
 
     ~SmilHandler(){
@@ -172,8 +176,9 @@ public:
     *  @para smil a MinimalAudioSmil object.
     *  @return TRUE if processing was successful, FALSE otherwise.
     */
-    gboolean openSmilFile(const gchar *xmlFile){
+    gboolean openSmilFile(const gchar *xmlFile, gint64 offset){
         xmlNode *node;
+		m_smilOffset = offset;
 
         /* parse the XML files */
         m_document = xmlReadFile(xmlFile, NULL, XML_PARSE_RECOVER);
@@ -193,8 +198,88 @@ public:
 emptysmilrecovery:
         AudioDescription *audioDescription = NULL;
 
+
+//TODO: m_smilOffset must contain correct clipOffset once this function exits!!!!!!
+
         if(m_subSmil != NULL){
-            audioDescription = m_subSmil->getNext();
+            audioDescription = m_subSmil->getNextInternal();
+            if(audioDescription == NULL){
+                delete m_subSmil;
+                m_subSmil = NULL;
+            }else{
+				if(m_smilOffset >= audioDescription->m_clipLength)
+				{
+					m_smilOffset -= audioDescription->m_clipLength;
+					goto emptysmilrecovery;
+				}
+                return audioDescription;
+            }
+        }
+
+        if(m_parChildren){//we are currently traversing par segment
+            audioDescription = getNextPar();
+        }
+
+        if(audioDescription == NULL && m_bodyChildren){//par exaused, see if there is more in the body segment
+            for (; m_bodyChildren; m_bodyChildren = m_bodyChildren->next) {
+                if (m_bodyChildren->type == XML_ELEMENT_NODE) {
+                    if (!strcmp((const char*)m_bodyChildren->name, "par")) {
+                        m_parChildren = m_bodyChildren->children;
+                        audioDescription = getNextPar();
+                        if(audioDescription != NULL){
+                            m_bodyChildren = m_bodyChildren->next;
+                            break;
+                        }
+                    } else {
+                        GST_WARNING("unsupported SMIL element %s found", m_bodyChildren->name);
+                    }
+                }
+            }
+        }
+
+        if(audioDescription != NULL && std::string(audioDescription->m_src).find(".smil") != std::string::npos){//we have a sub smil
+            m_subSmil = new SmilHandler();
+            m_subSmil->openSmilFile(audioDescription->m_src, m_smilOffset);
+            delete audioDescription;
+            audioDescription = m_subSmil->getNextInternal();
+            if(audioDescription == NULL){
+                delete m_subSmil;
+                m_subSmil = NULL;
+                goto emptysmilrecovery;
+            }
+        }
+		if(audioDescription != NULL && m_smilOffset >= audioDescription->m_clipLength)
+		{
+			m_smilOffset -= audioDescription->m_clipLength;
+			goto emptysmilrecovery;
+		}
+
+        return audioDescription;
+    }
+	
+	gint64 getClipOffset() {
+        gint64 offset = m_smilOffset;
+		m_smilOffset = 0L;//offset only valid after the first getNext
+		return offset;
+	}
+    
+    gint64 getPlayLength() throw() {
+        gint64 ns = 0LL;
+        //TODO: calculate proper playlist length
+        return ns;
+    }
+
+private:
+
+    /**
+    *  Fetch next audio entry in sequence.
+    *  @return AudioDescription object if processing was successful, NULL otherwise.
+    */
+    AudioDescription *getNextInternal(){
+emptysmilrecoveryint:
+        AudioDescription *audioDescription = NULL;
+        if(m_subSmil != NULL){
+            audioDescription = m_subSmil->getNextInternal();
             if(audioDescription == NULL){
                 delete m_subSmil;
                 m_subSmil = NULL;
@@ -226,27 +311,19 @@ emptysmilrecovery:
 
         if(audioDescription != NULL && std::string(audioDescription->m_src).find(".smil") != std::string::npos){//we have a sub smil
             m_subSmil = new SmilHandler();
-            m_subSmil->openSmilFile(audioDescription->m_src);
+            m_subSmil->openSmilFile(audioDescription->m_src, m_smilOffset);
             delete audioDescription;
-            audioDescription = m_subSmil->getNext();
+            audioDescription = m_subSmil->getNextInternal();
             if(audioDescription == NULL){
                 delete m_subSmil;
                 m_subSmil = NULL;
-                goto emptysmilrecovery;
+                goto emptysmilrecoveryint;
             }
         }
 
         return audioDescription;
     }
-    
-    gint64 getPlayLength() throw() {
-        gint64 ns = 0LL;
-        //TODO: calculate proper playlist length
-        return ns;
-    }
-
-private:
-
+	
     /**
     *  Fetch next audio entry from "<par>" SMIL segment.
     *
@@ -281,11 +358,12 @@ private:
 
         xmlNode           * node;
         xmlAttribute      * attr;
-        gchar             * src       = 0;
-        gchar             * begin     = 0;
-        gchar             * clipBegin = 0;
-        gchar             * clipEnd   = 0;
-        gchar             * idStr     = 0;
+        gchar             * src       	= 0;
+        gchar             * begin     	= 0;
+        gchar             * clipBegin 	= 0;
+        gchar             * clipEnd   	= 0;
+        gchar             * clipLength	= 0;
+        gchar             * idStr     	= 0;
     
         /* handle the attributes */
         for (attr = ((xmlElement*)audio)->attributes; attr; attr = (xmlAttribute*) attr->next) {
@@ -311,6 +389,10 @@ private:
                 if ((node = attr->children) && node->type == XML_TEXT_NODE) {
                     clipEnd = (gchar*) node->content;
                 }
+            } else if (!strcmp((const char*)attr->name, "clipLength")) {
+                if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                    clipLength = (gchar*) node->content;
+                }
             } else {
                 GST_WARNING("unsupported SMIL audio element attribute: %s",
                             attr->name);
@@ -333,6 +415,10 @@ private:
 			{
 				audioDescription->m_clipEnd = -1;
 			}
+		}
+		if(clipLength)
+		{
+			audioDescription->m_clipLength = su_smil_clock_value_to_nanosec(clipLength);
 		}
 		if(idStr)
 		{

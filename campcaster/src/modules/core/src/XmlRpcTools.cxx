@@ -92,6 +92,11 @@ const std::string clipStartName = "clipStart";
 const std::string clipEndName = "clipEnd";
 
 /*------------------------------------------------------------------------------
+ *  The name of the relative offset member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+const std::string clipLengthName = "clipLength";
+
+/*------------------------------------------------------------------------------
  *  The name of the from member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
 const std::string fromTimeName = "from";
@@ -318,6 +323,23 @@ XmlRpcTools :: extractClipEnd(XmlRpc::XmlRpcValue & xmlRpcValue)
     return clipEnd;
 }
 
+/*------------------------------------------------------------------------------
+ *  Extract the relative offset from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+XmlRpcTools :: extractClipLength(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(clipLengthName)
+        || xmlRpcValue[clipLengthName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeInt) {
+        throw std::invalid_argument("missing clip length argument");
+    }
+
+    Ptr<time_duration>::Ref clipLength(new time_duration(0,0,
+                               int(xmlRpcValue[clipLengthName]), 0));
+    return clipLength;
+}
 
 /*------------------------------------------------------------------------------
  *  Extract the relative offset from an XML-RPC function call parameter

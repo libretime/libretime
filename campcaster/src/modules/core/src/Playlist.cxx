@@ -474,7 +474,7 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                                                 throw ()
 {
     Ptr<PlaylistElement>::Ref   playlistElement(new PlaylistElement(
-                                    relativeOffset, audioClip, fadeInfo));
+                                    relativeOffset, audioClip->getPlaylength(), audioClip, fadeInfo));
     elementList->insert(std::make_pair(*relativeOffset, playlistElement));
     
     Ptr<time_duration>::Ref     endOffset(new time_duration(
@@ -498,7 +498,7 @@ Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
                                                 throw ()
 {
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
-                                   relativeOffset, playlist, fadeInfo));
+                                   relativeOffset, playlist->getPlaylength(), playlist, fadeInfo));
     elementList->insert(std::make_pair(*relativeOffset, playlistElement));
     
     Ptr<time_duration>::Ref     endOffset(new time_duration(
