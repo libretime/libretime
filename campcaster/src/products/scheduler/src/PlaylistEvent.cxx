@@ -54,8 +54,6 @@ using namespace boost;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
 
-#define START_TIME 0
-#define STOP_TIME 30
 /* ===================================================  local data structures */
 
 
@@ -161,7 +159,7 @@ PlaylistEvent :: start(Ptr<time_duration>::Ref offset)                       thr
 
     try {
         audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId());
-        audioPlayer->start(START_TIME, STOP_TIME);
+        audioPlayer->start(offset->total_microseconds());
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {

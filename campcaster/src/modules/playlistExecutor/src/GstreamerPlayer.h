@@ -124,12 +124,11 @@ class GstreamerPlayer : virtual public Configurable,
         std::string             m_audioDevice;
         
         gint64                  m_smilOffset;
-        gint                    m_stop_time;
         gint64                  m_currentPlayLength;
 		gint64					m_Id;
 
+		gint64 offsetSmil(gint64);//private helper to handle playback offset
 public:
-        gint                    m_start_time;
         /**
          *  Contains runtime error messages from GStreamer.
          */
@@ -166,7 +165,6 @@ public:
          */
         static gboolean
         fireOnStartEvent(gpointer self)                            throw ();
-
 
     public:
         /**
@@ -315,7 +313,7 @@ public:
          *
          *  @see #open
          */
-        virtual int
+        virtual void
         close(void)                             throw (std::logic_error);
 
         /**
@@ -330,7 +328,7 @@ public:
          *  @see #stop
          */
         virtual void
-        start(int,int)                             throw (std::logic_error);
+        start(gint64)                             throw (std::logic_error);
 
         /**
          *  Pause the player.

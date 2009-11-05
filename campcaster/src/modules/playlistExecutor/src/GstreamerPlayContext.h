@@ -83,6 +83,7 @@ class GstreamerPlayContext
     gpointer m_data;
     AudioDescription *m_audioDescription;
     std::string m_audioDevice;
+	gint64 m_clipOffset;
 
 public:
 
@@ -97,6 +98,7 @@ public:
         m_data = NULL;
         m_audioDescription = NULL;
         m_audioDevice = "default";
+		m_clipOffset = 0;
     }
 
     ~GstreamerPlayContext(){
@@ -131,6 +133,7 @@ public:
             delete m_audioDescription;
             m_audioDescription = NULL;
         }
+		m_clipOffset = 0;
    }
 
     void playContext(){
@@ -145,7 +148,8 @@ public:
 				gst_element_get_state (m_pipeline, &state, &pending, 2000000000);//just in case, do not wait for more than 2 sec				
 			}
 			gst_element_seek(m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, 
-				m_audioDescription->m_clipBegin*GST_NSECOND, GST_SEEK_TYPE_SET, m_audioDescription->m_clipEnd*GST_NSECOND);
+				std::max(m_clipOffset, m_audioDescription->m_clipBegin)*GST_NSECOND, GST_SEEK_TYPE_SET, m_audioDescription->m_clipEnd*GST_NSECOND);
+			m_clipOffset = 0;//reset clipOffset after it's been used
 		}
         g_object_set(G_OBJECT(m_volume), "volume", 1.0, NULL);
     }
@@ -246,20 +250,10 @@ public:
         return ns;
     }
     /*------------------------------------------------------------------------------
-     * Seeks to the passed argument seek
+     * Offsets playback within the clip
      *---------------------------------------------------------------------------*/
-    void 
-    start_time (gint start_time){
-        GstState state;
-        GstState pending;
-        gst_element_set_state (m_pipeline, GST_STATE_PAUSED);
-        gst_element_get_state (m_pipeline, &state, &pending, GST_CLOCK_TIME_NONE);
-        if (!gst_element_seek (m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, 
-            start_time*GST_SECOND, GST_SEEK_TYPE_END, 0)) {
-           g_print ("\nstart_time seek failed\n");
-        }
-        else
-           g_print ("\n start_time seek succces\n"); 
+    void setClipOffset(gint64 startTime){
+		m_clipOffset = startTime;
     }
     
     /*------------------------------------------------------------------------------
