@@ -247,7 +247,7 @@ PlaylistElement :: getXmlElementString(void)    throw ()
                                         + "\" ");
     xmlString->append(clipEndAttrName + "=\"" 
                                         + toFixedString(clipEnd)
-                                        + "\">\n");
+                                        + "\" ");
     xmlString->append(clipLengthAttrName + "=\"" 
                                         + toFixedString(clipLength)
                                         + "\">\n");
