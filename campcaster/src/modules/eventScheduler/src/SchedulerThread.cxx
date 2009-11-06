@@ -191,8 +191,8 @@ SchedulerThread :: run(void)                                    throw ()
     //DEBUG_FUNC_INFO
 
     shouldRun = true;
-//    getCurrentEvent();
-    getNextEvent(TimeConversion::now());
+    getCurrentEvent();//implements scheduler autostart
+//    getNextEvent(TimeConversion::now());//use if you do not want autostart
 
     while (shouldRun) {
         Ptr<ptime>::Ref     start = TimeConversion::now();

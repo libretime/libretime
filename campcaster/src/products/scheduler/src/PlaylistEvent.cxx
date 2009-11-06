@@ -158,7 +158,7 @@ PlaylistEvent :: start(Ptr<time_duration>::Ref offset)                       thr
     }
 
     try {
-        audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId(), offset->total_microseconds());
+        audioPlayer->open(*playlist->getUri(), (gint64)playlist->getId()->getId(), offset->total_nanoseconds());
         audioPlayer->start();
 
         playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());

@@ -197,19 +197,18 @@ public:
     AudioDescription *getNext(){
 emptysmilrecovery:
         AudioDescription *audioDescription = NULL;
-
-
-//TODO: m_smilOffset must contain correct clipOffset once this function exits!!!!!!
-
         if(m_subSmil != NULL){
             audioDescription = m_subSmil->getNextInternal();
             if(audioDescription == NULL){
                 delete m_subSmil;
                 m_subSmil = NULL;
             }else{
-				if(m_smilOffset >= audioDescription->m_clipLength)
+				gint64 actualLength = audioDescription->m_clipEnd != -1 ? 
+					audioDescription->m_clipEnd - audioDescription->m_clipBegin :
+					audioDescription->m_clipLength - audioDescription->m_clipBegin;
+				if(m_smilOffset >= actualLength)
 				{
-					m_smilOffset -= audioDescription->m_clipLength;
+					m_smilOffset -= actualLength;
 					goto emptysmilrecovery;
 				}
                 return audioDescription;
@@ -248,10 +247,16 @@ emptysmilrecovery:
                 goto emptysmilrecovery;
             }
         }
-		if(audioDescription != NULL && m_smilOffset >= audioDescription->m_clipLength)
+		if(audioDescription != NULL)
 		{
-			m_smilOffset -= audioDescription->m_clipLength;
-			goto emptysmilrecovery;
+			gint64 actualLength = audioDescription->m_clipEnd != -1 ? 
+				audioDescription->m_clipEnd - audioDescription->m_clipBegin :
+				audioDescription->m_clipLength - audioDescription->m_clipBegin;
+			if(m_smilOffset >= actualLength)
+			{
+				m_smilOffset -= actualLength;
+				goto emptysmilrecovery;
+			}
 		}
 
         return audioDescription;
