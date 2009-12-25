@@ -162,7 +162,14 @@ class Playlist extends StoredFile {
 
         // insert new playlist element
         $offset = $plLen;
-        $plElInfo = $this->insertPlaylistElement($parid, $offset,
+		
+		 // insert default values until UI starts supporting clip in / clip out
+        $clipStart = 00.000000;
+        $clipEnd = $acLen;
+        $clipLength = $acLen;
+		
+		
+        $plElInfo = $this->insertPlaylistElement($parid, $offset, $clipStart, $clipEnd, $clipLength,
             $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid,
             $elType);
         if (PEAR::isError($plElInfo)) {
@@ -1025,7 +1032,7 @@ class Playlist extends StoredFile {
      *   <li>fadeOutId int - record id</li>
      *  </ul>
      */
-    private function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
+    private function insertPlaylistElement($parid, $offset, $clipStart, $clipEnd, $clipLength, $acGunid, $acLen, $acTit,
         $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL, $elType='audioClip')
     {
         // insert playlistElement
@@ -1045,6 +1052,24 @@ class Playlist extends StoredFile {
         // insert relativeOffset
         $r = $this->md->insertMetadataElement(
             $plElId, 'relativeOffset', $offset, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        // insert clipLength
+        $r = $this->md->insertMetadataElement(
+            $plElId, 'clipLength', $clipLength, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        // insert clipStart
+        $r = $this->md->insertMetadataElement(
+            $plElId, 'clipStart', $clipStart, 'A');
+        if (PEAR::isError($r)) {
+        	return $r;
+        }
+        // insert clipEnd
+        $r = $this->md->insertMetadataElement(
+            $plElId, 'clipEnd', $clipEnd, 'A');
         if (PEAR::isError($r)) {
         	return $r;
         }
