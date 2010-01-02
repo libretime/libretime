@@ -102,7 +102,7 @@ FLAWFINDER_FILE  = ${DOC_DIR}/flawfinderReport.html
 TOOLS_DIR  = ${SRC_DIR}/tools
 
 LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
-LIBODBCXX_VERSION = libodbc++-0.2.4pre4
+LIBODBCXX_VERSION = libodbc++-0.2.5
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
 TAGLIB_DIR        = ${TOOLS_DIR}/taglib

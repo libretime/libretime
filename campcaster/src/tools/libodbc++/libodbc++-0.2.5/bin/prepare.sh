@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2004 Media Development Loan Fund
 #
@@ -21,32 +21,29 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author$
-#   Version  : $Revision$
-#   Location : $URL$
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 3360 $
+#   Location : $URL: svn://source.campware.org/campcaster/trunk/campcaster/src/tools/libodbc++/libodbc++-0.2.4pre4/bin/prepare.sh $
+#-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-
+# Run this script to prepare libodbc++ 2.3 to be configured and compiled.
+# To read more about libodbc++, see http://libodbcxx.sourceforge.net/
 #-------------------------------------------------------------------------------
-#   Run this script to configure the environment.
-#
-#   This script in effect calls the real automake / autoconf configure script
-#-------------------------------------------------------------------------------
+product=libodbc++-0.2.5
 
-# assume we're in $basedir
-reldir=`dirname $0`
-basedir=`cd $reldir; pwd;`
-test -z "$basedir" && basedir=.
+reldir=`dirname $0`/..
+basedir=`cd ${reldir}; pwd;`
+bindir=${basedir}/bin
+etcdir=${basedir}/etc
+tmpdir=${basedir}/tmp
 
-bindir=$basedir/bin
-tmpdir=$basedir/tmp
+tar=$basedir/src/$product.tar.bz2
 
+mkdir -p ${tmpdir}
 
-autogen=$bindir/autogen.sh
-configure=$tmpdir/configure
-
-if [ ! -x $configure ]; then
-    (cd $basedir && $autogen $*)
+cd ${tmpdir}
+if [ ! -d $product ]; then
+    tar xfj ${tar}
+    cd $product
 fi
-
-(cd $tmpdir && $configure $*)
 

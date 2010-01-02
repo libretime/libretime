@@ -20,9 +20,9 @@ dnl along with Campcaster; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author$
-dnl Version  : $Revision$
-dnl Location : $URL$
+dnl Author   : $Author: fgerlits $
+dnl Version  : $Revision: 3356 $
+dnl Location : $URL: svn://source.campware.org/campcaster/trunk/campcaster/src/tools/libodbc++/libodbc++-0.2.4pre4/etc/configure.ac $
 dnl-----------------------------------------------------------------------------
 
 dnl-----------------------------------------------------------------------------
@@ -32,18 +32,18 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(libodbc++, 0.2.4pre4, bugs@campware.org)
+AC_INIT(libodbc++, 0.2.5, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision$)
+AC_REVISION($Revision: 3356 $)
 
-AC_CONFIG_SRCDIR(../src/libodbc++-0.2.4pre4.tar.bz2)
+AC_CONFIG_SRCDIR(../src/libodbc++-0.2.5.tar.bz2)
 
 
 dnl untar the sources before anything happens
 ../bin/prepare.sh
 
-cd ../tmp/libodbc++-0.2.4pre4
+cd ../tmp/libodbc++-0.2.5
 ./configure --enable-threads --prefix=$prefix
 cd -
 

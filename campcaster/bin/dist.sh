@@ -145,7 +145,7 @@ etc_tmpdir=$ls_tmpdir/etc
 tmp_tmpdir=$ls_tmpdir/tmp
 
 libodbcxx_dir=$toolsdir/libodbc++
-libodbcxx_version=libodbc++-0.2.4pre4
+libodbcxx_version=libodbc++-0.2.5
 libodbcxx_tmpdir=$tools_tmpdir/libodbc++
 
 xmlrpcxx_dir=$toolsdir/xmlrpc++

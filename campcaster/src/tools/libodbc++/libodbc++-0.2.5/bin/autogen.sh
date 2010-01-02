@@ -21,9 +21,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author$
-#   Version  : $Revision$
-#   Location : $URL$
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 2674 $
+#   Location : $URL: svn://source.campware.org/campcaster/trunk/campcaster/src/tools/libodbc++/libodbc++-0.2.4pre4/bin/autogen.sh $
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------

@@ -355,7 +355,7 @@ AC_MSG_NOTICE(
 [compiling the following external libraries that are needed
 by Campcaster:
 
-    libodbc++ 0.2.4pre4
+    libodbc++ 0.2.5
     taglib 1.5
     xmlrpc++ 2004-07-13
 
