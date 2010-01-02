@@ -45,5 +45,8 @@ cd ${tmpdir}
 if [ ! -d $product ]; then
     tar xfj ${tar}
     cd $product
+
+    # patch submitted by email to libodbcxx-devel@lists.sourceforge.net.
+    patch -p1 < $etcdir/libodbc++-add-cstdio-include.patch
 fi
 

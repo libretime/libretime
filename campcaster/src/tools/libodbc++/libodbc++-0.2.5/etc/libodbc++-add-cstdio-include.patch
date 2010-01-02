@@ -1,0 +1,11 @@
+diff -Naur libodbc++-0.2.5/include/odbc++/types.h libodbc++-0.2.5-cstdio/include/odbc++/types.h
+--- libodbc++-0.2.5/include/odbc++/types.h	2009-03-05 14:23:21.000000000 +0100
++++ libodbc++-0.2.5-cstdio/include/odbc++/types.h	2010-01-02 19:22:54.650900117 +0100
+@@ -25,6 +25,7 @@
+ #include <odbc++/setup.h>
+ 
+ #include <cstring>
++#include <cstdio>
+ #include <exception>
+ #include <assert.h>
+ 
