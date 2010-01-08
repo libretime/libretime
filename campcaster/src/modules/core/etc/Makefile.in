@@ -61,9 +61,8 @@ USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
 
 GENRB     = @GENRB@
-GENRBOPTS = --destdir ${TMP_DIR} \
+GENRBOPTS = --destdir ${TMP_DIR}/${PACKAGE_NAME} \
             --encoding utf-8 \
-            --package-name ${PACKAGE_NAME} \
             --strict
 
 VPATH    = ${SRC_DIR}

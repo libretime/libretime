@@ -90,6 +90,7 @@ ThreadTest :: simpleTest(void)
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::created);
     thread->start();
     Thread::yield();
+    TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
     TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);

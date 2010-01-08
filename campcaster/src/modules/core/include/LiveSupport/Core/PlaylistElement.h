@@ -26,8 +26,8 @@
     Location : $URL$
 
 ------------------------------------------------------------------------------*/
-#ifndef PlaylistElement_h
-#define PlaylistElement_h
+#ifndef LiveSupport_Core_PlaylistElement_h
+#define LiveSupport_Core_PlaylistElement_h
 
 #ifndef __cplusplus
 #error This is a C++ include file

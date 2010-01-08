@@ -144,7 +144,7 @@ RdsContainerTest :: toStringTest(void)
 {
     Ptr<const Glib::ustring>::Ref   string = rdsContainer->toString();
     CPPUNIT_ASSERT(string);
-    CPPUNIT_ASSERT(*string == "PS=BBC Four\n"
-                              "RT=C. Monster - Monsterpiece Theater\n");    
+    CPPUNIT_ASSERT(*string == "PS=BBC Four\r\n"
+                              "RT=C. Monster - Monsterpiece Theater\r\n");    
 }
 

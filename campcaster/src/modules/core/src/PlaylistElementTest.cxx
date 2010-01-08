@@ -150,7 +150,10 @@ PlaylistElementTest :: firstTest(void)
                                         
         CPPUNIT_ASSERT(*playlistElement->getXmlElementString() ==
                                 "<playlistElement id=\"0000000000000111\" "
-                                "relativeOffset=\"00:00:00.000000\">\n"
+                                "relativeOffset=\"00:00:00.000000\" "
+                                "clipStart=\"00:00:00.000000\" "
+                                "clipEnd=\"00:00:00.000000\" "
+                                "clipLength=\"00:00:00.000000\">\n"
                                         "<audioClip id=\"0000000000010003\" "
                                         "title=\"three\" "
                                         "playlength=\"00:00:11.000000\"/>\n"
