@@ -125,12 +125,6 @@ void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
     DEBUG_BLOCK
-    
-    if (state != stopped) {
-        error() << "::deInitialize() - ERROR: STATE IS NOT STOPPED!  Aborting." << endl;
-        // TODO: handle error?
-        return;
-    }
 
     try {
         storage->releasePlaylist(playlist);
@@ -152,9 +146,7 @@ PlaylistEvent :: start(Ptr<time_duration>::Ref offset)                       thr
     DEBUG_BLOCK
 
     if (state != initialized) {
-        error() << "::start() - ERROR: STATE IS NOT INITIALIZED!  Aborting." << endl;
-        // TODO: handle error?
-        return;
+        initialize();
     }
 
     try {
@@ -180,12 +172,6 @@ void
 PlaylistEvent :: stop(void)                        throw ()
 {
     DEBUG_BLOCK
-
-    if (state != running) {
-        error() << "::stop() - ERROR: STATE IS NOT RUNNING!  Aborting." << endl;
-        // TODO: handle error?
-        return;
-    }
 
     try {
         audioPlayer->stop();

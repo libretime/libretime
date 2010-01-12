@@ -944,6 +944,7 @@ class GLiveSupport : public LocalizedConfigurable,
                         Ptr<boost::posix_time::ptime>::Ref  to)
                                                     throw (XmlRpcException)
         {
+std::cout << "calling GLiveSupport :: displaySchedule !!!!!!!!!!!!!!!!!" << std::endl;
             return scheduler->displaySchedule(sessionId, from, to);
         }
 

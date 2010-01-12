@@ -138,5 +138,7 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref  scheduleEntries
                             = schedule->getScheduleEntries(fromTime, toTime);
 
+std::cout << "DisplayScheduleMethod scheduleEntries: " << scheduleEntries->size() << std::endl;
+
     XmlRpcTools::scheduleEntriesToXmlRpcValue(scheduleEntries, returnValue);
 }

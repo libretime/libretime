@@ -287,7 +287,7 @@ SchedulerDaemonXmlRpcClient :: displaySchedule(
                                                 throw (Core::XmlRpcException)
 {
     Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
-
+	
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
 
@@ -317,6 +317,7 @@ SchedulerDaemonXmlRpcClient :: displaySchedule(
 
     try {
         entries = XmlRpcTools::extractScheduleEntries(xmlRpcResult);
+std::cout << "SchedulerDaemonXmlRpcClient::displaySchedule entries: " << entries->size() << std::endl;
     } catch (std::invalid_argument &e) {
         throw Core::XmlRpcInvalidArgumentException(e);
     }
