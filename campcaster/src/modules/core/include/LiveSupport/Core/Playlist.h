@@ -516,7 +516,7 @@ class Playlist : public Configurable,
          *
          *  @return the URI.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getUri(void) const                      throw ()
         {
             return uri;

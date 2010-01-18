@@ -480,5 +480,5 @@ class PlaylistElement : public Configurable
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // PlaylistElement_h
+#endif // LiveSupport_Core_PlaylistElement_h
 
