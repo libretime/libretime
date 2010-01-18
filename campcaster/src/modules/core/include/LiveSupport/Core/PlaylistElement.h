@@ -179,9 +179,7 @@ class PlaylistElement : public Configurable
         /**
          *  The default constructor.
          */
-        PlaylistElement(void)                              throw ()
-        {
-        }
+        PlaylistElement(void)                              throw ();
 
         /**
          *  Create a playlist element by specifying all details.
@@ -200,19 +198,7 @@ class PlaylistElement : public Configurable
                         Ptr<AudioClip>::Ref      audioClip,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
-                                                           throw ()
-        {
-            this->id             = id;
-            this->relativeOffset = relativeOffset;
-            this->clipLength	 = clipLength;
-            this->audioClip      = audioClip;
-            this->playable       = audioClip;
-            this->fadeInfo       = fadeInfo;
-            this->type           = AudioClipType;
-			
-			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-        }
+                                                           throw ();
 
         /**
          *  Create a new audio clip playlist element, with a new UniqueId,
@@ -229,19 +215,7 @@ class PlaylistElement : public Configurable
                         Ptr<AudioClip>::Ref      audioClip,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
-                                                           throw ()
-        {
-            this->id             = UniqueId::generateId();
-            this->relativeOffset = relativeOffset;
-            this->clipLength	 = clipLength;
-            this->audioClip      = audioClip;
-            this->playable       = audioClip;
-            this->fadeInfo       = fadeInfo;
-            this->type           = AudioClipType;
-			
-			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-         }
+                                                           throw ();
 
         /**
          *  Create a new sub-playlist playlist element, with a new UniqueId,
@@ -258,27 +232,13 @@ class PlaylistElement : public Configurable
                         Ptr<Playlist>::Ref       playlist,
                         Ptr<FadeInfo>::Ref       fadeInfo 
                                                  = Ptr<FadeInfo>::Ref())
-                                                           throw ()
-        {
-            this->id             = UniqueId::generateId();
-            this->relativeOffset = relativeOffset;
-            this->clipLength	 = clipLength;
-            this->playlist       = playlist;
-            this->playable       = playlist;
-            this->fadeInfo       = fadeInfo;
-            this->type           = PlaylistType;
-			
-			setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-			setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
-       }
+                                                           throw ();
 
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~PlaylistElement(void)                         throw ()
-        {
-        }
+        ~PlaylistElement(void)                         throw ();
 
         /**
          *  Return the name of the XML element this object expects

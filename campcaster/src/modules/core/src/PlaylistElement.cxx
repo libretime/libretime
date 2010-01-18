@@ -97,6 +97,90 @@ static const std::string    fadeInfoElementName = "fadeInfo";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
+ *  The default constructor.
+ *----------------------------------------------------------------------------*/
+PlaylistElement :: PlaylistElement(void)        throw ()
+{
+}
+
+/*------------------------------------------------------------------------------
+ *  Create a playlist element by specifying all details.
+ *----------------------------------------------------------------------------*/
+PlaylistElement :: PlaylistElement(Ptr<UniqueId>::Ref       id,
+                                   Ptr<time_duration>::Ref  relativeOffset,
+                                   Ptr<time_duration>::Ref  clipLength,
+                                   Ptr<AudioClip>::Ref      audioClip,
+                                   Ptr<FadeInfo>::Ref       fadeInfo)
+                                                   throw ()
+{
+    this->id             = id;
+    this->relativeOffset = relativeOffset;
+    this->clipLength	 = clipLength;
+    this->audioClip      = audioClip;
+    this->playable       = audioClip;
+    this->fadeInfo       = fadeInfo;
+    this->type           = AudioClipType;
+	
+	setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a new audio clip playlist element, with a new UniqueId,
+ *  to be added to a playlist.
+ *----------------------------------------------------------------------------*/
+PlaylistElement :: PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                                   Ptr<time_duration>::Ref  clipLength,
+                                   Ptr<AudioClip>::Ref      audioClip,
+                                   Ptr<FadeInfo>::Ref       fadeInfo)
+                                                   throw ()
+{
+    this->id             = UniqueId::generateId();
+    this->relativeOffset = relativeOffset;
+    this->clipLength	 = clipLength;
+    this->audioClip      = audioClip;
+    this->playable       = audioClip;
+    this->fadeInfo       = fadeInfo;
+    this->type           = AudioClipType;
+	
+	setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a new sub-playlist playlist element, with a new UniqueId,
+ *  to be added to a playlist.
+ *----------------------------------------------------------------------------*/
+PlaylistElement :: PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                                   Ptr<time_duration>::Ref  clipLength,
+                                   Ptr<Playlist>::Ref       playlist,
+                                   Ptr<FadeInfo>::Ref       fadeInfo)
+                                                   throw ()
+{
+    this->id             = UniqueId::generateId();
+    this->relativeOffset = relativeOffset;
+    this->clipLength	 = clipLength;
+    this->playlist       = playlist;
+    this->playable       = playlist;
+    this->fadeInfo       = fadeInfo;
+    this->type           = PlaylistType;
+	
+	setClipStart(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+	setClipEnd(Ptr<time_duration>::Ref(new time_duration(0,0,0,0)));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A virtual destructor, as this class has virtual functions.
+ *----------------------------------------------------------------------------*/
+PlaylistElement :: ~PlaylistElement(void)       throw ()
+{
+}
+
+
+/*------------------------------------------------------------------------------
  *  Create a playlist element object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
