@@ -1,5 +1,5 @@
 dnl-----------------------------------------------------------------------------
-dnl Copyright (c) 2004 Media Development Loan Fund
+dnl Copyright (c) 2010 Media Development Loan Fund
 dnl
 dnl This file is part of the Campcaster project.
 dnl http://campcaster.campware.org/
@@ -32,9 +32,9 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(Campcaster, 1.3.0, bugs@campware.org)
+AC_INIT(Campcaster, 1.4.0, bugs@campware.org)
 AC_PREREQ(2.59)
-AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
+AC_COPYRIGHT([Copyright (c) 2010 Media Development Loan Fund under the GNU GPL])
 AC_REVISION($Revision$)
 
 AC_CONFIG_SRCDIR(../src/products/scheduler/src/main.cxx)

@@ -10,6 +10,61 @@ done by a team of his then-fellow Parsons School of Design students Turi McKinle
 Catalin Lazia and Sangita Shah. The team was led by then-head of the school's 
 Department of Digital Design Colleen Macklin, assisted by Kunal Jain.
 
+The great deal of the work on Campcaster 1.4 "Monrovia" was commissioned by the
+Open Society Initiative for West Africa (www.osiwa.org), and by West Africa
+Democracy Radio (www.wadr.org). We would like to thank Ben Akoh at OSIWA and
+Peter Kahler at WADR for their immeasurable contributions to the project.
+
+A number of improvements to Campcaster 1.4 were commissioned by Openbroadcast, a user-
+generated radio station based in Basel, Switzerland powered by Campcaster. We are
+very grateful for their contributions, and specifically to Thomas Gilgen, Dirk Claes,
+Rigzen Latshang and Fabiano Sidler.
+
+
+Version 1.4.0 - "Monrovia"
+--------------------------
+
+Douglas Arellanes (douglas.arellanes@mdlf.org)
+    - Tester and user feedback
+
+Robin Gareus (robin@64studio.com)
+    - Packaging
+
+Ferenc Gerlits (fgerlits@campware.org)
+    - Studio GUI
+
+Sebastian Göbel (sebastian@campware.org)
+    - Web interface, storage server
+
+Nebojsa Grujic (nebojsa@campware.org)
+    - Scheduler, XML-RPC interface, Gstreamer plugins
+
+Tomáš Hlava (th@red2head.com)
+    - Bug fixes
+
+Sava Tatić (sava.tatic@mdlf.org)
+    - Manager
+
+
+Version 1.3.0 - "Dakar"
+-----------------------
+
+Douglas Arellanes (douglas.arellanes@mdlf.org)
+    - Tester and user feedback
+
+Ferenc Gerlits (fgerlits@campware.org)
+    - Studio GUI, scheduler, packaging
+
+Sebastian Göbel (sebastian@campware.org)
+    - Web interface
+
+Tomáš Hlava (th@red2head.com)
+    - Bug fixes
+
+Sava Tatić (sava.tatic@mdlf.org)
+    - Manager
+
+
 Version 1.2.0 - "Kotor"
 -----------------------
 In alphabetical order:
