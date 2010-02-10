@@ -116,6 +116,7 @@ input, select {
     clear: both;
     background: url("css_img/bg_navigation.png") repeat-x top left;
     margin-bottom: 38px;
+    white-space: nowrap;
 }
 
 .container_nav[class] {
