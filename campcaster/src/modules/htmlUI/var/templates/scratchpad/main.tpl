@@ -64,7 +64,7 @@
                 {if $_PL_activeId}
                     <option value="PL.addItem">##Add files to open Playlist##</option>
                 {else}
-                    <option value="PL.create">##New playlist using this files##</option>
+                    <option value="PL.create">##New playlist using these files##</option>
                 {/if}
             </select>
             <script type="text/javascript">

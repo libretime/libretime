@@ -89,11 +89,11 @@ function plPrBar_create(jscomRes) {
 }
 
 function plPrBar_show() {
-    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="onair">##on air##</div>';
+    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="onair">##Playing Scheduled Item##</div>';
 }
 
 function plPrBar_hide() {
-    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="offair">##off air##</div>';
+    document.getElementById("nowplaying_indicator").innerHTML   = '<div id="offair">##Off Air##</div>';
     document.getElementById("nowplaying").innerHTML             = "";
 }
 {/literal}

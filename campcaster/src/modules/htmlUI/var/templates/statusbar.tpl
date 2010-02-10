@@ -43,9 +43,9 @@
 		
 		<td>
         {if $_nowplaying}
-            <div id="nowplaying_indicator"><div id="onair">##on air##</div></div>            
+            <div id="nowplaying_indicator"><div id="onair">##Playing Scheduled Item##</div></div>            
         {else}
-            <div id="nowplaying_indicator"><div id="offair">##off air##</div></div>
+            <div id="nowplaying_indicator"><div id="offair">##Off Air##</div></div>
         {/if}
     		
 		</td>
