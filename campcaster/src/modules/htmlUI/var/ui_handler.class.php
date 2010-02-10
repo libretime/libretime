@@ -160,6 +160,12 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
             return FALSE;
         }
+        // #2196 no id tag -> use the original filename
+        if (basename($formdata['mediafile']['tmp_name']) == $metadata['dc:title']) {
+            $metadata['dc:title'] = $formdata['mediafile']['name'];
+            $metadata['ls_filename'] = $formdata['mediafile']['name'];     
+        }
+        
         // bsSetMetadataBatch doesnt like these values
         unset($metadata['audio']);
         unset($metadata['playtime_seconds']);
