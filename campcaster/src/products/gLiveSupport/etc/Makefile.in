@@ -380,7 +380,6 @@ install: all
 	      ${VAR_DIR}/stationLogo.png \
 	      ${VAR_DIR}/icon*.png \
 	      ${VAR_DIR}/testAudio.ogg \
-	      ${VAR_DIR}/testAudio.ogg.license ${USR_VAR_DIR}/Campcaster
 	${MKDIR} ${USR_VAR_DIR}/Campcaster/studio-localization
 	${CP} ${TMP_DIR}/studio-localization/*.res \
 	      ${USR_VAR_DIR}/Campcaster/studio-localization/
