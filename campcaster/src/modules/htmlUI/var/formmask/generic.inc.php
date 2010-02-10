@@ -350,7 +350,7 @@ $ui_fmask = array(
             'options'   => array(
                             UI_FILETYPE_ANY       => '*',
                             UI_FILETYPE_AUDIOCLIP => '##Audioclip##',
-                            #UI_FILETYPE_WEBSTREAM => '##Webstream##',
+                            UI_FILETYPE_WEBSTREAM => '##Webstream##',
                             UI_FILETYPE_PLAYLIST  => '##Playlist##'
                            ),
         ),
@@ -467,7 +467,7 @@ $ui_fmask = array(
             'options'   => array(
                             UI_FILETYPE_ANY       => '*',
                             UI_FILETYPE_AUDIOCLIP => '##Audioclip##',
-                            #UI_FILETYPE_WEBSTREAM => '##Webstream##',
+                            UI_FILETYPE_WEBSTREAM => '##Webstream##',
                             UI_FILETYPE_PLAYLIST  => '##Playlist##'
                            ),
             'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act='.$tmpAct.'.setFiletype&filetype=" + this.form.filetype.value)')
