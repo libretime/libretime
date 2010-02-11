@@ -195,6 +195,7 @@ class uiHandler extends uiBase {
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=".$storedFile->getId();
         $this->_retMsg('Audioclip has been uploaded successfully.');
+        $this->_retMsg('Now please complete metadata about the clip.');
         	
         return $storedFile->getId();
     } // fn uploadFile
@@ -295,6 +296,7 @@ class uiHandler extends uiBase {
 
         $this->redirUrl = UI_BROWSER."?act=addWebstreamMData&id=$r";
         $this->_retMsg('Webstream data has been saved.');
+        $this->_retMsg('Now please complete metadata about the clip.');
 
         return $r;
     } // fn addWebstream
@@ -314,7 +316,7 @@ class uiHandler extends uiBase {
         $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, $extent);
 
         $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
-        $this->_retMsg('Webstream metadata has been saved.');
+        $this->_retMsg('Webstream metadata has been updated.');
 
         return TRUE;
     } // fn editWebstream
@@ -350,7 +352,7 @@ class uiHandler extends uiBase {
             }
         }
 
-        $this->_retMsg('Audioclip metadata has been saved.');
+        $this->_retMsg('Audioclip metadata has been updated.');
     } // fn editMetadata
 
 
@@ -648,7 +650,7 @@ class uiHandler extends uiBase {
                 if (function_exists("getimagesize")) {
                     $size = @getimagesize($filePath);
                     if ($size === FALSE) {
-                        $this->_retMsg('Error while uploading logo: the file uploaded is not an image.');
+                        $this->_retMsg('Error while uploading logo: not an supported image format.');
                         return FALSE;
                     }
                     if ( ($size[0] > 128) || ($size[1] > 128) ) {
