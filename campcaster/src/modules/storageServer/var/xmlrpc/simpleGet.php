@@ -30,6 +30,7 @@
 require_once(dirname(__FILE__).'/../conf.php');
 require_once('DB.php');
 require_once(dirname(__FILE__).'/../LocStor.php');
+require_once(dirname(__FILE__).'/../MetaData.php');
 
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 $CC_DBC->setErrorHandling(PEAR_ERROR_RETURN);
@@ -43,6 +44,21 @@ function http_error($code, $err)
     header("Content-type: text/plain; charset=UTF-8");
     echo "$err\r\n";
     exit;
+}
+
+/**
+ * This function encodes an filename to
+ * be transferred via HTTP header.
+ *
+ * @param string $p_string utf8 filename
+ * @return string HTTP header encoded filename
+ */
+function sg_2hexstring($p_string)
+{
+    for ($x=0; $x < strlen($p_string); $x++) {
+        $return .= '%' . bin2hex($p_string[$x]);
+    }
+    return $return;
 }
 
 // parameter checking:
@@ -85,8 +101,11 @@ switch ($ftype) {
     case "audioclip":
         $realFname  = $ac->getRealFileName();
         $mime = $ac->getMime();
+        $md = new MetaData($ac->getGunId(), null);
+        $fileName = $md->getMetadataValue('dc:title').'.'.$ac->getFileExtension();
         header("Content-type: $mime");
         header("Content-length: ".filesize($realFname));
+        header("Content-Disposition: attachment; filename*=".sg_2hexstring($fileName).";");
         readfile($realFname);
         break;
     case "webstream":

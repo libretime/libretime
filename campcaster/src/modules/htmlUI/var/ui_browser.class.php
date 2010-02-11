@@ -448,15 +448,12 @@ class uiBrowser extends uiBase {
         $id   = BasicStor::IdFromGunid($clipid);
         $type = Greenbox::getFileType($id);
 
-        if (strtolower($type) === strtolower(UI_FILETYPE_AUDIOCLIP)) {
-            $m3u = "http://{$_SERVER['SERVER_NAME']}".$CC_CONFIG['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n";
+        if (1) {
+            header("Location: http://{$_SERVER['SERVER_NAME']}".$CC_CONFIG['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n");
         } else {
             $m3u = $this->getMetadataValue($id, UI_MDATA_KEY_URL);
         }
-        touch(UI_TESTSTREAM_MU3_TMP);
-        $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
-        fwrite($handle, $m3u);
-        fclose($handle);
+
     } // fn listen2Audio
 
 } // class uiBrowser
