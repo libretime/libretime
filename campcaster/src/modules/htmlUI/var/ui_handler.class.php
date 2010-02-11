@@ -147,8 +147,8 @@ class uiHandler extends uiBase {
                 $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
                 return FALSE;
             } else {
-                //$duplicate->delete();
-                $this->_retMsg('The file "'.basename($formdata['mediafile']['name']).'" already exists in the database.');
+                $duplicateName = $this->gb->getMetadataValue($duplicate->getId(), UI_MDATA_KEY_TITLE, $this->sessid);
+                $this->_retMsg('An identical audioclip named "$1" already exists in the storage server.', $duplicateName);
                 $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
                 return FALSE;
             }
@@ -163,7 +163,7 @@ class uiHandler extends uiBase {
         // #2196 no id tag -> use the original filename
         if (basename($formdata['mediafile']['tmp_name']) == $metadata['dc:title']) {
             $metadata['dc:title'] = $formdata['mediafile']['name'];
-            $metadata['ls_filename'] = $formdata['mediafile']['name'];     
+            $metadata['ls:filename'] = $formdata['mediafile']['name'];     
         }
         
         // bsSetMetadataBatch doesnt like these values
@@ -194,9 +194,8 @@ class uiHandler extends uiBase {
         $result = $this->gb->bsSetMetadataBatch($storedFile->getId(), $metadata);
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=".$storedFile->getId();
-        if (UI_VERBOSE) {
-        	$this->_retMsg('Data of audioclip saved.');
-        }
+        $this->_retMsg('Audioclip has been uploaded successfully.');
+        	
         return $storedFile->getId();
     } // fn uploadFile
 
@@ -295,9 +294,8 @@ class uiHandler extends uiBase {
         $this->setMetadataValue($r, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_STREAM);
 
         $this->redirUrl = UI_BROWSER."?act=addWebstreamMData&id=$r";
-        if (UI_VERBOSE) {
-        	$this->_retMsg('Stream data saved.');
-        }
+        $this->_retMsg('Webstream data has been saved.');
+
         return $r;
     } // fn addWebstream
 
@@ -316,16 +314,17 @@ class uiHandler extends uiBase {
         $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, $extent);
 
         $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
-        if (UI_VERBOSE) {
-        	$this->_retMsg('Stream data saved.');
-        }
+        $this->_retMsg('Webstream metadata has been saved.');
+
         return TRUE;
     } // fn editWebstream
 
 
+
     /**
-     * @todo Rename this function to "editMetadata".
-     * @param unknown_type $formdata
+     * Sava Meatadata from form.
+     *
+     * @param array $formdata
      */
     function editMetaData($formdata)
     {
@@ -351,9 +350,7 @@ class uiHandler extends uiBase {
             }
         }
 
-        if (UI_VERBOSE) {
-        	$this->_retMsg('Metadata saved.');
-        }
+        $this->_retMsg('Audioclip metadata has been saved.');
     } // fn editMetadata
 
 

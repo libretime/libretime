@@ -8,7 +8,7 @@
 <script>
     {UIBROWSER->getAlertMsg assign='alertMsg'}
     {if $alertMsg}
-        alert('{$alertMsg}');
+        alert('{$alertMsg|escape:quotes}');
     {/if}
 </script>
 </body>
