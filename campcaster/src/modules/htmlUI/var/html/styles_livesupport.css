@@ -840,7 +840,7 @@ table.masterpalette td{
 	padding-right: 5px;
 	font-family: bitstream-vera, verdana, helvetica;
 	font: #999;
-	width: 150px;
+	width: 300px;
 	height: 85px;
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
@@ -895,13 +895,13 @@ table.masterpalette td{
 
 .whatplaying .title {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 11px;
 }
 
 .whatplaying .scala {
-    width: 250px;
+    width: 290px;
     height: 8px;
-    margin-top: 5px;
+    margin: 2px 0;
     background-color: #DADADA;
     border-top: 1px solid #B5B5B5;
     border-left: 1px solid #B5B5B5;
@@ -916,26 +916,53 @@ table.masterpalette td{
 }
 
 .whatplaying .time {
-    width: 250px;
+    width: 300px;
     font-size: 11px;
 }
 
-.whatplaying .time .left {
+.whatplaying .left {
     float: left;
-    width: 125px;
+    width: 150px;
+}
+.whatplaying .left .left_title {
+  width: 65px;
+    float: left;
+  display: block;
+  overflow: hidden;
+  margin-right: 3px;
 }
 
-.whatplaying .time .right {
-    width: 125px;
+.whatplaying .right {
+    width: 140px;
     float: left;
     text-align: right;
 }
 
-.whatplaying .next {
+.whatplaying .playlist {
+    width: 350px;
     font-size: 11px;
-    font-weight: bold;
-    margin: 10px 0 0 0;
-    vertical-align: baseline;
+}
+
+.whatplaying .playlist_title {
+    height: 1.4em;
+    overflow: hidden;
+    display: block;
+    width: 225px;
+}
+
+.whatplaying #next_clip {
+    clear: both;
+    display: block;
+    font-size: 11px;
+    height: 1.4em;
+    overflow: hidden;
+}
+.whatplaying #next_clip .next {
+  width: 65px;
+  float: left;
+  display: block;
+  overflow: hidden;
+  margin-right: 3px;
 }
 
 .loginname {
@@ -952,10 +979,8 @@ table.masterpalette td{
 .frequence { font-size: 12px;
     margin: 15px 0 8px 0;
 }
-
-
-
-
-
-
-
+/* micz */
+.whatplaying .title {
+  max-height: 3em;
+  overflow: hidden;
+}

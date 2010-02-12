@@ -3,11 +3,12 @@
 {literal}
 // play-progress-bar object
 
-function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
-    this.tit        = tit.slice(0, 40);
+function plPrBar(tit, pltit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
+    this.tit        = tit;
+    this.pltit      = pltit;
     this.next       = next;
     this.interval   = 333;
-    this.ntit       = ntit.slice(0, 35);
+    this.ntit       = ntit.slice(0, 22);
     this.nh         = nh;
     this.ni         = ni;
     this.ns         = ns;
@@ -32,6 +33,7 @@ function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
 
 function plPrBar_init() {
     document.getElementById("now_title").innerHTML              = this.tit;
+    document.getElementById("now_pl_title").innerHTML           = this.pltit;
 
     if (this.next == 0) {
         document.getElementById("next_clip").innerHTML          = '';
@@ -99,11 +101,12 @@ function plPrBar_hide() {
 {/literal}
 
 {if (is_array($_nowplaying.duration))} 
-    ppb = new plPrBar  ("{$_nowplaying.title}",
+    ppb = new plPrBar  ("{$_nowplaying.title|escape:html}",
+                        "{$_nowplaying.pl_title|escape:html}",
                         {$_nowplaying.elapsed.h|string_format:"%d"}, {$_nowplaying.elapsed.m|string_format:"%d"}, {$_nowplaying.elapsed.s|string_format:"%d"},
                         {$_nowplaying.duration.h|string_format:"%d"}, {$_nowplaying.duration.m|string_format:"%d"}, {$_nowplaying.duration.s|string_format:"%d"},
                         {if is_array($_nextplaying)}
-                            1, "{$_nextplaying.title}", {$_nextplaying.duration.h|string_format:'%d'}, {$_nextplaying.duration.m|string_format:'%2d'}, {$_nextplaying.duration.s|string_format:'%2d'}
+                            1, "{$_nextplaying.title|escape:html}", {$_nextplaying.duration.h|string_format:'%d'}, {$_nextplaying.duration.m|string_format:'%2d'}, {$_nextplaying.duration.s|string_format:'%2d'}
                         {else}
                             0, "", 0, 0, 0
                         {/if}
