@@ -106,6 +106,17 @@ function _getNumArr($start, $end, $step=1)
     return $arr;
 } // fn _getNumArr
 
+function __autoload($p_className)
+{
+    foreach (uiBase::$m_classMapping as $item) {
+        if (strtolower($p_className) == $item['class']) {
+            $class_filename = $item['file'];
+            require_once(dirname(__FILE__).'/'.$class_filename);
+            break;
+        }  
+    }
+}
+
 
 /**
  * HTML User Interface module
@@ -125,17 +136,17 @@ class uiBase
     /**
      * @var uiScratchPad
      */
-    public $SCRATCHPAD;
+    private $SCRATCHPAD;
 
     /**
      * @var uiSearch
      */
-    public $SEARCH;
+    private $SEARCH;
 
     /**
      * @var uiBrowse
      */
-    public $BROWSE;
+    private $BROWSE;
 
     /**
      * @todo loading HUBBROWSE on every page load slows things down
@@ -143,37 +154,37 @@ class uiBase
      *
      * @var uiHubBrowse
      */
-    public $HUBBROWSE;
+    private $HUBBROWSE;
 
     /**
      * @var uiHubSearch
      */
-    public $HUBSEARCH;
+    private $HUBSEARCH;
 
     /**
      * @var uiPlaylist
      */
-    public $PLAYLIST;
+    private $PLAYLIST;
 
     /**
      * @var uiScheduler
      */
-    public $SCHEDULER;
+    private $SCHEDULER;
 
     /**
      * @var uiSubjects
      */
-    public $SUBJECTS;
+    private $SUBJECTS;
 
     /**
      * @var uiExchange
      */
-    public $EXCHANGE;
+    private $EXCHANGE;
 
     /**
      * @var uiTransfers
      */
-    public $TRANSFERS;
+    private $TRANSFERS;
 
     /**
      * @var string
@@ -207,6 +218,28 @@ class uiBase
      * @var string
      */
     public $alertMsg;
+    
+    /**
+     * This mapping keeps relation between uiBase::properties,
+     * class names and filenames and is used in
+     * __autoload() and uiBase::__get() functions.
+     *
+     * @var array
+     */
+    public static $m_classMapping = array(
+        'SCRATCHPAD'   => array('class' => 'uiscratchpad', 'file' => 'ui_scratchpad.class.php'),
+        'SEARCH'       => array('class' => 'uisearch', 'file' => 'ui_search.class.php'),
+        'BROWSE'       => array('class' => 'uibrowse', 'file' => 'ui_browse.class.php'),
+        'HUBBROWSE'    => array('class' => 'uihubbrowse', 'file' => 'ui_hubBrowse.class.php'),
+        'HUBSEARCH'    => array('class' => 'uihubsearch', 'file' => 'ui_hubSearch.class.php'),
+        'PLAYLIST'     => array('class' => 'uiplaylist', 'file' => 'ui_playlist.class.php'),
+        'SCHEDULER'    => array('class' => 'uischeduler', 'file' => 'ui_scheduler.class.php'),
+        'SUBJECTS'     => array('class' => 'uisubjects', 'file' => 'ui_subjects.class.php'),
+        'EXCHANGE'     => array('class' => 'uiexchange', 'file' => 'ui_exchange.class.php'),
+        'TRANSFERS'    => array('class' => 'uitransfers', 'file' => 'ui_transfers.class.php'),
+        'CALENDAR'     => array('class' => 'uicalendar', 'file' => 'ui_calendar.class.php'),
+        'JSCOM'        => array('class' => 'jscom', 'file' => 'ui_jscom.php')   
+    );
 
 
     /**
@@ -248,16 +281,27 @@ class uiBase
     public function init()
     {
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
-        $this->SCRATCHPAD = new uiScratchPad($this);
-        $this->SEARCH = new uiSearch($this);
-        $this->BROWSE = new uiBrowse($this);
-        $this->HUBBROWSE = new uiHubBrowse($this);
-        $this->HUBSEARCH = new uiHubSearch($this);
-        $this->PLAYLIST = new uiPlaylist($this);
-        $this->SCHEDULER = new uiScheduler($this);
-        $this->SUBJECTS = new uiSubjects($this);
-        $this->EXCHANGE = new uiExchange($this);
-        $this->TRANSFERS = new uiTransfers($this);
+    }
+    
+    /**
+     * Dynamically initialize uiBase properties,
+     * which keep objects (uiBase->SEARCH, $uiBase->BROWSE etc)
+     *
+     * @param unknown_type $p_class
+     * @return unknown
+     */
+    public function __get($p_class)
+    {
+        if (strtoupper($p_class !== $p_class)) {
+            return;    
+        }
+        
+        if (!is_object($this->$p_class)) {
+            if ($class_name = uiBase::$m_classMapping[$p_class]['class']) {
+                $this->$p_class = new $class_name($this);
+            }  
+        }
+        return $this->$p_class;
     }
 
 
