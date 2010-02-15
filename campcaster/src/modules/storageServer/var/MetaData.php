@@ -1001,7 +1001,7 @@ class MetaData {
             $node = XML_Util::createTagFromArray(array(
                 'namespace' => $predns,
                 'localPart' => $predicate,
-                'attributes'=> $attrs,
+                'attributes'=> $this->escapeAttr($attrs),
                 'content'   => (is_null($object) ? $children : htmlspecialchars($object)),
             ), FALSE);
 //                'content'   => (is_null($object) ? $children : htmlentities($object, ENT_COMPAT, 'UTF-8')),
@@ -1073,7 +1073,21 @@ class MetaData {
         }
         return compact('attrs', 'children', 'nSpaces');
     }
-
+    
+    /**
+     * Escape array values to be used as XML attributes.
+     *
+     * @param array $attr
+     * @return array
+     */
+    public function escapeAttr($attr)
+    {
+        foreach ($attr as $key => $val) {
+            $attr[$key] = XML_Util::replaceEntities($val, 1, 'UTF-8');
+        }
+        return $attr;
+    }
+    
 
     /* ========================================================= test methods */
     /**
