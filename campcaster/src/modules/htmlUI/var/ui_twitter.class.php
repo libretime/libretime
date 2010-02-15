@@ -16,6 +16,16 @@ class uiTwitter {
                 'constant'  => 'twitter.saveSettings'
             ),
             array(
+                'element'   => 'twitter-account-fieldset-open',
+                'type'      => 'static',
+                'text'      => '<fieldset style="width: 300px;">'
+            ),
+            array(
+                'element'   => 'twitter-account-label',
+                'type'      => 'static',
+                'text'      => '<legend style="font-weight: bold;">Twitter info</legend>'
+            ),
+            array(
                 'element'   => 'twitter-is_active',
                 'type'      => 'checkbox',
                 'label'     => 'Activate posts',
@@ -43,6 +53,21 @@ class uiTwitter {
                 'rule'      => 'compare',
                 'element'   => array('twitter-password','twitter-password2'),
                 'rulemsg'   => 'The passwords do not match.'
+            ),
+            array(
+                'element'   => 'twitter-account-fieldset-close',
+                'type'      => 'static',
+                'text'      => '</fieldset>'
+            ),
+            array(
+                'element'   => 'twitter-config-fieldset-open',
+                'type'      => 'static',
+                'text'      => '<fieldset style="width: 300px;">'
+            ),
+            array(
+                'element'   => 'twitter-config-label',
+                'type'      => 'static',
+                'text'      => '<legend style="font-weight: bold;">Tweet configuration</legend>'
             ),
             array(
                 'element'   => 'twitter-prefix',
@@ -116,6 +141,11 @@ class uiTwitter {
                     "43200" => "24 hours",
                 ),
                 'isPref'    => true
+            ),
+            array(
+                'element'   => 'twitter-config-fieldset-close',
+                'type'      => 'static',
+                'text'      => '</fieldset>'
             ),
             array(
                 'element'   => 'Submit',
@@ -198,23 +228,23 @@ class uiTwitter {
         $this->Base->_retMsg('Twitter settings saved.');
     }
     
-    public function getFeed($p_withSample = false)
+    public function getFeed($p_useSampledata = false)
     {
         $settings = $this->getSettings();
-        $whatsplaying = $this->getWhatsplaying($settings['twitter-offset']);
         
-        if (!$p_withSample && !$whatsplaying) {
-            return;   
-        }
-        
-        $whatsplaying = @array_merge(
-            array(
+        if ($p_useSampledata) {
+            $whatsplaying = array(
                 "tracktitle"     => "Gimme Shelter",
                 "trackartist"    => "The Rolling Stones",
                 "playlisttitle"  => "The Blues Hour"
-            ),
-            $whatsplaying
-        );
+            );   
+        } else {
+            $whatsplaying = $this->getWhatsplaying($settings['twitter-offset']);
+        }
+        
+        if (!$whatsplaying) {
+            return;   
+        }
 
         ////////////////////////////////////////////////////////////////////////
         // create twitter tweet sample
