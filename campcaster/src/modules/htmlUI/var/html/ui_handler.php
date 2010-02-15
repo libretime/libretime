@@ -436,6 +436,11 @@ switch ($_REQUEST['act']) {
 	    $_SESSION = array();
 	    die();
 	    break;
+	    
+	case 'twitter.saveSettings':
+        $uiHandler->TWITTER->saveSettings();
+        $uiHandler->redirUrl = UI_BROWSER.'?act=twitter.settings';
+	    break;
 
     case NULL:
 	    if ($uiHandler->userid) {

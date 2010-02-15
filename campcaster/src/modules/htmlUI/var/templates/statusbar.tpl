@@ -1,5 +1,5 @@
 {assign var='_nowplaying'  value=$SCHEDULER->getNowNextClip()}
-{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
+{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip()}
 
 <div id="masterpalette"> 
 <table border="0" class="masterpalette">
@@ -26,15 +26,31 @@
                     <div class="scala">
                         <div class="scala_in" id="now_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
+                    
                     <div class="time">
-                        <div class="left">Elapsed:    <strong id="now_elapsed"></strong></div>
-                        <div class="right">Remaining: <strong id="now_remaining"></strong></div>
+                        <span class="left">
+                          <span class="left_title">##Elapsed:##</span>
+                          <strong id="now_elapsed"></strong>
+                        </span>
+                        
+                        <span class="right">
+                          ##Remaining:##
+                          <strong id="now_remaining"></strong>
+                        </span>
+                    </div>
+                    
+                    <div class="playlist">
+                        <span class="left">
+                          <span class="left_title">##Playlist:##</span>
+                        <span>
+
+                        <strong class="playlist_title" id="now_pl_title"></strong> 
                     </div>
                 {/if}
-                <div  style="height:5px"> </div>
+                <div  style="height:3px"> </div>
                 <div id="next_clip">
                 {if $_nextplaying}
-                    <p class="next">##Playing Next##: <span id="next_title"></span>&nbsp; <span id="next_duration"></span></p>
+                    <span class="next">##Next Clip##:</span> <strong id="next_title"></strong>&nbsp; <strong id="next_duration"></strong></div>
                 {/if}
                 </div>
             </div>  

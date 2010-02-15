@@ -70,6 +70,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
             <ul>
             {* if $SUBJECTS->isMemberOf('StationPrefs') *}
                 <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
+                <li><a href="{$UI_BROWSER}?act=twitter.settings">##Twitter Settings##</a></li>
             {* /if *}
             {*if $SUBJECTS->isMemberOf('Subjects')*}
                 <li><a href="{$UI_BROWSER}?act=SUBJECTS">##User/Groups##</a></li>

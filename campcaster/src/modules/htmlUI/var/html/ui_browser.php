@@ -410,6 +410,12 @@ if ($uiBrowser->userid) {
         case "SCHEDULER.export":
 	        $Smarty->assign('act', $action);
 	        break;
+	        
+	    case "twitter.settings":
+	        $Smarty->assign('dynform', $uiBrowser->TWITTER->getSettingsForm());
+	        $Smarty->assign('twitter', array('samplefeed' => $uiBrowser->TWITTER->getFeed()));
+	        $Smarty->assign('act', $action);
+	        break;
     }
 
     if ($action != 'SCHEDULER') {

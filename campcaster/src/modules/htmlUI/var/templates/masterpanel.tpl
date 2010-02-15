@@ -73,6 +73,10 @@
             {include file="scheduler/import.tpl"}
         {/if}
         
+        {if $act === 'twitter.settings'}
+            {include file="twitter/settings.tpl"}
+        {/if}
+        
         <div class="content">
             {if $simpleSearchForm}
                 {include file="library/simpleSearchForm.tpl"}

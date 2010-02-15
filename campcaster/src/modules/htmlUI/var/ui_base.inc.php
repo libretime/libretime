@@ -238,7 +238,9 @@ class uiBase
         'EXCHANGE'     => array('class' => 'uiexchange', 'file' => 'ui_exchange.class.php'),
         'TRANSFERS'    => array('class' => 'uitransfers', 'file' => 'ui_transfers.class.php'),
         'CALENDAR'     => array('class' => 'uicalendar', 'file' => 'ui_calendar.class.php'),
-        'JSCOM'        => array('class' => 'jscom', 'file' => 'ui_jscom.php')   
+        array('class' => 'jscom', 'file' => 'ui_jscom.php'),
+        'TWITTER'      => array('class' => 'uitwitter', 'file' => 'ui_twitter.class.php'),
+        array('class' => 'twitter', 'file' => 'lib/twitter.class.php') 
     );
 
 
