@@ -24,16 +24,25 @@ class uiTwitter {
             array(
                 'element'   => 'twitter-login',
                 'type'      => 'text',
-                'label'     => 'Login / user'
-                ,
+                'label'     => 'Twitter user account',
                 'isPref'    => true
             ),
             array(
                 'element'   => 'twitter-password',
-                'type'      => 'text',
-                'label'     => 'Login / password'
-                ,
-                'isPref'    => true
+                'type'      => 'password',
+                'label'     => 'Twitter password <small>(Input to change)</span>',
+                'isPref'    => true,
+                'hiddenPref' => true
+            ),
+            array(
+                'element'   => 'twitter-password2',
+                'type'      => 'password',
+                'label'     => 'Repeat password',
+            ),
+            array(
+                'rule'      => 'compare',
+                'element'   => array('twitter-password','twitter-password2'),
+                'rulemsg'   => 'The passwords do not match.'
             ),
             array(
                 'element'   => 'twitter-prefix',
@@ -129,7 +138,7 @@ class uiTwitter {
         $mask = uiTwitter::getSettingFormMask();
         
         foreach($mask as $key => $val) {
-            if (isset($val['isPref']) && $val['isPref']) {
+            if (isset($val['isPref']) && $val['isPref'] && !$val['hiddenPref']) {
                 $element = isset($val['element']) ? $val['element'] : null;
                 $p = $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', $element);
                 if (is_string($p)) {
@@ -286,9 +295,11 @@ class uiTwitter {
         $twitter->username = $settings['twitter-login'];
         $twitter->password = $settings['twitter-password'];
         
-        $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate', time());
-        
-        return $twitter->update($p_feed);
+        if ($twitter->update($p_feed)) {
+            $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate', time());
+            return true;
+        }
+        return false;
     }
     
     public function needsUpdate()
