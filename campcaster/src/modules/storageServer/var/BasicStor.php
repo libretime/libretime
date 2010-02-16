@@ -2437,6 +2437,9 @@ class BasicStor {
         } else {
             echo "   * Skipping: user already exists: 'scheduler'\n";
         }
+        
+        // Need to add 'scheduler' to group StationPrefs
+        Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
     }
 
 
