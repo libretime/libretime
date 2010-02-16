@@ -71,10 +71,10 @@ class Crontab
      */
     function readCrontab()
     {
-        // Hmmm...this line looks like it erases the crontab file. -Paul
-        @exec("echo | crontab -u {$this->user} -", $crons, $return);
+        // return code is 0 or 1 if crontab was empty, elsewhere stop here
+        $cmd = "crontab -u {$this->user} -l";
         @exec("crontab -u {$this->user} -l", $crons, $return);
-        if ($return != 0) {
+        if ($return > 1) {
             return PEAR::raiseError("*** Can't read crontab ***\n".
                 "    Set crontab manually!\n");
         }

@@ -86,7 +86,6 @@ echo "done.\n";
 //------------------------------------------------------------------------
 require_once(dirname(__FILE__).'/../cron/Cron.php');
 
-echo " * Adding cron job...";
 $cron = new Cron();
 $access = $cron->openCrontab('write');
 if ($access != 'write') {
@@ -94,6 +93,14 @@ if ($access != 'write') {
        $r = $cron->forceWriteable();
     } while ($r);
 }
+foreach ($cron->ct->getByType(CRON_CMD) as $line) {
+    if (preg_match('/transportCron\.php/', $line['command'])) {
+        $cron->closeCrontab();
+        echo " * Storage cron job already exists.\n";
+        exit;
+    }
+}
+echo " * Adding transport cron job...";
 $cron->ct->addCron('*/2', '*', '*', '*', '*', realpath("{$CC_CONFIG['cronDir']}/transportCron.php"));
 $cron->closeCrontab();
 echo "done.\n";
