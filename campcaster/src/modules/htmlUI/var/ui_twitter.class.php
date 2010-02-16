@@ -2,7 +2,10 @@
 class uiTwitter {
     private $Base;
     
-    private $sesttings = array();
+    private $settings = array(
+        'twitter-bitly-login' => 'campcaster',
+        'twitter-bitly-apikey'   => 'R_2f812152bfc21035468350273ec8ff43' 
+    );
     
     /**
      * Time in sec
@@ -122,6 +125,12 @@ class uiTwitter {
                 'isPref'    => true
             ),
             array(
+                'rule'      => 'regex',
+                'element'   => 'twitter-url',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'The URL seems not to be valid. You need to use http(s):// prefix.'
+            ),
+            array(
                 'element'   => 'twitter-offset',
                 'type'      => 'select',
                 'label'     => 'Tweet what\'s...',
@@ -154,6 +163,43 @@ class uiTwitter {
             ),
             array(
                 'element'   => 'twitter-config-fieldset-close',
+                'type'      => 'static',
+                'text'      => '</fieldset>'
+            ),
+                        array(
+                'element'   => 'twitter-shortener-fieldset-open',
+                'type'      => 'static',
+                'text'      => '<fieldset style="width: 300px;">'
+            ),
+            array(
+                'element'   => 'twitter-shortener-label',
+                'type'      => 'static',
+                'text'      => '<legend style="font-weight: bold;">URL shortener</legend>'
+            ),
+            array(
+                'element'   => 'twitter-shortener-provider',
+                'type'      => 'select',
+                'label'     => 'Provider',
+                'options'   => array(
+                    'bit.ly'        => 'bit.ly',
+                    'tinyurl.com'   => 'tinyurl.com',               
+                ),
+                'isPref'    => true
+            ),
+            array(
+                'element'   => 'twitter-bitly-login',
+                'type'      => 'text',
+                'label'     => 'bit.ly username',
+                'isPref'    => true
+            ),
+            array(
+                'element'   => 'twitter-bitly-apikey',
+                'type'      => 'text',
+                'label'     => 'bit.ly API key',
+                'isPref'    => true
+            ),
+            array(
+                'element'   => 'twitter-shortener-fieldset-close',
                 'type'      => 'static',
                 'text'      => '</fieldset>'
             ),
@@ -228,7 +274,7 @@ class uiTwitter {
         $this->Base->_retMsg('Twitter settings saved.');
     }
     
-    public function getFeed($p_useSampledata = false)
+    public function getFeed($p_useSampledata = false, $p_twitterfy = false)
     {        
         if ($p_useSampledata) {
             $whatsplaying = array(
@@ -259,7 +305,7 @@ class uiTwitter {
             $tweetsuffix = "";
         }
         if (!empty($this->settings['twitter-url'])) {
-            $tweetsuffix = $tweetsuffix . " " . self::GetTinyUrl($this->settings['twitter-url']);
+            $tweetsuffix = $tweetsuffix . " " . self::shortUrl($this->settings['twitter-url']);
         }
         // TWEET BODY
         $tweetbody = array();
@@ -276,15 +322,27 @@ class uiTwitter {
         }
         
         $tweet = $tweetprefix . $tweetbody . $tweetsuffix;
-                
+          
+        if ($p_twitterfy) {
+            $tweet = $this->twitterify($tweet); 
+        }      
         return $tweet;
 
     }
     
-    public function getTinyUrl($p_url)
+    public function shortUrl($p_url)
     {
-        $tiny = file_get_contents('http://tinyurl.com/api-create.php?url='.$p_url);
-        return $tiny;
+        switch ($this->settings['twitter-shortener-provider']) {
+            case 'tinyurl.com':
+                $short = file_get_contents('http://tinyurl.com/api-create.php?url='.$p_url);
+                break;
+                
+            case 'bit.ly':
+                $short = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl={$p_url}&format=text&login={$this->settings['twitter-bitly-login']}&apiKey={$this->settings['twitter-bitly-apikey']}");
+                break;
+        }
+        
+        return $short;
     }
     
     public function getWhatsplaying($p_offset)
@@ -334,5 +392,13 @@ class uiTwitter {
             return true;
         }
         return false;
+    }
+    
+    public function twitterify($ret) {
+        $ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $ret);
+        $ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $ret);
+        $ret = preg_replace("/@(\w+)/", "<a href=\"http://www.twitter.com/\\1\" target=\"_blank\">@\\1</a>", $ret);
+        $ret = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $ret);
+        return $ret;
     }
 }
