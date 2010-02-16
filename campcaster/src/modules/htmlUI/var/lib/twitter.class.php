@@ -259,7 +259,7 @@ class twitter{
         if($this->username !== false && $this->password !== false)
             curl_setopt($ch, CURLOPT_USERPWD, $this->username.':'.$this->password);
         
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_NOBODY, 0);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);

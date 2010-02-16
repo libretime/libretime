@@ -1,10 +1,20 @@
 <?php
 class uiTwitter {
     private $Base;
+    
+    private $sesttings = array();
+    
+    /**
+     * Time in sec
+     *
+     * @var int
+     */
+    private $runtime = 10;
 
     public function __construct(&$uiBase)
     {
         $this->Base =& $uiBase;
+        $this->loadSettings();
     }
     
     private static function getSettingFormMask()
@@ -156,40 +166,30 @@ class uiTwitter {
         return $formmask; 
     }
     
-    private function getSettings()
+    private function loadSettings()
     {
-        static $settings;
-        
-        if (is_array($settings)) {
-            return $settings;   
-        }
-        
-        $settings = array();
         $mask = uiTwitter::getSettingFormMask();
         
         foreach($mask as $key => $val) {
-            if (isset($val['isPref']) && $val['isPref'] && !$val['hiddenPref']) {
+            if (isset($val['isPref']) && $val['isPref']) {
                 $element = isset($val['element']) ? $val['element'] : null;
                 $p = $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', $element);
                 if (is_string($p)) {
-                    $settings[$element] = $p;
+                    $this->settings[$element] = $p;
                 }
             }
         }
-          
-        return $settings;
     }
     
     public function getSettingsForm()
     {
         $mask = uiTwitter::getSettingFormMask();
         $form = new HTML_QuickForm('twitter', UI_STANDARD_FORM_METHOD, UI_HANDLER);#
-        $settings = $this->getSettings();
         
         foreach($mask as $key => $val) {
-            if (isset($val['isPref']) && $val['isPref']) {
+            if (isset($val['isPref']) && $val['isPref'] && !$val['hiddenPref']) {
                 $element = isset($val['element']) ? $val['element'] : null;
-                $p = $settings[$element];
+                $p = $this->settings[$element];
                 if (is_string($p)) {
                     $mask[$key]['default'] = $p;
                 }
@@ -219,7 +219,7 @@ class uiTwitter {
                 	$result = $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                     if (PEAR::isError($result))
                         $this->_retMsg('Error while saving twitter settings.');
-                } else {
+                } elseif (!$val['hiddenPref']) {
                     $this->Base->gb->delGroupPref($this->Base->sessid,  'StationPrefs', $val['element']);
                 }
             }
@@ -229,9 +229,7 @@ class uiTwitter {
     }
     
     public function getFeed($p_useSampledata = false)
-    {
-        $settings = $this->getSettings();
-        
+    {        
         if ($p_useSampledata) {
             $whatsplaying = array(
                 "tracktitle"     => "Gimme Shelter",
@@ -239,7 +237,7 @@ class uiTwitter {
                 "playlisttitle"  => "The Blues Hour"
             );   
         } else {
-            $whatsplaying = $this->getWhatsplaying($settings['twitter-offset']);
+            $whatsplaying = $this->getWhatsplaying($this->settings['twitter-offset']);
         }
         
         if (!$whatsplaying) {
@@ -249,26 +247,26 @@ class uiTwitter {
         ////////////////////////////////////////////////////////////////////////
         // create twitter tweet sample
         // TWEET PREFIX
-        if (!empty($settings['twitter-prefix'])) {
-            $tweetprefix = $settings['twitter-prefix'] . " ";
+        if (!empty($this->settings['twitter-prefix'])) {
+            $tweetprefix = $this->settings['twitter-prefix'] . " ";
         } else {
             $tweetprefix = "";
         }
         // TWEET SUFFIX
-        if (!empty($settings['twitter-suffix'])) {
-            $tweetsuffix = " " . $settings['twitter-suffix'];
+        if (!empty($this->settings['twitter-suffix'])) {
+            $tweetsuffix = " " . $this->settings['twitter-suffix'];
         } else {
             $tweetsuffix = "";
         }
-        if (!empty($settings['twitter-url'])) {
-            $tweetsuffix = $tweetsuffix . " " . self::GetTinyUrl($settings['twitter-url']);
+        if (!empty($this->settings['twitter-url'])) {
+            $tweetsuffix = $tweetsuffix . " " . self::GetTinyUrl($this->settings['twitter-url']);
         }
         // TWEET BODY
         $tweetbody = array();
-        if ($settings['twitter-has_tracktitle']) { $tweetbody[] = $whatsplaying['tracktitle']; }
-        if ($settings['twitter-has_trackartist']) { $tweetbody[] = $whatsplaying['trackartist']; }
-        if ($settings['twitter-has_playlisttitle']) { $tweetbody[] = $whatsplaying['playlisttitle']; }
-        if ($settings['twitter-has_stationname']) { $tweetbody[] = $this->Base->STATIONPREFS['stationName']; }
+        if ($this->settings['twitter-has_tracktitle']) { $tweetbody[] = $whatsplaying['tracktitle']; }
+        if ($this->settings['twitter-has_trackartist']) { $tweetbody[] = $whatsplaying['trackartist']; }
+        if ($this->settings['twitter-has_playlisttitle']) { $tweetbody[] = $whatsplaying['playlisttitle']; }
+        if ($this->settings['twitter-has_stationname']) { $tweetbody[] = $this->Base->STATIONPREFS['stationName']; }
         
         $tweetbody = implode (". ",$tweetbody);
         
@@ -319,23 +317,20 @@ class uiTwitter {
     
     public function sendFeed($p_feed)
     {
-        $settings = $this->getSettings();
-        
         $twitter = new twitter();
-        $twitter->username = $settings['twitter-login'];
-        $twitter->password = $settings['twitter-password'];
+        $twitter->username = $this->settings['twitter-login'];
+        $twitter->password = $this->settings['twitter-password'];
         
-        if ($twitter->update($p_feed)) {
+        if ($res = $twitter->update($p_feed)) {
             $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate', time());
-            return true;
+            return $res;
         }
         return false;
     }
     
     public function needsUpdate()
     {
-        $settings = $this->getSettings();
-        if (time() -  $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate') > $settings['twitter-interval']) {
+        if (time() -  $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate') + $this->runtime > $this->settings['twitter-interval']) {
             return true;
         }
         return false;

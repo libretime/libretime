@@ -158,6 +158,7 @@ install: configure_apache
 	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/system
 	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/playlist
 	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/subjects
+	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/install
 
 	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/Campcaster/index.php
 	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/Campcaster/htmlUI/index.php
@@ -212,7 +213,7 @@ install: configure_apache
 	${CP} ${VAR_DIR}/templates/subjects/*.tpl \
 	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/subjects
 
-	${MKDIR} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
+	${CP} ${VAR_DIR}/install/install.php ${USR_VAR_DIR}/Campcaster/htmlUI/var/install/
 
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
@@ -224,6 +225,8 @@ install: configure_apache
 
 	${RM} ${WWW_DOCROOT}/campcaster
 	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/campcaster
+	
+	-cd var/install && php -q install.php
 
 configure_apache:
 ifeq (@CONFIGURE_APACHE@,yes)

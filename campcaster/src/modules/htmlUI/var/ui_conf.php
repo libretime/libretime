@@ -114,7 +114,7 @@ define('UI_PL_ELEM_FADEOUT', 'fadeOut');
 define('UI_BACKUPTOKEN_KEY', 'backupToken');
 define('UI_RESTORETOKEN_KEY', 'restoreToken');
 
-require_once('../../../storageServer/var/conf.php');
+require_once(dirname(__FILE__).'/../../storageServer/var/conf.php');
 define('UI_VERSION', CAMPCASTER_VERSION);
 define('UI_VERSION_FULLNAME', 'Campcaster '.UI_VERSION);
 define('UI_COPYRIGHT_DATE', CAMPCASTER_COPYRIGHT_DATE);
@@ -151,7 +151,7 @@ $CC_CONFIG = array_merge($CC_CONFIG,
 );
 
 require_once(dirname(__FILE__).'/ui_base.inc.php');
-require_once('../../../storageServer/var/GreenBox.php');
+require_once(dirname(__FILE__).'/../../storageServer/var/GreenBox.php');
 require_once(dirname(__FILE__).'/formmask/generic.inc.php');
 
 require_once('DB.php');
