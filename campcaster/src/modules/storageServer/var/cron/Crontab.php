@@ -127,7 +127,7 @@ class Crontab
         $filename = ($DEBUG ? tempnam("$PATH/crons", "cron") : tempnam("/tmp", "cron"));
         $file = fopen($filename, "w");
 
-        for ($i = 0; $i < count($this->linetypes); $i ++) {
+        foreach($this->linetypes as $i => $line) {
             switch ($this->linetypes[$i]) {
                 case CRON_COMMENT:
                     $line = $this->crontabs[$i];
