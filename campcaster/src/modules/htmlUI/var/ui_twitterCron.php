@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__).'/../ui_conf.php');
-require_once(dirname(__FILE__).'/../ui_handler.class.php');
+require_once(dirname(__FILE__).'ui_conf.php');
+require_once(dirname(__FILE__).'ui_handler.class.php');
 
 $uiHandler = new uiHandler($CC_CONFIG);
 $uiHandler->init();

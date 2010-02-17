@@ -20,7 +20,7 @@ $h ='*';
 $dom = '*';
 $mon = '*';
 $dow = '*';
-$command = '/usr/bin/php '.realpath(dirname(__FILE__).'/../html/ui_twitterCron.php').' >/dev/null 2>&1';
+$command = '/usr/bin/php '.realpath(dirname(__FILE__).'/../ui_twitterCron.php').' >/dev/null 2>&1';
 $old_regex = '/ui_twitterCron\.php/';
 
 $cron = new Cron();

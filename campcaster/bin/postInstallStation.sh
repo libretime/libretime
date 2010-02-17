@@ -428,6 +428,22 @@ if [ "$storage_is_local" = "yes" ]; then
     fi
 fi
 
+#-------------------------------------------------------------------------------
+#  Initialize the twitter cron
+#-------------------------------------------------------------------------------
+echo "Initializing twitter cron...";
+
+cd $install_var_ls/htmlUI/var/install
+# workaround for #2059; restore to "exit 1" after the ticket is closed
+php -q install.php || exit 1;
+#php -q install.php || true
+cd -
+
+# We need the scheduler password here too
+sed -i -e "s/change_me/${SCHEDULER_STORAGE_PASS}/" \
+            $install_var_ls/htmlUI/var/html/ui_twitterCron.php
+
+
 
 #-------------------------------------------------------------------------------
 #  Update the database, if necessary
