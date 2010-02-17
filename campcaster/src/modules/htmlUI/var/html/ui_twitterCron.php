@@ -19,6 +19,10 @@ if (!$uiHandler->sessid) {
     exit(1); 
 }
 
+if (!$uiHandler->TWITTER->isActive()) {
+    if (CRON_DEBUG) print "Twitter feed is deactivated.\n";
+    exit();
+}
 
 if ($uiHandler->TWITTER->needsUpdate()) {
     if ($feed = $uiHandler->TWITTER->getFeed()) {

@@ -3,8 +3,8 @@ class uiTwitter {
     private $Base;
     
     private $settings = array(
-        'twitter-bitly-login' => 'campcaster',
-        'twitter-bitly-apikey'   => 'R_2f812152bfc21035468350273ec8ff43' 
+        'bitly-login'  => 'campcaster',
+        'bitly-apikey' => 'R_2f812152bfc21035468350273ec8ff43' 
     );
     
     /**
@@ -218,8 +218,8 @@ class uiTwitter {
         
         foreach($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
-                $element = isset($val['element']) ? $val['element'] : null;
-                $p = $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', $element);
+                $element = preg_replace('/^twitter-/', '', $val['element'], 1);
+                $p = $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', $val['element']);
                 if (is_string($p)) {
                     $this->settings[$element] = $p;
                 }
@@ -234,7 +234,7 @@ class uiTwitter {
         
         foreach($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref'] && !$val['hiddenPref']) {
-                $element = isset($val['element']) ? $val['element'] : null;
+                $element = preg_replace('/^twitter-/', '', $val['element']);
                 $p = $this->settings[$element];
                 if (is_string($p)) {
                     $mask[$key]['default'] = $p;
@@ -283,7 +283,7 @@ class uiTwitter {
                 "playlisttitle"  => "The Blues Hour"
             );   
         } else {
-            $whatsplaying = $this->getWhatsplaying($this->settings['twitter-offset']);
+            $whatsplaying = $this->getWhatsplaying($this->settings['offset']);
         }
         
         if (!$whatsplaying) {
@@ -293,26 +293,26 @@ class uiTwitter {
         ////////////////////////////////////////////////////////////////////////
         // create twitter tweet sample
         // TWEET PREFIX
-        if (!empty($this->settings['twitter-prefix'])) {
-            $tweetprefix = $this->settings['twitter-prefix'] . " ";
+        if (!empty($this->settings['prefix'])) {
+            $tweetprefix = $this->settings['prefix'] . " ";
         } else {
             $tweetprefix = "";
         }
         // TWEET SUFFIX
-        if (!empty($this->settings['twitter-suffix'])) {
-            $tweetsuffix = " " . $this->settings['twitter-suffix'];
+        if (!empty($this->settings['suffix'])) {
+            $tweetsuffix = " " . $this->settings['suffix'];
         } else {
             $tweetsuffix = "";
         }
-        if (!empty($this->settings['twitter-url'])) {
-            $tweetsuffix = $tweetsuffix . " " . self::shortUrl($this->settings['twitter-url']);
+        if (!empty($this->settings['url'])) {
+            $tweetsuffix = $tweetsuffix . " " . self::shortUrl($this->settings['url']);
         }
         // TWEET BODY
         $tweetbody = array();
-        if ($this->settings['twitter-has_tracktitle']) { $tweetbody[] = $whatsplaying['tracktitle']; }
-        if ($this->settings['twitter-has_trackartist']) { $tweetbody[] = $whatsplaying['trackartist']; }
-        if ($this->settings['twitter-has_playlisttitle']) { $tweetbody[] = $whatsplaying['playlisttitle']; }
-        if ($this->settings['twitter-has_stationname']) { $tweetbody[] = $this->Base->STATIONPREFS['stationName']; }
+        if ($this->settings['has_tracktitle']) { $tweetbody[] = $whatsplaying['tracktitle']; }
+        if ($this->settings['has_trackartist']) { $tweetbody[] = $whatsplaying['trackartist']; }
+        if ($this->settings['has_playlisttitle']) { $tweetbody[] = $whatsplaying['playlisttitle']; }
+        if ($this->settings['has_stationname']) { $tweetbody[] = $this->Base->STATIONPREFS['stationName']; }
         
         $tweetbody = implode (". ",$tweetbody);
         
@@ -329,13 +329,13 @@ class uiTwitter {
     
     public function shortUrl($p_url)
     {
-        switch ($this->settings['twitter-shortener-provider']) {
+        switch ($this->settings['shortener-provider']) {
             case 'tinyurl.com':
                 $short = file_get_contents('http://tinyurl.com/api-create.php?url='.$p_url);
                 break;
                 
             case 'bit.ly':
-                $short = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl={$p_url}&format=text&login={$this->settings['twitter-bitly-login']}&apiKey={$this->settings['twitter-bitly-apikey']}");
+                $short = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl={$p_url}&format=text&login={$this->settings['bitly-login']}&apiKey={$this->settings['bitly-apikey']}");
                 break;
         }
         
@@ -373,8 +373,8 @@ class uiTwitter {
     public function sendFeed($p_feed)
     {
         $twitter = new twitter();
-        $twitter->username = $this->settings['twitter-login'];
-        $twitter->password = $this->settings['twitter-password'];
+        $twitter->username = $this->settings['login'];
+        $twitter->password = $this->settings['password'];
         
         if ($res = $twitter->update($p_feed)) {
             $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate', time());
@@ -385,7 +385,7 @@ class uiTwitter {
     
     public function needsUpdate()
     {
-        if (time() -  $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate') + $this->runtime > $this->settings['twitter-interval']) {
+        if (time() -  $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate') + $this->runtime > $this->settings['interval']) {
             return true;
         }
         return false;
@@ -399,5 +399,10 @@ class uiTwitter {
         $string = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $string);
         
         return $string;
+    }
+    
+    public function isActive()
+    {
+        return $this->settings['is_active'];   
     }
 }
