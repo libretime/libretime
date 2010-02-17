@@ -80,7 +80,7 @@ class uiTwitter {
             array(
                 'element'   => 'twitter-config-label',
                 'type'      => 'static',
-                'text'      => '<legend style="font-weight: bold;">Tweet configuration</legend>'
+                'text'      => '<legend style="font-weight: bold;"></small>Tweet configuration<small></legend>'
             ),
             array(
                 'element'   => 'twitter-prefix',
@@ -174,7 +174,7 @@ class uiTwitter {
             array(
                 'element'   => 'twitter-shortener-label',
                 'type'      => 'static',
-                'text'      => '<legend style="font-weight: bold;">URL shortener</legend>'
+                'text'      => '<legend style="font-weight: bold;"></small>URL shortener<small></legend>'
             ),
             array(
                 'element'   => 'twitter-shortener-provider',
@@ -274,7 +274,7 @@ class uiTwitter {
         $this->Base->_retMsg('Twitter settings saved.');
     }
     
-    public function getFeed($p_useSampledata = false, $p_twitterfy = false)
+    public function getFeed($p_useSampledata = false)
     {        
         if ($p_useSampledata) {
             $whatsplaying = array(
@@ -322,10 +322,7 @@ class uiTwitter {
         }
         
         $tweet = $tweetprefix . $tweetbody . $tweetsuffix;
-          
-        if ($p_twitterfy) {
-            $tweet = $this->twitterify($tweet); 
-        }      
+            
         return $tweet;
 
     }
@@ -394,11 +391,13 @@ class uiTwitter {
         return false;
     }
     
-    public function twitterify($ret) {
-        $ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $ret);
-        $ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $ret);
-        $ret = preg_replace("/@(\w+)/", "<a href=\"http://www.twitter.com/\\1\" target=\"_blank\">@\\1</a>", $ret);
-        $ret = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $ret);
-        return $ret;
+    public function twitterify($p_string)
+    {
+        $string = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $p_string);
+        $string = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $string);
+        $string = preg_replace("/@(\w+)/", "<a href=\"http://www.twitter.com/\\1\" target=\"_blank\">@\\1</a>", $string);
+        $string = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $string);
+        
+        return $string;
     }
 }

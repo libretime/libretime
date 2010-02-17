@@ -413,7 +413,10 @@ if ($uiBrowser->userid) {
 	        
 	    case "twitter.settings":
 	        $Smarty->assign('dynform', $uiBrowser->TWITTER->getSettingsForm());
-	        $Smarty->assign('twitter', array('samplefeed' => $uiBrowser->TWITTER->getFeed(true, true)));
+	        $Smarty->assign('twitter', array(
+	           'samplefeed' => uiTwitter::twitterify($uiBrowser->TWITTER->getFeed(true)),
+	           'samplefeed_length' => strlen($uiBrowser->TWITTER->getFeed(true)))
+	        );
 	        $Smarty->assign('act', $action);
 	        break;
     }
