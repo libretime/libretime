@@ -227,6 +227,11 @@ install: configure_apache
 	ln -sf ${USR_VAR_DIR}/Campcaster ${WWW_DOCROOT}/campcaster
 	
 	-cd var/install && php -q install.php
+	
+uninstall:
+	-cd var/install && php -q uninstall.php
+	${RM} ${WWW_DOCROOT}/campcaster 
+	${RMDIR} ${USR_VAR_DIR}/Campcaster/htmlUI
 
 configure_apache:
 ifeq (@CONFIGURE_APACHE@,yes)

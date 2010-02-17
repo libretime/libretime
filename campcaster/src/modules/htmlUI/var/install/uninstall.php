@@ -11,16 +11,10 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 ?>
 
 //------------------------------------------------------------------------
-// Install twitter Cron job
+// Uninstall twitter Cron job
 //------------------------------------------------------------------------
 <?php
 require_once(dirname(__FILE__).'/../../../storageServer/var/cron/Cron.php');
-$m = '*';
-$h ='*';
-$dom = '*';
-$mon = '*';
-$dow = '*';
-$command = '/usr/bin/php '.realpath(dirname(__FILE__).'/../html/ui_twitterCron.php').' >/dev/null 2>&1';
 $old_regex = '/ui_twitterCron\.php/';
 
 $cron = new Cron();
@@ -33,12 +27,11 @@ if ($access != 'write') {
 
 foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
     if (preg_match($old_regex, $line['command'])) {
-        echo "    removing old entry\n";
+        echo "    removing cron entry\n";
         $cron->ct->delEntry($id);
     }
 }
-echo "    adding new entry\n";
-$cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
+
 $cron->closeCrontab();
 echo "Done.\n";
 ?>
