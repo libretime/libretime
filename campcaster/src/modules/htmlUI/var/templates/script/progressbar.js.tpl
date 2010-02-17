@@ -3,7 +3,7 @@
 {literal}
 // play-progress-bar object
 
-function plPrBar(tit, pltit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
+function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns, pltit){
     this.tit        = tit;
     this.pltit      = pltit;
     this.next       = next;
@@ -82,7 +82,8 @@ function plPrBar_create(jscomRes) {
             ppb = new plPrBar(parms[0],
                               parms[1], parms[2], parms[3],
                               parms[4], parms[5], parms[6],
-                              parms[7], parms[8], parms[9], parms[10], parms[11] 
+                              parms[7], parms[8], parms[9], parms[10], parms[11],
+                              parms[12] 
                              );
             ppb.init();
         } else {
@@ -102,7 +103,6 @@ function plPrBar_hide() {
 
 {if (is_array($_nowplaying.duration))} 
     ppb = new plPrBar  ("{$_nowplaying.title|escape:html}",
-                        "{$_nowplaying.pl_title|escape:html}",
                         {$_nowplaying.elapsed.h|string_format:"%d"}, {$_nowplaying.elapsed.m|string_format:"%d"}, {$_nowplaying.elapsed.s|string_format:"%d"},
                         {$_nowplaying.duration.h|string_format:"%d"}, {$_nowplaying.duration.m|string_format:"%d"}, {$_nowplaying.duration.s|string_format:"%d"},
                         {if is_array($_nextplaying)}
@@ -110,6 +110,7 @@ function plPrBar_hide() {
                         {else}
                             0, "", 0, 0, 0
                         {/if}
+                        , "{$_nowplaying.playlist|escape:html}"
                        );
     ppb.init();
 {/if}

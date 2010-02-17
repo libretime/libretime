@@ -1,5 +1,5 @@
 {assign var='_nowplaying'  value=$SCHEDULER->getNowNextClip()}
-{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip()}
+{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
 
 <div id="masterpalette"> 
 <table border="0" class="masterpalette">
@@ -50,7 +50,9 @@
                 <div  style="height:3px"> </div>
                 <div id="next_clip">
                 {if $_nextplaying}
-                    <span class="next">##Next Clip##:</span> <strong id="next_title"></strong>&nbsp; <strong id="next_duration"></strong></div>
+                    <span class="next">##Next Clip##:</span>
+                    <strong id="next_title"></strong>
+                    &nbsp;<span id="next_duration"></span>
                 {/if}
                 </div>
             </div>  

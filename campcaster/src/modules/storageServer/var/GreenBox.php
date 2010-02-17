@@ -887,6 +887,14 @@ class GreenBox extends BasicStor {
         if (!is_null($id)) {
             $res['title'] = $this->bsGetMetadataValue($id, "dc:title");
         }
+        $res['playlist_title'] = NULL;
+        $id = BasicStor::IdFromGunid($plid);
+        if (PEAR::isError($id)) {
+            return $id;
+        }
+        if (!is_null($id)) {
+            $res['playlist'] = $this->bsGetMetadataValue($id, "dc:title");
+        }
         return $res;
     } // fn displayPlaylistClipAtOffset
 

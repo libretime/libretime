@@ -624,14 +624,13 @@ class uiScheduler extends uiCalendar {
         $elapsed = array_map('round', $elapsed);
         $remaining = array_map('round', $remaining);
         $percentage =  $secondsElapsed ? (100 * $secondsElapsed / ($secondsElapsed + $secondsRemaining)) : 100;
-        $pl_title = $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($pl['playlistId']), UI_MDATA_KEY_TITLE, $this->Base->sessid);
         
         return array('title' => $clip['title'],
                      'duration'  => $duration,
                      'elapsed'   => $elapsed,
                      'remaining' => $remaining,
                      'percentage'=> $percentage,
-                     'pl_title'  => $pl_title
+                     'playlist'  => $clip['playlist']
                );
     } // fn getNowNextClip
 
@@ -655,6 +654,7 @@ class uiScheduler extends uiCalendar {
                     'next.dur.h'    => $next ? $next['duration']['h'] : 0,
                     'next.dur.m'    => $next ? $next['duration']['m'] : 0,
                     'next.dur.s'    => $next ? $next['duration']['s'] : 0,
+                    'playlist'      => $curr['playlist'],
                    );
         } else {
             return FALSE;
