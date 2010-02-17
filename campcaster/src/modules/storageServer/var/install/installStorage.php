@@ -85,6 +85,14 @@ echo "done.\n";
 // Install Cron job
 //------------------------------------------------------------------------
 require_once(dirname(__FILE__).'/../cron/Cron.php');
+$m = '*/2';
+$h ='*';
+$dom = '*';
+$mon = '*';
+$dow = '*';
+$command = realpath("{$CC_CONFIG['cronDir']}/transportCron.php");
+$old_regex = '/transportCron\.php/';
+echo " * Install storageServer cron job...\n";
 
 $cron = new Cron();
 $access = $cron->openCrontab('write');
@@ -93,16 +101,15 @@ if ($access != 'write') {
        $r = $cron->forceWriteable();
     } while ($r);
 }
-foreach ($cron->ct->getByType(CRON_CMD) as $line) {
-    if (preg_match('/transportCron\.php/', $line['command'])) {
-        $cron->closeCrontab();
-        echo " * Storage cron job already exists.\n";
-        exit;
+
+foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
+    if (preg_match($old_regex, $line['command'])) {
+        echo "    removing old entry\n";
+        $cron->ct->delEntry($id);
     }
 }
-echo " * Adding transport cron job...";
-$cron->ct->addCron('*/2', '*', '*', '*', '*', realpath("{$CC_CONFIG['cronDir']}/transportCron.php"));
+echo "    adding new entry\n";
+$cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
 $cron->closeCrontab();
-echo "done.\n";
-
+echo "   Done.\n";
 ?>

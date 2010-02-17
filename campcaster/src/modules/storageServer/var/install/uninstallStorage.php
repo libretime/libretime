@@ -48,6 +48,31 @@ if (!PEAR::isError($CC_DBC)) {
     }
 }
 
+//------------------------------------------------------------------------
+// Uninstall Cron job
+//------------------------------------------------------------------------
+require_once(dirname(__FILE__).'/../cron/Cron.php');
+$old_regex = '/transportCron\.php/';
+echo " * Uninstall storageServer cron job...\n";
+
+$cron = new Cron();
+$access = $cron->openCrontab('write');
+if ($access != 'write') {
+    do {
+       $r = $cron->forceWriteable();
+    } while ($r);
+}
+
+foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
+    if (preg_match($old_regex, $line['command'])) {
+        echo "    removing cron entry\n";
+        $cron->ct->delEntry($id);
+    }
+}
+
+$cron->closeCrontab();
+echo "Done.\n";
+
 camp_uninstall_delete_files($CC_CONFIG['storageDir']);
 camp_uninstall_delete_files($CC_CONFIG['transDir']);
 camp_uninstall_delete_files($CC_CONFIG['accessDir']);
