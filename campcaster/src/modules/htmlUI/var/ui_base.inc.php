@@ -373,6 +373,7 @@ class uiBase
                     $form->addElement($elem[$v['element']]);
                 }
             } elseif ($type == 'date') {
+                $v['options']['maxYear'] = isset($v['options']['maxYear']) ? $v['options']['maxYear'] : date('Y') + 10;
                 $elem[$v['element']] =& $form->createElement($type, $v['element'], $label, $v['options'], $attrs);
                 if (!$groupit) {
                     $form->addElement($elem[$v['element']]);
