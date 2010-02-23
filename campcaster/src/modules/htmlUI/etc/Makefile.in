@@ -214,6 +214,7 @@ install: configure_apache
 	      ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates/subjects
 
 	${CP} ${VAR_DIR}/install/install.php ${USR_VAR_DIR}/Campcaster/htmlUI/var/install/
+	${CP} ${VAR_DIR}/install/uninstall.php ${USR_VAR_DIR}/Campcaster/htmlUI/var/install/
 
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/templates_c
 	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/Campcaster/htmlUI/var/html/img
