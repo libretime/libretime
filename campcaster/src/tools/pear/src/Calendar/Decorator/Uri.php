@@ -1,28 +1,40 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-//
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/3_0.txt.                                  |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Harry Fuecks <hfuecks@phppatterns.com>                      |
-// |          Lorenzo Alberton <l dot alberton at quipo dot it>           |
-// +----------------------------------------------------------------------+
-//
-// $Id: Uri.php,v 1.3 2004/08/16 09:04:20 hfuecks Exp $
-//
+
 /**
- * @package Calendar
- * @version $Id: Uri.php,v 1.3 2004/08/16 09:04:20 hfuecks Exp $
+ * Contains the Calendar_Decorator_Uri class
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @version   CVS: $Id: Uri.php,v 1.8 2007/11/18 21:46:43 quipo Exp $
+ * @link      http://pear.php.net/package/Calendar
  */
 
 /**
@@ -53,22 +65,31 @@ require_once CALENDAR_ROOT.'Util'.DIRECTORY_SEPARATOR.'Uri.php';
  * $Uri->setFragments('year', 'month', 'day');
  * echo $Uri->getPrev(); // Displays year=2003&month=10&day=22
  * </code>
- * @see Calendar_Util_Uri
- * @package Calendar
- * @access public
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @link      http://pear.php.net/package/Calendar
+ * @see       Calendar_Util_Uri
+ * @access    public
  */
 class Calendar_Decorator_Uri extends Calendar_Decorator
 {
 
     /**
-    * @var Calendar_Util_Uri
-    * @access private
-    */
+     * @var Calendar_Util_Uri
+     * @access private
+     */
     var $Uri;
 
     /**
      * Constructs Calendar_Decorator_Uri
-     * @param object subclass of Calendar
+     *
+     * @param object &$Calendar subclass of Calendar
+     *
      * @access public
      */
     function Calendar_Decorator_Uri(&$Calendar)
@@ -78,22 +99,27 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
 
     /**
      * Sets the URI fragment names
-     * @param string URI fragment for year
-     * @param string (optional) URI fragment for month
-     * @param string (optional) URI fragment for day
-     * @param string (optional) URI fragment for hour
-     * @param string (optional) URI fragment for minute
-     * @param string (optional) URI fragment for second
+     *
+     * @param string $y URI fragment for year
+     * @param string $m (optional) URI fragment for month
+     * @param string $d (optional) URI fragment for day
+     * @param string $h (optional) URI fragment for hour
+     * @param string $i (optional) URI fragment for minute
+     * @param string $s (optional) URI fragment for second
+     *
      * @return void
      * @access public
      */
-    function setFragments($y, $m=null, $d=null, $h=null, $i=null, $s=null) {
+    function setFragments($y, $m = null, $d = null, $h = null, $i = null, $s = null)
+    {
         $this->Uri = & new Calendar_Util_Uri($y, $m, $d, $h, $i, $s);
     }
 
     /**
      * Sets the separator string between fragments
-     * @param string separator e.g. /
+     *
+     * @param string $separator url fragment separator e.g. /
+     *
      * @return void
      * @access public
      */
@@ -103,20 +129,23 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
     }
 
     /**
-     * Puts Uri decorator into "scalar mode" - URI variable names are not
-     * returned
-     * @param boolean (optional)
+     * Puts Uri decorator into "scalar mode" - URI variable names are not returned
+     *
+     * @param boolean $state (optional)
+     *
      * @return void
      * @access public
      */
-    function setScalar($state=true)
+    function setScalar($state = true)
     {
         $this->Uri->scalar = $state;
     }
 
     /**
      * Gets the URI string for the previous calendar unit
-     * @param string calendar unit to fetch uri for (year,month,week or day etc)
+     *
+     * @param string $method calendar unit to fetch uri for (year, month, week or day etc)
+     *
      * @return string
      * @access public
      */
@@ -127,7 +156,9 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
 
     /**
      * Gets the URI string for the current calendar unit
-     * @param string calendar unit to fetch uri for (year,month,week or day etc)
+     *
+     * @param string $method calendar unit to fetch uri for (year,month,week or day etc)
+     *
      * @return string
      * @access public
      */
@@ -138,7 +169,9 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
 
     /**
      * Gets the URI string for the next calendar unit
-     * @param string calendar unit to fetch uri for (year,month,week or day etc)
+     *
+     * @param string $method calendar unit to fetch uri for (year,month,week or day etc)
+     *
      * @return string
      * @access public
      */
@@ -146,6 +179,5 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
     {
         return $this->Uri->next($this, $method);
     }
-
 }
 ?>

@@ -4,20 +4,14 @@
  *
  * PHP versions 4 and 5
  *
- * LICENSE: This source file is subject to version 3.0 of the PHP license
- * that is available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
- * the PHP License and are unable to obtain it through the web, please
- * send a note to license@php.net so we can mail you a copy immediately.
- *
  * @category   pear
  * @package    PEAR
  * @author     Stig Bakken <ssb@php.net>
  * @author     Martin Jansen <mj@php.net>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Test.php,v 1.9 2006/02/03 22:28:08 cellog Exp $
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    CVS: $Id: Test.php 279072 2009-04-20 19:57:41Z cellog $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -35,17 +29,15 @@ require_once 'PEAR/Command/Common.php';
  * @author     Stig Bakken <ssb@php.net>
  * @author     Martin Jansen <mj@php.net>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.4.11
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    Release: 1.9.0
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
 
 class PEAR_Command_Test extends PEAR_Command_Common
 {
-    // {{{ properties
-
     var $commands = array(
         'run-tests' => array(
             'summary' => 'Run Regression Tests',
@@ -79,7 +71,21 @@ class PEAR_Command_Test extends PEAR_Command_Common
                 ),
                 'phpunit' => array(
                     'shortopt' => 'u',
-                    'doc' => 'Search parameters for AllTests.php, and use that to run phpunit-based tests',
+                    'doc' => 'Search parameters for AllTests.php, and use that to run phpunit-based tests
+If none is found, all .phpt tests will be tried instead.',
+                ),
+                'tapoutput' => array(
+                    'shortopt' => 't',
+                    'doc' => 'Output run-tests.log in TAP-compliant format',
+                ),
+                'cgi' => array(
+                    'shortopt' => 'c',
+                    'doc' => 'CGI php executable (needed for tests with POST/GET section)',
+                    'arg' => 'PHPCGI',
+                ),
+                'coverage' => array(
+                    'shortopt' => 'x',
+                    'doc'      => 'Generate a code coverage report (requires Xdebug 2.0.0+)',
                 ),
             ),
             'doc' => '[testfile|dir ...]
@@ -88,9 +94,6 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
         );
 
     var $output;
-
-    // }}}
-    // {{{ constructor
 
     /**
      * PEAR_Command_Test constructor.
@@ -102,26 +105,23 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
         parent::PEAR_Command_Common($ui, $config);
     }
 
-    // }}}
-    // {{{ doRunTests()
-
     function doRunTests($command, $options, $params)
     {
+        if (isset($options['phpunit']) && isset($options['tapoutput'])) {
+            return $this->raiseError('ERROR: cannot use both --phpunit and --tapoutput at the same time');
+        }
+
         require_once 'PEAR/Common.php';
-        require_once 'PEAR/RunTest.php';
         require_once 'System.php';
         $log = new PEAR_Common;
         $log->ui = &$this->ui; // slightly hacky, but it will work
-        $run = new PEAR_RunTest($log, $options);
         $tests = array();
-        if (isset($options['recur'])) {
-            $depth = 4;
-        } else {
-            $depth = 1;
-        }
+        $depth = isset($options['recur']) ? 14 : 1;
+
         if (!count($params)) {
             $params[] = '.';
         }
+
         if (isset($options['package'])) {
             $oldparams = $params;
             $params = array();
@@ -131,93 +131,145 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                 if (PEAR::isError($pname)) {
                     return $this->raiseError($pname);
                 }
+
                 $package = &$reg->getPackage($pname['package'], $pname['channel']);
                 if (!$package) {
                     return PEAR::raiseError('Unknown package "' .
                         $reg->parsedPackageNameToString($pname) . '"');
                 }
+
                 $filelist = $package->getFilelist();
                 foreach ($filelist as $name => $atts) {
                     if (isset($atts['role']) && $atts['role'] != 'test') {
                         continue;
                     }
-                    if (isset($options['phpunit'])) {
-                        if (!preg_match('/AllTests\.php$/i', $name)) {
-                            continue;
-                        }
-                    } else {
-                        if (!preg_match('/\.phpt$/', $name)) {
-                            continue;
-                        }
+
+                    if (isset($options['phpunit']) && preg_match('/AllTests\.php\\z/i', $name)) {
+                        $params[] = $atts['installed_as'];
+                        continue;
+                    } elseif (!preg_match('/\.phpt\\z/', $name)) {
+                        continue;
                     }
                     $params[] = $atts['installed_as'];
                 }
             }
         }
+
         foreach ($params as $p) {
             if (is_dir($p)) {
                 if (isset($options['phpunit'])) {
                     $dir = System::find(array($p, '-type', 'f',
                                                 '-maxdepth', $depth,
                                                 '-name', 'AllTests.php'));
-                } else {
-                    $dir = System::find(array($p, '-type', 'f',
-                                                '-maxdepth', $depth,
-                                                '-name', '*.phpt'));
+                    if (count($dir)) {
+                        foreach ($dir as $p) {
+                            $p = realpath($p);
+                            if (!count($tests) ||
+                                  (count($tests) && strlen($p) < strlen($tests[0]))) {
+                                // this is in a higher-level directory, use this one instead.
+                                $tests = array($p);
+                            }
+                        }
+                    }
+                    continue;
                 }
-                $tests = array_merge($tests, $dir);
+
+                $args  = array($p, '-type', 'f', '-name', '*.phpt');
             } else {
                 if (isset($options['phpunit'])) {
-                    if (!preg_match('/AllTests\.php$/i', $p)) {
-                        continue;
-                    }
-                    $tests[] = $p;
-                } else {
-                    if (!@file_exists($p)) {
-                        if (!preg_match('/\.phpt$/', $p)) {
-                            $p .= '.phpt';
+                    if (preg_match('/AllTests\.php\\z/i', $p)) {
+                        $p = realpath($p);
+                        if (!count($tests) ||
+                              (count($tests) && strlen($p) < strlen($tests[0]))) {
+                            // this is in a higher-level directory, use this one instead.
+                            $tests = array($p);
                         }
-                        $dir = System::find(array(dirname($p), '-type', 'f',
-                                                    '-maxdepth', $depth,
-                                                    '-name', $p));
-                        $tests = array_merge($tests, $dir);
-                    } else {
-                        $tests[] = $p;
                     }
+                    continue;
                 }
+
+                if (file_exists($p) && preg_match('/\.phpt$/', $p)) {
+                    $tests[] = $p;
+                    continue;
+                }
+
+                if (!preg_match('/\.phpt\\z/', $p)) {
+                    $p .= '.phpt';
+                }
+
+                $args  = array(dirname($p), '-type', 'f', '-name', $p);
             }
+
+            if (!isset($options['recur'])) {
+                $args[] = '-maxdepth';
+                $args[] = 1;
+            }
+
+            $dir   = System::find($args);
+            $tests = array_merge($tests, $dir);
         }
+
         $ini_settings = '';
         if (isset($options['ini'])) {
             $ini_settings .= $options['ini'];
         }
+
         if (isset($_ENV['TEST_PHP_INCLUDE_PATH'])) {
             $ini_settings .= " -d include_path={$_ENV['TEST_PHP_INCLUDE_PATH']}";
         }
+
         if ($ini_settings) {
             $this->ui->outputData('Using INI settings: "' . $ini_settings . '"');
         }
+
         $skipped = $passed = $failed = array();
-        $this->ui->outputData('Running ' . count($tests) . ' tests', $command);
+        $tests_count = count($tests);
+        $this->ui->outputData('Running ' . $tests_count . ' tests', $command);
         $start = time();
-        if (isset($options['realtimelog'])) {
-            @unlink('run-tests.log');
+        if (isset($options['realtimelog']) && file_exists('run-tests.log')) {
+            unlink('run-tests.log');
         }
+
+        if (isset($options['tapoutput'])) {
+            $tap = '1..' . $tests_count . "\n";
+        }
+
+        require_once 'PEAR/RunTest.php';
+        $run = new PEAR_RunTest($log, $options);
+        $run->tests_count = $tests_count;
+
+        if (isset($options['coverage']) && extension_loaded('xdebug')){
+            $run->xdebug_loaded = true;
+        } else {
+            $run->xdebug_loaded = false;
+        }
+
+        $j = $i = 1;
         foreach ($tests as $t) {
             if (isset($options['realtimelog'])) {
                 $fp = @fopen('run-tests.log', 'a');
                 if ($fp) {
-                    fwrite($fp, "Running test $t...");
+                    fwrite($fp, "Running test [$i / $tests_count] $t...");
                     fclose($fp);
                 }
             }
             PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-            $result = $run->run($t, $ini_settings);
+            if (isset($options['phpunit'])) {
+                $result = $run->runPHPUnit($t, $ini_settings);
+            } else {
+                $result = $run->run($t, $ini_settings, $j);
+            }
             PEAR::staticPopErrorHandling();
             if (PEAR::isError($result)) {
-                $this->ui->log(0, $result->getMessage());
+                $this->ui->log($result->getMessage());
                 continue;
             }
+
+            if (isset($options['tapoutput'])) {
+                $tap .= $result[0] . ' ' . $i . $result[1] . "\n";
+                continue;
+            }
+
             if (isset($options['realtimelog'])) {
                 $fp = @fopen('run-tests.log', 'a');
                 if ($fp) {
@@ -225,51 +277,61 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                     fclose($fp);
                 }
             }
+
             if ($result == 'FAILED') {
-            	$failed[] = $t;
+                $failed[] = $t;
             }
             if ($result == 'PASSED') {
-            	$passed[] = $t;
+                $passed[] = $t;
             }
             if ($result == 'SKIPPED') {
-            	$skipped[] = $t;
+                $skipped[] = $t;
             }
+
+            $j++;
         }
+
         $total = date('i:s', time() - $start);
-        if (count($failed)) {
-            $output = "TOTAL TIME: $total\n";
-            $output .= count($passed) . " PASSED TESTS\n";
-            $output .= count($skipped) . " SKIPPED TESTS\n";
-    		$output .= count($failed) . " FAILED TESTS:\n";
-        	foreach ($failed as $failure) {
-        		$output .= $failure . "\n";
-        	}
-            if (isset($options['realtimelog'])) {
-                $fp = @fopen('run-tests.log', 'a');
-            } else {
-                $fp = @fopen('run-tests.log', 'w');
-            }
+        if (isset($options['tapoutput'])) {
+            $fp = @fopen('run-tests.log', 'w');
             if ($fp) {
-                fwrite($fp, $output, strlen($output));
+                fwrite($fp, $tap, strlen($tap));
                 fclose($fp);
-                $this->ui->outputData('wrote log to "' . realpath('run-tests.log') . '"', $command);
+                $this->ui->outputData('wrote TAP-format log to "' .realpath('run-tests.log') .
+                    '"', $command);
             }
-        } elseif (@file_exists('run-tests.log') && !@is_dir('run-tests.log')) {
-            @unlink('run-tests.log');
+        } else {
+            if (count($failed)) {
+                $output = "TOTAL TIME: $total\n";
+                $output .= count($passed) . " PASSED TESTS\n";
+                $output .= count($skipped) . " SKIPPED TESTS\n";
+                $output .= count($failed) . " FAILED TESTS:\n";
+                foreach ($failed as $failure) {
+                    $output .= $failure . "\n";
+                }
+
+                $mode = isset($options['realtimelog']) ? 'a' : 'w';
+                $fp   = @fopen('run-tests.log', $mode);
+
+                if ($fp) {
+                    fwrite($fp, $output, strlen($output));
+                    fclose($fp);
+                    $this->ui->outputData('wrote log to "' . realpath('run-tests.log') . '"', $command);
+                }
+            } elseif (file_exists('run-tests.log') && !is_dir('run-tests.log')) {
+                @unlink('run-tests.log');
+            }
         }
         $this->ui->outputData('TOTAL TIME: ' . $total);
         $this->ui->outputData(count($passed) . ' PASSED TESTS', $command);
         $this->ui->outputData(count($skipped) . ' SKIPPED TESTS', $command);
         if (count($failed)) {
-    		$this->ui->outputData(count($failed) . ' FAILED TESTS:', $command);
-        	foreach ($failed as $failure) {
-        		$this->ui->outputData($failure, $command);
-        	}
+            $this->ui->outputData(count($failed) . ' FAILED TESTS:', $command);
+            foreach ($failed as $failure) {
+                $this->ui->outputData($failure, $command);
+            }
         }
 
         return true;
     }
-    // }}}
 }
-
-?>

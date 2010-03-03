@@ -4,19 +4,13 @@
  *
  * PHP versions 4 and 5
  *
- * LICENSE: This source file is subject to version 3.0 of the PHP license
- * that is available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
- * the PHP License and are unable to obtain it through the web, please
- * send a note to license@php.net so we can mail you a copy immediately.
- *
  * @category   pear
  * @package    PEAR
  * @author     Stig Bakken <ssb@php.net>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Command.php,v 1.36.2.1 2006/06/16 13:01:59 pajoye Exp $
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    CVS: $Id: Command.php 286494 2009-07-29 06:57:11Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -33,6 +27,12 @@ require_once 'PEAR/XMLParser.php';
  * @var array command => implementing class
  */
 $GLOBALS['_PEAR_Command_commandlist'] = array();
+
+/**
+ * List of commands and their descriptions
+ * @var array command => description
+ */
+$GLOBALS['_PEAR_Command_commanddesc'] = array();
 
 /**
  * List of shortcuts to common commands.
@@ -92,9 +92,9 @@ $GLOBALS['_PEAR_Command_objects'] = array();
  * @package    PEAR
  * @author     Stig Bakken <ssb@php.net>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.4.11
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    Release: 1.9.0
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -231,11 +231,9 @@ class PEAR_Command
         if ($dir === null) {
             $dir = dirname(__FILE__) . '/Command';
         }
-
-        if (!@is_dir($dir)) {
+        if (!is_dir($dir)) {
             return PEAR::raiseError("registerCommands: opendir($dir) '$dir' does not exist or is not a directory");
         }
-
         $dp = @opendir($dir);
         if (empty($dp)) {
             return PEAR::raiseError("registerCommands: opendir($dir) failed");
@@ -243,27 +241,31 @@ class PEAR_Command
         if (!$merge) {
             $GLOBALS['_PEAR_Command_commandlist'] = array();
         }
-        while ($entry = readdir($dp)) {
-            if ($entry{0} == '.' || substr($entry, -4) != '.xml') {
+
+        while ($file = readdir($dp)) {
+            if ($file{0} == '.' || substr($file, -4) != '.xml') {
                 continue;
             }
-            $class = "PEAR_Command_".substr($entry, 0, -4);
-            $file = "$dir/$entry";
-            $parser->parse(file_get_contents($file));
-            $implements = $parser->getData();
+
+            $f = substr($file, 0, -4);
+            $class = "PEAR_Command_" . $f;
             // List of commands
             if (empty($GLOBALS['_PEAR_Command_objects'][$class])) {
-                $GLOBALS['_PEAR_Command_objects'][$class] = "$dir/" . substr($entry, 0, -4) .
-                    '.php';
+                $GLOBALS['_PEAR_Command_objects'][$class] = "$dir/" . $f . '.php';
             }
+
+            $parser->parse(file_get_contents("$dir/$file"));
+            $implements = $parser->getData();
             foreach ($implements as $command => $desc) {
                 if ($command == 'attribs') {
                     continue;
                 }
+
                 if (isset($GLOBALS['_PEAR_Command_commandlist'][$command])) {
                     return PEAR::raiseError('Command "' . $command . '" already registered in ' .
                         'class "' . $GLOBALS['_PEAR_Command_commandlist'][$command] . '"');
                 }
+
                 $GLOBALS['_PEAR_Command_commandlist'][$command] = $class;
                 $GLOBALS['_PEAR_Command_commanddesc'][$command] = $desc['summary'];
                 if (isset($desc['shortcut'])) {
@@ -275,6 +277,7 @@ class PEAR_Command
                     }
                     $GLOBALS['_PEAR_Command_shortcuts'][$shortcut] = $command;
                 }
+
                 if (isset($desc['options']) && $desc['options']) {
                     foreach ($desc['options'] as $oname => $option) {
                         if (isset($option['shortopt']) && strlen($option['shortopt']) > 1) {
@@ -287,6 +290,7 @@ class PEAR_Command
                 }
             }
         }
+
         ksort($GLOBALS['_PEAR_Command_shortcuts']);
         ksort($GLOBALS['_PEAR_Command_commandlist']);
         @closedir($dp);
@@ -408,5 +412,3 @@ class PEAR_Command
     }
     // }}}
 }
-
-?>

@@ -5,21 +5,15 @@
  *
  * PHP versions 4 and 5
  *
- * LICENSE: This source file is subject to version 3.0 of the PHP license
- * that is available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
- * the PHP License and are unable to obtain it through the web, please
- * send a note to license@php.net so we can mail you a copy immediately.
- *
  * @category   pear
  * @package    PEAR
  * @author     Tomas V. V. Cox <cox@idecnet.com>
  * @author     Hans Lellelid <hans@velum.net>
  * @author     Bertrand Mansion <bmansion@mamasam.com>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Exception.php,v 1.23 2006/01/06 04:47:36 cellog Exp $
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    CVS: $Id: Exception.php 276383 2009-02-24 23:39:37Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.3.3
  */
@@ -93,9 +87,9 @@
  * @author     Hans Lellelid <hans@velum.net>
  * @author     Bertrand Mansion <bmansion@mamasam.com>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.4.11
+ * @copyright  1997-2009 The Authors
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    Release: 1.9.0
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.3
  *
@@ -112,19 +106,31 @@ class PEAR_Exception extends Exception
 
     /**
      * Supported signatures:
-     * PEAR_Exception(string $message);
-     * PEAR_Exception(string $message, int $code);
-     * PEAR_Exception(string $message, Exception $cause);
-     * PEAR_Exception(string $message, Exception $cause, int $code);
-     * PEAR_Exception(string $message, array $causes);
-     * PEAR_Exception(string $message, array $causes, int $code);
+     *  - PEAR_Exception(string $message);
+     *  - PEAR_Exception(string $message, int $code);
+     *  - PEAR_Exception(string $message, Exception $cause);
+     *  - PEAR_Exception(string $message, Exception $cause, int $code);
+     *  - PEAR_Exception(string $message, PEAR_Error $cause);
+     *  - PEAR_Exception(string $message, PEAR_Error $cause, int $code);
+     *  - PEAR_Exception(string $message, array $causes);
+     *  - PEAR_Exception(string $message, array $causes, int $code);
+     * @param string exception message
+     * @param int|Exception|PEAR_Error|array|null exception cause
+     * @param int|null exception code or null
      */
     public function __construct($message, $p2 = null, $p3 = null)
     {
         if (is_int($p2)) {
             $code = $p2;
             $this->cause = null;
-        } elseif ($p2 instanceof Exception || is_array($p2)) {
+        } elseif (is_object($p2) || is_array($p2)) {
+            // using is_object allows both Exception and PEAR_Error
+            if (is_object($p2) && !($p2 instanceof Exception)) {
+                if (!class_exists('PEAR_Error') || !($p2 instanceof PEAR_Error)) {
+                    throw new PEAR_Exception('exception cause must be Exception, ' .
+                        'array, or PEAR_Error');
+                }
+            }
             $code = $p3;
             if (is_array($p2) && isset($p2['message'])) {
                 // fix potential problem of passing in a single warning
@@ -242,11 +248,15 @@ class PEAR_Exception extends Exception
         if ($this->cause instanceof PEAR_Exception) {
             $this->cause->getCauseMessage($causes);
         } elseif ($this->cause instanceof Exception) {
-            $causes[] = array('class'   => get_class($cause),
-                           'message' => $cause->getMessage(),
-                           'file' => $cause->getFile(),
-                           'line' => $cause->getLine());
-
+            $causes[] = array('class'   => get_class($this->cause),
+                              'message' => $this->cause->getMessage(),
+                              'file' => $this->cause->getFile(),
+                              'line' => $this->cause->getLine());
+        } elseif (class_exists('PEAR_Error') && $this->cause instanceof PEAR_Error) {
+            $causes[] = array('class' => get_class($this->cause),
+                              'message' => $this->cause->getMessage(),
+                              'file' => 'unknown',
+                              'line' => 'unknown');
         } elseif (is_array($this->cause)) {
             foreach ($this->cause as $cause) {
                 if ($cause instanceof PEAR_Exception) {
@@ -256,6 +266,11 @@ class PEAR_Exception extends Exception
                                    'message' => $cause->getMessage(),
                                    'file' => $cause->getFile(),
                                    'line' => $cause->getLine());
+                } elseif (class_exists('PEAR_Error') && $cause instanceof PEAR_Error) {
+                    $causes[] = array('class' => get_class($cause),
+                                      'message' => $cause->getMessage(),
+                                      'file' => 'unknown',
+                                      'line' => 'unknown');
                 } elseif (is_array($cause) && isset($cause['message'])) {
                     // PEAR_ErrorStack warning
                     $causes[] = array(

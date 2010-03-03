@@ -1,5 +1,5 @@
 <?php
-// $Id: util_textual_test.php,v 1.1 2004/08/16 12:56:10 hfuecks Exp $
+// $Id: util_textual_test.php,v 1.2 2008/11/15 21:21:42 quipo Exp $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');
@@ -178,6 +178,11 @@ class TestOfUtilTextual extends UnitTestCase {
             5=>'Fri',
             6=>'Sat',
         );
+        $nShifts = CALENDAR_FIRST_DAY_OF_WEEK;
+        while ($nShifts-- > 0) {
+            $day = array_shift($weekdayNames);
+            array_push($weekdayNames, $day);
+        }
         $this->assertEqual($weekdayNames,Calendar_Util_Textual::orderedWeekdays($this->mockcal,'short'));
     }
 

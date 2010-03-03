@@ -2,6 +2,8 @@
  <releasetypes>php</releasetypes>
  <releasetypes>extsrc</releasetypes>
  <releasetypes>extbin</releasetypes>
+ <releasetypes>zendextsrc</releasetypes>
+ <releasetypes>zendextbin</releasetypes>
  <installable>1</installable>
  <locationconfig>php_dir</locationconfig>
  <honorsbaseinstall>1</honorsbaseinstall>

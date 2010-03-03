@@ -1,5 +1,5 @@
 <?php
-// $Id: peardate_engine_test.php,v 1.2 2004/08/16 11:36:51 hfuecks Exp $
+// $Id: peardate_engine_test.php,v 1.3 2008/11/15 21:21:42 quipo Exp $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');
@@ -113,6 +113,12 @@ class TestOfPearDateEngine extends UnitTestCase {
         $d = $this->engine->getDaysInMonth($y, $m);
 
         $this->assertEqual($this->engine->getDayOfWeek($y, $m, $d), 3);
+    }
+    function testIsToday() {
+        $stamp = date('Y-m-d H:i:s');
+        $this->assertTrue($this->engine->isToday($stamp));
+        $stamp = date('Y-m-d H:i:s', time() + 1000000000);
+        $this->assertFalse($this->engine->isToday($stamp));
     }
 }
 

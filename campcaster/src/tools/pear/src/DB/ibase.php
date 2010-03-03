@@ -21,9 +21,9 @@
  * @package    DB
  * @author     Sterling Hughes <sterling@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: ibase.php,v 1.113 2007/01/12 03:11:17 aharvey Exp $
+ * @version    CVS: $Id: ibase.php,v 1.116 2007/09/21 13:40:41 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -47,9 +47,9 @@ require_once 'DB/common.php';
  * @package    DB
  * @author     Sterling Hughes <sterling@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  * @since      Class became stable in Release 1.7.0
  */
@@ -553,9 +553,9 @@ class DB_ibase extends DB_common
         $data = (array)$data;
         $this->last_parameters = $data;
 
-        $types =& $this->prepare_types[(int)$stmt];
+        $types = $this->prepare_types[(int)$stmt];
         if (count($types) != count($data)) {
-            $tmp =& $this->raiseError(DB_ERROR_MISMATCH);
+            $tmp = $this->raiseError(DB_ERROR_MISMATCH);
             return $tmp;
         }
 
@@ -574,7 +574,7 @@ class DB_ibase extends DB_common
             } elseif ($types[$i] == DB_PARAM_OPAQUE) {
                 $fp = @fopen($data[$key], 'rb');
                 if (!$fp) {
-                    $tmp =& $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
+                    $tmp = $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
                     return $tmp;
                 }
                 $data[$key] = fread($fp, filesize($data[$key]));
@@ -587,7 +587,7 @@ class DB_ibase extends DB_common
 
         $res = call_user_func_array('ibase_execute', $data);
         if (!$res) {
-            $tmp =& $this->ibaseRaiseError();
+            $tmp = $this->ibaseRaiseError();
             return $tmp;
         }
         /* XXX need this?
@@ -601,7 +601,7 @@ class DB_ibase extends DB_common
             $tmp = DB_OK;
         } else {
             $this->_last_query_manip = false;
-            $tmp =& new DB_result($this, $res);
+            $tmp = new DB_result($this, $res);
         }
         return $tmp;
     }
@@ -707,7 +707,7 @@ class DB_ibase extends DB_common
         $repeat = 0;
         do {
             $this->pushErrorHandling(PEAR_ERROR_RETURN);
-            $result =& $this->query("SELECT GEN_ID(${sqn}, 1) "
+            $result = $this->query("SELECT GEN_ID(${sqn}, 1) "
                                    . 'FROM RDB$GENERATORS '
                                    . "WHERE RDB\$GENERATOR_NAME='${sqn}'");
             $this->popErrorHandling();
@@ -865,7 +865,7 @@ class DB_ibase extends DB_common
         if ($errno === null) {
             $errno = $this->errorCode($this->errorNative());
         }
-        $tmp =& $this->raiseError($errno, null, null, null, @ibase_errmsg());
+        $tmp = $this->raiseError($errno, null, null, null, @ibase_errmsg());
         return $tmp;
     }
 

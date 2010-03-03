@@ -18,9 +18,9 @@
  * @package    DB
  * @author     James L. Pine <jlp@valinux.com>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: oci8.php,v 1.111 2007/01/12 03:11:17 aharvey Exp $
+ * @version    CVS: $Id: oci8.php,v 1.115 2007/09/21 13:40:41 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -45,9 +45,9 @@ require_once 'DB/common.php';
  * @package    DB
  * @author     James L. Pine <jlp@valinux.com>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  */
 class DB_oci8 extends DB_common
@@ -487,7 +487,7 @@ class DB_oci8 extends DB_common
             $save_query = $this->last_query;
             $save_stmt = $this->last_stmt;
 
-            $count =& $this->query($countquery);
+            $count = $this->query($countquery);
 
             // Restore the last query and statement.
             $this->last_query = $save_query;
@@ -633,9 +633,9 @@ class DB_oci8 extends DB_common
         $this->last_query = $this->_prepared_queries[(int)$stmt];
         $this->_data = $data;
 
-        $types =& $this->prepare_types[(int)$stmt];
+        $types = $this->prepare_types[(int)$stmt];
         if (count($types) != count($data)) {
-            $tmp =& $this->raiseError(DB_ERROR_MISMATCH);
+            $tmp = $this->raiseError(DB_ERROR_MISMATCH);
             return $tmp;
         }
 
@@ -654,7 +654,7 @@ class DB_oci8 extends DB_common
             } elseif ($types[$i] == DB_PARAM_OPAQUE) {
                 $fp = @fopen($data[$key], 'rb');
                 if (!$fp) {
-                    $tmp =& $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
+                    $tmp = $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
                     return $tmp;
                 }
                 $data[$key] = fread($fp, filesize($data[$key]));
@@ -690,7 +690,7 @@ class DB_oci8 extends DB_common
         } else {
             $this->_last_query_manip = false;
             @ocisetprefetch($stmt, $this->options['result_buffering']);
-            $tmp =& new DB_result($this, $stmt);
+            $tmp = new DB_result($this, $stmt);
         }
         return $tmp;
     }
@@ -818,7 +818,7 @@ class DB_oci8 extends DB_common
         if (count($params)) {
             $result = $this->prepare("SELECT * FROM ($query) "
                                      . 'WHERE NULL = NULL');
-            $tmp =& $this->execute($result, $params);
+            $tmp = $this->execute($result, $params);
         } else {
             $q_fields = "SELECT * FROM ($query) WHERE NULL = NULL";
 
@@ -878,7 +878,7 @@ class DB_oci8 extends DB_common
         $repeat = 0;
         do {
             $this->expectError(DB_ERROR_NOSUCHTABLE);
-            $result =& $this->query("SELECT ${seqname}.nextval FROM dual");
+            $result = $this->query("SELECT ${seqname}.nextval FROM dual");
             $this->popExpect();
             if ($ondemand && DB::isError($result) &&
                 $result->getCode() == DB_ERROR_NOSUCHTABLE) {
@@ -1119,6 +1119,8 @@ class DB_oci8 extends DB_common
                 return 'SELECT table_name FROM user_tables';
             case 'synonyms':
                 return 'SELECT synonym_name FROM user_synonyms';
+            case 'views':
+                return 'SELECT view_name FROM user_views';
             default:
                 return null;
         }

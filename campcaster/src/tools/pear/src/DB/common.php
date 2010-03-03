@@ -18,9 +18,9 @@
  * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V. Cox <cox@idecnet.com>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: common.php,v 1.140 2007/01/12 02:41:07 aharvey Exp $
+ * @version    CVS: $Id: common.php,v 1.143 2007/09/21 13:40:41 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -40,9 +40,9 @@ require_once 'PEAR.php';
  * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V. Cox <cox@idecnet.com>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  */
 class DB_common extends PEAR
@@ -891,7 +891,7 @@ class DB_common extends PEAR
         if (DB::isError($sth)) {
             return $sth;
         }
-        $ret =& $this->execute($sth, array_values($fields_values));
+        $ret = $this->execute($sth, array_values($fields_values));
         $this->freePrepared($sth);
         return $ret;
 
@@ -985,7 +985,7 @@ class DB_common extends PEAR
      *     "'it''s good'",
      *     'filename.txt'
      * );
-     * $res =& $db->execute($sth, $data);
+     * $res = $db->execute($sth, $data);
      * </code>
      *
      * @param resource $stmt  a DB statement resource returned from prepare()
@@ -1014,7 +1014,7 @@ class DB_common extends PEAR
         if ($result === DB_OK || DB::isError($result)) {
             return $result;
         } else {
-            $tmp =& new DB_result($this, $result);
+            $tmp = new DB_result($this, $result);
             return $tmp;
         }
     }
@@ -1095,7 +1095,7 @@ class DB_common extends PEAR
     function executeMultiple($stmt, $data)
     {
         foreach ($data as $value) {
-            $res =& $this->execute($stmt, $value);
+            $res = $this->execute($stmt, $value);
             if (DB::isError($res)) {
                 return $res;
             }
@@ -1208,7 +1208,7 @@ class DB_common extends PEAR
             if (DB::isError($sth)) {
                 return $sth;
             }
-            $ret =& $this->execute($sth, $params);
+            $ret = $this->execute($sth, $params);
             $this->freePrepared($sth, false);
             return $ret;
         } else {
@@ -1217,7 +1217,7 @@ class DB_common extends PEAR
             if ($result === DB_OK || DB::isError($result)) {
                 return $result;
             } else {
-                $tmp =& new DB_result($this, $result);
+                $tmp = new DB_result($this, $result);
                 return $tmp;
             }
         }
@@ -1248,7 +1248,7 @@ class DB_common extends PEAR
         if (DB::isError($query)){
             return $query;
         }
-        $result =& $this->query($query, $params);
+        $result = $this->query($query, $params);
         if (is_a($result, 'DB_result')) {
             $result->setOption('limit_from', $from);
             $result->setOption('limit_count', $count);
@@ -1283,10 +1283,10 @@ class DB_common extends PEAR
             if (DB::isError($sth)) {
                 return $sth;
             }
-            $res =& $this->execute($sth, $params);
+            $res = $this->execute($sth, $params);
             $this->freePrepared($sth);
         } else {
-            $res =& $this->query($query);
+            $res = $this->query($query);
         }
 
         if (DB::isError($res)) {
@@ -1347,10 +1347,10 @@ class DB_common extends PEAR
             if (DB::isError($sth)) {
                 return $sth;
             }
-            $res =& $this->execute($sth, $params);
+            $res = $this->execute($sth, $params);
             $this->freePrepared($sth);
         } else {
-            $res =& $this->query($query);
+            $res = $this->query($query);
         }
 
         if (DB::isError($res)) {
@@ -1398,10 +1398,10 @@ class DB_common extends PEAR
                 return $sth;
             }
 
-            $res =& $this->execute($sth, $params);
+            $res = $this->execute($sth, $params);
             $this->freePrepared($sth);
         } else {
-            $res =& $this->query($query);
+            $res = $this->query($query);
         }
 
         if (DB::isError($res)) {
@@ -1414,7 +1414,7 @@ class DB_common extends PEAR
             $ret = array();
         } else {
             if (!array_key_exists($col, $row)) {
-                $ret =& $this->raiseError(DB_ERROR_NOSUCHFIELD);
+                $ret = $this->raiseError(DB_ERROR_NOSUCHFIELD);
             } else {
                 $ret = array($row[$col]);
                 while (is_array($row = $res->fetchRow($fetchmode))) {
@@ -1530,10 +1530,10 @@ class DB_common extends PEAR
                 return $sth;
             }
 
-            $res =& $this->execute($sth, $params);
+            $res = $this->execute($sth, $params);
             $this->freePrepared($sth);
         } else {
-            $res =& $this->query($query);
+            $res = $this->query($query);
         }
 
         if (DB::isError($res)) {
@@ -1545,7 +1545,7 @@ class DB_common extends PEAR
         $cols = $res->numCols();
 
         if ($cols < 2) {
-            $tmp =& $this->raiseError(DB_ERROR_TRUNCATED);
+            $tmp = $this->raiseError(DB_ERROR_TRUNCATED);
             return $tmp;
         }
 
@@ -1657,10 +1657,10 @@ class DB_common extends PEAR
                 return $sth;
             }
 
-            $res =& $this->execute($sth, $params);
+            $res = $this->execute($sth, $params);
             $this->freePrepared($sth);
         } else {
-            $res =& $this->query($query);
+            $res = $this->query($query);
         }
 
         if ($res === DB_OK || DB::isError($res)) {
@@ -1681,7 +1681,7 @@ class DB_common extends PEAR
         $res->free();
 
         if (DB::isError($row)) {
-            $tmp =& $this->raiseError($row);
+            $tmp = $this->raiseError($row);
             return $tmp;
         }
         return $results;

@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar_test.php,v 1.1 2004/05/24 22:25:43 quipo Exp $
+// $Id: calendar_test.php,v 1.2 2008/11/15 21:21:42 quipo Exp $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');
@@ -110,6 +110,15 @@ class TestOfCalendar extends UnitTestCase {
     function testGetTimeStamp() {
         $stamp = mktime(13,32,43,10,25,2003);
         $this->assertEqual($stamp,$this->cal->getTimeStamp());
+    }
+    function testIsToday() {
+        $stamp = mktime();
+        $this->cal->setTimestamp($stamp);
+        $this->assertTrue($this->cal->isToday());
+
+        $stamp += 1000000000;
+        $this->cal->setTimestamp($stamp);
+        $this->assertFalse($this->cal->isToday());
     }
 }
 ?>

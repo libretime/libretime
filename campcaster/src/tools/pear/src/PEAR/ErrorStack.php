@@ -21,9 +21,9 @@
  * @category   Debugging
  * @package    PEAR_ErrorStack
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  2004-2006 Greg Beaver
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: ErrorStack.php,v 1.22 2006/01/06 04:47:36 cellog Exp $
+ * @copyright  2004-2008 Greg Beaver
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    CVS: $Id: ErrorStack.php 276383 2009-02-24 23:39:37Z dufuz $
  * @link       http://pear.php.net/package/PEAR_ErrorStack
  */
 
@@ -132,12 +132,12 @@ define('PEAR_ERRORSTACK_ERR_OBJTOSTRING', 2);
  * $local_stack = new PEAR_ErrorStack('MyPackage');
  * </code>
  * @author     Greg Beaver <cellog@php.net>
- * @version    1.4.11
+ * @version    1.9.0
  * @package    PEAR_ErrorStack
  * @category   Debugging
- * @copyright  2004-2006 Greg Beaver
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: ErrorStack.php,v 1.22 2006/01/06 04:47:36 cellog Exp $
+ * @copyright  2004-2008 Greg Beaver
+ * @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version    CVS: $Id: ErrorStack.php 276383 2009-02-24 23:39:37Z dufuz $
  * @link       http://pear.php.net/package/PEAR_ErrorStack
  */
 class PEAR_ErrorStack {
@@ -476,19 +476,10 @@ class PEAR_ErrorStack {
      * @param array  $backtrace Protected parameter: use this to pass in the
      *                          {@link debug_backtrace()} that should be used
      *                          to find error context
-     * @return PEAR_Error|array|Exception
-     *                          if compatibility mode is on, a PEAR_Error is also
-     *                          thrown.  If the class Exception exists, then one
-     *                          is returned to allow code like:
-     * <code>
-     * throw ($stack->push(MY_ERROR_CODE, 'error', array('username' => 'grob')));
-     * </code>
+     * @return PEAR_Error|array if compatibility mode is on, a PEAR_Error is also
+     * thrown.  If a PEAR_Error is returned, the userinfo
+     * property is set to the following array:
      * 
-     * The errorData property of the exception class will be set to the array
-     * that would normally be returned.  If a PEAR_Error is returned, the userinfo
-     * property is set to the array
-     * 
-     * Otherwise, an array is returned in this format:
      * <code>
      * array(
      *    'code' => $code,
@@ -501,6 +492,8 @@ class PEAR_ErrorStack {
      * //['repackage' => $err] repackaged error array/Exception class
      * );
      * </code>
+     * 
+     * Normally, the previous array is returned.
      */
     function push($code, $level = 'error', $params = array(), $msg = false,
                   $repackage = false, $backtrace = false)
@@ -575,6 +568,9 @@ class PEAR_ErrorStack {
         }
         if ($push) {
             array_unshift($this->_errors, $err);
+            if (!isset($this->_errorsByLevel[$err['level']])) {
+                $this->_errorsByLevel[$err['level']] = array();
+            }
             $this->_errorsByLevel[$err['level']][] = &$this->_errors[0];
         }
         if ($log) {
@@ -606,13 +602,8 @@ class PEAR_ErrorStack {
      * @param array  $backtrace Protected parameter: use this to pass in the
      *                          {@link debug_backtrace()} that should be used
      *                          to find error context
-     * @return PEAR_Error|null|Exception
-     *                          if compatibility mode is on, a PEAR_Error is also
-     *                          thrown.  If the class Exception exists, then one
-     *                          is returned to allow code like:
-     * <code>
-     * throw ($stack->push(MY_ERROR_CODE, 'error', array('username' => 'grob')));
-     * </code>
+     * @return PEAR_Error|array if compatibility mode is on, a PEAR_Error is also
+     *                          thrown.  see docs for {@link push()}
      * @static
      */
     function staticPush($package, $code, $level = 'error', $params = array(),
@@ -673,9 +664,33 @@ class PEAR_ErrorStack {
      */
     function pop()
     {
-        return @array_shift($this->_errors);
+        $err = @array_shift($this->_errors);
+        if (!is_null($err)) {
+            @array_pop($this->_errorsByLevel[$err['level']]);
+            if (!count($this->_errorsByLevel[$err['level']])) {
+                unset($this->_errorsByLevel[$err['level']]);
+            }
+        }
+        return $err;
     }
-    
+
+    /**
+     * Pop an error off of the error stack, static method
+     *
+     * @param string package name
+     * @return boolean
+     * @since PEAR1.5.0a1
+     */
+    function staticPop($package)
+    {
+        if ($package) {
+            if (!isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
+                return false;
+            }
+            return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->pop();
+        }
+    }
+
     /**
      * Determine whether there are any errors on the stack
      * @param string|array Level name.  Use to determine if any errors
@@ -842,7 +857,7 @@ class PEAR_ErrorStack {
                          'line' => $filebacktrace['line']);
             // rearrange for eval'd code or create function errors
             if (strpos($filebacktrace['file'], '(') && 
-            	  preg_match(';^(.*?)\((\d+)\) : (.*?)$;', $filebacktrace['file'],
+            	  preg_match(';^(.*?)\((\d+)\) : (.*?)\\z;', $filebacktrace['file'],
                   $matches)) {
                 $ret['file'] = $matches[1];
                 $ret['line'] = $matches[2] + 0;

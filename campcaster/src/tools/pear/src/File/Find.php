@@ -16,7 +16,7 @@
 // | Author: Sterling Hughes <sterling@php.net>                           |
 // +----------------------------------------------------------------------+
 //
-// $Id: Find.php,v 1.26 2006/02/11 16:28:40 techtonik Exp $
+// $Id: Find.php,v 1.27 2006/06/30 14:06:16 techtonik Exp $
 //
 
 require_once 'PEAR.php';
@@ -30,7 +30,7 @@ define('FILE_FIND_VERSION', '@package_version@');
 *  Commonly needed functions searching directory trees
 *
 * @access public
-* @version $Id: Find.php,v 1.26 2006/02/11 16:28:40 techtonik Exp $
+* @version $Id: Find.php,v 1.27 2006/06/30 14:06:16 techtonik Exp $
 * @package File
 * @author Sterling Hughes <sterling@php.net>
 */
@@ -41,6 +41,12 @@ class File_Find
      * @var array
      */
     var $_dirs = array();
+
+    /**
+     * directory separator
+     * @var string
+     */
+    var $dirsep = "/";
 
     /**
      * found files
@@ -55,8 +61,7 @@ class File_Find
     var $directories = array();
 
     /**
-     * Search the current directory to find matches for the
-     * the specified pattern.
+     * Search specified directory to find matches for specified pattern
      *
      * @param string $pattern a string containing the pattern to search
      * the directory for.
@@ -80,7 +85,7 @@ class File_Find
         $dh = @opendir($dirpath);
 
         if (!$dh) {
-            $pe = PEAR::raiseError("Cannot open directory");
+            $pe = PEAR::raiseError("Cannot open directory $dirpath");
             return $pe;
         }
 
@@ -132,16 +137,14 @@ class File_Find
         $this->files       = array();
         $this->directories = array();
 
-        /* consistency rules - strip out trailing slashes */
+        /* strip out trailing slashes */
         $directory = preg_replace('![\\\\/]+$!', '', $directory);
-        /* use only native system directory delimiters */
-        $directory = preg_replace("![\\\\/]+!", DIRECTORY_SEPARATOR, $directory);
 
         $this->_dirs = array($directory);
 
         while (count($this->_dirs)) {
             $dir = array_pop($this->_dirs);
-            File_Find::_build($dir);
+            File_Find::_build($dir, $this->dirsep);
             array_push($this->directories, $dir);
         }
 
@@ -181,7 +184,8 @@ class File_Find
 
         $count++;
 
-        $directory .= DIRECTORY_SEPARATOR;
+        /* strip trailing slashes */
+        $directory = preg_replace('![\\\\/]+$!', '', $directory);
         
         if (is_readable($directory)) {
             $dh = opendir($directory);
@@ -194,9 +198,7 @@ class File_Find
         }
      
         while (list($key, $val) = each($retval)) {
-            $path = $directory . $val;
-            $path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,
-                                DIRECTORY_SEPARATOR, $path);
+            $path = $directory . "/" . $val;
       
             if (!is_array($val) && is_dir($path)) {
                 unset($retval[$key]);
@@ -287,9 +289,10 @@ class File_Find
      * File_Find::maptree()
      *
      * @param string $directory name of the directory to read
+     * @param string $separator directory separator
      * @return void
      */
-    function _build($directory)
+    function _build($directory, $separator = "/")
     {
 
         $dh = @opendir($directory);
@@ -302,9 +305,7 @@ class File_Find
         while (false !== ($entry = @readdir($dh))) {
             if ($entry != '.' && $entry != '..') {
 
-                $entry = $directory.DIRECTORY_SEPARATOR.$entry;
-                $entry = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,
-                                     DIRECTORY_SEPARATOR, $entry);
+                $entry = $directory.$separator.$entry;
 
                 if (is_dir($entry)) {
                     array_push($this->_dirs, $entry);
@@ -343,7 +344,7 @@ class File_Find
 
 /**
 * Package method to match via 'shell' pattern. Provided in global
-* scope, because they should be called like 'preg_match' and 'eregi'
+* scope, because it should be called like 'preg_match' and 'eregi'
 * and can be easily copied into other packages
 *
 * @author techtonik <techtonik@php.net>

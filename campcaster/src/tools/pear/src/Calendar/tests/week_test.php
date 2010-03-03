@@ -1,5 +1,5 @@
 <?php
-// $Id: week_test.php,v 1.4 2005/10/20 18:56:21 quipo Exp $
+// $Id: week_test.php,v 1.5 2006/10/20 14:03:58 quipo Exp $
 define('CALENDAR_FIRST_DAY_OF_WEEK', 1); //force firstDay = monday
 
 require_once('simple_include.php');
@@ -14,6 +14,41 @@ class TestOfWeek extends TestOfCalendar {
     function setUp() {
         $this->cal = Calendar_Factory::create('Week', 2003, 10, 9);
         //print_r($this->cal);
+    }
+    function testThisYear () {
+        $this->assertEqual(2003, $this->cal->thisYear());
+
+        $stamp = mktime(0,0,0,1,1,2003);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2003, $this->cal->thisYear());
+        
+        $stamp = mktime(0,0,0,12,31,2003);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2004, $this->cal->thisYear());
+
+        $stamp = mktime(0,0,0,1,1,2005);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2004, $this->cal->thisYear());
+        
+        $stamp = mktime(0,0,0,12,31,2004);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2004, $this->cal->thisYear());
+        
+        $stamp = mktime(0,0,0,1,1,2005);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2004, $this->cal->thisYear());
+
+        $stamp = mktime(0,0,0,12,31,2005);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2005, $this->cal->thisYear());
+
+        $stamp = mktime(0,0,0,1,1,2006);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2005, $this->cal->thisYear());
+
+        $stamp = mktime(0,0,0,12,31,2006);
+        $this->cal->setTimestamp($stamp);
+        $this->assertEqual(2006, $this->cal->thisYear());
     }
     function testPrevDay () {
         $this->assertEqual(8, $this->cal->prevDay());

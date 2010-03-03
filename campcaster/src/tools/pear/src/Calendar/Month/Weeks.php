@@ -1,28 +1,40 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-//
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/3_0.txt.                                  |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Harry Fuecks <hfuecks@phppatterns.com>                      |
-// |          Lorenzo Alberton <l dot alberton at quipo dot it>           |
-// +----------------------------------------------------------------------+
-//
-// $Id: Weeks.php,v 1.3 2005/10/22 10:28:49 quipo Exp $
-//
+
 /**
- * @package Calendar
- * @version $Id: Weeks.php,v 1.3 2005/10/22 10:28:49 quipo Exp $
+ * Contains the Calendar_Month_Weeks class
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @version   CVS: $Id: Weeks.php,v 1.7 2007/11/16 20:04:45 quipo Exp $
+ * @link      http://pear.php.net/package/Calendar
  */
 
 /**
@@ -53,8 +65,15 @@ require_once CALENDAR_ROOT.'Month.php';
  *     echo $Week->thisWeek().'<br />';
  * }
  * </code>
- * @package Calendar
- * @access public
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @link      http://pear.php.net/package/Calendar
+ * @access    public
  */
 class Calendar_Month_Weeks extends Calendar_Month
 {
@@ -74,9 +93,11 @@ class Calendar_Month_Weeks extends Calendar_Month
 
     /**
      * Constructs Calendar_Month_Weeks
-     * @param int year e.g. 2003
-     * @param int month e.g. 5
-     * @param int (optional) first day of week (e.g. 0 for Sunday, 2 for Tuesday etc.)
+     *
+     * @param int $y        year e.g. 2003
+     * @param int $m        month e.g. 5
+     * @param int $firstDay (optional) first day of week (e.g. 0 for Sunday, 2 for Tuesday etc.)
+     *
      * @access public
      */
     function Calendar_Month_Weeks($y, $m, $firstDay=null)
@@ -87,21 +108,25 @@ class Calendar_Month_Weeks extends Calendar_Month
     /**
      * Builds Calendar_Week objects for the Month. Note that Calendar_Week
      * builds Calendar_Day object in tabular form (with Calendar_Day->empty)
-     * @param array (optional) Calendar_Week objects representing selected dates
+     *
+     * @param array $sDates (optional) Calendar_Week objects representing selected dates
+     *
      * @return boolean
      * @access public
      */
-    function build($sDates=array())
+    function build($sDates = array())
     {
-        require_once CALENDAR_ROOT.'Table/Helper.php';
+        include_once CALENDAR_ROOT.'Table/Helper.php';
         $this->tableHelper = & new Calendar_Table_Helper($this, $this->firstDay);
-        require_once CALENDAR_ROOT.'Week.php';
+        include_once CALENDAR_ROOT.'Week.php';
         $numWeeks = $this->tableHelper->getNumWeeks();
         for ($i=1, $d=1; $i<=$numWeeks; $i++,
             $d+=$this->cE->getDaysInWeek(
                 $this->thisYear(),
                 $this->thisMonth(),
-                $this->thisDay()) ) {
+                $this->thisDay()
+            )
+        ) {
             $this->children[$i] = new Calendar_Week(
                 $this->year, $this->month, $d, $this->tableHelper->getFirstDay());
         }
@@ -118,7 +143,9 @@ class Calendar_Month_Weeks extends Calendar_Month
 
     /**
      * Called from build()
-     * @param array
+     *
+     * @param array $sDates Calendar_Week objects representing selected dates
+     *
      * @return void
      * @access private
      */

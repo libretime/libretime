@@ -1,52 +1,46 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997, 1998, 1999, 2000, 2001 The PHP Group             |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the PHP license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/2_02.txt.                                 |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Author: Adam Daniel <adaniel1@eesus.jnj.com>                         |
-// +----------------------------------------------------------------------+
-//
-// $Id: Common.php,v 1.13 2006/10/08 14:10:46 avb Exp $
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
  * Base class for all HTML classes
  *
- * @author    Adam Daniel <adaniel1@eesus.jnj.com>
- * @category  HTML
- * @package   HTML_Common
- * @version   1.2.3
- * @abstract
- */
-
-/**
- * Base class for all HTML classes
+ * PHP versions 4 and 5
  *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ * 
+ * @category    HTML
+ * @package     HTML_Common
  * @author      Adam Daniel <adaniel1@eesus.jnj.com>
- * @version     1.7
- * @since       PHP 4.0.3pl1
+ * @copyright   2001-2009 The PHP Group
+ * @license     http://www.php.net/license/3_01.txt PHP License 3.01
+ * @version     CVS: $Id: Common.php,v 1.15 2009/04/03 15:26:22 avb Exp $
+ * @link        http://pear.php.net/package/HTML_Common/
+ */ 
+
+/**
+ * Base class for all HTML classes
+ *
+ * @category    HTML
+ * @package     HTML_Common
+ * @author      Adam Daniel <adaniel1@eesus.jnj.com>
+ * @version     Release: 1.2.5
  * @abstract
  */
-class HTML_Common {
-
+class HTML_Common
+{
     /**
-     * Associative array of table attributes
+     * Associative array of attributes
      * @var     array
      * @access  private
      */
     var $_attributes = array();
 
     /**
-     * Tab offset of the table
+     * Tab offset of the tag
      * @var     int
      * @access  private
      */
@@ -185,9 +179,10 @@ class HTML_Common {
                         $arrAttr[strtolower(trim($name))] = strtolower(trim($name));
                     } else {
                         if (substr($value, 0, 1) == "\"" || substr($value, 0, 1) == "'") {
-                            $value = substr($value, 1, -1);
+                            $arrAttr[strtolower(trim($name))] = substr($value, 1, -1);
+                        } else {
+                            $arrAttr[strtolower(trim($name))] = trim($value);
                         }
-                        $arrAttr[strtolower(trim($name))] = trim($value);
                     }
                 }
                 return $arrAttr;

@@ -1,5 +1,5 @@
 <?php
-// $Id: unixts_engine_test.php,v 1.2 2004/08/16 11:36:51 hfuecks Exp $
+// $Id: unixts_engine_test.php,v 1.3 2008/11/15 21:21:42 quipo Exp $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');
@@ -93,6 +93,12 @@ class TestOfUnixTsEngine extends UnitTestCase {
     function testStampToYear() {
         $stamp = mktime(13,30,45,10,15,2003);
         $this->assertEqual($this->engine->stampToYear($stamp),2003);
+    }
+    function testIsToday() {
+        $stamp = mktime();
+        $this->assertTrue($this->engine->isToday($stamp));
+        $stamp += 1000000000;
+        $this->assertFalse($this->engine->isToday($stamp));
     }
 }
 

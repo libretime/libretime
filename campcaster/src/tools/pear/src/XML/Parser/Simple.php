@@ -1,37 +1,50 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2004 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 3.0 of the PHP license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/3_0.txt.                                  |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Author: Stephan Schmidt <schst@php-tools.net>                        |
-// +----------------------------------------------------------------------+
-//
-// $Id: Simple.php,v 1.6 2005/03/25 17:13:10 schst Exp $
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Simple XML parser class.
+ * XML_Parser
  *
- * This class is a simplified version of XML_Parser.
- * In most XML applications the real action is executed,
- * when a closing tag is found.
+ * XML Parser's Simple parser class 
  *
- * XML_Parser_Simple allows you to just implement one callback
- * for each tag that will receive the tag with its attributes
- * and CData
+ * PHP versions 4 and 5
  *
- * @category XML
- * @package XML_Parser
- * @author  Stephan Schmidt <schst@php-tools.net>
+ * LICENSE:
+ *
+ * Copyright (c) 2002-2008 The PHP Group
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *    * Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *    * Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ *    * The name of the author may not be used to endorse or promote products
+ *      derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category  XML
+ * @package   XML_Parser
+ * @author    Stephan Schmidt <schst@php.net>
+ * @copyright 2004-2008 Stephan Schmidt <schst@php.net>
+ * @license   http://opensource.org/licenses/bsd-license New BSD License
+ * @version   CVS: $Id: Simple.php,v 1.7 2008/08/24 21:48:21 ashnazg Exp $
+ * @link      http://pear.php.net/package/XML_Parser
  */
 
 /**
@@ -72,34 +85,38 @@ require_once 'XML/Parser.php';
  * $result = $p->parse();
  * </code>
  *
- * @category XML
- * @package XML_Parser
- * @author  Stephan Schmidt <schst@php-tools.net>
+ * @category  XML
+ * @package   XML_Parser
+ * @author    Stephan Schmidt <schst@php.net>
+ * @copyright 2004-2008 The PHP Group
+ * @license   http://opensource.org/licenses/bsd-license New BSD License
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/XML_Parser
  */
 class XML_Parser_Simple extends XML_Parser
 {
-   /**
-    * element stack
-    *
-    * @access   private
-    * @var      array
-    */
+    /**
+     * element stack
+     *
+     * @access   private
+     * @var      array
+     */
     var $_elStack = array();
 
-   /**
-    * all character data
-    *
-    * @access   private
-    * @var      array
-    */
+    /**
+     * all character data
+     *
+     * @access   private
+     * @var      array
+     */
     var $_data = array();
 
-   /**
-    * element depth
-    *
-    * @access   private
-    * @var      integer
-    */
+    /**
+     * element depth
+     *
+     * @access   private
+     * @var      integer
+     */
     var $_depth = 0;
 
     /**
@@ -126,7 +143,7 @@ class XML_Parser_Simple extends XML_Parser
      * @param string $mode   how this parser object should work, "event" for
      *                       handleElement(), "func" to have it call functions
      *                       named after elements (handleElement_$name())
-     * @param string $tgenc  a valid target encoding
+     * @param string $tgtenc a valid target encoding
      */
     function XML_Parser_Simple($srcenc = null, $mode = 'event', $tgtenc = null)
     {
@@ -136,7 +153,8 @@ class XML_Parser_Simple extends XML_Parser
     /**
      * inits the handlers
      *
-     * @access  private
+     * @return mixed
+     * @access private
      */
     function _initHandlers()
     {
@@ -145,11 +163,13 @@ class XML_Parser_Simple extends XML_Parser
         }
 
         if ($this->mode != 'func' && $this->mode != 'event') {
-            return $this->raiseError('Unsupported mode given', XML_PARSER_ERROR_UNSUPPORTED_MODE);
+            return $this->raiseError('Unsupported mode given', 
+                XML_PARSER_ERROR_UNSUPPORTED_MODE);
         }
         xml_set_object($this->parser, $this->_handlerObj);
 
-        xml_set_element_handler($this->parser, array(&$this, 'startHandler'), array(&$this, 'endHandler'));
+        xml_set_element_handler($this->parser, array(&$this, 'startHandler'), 
+            array(&$this, 'endHandler'));
         xml_set_character_data_handler($this->parser, array(&$this, 'cdataHandler'));
         
         /**
@@ -160,7 +180,7 @@ class XML_Parser_Simple extends XML_Parser
                 $xml_func = 'xml_set_' . $xml_func;
                 $xml_func($this->parser, $method);
             }
-		}
+        }
     }
 
     /**
@@ -179,44 +199,47 @@ class XML_Parser_Simple extends XML_Parser
         $this->_depth   = 0;
         
         $result = $this->_create();
-        if ($this->isError( $result )) {
+        if ($this->isError($result)) {
             return $result;
         }
         return true;
     }
 
-   /**
-    * start handler
-    *
-    * Pushes attributes and tagname onto a stack
-    *
-    * @access   private
-    * @final
-    * @param    resource    xml parser resource
-    * @param    string      element name
-    * @param    array       attributes
-    */
+    /**
+     * start handler
+     *
+     * Pushes attributes and tagname onto a stack
+     *
+     * @param resource $xp       xml parser resource
+     * @param string   $elem     element name
+     * @param array    &$attribs attributes
+     *
+     * @return mixed
+     * @access private
+     * @final
+     */
     function startHandler($xp, $elem, &$attribs)
     {
         array_push($this->_elStack, array(
-                                            'name'    => $elem,
-                                            'attribs' => $attribs
-                                        )
-                  );
+            'name'    => $elem,
+            'attribs' => $attribs
+        ));
         $this->_depth++;
         $this->_data[$this->_depth] = '';
     }
 
-   /**
-    * end handler
-    *
-    * Pulls attributes and tagname from a stack
-    *
-    * @access   private
-    * @final
-    * @param    resource    xml parser resource
-    * @param    string      element name
-    */
+    /**
+     * end handler
+     *
+     * Pulls attributes and tagname from a stack
+     *
+     * @param resource $xp   xml parser resource
+     * @param string   $elem element name
+     *
+     * @return mixed
+     * @access private
+     * @final
+     */
     function endHandler($xp, $elem)
     {
         $el   = array_pop($this->_elStack);
@@ -224,72 +247,78 @@ class XML_Parser_Simple extends XML_Parser
         $this->_depth--;
 
         switch ($this->mode) {
-            case 'event':
-                $this->_handlerObj->handleElement($el['name'], $el['attribs'], $data);
-                break;
-            case 'func':
-                $func = 'handleElement_' . $elem;
-                if (strchr($func, '.')) {
-                    $func = str_replace('.', '_', $func);
-                }
-                if (method_exists($this->_handlerObj, $func)) {
-                    call_user_func(array(&$this->_handlerObj, $func), $el['name'], $el['attribs'], $data);
-                }
-                break;
+        case 'event':
+            $this->_handlerObj->handleElement($el['name'], $el['attribs'], $data);
+            break;
+        case 'func':
+            $func = 'handleElement_' . $elem;
+            if (strchr($func, '.')) {
+                $func = str_replace('.', '_', $func);
+            }
+            if (method_exists($this->_handlerObj, $func)) {
+                call_user_func(array(&$this->_handlerObj, $func), 
+                    $el['name'], $el['attribs'], $data);
+            }
+            break;
         }
     }
 
-   /**
-    * handle character data
-    *
-    * @access   private
-    * @final
-    * @param    resource    xml parser resource
-    * @param    string      data
-    */
+    /**
+     * handle character data
+     *
+     * @param resource $xp   xml parser resource
+     * @param string   $data data
+     *
+     * @return void
+     * @access private
+     * @final
+     */
     function cdataHandler($xp, $data)
     {
         $this->_data[$this->_depth] .= $data;
     }
 
-   /**
-    * handle a tag
-    *
-    * Implement this in your parser 
-    *
-    * @access   public
-    * @abstract
-    * @param    string      element name
-    * @param    array       attributes
-    * @param    string      character data
-    */
+    /**
+     * handle a tag
+     *
+     * Implement this in your parser 
+     *
+     * @param string $name    element name
+     * @param array  $attribs attributes
+     * @param string $data    character data
+     *
+     * @return void
+     * @access public
+     * @abstract
+     */
     function handleElement($name, $attribs, $data)
     {
     }
 
-   /**
-    * get the current tag depth
-    *
-    * The root tag is in depth 0.
-    *
-    * @access   public
-    * @return   integer
-    */
+    /**
+     * get the current tag depth
+     *
+     * The root tag is in depth 0.
+     *
+     * @access   public
+     * @return   integer
+     */
     function getCurrentDepth()
     {
         return $this->_depth;
     }
 
-   /**
-    * add some string to the current ddata.
-    *
-    * This is commonly needed, when a document is parsed recursively.
-    *
-    * @access   public
-    * @param    string      data to add
-    * @return   void
-    */
-    function addToData( $data )
+    /**
+     * add some string to the current ddata.
+     *
+     * This is commonly needed, when a document is parsed recursively.
+     *
+     * @param string $data data to add
+     *
+     * @return void
+     * @access public
+     */
+    function addToData($data)
     {
         $this->_data[$this->_depth] .= $data;
     }

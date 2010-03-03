@@ -1,28 +1,40 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-//
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/3_0.txt.                                  |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Harry Fuecks <hfuecks@phppatterns.com>                      |
-// |          Lorenzo Alberton <l dot alberton at quipo dot it>           |
-// +----------------------------------------------------------------------+
-//
-// $Id: Weekday.php,v 1.3 2004/08/16 12:25:15 hfuecks Exp $
-//
+
 /**
- * @package Calendar
- * @version $Id: Weekday.php,v 1.3 2004/08/16 12:25:15 hfuecks Exp $
+ * Contains the Calendar_Decorator_Weekday class
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @version   CVS: $Id: Weekday.php,v 1.8 2007/11/24 11:04:24 quipo Exp $
+ * @link      http://pear.php.net/package/Calendar
  */
 
 /**
@@ -50,8 +62,15 @@ require_once CALENDAR_ROOT.'Day.php';
  * $Weekday->setFirstDay(0); // Set first day of week to Sunday (default Mon)
  * echo $Weekday->thisWeekDay(); // Displays 5 - fifth day of week relative to Sun
  * </code>
- * @package Calendar
- * @access public
+ *
+ * @category  Date and Time
+ * @package   Calendar
+ * @author    Harry Fuecks <hfuecks@phppatterns.com>
+ * @author    Lorenzo Alberton <l.alberton@quipo.it>
+ * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
+ * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ * @link      http://pear.php.net/package/Calendar
+ * @access    public
  */
 class Calendar_Decorator_Weekday extends Calendar_Decorator
 {
@@ -64,84 +83,112 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
 
     /**
      * Constructs Calendar_Decorator_Weekday
-     * @param object subclass of Calendar
+     *
+     * @param object &$Calendar subclass of Calendar
+     *
      * @access public
      */
-    function Calendar_Decorator_Weekday(& $Calendar)
+    function Calendar_Decorator_Weekday(&$Calendar)
     {
         parent::Calendar_Decorator($Calendar);
     }
 
     /**
      * Sets the first day of the week (0 = Sunday, 1 = Monday (default) etc)
-     * @param int first day of week
+     *
+     * @param int $firstDay first day of week
+     *
      * @return void
      * @access public
      */
-    function setFirstDay($firstDay) {
+    function setFirstDay($firstDay) 
+    {
         $this->firstDay = (int)$firstDay;
     }
 
     /**
      * Returns the previous weekday
-     * @param string (default = 'int') return value format
-     * @return int numeric day of week or timestamp
+     *
+     * @param string $format (default = 'int') return value format
+     *
+     * @return int $format numeric day of week or timestamp
      * @access public
      */
     function prevWeekDay($format = 'int')
     {
-        $ts = $this->calendar->prevDay('timestamp');
-        $Day = new Calendar_Day(2000,1,1);
+        $ts  = $this->calendar->prevDay('timestamp');
+        $Day = new Calendar_Day(2000, 1, 1);
         $Day->setTimeStamp($ts);
-        $day = $this->calendar->cE->getDayOfWeek($Day->thisYear(),$Day->thisMonth(),$Day->thisDay());
+        $day = $this->calendar->cE->getDayOfWeek(
+            $Day->thisYear(),
+            $Day->thisMonth(),
+            $Day->thisDay()
+        );
         $day = $this->adjustWeekScale($day);
         return $this->returnValue('Day', $format, $ts, $day);
     }
 
     /**
      * Returns the current weekday
-     * @param string (default = 'int') return value format
+     *
+     * @param string $format (default = 'int') return value format
+     *
      * @return int numeric day of week or timestamp
      * @access public
      */
     function thisWeekDay($format = 'int')
     {
-        $ts = $this->calendar->thisDay('timestamp');
-        $day = $this->calendar->cE->getDayOfWeek($this->calendar->year,$this->calendar->month,$this->calendar->day);
+        $ts  = $this->calendar->thisDay('timestamp');
+        $day = $this->calendar->cE->getDayOfWeek(
+            $this->calendar->year,
+            $this->calendar->month,
+            $this->calendar->day
+        );
         $day = $this->adjustWeekScale($day);
         return $this->returnValue('Day', $format, $ts, $day);
     }
 
     /**
      * Returns the next weekday
-     * @param string (default = 'int') return value format
+     *
+     * @param string $format (default = 'int') return value format
+     *
      * @return int numeric day of week or timestamp
      * @access public
      */
     function nextWeekDay($format = 'int')
     {
-        $ts = $this->calendar->nextDay('timestamp');
-        $Day = new Calendar_Day(2000,1,1);
+        $ts  = $this->calendar->nextDay('timestamp');
+        $Day = new Calendar_Day(2000, 1, 1);
         $Day->setTimeStamp($ts);
-        $day = $this->calendar->cE->getDayOfWeek($Day->thisYear(),$Day->thisMonth(),$Day->thisDay());
+        $day = $this->calendar->cE->getDayOfWeek(
+            $Day->thisYear(),
+            $Day->thisMonth(),
+            $Day->thisDay()
+        );
         $day = $this->adjustWeekScale($day);
         return $this->returnValue('Day', $format, $ts, $day);
     }
 
     /**
      * Adjusts the day of the week relative to the first day of the week
-     * @param int day of week calendar from Calendar_Engine
+     *
+     * @param int $dayOfWeek day of week calendar from Calendar_Engine
+     *
      * @return int day of week adjusted to first day
      * @access private
      */
-    function adjustWeekScale($dayOfWeek) {
+    function adjustWeekScale($dayOfWeek) 
+    {
         $dayOfWeek = $dayOfWeek - $this->firstDay;
-        if ( $dayOfWeek >= 0 ) {
+        if ($dayOfWeek >= 0) {
             return $dayOfWeek;
         } else {
             return $this->calendar->cE->getDaysInWeek(
-                $this->calendar->year,$this->calendar->month,$this->calendar->day
-                ) + $dayOfWeek;
+                $this->calendar->year,
+                $this->calendar->month,
+                $this->calendar->day
+            ) + $dayOfWeek;
         }
     }
 }

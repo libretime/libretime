@@ -18,9 +18,9 @@
  * @package    DB
  * @author     Stig Bakken <ssb@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: odbc.php,v 1.80 2007/01/12 03:11:17 aharvey Exp $
+ * @version    CVS: $Id: odbc.php,v 1.81 2007/07/06 05:19:21 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -42,9 +42,9 @@ require_once 'DB/common.php';
  * @package    DB
  * @author     Stig Bakken <ssb@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  */
 class DB_odbc extends DB_common

@@ -18,9 +18,9 @@
  * @package    DB
  * @author     Stig Bakken <ssb@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: mysql.php,v 1.124 2007/01/12 03:11:17 aharvey Exp $
+ * @version    CVS: $Id: mysql.php,v 1.126 2007/09/21 13:32:52 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -39,9 +39,9 @@ require_once 'DB/common.php';
  * @package    DB
  * @author     Stig Bakken <ssb@php.net>
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  */
 class DB_mysql extends DB_common
@@ -932,6 +932,13 @@ class DB_mysql extends DB_common
     function tableInfo($result, $mode = null)
     {
         if (is_string($result)) {
+            // Fix for bug #11580.
+            if ($this->_db) {
+                if (!@mysql_select_db($this->_db, $this->connection)) {
+                    return $this->mysqlRaiseError(DB_ERROR_NODBSELECTED);
+                }
+            }
+            
             /*
              * Probably received a table name.
              * Create a result resource identifier.

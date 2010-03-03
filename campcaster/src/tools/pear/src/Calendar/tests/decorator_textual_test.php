@@ -1,5 +1,5 @@
 <?php
-// $Id: decorator_textual_test.php,v 1.1 2004/05/24 22:25:43 quipo Exp $
+// $Id: decorator_textual_test.php,v 1.2 2008/11/15 21:21:42 quipo Exp $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');
@@ -160,6 +160,11 @@ class TestOfDecoratorTextual extends TestOfDecorator {
             5=>'Fri',
             6=>'Sat',
         );
+        $nShifts = CALENDAR_FIRST_DAY_OF_WEEK;
+        while ($nShifts-- > 0) {
+            $day = array_shift($weekdayNames);
+            array_push($weekdayNames, $day);
+        }
         $Textual = new Calendar_Decorator_Textual($this->mockcal);
         $this->assertEqual($weekdayNames,$Textual->orderedWeekdays('short'));
     }

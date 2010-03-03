@@ -1,5 +1,6 @@
 <role version="1.0">
  <releasetypes>extbin</releasetypes>
+ <releasetypes>zendextbin</releasetypes>
  <installable>1</installable>
  <locationconfig>ext_dir</locationconfig>
  <honorsbaseinstall>1</honorsbaseinstall>

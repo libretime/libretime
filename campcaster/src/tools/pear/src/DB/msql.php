@@ -21,9 +21,9 @@
  * @category   Database
  * @package    DB
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: msql.php,v 1.62 2007/01/12 03:11:17 aharvey Exp $
+ * @version    CVS: $Id: msql.php,v 1.64 2007/09/21 13:40:41 aharvey Exp $
  * @link       http://pear.php.net/package/DB
  */
 
@@ -45,9 +45,9 @@ require_once 'DB/common.php';
  * @category   Database
  * @package    DB
  * @author     Daniel Convissor <danielc@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.7.9
+ * @version    Release: 1.7.13
  * @link       http://pear.php.net/package/DB
  * @since      Class not functional until Release 1.7.0
  */
@@ -153,7 +153,7 @@ class DB_msql extends DB_common
      *     'portability' => DB_PORTABILITY_ALL,
      * );
      * 
-     * $db =& DB::connect($dsn, $options);
+     * $db = DB::connect($dsn, $options);
      * if (PEAR::isError($db)) {
      *     die($db->getMessage());
      * }
@@ -443,7 +443,7 @@ class DB_msql extends DB_common
         $repeat = false;
         do {
             $this->pushErrorHandling(PEAR_ERROR_RETURN);
-            $result =& $this->query("SELECT _seq FROM ${seqname}");
+            $result = $this->query("SELECT _seq FROM ${seqname}");
             $this->popErrorHandling();
             if ($ondemand && DB::isError($result) &&
                 $result->getCode() == DB_ERROR_NOSUCHTABLE) {
