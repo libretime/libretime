@@ -671,12 +671,14 @@ class GreenBox extends BasicStor {
      * @param string $length
      *      length in extent format -
      *          for webstream (or for overrule length of audioclip)
-     * @param string $pause
-     *      pause between half-faded points in time format hh:mm:ss.ssssss
+     * @param string $clipstart
+     *      optional clipstart time format hh:mm:ss.ssssss - relative to begin
+     * @param string $clipend
+     *      optional $clipend time format hh:mm:ss.ssssss - relative to begin
      * @return string, generated playlistElement gunid
      */
     public function addAudioClipToPlaylist($token, $acId, $sessid,
-        $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $pause=NULL)
+        $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $clipstart=NULL, $clipend=NULL)
     {
         require_once("Playlist.php");
         $pl = StoredFile::RecallByToken($token);
@@ -690,13 +692,11 @@ class GreenBox extends BasicStor {
                 " ($type)"
             );
         }
-//        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
-        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length);
+        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length, $clipstart, $clipend);
         if (PEAR::isError($res)) {
             return $res;
         }
         // recalculate offsets and total length:
-//        $r = $pl->recalculateTimes($pause);
         $r = $pl->recalculateTimes();
         if (PEAR::isError($r)) {
             return $r;
@@ -760,6 +760,41 @@ class GreenBox extends BasicStor {
             return $pl;
         }
         $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+        // recalculate offsets and total length:
+        $r = $pl->recalculateTimes();
+        if (PEAR::isError($r)) {
+            return $r;
+        }
+        return TRUE;
+    } // fn changeFadeInfo
+    
+    /**
+     * Change cueIn/curOut values for playlist element
+     *
+     * @param string $token
+     *      playlist access token
+     * @param string $plElGunid
+     *      global id of deleted playlistElement
+     * @param string $clipStart
+     *      in time format hh:mm:ss.ssssss
+     * @param string $clipEnd
+     *      in time format hh:mm:ss.ssssss
+     *      relative to begin
+     * @param sessid $string
+     *      session ID
+     * @return boolean or pear error object
+     */
+    public function changeClipLength($token, $plElGunid, $clipStart, $clipEnd, $sessid)
+    {
+        require_once("Playlist.php");
+        $pl = StoredFile::RecallByToken($token);
+        if (is_null($pl) || PEAR::isError($pl)) {
+            return $pl;
+        }
+        $res = $pl->changeClipLength($plElGunid, $clipStart, $clipEnd);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -1041,11 +1076,11 @@ class GreenBox extends BasicStor {
      * @return int
      * 		seconds
      */
-//    public function playlistTimeToSeconds($plt)
-//    {
-//        require_once("Playlist.php");
-//        return Playlist::playlistTimeToSeconds($plt);
-//    }
+      public function playlistTimeToSeconds($plt)
+      {
+          require_once("Playlist.php");
+          return Playlist::playlistTimeToSeconds($plt);
+      }
 
 
     /**
@@ -1056,11 +1091,11 @@ class GreenBox extends BasicStor {
      * @return string
      * 		time in playlist time format (HH:mm:ss.dddddd)
      */
-//    public static function secondsToPlaylistTime($s0)
-//    {
-//        require_once("Playlist.php");
-//        return Playlist::secondsToPlaylistTime($s0);
-//    } // fn secondsToPlaylistTime
+      public static function secondsToPlaylistTime($s0)
+      {
+          require_once("Playlist.php");
+          return Playlist::secondsToPlaylistTime($s0);
+      } // fn secondsToPlaylistTime
 
 
     /* ------------------------------------------------------- render methods */

@@ -129,19 +129,23 @@ class Playlist extends StoredFile {
      * @param string $acId
      * 		local ID of added file
      * @param string $fadeIn
-     * 		optional, in time format hh:mm:ss.ssssss
+     * 		optional, in time format hh:mm:ss.ssssss - total duration
      * @param string $fadeOut
-     * 		optional, in time format hh:mm:ss.ssssss
+     * 		optional, in time format hh:mm:ss.ssssss - total duration
      * @param string $plElGunid
      * 		optional playlist element gunid
      * @param string $length
-     * 		optional length in extent format -
+     * 		optional length in in time format hh:mm:ss.ssssss -
      *      for webstream (or for overrule length of audioclip)
+     * @param string $clipstart
+     *      optional clipstart in time format hh:mm:ss.ssssss - relative to begin
+     * @param string $clipend
+     *      optional $clipend in time format hh:mm:ss.ssssss - relative to begin
      * @return string
      * 		generated playlistElement gunid
      */
     public function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL,
-        $length=NULL)
+        $length=NULL, $clipstart=NULL, $clipend=NULL)
     {
         $plGunid = $this->gunid;
         // get information about audioClip
@@ -163,11 +167,18 @@ class Playlist extends StoredFile {
         // insert new playlist element
         $offset = $plLen;
 		
-		 // insert default values until UI starts supporting clip in / clip out
-        $clipStart = 00.000000;
-        $clipEnd = $acLen;
-        $clipLength = $acLen;
-		
+		 // insert default values if parameter was empty
+        $clipStart = !is_null($clipstart) ? $clipstart : '00:00:00.000000';
+        $clipEnd = !is_null($clipend) ? $clipend : $acLen;
+        
+        $acLengthS = $clipLengthS = self::playlistTimeToSeconds($acLen);
+        if (!is_null($clipStart)) {
+            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($clipStart);    
+        }
+        if (!is_null($clipEnd)) {
+            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($clipEnd));   
+        }
+        $clipLength = self::secondsToPlaylistTime($clipLengthS);
 		
         $plElInfo = $this->insertPlaylistElement($parid, $offset, $clipStart, $clipEnd, $clipLength,
             $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid,
@@ -263,7 +274,6 @@ class Playlist extends StoredFile {
         if (PEAR::isError($plElArr)) {
         	return $plElArr;
         }
-        $found = FALSE;
         foreach ($plElArr as $el) {
             $plElGunidArr = $this->md->getMetadataElement('id', $el['mid']);
             if (PEAR::isError($plElGunidArr)) {
@@ -273,6 +283,7 @@ class Playlist extends StoredFile {
             if ($plElGunidArr[0]['value'] != $plElGunid) {
             	continue;
             }
+            $found = TRUE;
             // get fadeInfo:
             $fiMid = $this->_getMidOrInsert('fadeInfo', $el['mid']);
             if (PEAR::isError($fiMid)) {
@@ -301,8 +312,82 @@ class Playlist extends StoredFile {
             if (PEAR::isError($r)) {
             	return $r;
             }
+            return true;
         }
-        return TRUE;
+        return false;
+    }
+    
+        /**
+     * Change cueIn/curOut values for playlist element
+     *
+     * @param string $plElGunid
+     * 		playlistElement gunid
+     * @param string $fadeIn
+     * 		new value in ss.ssssss or extent format
+     * @param string $fadeOut
+     * 		new value in ss.ssssss or extent format
+     * @return boolean or pear error object
+     */
+    public function changeClipLength($plElGunid, $clipStart, $clipEnd)
+    {
+        $plGunid = $this->gunid;
+        // get information about playlist and containers
+        $plInfo = $this->getPlaylistInfo();
+        if (PEAR::isError($plInfo)) {
+        	return $plInfo;
+        }
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
+
+        // get array of playlist elements:
+        $plElArr = $this->md->getMetadataElement('playlistElement', $parid);
+        if (PEAR::isError($plElArr)) {
+        	return $plElArr;
+        }
+        foreach ($plElArr as $el) {
+            $plElGunidArr = $this->md->getMetadataElement('id', $el['mid']);
+            if (PEAR::isError($plElGunidArr)) {
+            	return $plElGunidArr;
+            }
+            // select playlist element:
+            if ($plElGunidArr[0]['value'] != $plElGunid) {
+            	continue;
+            }
+            $found = TRUE;
+            // get clipStart Mid
+            $clipStartMid = $this->_getMidOrInsert('clipStart', $el['mid']);
+            if (PEAR::isError($clipStartMid)) {
+            	return $clipStartMid;
+            }
+            // get clipEnd Mid
+            $clipEndMid = $this->_getMidOrInsert('clipEnd', $el['mid']);
+            if (PEAR::isError($clipEndMid)) {
+            	return $clipEndMid;
+            }
+            // get clipLength Mid
+            $clipLengthMid = $this->_getMidOrInsert('clipLength', $el['mid']);
+            if (PEAR::isError($clipLengthMid)) {
+            	return $clipLengthMid;
+            }
+            // set clipStart value
+            $r = $this->md->setMetadataElement($clipStartMid, $clipStart);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            // setClipend value
+            $r = $this->md->setMetadataElement($clipEndMid, $clipEnd);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            // set playlength value
+            $clipLength = self::secondsToPlaylistTime(self::playlistTimeToSeconds($clipEnd) - self::playlistTimeToSeconds($clipStart));
+            $r = $this->md->setMetadataElement($clipLengthMid, $clipLength);
+            if (PEAR::isError($r)) {
+            	return $r;
+            }
+            $this->recalculateTimes();
+            return true;
+        }
+        return false;
     }
 
 
@@ -422,15 +507,19 @@ class Playlist extends StoredFile {
             	return $offArr;
             }
             // get clipStart:
-            $startArr = $this->md->getMetadataElement('clipStart', $elId);
-            if (PEAR::isError($startArr)) {
-            	return $startArr;
+            $clipStartArr = $this->md->getMetadataElement('clipStart', $elId);
+            if (PEAR::isError($clipStartArr)) {
+            	return $clipStartArr;
             }
+            $clipStart = $clipStartArr[0]['value'];
+            $clipStartS = Playlist::playlistTimeToSeconds($clipStart);
             // get clipEnd:
-            $endArr = $this->md->getMetadataElement('clipEnd', $elId);
-            if (PEAR::isError($endArr)) {
-            	return $endArr;
+            $clipEndArr = $this->md->getMetadataElement('clipEnd', $elId);
+            if (PEAR::isError($clipEndArr)) {
+            	return $clipEndArr;
             }
+            $clipEnd = $clipEndArr[0]['value'];
+            $clipEndS = Playlist::playlistTimeToSeconds($clipEnd);
             // get clipLength:
             $lenArr = $this->md->getMetadataElement('clipLength', $elId);
             if (PEAR::isError($lenArr)) {
@@ -482,14 +571,20 @@ class Playlist extends StoredFile {
                         "Playlist::recalculateTimes: fadeIn too big");
                 }
             }
+            /*
+            this seems made for crossfade
             if ($len > 0) {
             	$len = $len - $fadeInS;
             }
+            */
+            
             $newOffset = Playlist::secondsToPlaylistTime($len);
             $r = $this->_setValueOrInsert($offsetId, $newOffset, $elId, 'relativeOffset');
             if (PEAR::isError($r)) {
             	return $r;
             }
+            
+            // commulate length for next offset
             $acLenS = Playlist::playlistTimeToSeconds($acLen);
             $len = $len + $acLenS;
             if (!is_null($prevFiMid)) {
@@ -503,6 +598,14 @@ class Playlist extends StoredFile {
                 	return $r;
                 }
             }
+            // respect clipStart and clipEnd
+            if (!is_null($clipStart)) {
+                $len = $len - $clipStartS;    
+            }
+            if (!is_null($clipEnd)) {
+                $len = $len - ($acLenS - $clipEndS);   
+            }
+            
             $prevFiMid = $fiMid;
             $lastLenS = $acLenS;
         }
@@ -1010,6 +1113,12 @@ class Playlist extends StoredFile {
      * 		parent record id
      * @param string $offset
      * 		relative offset in extent format
+     * @param string $clipstart
+     * 		audioClip clipstart in extent format
+     * @param string $clipEnd
+     * 		audioClip clipEnd in extent format
+     * @param string $clipLength
+     * 		 audioClip playlength in extent format (?)
      * @param string $acGunid
      * 		audioClip gunid
      * @param string $acLen
