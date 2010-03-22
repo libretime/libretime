@@ -264,7 +264,7 @@ class uiTwitter {
                 if (!empty($formdata[$val['element']])) {
                 	$result = $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                     if (PEAR::isError($result))
-                        $this->_retMsg('Error while saving twitter settings.');
+                        $this->Base->_retMsg('Error while saving twitter settings.');
                 } elseif (!$val['hiddenPref']) {
                     $this->Base->gb->delGroupPref($this->Base->sessid,  'StationPrefs', $val['element']);
                 }
