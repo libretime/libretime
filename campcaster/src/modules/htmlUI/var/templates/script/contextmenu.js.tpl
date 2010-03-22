@@ -1,6 +1,6 @@
 {literal}
 <script type="text/javascript">
-// www.jjam.de - Kontextmenü mit JavaScript - Version 15.12.2002
+// www.jjam.de - Kontextmenï¿½ mit JavaScript - Version 15.12.2002
 
 //  Browser detection
 ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
@@ -19,7 +19,7 @@ function contextmenu(param) {
 
     var sp2         = "&nbsp;&nbsp;";
     var sp5         = sp2 + sp2 + "&nbsp;";                     // Leerzeichen als Abstandshalter (flexibler und code-sparender als eine aufwendige Tabellenkonstruktion) ;
-    var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um hässlichen Linkrahmen in einigen Browsern zu vermeiden;
+    var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um hï¿½sslichen Linkrahmen in einigen Browsern zu vermeiden;
     var entry       = new Array();
     //contextmenuStatus = 0;
 
@@ -38,8 +38,8 @@ function contextmenu(param) {
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setItemPlaylengthForm&id="+param+"', 'PL.setStreamPlaylength', 400, 50)\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
             break;
             
-            case "PL.changeItemPlaylength":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setItemPlaylengthForm&elemId="+param+"', 'PL.setItemPlaylength', 400, 50)\" "+oF+">&nbsp;##Change playlegth##&nbsp;</a></li>";
+            case "PL.setCliplength":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setClipLength&elemId="+param+"', 'PL.setClipLength', 400, 50)\" "+oF+">&nbsp;##Set clip length##&nbsp;</a></li>";
             break;
 
             case "PL.removeItem":

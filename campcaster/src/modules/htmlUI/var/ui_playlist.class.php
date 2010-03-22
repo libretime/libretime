@@ -166,6 +166,7 @@ class uiPlaylist
         	$this->Base->_retMsg('Playlist "$1" saved.', $this->Base->getMetadataValue($tmpid, UI_MDATA_KEY_TITLE));
         }
 
+        $this->Base->SCRATCHPAD->reloadMetadata();
         return $this->activeId;
     } // fn save
 
@@ -240,13 +241,28 @@ class uiPlaylist
     } // fn loadLookedFromPref
 
 
-    public function addItem($elemIds, $duration=null)
+    /**
+     * Add item to playlist
+     *
+     * @param int $elemIds
+     * @param array $duration
+     * @return unknown
+     */
+    public function addItem($elemIds, $duration=NULL)
     {
         $this->changed = TRUE;
-        $fadeIn = null;
-        $fadeOut = null;
-        $pause = null;
-
+        $fadeIn = NULL;
+        $fadeOut = NULL;
+        $length = NULL;
+        $clipstart = NULL;
+        
+        /*
+        gstreamer bug:
+        Warning: The clipEnd can't be bigger than ninety nine percent (99%) of the clipLength,
+        this means also if no clipEnd is defined it should be 00:00:00.000000 and not the clipLength.
+        $clipend = '00:00:00.000000';
+        */
+        
         if (!$elemIds) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('No item(s) selected.');
@@ -260,7 +276,7 @@ class uiPlaylist
             $length = sprintf('%02d', $duration['H']).':'.sprintf('%02d', $duration['i']).':'.sprintf('%02d', $duration['s']).'.000000';
         }
         foreach ($elemIds as $elemId) {
-            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid, $fadeIn, $fadeOut, $length, $pause);
+            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid, $fadeIn, $fadeOut, $length, $clipstart, $clipend);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
                 	print_r($r);
@@ -572,27 +588,59 @@ class uiPlaylist
     } // fn changeAllTransitionsForm
 
 
-    public function setItemPlaylengthForm($id, $elemId, $mask)
+    public function setClipLengthForm($id, $elemId, $mask)
     {
         if (isset($elemId)) {
-            $mask['act']['constant'] = 'PL.setItemPlaylength';
+            $mask['act']['constant'] = 'PL.setClipLength';
             $mask['elemId']['constant'] = $elemId;
             $element = $this->getCurrElement($elemId);
-            $mask['playlength']['default'] = substr($element['playlength'], 0, 8);
-            $mask['duration']['constant'] = substr($element['duration'], 0, 8);
+            $playLegthS = Playlist::playlistTimeToSeconds($element['playlength']);
+            $clipStartS = Playlist::playlistTimeToSeconds($element['attrs']['clipStart']);
+            $clipEndS   = Playlist::playlistTimeToSeconds($element['attrs']['clipEnd']);
+            $mask['duration']['constant']  = round($playLegthS);
+            $mask['clipLength']['default'] = round($clipEndS - $clipStartS);
+            $mask['clipStart']['default']  = round($clipStartS);
+            $mask['clipEnd']['default']    = round($clipEndS);
+            for ($n=0; $n<=round($playLegthS); $n++) {
+                $options[$n] = date('i:s', $n);    
+            }
+            $mask['clipStart']['options']  = $options;
+            $mask['clipLength']['options'] = $options;
+            $mask['clipEnd']['options']    = array_reverse(array_reverse($options), true);
         } else {
             $mask['act']['constant'] = 'PL.addItem';
             $mask['id']['constant'] = $id;
-            $mask['playlength']['default'] = substr($this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
+            $mask['clipLength']['default'] = substr($this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
             $mask['duration']['constant'] = $mask['playlength']['default'];
         }
 
-        $form = new HTML_QuickForm('PL_setItemPlaylengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('PL_setClipLengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $mask);
         $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
-    } // fn setItemPlaylengthForm
+    } // fn setClipLengthForm
+    
+    function setClipLength($p_elemId, &$p_mask)
+    {
+        $form = new HTML_QuickForm('PL_setClipLengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        uiBase::parseArrayToForm($form, $p_mask);
+        
+        if (!$form->validate()) {
+            return false;       
+        }
+        $values = $form->exportValues();
+        $elem = $this->getCurrElement($values['elemId']);
+        if (!$elem) {
+            return false;   
+        }
+        
+        $clipStart = GreenBox::secondsToPlaylistTime($values['clipStart']);
+        $clipEnd = GreenBox::secondsToPlaylistTime($values['clipEnd']);
+        
+        $this->Base->gb->changeClipLength($this->token, $p_elemId, $clipStart, $clipEnd, $this->Base->sessid);
+        
+    }
 
 
     public function metaDataForm($langid)

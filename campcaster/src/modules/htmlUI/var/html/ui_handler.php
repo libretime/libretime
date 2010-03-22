@@ -273,8 +273,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
-    case "PL.setItemPlaylength":
-	    $uiHandler->PLAYLIST->setItemPlaylength($_REQUEST['elemId'], $_REQUEST['playlength']);
+    case "PL.setClipLength":
+	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['elemId'], $ui_fmask['PL.setClipLength']);
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 

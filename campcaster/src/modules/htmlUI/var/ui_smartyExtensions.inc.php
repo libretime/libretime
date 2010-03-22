@@ -127,31 +127,11 @@ function S_getSecond($param)
  */
 function S_niceTime($param)
 {
-    extract($param);
-
-    if (strpos($in, '.')) {
-        list ($in, $lost) = explode('.', $in);
-    }
-    $in = str_replace('&nbsp;', '', $in);
-	$h = 0;
-	$i = 0;
-	$s = 0;
-    if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
-        list($h, $i, $s) = explode(':', $in);
-    } elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in)) {
-        list($i, $s) = explode(':', $in);
-    } else {
-        $s = $in;
-    }
-
-    if ((isset($all) && $all) || ($h > 0) ) {
-        $H = sprintf('%02d', $h).':';
-    } else {
-        $H = '&nbsp;&nbsp;&nbsp;';
-    }
-    $I = sprintf('%02d', $i).':';
-    $S = sprintf('%02d', $s);
-
-    return $H.$I.$S;
+    require_once("../../../storageServer/var/Playlist.php");
+    
+    $sec = round(Playlist::playlistTimeToSeconds($param['in']));
+    $formatted = isset($param['all']) && $sec >= 3600 ? strftime('%H:%M:%S', $sec) : strftime('&nbsp;&nbsp;&nbsp;%M:%S', $sec);
+    
+    return $formatted;
 } // fn S_niceTime
 ?>

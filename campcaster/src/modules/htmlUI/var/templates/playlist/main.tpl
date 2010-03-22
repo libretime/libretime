@@ -14,7 +14,7 @@
     <h1>##Playlist Editor##</h1>
         <p>&nbsp;</p>
         {if $PL->reportLookedPL()}
-            <input type="button" value="##Open last Playlist##" onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')" class="button_wide">
+            <input type="button" value="##Reopen Playlist##" onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')" class="button_wide">
         {else}
             <input type="button" value="##New empty Playlist##" onClick="hpopup('{$UI_HANDLER}?act=PL.create')" class="button_wide">
         {/if}

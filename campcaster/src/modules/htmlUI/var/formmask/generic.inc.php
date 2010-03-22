@@ -653,7 +653,7 @@ $ui_fmask = array(
             )
         )
     ),
-    'PL.setItemPlaylength' => array(
+    'PL.setClipLength' => array(
         'act'       => array(
             'element'   => 'act',
             'type'      => 'hidden',
@@ -670,11 +670,37 @@ $ui_fmask = array(
             'element'   => 'duration',
             'type'      => 'hidden'
         ),
-        'playlength'  => array(
-            'element'   => 'playlength',
-            'type'      => 'date',
-            'label'     => 'Playlength',
-            'options'   => array('format' => 'His'),
+        'clipStart'  => array(
+            'element'   => 'clipStart',
+            'type'      => 'select',
+            'label'     => 'Cue in: ',
+            'options'   => array(),
+            'attributes' => 'onChange="return PL_setClipLength(this)"',
+            'groupit'   => true
+        ),
+        'clipLength'  => array(
+            'element'   => 'clipLength',
+            'type'      => 'select',
+            'label'     => 'Length: ',
+            'options'   => array(),
+            'attributes' => 'onChange="return PL_setClipLength(this)"',
+            'groupit'   => true
+        ),
+        'clipEnd'  => array(
+            'element'   => 'clipEnd',
+            'type'      => 'select',
+            'label'     => 'Cue out: ',
+            'options'   => array(),
+            'attributes' => 'onChange="return PL_setClipLength(this)"',
+            'groupit'   => true
+        ),
+        array(
+            'group'     => array('clipStart', 'clipLength', 'clipEnd')
+        ),
+        array(
+            'elemnt'     => 'linebreak',
+            'type'      => 'static',
+            'text'     => '<p></p>'
         ),
         array(
             'element'   => 'cancel',
@@ -691,9 +717,8 @@ $ui_fmask = array(
         ),
         array(
             'element'   => 'submitter',
-            'type'      => 'button',
+            'type'      => 'submit',
             'label'     => 'Submit',
-            'attributes'=> array('onClick' => 'PL_checkItemPlaylength()'),
             'groupit'   => TRUE
         ),
         array(

@@ -116,9 +116,9 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            $Smarty->display('popup/PLAYLIST.arrangeItems.tpl');
 	            break;
 
-            case "PL.setItemPlaylengthForm":
-	            $Smarty->assign('dynform', $uiBrowser->PLAYLIST->setItemPlaylengthForm($_REQUEST['id'], $_REQUEST['elemId'], $ui_fmask['PL.setItemPlaylength']));
-	            $Smarty->display('popup/PLAYLIST.setItemPlaylength.tpl');
+            case "PL.setClipLength":
+	            $Smarty->assign('dynform', $uiBrowser->PLAYLIST->setClipLengthForm($_REQUEST['id'], $_REQUEST['elemId'], $ui_fmask['PL.setClipLength']));
+	            $Smarty->display('popup/PLAYLIST.setClipLength.tpl');
 	            break;
 
             case "PL.export":

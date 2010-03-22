@@ -39,7 +39,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
                     <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Edit Playlist##</a></li>
                 {else}
                     {if $PL->reportLookedPL()}
-                        <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">##Open last Playlist##</a></li>
+                        <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">##Reopen Playlist##</a></li>
                     {else}
                         <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.create')">##New empty Playlist##</a></li>
                     {/if}

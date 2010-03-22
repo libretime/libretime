@@ -18,7 +18,8 @@
                         <tr class="blue_head">
                             <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></td>
                             <td style="width: 200px">##Title##</td>
-                            <td>                     ##Duration##</td>
+                            <td style="white-space: nowrap">##Clip length##</td>
+                            <td>                     ##Original##</td>
                             <td style="width: 200px">##Artist##</td>
                             <td style="width: 30px;">##Type##</td>
                             <td style="width: 30px; border: 0">##Move##</td>
@@ -26,14 +27,20 @@
                     <!-- end repeat after 14 columns -->
                     <!-- start item -->
                     {foreach from=$PL->getFlat($PL->activeId) key='pos' item='i'}
+                        {*
                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', {if $i.firstInList == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0; cursor: pointer">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
                         </tr>
+                        <!-- /fade information -->
+                        *}
                         <tr class="{cycle values='blue1, blue2'}">
                             <td><input type="checkbox" class="checkbox" name="{$i.attrs.id}"/></td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
+                            <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
+                                {assign var="_playlength" value=$i.attrs.clipLength}{niceTime in=$_playlength}
+                            </td>
                             <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
                                 {assign var="_duration" value=$i.playlength}{niceTime in=$_duration}
                             </td>
@@ -48,14 +55,17 @@
                         </tr>
                     {/foreach}
                         {if isset($pos)}
+                        {*
                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0; cursor: pointer">##Fade## {$i.fadeout_ms|string_format:"%d"} ms</td>
                         </tr>
+                        <!-- /fade information -->
+                        *}
                         {else}
                             <tr class="{cycle values='blue1, blue2'}">
-                                <td style="border: 0" colspan="6" align="center">##No Entry##</td>
+                                <td style="border: 0" colspan="7" align="center">##Empty playlist##</td>
                             </tr>
                         {/if}
                     <!-- end item -->
@@ -63,7 +73,7 @@
                     </table>
                 </div>
                 <div class="footer" style="width: 569px;">
-                    <input type="button" class="button_large" onClick="collector_submit('PL', '0&popup[]=PL.changeAllTransitions', '{$UI_BROWSER}', 'chgAllTrans', 400, 150)" value="##Change Fades##" />
+                {* <input type="button" class="button_large" onClick="collector_submit('PL', '0&popup[]=PL.changeAllTransitions', '{$UI_BROWSER}', 'chgAllTrans', 400, 150)" value="##Change Fades##" /> *}
                     <input type="button" class="button_large" onClick="collector_submit('PL', 'PL.removeItem')"   value="##Remove Selected##" />
                     <input type="button" class="button_large" onClick="collector_clearAll('PL', 'PL.removeItem')" value="##Clear Playlist##" />
                 </div>
