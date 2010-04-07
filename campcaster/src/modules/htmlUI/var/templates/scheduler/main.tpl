@@ -1,4 +1,4 @@
-{if $SCHEDULER->getErrorMsg()}
+{if !$SCHEDULER->getSchedulerTime()}
     <script language="javascript">
         alert("{$SCHEDULER->getErrorMsg()|escape:"quotes"}");
     </script>

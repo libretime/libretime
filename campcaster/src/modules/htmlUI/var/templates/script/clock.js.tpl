@@ -16,8 +16,8 @@ function incClock() {
 
 {/literal}
 
-myClock({$smarty.now|date_format:"%Y"|string_format:"%d"}, {$smarty.now|date_format:"%m"|string_format:"%d"}, {$smarty.now|date_format:"%d"|string_format:"%d"},
-             {$smarty.now|date_format:"%H"|string_format:"%d"}, {$smarty.now|date_format:"%M"|string_format:"%d"}, {$smarty.now|date_format:"%S"|string_format:"%d"},
+myClock({$_now|date_format:"%Y"|string_format:"%d"}, {$_now|date_format:"%m"|string_format:"%d"}, {$_now|date_format:"%d"|string_format:"%d"},
+             {$_now|date_format:"%H"|string_format:"%d"}, {$_now|date_format:"%M"|string_format:"%d"}, {$_now|date_format:"%S"|string_format:"%d"},
              1000);
 
 </script>      

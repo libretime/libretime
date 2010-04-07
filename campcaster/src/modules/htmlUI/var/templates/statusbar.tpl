@@ -10,8 +10,12 @@
 		<td>
     		<div id="time">
     		    ##Station Time##
-                <h1><span id="servertime" class="clock">{$smarty.now|date_format:"%H:%M:%S"}</span></h1>
-                {$smarty.now|date_format:"%Z"}
+    		    {assign var="_now value=$SCHEDULER->getSchedulerTime(true)}
+    		    {if !$_now}
+    		      {assign var="_now" value=$smarty.now}
+    		    {/if}
+                <h1><span id="servertime" class="clock">{$_now|date_format:"%H:%M:%S"}</span></h1>
+                {$_now|date_format:"%Z"}
     		</div>
 		</td>
 		

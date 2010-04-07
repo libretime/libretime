@@ -74,7 +74,7 @@ class uiScheduler extends uiCalendar {
         $this->scheduleAtTime =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAtTime'];
         $this->schedulePrev =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
         $this->scheduleNext =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
-        $this->error =& $_SESSION['SCHEDULER']['error'];
+        #$this->error =& $_SESSION['SCHEDULER']['error'];
 
         if (!is_array($this->curr)) {
             $this->curr['view'] = UI_SCHEDULER_DEFAULT_VIEW;
@@ -1261,6 +1261,21 @@ class uiScheduler extends uiCalendar {
 
         return $status;
     } // fn scheduleImportClose
+    
+    public function getSchedulerTime()
+    {
+        static $first, $cached;
+        if (!$first) {
+            $first = time();
+            $r = $this->spc->GetSchedulerTimeMethod();
+            if ($this->_isError($r)) {
+                return false;    
+            }
+            $cached = self::datetimeToTimestamp($r['schedulerTime']);
+        }
+        $schedulerTime = $cached + time() - $first;
+        return $schedulerTime;
+    }
 
 } // class uiScheduler
 ?>
