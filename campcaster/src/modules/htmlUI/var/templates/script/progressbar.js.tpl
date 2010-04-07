@@ -3,10 +3,8 @@
 {literal}
 // play-progress-bar object
 
-function plPrBar() {
-    this.debug      = true;
-    plPrBar_debug('new plPrBar');
-    
+function plPrBar() { 
+    plPrBar_debug('new plPrBar'); 
     // methods:
     this.init       = plPrBar_init;
     this.tick       = plPrBar_tick;
@@ -94,7 +92,8 @@ function plPrBar_init(current, c_tit, c_pltit, c_eh, c_ei, c_es, c_dh, c_di, c_d
 function plPrBar_tick() {
     //plPrBar_debug('tick:' + this.c_remaining.getTime());
     if (this.c_remaining.getTime() <= this.interval*2)  {
-        window.clearInterval(progress);
+        window.clearInterval(this.progress);
+        this.request()
         return;
     }
     this.c_elapsed.setTime(this.c_elapsed.getTime() + this.interval);
