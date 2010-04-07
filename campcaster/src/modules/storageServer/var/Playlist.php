@@ -658,8 +658,16 @@ class Playlist extends StoredFile {
         $dd = 0;
         $found = FALSE;
         foreach ($plArr['els'] as $el) {
-            extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
-            if ( ($offsetS >= $elOffsetS) && ($offsetS < ($elOffsetS + $acLenS)) ) {
+            extract($el);   // acGunid, acLen, acLenS, clipEnd, clipEndS, clipStart, clipStartS,
+                            // elOffset, elOffsetS, fadeIn, fadeInS, fadeOut, fadeOutS, type
+            $lengthS = $acLenS;
+            if ($clipEndS) {
+                $lengthS = $clipEndS;
+            }
+            if ($clipStartS) {
+                $lengthS = $lengthS - $clipStartS;
+            }
+            if ( ($offsetS >= $elOffsetS) && ($offsetS < ($elOffsetS + $lengthS)) ) {
             	$found = TRUE;
             }
             if ($found) {               // we've found offset
@@ -690,11 +698,11 @@ class Playlist extends StoredFile {
                         if ($playedS < 0) {
                         	$playedS = 0;
                         }
-                        $remainS = $acLenS - $playedS;
+                        $remainS = $lengthS - $playedS;
                         $res  = array('gunid'=>$acGunid,
                             'elapsed'   => Playlist::secondsToPlaylistTime($playedS),
                             'remaining' => Playlist::secondsToPlaylistTime($remainS),
-                            'duration'  => Playlist::secondsToPlaylistTime($acLenS),
+                            'duration'  => Playlist::secondsToPlaylistTime($lengthS),
                         );
                         return $res;
                     }
@@ -1360,6 +1368,10 @@ class PlaylistElement {
             'fadeInS' => 0,
             'fadeOut' => '00:00:00.000000',
             'fadeOutS' => 0,
+            'clipStart' => '00:00:00.000000',
+            'clipStartS' => 0,
+            'clipEnd' => '00:00:00.000000',
+            'clipEndS' => 0 
         );
         $plInfo['elOffset'] = $this->plEl['attrs']['relativeOffset'];
         $plInfo['elOffsetS'] = Playlist::playlistTimeToSeconds($plInfo['elOffset']);
@@ -1387,6 +1399,10 @@ class PlaylistElement {
 	                $plInfo['fadeOutS'] = Playlist::playlistTimeToSeconds($plInfo['fadeOut']);
 	                break;
             }
+            $plInfo['clipStart'] = $this->plEl['attrs']['clipStart'];
+            $plInfo['clipStartS'] = Playlist::playlistTimeToSeconds($this->plEl['attrs']['clipStart']);
+            $plInfo['clipEnd'] = $this->plEl['attrs']['clipEnd'];
+            $plInfo['clipEndS'] = Playlist::playlistTimeToSeconds($this->plEl['attrs']['clipEnd']);
         }
         return $plInfo;
     }

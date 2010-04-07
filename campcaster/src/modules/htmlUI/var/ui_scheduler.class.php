@@ -142,7 +142,7 @@ class uiScheduler extends uiCalendar {
             $this->curr['hour'] = sprintf('%02d', $hour);
         }
 
-        $stampNow = uiScheduler::datetimeToTimestamp($this->curr['year']
+        $stampNow = self::datetimeToTimestamp($this->curr['year']
             .$this->curr['month']
             .$this->curr['day']
             .'T'.$this->curr['hour'].':00:00');
@@ -246,7 +246,7 @@ class uiScheduler extends uiCalendar {
         $this->scheduleNext['minute'] = 59;
         $this->scheduleNext['second'] = 59;
 
-        $this->scheduleAtTime['stamp'] = uiScheduler::datetimeToTimestamp(
+        $this->scheduleAtTime['stamp'] = self::datetimeToTimestamp(
             $this->scheduleAtTime['year']
             .$this->scheduleAtTime['month']
             .$this->scheduleAtTime['day']
@@ -311,15 +311,15 @@ class uiScheduler extends uiCalendar {
         $items = array();
         foreach ($arr as $key => $val) {
         	$id = BasicStor::IdFromGunid($val['playlistId']);
-        	$startDay = strftime('%d', uiScheduler::datetimeToTimestamp($val['start']));
-        	$startHour = number_format(strftime('%H', uiScheduler::datetimeToTimestamp($val['start'])));
+        	$startDay = strftime('%d', self::datetimeToTimestamp($val['start']));
+        	$startHour = number_format(strftime('%H', self::datetimeToTimestamp($val['start'])));
             $items[$startDay][$startHour][]= array (
                 'id' => $id,
                 'scheduleid'=> $val['id'],
                 'start' => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end' => substr($val['end'], strpos($val['end'], 'T')+1),
-                'start_stamp' => uiScheduler::datetimeToTimestamp($val['start']),
-                'end_stamp' => uiScheduler::datetimeToTimestamp($val['end']),
+                'start_stamp' => self::datetimeToTimestamp($val['start']),
+                'end_stamp' => self::datetimeToTimestamp($val['end']),
                 'title' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
                 'creator' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
                 'type' => 'Playlist'
@@ -348,8 +348,8 @@ class uiScheduler extends uiCalendar {
 
         $items = array();
         foreach ($arr as $key => $val) {
-        	$start = uiScheduler::datetimeToTimestamp($val['start']);
-            $end = uiScheduler::datetimeToTimestamp($val['end']);
+        	$start = self::datetimeToTimestamp($val['start']);
+            $end = self::datetimeToTimestamp($val['end']);
         	$Y = strftime('%Y', $start);
             $m = number_format(strftime('%m', $start));
             $d = number_format(strftime('%d', $start));
@@ -447,7 +447,7 @@ class uiScheduler extends uiCalendar {
         if (!count($arr))
             return FALSE;
         foreach ($arr as $key => $val) {
-            $items[date('H', uiScheduler::datetimeToTimestamp($val['start']))][]= array (
+            $items[date('H', self::datetimeToTimestamp($val['start']))][]= array (
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->getMetadataValue(BasicStor::IdFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
@@ -473,8 +473,8 @@ class uiScheduler extends uiCalendar {
         	$id = BasicStor::IdFromGunid($val['playlistId']);
             $arr[$key]['title'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
             $arr[$key]['creator'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
-            $arr[$key]['pos'] = uiScheduler::datetimeToTimestamp($val['start']);
-            $arr[$key]['span'] = date('H', uiScheduler::datetimeToTimestamp($val['end'])) - date('H', uiScheduler::datetimeToTimestamp($val['start'])) +1;
+            $arr[$key]['pos'] = self::datetimeToTimestamp($val['start']);
+            $arr[$key]['span'] = date('H', self::datetimeToTimestamp($val['end'])) - date('H', self::datetimeToTimestamp($val['start'])) +1;
         }
         return $arr;
     } // fn getDayUsage
@@ -496,7 +496,7 @@ class uiScheduler extends uiCalendar {
 
         $duration = 0;
         foreach ($arr as $val) {
-            $duration += (uiScheduler::datetimeToTimestamp($val['end'])-uiScheduler::datetimeToTimestamp($val['start']))/86400*100;
+            $duration += (self::datetimeToTimestamp($val['end'])-self::datetimeToTimestamp($val['start']))/86400*100;
         }
         return $duration;
     } // fn getDayUsagePercentage
@@ -586,29 +586,54 @@ class uiScheduler extends uiCalendar {
 
 
     /**
-     * Get the currently playing clip or one that is coming up.
+     * Get an scheduled playlist
      *
      * Note: just use methods here which work without valid authentification.
      *
-     * @param int $distance
-     *      0=current clip; 1=next clip ...
+     * @param int $p_playlist_nr
+     *      0=current pl; 1=next pl ...
      * @return array
      */
-    public function getNowNextClip($distance=0)
+    public function getScheduledPlaylist($p_playlist_nr=0, $p_period=3600)
     {
-        $datetime = strftime('%Y-%m-%dT%H:%M:%S');
-        $xmldatetime = str_replace('-', '', $datetime);
-        $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
+        $now = time();
+        $start = strftime('%Y%m%dT%H:%M:%S', $now);
+        $end =  $p_playlist_nr ? strftime('%Y%m%dT%H:%M:%S', $now + $p_period) : strftime('%Y%m%dT%H:%M:%S', $now); 
+        $playlists = $this->displayScheduleMethod($start, $end);
 
-        if (!is_array($pl) || !count($pl)) {
+        if (!is_array($playlists) || !count($playlists)) {
             return FALSE;
         }
 
-        $pl = current($pl);
+        switch ($p_playlist_nr) {
+            case 0:
+                if ($playlist = current($playlists)) {
+                    return $playlist;
+                }
+            break;
+            
+            default:
+                $pos = 0;
+                foreach ($playlists as $playlist) {
+                    if (self::datetimeToTimestamp($playlist['start']) > $now) {
+                        $pos++;
+                        if ($pos == $p_playlist_nr) {
+                            return $playlist;   
+                        }
+                    }
+                }
+            break;            
+        }        
+        return false;
+    }   // fn getScheduledPlaylist
+        
+        
+    public function getClipFromCurrent($p_playlist, $p_item_nr=0)
+    {
         //  subtract difference to UTC
-        $offset = strftime('%H:%M:%S', time() - uiScheduler::datetimeToTimestamp($pl['start']) - 3600 * strftime('%H', 0));
+        $offset = strftime('%H:%M:%S', time() - self::datetimeToTimestamp($p_playlist['start']) - 3600 * strftime('%H', 0));
 
-        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance, $_SESSION['langid'], UI_DEFAULT_LANGID);
+        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $p_playlist['playlistId'], $offset, $p_item_nr, $_SESSION['langid'], UI_DEFAULT_LANGID);
 
         if (!$clip['gunid']) {
             return FALSE;
@@ -631,34 +656,84 @@ class uiScheduler extends uiCalendar {
                      'percentage'=> $percentage,
                      'playlist'  => $clip['playlist']
                );
-    } // fn getNowNextClip
+    }
+    
+    public function getClipFromPlaylist($p_playlist, $p_position=0)
+    {
+        $pos = 0;
+        $playlist = new uiPlaylist($this->Base);
+        $flat = $playlist->getFlat(BasicStor::IdFromGunid($p_playlist['playlistId']));
 
+        foreach ($flat as $clip) {
+            if ($pos == $p_position) {
+                $found = true;
+                break;
+            }
+            $pos++;
+        }
+        if ($found) {   
+            list($duration['h'], $duration['m'], $duration['s']) = explode(':', $clip['attrs']['clipLength']);
+            list($elapsed['h'], $elapsed['m'], $elapsed['s']) = explode(':', '00:00:00');
+            $remaining = $duration;
+            $duration = array_map('round', $duration);
+            $elapsed = array_map('round', $elapsed);
+            $remaining = array_map('round', $remaining);
+            $percentage =  $secondsElapsed ? (100 * $secondsElapsed / ($secondsElapsed + $secondsRemaining)) : 100;
+            return array(
+                     'title' => $clip['title'],
+                     'duration'  => $duration,
+                     'elapsed'   => $elapsed,
+                     'remaining' => $remaining,
+                     'percentage'=> $percentage
+            );
+        }
+        return false;
+    }
 
-    public function getNowNextClip4jscom()
+    public function getScheduleInfo_jscom($p_playlist_nr=0)
     {
         // just use methods which work without valid authentification
 
-        if ($curr = $this->getNowNextClip()) {
-            $next = $this->getNowNextClip(1);
-            return array(
-                    'title'         => $curr['title'],
-                    'elapsed.h'     => $curr['elapsed']['h'],
-                    'elapsed.m'     => $curr['elapsed']['m'],
-                    'elapsed.s'     => $curr['elapsed']['s'],
-                    'duration.h'    => $curr['duration']['h'],
-                    'duration.m'    => $curr['duration']['m'],
-                    'duration.s'    => $curr['duration']['s'],
-                    'next'          => $next ? 1 : 0,
-                    'next.title'    => $next ? $next['title'] : "",
-                    'next.dur.h'    => $next ? $next['duration']['h'] : 0,
-                    'next.dur.m'    => $next ? $next['duration']['m'] : 0,
-                    'next.dur.s'    => $next ? $next['duration']['s'] : 0,
-                    'playlist'      => $curr['playlist'],
-                   );
-        } else {
-            return FALSE;
+        $c_pl = self::getScheduledPlaylist();
+        if ($c_clip = $this->getClipFromCurrent($c_pl, 0)) {
+            $n_clip = $this->getClipFromCurrent($c_pl, 1);
         }
-    } // fn getNowNextClip4jscom
+        if ($u_pl = self::getScheduledPlaylist(1)) {
+            $u_clip = $this->getClipFromPlaylist($u_pl);
+            $u_pl_start = explode(':', date('H:i:s', self::datetimeToTimestamp($u_pl['start'])));  
+        }
+        
+        return array(
+            'current'               => $c_clip ? 1 : 0,
+            'current.title'         => addcslashes($c_clip['title'], "'"),
+            'current.pltitle'       => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($c_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'current.elapsed.h'     => $c_clip['elapsed']['h'],
+            'current.elapsed.m'     => $c_clip['elapsed']['m'],
+            'current.elapsed.s'     => $c_clip['elapsed']['s'],
+            'current.duration.h'    => $c_clip['duration']['h'],
+            'current.duration.m'    => $c_clip['duration']['m'],
+            'current.duration.s'    => $c_clip['duration']['s'],
+            
+            
+            'next'                  => $n_clip ? 1 : 0,
+            'next.title'            => $n_clip ? addcslashes($n_clip['title'], "'") : "",
+            'next.pltitle'          => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($n_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'next.duration.h'       => $n_clip ? $n_clip['duration']['h'] : 0,
+            'next.duration.m'       => $n_clip ? $n_clip['duration']['m'] : 0,
+            'next.duration.s'       => $n_clip ? $n_clip['duration']['s'] : 0,
+            
+            'upcoming'              => $u_pl ? 1 : 0,
+            'upcoming.title'        => addcslashes($u_clip['title'], "'"),
+            'upcoming.pltitle'      => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($u_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'upcoming.duration.h'   => $u_clip['duration']['h'],
+            'upcoming.duration.m'   => $u_clip['duration']['m'],
+            'upcoming.duration.s'   => $u_clip['duration']['s'],
+            'upcoming.plstart.h'    => $u_pl_start[0],
+            'upcoming.plstart.m'    => $u_pl_start[1],
+            'upcoming.plstart.s'    => $u_pl_start[2],
+            
+        );
+    } // fn getNowPlaying4jscom
 
 
     /**
@@ -671,7 +746,7 @@ class uiScheduler extends uiCalendar {
     {
         $i = str_replace('T', ' ', $i);
         $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, ' ');
-        return uiScheduler::strtotime($formatted);
+        return self::strtotime($formatted);
     } // fn datetimeToTimestamp
 
 
@@ -738,11 +813,11 @@ class uiScheduler extends uiCalendar {
 
         $pStampArr = null;
         foreach ($pArr as $val) {
-            $pStampArr[] = array('start' => uiScheduler::datetimeToTimestamp($val['start']),
-                                 'end'   => uiScheduler::datetimeToTimestamp($val['end']));
+            $pStampArr[] = array('start' => self::datetimeToTimestamp($val['start']),
+                                 'end'   => self::datetimeToTimestamp($val['end']));
         }
         if (is_array($pStampArr)) {
-            for ($n = uiScheduler::datetimeToTimestamp($dfrom); $n <= uiScheduler::datetimeToTimestamp($dto); $n+=86400) {
+            for ($n = self::datetimeToTimestamp($dfrom); $n <= self::datetimeToTimestamp($dto); $n+=86400) {
                 foreach ($pStampArr as $val) {
                     if ($val['start'] < $n+86400 && $val['end'] >= $n) {
                         $days[date('Ymd', $n)] = array('year'  => date('Y', $n),

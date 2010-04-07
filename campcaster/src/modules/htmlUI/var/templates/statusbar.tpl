@@ -1,6 +1,3 @@
-{assign var='_nowplaying'  value=$SCHEDULER->getNowNextClip()}
-{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
-
 <div id="masterpalette"> 
 <table border="0" class="masterpalette">
 	<tr>
@@ -21,56 +18,63 @@
 		<td>	
     		<div id="nowplaying">
             <div class="whatplaying">
-                {if $_nowplaying}
-                    <div class="title">##Now Playing##: <span id="now_title"></span></div>
-                    <div class="scala">
-                        <div class="scala_in" id="now_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
-                    </div>
+                <div class="title" id="now_title_">##Now Playing##: <span id="now_title"></span></div>
+                <div class="scala" id="now_scala_">
+                    <div class="scala_in" id="now_scala" style="width: 0%;">&nbsp;</div>
+                </div>
+                
+                <div class="time">
+                    <span class="left">
+                      <span class="left_title" id="now_elapsed_">##Elapsed:##</span>
+                      <strong id="now_elapsed"></strong>
+                    </span>
                     
-                    <div class="time">
-                        <span class="left">
-                          <span class="left_title">##Elapsed:##</span>
-                          <strong id="now_elapsed"></strong>
-                        </span>
-                        
-                        <span class="right">
-                          ##Remaining:##
-                          <strong id="now_remaining"></strong>
-                        </span>
-                    </div>
-                    
-                    <div class="playlist">
-                        <span class="left">
-                          <span class="left_title">##Playlist:##</span>
-                        <span>
-
-                        <strong class="playlist_title" id="now_pl_title"></strong> 
-                    </div>
-                {/if}
-                <div  style="height:3px"> </div>
+                    <span class="right">
+                      <span id="now_remaining_">##Remaining:##</span>
+                      <strong id="now_remaining"></strong>
+                    </span>
+                </div>
+                
+                <div class="playlist">
+                    <span class="left">
+                      <span class="left_title" id="now_pltitle_">##Playlist:##</span>
+                    <span>
+                    <strong class="playlist_title" id="now_pltitle"></strong> 
+                </div>
+                
+                <div style="height:3px"> </div>
+                
                 <div id="next_clip">
-                {if $_nextplaying}
-                    <span class="next">##Next Clip##:</span>
+                    <span class="next" id="next_title_">##Next File##:</span>
                     <strong id="next_title"></strong>
                     &nbsp;<span id="next_duration"></span>
-                {/if}
+                </div>
+                
+                <div id="upcoming_playlist">
+                    <span class="next" id="upcoming_pltitle_">##Upcoming Playlist##:</span>
+                    <strong id="upcoming_pltitle"></strong>
+                    &nbsp;<span id="upcoming_plstart"></span>
+                </div>
+                
+                <div id="upcoming_clip">
+                    <span class="next" id="upcoming_title_">##Upcoming Title##:</span>
+                    <strong id="upcoming_title"></strong>
+                    &nbsp;<span id="upcoming_duration"></span>
                 </div>
             </div>  
     		</div>
 		</td>
 		
 		<td>
-        {if $_nowplaying}
-            <div id="nowplaying_indicator"><div id="onair">##Playing Scheduled Item##</div></div>            
-        {else}
-            <div id="nowplaying_indicator"><div id="offair">##Off Air##</div></div>
-        {/if}
-    		
+            <div id="nowplaying_indicator">
+                <div id="onair">##Playing Scheduled Item##</div>
+                <div id="offair">##Off Air##</div>
+            </div>
 		</td>
 		
 		<td>
-    		<div id="station">
-    		  <img src="{$STATIONPREFS.stationLogoPath}" alt="{$STATIONPREFS.stationName}">
+    		<div id="debug_console" style="width: 180px; height: 140px; overflow: auto">
+    	
     		</div>
 		</td>
     </tr>
@@ -80,7 +84,3 @@
 
 {include file="script/clock.js.tpl"}
 {include file="script/progressbar.js.tpl"}
-
-
-{assign var='_nowplaying'  value=null}
-{assign var='_nextplaying' value=null}
