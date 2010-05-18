@@ -1,0 +1,23 @@
+Campcaster is an free, open source radio suite enabling live broadcast and scheduling for radio stations, whether their transmission is analogue, digital or online. Campcaster runs on Linux. Campcaster is developed by sourcefabric (http://www.sourcefabric.org)
+
+Benefits:
+
+    * Professional grade software that is free to download and easy to install
+    * Broadcast live from the studio using Campcaster Studio
+    * Control and automate your station remotely with Campcaster Web
+    * Sharing content with affiliated stations simple via online networks or removable offline media
+    * Multilingual user interface and metadata, supports all major audio formats
+    * Create mashups with other applications using Campcaster's XMLRPC interface
+
+Sourcefabric has a dedicated platform for Developers. Firstly, you'll need to create a Sourcefabric log-in. It's free, quick and safe. Information on how to do that can be found at http://www.sourcefabric.org/en/home/support/26/?tpl=15
+
+Quick links to our resources are:
+
+Manuals for Campcaster: http://en.flossmanuals.net/CampCaster/Introduction
+Forums and mailing lists: http://forum.sourcefabric.org
+Bug Tracking: http://dev.sourcefabric.org
+Code view/review: http://code.sourcefabric.org
+Public source code hosting: http://github.com/sourcefabric
+Download link: https://sourceforge.net/projects/campcaster/files/
+Developer's wiki: http://wiki.sourcefabric.org
+
