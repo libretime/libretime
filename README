@@ -1,23 +1,102 @@
-Campcaster is an free, open source radio suite enabling live broadcast and scheduling for radio stations, whether their transmission is analogue, digital or online. Campcaster runs on Linux. Campcaster is developed by sourcefabric (http://www.sourcefabric.org)
+=========================================================================
+==========================   CAMPCASTER   ===============================
+=========================================================================
+Campcaster is the first free and open radio management software that 
+provides live studio broadcast capabilities as well as remote automation
+in one integrated system.
 
-Benefits:
+Campcaster has three audio outputs: one for live broadcasting, one for
+previewing audio, and one for automated scheduled playback.
 
-    * Professional grade software that is free to download and easy to install
-    * Broadcast live from the studio using Campcaster Studio
-    * Control and automate your station remotely with Campcaster Web
-    * Sharing content with affiliated stations simple via online networks or removable offline media
-    * Multilingual user interface and metadata, supports all major audio formats
-    * Create mashups with other applications using Campcaster's XMLRPC interface
+Major features of Campcaster:
+ * Live, in-studio playout.  Campcaster Studio enables station personnel
+   to play out both individual sound files and playlists such as 
+   advertising blocks or entire programs.
+ * Web-based remote station management.  Authorized personnel can add
+   program material, create playlists, and schedule programming all via 
+   Campcaster's web interface.
+ * Automation.  Campcaster has a scheduler function that enables users to
+   set playlists for playback at a date and time of their choosing.
+   Playlists can be played back multiple times.
+ * Playlists.  Campcaster allows users to create playlists that can be 
+   either played on-demand in the Studio or in automated mode.  Playlists
+   can be nested inside each other, so for example, a playlist with a 
+   block of ads can be inside of a playlist with a music program.
+ * Centralized archives of station program material.  Station personnel
+   have a searchable, browseable central archive that is accessible both
+   in the office and via the web.
+ * Solid, fast playback.  Campcaster uses the popular Gstreamer 
+   multimedia framework for clean, reliable, fast playback. 
+ * Program sharing.  Stations can share both playlists and files with a 
+   designated, centralized 'network hub.'  This enables the creation of 
+   'virtual radio networks' connected via the Internet. 
+ * Search-based backup.  You can backup all station archives at the click
+   of a button, or only backup certain files based on search terms, so 
+   that backup files can be made of only a certain program or of all 
+   files created by a certain user.
+ * Localization.  Campcaster is multilingual and supports Unicode.  It
+   also is very easy to create language localizations.
+ * No restrictions.  Multiple instances of the Campcaster Studio program 
+   can access the same archive on the office network, and there are no 
+   worries about hardware dongles or keys limiting access on multiple PCs.
+ * Innovative design.  Campcaster's user interface – the product of 
+   Parsons School of Design's “Design and Communication” program -  
+   introduces a number of innovations, including the 'Scratchpad', 
+   a list of recently-used files and playlists.
+ * Open, extensible architecture.  Stations are free to extend and alter 
+   all parts of the Campcaster program code, which makes extensive use 
+   of XML-RPC APIs.
 
-Sourcefabric has a dedicated platform for Developers. Firstly, you'll need to create a Sourcefabric log-in. It's free, quick and safe. Information on how to do that can be found at http://www.sourcefabric.org/en/home/support/26/?tpl=15
 
-Quick links to our resources are:
+INSTALLATION
+------------
 
-Manuals for Campcaster: http://en.flossmanuals.net/CampCaster/Introduction
-Forums and mailing lists: http://forum.sourcefabric.org
-Bug Tracking: http://dev.sourcefabric.org
-Code view/review: http://code.sourcefabric.org
-Public source code hosting: http://github.com/sourcefabric
-Download link: https://sourceforge.net/projects/campcaster/files/
-Developer's wiki: http://wiki.sourcefabric.org
+ * Building & Installing on all versions of Ubuntu/Kubuntu etc.
+   doc/installUbuntu.html
+
+ * Installing on other platforms
+   doc/install.html
+
+ * Developing on all versions of Ubuntu/Kubuntu etc.
+   http://trac.campware.org/campcaster/wiki/DevelopmentEnvironment
+
+ * Developing on other platforms
+   doc/gettingStarted.html
+
+Quick links to our resources
+----------------------------
+
+    Manuals for Campcaster: http://en.flossmanuals.net/CampCaster/Introduction
+    Forums and mailing lists: http://forum.sourcefabric.org
+    Bug Tracking: http://dev.sourcefabric.org
+    Code view/review: http://code.sourcefabric.org
+    Public source code hosting: http://github.com/sourcefabric
+    Download link: https://sourceforge.net/projects/campcaster/files/
+    Developer's wiki: http://wiki.sourcefabric.org
+
+
+
+-------------------------------------------------------------------------
+
+    Copyright (c) 2010 Media Development Loan Fund
+
+    This file is part of the Campcaster project.
+    http://campcaster.campware.org/
+    To report bugs, send an e-mail to bugs@campware.org
+
+    Campcaster is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Campcaster is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Campcaster; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+-------------------------------------------------------------------------
 
