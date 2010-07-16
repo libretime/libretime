@@ -1,9 +1,9 @@
 /*------------------------------------------------------------------------------
 
-    Copyright (c) 2004 Media Development Loan Fund
+    Copyright (c) 2010 Sourcefabric O.P.S.
 
     This file is part of the Campcaster project.
-    http://campcaster.campware.org/
+    http://campcaster.sourcefabric.org/
     To report bugs, send an e-mail to bugs@campware.org
 
     Campcaster is free software; you can redistribute it and/or modify
@@ -68,7 +68,7 @@ using namespace LiveSupport::Scheduler;
  *  Our copyright notice, should be at most 80 columns
  */
 static const char copyrightNotice[] =
-        "Copyright (c) 2004 Media Development Loan Fund under the GNU GPL";
+        "Copyright (c) 2010 Sourcefabric O.P.S. under the GNU GPL";
 
 /**
  *  String describing the short options.

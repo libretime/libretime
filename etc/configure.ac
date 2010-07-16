@@ -2,7 +2,7 @@ dnl-----------------------------------------------------------------------------
 dnl Copyright (c) 2010 Media Development Loan Fund
 dnl
 dnl This file is part of the Campcaster project.
-dnl http://campcaster.campware.org/
+dnl http://campcaster.sourcefabric.org/
 dnl To report bugs, send an e-mail to bugs@campware.org
 dnl
 dnl Campcaster is free software; you can redistribute it and/or modify

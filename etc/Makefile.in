@@ -1,8 +1,8 @@
 #-------------------------------------------------------------------------------
-#   Copyright (c) 2004 Media Development Loan Fund
+#   Copyright (c) 2010 Sourcefabric O.P.S.
 #
 #   This file is part of the Campcaster project.
-#   http://campcaster.campware.org/
+#   http://campcaster.sourcefabric.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
 #   Campcaster is free software; you can redistribute it and/or modify
@@ -143,8 +143,8 @@ all: setup compile
 
 help:
 	${ECHO} "Campcaster project main Makefile"
-	${ECHO} "http://campcaster.campware.org/"
-	${ECHO} "Copyright (c) 2004 Media Development Loan Fund under the GNU GPL"
+	${ECHO} "http://campcaster.sourcefabric.org/"
+	${ECHO} "Copyright (c) 2010 Sourcefabric O.P.S. under the GNU GPL"
 	${ECHO} ""
 	${ECHO} "Useful targets for this makefile:"
 	${ECHO} "   all          - set up and compile everthing"

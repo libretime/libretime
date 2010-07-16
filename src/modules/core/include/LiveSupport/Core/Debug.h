@@ -4,7 +4,7 @@
                 (c) 2006 Media Development Loan Fund
  
     This file is part of the Campcaster project.
-    http://campcaster.campware.org/
+    http://campcaster.sourcefabric.org/
     To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify

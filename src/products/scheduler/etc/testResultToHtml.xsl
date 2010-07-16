@@ -10,7 +10,7 @@
 <body>
 <h1>Preface</h1>
 This document is part of the
-<a href="http://campcaster.campware.org/">Campcaster</a>
+<a href="http://campcaster.sourcefabric.org/">Campcaster</a>
 project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU
 <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.
@@ -18,7 +18,7 @@ Development Loan Fund</a>, under the GNU
 This is an automatically generated document.
 <h1>Scope</h1>
 This document contains the generated unit test results for the
-<a href="http://campcaster.campware.org/">Campcaster</a> project.
+<a href="http://campcaster.sourcefabric.org/">Campcaster</a> project.
 <h1>Summary</h1>
 <xsl:for-each select="//Statistics">
 <table>

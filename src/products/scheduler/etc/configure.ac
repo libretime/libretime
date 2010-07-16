@@ -1,8 +1,8 @@
 dnl-----------------------------------------------------------------------------
-dnl Copyright (c) 2004 Media Development Loan Fund
+dnl Copyright (c) 2010 Sourcefabric O.P.S.
 dnl
 dnl This file is part of the Campcaster project.
-dnl http://campcaster.campware.org/
+dnl http://campcaster.sourcefabric.org/
 dnl To report bugs, send an e-mail to bugs@campware.org
 dnl
 dnl Campcaster is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@ dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
 AC_INIT(Campcaster-Scheduler, 0.0, bugs@campware.org)
 AC_PREREQ(2.59)
-AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
+AC_COPYRIGHT([Copyright (c) 2010 Sourcefabric O.P.S. under the GNU GPL])
 AC_REVISION($Revision$)
 
 AC_CONFIG_SRCDIR(../src/main.cxx)
