@@ -11,7 +11,7 @@
  * Install:  Drop into the plugin directory, call
  *           $smarty->load_filter('post','localizer');
  *           from application.
- * Author:   Media Development Loan Fund
+ * Author:   Sourcefabric O.P.S.
  * -------------------------------------------------------------
  */
 
