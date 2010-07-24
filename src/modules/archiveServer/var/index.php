@@ -1,7 +1,5 @@
 <?php
 /**
- * @author $Author$
- * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
  */

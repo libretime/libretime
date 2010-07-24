@@ -1,9 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
-
 /* ====================================================== specific PHP config */
 ini_set("mbstring.internal_encoding", 'UTF-8');
 ini_set("html_errors", FALSE);

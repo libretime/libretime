@@ -1,8 +1,5 @@
 <?php
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
  */
@@ -13,14 +10,10 @@ require_once "XML/Util.php";
 /**
  * Object representation of one XML element
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @see MetaData
  */
 class XmlElement {
@@ -87,13 +80,10 @@ class XmlElement {
 /**
  * Object representation of one XML attribute
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @see MetaData
  */
 class XmlAttrib {
@@ -136,13 +126,10 @@ class XmlAttrib {
 /**
  *  XML parser object encapsulation
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @see MetaData
  */
 class XmlParser {

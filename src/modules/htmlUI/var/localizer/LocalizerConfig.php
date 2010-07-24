@@ -1,9 +1,5 @@
 <?php
 /**
- * @package Campware
- */
-
-/**
  * Since the XML_Serializer package is not yet stable,
  * we must use our own package.  The package has a bug fix applied
  * that is required for the Localizer XML files to work.
@@ -19,7 +15,7 @@ $g_localizerConfig['MAINTENANCE'] = TRUE;
 // Debug Mode to display additinal info
 $g_localizerConfig['DEBUG'] = FALSE;
 
-// The default language, which forms the keys for 
+// The default language, which forms the keys for
 // all other languages.
 $g_localizerConfig['DEFAULT_LANGUAGE'] = 'default_DEFAULT';
 
@@ -30,10 +26,10 @@ $g_localizerConfig['FILENAME_PREFIX'] = 'locals';
 $g_localizerConfig['ORDER_KEYS'] = FALSE;
 
 // Delete unsed key from non-default language files on sync?
-$g_localizerConfig['DELETE_UNUSED_ON_SYNC'] = TRUE; 
+$g_localizerConfig['DELETE_UNUSED_ON_SYNC'] = TRUE;
 
 // Filename prefix for the global translation file -
-// a file that is always loaded with the particular 
+// a file that is always loaded with the particular
 // locals file.
 #$g_localizerConfig['FILENAME_PREFIX_GLOBAL'] = 'globals';
 
@@ -94,7 +90,7 @@ $g_localizerConfig['mapPrefixToDir'] = array(
             'depth'         => 1,
             'filePatterns'  => array('/(.*).php/'),
             'execlPattern'  => '/(\/\.|^\.)/',
-            'funcPatterns'  => array('/_retMsg( )*\(( )*\'([^\']*)\'/iU' => 3, '/(put|get)gs( )*\(( )*"([^"]*)"/iU' => 3), 
+            'funcPatterns'  => array('/_retMsg( )*\(( )*\'([^\']*)\'/iU' => 3, '/(put|get)gs( )*\(( )*"([^"]*)"/iU' => 3),
             'display'       => 'Application'
     ),
     'templates'     => array(
@@ -123,7 +119,7 @@ $g_localizerConfig['mapPrefixToDir'] = array(
             'display'       => 'Localizer itself'
     )
     */
-);   
+);
 
 $g_localizerConfig["MAP_PREFIX_TO_DIR"] = $mapPrefixToDir;
 unset($mapPrefixToDir);

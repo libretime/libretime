@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_Core_XmlRpcMethodResponseException_h
 #define LiveSupport_Core_XmlRpcMethodResponseException_h
@@ -57,9 +51,6 @@ namespace Core {
 /**
  *  Exception signaling an XML-RPC problem: the XML-RPC method call completed
  *  normally, but the response received has incorrect syntax.
- *
- *  @author  $Author$
- *  @version $Revision$
  */
 class XmlRpcMethodResponseException : public XmlRpcException
 {

@@ -2,8 +2,6 @@
 /**
  * Cron jobs handling abstract class
  *
- * @author $Author: $
- * @version $Revision: $
  * @package Campcaster
  * @subpackage StorageServer.Cron
  */

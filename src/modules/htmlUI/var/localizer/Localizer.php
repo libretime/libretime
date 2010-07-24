@@ -1,6 +1,5 @@
 <?php
 /**
- * @package Campware
  * This file would normally be split into multiple files but since it must
  * be fast (it gets loaded for every hit to the admin screen), we put it
  * all in one file.
@@ -88,7 +87,6 @@ function regGS($p_key, $p_value)
 /**
  * The Localizer class handles groups of translation tables (LocalizerLanguages).
  * This class simply acts as a namespace for a group of static methods.
- * @package Campware
  */
 class Localizer {
 

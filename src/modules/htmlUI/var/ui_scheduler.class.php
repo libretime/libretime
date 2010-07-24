@@ -1,12 +1,8 @@
 <?php
 /**
- * @author Sebastian Gobel <sebastian.goebel@web.de>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
- * @copyright 2006 MDLF, Inc.
- * @link http://www.campware.org
+ * @copyright 2010 Sourcefabric O.P.S.
  */
 class uiScheduler extends uiCalendar {
 	/**
@@ -598,7 +594,7 @@ class uiScheduler extends uiCalendar {
     {
         $now = time();
         $start = strftime('%Y%m%dT%H:%M:%S', $now);
-        $end =  $p_playlist_nr ? strftime('%Y%m%dT%H:%M:%S', $now + $p_period) : strftime('%Y%m%dT%H:%M:%S', $now); 
+        $end =  $p_playlist_nr ? strftime('%Y%m%dT%H:%M:%S', $now + $p_period) : strftime('%Y%m%dT%H:%M:%S', $now);
         $playlists = $this->displayScheduleMethod($start, $end);
 
         if (!is_array($playlists) || !count($playlists)) {
@@ -611,23 +607,23 @@ class uiScheduler extends uiCalendar {
                     return $playlist;
                 }
             break;
-            
+
             default:
                 $pos = 0;
                 foreach ($playlists as $playlist) {
                     if (self::datetimeToTimestamp($playlist['start']) > $now) {
                         $pos++;
                         if ($pos == $p_playlist_nr) {
-                            return $playlist;   
+                            return $playlist;
                         }
                     }
                 }
-            break;            
-        }        
+            break;
+        }
         return false;
     }   // fn getScheduledPlaylist
-        
-        
+
+
     public function getClipFromCurrent($p_playlist, $p_item_nr=0)
     {
         //  subtract difference to UTC
@@ -648,7 +644,7 @@ class uiScheduler extends uiCalendar {
         $elapsed = array_map('round', $elapsed);
         $remaining = array_map('round', $remaining);
         $percentage =  $secondsElapsed ? (100 * $secondsElapsed / ($secondsElapsed + $secondsRemaining)) : 100;
-        
+
         return array('title' => $clip['title'],
                      'duration'  => $duration,
                      'elapsed'   => $elapsed,
@@ -657,7 +653,7 @@ class uiScheduler extends uiCalendar {
                      'playlist'  => $clip['playlist']
                );
     }
-    
+
     public function getClipFromPlaylist($p_playlist, $p_position=0)
     {
         $pos = 0;
@@ -671,7 +667,7 @@ class uiScheduler extends uiCalendar {
             }
             $pos++;
         }
-        if ($found) {   
+        if ($found) {
             list($duration['h'], $duration['m'], $duration['s']) = explode(':', $clip['attrs']['clipLength']);
             list($elapsed['h'], $elapsed['m'], $elapsed['s']) = explode(':', '00:00:00');
             $remaining = $duration;
@@ -700,9 +696,9 @@ class uiScheduler extends uiCalendar {
         }
         if ($u_pl = self::getScheduledPlaylist(1)) {
             $u_clip = $this->getClipFromPlaylist($u_pl);
-            $u_pl_start = explode(':', date('H:i:s', self::datetimeToTimestamp($u_pl['start'])));  
+            $u_pl_start = explode(':', date('H:i:s', self::datetimeToTimestamp($u_pl['start'])));
         }
-        
+
         return array(
             'current'               => $c_clip ? 1 : 0,
             'current.title'         => addcslashes($c_clip['title'], "'"),
@@ -713,15 +709,15 @@ class uiScheduler extends uiCalendar {
             'current.duration.h'    => $c_clip['duration']['h'],
             'current.duration.m'    => $c_clip['duration']['m'],
             'current.duration.s'    => $c_clip['duration']['s'],
-            
-            
+
+
             'next'                  => $n_clip ? 1 : 0,
             'next.title'            => $n_clip ? addcslashes($n_clip['title'], "'") : "",
             'next.pltitle'          => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($n_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
             'next.duration.h'       => $n_clip ? $n_clip['duration']['h'] : 0,
             'next.duration.m'       => $n_clip ? $n_clip['duration']['m'] : 0,
             'next.duration.s'       => $n_clip ? $n_clip['duration']['s'] : 0,
-            
+
             'upcoming'              => $u_pl ? 1 : 0,
             'upcoming.title'        => addcslashes($u_clip['title'], "'"),
             'upcoming.pltitle'      => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($u_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
@@ -731,7 +727,7 @@ class uiScheduler extends uiCalendar {
             'upcoming.plstart.h'    => $u_pl_start[0],
             'upcoming.plstart.m'    => $u_pl_start[1],
             'upcoming.plstart.s'    => $u_pl_start[2],
-            
+
         );
     } // fn getNowPlaying4jscom
 
@@ -1261,7 +1257,7 @@ class uiScheduler extends uiCalendar {
 
         return $status;
     } // fn scheduleImportClose
-    
+
     public function getSchedulerTime()
     {
         static $first, $cached;
@@ -1269,7 +1265,7 @@ class uiScheduler extends uiCalendar {
             $first = time();
             $r = $this->spc->GetSchedulerTimeMethod();
             if ($this->_isError($r)) {
-                return false;    
+                return false;
             }
             $cached = self::datetimeToTimestamp($r['schedulerTime']);
         }

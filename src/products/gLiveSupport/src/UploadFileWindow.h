@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef UploadFileWindow_h
 #define UploadFileWindow_h
@@ -69,8 +63,6 @@ using namespace LiveSupport::Widgets;
  *  It allows one to select a file from the file system, add metadata,
  *  and upload it to the storage server.
  *
- *  @author $Author$
- *  @version $Revision$
  */
 class UploadFileWindow : public  GuiWindow,
                          private NumericTools

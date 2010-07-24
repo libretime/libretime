@@ -2,13 +2,13 @@
 require_once("../../../storageServer/var/Playlist.php");
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
+
+
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
- * @copyright 2006 MDLF, Inc.
- * @link http://www.campware.org
+
+ * @copyright 2010 Sourcefabric O.P.S.
+
  */
 class uiPlaylist
 {

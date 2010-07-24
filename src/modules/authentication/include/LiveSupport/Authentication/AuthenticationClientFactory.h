@@ -20,11 +20,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_Authentication_AuthenticationClientFactory_h
 #define LiveSupport_Authentication_AuthenticationClientFactory_h
@@ -92,8 +87,6 @@ using namespace LiveSupport::Core;
  *                                         webAuthentication) &gt;
  *  </code></pre>
  *
- *  @author  $Author$
- *  @version $Revision$
  *  @see TestAuthenticationClient
  *  @see WebAuthenticationClient
  */

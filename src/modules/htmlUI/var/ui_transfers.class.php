@@ -3,7 +3,7 @@
 /**
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
+
  */
 class uiTransfers
 {

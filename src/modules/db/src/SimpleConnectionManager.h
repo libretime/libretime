@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef SimpleConnectionManager_h
 #define SimpleConnectionManager_h
@@ -83,9 +77,6 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
  *  <!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
  *  </code></pre>
- *
- *  @author  $Author$
- *  @version $Revision$
  */
 class SimpleConnectionManager :
                         virtual public Configurable,

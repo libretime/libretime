@@ -1,6 +1,5 @@
 <?php
 /**
- *  \file put.php
  *  Store PUT data as temporary file.
  *
  *  put.php is remote callable script through HTTP PUT method.
@@ -24,8 +23,6 @@
  *  </ul>
  *
  * @see XR_LocStor
- * @author $Author$
- * @version $Revision$
  * @package Campcaster
  * @subpackage ArchiveServer
  */

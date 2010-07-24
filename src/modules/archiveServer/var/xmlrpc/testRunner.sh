@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#   Author   : $Author$
-#   Version  : $Revision$
-#-------------------------------------------------------------------------------
-
 #DEBUG=yes
 #DEBUG_I=yes
 

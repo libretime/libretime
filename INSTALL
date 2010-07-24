@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 
-    Copyright (c) 2010 Media Development Loan Fund
+    Copyright (c) 2010 Sourcefabric O.P.S.
 
     This file is part of the Campcaster project.
     http://campcaster.campware.org/
@@ -20,19 +20,11 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 --------------------------------------------------------------------------------
 
-Installing on Ubuntu/Kubuntu etc.
-doc/installUbuntu.html
+Please see this page for typical user install:
+http://en.flossmanuals.net/Campcaster
 
-Installing on other platforms
-doc/install.html
-
-Campcaster home page
-http://campcaster.campware.org/
+If you are developer, see this page:
+http://wiki.sourcefabric.org/display/CC/Campcaster+Dev+Site
 

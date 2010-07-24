@@ -1,11 +1,7 @@
 <?PHP
-/**
- * @package Campware
- */
 
 /**
  * Abstract interface for the localizer to access data from different sources.
- * @package Campware
  * @abstract
  */
 class LocalizerFileFormat {
@@ -15,9 +11,6 @@ class LocalizerFileFormat {
 } // class LocalizerFileFormat
 
 
-/**
- * @package Campware
- */
 class LocalizerFileFormat_GS extends LocalizerFileFormat {
     /**
      * Load the translation table from a PHP-GS file.
@@ -142,9 +135,6 @@ class LocalizerFileFormat_GS extends LocalizerFileFormat {
 } // class LocalizerFileFormat_GS
 
 
-/**
- * @package Campware
- */
 class LocalizerFileFormat_XML extends LocalizerFileFormat {
     var $m_serializeOptions     = array();
     var $m_unserializeOptions   = array();

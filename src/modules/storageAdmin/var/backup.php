@@ -1,8 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version  $Revision$
- */
 define('NSPACE', 'lse');
 
 header("Content-type: text/plain");

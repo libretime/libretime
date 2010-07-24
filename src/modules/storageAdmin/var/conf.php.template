@@ -1,7 +1,3 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
 $STORAGE_SERVER_PATH = 'ls_storageServer';
 ?>

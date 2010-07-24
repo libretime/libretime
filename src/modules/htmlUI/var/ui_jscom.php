@@ -3,7 +3,7 @@
 /**
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
+
  */
 class jscom {
     private $prefix = 'jsc_';

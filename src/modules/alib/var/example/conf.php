@@ -1,9 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
-
 $CC_CONFIG = array(
     'dsn'       => array(           // data source definition
         'username' => 'test',

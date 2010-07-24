@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_Widgets_ZebraTreeView_h
 #define LiveSupport_Widgets_ZebraTreeView_h
@@ -89,9 +83,6 @@ using namespace LiveSupport::Core;
  *  A derived CellRenderer sub-type needs to be 1) instantiated;
  *  2) added to a TreeViewColumn using a constructor or pack_start() etc;
  *  3) connected with a TreeModelColumn using TreeViewColumn::set_renderer().
- *
- *  @author  $Author$
- *  @version $Revision$
  */
 class ZebraTreeView : public Gtk::TreeView
 {

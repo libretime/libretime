@@ -20,11 +20,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef WebAuthenticationClient_h
 #define WebAuthenticationClient_h
@@ -91,9 +86,6 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location port     NMTOKEN     #REQUIRED &gt;
  *  &lt;!ATTLIST location path     CDATA       #REQUIRED &gt;
  *  </code></pre>
- *
- *  @author  $Author$
- *  @version $Revision$
  */
 class WebAuthenticationClient :
                     virtual public Configurable,

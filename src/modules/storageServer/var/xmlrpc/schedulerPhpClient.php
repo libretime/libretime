@@ -1,9 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
-
 /* ================================================================= includes */
 include_once(dirname(__FILE__)."/../conf.php");
 require_once('DB.php');

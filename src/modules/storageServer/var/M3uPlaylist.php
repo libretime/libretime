@@ -4,14 +4,10 @@ define('INDCH', ' ');
 /**
  * M3uPlaylist class
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version  : $Revision: 1848 $
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class M3uPlaylist {
 
@@ -202,14 +198,10 @@ class M3uPlaylist {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class M3uPlaylistBodyElement {
     function convert2lspl(&$tree, $ind='')
@@ -241,14 +233,10 @@ class M3uPlaylistBodyElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class M3uPlaylistParElement {
     function convert2lspl(&$tree, $ind='')
@@ -271,14 +259,10 @@ class M3uPlaylistParElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class M3uPlaylistAudioElement {
     function convert2lspl(&$tree, $ind='')
@@ -331,14 +315,10 @@ class M3uPlaylistAudioElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class M3uPlaylistAnimateElement {
     function convert2lspl(&$tree, $ind='') {

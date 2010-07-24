@@ -1,8 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
 header ("location: html/");
 exit;
 /*

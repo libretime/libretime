@@ -6,14 +6,10 @@ require_once("XmlParser.php");
 /**
  * SmilPlaylist class
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision: 1848 $
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class SmilPlaylist {
 
@@ -125,14 +121,10 @@ class SmilPlaylist {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class SmilPlaylistBodyElement {
 
@@ -168,14 +160,10 @@ class SmilPlaylistBodyElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class SmilPlaylistParElement {
 
@@ -200,14 +188,10 @@ class SmilPlaylistParElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class SmilPlaylistAudioElement {
     public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
@@ -289,14 +273,10 @@ class SmilPlaylistAudioElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class SmilPlaylistAnimateElement {
 

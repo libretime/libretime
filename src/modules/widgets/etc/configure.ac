@@ -3,7 +3,6 @@ dnl Copyright (c) 2010 Sourcefabric O.P.S.
 dnl
 dnl This file is part of the Campcaster project.
 dnl http://campcaster.sourcefabric.org/
-dnl To report bugs, send an e-mail to bugs@campware.org
 dnl
 dnl Campcaster is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -19,10 +18,6 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with Campcaster; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
-dnl
-dnl Author   : $Author$
-dnl Version  : $Revision$
-dnl Location : $URL$
 dnl-----------------------------------------------------------------------------
 
 dnl-----------------------------------------------------------------------------

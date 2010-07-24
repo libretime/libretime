@@ -1,18 +1,11 @@
 <?PHP
 /**
- * @package Campware
- */
-
-/**
  * Includes
  */
 require_once 'PEAR.php';
 require_once dirname(__FILE__).'/LocalizerConfig.php';
 require_once dirname(__FILE__).'/LocalizerFileFormat.php';
 
-/**
- * @package Campware
- */
 class LocalizerLanguage {
 	var $m_translationTable = array();
 	var $m_languageCode = '';

@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef CuePlayer_h
 #define CuePlayer_h
@@ -66,8 +60,6 @@ using namespace LiveSupport::Widgets;
  *  A box displaying a play/pause and a stop button, which control the cue
  *  (preview) audio player.
  *
- *  @author  $Author$
- *  @version $Revision$
  */
 class CuePlayer : public GuiComponent,
                   public PlaylistExecutor::AudioPlayerEventListener

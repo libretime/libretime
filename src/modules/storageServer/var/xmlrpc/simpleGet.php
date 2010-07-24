@@ -1,6 +1,5 @@
 <?php
 /**
- *  \file simpleGet.php
  *  Returns stored media file identified by global unique ID.
  *
  *  simpleGet.php is remote callable script through HTTP GET method.
@@ -22,8 +21,6 @@
  *      <li> 404    -  File not found</li>
  *      <li> 500    -  Application error</li>
  *  </ul>
- * @author $Author$
- * @version $Revision$
  *
  */
 

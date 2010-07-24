@@ -122,7 +122,7 @@ function __autoload($p_className)
  * HTML User Interface module
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
+
  */
 class uiBase
 {

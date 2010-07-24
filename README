@@ -50,23 +50,15 @@ Major features of Campcaster:
 
 INSTALLATION
 ------------
+Please see this page for typical user install:
+http://en.flossmanuals.net/Campcaster
 
- * Building & Installing on all versions of Ubuntu/Kubuntu etc.
-   doc/installUbuntu.html
-
- * Installing on other platforms
-   doc/install.html
-
- * Developing on all versions of Ubuntu/Kubuntu etc.
-   http://trac.campware.org/campcaster/wiki/DevelopmentEnvironment
-
- * Developing on other platforms
-   doc/gettingStarted.html
+If you are developer, see this page:
+http://wiki.sourcefabric.org/display/CC/Campcaster+Dev+Site
 
 Quick links to our resources
 ----------------------------
-
-    Manuals for Campcaster: http://en.flossmanuals.net/CampCaster/Introduction
+    User Manual: http://en.flossmanuals.net/CampCaster/Introduction
     Forums and mailing lists: http://forum.sourcefabric.org
     Bug Tracking: http://dev.sourcefabric.org
     Code view/review: http://code.sourcefabric.org
@@ -78,7 +70,7 @@ Quick links to our resources
 
 -------------------------------------------------------------------------
 
-    Copyright (c) 2010 Media Development Loan Fund
+    Copyright (c) 2010 Sourcefabric O.P.S.
 
     This file is part of the Campcaster project.
     http://campcaster.campware.org/

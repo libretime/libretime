@@ -10,14 +10,14 @@ define('ALIBERR_BADSMEMB', 21);
  * with "linearized recursive membership" ;)
  *   (allow adding users to groups or groups to groups)
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
+
+
+
  * @package Campcaster
  * @subpackage Alib
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
+
  * @see ObjClasses
  * @see Alib
  */

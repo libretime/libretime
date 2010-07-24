@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef ScratchpadWindow_h
 #define ScratchpadWindow_h
@@ -72,8 +66,6 @@ using namespace LiveSupport::Widgets;
  *  The Scratchpad window, showing recent and relevant audio clips and
  *  playlists.
  *
- *  @author $Author$
- *  @version $Revision$
  */
 class ScratchpadWindow : public GuiWindow,
                          public ContentsStorable,
@@ -136,8 +128,6 @@ class ScratchpadWindow : public GuiWindow,
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
-         *  @author $Author$
-         *  @version $Revision$
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {

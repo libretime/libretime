@@ -39,14 +39,10 @@ include_once("TransportRecord.php");
  *   <li>file</li>
  *  </ul>
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class Transport
 {

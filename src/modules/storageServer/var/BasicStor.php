@@ -23,14 +23,10 @@ require_once("Transport.php");
 /**
  * Core of Campcaster file storage module
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @see Alib
  */
 //class BasicStor extends Alib {
@@ -2437,7 +2433,7 @@ class BasicStor {
         } else {
             echo "   * Skipping: user already exists: 'scheduler'\n";
         }
-        
+
         // Need to add 'scheduler' to group StationPrefs
         Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
     }

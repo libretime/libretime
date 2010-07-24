@@ -6,14 +6,14 @@ require_once("M2tree.php");
  *
  * A class for 'object classes' handling - i.e. groups of object in tree
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
+
+
+
  * @package Campcaster
  * @subpackage Alib
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
+
  */
 class ObjClasses {
 //class ObjClasses extends M2tree {

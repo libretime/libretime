@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,12 +68,6 @@ without express or implied warranty of any kind.
 
 These notices must be retained in any copies of any part of this
 documentation and/or software.
-
-  ------------------------------------------------------------------------------
-
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 

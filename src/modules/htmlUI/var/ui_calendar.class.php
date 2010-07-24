@@ -1,13 +1,9 @@
 <?php
 /**
- * @author Sebastian Gobel <sebastian.goebel@web.de>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage htmlUI
- * @version $Revision$
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class uiCalendar
 {

@@ -20,11 +20,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef TestAuthenticationClient_h
 #define TestAuthenticationClient_h
@@ -93,9 +88,6 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST user login      CDATA      #REQUIRED &gt;
  *  &lt;!ATTLIST user password   CDATA      #REQUIRED &gt;
  *  </code></pre>
- *
- *  @author  $Author$
- *  @version $Revision$
  */
 class TestAuthenticationClient :
                     virtual public Configurable,

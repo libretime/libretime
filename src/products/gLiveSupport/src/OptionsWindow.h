@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef OptionsWindow_h
 #define OptionsWindow_h
@@ -80,8 +74,6 @@ using namespace LiveSupport::Widgets;
  *  +------------(Apply)-(Cancel)-(OK)--+
  *  </code></pre>
  *
- *  @author $Author$
- *  @version $Revision$
  */
 class OptionsWindow : public GuiWindow
 {
@@ -317,8 +309,6 @@ class OptionsWindow : public GuiWindow
         /**
          *  The columns model containing the data for the Key bindings section.
          *
-         *  @author $Author$
-         *  @version $Revision$
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,11 +41,6 @@
 ** Foundation, Inc., Hewlett-Packard Company, Microsoft, nor Digital Equipment
 ** Corporation makes any representations about the suitability of
 ** this software for any purpose.
-
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
 
 ------------------------------------------------------------------------------*/
 #ifndef LiveSupport_Core_Uuid_h
@@ -89,8 +83,6 @@ namespace Core {
  *  This implementation is based on the Leach UUID/GUID draft:
  *  http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt
  *
- *  @author  $Author$
- *  @version $Revision$
  *  @see http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt
  */
 class Uuid

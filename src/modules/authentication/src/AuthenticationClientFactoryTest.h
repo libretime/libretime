@@ -20,11 +20,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef AuthenticationClientFactoryTest_h
 #define AuthenticationClientFactoryTest_h
@@ -62,8 +57,6 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the AuthenticationClientFactory class.
  *
- *  @author  $Author$
- *  @version $Revision$
  *  @see AuthenticationClientFactory
  */
 class AuthenticationClientFactoryTest : public BaseTestMethod

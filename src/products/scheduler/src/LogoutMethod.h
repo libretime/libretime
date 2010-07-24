@@ -4,7 +4,6 @@
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +19,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author$
-    Version  : $Revision$
-    Location : $URL$
-
 ------------------------------------------------------------------------------*/
 #ifndef LogoutMethod_h
 #define LogoutMethod_h
@@ -80,8 +74,6 @@ using namespace LiveSupport::Core;
  *     <li>2104 - the authentication server reported an error </li>
  *  </ul>
  *
- *  @author  $Author$
- *  @version $Revision$
  */
 class LogoutMethod : public XmlRpc::XmlRpcServerMethod
 {

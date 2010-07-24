@@ -1,10 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version  $Revision$
- *
- */
-
 $audioClipFormat = array(
     '_root'=>'audioClip',
     'audioClip'=>array(

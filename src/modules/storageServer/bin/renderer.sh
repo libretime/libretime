@@ -20,11 +20,6 @@
 #   along with Campcaster; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-#
-#   Author   : $Author: tomash $
-#   Version  : $Revision: 1847 $
-#   Location : $URL: svn+ssh://tomash@code.campware.org/home/svn/repo/livesupport/trunk/livesupport/src/modules/storageAdmin/bin/backup.sh $
-#-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  Playlist-to-file renderer caller. DUMMY VERSION.
 #

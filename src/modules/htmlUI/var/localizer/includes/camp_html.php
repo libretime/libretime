@@ -27,9 +27,9 @@ function camp_html_copyright_notice($p_displayBorder = true)
 	?>
 	<tr>
 		<td style="padding-left: 5px; padding-top: 10px;" align="center">
-			<a style="font-size:8pt; color: black;" href="http://www.campware.org" target="campware">
-			Campsite <?php echo $Campsite['VERSION'] ?> &copy 1999-2005 MDLF, 
-			maintained and distributed under GNU GPL by CAMPWARE
+			<a style="font-size:8pt; color: black;" href="http://sourcefabric.org">
+			&copy 2010 Sourcefabric O.P.S.,
+			maintained and distributed under the GNU GPL
 			</a>
 		</td>
 	</tr>
@@ -42,7 +42,7 @@ function camp_html_copyright_notice($p_displayBorder = true)
  * Create a HTML SELECT drop down box.
  *
  */
-function camp_html_create_select($p_name, $p_options, $p_selected = null, $p_extras ="", $p_valuesIncluded = false) 
+function camp_html_create_select($p_name, $p_options, $p_selected = null, $p_extras ="", $p_valuesIncluded = false)
 {
 	?>
 	<select name="<?php echo $p_name ?>" <?php echo $p_extras ?>>
@@ -56,7 +56,7 @@ function camp_html_create_select($p_name, $p_options, $p_selected = null, $p_ext
 		else {
 			?>
 			<option <?php if (!is_null($p_selected) && ($p_selected == $value)) { echo "selected"; } ?>><?php echo htmlspecialchars($value); ?></option>
-			<?php    			
+			<?php
 		}
 	}
 	?>
@@ -72,7 +72,7 @@ function camp_html_create_select($p_name, $p_options, $p_selected = null, $p_ext
  *		The article we want to display.
  *
  * @param int $p_sectionLanguageId
- *		The section language ID. 
+ *		The section language ID.
  *
  * @param string $p_targetFileName
  *		Which file in the "articles" directory to call.
@@ -80,7 +80,7 @@ function camp_html_create_select($p_name, $p_options, $p_selected = null, $p_ext
  * @param string $p_backLink
  *		I'm not entirely sure what this is for.  I put it in for backward compatibility.
  */
-function camp_html_article_link($p_articleObj, $p_interfaceLanguageId, $p_targetFileName = "", $p_backLink = "") 
+function camp_html_article_link($p_articleObj, $p_interfaceLanguageId, $p_targetFileName = "", $p_backLink = "")
 {
 	$str = '<A HREF="'.camp_html_article_url($p_articleObj, $p_interfaceLanguageId, $p_targetFileName, $p_backLink).'">';
 	return $str;
@@ -94,7 +94,7 @@ function camp_html_article_link($p_articleObj, $p_interfaceLanguageId, $p_target
  *		The article we want to display.
  *
  * @param int $p_interfaceLanguageId
- *		The language ID for the interface language. 
+ *		The language ID for the interface language.
  *
  * @param string $p_targetFileName
  *		Which file in the "articles" directory to call.
@@ -104,7 +104,7 @@ function camp_html_article_link($p_articleObj, $p_interfaceLanguageId, $p_target
  *
  * @param string $p_extraParams
  */
-function camp_html_article_url($p_articleObj, $p_interfaceLanguageId, $p_targetFileName = "", $p_backLink = "", $p_extraParams = null) 
+function camp_html_article_url($p_articleObj, $p_interfaceLanguageId, $p_targetFileName = "", $p_backLink = "", $p_extraParams = null)
 {
 	global $ADMIN;
 	$str = "/$ADMIN/articles/".$p_targetFileName
@@ -114,7 +114,7 @@ function camp_html_article_url($p_articleObj, $p_interfaceLanguageId, $p_targetF
 		."&Article=".$p_articleObj->getArticleId()
 		."&Language=".$p_interfaceLanguageId
 		."&sLanguage=".$p_articleObj->getLanguageId();
-	if ($p_backLink != "") { 
+	if ($p_backLink != "") {
 		$str .="&Back=".urlencode($p_backLink);
 	}
 	if (!is_null($p_extraParams)) {
@@ -137,7 +137,7 @@ function camp_html_article_url($p_articleObj, $p_interfaceLanguageId, $p_targetF
  *
  * @return void
  */
-function camp_html_display_error($p_errorStr, $p_backLink = null, $popup = false) 
+function camp_html_display_error($p_errorStr, $p_backLink = null, $popup = false)
 {
 	global $ADMIN;
 	$script = $popup ? 'ad_popup.php' : 'ad.php';
@@ -173,7 +173,7 @@ function camp_html_display_error($p_errorStr, $p_backLink = null, $popup = false
  *
  * @return void
  */
-function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p_fValidate = false, $p_extraBreadcrumbs = null) 
+function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p_fValidate = false, $p_extraBreadcrumbs = null)
 {
 	global $Campsite;
 	global $ADMIN;
@@ -181,7 +181,7 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
 	$issueObj = camp_array_get_value($p_objArray, 'Issue', null);
 	$sectionObj = camp_array_get_value($p_objArray, 'Section', null);
 	$articleObj = camp_array_get_value($p_objArray, 'Article', null);
-	
+
 	$breadcrumbs = array();
 	if (!is_null($publicationObj)) {
 	    $prompt =  getGS("Publication").":";
@@ -190,25 +190,25 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
     	$breadcrumbs[] = array($prompt, "/$ADMIN/pub/", false);
     	$breadcrumbs[] = array($name, "/$ADMIN/pub/edit.php?Pub=".$publicationObj->getPublicationId());
 	}
-	
-	if (!is_null($issueObj)) { 
+
+	if (!is_null($issueObj)) {
 	    $prompt = getGS("Issue").":";
-    	$breadcrumbs[] = array($prompt, 
+    	$breadcrumbs[] = array($prompt,
     	       "/$ADMIN/issues/"
     	       ."?Pub=".$issueObj->getPublicationId()
     	       ."&Issue=".$issueObj->getIssueId()
     	       ."&Language=".$issueObj->getLanguageId(),
     	       false);
 	    $name = htmlspecialchars($issueObj->getName())." (".htmlspecialchars($issueObj->getLanguageName()).")";
-        $breadcrumbs[] = array($name, 
+        $breadcrumbs[] = array($name,
     	       "/$ADMIN/issues/edit.php"
     	       ."?Pub=".$issueObj->getPublicationId()
     	       ."&Issue=".$issueObj->getIssueId()
-    	       ."&Language=".$issueObj->getLanguageId()); 
+    	       ."&Language=".$issueObj->getLanguageId());
 	}
-	if (!is_null($sectionObj)) { 
+	if (!is_null($sectionObj)) {
 	    $prompt = getGS("Section").":";
-		$breadcrumbs[] = array($prompt, 
+		$breadcrumbs[] = array($prompt,
 		        "/$ADMIN/sections/"
 		        ."?Pub=".$sectionObj->getPublicationId()
                 ."&Issue=".$sectionObj->getIssueId()
@@ -216,7 +216,7 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
                 ."&Section=".$sectionObj->getSectionId(),
                 false);
 	    $name = htmlspecialchars($sectionObj->getName());
-        $breadcrumbs[] = array($name, 
+        $breadcrumbs[] = array($name,
                 "/$ADMIN/sections/edit.php"
                 ."?Pub=".$sectionObj->getPublicationId()
                 ."&Issue=".$sectionObj->getIssueId()
@@ -225,19 +225,19 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
 	}
 	if (!is_null($articleObj)) {
 	    $prompt = getGS("Article").":";
-		$breadcrumbs[] = array($prompt, 
+		$breadcrumbs[] = array($prompt,
                 "/$ADMIN/articles/index.php"
-                ."?Pub=" . $articleObj->getPublicationId() 
+                ."?Pub=" . $articleObj->getPublicationId()
                 ."&Issue=".$articleObj->getIssueId()
                 ."&Language=".$articleObj->getLanguageId()
                 ."&Section=".$articleObj->getSectionId()
                 ."&Article=".$articleObj->getArticleId()
-                ."&sLanguage=".$sectionObj->getLanguageId(),                
+                ."&sLanguage=".$sectionObj->getLanguageId(),
                 false);
 	    $name = htmlspecialchars($articleObj->getName())." (".htmlspecialchars($articleObj->getLanguageName()).")";
         $breadcrumbs[] = array($name,
                 "/$ADMIN/articles/edit.php"
-                ."?Pub=" . $articleObj->getPublicationId() 
+                ."?Pub=" . $articleObj->getPublicationId()
                 ."&Issue=".$articleObj->getIssueId()
                 ."&Language=".$articleObj->getLanguageId()
                 ."&Section=".$articleObj->getSectionId()
@@ -261,7 +261,7 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
 	<script type="text/javascript" src="<?php echo $Campsite['WEBSITE_URL']; ?>/javascript/fValidate/fValidate.config.js"></script>
     <script type="text/javascript" src="<?php echo $Campsite['WEBSITE_URL']; ?>/javascript/fValidate/fValidate.core.js"></script>
     <script type="text/javascript" src="<?php echo $Campsite['WEBSITE_URL']; ?>/javascript/fValidate/fValidate.lang-enUS.js"></script>
-    <script type="text/javascript" src="<?php echo $Campsite['WEBSITE_URL']; ?>/javascript/fValidate/fValidate.validators.js"></script>	
+    <script type="text/javascript" src="<?php echo $Campsite['WEBSITE_URL']; ?>/javascript/fValidate/fValidate.validators.js"></script>
 	<?php } ?>
 	<TITLE><?php p($p_title); ?></TITLE>
 </HEAD>
@@ -281,7 +281,7 @@ function camp_html_content_top($p_title, $p_objArray, $p_includeLinks = true, $p
  *
  * @return string
  */
-function camp_html_breadcrumbs($p_crumbs) 
+function camp_html_breadcrumbs($p_crumbs)
 {
     $lastCrumb = array_pop($p_crumbs);
     $str = '<TABLE BORDER="0" CELLSPACING="1" CELLPADDING="0" bgcolor="#D5E2EE" width="100%"><TR><TD align="left" style="border-bottom: 1px solid black; border-top: 1px solid #8BAED1; padding-bottom: 2px; padding-top: 2px; padding-left: 1.3em; ">';
@@ -325,7 +325,7 @@ function camp_html_breadcrumb($p_text, $p_link, $p_separator = true, $p_active =
         $class = "breadcrumb_active";
     }
     else {
-        $class = "breadcrumb";        
+        $class = "breadcrumb";
     }
     if ($p_separator) {
         $tmpStr .= "<span>";
@@ -344,7 +344,7 @@ function camp_html_breadcrumb($p_text, $p_link, $p_separator = true, $p_active =
         $tmpStr .= "<span CLASS='breadcrumb_separator'>&nbsp;</span>";
 	}
 	else {
-        $tmpStr .= "<span>&nbsp;</spanTD>";	    
+        $tmpStr .= "<span>&nbsp;</spanTD>";
 	}
     return $tmpStr;
 } // fn camp_html_breadcrumb

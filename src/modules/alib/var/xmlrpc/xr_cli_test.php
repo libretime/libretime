@@ -1,8 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
 include("xmlrpc.inc");
 
 $host       = "localhost";

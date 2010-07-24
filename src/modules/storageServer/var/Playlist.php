@@ -8,14 +8,10 @@ define('INDCH', ' ');
  *
  * remark: dcterms:extent format: hh:mm:ss.ssssss
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @version $Revision$
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class Playlist extends StoredFile {
 
@@ -166,20 +162,20 @@ class Playlist extends StoredFile {
 
         // insert new playlist element
         $offset = $plLen;
-		
+
 		 // insert default values if parameter was empty
         $clipStart = !is_null($clipstart) ? $clipstart : '00:00:00.000000';
         $clipEnd = !is_null($clipend) ? $clipend : $acLen;
-        
+
         $acLengthS = $clipLengthS = self::playlistTimeToSeconds($acLen);
         if (!is_null($clipStart)) {
-            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($clipStart);    
+            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($clipStart);
         }
         if (!is_null($clipEnd)) {
-            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($clipEnd));   
+            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($clipEnd));
         }
         $clipLength = self::secondsToPlaylistTime($clipLengthS);
-		
+
         $plElInfo = $this->insertPlaylistElement($parid, $offset, $clipStart, $clipEnd, $clipLength,
             $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid,
             $elType);
@@ -316,7 +312,7 @@ class Playlist extends StoredFile {
         }
         return false;
     }
-    
+
         /**
      * Change cueIn/curOut values for playlist element
      *
@@ -577,13 +573,13 @@ class Playlist extends StoredFile {
             	$len = $len - $fadeInS;
             }
             */
-            
+
             $newOffset = Playlist::secondsToPlaylistTime($len);
             $r = $this->_setValueOrInsert($offsetId, $newOffset, $elId, 'relativeOffset');
             if (PEAR::isError($r)) {
             	return $r;
             }
-            
+
             // commulate length for next offset
             $acLenS = Playlist::playlistTimeToSeconds($acLen);
             $len = $len + $acLenS;
@@ -600,12 +596,12 @@ class Playlist extends StoredFile {
             }
             // respect clipStart and clipEnd
             if (!is_null($clipStart)) {
-                $len = $len - $clipStartS;    
+                $len = $len - $clipStartS;
             }
             if (!is_null($clipEnd)) {
-                $len = $len - ($acLenS - $clipEndS);   
+                $len = $len - ($acLenS - $clipEndS);
             }
-            
+
             $prevFiMid = $fiMid;
             $lastLenS = $acLenS;
         }
@@ -1342,11 +1338,8 @@ class Playlist extends StoredFile {
 /**
  * Auxiliary class for GB playlist editing methods
  *
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  */
 class PlaylistElement {
     private $pl = NULL;
@@ -1371,7 +1364,7 @@ class PlaylistElement {
             'clipStart' => '00:00:00.000000',
             'clipStartS' => 0,
             'clipEnd' => '00:00:00.000000',
-            'clipEndS' => 0 
+            'clipEndS' => 0
         );
         $plInfo['elOffset'] = $this->plEl['attrs']['relativeOffset'];
         $plInfo['elOffsetS'] = Playlist::playlistTimeToSeconds($plInfo['elOffset']);
@@ -1410,13 +1403,10 @@ class PlaylistElement {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @todo Rename this class PlaylistTag
  */
 class PlaylistTagExport
@@ -1523,13 +1513,10 @@ class PlaylistTagExport
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @todo Rename this class "PlaylistElement"
  */
 class PlaylistElementExport {
@@ -1707,13 +1694,10 @@ class PlaylistElementExport {
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @todo Rename this class to PlaylistAudioClip (notice the caps)
  */
 class PlaylistAudioClipExport
@@ -1784,13 +1768,10 @@ class PlaylistAudioClipExport
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
  */
 class PlaylistFadeInfoExport
@@ -1821,13 +1802,10 @@ class PlaylistFadeInfoExport
 
 
 /**
- * @author Tomas Hlava <th@red2head.com>
- * @author Paul Baranowski <paul@paulbaranowski.org>
  * @package Campcaster
  * @subpackage StorageServer
- * @copyright 2006 MDLF, Inc.
+ * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @link http://www.campware.org
  * @todo Rename this class to PlaylistMetadata (notice the caps)
  */
 class PlaylistMetadataExport

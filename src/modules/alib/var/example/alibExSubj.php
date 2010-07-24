@@ -1,9 +1,4 @@
 <?php
-/**
- * @author $Author$
- * @version $Revision$
- */
-
 require_once "alib_h.php";
 require_once "alibExTestAuth.php";
 
