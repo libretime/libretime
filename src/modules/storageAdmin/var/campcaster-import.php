@@ -2,14 +2,10 @@
 /**
  * Mass import of audio files.
  *
-
-
-
  * @package Campcaster
  * @subpackage StorageAdmin
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
-
  */
 ini_set('memory_limit', '128M');
 set_time_limit(0);
@@ -31,6 +27,7 @@ function camp_import_error_handler()
 
 function printUsage()
 {
+		global $CC_CONFIG;
     echo "There are two ways to import audio files into Campcaster: linking\n";
     echo "or copying.\n";
     echo "\n";
@@ -58,6 +55,9 @@ function printUsage()
     echo "                 double the disk space required.\n";
     echo "\n";
     echo "  -h, --help     Print this message and exit.\n";
+    echo "\n";
+    echo "Files will be imported to directory:\n";
+    echo "  ". $CC_CONFIG["storageDir"] ."\n";
     echo "\n";
 }
 
