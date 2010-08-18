@@ -19,6 +19,11 @@ class getid3_id3v1
 
 	function getid3_id3v1(&$fd, &$ThisFileInfo) {
 
+		if ($ThisFileInfo['filesize'] >= pow(2, 31)) {
+			$ThisFileInfo['warning'][] = 'Unable to check for ID3v1 because file is larger than 2GB';
+			return false;
+		}
+
 		fseek($fd, -256, SEEK_END);
 		$preid3v1 = fread($fd, 128);
 		$id3v1tag = fread($fd, 128);
@@ -60,7 +65,7 @@ class getid3_id3v1
 											$ParsedID3v1['artist'],
 											$ParsedID3v1['album'],
 											$ParsedID3v1['year'],
-											$this->LookupGenreID(@$ParsedID3v1['genre']),
+											(isset($ParsedID3v1['genre']) ? $this->LookupGenreID($ParsedID3v1['genre']) : false),
 											$ParsedID3v1['comment'],
 											@$ParsedID3v1['track']);
 			$ParsedID3v1['padding_valid'] = true;

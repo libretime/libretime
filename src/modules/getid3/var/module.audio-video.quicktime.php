@@ -29,11 +29,21 @@ class getid3_quicktime
 		$atomcounter = 0;
 
 		while ($offset < $ThisFileInfo['avdataend']) {
+			if ($offset >= pow(2, 31)) {
+				$ThisFileInfo['error'][] = 'Unable to parse atom at offset '.$offset.' because beyond 2GB limit of PHP filesystem functions';
+				break;
+			}
 			fseek($fd, $offset, SEEK_SET);
 			$AtomHeader = fread($fd, 8);
 
 			$atomsize = getid3_lib::BigEndian2Int(substr($AtomHeader, 0, 4));
-			$atomname =               substr($AtomHeader, 4, 4);
+			$atomname = substr($AtomHeader, 4, 4);
+
+			// 64-bit MOV patch by jlegateØktnc*com
+			if ($atomsize == 1) {
+				$atomsize = getid3_lib::BigEndian2Int(fread($fd, 8));
+			}
+
 			$ThisFileInfo['quicktime'][$atomname]['name']   = $atomname;
 			$ThisFileInfo['quicktime'][$atomname]['size']   = $atomsize;
 			$ThisFileInfo['quicktime'][$atomname]['offset'] = $offset;
@@ -105,7 +115,17 @@ class getid3_quicktime
 		if (isset($ThisFileInfo['bitrate']) && !isset($ThisFileInfo['audio']['bitrate']) && !isset($ThisFileInfo['quicktime']['video'])) {
 			$ThisFileInfo['audio']['bitrate'] = $ThisFileInfo['bitrate'];
 		}
-
+		if (@$ThisFileInfo['playtime_seconds'] && !isset($ThisFileInfo['video']['frame_rate']) && !empty($ThisFileInfo['quicktime']['stts_framecount'])) {
+			foreach ($ThisFileInfo['quicktime']['stts_framecount'] as $key => $samples_count) {
+				$samples_per_second = $samples_count / $ThisFileInfo['playtime_seconds'];
+				if ($samples_per_second > 240) {
+					// has to be audio samples
+				} else {
+					$ThisFileInfo['video']['frame_rate'] = $samples_per_second;
+					break;
+				}
+			}
+		}
 		if (($ThisFileInfo['audio']['dataformat'] == 'mp4') && empty($ThisFileInfo['video']['resolution_x'])) {
 			$ThisFileInfo['fileformat'] = 'mp4';
 			$ThisFileInfo['mime_type']  = 'audio/mp4';
@@ -146,12 +166,50 @@ class getid3_quicktime
 			case 'minf': // Media INFormation container atom
 			case 'dinf': // Data INFormation container atom
 			case 'udta': // User DaTA container atom
-			case 'stbl': // Sample TaBLe container atom
 			case 'cmov': // Compressed MOVie container atom
 			case 'rmra': // Reference Movie Record Atom
 			case 'rmda': // Reference Movie Descriptor Atom
 			case 'gmhd': // Generic Media info HeaDer atom (seen on QTVR)
 				$atomstructure['subatoms'] = $this->QuicktimeParseContainerAtom($atomdata, $ThisFileInfo, $baseoffset + 8, $atomHierarchy, $ParseAllPossibleAtoms);
+				break;
+
+			case 'stbl': // Sample TaBLe container atom
+				$atomstructure['subatoms'] = $this->QuicktimeParseContainerAtom($atomdata, $ThisFileInfo, $baseoffset + 8, $atomHierarchy, $ParseAllPossibleAtoms);
+				$isVideo = false;
+				$framerate  = 0;
+				$framecount = 0;
+				foreach ($atomstructure['subatoms'] as $key => $value_array) {
+					if (isset($value_array['sample_description_table'])) {
+						foreach ($value_array['sample_description_table'] as $key2 => $value_array2) {
+							if (isset($value_array2['data_format'])) {
+								switch ($value_array2['data_format']) {
+									case 'avc1':
+									case 'mp4v':
+										// video data
+										$isVideo = true;
+										break;
+									case 'mp4a':
+										// audio data
+										break;
+								}
+							}
+						}
+					} elseif (isset($value_array['time_to_sample_table'])) {
+						foreach ($value_array['time_to_sample_table'] as $key2 => $value_array2) {
+							if (isset($value_array2['sample_count']) && isset($value_array2['sample_duration'])) {
+								$framerate  = round($ThisFileInfo['quicktime']['time_scale'] / $value_array2['sample_duration'], 3);
+								$framecount = $value_array2['sample_count'];
+							}
+						}
+					}
+				}
+				if ($isVideo && $framerate) {
+					$ThisFileInfo['quicktime']['video']['frame_rate'] = $framerate;
+					$ThisFileInfo['video']['frame_rate'] = $ThisFileInfo['quicktime']['video']['frame_rate'];
+				}
+				if ($isVideo && $framecount) {
+					$ThisFileInfo['quicktime']['video']['frame_count'] = $framecount;
+				}
 				break;
 
 
@@ -396,9 +454,11 @@ class getid3_quicktime
 							$atomstructure['sample_description_table'][$i]['audio_sample_rate']    = getid3_lib::FixedPoint16_16(substr($atomstructure['sample_description_table'][$i]['data'], 16,  4));
 
 							switch ($atomstructure['sample_description_table'][$i]['data_format']) {
+								case 'avc1':
 								case 'mp4v':
 									$ThisFileInfo['fileformat'] = 'mp4';
-									$ThisFileInfo['error'][] = 'This version ('.GETID3_VERSION.') of getID3() does not fully support MPEG-4 audio/video streams';
+									$ThisFileInfo['video']['fourcc'] = $atomstructure['sample_description_table'][$i]['data_format'];
+									$ThisFileInfo['warning'][] = 'This version ('.GETID3_VERSION.') of getID3() does not fully support MPEG-4 audio/video streams';
 									break;
 
 								case 'qtvr':
@@ -508,44 +568,48 @@ class getid3_quicktime
 
 
 			case 'stts': // Sample Table Time-to-Sample atom
-				//if ($ParseAllPossibleAtoms) {
-					$atomstructure['version']        = getid3_lib::BigEndian2Int(substr($atomdata,  0, 1));
-					$atomstructure['flags_raw']      = getid3_lib::BigEndian2Int(substr($atomdata,  1, 3)); // hardcoded: 0x0000
-					$atomstructure['number_entries'] = getid3_lib::BigEndian2Int(substr($atomdata,  4, 4));
-					$sttsEntriesDataOffset = 8;
-					$FrameRateCalculatorArray = array();
-					for ($i = 0; $i < $atomstructure['number_entries']; $i++) {
-						$atomstructure['time_to_sample_table'][$i]['sample_count']    = getid3_lib::BigEndian2Int(substr($atomdata, $sttsEntriesDataOffset, 4));
-						$sttsEntriesDataOffset += 4;
-						$atomstructure['time_to_sample_table'][$i]['sample_duration'] = getid3_lib::BigEndian2Int(substr($atomdata, $sttsEntriesDataOffset, 4));
-						$sttsEntriesDataOffset += 4;
+				$atomstructure['version']        = getid3_lib::BigEndian2Int(substr($atomdata,  0, 1));
+				$atomstructure['flags_raw']      = getid3_lib::BigEndian2Int(substr($atomdata,  1, 3)); // hardcoded: 0x0000
+				$atomstructure['number_entries'] = getid3_lib::BigEndian2Int(substr($atomdata,  4, 4));
+				$sttsEntriesDataOffset = 8;
+				//$FrameRateCalculatorArray = array();
+				$frames_count = 0;
+				for ($i = 0; $i < $atomstructure['number_entries']; $i++) {
+					$atomstructure['time_to_sample_table'][$i]['sample_count']    = getid3_lib::BigEndian2Int(substr($atomdata, $sttsEntriesDataOffset, 4));
+					$sttsEntriesDataOffset += 4;
+					$atomstructure['time_to_sample_table'][$i]['sample_duration'] = getid3_lib::BigEndian2Int(substr($atomdata, $sttsEntriesDataOffset, 4));
+					$sttsEntriesDataOffset += 4;
 
-						if (!empty($ThisFileInfo['quicktime']['time_scale']) && (@$atomstructure['time_to_sample_table'][$i]['sample_duration'] > 0)) {
-							$stts_new_framerate = $ThisFileInfo['quicktime']['time_scale'] / $atomstructure['time_to_sample_table'][$i]['sample_duration'];
-							if ($stts_new_framerate <= 60) {
-								// some atoms have durations of "1" giving a very large framerate, which probably is not right
-								$ThisFileInfo['video']['frame_rate'] = max(@$ThisFileInfo['video']['frame_rate'], $stts_new_framerate);
-							}
-						}
-						//@$FrameRateCalculatorArray[($ThisFileInfo['quicktime']['time_scale'] / $atomstructure['time_to_sample_table'][$i]['sample_duration'])] += $atomstructure['time_to_sample_table'][$i]['sample_count'];
-					}
-					//$sttsFramesTotal  = 0;
-					//$sttsSecondsTotal = 0;
-					//foreach ($FrameRateCalculatorArray as $frames_per_second => $frame_count) {
-					//	if (($frames_per_second > 60) || ($frames_per_second < 1)) {
-					//		// not video FPS information, probably audio information
-					//		$sttsFramesTotal  = 0;
-					//		$sttsSecondsTotal = 0;
-					//		break;
-					//	}
-					//	$sttsFramesTotal  += $frame_count;
-					//	$sttsSecondsTotal += $frame_count / $frames_per_second;
-					//}
-					//if (($sttsFramesTotal > 0) && ($sttsSecondsTotal > 0)) {
-					//	if (($sttsFramesTotal / $sttsSecondsTotal) > @$ThisFileInfo['video']['frame_rate']) {
-					//		$ThisFileInfo['video']['frame_rate'] = $sttsFramesTotal / $sttsSecondsTotal;
+					$frames_count += $atomstructure['time_to_sample_table'][$i]['sample_count'];
+
+					// THIS SECTION REPLACED WITH CODE IN "stbl" ATOM
+					//if (!empty($ThisFileInfo['quicktime']['time_scale']) && (@$atomstructure['time_to_sample_table'][$i]['sample_duration'] > 0)) {
+					//	$stts_new_framerate = $ThisFileInfo['quicktime']['time_scale'] / $atomstructure['time_to_sample_table'][$i]['sample_duration'];
+					//	if ($stts_new_framerate <= 60) {
+					//		// some atoms have durations of "1" giving a very large framerate, which probably is not right
+					//		$ThisFileInfo['video']['frame_rate'] = max(@$ThisFileInfo['video']['frame_rate'], $stts_new_framerate);
 					//	}
 					//}
+                    //
+					//@$FrameRateCalculatorArray[($ThisFileInfo['quicktime']['time_scale'] / $atomstructure['time_to_sample_table'][$i]['sample_duration'])] += $atomstructure['time_to_sample_table'][$i]['sample_count'];
+				}
+				$ThisFileInfo['quicktime']['stts_framecount'][] = $frames_count;
+				//$sttsFramesTotal  = 0;
+				//$sttsSecondsTotal = 0;
+				//foreach ($FrameRateCalculatorArray as $frames_per_second => $frame_count) {
+				//	if (($frames_per_second > 60) || ($frames_per_second < 1)) {
+				//		// not video FPS information, probably audio information
+				//		$sttsFramesTotal  = 0;
+				//		$sttsSecondsTotal = 0;
+				//		break;
+				//	}
+				//	$sttsFramesTotal  += $frame_count;
+				//	$sttsSecondsTotal += $frame_count / $frames_per_second;
+				//}
+				//if (($sttsFramesTotal > 0) && ($sttsSecondsTotal > 0)) {
+				//	if (($sttsFramesTotal / $sttsSecondsTotal) > @$ThisFileInfo['video']['frame_rate']) {
+				//		$ThisFileInfo['video']['frame_rate'] = $sttsFramesTotal / $sttsSecondsTotal;
+				//	}
 				//}
 				break;
 
@@ -608,6 +672,20 @@ class getid3_quicktime
 					for ($i = 0; $i < $atomstructure['number_entries']; $i++) {
 						$atomstructure['chunk_offset_table'][$i] = getid3_lib::BigEndian2Int(substr($atomdata, $stcoEntriesDataOffset, 4));
 						$stcoEntriesDataOffset += 4;
+					}
+				}
+				break;
+
+
+			case 'co64': // Chunk Offset 64-bit (version of "stco" that supports > 2GB files)
+				if ($ParseAllPossibleAtoms) {
+					$atomstructure['version']        = getid3_lib::BigEndian2Int(substr($atomdata,  0, 1));
+					$atomstructure['flags_raw']      = getid3_lib::BigEndian2Int(substr($atomdata,  1, 3)); // hardcoded: 0x0000
+					$atomstructure['number_entries'] = getid3_lib::BigEndian2Int(substr($atomdata,  4, 4));
+					$stcoEntriesDataOffset = 8;
+					for ($i = 0; $i < $atomstructure['number_entries']; $i++) {
+						$atomstructure['chunk_offset_table'][$i] = getid3_lib::BigEndian2Int(substr($atomdata, $stcoEntriesDataOffset, 8));
+						$stcoEntriesDataOffset += 8;
 					}
 				}
 				break;
@@ -697,6 +775,8 @@ class getid3_quicktime
 					$ThisFileInfo['error'][] = 'Corrupt Quicktime file: mdhd.time_scale == zero';
 					return false;
 				}
+                $ThisFileInfo['quicktime']['time_scale'] = max(@$ThisFileInfo['quicktime']['time_scale'], $atomstructure['time_scale']);
+
 				$atomstructure['creation_time_unix']    = getid3_lib::DateMac2Unix($atomstructure['creation_time']);
 				$atomstructure['modify_time_unix']      = getid3_lib::DateMac2Unix($atomstructure['modify_time']);
 				$atomstructure['playtime_seconds']      = $atomstructure['duration'] / $atomstructure['time_scale'];
@@ -811,7 +891,7 @@ class getid3_quicktime
 				}
 				$atomstructure['creation_time_unix']        = getid3_lib::DateMac2Unix($atomstructure['creation_time']);
 				$atomstructure['modify_time_unix']          = getid3_lib::DateMac2Unix($atomstructure['modify_time']);
-				$ThisFileInfo['quicktime']['time_scale']    = $atomstructure['time_scale'];
+				$ThisFileInfo['quicktime']['time_scale'] = max(@$ThisFileInfo['quicktime']['time_scale'], $atomstructure['time_scale']);
 				$ThisFileInfo['quicktime']['display_scale'] = $atomstructure['matrix_a'];
 				$ThisFileInfo['playtime_seconds']           = $atomstructure['duration'] / $atomstructure['time_scale'];
 				break;
@@ -834,8 +914,8 @@ class getid3_quicktime
 				$atomstructure['matrix_b']            = getid3_lib::FixedPoint16_16(substr($atomdata, 44, 4));
 				$atomstructure['matrix_u']            = getid3_lib::FixedPoint16_16(substr($atomdata, 48, 4));
 				$atomstructure['matrix_c']            = getid3_lib::FixedPoint16_16(substr($atomdata, 52, 4));
-				$atomstructure['matrix_v']            = getid3_lib::FixedPoint16_16(substr($atomdata, 56, 4));
-				$atomstructure['matrix_d']            = getid3_lib::FixedPoint16_16(substr($atomdata, 60, 4));
+				$atomstructure['matrix_d']            = getid3_lib::FixedPoint16_16(substr($atomdata, 56, 4));
+				$atomstructure['matrix_v']            = getid3_lib::FixedPoint16_16(substr($atomdata, 60, 4));
 				$atomstructure['matrix_x']            =  getid3_lib::FixedPoint2_30(substr($atomdata, 64, 4));
 				$atomstructure['matrix_y']            =  getid3_lib::FixedPoint2_30(substr($atomdata, 68, 4));
 				$atomstructure['matrix_w']            =  getid3_lib::FixedPoint2_30(substr($atomdata, 72, 4));

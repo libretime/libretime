@@ -27,7 +27,7 @@ function camp_import_error_handler()
 
 function printUsage()
 {
-		global $CC_CONFIG;
+	global $CC_CONFIG;
     echo "There are two ways to import audio files into Campcaster: linking\n";
     echo "or copying.\n";
     echo "\n";
@@ -335,6 +335,13 @@ if (!$DEBUG_IMPORT) {
 if (is_null($importMode)) {
     printUsage();
     exit(0);
+}
+
+global $CC_CONFIG;
+
+if (!is_writable($CC_CONFIG["storageDir"])) {
+	echo "ERROR: You do not have write permissions to the directory you are trying to import to:\n " . $CC_CONFIG["storageDir"] . "\n\n";
+	exit;
 }
 
 global $g_fileCount;

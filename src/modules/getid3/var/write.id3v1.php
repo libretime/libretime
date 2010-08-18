@@ -27,6 +27,11 @@ class getid3_write_id3v1
 	}
 
 	function WriteID3v1() {
+		if ((filesize($this->filename) >= (pow(2, 31) - 128)) || (filesize($this->filename) < 0)) {
+			$this->errors[] = 'Unable to write ID3v1 because file is larger than 2GB';
+			return false;
+		}
+
 		// File MUST be writeable - CHMOD(646) at least
 		if (is_writeable($this->filename)) {
 			if ($fp_source = @fopen($this->filename, 'r+b')) {
@@ -37,6 +42,7 @@ class getid3_write_id3v1
 				} else {
 					fseek($fp_source, 0, SEEK_END);    // append new ID3v1 tag
 				}
+				$this->tag_data['track'] = (isset($this->tag_data['track']) ? $this->tag_data['track'] : (isset($this->tag_data['track_number']) ? $this->tag_data['track_number'] : (isset($this->tag_data['tracknumber']) ? $this->tag_data['tracknumber'] : '')));
 
 				$new_id3v1_tag_data = getid3_id3v1::GenerateID3v1Tag(
 														@$this->tag_data['title'],
@@ -66,6 +72,10 @@ class getid3_write_id3v1
 		// Initialize getID3 engine
 		$getID3 = new getID3;
 		$ThisFileInfo = $getID3->analyze($this->filename);
+		if ($ThisFileInfo['filesize'] >= (pow(2, 31) - 128)) {
+			// cannot write tags on files > 2GB
+			return false;
+		}
 		if (isset($ThisFileInfo['tags']['id3v1'])) {
 			foreach ($ThisFileInfo['tags']['id3v1'] as $key => $value) {
 				$id3v1data[$key] = implode(',', $value);
@@ -77,6 +87,11 @@ class getid3_write_id3v1
 	}
 
 	function RemoveID3v1() {
+		if ($ThisFileInfo['filesize'] >= pow(2, 31)) {
+			$this->errors[] = 'Unable to write ID3v1 because file is larger than 2GB';
+			return false;
+		}
+
 		// File MUST be writeable - CHMOD(646) at least
 		if (is_writeable($this->filename)) {
 			if ($fp_source = @fopen($this->filename, 'r+b')) {

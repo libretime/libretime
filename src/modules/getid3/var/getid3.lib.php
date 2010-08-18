@@ -64,7 +64,7 @@ class getid3_lib
 		// convert a float to type int, only if possible
 		if (getid3_lib::trunc($floatnum) == $floatnum) {
 			// it's not floating point
-			if ($floatnum <= 1073741824) { // 2^30
+			if ($floatnum <= 2147483647) { // 2^31
 				// it's within int range
 				$floatnum = (int) $floatnum;
 			}
@@ -162,6 +162,9 @@ class getid3_lib
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/ieee.html
 
 		$bitword = getid3_lib::BigEndian2Bin($byteword);
+		if (!$bitword) {
+            return 0;
+        }
 		$signbit = $bitword{0};
 
 		switch (strlen($byteword) * 8) {
@@ -406,13 +409,15 @@ class getid3_lib
 
 
 	function PlaytimeString($playtimeseconds) {
+		$sign = (($playtimeseconds < 0) ? '-' : '');
+		$playtimeseconds = abs($playtimeseconds);
 		$contentseconds = round((($playtimeseconds / 60) - floor($playtimeseconds / 60)) * 60);
 		$contentminutes = floor($playtimeseconds / 60);
 		if ($contentseconds >= 60) {
 			$contentseconds -= 60;
 			$contentminutes++;
 		}
-		return intval($contentminutes).':'.str_pad($contentseconds, 2, 0, STR_PAD_LEFT);
+		return $sign.intval($contentminutes).':'.str_pad($contentseconds, 2, 0, STR_PAD_LEFT);
 	}
 
 
@@ -580,6 +585,9 @@ class getid3_lib
 	// Allan Hansen <ahÿartemis*dk>
 	// getid3_lib::md5_data() - returns md5sum for a file from startuing position to absolute end position
 	function hash_data($file, $offset, $end, $algorithm) {
+		if ($end >= pow(2, 31)) {
+			return false;
+		}
 
 		switch ($algorithm) {
 			case 'md5':
@@ -954,69 +962,47 @@ class getid3_lib
 			return $string;
 		}
 
-		static $iconv_broken_or_unavailable = array();
-		if (is_null(@$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset])) {
-			$GETID3_ICONV_TEST_STRING = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü °¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ';
+		// iconv() availble
+		if (function_exists('iconv')) {
 
-			// Check iconv()
-			if (function_exists('iconv')) {
-				if (@iconv($in_charset, 'ISO-8859-1', @iconv('ISO-8859-1', $in_charset, $GETID3_ICONV_TEST_STRING)) == $GETID3_ICONV_TEST_STRING) {
-					if (@iconv($out_charset, 'ISO-8859-1', @iconv('ISO-8859-1', $out_charset, $GETID3_ICONV_TEST_STRING)) == $GETID3_ICONV_TEST_STRING) {
-						// everything works, use iconv()
-						$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset] = false;
-					} else {
-						// iconv() available, but broken. Use getID3()'s iconv_fallback() conversions instead
-						// known issue in PHP v4.1.x
-						$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset] = true;
-					}
-				} else {
-					// iconv() available, but broken. Use getID3()'s iconv_fallback() conversions instead
-					// known issue in PHP v4.1.x
-					$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset] = true;
-				}
-			} else {
-				// iconv() unavailable, use getID3()'s iconv_fallback() conversions
-				$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset] = true;
-			}
+		    if ($converted_string = @iconv($in_charset, $out_charset.'//TRANSLIT', $string)) {
+    			switch ($out_charset) {
+    				case 'ISO-8859-1':
+    					$converted_string = rtrim($converted_string, "\x00");
+    					break;
+    			}
+    			return $converted_string;
+    		}
+
+    		// iconv() may sometimes fail with "illegal character in input string" error message
+    		// and return an empty string, but returning the unconverted string is more useful
+    		return $string;
+    	}
+
+
+        // iconv() not available
+		static $ConversionFunctionList = array();
+		if (empty($ConversionFunctionList)) {
+			$ConversionFunctionList['ISO-8859-1']['UTF-8']    = 'iconv_fallback_iso88591_utf8';
+			$ConversionFunctionList['ISO-8859-1']['UTF-16']   = 'iconv_fallback_iso88591_utf16';
+			$ConversionFunctionList['ISO-8859-1']['UTF-16BE'] = 'iconv_fallback_iso88591_utf16be';
+			$ConversionFunctionList['ISO-8859-1']['UTF-16LE'] = 'iconv_fallback_iso88591_utf16le';
+			$ConversionFunctionList['UTF-8']['ISO-8859-1']    = 'iconv_fallback_utf8_iso88591';
+			$ConversionFunctionList['UTF-8']['UTF-16']        = 'iconv_fallback_utf8_utf16';
+			$ConversionFunctionList['UTF-8']['UTF-16BE']      = 'iconv_fallback_utf8_utf16be';
+			$ConversionFunctionList['UTF-8']['UTF-16LE']      = 'iconv_fallback_utf8_utf16le';
+			$ConversionFunctionList['UTF-16']['ISO-8859-1']   = 'iconv_fallback_utf16_iso88591';
+			$ConversionFunctionList['UTF-16']['UTF-8']        = 'iconv_fallback_utf16_utf8';
+			$ConversionFunctionList['UTF-16LE']['ISO-8859-1'] = 'iconv_fallback_utf16le_iso88591';
+			$ConversionFunctionList['UTF-16LE']['UTF-8']      = 'iconv_fallback_utf16le_utf8';
+			$ConversionFunctionList['UTF-16BE']['ISO-8859-1'] = 'iconv_fallback_utf16be_iso88591';
+			$ConversionFunctionList['UTF-16BE']['UTF-8']      = 'iconv_fallback_utf16be_utf8';
 		}
-
-		if ($iconv_broken_or_unavailable[$in_charset.'_'.$out_charset]) {
-			static $ConversionFunctionList = array();
-			if (empty($ConversionFunctionList)) {
-				$ConversionFunctionList['ISO-8859-1']['UTF-8']    = 'iconv_fallback_iso88591_utf8';
-				$ConversionFunctionList['ISO-8859-1']['UTF-16']   = 'iconv_fallback_iso88591_utf16';
-				$ConversionFunctionList['ISO-8859-1']['UTF-16BE'] = 'iconv_fallback_iso88591_utf16be';
-				$ConversionFunctionList['ISO-8859-1']['UTF-16LE'] = 'iconv_fallback_iso88591_utf16le';
-				$ConversionFunctionList['UTF-8']['ISO-8859-1']    = 'iconv_fallback_utf8_iso88591';
-				$ConversionFunctionList['UTF-8']['UTF-16']        = 'iconv_fallback_utf8_utf16';
-				$ConversionFunctionList['UTF-8']['UTF-16BE']      = 'iconv_fallback_utf8_utf16be';
-				$ConversionFunctionList['UTF-8']['UTF-16LE']      = 'iconv_fallback_utf8_utf16le';
-				$ConversionFunctionList['UTF-16']['ISO-8859-1']   = 'iconv_fallback_utf16_iso88591';
-				$ConversionFunctionList['UTF-16']['UTF-8']        = 'iconv_fallback_utf16_utf8';
-				$ConversionFunctionList['UTF-16LE']['ISO-8859-1'] = 'iconv_fallback_utf16le_iso88591';
-				$ConversionFunctionList['UTF-16LE']['UTF-8']      = 'iconv_fallback_utf16le_utf8';
-				$ConversionFunctionList['UTF-16BE']['ISO-8859-1'] = 'iconv_fallback_utf16be_iso88591';
-				$ConversionFunctionList['UTF-16BE']['UTF-8']      = 'iconv_fallback_utf16be_utf8';
-			}
-			if (isset($ConversionFunctionList[strtoupper($in_charset)][strtoupper($out_charset)])) {
-				$ConversionFunction = $ConversionFunctionList[strtoupper($in_charset)][strtoupper($out_charset)];
-				return getid3_lib::$ConversionFunction($string);
-			}
-			die('PHP does not have iconv() support - cannot convert from '.$in_charset.' to '.$out_charset);
+		if (isset($ConversionFunctionList[strtoupper($in_charset)][strtoupper($out_charset)])) {
+			$ConversionFunction = $ConversionFunctionList[strtoupper($in_charset)][strtoupper($out_charset)];
+			return getid3_lib::$ConversionFunction($string);
 		}
-
-		if ($converted_string = @iconv($in_charset, $out_charset.'//TRANSLIT', $string)) {
-			switch ($out_charset) {
-				case 'ISO-8859-1':
-					$converted_string = rtrim($converted_string, "\x00");
-					break;
-			}
-			return $converted_string;
-		}
-
-		// iconv() may sometimes fail with "illegal character in input string" error message
-		// and return an empty string, but returning the unconverted string is more useful
-		return $string;
+		die('PHP does not have iconv() support - cannot convert from '.$in_charset.' to '.$out_charset);
 	}
 
 
@@ -1061,21 +1047,21 @@ class getid3_lib
 					$charval = 0;
 					if ($char_ord_val < 0x80) {
 						$charval = $char_ord_val;
-					} elseif ((($char_ord_val & 0xF0) >> 4) == 0x0F) {
+					} elseif ((($char_ord_val & 0xF0) >> 4) == 0x0F  &&  $i+3 < $strlen) {
 						$charval  = (($char_ord_val & 0x07) << 18);
 						$charval += ((ord($string{++$i}) & 0x3F) << 12);
 						$charval += ((ord($string{++$i}) & 0x3F) << 6);
 						$charval +=  (ord($string{++$i}) & 0x3F);
-					} elseif ((($char_ord_val & 0xE0) >> 5) == 0x07) {
+					} elseif ((($char_ord_val & 0xE0) >> 5) == 0x07  &&  $i+2 < $strlen) {
 						$charval  = (($char_ord_val & 0x0F) << 12);
 						$charval += ((ord($string{++$i}) & 0x3F) << 6);
 						$charval +=  (ord($string{++$i}) & 0x3F);
-					} elseif ((($char_ord_val & 0xC0) >> 6) == 0x03) {
+					} elseif ((($char_ord_val & 0xC0) >> 6) == 0x03  &&  $i+1 < $strlen) {
 						$charval  = (($char_ord_val & 0x1F) << 6);
 						$charval += (ord($string{++$i}) & 0x3F);
 					}
 					if (($charval >= 32) && ($charval <= 127)) {
-						$HTMLstring .= chr($charval);
+						$HTMLstring .= htmlentities(chr($charval));
 					} else {
 						$HTMLstring .= '&#'.$charval.';';
 					}
@@ -1167,13 +1153,13 @@ class getid3_lib
 	}
 
 
-	function GetDataImageSize($imgData) {
+	function GetDataImageSize($imgData, &$imageinfo) {
 		$GetDataImageSize = false;
 		if ($tempfilename = tempnam('*', 'getID3')) {
 			if ($tmp = @fopen($tempfilename, 'wb')) {
 				fwrite($tmp, $imgData);
 				fclose($tmp);
-				$GetDataImageSize = @GetImageSize($tempfilename);
+				$GetDataImageSize = @GetImageSize($tempfilename, $imageinfo);
 			}
 			unlink($tempfilename);
 		}
@@ -1203,7 +1189,7 @@ class getid3_lib
 
 	function CopyTagsToComments(&$ThisFileInfo) {
 
-		// Copy all entries from ['tags'] into common ['comments'] 
+		// Copy all entries from ['tags'] into common ['comments']
 		if (!empty($ThisFileInfo['tags'])) {
 			foreach ($ThisFileInfo['tags'] as $tagtype => $tagarray) {
 				foreach ($tagarray as $tagname => $tagdata) {
@@ -1243,8 +1229,8 @@ class getid3_lib
 					}
 				}
 			}
-			
-			// Copy to ['comments_html'] 
+
+			// Copy to ['comments_html']
     		foreach ($ThisFileInfo['comments'] as $field => $values) {
     		    foreach ($values as $index => $value) {
     		        $ThisFileInfo['comments_html'][$field][$index] = str_replace('&#0;', '', getid3_lib::MultiByteCharString2HTML($value, $ThisFileInfo['encoding']));

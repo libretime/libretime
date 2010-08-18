@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////
 
 // Defines
-define('GETID3_VERSION', '1.7.7');
+define('GETID3_VERSION', '1.7.9-20090308');
 define('GETID3_FREAD_BUFFER_SIZE', 16384); // read buffer size in bytes
 
 
@@ -53,14 +53,15 @@ class getID3
 		$this->startup_error   = '';
 		$this->startup_warning = '';
 
-		// Check for PHP version >= 4.1.0
-		if (phpversion() < '4.1.0') {
-		    $this->startup_error .= 'getID3() requires PHP v4.1.0 or higher - you are running v'.phpversion();
+		// Check for PHP version >= 4.2.0
+		if (phpversion() < '4.2.0') {
+		    $this->startup_error .= 'getID3() requires PHP v4.2.0 or higher - you are running v'.phpversion();
 		}
 
 		// Check memory
 		$memory_limit = ini_get('memory_limit');
-		if (eregi('([0-9]+)M', $memory_limit, $matches)) {
+		#if (eregi('([0-9]+)M', $memory_limit, $matches)) {
+		if (preg_match('/([0-9]+)M/', $memory_limit, $matches)) {
 			// could be stored as "16M" rather than 16777216 for example
 			$memory_limit = $matches[1] * 1048576;
 		}
@@ -110,40 +111,26 @@ class getID3
 		//   ie for "C:/Program Files/Apache/" put "C:/PROGRA~1/APACHE/"
 		// IMPORTANT: This path must include the trailing slash
 		if (GETID3_OS_ISWINDOWS && !defined('GETID3_HELPERAPPSDIR')) {
+
 			$helperappsdir = GETID3_INCLUDEPATH.'..'.DIRECTORY_SEPARATOR.'helperapps'; // must not have any space in this path
 
 			if (!is_dir($helperappsdir)) {
-
 				$this->startup_error .= '"'.$helperappsdir.'" cannot be defined as GETID3_HELPERAPPSDIR because it does not exist';
-
 			} elseif (strpos(realpath($helperappsdir), ' ') !== false) {
-
 				$DirPieces = explode(DIRECTORY_SEPARATOR, realpath($helperappsdir));
-				$DirPieces8 = $DirPieces;
-
-				$CLIdir = $DirPieces[0].' && cd \\';
-				for ($i = 1; $i < count($DirPieces); $i++) {
-				  if (strpos($DirPieces[$i], ' ') === false) {
-				    $CLIdir .= ' && cd '.$DirPieces[$i];
-				  } else {
-				    ob_start();
-				    system($CLIdir.' && dir /ad /x');
-				    $subdirsraw = explode("\n", ob_get_contents());
-				    ob_end_clean();
-				    foreach ($subdirsraw as $dummy => $line) {
-				      if (eregi('^[0-9]{4}/[0-9]{2}/[0-9]{2}  [0-9]{2}:[0-9]{2} [AP]M    <DIR>          ([^ ]{8})     '.preg_quote($DirPieces[$i]).'$', trim($line), $matches)) {
-				        $CLIdir .= ' && cd '.$matches[1];
-				        break;
-				      }
-				    }
-				    $DirPieces8[$i] = $matches[1];
-				  }
+				foreach ($DirPieces as $key => $value) {
+					if ((strpos($value, '.') !== false) && (strpos($value, ' ') === false)) {
+						if (strpos($value, '.') > 8) {
+							$value = substr($value, 0, 6).'~1';
+						}
+					} elseif ((strpos($value, ' ') !== false) || strlen($value) > 8) {
+						$value = substr($value, 0, 6).'~1';
+					}
+					$DirPieces[$key] = strtoupper($value);
 				}
-				$helperappsdir = implode(DIRECTORY_SEPARATOR, $DirPieces8);
-
+				$this->startup_error .= 'GETID3_HELPERAPPSDIR must not have any spaces in it - use 8dot3 naming convention if neccesary (on this server that would be something like "'.implode(DIRECTORY_SEPARATOR, $DirPieces).'" - NOTE: this may or may not be the actual 8.3 equivalent of "'.$helperappsdir.'", please double-check). You can run "dir /x" from the commandline to see the correct 8.3-style names.';
 			}
 			define('GETID3_HELPERAPPSDIR', realpath($helperappsdir).DIRECTORY_SEPARATOR);
-
 		}
 
 	}
@@ -155,7 +142,8 @@ class getID3
 			return false;
 		}
 		foreach ($optArray as $opt => $val) {
-			if (isset($this, $opt) === false) {
+			//if (isset($this, $opt) === false) {
+			if (isset($this->$opt) === false) {
 				continue;
 			}
 			$this->$opt = $val;
@@ -192,7 +180,7 @@ class getID3
 		// Disable magic_quotes_runtime, if neccesary
 		$old_magic_quotes_runtime = get_magic_quotes_runtime(); // store current setting of magic_quotes_runtime
 		if ($old_magic_quotes_runtime) {
-			set_magic_quotes_runtime(0);                        // turn off magic_quotes_runtime
+			ini_set('magic_quotes_runtime', 0);                       // turn off magic_quotes_runtime
 			if (get_magic_quotes_runtime()) {
 				return $this->error('Could not disable magic_quotes_runtime - getID3() cannot work properly with this setting enabled');
 			}
@@ -203,8 +191,13 @@ class getID3
 			return $this->error('Remote files are not supported in this version of getID3() - please copy the file locally first');
 		}
 
+		$filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
+		$filename = preg_replace('#'.preg_quote(DIRECTORY_SEPARATOR).'{2,}#', DIRECTORY_SEPARATOR, $filename);
+
 		// open local file
-		if (!$fp = @fopen($filename, 'rb')) {
+		if (file_exists($filename) && ($fp = @fopen($filename, 'rb'))) {
+			// great
+		} else {
 			return $this->error('Could not open file "'.$filename.'"');
 		}
 
@@ -220,9 +213,31 @@ class getID3
 			if ((($this->info['filesize'] != 0) && (ftell($fp) == 0)) ||
 				($this->info['filesize'] < 0) ||
 				(ftell($fp) < 0)) {
-					unset($this->info['filesize']);
-					fclose($fp);
-					return $this->error('File is most likely larger than 2GB and is not supported by PHP');
+					$real_filesize = false;
+					if (GETID3_OS_ISWINDOWS) {
+						$commandline = 'dir /-C "'.str_replace('/', DIRECTORY_SEPARATOR, $filename).'"';
+						$dir_output = `$commandline`;
+						if (eregi('1 File\(s\)[ ]+([0-9]+) bytes', $dir_output, $matches)) {
+							$real_filesize = (float) $matches[1];
+						}
+					} else {
+						$commandline = 'ls -o -g -G --time-style=long-iso '.escapeshellarg($filename);
+						$dir_output = `$commandline`;
+						if (eregi('([0-9]+) ([0-9]{4}-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}) '.preg_quote($filename).'$', $dir_output, $matches)) {
+							$real_filesize = (float) $matches[1];
+						}
+					}
+					if ($real_filesize === false) {
+						unset($this->info['filesize']);
+						fclose($fp);
+						return $this->error('File is most likely larger than 2GB and is not supported by PHP');
+					} elseif ($real_filesize < pow(2, 31)) {
+						unset($this->info['filesize']);
+						fclose($fp);
+						return $this->error('PHP seems to think the file is larger than 2GB, but filesystem reports it as '.number_format($real_filesize, 3).'GB, please report to info@getid3.org');
+					}
+					$this->info['filesize'] = $real_filesize;
+					$this->error('File is larger than 2GB (filesystem reports it as '.number_format($real_filesize, 3).'GB) and is not properly supported by PHP.');
 			}
 		}
 
@@ -251,13 +266,14 @@ class getID3
 			$GETID3_ERRORARRAY = &$this->info['warning'];
 			if (getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.id3v2.php', __FILE__, false)) {
 				$tag = new getid3_id3v2($fp, $this->info);
+				unset($tag);
 			}
 
 		} else {
 
 			fseek($fp, 0, SEEK_SET);
 			$header = fread($fp, 10);
-			if (substr($header, 0, 3) == 'ID3') {
+			if (substr($header, 0, 3) == 'ID3'  &&  strlen($header) == 10) {
 				$this->info['id3v2']['header']           = true;
 				$this->info['id3v2']['majorversion']     = ord($header{3});
 				$this->info['id3v2']['minorversion']     = ord($header{4});
@@ -277,6 +293,7 @@ class getID3
 				return $this->error('module.tag.id3v1.php is missing - you may disable option_tag_id3v1.');
 			}
 			$tag = new getid3_id3v1($fp, $this->info);
+			unset($tag);
 		}
 
 		// handle APE tag
@@ -285,6 +302,7 @@ class getID3
 				return $this->error('module.tag.apetag.php is missing - you may disable option_tag_apetag.');
 			}
 			$tag = new getid3_apetag($fp, $this->info);
+			unset($tag);
 		}
 
 		// handle lyrics3 tag
@@ -293,6 +311,7 @@ class getID3
 				return $this->error('module.tag.lyrics3.php is missing - you may disable option_tag_lyrics3.');
 			}
 			$tag = new getid3_lyrics3($fp, $this->info);
+			unset($tag);
 		}
 
 		// read 32 kb file data
@@ -334,7 +353,7 @@ class getID3
 		// supported format signature pattern detected, but module deleted
 		if (!file_exists(GETID3_INCLUDEPATH.$determined_format['include'])) {
 			fclose($fp);
-			return $this->error('Format not supported, module, '.$determined_format['include'].', was removed.');
+			return $this->error('Format not supported, module "'.$determined_format['include'].'" was removed.');
 		}
 
 		// module requires iconv support
@@ -348,13 +367,14 @@ class getID3
 		// instantiate module class
 		$class_name = 'getid3_'.$determined_format['module'];
 		if (!class_exists($class_name)) {
-			return $this->error('Format not supported, module, '.$determined_format['include'].', is corrupt.');
+			return $this->error('Format not supported, module "'.$determined_format['include'].'" is corrupt.');
 		}
 		if (isset($determined_format['option'])) {
 			$class = new $class_name($fp, $this->info, $determined_format['option']);
 		} else {
 			$class = new $class_name($fp, $this->info);
 		}
+		unset($class);
 
 		// close file
 		fclose($fp);
@@ -389,8 +409,8 @@ class getID3
 		// remove undesired keys
 		$this->CleanUp();
 
-		// restore magic_quotes_runtime setting
-		set_magic_quotes_runtime($old_magic_quotes_runtime);
+		// restore magic_quotes_runtime setting	
+		ini_set('magic_quotes_runtime', $old_magic_quotes_runtime);
 
 		// return info array
 		return $this->info;
@@ -418,7 +438,7 @@ class getID3
 	function CleanUp() {
 
 		// remove possible empty keys
-		$AVpossibleEmptyKeys = array('dataformat', 'bits_per_sample', 'encoder_options', 'streams');
+		$AVpossibleEmptyKeys = array('dataformat', 'bits_per_sample', 'encoder_options', 'streams', 'bitrate');
 		foreach ($AVpossibleEmptyKeys as $dummy => $key) {
 			if (empty($this->info['audio'][$key]) && isset($this->info['audio'][$key])) {
 				unset($this->info['audio'][$key]);
@@ -511,6 +531,22 @@ class getID3
 							'mime_type' => 'audio/xmms-bonk',
 						),
 
+				// DSS  - audio       - Digital Speech Standard
+				'dss'  => array(
+							'pattern'   => '^[\x02]dss',
+							'group'     => 'audio',
+							'module'    => 'dss',
+							'mime_type' => 'application/octet-stream',
+						),
+
+				// DTS  - audio       - Dolby Theatre System
+				'dts'  => array(
+							'pattern'   => '^\x7F\xFE\x80\x01',
+							'group'     => 'audio',
+							'module'    => 'dts',
+							'mime_type' => 'audio/dts',
+						),
+
 				// FLAC - audio       - Free Lossless Audio Codec
 				'flac' => array(
 							'pattern'   => '^fLaC',
@@ -551,14 +587,15 @@ class getID3
 							'mime_type' => 'application/octet-stream',
 						),
 
-				// MOD  - audio       - MODule (assorted sub-formats)
-				'mod'  => array(
-							'pattern'   => '^.{1080}(M.K.|[5-9]CHN|[1-3][0-9]CH)',
-							'group'     => 'audio',
-							'module'    => 'mod',
-							'option'    => 'mod',
-							'mime_type' => 'audio/mod',
-						),
+// has been known to produce false matches in random files (e.g. JPEGs), leave out until more precise matching available
+//				// MOD  - audio       - MODule (assorted sub-formats)
+//				'mod'  => array(
+//							'pattern'   => '^.{1080}(M\\.K\\.|M!K!|FLT4|FLT8|[5-9]CHN|[1-3][0-9]CH)',
+//							'group'     => 'audio',
+//							'module'    => 'mod',
+//							'option'    => 'mod',
+//							'mime_type' => 'audio/mod',
+//						),
 
 				// MOD  - audio       - MODule (Impulse Tracker)
 				'it'   => array(
@@ -589,10 +626,10 @@ class getID3
 
 				// MPC  - audio       - Musepack / MPEGplus
 				'mpc'  => array(
-							'pattern'   => '^(MP\+|[\x00\x01\x10\x11\x40\x41\x50\x51\x80\x81\x90\x91\xC0\xC1\xD0\xD1][\x20-37][\x00\x20\x40\x60\x80\xA0\xC0\xE0])',
+							'pattern'   => '^(MPCK|MP\+|[\x00\x01\x10\x11\x40\x41\x50\x51\x80\x81\x90\x91\xC0\xC1\xD0\xD1][\x20-37][\x00\x20\x40\x60\x80\xA0\xC0\xE0])',
 							'group'     => 'audio',
 							'module'    => 'mpc',
-							'mime_type' => 'application/octet-stream',
+							'mime_type' => 'audio/x-musepack',
 						),
 
 				// MP3  - audio       - MPEG-audio Layer 3 (very similar to AAC-ADTS)
@@ -694,7 +731,7 @@ class getID3
 							'pattern'   => '^\x1A\x45\xDF\xA3',
 							'group'     => 'audio-video',
 							'module'    => 'matroska',
-							'mime_type' => 'application/octet-stream',
+							'mime_type' => 'video/x-matroska', // may also be audio/x-matroska
 						),
 
 				// MPEG - audio/video - MPEG (Moving Pictures Experts Group)
@@ -742,7 +779,7 @@ class getID3
 
 				// Real - audio/video - RealAudio, RealVideo
 				'real' => array(
-							'pattern'   => '^(\.RMF|.ra)',
+							'pattern'   => '^(\\.RMF|\\.ra)',
 							'group'     => 'audio-video',
 							'module'    => 'real',
 							'mime_type' => 'audio/x-realaudio',
@@ -806,6 +843,17 @@ class getID3
 							'group'     => 'graphic',
 							'module'    => 'png',
 							'mime_type' => 'image/png',
+							'fail_id3'  => 'ERROR',
+							'fail_ape'  => 'ERROR',
+						),
+
+
+                // SVG  - still image - Scalable Vector Graphics (SVG)
+				'svg'  => array(
+							'pattern'   => '<!DOCTYPE svg PUBLIC ',
+							'group'     => 'graphic',
+							'module'    => 'svg',
+							'mime_type' => 'image/svg+xml',
 							'fail_id3'  => 'ERROR',
 							'fail_ape'  => 'ERROR',
 						),
@@ -888,7 +936,17 @@ class getID3
 
 				// Misc other formats
 
-				// PDF  - data         - ZIP compressed data
+                // PAR2 - data        - Parity Volume Set Specification 2.0
+                'par2' => array (
+                			'pattern'   => '^PAR2\x00PKT',
+                			'group'     => 'misc',
+							'module'    => 'par2',
+							'mime_type' => 'application/octet-stream',
+							'fail_id3'  => 'ERROR',
+							'fail_ape'  => 'ERROR',
+						),
+
+				// PDF  - data        - Portable Document Format
 				'pdf'  => array(
 							'pattern'   => '^\x25PDF',
 							'group'     => 'misc',
@@ -898,7 +956,7 @@ class getID3
 							'fail_ape'  => 'ERROR',
 						),
 
-				// MSOFFICE  - data         - ZIP compressed data
+				// MSOFFICE  - data   - ZIP compressed data
 				'msoffice' => array(
 							'pattern'   => '^\xD0\xCF\x11\xE0', // D0CF11E == DOCFILE == Microsoft Office Document
 							'group'     => 'misc',
@@ -1187,8 +1245,43 @@ class getID3
 		//	unset($this->info['bitrate']);
 		//}
 
-		if (!isset($this->info['playtime_seconds']) && !empty($this->info['bitrate'])) {
+		// video bitrate undetermined, but calculable
+		if (isset($this->info['video']['dataformat']) && $this->info['video']['dataformat'] && (!isset($this->info['video']['bitrate']) || ($this->info['video']['bitrate'] == 0))) {
+			// if video bitrate not set
+			if (isset($this->info['audio']['bitrate']) && ($this->info['audio']['bitrate'] > 0) && ($this->info['audio']['bitrate'] == $this->info['bitrate'])) {
+				// AND if audio bitrate is set to same as overall bitrate
+				if (isset($this->info['playtime_seconds']) && ($this->info['playtime_seconds'] > 0)) {
+					// AND if playtime is set
+					if (isset($this->info['avdataend']) && isset($this->info['avdataoffset'])) {
+						// AND if AV data offset start/end is known
+						// THEN we can calculate the video bitrate
+						$this->info['bitrate'] = round((($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['playtime_seconds']);
+						$this->info['video']['bitrate'] = $this->info['bitrate'] - $this->info['audio']['bitrate'];
+					}
+				}
+			}
+		}
+
+		if ((!isset($this->info['playtime_seconds']) || ($this->info['playtime_seconds'] <= 0)) && !empty($this->info['bitrate'])) {
 			$this->info['playtime_seconds'] = (($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['bitrate'];
+		}
+
+		if (!isset($this->info['bitrate']) && !empty($this->info['playtime_seconds'])) {
+			$this->info['bitrate'] = (($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['playtime_seconds'];
+		}
+//echo '<pre>';
+//var_dump($this->info['bitrate']);
+//var_dump($this->info['audio']['bitrate']);
+//var_dump($this->info['video']['bitrate']);
+//echo '</pre>';
+		if (isset($this->info['bitrate']) && empty($this->info['audio']['bitrate']) && empty($this->info['video']['bitrate'])) {
+			if (isset($this->info['audio']['dataformat']) && empty($this->info['video']['resolution_x'])) {
+				// audio only
+				$this->info['audio']['bitrate'] = $this->info['bitrate'];
+			} elseif (isset($this->info['video']['resolution_x']) && empty($this->info['audio']['dataformat'])) {
+				// video only
+				$this->info['video']['bitrate'] = $this->info['bitrate'];
+			}
 		}
 
 		// Set playtime string

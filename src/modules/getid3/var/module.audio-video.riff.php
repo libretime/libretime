@@ -13,6 +13,7 @@
 //    Wave, AVI, AIFF/AIFC, (MP3,AC3)/RIFF, Wavpack v3, 8SVX   //
 // dependencies: module.audio.mp3.php                          //
 //               module.audio.ac3.php (optional)               //
+//               module.audio.dts.php (optional)               //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
@@ -63,8 +64,21 @@ class getid3_riff
 
 				$ThisFileInfo['fileformat']   = 'riff';
 				$RIFFheaderSize               = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($RIFFheader, 4, 4));
-				$thisfile_riff[$RIFFsubtype]  = getid3_riff::ParseRIFF($fd, $thisfile_avdataoffset + 12, $thisfile_avdataoffset + $RIFFheaderSize, $ThisFileInfo);
 				$thisfile_riff['header_size'] = $RIFFheaderSize;
+				$thisfile_riff[$RIFFsubtype]  = getid3_riff::ParseRIFF($fd, $thisfile_avdataoffset + 12, $thisfile_avdataoffset + $RIFFheaderSize, $ThisFileInfo);
+
+				fseek($fd, $thisfile_avdataoffset + $RIFFheaderSize);
+				$nextRIFFheader = fread($fd, 20);
+				if (substr($nextRIFFheader, 8, 4) == 'RIFF') {
+					$nextRIFFsize = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($nextRIFFheader, 12, 4));
+					$nextRIFFtype = substr($nextRIFFheader, 16, 4).'<br>';
+					$thisfile_riff[$nextRIFFtype]['offset'] = ftell($fd) - 4;
+					$thisfile_riff[$nextRIFFtype]['size']   = $nextRIFFsize;
+					$ThisFileInfo['avdataend'] = $thisfile_riff[$nextRIFFtype]['offset'] + $thisfile_riff[$nextRIFFtype]['size'];
+					$ThisFileInfo['error'][]   = 'AVI extends beyond 2GB and PHP filesystem functions cannot read that far, playtime is probably wrong';
+					$ThisFileInfo['warning'][] = '[avdataend] value may be incorrect, multiple AVIX chunks may be present';
+					$thisfile_riff[$nextRIFFtype]  = getid3_riff::ParseRIFF($fd, $thisfile_riff[$nextRIFFtype]['offset'] + 4, $thisfile_riff[$nextRIFFtype]['offset'] + $thisfile_riff[$nextRIFFtype]['size'], $ThisFileInfo);
+				}
 				if ($RIFFsubtype == 'WAVE') {
 					$thisfile_riff_WAVE = &$thisfile_riff['WAVE'];
 				}
@@ -412,6 +426,33 @@ class getid3_riff
 					}
 				}
 
+				if (isset($thisfile_riff['AVI ']['hdrl']['strl']['indx'])) {
+					//$bIndexType = array(
+					//	0x00 => 'AVI_INDEX_OF_INDEXES',
+					//	0x01 => 'AVI_INDEX_OF_CHUNKS',
+					//	0x80 => 'AVI_INDEX_IS_DATA',
+					//);
+					//$bIndexSubtype = array(
+					//	0x01 => array(
+					//		0x01 => 'AVI_INDEX_2FIELD',
+					//	),
+					//);
+					foreach ($thisfile_riff['AVI ']['hdrl']['strl']['indx'] as $streamnumber => $steamdataarray) {
+						$thisfile_riff_avi_hdrl_strl_indx_stream_data = &$thisfile_riff['AVI ']['hdrl']['strl']['indx'][$streamnumber]['data'];
+
+						$thisfile_riff_raw['indx'][$streamnumber]['wLongsPerEntry'] = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($thisfile_riff_avi_hdrl_strl_indx_stream_data,  0, 2));
+						$thisfile_riff_raw['indx'][$streamnumber]['bIndexSubType']  = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($thisfile_riff_avi_hdrl_strl_indx_stream_data,  2, 1));
+						$thisfile_riff_raw['indx'][$streamnumber]['bIndexType']     = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($thisfile_riff_avi_hdrl_strl_indx_stream_data,  3, 1));
+						$thisfile_riff_raw['indx'][$streamnumber]['nEntriesInUse']  = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($thisfile_riff_avi_hdrl_strl_indx_stream_data,  4, 4));
+						$thisfile_riff_raw['indx'][$streamnumber]['dwChunkId']      =                                              substr($thisfile_riff_avi_hdrl_strl_indx_stream_data,  8, 4);
+						$thisfile_riff_raw['indx'][$streamnumber]['dwReserved']     = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($thisfile_riff_avi_hdrl_strl_indx_stream_data, 12, 4));
+
+						//$thisfile_riff_raw['indx'][$streamnumber]['bIndexType_name']    =    @$bIndexType[$thisfile_riff_raw['indx'][$streamnumber]['bIndexType']];
+						//$thisfile_riff_raw['indx'][$streamnumber]['bIndexSubType_name'] = @$bIndexSubtype[$thisfile_riff_raw['indx'][$streamnumber]['bIndexType']][$thisfile_riff_raw['indx'][$streamnumber]['bIndexSubType']];
+
+						unset($thisfile_riff_avi_hdrl_strl_indx_stream_data);
+					}
+				}
 				if (isset($thisfile_riff['AVI ']['hdrl']['avih'][$streamindex]['data'])) {
 					$avihData = $thisfile_riff['AVI ']['hdrl']['avih'][$streamindex]['data'];
 
@@ -591,17 +632,18 @@ class getid3_riff
 
 											switch ($strhfccType) {
 												case 'vids':
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biSize']          = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  0, 4)); // number of bytes required by the BITMAPINFOHEADER structure
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biWidth']         = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  4, 4)); // width of the bitmap in pixels
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biHeight']        = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  8, 4)); // height of the bitmap in pixels. If biHeight is positive, the bitmap is a 'bottom-up' DIB and its origin is the lower left corner. If biHeight is negative, the bitmap is a 'top-down' DIB and its origin is the upper left corner
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biPlanes']        = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 12, 2)); // number of color planes on the target device. In most cases this value must be set to 1
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biBitCount']      = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 14, 2)); // Specifies the number of bits per pixels
-													$thisfile_riff_raw_strf_strhfccType_streamindex['fourcc']          =                                 substr($strfData, 16, 4);  //
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biSizeImage']     = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 20, 4)); // size of the bitmap data section of the image (the actual pixel data, excluding BITMAPINFOHEADER and RGBQUAD structures)
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biXPelsPerMeter'] = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 24, 4)); // horizontal resolution, in pixels per metre, of the target device
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biYPelsPerMeter'] = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 28, 4)); // vertical resolution, in pixels per metre, of the target device
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biClrUsed']       = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 32, 4)); // actual number of color indices in the color table used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the biBitCount member for the compression mode specified by biCompression
-													$thisfile_riff_raw_strf_strhfccType_streamindex['biClrImportant']  = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 36, 4)); // number of color indices that are considered important for displaying the bitmap. If this value is zero, all colors are important
+													$thisfile_riff_raw_strf_strhfccType_streamindex = getid3_riff::ParseBITMAPINFOHEADER(substr($strfData, 0, 40), ($ThisFileInfo['fileformat'] == 'riff'));
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biSize']          = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  0, 4)); // number of bytes required by the BITMAPINFOHEADER structure
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biWidth']         = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  4, 4)); // width of the bitmap in pixels
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biHeight']        = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData,  8, 4)); // height of the bitmap in pixels. If biHeight is positive, the bitmap is a 'bottom-up' DIB and its origin is the lower left corner. If biHeight is negative, the bitmap is a 'top-down' DIB and its origin is the upper left corner
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biPlanes']        = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 12, 2)); // number of color planes on the target device. In most cases this value must be set to 1
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biBitCount']      = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 14, 2)); // Specifies the number of bits per pixels
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['fourcc']          =                                              substr($strfData, 16, 4);  //
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biSizeImage']     = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 20, 4)); // size of the bitmap data section of the image (the actual pixel data, excluding BITMAPINFOHEADER and RGBQUAD structures)
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biXPelsPerMeter'] = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 24, 4)); // horizontal resolution, in pixels per metre, of the target device
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biYPelsPerMeter'] = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 28, 4)); // vertical resolution, in pixels per metre, of the target device
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biClrUsed']       = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 32, 4)); // actual number of color indices in the color table used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the biBitCount member for the compression mode specified by biCompression
+													//$thisfile_riff_raw_strf_strhfccType_streamindex['biClrImportant']  = getid3_riff::EitherEndian2Int($ThisFileInfo, substr($strfData, 36, 4)); // number of color indices that are considered important for displaying the bitmap. If this value is zero, all colors are important
 
 													$thisfile_video['bits_per_sample'] = $thisfile_riff_raw_strf_strhfccType_streamindex['biBitCount'];
 
@@ -885,6 +927,7 @@ class getid3_riff
 							$ThisFileInfo['mpeg']    = $dummy['mpeg'];
 							$ThisFileInfo['warning'] = $dummy['warning'];
 						}
+						unset($mpeg_scanner);
 					}
 				}
 				break;
@@ -895,6 +938,20 @@ class getid3_riff
 				unset($ThisFileInfo['fileformat']);
 				break;
 		}
+
+		if (@$thisfile_riff_raw['fmt ']['wFormatTag'] == 1) {
+			// http://www.mega-nerd.com/erikd/Blog/Windiots/dts.html
+			fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
+			$FirstFourBytes = fread($fd, 4);
+			if (preg_match('/^\xFF\x1F\x00\xE8/s', $FirstFourBytes)) {
+				// DTSWAV
+				$thisfile_audio_dataformat = 'dts';
+			} elseif (preg_match('/^\x7F\xFF\x80\x01/s', $FirstFourBytes)) {
+				// DTS, but this probably shouldn't happen
+				$thisfile_audio_dataformat = 'dts';
+			}
+		}
+
 
 		if (isset($thisfile_riff_WAVE['DISP']) && is_array($thisfile_riff_WAVE['DISP'])) {
 			$thisfile_riff['comments']['title'][] = trim(substr($thisfile_riff_WAVE['DISP'][count($thisfile_riff_WAVE['DISP']) - 1]['data'], 4));
@@ -1060,11 +1117,15 @@ class getid3_riff
 	}
 
 	function ParseRIFF(&$fd, $startoffset, $maxoffset, &$ThisFileInfo) {
-
 		$maxoffset = min($maxoffset, $ThisFileInfo['avdataend']);
 
 		$RIFFchunk = false;
+		$FoundAllChunksWeNeed = false;
 
+		if (($startoffset < 0) || ($startoffset >= pow(2, 31))) {
+			$ThisFileInfo['warning'][] = 'Unable to ParseRIFF() at '.$startoffset.' because beyond 2GB limit of PHP filesystem functions';
+			return false;
+		}
 		fseek($fd, $startoffset, SEEK_SET);
 
 		while (ftell($fd) < $maxoffset) {
@@ -1076,8 +1137,8 @@ class getid3_riff
 
 			$chunksize = getid3_riff::EitherEndian2Int($ThisFileInfo, fread($fd, 4));
 			if ($chunksize == 0) {
-				$ThisFileInfo['error'][] = 'Chunk size at offset '.(ftell($fd) - 4).' is zero. Aborting RIFF parsing.';
-				break;
+				$ThisFileInfo['warning'][] = 'Chunk size at offset '.(ftell($fd) - 4).' is zero. Aborting RIFF parsing.';
+				continue;
 			}
 			if (($chunksize % 2) != 0) {
 				// all structures are packed on word boundaries
@@ -1087,90 +1148,101 @@ class getid3_riff
 			switch ($chunkname) {
 				case 'LIST':
 					$listname = fread($fd, 4);
-					switch ($listname) {
-						case 'movi':
-						case 'rec ':
-							$RIFFchunk[$listname]['offset'] = ftell($fd) - 4;
-							$RIFFchunk[$listname]['size']   = $chunksize;
+					if (eregi('^(movi|rec )$', $listname)) {
+						$RIFFchunk[$listname]['offset'] = ftell($fd) - 4;
+						$RIFFchunk[$listname]['size']   = $chunksize;
 
-							static $ParsedAudioStream = false;
-							if ($ParsedAudioStream) {
+						if ($FoundAllChunksWeNeed) {
 
-								// skip over
+							// skip over
 
-							} else {
+						} else {
 
-								$WhereWeWere = ftell($fd);
-								$AudioChunkHeader = fread($fd, 12);
-								$AudioChunkStreamNum  =                              substr($AudioChunkHeader, 0, 2);
-								$AudioChunkStreamType =                              substr($AudioChunkHeader, 2, 2);
-								$AudioChunkSize       = getid3_lib::LittleEndian2Int(substr($AudioChunkHeader, 4, 4));
+							$WhereWeWere = ftell($fd);
+							$AudioChunkHeader = fread($fd, 12);
+							$AudioChunkStreamNum  =                              substr($AudioChunkHeader, 0, 2);
+							$AudioChunkStreamType =                              substr($AudioChunkHeader, 2, 2);
+							$AudioChunkSize       = getid3_lib::LittleEndian2Int(substr($AudioChunkHeader, 4, 4));
 
-								if ($AudioChunkStreamType == 'wb') {
-									$FirstFourBytes = substr($AudioChunkHeader, 8, 4);
-									if (preg_match('/^\xFF[\xE2-\xE7\xF2-\xF7\xFA-\xFF][\x00-\xEB]/s', $FirstFourBytes)) {
-
-										// MP3
-										if (getid3_mp3::MPEGaudioHeaderBytesValid($FirstFourBytes)) {
-											$dummy = $ThisFileInfo;
-											$dummy['avdataoffset'] = ftell($fd) - 4;
-											$dummy['avdataend']    = ftell($fd) + $AudioChunkSize;
-											getid3_mp3::getOnlyMPEGaudioInfo($fd, $dummy, $dummy['avdataoffset'], false);
-											if (isset($dummy['mpeg']['audio'])) {
-												$ThisFileInfo = $dummy;
-												$ThisFileInfo['audio']['dataformat']   = 'mp'.$ThisFileInfo['mpeg']['audio']['layer'];
-												$ThisFileInfo['audio']['sample_rate']  = $ThisFileInfo['mpeg']['audio']['sample_rate'];
-												$ThisFileInfo['audio']['channels']     = $ThisFileInfo['mpeg']['audio']['channels'];
-												$ThisFileInfo['audio']['bitrate']      = $ThisFileInfo['mpeg']['audio']['bitrate'];
-												$ThisFileInfo['bitrate']               = $ThisFileInfo['audio']['bitrate'];
-												$ThisFileInfo['audio']['bitrate_mode'] = strtolower($ThisFileInfo['mpeg']['audio']['bitrate_mode']);
-											}
+							if ($AudioChunkStreamType == 'wb') {
+								$FirstFourBytes = substr($AudioChunkHeader, 8, 4);
+								if (preg_match('/^\xFF[\xE2-\xE7\xF2-\xF7\xFA-\xFF][\x00-\xEB]/s', $FirstFourBytes)) {
+									// MP3
+									if (getid3_mp3::MPEGaudioHeaderBytesValid($FirstFourBytes)) {
+										$dummy = $ThisFileInfo;
+										$dummy['avdataoffset'] = ftell($fd) - 4;
+										$dummy['avdataend']    = ftell($fd) + $AudioChunkSize;
+										getid3_mp3::getOnlyMPEGaudioInfo($fd, $dummy, $dummy['avdataoffset'], false);
+										if (isset($dummy['mpeg']['audio'])) {
+											$ThisFileInfo = $dummy;
+											$ThisFileInfo['audio']['dataformat']   = 'mp'.$ThisFileInfo['mpeg']['audio']['layer'];
+											$ThisFileInfo['audio']['sample_rate']  = $ThisFileInfo['mpeg']['audio']['sample_rate'];
+											$ThisFileInfo['audio']['channels']     = $ThisFileInfo['mpeg']['audio']['channels'];
+											$ThisFileInfo['audio']['bitrate']      = $ThisFileInfo['mpeg']['audio']['bitrate'];
+											$ThisFileInfo['bitrate']               = $ThisFileInfo['audio']['bitrate'];
+											$ThisFileInfo['audio']['bitrate_mode'] = strtolower($ThisFileInfo['mpeg']['audio']['bitrate_mode']);
 										}
+										unset($dummy);
+									}
 
-									} elseif (preg_match('/^\x0B\x77/s', $FirstFourBytes)) {
+								} elseif (preg_match('/^\x0B\x77/s', $FirstFourBytes)) {
 
-										// AC3
-										$GETID3_ERRORARRAY = &$ThisFileInfo['warning'];
-										if (getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio.ac3.php', __FILE__, false)) {
+									// AC3
+									$GETID3_ERRORARRAY = &$ThisFileInfo['warning'];
+									if (getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio.ac3.php', __FILE__, false)) {
 
-											$dummy = $ThisFileInfo;
-											$dummy['avdataoffset'] = ftell($fd) - 4;
-											$dummy['avdataend']    = ftell($fd) + $AudioChunkSize;
-											$dummy['error']        = array();
-											$ac3_tag = new getid3_ac3($fd, $dummy);
-											if (empty($dummy['error'])) {
-												$ThisFileInfo['audio']   = $dummy['audio'];
-												$ThisFileInfo['ac3']     = $dummy['ac3'];
-												$ThisFileInfo['warning'] = $dummy['warning'];
-											}
-
+										$dummy = $ThisFileInfo;
+										$dummy['avdataoffset'] = ftell($fd) - 4;
+										$dummy['avdataend']    = ftell($fd) + $AudioChunkSize;
+										$dummy['error']        = array();
+										$ac3_tag = new getid3_ac3($fd, $dummy);
+										if (empty($dummy['error'])) {
+											$ThisFileInfo['audio']   = $dummy['audio'];
+											$ThisFileInfo['ac3']     = $dummy['ac3'];
+											$ThisFileInfo['warning'] = $dummy['warning'];
 										}
+										unset($ac3_tag);
 
 									}
 
 								}
 
-								$ParsedAudioStream = true;
-								fseek($fd, $WhereWeWere, SEEK_SET);
+							}
 
-							}
-							fseek($fd, $chunksize - 4, SEEK_CUR);
-							break;
+							$FoundAllChunksWeNeed = true;
+							fseek($fd, $WhereWeWere, SEEK_SET);
 
-						default:
-							if (!isset($RIFFchunk[$listname])) {
-								$RIFFchunk[$listname] = array();
-							}
-							$LISTchunkParent    = $listname;
-							$LISTchunkMaxOffset = ftell($fd) - 4 + $chunksize;
-							if ($parsedChunk = getid3_riff::ParseRIFF($fd, ftell($fd), ftell($fd) + $chunksize - 4, $ThisFileInfo)) {
-								$RIFFchunk[$listname] = array_merge_recursive($RIFFchunk[$listname], $parsedChunk);
-							}
-							break;
+						}
+						fseek($fd, $chunksize - 4, SEEK_CUR);
+
+					//} elseif (ereg('^[0-9]{2}(wb|pc|dc|db)$', $listname)) {
+                    //
+					//	// data chunk, ignore
+                    //
+					} else {
+
+						if (!isset($RIFFchunk[$listname])) {
+							$RIFFchunk[$listname] = array();
+						}
+						$LISTchunkParent    = $listname;
+						$LISTchunkMaxOffset = ftell($fd) - 4 + $chunksize;
+						if ($parsedChunk = getid3_riff::ParseRIFF($fd, ftell($fd), ftell($fd) + $chunksize - 4, $ThisFileInfo)) {
+							$RIFFchunk[$listname] = array_merge_recursive($RIFFchunk[$listname], $parsedChunk);
+						}
+
 					}
 					break;
 
 				default:
+					if (eregi('^[0-9]{2}(wb|pc|dc|db)$', $chunkname)) {
+						$nextoffset = ftell($fd) + $chunksize;
+						if (($nextoffset < 0) || ($nextoffset >= pow(2, 31))) {
+							$ThisFileInfo['warning'][] = 'Unable to parse chunk at offset '.$nextoffset.' because beyond 2GB limit of PHP filesystem functions';
+							break 2;
+						}
+						fseek($fd, $nextoffset, SEEK_SET);
+						break;
+					}
 					$thisindex = 0;
 					if (isset($RIFFchunk[$chunkname]) && is_array($RIFFchunk[$chunkname])) {
 						$thisindex = count($RIFFchunk[$chunkname]);
@@ -1188,7 +1260,16 @@ class getid3_riff
 
 								// Probably is MP3 data
 								if (getid3_mp3::MPEGaudioHeaderBytesValid(substr($RIFFdataChunkContentsTest, 0, 4))) {
-									getid3_mp3::getOnlyMPEGaudioInfo($fd, $ThisFileInfo, $RIFFchunk[$chunkname][$thisindex]['offset'], false);
+
+									// copy info array
+									$dummy = $ThisFileInfo;
+
+									getid3_mp3::getOnlyMPEGaudioInfo($fd, $dummy, $RIFFchunk[$chunkname][$thisindex]['offset'], false);
+
+                                    // use dummy array unless error
+									if (empty($dummy['error'])) {
+									    $ThisFileInfo = $dummy;
+									}
 								}
 
 							} elseif ((strlen($RIFFdataChunkContentsTest) > 0) && (substr($RIFFdataChunkContentsTest, 0, 2) == "\x0B\x77")) {
@@ -1208,6 +1289,7 @@ class getid3_riff
 										$ThisFileInfo['ac3']     = $dummy['ac3'];
 										$ThisFileInfo['warning'] = $dummy['warning'];
 									}
+									unset($ac3_tag);
 
 								}
 
@@ -1242,6 +1324,7 @@ class getid3_riff
 										} else {
 											$ThisFileInfo['error'][] = 'Errors parsing DolbyDigital WAV: '.explode(';', $dummy['error']);
 										}
+										unset($ac3_tag);
 
 									} else {
 
@@ -1264,12 +1347,20 @@ class getid3_riff
 								// do nothing special, just skip it
 
 							}
+							$nextoffset = $RIFFchunk[$chunkname][$thisindex]['offset'] + 8 + $chunksize;
+							if (($nextoffset < 0) || ($nextoffset >= pow(2, 31))) {
+								$ThisFileInfo['warning'][] = 'Unable to parse chunk at offset '.$nextoffset.' because beyond 2GB limit of PHP filesystem functions';
+								break 3;
+							}
 							fseek($fd, $RIFFchunk[$chunkname][$thisindex]['offset'] + 8 + $chunksize, SEEK_SET);
 							break;
 
 						case 'bext':
 						case 'cart':
 						case 'fmt ':
+						case 'strh':
+						case 'strf':
+						case 'indx':
 						case 'MEXT':
 						case 'DISP':
 							// always read data in
@@ -1277,7 +1368,7 @@ class getid3_riff
 							break;
 
 						default:
-							if (!empty($LISTchunkParent) && (($RIFFchunk[$chunkname][$thisindex]['offset'] + $RIFFchunk[$chunkname][$thisindex]['size']) <= $LISTchunkMaxOffset)) {
+							if (!ereg('^[0-9]{2}(wb|pc|dc|db)$', $chunkname) && !empty($LISTchunkParent) && (($RIFFchunk[$chunkname][$thisindex]['offset'] + $RIFFchunk[$chunkname][$thisindex]['size']) <= $LISTchunkMaxOffset)) {
 								$RIFFchunk[$LISTchunkParent][$chunkname][$thisindex]['offset'] = $RIFFchunk[$chunkname][$thisindex]['offset'];
 								$RIFFchunk[$LISTchunkParent][$chunkname][$thisindex]['size']   = $RIFFchunk[$chunkname][$thisindex]['size'];
 								unset($RIFFchunk[$chunkname][$thisindex]['offset']);
@@ -1293,7 +1384,12 @@ class getid3_riff
 								// only read data in if smaller than 2kB
 								$RIFFchunk[$chunkname][$thisindex]['data'] = fread($fd, $chunksize);
 							} else {
-								fseek($fd, $chunksize, SEEK_CUR);
+								$nextoffset = ftell($fd) + $chunksize;
+								if (($nextoffset < 0) || ($nextoffset >= pow(2, 31))) {
+									$ThisFileInfo['warning'][] = 'Unable to parse chunk at offset '.$nextoffset.' because beyond 2GB limit of PHP filesystem functions';
+									break 3;
+								}
+								fseek($fd, $nextoffset, SEEK_SET);
 							}
 							break;
 					}
@@ -1328,6 +1424,7 @@ class getid3_riff
 			$ThisFileInfo['error']    = $dummy['error'];
 			$ThisFileInfo['tags']     = $dummy['tags'];
 			$ThisFileInfo['comments'] = $dummy['comments'];
+			unset($riff);
 			fclose($fp_temp);
 			unlink($tempfile);
 			return true;
@@ -1419,6 +1516,24 @@ class getid3_riff
 		}
 
 		return true;
+	}
+
+	function ParseBITMAPINFOHEADER($BITMAPINFOHEADER, $littleEndian=true) {
+		// yes it's ugly to instantiate a getid3_lib object here, suggested alternative please?
+		$getid3_lib = new getid3_lib();
+		$functionname = ($littleEndian ? 'LittleEndian2Int' : 'BigEndian2Int');
+		$parsed['biSize']          = $getid3_lib->$functionname(substr($BITMAPINFOHEADER,  0, 4)); // number of bytes required by the BITMAPINFOHEADER structure
+		$parsed['biWidth']         = $getid3_lib->$functionname(substr($BITMAPINFOHEADER,  4, 4)); // width of the bitmap in pixels
+		$parsed['biHeight']        = $getid3_lib->$functionname(substr($BITMAPINFOHEADER,  8, 4)); // height of the bitmap in pixels. If biHeight is positive, the bitmap is a 'bottom-up' DIB and its origin is the lower left corner. If biHeight is negative, the bitmap is a 'top-down' DIB and its origin is the upper left corner
+		$parsed['biPlanes']        = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 12, 2)); // number of color planes on the target device. In most cases this value must be set to 1
+		$parsed['biBitCount']      = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 14, 2)); // Specifies the number of bits per pixels
+		$parsed['fourcc']          =                            substr($BITMAPINFOHEADER, 16, 4);  // compression identifier
+		$parsed['biSizeImage']     = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 20, 4)); // size of the bitmap data section of the image (the actual pixel data, excluding BITMAPINFOHEADER and RGBQUAD structures)
+		$parsed['biXPelsPerMeter'] = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 24, 4)); // horizontal resolution, in pixels per metre, of the target device
+		$parsed['biYPelsPerMeter'] = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 28, 4)); // vertical resolution, in pixels per metre, of the target device
+		$parsed['biClrUsed']       = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 32, 4)); // actual number of color indices in the color table used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the biBitCount member for the compression mode specified by biCompression
+		$parsed['biClrImportant']  = $getid3_lib->$functionname(substr($BITMAPINFOHEADER, 36, 4)); // number of color indices that are considered important for displaying the bitmap. If this value is zero, all colors are important
+		return $parsed;
 	}
 
 	function RIFFwFormatTagLookup($wFormatTag) {

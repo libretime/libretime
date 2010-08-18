@@ -17,6 +17,12 @@ class getid3_apetag
 {
 
 	function getid3_apetag(&$fd, &$ThisFileInfo, $overrideendoffset=0) {
+
+		if ($ThisFileInfo['filesize'] >= pow(2, 31)) {
+			$ThisFileInfo['warning'][] = 'Unable to check for APEtags because file is larger than 2GB';
+			return false;
+		}
+
 		$id3v1tagsize     = 128;
 		$apetagheadersize = 32;
 		$lyrics3tagsize   = 10;
@@ -102,7 +108,7 @@ class getid3_apetag
 		// shortcut
 		$ThisFileInfo['replay_gain'] = array();
 		$thisfile_replaygain = &$ThisFileInfo['replay_gain'];
-		
+
 		for ($i = 0; $i < $thisfile_ape['footer']['raw']['tag_items']; $i++) {
 			$value_size = getid3_lib::LittleEndian2Int(substr($APEtagData, $offset, 4));
 			$offset += 4;

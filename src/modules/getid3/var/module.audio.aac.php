@@ -306,6 +306,10 @@ class getid3_aac
 			// breaks out when end-of-file encountered, or invalid data found,
 			// or MaxFramesToScan frames have been scanned
 
+			if ($byteoffset >= pow(2, 31)) {
+				$ThisFileInfo['warning'][] = 'Unable to parse AAC file beyond '.ftell($fd).' (PHP does not support file operations beyond 2GB)';
+				return false;
+			}
 			fseek($fd, $byteoffset, SEEK_SET);
 
 			// First get substring

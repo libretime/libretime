@@ -27,55 +27,56 @@ class getid3_zip
 		$ThisFileInfo['zip']['uncompressed_size'] = 0;
 		$ThisFileInfo['zip']['entries_count']     = 0;
 
-		$EOCDsearchData    = '';
-		$EOCDsearchCounter = 0;
-		while ($EOCDsearchCounter++ < 512) {
+		if ($ThisFileInfo['filesize'] < pow(2, 31)) {
+			$EOCDsearchData    = '';
+			$EOCDsearchCounter = 0;
+			while ($EOCDsearchCounter++ < 512) {
 
-			fseek($fd, -128 * $EOCDsearchCounter, SEEK_END);
-			$EOCDsearchData = fread($fd, 128).$EOCDsearchData;
+				fseek($fd, -128 * $EOCDsearchCounter, SEEK_END);
+				$EOCDsearchData = fread($fd, 128).$EOCDsearchData;
 
-			if (strstr($EOCDsearchData, 'PK'."\x05\x06")) {
+				if (strstr($EOCDsearchData, 'PK'."\x05\x06")) {
 
-				$EOCDposition = strpos($EOCDsearchData, 'PK'."\x05\x06");
-				fseek($fd, (-128 * $EOCDsearchCounter) + $EOCDposition, SEEK_END);
-				$ThisFileInfo['zip']['end_central_directory'] = $this->ZIPparseEndOfCentralDirectory($fd);
+					$EOCDposition = strpos($EOCDsearchData, 'PK'."\x05\x06");
+					fseek($fd, (-128 * $EOCDsearchCounter) + $EOCDposition, SEEK_END);
+					$ThisFileInfo['zip']['end_central_directory'] = $this->ZIPparseEndOfCentralDirectory($fd);
 
-				fseek($fd, $ThisFileInfo['zip']['end_central_directory']['directory_offset'], SEEK_SET);
-				$ThisFileInfo['zip']['entries_count'] = 0;
-				while ($centraldirectoryentry = $this->ZIPparseCentralDirectory($fd)) {
-					$ThisFileInfo['zip']['central_directory'][] = $centraldirectoryentry;
-					$ThisFileInfo['zip']['entries_count']++;
-					$ThisFileInfo['zip']['compressed_size']   += $centraldirectoryentry['compressed_size'];
-					$ThisFileInfo['zip']['uncompressed_size'] += $centraldirectoryentry['uncompressed_size'];
+					fseek($fd, $ThisFileInfo['zip']['end_central_directory']['directory_offset'], SEEK_SET);
+					$ThisFileInfo['zip']['entries_count'] = 0;
+					while ($centraldirectoryentry = $this->ZIPparseCentralDirectory($fd)) {
+						$ThisFileInfo['zip']['central_directory'][] = $centraldirectoryentry;
+						$ThisFileInfo['zip']['entries_count']++;
+						$ThisFileInfo['zip']['compressed_size']   += $centraldirectoryentry['compressed_size'];
+						$ThisFileInfo['zip']['uncompressed_size'] += $centraldirectoryentry['uncompressed_size'];
 
-					if ($centraldirectoryentry['uncompressed_size'] > 0) {
-						$ThisFileInfo['zip']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['zip']['files'], getid3_lib::CreateDeepArray($centraldirectoryentry['filename'], '/', $centraldirectoryentry['uncompressed_size']));
+						if ($centraldirectoryentry['uncompressed_size'] > 0) {
+							$ThisFileInfo['zip']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['zip']['files'], getid3_lib::CreateDeepArray($centraldirectoryentry['filename'], '/', $centraldirectoryentry['uncompressed_size']));
+						}
 					}
-				}
 
-				if ($ThisFileInfo['zip']['entries_count'] == 0) {
-					$ThisFileInfo['error'][] = 'No Central Directory entries found (truncated file?)';
-					return false;
-				}
+					if ($ThisFileInfo['zip']['entries_count'] == 0) {
+						$ThisFileInfo['error'][] = 'No Central Directory entries found (truncated file?)';
+						return false;
+					}
 
-				if (!empty($ThisFileInfo['zip']['end_central_directory']['comment'])) {
-					$ThisFileInfo['zip']['comments']['comment'][] = $ThisFileInfo['zip']['end_central_directory']['comment'];
-				}
+					if (!empty($ThisFileInfo['zip']['end_central_directory']['comment'])) {
+						$ThisFileInfo['zip']['comments']['comment'][] = $ThisFileInfo['zip']['end_central_directory']['comment'];
+					}
 
-				if (isset($ThisFileInfo['zip']['central_directory'][0]['compression_method'])) {
-					$ThisFileInfo['zip']['compression_method'] = $ThisFileInfo['zip']['central_directory'][0]['compression_method'];
-				}
-				if (isset($ThisFileInfo['zip']['central_directory'][0]['flags']['compression_speed'])) {
-					$ThisFileInfo['zip']['compression_speed']  = $ThisFileInfo['zip']['central_directory'][0]['flags']['compression_speed'];
-				}
-				if (isset($ThisFileInfo['zip']['compression_method']) && ($ThisFileInfo['zip']['compression_method'] == 'store') && !isset($ThisFileInfo['zip']['compression_speed'])) {
-					$ThisFileInfo['zip']['compression_speed']  = 'store';
-				}
+					if (isset($ThisFileInfo['zip']['central_directory'][0]['compression_method'])) {
+						$ThisFileInfo['zip']['compression_method'] = $ThisFileInfo['zip']['central_directory'][0]['compression_method'];
+					}
+					if (isset($ThisFileInfo['zip']['central_directory'][0]['flags']['compression_speed'])) {
+						$ThisFileInfo['zip']['compression_speed']  = $ThisFileInfo['zip']['central_directory'][0]['flags']['compression_speed'];
+					}
+					if (isset($ThisFileInfo['zip']['compression_method']) && ($ThisFileInfo['zip']['compression_method'] == 'store') && !isset($ThisFileInfo['zip']['compression_speed'])) {
+						$ThisFileInfo['zip']['compression_speed']  = 'store';
+					}
 
-				return true;
+					return true;
 
+				}
 			}
-
 		}
 
 		if ($this->getZIPentriesFilepointer($fd, $ThisFileInfo)) {

@@ -76,6 +76,7 @@ class getid3_lpac
 
 		$dummy = $ThisFileInfo;
 		$riff = new getid3_riff($fd, $dummy);
+		unset($riff);
 		$ThisFileInfo['avdataoffset']                = $dummy['avdataoffset'];
 		$ThisFileInfo['riff']                        = $dummy['riff'];
 		$ThisFileInfo['error']                       = $dummy['error'];

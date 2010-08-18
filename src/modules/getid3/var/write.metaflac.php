@@ -52,7 +52,7 @@ class getid3_write_metaflac
 			if (GETID3_OS_ISWINDOWS) {
 
 				if (file_exists(GETID3_HELPERAPPSDIR.'metaflac.exe')) {
-					//$commandline = '"'.GETID3_HELPERAPPSDIR.'metaflac.exe" --no-utf8-convert --remove-vc-all --import-vc-from="'.$tempcommentsfilename.'" "'.str_replace('/', '\\', $this->filename).'"';
+					//$commandline = '"'.GETID3_HELPERAPPSDIR.'metaflac.exe" --no-utf8-convert --remove-all-tags --import-tags-from="'.$tempcommentsfilename.'" "'.str_replace('/', '\\', $this->filename).'"';
 					//  metaflac works fine if you copy-paste the above commandline into a command prompt,
 					//  but refuses to work with `backtick` if there are "doublequotes" present around BOTH
 					//  the metaflac pathname and the target filename. For whatever reason...??
@@ -64,7 +64,7 @@ class getid3_write_metaflac
 					clearstatcache();
 					$timestampbeforewriting = filemtime($this->filename);
 
-					$commandline = GETID3_HELPERAPPSDIR.'metaflac.exe --no-utf8-convert --remove-vc-all --import-vc-from="'.$tempcommentsfilename.'" "'.$this->filename.'" 2>&1';
+					$commandline = GETID3_HELPERAPPSDIR.'metaflac.exe --no-utf8-convert --remove-all-tags --import-tags-from="'.$tempcommentsfilename.'" "'.$this->filename.'" 2>&1';
 					$metaflacError = `$commandline`;
 
 					if (empty($metaflacError)) {
@@ -80,7 +80,7 @@ class getid3_write_metaflac
 			} else {
 
 				// It's simpler on *nix
-				$commandline = 'metaflac --no-utf8-convert --remove-vc-all --import-vc-from='.$tempcommentsfilename.' "'.$this->filename.'" 2>&1';
+				$commandline = 'metaflac --no-utf8-convert --remove-all-tags --import-tags-from='.$tempcommentsfilename.' "'.$this->filename.'" 2>&1';
 				$metaflacError = `$commandline`;
 
 			}
@@ -116,7 +116,7 @@ class getid3_write_metaflac
 					clearstatcache();
 					$timestampbeforewriting = filemtime($this->filename);
 
-					$commandline = GETID3_HELPERAPPSDIR.'metaflac.exe --remove-vc-all "'.$this->filename.'" 2>&1';
+					$commandline = GETID3_HELPERAPPSDIR.'metaflac.exe --remove-all-tags "'.$this->filename.'" 2>&1';
 					$metaflacError = `$commandline`;
 
 					if (empty($metaflacError)) {
@@ -132,7 +132,7 @@ class getid3_write_metaflac
 			} else {
 
 				// It's simpler on *nix
-				$commandline = 'metaflac --remove-vc-all "'.$this->filename.'" 2>&1';
+				$commandline = 'metaflac --remove-all-tags "'.$this->filename.'" 2>&1';
 				$metaflacError = `$commandline`;
 
 			}

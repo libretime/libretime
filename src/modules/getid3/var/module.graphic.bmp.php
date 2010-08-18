@@ -185,6 +185,8 @@ class getid3_bmp
 			// DWORD  biClrUsed;
 			// DWORD  biClrImportant;
 
+			// possibly integrate this section and module.audio-video.riff.php::ParseBITMAPINFOHEADER() ?
+
 			$thisfile_bmp_header_raw['width']            = getid3_lib::LittleEndian2Int(substr($BMPheader, $offset, 4), true);
 			$offset += 4;
 			$thisfile_bmp_header_raw['height']           = getid3_lib::LittleEndian2Int(substr($BMPheader, $offset, 4), true);

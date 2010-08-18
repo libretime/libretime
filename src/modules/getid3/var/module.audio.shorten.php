@@ -123,7 +123,7 @@ class getid3_shorten
 					return false;
 				}
 			}
-			$commandline = GETID3_HELPERAPPSDIR.'shorten.exe -x "'.$ThisFileInfo['filenamepath'].'" - | '.GETID3_HELPERAPPSDIR.'head.exe -c 44';
+			$commandline = GETID3_HELPERAPPSDIR.'shorten.exe -x "'.$ThisFileInfo['filenamepath'].'" - | '.GETID3_HELPERAPPSDIR.'head.exe -c 64';
 			$commandline = str_replace('/', '\\', $commandline);
 
 		} else {
@@ -136,7 +136,7 @@ class getid3_shorten
                 $ThisFileInfo['error'][] = 'shorten binary was not found in path or /usr/local/bin';
                 return false;
             }
-            $commandline = (file_exists('/usr/local/bin/shorten') ? '/usr/local/bin/' : '' ) . 'shorten -x '.escapeshellarg($ThisFileInfo['filenamepath']).' - | head -c 44';
+            $commandline = (file_exists('/usr/local/bin/shorten') ? '/usr/local/bin/' : '' ) . 'shorten -x '.escapeshellarg($ThisFileInfo['filenamepath']).' - | head -c 64';
 
 		}
 
@@ -146,14 +146,15 @@ class getid3_shorten
 
 			getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', __FILE__, true);
 
-			$DecodedWAVFORMATEX = getid3_riff::RIFFparseWAVEFORMATex(substr($output, 20, 16));
+			$fmt_size = getid3_lib::LittleEndian2Int(substr($output, 16, 4));
+			$DecodedWAVFORMATEX = getid3_riff::RIFFparseWAVEFORMATex(substr($output, 20, $fmt_size));
 			$ThisFileInfo['audio']['channels']        = $DecodedWAVFORMATEX['channels'];
 			$ThisFileInfo['audio']['bits_per_sample'] = $DecodedWAVFORMATEX['bits_per_sample'];
 			$ThisFileInfo['audio']['sample_rate']     = $DecodedWAVFORMATEX['sample_rate'];
 
-			if (substr($output, 36, 4) == 'data') {
+			if (substr($output, 20 + $fmt_size, 4) == 'data') {
 
-				$ThisFileInfo['playtime_seconds'] = getid3_lib::LittleEndian2Int(substr($output, 40, 4)) / $DecodedWAVFORMATEX['raw']['nAvgBytesPerSec'];
+				$ThisFileInfo['playtime_seconds'] = getid3_lib::LittleEndian2Int(substr($output, 20 + 4 + $fmt_size, 4)) / $DecodedWAVFORMATEX['raw']['nAvgBytesPerSec'];
 
 			} else {
 

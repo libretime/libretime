@@ -25,32 +25,40 @@ class getid3_bonk
 		$thisfile_bonk['dataoffset']      = $ThisFileInfo['avdataoffset'];
 		$thisfile_bonk['dataend']         = $ThisFileInfo['avdataend'];
 
-		// scan-from-end method, for v0.6 and higher
-		fseek($fd, $thisfile_bonk['dataend'] - 8, SEEK_SET);
-		$PossibleBonkTag = fread($fd, 8);
-		while ($this->BonkIsValidTagName(substr($PossibleBonkTag, 4, 4), true)) {
-			$BonkTagSize = getid3_lib::LittleEndian2Int(substr($PossibleBonkTag, 0, 4));
-			fseek($fd, 0 - $BonkTagSize, SEEK_CUR);
-			$BonkTagOffset = ftell($fd);
-			$TagHeaderTest = fread($fd, 5);
-			if (($TagHeaderTest{0} != "\x00") || (substr($PossibleBonkTag, 4, 4) != strtolower(substr($PossibleBonkTag, 4, 4)))) {
-				$ThisFileInfo['error'][] = 'Expecting "Ø'.strtoupper(substr($PossibleBonkTag, 4, 4)).'" at offset '.$BonkTagOffset.', found "'.$TagHeaderTest.'"';
-				return false;
-			}
-			$BonkTagName = substr($TagHeaderTest, 1, 4);
+		if ($thisfile_bonk['dataend'] >= pow(2, 31)) {
 
-			$thisfile_bonk[$BonkTagName]['size']   = $BonkTagSize;
-			$thisfile_bonk[$BonkTagName]['offset'] = $BonkTagOffset;
-			$this->HandleBonkTags($fd, $BonkTagName, $ThisFileInfo);
-			$NextTagEndOffset = $BonkTagOffset - 8;
-			if ($NextTagEndOffset < $thisfile_bonk['dataoffset']) {
-				if (empty($ThisFileInfo['audio']['encoder'])) {
-					$ThisFileInfo['audio']['encoder'] = 'Extended BONK v0.9+';
-				}
-				return true;
-			}
-			fseek($fd, $NextTagEndOffset, SEEK_SET);
+			$ThisFileInfo['warning'][] = 'Unable to parse BONK file from end (v0.6+ preferred method) because PHP filesystem functions only support up to 2GB';
+
+		} else {
+
+			// scan-from-end method, for v0.6 and higher
+			fseek($fd, $thisfile_bonk['dataend'] - 8, SEEK_SET);
 			$PossibleBonkTag = fread($fd, 8);
+			while ($this->BonkIsValidTagName(substr($PossibleBonkTag, 4, 4), true)) {
+				$BonkTagSize = getid3_lib::LittleEndian2Int(substr($PossibleBonkTag, 0, 4));
+				fseek($fd, 0 - $BonkTagSize, SEEK_CUR);
+				$BonkTagOffset = ftell($fd);
+				$TagHeaderTest = fread($fd, 5);
+				if (($TagHeaderTest{0} != "\x00") || (substr($PossibleBonkTag, 4, 4) != strtolower(substr($PossibleBonkTag, 4, 4)))) {
+					$ThisFileInfo['error'][] = 'Expecting "Ø'.strtoupper(substr($PossibleBonkTag, 4, 4)).'" at offset '.$BonkTagOffset.', found "'.$TagHeaderTest.'"';
+					return false;
+				}
+				$BonkTagName = substr($TagHeaderTest, 1, 4);
+
+				$thisfile_bonk[$BonkTagName]['size']   = $BonkTagSize;
+				$thisfile_bonk[$BonkTagName]['offset'] = $BonkTagOffset;
+				$this->HandleBonkTags($fd, $BonkTagName, $ThisFileInfo);
+				$NextTagEndOffset = $BonkTagOffset - 8;
+				if ($NextTagEndOffset < $thisfile_bonk['dataoffset']) {
+					if (empty($ThisFileInfo['audio']['encoder'])) {
+						$ThisFileInfo['audio']['encoder'] = 'Extended BONK v0.9+';
+					}
+					return true;
+				}
+				fseek($fd, $NextTagEndOffset, SEEK_SET);
+				$PossibleBonkTag = fread($fd, 8);
+			}
+
 		}
 
 		// seek-from-beginning method for v0.4 and v0.5

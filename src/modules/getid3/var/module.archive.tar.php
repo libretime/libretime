@@ -8,11 +8,16 @@
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.archive.tar.php                                      //
-// written by Mike Mozolin <teddybearØmail*ru>                 //
 // module for analyzing TAR files                              //
 // dependencies: NONE                                          //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
+//                                                             //
+// Module originally written by                                //
+//      Mike Mozolin <teddybearØmail*ru>                       //
+//                                                             //
+/////////////////////////////////////////////////////////////////
+
 
 class getid3_tar {
 
@@ -20,12 +25,15 @@ class getid3_tar {
 		$ThisFileInfo['fileformat'] = 'tar';
 		$ThisFileInfo['tar']['files'] = array();
 
-		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155/prefix';
-		$null_512k = str_repeat("\0", 512); // end-of-file marker
+		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155prefix';
+		$null_512k = str_repeat("\x00", 512); // end-of-file marker
 
 		@fseek($fd, 0);
-        while (!feof($fd)) {
-            $buffer = fread($fd, 512);
+		while (!feof($fd)) {
+			$buffer = fread($fd, 512);
+			if (strlen($buffer) < 512) {
+				break;
+			}
 
 			// check the block
 			$checksum = 0;
