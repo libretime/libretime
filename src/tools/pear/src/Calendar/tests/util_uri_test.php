@@ -1,5 +1,5 @@
 <?php
-// $Id: util_uri_test.php,v 1.1 2004/08/16 08:55:24 hfuecks Exp $
+// $Id: util_uri_test.php 166473 2004-08-16 08:55:24Z hfuecks $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');

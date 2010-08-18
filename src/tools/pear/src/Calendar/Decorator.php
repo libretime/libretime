@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Decorator.php,v 1.9 2007/11/18 21:46:42 quipo Exp $
+ * @version   CVS: $Id: Decorator.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -49,8 +49,8 @@
 .*         return date('D', $day);
  *     }
  * }
- * $Day = & new Calendar_Day(2003, 10, 25);
- * $DayDecorator = & new DayDecorator($Day);
+ * $Day = new Calendar_Day(2003, 10, 25);
+ * $DayDecorator = new DayDecorator($Day);
  * echo $DayDecorator->thisDay(); // Outputs "Sat"
  * </code>
  *

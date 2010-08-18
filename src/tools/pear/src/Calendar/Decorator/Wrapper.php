@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Wrapper.php,v 1.5 2007/10/31 18:27:03 quipo Exp $
+ * @version   CVS: $Id: Wrapper.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -88,7 +88,7 @@ class Calendar_Decorator_Wrapper extends Calendar_Decorator
     {
         $Calendar = parent::fetch();
         if ($Calendar) {
-            $ret =& new $decorator($Calendar);
+            $ret = new $decorator($Calendar);
         } else {
             $ret = false;
         }
@@ -107,7 +107,7 @@ class Calendar_Decorator_Wrapper extends Calendar_Decorator
     {
         $children = parent::fetchAll();
         foreach ($children as $key => $Calendar) {
-            $children[$key] = & new $decorator($Calendar);
+            $children[$key] = new $decorator($Calendar);
         }
         return $children;
     }

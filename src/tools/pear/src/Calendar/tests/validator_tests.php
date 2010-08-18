@@ -1,5 +1,5 @@
 <?php
-// $Id: validator_tests.php,v 1.1 2004/05/24 22:25:43 quipo Exp $
+// $Id: validator_tests.php 159563 2004-05-24 22:25:43Z quipo $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');

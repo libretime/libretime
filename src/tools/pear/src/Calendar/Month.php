@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Month.php,v 1.7 2007/11/16 20:03:12 quipo Exp $
+ * @version   CVS: $Id: Month.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -53,7 +53,7 @@ require_once CALENDAR_ROOT.'Calendar.php';
  * Represents a Month and builds Days
  * <code>
  * require_once 'Calendar/Month.php';
- * $Month = & new Calendar_Month(2003, 10); // Oct 2003
+ * $Month = new Calendar_Month(2003, 10); // Oct 2003
  * $Month->build(); // Build Calendar_Day objects
  * while ($Day = & $Month->fetch()) {
  *     echo $Day->thisDay().'<br />';
@@ -81,7 +81,7 @@ class Calendar_Month extends Calendar
      */
     function Calendar_Month($y, $m, $firstDay=null)
     {
-        Calendar::Calendar($y, $m);
+        parent::Calendar($y, $m);
         $this->firstDay = $this->defineFirstDayOfWeek($firstDay);
     }
 

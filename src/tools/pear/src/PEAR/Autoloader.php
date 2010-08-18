@@ -45,7 +45,7 @@ require_once "PEAR.php";
  * @author Stig Bakken <ssb@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: 1.9.1
  * @link       http://pear.php.net/manual/en/core.ppm.php#core.ppm.pear-autoloader
  * @since      File available since Release 0.1
  * @deprecated File deprecated in Release 1.4.0a1

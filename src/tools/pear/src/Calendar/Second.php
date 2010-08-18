@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Second.php,v 1.4 2007/10/31 18:26:41 quipo Exp $
+ * @version   CVS: $Id: Second.php 300728 2010-06-24 11:43:56Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -76,7 +76,7 @@ class Calendar_Second extends Calendar
      */
     function Calendar_Second($y, $m, $d, $h, $i, $s)
     {
-        Calendar::Calendar($y, $m, $d, $h, $i, $s);
+        parent::Calendar($y, $m, $d, $h, $i, $s);
     }
 
     /**

@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Year.php,v 1.9 2007/11/18 21:46:42 quipo Exp $
+ * @version   CVS: $Id: Year.php 300728 2010-06-24 11:43:56Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -79,7 +79,7 @@ class Calendar_Year extends Calendar
      */
     function Calendar_Year($y)
     {
-        Calendar::Calendar($y);
+        parent::Calendar($y);
     }
 
     /**

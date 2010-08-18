@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Weekdays.php,v 1.8 2007/11/16 20:04:45 quipo Exp $
+ * @version   CVS: $Id: Weekdays.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -58,7 +58,7 @@ require_once CALENDAR_ROOT.'Month.php';
  * Represents a Month and builds Days in tabular form<br>
  * <code>
  * require_once 'Calendar/Month/Weekdays.php';
- * $Month = & new Calendar_Month_Weekdays(2003, 10); // Oct 2003
+ * $Month = new Calendar_Month_Weekdays(2003, 10); // Oct 2003
  * $Month->build(); // Build Calendar_Day objects
  * while ($Day = & $Month->fetch()) {
  *     if ($Day->isFirst()) {
@@ -110,7 +110,7 @@ class Calendar_Month_Weekdays extends Calendar_Month
      */
     function Calendar_Month_Weekdays($y, $m, $firstDay=null)
     {
-        Calendar_Month::Calendar_Month($y, $m, $firstDay);
+        parent::Calendar_Month($y, $m, $firstDay);
     }
 
     /**
@@ -129,7 +129,7 @@ class Calendar_Month_Weekdays extends Calendar_Month
     function build($sDates = array())
     {
         include_once CALENDAR_ROOT.'Table/Helper.php';
-        $this->tableHelper = & new Calendar_Table_Helper($this, $this->firstDay);
+        $this->tableHelper = new Calendar_Table_Helper($this, $this->firstDay);
         Calendar_Month::build($sDates);
         $this->buildEmptyDaysBefore();
         $this->shiftDays();

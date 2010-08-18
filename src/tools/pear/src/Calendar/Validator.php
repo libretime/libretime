@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Validator.php,v 1.6 2007/11/28 19:42:33 quipo Exp $
+ * @version   CVS: $Id: Validator.php 247251 2007-11-28 19:42:33Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 

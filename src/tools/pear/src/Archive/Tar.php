@@ -36,7 +36,7 @@
  * @author      Vincent Blavet <vincent@phpconcept.net>
  * @copyright   1997-2008 The Authors
  * @license     http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: Tar.php 287963 2009-09-02 08:18:55Z mrook $
+ * @version     CVS: $Id: Tar.php 295988 2010-03-09 08:39:37Z mrook $
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
@@ -50,7 +50,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@phpconcept.net>
-* @version  $Revision: 287963 $
+* @version  $Revision: 295988 $
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
@@ -85,6 +85,11 @@ class Archive_Tar extends PEAR
     * @var string Local Tar name of a remote Tar (http:// or ftp://)
     */
     var $_temp_tarname='';
+
+    /**
+    * @var string regular expression for ignoring files or directories
+    */
+    var $_ignore_regexp='';
 
     // {{{ constructor
     /**
@@ -589,6 +594,36 @@ class Archive_Tar extends PEAR
     }
     // }}}
 
+    // {{{ setIgnoreRegexp()
+    /**
+    * This method sets the regular expression for ignoring files and directories
+    * at import, for example:
+    * $arch->setIgnoreRegexp("#CVS|\.svn#");
+    * @param string $regexp         regular expression defining which files or directories to ignore
+    * @access public
+    */
+    function setIgnoreRegexp($regexp)
+    {
+    	$this->_ignore_regexp = $regexp;
+    }
+    // }}}
+
+    // {{{ setIgnoreList()
+    /**
+    * This method sets the regular expression for ignoring all files and directories
+    * matching the filenames in the array list at import, for example:
+    * $arch->setIgnoreList(array('CVS', '.svn', 'bin/tool'));
+    * @param array $list         a list of file or directory names to ignore
+    * @access public
+    */
+    function setIgnoreList($list)
+    {
+    	$regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
+    	$regexp = '#/'.join('$|/', $list).'#';
+    	$this->setIgnoreRegexp($regexp);
+    }
+    // }}}
+
     // {{{ _error()
     function _error($p_message)
     {
@@ -830,7 +865,7 @@ class Archive_Tar extends PEAR
               for ($i=0; $i<$p_len; $i++)
                   $this->_readBlock();
           } else if ($this->_compress_type == 'none')
-              @fseek($this->_file, ftell($this->_file)+($p_len*512));
+              @fseek($this->_file, $p_len*512, SEEK_CUR);
           else
               $this->_error('Unknown or missing compression type ('
 			                .$this->_compress_type.')');
@@ -881,6 +916,12 @@ class Archive_Tar extends PEAR
 
         if ($v_filename == '')
             continue;
+
+       	// ----- ignore files and directories matching the ignore regular expression
+       	if ($this->_ignore_regexp && preg_match($this->_ignore_regexp, '/'.$v_filename)) {
+            $this->_warning("File '$v_filename' ignored");
+       	    continue;
+       	}
 
         if (!file_exists($v_filename)) {
             $this->_warning("File '$v_filename' does not exist");

@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Week.php,v 1.14 2007/11/18 21:46:42 quipo Exp $
+ * @version   CVS: $Id: Week.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -54,7 +54,7 @@ require_once CALENDAR_ROOT.'Calendar.php';
  * Represents a Week and builds Days in tabular format<br>
  * <code>
  * require_once 'Calendar/Week.php';
- * $Week = & new Calendar_Week(2003, 10, 1); Oct 2003, 1st tabular week
+ * $Week = new Calendar_Week(2003, 10, 1); Oct 2003, 1st tabular week
  * echo '<tr>';
  * while ($Day = & $Week->fetch()) {
  *     if ($Day->isEmpty()) {
@@ -138,9 +138,9 @@ class Calendar_Week extends Calendar
     function Calendar_Week($y, $m, $d, $firstDay = null)
     {
         include_once CALENDAR_ROOT.'Table/Helper.php';
-        Calendar::Calendar($y, $m, $d);
+        parent::Calendar($y, $m, $d);
         $this->firstDay    = $this->defineFirstDayOfWeek($firstDay);
-        $this->tableHelper = & new Calendar_Table_Helper($this, $this->firstDay);
+        $this->tableHelper = new Calendar_Table_Helper($this, $this->firstDay);
         $this->thisWeek    = $this->tableHelper->getWeekStart($y, $m, $d, $this->firstDay);
         $this->prevWeek    = $this->tableHelper->getWeekStart(
             $y, 
@@ -313,21 +313,24 @@ class Calendar_Week extends Calendar
      */
     function thisYear($format = 'int')
     {
-        $tmp_cal = new Calendar();
-        $tmp_cal->setTimestamp($this->thisWeek);
-        $first_dow = $tmp_cal->thisDay('array');
-        $days_in_week = $tmp_cal->cE->getDaysInWeek($tmp_cal->year, $tmp_cal->month, $tmp_cal->day);
-        $tmp_cal->day += $days_in_week;
-        $last_dow  = $tmp_cal->thisDay('array');
+        if (null !== $this->thisWeek) {
+            $tmp_cal = new Calendar();
+            $tmp_cal->setTimestamp($this->thisWeek);
+            $first_dow = $tmp_cal->thisDay('array');
+            $days_in_week = $tmp_cal->cE->getDaysInWeek($tmp_cal->year, $tmp_cal->month, $tmp_cal->day);
+            $tmp_cal->day += $days_in_week;
+            $last_dow  = $tmp_cal->thisDay('array');
 
-        if ($first_dow['year'] == $last_dow['year']) {
+            if ($first_dow['year'] == $last_dow['year']) {
+                return $first_dow['year'];
+            }
+
+            if ($last_dow['day'] > floor($days_in_week / 2)) {
+                return $last_dow['year'];
+            }
             return $first_dow['year'];
         }
-
-        if ($last_dow['day'] > floor($days_in_week / 2)) {
-            return $last_dow['year'];
-        }
-        return $first_dow['year'];
+        return parent::thisYear();
     }
 
     /**

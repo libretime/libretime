@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Day.php,v 1.5 2007/11/16 20:03:12 quipo Exp $
+ * @version   CVS: $Id: Day.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -53,7 +53,7 @@ require_once CALENDAR_ROOT.'Calendar.php';
  * Represents a Day and builds Hours.
  * <code>
  * require_once 'Calendar/Day.php';
- * $Day = & new Calendar_Day(2003, 10, 21); // Oct 21st 2003
+ * $Day = new Calendar_Day(2003, 10, 21); // Oct 21st 2003
  * while ($Hour = & $Day->fetch()) {
  *    echo $Hour->thisHour().'<br />';
  * }
@@ -102,7 +102,7 @@ class Calendar_Day extends Calendar
      */
     function Calendar_Day($y, $m, $d)
     {
-        Calendar::Calendar($y, $m, $d);
+        parent::Calendar($y, $m, $d);
     }
 
     /**

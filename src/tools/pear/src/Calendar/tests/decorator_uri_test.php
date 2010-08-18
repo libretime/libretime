@@ -1,5 +1,5 @@
 <?php
-// $Id: decorator_uri_test.php,v 1.2 2004/07/08 10:18:48 quipo Exp $
+// $Id: decorator_uri_test.php 162858 2004-07-08 10:18:48Z quipo $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');

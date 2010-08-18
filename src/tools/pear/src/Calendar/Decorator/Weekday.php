@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Weekday.php,v 1.8 2007/11/24 11:04:24 quipo Exp $
+ * @version   CVS: $Id: Weekday.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -58,7 +58,7 @@ require_once CALENDAR_ROOT.'Day.php';
  * Decorator for fetching the day of the week
  * <code>
  * $Day = new Calendar_Day(2003, 10, 23);
- * $Weekday = & new Calendar_Decorator_Weekday($Day);
+ * $Weekday = new Calendar_Decorator_Weekday($Day);
  * $Weekday->setFirstDay(0); // Set first day of week to Sunday (default Mon)
  * echo $Weekday->thisWeekDay(); // Displays 5 - fifth day of week relative to Sun
  * </code>

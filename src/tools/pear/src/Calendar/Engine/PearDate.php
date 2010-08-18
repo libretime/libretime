@@ -32,7 +32,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: PearDate.php,v 1.14 2008/11/15 21:41:38 quipo Exp $
+ * @version   CVS: $Id: PearDate.php 269076 2008-11-15 21:41:38Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 

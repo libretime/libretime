@@ -10,7 +10,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: RunTest.php 287447 2009-08-18 11:46:19Z dufuz $
+ * @version    CVS: $Id: RunTest.php 297621 2010-04-07 15:09:33Z sebastian $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.3.3
  */
@@ -38,7 +38,7 @@ putenv("PHP_PEAR_RUNTESTS=1");
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: 1.9.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.3
  */
@@ -370,9 +370,8 @@ class PEAR_RunTest
         // We've satisfied the preconditions - run the test!
         if (isset($this->_options['coverage']) && $this->xdebug_loaded) {
             $xdebug_file = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'xdebug';
-            $text = '<?php';
-            $text .= "\n" . 'function coverage_shutdown() {' .
-                     "\n" . '    $xdebug = var_export(xdebug_get_code_coverage(), true);';
+            $text = "\n" . 'function coverage_shutdown() {' .
+                    "\n" . '    $xdebug = var_export(xdebug_get_code_coverage(), true);';
             if (!function_exists('file_put_contents')) {
                 $text .= "\n" . '    $fh = fopen(\'' . $xdebug_file . '\', "wb");' .
                         "\n" . '    if ($fh !== false) {' .
@@ -388,14 +387,26 @@ class PEAR_RunTest
                 "\n" . 'register_shutdown_function("coverage_shutdown");';
             $text .= "\n" . 'xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);' . "\n?>";
 
-            $len_f = 5;
-            if (substr($section_text['FILE'], 0, 5) != '<?php'
-                && substr($section_text['FILE'], 0, 2) == '<?') {
-                $len_f = 2;
-            }
-            $text .= $section_text['FILE'];
+            // Workaround for http://pear.php.net/bugs/bug.php?id=17292
+            $lines     = explode("\n", $section_text['FILE']);
+            $numLines  = count($lines);
+            $namespace = '';
 
-            $this->save_text($temp_file, $text);
+            for ($i = 0; $i < $numLines; $i++) {
+                $lines[$i] = trim($lines[$i]);
+
+                if ($lines[$i] == '<?' || $lines[$i] == '<?php') {
+                    unset($lines[$i]);
+                }
+
+                if (substr($lines[$i], 0, 9) == 'namespace') {
+                    $namespace = $lines[$i] . "\n";
+                    unset($lines[$i]);
+                    break;
+                }
+            }
+
+            $this->save_text($temp_file, "<?php\n" . $namespace . join("\n", $lines));
         } else {
             $this->save_text($temp_file, $section_text['FILE']);
         }

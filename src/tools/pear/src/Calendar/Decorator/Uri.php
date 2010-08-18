@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Uri.php,v 1.8 2007/11/18 21:46:43 quipo Exp $
+ * @version   CVS: $Id: Uri.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -61,7 +61,7 @@ require_once CALENDAR_ROOT.'Util'.DIRECTORY_SEPARATOR.'Uri.php';
  * have a specific need to use a decorator
  * <code>
  * $Day = new Calendar_Day(2003, 10, 23);
- * $Uri = & new Calendar_Decorator_Uri($Day);
+ * $Uri = new Calendar_Decorator_Uri($Day);
  * $Uri->setFragments('year', 'month', 'day');
  * echo $Uri->getPrev(); // Displays year=2003&month=10&day=22
  * </code>
@@ -112,7 +112,7 @@ class Calendar_Decorator_Uri extends Calendar_Decorator
      */
     function setFragments($y, $m = null, $d = null, $h = null, $i = null, $s = null)
     {
-        $this->Uri = & new Calendar_Util_Uri($y, $m, $d, $h, $i, $s);
+        $this->Uri = new Calendar_Util_Uri($y, $m, $d, $h, $i, $s);
     }
 
     /**

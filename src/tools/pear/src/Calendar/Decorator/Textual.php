@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Textual.php,v 1.8 2007/11/24 11:04:24 quipo Exp $
+ * @version   CVS: $Id: Textual.php 246907 2007-11-24 11:04:24Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 

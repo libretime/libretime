@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar_tabular_tests.php,v 1.2 2005/10/20 18:59:45 quipo Exp $
+// $Id: calendar_tabular_tests.php 198886 2005-10-20 18:59:45Z quipo $
 
 require_once('simple_include.php');
 require_once('calendar_include.php');

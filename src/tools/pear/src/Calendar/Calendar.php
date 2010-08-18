@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Calendar.php,v 1.9 2008/11/15 21:21:42 quipo Exp $
+ * @version   CVS: $Id: Calendar.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -457,7 +457,7 @@ class Calendar
     {
         if (!isset($this->validator)) {
             include_once CALENDAR_ROOT.'Validator.php';
-            $this->validator = & new Calendar_Validator($this);
+            $this->validator = new Calendar_Validator($this);
         }
         return $this->validator;
     }

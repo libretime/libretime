@@ -32,7 +32,7 @@
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Minute.php,v 1.5 2007/11/16 20:03:12 quipo Exp $
+ * @version   CVS: $Id: Minute.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -53,7 +53,7 @@ require_once CALENDAR_ROOT.'Calendar.php';
  * Represents a Minute and builds Seconds
  * <code>
  * require_once 'Calendar'.DIRECTORY_SEPARATOR.'Minute.php';
- * $Minute = & new Calendar_Minute(2003, 10, 21, 15, 31); // Oct 21st 2003, 3:31pm
+ * $Minute = new Calendar_Minute(2003, 10, 21, 15, 31); // Oct 21st 2003, 3:31pm
  * $Minute->build(); // Build Calendar_Second objects
  * while ($Second = & $Minute->fetch()) {
  *     echo $Second->thisSecond().'<br />';
@@ -83,7 +83,7 @@ class Calendar_Minute extends Calendar
      */
     function Calendar_Minute($y, $m, $d, $h, $i)
     {
-        Calendar::Calendar($y, $m, $d, $h, $i);
+        parent::Calendar($y, $m, $d, $h, $i);
     }
 
     /**

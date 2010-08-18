@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar_include.php,v 1.4 2004/08/16 12:56:10 hfuecks Exp $
+// $Id: calendar_include.php 166503 2004-08-16 12:56:10Z hfuecks $
 if ( !@include 'Calendar/Calendar.php' ) {
     @define('CALENDAR_ROOT','../');
 }

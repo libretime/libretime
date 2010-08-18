@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Weeks.php,v 1.7 2007/11/16 20:04:45 quipo Exp $
+ * @version   CVS: $Id: Weeks.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -59,7 +59,7 @@ require_once CALENDAR_ROOT.'Month.php';
  * Represents a Month and builds Weeks
  * <code>
  * require_once 'Calendar'.DIRECTORY_SEPARATOR.'Month'.DIRECTORY_SEPARATOR.'Weeks.php';
- * $Month = & new Calendar_Month_Weeks(2003, 10); // Oct 2003
+ * $Month = new Calendar_Month_Weeks(2003, 10); // Oct 2003
  * $Month->build(); // Build Calendar_Day objects
  * while ($Week = & $Month->fetch()) {
  *     echo $Week->thisWeek().'<br />';
@@ -102,7 +102,7 @@ class Calendar_Month_Weeks extends Calendar_Month
      */
     function Calendar_Month_Weeks($y, $m, $firstDay=null)
     {
-        Calendar_Month::Calendar_Month($y, $m, $firstDay);
+        parent::Calendar_Month($y, $m, $firstDay);
     }
 
     /**
@@ -117,7 +117,7 @@ class Calendar_Month_Weeks extends Calendar_Month
     function build($sDates = array())
     {
         include_once CALENDAR_ROOT.'Table/Helper.php';
-        $this->tableHelper = & new Calendar_Table_Helper($this, $this->firstDay);
+        $this->tableHelper = new Calendar_Table_Helper($this, $this->firstDay);
         include_once CALENDAR_ROOT.'Week.php';
         $numWeeks = $this->tableHelper->getNumWeeks();
         for ($i=1, $d=1; $i<=$numWeeks; $i++,

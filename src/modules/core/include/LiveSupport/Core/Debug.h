@@ -1,11 +1,10 @@
 /*------------------------------------------------------------------------------
 
     Copyright   (c) 2003-2005 Max Howell <max.howell@methylblue.com>
-                (c) 2006 Media Development Loan Fund
+                (c) 2010 Sourcefabric O.P.S.
  
     This file is part of the Campcaster project.
     http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to bugs@campware.org
  
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,11 +20,6 @@
     along with Campcaster; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
- 
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 2329 $
-    Location : $URL: svn://code.campware.org/campcaster/trunk/campcaster/src/products/scheduler/src/PlaylistEvent.cxx $
-
 ------------------------------------------------------------------------------*/
 
 #ifndef CAMPCASTER_DEBUG_H

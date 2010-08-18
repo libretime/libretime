@@ -1,5 +1,5 @@
 <?php
-// $Id: month_weekdays_test.php,v 1.3 2008/11/15 21:21:42 quipo Exp $
+// $Id: month_weekdays_test.php 300728 2010-06-24 11:43:56Z quipo $
 
 require_once 'simple_include.php';
 require_once 'calendar_include.php';
@@ -118,11 +118,57 @@ class TestOfMonthWeekdaysBuild extends TestOfMonthWeekdays {
         }
         $this->assertEqual(4, $empty);
     }
+    function testEmptyCount2() {
+        $this->cal = new Calendar_Month_Weekdays(2010,3);
+        $this->cal->build();
+        $empty = 0;
+        while ($Child = $this->cal->fetch()) {
+            if ($Child->isEmpty()) {
+                $empty++;
+            }
+        }
+        $this->assertEqual(4, $empty);
+    }
+    function testEmptyCount3() {
+        $this->cal = new Calendar_Month_Weekdays(2010,6);
+        $this->cal->build();
+        $empty = 0;
+        while ($Child = $this->cal->fetch()) {
+            if ($Child->isEmpty()) {
+                $empty++;
+            }
+        }
+        $this->assertEqual(5, $empty);
+    }
     function testEmptyDaysBefore_AfterAdjust() {
         $this->cal = new Calendar_Month_Weekdays(2004, 0);
         $this->cal->build();
         $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 1 : 0;
         $this->assertEqual($expected, $this->cal->tableHelper->getEmptyDaysBefore());
+    }
+    function testEmptyDaysBefore() {
+        $this->cal = new Calendar_Month_Weekdays(2010, 3);
+        $this->cal->build();
+        $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 1 : 0;
+        $this->assertEqual($expected, $this->cal->tableHelper->getEmptyDaysBefore());
+    }
+    function testEmptyDaysBefore2() {
+        $this->cal = new Calendar_Month_Weekdays(2010, 6);
+        $this->cal->build();
+        $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 2 : 1;
+        $this->assertEqual($expected, $this->cal->tableHelper->getEmptyDaysBefore());
+    }
+    function testEmptyDaysAfter() {
+        $this->cal = new Calendar_Month_Weekdays(2010, 3);
+        $this->cal->build();
+        $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 30 : 31;
+        $this->assertEqual($expected, $this->cal->tableHelper->getEmptyDaysAfter());
+    }
+    function testEmptyDaysAfter2() {
+        $this->cal = new Calendar_Month_Weekdays(2010, 6);
+        $this->cal->build();
+        $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 30 : 31;
+        $this->assertEqual($expected, $this->cal->tableHelper->getEmptyDaysAfter());
     }
 }
 

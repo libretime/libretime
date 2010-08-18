@@ -33,7 +33,7 @@
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Uri.php,v 1.7 2007/11/18 22:22:42 quipo Exp $
+ * @version   CVS: $Id: Uri.php 300729 2010-06-24 12:05:53Z quipo $
  * @link      http://pear.php.net/package/Calendar
  */
 
@@ -41,7 +41,7 @@
  * Utility to help building HTML links for navigating the calendar<br />
  * <code>
  * $Day = new Calendar_Day(2003, 10, 23);
- * $Uri = & new Calendar_Util_Uri('year', 'month', 'day');
+ * $Uri = new Calendar_Util_Uri('year', 'month', 'day');
  * echo $Uri->prev($Day,'month'); // Displays year=2003&amp;month=10
  * echo $Uri->prev($Day,'day'); // Displays year=2003&amp;month=10&amp;day=22
  * $Uri->seperator = '/';

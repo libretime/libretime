@@ -13,7 +13,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Exception.php 276383 2009-02-24 23:39:37Z dufuz $
+ * @version    CVS: $Id: Exception.php 296939 2010-03-27 16:24:43Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.3.3
  */
@@ -89,7 +89,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: 1.9.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.3
  *
@@ -289,7 +289,7 @@ class PEAR_Exception extends Exception
     }
 
     public function getTraceSafe()
-    {   
+    {
         if (!isset($this->_trace)) {
             $this->_trace = $this->getTrace();
             if (empty($this->_trace)) {
@@ -325,21 +325,21 @@ class PEAR_Exception extends Exception
         $trace = $this->getTraceSafe();
         $causes = array();
         $this->getCauseMessage($causes);
-        $html =  '<table border="1" cellspacing="0">' . "\n";
+        $html =  '<table style="border: 1px" cellspacing="0">' . "\n";
         foreach ($causes as $i => $cause) {
-            $html .= '<tr><td colspan="3" bgcolor="#ff9999">'
+            $html .= '<tr><td colspan="3" style="background: #ff9999">'
                . str_repeat('-', $i) . ' <b>' . $cause['class'] . '</b>: '
                . htmlspecialchars($cause['message']) . ' in <b>' . $cause['file'] . '</b> '
                . 'on line <b>' . $cause['line'] . '</b>'
                . "</td></tr>\n";
         }
-        $html .= '<tr><td colspan="3" bgcolor="#aaaaaa" align="center"><b>Exception trace</b></td></tr>' . "\n"
-               . '<tr><td align="center" bgcolor="#cccccc" width="20"><b>#</b></td>'
-               . '<td align="center" bgcolor="#cccccc"><b>Function</b></td>'
-               . '<td align="center" bgcolor="#cccccc"><b>Location</b></td></tr>' . "\n";
+        $html .= '<tr><td colspan="3" style="background-color: #aaaaaa; text-align: center; font-weight: bold;">Exception trace</td></tr>' . "\n"
+               . '<tr><td style="text-align: center; background: #cccccc; width:20px; font-weight: bold;">#</td>'
+               . '<td style="text-align: center; background: #cccccc; font-weight: bold;">Function</td>'
+               . '<td style="text-align: center; background: #cccccc; font-weight: bold;">Location</td></tr>' . "\n";
 
         foreach ($trace as $k => $v) {
-            $html .= '<tr><td align="center">' . $k . '</td>'
+            $html .= '<tr><td style="text-align: center;">' . $k . '</td>'
                    . '<td>';
             if (!empty($v['class'])) {
                 $html .= $v['class'] . $v['type'];
@@ -367,7 +367,7 @@ class PEAR_Exception extends Exception
                    . ':' . (isset($v['line']) ? $v['line'] : 'unknown')
                    . '</td></tr>' . "\n";
         }
-        $html .= '<tr><td align="center">' . ($k+1) . '</td>'
+        $html .= '<tr><td style="text-align: center;">' . ($k+1) . '</td>'
                . '<td>{main}</td>'
                . '<td>&nbsp;</td></tr>' . "\n"
                . '</table>';
@@ -387,5 +387,3 @@ class PEAR_Exception extends Exception
         return $causeMsg . $this->getTraceAsString();
     }
 }
-
-?>

@@ -10,7 +10,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: CLI.php 278236 2009-04-04 00:09:14Z dufuz $
+ * @version    CVS: $Id: CLI.php 296938 2010-03-27 16:16:25Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -27,7 +27,7 @@ require_once 'PEAR/Frontend.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: 1.9.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -512,9 +512,13 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                                          $opts);
                     }
 
-                    foreach($data['data'] as $row) {
-                        $this->_tableRow($row, null, $opts);
-                    }
+                    if (is_array($data['data'])) {
+                        foreach($data['data'] as $row) {
+                            $this->_tableRow($row, null, $opts);
+                        }
+                    } else {
+                        $this->_tableRow(array($data['data']), null, $opts);
+                     }
                     $this->_endTable();
                 } else {
                     $this->_displayLine($data);
