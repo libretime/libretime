@@ -39,8 +39,8 @@ function plPrBar_init(current, c_tit, c_pltit, c_eh, c_ei, c_es, c_dh, c_di, c_d
     if (next == 1) {
         //plPrBar_debug('init::next: ' + next);
         this.next       = true; 
-        this.n_tit      = n_tit.slice(0, 22);
-        this.n_pltit    = n_pltit.slice(0, 22);
+        this.n_tit      = n_tit.slice(0, 35);
+        this.n_pltit    = n_pltit.slice(0, 35);
         this.n_duration = new Date;
         this.n_duration.setTime(Date.UTC(1970, 0, 1, n_dh, n_di, n_ds));
     }
@@ -77,9 +77,9 @@ function plPrBar_init(current, c_tit, c_pltit, c_eh, c_ei, c_es, c_dh, c_di, c_d
     if (this.upcoming) {
         this.show('upcoming');
         document.getElementById("upcoming_pltitle").innerHTML     = this.u_pltit;
-        document.getElementById("upcoming_plstart").innerHTML     = '(at ' + twoDigit(this.u_plstart.getUTCHours()) 
+        document.getElementById("upcoming_plstart").innerHTML     = 'at ' + twoDigit(this.u_plstart.getUTCHours()) 
                                                                   + ':' + twoDigit(this.u_plstart.getUTCMinutes()) 
-                                                                  + ':' + twoDigit(this.u_plstart.getUTCSeconds()) + ')';
+                                                                  + ':' + twoDigit(this.u_plstart.getUTCSeconds());
         document.getElementById("upcoming_title").innerHTML       = this.u_tit;
         document.getElementById("upcoming_duration").innerHTML    = '(' + twoDigit(this.u_duration.getUTCHours()) 
                                                                   + ':' + twoDigit(this.u_duration.getUTCMinutes()) 
@@ -156,6 +156,7 @@ function plPrBar_show(what) {
     }
     if (what == 'upcoming') {
         document.getElementById("upcoming_pltitle_").style.visibility   = 'visible';
+        document.getElementById("upcoming_plstart").style.visibility     = 'visible';
         document.getElementById("upcoming_title_").style.visibility     = 'visible';
     } 
 }
@@ -182,7 +183,7 @@ function plPrBar_hide(what) {
         document.getElementById("upcoming_pltitle_").style.visibility   = 'hidden';
         document.getElementById("upcoming_pltitle").innerHTML           = '';
         document.getElementById("upcoming_title_").style.visibility     = 'hidden';
-        document.getElementById("upcoming_title").innerHTML             = ''; 
+        document.getElementById("upcoming_plstart").innerHTML             = ''; 
     } 
 }
 

@@ -839,7 +839,7 @@ table.masterpalette td{
     padding-right: 5px;
     font-family: bitstream-vera, verdana, helvetica;
     font: #999;
-    width: 350px;
+    width: 460px;
     height: 85px;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -900,7 +900,7 @@ table.masterpalette td{
 }
 
 .whatplaying .scala {
-    width: 340px;
+    width: 450px;
     height: 8px;
     margin: 2px 0;
     background-color: #DADADA;
@@ -1000,6 +1000,7 @@ table.masterpalette td{
 #now_pltitle_,
 #next_title_,
 #upcoming_pltitle_,
-#upcoming_title_ {
+#upcoming_title_,
+#upcoming_plstart {
   visibility: hidden;
 }
