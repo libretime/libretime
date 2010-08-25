@@ -4,7 +4,7 @@
     <tr>
 		<td>
             <div id="logo">
-              <img src="ui_browser.php-Dateien/logo.png">
+              <img src="img/logo.png">
             </div>
 		</td>
 		

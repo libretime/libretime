@@ -880,10 +880,10 @@ class uiScheduler extends uiCalendar {
     	$this->scriptError = null;
         if (!isset($this->Base->STATIONPREFS['schedulerStartupScript'])
         	|| empty($this->Base->STATIONPREFS['schedulerStartupScript'])) {
-           	$this->scriptError = 'Scheduler startup script has not been defined.  Please set this value in the "Preferences->System Settings".';
+           	$this->scriptError = 'Scheduler startup script has not been defined.  Please set this value in the "Preferences->Station Settings".';
            	return FALSE;
         } elseif (!file_exists($this->Base->STATIONPREFS['schedulerStartupScript'])) {
-        	$this->scriptError = sprintf('The scheduler startup script you defined does not exist.  You can set this value in "Preferences->System Settings".  The current value is "%s"', $this->Base->STATIONPREFS['schedulerStartupScript']);
+        	$this->scriptError = sprintf('The scheduler startup script you defined does not exist.  You can set this value in "Preferences->Station Settings".  The current value is "%s"', $this->Base->STATIONPREFS['schedulerStartupScript']);
         	return FALSE;
         }
         return TRUE;
@@ -978,7 +978,7 @@ class uiScheduler extends uiCalendar {
         exec($cmd, $output);
 
         if (empty($output)) {
-           	$this->scriptError = 'Scheduler startup script does not appear to be valid.  Please check the value you have set in "Preferences->System Settings".';
+           	$this->scriptError = 'Scheduler startup script does not appear to be valid.  Please check the value you have set in "Preferences->Station Settings".';
            	return FALSE;
         }
         $message = "";
