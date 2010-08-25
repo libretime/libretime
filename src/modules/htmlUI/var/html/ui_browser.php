@@ -341,8 +341,6 @@ if ($uiBrowser->userid) {
 	        break;
 
         case "HUBBROWSE":
-       	    //$HUBBROWSE = new uiHubBrowse($uiBrowser);
-	        //$Smarty->assign('hubBrowseForm', $HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('hubBrowseForm', $uiBrowser->HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        $Smarty->assign('isHub', TRUE);

@@ -144,6 +144,10 @@ switch ($_REQUEST['act']) {
     case "SEARCH.setOffset":
 	    $uiHandler->SEARCH->setOffset($_REQUEST['page']);
 	    break;
+	    
+	case "BROWSE.refresh":
+		$uiHandler->BROWSE->refresh($_REQUEST);
+		break;
 
     case "BROWSE.setCategory":
 	    $uiHandler->BROWSE->setCategory($_REQUEST);
