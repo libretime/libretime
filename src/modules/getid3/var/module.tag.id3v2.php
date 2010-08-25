@@ -429,7 +429,7 @@ class getid3_id3v2
 			}
 		}
 
-		if (!isset($thisfile_id3v2['comments']['year']) && ereg('^([0-9]{4})', trim(@$thisfile_id3v2['comments']['recording_time'][0]), $matches)) {
+		if (!isset($thisfile_id3v2['comments']['year']) && preg_match('/^([0-9]{4})/', trim(@$thisfile_id3v2['comments']['recording_time'][0]), $matches)) {
 			$thisfile_id3v2['comments']['year'] = array($matches[1]);
 		}
 
@@ -461,7 +461,7 @@ class getid3_id3v2
 				$unprocessed = substr($unprocessed, $endpos + 1);
 			}
 			unset($unprocessed);
-        } elseif (eregi('^([0-9]+|CR|RX)$', $genrestring)) {
+        } elseif (preg_match('/^([0-9]+|CR|RX)$/', $genrestring)) {
         	// some tagging program (including some that use TagLib) fail to include null byte after numeric genre
 			$genrestring = '('.$genrestring.')';
         }

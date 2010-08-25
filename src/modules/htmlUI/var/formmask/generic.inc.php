@@ -32,7 +32,7 @@ $ui_fmask = array(
             'isPref'    => TRUE,
             'type'      => 'hidden',
             'label'     => 'Station logo path',
-            'default'   => 'img/stationlogo.image',
+            'default'   => 'img/logo.png',
             'required'  => TRUE,
         ),
         array(
@@ -440,7 +440,7 @@ $ui_fmask = array(
             'attributes'=> array(
                 'onChange'  => 'this.form.act.value="'.$tmpAct.'.setCategory"; this.form.submit()',
                 'style'     => 'width: 180px;',
-                'id'        => 'category_1'
+                'id'        => 'category_'
                 )
         ),
         'value'      => array(
@@ -450,6 +450,7 @@ $ui_fmask = array(
             'attributes'=> array(
                 'size'      => 10,
                 'class'     => 'area_browse',
+        		'id'		=> 'category_value_',
                 'onChange'  => 'this.form.act.value="'.$tmpAct.'.setValue"; this.form.submit()'
             )
         )

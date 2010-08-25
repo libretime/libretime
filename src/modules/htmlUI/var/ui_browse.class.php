@@ -117,8 +117,8 @@ class uiBrowse
      * @return array
      */
     public function getCriteria()
-    {
-        return $this->criteria;
+    {   
+    	return $this->criteria;     
     } // fn getCriteria
 
 
@@ -128,7 +128,7 @@ class uiBrowse
     public function getResult()
     {
         $this->searchDB();
-        return $this->results;
+        return $this->results;   
     } // fn getResult
 
 
@@ -140,16 +140,21 @@ class uiBrowse
                 if (isset($v['type']) && $v['type']) {
                     $tmp = uiBase::formElementEncode($v['element']);
                     $mask2['browse_columns']['category']['options'][$tmp] = tra($v['label']);
+                    
                 }
             }
         }
-
+        
         for ($n = 1; $n <= 3; $n++) {
             $form = new HTML_QuickForm('col'.$n, UI_STANDARD_FORM_METHOD, UI_HANDLER);
             $form->setConstants(array('id' => $id,
                                       'col' => $n,
                                       'category' => uiBase::formElementEncode($this->col[$n]['category'])));
+            
             $mask2['browse_columns']['value']['options'] = $this->options($this->col[$n]['values']['results']);
+          	$mask2['browse_columns']['category']['attributes']['id'] = "category_" . $n;
+          	$mask2['browse_columns']['value']['attributes']['id'] = "category_value_" . $n;
+           
             $mask2['browse_columns']['value']['default'] = $this->col[$n]['form_value'];
             uiBase::parseArrayToForm($form, $mask2['browse_columns']);
             $form->validate();
@@ -170,7 +175,6 @@ class uiBrowse
         return $output;
     } // fn browseForm
 
-
     /**
      * Set the category for audio file browser.  There are three columns
      * you can set the category for.  All columns greater than the current
@@ -182,7 +186,7 @@ class uiBrowse
      * 		string ['category'] - the category for the given column
      * @return void
      */
-    public function setCategory($p_param)
+    public function setCategory($p_param, $redirect="true")
     {
         // input values
         $columnNumber = $p_param['col'];
@@ -205,7 +209,7 @@ class uiBrowse
         // way too many values.
         $tmpCriteria["limit"] = 1000;
         $tmpCriteria["offset"] = 0;
-
+        
         // For this column and all columns above this one,
         // reload the values.
         for ($i = $columnNumber; $i <= 3; $i++) {
@@ -217,7 +221,9 @@ class uiBrowse
             $browseValues = null;
         }
 
-        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+        if($redirect) {
+        	$this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+        }
     } // fn setCategory
 
 
@@ -234,10 +240,10 @@ class uiBrowse
      *      See the top of that file for a description of the search
      *      criteria structure.
      */
-    public function setValue($p_param)
+    public function setValue($p_param, $redirect="true")
     {
         $columnNumber = $p_param['col'];
-        $value = $p_param['value'][0];
+        $value = $p_param['value'][0]; 
         $category = $p_param['category'];
 
         $this->criteria['offset'] = 0;
@@ -275,9 +281,60 @@ class uiBrowse
                 $this->col[$tmpColNum]['values'] = $browseValues;
             }
         }
-        $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+        
+        if($redirect) {
+        	$this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+        }
     } // fn setValue
 
+    public function refresh($p_param){
+    	$category_1 = array(
+    		'col' => 1,
+    		'category' => $p_param['cat1']
+    	);
+    	
+    	$value_1 = array(
+    		'col' => 1,
+    		'category' => $p_param['cat1'],
+    		'value' => array(
+    			0 =>	$p_param['val1']
+    		)
+    	);
+    	
+    	$category_2 = array(
+    		'col' => 2,
+    		'category' => $p_param['cat2']
+    	);
+    	
+    	$value_2 = array(
+    		'col' => 2,
+    		'category' => $p_param['cat2'],
+    		'value' => array(
+    			0 =>	$p_param['val2']
+    		)
+    	);
+    	
+    	$category_3 = array(
+    		'col' => 3,
+    		'category' => $p_param['cat3']
+    	);
+
+    	$value_3 = array(
+    		'col' => 3,
+    		'category' => $p_param['cat3'],
+    		'value' => array(
+    			0 =>	$p_param['val3']
+    		)
+    	);
+    	
+    	$this->setCategory($category_1, false);
+    	$this->setCategory($category_2, false);
+    	$this->setCategory($category_3, false);
+    	
+    	$this->setValue($value_1, false);
+    	$this->setValue($value_2, false);
+    	$this->setValue($value_3, true);
+    }
 
     /**
      * Given an array of category values, prepare the array for display:
