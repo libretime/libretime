@@ -1,0 +1,13 @@
+# Upstream uses realtive paths to data folders, so we use
+# syminks to /var/campcaster/.. where persistant data is stored
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/archiveServer/var/stor/buffer/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/archiveServer/var/trans/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/htmlUI/var/templates_c/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/storageServer/var/access/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/storageServer/var/stor/buffer/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/storageServer/var/trans/
+campcaster-data: package-contains-empty-directory usr/share/campcaster/www/archiveServer/var/access/
+# Upstream uses a patched/customized version of Smarty - but is 
+# working on getting solving issue to move to a maintained one.
+campcaster-data: embedded-php-library usr/share/campcaster/www/htmlUI/var/Smarty/libs/Smarty_Compiler.class.php
+campcaster-data: embedded-php-library usr/share/campcaster/www/htmlUI/var/Smarty/libs/Smarty.class.php

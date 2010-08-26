@@ -1,0 +1,28 @@
+Description: change paths used during "make check" 
+ they should be generated from .template files during
+ the setup stage but are not.
+Author: Robin Gareus <robin@gareus.org>
+Last-Update: 2010-02-15
+Index: campcaster/src/modules/storageClient/etc/webAuthenticationClient.xml
+===================================================================
+--- campcaster.orig/src/modules/storageClient/etc/webAuthenticationClient.xml	2010-02-16 00:13:07.000000000 +0100
++++ campcaster/src/modules/storageClient/etc/webAuthenticationClient.xml	2010-02-16 00:15:23.000000000 +0100
+@@ -14,6 +14,6 @@
+ <authenticationClientFactory>
+     <webAuthentication>
+         <location server="localhost" port="80"
+-                  path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
++                  path="/campcaster/storageServer/var/xmlrpc/xrLocStor.php" />
+     </webAuthentication>
+ </authenticationClientFactory>
+Index: campcaster/src/modules/storageClient/etc/webStorage.xml
+===================================================================
+--- campcaster.orig/src/modules/storageClient/etc/webStorage.xml	2010-02-16 00:12:34.000000000 +0100
++++ campcaster/src/modules/storageClient/etc/webStorage.xml	2010-02-16 00:14:53.000000000 +0100
+@@ -12,5 +12,5 @@
+ ]>
+ <webStorage tempFiles="file:///tmp/webStorageClient" >
+     <location server="localhost" port="80" 
+-              path="/campcasterStorageServer/xmlrpc/xrLocStor.php" />
++              path="/campcaster/storageServer/var/xmlrpc/xrLocStor.php" />
+ </webStorage>

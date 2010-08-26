@@ -1,0 +1,62 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" URL Macro
+.de URL
+\\$2 \(laURL: \\$1 \(ra\\$3
+..
+.if \n[.g] .mso www.tmac
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH CAMPCASTER\-SCHEDULER 1 "February  4, 2010"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+campcaster-scheduler \- graphical interface to campcaster radio station
+.SH SYNOPSIS
+.B campcaster-scheduler
+.RI start|stop|restart|status|install|uninstall|kill
+.SH DESCRIPTION
+This is the daemon behind the campcaster-radio-system which is usually launched
+during boot with administrator privileges. However this tool is also used to
+query the current status of the server or perform administrative tasks.
+.PP
+The campcaster-scheduler plays songs at their designated time and provides an
+XML-RPC interface for the Scheduler, which can be accessed via web/HTML
+interface or via the campcaster-studio GUI.
+.PP
+Campcaster is the first free and open radio management software, providing
+live studio broadcast capabilities as well as the remote automation in one
+integrated system. The scalability of Campcaster allows implementation in a
+number of use scenarios, ranging from an unmanned broadcast unit accessed from
+remote through the Internet to a local network of Campcaster machines inside a
+radio station handling live broadcasts and delivering program automation by
+accessing a central audio storage system. Campcaster is capable of combining
+local audio files and remote web streams, supporting the widely used MP3 format
+and the open equivalent OGG Vorbis.
+.SH SEE ALSO
+.URL "http://code.campware.org/manuals/campcaster/1.4/" "online manual" ,
+.BR campcaster-studio (1),
+.BR campcaster-import (1).
+.\".BR campcaster-backup (1).
+.\".BR campcaster-restore (1).
+.BR campcaster-restore (1).
+.SH AUTHOR
+Campcaster was written by the Media Develoment Loan Fund (MDLF) at the Center
+for Advanced Media\-Prague (CAMP).
+.br
+For full credits see
+.URL "http://www.campware.org/en/camp/about_campware/619/" "campware.org"  .
+.PP
+This manual page was written by Robin Gareus <robin@gareus.org>,
+for the Debian project (and may be used by others).

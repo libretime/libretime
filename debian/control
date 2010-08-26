@@ -1,0 +1,151 @@
+Source: campcaster
+Section: sound
+Priority: extra
+Maintainer: Alessio Treglia <quadrispro@ubuntu.com>
+XSBC-Original-Maintainer: Robin Gareus <robin@gareus.org>
+Build-Depends: debhelper (>= 7.0.50~),
+               autotools-dev,
+               libtool,
+               pkg-config (>= 0.15),
+               doxygen,
+               automake,
+               unzip, bzip2,
+               curl,
+               graphviz,
+               xsltproc,
+               libcppunit-dev,
+               unixodbc-dev (>= 2.2),
+               odbc-postgresql,
+               fontconfig,
+               libfontconfig1-dev,
+               libpng12-dev,
+               libjpeg62-dev | libjpeg8-dev,
+               libssl-dev,
+               libxml2-dev,
+               libpopt-dev,
+               libmad0-dev,
+               libogg-dev,
+               libvorbis-dev,
+               libbz2-dev,
+               libtar-dev (>= 1.2.11),
+               libcurl3-dev (>= 7.12.3) | libcurl4-openssl-dev (>= 7.16.4),
+               libboost-date-time-dev (>= 1.33.1),
+               libgtk2.0-dev (>= 2.6.10),
+               libgtkmm-2.4-dev (>= 1:2.6.5),
+               libglademm-2.4-dev (>= 2.6.2),
+               libxml++2.6-dev (>= 2.8.1),
+               libicu34-dev | libicu36-dev | libicu-dev,
+               apache2,
+               php5-pgsql,
+               libapache2-mod-php5,
+               php5-gd,
+               postgresql-8.1 | postgresql-8.2 | postgresql-8.3 | postgresql (>= 8.1),
+               postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3 | postgresql-client (>= 8.1),
+               libgstreamer0.10-dev (>= 0.10.17),
+               php-pear,
+               php-db,
+               libserial-dev (>= 0.5.2)
+Standards-Version: 3.8.4
+Homepage: http://campware.org/en/camp/campcaster_news/
+
+
+Package: campcaster-libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A radio program automation and support tool
+ Campcaster is the first free and open radio management software that 
+ provides live studio broadcast capabilities as well as remote automation
+ in one integrated system.
+ .
+ Major features of Campcaster: live, in-studio playout; web-based remote
+ station management; automation; playlists; centralized archives of station
+ program material; solid, fast playback using the GStreamer multimedia
+ framework; search-based backup; localization into several languages;
+ innovative design by the Parsons School of Design; open, extensible
+ architecture based on XML-RPC.
+ .
+ This package contains the libraries used by Campcaster.
+
+Package: campcaster-data
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+         apache2,
+         unzip, bzip2, gzip (>= 1.3.5),
+         libapache2-mod-php5,
+         postgresql-8.1 | postgresql-8.2 | postgresql-8.3 | postgresql (>= 8.1),
+         postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3 | postgresql-client (>= 8.1),
+         unixodbc (>= 2.2),
+         odbc-postgresql, 
+         xsltproc,
+         php5-pgsql, php5-cli, php5-gd, php-db,
+         gstreamer0.10-plugins-good,
+         gstreamer0.10-plugins-ugly | gstreamer0.10-ffmpeg | gstreamer0.10-fluendo-mp3,
+         gstreamer0.10-alsa,
+         curl, pwgen, sed (>= 4.2.1)
+Description: A radio program automation and support tool - data files
+ Campcaster is the first free and open radio management software that 
+ provides live studio broadcast capabilities as well as remote automation
+ in one integrated system.
+ .
+ Major features of Campcaster: live, in-studio playout; web-based remote
+ station management; automation; playlists; centralized archives of station
+ program material; solid, fast playback using the GStreamer multimedia
+ framework; search-based backup; localization into several languages;
+ innovative design by the Parsons School of Design; open, extensible
+ architecture based on XML-RPC.
+ .
+ This package contains the XMLRPC server component and shared data 
+ files for Campcaster.
+
+Package: campcaster-station
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+         campcaster-libs (= ${binary:Version}),
+         campcaster-data (= ${source:Version}),
+         apache2,
+         unzip, bzip2, gzip (>= 1.3.5),
+         libapache2-mod-php5,
+         postgresql-8.1 | postgresql-8.2 | postgresql-8.3 | postgresql (>= 8.1),
+         postgresql-client-8.1 | postgresql-client-8.2 | postgresql-client-8.3 | postgresql-client (>= 8.1),
+         unixodbc (>= 2.2),
+         odbc-postgresql, 
+         xsltproc,
+         php5-pgsql, php5-cli, php5-gd, php-db,
+         gstreamer0.10-plugins-good,
+         gstreamer0.10-plugins-ugly | gstreamer0.10-ffmpeg | gstreamer0.10-fluendo-mp3,
+         gstreamer0.10-alsa,
+         curl, pwgen, sed (>= 4.2.1)
+Description: A radio program automation and support tool - backend and server
+ Campcaster is the first free and open radio management software that 
+ provides live studio broadcast capabilities as well as remote automation
+ in one integrated system.
+ .
+ Major features of Campcaster: live, in-studio playout; web-based remote
+ station management; automation; playlists; centralized archives of station
+ program material; solid, fast playback using the GStreamer multimedia
+ framework; search-based backup; localization into several languages;
+ innovative design by the Parsons School of Design; open, extensible
+ architecture based on XML-RPC.
+ .
+ This package contains the XMLRPC backend 
+ and web-server component of Campcaster.
+
+Package: campcaster-studio
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+         campcaster-libs (= ${binary:Version}),
+         campcaster-data (= ${source:Version}),
+         campcaster-station (= ${binary:Version})
+Description: A radio program automation and support tool - client GUI
+ Campcaster is the first free and open radio management software that 
+ provides live studio broadcast capabilities as well as remote automation
+ in one integrated system.
+ .
+ Major features of Campcaster: live, in-studio playout; web-based remote
+ station management; automation; playlists; centralized archives of station
+ program material; solid, fast playback using the GStreamer multimedia
+ framework; search-based backup; localization into several languages;
+ innovative design by the Parsons School of Design; open, extensible
+ architecture based on XML-RPC.
+ .
+ This package contains the GUI client component of Campcaster.
