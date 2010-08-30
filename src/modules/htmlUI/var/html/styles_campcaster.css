@@ -1004,3 +1004,26 @@ table.masterpalette td{
 #upcoming_plstart {
   visibility: hidden;
 }
+
+#plupload_error {
+	width: 95%;
+	height: 150px;
+	overflow: auto;
+	margin: 0 auto;
+}
+
+#plupload_error table {
+	border: 0;
+}
+
+#plupload_error table tr {
+
+}
+
+#plupload_error table td {
+	border: 0;
+}
+
+#plupload_error table td:first-child {
+	border-right: 1px solid #000000;
+}

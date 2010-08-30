@@ -29,6 +29,15 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->PLAYLIST->release();
 	    $uiHandler->logout(TRUE);
 	    break;
+	    
+    case "plupload":
+    	 $ui_tmpid = $uiHandler->pluploadFile($_REQUEST);
+    	 if($ui_tmpid) {
+    	 	$uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+    	 }
+    	 ob_end_clean();
+    	 
+    	die('{"jsonrpc" : "2.0", "error" : {}}');  
 
     // file/webstream handling
     case "addFileData":
@@ -462,16 +471,14 @@ switch ($_REQUEST['act']) {
 	    if ($_REQUEST['is_popup']) {
 	    	$uiHandler->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 	    }
-	    break;
+	    //break;
 }
+
 
 if ($uiHandler->alertMsg) {
     $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 }
-//$ui_wait = 0;
-//if (ob_get_contents()) {
-//    $ui_wait = 10;
-//}
+
 ob_end_clean();
 if (isset($_REQUEST['target'])) {
 	header('Location: ui_browser.php?act='.$_REQUEST['target']);

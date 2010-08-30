@@ -8,11 +8,18 @@
 
     {* <link rel="stylesheet" href="styles.css"> *}
     <link href="styles_campcaster.css" rel="stylesheet" type="text/css" />
+    
+    <link href="assets/plupload/plupload.queue.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="assets/jquery-1.3.2.min.js"></script>
+	
+	<script type="text/javascript" src="assets/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="assets/plupload/jquery.plupload.queue.min.js"></script>
 
     {include file="script/basics.js.tpl"}
     {include file="script/contextmenu.js.tpl"}
     {include file="script/collector.js.tpl"}
     {include file="script/alttext.js.tpl"}
+    
 </head>
 
 <body>
