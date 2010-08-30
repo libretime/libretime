@@ -1,0 +1,552 @@
+Description: Change (hardcoded) paths in shell and install scripts
+ to conform to debian locations.  
+Forwarded: not-needed
+Author: Robin Gareus <robin@gareus.org>
+Last-Update: 2010-02-14
+Index: campcaster/bin/postInstallStation.sh
+===================================================================
+--- campcaster.orig/bin/postInstallStation.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/bin/postInstallStation.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -31,14 +31,6 @@
+ #-------------------------------------------------------------------------------
+ 
+ #-------------------------------------------------------------------------------
+-#  Determine directories, files
+-#-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-
+-
+-#-------------------------------------------------------------------------------
+ #  Print the usage information for this script.
+ #-------------------------------------------------------------------------------
+ printUsage()
+@@ -181,11 +173,11 @@
+ postgres_user=postgres
+ 
+ install_bin=$installdir/bin
+-install_etc=$installdir/etc
+-install_lib=$installdir/lib
+-install_usr=$installdir/usr
+-install_var=$installdir/var
+-install_var_ls=$install_var/Campcaster
++install_etc=/etc
++install_shr=/usr/share/campcaster/www/
++install_tpl=/usr/share/campcaster/etc/
++install_var_ls=/var/lib/campcaster/
++storagedir=$install_var_ls/storageServer
+ 
+ 
+ #-------------------------------------------------------------------------------
+@@ -281,7 +273,6 @@
+ #  Check whether the storage server directory has been replaced with a mount
+ #  point for an NFS share.
+ #-------------------------------------------------------------------------------
+-storagedir=$installdir/var/storageServer
+ storage_is_local=yes
+ if [ "`mount | grep -o \"on $storagedir \"`" = "on $storagedir " ]; then
+     storage_is_local=no
+@@ -291,6 +282,33 @@
+ #-------------------------------------------------------------------------------
+ #  Setup directory permissions
+ #-------------------------------------------------------------------------------
++
++echo "Setting up links in /var..."
++
++linkvardir()
++{
++  mkdir -p $install_var_ls/$1
++  test -L $install_shr/$1 || (\
++    ls $install_shr/$1/* &>/dev/null && \
++    cp -af $install_shr/$1/* $install_var_ls/$1/ )
++  rm -rf $install_shr/$1
++  ln -fs $install_var_ls/$1 $install_shr/$1
++}
++
++linkvardir archiveServer/var/stor
++linkvardir archiveServer/var/access
++linkvardir archiveServer/var/trans
++
++linkvardir storageServer/var/stor
++linkvardir storageServer/var/access
++linkvardir storageServer/var/trans
++
++linkvardir htmlUI/var/templates_c
++linkvardir htmlUI/var/html/img
++
++mkdir -p $install_var_ls/archiveServer/var/stor/buffer
++mkdir -p $install_var_ls/storageServer/var/stor/buffer
++
+ echo "Setting up directory permissions..."
+ 
+ chgrp $apache_group $install_var_ls/archiveServer/var/stor
+@@ -335,7 +353,7 @@
+     if [ -d $APACHE_DDIR ]; then
+         echo "Y"
+         AP_DDIR_FOUND=yes
+-        cp $basedir/etc/apache/$CONFFILE $APACHE_DDIR
++        cp $install_tpl/$CONFFILE $APACHE_DDIR
+         break
+     else
+         echo "N"
+@@ -345,7 +363,7 @@
+     echo "###############################"
+     echo " Could not configure Apache"
+     echo "  include following file into apache config manually:"
+-    echo "  $basedir/etc/apache/$CONFFILE"
++    echo "  $install_tpl/etc/apache/$CONFFILE"
+     echo "###############################"
+ fi
+ echo "done"
+@@ -389,7 +407,7 @@
+ 
+ if [ "$storage_is_local" = "yes" ]; then
+     # create PHP-related database tables
+-    cd $install_var_ls/storageServer/var/install
++    cd $install_shr/storageServer/var/install
+     # workaround for #2059; restore to "exit 1" after the ticket is closed
+     php -q install.php || exit 1;
+     #php -q install.php || true
+@@ -397,7 +415,7 @@
+ fi
+ 
+ # create PHP-related database tables
+-cd $install_var_ls/archiveServer/var/install
++cd $install_shr/archiveServer/var/install
+ # workaround for ticket #2059; restore to "exit 1" after the ticket is closed
+ php -q install.php || exit 1;
+ #php -q install.php || true
+@@ -416,7 +434,7 @@
+     grep -q 'ls_scheduler_storage_pass' $install_etc/campcaster-scheduler.xml
+     if [ $? = 0 ]; then
+         SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
+-        php -q $install_var_ls/storageServer/var/install/campcaster-user.php \
++        php -q $install_shr/storageServer/var/install/campcaster-user.php \
+             --addupdate scheduler ${SCHEDULER_STORAGE_PASS}
+         sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
+             $install_etc/campcaster-scheduler.xml
+@@ -428,7 +446,7 @@
+ #-------------------------------------------------------------------------------
+ echo "Initializing twitter cron...";
+ 
+-cd $install_var_ls/htmlUI/var/install
++cd $install_shr/htmlUI/var/install
+ # workaround for #2059; restore to "exit 1" after the ticket is closed
+ php -q install.php || exit 1;
+ #php -q install.php || true
+@@ -436,7 +454,7 @@
+ 
+ # We need the scheduler password here too
+ sed -i -e "s/change_me/${SCHEDULER_STORAGE_PASS}/" \
+-            $install_var_ls/htmlUI/var/html/ui_twitterCron.php
++            $install_shr/htmlUI/var/ui_twitterCron.php
+ 
+ 
+ 
+@@ -444,7 +462,7 @@
+ #  Update the database, if necessary
+ #-------------------------------------------------------------------------------
+ if [ "$storage_is_local" = "yes" ]; then
+-    php -q $install_var_ls/storageServer/var/install/upgrade/upgrade.php
++    php -q $install_shr/storageServer/var/install/upgrade/upgrade.php
+ fi
+ 
+ 
+Index: campcaster/etc/Makefile.in
+===================================================================
+--- campcaster.orig/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -52,7 +52,7 @@
+ 
+ USR_DIR     = ${prefix}
+ USR_BIN_DIR = ${USR_DIR}/bin
+-USR_DOC_DIR = ${USR_DIR}/doc
++USR_DOC_DIR = ${USR_DIR}/share/doc/campcaster
+ USR_ETC_DIR = ${USR_DIR}/etc
+ USR_LIB_DIR = ${USR_DIR}/lib
+ USR_VAR_DIR = ${USR_DIR}/var
+@@ -237,10 +237,10 @@
+             --with-apache-group=${APACHE_GROUP} \
+             --with-www-docroot=${WWW_DOCROOT} \
+             --with-configure-apache=${CONFIGURE_APACHE} \
+-            --with-storage-server=${prefix}/var/Campcaster/storageServer \
++            --with-storage-server=/usr/share/campcaster/www/storageServer \
+             PACKAGE_VERSION=${PACKAGE_VERSION}
+ 	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix} \
+-            --with-storage-server=${prefix}/var/Campcaster/storageServer \
++            --with-storage-server=/usr/share/campcaster/www/storageServer \
+             --with-phppart-dir=${prefix}/var/Campcaster/storageAdmin \
+             PACKAGE_VERSION=${PACKAGE_VERSION}
+ 	cd ${STORAGE_SERVER_DIR} && \
+Index: campcaster/src/modules/archiveServer/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/modules/archiveServer/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/archiveServer/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -86,11 +86,13 @@
+ PHP_URL_PREFIX = @URL_PREFIX@
+ 
+ 
+-USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
++SHR_WWW_DIR_S=$(shell ${ECHO} /usr/share/campcaster/www | ${SED} -e "s/\//\\\\\\\\\//g")
++USR_LIB_DIR_S=$(shell ${ECHO} /usr/lib/campcaster | ${SED} -e "s/\//\\\\\\\\\//g")
+ PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+ 
+ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
+               s/ls_dbuser/${DB_USER}/; \
++              s/ls_shr_www/${SHR_WWW_DIR_S}/; \
+               s/ls_dbpassword/${DB_PASSWORD}/; \
+               s/ls_dbserver/${DB_SERVER}/; \
+               s/ls_database/${DATABASE}/; \
+Index: campcaster/src/modules/archiveServer/var/conf.php.template
+===================================================================
+--- campcaster.orig/src/modules/archiveServer/var/conf.php.template	2010-07-22 15:21:30.000000000 +0200
++++ campcaster/src/modules/archiveServer/var/conf.php.template	2010-08-26 14:51:22.000000000 +0200
+@@ -3,7 +3,7 @@
+  * ArchiveServer configuration file
+  */
+ 
+-include(dirname(__FILE__)."/../../storageServer/var/campcaster_version.php");
++include("/etc/campcaster/storageServer/campcaster_version.php");
+ 
+ /**
+  *  configuration structure:
+@@ -48,10 +48,10 @@
+     'AdminsGr'      => 'Admins',
+     'StationPrefsGr'=> '',
+     'AllGr'         => 'All',
+-    'storageDir'    =>  dirname(__FILE__).'/../../archiveServer/var/stor',
+-    'bufferDir'     =>  dirname(__FILE__).'/../../archiveServer/var/stor/buffer',
+-    'transDir'      =>  dirname(__FILE__).'/../../archiveServer/var/trans',
+-    'accessDir'     =>  dirname(__FILE__).'/../../archiveServer/var/access',
++    'storageDir'    =>  'ls_shr_www/archiveServer/var/stor',
++    'bufferDir'     =>  'ls_shr_www/archiveServer/var/stor/buffer',
++    'transDir'      =>  'ls_shr_www/archiveServer/var/trans',
++    'accessDir'     =>  'ls_shr_www/archiveServer/var/access',
+     'pearPath'      =>  'ls_lib_dir/pear',
+     'isArchive'     =>  TRUE,
+     'validate'      =>  TRUE,
+@@ -117,4 +117,4 @@
+ );
+ $old_ip = get_include_path();
+ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_ip);
+-?>
+\ No newline at end of file
++?>
+Index: campcaster/src/modules/htmlUI/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/modules/htmlUI/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/htmlUI/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -73,7 +73,11 @@
+ WWW_DOCROOT  = @WWW_DOCROOT@
+ STORAGE_SERVER = @STORAGE_SERVER@
+ 
+-REPLACE_SED_STRING="s\storage_server\${STORAGE_SERVER}\;"
++STORAGE_SERVER_S=$(shell ${ECHO} "${STORAGE_SERVER}" | ${SED} -e "s/\//\\\\\\\\\//g")
++HTMLUI_DIR_S=$(shell ${ECHO} "${STORAGE_SERVER}/../htmlUI/var" | ${SED} -e "s/\//\\\\\\\\\//g")
++
++REPLACE_SED_STRING="s/storage_server/${STORAGE_SERVER_S}/;\
++                   s/htmlui_dir/${HTMLUI_DIR_S}/;"
+ 
+ 
+ #-------------------------------------------------------------------------------
+Index: campcaster/src/modules/htmlUI/var/ui_conf.php.template
+===================================================================
+--- campcaster.orig/src/modules/htmlUI/var/ui_conf.php.template	2010-07-22 15:21:30.000000000 +0200
++++ campcaster/src/modules/htmlUI/var/ui_conf.php.template	2010-08-26 14:51:22.000000000 +0200
+@@ -152,9 +152,9 @@
+     )
+ );
+ 
+-require_once(dirname(__FILE__).'/ui_base.inc.php');
+-require_once('../../../storageServer/var/GreenBox.php');
+-require_once(dirname(__FILE__).'/formmask/generic.inc.php');
++require_once('htmlui_dir/ui_base.inc.php');
++require_once('storage_server/var/GreenBox.php');
++require_once('htmlui_dir/formmask/generic.inc.php');
+ 
+ require_once('DB.php');
+ require_once('HTML/QuickForm.php');
+Index: campcaster/src/modules/storageAdmin/bin/campcaster-backup
+===================================================================
+--- campcaster.orig/src/modules/storageAdmin/bin/campcaster-backup	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/storageAdmin/bin/campcaster-backup	2010-08-26 14:51:22.000000000 +0200
+@@ -36,8 +36,7 @@
+ then
+     phpdir=`cd $reldir/var; pwd`
+ fi
+-mkdir -p $reldir/tmp
+-tmpmaindir=`cd $reldir/tmp; pwd`
++tmpmaindir=/tmp
+ dbxml="db.xml"
+ datestr=`date '+%Y%m%d%H%M%S'`
+ xmltar="xmls.tar"
+Index: campcaster/src/modules/storageAdmin/bin/dumpDbSchema.sh
+===================================================================
+--- campcaster.orig/src/modules/storageAdmin/bin/dumpDbSchema.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/storageAdmin/bin/dumpDbSchema.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -30,13 +30,7 @@
+ #  Determine directories, files
+ #-------------------------------------------------------------------------------
+ 
+-reldir=`dirname $0`/..
+-phpdir=ls_storageAdmin_phppart_dir
+-if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
+-then
+-    phpdir=`cd $reldir/var; pwd`
+-fi
+-filelistpathname=.
++phpdir=/usr/share/campcaster/www/storageAdmin/var/
+ 
+ #-------------------------------------------------------------------------------
+ #  Print the usage information for this script.
+Index: campcaster/src/modules/storageAdmin/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/modules/storageAdmin/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/storageAdmin/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -67,9 +67,10 @@
+ 
+ DEST_DIR    = ${USR_DIR}
+ PHPPART_DIR = ${prefix}/var/Campcaster/storageAdmin/var
++REALPHP_DIR = /usr/share/campcaster/www/storageAdmin/var
+ STORAGE_SERVER 	= @STORAGE_SERVER@
+ 
+-PHPPART_DIR_S=$(shell ${ECHO} ${PHPPART_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
++PHPPART_DIR_S=$(shell ${ECHO} ${REALPHP_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+ STORAGE_SERVER_S=$(shell ${ECHO} ${STORAGE_SERVER} | ${SED} -e "s/\//\\\\\\\\\//g")
+ 
+ SED_STORAGE_SERVER="s/ls_storageServer/${STORAGE_SERVER_S}/;"
+Index: campcaster/src/modules/storageServer/bin/createDatabase.sh
+===================================================================
+--- campcaster.orig/src/modules/storageServer/bin/createDatabase.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/storageServer/bin/createDatabase.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -30,18 +30,6 @@
+ #-------------------------------------------------------------------------------
+ 
+ #-------------------------------------------------------------------------------
+-#  Determine directories, files
+-#-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-etcdir=$basedir/etc
+-docdir=$basedir/doc
+-tmpdir=$basedir/tmp
+-usrdir=$basedir/usr
+-
+-
+-#-------------------------------------------------------------------------------
+ #  Print the usage information for this script.
+ #-------------------------------------------------------------------------------
+ printUsage()
+Index: campcaster/src/modules/storageServer/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/modules/storageServer/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/storageServer/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -95,11 +95,14 @@
+ SCHEDULER_URL_PREFIX =
+ SCHEDULER_XML_RPC_PREFIX = RC2
+ 
+-USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
++SHR_WWW_DIR_S=$(shell ${ECHO} /usr/share/campcaster/www | ${SED} -e "s/\//\\\\\\\\\//g")
++USR_LIB_DIR_S=$(shell ${ECHO} "/usr/lib/campcaster" | ${SED} -e "s/\//\\\\\\\\\//g")
++
+ PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+ 
+ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
+               s/ls_dbuser/${DB_USER}/; \
++              s/ls_shr_www/${SHR_WWW_DIR_S}/; \
+               s/ls_dbpassword/${DB_PASSWORD}/; \
+               s/ls_dbserver/${DB_SERVER}/; \
+               s/ls_database/${DATABASE}/; \
+Index: campcaster/src/modules/storageServer/var/conf.php.template
+===================================================================
+--- campcaster.orig/src/modules/storageServer/var/conf.php.template	2010-07-22 15:21:30.000000000 +0200
++++ campcaster/src/modules/storageServer/var/conf.php.template	2010-08-26 14:51:22.000000000 +0200
+@@ -53,12 +53,12 @@
+     'StationPrefsGr'=> 'StationPrefs',
+     'AllGr'         => 'All',
+     'TrashName'     => 'trash_',
+-    'storageDir'    => dirname(__FILE__).'/../../storageServer/var/stor',
+-    'bufferDir'     => dirname(__FILE__).'/../../storageServer/var/stor/buffer',
+-    'transDir'      => dirname(__FILE__).'/../../storageServer/var/trans',
+-    'accessDir'     => dirname(__FILE__).'/../../storageServer/var/access',
++    'storageDir'    => 'ls_shr_www/storageServer/var/stor',
++    'bufferDir'     => 'ls_shr_www/storageServer/var/stor/buffer',
++    'transDir'      => 'ls_shr_www/storageServer/var/trans',
++    'accessDir'     => 'ls_shr_www/storageServer/var/access',
+     'pearPath'      => 'ls_lib_dir/pear',
+-    'cronDir'       => dirname(__FILE__).'/../../storageServer/var/cron',
++    'cronDir'       => 'ls_shr_www/storageServer/var/cron',
+     'isArchive'     =>  FALSE,
+     'validate'      =>  TRUE,
+     'useTrash'      =>  TRUE,
+@@ -113,9 +113,10 @@
+ 
+     /* =================================================== cron configuration */
+     'cronUserName'      => 'ls_apache_group',
+-    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
+-    'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
+-    'paramdir'          => dirname(__FILE__).'/cron/params',
++    'lockfile'          => '/var/lock/campcaster-cron.lock',
++    'cronfile'          => 'ls_shr_www/storageServer/var/cron/croncall.php',
++    'paramdir'          => '/var/cache/campcaster/cronparams',
++
+ );
+ 
+ // Add database table names
+Index: campcaster/src/products/gLiveSupport/bin/campcaster-studio.sh
+===================================================================
+--- campcaster.orig/src/products/gLiveSupport/bin/campcaster-studio.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/gLiveSupport/bin/campcaster-studio.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -29,17 +29,15 @@
+ #-------------------------------------------------------------------------------
+ #  Determine directories, files
+ #-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-etcdir=$basedir/etc
+-libdir=$basedir/lib
+-tmpdir=$basedir/tmp
++bindir=/usr/lib/campcaster/bin/
++etcdir=/etc
++libdir=/usr/lib/campcaster/
+ 
+ 
+ #-------------------------------------------------------------------------------
+ #  Set up the environment
+ #-------------------------------------------------------------------------------
++export PATH=$bindir:$PATH
+ export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
+ export GST_REGISTRY=$etcdir/gst-registry.xml
+ studio_exe=$bindir/campcaster-studio
+Index: campcaster/src/products/gLiveSupport/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/products/gLiveSupport/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/gLiveSupport/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -61,6 +61,7 @@
+ USR_LIB_DIR     = ${USR_DIR}/lib
+ USR_VAR_DIR     = ${USR_DIR}/var
+ STORAGE_TMP_DIR = "/tmp"
++REAL_SHR_DIR    = "/usr/share/campcaster/www"
+ 
+ HOSTNAME       = @HOSTNAME@
+ WWW_PORT       = @WWW_PORT@
+@@ -75,9 +76,10 @@
+ PHP_URL_PREFIX=campcaster
+ ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
+ SCHEDULER_XML_RPC_PREFIX=RC2
+-SCHEDULER_DAEMON_COMMAND="sudo ${USR_BIN_DIR}/campcaster-scheduler.sh"
++SCHEDULER_DAEMON_COMMAND="sudo /etc/init.d/campcaster"
+ 
+-USR_VAR_DIR_S=$(shell ${ECHO} ${USR_VAR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
++
++USR_VAR_DIR_S=$(shell ${ECHO} ${REAL_SHR_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+ PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | \
+                                             ${SED} -e "s/\//\\\\\\\\\//g")
+ ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | \
+Index: campcaster/src/products/scheduler/bin/campcaster-scheduler.sh
+===================================================================
+--- campcaster.orig/src/products/scheduler/bin/campcaster-scheduler.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/scheduler/bin/campcaster-scheduler.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -28,17 +28,15 @@
+ #-------------------------------------------------------------------------------
+ #  Determine directories, files
+ #-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-etcdir=$basedir/etc
+-libdir=$basedir/lib
+-vardir=$basedir/var/Campcaster/scheduler/var
+-
++bindir=/usr/lib/campcaster/bin
++etcdir=/etc
++libdir=/usr/lib/campcaster/
++vardir=/usr/share/campcaster/www/scheduler/var
+ 
+ #-------------------------------------------------------------------------------
+ #  Set up the environment
+ #-------------------------------------------------------------------------------
++export PATH=$bindir:$PATH
+ export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
+ export GST_REGISTRY=$etcdir/gst-registry.xml
+ scheduler_exe=$bindir/campcaster-scheduler
+Index: campcaster/src/products/scheduler/bin/createDatabase.sh
+===================================================================
+--- campcaster.orig/src/products/scheduler/bin/createDatabase.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/scheduler/bin/createDatabase.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -30,18 +30,6 @@
+ #-------------------------------------------------------------------------------
+ 
+ #-------------------------------------------------------------------------------
+-#  Determine directories, files
+-#-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-etcdir=$basedir/etc
+-docdir=$basedir/doc
+-tmpdir=$basedir/tmp
+-usrdir=$basedir/usr
+-
+-
+-#-------------------------------------------------------------------------------
+ #  Print the usage information for this script.
+ #-------------------------------------------------------------------------------
+ printUsage()
+Index: campcaster/src/products/scheduler/bin/createOdbcDataSource.sh
+===================================================================
+--- campcaster.orig/src/products/scheduler/bin/createOdbcDataSource.sh	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/scheduler/bin/createOdbcDataSource.sh	2010-08-26 14:51:22.000000000 +0200
+@@ -32,14 +32,7 @@
+ #-------------------------------------------------------------------------------
+ #  Determine directories, files
+ #-------------------------------------------------------------------------------
+-reldir=`dirname $0`/..
+-basedir=`cd $reldir; pwd;`
+-bindir=$basedir/bin
+-etcdir=$basedir/etc
+-docdir=$basedir/doc
+-tmpdir=$basedir/tmp
+-usrdir=$basedir/usr
+-
++etcdir=/usr/share/campcaster/etc/
+ 
+ #-------------------------------------------------------------------------------
+ #  Print the usage information for this script.
+Index: campcaster/src/products/scheduler/etc/Makefile.in
+===================================================================
+--- campcaster.orig/src/products/scheduler/etc/Makefile.in	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/products/scheduler/etc/Makefile.in	2010-08-26 14:51:22.000000000 +0200
+@@ -76,6 +76,8 @@
+ POSTGRES_USER=postgres
+ 
+ USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
++STORAGE_PID_DIR_S=$(shell ${ECHO} /var/run/ | \
++                        ${SED} -e "s/\//\\\\\\\\\//g")
+ STORAGE_TMP_DIR_S=$(shell ${ECHO} ${STORAGE_TMP_DIR} | \
+                         ${SED} -e "s/\//\\\\\\\\\//g")
+ PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | \
+@@ -95,6 +97,7 @@
+               s/ls_php_port/${WWW_PORT}/; \
+               s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
+               s/ls_tmp_dir/${STORAGE_TMP_DIR_S}/; \
++              s/ls_pid_dir/${STORAGE_PID_DIR_S}/; \
+               s/ls_audio_output_device/${AUDIO_OUT_S}/; \
+               s/ls_scheduler_host/${HOSTNAME}/; \
+               s/ls_scheduler_port/${SCHEDULER_PORT}/;"
+Index: campcaster/src/products/scheduler/etc/campcaster-scheduler.xml.template
+===================================================================
+--- campcaster.orig/src/products/scheduler/etc/campcaster-scheduler.xml.template	2010-07-22 15:21:30.000000000 +0200
++++ campcaster/src/products/scheduler/etc/campcaster-scheduler.xml.template	2010-08-26 14:51:22.000000000 +0200
+@@ -124,7 +124,7 @@
+ 
+     <xmlRpcDaemon xmlRpcHost  = "ls_scheduler_host"
+                   xmlRpcPort  = "ls_scheduler_port"
+-                  pidFileName = "ls_tmp_dir/scheduler.pid"
++                  pidFileName = "ls_pid_dir/campcaster.pid"
+     />
+ </scheduler>
+ 

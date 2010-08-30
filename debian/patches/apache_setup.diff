@@ -1,0 +1,33 @@
+Subject: do not add symlink in /var/www/ - use apache Alias instead
+Forwarded: no
+Author: Robin Gareus <robin@gareus.org>
+Last-Update: 2010-02-14
+Index: campcaster/bin/postInstallStation.sh
+===================================================================
+--- campcaster.orig/bin/postInstallStation.sh	2010-08-26 14:51:40.000000000 +0200
++++ campcaster/bin/postInstallStation.sh	2010-08-26 14:51:45.000000000 +0200
+@@ -396,8 +396,9 @@
+ echo "Creating symlinks...";
+ 
+ # create symlink for the PHP pages in apache's document root
+-rm -f $www_root/campcaster
+-ln -s $install_var_ls $www_root/campcaster
++#rm -f $www_root/campcaster
++#ln -s $install_var_ls $www_root/campcaster
++#debian: skip this -> done via apache-config in 90_php_campcaster.conf
+ 
+ 
+ #-------------------------------------------------------------------------------
+Index: campcaster/etc/apache/90_php_campcaster.conf
+===================================================================
+--- campcaster.orig/etc/apache/90_php_campcaster.conf	2010-07-22 15:21:30.000000000 +0200
++++ campcaster/etc/apache/90_php_campcaster.conf	2010-08-26 14:51:45.000000000 +0200
+@@ -1,2 +1,8 @@
+ php_value upload_max_filesize 32M
+ php_value post_max_size 36M
++
++Alias /campcaster /usr/share/campcaster/www
++
++<Directory /usr/share/campcaster/www>
++  Options FollowSymlinks
++</Directory>

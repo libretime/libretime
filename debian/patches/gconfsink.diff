@@ -1,0 +1,27 @@
+Subject: Allow to configure the player's audio-device with gconf
+Forwarded: no
+Author: Robin Gareus <robin@gareus.org>
+Last-Update: 2010-08-26
+Index: campcaster/src/modules/playlistExecutor/src/GstreamerPlayContext.h
+===================================================================
+--- campcaster.orig/src/modules/playlistExecutor/src/GstreamerPlayContext.h	2010-08-26 13:40:02.000000000 +0200
++++ campcaster/src/modules/playlistExecutor/src/GstreamerPlayContext.h	2010-08-26 14:51:50.000000000 +0200
+@@ -292,6 +292,7 @@
+         // and ALSA can emulate it.
+         // const bool oss = m_audioDevice.find("/dev") == 0;
+         const bool autosink = m_audioDevice.find("auto") == 0;
++        const bool gconfsink = m_audioDevice.find("gconf") == 0;
+ 
+         m_sink = gst_bin_new ("audiobin");
+         if(m_sink == NULL){
+@@ -301,7 +302,9 @@
+         audiopad = gst_element_get_pad (conv, "sink");
+ 
+         // set the string to be sent to gstreamer. the option here is to set it to autoaudiosink.
+-        GstElement *sink = (autosink ? gst_element_factory_make("autoaudiosink", NULL) : gst_element_factory_make("alsasink", NULL));
++        GstElement *sink = (autosink ? gst_element_factory_make("autoaudiosink", NULL) :
++			   (gconfsink? gst_element_factory_make("gconfaudiosink", NULL):
++				       gst_element_factory_make("alsasink", NULL)));
+         if(sink == NULL){
+             return false;
+         }

@@ -1,0 +1,9 @@
+# Campcaster has a job opening for someone to
+# refactor code to use standard PEAR classes.
+# see http://www.campware.org/en/camp/about_campware/696/ for details.
+# 
+# Note that the embedded-pear-modules are unpatched upstream
+# versions - they're just included for version compatibiliy issues
+campcaster-libs: embedded-pear-module usr/lib/campcaster/pear/PEAR/Command/Auth.php
+campcaster-libs: embedded-pear-module usr/lib/campcaster/pear/PEAR/Command/Config.php
+campcaster-libs: embedded-pear-module usr/lib/campcaster/pear/PEAR/Config.php

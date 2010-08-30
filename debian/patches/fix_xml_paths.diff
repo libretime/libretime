@@ -1,0 +1,52 @@
+Subject: Change paths in XML templates for Debian/Ubuntu
+Forwarded: no
+Author: Robin Gareus <robin@gareus.org>
+Last-Update: 2010-08-26
+Index: campcaster/src/products/gLiveSupport/etc/campcaster-studio.xml.template
+===================================================================
+--- campcaster.orig/src/products/gLiveSupport/etc/campcaster-studio.xml.template	2010-04-13 22:36:12.000000000 +0200
++++ campcaster/src/products/gLiveSupport/etc/campcaster-studio.xml.template	2010-04-13 22:37:32.000000000 +0200
+@@ -140,7 +140,7 @@
+ ]>
+ 
+ <gLiveSupport>
+-    <resourceBundle path   = "ls_var_dir/Campcaster/studio-localization"
++    <resourceBundle path   = "ls_var_dir/studio-localization"
+                     locale = "en"
+     />
+ 
+@@ -156,9 +156,9 @@
+         <language locale="sv"               name="Svenska"/>
+     </supportedLanguages>
+ 
+-    <gladeDirectory     path = "ls_var_dir/Campcaster/glade/" />
++    <gladeDirectory     path = "ls_var_dir/glade/" />
+ 
+-    <widgetFactory    path = "ls_var_dir/Campcaster/Widgets/" />
++    <widgetFactory    path = "ls_var_dir/Widgets/" />
+ 
+     <authenticationClientFactory>
+         <webAuthentication>
+@@ -196,16 +196,16 @@
+         </audioPlayer>
+     </cuePlayer>
+ 
+-    <stationLogo    path = "ls_var_dir/Campcaster/stationLogo.png" />
++    <stationLogo    path = "ls_var_dir/stationLogo.png" />
+ 
+     <taskbarIcons>
+-        <icon       path = "ls_var_dir/Campcaster/icon16.png" />
+-        <icon       path = "ls_var_dir/Campcaster/icon22.png" />
+-        <icon       path = "ls_var_dir/Campcaster/icon32.png" />
+-        <icon       path = "ls_var_dir/Campcaster/icon48.png" />
++        <icon       path = "ls_var_dir/icon16.png" />
++        <icon       path = "ls_var_dir/icon22.png" />
++        <icon       path = "ls_var_dir/icon32.png" />
++        <icon       path = "ls_var_dir/icon48.png" />
+     </taskbarIcons>
+ 
+-    <testAudioUrl   path = "file://ls_var_dir/Campcaster/testAudio.ogg" />
++    <testAudioUrl   path = "file://ls_var_dir/testAudio.ogg" />
+ 
+     <serialPort     path = "/dev/ttyS0" />
+ 
