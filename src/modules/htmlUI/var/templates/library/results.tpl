@@ -31,12 +31,22 @@
                             {$i.title|truncate:30:"...":true}
                         {/if}
                     </td>
-                    <td {include file=$action_handler} style="cursor: pointer">{$i.creator}</td>
+                    <td {include file=$action_handler} style="cursor: pointer">
+                    {$i.creator}
+                    {if $PL->isAvailable($i.id) == false}
+                    (editing: {$PL->isUsedBy($i.id)})
+                    {/if}
+                    </td>
                     <td {include file=$action_handler} style="cursor: pointer">{$i.source}</td>
                     <td {include file=$action_handler} style="cursor: pointer" align="center">{$i.track_num}</td>
                     <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
-                        <img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />
+                    	{if $PL->isAvailable($i.id) == false}
+                            <div align="left"><img src="img/ico_lock.png">
+                        	<img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /></div>
+                        {else}
+                        	<img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /> 
+                        {/if}
                     </td>
                 </tr>
             <!-- end item -->
