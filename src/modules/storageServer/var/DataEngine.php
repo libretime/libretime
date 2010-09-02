@@ -433,7 +433,7 @@ class DataEngine {
             $fldsPart = "DISTINCT f.gunid, f.ftype, f.id ";
         }
 
-        $fileCond = "f.state='ready'";
+        $fileCond = "(f.state='ready' OR f.state='edited')";
         if (!is_null($filetype)) {
         	$fileCond .= " AND f.ftype='$filetype'";
         }
@@ -442,7 +442,7 @@ class DataEngine {
         } else {
             $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, false);
         }
-
+      
         // the actual values to fetch
         if ($orderby) {
             $tmpSql = "SELECT to_hex(sq2.gunid)as gunid, sq2.ftype, sq2.id";
@@ -466,7 +466,7 @@ class DataEngine {
                    "ORDER BY ".join(",", $orderBySql)."\n";
             $sql = $tmpSql;
         }
-
+     
         // Get the number of results
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
@@ -586,7 +586,7 @@ class DataEngine {
         $whereArr = $this->_makeWhereArr($conditions);
 
         $fldsPart = "DISTINCT br.object as txt";
-        $fileCond = "f.state='ready'";
+        $fileCond = "(f.state='ready' OR f.state='edited')";
         if (!is_null($filetype)) {
         	$fileCond .= " AND f.ftype='$filetype'";
         }
