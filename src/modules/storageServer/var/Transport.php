@@ -1380,11 +1380,6 @@ class Transport
                         }
                         return TRUE;
                     case 'finished':  // metadata finished, close main transport
-                        $parid = $this->gb->_getHomeDirId($trec->row['uid']);
-                        if (PEAR::isError($parid)) {
-                            $mdtrec->setLock(FALSE);
-                            return $parid;
-                        }
                         $values = array(
                             "filename" => $row['fname'],
                             "filepath" => $trec->row['localfile'],
@@ -1392,7 +1387,7 @@ class Transport
                             "gunid" => $row['gunid'],
                             "filetype" => "audioclip"
                         );
-                        $storedFile = $this->gb->bsPutFile($parid, $values);
+                        $storedFile = $this->gb->bsPutFile($values);
                         if (PEAR::isError($storedFile)) {
                             $mdtrec->setLock(FALSE);
                             return $storedFile;
@@ -1442,17 +1437,13 @@ class Transport
         }
         switch ($row['trtype']) {
             case "playlist":
-                $parid = $this->gb->_getHomeDirId($trec->row['uid']);
-                if (PEAR::isError($parid)) {
-                	return $parid;
-                }
                 $values = array(
                     "filename" => $row['fname'],
                     "metadata" => $trec->row['localfile'],
                     "gunid" => $row['gunid'],
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->gb->bsPutFile($parid, $values);
+                $storedFile = $this->gb->bsPutFile($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -1462,11 +1453,7 @@ class Transport
             case "playlistPkg":
                 $subjid = $trec->row['uid'];
                 $fname = $trec->row['localfile'];
-                $parid = $this->gb->_getHomeDirId($subjid);
-                if (PEAR::isError($parid)) {
-                	return $parid;
-                }
-                $res = $this->gb->bsImportPlaylist($parid, $fname, $subjid);
+                $res = $this->gb->bsImportPlaylist($fname, $subjid);
                 if (PEAR::isError($res)) {
                 	return $res;
                 }

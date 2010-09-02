@@ -85,10 +85,6 @@ class Archive extends XR_LocStor {
                 if ($gunid == '') {
                 	$gunid = NULL;
                 }
-                $parid = $this->_getHomeDirId($owner);
-                if (PEAR::isError($parid)) {
-                	return $parid;
-                }
                 $values = array(
                     "filename" => $pars['name'],
                     "filepath" => $fname,
@@ -96,7 +92,7 @@ class Archive extends XR_LocStor {
                     "gunid" => $pars['gunid'],
                     "filetype" => "audioclip"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = $this->bsPutFile($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -108,17 +104,13 @@ class Archive extends XR_LocStor {
                 if ($gunid == '') {
                 	$gunid = NULL;
                 }
-                $parid = $this->_getHomeDirId($owner);
-                if (PEAR::isError($parid)) {
-                	return $parid;
-                }
                 $values = array(
                     "filename" => $pars['name'],
                     "metadata" => $fname,
                     "gunid" => $pars['gunid'],
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = $this->bsPutFile($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }

@@ -37,22 +37,16 @@ class Playlist extends StoredFile {
     public function create(&$gb, $plid, $fname=NULL, $parid=NULL)
     {
         $tmpFname = uniqid('');
-        $oid = BasicStor::AddObj($tmpFname , 'playlist', $parid);
-        if (PEAR::isError($oid)) {
-        	return $oid;
-        }
         $values = array(
-            "id" => $oid,
             "metadata" => dirname(__FILE__).'/emptyPlaylist.xml',
             "gunid" => $plid,
             "filetype" => "playlist");
         $pl =& StoredFile::Insert($values);
         if (PEAR::isError($pl)) {
-            $res = BasicStor::RemoveObj($oid);
             return $pl;
         }
         $fname = ($fname == '' || is_null($fname) ? "newFile.xml" : $fname );
-        $res = $gb->bsRenameFile($oid, $fname);
+        $res = $gb->bsRenameFile($pl->id, $fname);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -163,7 +157,7 @@ class Playlist extends StoredFile {
         // insert new playlist element
         $offset = $plLen;
 
-		 // insert default values if parameter was empty
+	 		  // insert default values if parameter was empty
         $clipStart = !is_null($clipstart) ? $clipstart : '00:00:00.000000';
         $clipEnd = !is_null($clipend) ? $clipend : $acLen;
 

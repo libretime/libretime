@@ -37,8 +37,8 @@ $Smarty->assign('ACT', isset($_REQUEST['act'])?$_REQUEST['act']:null);
 $Smarty->assign('CONFIG', $CC_CONFIG);
 $Smarty->assign('START', array(
                             'id'        => &$uiBrowser->id,
-                            'pid'       => &$uiBrowser->pid,
-                            'fid'       => &$uiBrowser->fid,
+                            //'pid'       => &$uiBrowser->pid,
+                            //'fid'       => &$uiBrowser->fid,
                             'sessid'    => &$uiBrowser->sessid)
                           );
 $Smarty->assign('USER', array(
@@ -48,8 +48,8 @@ $Smarty->assign('USER', array(
                           );
 $uiBrowser->loadStationPrefs($ui_fmask['stationPrefs']);
 $Smarty->assign('STATIONPREFS', $uiBrowser->STATIONPREFS);
-$Smarty->assign_by_ref('_REQUEST', &$_REQUEST);
-
+$Smarty->assign_by_ref('_REQUEST', $_REQUEST);
+$Smarty->assign_by_ref('_SESSION', $_SESSION);
 // retransfer incomplete formdata from SESSION to POST-data #########
 if (isset($_SESSION['retransferFormData']) && is_array($_SESSION['retransferFormData'])) {
     foreach($_SESSION['retransferFormData'] as $k=>$v){

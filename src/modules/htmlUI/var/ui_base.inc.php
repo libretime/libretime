@@ -113,7 +113,7 @@ function __autoload($p_className)
             $class_filename = $item['file'];
             require_once(dirname(__FILE__).'/'.$class_filename);
             break;
-        }  
+        }
     }
 }
 
@@ -218,7 +218,7 @@ class uiBase
      * @var string
      */
     public $alertMsg;
-    
+
     /**
      * This mapping keeps relation between uiBase::properties,
      * class names and filenames and is used in
@@ -240,7 +240,7 @@ class uiBase
         'CALENDAR'     => array('class' => 'uicalendar', 'file' => 'ui_calendar.class.php'),
         array('class' => 'jscom', 'file' => 'ui_jscom.php'),
         'TWITTER'      => array('class' => 'uitwitter', 'file' => 'ui_twitter.class.php'),
-        array('class' => 'twitter', 'file' => 'lib/twitter.class.php') 
+        array('class' => 'twitter', 'file' => 'lib/twitter.class.php')
     );
 
 
@@ -266,14 +266,10 @@ class uiBase
             if (isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
                 $this->id = $_REQUEST['id'];
             } else {
-                $this->id = M2tree::GetObjId($this->login, $this->gb->storId);
+                $this->id = $this->gb->storId;
             }
             if (!is_null($this->id)) {
-                $parentId = M2tree::GetParent($this->id);
-                $this->pid = ($parentId != 1) ? $parentId : FALSE;
                 $this->type = Greenbox::getFileType($this->id);
-                $this->fid = ($this->type == 'Folder') ? $this->id : $this->pid;
-                $this->homeid = M2tree::GetObjId($this->login, $this->gb->storId);
             }
         }
 
@@ -284,7 +280,7 @@ class uiBase
     {
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
     }
-    
+
     /**
      * Dynamically initialize uiBase properties,
      * which keep objects (uiBase->SEARCH, $uiBase->BROWSE etc)
@@ -295,13 +291,13 @@ class uiBase
     public function __get($p_class)
     {
         if (strtoupper($p_class !== $p_class)) {
-            return;    
+            return;
         }
-        
+
         if (!is_object($this->$p_class)) {
             if ($class_name = uiBase::$m_classMapping[$p_class]['class']) {
                 $this->$p_class = new $class_name($this);
-            }  
+            }
         }
         return $this->$p_class;
     }
@@ -492,20 +488,6 @@ class uiBase
 
         if ($format=='text') {
             return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
-        } elseif ($format=='xml') {
-            return '!!!XML IS DEPRICATED!!!
-                    <?xml version="1.0" encoding="utf-8"?>
-                    <audioClip>
-                    <metadata
-                      xmlns:dc="http://purl.org/dc/elements/1.1/"
-                      xmlns:dcterms="http://purl.org/dc/terms/"
-                      xmlns:xml="http://www.w3.org/XML/1998/namespace"
-                      xmlns:ls="http://mdlf.org/campcaster/elements/1.0/"
-                     >
-                   <dc:title>'.$this->_getFileTitle($id).'</dc:title>
-                   <dcterms:extent>'.$extent.'</dcterms:extent>
-                   </metadata>
-                   </audioClip>';
         }
         return FALSE;
     } // fn analyzeFile
@@ -592,23 +574,14 @@ class uiBase
      * @param unknown_type $id
      * @return string/FALSE
      */
-    private function _getFileTitle($id)
-    {
-        if (is_array($arr = GreenBox::GetPath($id))) {
-            $file = array_pop($arr);
-            return $file['name'];
-        }
-        return FALSE;
-    } // fn _getFileTitle
-
-
-//    function _isFolder($id)
+//    private function _getFileTitle($id)
 //    {
-//        if (strtolower(GreenBox::getFileType($id)) != 'folder') {
-//            return FALSE;
+//        if (is_array($arr = GreenBox::GetPath($id))) {
+//            $file = array_pop($arr);
+//            return $file['name'];
 //        }
-//        return TRUE;
-//    } // fn _isFolder
+//        return FALSE;
+//    } // fn _getFileTitle
 
 
     public static function formElementEncode($str)

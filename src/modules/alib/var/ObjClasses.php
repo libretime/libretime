@@ -1,22 +1,17 @@
 <?php
-require_once("M2tree.php");
+//require_once("M2tree.php");
 
 /**
  * ObjClass class
  *
  * A class for 'object classes' handling - i.e. groups of object in tree
  *
-
-
-
  * @package Campcaster
  * @subpackage Alib
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
-
  */
 class ObjClasses {
-//class ObjClasses extends M2tree {
 
     /* ======================================================= public methods */
 
@@ -135,11 +130,7 @@ class ObjClasses {
      */
     public static function RemoveObj($id)
     {
-        $r = ObjClasses::RemoveObjectFromClass($id);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return M2tree::RemoveObj($id);
+        return ObjClasses::RemoveObjectFromClass($id);
     }
 
 
@@ -255,7 +246,6 @@ class ObjClasses {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("DELETE FROM ".$CC_CONFIG['cmembTable']);
         $CC_DBC->query("DELETE FROM ".$CC_CONFIG['classTable']);
-        M2tree::reset();
     }
 
 
@@ -265,15 +255,15 @@ class ObjClasses {
      */
     public static function TestData()
     {
-        $tdata = M2tree::testData();
-        $o['cl_sa'] = ObjClasses::AddClass('Sections a');
-        $o['cl2'] = ObjClasses::AddClass('Class 2');
-        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s1a']);
-        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s2a']);
-        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['t1']);
-        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['pb']);
-        $tdata['classes'] = $o;
-        return $tdata;
+//        $tdata = M2tree::testData();
+//        $o['cl_sa'] = ObjClasses::AddClass('Sections a');
+//        $o['cl2'] = ObjClasses::AddClass('Class 2');
+//        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s1a']);
+//        ObjClasses::AddObjectToClass($o['cl_sa'], $tdata['tree']['s2a']);
+//        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['t1']);
+//        ObjClasses::AddObjectToClass($o['cl2'], $tdata['tree']['pb']);
+//        $tdata['classes'] = $o;
+//        return $tdata;
     }
 
 
@@ -283,29 +273,29 @@ class ObjClasses {
      */
     public static function Test()
     {
-        $p = M2tree::test();
-        if (PEAR::isError($p)) {
-        	return $p;
-        }
-        ObjClasses::DeleteData();
-        ObjClasses::TestData();
-        $test_correct = "Sections a (2), Class 2 (2)\n";
-        $test_dump = ObjClasses::DumpClasses();
-        //$this->removeClass('Sections a');
-        ObjClasses::RemoveObjectFromClass($tdata['tree']['pb'],
-            $tdata['classes']['cl2']);
-        $test_correct .= "Class 2 (1)\n";
-        $test_dump .= ObjClasses::DumpClasses();
-        ObjClasses::DeleteData();
-        if ($test_dump == $test_correct) {
-            $test_log .= "class: OK\n";
-            return TRUE;
-        } else {
-        	return PEAR::raiseError(
-                'ObjClasses::test:', 1, PEAR_ERROR_DIE, '%s'.
-                "<pre>\ncorrect:\n{$test_correct}\n".
-                "dump:\n{$test_dump}\n</pre>\n");
-        }
+//        $p = M2tree::test();
+//        if (PEAR::isError($p)) {
+//        	return $p;
+//        }
+//        ObjClasses::DeleteData();
+//        ObjClasses::TestData();
+//        $test_correct = "Sections a (2), Class 2 (2)\n";
+//        $test_dump = ObjClasses::DumpClasses();
+//        //$this->removeClass('Sections a');
+//        ObjClasses::RemoveObjectFromClass($tdata['tree']['pb'],
+//            $tdata['classes']['cl2']);
+//        $test_correct .= "Class 2 (1)\n";
+//        $test_dump .= ObjClasses::DumpClasses();
+//        ObjClasses::DeleteData();
+//        if ($test_dump == $test_correct) {
+//            $test_log .= "class: OK\n";
+//            return TRUE;
+//        } else {
+//        	return PEAR::raiseError(
+//                'ObjClasses::test:', 1, PEAR_ERROR_DIE, '%s'.
+//                "<pre>\ncorrect:\n{$test_correct}\n".
+//                "dump:\n{$test_dump}\n</pre>\n");
+//        }
     }
 
 } // class ObjClasses

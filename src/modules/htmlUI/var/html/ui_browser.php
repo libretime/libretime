@@ -275,32 +275,32 @@ if ($uiBrowser->userid) {
     $action = isset($_REQUEST['act']) ? $_REQUEST['act'] : null;
     switch ($action) {
         case "fileList":
-	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
-	        $Smarty->assign('fileList', TRUE);
-
-	        if ($_REQUEST['tree'] == 'Y') {
-	        	$Smarty->assign('showTree', TRUE);
-	        } else{
-	        	$Smarty->assign('showObjects', TRUE);
-	        }
-
-	        $Smarty->assign('delOverride', $_REQUEST['delOverride']);
+//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
+//	        $Smarty->assign('fileList', TRUE);
+//
+//	        if ($_REQUEST['tree'] == 'Y') {
+//	        	$Smarty->assign('showTree', TRUE);
+//	        } else{
+//	        	$Smarty->assign('showObjects', TRUE);
+//	        }
+//
+//	        $Smarty->assign('delOverride', $_REQUEST['delOverride']);
 	        break;
 
         case "permissions":
-	        $Smarty->assign('structure',   $uiBrowser->getStructure($uiBrowser->id));
-	        $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
-	        $Smarty->assign('fileList', TRUE);
+//	        $Smarty->assign('structure',   $uiBrowser->getStructure($uiBrowser->id));
+//	        $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
+//	        $Smarty->assign('fileList', TRUE);
 	        break;
 
         case "uploadFileM":
-	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $Smarty->assign('uploadform', $uiBrowser->uploadFileM($ui_fmask['uploadFileM'], $uiBrowser->id));
 	        break;
 
         case "addFileData":
         case "addFileMData":
-	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
 	        $langId = isset($_REQUEST['curr_langid']) ? $_REQUEST['curr_langid'] : null;
 	        $Smarty->assign('editItem', array('type' => 'audioclip',
@@ -311,13 +311,13 @@ if ($uiBrowser->userid) {
 
         case "addWebstreamData":
         case "addWebstreamMData":
-	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
 	        break;
 
         case "editItem":
 	        $uiBrowser->SCRATCHPAD->addItem($_REQUEST['id']);
-	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
 	        break;
 
@@ -341,6 +341,8 @@ if ($uiBrowser->userid) {
 	        break;
 
         case "HUBBROWSE":
+       	    //$HUBBROWSE = new uiHubBrowse($uiBrowser);
+	        //$Smarty->assign('hubBrowseForm', $HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('hubBrowseForm', $uiBrowser->HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        $Smarty->assign('isHub', TRUE);
@@ -408,7 +410,7 @@ if ($uiBrowser->userid) {
         case "SCHEDULER.export":
 	        $Smarty->assign('act', $action);
 	        break;
-	        
+
 	    case "twitter.settings":
 	        $Smarty->assign('dynform', $uiBrowser->TWITTER->getSettingsForm());
 	        $Smarty->assign('twitter', array(

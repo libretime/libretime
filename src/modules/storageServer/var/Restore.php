@@ -299,7 +299,6 @@ class Restore {
             #$this->addLogItem("replace it \n");
         } else {
             // add as new
-            $parid = $this->gb->_getHomeDirIdFromSess($this->sessid);
             $name = $tree->children[0]->children[0]->content;
             if (empty($name)) {
             	$name = $tree->attrs['title']->val;
@@ -309,7 +308,7 @@ class Restore {
             }
             if ($this->loglevel=='debug') {
                 $this->addLogItem("-I- ".date("Ymd-H:i:s")." putFile\n".
-                    "$parid, $name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
+                    "$name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
                 );
             }
             $values = array(
@@ -319,7 +318,7 @@ class Restore {
                 "gunid" => $gunid,
                 "filetype" => $type
             );
-            $put = $this->gb->putFile($parid, $values, $this->sessid);
+            $put = $this->gb->putFile($values, $this->sessid);
             //$this->addLogItem("add as new \n");
             if (PEAR::isError($put)) {
                 $this->addLogItem("-E- ".date("Ymd-H:i:s").

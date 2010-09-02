@@ -2,13 +2,9 @@
 require_once("../../../storageServer/var/Playlist.php");
 
 /**
-
-
  * @package Campcaster
  * @subpackage htmlUI
-
  * @copyright 2010 Sourcefabric O.P.S.
-
  */
 class uiPlaylist
 {
@@ -255,14 +251,14 @@ class uiPlaylist
         $fadeOut = NULL;
         $length = NULL;
         $clipstart = NULL;
-        
+
         /*
         gstreamer bug:
         Warning: The clipEnd can't be bigger than ninety nine percent (99%) of the clipLength,
         this means also if no clipEnd is defined it should be 00:00:00.000000 and not the clipLength.
         $clipend = '00:00:00.000000';
         */
-        
+
         if (!$elemIds) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('No item(s) selected.');
@@ -332,7 +328,7 @@ class uiPlaylist
             return FALSE;
         }
         $datetime = strftime('%Y-%m-%d %H:%M:%S');
-        $plid = $this->Base->gb->createPlaylist($this->Base->homeid, $datetime, $this->Base->sessid);
+        $plid = $this->Base->gb->createPlaylist($datetime, $this->Base->sessid);
         if (!$plid) {
             $this->Base->_retMsg('Cannot create playlist.');
             return FALSE;
@@ -602,7 +598,7 @@ class uiPlaylist
             $mask['clipStart']['default']  = round($clipStartS);
             $mask['clipEnd']['default']    = round($clipEndS);
             for ($n=0; $n<=round($playLegthS); $n++) {
-                $options[$n] = date('i:s', $n);    
+                $options[$n] = date('i:s', $n);
             }
             $mask['clipStart']['options']  = $options;
             $mask['clipLength']['options'] = $options;
@@ -620,26 +616,26 @@ class uiPlaylist
         $form->accept($renderer);
         return $renderer->toArray();
     } // fn setClipLengthForm
-    
+
     function setClipLength($p_elemId, &$p_mask)
     {
         $form = new HTML_QuickForm('PL_setClipLengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $p_mask);
-        
+
         if (!$form->validate()) {
-            return false;       
+            return false;
         }
         $values = $form->exportValues();
         $elem = $this->getCurrElement($values['elemId']);
         if (!$elem) {
-            return false;   
+            return false;
         }
-        
+
         $clipStart = GreenBox::secondsToPlaylistTime($values['clipStart']);
         $clipEnd = GreenBox::secondsToPlaylistTime($values['clipEnd']);
-        
+
         $this->Base->gb->changeClipLength($this->token, $p_elemId, $clipStart, $clipEnd, $this->Base->sessid);
-        
+
     }
 
 

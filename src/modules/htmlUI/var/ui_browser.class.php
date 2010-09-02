@@ -89,44 +89,6 @@ class uiBrowser extends uiBase {
 
 
     /**
-     * Get directory-structure
-     *
-     * @param int $id
-     * 		local ID of start-directory
-     * @return array
-     * 		tree of directory with subs
-     */
-    function getStructure($id)
-    {
-        $data = array(
-                    'pathdata'  => GreenBox::GetPath($id, $this->sessid),
-                    'listdata'  => BasicStor::GetObjType($id)=='Folder' ? $this->gb->listFolder($id, $this->sessid) : array(),
-                );
-        $tree = isset($_REQUEST['tree']) ? $_REQUEST['tree'] : null;
-        if ($tree == 'Y') {
-            $tmp = M2tree::GetSubTree($id, $this->sessid);
-            foreach ($tmp as $key=>$val) {
-                $val['type'] = Greenbox::getFileType($val['id']);
-                $data['treedata'][$key] = $val;
-            }
-        }
-        if (PEAR::isError($data['listdata'])) {
-            $data['msg'] = $data['listdata']->getMessage();
-            $data['listdata'] = array();
-            return FALSE;
-        }
-        foreach ($data['listdata'] as $key=>$val) {
-            if ($val['type'] != 'Folder') {
-                $data['listdata'][$key]['title'] = $this->getMetadataValue($val['id'], UI_MDATA_KEY_TITLE);
-            } else {
-                $data['listdata'][$key]['title'] = $val['name'];
-            }
-        }
-        return $data;
-    } // fn getStructure
-
-
-    /**
      * Create a form for file-upload.
      *
      * @param array $params
@@ -198,25 +160,6 @@ class uiBrowser extends uiBase {
         $form->accept($renderer);
         return $renderer->toArray();
     } // fn webstreamForm
-
-
-    /**
-     * Get permissions for local object ID.
-     *
-     * @param int $id
-     * 		local ID (file/folder)
-     * @return array
-     */
-    function permissions($id)
-    {
-        return array('pathdata'  => GreenBox::GetPath($id),
-                     'perms'     => Alib::GetObjPerms($id),
-                     'actions'   => Alib::GetAllowedActions(BasicStor::GetObjType($id)),
-                     'subjects'  => $this->gb->getSubjects(),
-                     'id'        => $id,
-                     'loggedAs'  => $this->login
-               );
-    }
 
 
     /**
@@ -378,7 +321,7 @@ class uiBrowser extends uiBase {
     function testStream($url)
     {
         global $CC_CONFIG;
-        
+
         touch(UI_TESTSTREAM_MU3_TMP);
         $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
         fwrite($handle, $url);

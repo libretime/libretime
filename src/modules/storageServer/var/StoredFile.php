@@ -399,7 +399,7 @@ class StoredFile {
      *  Create instance of StoredFile object and insert new file
      *
      * @param array $p_values
-     *      "id" - required, local object id in the tree
+     *      "id" - optional, local object id in the tree
      *      "gunid" - optional, unique id, for insert file with gunid
      *      "filename" - optional
      *      "filepath" - local path to media file, not needed for Playlist
@@ -420,7 +420,8 @@ class StoredFile {
         // Create the StoredFile object
         $storedFile = new StoredFile($gunid);
         $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $storedFile->gunid;
-        $storedFile->id = $p_values['id'];
+        // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
+      	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?"'".$p_values['id']."'":'DEFAULT';
         $storedFile->ftype = $p_values['filetype'];
         if ($storedFile->ftype == 'playlist') {
             $storedFile->mime = 'application/smil';
@@ -444,16 +445,22 @@ class StoredFile {
         $CC_DBC->query("BEGIN");
         $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
                 ."(id, name, gunid, mime, state, ftype, mtime, md5)"
-                ."VALUES ('{$storedFile->id}', '{$escapedName}', "
+                ."VALUES ({$storedFile->id}, '{$escapedName}', "
                 ." x'{$storedFile->gunid}'::bigint,"
                 ." '{$storedFile->mime}', 'incomplete', '$escapedFtype',"
                 ." now(), '{$storedFile->md5}')";
+        //$_SESSION["debug"] .= "sql: ".$sql."<br>";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
 
+        if (!is_integer($storedFile->id)) {
+        	// NOTE: POSTGRES-SPECIFIC
+					$sql = "SELECT currval('file_id_seq')";
+        	$storedFile->id = $CC_DBC->getOne($sql);
+        }
         // Insert metadata
         $metadata = $p_values['metadata'];
         // $mdataLoc = ($metadata[0]=="/")? "file":"string";

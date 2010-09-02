@@ -9,13 +9,13 @@ include_once("xmlrpc.inc");
 include_once("xmlrpcs.inc");
 require_once("../example/alib_h.php");
 
-function v2xr($var, $struct=true) 
+function v2xr($var, $struct=true)
 {
 	if (is_array($var)) {
 		$r = array();
 		foreach ($var as $k => $v) {
 		    if ($struct) {
-		        $r[$k] = v2xr($v); 
+		        $r[$k] = v2xr($v);
 		    } else {
 		        $r[] = v2xr($v);
 		    }
@@ -60,8 +60,8 @@ class XR_Alib {
             v2xr(strtoupper($s)."_".Alib::GetSessLogin($sessid)."_".$sessid, false)
         );
     }
- 
-    
+
+
     function xr_login($input)
     {
         $p1 = $input->getParam(0);
@@ -86,8 +86,8 @@ class XR_Alib {
             return new xmlrpcresp(v2xr($res, false));
         }
     }
- 
-    
+
+
     function xr_logout($input)
     {
         $p1 = $input->getParam(0);
@@ -106,29 +106,7 @@ class XR_Alib {
         }
     }
 
-    
-    function xr_getDir($input)
-    {
-        $p1 = $input->getParam(0);
-        if (!(isset($p1) && ($p1->scalartyp()=="int") && is_numeric($id=$p1->scalarval()))) {
-            return new xmlrpcresp(0, 801,
-                "xr_getDir: wrong 1st parameter, int expected.");
-        }
-        $res = M2tree::GetDir($id, 'name');
-        return new xmlrpcresp(v2xr($res, false));
-    }
-    
-    
-    function xr_getPath($input)
-    {
-        $p1 = $input->getParam(0);
-        if (!(isset($p1) && ($p1->scalartyp()=="int") && is_numeric($id=$p1->scalarval()))) {
-            return new xmlrpcresp(0, 801,
-                "xr_getPath: wrong 1st parameter, int expected.");
-        }
-        $res = M2tree::GetPath($id, 'id, name');
-        return new xmlrpcresp(v2xr($res, false));
-    }
+
 } // class XR_Alib
 
 $alib = new XR_Alib();
@@ -148,17 +126,6 @@ $s = new xmlrpc_server( array(
 		"function" => array(&$alib, 'xr_logout'),
 		"signature" => array(array($xmlrpcString, $xmlrpcString)),
 		"docstring" => ""
-	),
-	"alib.getDir" => array(
-		"function" => array(&$alib, 'xr_getDir'),
-		"signature" => array(array($xmlrpcArray, $xmlrpcInt)),
-		"docstring" => "returns directory listing of object with given id"
-	),
-	"alib.getPath" => array(
-		"function" => array(&$alib, 'xr_getPath'),
-		"signature" => array(array($xmlrpcArray, $xmlrpcInt)),
-		"docstring" =>
-		    "returns listing of object in path from rootnode to object with given id"
 	)
 ));
 

@@ -31,31 +31,12 @@ require_once("Transport.php");
  */
 //class BasicStor extends Alib {
 class BasicStor {
-    protected $rootId;
+    //protected $rootId;
     public $storId;
 
 
     public function __construct()
     {
-        $this->rootId = M2tree::GetRootNode();
-        $this->storId = M2tree::GetObjId('StorageRoot', $this->rootId);
-    }
-
-
-    /**
-     * Create a virtual folder in the database.
-     *
-     * @param int $parid
-     * 		Parent id
-     * @param string $folderName
-     * 		Name for new folder
-     * @return int
-     * 		id of new folder
-     * @exception PEAR_Error
-     */
-    public static function bsCreateFolder($parid, $folderName)
-    {
-        return BasicStor::AddObj($folderName , 'Folder', $parid);
     }
 
 
@@ -71,17 +52,12 @@ class BasicStor {
      * @return int|PEAR_Error
      *      ID of the StoredFile that was created.
      */
-    public function bsPutFile($p_parentId, $p_values, $p_copyMedia=TRUE)
+    public function bsPutFile($p_values, $p_copyMedia=TRUE)
     {
         if (!isset($p_values['filetype']) || !isset($p_values['filename'])) {
             return NULL;
         }
         $ftype = strtolower($p_values['filetype']);
-        $id = BasicStor::AddObj($p_values['filename'], $ftype, $p_parentId);
-        if (PEAR::isError($id)) {
-            return $id;
-        }
-        $p_values['id'] = $id;
         $storedFile = StoredFile::Insert($p_values, $p_copyMedia);
         if (PEAR::isError($storedFile)) {
             $res = BasicStor::RemoveObj($id);
@@ -109,7 +85,6 @@ class BasicStor {
      */
     public function bsRenameFile($id, $newName)
     {
-        $parid = M2tree::GetParent($id);
         switch (BasicStor::GetObjType($id)) {
             case "audioclip":
             case "playlist":
@@ -128,77 +103,7 @@ class BasicStor {
             case "File":
             default:
         }
-        return M2tree::RenameObj($id, $newName);
-    }
-
-
-    /**
-     * Move file
-     *
-     * @param int $id
-     * 		Virtual file's local id
-     * @param int $did
-     * 		Destination folder local id
-     * @return boolean/PEAR_Error
-     */
-    public function bsMoveFile($id, $did)
-    {
-        $parid = M2tree::GetParent($id);
-        if (BasicStor::GetObjType($did) !== 'Folder') {
-            return PEAR::raiseError(
-                "BasicStor::moveFile: destination is not folder ($did)",
-                GBERR_WRTYPE
-            );
-        }
-        switch (BasicStor::GetObjType($id)) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-            case "File":
-            case "Folder":
-                return BasicStor::MoveObj($id, $did);
-                break;
-            default:
-                return PEAR::raiseError(
-                    "BasicStor::moveFile: unsupported object to move, sorry.",
-                    GBERR_WRTYPE
-                );
-        }
-    }
-
-
-    /**
-     * Copy file
-     *
-     * @param int $id
-     * 		Virtual file's local id
-     * @param int $did
-     * 		Destination folder local id
-     * @return boolean|PEAR_Error
-     */
-    public function bsCopyFile($id, $did)
-    {
-        $parid = M2tree::GetParent($id);
-        if (BasicStor::GetObjType($did) !== 'Folder') {
-            return PEAR::raiseError(
-                'BasicStor::bsCopyFile: destination is not folder',
-                GBERR_WRTYPE
-            );
-        }
-        switch (BasicStor::GetObjType($id)) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-            case "File":
-            case "Folder":
-                return BasicStor::CopyObj($id, $did);
-                break;
-            default:
-                return PEAR::raiseError(
-                    "BasicStor::moveFile: unsupported object to copy, sorry.",
-                    GBERR_WRTYPE
-                );
-        }
+        return TRUE;
     }
 
 
@@ -257,10 +162,6 @@ class BasicStor {
             return $res;
         }
         // move to trash:
-        $did = M2tree::GetObjId($CC_CONFIG['TrashName'], $this->storId);
-        if (PEAR::isError($did)) {
-            return $did;
-        }
         switch (BasicStor::GetObjType($id)) {
             case "audioclip":
             case "playlist":
@@ -269,10 +170,6 @@ class BasicStor {
                 if (is_null($storedFile) || PEAR::isError($storedFile)) {
                     return $storedFile;
                 }
-                if (is_null($did)) {
-                    return PEAR::raiseError("BasicStor::bsDeleteFile: ".
-                        "trash not found", GBERR_NOTF);
-                }
                 $res = $storedFile->setState('deleted');
                 if (PEAR::isError($res)) {
                     return $res;
@@ -280,8 +177,7 @@ class BasicStor {
                 break;
             default:
         }
-        $res = $this->bsMoveFile($id, $did);
-        return $res;
+				return TRUE;
     }
 
 
@@ -307,32 +203,6 @@ class BasicStor {
         }
         return ($cnt == 1);
     }
-
-
-    /**
-     *  Get gunid from token
-     *
-     * @param string $token
-     * 		Access/put token
-     * @param string $type
-     * 		'put'|'access'|'download'
-     * @return string
-     */
-//    function _gunidFromToken($token, $type='put')
-//    {
-//        $acc = $CC_DBC->getRow("
-//            SELECT to_hex(gunid)as gunid, ext FROM {$this->accessTable}
-//            WHERE token=x'{$token}'::bigint AND type='$type'
-//        ");
-//        if (PEAR::isError($acc)) {
-//            return $acc;
-//        }
-//        $gunid = StoredFile::NormalizeGunid($acc['gunid']);
-//        if (PEAR::isError($gunid)) {
-//            return $gunid;
-//        }
-//        return $gunid;
-//    }
 
 
     /**
@@ -499,7 +369,7 @@ class BasicStor {
      * 		array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
-    public function bsOpenDownload($id, $part='media', $parent='0')
+    public function bsOpenDownload($id, $part='media')
     {
         $storedFile = StoredFile::Recall($id);
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
@@ -522,7 +392,7 @@ class BasicStor {
                  "BasicStor::bsOpenDownload: unknown part ($part)"
                 );
         }
-        $acc = BasicStor::bsAccess($realfile, $ext, $gunid, 'download', $parent);
+        $acc = BasicStor::bsAccess($realfile, $ext, $gunid, 'download');
         if (PEAR::isError($acc)) {
             return $acc;
         }
@@ -728,27 +598,6 @@ class BasicStor {
         $path = $CC_CONFIG['storageUrlPath'];
         return "http://$host:$port$path/";
     }
-
-
-    /**
-     * Return local subject id of token owner
-     *
-     * @param string $token
-     * 		access/put/render etc. token
-     * @return int
-     * 		local subject id
-     */
-//    function getTokenOwner($token)
-//    {
-//        $row = $CC_DBC->getOne("
-//            SELECT owner FROM {$this->accessTable}
-//            WHERE token=x'{$token}'::bigint
-//        ");
-//        if (PEAR::isError($row)) {
-//            return $row;
-//        }
-//        $owner = $row;
-//    }
 
 
     /**
@@ -1256,8 +1105,6 @@ class BasicStor {
     /**
      * Import playlist in LS Archive format
      *
-     * @param int $parid
-     * 		Destination folder local id
      * @param string $plid
      * 		Playlist gunid
      * @param string $aPath
@@ -1273,7 +1120,7 @@ class BasicStor {
      * @return int
      * 		Result file local id (or error object)
      */
-    public function bsImportPlaylistRaw($parid, $plid, $aPath, $rPath, $ext, &$gunids, $subjid)
+    public function bsImportPlaylistRaw($plid, $aPath, $rPath, $ext, &$gunids, $subjid)
     {
         $id = BasicStor::IdFromGunid($plid);
         if (!is_null($id)) {
@@ -1295,12 +1142,12 @@ class BasicStor {
                     "gunid" => $plid,
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = $this->bsPutFile($values);
                 $res = $storedFile->getId();
                 break;
             case "smil":
                 require_once("SmilPlaylist.php");
-                $res = SmilPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $parid, $subjid);
+                $res = SmilPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
                 if (PEAR::isError($res)) {
                     break;
                 }
@@ -1308,7 +1155,7 @@ class BasicStor {
                 break;
             case "m3u":
                 require_once("M3uPlaylist.php");
-                $res = M3uPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $parid, $subjid);
+                $res = M3uPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
                 if (PEAR::isError($res)) {
                     break;
                 }
@@ -1331,8 +1178,6 @@ class BasicStor {
     /**
      * Import playlist in LS Archive format
      *
-     * @param int $parid
-     * 		Destination folder local id
      * @param string $fpath
      * 		Imported file pathname
      * @param int $subjid
@@ -1340,7 +1185,7 @@ class BasicStor {
      * @return int
      * 		Result file local id (or error object)
      */
-    public function bsImportPlaylist($parid, $fpath, $subjid)
+    public function bsImportPlaylist($fpath, $subjid)
     {
         global $CC_CONFIG;
         // untar:
@@ -1397,7 +1242,7 @@ class BasicStor {
                     "gunid" => $gunid,
                     "filetype" => "audioclip"
                 );
-                $storedFile = $this->bsPutFile($parid, $values);
+                $storedFile = $this->bsPutFile($values);
                 $res = $storedFile->getId();
             }
             @unlink("$tmpdc/{$it['rawMedia']}");
@@ -1413,7 +1258,7 @@ class BasicStor {
             while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
                 if (preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)) {
                     list(,$gunid, $ext) = $va;
-                    $res = $this->bsImportPlaylistRaw($parid, $gunid,
+                    $res = $this->bsImportPlaylistRaw($gunid,
                         $tmpdp, $entry, $ext, $gunids, $subjid);
                     unlink("$tmpdp/$entry");
                     if (PEAR::isError($res)) {
@@ -1435,52 +1280,6 @@ class BasicStor {
     /* --------------------------------------------------------- info methods */
 
     /**
-     * List files in folder
-     *
-     * @param int $id
-     * 		Local ID of folder
-     * @return array
-     * @todo THERE IS A BUG IN THIS FUNCTION
-     */
-    public function bsListFolder($id)
-    {
-        if (BasicStor::GetObjType($id) !== 'Folder') {
-            return PEAR::raiseError(
-                'BasicStor::bsListFolder: not a folder', GBERR_NOTF
-            );
-        }
-        $listArr = M2tree::GetDir($id, 'id, name, type, param as target', 'name');
-        if (PEAR::isError($listArr)) {
-            return $listArr;
-        }
-        foreach ($listArr as $i => $v) {
-            if ($v['type'] == 'Folder') {
-                break;
-            }
-            $gunid = BasicStor::GunidFromId($v['id']);
-            if (PEAR::isError($gunid)) {
-                return $gunid;
-            }
-            if (is_null($gunid)) {
-                unset($listArr[$i]);
-                break;
-            }
-            $listArr[$i]['type'] = BasicStor::GetType($gunid);
-            if (PEAR::isError($listArr[$i]['type'])) {
-                return $listArr[$i]['type'];
-            }
-            $listArr[$i]['gunid'] = $gunid;
-
-            // THE BUG IS HERE - "getState()" IS NOT A STATIC FUNCTION!
-            if (StoredFile::getState($gunid) == 'incomplete') {
-                unset($listArr[$i]);
-            }
-        }
-        return $listArr;
-    }
-
-
-    /**
      * Analyze media file for internal metadata information
      *
      * @param int $id
@@ -1495,64 +1294,6 @@ class BasicStor {
         }
         $ia = $storedFile->analyzeFile();
         return $ia;
-    }
-
-
-    /**
-     * List files in folder
-     *
-     * @param int $id
-     * 		Local id of object
-     * @param string $relPath
-     * 		Relative path
-     * @return array
-     */
-    public function getObjIdFromRelPath($id, $relPath='.')
-    {
-        $relPath = trim(urldecode($relPath));
-        //if(BasicStor::GetObjType($id) !== 'Folder')
-        $nid = M2tree::GetParent($id);
-        if (PEAR::isError($nid)) {
-            return $nid;
-        }
-        if (is_null($nid)) {
-            return PEAR::raiseError("null parent for id=$id");
-        }
-        //else $nid = $id;
-        if (substr($relPath, 0, 1)=='/') {
-            $nid = $this->storId;
-        }
-        $a = split('/', $relPath);
-        foreach ($a as $i => $pathItem) {
-            switch ($pathItem) {
-                case ".":
-                    break;
-                case "..":
-                    if ($nid != $this->storId) {
-                        $nid = M2tree::GetParent($nid);
-                        if (PEAR::isError($nid)) {
-                            return $nid;
-                        }
-                        if (is_null($nid)) {
-                             return PEAR::raiseError(
-                                "null parent for $nid");
-                        }
-                    }
-                    break;
-                case "":
-                    break;
-                default:
-                    $nid = M2tree::GetObjId($pathItem, $nid);
-                    if (PEAR::isError($nid)) {
-                        return $nid;
-                    }
-                    if (is_null($nid)) {
-                         return PEAR::raiseError(
-                            "Object $pathItem not found (from id=$id)");
-                    }
-            }
-        }
-        return $nid;
     }
 
 
@@ -1611,19 +1352,17 @@ class BasicStor {
      */
     public static function GetObjType($oid)
     {
-        $type = M2tree::GetObjType($oid);
-        if ( !PEAR::isError($type) && ($type == 'File') ) {
-            $gunid = BasicStor::GunidFromId($oid);
-            if (PEAR::isError($gunid)) {
-                return $gunid;
-            }
-            $ftype = BasicStor::GetType($gunid);
-            if (PEAR::isError($ftype)) {
-                return $ftype;
-            }
-            if (!is_null($ftype)) {
-                $type = $ftype;
-            }
+				$type = "unknown";
+        $gunid = BasicStor::GunidFromId($oid);
+        if (PEAR::isError($gunid)) {
+            return $gunid;
+        }
+        $ftype = BasicStor::GetType($gunid);
+        if (PEAR::isError($ftype)) {
+            return $ftype;
+        }
+        if (!is_null($ftype)) {
+            $type = $ftype;
         }
         return $type;
     }
@@ -1645,10 +1384,6 @@ class BasicStor {
             return $uid;
         }
         if (Subjects::IsGroup($uid) === FALSE) {
-            $fid = BasicStor::bsCreateFolder($this->storId, $login);
-            if (PEAR::isError($fid)) {
-                return $fid;
-            }
             $res = Alib::AddPerm($uid, '_all', $fid, 'A');
             if (PEAR::isError($res)) {
                 return $res;
@@ -1662,22 +1397,6 @@ class BasicStor {
                 if (PEAR::isError($res)) {
                     return $res;
                 }
-                //$pfid = BasicStor::bsCreateFolder($fid, 'public');
-                //if (PEAR::isError($pfid)) {
-                //    return $pfid;
-                //}
-                //$res = Alib::AddPerm($uid, '_all', $pfid, 'A');
-                //if (PEAR::isError($res)) {
-                //    return $res;
-                //}
-                //$allGrId = Subjects::GetSubjId($CC_CONFIG['AllGr']);
-                //if (PEAR::isError($allGrId)) {
-                //    return $allGrId;
-                //}
-                //$res = Alib::AddPerm($allGrId, 'read', $pfid, 'A');
-                //if (PEAR::isError($res)) {
-                //    return $res;
-                //}
             }
         }
         return $uid;
@@ -1710,17 +1429,6 @@ class BasicStor {
         $res = Alib::RemoveSubj($login);
         if (PEAR::isError($res)) {
             return $res;
-        }
-        $id = M2tree::GetObjId($login, $this->storId);
-        if (PEAR::isError($id)) {
-            return $id;
-        }
-        if (!is_null($id)) {
-            // remove home folder:
-            $res = $this->bsDeleteFile($id);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
         }
         return TRUE;
     }
@@ -1782,50 +1490,6 @@ class BasicStor {
         $adesc = "[".join(',',$acts)."]";
         return PEAR::raiseError(
             "BasicStor::$adesc: access denied", GBERR_DENY);
-    }
-
-
-    /**
-     * Return users's home folder local ID
-     *
-     * @param string $subjid
-     * 		Local subject id
-     * @return unknown
-     * 		local folder id
-     */
-    public function _getHomeDirId($subjid)
-    {
-        $login = Subjects::GetSubjName($subjid);
-        if (PEAR::isError($login)) {
-            return $login;
-        }
-        $parid = M2tree::GetObjId($login, $this->storId);
-        if (PEAR::isError($parid)) {
-            return $parid;
-        }
-        if (is_null($parid)) {
-            return PEAR::raiseError("BasicStor::_getHomeDirId: ".
-                "homedir not found ($subjid) ($login)", GBERR_NOTF);
-        }
-        return $parid;
-    }
-
-
-    /**
-     * Return users's home folder local ID
-     *
-     * @param string $sessid
-     * 		session ID
-     * @return unknown
-     * 		local folder id
-     */
-    public function _getHomeDirIdFromSess($sessid)
-    {
-        $uid = Alib::GetSessUserId($sessid);
-        if (PEAR::isError($uid)) {
-            return $uid;
-        }
-        return $this->_getHomeDirId($uid);
     }
 
 
@@ -1908,26 +1572,6 @@ class BasicStor {
 
 
     /**
-     * Returns TRUE if gunid is free
-     * @return boolean|PEAR_Error
-     */
-//    function _gunidIsFree($gunid)
-//    {
-//        $cnt = $CC_DBC->getOne("
-//            SELECT count(*) FROM {$this->filesTable}
-//            WHERE gunid=x'{$this->gunid}'::bigint
-//        ");
-//        if (PEAR::isError($cnt)) {
-//            return $cnt;
-//        }
-//        if ($cnt > 0) {
-//            return FALSE;
-//        }
-//        return TRUE;
-//    }
-
-
-    /**
      * Set playlist edit flag
      *
      * @param string $p_playlistId
@@ -1997,11 +1641,6 @@ class BasicStor {
      */
     protected static function CopyObj($id, $newParid, $after=NULL)
     {
-        $parid = M2tree::GetParent($id);
-        $nid = M2tree::CopyObj($id, $newParid, $after);
-        if (PEAR::isError($nid)) {
-            return $nid;
-        }
         switch (BasicStor::GetObjType($id)) {
             case "audioclip":
             case "playlist":
@@ -2011,73 +1650,12 @@ class BasicStor {
                     return $storedFile;
                 }
                 $ac2 = StoredFile::CopyOf($storedFile, $nid);
-                $ac2->setName(M2tree::GetObjName($nid));
+                //$ac2->setName(M2tree::GetObjName($nid));
                 break;
             case "File":
             default:
         }
         return $nid;
-    }
-
-
-    /**
-     * Move virtual file.<br>
-     * Redefined from parent class.
-     *
-     * @return boolean
-     */
-    public static function MoveObj($id, $newParid, $after=NULL)
-    {
-        $parid = M2tree::GetParent($id);
-        switch (BasicStor::GetObjType($id)) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-                $storedFile = StoredFile::Recall($id);
-                if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                    return $storedFile;
-                }
-                if ($storedFile->isEdited()) {
-                    return PEAR::raiseError(
-                        'BasicStor::MoveObj: file is currently being edited, it cannot be moved.');
-                }
-                if ($storedFile->isAccessed()) {
-                    return PEAR::raiseError(
-                        'BasicStor::MoveObj: file is currently in use, it cannot be moved.');
-                }
-                break;
-            default:
-        }
-        $nid = M2tree::MoveObj($id, $newParid, $after);
-        if (PEAR::isError($nid)) {
-            return $nid;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Add a virtual file.
-     *
-     * @return int
-     * 		Database ID of the object.
-     */
-    public static function AddObj($name, $type, $parid=1, $aftid=NULL, $param='')
-    {
-        $exid = M2tree::GetObjId($name, $parid);
-        if (PEAR::isError($exid)) {
-            return $exid;
-        }
-        $name2 = $name;
-        for ( ;
-            $xid = M2tree::GetObjId($name2, $parid),
-                !is_null($xid) && !PEAR::isError($xid);
-            $name2 .= "_"
-        );
-        if (!is_null($exid)) {
-            $r = M2tree::RenameObj($exid, $name2);
-        }
-        return M2tree::AddObj($name, $type, $parid, $aftid, $param);
     }
 
 
@@ -2197,7 +1775,6 @@ class BasicStor {
         if (!$loadSampleData) {
             return $res;
         }
-        $rootHD = M2tree::GetObjId('root', $this->storId);
         $samples = dirname(__FILE__)."/tests/sampleData.php";
         if (file_exists($samples)) {
             include($samples);
@@ -2230,18 +1807,14 @@ class BasicStor {
                 "gunid" => $gunid,
                 "filetype" => $type
             );
-            $r = $this->bsPutFile($rootHD, $values);
+            $r = $this->bsPutFile($values);
             if (PEAR::isError($r)) {
                 return $r;
             }
-            //$gunid = BasicStor::GunidFromId($r);
-            //$res['results'][] = array('gunid' => $gunid, 'type' => $type);
-            //$res['cnt']++;
         }
         return $this->bsLocalSearch(
             array('filetype'=>'all', 'conditions'=>array())
         );
-        //return $res;
     }
 
 
@@ -2262,15 +1835,15 @@ class BasicStor {
      *
      *
      */
-    public function dumpDir($id='', $format='$o["name"]')
-    {
-        if ($id == '') {
-            $id = $this->storId;
-        }
-        $arr = M2tree::GetDir($id, 'id,name');
-        $arr = array_map(create_function('$o', 'return "'.$format .'";'), $arr);
-        return join('', $arr);
-    }
+//    public function dumpDir($id='', $format='$o["name"]')
+//    {
+//        if ($id == '') {
+//            $id = $this->storId;
+//        }
+//        $arr = M2tree::GetDir($id, 'id,name');
+//        $arr = array_map(create_function('$o', 'return "'.$format .'";'), $arr);
+//        return join('', $arr);
+//    }
 
 
     /**
@@ -2321,19 +1894,6 @@ class BasicStor {
     public function initData($p_verbose = false)
     {
         global $CC_CONFIG;
-        $this->rootId = M2tree::GetRootNode();
-
-        // Check if the StorageRoot already exists, if not, create it.
-        $storageRootId = M2tree::GetObjId('StorageRoot', $this->rootId);
-        if (is_null($storageRootId)) {
-            echo "   * Creating 'StorageRoot' node...";
-            $this->storId = BasicStor::AddObj('StorageRoot', 'Folder', $this->rootId);
-            $this->wd = $this->storId;
-            echo "done.\n";
-        } else {
-            echo "   * Skipping: StorageRoot already exists.\n";
-        }
-
         // Create the Admin group
         if (!empty($CC_CONFIG['AdminsGr'])) {
             if (!Subjects::GetSubjId($CC_CONFIG['AdminsGr'])) {
@@ -2404,20 +1964,6 @@ class BasicStor {
             echo "done.\n";
         } else {
             echo "   * Skipping: user already exists: 'root'\n";
-        }
-
-        if (!empty($CC_CONFIG['TrashName'])) {
-            $trashId = M2tree::GetObjId($CC_CONFIG['TrashName'], $this->storId);
-            if (!$trashId) {
-                echo "   * Creating trash can...";
-                $tfid = BasicStor::bsCreateFolder($this->storId, $CC_CONFIG["TrashName"]);
-                if (PEAR::isError($tfid)) {
-                    return $tfid;
-                }
-                echo "done.\n";
-            } else {
-                echo "   * Skipping: trash can already exists.\n";
-            }
         }
 
         // Create the user named 'scheduler'.

@@ -21,11 +21,12 @@ $stid = $bs->storId;
 
 function admDumpFolder(&$bs, $fid, $ind='')
 {
-    $name = M2tree::GetObjName($fid);
-    if (PEAR::isError($name)) {
-    	echo $name->getMessage();
-    	exit;
-    }
+		// NOTE: need to fix this, removed due to tree removal
+//    $name = M2tree::GetObjName($fid);
+//    if (PEAR::isError($name)) {
+//    	echo $name->getMessage();
+//    	exit;
+//    }
     $type = BasicStor::GetObjType($fid);
     if (PEAR::isError($type)) {
     	echo $type->getMessage();
@@ -42,32 +43,6 @@ function admDumpFolder(&$bs, $fid, $ind='')
     }
     $pars['name'] = "$name";
     switch ($type) {
-        case "Folder":
-            $farr = $bs->bsListFolder($fid);
-            if (PEAR::isError($farr)) {
-            	echo $farr->getMessage();
-            	exit;
-            }
-            $res = '';
-            foreach ($farr as $i => $folder) {
-                $fid2 = $folder['id'];
-                $res .= admDumpFolder($bs, $fid2, "$ind ");
-            }
-            if (!$res) {
-                return XML_Util::createTagFromArray(array(
-                    'namespace' => NSPACE,
-                    'localPart' => 'folder',
-                    'attributes'=> $pars,
-                ));
-            } else {
-                return XML_Util::createTagFromArray(array(
-                    'namespace' => NSPACE,
-                    'localPart' => 'folder',
-                    'attributes'=> $pars,
-                    'content'   => $res,
-                ), FALSE);
-            }
-            break;
         case "audioclip":
             return XML_Util::createTagFromArray(array(
                 'namespace' => NSPACE,
@@ -92,8 +67,8 @@ function admDumpFolder(&$bs, $fid, $ind='')
         default:
             return "";
     }
-
 }
+
 function admDumpGroup(&$bs, $gid, $ind='')
 {
     $name = Subjects::GetSubjName($gid);

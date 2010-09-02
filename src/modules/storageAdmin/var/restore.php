@@ -40,25 +40,9 @@ function ls_restore_checkErr($r, $ln='')
     }
 }
 
-function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
+function ls_restore_restoreObject($obj, /*$parid,*/ $reallyInsert=TRUE){
     global $tmpdir, $bs;
     switch ($obj['type']) {
-        case "folder";
-            if ($reallyInsert) {
-                if (VERBOSE) {
-                    echo " creating folder {$obj['name']} ...\n";
-                }
-                $r = BasicStor::bsCreateFolder($parid, $obj['name']);
-                ls_restore_checkErr($r, __LINE__);
-            } else {
-                $r = $parid;
-            }
-            if (isset($obj['children']) && is_array($obj['children'])) {
-                foreach ($obj['children'] as $i => $ch) {
-                    ls_restore_restoreObject($ch, $r);
-                }
-            }
-            break;
         case "audioClip";
         case "webstream";
         case "playlist";
@@ -87,7 +71,7 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
                     "gunid" => $obj['gunid'],
                     "filetype" => strtolower($obj['type'])
                 );
-                $r = $bs->bsPutFile($parid, $values);
+                $r = $bs->bsPutFile($values);
                 ls_restore_checkErr($r, __LINE__);
             }
         break;
@@ -117,7 +101,7 @@ $xmlTree = $parser->getTree();
 
 /* ----------------------------------------- processing storageServer element */
 $subjArr = FALSE;
-$tree = FALSE;
+//$tree = FALSE;
 foreach ($xmlTree->children as $i => $el) {
     switch ($el->name) {
         case "subjects":
@@ -126,12 +110,12 @@ foreach ($xmlTree->children as $i => $el) {
             }
             $subjArr = $el->children;
             break;
-        case "folder":
-            if ($tree !== FALSE) {
-                echo "ERROR: unexpected folder element\n";
-            }
-            $tree = ls_restore_processObject($el);
-            break;
+//        case "folder":
+//            if ($tree !== FALSE) {
+//                echo "ERROR: unexpected folder element\n";
+//            }
+//            $tree = ls_restore_processObject($el);
+//            break;
         default:
             echo "ERROR: unknown element name {$el->name}\n";
             exit;
@@ -267,6 +251,6 @@ foreach ($groups as $grname => $group) {
 }
 
 /* -------------------------------------------------------- restoring objects */
-ls_restore_restoreObject($tree, $storId, FALSE);
+ls_restore_restoreObject($tree, /*$storId,*/ FALSE);
 
 ?>

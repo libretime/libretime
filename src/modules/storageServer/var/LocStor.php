@@ -78,25 +78,15 @@ class LocStor extends BasicStor {
         } else {
             // gunid doesn't exist - do insert:
             $tmpFname = uniqid();
-            $parid = $this->_getHomeDirIdFromSess($sessid);
-            if (PEAR::isError($parid)) {
-                return $parid;
-            }
-            if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+            if (($res = BasicStor::Authorize('write', null, $sessid)) !== TRUE) {
                 return $res;
             }
-            $oid = BasicStor::AddObj($tmpFname, $ftype, $parid);
-            if (PEAR::isError($oid)) {
-                return $oid;
-            }
             $values = array(
-                "id" => $oid,
                 "metadata" => $metadata,
                 "gunid" => $gunid,
                 "filetype" => $ftype);
             $storedFile =& StoredFile::Insert($values);
             if (PEAR::isError($storedFile)) {
-                $res = BasicStor::RemoveObj($oid);
                 return $storedFile;
             }
             if (PEAR::isError($res)) {
@@ -110,7 +100,7 @@ class LocStor extends BasicStor {
         if ($fname == '') {
             $fname = "newFile";
         }
-        $res = $this->bsRenameFile($oid, $fname);
+        $res = $this->bsRenameFile($storedFile->id, $fname);
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -599,19 +589,10 @@ class LocStor extends BasicStor {
             );
         }
         $tmpFname = uniqid('');
-        $parid = $this->_getHomeDirIdFromSess($sessid);
-        if (PEAR::isError($parid)) {
-            return $parid;
-        }
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', null, $sessid)) !== TRUE) {
             return $res;
         }
-        $oid = BasicStor::AddObj($tmpFname , 'playlist', $parid);
-        if (PEAR::isError($oid)) {
-            return $oid;
-        }
         $values = array(
-            "id" => $oid,
             "metadata" => dirname(__FILE__).'/emptyPlaylist.xml',
             "gunid" => $playlistId,
             "filetype" => "playlist");
@@ -959,14 +940,7 @@ class LocStor extends BasicStor {
         }
         $fname = $arr['fname'];
         $owner = $arr['owner'];
-        $parid = $this->_getHomeDirId($owner);
-        if (PEAR::isError($parid)) {
-            if (file_exists($fname)) {
-                @unlink($fname);
-            }
-            return $parid;
-        }
-        $res = $this->bsImportPlaylist($parid, $fname);
+        $res = $this->bsImportPlaylist($fname);
         if (file_exists($fname)) {
             @unlink($fname);
         }

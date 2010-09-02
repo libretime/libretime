@@ -29,15 +29,15 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->PLAYLIST->release();
 	    $uiHandler->logout(TRUE);
 	    break;
-	    
+
     case "plupload":
     	 $ui_tmpid = $uiHandler->pluploadFile($_REQUEST);
     	 if($ui_tmpid) {
     	 	$uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     	 }
     	 ob_end_clean();
-    	 
-    	die('{"jsonrpc" : "2.0", "error" : {}}');  
+
+    	die('{"jsonrpc" : "2.0", "error" : {}}');
 
     // file/webstream handling
     case "addFileData":
@@ -62,20 +62,8 @@ switch ($_REQUEST['act']) {
 	    $uiHandler->SCRATCHPAD->reloadMetadata();
 	    break;
 
-    case "newFolder":
-	    $uiHandler->newFolder($_REQUEST["newname"], $uiHandler->id);
-	    break;
-
     case "rename":
 	    $uiHandler->rename($_REQUEST["newname"], $uiHandler->id);
-	    break;
-
-    case "move":
-	    $uiHandler->move($_REQUEST["newPath"], $uiHandler->id);
-	    break;
-
-    case "copy":
-	    $uiHandler->copy($_REQUEST["newPath"], $uiHandler->id);
 	    break;
 
     case "delete":
@@ -153,10 +141,10 @@ switch ($_REQUEST['act']) {
     case "SEARCH.setOffset":
 	    $uiHandler->SEARCH->setOffset($_REQUEST['page']);
 	    break;
-	    
-	case "BROWSE.refresh":
-		$uiHandler->BROWSE->refresh($_REQUEST);
-		break;
+
+		case "BROWSE.refresh":
+			$uiHandler->BROWSE->refresh($_REQUEST);
+			break;
 
     case "BROWSE.setCategory":
 	    $uiHandler->BROWSE->setCategory($_REQUEST);
@@ -449,7 +437,7 @@ switch ($_REQUEST['act']) {
 	    $_SESSION = array();
 	    die();
 	    break;
-	    
+
 	case 'twitter.saveSettings':
         $uiHandler->TWITTER->saveSettings();
         $uiHandler->redirUrl = UI_BROWSER.'?act=twitter.settings';

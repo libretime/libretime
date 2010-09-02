@@ -8,14 +8,10 @@ define('ALIBERR_NOTEXISTS', 31);
 /**
  * Authentication/authorization class
  *
-
-
-
  * @package Campcaster
  * @subpackage Alib
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
-
  */
 class Alib {
     /* ======================================================= public methods */
@@ -217,17 +213,18 @@ class Alib {
      */
     public static function CheckPerm($sid, $action, $oid=NULL)
     {
+    		return TRUE;
         global $CC_DBC;
         global $CC_CONFIG;
         if (!is_numeric($sid)) {
             return FALSE;
         }
-        if (is_null($oid) or $oid=='') {
-            $oid = M2tree::GetRootNode();
-        }
-        if (PEAR::isError($oid)) {
-            return $oid;
-        }
+//        if (is_null($oid) or $oid=='') {
+//            $oid = M2tree::GetRootNode();
+//        }
+//        if (PEAR::isError($oid)) {
+//            return $oid;
+//        }
         if (!is_numeric($oid)) {
             return FALSE;
         }
@@ -255,9 +252,9 @@ class Alib {
         $q_ordb0 = $q_ordb;
         //  joins for solving object tree:
         $q_flds .= ", t.name, ts.level as tlevel";
-        $q_join .= "LEFT JOIN ".$CC_CONFIG['treeTable']." t ON t.id=p.obj ";
-        $q_join .= "LEFT JOIN ".$CC_CONFIG['structTable']." ts ON ts.parid=p.obj ";
-        $q_cond .= " AND (t.id=$oid OR ts.objid=$oid)";
+        //$q_join .= "LEFT JOIN ".$CC_CONFIG['treeTable']." t ON t.id=p.obj ";
+        //$q_join .= "LEFT JOIN ".$CC_CONFIG['structTable']." ts ON ts.parid=p.obj ";
+        //$q_cond .= " AND (t.id=$oid OR ts.objid=$oid)";
         // action DESC order is hack for lower priority of '_all':
         $q_ordb = "ORDER BY coalesce(ts.level,0), m.level, action DESC, p.type DESC";
         // query by tree:
@@ -267,10 +264,10 @@ class Alib {
             return($r1);
         }
         //  if there is row with type='A' on the top => permit
-        $AllowedByTree =
-            (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
-        $DeniedByTree =
-            (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
+        //$AllowedByTree =
+        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
+        //$DeniedByTree =
+        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
 
         if (!USE_ALIB_CLASSES) {
             return $AllowedbyTree;

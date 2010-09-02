@@ -31,7 +31,8 @@ function login(&$data)
         return FALSE;
     }
 
-    $id = M2tree::GetObjId($data['PHP_AUTH_USER'], $gb->storId);
+    //$id = M2tree::GetObjId($data['PHP_AUTH_USER'], $gb->storId);
+    $id = $gb->storId;
 
     if (PEAR::isError($id)) {
         return FALSE;

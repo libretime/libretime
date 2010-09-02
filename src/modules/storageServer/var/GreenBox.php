@@ -8,45 +8,18 @@ require_once('Prefs.php');
  *
  * File storage module.
  *
-
-
-
  * @package Campcaster
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
-
  */
 class GreenBox extends BasicStor {
 
     /* ====================================================== storage methods */
 
     /**
-     * Create new folder
-     *
-     * @param int $parid
-     * 		Parent id
-     * @param string $folderName
-     * 		Name for new folder
-     * @param string $sessid
-     * 		Session id
-     * @return int
-     * 		ID of new folder
-     * @exception PEAR::error
-     */
-    public function createFolder($parid, $folderName, $sessid='')
-    {
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
-            return $res;
-        }
-        return BasicStor::bsCreateFolder($parid, $folderName);
-    } // fn createFolder
-
-
-    /**
      * Store new file in the storage
      *
-     * @param int $parid, parent id
      * @param string $fileName
      * 		The name for the new file.
      * @param string $mediaFileLP
@@ -62,12 +35,12 @@ class GreenBox extends BasicStor {
      * @return int
      *      ID of the StoredFile that was created.
      */
-    public function putFile($p_parentId, $p_values, $p_sessionId='')
+    public function putFile($p_values, $p_sessionId='')
     {
-        if (($res = BasicStor::Authorize('write', $p_parentId, $p_sessionId)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', null, $p_sessionId)) !== TRUE) {
             return $res;
         }
-        $storedFile = $this->bsPutFile($p_parentId, $p_values);
+        $storedFile = $this->bsPutFile($p_values);
         return $storedFile;
     } // fn putFile
 
@@ -75,8 +48,6 @@ class GreenBox extends BasicStor {
     /**
      * Store new webstream
      *
-     * @param int $parid
-     * 		Parent id
      * @param string $fileName
      * 		Name for new file
      * @param string $mdataFileLP
@@ -90,10 +61,10 @@ class GreenBox extends BasicStor {
      * @return int
      *  @exception PEAR::error
      */
-    public function storeWebstream($parid, $fileName, $mdataFileLP, $sessid='',
+    public function storeWebstream($fileName, $mdataFileLP, $sessid='',
          $gunid=NULL, $url)
     {
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', null, $sessid)) !== TRUE) {
             return $res;
         }
         if (!file_exists($mdataFileLP)) {
@@ -105,7 +76,7 @@ class GreenBox extends BasicStor {
             "gunid" => $gunid,
             "filetype" => "webstream"
         );
-        $storedFile = $this->bsPutFile($parid, $values);
+        $storedFile = $this->bsPutFile($values);
         if (PEAR::isError($storedFile)) {
             return $storedFile;
         }
@@ -192,54 +163,11 @@ class GreenBox extends BasicStor {
      */
     public function renameFile($id, $newName, $sessid='')
     {
-        $parid = M2tree::GetParent($id);
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
         return $this->bsRenameFile($id, $newName);
     } // fn renameFile
-
-
-    /**
-     * Move file
-     *
-     * @param int $id
-     *      virt.file's local id
-     * @param int $did
-     *      destination folder local id
-     * @param string $sessid
-     *      session id
-     * @return boolean|PEAR_Error
-     */
-    public function moveFile($id, $did, $sessid='')
-    {
-        $res = BasicStor::Authorize(array('read', 'write'), array($id, $did), $sessid);
-        if ($res !== TRUE) {
-            return $res;
-        }
-        return $this->bsMoveFile($id, $did);
-    } // fn moveFile
-
-
-    /**
-     * Copy file
-     *
-     * @param int $id
-     *      virt.file's local id
-     * @param int $did
-     *      destination folder local id
-     * @param string $sessid
-     *      session id
-     * @return boolean|PEAR_Error
-     */
-    public function copyFile($id, $did, $sessid='')
-    {
-        $res = BasicStor::Authorize(array('read', 'write'), array($id, $did), $sessid);
-        if($res !== TRUE) {
-            return $res;
-        }
-        return $this->bsCopyFile($id, $did);
-    } // fn copyFile
 
 
     /**
@@ -276,8 +204,7 @@ class GreenBox extends BasicStor {
      */
     public function deleteFile($id, $sessid='', $forced=FALSE)
     {
-        $parid = M2tree::GetParent($id);
-        if (($res = BasicStor::Authorize('write', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
         return $this->bsDeleteFile($id, $forced);
@@ -528,8 +455,6 @@ class GreenBox extends BasicStor {
     /**
      * Create a new empty playlist.
      *
-     * @param int $parid
-     *      parent id
      * @param string $fname
      *      human readable menmonic file name
      * @param string $sessid
@@ -537,7 +462,7 @@ class GreenBox extends BasicStor {
      * @return int
      * 		local id of created playlist
      */
-    public function createPlaylist($parid, $fname, $sessid='')
+    public function createPlaylist($fname, $sessid='')
     {
         global $CC_CONFIG, $CC_DBC;
         $gunid = StoredFile::CreateGunid();
@@ -550,18 +475,6 @@ class GreenBox extends BasicStor {
         $id = BasicStor::IdFromGunid($gunid2);
         if (PEAR::isError($id)) {
             return $id;
-        }
-        // get home dir id:
-        $hdid = $this->_getHomeDirIdFromSess($sessid);
-        if (PEAR::isError($hdid)) {
-            return $hdid;
-        }
-        // optionally move it to the destination folder:
-        if($parid != $hdid && !is_null($parid)){
-            $r = $this->bsMoveFile($id, $parid);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
         }
         return $id;
     } // fn createPlaylist
@@ -770,7 +683,7 @@ class GreenBox extends BasicStor {
         }
         return TRUE;
     } // fn changeFadeInfo
-    
+
     /**
      * Change cueIn/curOut values for playlist element
      *
@@ -1013,14 +926,7 @@ class GreenBox extends BasicStor {
         }
         $fname = $arr['fname'];
         $owner = $arr['owner'];
-        $parid = $this->_getHomeDirId($owner);
-        if (PEAR::isError($parid)) {
-            if (file_exists($fname)) {
-                @unlink($fname);
-            }
-            return $parid;
-        }
-        $res = $this->bsImportPlaylist($parid, $fname, $owner);
+        $res = $this->bsImportPlaylist($fname, $owner);
         if (file_exists($fname)) {
             @unlink($fname);
         }
@@ -1763,25 +1669,6 @@ class GreenBox extends BasicStor {
 
     /* ========================================================= info methods */
     /**
-     * List files in folder
-     *
-     * @param int $id
-     *      local id of folder
-     * @param string $sessid
-     *      session id
-     * @return array
-     */
-    public function listFolder($id, $sessid='')
-    {
-        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        $listArr = $this->bsListFolder($id);
-        return $listArr;
-    } // fn listFolder
-
-
-    /**
      * Get type of stored file (by local id)
      *
      * @param int $id
@@ -1818,20 +1705,6 @@ class GreenBox extends BasicStor {
 
 
     /* ==================================================== redefined methods */
-    /**
-     * Get file's path in virtual filesystem
-     *
-     * @param int $id
-     * @return array
-     */
-    public static function GetPath($id)
-    {
-        $pa = M2tree::GetPath($id, 'id, name, type');
-        array_shift($pa);
-        return $pa;
-    } // fn getPath
-
-
     /**
      * Get user id from session id
      *
@@ -1912,8 +1785,7 @@ class GreenBox extends BasicStor {
      */
     public function addPerm($sid, $action, $oid, $type='A', $sessid='')
     {
-        $parid = M2tree::GetParent($oid);
-        if (($res = BasicStor::Authorize('editPerms', $parid, $sessid)) !== TRUE) {
+        if (($res = BasicStor::Authorize('editPerms', $oid, $sessid)) !== TRUE) {
             return $res;
         }
         return Alib::AddPerm($sid, $action, $oid, $type);
@@ -1941,8 +1813,7 @@ class GreenBox extends BasicStor {
                 return $oid;
             }
             if (!is_null($oid)) {
-                $parid = M2tree::GetParent($oid);
-                if (($res = BasicStor::Authorize('editPerms', $parid, $sessid)) !== TRUE) {
+                if (($res = BasicStor::Authorize('editPerms', $oid, $sessid)) !== TRUE) {
                     return $res;
                 }
             }

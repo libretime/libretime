@@ -27,7 +27,7 @@ function camp_import_error_handler()
 
 function printUsage()
 {
-	global $CC_CONFIG;
+		global $CC_CONFIG;
     echo "There are two ways to import audio files into Campcaster: linking\n";
     echo "or copying.\n";
     echo "\n";
@@ -106,7 +106,6 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
     }
 
     $greenbox = new GreenBox();
-    $parentId = M2tree::GetObjId(M2tree::GetRootNode());
 
     $fileCount = 0;
     $duplicates = 0;
@@ -226,7 +225,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
             "mime" => $metadata['dc:format']
         );
 //        $timeBegin = microtime(true);
-        $storedFile = $greenbox->bsPutFile($parentId, $values, $doCopyFiles);
+        $storedFile = $greenbox->bsPutFile($values, $doCopyFiles);
         if (PEAR::isError($storedFile)) {
         	import_err($storedFile, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
