@@ -1344,7 +1344,6 @@ class BasicStor {
     /* ---------------------------------------------------- redefined methods */
     /**
      * Get object type by id.
-     *  (RootNode, Folder, File, )
      *
      * @param int $oid
      * 		Local object id
@@ -1369,7 +1368,7 @@ class BasicStor {
 
 
     /**
-     * Add new user with home folder
+     * Add new user
      *
      * @param string $login
      * @param string $pass
@@ -1404,7 +1403,7 @@ class BasicStor {
 
 
     /**
-     * Remove user by login and remove also his home folder
+     * Remove user by login
      *
      * @param string $login
      * @return boolean|PEAR_Error
@@ -1699,8 +1698,8 @@ class BasicStor {
                 $storedFile->delete();
                 break;
             case "File":
-            case "Folder":
-            case "Replica":
+//            case "Folder":
+//            case "Replica":
                 break;
             default:
                 return PEAR::raiseError(

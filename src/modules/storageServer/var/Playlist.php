@@ -30,11 +30,9 @@ class Playlist extends StoredFile {
      * 		unique id
      * @param string $fname
      * 		name of new file
-     * @param int $parid
-     * 		local object id of parent folder
      * @return instance of Playlist object
      */
-    public function create(&$gb, $plid, $fname=NULL, $parid=NULL)
+    public function create(&$gb, $plid, $fname=NULL)
     {
         $tmpFname = uniqid('');
         $values = array(

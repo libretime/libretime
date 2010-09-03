@@ -9,6 +9,19 @@ ALTER TABLE ls_files
     ALTER COLUMN id 
         SET DEFAULT NEXTVAL('file_id_seq');
 
-DROP TABLE ls_struct;
-DROP TABLE ls_tree;
+DROP TABLE ls_struct CASCADE;
+DROP TABLE ls_tree CASCADE;
+DROP TABLE ls_classes CASCADE;
+DROP TABLE ls_cmemb CASCADE;
+
+DROP SEQUENCE ls_struct_id_seq_seq;
+DROP SEQUENCE ls_tree_id_seq_seq;
+
+DROP TABLE as_tree CASCADE;
+DROP TABLE as_struct CASCADE;
+DROP TABLE as_classes CASCADE;
+DROP TABLE as_cmemb CASCADE;
+
+DROP SEQUENCE as_struct_id_seq_seq;
+DROP SEQUENCE as_tree_id_seq_seq;
 

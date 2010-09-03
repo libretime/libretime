@@ -21,126 +21,6 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 //------------------------------------------------------------------------------
 // Install database tables
 //------------------------------------------------------------------------------
-
-if (!camp_db_table_exists($CC_CONFIG['treeTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['treeTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['treeTable']." (
-        id int not null PRIMARY KEY,
-        name varchar(255) not null default'',
-        -- parid int,
-        type varchar(255) not null default'',
-        param varchar(255))";
-    camp_install_query($sql, false);
-
-    $CC_DBC->createSequence($CC_CONFIG['treeTable']."_id_seq");
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['treeTable']."_id_idx
-        ON ".$CC_CONFIG['treeTable']." (id)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['treeTable']."_name_idx
-        ON ".$CC_CONFIG['treeTable']." (name)";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['treeTable']."\n";
-}
-
-if (!camp_db_table_exists($CC_CONFIG['structTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['structTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['structTable']." (
-        rid int not null PRIMARY KEY,
-        objid int not null REFERENCES ".$CC_CONFIG['treeTable']." ON DELETE CASCADE,
-        parid int not null REFERENCES ".$CC_CONFIG['treeTable']." ON DELETE CASCADE,
-        level int)";
-    camp_install_query($sql, false);
-
-    $CC_DBC->createSequence($CC_CONFIG['structTable']."_id_seq");
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['structTable']."_rid_idx
-        ON ".$CC_CONFIG['structTable']." (rid)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['structTable']."_objid_idx
-        ON ".$CC_CONFIG['structTable']." (objid)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['structTable']."_parid_idx
-        ON ".$CC_CONFIG['structTable']." (parid)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['structTable']."_level_idx
-        ON ".$CC_CONFIG['structTable']." (level)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['structTable']."_objid_level_idx
-        ON ".$CC_CONFIG['structTable']." (objid, level)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['structTable']."_objid_parid_idx
-        ON ".$CC_CONFIG['structTable']." (objid, parid)";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['structTable']."\n";
-}
-
-//
-// Insert the RootNode if its not there yet.
-//
-$sql = "SELECT * FROM ".$CC_CONFIG['treeTable']
-       ." WHERE name='".$CC_CONFIG['RootNode']."'"
-       ." AND type='RootNode'";
-$row = $CC_DBC->GetRow($sql);
-if (!PEAR::isError($row) && !$row) {
-    echo " * Creating ROOT NODE in ".$CC_CONFIG['treeTable']."...";
-    $oid = $CC_DBC->nextId($CC_CONFIG['treeTable']."_id_seq");
-    if (PEAR::isError($oid)) {
-        echo $oid->getMessage()."\n";
-        //print_r($oid);
-        exit();
-    }
-    $CC_DBC->query("
-        INSERT INTO ".$CC_CONFIG['treeTable']."
-            (id, name, type)
-        VALUES
-            ($oid, '".$CC_CONFIG['RootNode']."', 'RootNode')
-    ");
-    echo "done.\n";
-} else {
-    echo " * Skipping: Root node already exists in ".$CC_CONFIG['treeTable']."\n";
-}
-
-if (!camp_db_table_exists($CC_CONFIG['classTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['classTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['classTable']." (
-        id int not null PRIMARY KEY,
-        cname varchar(20))";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['classTable']."_id_idx
-        ON ".$CC_CONFIG['classTable']." (id)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['classTable']."_cname_idx
-        ON ".$CC_CONFIG['classTable']." (cname)";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['classTable']."\n";
-}
-
-if (!camp_db_table_exists($CC_CONFIG['cmembTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['cmembTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['cmembTable']." (
-        objid int not null,
-        cid int not null)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['cmembTable']."_idx
-        ON ".$CC_CONFIG['cmembTable']." (objid, cid)";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['cmembTable']."\n";
-}
-
 if (!camp_db_table_exists($CC_CONFIG['subjTable'])) {
     echo " * Creating database table ".$CC_CONFIG['subjTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['subjTable']." (
@@ -292,6 +172,15 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
     $sql = "CREATE INDEX ".$CC_CONFIG['filesTable']."_md5_idx
         ON ls_files (md5)";
     camp_install_query($sql);
+
+		$sql = "CREATE SEQUENCE file_id_seq
+  			INCREMENT 1
+  			MINVALUE 1
+  			MAXVALUE 9223372036854775807
+  			START 1000000
+  			CACHE 1";
+    camp_install_query($sql);
+
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['filesTable']."\n";
 }

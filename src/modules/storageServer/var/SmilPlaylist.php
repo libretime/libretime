@@ -43,15 +43,13 @@ class SmilPlaylist {
      * 		hash relation from filenames to gunids
      * @param string $plid
      * 		playlist gunid
-     * @param int $parid
-     * 		destination folder local id
      * @param int $subjid
      * 		local subject (user) id (id of user doing the import)
      * @return Playlist
      */
-    public static function &import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL)
+    public static function &import(&$gb, $aPath, $rPath, &$gunids, $plid, $subjid=NULL)
     {
-        $parr = compact('parid', 'subjid', 'aPath', 'plid', 'rPath');
+        $parr = compact('subjid', 'aPath', 'plid', 'rPath');
         $path = realpath("$aPath/$rPath");
         if (FALSE === $path) {
             return PEAR::raiseError(
@@ -63,7 +61,7 @@ class SmilPlaylist {
         	return $lspl;
         }
         require_once("Playlist.php");
-        $pl =& Playlist::create($gb, $plid, "imported_SMIL", $parid);
+        $pl =& Playlist::create($gb, $plid, "imported_SMIL");
         if (PEAR::isError($pl)) {
         	return $pl;
         }
@@ -92,7 +90,7 @@ class SmilPlaylist {
      * @param hasharray $gunids
      * 		hash relation from filenames to gunids
      * @param array $parr
-     * 		array of parid, subjid, aPath, plid, rPath
+     * 		array of subjid, aPath, plid, rPath
      * @return string
      * 		XML of playlist in Campcaster playlist format
      */
@@ -239,7 +237,7 @@ class SmilPlaylistAudioElement {
                 case "smil":
                 case "m3u":
                     $type = 'playlist';
-                    $acId = $gb->bsImportPlaylistRaw($parid, $gunid,
+                    $acId = $gb->bsImportPlaylistRaw($gunid,
                         $aPath, $uri, $ext, $gunids, $subjid);
                     if (PEAR::isError($acId)) {
                     	return $r;

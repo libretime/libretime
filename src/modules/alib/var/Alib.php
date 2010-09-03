@@ -214,84 +214,84 @@ class Alib {
     public static function CheckPerm($sid, $action, $oid=NULL)
     {
     		return TRUE;
-        global $CC_DBC;
-        global $CC_CONFIG;
-        if (!is_numeric($sid)) {
-            return FALSE;
-        }
-//        if (is_null($oid) or $oid=='') {
-//            $oid = M2tree::GetRootNode();
+//        global $CC_DBC;
+//        global $CC_CONFIG;
+//        if (!is_numeric($sid)) {
+//            return FALSE;
 //        }
-//        if (PEAR::isError($oid)) {
-//            return $oid;
+////        if (is_null($oid) or $oid=='') {
+////            $oid = M2tree::GetRootNode();
+////        }
+////        if (PEAR::isError($oid)) {
+////            return $oid;
+////        }
+//        if (!is_numeric($oid)) {
+//            return FALSE;
 //        }
-        if (!is_numeric($oid)) {
-            return FALSE;
-        }
-        // query construction
-        //      shortcuts:
-        //          p: permTable,
-        //          s: subjTable, m smembTable,
-        //          t: treeTable ts: structTable,
-        //          c: classTable, cm: cmembTable
-        // main query elements:
-        $q_flds = "m.level , p.subj, s.login, action, p.type, p.obj";
-        $q_from = $CC_CONFIG['permTable']." p ";
-        // joins for solving users/groups:
-        $q_join = "LEFT JOIN ".$CC_CONFIG['subjTable']." s ON s.id=p.subj ";
-        $q_join .= "LEFT JOIN ".$CC_CONFIG['smembTable']." m ON m.gid=p.subj ";
-        $q_cond = "p.action in('_all', '$action') AND
-            (s.id=$sid OR m.uid=$sid) ";
-        // coalesce -1 for higher priority of nongroup rows:
-        // action DESC order for lower priority of '_all':
-        $q_ordb = "ORDER BY coalesce(m.level,-1), action DESC, p.type DESC";
-        $q_flds0 = $q_flds;
-        $q_from0 = $q_from;
-        $q_join0 = $q_join;
-        $q_cond0 = $q_cond;
-        $q_ordb0 = $q_ordb;
-        //  joins for solving object tree:
-        $q_flds .= ", t.name, ts.level as tlevel";
-        //$q_join .= "LEFT JOIN ".$CC_CONFIG['treeTable']." t ON t.id=p.obj ";
-        //$q_join .= "LEFT JOIN ".$CC_CONFIG['structTable']." ts ON ts.parid=p.obj ";
-        //$q_cond .= " AND (t.id=$oid OR ts.objid=$oid)";
-        // action DESC order is hack for lower priority of '_all':
-        $q_ordb = "ORDER BY coalesce(ts.level,0), m.level, action DESC, p.type DESC";
-        // query by tree:
-        $query1 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
-        $r1 = $CC_DBC->getAll($query1);
-        if (PEAR::isError($r1)) {
-            return($r1);
-        }
-        //  if there is row with type='A' on the top => permit
-        //$AllowedByTree =
-        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
-        //$DeniedByTree =
-        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
-
-        if (!USE_ALIB_CLASSES) {
-            return $AllowedbyTree;
-        }
-
-        // joins for solving object classes:
-        $q_flds = $q_flds0.", c.cname ";
-        $q_join = $q_join0."LEFT JOIN ".$CC_CONFIG['classTable']." c ON c.id=p.obj ";
-        $q_join .= "LEFT JOIN ".$CC_CONFIG['cmembTable']." cm ON cm.cid=p.obj ";
-        $q_cond = $q_cond0." AND (c.id=$oid OR cm.objid=$oid)";
-        $q_ordb = $q_ordb0;
-        // query by class:
-        $query2 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
-        $r2 = $CC_DBC->getAll($query2);
-        if (PEAR::isError($r2)) {
-            return $r2;
-        }
-        $AllowedByClass =
-            (is_array($r2) && count($r2)>0 && $r2[0]['type']=='A');
-        // not used now:
-        // $DeniedByClass =
-        //    (is_array($r2) && count($r2)>0 && $r2[0]['type']=='D');
-        $res = ($AllowedByTree || (!$DeniedByTree && $AllowedByClass));
-        return $res;
+//        // query construction
+//        //      shortcuts:
+//        //          p: permTable,
+//        //          s: subjTable, m smembTable,
+//        //          t: treeTable ts: structTable,
+//        //          c: classTable, cm: cmembTable
+//        // main query elements:
+//        $q_flds = "m.level , p.subj, s.login, action, p.type, p.obj";
+//        $q_from = $CC_CONFIG['permTable']." p ";
+//        // joins for solving users/groups:
+//        $q_join = "LEFT JOIN ".$CC_CONFIG['subjTable']." s ON s.id=p.subj ";
+//        $q_join .= "LEFT JOIN ".$CC_CONFIG['smembTable']." m ON m.gid=p.subj ";
+//        $q_cond = "p.action in('_all', '$action') AND
+//            (s.id=$sid OR m.uid=$sid) ";
+//        // coalesce -1 for higher priority of nongroup rows:
+//        // action DESC order for lower priority of '_all':
+//        $q_ordb = "ORDER BY coalesce(m.level,-1), action DESC, p.type DESC";
+//        $q_flds0 = $q_flds;
+//        $q_from0 = $q_from;
+//        $q_join0 = $q_join;
+//        $q_cond0 = $q_cond;
+//        $q_ordb0 = $q_ordb;
+//        //  joins for solving object tree:
+//        $q_flds .= ", t.name, ts.level as tlevel";
+//        //$q_join .= "LEFT JOIN ".$CC_CONFIG['treeTable']." t ON t.id=p.obj ";
+//        //$q_join .= "LEFT JOIN ".$CC_CONFIG['structTable']." ts ON ts.parid=p.obj ";
+//        //$q_cond .= " AND (t.id=$oid OR ts.objid=$oid)";
+//        // action DESC order is hack for lower priority of '_all':
+//        $q_ordb = "ORDER BY coalesce(ts.level,0), m.level, action DESC, p.type DESC";
+//        // query by tree:
+//        $query1 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
+//        $r1 = $CC_DBC->getAll($query1);
+//        if (PEAR::isError($r1)) {
+//            return($r1);
+//        }
+//        //  if there is row with type='A' on the top => permit
+//        //$AllowedByTree =
+//        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
+//        //$DeniedByTree =
+//        //    (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
+//
+//        if (!USE_ALIB_CLASSES) {
+//            return $AllowedbyTree;
+//        }
+//
+//        // joins for solving object classes:
+//        $q_flds = $q_flds0.", c.cname ";
+//        $q_join = $q_join0."LEFT JOIN ".$CC_CONFIG['classTable']." c ON c.id=p.obj ";
+//        $q_join .= "LEFT JOIN ".$CC_CONFIG['cmembTable']." cm ON cm.cid=p.obj ";
+//        $q_cond = $q_cond0." AND (c.id=$oid OR cm.objid=$oid)";
+//        $q_ordb = $q_ordb0;
+//        // query by class:
+//        $query2 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
+//        $r2 = $CC_DBC->getAll($query2);
+//        if (PEAR::isError($r2)) {
+//            return $r2;
+//        }
+//        $AllowedByClass =
+//            (is_array($r2) && count($r2)>0 && $r2[0]['type']=='A');
+//        // not used now:
+//        // $DeniedByClass =
+//        //    (is_array($r2) && count($r2)>0 && $r2[0]['type']=='D');
+//        $res = ($AllowedByTree || (!$DeniedByTree && $AllowedByClass));
+//        return $res;
     } // fn CheckPerm
 
 
@@ -306,10 +306,7 @@ class Alib {
     public static function RemoveObj($id)
     {
         $r = Alib::RemovePerm(NULL, NULL, $id);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return ObjClasses::RemoveObj($id);
+        return $r;
     } // fn removeObj
 
     /* --------------------------------------------------------- users/groups */
@@ -411,21 +408,14 @@ class Alib {
     public static function GetSubjPerms($sid)
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT t.name, t.type as otype , p.*"
-            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['treeTable']." t"
-            ." WHERE t.id=p.obj AND p.subj=$sid";
+        $sql = "SELECT *"
+            ." FROM ".$CC_CONFIG['permTable']
+            ." WHERE p.subj=$sid";
+//        $sql = "SELECT t.name, t.type as otype , p.*"
+//            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['treeTable']." t"
+//            ." WHERE t.id=p.obj AND p.subj=$sid";
         $a1 = $CC_DBC->getAll($sql);
-        if (PEAR::isError($a1)) {
-            return $a1;
-        }
-        $sql2 = "SELECT c.cname as name, 'C'as otype, p.*"
-            ." FROM ".$CC_CONFIG['permTable']." p, ".$CC_CONFIG['classTable']." c"
-            ." WHERE c.id=p.obj AND p.subj=$sid";
-        $a2 = $CC_DBC->getAll($sql2);
-        if (PEAR::isError($a2)) {
-            return $a2;
-        }
-        return array_merge($a1, $a2);
+        return $a1;
     } // fn GetSubjPerms
 
 

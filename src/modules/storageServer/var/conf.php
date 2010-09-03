@@ -11,7 +11,6 @@
  *   <dt>AdminsGr <dd>name of admin group
  *   <dt>StationPrefsGr <dd>name of station preferences group
  *   <dt>AllGr <dd>name of 'all users' group
- *   <dt>TrashName <dd>name of trash folder (subfolder of the storageRoot)
  *   <dt>storageDir <dd>main directory for storing binary media files
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
@@ -85,29 +84,24 @@ $CC_CONFIG = array(
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
-        'RootNode'      => array('Folder'),
-        'Storage'       => array('Folder', 'File', 'Replica'),
-        'Folder'        => array('Folder', 'File', 'Replica'),
+        'Storage'       => array(/*'Folder',*/ 'File' /*, 'Replica'*/),
         'File'          => array(),
         'audioclip'     => array(),
         'playlist'      => array(),
-        'Replica'       => array(),
+//        'Replica'       => array(),
     ),
     'allowedActions'=> array(
-        'RootNode'      => array('classes', 'subjects'),
-        'Folder'        => array('editPrivs', 'write', 'read'),
         'File'          => array('editPrivs', 'write', 'read'),
         'audioclip'     => array('editPrivs', 'write', 'read'),
         'playlist'      => array('editPrivs', 'write', 'read'),
-        'Replica'       => array('editPrivs', 'write', 'read'),
-        '_class'        => array('editPrivs', 'write', 'read'),
+//        'Replica'       => array('editPrivs', 'write', 'read'),
+//        '_class'        => array('editPrivs', 'write', 'read'),
     ),
     'allActions'    =>  array(
-        'editPrivs', 'write', 'read', 'classes', 'subjects'
+        'editPrivs', 'write', 'read', /*'classes',*/ 'subjects'
     ),
 
     /* ============================================== auxiliary configuration */
-    'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
 
     /* =================================================== cron configuration */
@@ -126,10 +120,6 @@ $CC_CONFIG['permTable'] = $CC_CONFIG['tblNamePrefix'].'perms';
 $CC_CONFIG['sessTable'] = $CC_CONFIG['tblNamePrefix'].'sess';
 $CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
 $CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
-$CC_CONFIG['classTable'] = $CC_CONFIG['tblNamePrefix'].'classes';
-$CC_CONFIG['cmembTable'] = $CC_CONFIG['tblNamePrefix'].'cmemb';
-$CC_CONFIG['treeTable'] = $CC_CONFIG['tblNamePrefix'].'tree';
-$CC_CONFIG['structTable'] = $CC_CONFIG['tblNamePrefix'].'struct';
 $CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
 $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
 $CC_CONFIG['playlogTable'] = 'playlog';

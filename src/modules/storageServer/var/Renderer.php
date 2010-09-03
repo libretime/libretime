@@ -212,10 +212,6 @@ class Renderer
         $realOgg = $r['realFname'];
         $owner = $r['owner'];
         $gunid = $r['gunid'];
-//        $parid = $gb->_getHomeDirId($owner);
-//        if (PEAR::isError($parid)) {
-//        	return $parid;
-//        }
         $fileName = 'rendered_playlist';
         $id = BasicStor::IdFromGunid($gunid);
         if (PEAR::isError($id)) {

@@ -1,5 +1,5 @@
 <?php
-require_once("ObjClasses.php");
+//require_once("ObjClasses.php");
 define('ALIBERR_NOTGR', 20);
 define('ALIBERR_BADSMEMB', 21);
 
@@ -612,7 +612,7 @@ class Subjects {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("DELETE FROM ".$CC_CONFIG['subjTable']);
         $CC_DBC->query("DELETE FROM ".$CC_CONFIG['smembTable']);
-        ObjClasses::DeleteData();
+        //ObjClasses::DeleteData();
     } // fn deleteData
 
 
@@ -623,26 +623,26 @@ class Subjects {
      */
     public function TestData()
     {
-        $tdata = ObjClasses::TestData();
-        $o['root'] = Subjects::AddSubj('root', 'q');
-        $o['test1'] = Subjects::AddSubj('test1', 'a');
-        $o['test2'] = Subjects::AddSubj('test2', 'a');
-        $o['test3'] = Subjects::AddSubj('test3', 'a');
-        $o['test4'] = Subjects::AddSubj('test4', 'a');
-        $o['test5'] = Subjects::AddSubj('test5', 'a');
-        $o['gr1'] = Subjects::AddSubj('gr1');
-        $o['gr2'] = Subjects::AddSubj('gr2');
-        $o['gr3'] = Subjects::AddSubj('gr3');
-        $o['gr4'] = Subjects::AddSubj('gr4');
-        Subjects::AddSubjectToGroup('test1', 'gr1');
-        Subjects::AddSubjectToGroup('test2', 'gr2');
-        Subjects::AddSubjectToGroup('test3', 'gr3');
-        Subjects::AddSubjectToGroup('test4', 'gr4');
-        Subjects::AddSubjectToGroup('test5', 'gr1');
-        Subjects::AddSubjectToGroup('gr4', 'gr3');
-        Subjects::AddSubjectToGroup('gr3', 'gr2');
-        $tdata['subjects'] = $o;
-        return $tdata;
+//        $tdata = ObjClasses::TestData();
+//        $o['root'] = Subjects::AddSubj('root', 'q');
+//        $o['test1'] = Subjects::AddSubj('test1', 'a');
+//        $o['test2'] = Subjects::AddSubj('test2', 'a');
+//        $o['test3'] = Subjects::AddSubj('test3', 'a');
+//        $o['test4'] = Subjects::AddSubj('test4', 'a');
+//        $o['test5'] = Subjects::AddSubj('test5', 'a');
+//        $o['gr1'] = Subjects::AddSubj('gr1');
+//        $o['gr2'] = Subjects::AddSubj('gr2');
+//        $o['gr3'] = Subjects::AddSubj('gr3');
+//        $o['gr4'] = Subjects::AddSubj('gr4');
+//        Subjects::AddSubjectToGroup('test1', 'gr1');
+//        Subjects::AddSubjectToGroup('test2', 'gr2');
+//        Subjects::AddSubjectToGroup('test3', 'gr3');
+//        Subjects::AddSubjectToGroup('test4', 'gr4');
+//        Subjects::AddSubjectToGroup('test5', 'gr1');
+//        Subjects::AddSubjectToGroup('gr4', 'gr3');
+//        Subjects::AddSubjectToGroup('gr3', 'gr2');
+//        $tdata['subjects'] = $o;
+//        return $tdata;
     } // fn TestData
 
 
@@ -652,32 +652,32 @@ class Subjects {
      */
     public static function Test()
     {
-        $p = ObjClasses::Test();
-        if (PEAR::isError($p)) {
-            return $p;
-        }
-        Subjects::DeleteData();
-        Subjects::TestData();
-        $test_correct = "root(0), test1(0), test2(0), test3(0),".
-            " test4(0), test5(0), gr1(2), gr2(2), gr3(2), gr4(1)\n";
-        $test_dump = Subjects::DumpSubjects();
-        Subjects::RemoveSubj('test1');
-        Subjects::RemoveSubj('test3');
-        Subjects::RemoveSubjectFromGroup('test5', 'gr1');
-        Subjects::RemoveSubjectFromGroup('gr3', 'gr2');
-        $test_correct .= "root(0), test2(0), test4(0), test5(0),".
-            " gr1(0), gr2(1), gr3(1), gr4(1)\n";
-        $test_dump .= Subjects::DumpSubjects();
-        Subjects::DeleteData();
-        if ($test_dump == $test_correct) {
-            $test_log .= "subj: OK\n";
-            return TRUE;
-        } else {
-            return PEAR::raiseError(
-                'Subjects::test:', 1, PEAR_ERROR_DIE, '%s'.
-                "<pre>\ncorrect:\n{$test_correct}\n".
-                "dump:\n{$test_dump}\n</pre>\n");
-        }
+//        $p = ObjClasses::Test();
+//        if (PEAR::isError($p)) {
+//            return $p;
+//        }
+//        Subjects::DeleteData();
+//        Subjects::TestData();
+//        $test_correct = "root(0), test1(0), test2(0), test3(0),".
+//            " test4(0), test5(0), gr1(2), gr2(2), gr3(2), gr4(1)\n";
+//        $test_dump = Subjects::DumpSubjects();
+//        Subjects::RemoveSubj('test1');
+//        Subjects::RemoveSubj('test3');
+//        Subjects::RemoveSubjectFromGroup('test5', 'gr1');
+//        Subjects::RemoveSubjectFromGroup('gr3', 'gr2');
+//        $test_correct .= "root(0), test2(0), test4(0), test5(0),".
+//            " gr1(0), gr2(1), gr3(1), gr4(1)\n";
+//        $test_dump .= Subjects::DumpSubjects();
+//        Subjects::DeleteData();
+//        if ($test_dump == $test_correct) {
+//            $test_log .= "subj: OK\n";
+//            return TRUE;
+//        } else {
+//            return PEAR::raiseError(
+//                'Subjects::test:', 1, PEAR_ERROR_DIE, '%s'.
+//                "<pre>\ncorrect:\n{$test_correct}\n".
+//                "dump:\n{$test_dump}\n</pre>\n");
+//        }
     } // fn test
 
 } // class Subjects

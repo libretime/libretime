@@ -67,13 +67,11 @@ class M3uPlaylist {
      * 		hash relation from filenames to gunids
      * @param string $plid
      * 		playlist gunid
-     * @param int $parid
-     * 		destination folder local id
      * @param int $subjid
      * 		local subject (user) id (id of user doing the import)
      * @return Playlist
      */
-    function import(&$gb, $aPath, $rPath, &$gunids, $plid, $parid, $subjid=NULL)
+    function import(&$gb, $aPath, $rPath, &$gunids, $plid, $subjid=NULL)
     {
         $path = realpath("$aPath/$rPath");
         if (FALSE === $path) {
@@ -86,7 +84,7 @@ class M3uPlaylist {
         	return $arr;
         }
         require_once("Playlist.php");
-        $pl =& Playlist::create($gb, $plid, "imported_M3U", $parid);
+        $pl =& Playlist::create($gb, $plid, "imported_M3U");
         if (PEAR::isError($pl)) {
         	return $pl;
         }
@@ -111,7 +109,7 @@ class M3uPlaylist {
                     case "xml":
                     case "smil":
                     case "m3u":
-                        $acId = $gb->bsImportPlaylistRaw($parid, $gunid,
+                        $acId = $gb->bsImportPlaylistRaw($gunid,
                             $aPath, $uri, $ext, $gunids, $subjid);
                         if (PEAR::isError($acId)) {
                         	break;
