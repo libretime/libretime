@@ -15,7 +15,7 @@ function printUsage()
 
 $verbose = TRUE;
 $parsedCommandLine = Console_Getopt::getopt($argv, "vs:o:h");
-
+$options = null;
 $cmdLineOptions = $parsedCommandLine[0];
 
 if (count($parsedCommandLine[1]) == 0) {
@@ -65,7 +65,6 @@ if ($verbose) {
     echo "Method: $method\n";
     echo "Parameters:\n";
     //var_dump($pars);
-    var_dump($options);
 }
 
 $infos = array(

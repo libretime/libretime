@@ -1,6 +1,12 @@
 <?php
 require_once("BasicStor.php");
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Loaded BasicStor<br>";
+}
 require_once("LocStor.php");
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Loaded LocStor<br>";
+}
 require_once('Prefs.php');
 
 /**

@@ -143,6 +143,16 @@ $methods = array(
     'globalSearch'              => 'Start search job on network hub',
     'getSearchResults'          => 'Get results from search job on network hub',
 
+    'uploadOpen'              => 'Open file-layer upload',
+    'uploadCheck'             => 'Check the checksum of uploaded file',
+    'uploadClose'             => 'Close file-layer upload',
+    'downloadOpen'            => 'Open file-layer download',
+//    'downloadCheck'           => 'Check the checksum of downloaded file',
+    'downloadClose'           => 'Close file-layer download',
+    'prepareHubInitiatedTransfer'   => 'Prepare hub initiated transfer',
+    'listHubInitiatedTransfers'     => 'List hub initiated transfers',
+    'setHubInitiatedTransfer'       => 'Set state of hub initiated transfers',
+    'ping'                    => 'Echo request',
 );
 
 $defs = array();

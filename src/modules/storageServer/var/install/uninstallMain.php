@@ -98,42 +98,4 @@ if (camp_db_table_exists($CC_CONFIG['smembTable'])) {
     echo " * Skipping: database table ".$CC_CONFIG['smembTable']."\n";
 }
 
-if (camp_db_table_exists($CC_CONFIG['classTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['classTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['classTable'];
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['classTable']."\n";
-}
-
-if (camp_db_table_exists($CC_CONFIG['cmembTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['cmembTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['cmembTable'];
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['cmembTable']."\n";
-}
-
-if (camp_db_table_exists($CC_CONFIG['structTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['structTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['structTable'];
-    camp_install_query($sql, false);
-
-    $CC_DBC->dropSequence($CC_CONFIG['structTable']."_id_seq");
-    echo "done.\n";
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['structTable']."\n";
-}
-
-if (camp_db_table_exists($CC_CONFIG['treeTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['treeTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['treeTable'];
-    camp_install_query($sql, false);
-
-    $CC_DBC->dropSequence($CC_CONFIG['treeTable']."_id_seq");
-    echo "done.\n";
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['treeTable']."\n";
-}
-
 ?>

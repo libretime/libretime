@@ -7,6 +7,10 @@ define('UI_VERBOSE', FALSE);
 define('UI_WARNING', TRUE);
 define('UI_ERROR', TRUE);
 
+// Note: this needs to be a variable, not a define because other
+// parts of the application do not read in this file.
+$WHITE_SCREEN_OF_DEATH = FALSE;
+
 if (UI_DEBUG) {
 	error_reporting(E_ALL);
 }
@@ -115,6 +119,9 @@ define('UI_PL_ELEM_FADEOUT', 'fadeOut');
 define('UI_BACKUPTOKEN_KEY', 'backupToken');
 define('UI_RESTORETOKEN_KEY', 'restoreToken');
 
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__."<br>";
+}
 require_once(dirname(__FILE__).'/../../storageServer/var/conf.php');
 define('UI_VERSION', CAMPCASTER_VERSION);
 define('UI_VERSION_FULLNAME', 'Campcaster '.UI_VERSION);
@@ -151,8 +158,17 @@ $CC_CONFIG = array_merge($CC_CONFIG,
     )
 );
 
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__."<br>";
+}
 require_once(dirname(__FILE__).'/ui_base.inc.php');
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Loaded ui_base.inc.php<br>";
+}
 require_once(dirname(__FILE__).'/../../storageServer/var/GreenBox.php');
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Loaded GreenBox<br>";
+}
 require_once(dirname(__FILE__).'/formmask/generic.inc.php');
 
 require_once('DB.php');

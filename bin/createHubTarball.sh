@@ -168,7 +168,7 @@ mkdir -p $etc_tmpdir/apache
 #  Copy the modules and tools
 #-------------------------------------------------------------------------------
 #cp -pPR $modules_dir/* $modules_tmpdir
-for it in alib getid3 storageServer storageAdmin archiveServer; do
+for it in alib getid3 storageServer storageAdmin; do
     cp -pPR $modules_dir/$it $modules_tmpdir
 done
 for it in pear; do

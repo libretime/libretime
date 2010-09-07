@@ -282,10 +282,6 @@ dnl set up the alib module
 AC_CONFIG_COMMANDS([../src/modules/alib/tmp/configure],
                    [../src/modules/alib/bin/autogen.sh])
 
-dnl set up the archive server module
-AC_CONFIG_COMMANDS([../src/modules/archiveServer/tmp/configure],
-                   [../src/modules/archiveServer/bin/autogen.sh])
-
 dnl set up the getid3 module
 AC_CONFIG_COMMANDS([../src/modules/getid3/tmp/configure],
                    [../src/modules/getid3/bin/autogen.sh])
