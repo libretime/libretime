@@ -15,7 +15,7 @@ function printUsage()
 
 $verbose = TRUE;
 $parsedCommandLine = Console_Getopt::getopt($argv, "vs:o:h");
-
+$options = null;
 $cmdLineOptions = $parsedCommandLine[0];
 
 if (count($parsedCommandLine[1]) == 0) {
@@ -64,7 +64,7 @@ if ($verbose) {
     echo "Host: {$url['host']}, path: {$url['path']}\n";
     echo "Method: $method\n";
     echo "Parameters:\n";
-    var_dump($pars);
+    var_dump($options);
 }
 
 $infos = array(
@@ -283,7 +283,8 @@ switch ($method) {
 } // switch
 
 $fullmethod = $infos[$method]['m'];
-$msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($parr)));
+$msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($options)));
+//$msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($parr)));
 
 if ($verbose) {
     echo "parr:\n";

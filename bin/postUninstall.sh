@@ -217,10 +217,6 @@ if [ "$storage_is_local" = "yes" ]; then
     rm -rf $installdir/var/storageServer/var/access/*
     rm -rf $installdir/var/storageServer/var/trans/*
 fi
-rm -rf $installdir/var/archiveServer/var/stor/*
-rm -rf $installdir/var/archiveServer/var/access/*
-rm -rf $installdir/var/archiveServer/var/trans/*
-
 
 #-------------------------------------------------------------------------------
 #  Remove the ODBC data source and driver

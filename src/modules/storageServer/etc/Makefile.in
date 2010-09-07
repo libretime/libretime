@@ -239,12 +239,6 @@ db_clean:
 reset:
 	./bin/resetStorage.sh
 
-archive:
-	$(MAKE) -C ../archiveServer all
-
-archiveclean:
-	$(MAKE) -C ../archiveServer clean
-
 transtest:
 	./var/tests/transTest.sh
 #	cd var/tests; php -q transTest.php

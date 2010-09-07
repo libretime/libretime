@@ -836,11 +836,11 @@ class MetaData {
         //$predns = strtolower($predns);
         //$predicate = strtolower($predicate);
         $subjns_sql = is_null($subjns) ? "NULL" : "'".pg_escape_string($subjns)."'";
-		$subject_sql = is_null($subject) ? "NULL" : "'".pg_escape_string($subject)."'";
-		$predns_sql = is_null($predns) ? "NULL" : "'".pg_escape_string($predns)."'";
-		$predicate_sql = is_null($predicate) ? "NULL" : "'".pg_escape_string($predicate)."'";
-		$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
-		$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
+    		$subject_sql = is_null($subject) ? "NULL" : "'".pg_escape_string($subject)."'";
+    		$predns_sql = is_null($predns) ? "NULL" : "'".pg_escape_string($predns)."'";
+    		$predicate_sql = is_null($predicate) ? "NULL" : "'".pg_escape_string($predicate)."'";
+    		$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
+    		$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
         $id = $CC_DBC->nextId($CC_CONFIG['mdataTable']."_id_seq");
         if (PEAR::isError($id)) {
         	return $id;
@@ -873,7 +873,7 @@ class MetaData {
     {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT id FROM ".$CC_CONFIG['mdataTable']."
-            	WHERE subjns='_I' AND subject='{$p_id}' AND
+            	  WHERE subjns='_I' AND subject='{$p_id}' AND
                 gunid=x'{$this->gunid}'::bigint";
         $rh = $CC_DBC->query($sql);
         if (PEAR::isError($rh)) {
@@ -887,7 +887,7 @@ class MetaData {
         }
         $rh->free();
         $sql = "DELETE FROM ".$CC_CONFIG['mdataTable']."
-            	WHERE id={$p_id} AND
+            	  WHERE id={$p_id} AND
                 gunid=x'{$this->gunid}'::bigint";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {

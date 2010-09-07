@@ -182,7 +182,7 @@ fi
 
 www_port=80
 
-echo "Installing Campcaster network hub (archiveServer).";
+echo "Installing Campcaster network hub.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -386,15 +386,6 @@ echo "Configuring modules ...";
 
 cd $tools_dir/pear && ./configure --prefix=$installdir
 cd $modules_dir/alib && ./configure --prefix=$installdir
-cd $modules_dir/archiveServer && \
-        ./configure --prefix=$installdir \
-                --with-hostname=$hostname \
-                                --with-www-port=$www_port \
-                                --with-database-server=$dbserver \
-                                --with-database=$database \
-                                --with-database-user=$dbuser \
-                                --with-database-password=$dbpassword \
-                                --with-url-prefix=$url_prefix
 cd $modules_dir/getid3 && ./configure --prefix=$installdir
 #cd $modules_dir/htmlUI && ./configure --prefix=$installdir \
 #    --with-apache-group=$apache_group \
@@ -429,7 +420,6 @@ make -C $modules_dir/alib install
 make -C $modules_dir/getid3 install
 make -C $modules_dir/storageServer install
 make -C $modules_dir/storageAdmin install
-make -C $modules_dir/archiveServer install
 
 mkdir -p $install_var_ls/storageServer/var/tests
 for it in ex1.mp3 ex2.wav; do
@@ -453,25 +443,15 @@ ln -vs $install_var_ls $webentry
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
 
-chgrp $apache_group $install_var_ls/archiveServer/var/stor
-chgrp $apache_group $install_var_ls/archiveServer/var/access
-chgrp $apache_group $install_var_ls/archiveServer/var/trans
-chgrp $apache_group $install_var_ls/archiveServer/var/stor/buffer
+chgrp $apache_group $install_var_ls/storageServer/var/stor
+chgrp $apache_group $install_var_ls/storageServer/var/access
+chgrp $apache_group $install_var_ls/storageServer/var/trans
+chgrp $apache_group $install_var_ls/storageServer/var/stor/buffer
 
-chmod g+sw $install_var_ls/archiveServer/var/stor
-chmod g+sw $install_var_ls/archiveServer/var/access
-chmod g+sw $install_var_ls/archiveServer/var/trans
-chmod g+sw $install_var_ls/archiveServer/var/stor/buffer
-
-#chgrp $apache_group $install_var_ls/storageServer/var/stor
-#chgrp $apache_group $install_var_ls/storageServer/var/access
-#chgrp $apache_group $install_var_ls/storageServer/var/trans
-#chgrp $apache_group $install_var_ls/storageServer/var/stor/buffer
-
-#chmod g+sw $install_var_ls/storageServer/var/stor
-#chmod g+sw $install_var_ls/storageServer/var/access
-#chmod g+sw $install_var_ls/storageServer/var/trans
-#chmod g+sw $install_var_ls/storageServer/var/stor/buffer
+chmod g+sw $install_var_ls/storageServer/var/stor
+chmod g+sw $install_var_ls/storageServer/var/access
+chmod g+sw $install_var_ls/storageServer/var/trans
+chmod g+sw $install_var_ls/storageServer/var/stor/buffer
 
 #chgrp $apache_group $install_var_ls/htmlUI/var/templates_c
 #chgrp $apache_group $install_var_ls/htmlUI/var/html/img
@@ -486,7 +466,7 @@ chmod g+sw $install_var_ls/archiveServer/var/stor/buffer
 echo "Initializing database...";
 
 # create PHP-related database tables
-cd $install_var_ls/archiveServer/var/install
+cd $install_var_ls/storageServer/var/install
 php -q install.php || exit 1;
 cd -
 

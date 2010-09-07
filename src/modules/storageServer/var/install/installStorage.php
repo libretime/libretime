@@ -104,11 +104,11 @@ if ($access != 'write') {
 
 foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
     if (preg_match($old_regex, $line['command'])) {
-        echo "    removing old entry\n";
+        echo "    * Removing old entry: ".$line['command']."\n";
         $cron->ct->delEntry($id);
     }
 }
-echo "    adding new entry\n";
+echo "    * Adding new entry: ".$command."\n";
 $cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
 $cron->closeCrontab();
 echo "   Done.\n";

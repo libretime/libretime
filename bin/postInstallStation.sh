@@ -293,16 +293,6 @@ fi
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
 
-chgrp $apache_group $install_var_ls/archiveServer/var/stor
-chgrp $apache_group $install_var_ls/archiveServer/var/access
-chgrp $apache_group $install_var_ls/archiveServer/var/trans
-chgrp $apache_group $install_var_ls/archiveServer/var/stor/buffer
-
-chmod g+sw $install_var_ls/archiveServer/var/stor
-chmod g+sw $install_var_ls/archiveServer/var/access
-chmod g+sw $install_var_ls/archiveServer/var/trans
-chmod g+sw $install_var_ls/archiveServer/var/stor/buffer
-
 if [ "$storage_is_local" = "yes" ]; then
     chgrp $apache_group $install_var_ls/storageServer/var/stor
     chgrp $apache_group $install_var_ls/storageServer/var/access
@@ -396,8 +386,6 @@ if [ "$storage_is_local" = "yes" ]; then
     cd -
 fi
 
-# create PHP-related database tables
-cd $install_var_ls/archiveServer/var/install
 # workaround for ticket #2059; restore to "exit 1" after the ticket is closed
 php -q install.php || exit 1;
 #php -q install.php || true

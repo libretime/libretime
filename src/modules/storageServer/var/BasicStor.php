@@ -29,9 +29,7 @@ require_once("Transport.php");
  * @license http://www.gnu.org/licenses/gpl.txt
  * @see Alib
  */
-//class BasicStor extends Alib {
 class BasicStor {
-    //protected $rootId;
     public $storId;
 
 

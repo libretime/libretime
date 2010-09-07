@@ -200,7 +200,6 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
     s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
     s/ls_php_host/$ls_php_host/; \
     s/ls_php_port/$ls_php_port/; \
-    s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
     s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
     s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
     s/ls_scheduler_host/$ls_scheduler_host/; \
@@ -251,10 +250,6 @@ mkdir -p $configdir
 cat $modules_dir/storageServer/var/conf_only.php.template \
     | sed -e "$replace_sed_string" \
     > $configdir/storageServer.conf.php
-
-cat $modules_dir/archiveServer/var/conf_only.php.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/archiveServer.conf.php
 
 cat $modules_dir/authentication/etc/webAuthentication.xml.template \
     | sed -e "$replace_sed_string" \
@@ -319,7 +314,6 @@ ln -s $modules_dir $htmldir/campcaster
 echo "Setting up storageServer..."
 
 make -C $modules_dir/storageServer storage || exit 1
-make -C $modules_dir/archiveServer storage || exit 1
 
 
 #-------------------------------------------------------------------------------
@@ -342,16 +336,6 @@ php $modules_dir/storageServer/var/install/campcaster-user.php --addupdate sched
 #  Setup directory permissions
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
-
-chgrp $apache_group $modules_dir/archiveServer/var/stor
-chgrp $apache_group $modules_dir/archiveServer/var/access
-chgrp $apache_group $modules_dir/archiveServer/var/trans
-chgrp $apache_group $modules_dir/archiveServer/var/stor/buffer
-
-chmod g+sw $modules_dir/archiveServer/var/stor
-chmod g+sw $modules_dir/archiveServer/var/access
-chmod g+sw $modules_dir/archiveServer/var/trans
-chmod g+sw $modules_dir/archiveServer/var/stor/buffer
 
 chgrp $apache_group $modules_dir/storageServer/var/stor
 chgrp $apache_group $modules_dir/storageServer/var/access

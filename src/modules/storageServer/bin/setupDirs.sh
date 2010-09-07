@@ -28,7 +28,7 @@
 WWW_ROOT=`cd var/install; php -q getWwwRoot.php` || exit $?
 echo " *** StorageServer bin/setupDirs.sh BEGIN"
 echo " *** Root URL: $WWW_ROOT"
-PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
+PHP_PWD_COMMAND=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
   {
     errno=$?
     if [ $errno -eq 22 ]
@@ -37,6 +37,13 @@ PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
     fi
     exit $errno
   }
+PHP_PWD=$PHP_PWD_COMMAND
+# MOD_PHP may not be working, this command will tell us
+if [ ${PHP_PWD_COMMAND:0:5} == '<?php' ]; then
+	echo "MOD_PHP is not working, the raw PHP file is being returned instead of result of the PHP code."
+	exit 1
+fi
+	
 echo " *** Webspace mapping test:"
 echo " *** mod_php : $PHP_PWD"
 INSTALL_DIR="$PWD/var/install"
