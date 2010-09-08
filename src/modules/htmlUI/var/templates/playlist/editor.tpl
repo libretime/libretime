@@ -3,7 +3,7 @@
 
                 <div style="width: 574px;">
                     <div style="float: left;"><h1>##Playlist Editor## </h1></div>
-                    <div style="float: right;"><h1><a href="{$UI_BROWSER}?act=PL.editMetaData" style="color: #666666">{$PL->title} &nbsp; {getHour time=$PL->duration}##h##&nbsp;{getMinute time=$PL->duration}##m##&nbsp;{getSecond time=$PL->duration}##s##</a></h1></div>
+                    <div style="float: right;"><h1><a href="{$UI_BROWSER}?act=PL.editMetaData" style="color: #666666">{$PL->title} &nbsp; {niceTime in=$PL->duration} &nbsp;</a></h1></div>
                 </div>
 
                 <div class="head" style="width: 574px;">

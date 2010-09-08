@@ -69,6 +69,19 @@ $ui_fmask = array(
             'label'     => 'Scheduler startup script',
             'required'  => false,
         ),
+         array(
+            'element'   => 'archiveServerLocation',
+            'isPref'    => TRUE,
+            'type'      => 'text',
+            'label'     => 'Archive server location URL',
+            'required'  => false,
+        ),
+        array(
+            'rule'      => 'regex',
+            'element'   => 'archiveServerLocation',
+            'format'    => UI_REGEX_URL,
+            'rulemsg'   => 'archive server location seems not to be valid'
+        ),
         array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
             'isPref'    => TRUE,
