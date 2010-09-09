@@ -72,7 +72,8 @@ $infos = array(
     "methodHelp" => array('m'=>"system.methodHelp", 'p'=>0),
     "methodSignature" => array('m'=>"system.methodSignature", 'p'=>0),
     "test" => array('m'=>"locstor.test", 'p'=>array('sessid', 'teststring')),
-    "getVersion" => array('m'=>"locstor.getVersion", 'p'=>array(), 'r'=>'version'),
+    "ping" => array('m'=>"locstor.ping", 'p'=>array("par")),
+		"getVersion" => array('m'=>"locstor.getVersion", 'p'=>array("str"), 'r'=>'version'),
     "authenticate" => array('m'=>"locstor.authenticate", 'p'=>array('login', 'pass'), 'r'=>'authenticate'),
     "login" => array('m'=>"locstor.login", 'p'=>array('login', 'pass'), 'r'=>'sessid'),
     "logout" => array('m'=>"locstor.logout", 'p'=>array('sessid'), 'r'=>'status'),
@@ -193,10 +194,10 @@ $infos = array(
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
     "downloadFromHub" => array('m'=>"locstor.downloadFromHub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
-    "globalSearch" => array('m'=>"locstor.globalSearch",
-        'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
-    "getSearchResults" => array('m'=>"locstor.getSearchResults",
-        'p'=>array('trtok')),
+//    "globalSearch" => array('m'=>"locstor.globalSearch",
+//        'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
+//    "getSearchResults" => array('m'=>"locstor.getSearchResults",
+//        'p'=>array('trtok')),
 
     "createBackupOpen" => array('m'=>"locstor.createBackupOpen",
         'p'=>array('sessid', 'criteria'), 'r'=>array('token')),
@@ -228,7 +229,7 @@ $infos = array(
 
 switch ($method) {
     case "searchMetadata":
-    case "globalSearch":
+//    case "globalSearch":
     case "createBackupOpen":
         $parr = array(
             'sessid'=>$pars[0],
@@ -283,7 +284,11 @@ switch ($method) {
 } // switch
 
 $fullmethod = $infos[$method]['m'];
-$msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($options)));
+if (is_array($options)) {
+    $msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($options)));
+} else {
+    $msg = new XML_RPC_Message($fullmethod);
+}
 //$msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($parr)));
 
 if ($verbose) {
@@ -327,7 +332,7 @@ if (isset($infos[$method]['r'])) {
 } else {
     switch ($method) {
         case "searchMetadata":
-        case "getSearchResults":
+//        case "getSearchResults":
             $acCnt = 0;
             $acGunids = array();
             $plCnt = 0;
@@ -356,6 +361,7 @@ if (isset($infos[$method]['r'])) {
             break;
         default:
             print_r($resp);
+            echo "\n";
     }
 }
 

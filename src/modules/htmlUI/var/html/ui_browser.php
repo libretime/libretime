@@ -229,42 +229,42 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
             case 'HUBBROWSE.getResults':
        	        //$HUBBROWSE = new uiHubBrowse($uiBrowser);
 
-	            if (isset($_REQUEST['trtokid'])) {
-	                $Smarty->assign('trtokid', $_REQUEST['trtokid']);
-	                //if ($HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
-	                if ($uiBrowser->HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
-	                    $Smarty->assign('results', true);
-	                } else {
-	                    $Smarty->assign('results', false);
-	                }
-	            } else {
-	                //$Smarty->assign('trtokid', $HUBBROWSE->searchDB());
-	                $Smarty->assign('trtokid', $uiBrowser->HUBBROWSE->searchDB());
-	                $Smarty->assign('results', false);
-	            }
-	            $Smarty->assign('polling_frequency', UI_HUB_POLLING_FREQUENCY);
-	            $Smarty->assign('_prefix', 'HUBBROWSE');
-	            $Smarty->display('popup/HUB.getResults.tpl');
+//	            if (isset($_REQUEST['trtokid'])) {
+//	                $Smarty->assign('trtokid', $_REQUEST['trtokid']);
+//	                //if ($HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
+//	                if ($uiBrowser->HUBBROWSE->getSearchResults($_REQUEST['trtokid'])) {
+//	                    $Smarty->assign('results', true);
+//	                } else {
+//	                    $Smarty->assign('results', false);
+//	                }
+//	            } else {
+//	                //$Smarty->assign('trtokid', $HUBBROWSE->searchDB());
+//	                $Smarty->assign('trtokid', $uiBrowser->HUBBROWSE->searchDB());
+//	                $Smarty->assign('results', false);
+//	            }
+//	            $Smarty->assign('polling_frequency', UI_HUB_POLLING_FREQUENCY);
+//	            $Smarty->assign('_prefix', 'HUBBROWSE');
+//	            $Smarty->display('popup/HUB.getResults.tpl');
 	            break;
 
             case 'HUBSEARCH.getResults':
-	            if (isset($_REQUEST['trtokid']) && $_REQUEST['trtokid']) {
-	                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
-	                $r = $uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'], FALSE);
-                    if ( PEAR::isError($r) && ($r->getCode() != TRERR_NOTFIN) ) {
-                        break;
-                    }
-	                if ($r) {
-	                    $Smarty->assign('results',true);
-	                } else {
-	                    $Smarty->assign('results',false);
-	                }
-	            } else {
-	                $Smarty->assign('trtok',true);
-	            }
-	            $Smarty->assign('polling_frequency',UI_HUB_POLLING_FREQUENCY);
-	            $Smarty->assign('_prefix','HUBSEARCH');
-	            $Smarty->display('popup/HUB.getResults.tpl');
+//	            if (isset($_REQUEST['trtokid']) && $_REQUEST['trtokid']) {
+//	                $Smarty->assign('trtokid',$_REQUEST['trtokid']);
+//	                $r = $uiBrowser->HUBSEARCH->getSearchResults($_REQUEST['trtokid'], FALSE);
+//                    if ( PEAR::isError($r) && ($r->getCode() != TRERR_NOTFIN) ) {
+//                        break;
+//                    }
+//	                if ($r) {
+//	                    $Smarty->assign('results',true);
+//	                } else {
+//	                    $Smarty->assign('results',false);
+//	                }
+//	            } else {
+//	                $Smarty->assign('trtok',true);
+//	            }
+//	            $Smarty->assign('polling_frequency',UI_HUB_POLLING_FREQUENCY);
+//	            $Smarty->assign('_prefix','HUBSEARCH');
+//	            $Smarty->display('popup/HUB.getResults.tpl');
 	            break;
         }
     }
@@ -311,13 +311,11 @@ if ($uiBrowser->userid) {
 
         case "addWebstreamData":
         case "addWebstreamMData":
-//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
 	        break;
 
         case "editItem":
 	        $uiBrowser->SCRATCHPAD->addItem($_REQUEST['id']);
-//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 	        $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
 	        break;
 
@@ -327,22 +325,18 @@ if ($uiBrowser->userid) {
 	        break;
 
         case "BROWSE":
-	        #echo '<XMP>uiBrowser->BROWSE->getResult():'; print_r($uiBrowser->BROWSE->getResult()); echo "</XMP>\n";
 	        $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        break;
 
         case "HUBSEARCH":
-	        #echo '<XMP>_REQUEST:'; print_r($_REQUEST); echo "</XMP>\n";
-	        #$Smarty->assign('searchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('hubSearchForm', $uiBrowser->HUBSEARCH->searchForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        $Smarty->assign('isHub', TRUE);
+          $Smarty->assign('results', true);
 	        break;
 
         case "HUBBROWSE":
-       	    //$HUBBROWSE = new uiHubBrowse($uiBrowser);
-	        //$Smarty->assign('hubBrowseForm', $HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('hubBrowseForm', $uiBrowser->HUBBROWSE->browseForm($uiBrowser->id, $ui_fmask));
 	        $Smarty->assign('showLibrary', TRUE);
 	        $Smarty->assign('isHub', TRUE);

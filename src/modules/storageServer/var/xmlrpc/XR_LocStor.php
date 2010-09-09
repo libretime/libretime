@@ -10,7 +10,6 @@ require_once(dirname(__FILE__).'/../LocStor.php');
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 class XR_LocStor extends LocStor {
-
     /* ----------------------------------------------------------- getVersion */
     /**
      * Dummy method - only returns Campcaster version
@@ -38,19 +37,36 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see Subjects::getVersion
      */
-    public function xr_getVersion($input)
+//    public function xr_getVersion($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//        	return $r;
+//        }
+//        $res = $this->getVersion();
+//        if (PEAR::isError($res)) {
+//            return new XML_RPC_Response(0, 805,
+//                "xr_getVersion: ".$res->getMessage().
+//                " ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(
+//            XML_RPC_encode(array('version'=>$res))
+//        );
+//    }
+    public function xr_getVersion()
     {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//        	return $r;
+//        }
         $res = $this->getVersion();
-        if (PEAR::isError($res)) {
-            return new XML_RPC_Response(0, 805,
-                "xr_getVersion: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        }
+//        if (PEAR::isError($res)) {
+//            return new XML_RPC_Response(0, 805,
+//                "xr_getVersion: ".$res->getMessage().
+//                " ".$res->getUserInfo()
+//            );
+//        }
         return new XML_RPC_Response(
             XML_RPC_encode(array('version'=>$res))
         );
@@ -3270,24 +3286,24 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see Transport::globalSearch
      */
-    public function xr_globalSearch($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        require_once('../Transport.php');
-        $tr = new Transport($this);
-        $res = $tr->globalSearch($r['criteria']);
-        if (PEAR::isError($res)) {
-            $ec0 = intval($res->getCode());
-            $ec = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_globalSearch: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
-    }
+//    public function xr_globalSearch($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//        	return $r;
+//        }
+//        require_once('../Transport.php');
+//        $tr = new Transport($this);
+//        $res = $tr->globalSearch($r['criteria']);
+//        if (PEAR::isError($res)) {
+//            $ec0 = intval($res->getCode());
+//            $ec = ($ec0 == GBERR_SESS || $ec0 == TRERR_TOK ? 800+$ec0 : 805 );
+//            return new XML_RPC_Response(0, $ec,
+//                "xr_globalSearch: ".$res->getMessage()." ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+//    }
 
     /**
      * Get results from search job on network hub.
@@ -3335,26 +3351,26 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see Transport::getSearchResults
      */
-    public function xr_getSearchResults($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        require_once('../Transport.php');
-        $tr = new Transport($this);
-        $res = $tr->getSearchResults($r['trtok']);
-        if (PEAR::isError($res)) {
-            $ec0 = intval($res->getCode());
-            $ec = (
-                $ec0 == GBERR_SESS || $ec0 == TRERR_TOK || $ec0 == TRERR_NOTFIN
-                 ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_getSearchResults: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
+//    public function xr_getSearchResults($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//        	return $r;
+//        }
+//        require_once('../Transport.php');
+//        $tr = new Transport($this);
+//        $res = $tr->getSearchResults($r['trtok']);
+//        if (PEAR::isError($res)) {
+//            $ec0 = intval($res->getCode());
+//            $ec = (
+//                $ec0 == GBERR_SESS || $ec0 == TRERR_TOK || $ec0 == TRERR_NOTFIN
+//                 ? 800+$ec0 : 805 );
+//            return new XML_RPC_Response(0, $ec,
+//                "xr_getSearchResults: ".$res->getMessage()." ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(XML_RPC_encode($res));
+//    }
 
     /**
      * OBSOLETE
@@ -3389,24 +3405,24 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see Transport::uploadToArchive
      */
-    public function xr_uploadToArchive($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-        	return $r;
-        }
-        require_once(dirname(__FILE__).'/../Transport.php');
-        $tr = new Transport($this);
-        $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
-        if (PEAR::isError($res)) {
-            $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
-    }
+//    public function xr_uploadToArchive($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//        	return $r;
+//        }
+//        require_once(dirname(__FILE__).'/../Transport.php');
+//        $tr = new Transport($this);
+//        $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
+//        if (PEAR::isError($res)) {
+//            $ec0 = intval($res->getCode());
+//            $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
+//            return new XML_RPC_Response(0, $ec,
+//                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+//    }
 
     /**
      * OBSOLETE
@@ -3441,24 +3457,24 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see Transport::downloadFromArchive
      */
-    public function xr_downloadFromArchive($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-            return $r;
-        }
-        require_once(dirname(__FILE__).'/../Transport.php');
-        $tr = new Transport($this);
-        $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
-        if (PEAR::isError($res)) {
-            $ec0 = intval($res->getCode());
-            $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
-            return new XML_RPC_Response(0, $ec,
-                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
-    }
+//    public function xr_downloadFromArchive($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//            return $r;
+//        }
+//        require_once(dirname(__FILE__).'/../Transport.php');
+//        $tr = new Transport($this);
+//        $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
+//        if (PEAR::isError($res)) {
+//            $ec0 = intval($res->getCode());
+//            $ec  = ($ec0 == GBERR_SESS ? 800+$ec0 : 805 );
+//            return new XML_RPC_Response(0, $ec,
+//                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(XML_RPC_encode(array('trtok'=>$res)));
+//    }
 
     /* ================================================ methods for debugging */
     /**
@@ -3593,7 +3609,7 @@ class XR_LocStor extends LocStor {
     }
 
     /**
-     * Simple ping method - return strtouppered string
+     * Simple ping method - return string
      *
      * @param XML_RPC_Message $input
      * @return XML_RPC_Response
@@ -3604,7 +3620,7 @@ class XR_LocStor extends LocStor {
         if (!$ok) {
         	return $r;
         }
-        $res = date("Ymd-H:i:s")." Network hub answer: {$r['par']}";
+        $res = date("Ymd-H:i:s")." -- reply from remote node: {$r['par']}";
         return new XML_RPC_Response(XML_RPC_encode($res));
     }
 

@@ -1,8 +1,8 @@
 <?php
+
 /**
  * @package Campcaster
  * @subpackage htmlUI
-
  */
 class uiHubSearch extends uiSearch {
 
@@ -10,27 +10,26 @@ class uiHubSearch extends uiSearch {
     {
         $this->Base =& $uiBase;
         $this->prefix = 'HUBSEARCH';
-        #$this->results =& $_SESSION[UI_HUBSEARCH_SESSNAME]['results'];
+        $this->results =& $_SESSION[UI_HUBSEARCH_SESSNAME]['results'];
         $this->criteria =& $_SESSION[UI_HUBSEARCH_SESSNAME]['criteria'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {
-        	$this->criteria['limit']    = UI_BROWSE_DEFAULT_LIMIT;
+        	$this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
         }
     } // constructor
 
 
     function getResult()
     {
-        //$this->searchDB();
-        if (isset($_REQUEST['trtokid'])) {
-            $this->getSearchResults($_REQUEST['trtokid']);
-            return $this->results;
-        }
-        return false;
+        return $this->results;
     } // fn getResult
 
 
+    /**
+     * This gets called when the user first fills in the search form.
+     *
+     */
     function newSearch(&$formdata)
     {
         $this->results = NULL;
@@ -61,70 +60,57 @@ class uiHubSearch extends uiSearch {
             }
         }
 
-        //echo '<XMP>this->criteria:'; print_r($this->criteria); echo "</XMP>\n";
-        $trtokid = $this->Base->gb->globalSearch($this->criteria);
-        if (PEAR::isError($trtokid)) {
-            // don't know how to display error message in htmlUi- should be improved:
-            echo "ERROR: {$trtokid->getMessage()} {$trtokid->getUserInfo()}".
-                ($trtokid->getCode() ? " ({$trtokid->getCode()})" : "")."\n";
-            echo "<br/>\n<a href=\"javascript:history.go(-1)\">Back</a>\n";
-            exit;
-            //$this->Base->_retMsg("ERROR_3: {$trtokid->getMessage()} {$trtokid->getUserInfo()}\n");
-            //$this->Base->redirUrl = UI_BROWSER.'?popup[]=';
-            return $trtokid;
-        }
-
-        $this->Base->redirUrl = UI_BROWSER.'?popup[]='.$this->prefix.'.getResults&trtokid='.$trtokid;
+        $results = $this->Base->gb->globalSearch($this->criteria);
+        $this->results["cnt"] = $results["cnt"];
+        $this->results["items"] = $results["results"];
+        $this->pagination();
+        $this->Base->redirUrl = UI_BROWSER."?act=HUBSEARCH";
     } // fn newSearch
 
 
+    /**
+     * This gets called when the user is paginating.
+     *
+     */
     function searchDB()
     {
         if (count($this->criteria) === 0) {
             return FALSE;
         }
-        $this->results = array('page' => $this->criteria['offset'] / $this->criteria['limit']);
-
-        $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
-        if (PEAR::isError($results)) {
-            return FALSE;
-        }
-        foreach ($results['results'] as $rec) {
-            $tmpId = BasicStor::IdFromGunid($rec["gunid"]);
-            $this->results['items'][] = $this->Base->getMetaInfo($tmpId);
-        }
-        $this->results['cnt'] = $results['cnt'];
-
-        $this->pagination($results);
+        $this->results = array('page' => ($this->criteria['offset'] / $this->criteria['limit']));
+        $results = $this->Base->gb->globalSearch($this->criteria);
+        $this->results["cnt"] = $results["cnt"];
+        $this->results["items"] = $results["results"];
+        $this->pagination();
 
         return TRUE;
     } // fn searchDB
 
 
-    function getSearchResults($trtokid, $andClose=TRUE)
-    {
-        $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
-        $results = $this->Base->gb->getSearchResults($trtokid, $andClose);
-        if ( PEAR::isError($results) && ($results->getCode() != TRERR_NOTFIN) ) {
-             echo "ERROR: {$results->getMessage()} {$results->getUserInfo()}\n";
-            return $results;
-        }
-        if (!is_array($results) || !count($results)) {
-            return false;
-        }
-        $this->results['cnt'] = $results['cnt'];
-/*
-        foreach ($results['results'] as $rec) {
-            // TODO: maybe this getMetaInfo is not correct for the remote results
-            // yes, right :)
-            // $this->results['items'][] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($rec));
-            $this->results['items'][] = $rec;
-        }
-*/
-        $this->results['items'] = $results['results'];
-        $this->pagination($results);
-        return is_array($results);
-    } // fn getSearchResults
+//    function getSearchResults($trtokid, $andClose=TRUE)
+//    {
+//        $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
+//        $results = $this->Base->gb->getSearchResults($trtokid, $andClose);
+//        if ( PEAR::isError($results) && ($results->getCode() != TRERR_NOTFIN) ) {
+//             echo "ERROR: {$results->getMessage()} {$results->getUserInfo()}\n";
+//            return $results;
+//        }
+//        if (!is_array($results) || !count($results)) {
+//            return false;
+//        }
+//        $this->results['cnt'] = $results['cnt'];
+///*
+//        foreach ($results['results'] as $rec) {
+//            // TODO: maybe this getMetaInfo is not correct for the remote results
+//            // yes, right :)
+//            // $this->results['items'][] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($rec));
+//            $this->results['items'][] = $rec;
+//        }
+//*/
+//        $this->results['items'] = $results['results'];
+//        $this->pagination($results);
+//        return is_array($results);
+//    } // fn getSearchResults
 
 } // class uiHubSearch
 ?>

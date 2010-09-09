@@ -184,10 +184,10 @@ $methodDefs = array(
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
     "downloadFromHub" => array('m'=>"locstor.downloadFromHub",
         'p'=>array('sessid', 'gunid'), 'r'=>array('trtok')),
-    "globalSearch" => array('m'=>"locstor.globalSearch",
-        'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
-    "getSearchResults" => array('m'=>"locstor.getSearchResults",
-        'p'=>array('trtok')),
+//    "globalSearch" => array('m'=>"locstor.globalSearch",
+//        'p'=>array('sessid', 'criteria'), 'r'=>array('trtok')),
+//    "getSearchResults" => array('m'=>"locstor.getSearchResults",
+//        'p'=>array('trtok')),
 
     "createBackupOpen" => array('m'=>"locstor.createBackupOpen",
         'p'=>array('sessid', 'criteria'), 'r'=>array('token')),
@@ -267,7 +267,7 @@ if (isset($_REQUEST['go_button'])) {
         } else {
             switch ($method) {
                 case "searchMetadata":
-                case "getSearchResults":
+//                case "getSearchResults":
                     $acCnt = 0;
                     $acGunids = array();
                     $plCnt = 0;

@@ -415,7 +415,7 @@ class LocStor extends BasicStor {
      *   </ul>
      *  @see BasicStor::localSearch
       */
-    protected function searchMetadata($sessid, $criteria)
+    public function searchMetadata($sessid, $criteria)
     {
         if (($res = BasicStor::Authorize('read', $this->storId, $sessid)) !== TRUE) {
             return $res;
@@ -1378,7 +1378,7 @@ class LocStor extends BasicStor {
      *
      * @return string
      */
-    protected function getVersion()
+    public static function getVersion()
     {
         return CAMPCASTER_VERSION;
     }

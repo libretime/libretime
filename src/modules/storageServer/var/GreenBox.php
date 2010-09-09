@@ -1651,8 +1651,9 @@ class GreenBox extends BasicStor {
     {
         require_once("Transport.php");
         $tr = new Transport($this);
-        return $tr->globalSearch($criteria);
-    } // fn globalSearch
+        //return $tr->globalSearch($criteria);
+        return $tr->remoteSearch($criteria);
+    }
 
 
     /**
@@ -1665,12 +1666,12 @@ class GreenBox extends BasicStor {
      * @return array
      * 		search result format (see localSearch)
      */
-    public function getSearchResults($trtok, $andClose=TRUE)
-    {
-        require_once("Transport.php");
-        $tr = new Transport($this);
-        return $tr->getSearchResults($trtok, $andClose);
-    } // fn getSearchResults
+//    public function getSearchResults($trtok, $andClose=TRUE)
+//    {
+//        require_once("Transport.php");
+//        $tr = new Transport($this);
+//        return $tr->getSearchResults($trtok, $andClose);
+//    } // fn getSearchResults
 
 
     /* ========================================================= info methods */

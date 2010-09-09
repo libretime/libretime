@@ -1,6 +1,7 @@
 <?php
+$WHITE_SCREEN_OF_DEATH = false;
+
 header("Content-type: text/plain");
-echo "\n# Transport test:\n";
 
 require_once('../conf.php');
 require_once('DB.php');
@@ -22,24 +23,24 @@ $gunid     = 'a23456789abcdefb';
 $mediaFile = '../tests/ex1.mp3';
 $mdataFile = '../tests/mdata1.xml';
 
-/* ========== PING ========== */
-/*
-echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
+// Test remote search
+$result = $tr->remoteSearch("");
+if (PEAR::isError($result)) {
+    echo $result->message."\n";
+} else {
+    var_dump($result);
+}
+//$client = XML_RPC2_Client::create('http://localhost/~paul/campcaster/storageServer/var/xmlrpc/xrLocStor2.php', array('backend'=>'php', 'prefix' => "Campcaster_Remote."));
+////var_dump($client);
+//$result = $client->System_Ping("woo");
+//var_dump($result);
+exit;
 
-echo"#  Ping: ";
-$r = $tr->pingToArchive();
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-var_export($r); echo"\n";
 
-echo"#  logout: "; $r = Alib::Logout($sessid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-*/
 /* ========== STORE ========== */
-echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
 echo"#  Store: ";
-$parid = $gb->_getHomeDirIdFromSess($sessid);
+//$parid = $gb->_getHomeDirIdFromSess($sessid);
 $values = array(
     "filename" => "xx1.mp3",
     "filepath" => $mediaFile,
@@ -47,7 +48,7 @@ $values = array(
     "gunid" => $gunid,
     "filetype" => "audioclip"
 );
-$storedFile = $gb->bsPutFile($parid, $values);
+$storedFile = $gb->bsPutFile($values);
 if (PEAR::isError($storedFile)) {
     if ($storedFile->getCode()!=GBERR_GUNID) {
         echo "ERROR: ".$storedFile->getMessage()."\n";
@@ -185,7 +186,7 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 var_export($r['status']); echo"\n";
 
 echo"#  Ping: ";
-$r = $tr->pingToArchive();
+$r = $tr->ping();
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 var_export($r); echo"\n";
 
