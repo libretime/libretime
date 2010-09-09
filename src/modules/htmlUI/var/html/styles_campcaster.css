@@ -1012,18 +1012,18 @@ table.masterpalette td{
 	margin: 0 auto;
 }
 
-#plupload_error table {
-	border: 0;
-}
-
-#plupload_error table tr {
-
-}
-
 #plupload_error table td {
 	border: 0;
 }
 
 #plupload_error table td:first-child {
 	border-right: 1px solid #000000;
+}
+
+.sp_tool_tip table {
+	margin: 2px;
+}
+
+.sp_tool_tip table td {
+	border: 0;
 }

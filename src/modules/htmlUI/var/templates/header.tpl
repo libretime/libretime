@@ -14,6 +14,7 @@
 	
 	<script type="text/javascript" src="assets/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="assets/plupload/jquery.plupload.queue.min.js"></script>
+	<script type="text/javascript" src="assets/qtip/jquery.qtip.min.js"></script>
 
     {include file="script/basics.js.tpl"}
     {include file="script/contextmenu.js.tpl"}
