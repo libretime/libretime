@@ -64,7 +64,7 @@ if ($verbose) {
     echo "Host: {$url['host']}, path: {$url['path']}\n";
     echo "Method: $method\n";
     echo "Parameters:\n";
-    var_dump($options);
+    //var_dump($pars);
 }
 
 $infos = array(

@@ -21,7 +21,7 @@
     {if count($SCRATCHPAD) >= 1}
         {foreach from=$SCRATCHPAD item=i}
                 <!-- start item -->
-                <tr class="{cycle values='blue1, blue2'}">
+                <tr class="{cycle values='blue1, blue2'}" id="scratchpad_item_{$i.id}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="cursor: pointer">
                         {if $i.type|lower == "playlist"}
@@ -48,6 +48,61 @@
                     </td>
                 </tr>
                 <!-- end item -->
+                
+                
+                
+                <script type="text/javascript">
+                var tool_tip = $("<div class='sp_tool_tip'/>"),
+                	tool_tip_content = $("<table/>"),
+                	playlist_content = $("<table/>"),
+                    title = "{$i.title}",
+                    id = "{$i.id}",
+                    type = "{$i.type}",
+                    creator = "{$i.creator}",
+                    duration = "{$i.duration}",
+    				source = "{$i.source}", 
+    				bitRate = "{$i.bitRate}",
+    				sampleRate = "{$i.sampleRate}",
+    				content = "{$i.content}";
+
+                {literal}
+                
+                tool_tip_content.append("<tr><td>Title: </td><td>"+title+"</td></tr>");
+                tool_tip_content.append("<tr><td>Creator: </td><td>"+creator+"</td></tr>");
+               
+                if(type === "audioclip") {
+                	tool_tip_content.append("<tr><td>Album: </td><td>"+source+"</td></tr>");
+                	tool_tip_content.append("<tr><td>Bit Rate: </td><td>"+bitRate+"</td></tr>");
+                	tool_tip_content.append("<tr><td>Sample Rate: </td><td>"+sampleRate+"</td></tr>");
+                }
+
+                tool_tip_content.append("<tr><td>Duration: </td><td>"+duration+"</td></tr>");
+
+                if(type === "playlist") {
+                	content = content.split("/");
+                	for(var i=0; i< content.length; i++){
+                		playlist_content.append("<tr><td>" +content[i]+ "</td></tr>");
+                    }
+                }
+
+                tool_tip.append(tool_tip_content);
+                tool_tip.append(playlist_content);
+
+                $("#scratchpad_item_"+id).qtip({
+            	   content: tool_tip,
+            	   style: {name: 'cream'},
+            	   position: {
+                	   corner: {
+                	   	target: "rightMiddle",
+                	   	tooltip: "leftMiddle"
+                	   }
+                	},       	   
+            	   show: 'mouseover',
+            	   hide: 'mouseout'
+                })
+                </script>
+                
+                {/literal}
         {/foreach}
     {else}
         <tr class="blue1">

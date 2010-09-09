@@ -1668,11 +1668,32 @@ class Transport
     {
         global $CC_CONFIG;
         $xrp = XML_RPC_encode($pars);
-        $path = $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'];
-        $url = $CC_CONFIG["archiveUrlHost"].":".$CC_CONFIG["archiveUrlPort"]."/".$path;
-        //echo $url."\n";
-        $c = new XML_RPC_Client($path, $CC_CONFIG['archiveUrlHost'],
-            $CC_CONFIG['archiveUrlPort']);
+        
+        $group = 'StationPrefs';
+        $key = 'archiveServerLocation';
+        $archiveUrl = $pr->loadGroupPref(NULL/*sessid*/, $group, $key);
+        
+        if($archiveUrl){
+       
+            $archiveUrlInfo = parse_url($archiveUrl);
+            
+            if($archiveUrlInfo['port']){
+                $port = $archiveUrlInfo['port'];
+            }
+            else {
+                $port = 80;
+            }
+        
+        
+            $c = new XML_RPC_Client($archiveUrlInfo['path'], $archiveUrlInfo['host'], $port); 
+        }
+        else {
+            $c = new XML_RPC_Client(
+                $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],
+                $CC_CONFIG['archiveUrlHost'], $CC_CONFIG['archiveUrlPort']
+            ); 
+        }
+                  
         $f = new XML_RPC_Message($method, array($xrp));
         $r = $c->send($f);
         if (!$r) {
