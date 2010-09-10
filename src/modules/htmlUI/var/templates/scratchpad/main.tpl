@@ -68,14 +68,32 @@
                 {literal}
                 
                 tool_tip_content.append("<tr><td>Title: </td><td>"+title+"</td></tr>");
-                tool_tip_content.append("<tr><td>Creator: </td><td>"+creator+"</td></tr>");
-               
+
+                if(type === "audioclip")
+                	tool_tip_content.append("<tr><td>Artist: </td><td>"+creator+"</td></tr>");
+
+            	if(type === "playlist")
+                    tool_tip_content.append("<tr><td>Creator: </td><td>"+creator+"</td></tr>");
+             
                 if(type === "audioclip") {
+					bitRate = bitRate.substr(0, 3);
+                    
                 	tool_tip_content.append("<tr><td>Album: </td><td>"+source+"</td></tr>");
-                	tool_tip_content.append("<tr><td>Bit Rate: </td><td>"+bitRate+"</td></tr>");
-                	tool_tip_content.append("<tr><td>Sample Rate: </td><td>"+sampleRate+"</td></tr>");
+                	tool_tip_content.append("<tr><td>Bit Rate: </td><td>"+bitRate+" kbps</td></tr>");
+                	tool_tip_content.append("<tr><td>Sample Rate: </td><td>"+sampleRate+" Hz</td></tr>");
                 }
 
+				duration = duration.split(".");
+				duration = duration[0].split(":");
+
+				if(parseInt(duration[0] !== 0)) {
+					duration = duration[0] +":"+duration[1]+":"+duration[2];
+				}
+				else{
+					duration = duration[1]+":"+duration[2];
+				}
+				
+				
                 tool_tip_content.append("<tr><td>Duration: </td><td>"+duration+"</td></tr>");
 
                 if(type === "playlist") {
