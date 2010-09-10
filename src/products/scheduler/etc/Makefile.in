@@ -343,7 +343,6 @@ copy_files:
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} install
 	${MKDIR} ${USR_BIN_DIR}
 	${MKDIR} ${USR_ETC_DIR}
-	${MKDIR} ${USR_VAR_DIR}/install
 	${MKDIR} ${USR_TMP_DIR}
 	${CP} ${BIN_DIR}/campcaster-scheduler.sh ${USR_BIN_DIR}
 	${CP} ${SCHEDULER_EXE} ${USR_BIN_DIR}
@@ -357,7 +356,6 @@ copy_files:
 	${CAT} ${ETC_DIR}/campcaster-scheduler.xml.template \
 	       | ${SED} -e ${REPLACE_SED_STRING} \
 	       > ${USR_ETC_DIR}/campcaster-scheduler.xml
-	${CP} ${VAR_DIR}/install/*.php ${USR_VAR_DIR}/install/
 
 create_database:
 ifeq (@CREATE_LS_DATABASE@,yes)
@@ -373,19 +371,10 @@ ifeq (@CREATE_ODBC_DATA_SOURCE@,yes)
 	                                   --dbserver=${DB_SERVER}
 endif
 
-init_database:
-ifeq (@INIT_LS_DATABASE@,yes)
-	${USR_BIN_DIR}/campcaster-scheduler.sh install
-endif
-
-
 check_local: all ${TEST_RUNNER} kill start_local run_tests stop_local
 
 run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER_SH} -o ${TEST_RESULTS} -s ${TEST_XSLT}
-
-init: ${SCHEDULER_EXE}
-	-${SCHEDULER_SH} install
 
 start: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} start
@@ -401,12 +390,6 @@ stop: ${SCHEDULER_EXE}
 status: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} status
 
-deinit: ${SCHEDULER_EXE}
-	-${SCHEDULER_SH} uninstall
-
-init_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} install
-
 start_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} start
 	sleep 2
@@ -421,9 +404,6 @@ status_local: ${SCHEDULER_EXE}
 run_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} --debug start
 	sleep 2
-
-deinit_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} uninstall
 
 storage_server_init:
 	${MAKE} -C ${STORAGE_SERVER_DIR}

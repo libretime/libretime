@@ -15,7 +15,6 @@
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
- *   <dt>isArchive <dd>local/central flag
  *   <dt>validate <dd>enable/disable validator
  *   <dt>useTrash <dd>enable/disable safe delete (move to trash)
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
@@ -44,20 +43,20 @@ $CC_CONFIG = array(
         'phptype'       => 'pgsql',
         'database'      => 'Campcaster-paul',
     ),
-    'tblNamePrefix' => 'ls_',
+    'tblNamePrefix' => 'cc_',
     /* ================================================ storage configuration */
     'authCookieName'=> 'campcaster_session_id',
-    'AdminsGr'      => 'Admins',
-    'StationPrefsGr'=> 'StationPrefs',
-    'AllGr'         => 'All',
+    //'AdminsGr'      => 'Admins',
+    //'StationPrefsGr'=> 'StationPrefs',
+    //'AllGr'         => 'All',
     'TrashName'     => 'trash_',
     'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
     'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'pearPath'      =>  dirname(__FILE__).'/../../../../usr/lib/pear',
+//    'zendPath'      =>  dirname(__FILE__).'/../../../../usr/lib',
     'cronDir'       =>  dirname(__FILE__).'/../../storageServer/var/cron',
-    'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
 
@@ -71,6 +70,7 @@ $CC_CONFIG = array(
     'archiveUrlPath'        => '/campcasterStorageServer',
     'archiveXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'archiveUrlHost'        => 'localhost',
+//    'archiveUrlHost'        => '192.168.30.166',
     'archiveUrlPort'        => 80,
     'archiveAccountLogin'   => 'root',
     'archiveAccountPass'    => 'q',
@@ -110,6 +110,7 @@ $CC_CONFIG = array(
     'lockfile'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer/cron.lock',
     'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
     'paramdir'          => dirname(__FILE__).'/cron/params',
+    'systemPrefId' => "0", // ID for system prefs in prefs table
 );
 
 // Add database table names
@@ -122,15 +123,16 @@ $CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
 $CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
 $CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
 $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
-$CC_CONFIG['playlogTable'] = 'playlog';
-$CC_CONFIG['scheduleTable'] = 'schedule';
-$CC_CONFIG['backupTable'] = 'backup';
+$CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
+$CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
+$CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
+$CC_CONFIG['filesSequence'] = $CC_CONFIG['tblNamePrefix']."file_id_seq";
 
 $CC_CONFIG['sysSubjs'] = array(
-    'root', $CC_CONFIG['AdminsGr'], $CC_CONFIG['AllGr'], $CC_CONFIG['StationPrefsGr']
+    'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ /*$CC_CONFIG['StationPrefsGr']*/
 );
-$old_ip = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_ip);
+$old_include_path = get_include_path();
+set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);
 
 // see if a ~/.campcaster/storageServer.conf.php exists, and
 // overwrite the settings from there if any

@@ -222,13 +222,13 @@ $mdefs = array(
             '1320'=>'missing session ID argument',
         )
     ),
-    "ResetStorageMethod" => array(
-        'm'=>'resetStorage',
-        'p'=>array(),
-        't'=>array(),
-        'r'=>array(),
-        'e'=>array('3001'=>'storage client reported an error'),
-    ),
+//    "ResetStorageMethod" => array(
+//        'm'=>'resetStorage',
+//        'p'=>array(),
+//        't'=>array(),
+//        'r'=>array(),
+//        'e'=>array('3001'=>'storage client reported an error'),
+//    ),
     "RevertEditedPlaylistMethod" => array(
         'm'=>'revertEditedPlaylist',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),

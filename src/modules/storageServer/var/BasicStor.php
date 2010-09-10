@@ -1381,20 +1381,18 @@ class BasicStor {
             return $uid;
         }
         if (Subjects::IsGroup($uid) === FALSE) {
-            $res = Alib::AddPerm($uid, '_all', $fid, 'A');
+            $res = Alib::AddPerm($uid, '_all', '0', 'A');
             if (PEAR::isError($res)) {
                 return $res;
             }
-            if (!$CC_CONFIG['isArchive']) {
-                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['StationPrefsGr']);
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['AllGr']);
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-            }
+//                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['StationPrefsGr']);
+//                if (PEAR::isError($res)) {
+//                    return $res;
+//                }
+//                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['AllGr']);
+//                if (PEAR::isError($res)) {
+//                    return $res;
+//                }
         }
         return $uid;
     }
@@ -1764,10 +1762,8 @@ class BasicStor {
         } else {
             $this->deleteData();
         }
-        if (!$CC_CONFIG['isArchive']) {
-            $tr = new Transport($this);
-            $tr->resetData();
-        }
+        $tr = new Transport($this);
+        $tr->resetData();
         $res = array('cnt'=>0, 'results'=>array());
         if (!$loadSampleData) {
             return $res;
@@ -1892,57 +1888,57 @@ class BasicStor {
     {
         global $CC_CONFIG;
         // Create the Admin group
-        if (!empty($CC_CONFIG['AdminsGr'])) {
-            if (!Subjects::GetSubjId($CC_CONFIG['AdminsGr'])) {
-                echo "   * Creating group '".$CC_CONFIG['AdminsGr']."'...";
-                // Add the admin group
-                $admid = Subjects::AddSubj($CC_CONFIG['AdminsGr']);
-                if (PEAR::isError($admid)) {
-                    return $admid;
-                }
-
-                // Add the "all" permission to the "admin" group
-                $res = Alib::AddPerm($admid, '_all', $this->rootId, 'A');
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-                echo "done.\n";
-            } else {
-                echo "   * Skipping: group already exists: '".$CC_CONFIG['AdminsGr']."'\n";
-            }
-        }
+//        if (!empty($CC_CONFIG['AdminsGr'])) {
+//            if (!Subjects::GetSubjId($CC_CONFIG['AdminsGr'])) {
+//                echo "   * Creating group '".$CC_CONFIG['AdminsGr']."'...";
+//                // Add the admin group
+//                $admid = Subjects::AddSubj($CC_CONFIG['AdminsGr']);
+//                if (PEAR::isError($admid)) {
+//                    return $admid;
+//                }
+//
+//                // Add the "all" permission to the "admin" group
+//                $res = Alib::AddPerm($admid, '_all', $this->storId, 'A');
+//                if (PEAR::isError($res)) {
+//                    return $res;
+//                }
+//                echo "done.\n";
+//            } else {
+//                echo "   * Skipping: group already exists: '".$CC_CONFIG['AdminsGr']."'\n";
+//            }
+//        }
 
         // Add the "all" group
-        if (!empty($CC_CONFIG['AllGr'])) {
-            if (!Subjects::GetSubjId($CC_CONFIG['AllGr'])) {
-                echo "   * Creating group '".$CC_CONFIG['AllGr']."'...";
-                $allid = Subjects::AddSubj($CC_CONFIG['AllGr']);
-                if (PEAR::isError($allid)) {
-                    return $allid;
-                }
-
-                // Add the "read" permission to the "all" group.
-                Alib::AddPerm($allid, 'read', $this->rootId, 'A');
-                echo "done.\n";
-            } else {
-                echo "   * Skipping: group already exists: '".$CC_CONFIG['AllGr']."'\n";
-            }
-        }
+//        if (!empty($CC_CONFIG['AllGr'])) {
+//            if (!Subjects::GetSubjId($CC_CONFIG['AllGr'])) {
+//                echo "   * Creating group '".$CC_CONFIG['AllGr']."'...";
+//                $allid = Subjects::AddSubj($CC_CONFIG['AllGr']);
+//                if (PEAR::isError($allid)) {
+//                    return $allid;
+//                }
+//
+//                // Add the "read" permission to the "all" group.
+//                Alib::AddPerm($allid, 'read', $this->storId, 'A');
+//                echo "done.\n";
+//            } else {
+//                echo "   * Skipping: group already exists: '".$CC_CONFIG['AllGr']."'\n";
+//            }
+//        }
 
         // Add the "Station Preferences" group
-        if (!empty($CC_CONFIG['StationPrefsGr'])) {
-            if (!Subjects::GetSubjId('scheduler')) {
-                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
-                $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
-                if (PEAR::isError($stPrefGr)) {
-                    return $stPrefGr;
-                }
-                Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
-                echo "done.\n";
-            } else {
-                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
-            }
-        }
+//        if (!empty($CC_CONFIG['StationPrefsGr'])) {
+//            if (!Subjects::GetSubjId('scheduler')) {
+//                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
+//                $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
+//                if (PEAR::isError($stPrefGr)) {
+//                    return $stPrefGr;
+//                }
+//                Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
+//                echo "done.\n";
+//            } else {
+//                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
+//            }
+//        }
 
         // Add the root user if it doesnt exist yet.
         $rootUid = Subjects::GetSubjId('root');
@@ -1954,10 +1950,10 @@ class BasicStor {
             }
 
             // Add root user to the admin group
-            $r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
+//            $r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
             echo "done.\n";
         } else {
             echo "   * Skipping: user already exists: 'root'\n";
@@ -1966,19 +1962,19 @@ class BasicStor {
         // Create the user named 'scheduler'.
         if (!Subjects::GetSubjId('scheduler')) {
             echo "   * Creating user 'scheduler'...";
-            Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
-            $res = Alib::AddPerm($rootUid, 'read', $this->rootId, 'A');
+            $subid = Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
+            $res = Alib::AddPerm($subid, 'read', '0', 'A');
             if (PEAR::isError($res)) {
                 return $res;
             }
-            $r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
+            //$r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
             echo "done.\n";
         } else {
             echo "   * Skipping: user already exists: 'scheduler'\n";
         }
 
         // Need to add 'scheduler' to group StationPrefs
-        Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
+        //Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
     }
 
 

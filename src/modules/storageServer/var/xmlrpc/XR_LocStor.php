@@ -3523,23 +3523,23 @@ class XR_LocStor extends LocStor {
      * @return XML_RPC_Response
      * @see LocStor::getAudioClip
      */
-    public function xr_resetStorage($input)
-    {
-        list($ok, $r) = XR_LocStor::xr_getParams($input);
-        if (!$ok) {
-            return $r;
-        }
-        $res = $this->resetStorage(
-            isset($r['loadSampleData']) ? $r['loadSampleData'] : TRUE,
-            !(isset($r['invalidateSessionIds']) ? $r['invalidateSessionIds'] : FALSE)
-        );
-        if (PEAR::isError($res)) {
-            return new XML_RPC_Response(0, 805,
-                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
-            );
-        }
-        return new XML_RPC_Response(XML_RPC_encode($res));
-    }
+//    public function xr_resetStorage($input)
+//    {
+//        list($ok, $r) = XR_LocStor::xr_getParams($input);
+//        if (!$ok) {
+//            return $r;
+//        }
+//        $res = $this->resetStorage(
+//            isset($r['loadSampleData']) ? $r['loadSampleData'] : TRUE,
+//            !(isset($r['invalidateSessionIds']) ? $r['invalidateSessionIds'] : FALSE)
+//        );
+//        if (PEAR::isError($res)) {
+//            return new XML_RPC_Response(0, 805,
+//                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+//            );
+//        }
+//        return new XML_RPC_Response(XML_RPC_encode($res));
+//    }
 
     /**
      * Test XMLRPC - strupper and return given string,

@@ -1,5 +1,14 @@
 <?php
 
+// Do not allow remote execution
+$arr = array_diff_assoc($_SERVER, $_ENV);
+if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
+    header("HTTP/1.1 400");
+    header("Content-type: text/plain; charset=UTF-8");
+    echo "400 Not executable\r\n";
+    exit(1);
+}
+
 require_once('conf.php');
 require_once('DB.php');
 require_once('install/installInit.php');

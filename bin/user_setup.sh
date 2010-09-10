@@ -317,22 +317,6 @@ make -C $modules_dir/storageServer storage || exit 1
 
 
 #-------------------------------------------------------------------------------
-#  Setup the database tables for the scheduler
-#-------------------------------------------------------------------------------
-echo "Setting up database tables for the scheduler..."
-
-make -C $products_dir/scheduler init || exit 1
-
-
-#-------------------------------------------------------------------------------
-#  Add "scheduler" user
-#-------------------------------------------------------------------------------
-echo "Adding the 'scheduler' user..."
-
-php $modules_dir/storageServer/var/install/campcaster-user.php --addupdate scheduler $scheduler_storage_pass
-
-
-#-------------------------------------------------------------------------------
 #  Setup directory permissions
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."

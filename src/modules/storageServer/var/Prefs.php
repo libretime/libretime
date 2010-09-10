@@ -437,59 +437,5 @@ class Prefs {
         return TRUE;
     }
 
-
-    /**
-     *  Install database table for preference storage
-     *
-     * @return boolean
-     */
-//    function install()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->createSequence("{$this->prefTable}_id_seq");
-//        $r = $CC_DBC->query("CREATE TABLE {$this->prefTable} (
-//            id int not null,
-//            subjid int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
-//            keystr varchar(255),
-//            valstr text
-//        )");
-//        if (PEAR::isError($r)) {
-//        	return $r;
-//        }
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->prefTable}_id_idx
-//            ON {$this->prefTable} (id)");
-//        $CC_DBC->query("CREATE UNIQUE INDEX {$this->prefTable}_subj_key_idx
-//            ON {$this->prefTable} (subjid, keystr)");
-//        $CC_DBC->query("CREATE INDEX {$this->prefTable}_subjid_idx
-//            ON {$this->prefTable} (subjid)");
-//        $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
-//        if (PEAR::isError($stPrefGr)) {
-//        	echo $stPrefGr->getMessage()."\n";
-//        }
-//        $r = Prefs::Insert($stPrefGr, 'stationName', "Radio Station 1");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()."\n";
-//        }
-//        $genres = file_get_contents(dirname(__FILE__).'/../genres.xml');
-//        $r = Prefs::Insert($stPrefGr, 'genres', $genres);
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()."\n";
-//        }
-//        return TRUE;
-//    }
-
-
-    /**
-     *  Uninstall database table for preference storage
-     *
-     * @return boolean
-     */
-//    function uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE {$this->prefTable}");
-//        $CC_DBC->dropSequence("{$this->prefTable}_id_seq");
-//    }
-
 } // class Prefs
 ?>

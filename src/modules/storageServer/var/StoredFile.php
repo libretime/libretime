@@ -458,7 +458,7 @@ class StoredFile {
 
         if (!is_integer($storedFile->id)) {
         	// NOTE: POSTGRES-SPECIFIC
-					$sql = "SELECT currval('file_id_seq')";
+					$sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."')";
         	$storedFile->id = $CC_DBC->getOne($sql);
         }
         // Insert metadata
