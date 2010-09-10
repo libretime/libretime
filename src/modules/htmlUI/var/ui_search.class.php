@@ -1,16 +1,17 @@
 <?php
+require_once("ui_base.inc.php");
+
 /**
  * @package Campcaster
  * @subpackage htmlUI
-
  */
 class uiSearch
 {
-    private $Base;
-    private $prefix;
-    private $criteria;
-    private $reloadUrl;
-    private $results;
+    protected $Base;
+    protected $prefix;
+    protected $criteria;
+    protected $reloadUrl;
+    protected $results;
 
     public function __construct(&$uiBase)
     {
@@ -226,10 +227,10 @@ class uiSearch
         $maxNumPaginationButtons = $deltaLower + $deltaUpper + 1;
 
         $start = 1;
-		$end = $maxPage;
+    		$end = $maxPage;
 
-		// If there are enough pages to warrant "next" and "previous"
-		// buttons...
+    		// If there are enough pages to warrant "next" and "previous"
+    		// buttons...
         if ($maxPage > $maxNumPaginationButtons) {
         	// When currentPage goes past deltaLower
         	if ($currentPage <= $deltaLower) {
@@ -300,7 +301,7 @@ class uiSearch
             $o = $l * ($page-1);
         }
         $this->setReload();
-        //$this->searchDB();
+        $this->searchDB();
     }
 
 } // class uiSearch

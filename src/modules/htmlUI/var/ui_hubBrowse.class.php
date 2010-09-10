@@ -14,7 +14,7 @@ class uiHubBrowse extends uiBrowse
         $this->prefix = 'HUBBROWSE';
         $this->col =& $_SESSION[UI_HUBBROWSE_SESSNAME]['col'];
         $this->criteria =& $_SESSION[UI_HUBBROWSE_SESSNAME]['criteria'];
-        //$this->results =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
+        $this->results =& $_SESSION[UI_HUBBROWSE_SESSNAME]['results'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if (empty($this->criteria['limit'])) {

@@ -405,7 +405,42 @@ class Transport
     }
 
 
-    /* ------------------------------------------------ global-search methods */
+    /* ------------------------------------------------ remote-search methods */
+    /**
+     * Start search job on remote Campcaster instance.
+     *
+     * @param array $criteria
+     * 		LS criteria format (see localSearch)
+     * @param string $resultMode
+     * 		'php' | 'xmlrpc'
+     * @param array $pars
+     * 		default parameters (optional, internal use)
+     * @return string
+     * 		transport token
+     */
+    function remoteSearch($criteria, $resultMode='php')
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $criteria['resultMode'] = $resultMode;
+
+        // testing of hub availability and hub account configuration.
+        $sessid = $this->loginToArchive();
+        if (PEAR::isError($sessid)) {
+            switch(intval($sessid->getCode())) {
+                case 802:
+                    return PEAR::raiseError("Can't login to Hub ({$sessid->getMessage()})", TRERR_XR_FAIL);
+                case TRERR_XR_FAIL:
+                    return PEAR::raiseError("Can't connect to Hub ({$sessid->getMessage()})", TRERR_XR_FAIL);
+            }
+            return $sessid;
+        }
+        $params = array("sessid" => $sessid, "criteria" => $criteria);
+        $result = $this->xmlrpcCall("locstor.searchMetadata", $params);
+        //$result = $this->xmlrpcCall("locstor.ping", array("par" => "foo"));
+        $this->logoutFromArchive($sessid);
+        return $result;
+    }
+
     /**
      * Start search job on network hub
      *
@@ -418,33 +453,33 @@ class Transport
      * @return string
      * 		transport token
      */
-    function globalSearch($criteria, $resultMode='php', $pars=array())
-    {
-        global $CC_CONFIG, $CC_DBC;
-        // testing of hub availability and hub account configuration.
-        // it makes searchjob not async - should be removed for real async
-        $r = $this->loginToArchive();
-        if (PEAR::isError($r)) {
-            switch(intval($r->getCode())) {
-                case 802:
-                    return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
-                case TRERR_XR_FAIL:
-                    return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
-            }
-            return $r;
-        }
-        $this->logoutFromArchive($r);
-        $criteria['resultMode'] = $resultMode;
-        $localfile = tempnam($CC_CONFIG['transDir'], 'searchjob_');
-        @chmod($localfile, 0660);
-        $len = file_put_contents($localfile, serialize($criteria));
-        $trec = $this->_uploadGeneralFileToHub($localfile, 'searchjob', $pars);
-        if (PEAR::isError($trec)) {
-        	return $trec;
-        }
-        $this->startCronJobProcess($trec->trtok);
-        return $trec->trtok;
-    }
+//    function globalSearch($criteria, $resultMode='php', $pars=array())
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        // testing of hub availability and hub account configuration.
+//        // it makes searchjob not async - should be removed for real async
+//        $r = $this->loginToArchive();
+//        if (PEAR::isError($r)) {
+//            switch(intval($r->getCode())) {
+//                case 802:
+//                    return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+//                case TRERR_XR_FAIL:
+//                    return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+//            }
+//            return $r;
+//        }
+//        $this->logoutFromArchive($r);
+//        $criteria['resultMode'] = $resultMode;
+//        $localfile = tempnam($CC_CONFIG['transDir'], 'searchjob_');
+//        @chmod($localfile, 0660);
+//        $len = file_put_contents($localfile, serialize($criteria));
+//        $trec = $this->_uploadGeneralFileToHub($localfile, 'searchjob', $pars);
+//        if (PEAR::isError($trec)) {
+//        	return $trec;
+//        }
+//        $this->startCronJobProcess($trec->trtok);
+//        return $trec->trtok;
+//    }
 
 
     /**
@@ -457,60 +492,60 @@ class Transport
      * @return array
      * 		LS search result format (see localSearch)
      */
-    function getSearchResults($trtok, $andClose=TRUE)
-    {
-        $trec = TransportRecord::recall($this, $trtok);
-        if (PEAR::isError($trec)) {
-        	return $trec;
-        }
-        $row = $trec->row;
-        switch ($st = $trec->getState()) {
-            case "failed":
-                return PEAR::raiseError(
-                    "Transport::getSearchResults:".
-                    " global search or results transport failed".
-                    " ({$trec->row['errmsg']})"
-                );
-            case "closed":
-/*
-                $res = file_get_contents($row['localfile']);
-                $results = unserialize($res);
-                return $results;
-*/
-                return PEAR::raiseError(
-                    "Transport::getSearchResults:".
-                    " closed transport token ($trtok)", TRERR_TOK
-                );
-            case "finished":
-                if ($row['direction'] == 'down') {
-                    // really finished
-                    $res = file_get_contents($row['localfile']);
-                    $results = unserialize($res);
-                    if ($andClose) {
-                        $ret = $this->xmlrpcCall('archive.downloadClose',
-                            array(
-                               'token'     => $row['pdtoken'] ,
-                               'trtype'     => $row['trtype'] ,
-                            ));
-                        if (PEAR::isError($ret)) {
-                            return $ret;
-                        }
-                        @unlink($row['localfile']);
-                        $r = $trec->close();
-                        if (PEAR::isError($r)) {
-                            return $r;
-                        }
-                    }
-                    return $results;
-                }
-                // otherwise not really finished - only request upload finished
-            default:
-                return PEAR::raiseError(
-                    "Transport::getSearchResults: not finished ($st)",
-                    TRERR_NOTFIN
-                );
-        }
-    }
+//    function getSearchResults($trtok, $andClose=TRUE)
+//    {
+//        $trec = TransportRecord::recall($this, $trtok);
+//        if (PEAR::isError($trec)) {
+//        	return $trec;
+//        }
+//        $row = $trec->row;
+//        switch ($st = $trec->getState()) {
+//            case "failed":
+//                return PEAR::raiseError(
+//                    "Transport::getSearchResults:".
+//                    " global search or results transport failed".
+//                    " ({$trec->row['errmsg']})"
+//                );
+//            case "closed":
+///*
+//                $res = file_get_contents($row['localfile']);
+//                $results = unserialize($res);
+//                return $results;
+//*/
+//                return PEAR::raiseError(
+//                    "Transport::getSearchResults:".
+//                    " closed transport token ($trtok)", TRERR_TOK
+//                );
+//            case "finished":
+//                if ($row['direction'] == 'down') {
+//                    // really finished
+//                    $res = file_get_contents($row['localfile']);
+//                    $results = unserialize($res);
+//                    if ($andClose) {
+//                        $ret = $this->xmlrpcCall('archive.downloadClose',
+//                            array(
+//                               'token'     => $row['pdtoken'] ,
+//                               'trtype'     => $row['trtype'] ,
+//                            ));
+//                        if (PEAR::isError($ret)) {
+//                            return $ret;
+//                        }
+//                        @unlink($row['localfile']);
+//                        $r = $trec->close();
+//                        if (PEAR::isError($r)) {
+//                            return $r;
+//                        }
+//                    }
+//                    return $results;
+//                }
+//                // otherwise not really finished - only request upload finished
+//            default:
+//                return PEAR::raiseError(
+//                    "Transport::getSearchResults: not finished ($st)",
+//                    TRERR_NOTFIN
+//                );
+//        }
+//    }
 
 
     /* ------------------------ methods for ls-archive-format file transports */
@@ -712,7 +747,7 @@ class Transport
     function loginToArchive()
     {
         global $CC_CONFIG;
-        $res = $this->xmlrpcCall('archive.login',
+        $res = $this->xmlrpcCall('locstor.login',
             array(
                 'login' => $CC_CONFIG['archiveAccountLogin'],
                 'pass' => $CC_CONFIG['archiveAccountPass']
@@ -734,7 +769,7 @@ class Transport
      */
     function logoutFromArchive($sessid)
     {
-        $res = $this->xmlrpcCall('archive.logout',
+        $res = $this->xmlrpcCall('locstor.logout',
             array('sessid'=>$sessid));
         return $res;
     }
@@ -777,7 +812,7 @@ class Transport
             return TRUE;
         }
         // ping to archive server:
-        $r = $this->pingToArchive();
+        $r = $this->ping();
         chdir($CC_CONFIG['transDir']);
         // for all opened transports:
         foreach ($transports as $i => $row) {
@@ -1423,7 +1458,7 @@ class Transport
                 }
                 break;
             case "metadata":
-            case "searchjob":
+//            case "searchjob":
                 return TRUE;     // don't close - getSearchResults should close it
                 break;
         }
@@ -1606,14 +1641,14 @@ class Transport
 
 
     /**
-     * Ping to archive server
+     * Ping to remote Campcaster server
      *
      * @return string
      * 		network hub response or error object
      */
-    function pingToArchive()
+    function ping()
     {
-        $res = $this->xmlrpcCall('archive.ping',
+        $res = $this->xmlrpcCall('ping',
             array('par'=>'ping_'.date('H:i:s')));
         return $res;
     }

@@ -61,11 +61,11 @@ $locStor = new XR_LocStor();
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
                                   'teststring, sessid.',
-    'getVersion'              => 'Dummy function for connection testing.',
-    'authenticate'            => 'Checks authentication.',
+    'getVersion'              => 'Get version of Campcaster.',
+//    'authenticate'            => 'Checks authentication.',
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',
-    'existsAudioClip'         => 'Checks if an Audio clip with the specified '.
+    'existsAudioClip'         => 'Checks if an audio clip with the specified '.
                                   'id is stored in local storage.',
     'storeAudioClipOpen'      => 'Open channel to store a new audio clip '.
                                     'or replace an existing one.',
@@ -140,26 +140,26 @@ $methods = array(
     'startHubInitiatedTransfer' => 'Start of download initiated by hub',
     'upload2Hub'                => 'Start upload of audioclip or playlist from local storageServer to hub',
     'downloadFromHub'           => 'Start download of audioclip or playlist from hub to local storageServer',
-    'globalSearch'              => 'Start search job on network hub',
-    'getSearchResults'          => 'Get results from search job on network hub',
+//    'globalSearch'              => 'Start search job on network hub',
+//    'getSearchResults'          => 'Get results from search job on network hub',
 
-    'uploadOpen'              => 'Open file-layer upload',
-    'uploadCheck'             => 'Check the checksum of uploaded file',
-    'uploadClose'             => 'Close file-layer upload',
-    'downloadOpen'            => 'Open file-layer download',
+    'uploadOpen'                => 'Open file-layer upload',
+    'uploadCheck'               => 'Check the checksum of uploaded file',
+    'uploadClose'               => 'Close file-layer upload',
+    'downloadOpen'              => 'Open file-layer download',
 //    'downloadCheck'           => 'Check the checksum of downloaded file',
-    'downloadClose'           => 'Close file-layer download',
+    'downloadClose'             => 'Close file-layer download',
     'prepareHubInitiatedTransfer'   => 'Prepare hub initiated transfer',
     'listHubInitiatedTransfers'     => 'List hub initiated transfers',
     'setHubInitiatedTransfer'       => 'Set state of hub initiated transfers',
-    'ping'                    => 'Echo request',
+    'ping'                      => 'Echo request',
 );
 
 $defs = array();
 foreach ($methods as $method => $description) {
     $defs["locstor.$method"] = array(
             "function" => array(&$locStor, "xr_$method"),
-#            "function" => "\$GLOBALS['locStor']->xr_$method",
+            // NOTE: the way this signature is set up, every function must take at least one parameter!
             "signature" => array(
                 array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
             ),
