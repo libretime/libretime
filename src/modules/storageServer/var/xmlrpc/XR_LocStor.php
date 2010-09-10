@@ -2742,7 +2742,7 @@ class XR_LocStor extends LocStor {
         }
         require_once(dirname(__FILE__).'/../Prefs.php');
         $pr = new Prefs($this);
-        $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
+        $res = $pr->loadGroupPref($r['group'], $r['key']);
         if (PEAR::isError($res)) {
             $ec0 = intval($res->getCode());
             $ec  = (

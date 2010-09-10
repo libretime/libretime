@@ -199,9 +199,9 @@ class Transport
     {
         require_once('Prefs.php');
         $pr = new Prefs($this->gb);
-        $group = 'StationPrefs';
+        $group = $CC_CONFIG['StationPrefsGr'];
         $key = 'TransportsDenied';
-        $res = $pr->loadGroupPref($sessid, $group, $key);
+        $res = $pr->loadGroupPref($group, $key);
         if (PEAR::isError($res)) {
             if ($res->getCode() !== GBERR_PREF) {
             	return $res;
@@ -863,6 +863,7 @@ class Transport
      */
     function cronCallMethod($trtok)
     {
+        global $CC_CONFIG;
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
         	return $trec;
@@ -903,9 +904,9 @@ class Transport
             case 'waiting':
                 require_once('Prefs.php');
                 $pr = new Prefs($this->gb);
-                $group = 'StationPrefs';
+                $group = $CC_CONFIG['StationPrefsGr'];
                 $key = 'TransportsDenied';
-                $res = $pr->loadGroupPref(NULL/*sessid*/, $group, $key);
+                $res = $pr->loadGroupPref($group, $key);
                 if (PEAR::isError($res)) {
                     if ($res->getCode() !== GBERR_PREF) {
                     	return $res;
@@ -1668,32 +1669,31 @@ class Transport
     {
         global $CC_CONFIG;
         $xrp = XML_RPC_encode($pars);
-        
-        $group = 'StationPrefs';
+
+        $pr = new Prefs($this->gb);
+        $group = $CC_CONFIG["StationPrefsGr"];
         $key = 'archiveServerLocation';
-        $archiveUrl = $pr->loadGroupPref(NULL/*sessid*/, $group, $key);
-        
-        if($archiveUrl){
-       
+        $archiveUrl = $pr->loadGroupPref($group, $key, false);
+
+        echo "Archive URL: $archiveUrl\n";
+        if ($archiveUrl) {
             $archiveUrlInfo = parse_url($archiveUrl);
-            
-            if($archiveUrlInfo['port']){
+            if ($archiveUrlInfo['port']) {
                 $port = $archiveUrlInfo['port'];
             }
             else {
                 $port = 80;
             }
-        
-        
-            $c = new XML_RPC_Client($archiveUrlInfo['path'], $archiveUrlInfo['host'], $port); 
+
+            $c = new XML_RPC_Client($archiveUrlInfo['path'], $archiveUrlInfo['host'], $port);
         }
         else {
             $c = new XML_RPC_Client(
                 $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],
                 $CC_CONFIG['archiveUrlHost'], $CC_CONFIG['archiveUrlPort']
-            ); 
+            );
         }
-                  
+
         $f = new XML_RPC_Message($method, array($xrp));
         $r = $c->send($f);
         if (!$r) {

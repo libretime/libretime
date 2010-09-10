@@ -412,7 +412,7 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
     camp_install_query($sql);
 
     echo " * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
-    //$stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
+    $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
     Prefs::Insert($CC_CONFIG["systemPrefId"], 'stationName', "Radio Station 1");
     $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
     Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);

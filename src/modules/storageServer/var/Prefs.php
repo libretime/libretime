@@ -132,16 +132,16 @@ class Prefs {
     /**
      *  Read group preference record
      *
-     * @param string $sessid
-     * 		session id
      * @param string $group
      * 		group name
      * @param string $key
      * 		preference key
+     * @param boolean $returnErrorIfKeyNotExists
+     * 		If set to true and the key doesnt exist, return a PEAR error.
      * @return string
      * 		preference value
      */
-    function loadGroupPref($sessid, $group, $key)
+    function loadGroupPref($group, $key, $returnErrorIfKeyNotExists = true)
     {
         // if sessid is would be used here fix Transport::cronCallMethod !
         $subjid = Subjects::GetSubjId($group);
@@ -157,8 +157,12 @@ class Prefs {
         	return $val;
         }
         if ($val === FALSE) {
-            return PEAR::raiseError(
-                "Prefs::loadGroupPref: invalid preference key", GBERR_PREF);
+            if ($returnErrorIfKeyNotExists) {
+                return PEAR::raiseError(
+                    "Prefs::loadGroupPref: invalid preference key", GBERR_PREF);
+            } else {
+                return '';
+            }
         }
         return $val;
     }

@@ -1385,10 +1385,10 @@ class BasicStor {
             if (PEAR::isError($res)) {
                 return $res;
             }
-//                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['StationPrefsGr']);
-//                if (PEAR::isError($res)) {
-//                    return $res;
-//                }
+            $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['StationPrefsGr']);
+            if (PEAR::isError($res)) {
+                return $res;
+            }
 //                $res = Subjects::AddSubjectToGroup($login, $CC_CONFIG['AllGr']);
 //                if (PEAR::isError($res)) {
 //                    return $res;
@@ -1926,19 +1926,19 @@ class BasicStor {
 //        }
 
         // Add the "Station Preferences" group
-//        if (!empty($CC_CONFIG['StationPrefsGr'])) {
-//            if (!Subjects::GetSubjId('scheduler')) {
-//                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
-//                $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
-//                if (PEAR::isError($stPrefGr)) {
-//                    return $stPrefGr;
-//                }
-//                Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
-//                echo "done.\n";
-//            } else {
-//                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
-//            }
-//        }
+        if (!empty($CC_CONFIG['StationPrefsGr'])) {
+            if (!Subjects::GetSubjId('scheduler')) {
+                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
+                $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
+                if (PEAR::isError($stPrefGr)) {
+                    return $stPrefGr;
+                }
+                Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
+                echo "done.\n";
+            } else {
+                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
+            }
+        }
 
         // Add the root user if it doesnt exist yet.
         $rootUid = Subjects::GetSubjId('root');
@@ -1974,7 +1974,7 @@ class BasicStor {
         }
 
         // Need to add 'scheduler' to group StationPrefs
-        //Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
+        Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
     }
 
 

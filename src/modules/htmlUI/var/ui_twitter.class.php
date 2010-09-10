@@ -1,12 +1,12 @@
 <?php
 class uiTwitter {
     private $Base;
-    
+
     private $settings = array(
         'bitly-login'  => 'campcaster',
-        'bitly-apikey' => 'R_2f812152bfc21035468350273ec8ff43' 
+        'bitly-apikey' => 'R_2f812152bfc21035468350273ec8ff43'
     );
-    
+
     /**
      * Time in sec
      *
@@ -19,7 +19,7 @@ class uiTwitter {
         $this->Base =& $uiBase;
         $this->loadSettings();
     }
-    
+
     private static function getSettingFormMask()
     {
         $formmask = array(
@@ -182,7 +182,7 @@ class uiTwitter {
                 'label'     => 'Provider',
                 'options'   => array(
                     'bit.ly'        => 'bit.ly',
-                    'tinyurl.com'   => 'tinyurl.com',               
+                    'tinyurl.com'   => 'tinyurl.com',
                 ),
                 'isPref'    => true
             ),
@@ -209,29 +209,30 @@ class uiTwitter {
                 'label'     => 'Submit',
             )
         );
-        return $formmask; 
+        return $formmask;
     }
-    
+
     private function loadSettings()
     {
+        global $CC_CONFIG;
         $mask = uiTwitter::getSettingFormMask();
-        
+
         foreach($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
                 $element = preg_replace('/^twitter-/', '', $val['element'], 1);
-                $p = $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', $val['element']);
+                $p = $this->Base->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], $val['element']);
                 if (is_string($p)) {
                     $this->settings[$element] = $p;
                 }
             }
         }
     }
-    
+
     public function getSettingsForm()
     {
         $mask = uiTwitter::getSettingFormMask();
         $form = new HTML_QuickForm('twitter', UI_STANDARD_FORM_METHOD, UI_HANDLER);#
-        
+
         foreach($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref'] && !$val['hiddenPref']) {
                 $element = preg_replace('/^twitter-/', '', $val['element']);
@@ -246,48 +247,49 @@ class uiTwitter {
         $form->accept($renderer);
         return $renderer->toArray();
     }
-    
+
     public function saveSettings()
     {
+        global $CC_CONFIG;
         if ($this->Base->_validateForm($_REQUEST, uiTwitter::getSettingFormMask()) !== TRUE) {
             $this->Base->_retMsg('An error has occured on validating the form.');
             return FALSE;
         }
-        
+
         $mask = uiTwitter::getSettingFormMask();
         $form = new HTML_QuickForm('twitter', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         uiBase::parseArrayToForm($form, $mask);
         $formdata = $form->exportValues();
-        
+
         foreach ($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
                 if (!empty($formdata[$val['element']])) {
-                	$result = $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                	$result = $this->Base->gb->saveGroupPref($this->Base->sessid, $CC_CONFIG['StationPrefsGr'], $val['element'], $formdata[$val['element']]);
                     if (PEAR::isError($result))
                         $this->Base->_retMsg('Error while saving twitter settings.');
                 } elseif (!$val['hiddenPref']) {
-                    $this->Base->gb->delGroupPref($this->Base->sessid,  'StationPrefs', $val['element']);
+                    $this->Base->gb->delGroupPref($this->Base->sessid,  $CC_CONFIG['StationPrefsGr'], $val['element']);
                 }
             }
         }
-        
+
         $this->Base->_retMsg('Twitter settings saved.');
     }
-    
+
     public function getFeed($p_useSampledata = false)
-    {        
+    {
         if ($p_useSampledata) {
             $whatsplaying = array(
                 "tracktitle"     => "Gimme Shelter",
                 "trackartist"    => "The Rolling Stones",
                 "playlisttitle"  => "The Blues Hour"
-            );   
+            );
         } else {
             $whatsplaying = $this->getWhatsplaying($this->settings['offset']);
         }
-        
+
         if (!$whatsplaying) {
-            return;   
+            return;
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -313,35 +315,35 @@ class uiTwitter {
         if ($this->settings['has_trackartist']) { $tweetbody[] = $whatsplaying['trackartist']; }
         if ($this->settings['has_playlisttitle']) { $tweetbody[] = $whatsplaying['playlisttitle']; }
         if ($this->settings['has_stationname']) { $tweetbody[] = $this->Base->STATIONPREFS['stationName']; }
-        
+
         $tweetbody = implode (". ",$tweetbody);
-        
+
         // chop body to fit if necessary
         if ((strlen($tweetprefix) + strlen($tweetbody) + strlen($tweetsuffix)) > 140) {
             $tweetbody = substr($tweetbody, 0, (140 - (strlen($tweetprefix) + strlen($tweetsuffix) + 3))) . "...";
         }
-        
+
         $tweet = $tweetprefix . $tweetbody . $tweetsuffix;
-            
+
         return $tweet;
 
     }
-    
+
     public function shortUrl($p_url)
     {
         switch ($this->settings['shortener-provider']) {
             case 'tinyurl.com':
                 $short = file_get_contents('http://tinyurl.com/api-create.php?url='.$p_url);
                 break;
-                
+
             case 'bit.ly':
                 $short = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl={$p_url}&format=text&login={$this->settings['bitly-login']}&apiKey={$this->settings['bitly-apikey']}");
                 break;
         }
-        
+
         return $short;
     }
-    
+
     public function getWhatsplaying($p_offset)
     {
         $timestamp = time() + $p_offset;
@@ -362,47 +364,48 @@ class uiTwitter {
         if (!$clip['gunid']) {
             return FALSE;
         }
-        
+
         return array(
             'tracktitle' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
             'trackartist' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_CREATOR, $this->Base->sessid),
             'playlisttitle' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($pl['playlistId']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
         );
     }
-    
+
     public function sendFeed($p_feed)
     {
+        global $CC_CONFIG;
         $twitter = new twitter();
         $twitter->username = $this->settings['login'];
         $twitter->password = $this->settings['password'];
-        
+
         if ($res = $twitter->update($p_feed)) {
-            $this->Base->gb->saveGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate', time());
+            $this->Base->gb->saveGroupPref($this->Base->sessid, $CC_CONFIG['StationPrefsGr'], 'twitter-lastupdate', time());
             return $res;
         }
         return false;
     }
-    
+
     public function needsUpdate()
     {
-        if (time() -  $this->Base->gb->loadGroupPref($this->Base->sessid, 'StationPrefs', 'twitter-lastupdate') + $this->runtime > $this->settings['interval']) {
+        if (time() -  $this->Base->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], 'twitter-lastupdate') + $this->runtime > $this->settings['interval']) {
             return true;
         }
         return false;
     }
-    
+
     public function twitterify($p_string)
     {
         $string = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $p_string);
         $string = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $string);
         $string = preg_replace("/@(\w+)/", "<a href=\"http://www.twitter.com/\\1\" target=\"_blank\">@\\1</a>", $string);
         $string = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $string);
-        
+
         return $string;
     }
-    
+
     public function isActive()
     {
-        return $this->settings['is_active'];   
+        return $this->settings['is_active'];
     }
 }

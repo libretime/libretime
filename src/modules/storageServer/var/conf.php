@@ -47,7 +47,7 @@ $CC_CONFIG = array(
     /* ================================================ storage configuration */
     'authCookieName'=> 'campcaster_session_id',
     //'AdminsGr'      => 'Admins',
-    //'StationPrefsGr'=> 'StationPrefs',
+    'StationPrefsGr'=> 'StationPrefs',
     //'AllGr'         => 'All',
     'TrashName'     => 'trash_',
     'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
@@ -129,7 +129,7 @@ $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
 $CC_CONFIG['filesSequence'] = $CC_CONFIG['tblNamePrefix']."file_id_seq";
 
 $CC_CONFIG['sysSubjs'] = array(
-    'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ /*$CC_CONFIG['StationPrefsGr']*/
+    'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']
 );
 $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);

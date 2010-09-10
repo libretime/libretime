@@ -296,10 +296,11 @@ class uiBrowser extends uiBase {
 
     function changeStationPrefs(&$mask)
     {
+        global $CC_CONFIG;
         $form = new HTML_QuickForm('changeStationPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         foreach($mask as $key => $val) {
             $element = isset($val['element']) ? $val['element'] : null;
-            $p = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $element);
+            $p = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], $element);
             if (is_string($p)) {
                 $mask[$key]['default'] = $p;
             }
