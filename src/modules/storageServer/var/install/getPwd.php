@@ -4,7 +4,10 @@
  *----------------------------------------------------------------------------*/
 
 header("Content-type: text/plain");
-if ($_SERVER["REMOTE_ADDR"] == "127.0.0.1") {
+//var_dump($_SERVER);
+if ( (isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] == "127.0.0.1"))
+    || (isset($_SERVER["HTTP_HOST"]) && ($_SERVER["HTTP_HOST"] == "localhost"))
+    || (isset($_SERVER["SHELL"])) ) {
     echo `pwd`;
 }
 ?>

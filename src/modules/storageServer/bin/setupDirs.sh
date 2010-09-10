@@ -27,7 +27,7 @@
 
 WWW_ROOT=`cd var/install; php -q getWwwRoot.php` || exit $?
 echo " *** StorageServer bin/setupDirs.sh BEGIN"
-echo " *** Root URL: $WWW_ROOT"
+echo "   * Root URL: $WWW_ROOT"
 PHP_PWD_COMMAND=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
   {
     errno=$?
@@ -37,6 +37,7 @@ PHP_PWD_COMMAND=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || \
     fi
     exit $errno
   }
+
 PHP_PWD=$PHP_PWD_COMMAND
 # MOD_PHP may not be working, this command will tell us
 if [ ${PHP_PWD_COMMAND:0:5} == '<?php' ]; then
@@ -44,14 +45,19 @@ if [ ${PHP_PWD_COMMAND:0:5} == '<?php' ]; then
 	exit 1
 fi
 	
-echo " *** Webspace mapping test:"
-echo " *** mod_php : $PHP_PWD"
+if [ $PHP_PWD == "" ]; then
+	echo "   * ERROR: Could not get PHP working directory."
+	exit 1
+fi
+
+echo "  ** Webspace mapping test:"
+echo "   * mod_php : $PHP_PWD"
 INSTALL_DIR="$PWD/var/install"
-echo " *** install : $INSTALL_DIR"
+echo "   * install : $INSTALL_DIR"
 if [ $PHP_PWD == $INSTALL_DIR ]; then
-    echo " *** Mapping OK"
+    echo "   * Mapping OK"
 else
-    echo " *** WARNING: there was a problem with webspace mapping!!!"
+    echo "   * WARNING: there was a problem with webspace mapping!!!"
 fi
 
 HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
@@ -61,11 +67,11 @@ HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
   echo " -> Probably wrong setting in var/conf.php: URL configuration";
   exit $ERN;
  }
-echo " *** The system group that is running the http daemon: '$HTTP_GROUP'"
+echo "  ** The system group that is running the http daemon: '$HTTP_GROUP'"
 
 for i in $*
 do
-  echo " *** chown :$HTTP_GROUP $i"
+  echo "   * chown :$HTTP_GROUP $i"
   if [ -G $i ]; then
     chown :$HTTP_GROUP $i || \
     {
@@ -73,7 +79,7 @@ do
       echo "ERROR: chown :$HTTP_GROUP $i -> You should have permissions to set group owner to group '$HTTP_GROUP'";
       exit $ERN;
     }
-    echo " *** chmod g+sw $i"
+    echo "   * chmod g+sw $i"
     chmod g+sw $i || exit $?
   fi
 done
