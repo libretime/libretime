@@ -159,23 +159,55 @@ class BasicStor {
             $res = BasicStor::RemoveObj($id, $forced);
             return $res;
         }
+        
+        $storedFile = StoredFile::Recall($id);
+            
+        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+            return $storedFile;
+        }
+        if ($storedFile->isAccessed()) {
+             return PEAR::raiseError(
+                'Cannot delete an object that is currently accessed.'
+            );
+        }
         // move to trash:
         switch (BasicStor::GetObjType($id)) {
+            
             case "audioclip":
+                $playLists = $storedFile->getPlaylists();
+                $item_gunid = $storedFile->getGunid();
+                if( $playLists != NULL) {
+                   
+                    foreach($playLists as $key=>$val) {
+                        $playList_id = BasicStor::IdFromGunidBigInt($val["gunid"]);
+                        $playList_titles[] = BasicStor::bsGetMetadataValue($playList_id, "dc:title");
+                    }
+                    return PEAR::raiseError(
+                        'Please remove this song from all playlists: ' . join(",", $playList_titles)
+                    );
+                }
+                break;
+                
             case "playlist":
+                if($storedFile->isScheduled()) {
+                     return PEAR::raiseError(
+                        'Cannot delete an object that is scheduled to play.'
+                    );
+                }
+                break;
+                
             case "webstream":
-                $storedFile = StoredFile::Recall($id);
-                if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                    return $storedFile;
-                }
-                $res = $storedFile->setState('deleted');
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
+               
                 break;
             default:
         }
-				return TRUE;
+     
+        $res = $storedFile->setState('deleted');
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+       
+	    return TRUE;
     }
 
 
@@ -1491,7 +1523,7 @@ class BasicStor {
 
 
     /**
-     * Get local id from global id.
+     * Get local id from global id (in hex).
      *
      * @param string $p_gunid
      * 		Global id
@@ -1503,6 +1535,21 @@ class BasicStor {
         global $CC_DBC;
         global $CC_CONFIG;
         return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid=x'$p_gunid'::bigint");
+    }
+    
+     /**
+     * Get local id from global id (big int).
+     *
+     * @param string $p_gunid
+     * 		Global id
+     * @return int
+     * 		Local id
+     */
+    public static function IdFromGunidBigInt($p_gunid)
+    {
+        global $CC_DBC;
+        global $CC_CONFIG;
+        return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid='$p_gunid'");
     }
 
 
