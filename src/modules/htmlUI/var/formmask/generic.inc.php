@@ -74,7 +74,8 @@ $ui_fmask = array(
             'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Archive server location URL',
-            'required'  => false,
+            'default'	=>  "http://" . $CC_CONFIG['archiveUrlHost'] . ":" . $CC_CONFIG['archiveUrlPort'] . $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],     
+            'required'  => TRUE,
         ),
         array(
             'rule'      => 'regex',

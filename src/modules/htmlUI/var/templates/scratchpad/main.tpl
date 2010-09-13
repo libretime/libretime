@@ -86,13 +86,15 @@
 				duration = duration.split(".");
 				duration = duration[0].split(":");
 
-				if(parseInt(duration[0] !== 0)) {
+				if(duration[0] == ''){
+					duration = "00:00";
+				}
+				else if(parseInt(duration[0]) !== 0) {
 					duration = duration[0] +":"+duration[1]+":"+duration[2];
 				}
 				else{
 					duration = duration[1]+":"+duration[2];
 				}
-				
 				
                 tool_tip_content.append("<tr><td>Duration: </td><td>"+duration+"</td></tr>");
 
