@@ -99,9 +99,8 @@ $methodDefs = array(
         'p'=>array('sessid', 'gunid', 'metadata'), 'r'=>'status'),
     "searchMetadata" => array('m'=>"locstor.searchMetadata", 'p'=>NULL),
     "browseCategory" => array('m'=>"locstor.browseCategory", 'p'=>NULL),
-    "resetStorage" => array('m'=>"locstor.resetStorage",
-        'p'=>array()),
-#        'p'=>array('loadSampleData', 'invalidateSessionIds')),
+//    "resetStorage" => array('m'=>"locstor.resetStorage",
+//        'p'=>array()),
     "storeWebstream" => array('m'=>"locstor.storeWebstream",
         'p'=>array('sessid', 'gunid', 'metadata', 'fname', 'url'),
         'r'=>array('gunid')

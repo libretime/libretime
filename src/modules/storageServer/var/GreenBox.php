@@ -1432,10 +1432,10 @@ class GreenBox extends BasicStor {
      * @return string
      * 		preference value
      */
-    public function loadGroupPref($sessid, $group, $key)
+    public function loadGroupPref($group, $key)
     {
         $pr = new Prefs($this);
-        $res = $pr->loadGroupPref($sessid, $group, $key);
+        $res = $pr->loadGroupPref($group, $key);
         return $res;
     } // fn loadGroupPref
 

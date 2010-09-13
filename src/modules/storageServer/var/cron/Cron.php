@@ -164,7 +164,7 @@ class Cron {
      */
     function lockCrontab()
     {
-        return touch($this->lockfile);
+        return @touch($this->lockfile);
     }
 
     /**

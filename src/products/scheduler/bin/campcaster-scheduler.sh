@@ -84,16 +84,6 @@ case "$mode" in
         $scheduler_exe -c $config_file status
         ;;
 
-    'install')
-        echo "Installing Campcaster scheduler database tables..."
-        BASE_DIR=$basedir php $vardir/install/install.php -c $config_file
-        ;;
-
-    'uninstall')
-        echo "Uninstalling Campcaster scheduler database tables..."
-        BASE_DIR=$basedir php $vardir/install/uninstall.php -c $config_file
-        ;;
-
     'kill')
         echo "Killing all Campcaster scheduler processes..."
         killall campcaster-scheduler
@@ -105,7 +95,7 @@ case "$mode" in
         echo "Campcaster scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
-        echo "  $0 start|stop|restart|status|install|uninstall|kill"
+        echo "  $0 start|stop|restart|status|kill"
         echo ""
 
 esac

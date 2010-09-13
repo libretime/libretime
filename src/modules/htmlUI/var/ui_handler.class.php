@@ -696,6 +696,7 @@ class uiHandler extends uiBase {
      */
     function changeStationPrefs($formdata, $mask)
     {
+        global $CC_CONFIG;
         $this->redirUrl = UI_BROWSER;
 
         if ($this->_validateForm($formdata, $mask) == FALSE) {
@@ -705,18 +706,18 @@ class uiHandler extends uiBase {
         foreach ($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
                 if (!empty($formdata[$val['element']])) {
-                	$result = $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                	$result = $this->gb->saveGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element'], $formdata[$val['element']]);
                     if (PEAR::isError($result))
                         $this->_retMsg('Error while saving settings.');
                 } else {
-                    $this->gb->delGroupPref($this->sessid,  'StationPrefs', $val['element']);
+                    $this->gb->delGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element']);
                 }
             }
             if (isset($val['type'])
             	&& ($val['type'] == 'file')
             	&& ($val['element'] == "stationlogo")
             	&& !empty($formdata[$val['element']]['name'])) {
-                $stationLogoPath = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath');
+                $stationLogoPath = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], 'stationLogoPath');
                 $filePath = $formdata[$val['element']]['tmp_name'];
                 if (function_exists("getimagesize")) {
                     $size = @getimagesize($filePath);

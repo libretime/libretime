@@ -311,17 +311,18 @@ class uiBase
      */
     public function loadStationPrefs(&$mask, $reload=FALSE)
     {
+        global $CC_CONFIG;
         if (!is_array($this->STATIONPREFS) || ($reload === TRUE) ) {
         	$this->STATIONPREFS = array();
             foreach ($mask as $key => $val) {
                 if (isset($val['isPref']) && $val['isPref']) {
-                	$setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']);
+                	$setting = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], $val['element']);
                     if (is_string($setting)) {
                         $this->STATIONPREFS[$val['element']] = $setting;
                     } elseif ($val['required']) {
                         // set default values on first login
                         $default = isset($val['default'])?$val['default']:null;
-                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $default);
+                        $this->gb->saveGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element'], $default);
                         $this->STATIONPREFS[$val['element']] = $default;
                     }
                 }
@@ -529,24 +530,24 @@ class uiBase
     public function getMetaInfo($id)
     {
         $type = strtolower(GreenBox::getFileType($id));
-        
+
         if($type == 'playlist') {
             require_once("../../../storageServer/var/Playlist.php");
-       
+
             $playList = new Playlist(GreenBox::GunidFromId($id));
             $playListData = $playList->export();
-            
+
             for ($i = 1; $i < count($playListData); $i++) {
-                
-                $entry = StoredFile::RecallByGunid($playListData["".$i]["gunid"]);  
+
+                $entry = StoredFile::RecallByGunid($playListData["".$i]["gunid"]);
                 $playListEntries[] = $entry->getName();
-                
+
             }
-            
+
             $_SESSION['mdata'] = $playListEntries;
-     
+
         }
-        
+
         $data = array('id' => $id,
                       'gunid' => BasicStor::GunidFromId($id),
                       'title' => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),

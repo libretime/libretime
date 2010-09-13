@@ -3,7 +3,6 @@ if (!function_exists('pg_connect')) {
     trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
     exit(2);
 }
-
 require_once('DB.php');
 require_once('File/Find.php');
 
@@ -16,6 +15,17 @@ function camp_db_table_exists($p_name)
         return false;
     }
     return true;
+}
+
+function camp_db_sequence_exists($p_name)
+{
+    global $CC_DBC;
+    $sql = "SELECT 1 FROM pg_class where relname = '$p_name'";
+    $result = $CC_DBC->GetOne($sql);
+    if (!PEAR::isError($result) && $result == "1") {
+        return true;
+    }
+    return false;
 }
 
 function camp_install_query($sql, $verbose = true)

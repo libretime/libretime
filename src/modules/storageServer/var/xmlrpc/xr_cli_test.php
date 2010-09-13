@@ -109,8 +109,8 @@ $infos = array(
         'p'=>array('sessid', 'gunid', 'metadata'), 'r'=>'status'),
     "searchMetadata" => array('m'=>"locstor.searchMetadata", 'p'=>NULL),
     "browseCategory" => array('m'=>"locstor.browseCategory", 'p'=>NULL),
-    "resetStorage" => array('m'=>"locstor.resetStorage",
-        'p'=>array()),
+//    "resetStorage" => array('m'=>"locstor.resetStorage",
+//        'p'=>array()),
 #        'p'=>array('loadSampleData', 'invalidateSessionIds')),
     "storeWebstream" => array('m'=>"locstor.storeWebstream",
         'p'=>array('sessid', 'gunid', 'metadata', 'fname', 'url'),
@@ -259,12 +259,12 @@ switch ($method) {
             ),
         );
         break;
-    case "resetStorage":
-        $parr = array(
-            'loadSampleData'=>(boolean)$pars[0],
-            'invalidateSessionIds'=>(boolean)$pars[1],
-        );
-        break;
+//    case "resetStorage":
+//        $parr = array(
+//            'loadSampleData'=>(boolean)$pars[0],
+//            'invalidateSessionIds'=>(boolean)$pars[1],
+//        );
+//        break;
     default:
         $pinfo = $infos[$method]['p'];
         if (is_null($pinfo)) {

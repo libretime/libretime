@@ -111,7 +111,7 @@ class Crontab
 
             // It's a regular crontab-entry
             $ct = split("[ \t]", $line, 6);
-            $this->addCron($ct[0], $ct[1], $ct[2], $ct[3], $ct[4], $ct[5], $ct[6]);
+            $this->addCron($ct[0], $ct[1], $ct[2], $ct[3], $ct[4], $ct[5]);
         }
     }
 
@@ -122,6 +122,9 @@ class Crontab
     {
         global $DEBUG, $PATH;
 
+        if (empty($this->linetypes)) {
+            return;
+        }
         $filename = ($DEBUG ? tempnam("$PATH/crons", "cron") : tempnam("/tmp", "cron"));
         $file = fopen($filename, "w");
 
