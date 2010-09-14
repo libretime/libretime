@@ -28,7 +28,7 @@ class uiBrowse
      * ['value'] --> an array of one value, the selected value
      * ['values']['cnt'] --> number of values
      * ['values']['results'] --> array of values, indexed numerically
-     * ['criteria'] --> criteria for one column, see top of DataEngine.php
+     * ['criteria'] --> criteria for one column, see top of BasicStor.php
      *      for description of these values.  The criteria of all three
      *      columns are merged together to make $this->criteria.
      * ['form_value'] --> the value as used in the HTML form
@@ -41,7 +41,7 @@ class uiBrowse
      * A pointer to the SESSION variable: ['UI_BROWSE_SESSNAME']['criteria']
      *
      * This array ultimately is passed to DataEngine::localSearch().  Look
-     * at the top of the DataEngine.php class for the structure of this
+     * at the top of the BasicStor.php class for the structure of this
      * variable.
      *
      * @var array
@@ -117,8 +117,8 @@ class uiBrowse
      * @return array
      */
     public function getCriteria()
-    {   
-    	return $this->criteria;     
+    {
+    	return $this->criteria;
     } // fn getCriteria
 
 
@@ -128,7 +128,7 @@ class uiBrowse
     public function getResult()
     {
         $this->searchDB();
-        return $this->results;   
+        return $this->results;
     } // fn getResult
 
 
@@ -140,21 +140,21 @@ class uiBrowse
                 if (isset($v['type']) && $v['type']) {
                     $tmp = uiBase::formElementEncode($v['element']);
                     $mask2['browse_columns']['category']['options'][$tmp] = tra($v['label']);
-                    
+
                 }
             }
         }
-        
+
         for ($n = 1; $n <= 3; $n++) {
             $form = new HTML_QuickForm('col'.$n, UI_STANDARD_FORM_METHOD, UI_HANDLER);
             $form->setConstants(array('id' => $id,
                                       'col' => $n,
                                       'category' => uiBase::formElementEncode($this->col[$n]['category'])));
-            
+
             $mask2['browse_columns']['value']['options'] = $this->options($this->col[$n]['values']['results']);
           	$mask2['browse_columns']['category']['attributes']['id'] = "category_" . $n;
           	$mask2['browse_columns']['value']['attributes']['id'] = "category_value_" . $n;
-           
+
             $mask2['browse_columns']['value']['default'] = $this->col[$n]['form_value'];
             uiBase::parseArrayToForm($form, $mask2['browse_columns']);
             $form->validate();
@@ -209,7 +209,7 @@ class uiBrowse
         // way too many values.
         $tmpCriteria["limit"] = 1000;
         $tmpCriteria["offset"] = 0;
-        
+
         // For this column and all columns above this one,
         // reload the values.
         for ($i = $columnNumber; $i <= 3; $i++) {
@@ -236,14 +236,11 @@ class uiBrowse
      * 		int ['col']: column number
      * 		string ['value'][0]: the search value for the given category
      * 		string ['category']: the category to search
-     * @see DataEngine
-     *      See the top of that file for a description of the search
-     *      criteria structure.
      */
     public function setValue($p_param, $redirect="true")
     {
         $columnNumber = $p_param['col'];
-        $value = $p_param['value'][0]; 
+        $value = $p_param['value'][0];
         $category = $p_param['category'];
 
         $this->criteria['offset'] = 0;
@@ -253,7 +250,7 @@ class uiBrowse
             unset($this->col[$columnNumber]['criteria']['conditions']);
         } else {
         	$conditions = array('cat' => uiBase::formElementDecode($category),
-                                'op' => '=',
+                              'op' => '=',
 	                            'val' => $value);
     	    $this->col[$columnNumber]['criteria']['conditions'] = $conditions;
         }
@@ -281,7 +278,7 @@ class uiBrowse
                 $this->col[$tmpColNum]['values'] = $browseValues;
             }
         }
-        
+
         if($redirect) {
         	$this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         }
@@ -292,7 +289,7 @@ class uiBrowse
     		'col' => 1,
     		'category' => $p_param['cat1']
     	);
-    	
+
     	$value_1 = array(
     		'col' => 1,
     		'category' => $p_param['cat1'],
@@ -300,12 +297,12 @@ class uiBrowse
     			0 =>	$p_param['val1']
     		)
     	);
-    	
+
     	$category_2 = array(
     		'col' => 2,
     		'category' => $p_param['cat2']
     	);
-    	
+
     	$value_2 = array(
     		'col' => 2,
     		'category' => $p_param['cat2'],
@@ -313,7 +310,7 @@ class uiBrowse
     			0 =>	$p_param['val2']
     		)
     	);
-    	
+
     	$category_3 = array(
     		'col' => 3,
     		'category' => $p_param['cat3']
@@ -326,11 +323,11 @@ class uiBrowse
     			0 =>	$p_param['val3']
     		)
     	);
-    	
+
     	$this->setCategory($category_1, false);
     	$this->setCategory($category_2, false);
     	$this->setCategory($category_3, false);
-    	
+
     	$this->setValue($value_1, false);
     	$this->setValue($value_2, false);
     	$this->setValue($value_3, true);

@@ -15,7 +15,6 @@ require_once("XML/Util.php");
  * @license http://www.gnu.org/licenses/gpl.txt
  * @see StoredFile
  * @see XmlParser
- * @see DataEngine
  */
 class MetaData {
 
