@@ -331,7 +331,7 @@ class StoredFile {
 	 * @var int
 	 */
 	private $currentlyaccessing;
-
+	
 	/**
 	 * @var int
 	 */
@@ -1152,6 +1152,35 @@ class StoredFile {
             return $res;
         }
         return TRUE;
+    }
+    
+    /**
+     * Returns gunIds of the playlists the stored file is in.
+     */    
+    public function getPlaylists() {
+        global $CC_CONFIG, $CC_DBC;
+        
+        $_SESSION['delete'] = "gunid: " . $this->gunid;
+        
+        $sql = "SELECT gunid "
+            ." FROM ".$CC_CONFIG['mdataTable']
+            ." WHERE object='{$this->gunid}'";
+            
+        $_SESSION['delete'] = $sql;
+        $playlists = $CC_DBC->getAll($sql);
+        
+        return $playlists;
+    }
+    
+    public function isScheduled() {
+        global $CC_CONFIG, $CC_DBC;
+        
+        $sql = "SELECT * "
+            ." FROM ".$CC_CONFIG['scheduleTable']
+            ." WHERE ends > now() and playlist=x'{$this->gunid}'::bigint";
+        $scheduled = $CC_DBC->getAll($sql);
+        
+        return $scheduled;
     }
 
 

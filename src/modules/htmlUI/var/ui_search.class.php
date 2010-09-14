@@ -175,7 +175,7 @@ class uiSearch
         $this->criteria['counter'] = UI_SIMPLESEARCH_ROWS;
 
         // $criteria['form'] is used for retransfer to form
-        $this->criteria['form']['operator'] = 'OR';
+        $this->criteria['form']['operator'] = 'or';
         $this->criteria['form']['filetype'] = UI_SIMPLESEARCH_FILETYPE;
         $this->criteria['form']['limit'] = UI_SIMPLESEARCH_LIMIT;
 
