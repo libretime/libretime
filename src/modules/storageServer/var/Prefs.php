@@ -285,7 +285,7 @@ class Prefs {
     public static function Insert($subjid, $keystr, $valstr='')
     {
         global $CC_CONFIG, $CC_DBC;
-        $id = $CC_DBC->nextId($CC_CONFIG['prefTable']."_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['prefSequence']);
         if (PEAR::isError($id)) {
         	return $id;
         }

@@ -49,7 +49,7 @@ class MetaData {
 	/**
 	 * @var array
 	 */
-    private $metadata;
+  private $metadata;
 
 
     /**
@@ -278,30 +278,13 @@ class MetaData {
     public function setMetadataElement($p_id, $p_value=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
-        $info = $CC_DBC->getRow("
-            SELECT parmd.predns as parns, parmd.predicate as parname,
-                md.predxml, md.predns as chns, md.predicate as chname
-            FROM ".$CC_CONFIG['mdataTable']." parmd
-            INNER JOIN ".$CC_CONFIG['mdataTable']." md
-                ON parmd.id=md.subject::integer AND md.subjns='_I'
-            WHERE md.id=$p_id");
-        if (PEAR::isError($info)) {
-        	return $info;
-        }
-        if (is_null($info)) {
-            return PEAR::raiseError(
-                "MetaData::setMetadataElement: parent container not found");
-        }
-        extract($info);
-        $parname = ($parns ? "$parns:" : '').$parname;
-        $category = ($chns ? "$chns:" : '').$chname;
-        $r = $this->validateOneValue($parname, $category, $predxml, $p_value);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
+//        $r = $this->validateOneValue($parname, $category, $predxml, $p_value);
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
         if (!is_null($p_value)) {
         	$escapedValue = pg_escape_string($p_value);
-            $sql = "UPDATE ".$CC_CONFIG['mdataTable']."
+            $sql = "UPDATE ".$CC_CONFIG['filesTable']."
                 SET object='$escapedValue', objns='_L'
                 WHERE id={$p_id}";
             $res = $CC_DBC->query($sql);
@@ -523,6 +506,7 @@ class MetaData {
             }
             $parid = $contArr[0]['mid'];
             if (is_null($parid)) {
+                //var_dump($contArr);
                 return PEAR::raiseError(
                     "MetaData::setMetadataValue: container ($p_container) not found"
                 );
@@ -746,7 +730,6 @@ class MetaData {
      */
     private function storeNode(&$node, $parid=NULL, $nSpaces=array())
     {
-        //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
         $nSpaces = array_merge($nSpaces, $node->nSpaces);
         // null parid = root node of metadata tree
         $subjns  = (is_null($parid)? '_G'         : '_I');
@@ -758,12 +741,10 @@ class MetaData {
         } else {
         	$objns = '_L';
         }
-        $id = $this->storeRecord($subjns, $subject,
-            $node->ns, $node->name, 'T', $objns, $object);
+        $id = $this->storeRecord($subjns, $subject, $node->ns, $node->name, 'T', $objns, $object);
         // process attributes
         foreach ($node->attrs as $atn => $ato) {
-            $this->storeRecord('_I', $id,
-                $ato->ns, $ato->name, 'A', '_L', $ato->val);
+            $this->storeRecord('_I', $id, $ato->ns, $ato->name, 'A', '_L', $ato->val);
         }
         // process child nodes
         foreach ($node->children as $ch) {
@@ -771,8 +752,7 @@ class MetaData {
         }
         // process namespace definitions
         foreach ($node->nSpaces as $ns => $uri) {
-            $this->storeRecord('_I', $id,
-                'xmlns', $ns, 'N', '_L', $uri);
+            $this->storeRecord('_I', $id, 'xmlns', $ns, 'N', '_L', $uri);
         }
         return $id;
     }
@@ -841,7 +821,7 @@ class MetaData {
     		$predicate_sql = is_null($predicate) ? "NULL" : "'".pg_escape_string($predicate)."'";
     		$objns_sql = is_null($objns) ? "NULL" : "'".pg_escape_string($objns)."'";
     		$object_sql = is_null($object) ? "NULL" : "'".pg_escape_string($object)."'";
-        $id = $CC_DBC->nextId($CC_CONFIG['mdataTable']."_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['mdataSequence']);
         if (PEAR::isError($id)) {
         	return $id;
         }
@@ -851,7 +831,7 @@ class MetaData {
                     predns, predicate, predxml,
                     objns, object)
             VALUES
-                ($id, x'{$this->gunid}'::bigint, $subjns_sql, $subject_sql,
+                (DEFAULT, x'{$this->gunid}'::bigint, $subjns_sql, $subject_sql,
                     $predns_sql, $predicate_sql, '$predxml',
                     $objns_sql, $object_sql
                 )");

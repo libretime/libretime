@@ -80,7 +80,7 @@ class TransportRecord
             	return $defaults['title'];
             }
         }
-        $id = $CC_DBC->nextId($CC_CONFIG['transTable']."_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['transSequence']);
         $names  = "id, trtok, direction, state, trtype, start, ts";
         $values = "$id, '$trtok', '$direction', 'init', '$trtype', now(), now()";
         foreach ($defaults as $k => $v) {

@@ -1,5 +1,5 @@
 <?php
-require_once("MetaData.php");
+//require_once("MetaData.php");
 require_once("Playlist.php");
 require_once(dirname(__FILE__)."/../../getid3/var/getid3.php");
 
@@ -390,9 +390,71 @@ class StoredFile {
         $this->resDir = $this->_getResDir($this->gunid);
         $this->filepath = "{$this->resDir}/{$this->gunid}";
         $this->exists = is_file($this->filepath) && is_readable($this->filepath);
-        $this->md = new MetaData($this->gunid, $this->resDir);
+        $this->md = $this->loadMetadata();
     }
 
+    public function loadMetadata()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $escapedValue = pg_escape_string($this->gunid);
+        $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"]
+              ." WHERE gunid=x'$escapedValue'::bigint";
+        //var_dump($sql);
+        $this->md = $CC_DBC->getRow($sql);
+        if (PEAR::isError($this->md)) {
+            $error = $this->md;
+            $this->md = null;
+            return $error;
+        }
+        if (is_null($this->md)) {
+            $this->md = array();
+            return;
+        }
+        $compatibilityData = array();
+        foreach ($this->md as $key => $value) {
+            if ($xmlName = BasicStor::dbColumnToXmlCatagory($key)) {
+                $compatibilityData[$xmlName] = $value;
+            }
+        }
+        $this->md = array_merge($this->md, $compatibilityData);
+        //$_SESSION["debug"] = $this->md;
+    }
+
+    public function setFormat($p_value)
+    {
+        $this->md["format"] = $p_value;
+    }
+
+    public function replaceMetadata($p_values)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        foreach ($p_values as $category => $value) {
+            $escapedValue = pg_escape_string($value);
+            $columnName = BasicStor::xmlCategoryToDbColumn($category);
+            if (!is_null($columnName)) {
+                $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+                      ." SET $columnName='$escapedValue'"
+                      ." WHERE gunid = '".$this->gunid."'";
+                $CC_DBC->query($sql);
+            }
+        }
+        $this->loadMetadata();
+    }
+
+    public function clearMetadata()
+    {
+        $metadataColumns = array("format",  "bit_rate", "sample_rate", "length",
+        	"track_title", "comments", "genre", "artist_name", "channels", "name",
+          "year", "url", "track_number");
+        foreach ($metadataColumns as $columnName) {
+            if (!is_null($columnName)) {
+                $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+                      ." SET $columnName=''"
+                      ." WHERE gunid = '".$this->gunid."'";
+                $CC_DBC->query($sql);
+            }
+        }
+    }
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
@@ -458,29 +520,31 @@ class StoredFile {
 
         if (!is_integer($storedFile->id)) {
         	// NOTE: POSTGRES-SPECIFIC
-					$sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."')";
+					$sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."_seq')";
         	$storedFile->id = $CC_DBC->getOne($sql);
         }
         // Insert metadata
         $metadata = $p_values['metadata'];
+        BasicStor::bsSetMetadataBatch($storedFile->id, $metadata);
+
         // $mdataLoc = ($metadata[0]=="/")? "file":"string";
         // for non-absolute paths:
-        $mdataLoc = ($metadata[0]!="<")? "file":"string";
-        if (is_null($metadata) || ($metadata == '') ) {
-            $metadata = dirname(__FILE__).'/emptyMdata.xml';
-            $mdataLoc = 'file';
-        } else {
-            $emptyState = FALSE;
-        }
-        if ( ($mdataLoc == 'file') && !file_exists($metadata)) {
-            return PEAR::raiseError("StoredFile::Insert: ".
-                "metadata file not found ($metadata)");
-        }
-        $res = $storedFile->md->insert($metadata, $mdataLoc, $storedFile->ftype);
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
+//        $mdataLoc = ($metadata[0]!="<")? "file":"string";
+//        if (is_null($metadata) || ($metadata == '') ) {
+//            $metadata = dirname(__FILE__).'/emptyMdata.xml';
+//            $mdataLoc = 'file';
+//        } else {
+//            $emptyState = FALSE;
+//        }
+//        if ( ($mdataLoc == 'file') && !file_exists($metadata)) {
+//            return PEAR::raiseError("StoredFile::Insert: ".
+//                "metadata file not found ($metadata)");
+//        }
+//        $res = $storedFile->md->insert($metadata, $mdataLoc, $storedFile->ftype);
+//        if (PEAR::isError($res)) {
+//            $CC_DBC->query("ROLLBACK");
+//            return $res;
+//        }
 
         // Save media file
         if (!empty($p_values['filepath'])) {
@@ -567,7 +631,8 @@ class StoredFile {
             $storedFile = new StoredFile($gunid);
         }
         $storedFile->gunidBigint = $row['gunid_bigint'];
-        $storedFile->md->gunidBigint = $row['gunid_bigint'];
+        //$storedFile->md->gunidBigint = $row['gunid_bigint'];
+        $storedFile->md["gunid"] = $row['gunid_bigint'];
         $storedFile->id = $row['id'];
         $storedFile->name = $row['name'];
         $storedFile->mime = $row['mime'];
@@ -578,7 +643,7 @@ class StoredFile {
         $storedFile->mtime = $row['mtime'];
         $storedFile->md5 = $row['md5'];
         $storedFile->exists = TRUE;
-        $storedFile->md->setFormat($row['ftype']);
+        $storedFile->setFormat($row['ftype']);
         return $storedFile;
     }
 
@@ -772,7 +837,7 @@ class StoredFile {
         if (PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $storedFile->md->replace($p_src->md->getMetadata(), 'string');
+        $storedFile->replaceMetadata($p_src->getAllMetadata(), 'string');
         return $storedFile;
     }
 
@@ -814,7 +879,8 @@ class StoredFile {
         if ($p_metadata != '') {
             $res = $this->setMetadata($p_metadata, $p_mdataLoc);
         } else {
-            $res = $this->md->delete();
+//            $res = $this->md->delete();
+            $res = $this->clearMetadata();
         }
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -888,10 +954,10 @@ class StoredFile {
                 return $res;
             }
         }
-        $r = $this->md->regenerateXmlFile();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+//        $r = $this->md->regenerateXmlFile();
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
         return TRUE;
     }
 
@@ -918,11 +984,11 @@ class StoredFile {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        $r = $this->md->regenerateXmlFile();
-        if (PEAR::isError($r)) {
-            $CC_DBC->query("ROLLBACK");
-            return $r;
-        }
+//        $r = $this->md->regenerateXmlFile();
+//        if (PEAR::isError($r)) {
+//            $CC_DBC->query("ROLLBACK");
+//            return $r;
+//        }
         $res = $CC_DBC->query("COMMIT");
         if (PEAR::isError($res)) {
             return $res;
@@ -939,7 +1005,8 @@ class StoredFile {
      */
     public function getMetadata()
     {
-        return $this->md->getMetadata();
+        //return $this->md->getMetadata();
+        return $this->md;
     }
 
 
@@ -1056,10 +1123,10 @@ class StoredFile {
                 return $res;
             }
         }
-        $res = $this->md->delete();
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+//        $res = $this->md->delete();
+//        if (PEAR::isError($res)) {
+//            return $res;
+//        }
         $sql = "SELECT to_hex(token)as token, ext "
             ." FROM ".$CC_CONFIG['accessTable']
             ." WHERE gunid=x'{$this->gunid}'::bigint";
@@ -1370,7 +1437,8 @@ class StoredFile {
      */
     public function getRealMetadataFileName()
     {
-        return $this->md->getFileName();
+        //return $this->md->getFileName();
+        return $this->md["name"];
     }
 
 

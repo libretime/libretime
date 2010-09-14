@@ -128,7 +128,7 @@ class Alib {
     public static function AddPerm($sid, $action, $oid, $type='A')
     {
         global $CC_CONFIG, $CC_DBC;
-        $permid = $CC_DBC->nextId($CC_CONFIG['permTable']."_id_seq");
+        $permid = $CC_DBC->nextId($CC_CONFIG['permSequence']);
         $sql = "INSERT INTO ".$CC_CONFIG['permTable']." (permid, subj, action, obj, type)"
             ." VALUES ($permid, $sid, '$action', $oid, '$type')";
         $r = $CC_DBC->query($sql);

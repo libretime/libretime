@@ -1,10 +1,10 @@
 <?php
 require_once("BasicStor.php");
-if ($WHITE_SCREEN_OF_DEATH) {
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded BasicStor<br>";
 }
 require_once("LocStor.php");
-if ($WHITE_SCREEN_OF_DEATH) {
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded LocStor<br>";
 }
 require_once('Prefs.php');
@@ -282,7 +282,9 @@ class GreenBox extends BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $arr = $storedFile->md->genPhpArray();
+        return $storedFile->md;
+
+//        $arr = $storedFile->md->genPhpArray();
         $md = FALSE;
         foreach ($arr['children'] as $i=>$a) {
             if ($a['elementname'] == 'metadata'){
@@ -365,7 +367,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsSetMetadataValue($id, $category, $value, $lang, $mid);
+        return $this->bsSetMetadataValue($id, $category, $value /*, $lang, $mid*/);
     } // fn setMetadataValue
 
 
@@ -565,10 +567,10 @@ class GreenBox extends BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $r = $storedFile->md->regenerateXmlFile();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+//        $r = $storedFile->md->regenerateXmlFile();
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
         $this->setEditFlag($gunid, FALSE, $sessid);
         return $gunid;
     } // fn releaseLockedPlaylist

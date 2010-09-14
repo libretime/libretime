@@ -401,37 +401,43 @@ class DataEngine {
         // Each metadata value is LEFT JOINED to the results, and has the
         // name of its qualified name with ":" replaced with "_".
         // Here we also make the ORDER BY clause.
-        $metadataJoinSql = array();
+//        $metadataJoinSql = array();
         $orderBySql = array();
         // $dataName contains the names of the metadata columns we want to
         // fetch.  It is indexed numerically starting from 1, and the value
         // in the array is the qualified name with ":" replaced with "_".
         // e.g. "dc:creator" becomes "dc_creator".
-        $dataName = array();
-        foreach ($metadataNames as $j => $qname) {
-            $i = $j + 1;
-            $obSplitQn = XML_Util::splitQualifiedName($qname);
-            $obNs = $obSplitQn['namespace'];
-            $obLp = $obSplitQn['localPart'];
-            $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
-            $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
-            $metadataJoinSql[] =
-                "LEFT JOIN ".$CC_CONFIG['mdataTable']." m$i\n".
-                "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
-                " AND m$i.objns='_L' AND m$i.predxml='T'".
-                (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
+//        $dataName = array();
+//        foreach ($metadataNames as $j => $qname) {
+//            $i = $j + 1;
+//            $obSplitQn = XML_Util::splitQualifiedName($qname);
+//            $obNs = $obSplitQn['namespace'];
+//            $obLp = $obSplitQn['localPart'];
+//            $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
+//            $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
+//            $metadataJoinSql[] =
+//                "LEFT JOIN ".$CC_CONFIG['mdataTable']." m$i\n".
+//                "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
+//                " AND m$i.objns='_L' AND m$i.predxml='T'".
+//                (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
+//
+//            $dataName[$qname] = str_replace(":", "_", $qname);
+//            if (in_array($qname, $orderbyQns)) {
+//                $orderBySql[] = $dataName[$qname].$retype.($desc? ' DESC':'');
+//            }
+//        }
 
-            $dataName[$qname] = str_replace(":", "_", $qname);
-            if (in_array($qname, $orderbyQns)) {
-                $orderBySql[] = $dataName[$qname].$retype.($desc? ' DESC':'');
-            }
+        foreach ($orderbyQns as $xmlTag) {
+            $columnName = BasicStor::xmlCategoryToDbColumn($xmlTag);
+            $orderBySql[] = $columnName;
         }
 
-        if (!$orderby) {
-            $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id ";
-        } else {
-            $fldsPart = "DISTINCT f.gunid, f.ftype, f.id ";
-        }
+//        if (!$orderby) {
+//            $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id ";
+//        } else {
+//            $fldsPart = "DISTINCT f.gunid, f.ftype, f.id ";
+//        }
+        $fldsPart = " * ";
 
         $fileCond = "(f.state='ready' OR f.state='edited')";
         if (!is_null($filetype)) {
@@ -442,31 +448,33 @@ class DataEngine {
         } else {
             $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, false);
         }
-      
+
         // the actual values to fetch
         if ($orderby) {
-            $tmpSql = "SELECT to_hex(sq2.gunid)as gunid, sq2.ftype, sq2.id";
-            $i = 1;
-            foreach ($metadataNames as $qname) {
-                // Special case for track number because if we use text
-                // sorting of this value, then 10 comes right after 1.
-                // So we convert track number to an integer for ordering.
+            //$tmpSql = "SELECT to_hex(sq2.gunid)as gunid, sq2.ftype, sq2.id";
+            $tmpSql = "SELECT * ";
+//            $i = 1;
+//            foreach ($metadataNames as $qname) {
+//                // Special case for track number because if we use text
+//                // sorting of this value, then 10 comes right after 1.
+//                // So we convert track number to an integer for ordering.
+//
+//                // PaulB: see my note above about why this is commented out.
+//                //if ($qname == "ls:track_num") {
+//                //    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
+//                //} else {
+////                $tmpSql .= ", m$i.object as ".$dataName[$qname];
+//                $tmpSql .= ", m$i.object as ".$dataName[$qname];
+//                //}
+//                $i++;
+//            }
 
-                // PaulB: see my note above about why this is commented out.
-                //if ($qname == "ls:track_num") {
-                //    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
-                //} else {
-                $tmpSql .= ", m$i.object as ".$dataName[$qname];
-                //}
-                $i++;
-            }
-
-            $tmpSql .= "\nFROM (\n$sql\n)sq2\n".
-                    join("\n", $metadataJoinSql).
+            $tmpSql .= "\nFROM \n".$CC_CONFIG["filesTable"]."\n".
                    "ORDER BY ".join(",", $orderBySql)."\n";
             $sql = $tmpSql;
         }
-     
+
+        $_SESSION["debug"] = $tmpSql;
         // Get the number of results
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
@@ -490,13 +498,24 @@ class DataEngine {
             	'id' => $it['id'],
                 'gunid' => $gunid,
                 'type' => strtolower($it['ftype']),
-                'title' => $it['dc_title'],
-                'creator' => $it['dc_creator'],
-                'duration' => $it['dcterms_extent'],
-                'length' => $it['dcterms_extent'],
-                'source' => $it['dc_source'],
-                'track_num' => $it['ls_track_num'],
+                'title' => $it['track_title'],
+                'creator' => $it['artist_name'],
+                'duration' => $it['length'],
+                'length' => $it['length'],
+                'source' => $it['album_title'],
+                'track_num' => $it['track_number'],
             );
+//            $eres[] = array(
+//            	'id' => $it['id'],
+//                'gunid' => $gunid,
+//                'type' => strtolower($it['ftype']),
+//                'title' => $it['dc_title'],
+//                'creator' => $it['dc_creator'],
+//                'duration' => $it['dcterms_extent'],
+//                'length' => $it['dcterms_extent'],
+//                'source' => $it['dc_source'],
+//                'track_num' => $it['ls_track_num'],
+//            );
         }
         return array('results'=>$eres, 'cnt'=>$cnt);
     }
