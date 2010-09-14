@@ -91,7 +91,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 
         <li class="nav-main"><a>##Help##</a>
             <ul>
-                <li><a href="" onclick="window.open('http://manuals.campware.org/campcaster', 'help', 'menubar=yes,toolbar=yes,location=yes,status=yes,scrollbars=yes,resizable=yes,width=850,height=800')">##User Manual##</a></li>
+                <li><a href="" onclick="window.open('http://en.flossmanuals.net/Campcaster/', 'help', 'menubar=yes,toolbar=yes,location=yes,status=yes,scrollbars=yes,resizable=yes,width=850,height=800')">##User Manual##</a></li>
                 <li><a href="" onclick="window.open('{$UI_BROWSER}?popup[]=help', 'help', 'scrollbars=yes,resizable=yes,width=500,height=800')">##Quickstart##</a></li>
                 <li><a href="" onclick="window.open('http://campcaster.sourcefabric.org/', 'help', 'menubar=yes,toolbar=yes,location=yes,status=yes,scrollbars=yes,resizable=yes,width=850,height=800')">##Homepage##</a></li>
 
