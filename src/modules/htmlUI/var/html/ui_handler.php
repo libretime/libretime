@@ -163,34 +163,58 @@ switch ($_REQUEST['act']) {
 
 		case "BROWSE.refresh":
 			$uiHandler->BROWSE->refresh($_REQUEST);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 			break;
 
     case "BROWSE.setCategory":
 	    $uiHandler->BROWSE->setCategory($_REQUEST);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.setValue":
 	    $uiHandler->BROWSE->setValue($_REQUEST);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.reorder":
 	    $uiHandler->BROWSE->reorder($_REQUEST['by']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.setDefaults":
 	    $uiHandler->BROWSE->setDefaults(TRUE);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.setOffset":
 	    $uiHandler->BROWSE->setOffset($_REQUEST['page']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.setLimit":
 	    $uiHandler->BROWSE->setLimit($_REQUEST['limit']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "BROWSE.setFiletype":
 	    $uiHandler->BROWSE->setFiletype($_REQUEST['filetype']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "BROWSE";
+	    include("ui_browser.php");
 	    break;
 
     case "HUBBROWSE.setCategory":

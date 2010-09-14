@@ -6,7 +6,12 @@
 $tmpAct = '';
 if (isset($_REQUEST['act'])) {
     // Get everything up to the first dot
-    $tmpAct = substr($_REQUEST["act"], 0, strpos($_REQUEST["act"], '.'));
+    $tmpPos = strpos($_REQUEST["act"], '.');
+    if ($tmpPos > 0) {
+        $tmpAct = substr($_REQUEST["act"], 0, $tmpPos);
+    } else {
+        $tmpAct = $_REQUEST["act"];
+    }
 }
 
 $ui_fmask = array(
@@ -489,7 +494,7 @@ $ui_fmask = array(
                             UI_FILETYPE_WEBSTREAM => '##Webstream##',
                             UI_FILETYPE_PLAYLIST  => '##Playlist##'
                            ),
-            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act='.$tmpAct.'.setFiletype&filetype=" + this.form.filetype.value)')
+            'attributes'=> array('onChange' =>  'location=\''.UI_HANDLER.'?act='.$tmpAct.'.setFiletype&filetype=\' + this.form.filetype.value')
         ),
         array(
             'element'   => 'limit',
@@ -501,7 +506,7 @@ $ui_fmask = array(
                             50  => 50,
                             100 => 100
                            ),
-            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act='.$tmpAct.'.setLimit&limit=" + this.form.limit.value)')
+            'attributes'=> array('onChange' => 'location=\''.UI_HANDLER.'?act='.$tmpAct.'.setLimit&limit=\'+ this.form.limit.value')
         ),
         /*        do we need reset?
         array(

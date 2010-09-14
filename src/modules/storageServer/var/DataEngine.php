@@ -1,6 +1,4 @@
 <?php
-define('USE_INTERSECT', TRUE);
-
 require_once("XML/Util.php");
 
 /**
@@ -46,8 +44,6 @@ require_once("XML/Util.php");
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @see MetaData
- * @see StoredFile
  */
 class DataEngine {
 
@@ -85,7 +81,6 @@ class DataEngine {
         );
         $whereArr = array();
         if (is_array($conditions)) {
-            //$_SESSION["debug"] = $conditions;
             foreach ($conditions as $cond) {
                 $columnName = BasicStor::xmlCategoryToDbColumn($cond['cat']);
                 $op = strtolower($cond['op']);
@@ -106,121 +101,12 @@ class DataEngine {
                                 $opVal = "$retype $opVal$retype";
                         }
                     }
-                    // escape % for sprintf in whereArr construction:
-                    //$cat = str_replace("%", "%%", $cat);
-                    //$opVal = str_replace("%", "%%", $opVal);
                     $sqlCond = " {$columnName} {$opVal}\n";
                     $whereArr[] = $sqlCond;
                 }
             }
         }
-        //$_SESSION["debug"] = $whereArr;
         return $whereArr;
-    }
-
-
-    /**
-     * Method returning SQL query for search/browse with AND operator
-     * (without using INTERSECT command)
-     *
-     * @param string $fldsPart
-     * 		fields part of SQL query
-     * @param array $whereArr
-     * 		array of WHERE-parts
-     * @param string $fileCond
-     * 		Condition for files table
-     * @param boolean $browse
-     * 		TRUE if browse vals required instead of gunids
-     * @param string $brFldNs
-     * 		Namespace prefix of category for browse
-     * @param string $brFld
-     * 		Category for browse
-     * @return string
-     * 		query
-     */
-    private function _makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse,
-        $brFldNs=NULL, $brFld=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $innerBlocks = array();
-        foreach ($whereArr as $i => $v) {
-            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
-            $lastTbl = ($i==0 ? "f" : "md".($i-1));
-            $innerBlocks[] = "INNER JOIN ".$CC_CONFIG['mdataTable']." md$i ON md$i.gunid = $lastTbl.gunid\n";
-        }
-        // query construcion:
-        $sql =  "SELECT $fldsPart FROM ".$CC_CONFIG['filesTable']." f ".join("", $innerBlocks);
-        if ($browse) {
-            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." br".
-                "\n ON br.gunid = f.gunid AND br.objns='_L'".
-                " AND br.predicate='{$brFld}' AND br.predxml='T'";
-            if (!is_null($brFldNs)) {
-            	$sql .= " AND br.predns='{$brFldNs}'";
-            }
-            $sql .= "\n";
-        }
-        if (!is_null($fileCond)) {
-        	$whereArr[] = " $fileCond";
-        }
-        if (count($whereArr) > 0) {
-        	$sql .= "WHERE\n".join("  AND\n", $whereArr);
-        }
-        if ($browse) {
-        	$sql .= "\nORDER BY br.object";
-        }
-        return $sql;
-    }
-
-
-    /**
-     * Method returning SQL query for search/browse with AND operator
-     * (using INTERSECT command)
-     *
-     * @param string $fldsPart
-     * 		Fields part of sql query
-     * @param array $whereArr
-     * 		Array of where-parts
-     * @param string $fileCond
-     * 		Condition for files table
-     * @param boolean $browse
-     * 		true if browse vals required instead of gunids
-     * @param string $brFldNs
-     * 		namespace prefix of category for browse
-     * @param string $brFld
-     * 		category for browse
-     * @return string
-     * 		query
-     */
-    private function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
-        $brFldNs=NULL, $brFld=NULL)
-    {
-        $sql = "(".join(") AND (", $whereArr).")";
-        return $sql;
-    }
-
-    /**
-     * Method returning SQL query for search/browse with OR operator
-     *
-     * @param string $fldsPart
-     * 		Fields part of sql query
-     * @param array $whereArr
-     * 		Array of where-parts
-     * @param string $fileCond
-     * 		Condition for files table
-     * @param boolean $browse
-     * 		True if browse vals required instead of gunids
-     * @param string $brFldNs
-     * 		Namespace prefix of category for browse
-     * @param string $brFld
-     * 		Category for browse
-     * @return string
-     * 		query
-     */
-    private function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
-        $brFldNs=NULL, $brFld=NULL)
-    {
-        $sql = "(".join(") OR (", $whereArr).")";
-        return $sql;
     }
 
 
@@ -228,29 +114,6 @@ class DataEngine {
      * Search in local metadata database.
      *
      * @param array $cri
-     * 		Search criteria see DataEngine class documentation
-     * @param int $limit
-     * 		Limit for result arrays (0 means unlimited)
-     * @param int $offset
-     * 		Starting point (0 means without offset)
-     * @return array
-     * 		hash, fields:
-     *       results : array with gunid strings
-     *       cnt : integer - number of matching gunids
-     *              of files have been found
-     */
-    public function localSearch($cri, $limit=0, $offset=0)
-    {
-        $res = $this->_localGenSearch($cri, $limit, $offset);
-        // if (PEAR::isError($res)) return $res;
-        return $res;
-    }
-
-
-    /**
-     * Search in local metadata database, more general version.
-     *
-     * @param hash $criteria
      * 		Search criteria see DataEngine class documentation
      * @param int $limit
      * 		Limit for result arrays (0 means unlimited)
@@ -270,7 +133,7 @@ class DataEngine {
      *     OR (in browse mode)
      *       results: array of strings - browsed values
      */
-    private function _localGenSearch($criteria, $limit=0, $offset=0)
+    public function localSearch($criteria, $limit=0, $offset=0)
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -352,18 +215,20 @@ class DataEngine {
             }
         }
 
-        // the actual values to fetch
+        // Final query
+        $sql = "SELECT * "
+                 . " FROM ".$CC_CONFIG["filesTable"]
+                 . $whereClause;
         if ($orderby) {
-            $tmpSql = "SELECT * "
-                    . " FROM ".$CC_CONFIG["filesTable"]
-                    . $whereClause
-                    . " ORDER BY ".join(",", $orderBySql);
-            $sql = $tmpSql;
+           $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        //$_SESSION["debug"] = $tmpSql;
+        $countRowsSql = "SELECT COUNT(*) "
+                 . " FROM ".$CC_CONFIG["filesTable"]
+                 . $whereClause;
+        $cnt = $CC_DBC->GetOne($countRowsSql);
+
         // Get the number of results
-        $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
@@ -422,23 +287,11 @@ class DataEngine {
             return new PEAR_Error("DataEngine::browseCategory() -- could not map XML category to DB column.");
         }
         $sql = "SELECT DISTINCT $columnName FROM ".$CC_CONFIG["filesTable"];
-//        $r = XML_Util::splitQualifiedName($category);
-//        $catNs = $r['namespace'];
-//        $cat = $r['localPart'];
-//        if (is_array($criteria) && count($criteria) > 0) {
-//            return $this->_browseCategory($criteria, $limit, $offset, $catNs, $cat);
-//        }
-//        $sqlCond = "m.predicate='$cat' AND m.objns='_L' AND m.predxml='T'";
-//        if (!is_null($catNs)) {
-//            $sqlCond = "m.predns = '{$catNs}' AND  $sqlCond";
-//        }
         $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
             ($offset != 0 ? " OFFSET $offset" : '' );
-//        $sql =
-//            "SELECT DISTINCT m.object FROM ".$CC_CONFIG['mdataTable']." m\n".
-//            "WHERE $sqlCond";
-        $_SESSION["debug"] = "DataEngine:: browse(): $sql";
-        $cnt = $this->_getNumRows($sql);
+        $countRowsSql = "SELECT COUNT(DISTINCT $columnName) FROM ".$CC_CONFIG["filesTable"];
+
+        $cnt = $CC_DBC->GetOne($countRowsSql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
         }
@@ -452,97 +305,6 @@ class DataEngine {
         return array('results'=>$res, 'cnt'=>$cnt);
     }
 
-
-    /**
-     * Fetching the list of metadata values for a particular category.
-     *
-     * @param array $criteria
-     * @param int $limit
-     * @param int $offset
-     * @param string $brFldNs
-     * 		Namespace prefix of category for browse
-     * @param string $brFld
-     * 		Metadata category identifier for browse.
-     * @return array|PEAR_Error
-     */
-    private function _browseCategory($criteria, $limit=0, $offset=0,
-        $brFldNs=NULL, $brFld=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC;
-
-        // Input values
-        $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
-        $filetype = strtolower($filetype);
-        if (!array_key_exists($filetype, $this->filetypes)) {
-            return PEAR::raiseError(
-                'DataEngine::_browseCategory: unknown filetype in search criteria'
-            );
-        }
-        $filetype = $this->filetypes[$filetype];
-        $operator = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
-        $operator = strtolower($operator);
-        $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
-
-        // Create the WHERE clause - this is the actual search part
-        $whereArr = $this->_makeWhereArr($conditions);
-
-        $fldsPart = "DISTINCT br.object as txt";
-        $fileCond = "(f.state='ready' OR f.state='edited')";
-        if (!is_null($filetype)) {
-        	$fileCond .= " AND f.ftype='$filetype'";
-        }
-        if ($operator == 'and') {
-            $sql = $this->_makeAndSql($fldsPart, $whereArr, $fileCond, true, $brFldNs, $brFld);
-        } else {
-            $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, true, $brFldNs, $brFld);
-        }
-
-        // Get the number of results
-        $cnt = $this->_getNumRows($sql);
-        if (PEAR::isError($cnt)) {
-        	return $cnt;
-        }
-
-        // Get actual results
-        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
-            ($offset != 0 ? " OFFSET $offset" : '' );
-        $res = $CC_DBC->getAll($sql.$limitPart);
-        if (PEAR::isError($res)) {
-        	return $res;
-        }
-        if (!is_array($res)) {
-        	$res = array();
-        }
-        $eres = array();
-        foreach ($res as $it) {
-            $eres[] = $it['txt'];
-        }
-        return array('results'=>$eres, 'cnt'=>$cnt);
-    }
-
-
-    /**
-     * Get number of rows in query result
-     *
-     * @param string $query
-     * 		SQL query
-     * @return int
-     * 		Number of rows in query result
-     */
-    private function _getNumRows($query)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $rh = $CC_DBC->query($query);
-        if (PEAR::isError($rh)) {
-        	return $rh;
-        }
-        $cnt = $rh->numRows();
-        if (PEAR::isError($cnt)) {
-        	return $cnt;
-        }
-        $rh->free();
-        return $cnt;
-    }
 
 } // class DataEngine
 
