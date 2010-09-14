@@ -79,14 +79,15 @@ class DataEngine {
      */
     private function _makeWhereArr($conditions)
     {
-        $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'",
-            'prefix'=>"like '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
+        $ops = array('full'=>"='%s'", 'partial'=>"ILIKE '%%%s%%'",
+            'prefix'=>"ILIKE '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
             '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
         );
         $whereArr = array();
         if (is_array($conditions)) {
+            //$_SESSION["debug"] = $conditions;
             foreach ($conditions as $cond) {
-                $catQn = $cond['cat'];
+                $columnName = BasicStor::xmlCategoryToDbColumn($cond['cat']);
                 $op = strtolower($cond['op']);
                 $value = strtolower($cond['val']);
                 if (!empty($value)) {
@@ -106,20 +107,14 @@ class DataEngine {
                         }
                     }
                     // escape % for sprintf in whereArr construction:
-                    $cat = str_replace("%", "%%", $cat);
-                    $opVal = str_replace("%", "%%", $opVal);
-                    $sqlCond =
-                        " %s.predicate = '{$cat}' AND".
-                        " %s.objns='_L' AND %s.predxml='T'".
-                        " AND lower(%s.object) {$opVal}\n";
-                    if (!is_null($catNs)) {
-                        $catNs  = str_replace("%", "%%", $catNs);
-                        $sqlCond = " %s.predns = '{$catNs}' AND $sqlCond";
-                    }
+                    //$cat = str_replace("%", "%%", $cat);
+                    //$opVal = str_replace("%", "%%", $opVal);
+                    $sqlCond = " {$columnName} {$opVal}\n";
                     $whereArr[] = $sqlCond;
                 }
             }
         }
+        //$_SESSION["debug"] = $whereArr;
         return $whereArr;
     }
 
@@ -199,42 +194,7 @@ class DataEngine {
     private function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
-        if (!USE_INTERSECT) {
-        	return $this->_makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
-        }
-        $isectBlocks = array();
-        foreach ($whereArr as $i => $v) {
-            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
-            $isectBlocks[] =
-                " SELECT gunid FROM ".$CC_CONFIG['mdataTable']." md$i \n".
-                " WHERE {$whereArr[$i]}";
-        }
-        // query construcion:
-        if (count($isectBlocks) > 0) {
-            $isectBlock =
-                "FROM (".join("INTERSECT\n", $isectBlocks).") sq \n".
-                " INNER JOIN ".$CC_CONFIG['filesTable']." f ON f.gunid = sq.gunid";
-        } else {
-            $isectBlock = "FROM ".$CC_CONFIG['filesTable']." f \n";
-        }
-        $sql = "SELECT $fldsPart ".$isectBlock;
-        if ($browse) {
-            $sql .= " INNER JOIN ".$CC_CONFIG['mdataTable']." br ON br.gunid = f.gunid \n".
-            		" WHERE br.objns='_L' AND br.predxml='T' AND br.predicate='{$brFld}'";
-            if (!is_null($brFldNs)) {
-            	$sql .= " AND br.predns='{$brFldNs}'";
-            }
-            $glue = " AND";
-        } else {
-        	$glue = " WHERE ";
-        }
-        if (!is_null($fileCond)) {
-        	$sql .= " $glue $fileCond";
-        }
-        if ($browse) {
-        	$sql .= " ORDER BY br.object";
-        }
+        $sql = "(".join(") AND (", $whereArr).")";
         return $sql;
     }
 
@@ -259,35 +219,7 @@ class DataEngine {
     private function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
-        //$whereArr[] = " FALSE\n";
-        foreach ($whereArr as $i => $v) {
-            $whereArr[$i] = sprintf($v, "md", "md", "md", "md", "md");
-        }
-        // query construcion:
-        $sql = "SELECT $fldsPart FROM ".$CC_CONFIG['filesTable']." f ";
-        if ($browse) {
-            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." br".
-                "\n ON br.gunid = f.gunid AND br.objns='_L'".
-                " AND br.predxml='T' AND br.predicate='{$brFld}'";
-            if (!is_null($brFldNs)) {
-            	$sql .= " AND br.predns='{$brFldNs}'";
-            }
-            $sql .= "\n";
-        }
-        if (count($whereArr) > 0) {
-            $sql .= "INNER JOIN ".$CC_CONFIG['mdataTable']." md ON md.gunid=f.gunid\n";
-            $sql .= "WHERE\n(\n".join("  OR\n", $whereArr).")";
-            $glue = " AND";
-        } else {
-        	$glue = "WHERE";
-        }
-        if (!is_null($fileCond)) {
-        	$sql .= "$glue $fileCond";
-        }
-        if ($browse) {
-        	$sql .= "\nORDER BY br.object";
-        }
+        $sql = "(".join(") OR (", $whereArr).")";
         return $sql;
     }
 
@@ -397,84 +329,39 @@ class DataEngine {
             $descA = array($descA);
         }
 
-        // This section of code adds the metadata values to the results.
-        // Each metadata value is LEFT JOINED to the results, and has the
-        // name of its qualified name with ":" replaced with "_".
-        // Here we also make the ORDER BY clause.
-//        $metadataJoinSql = array();
         $orderBySql = array();
         // $dataName contains the names of the metadata columns we want to
         // fetch.  It is indexed numerically starting from 1, and the value
         // in the array is the qualified name with ":" replaced with "_".
         // e.g. "dc:creator" becomes "dc_creator".
-//        $dataName = array();
-//        foreach ($metadataNames as $j => $qname) {
-//            $i = $j + 1;
-//            $obSplitQn = XML_Util::splitQualifiedName($qname);
-//            $obNs = $obSplitQn['namespace'];
-//            $obLp = $obSplitQn['localPart'];
-//            $desc = (isset($descA[$j]) ? $descA[$j] : NULL);
-//            $retype = ($obLp == 'mtime' ? '::timestamp with time zone' : '' );
-//            $metadataJoinSql[] =
-//                "LEFT JOIN ".$CC_CONFIG['mdataTable']." m$i\n".
-//                "  ON m$i.gunid = sq2.gunid AND m$i.predicate='$obLp'".
-//                " AND m$i.objns='_L' AND m$i.predxml='T'".
-//                (!is_null($obNs)? " AND m$i.predns='$obNs'":'');
-//
-//            $dataName[$qname] = str_replace(":", "_", $qname);
-//            if (in_array($qname, $orderbyQns)) {
-//                $orderBySql[] = $dataName[$qname].$retype.($desc? ' DESC':'');
-//            }
-//        }
-
         foreach ($orderbyQns as $xmlTag) {
             $columnName = BasicStor::xmlCategoryToDbColumn($xmlTag);
             $orderBySql[] = $columnName;
         }
 
-//        if (!$orderby) {
-//            $fldsPart = "DISTINCT to_hex(f.gunid)as gunid, f.ftype, f.id ";
-//        } else {
-//            $fldsPart = "DISTINCT f.gunid, f.ftype, f.id ";
-//        }
-        $fldsPart = " * ";
-
-        $fileCond = "(f.state='ready' OR f.state='edited')";
+        // Build WHERE clause
+        $whereClause = " WHERE (state='ready' OR state='edited')";
         if (!is_null($filetype)) {
-        	$fileCond .= " AND f.ftype='$filetype'";
+        	$whereClause .= " AND (ftype='$filetype')";
         }
-        if ($operator == 'and') {
-            $sql = $this->_makeAndSql($fldsPart, $whereArr, $fileCond, false);
-        } else {
-            $sql = $this->_makeOrSql($fldsPart, $whereArr, $fileCond, false);
+        if (count($whereArr) != 0) {
+            if ($operator == 'and') {
+                $whereClause .= " AND ((".join(") AND (", $whereArr)."))";
+            } else {
+                $whereClause .= " AND ((".join(") OR (", $whereArr)."))";
+            }
         }
 
         // the actual values to fetch
         if ($orderby) {
-            //$tmpSql = "SELECT to_hex(sq2.gunid)as gunid, sq2.ftype, sq2.id";
-            $tmpSql = "SELECT * ";
-//            $i = 1;
-//            foreach ($metadataNames as $qname) {
-//                // Special case for track number because if we use text
-//                // sorting of this value, then 10 comes right after 1.
-//                // So we convert track number to an integer for ordering.
-//
-//                // PaulB: see my note above about why this is commented out.
-//                //if ($qname == "ls:track_num") {
-//                //    $tmpSql .= ", CAST(m$i.object as integer) as ls_track_num";
-//                //} else {
-////                $tmpSql .= ", m$i.object as ".$dataName[$qname];
-//                $tmpSql .= ", m$i.object as ".$dataName[$qname];
-//                //}
-//                $i++;
-//            }
-
-            $tmpSql .= "\nFROM \n".$CC_CONFIG["filesTable"]."\n".
-                   "ORDER BY ".join(",", $orderBySql)."\n";
+            $tmpSql = "SELECT * "
+                    . " FROM ".$CC_CONFIG["filesTable"]
+                    . $whereClause
+                    . " ORDER BY ".join(",", $orderBySql);
             $sql = $tmpSql;
         }
 
-        $_SESSION["debug"] = $tmpSql;
+        //$_SESSION["debug"] = $tmpSql;
         // Get the number of results
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
@@ -505,17 +392,6 @@ class DataEngine {
                 'source' => $it['album_title'],
                 'track_num' => $it['track_number'],
             );
-//            $eres[] = array(
-//            	'id' => $it['id'],
-//                'gunid' => $gunid,
-//                'type' => strtolower($it['ftype']),
-//                'title' => $it['dc_title'],
-//                'creator' => $it['dc_creator'],
-//                'duration' => $it['dcterms_extent'],
-//                'length' => $it['dcterms_extent'],
-//                'source' => $it['dc_source'],
-//                'track_num' => $it['ls_track_num'],
-//            );
         }
         return array('results'=>$eres, 'cnt'=>$cnt);
     }
@@ -540,22 +416,28 @@ class DataEngine {
     public function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
-        //$category = strtolower($category);
-        $r = XML_Util::splitQualifiedName($category);
-        $catNs = $r['namespace'];
-        $cat = $r['localPart'];
-        if (is_array($criteria) && count($criteria) > 0) {
-            return $this->_browseCategory($criteria, $limit, $offset, $catNs, $cat);
+        $category = strtolower($category);
+        $columnName = BasicStor::xmlCategoryToDbColumn($category);
+        if (is_null($columnName)) {
+            return new PEAR_Error("DataEngine::browseCategory() -- could not map XML category to DB column.");
         }
-        $sqlCond = "m.predicate='$cat' AND m.objns='_L' AND m.predxml='T'";
-        if (!is_null($catNs)) {
-            $sqlCond = "m.predns = '{$catNs}' AND  $sqlCond";
-        }
+        $sql = "SELECT DISTINCT $columnName FROM ".$CC_CONFIG["filesTable"];
+//        $r = XML_Util::splitQualifiedName($category);
+//        $catNs = $r['namespace'];
+//        $cat = $r['localPart'];
+//        if (is_array($criteria) && count($criteria) > 0) {
+//            return $this->_browseCategory($criteria, $limit, $offset, $catNs, $cat);
+//        }
+//        $sqlCond = "m.predicate='$cat' AND m.objns='_L' AND m.predxml='T'";
+//        if (!is_null($catNs)) {
+//            $sqlCond = "m.predns = '{$catNs}' AND  $sqlCond";
+//        }
         $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
             ($offset != 0 ? " OFFSET $offset" : '' );
-        $sql =
-            "SELECT DISTINCT m.object FROM ".$CC_CONFIG['mdataTable']." m\n".
-            "WHERE $sqlCond";
+//        $sql =
+//            "SELECT DISTINCT m.object FROM ".$CC_CONFIG['mdataTable']." m\n".
+//            "WHERE $sqlCond";
+        $_SESSION["debug"] = "DataEngine:: browse(): $sql";
         $cnt = $this->_getNumRows($sql);
         if (PEAR::isError($cnt)) {
         	return $cnt;

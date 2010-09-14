@@ -1,12 +1,12 @@
 <?php
 $relations = array(
 'dc:title' => 'Title',
-'dc:creator' => 'Creator',
+'dc:creator' => 'Artist/Creator',
 'dc:type' => 'Genre',
 'dc:format' => 'File format',
 'dcterms:extent' => 'Length',
 'dc:title' => 'Title',
-'dc:creator' => 'Creator',
+'dc:creator' => 'Artist/Creator',
 'dc:source' => 'Album',
 'ls:year' => 'Year',
 'dc:type' => 'Genre',
@@ -46,7 +46,7 @@ $relations = array(
 'dcterms:spatial' => 'Report location',
 'dcterms:entity' => 'Report organizations',
 'dc:description' => 'Description',
-'dc:creator' => 'Creator',
+'dc:creator' => 'Artist/Creator',
 'dc:subject' => 'Subject',
 'dc:type' => 'Genre',
 'dc:format' => 'Format',
@@ -54,7 +54,7 @@ $relations = array(
 'dc:language' => 'Language',
 'dc:rights' => 'Copyright',
 'dc:title' => 'Title',
-'dc:creator' => 'Creator',
+'dc:creator' => 'Artist/Creator',
 'dcterms:extent' => 'Length',
 'dc:description' => 'Description',
 

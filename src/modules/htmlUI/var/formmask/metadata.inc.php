@@ -74,7 +74,7 @@ $mask = array(
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
-                'label'     => 'Creator',
+                'label'     => 'Artist/Creator',
                 'required'  => TRUE,
                 'id3'       => array('Artist')
             ),
@@ -115,7 +115,7 @@ $mask = array(
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
-                'label'     => 'Creator',
+                'label'     => 'Artist/Creator',
                 #'id3'       => 'Artist'
             ),
             array(
@@ -410,7 +410,7 @@ $mask = array(
             array(
                 'element'   => 'dc:creator',       ## menu??
                 'type'      => 'text',
-                'label'     => 'Creator',
+                'label'     => 'Artist/Creator',
             ),
             array(
                 'element'   => 'dc:subject',
