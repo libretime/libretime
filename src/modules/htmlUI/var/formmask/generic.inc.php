@@ -3,7 +3,11 @@
 // This file contains a list of all the HTML forms in the system,
 // encoded as arrays.
 //
-$tmpAct = isset($_REQUEST['act']) ? $_REQUEST['act'] : '';
+$tmpAct = '';
+if (isset($_REQUEST['act'])) {
+    // Get everything up to the first dot
+    $tmpAct = substr($_REQUEST["act"], 0, strpos($_REQUEST["act"], '.'));
+}
 
 $ui_fmask = array(
     /* ===================== list of system preferences which can be adjusted */
@@ -74,7 +78,7 @@ $ui_fmask = array(
             'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Archive server location URL',
-            'default'	=>  "http://" . $CC_CONFIG['archiveUrlHost'] . ":" . $CC_CONFIG['archiveUrlPort'] . $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],     
+            'default'	=>  "http://" . $CC_CONFIG['archiveUrlHost'] . ":" . $CC_CONFIG['archiveUrlPort'] . $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],
             'required'  => TRUE,
         ),
         array(
@@ -382,8 +386,8 @@ $ui_fmask = array(
         array(
             'element'   => 'clear',
             'type'      => 'button',
-            'label'     => 'Reset criteria',
-            'attributes'  => array('class' => 'button_wide', 'onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
+            'label'     => 'Reset Criteria',
+            'attributes'  => array('class' => 'button_wide', 'onClick' => "this.form.reset(); location='".UI_HANDLER."?act=SEARCH.clear'"),
             'groupit'   => TRUE,
         ),
         array(

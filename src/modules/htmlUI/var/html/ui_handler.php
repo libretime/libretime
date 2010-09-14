@@ -128,18 +128,30 @@ switch ($_REQUEST['act']) {
 
     case "SEARCH.newSearch":
 	    $uiHandler->SEARCH->newSearch($_REQUEST);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "SEARCH";
+	    include("ui_browser.php");
 	    break;
 
     case "SEARCH.simpleSearch":
 	    $uiHandler->SEARCH->simpleSearch($_REQUEST);
+	    $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "SEARCH";
+	    include("ui_browser.php");
 	    break;
 
     case "SEARCH.reorder":
 	    $uiHandler->SEARCH->reorder($_REQUEST['by']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "SEARCH";
+	    include("ui_browser.php");
 	    break;
 
     case "SEARCH.clear":
 	    $uiHandler->SEARCH->clear();
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "SEARCH";
+	    include("ui_browser.php");
 	    break;
 
     case "SEARCH.setOffset":
