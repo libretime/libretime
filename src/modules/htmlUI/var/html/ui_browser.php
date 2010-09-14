@@ -19,6 +19,10 @@ $Smarty->assign('PL_simpleManagement', FALSE);
 $Smarty->assign('showBackup', FALSE);
 
 if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
+    if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+        echo __FILE__.':line '.__LINE__.": about to do popup processing for: <br>";
+        var_dump($_REQUEST['popup']);
+    }
     foreach ($_REQUEST['popup'] as $val) {
         switch ($val) {
             case "jscom":
@@ -271,6 +275,9 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
     die();
 };
 
+if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+    echo __FILE__.':line '.__LINE__.": popup processing complete<br>";
+}
 if ($uiBrowser->userid) {
     $action = isset($_REQUEST['act']) ? $_REQUEST['act'] : null;
     switch ($action) {

@@ -2,6 +2,10 @@
 require_once(dirname(__FILE__).'/../ui_handler_init.php');
 require_once("../Input.php");
 
+if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+    echo __FILE__.':line '.__LINE__.": Action {$_REQUEST['act']} Begin<br>";
+}
+
 if (get_magic_quotes_gpc()) {
     $_REQUEST = Input::CleanMagicQuotes($_REQUEST);
 }
@@ -140,6 +144,9 @@ switch ($_REQUEST['act']) {
 
     case "SEARCH.setOffset":
 	    $uiHandler->SEARCH->setOffset($_REQUEST['page']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "SEARCH";
+	    include("ui_browser.php");
 	    break;
 
 		case "BROWSE.refresh":
@@ -216,6 +223,9 @@ switch ($_REQUEST['act']) {
 
     case "HUBSEARCH.setOffset":
 	    $uiHandler->HUBSEARCH->setOffset($_REQUEST['page']);
+      $NO_REDIRECT = true;
+	    $_REQUEST["act"] = "HUBSEARCH";
+	    include("ui_browser.php");
 	    break;
 
     case "TRANSFERS.reorder":
@@ -467,11 +477,13 @@ if ($uiHandler->alertMsg) {
     $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 }
 
-ob_end_clean();
-if (isset($_REQUEST['target'])) {
-	header('Location: ui_browser.php?act='.$_REQUEST['target']);
-} else {
-	header("Location: ".$uiHandler->redirUrl);
+ob_end_flush();
+if (!isset($NO_REDIRECT)) {
+    if (isset($_REQUEST['target'])) {
+    	header('Location: ui_browser.php?act='.$_REQUEST['target']);
+    } else {
+    	header("Location: ".$uiHandler->redirUrl);
+    }
 }
 exit;
 ?>

@@ -185,6 +185,9 @@ if (PEAR::isError($CC_DBC)) {
     echo "</table>";
     exit;
 }
+if ($WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Connected to database<br>";
+}
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);

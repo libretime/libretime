@@ -23,6 +23,9 @@ require_once(dirname(__FILE__).'/ui_calendar.class.php');
 require_once(dirname(__FILE__).'/ui_jscom.php');
 require_once(dirname(__FILE__).'/ui_twitter.class.php');
 
+if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+    echo __FILE__.':line '.__LINE__.": All includes loaded<br>";
+}
 # NOTE: You have to load all classes that use session variables BEFORE you make a call to session_start()!!!
 session_start();
 
@@ -72,4 +75,9 @@ if (isset($_SESSION['retransferFormData']) && is_array($_SESSION['retransferForm
     }
     unset($_SESSION['retransferFormData']);
 }
+
+if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+    echo __FILE__.':line '.__LINE__.": end of file<br>";
+}
+
 ?>
