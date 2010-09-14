@@ -1,10 +1,10 @@
 <?php
 require_once("BasicStor.php");
-if ($WHITE_SCREEN_OF_DEATH) {
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded BasicStor<br>";
 }
 require_once("Transport.php");
-if ($WHITE_SCREEN_OF_DEATH) {
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded Transport<br>";
 }
 
@@ -196,7 +196,7 @@ class LocStor extends BasicStor {
         }
         $oid = $storedFile->getId();
         $r = $this-> bsSetMetadataValue(
-            $oid, 'ls:url', $url, NULL, NULL, 'metadata');
+            $oid, 'ls:url', $url /*, NULL, NULL, 'metadata'*/);
         if (PEAR::isError($r)) {
             return $r;
         }

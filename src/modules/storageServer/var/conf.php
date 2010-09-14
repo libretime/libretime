@@ -126,7 +126,14 @@ $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
 $CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
 $CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
 $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
-$CC_CONFIG['filesSequence'] = $CC_CONFIG['tblNamePrefix']."file_id_seq";
+
+$CC_CONFIG['filesSequence'] = $CC_CONFIG['filesTable'].'_id';
+$CC_CONFIG['transSequence'] = $CC_CONFIG['transTable'].'_id';
+$CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';
+$CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
+$CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
+$CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
+$CC_CONFIG['mdataSequence'] = $CC_CONFIG['mdataTable'].'_id';
 
 $CC_CONFIG['sysSubjs'] = array(
     'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']

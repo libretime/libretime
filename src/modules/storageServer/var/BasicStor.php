@@ -20,6 +20,22 @@ require_once(dirname(__FILE__)."/../../alib/var/Alib.php");
 require_once("StoredFile.php");
 require_once("Transport.php");
 
+$g_metadata_xml_to_db_mapping = array(
+        'dc:format' => "format",
+        "ls:bitrate" => "bit_rate",
+    		"ls:samplerate" => "sample_rate",
+        "dcterms:extent" => "length",
+				"dc:title" => "track_title",
+				"dc:description" => "comments",
+    		"dc:type" => "genre",
+    		"dc:creator" => "artist_name",
+        "dc:source" => "album_title",
+    		"ls:channels" => "channels",
+				"ls:filename" => "name",
+				"ls:year" => "year",
+    		"ls:url" => "url",
+    		"ls:track_num" => "track_number");
+
 /**
  * Core of Campcaster file storage module
  *
@@ -715,10 +731,11 @@ class BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $r = $storedFile->md->getMetadataValue('dc:title', $lang, $deflang);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+//        $r = $storedFile->md->getMetadataValue('dc:title', $lang, $deflang);
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
+        $r = $storedFile->md["title"];
         $title = (isset($r[0]['value']) ? $r[0]['value'] : 'unknown');
         return $title;
     }
@@ -773,24 +790,42 @@ class BasicStor {
             return $storedFile;
         }
         if (is_null($category)) {
-        	return $storedFile->md->getAllMetadata();
+            return $storedFile->md;
         } elseif (is_array($category)) {
-        	$values = array();
-			foreach ($category as $tmpCat) {
-				$values[$tmpCat] = $storedFile->md->getMetadataValue($tmpCat);
-			}
-			return $values;
+            $values = array();
+			      foreach ($category as $tmpCat) {
+//				        $values[$tmpCat] = $storedFile->md->getMetadataValue($tmpCat);
+				        $values[$tmpCat] = $storedFile->md[$tmpCat];
+			      }
+			      return $values;
         } else {
-        	return $storedFile->md->getMetadataValue($category);
+//            return $storedFile->md->getMetadataValue($category);
+            return $storedFile->md[$category];
         }
     }
 
+
+    public static function xmlCategoryToDbColumn($p_category)
+    {
+        global $g_metadata_xml_to_db_mapping;
+        if (array_key_exists($p_category, $g_metadata_xml_to_db_mapping)) {
+            return $g_metadata_xml_to_db_mapping[$p_category];
+        }
+        return null;
+    }
+
+
+    public static function dbColumnToXmlCatagory($p_dbColumn)
+    {
+        global $g_metadata_xml_to_db_mapping;
+        return array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+    }
 
     /**
      * Set metadata element value
      *
      * @param int|StoredFile $id
-     * 		Virtual file's local id
+     * 		Database ID of file
      * @param string $category
      * 		Metadata element identification (e.g. dc:title)
      * @param string $value
@@ -805,34 +840,45 @@ class BasicStor {
      * 		flag, if true, regenerate XML file
      * @return boolean
      */
-    public function bsSetMetadataValue($id, $category, $value,
-        $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)
+    public static function bsSetMetadataValue($p_id, $p_category, $p_value)/*,
+        $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)*/
     {
-        if (!is_string($category) || is_array($value)) {
+        global $CC_CONFIG, $CC_DBC;
+        if (!is_string($p_category) || is_array($p_value)) {
             return FALSE;
         }
-        if (is_a($id, "StoredFile")) {
-            $storedFile =& $id;
+        if (is_a($p_id, "StoredFile")) {
+            $storedFile =& $p_id;
         } else {
-            $storedFile = StoredFile::Recall($id);
+            $storedFile = StoredFile::Recall($p_id);
             if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
         }
-        if ($category == 'dcterms:extent') {
-            $value = BasicStor::NormalizeExtent($value);
+        if ($p_category == 'dcterms:extent') {
+            $p_value = BasicStor::NormalizeExtent($p_value);
         }
-        $res = $storedFile->md->setMetadataValue($category, $value, $lang, $mid, $container);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        if ($regen) {
-            $r = $storedFile->md->regenerateXmlFile();
-            if (PEAR::isError($r)) {
-                return $r;
+        $columnName = BasicStor::xmlCategoryToDbColumn($p_category); // Get column name
+
+        if (!is_null($columnName)) {
+            $escapedValue = pg_escape_string($p_value);
+            $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+                 ." SET $columnName='$escapedValue'"
+                 ." WHERE id=".$storedFile->getId();
+            //var_dump($sql);
+            //$res = $storedFile->md->setMetadataValue($category, $value, $lang, $mid, $container);
+            $res = $CC_DBC->query($sql);
+            if (PEAR::isError($res)) {
+                return $res;
             }
         }
-        return $res;
+//        if ($regen) {
+//            $r = $storedFile->md->regenerateXmlFile();
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
+//        }
+//        return $res;
     }
 
 
@@ -858,8 +904,8 @@ class BasicStor {
     /**
      * Set metadata values in 'batch' mode
      *
-     * @param int $id
-     * 		Virtual file's local ID
+     * @param int|StoredFile $id
+     * 		Database ID of file or StoredFile object
      * @param array $values
      * 		array of key/value pairs
      *      (e.g. 'dc:title'=>'New title')
@@ -871,33 +917,37 @@ class BasicStor {
      * 		flag, if true, regenerate XML file
      * @return boolean
      */
-    public function bsSetMetadataBatch(
+    public static function bsSetMetadataBatch(
         $id, $values, $lang=NULL, $container='metadata', $regen=TRUE)
     {
         if (!is_array($values)) {
             $values = array($values);
         }
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        foreach ($values as $category => $oneValue) {
-            $res = $this->bsSetMetadataValue($storedFile, $category,
-                $oneValue, $lang, NULL, $container, FALSE);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-        }
-        if ($regen) {
+        if (is_a($id, "StoredFile")) {
+            $storedFile =& $id;
+        } else {
             $storedFile = StoredFile::Recall($id);
             if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
-            $r = $storedFile->md->regenerateXmlFile();
-            if (PEAR::isError($r)) {
-                return $r;
+        }
+        foreach ($values as $category => $oneValue) {
+            $res = BasicStor::bsSetMetadataValue($storedFile, $category,
+                $oneValue/*, $lang, NULL, $container, FALSE*/);
+            if (PEAR::isError($res)) {
+                return $res;
             }
         }
+//        if ($regen) {
+//            $storedFile = StoredFile::Recall($id);
+//            if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//                return $storedFile;
+//            }
+//            $r = $storedFile->md->regenerateXmlFile();
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
+//        }
         return TRUE;
     }
 
@@ -1047,7 +1097,8 @@ class BasicStor {
             if (is_null($storedFile) || PEAR::isError($storedFile)) {
                 return $storedFile;
             }
-            $MDfname = $storedFile->md->getFileName();
+//            $MDfname = $storedFile->md->getFileName();
+            $MDfname = $storedFile->md["name"];
             if (PEAR::isError($MDfname)) {
                 return $MDfname;
             }
@@ -1064,7 +1115,7 @@ class BasicStor {
 	                            $string = $r = $storedFile->outputToM3u();
 	                            break;
 	                        default:
-	                            $string = $r = $storedFile->md->genXmlDoc();
+//	                            $string = $r = $storedFile->md->genXmlDoc();
 	                    }
 	                    if (PEAR::isError($r)) {
 	                        return $r;

@@ -1,6 +1,4 @@
 <?php
-$WHITE_SCREEN_OF_DEATH = false;
-
 header("Content-type: text/plain");
 
 require_once('../conf.php');

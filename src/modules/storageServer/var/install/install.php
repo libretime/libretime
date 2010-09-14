@@ -7,8 +7,6 @@
  *
  */
 
-$WHITE_SCREEN_OF_DEATH = false;
-
 // Do not allow remote execution
 $arr = array_diff_assoc($_SERVER, $_ENV);
 if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
@@ -22,9 +20,9 @@ echo "*************************\n";
 echo "* StorageServer Install *\n";
 echo "*************************\n";
 
-require_once('../conf.php');
-require_once('../GreenBox.php');
-require_once("installInit.php");
+require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/../GreenBox.php');
+require_once(dirname(__FILE__)."/installInit.php");
 campcaster_db_connect(true);
 
 //------------------------------------------------------------------------------
@@ -51,7 +49,7 @@ if (!camp_db_table_exists($CC_CONFIG['subjTable'])) {
         ON ".$CC_CONFIG['subjTable']." (login)";
     camp_install_query($sql, false);
 
-    $CC_DBC->createSequence($CC_CONFIG['subjTable']."_id_seq");
+    $CC_DBC->createSequence($CC_CONFIG['subjSequence']);
     echo "done.\n";
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['subjTable']."\n";
@@ -71,7 +69,7 @@ if (!camp_db_table_exists($CC_CONFIG['smembTable'])) {
         ON ".$CC_CONFIG['smembTable']." (id)";
     camp_install_query($sql, false);
 
-    $CC_DBC->createSequence($CC_CONFIG['smembTable']."_id_seq");
+    //$CC_DBC->createSequence($CC_CONFIG['smembSequence']);
     echo "done.\n";
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['smembTable']."\n";
@@ -99,7 +97,7 @@ if (!camp_db_table_exists($CC_CONFIG['permTable'])) {
         ON ".$CC_CONFIG['permTable']." (subj, action, obj)";
     camp_install_query($sql, false);
 
-    $CC_DBC->createSequence($CC_CONFIG['permTable']."_id_seq");
+    //$CC_DBC->createSequence($CC_CONFIG['permSequence']);
     echo "done.\n";
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['permTable']."\n";
@@ -114,9 +112,9 @@ if (!camp_db_table_exists($CC_CONFIG['sessTable'])) {
         ts timestamp)";
     camp_install_query($sql, false);
 
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['sessTable']."_sessid_idx
-        ON ".$CC_CONFIG['sessTable']." (sessid)";
-    camp_install_query($sql, false);
+    //    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['sessTable']."_sessid_idx
+    //        ON ".$CC_CONFIG['sessTable']." (sessid)";
+    //    camp_install_query($sql, false);
 
     $sql = "CREATE INDEX ".$CC_CONFIG['sessTable']."_userid_idx
         ON ".$CC_CONFIG['sessTable']." (userid)";
@@ -152,23 +150,43 @@ if (!camp_db_table_exists($CC_CONFIG['sessTable'])) {
  */
 if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
     echo " * Creating database table ".$CC_CONFIG['filesTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['filesTable']." (
-        id int not null,
-        gunid bigint not null,                      -- global unique ID
-        name varchar(255) not null default'',       -- human file id ;)
-        mime varchar(255) not null default'',       -- mime type
-        ftype varchar(128) not null default'',      -- file type
-        state varchar(128) not null default'empty', -- file state
-        currentlyaccessing int not null default 0,  -- access counter
-        editedby int REFERENCES ".$CC_CONFIG['subjTable'].", -- who edits it
-        mtime timestamp(6) with time zone,           -- lst modif.time
-        md5 char(32)
-    )";
+    $sql =
+        "CREATE TABLE ".$CC_CONFIG['filesTable']."
+        (
+          id serial NOT NULL,
+          gunid bigint NOT NULL,
+          \"name\" character varying(255) NOT NULL DEFAULT ''::character varying,
+          mime character varying(255) NOT NULL DEFAULT ''::character varying,
+          ftype character varying(128) NOT NULL DEFAULT ''::character varying,
+          state character varying(128) NOT NULL DEFAULT 'empty'::character varying,
+          currentlyaccessing integer NOT NULL DEFAULT 0,
+          editedby integer,
+          mtime timestamp(6) with time zone,
+          md5 character(32),
+          track_title character varying(512),
+          artist_name character varying(512),
+          bit_rate character varying(32),
+          sample_rate character varying(32),
+          format character varying(128),
+          length character(16),
+          album_title character varying(512),
+          genre character varying(64),
+          comments text,
+          \"year\" character varying(16),
+          track_number integer,
+          channels integer,
+          url character varying(1024),
+          CONSTRAINT cc_files_pkey PRIMARY KEY (id),
+          CONSTRAINT cc_files_editedby_fkey FOREIGN KEY (editedby)
+              REFERENCES cc_subjs (id) MATCH SIMPLE
+              ON UPDATE NO ACTION ON DELETE NO ACTION
+        )";
+
     camp_install_query($sql, false);
 
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_id_idx
-        ON ".$CC_CONFIG['filesTable']." (id)";
-    camp_install_query($sql, false);
+//    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_id_idx
+//        ON ".$CC_CONFIG['filesTable']." (id)";
+//    camp_install_query($sql, false);
 
     $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_gunid_idx
         ON ".$CC_CONFIG['filesTable']." (gunid)";
@@ -182,22 +200,25 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
         ON ".$CC_CONFIG['filesTable']." (md5)";
     camp_install_query($sql);
 
+    //$CC_DBC->createSequence($CC_CONFIG['filesSequence']);
+
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['filesTable']."\n";
 }
 
-if (!camp_db_sequence_exists($CC_CONFIG["filesSequence"])) {
-    echo " * Creating database sequence ".$CC_CONFIG['filesSequence']."...";
-    $sql = "CREATE SEQUENCE ".$CC_CONFIG["filesSequence"]
-  		." INCREMENT 1
-  			MINVALUE 1
-  			MAXVALUE 9223372036854775807
-  			START 1000000
-  			CACHE 1";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database sequence already exists: ".$CC_CONFIG['filesSequence']."\n";
-}
+//if (!camp_db_sequence_exists($CC_CONFIG["filesSequence"])) {
+//    echo " * Creating database sequence for ".$CC_CONFIG['filesTable']."...\n";
+//    $CC_DBC->createSequence($CC_CONFIG['filesSequence']);
+////    $sql = "CREATE SEQUENCE ".$CC_CONFIG["filesSequence"]
+////  		." INCREMENT 1
+////  			MINVALUE 1
+////  			MAXVALUE 9223372036854775807
+////  			START 1000000
+////  			CACHE 1";
+////    camp_install_query($sql);
+//} else {
+//    echo " * Skipping: database sequence already exists: ".$CC_CONFIG['filesSequence']."\n";
+//}
 
 /**
  * id  subjns  subject predns  predicate   objns   object
@@ -214,9 +235,9 @@ if (!camp_db_sequence_exists($CC_CONFIG["filesSequence"])) {
  */
 if (!camp_db_table_exists($CC_CONFIG['mdataTable'])) {
     echo " * Creating database table ".$CC_CONFIG['mdataTable']."...";
-    $CC_DBC->createSequence($CC_CONFIG['mdataTable']."_id_seq");
+    //$CC_DBC->createSequence($CC_CONFIG['mdataSequence']);
     $sql = "CREATE TABLE ".$CC_CONFIG['mdataTable']." (
-        id int not null,
+        id SERIAL PRIMARY KEY,
         gunid bigint,
         subjns varchar(255),             -- subject namespace shortcut/uri
         subject varchar(255) not null default '',
@@ -228,9 +249,9 @@ if (!camp_db_table_exists($CC_CONFIG['mdataTable'])) {
     )";
     camp_install_query($sql, false);
 
-    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['mdataTable']."_id_idx
-        ON ".$CC_CONFIG['mdataTable']." (id)";
-    camp_install_query($sql, false);
+//    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['mdataTable']."_id_idx
+//        ON ".$CC_CONFIG['mdataTable']." (id)";
+//    camp_install_query($sql, false);
 
     $sql = "CREATE INDEX ".$CC_CONFIG['mdataTable']."_gunid_idx
         ON ".$CC_CONFIG['mdataTable']." (gunid)";
@@ -320,7 +341,7 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
     )";
     camp_install_query($sql, false);
 
-    $CC_DBC->createSequence($CC_CONFIG['transTable']."_id_seq");
+    $CC_DBC->createSequence($CC_CONFIG['transSequence']);
     $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['transTable']."_id_idx
         ON ".$CC_CONFIG['transTable']." (id)";
     camp_install_query($sql, false);
@@ -350,11 +371,11 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
 if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
     echo " * Creating database table ".$CC_CONFIG['scheduleTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['scheduleTable']."("
-        ."   id          BIGINT      NOT NULL,"
-        ."   playlist    BIGINT      NOT NULL,"
-        ."   starts      TIMESTAMP   NOT NULL,"
-        ."   ends        TIMESTAMP   NOT NULL,"
-        ."   PRIMARY KEY(id))";
+    ."   id          BIGINT      NOT NULL,"
+    ."   playlist    BIGINT      NOT NULL,"
+    ."   starts      TIMESTAMP   NOT NULL,"
+    ."   ends        TIMESTAMP   NOT NULL,"
+    ."   PRIMARY KEY(id))";
     camp_install_query($sql);
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['scheduleTable']."\n";
@@ -364,10 +385,10 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
     echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
-        ."   id            BIGINT      NOT NULL,"
-        ."   audioClipId   BIGINT      NOT NULL,"
-        ."   timestamp     TIMESTAMP   NOT NULL,"
-        ."   PRIMARY KEY(id))";
+    ."   id            BIGINT      NOT NULL,"
+    ."   audioClipId   BIGINT      NOT NULL,"
+    ."   timestamp     TIMESTAMP   NOT NULL,"
+    ."   PRIMARY KEY(id))";
     camp_install_query($sql);
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
@@ -377,12 +398,12 @@ if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
     echo " * Creating database table ".$CC_CONFIG['backupTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['backupTable']." ("
-        ."   token       VARCHAR(64)     NOT NULL,"
-        ."   sessionId   VARCHAR(64)     NOT NULL,"
-        ."   status      VARCHAR(32)     NOT NULL,"
-        ."   fromTime    TIMESTAMP       NOT NULL,"
-        ."   toTime      TIMESTAMP       NOT NULL,"
-        ."   PRIMARY KEY(token))";
+    ."   token       VARCHAR(64)     NOT NULL,"
+    ."   sessionId   VARCHAR(64)     NOT NULL,"
+    ."   status      VARCHAR(32)     NOT NULL,"
+    ."   fromTime    TIMESTAMP       NOT NULL,"
+    ."   toTime      TIMESTAMP       NOT NULL,"
+    ."   PRIMARY KEY(token))";
     camp_install_query($sql);
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['backupTable']."\n";
@@ -390,7 +411,7 @@ if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
 
 if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
     echo " * Creating database table ".$CC_CONFIG['prefTable']."...";
-    $CC_DBC->createSequence($CC_CONFIG['prefTable']."_id_seq");
+    //$CC_DBC->createSequence($CC_CONFIG['prefSequence']);
     $sql = "CREATE TABLE ".$CC_CONFIG['prefTable']." (
         id int not null,
         subjid int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
@@ -478,7 +499,7 @@ $cron = new Cron();
 $access = $cron->openCrontab('write');
 if ($access != 'write') {
     do {
-       $r = $cron->forceWriteable();
+        $r = $cron->forceWriteable();
     } while ($r);
 }
 

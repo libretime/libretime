@@ -37,7 +37,7 @@ class Subjects {
         if (!$p_login) {
             return $CC_DBC->raiseError("Subjects::AddSubj: empty login");
         }
-        $id = $CC_DBC->nextId($CC_CONFIG['subjTable']."_id_seq");
+        $id = $CC_DBC->nextId($CC_CONFIG['subjSequence']);
         if (PEAR::isError($id)) {
             return $id;
         }
@@ -441,7 +441,7 @@ class Subjects {
                 }
             }
         } else {
-            $id = $CC_DBC->nextId($CC_CONFIG['smembTable']."_id_seq");
+            $id = $CC_DBC->nextId($CC_CONFIG['smembSequence']);
             if (PEAR::isError($id)) {
                 return $id;
             }

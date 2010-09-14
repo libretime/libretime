@@ -34,7 +34,6 @@ include_once("TransportRecord.php");
  *  <ul>
  *   <li>audioclip</li>
  *   <li>playlist</li>
- *   <li>searchjob</li>
  *   <li>metadata</li>
  *   <li>file</li>
  *  </ul>
@@ -139,7 +138,7 @@ class Transport
      * @return array
      * 		struct/hasharray with fields:
      *      trtype: string -
-     *          audioclip | playlist | playlistPkg | search | metadata | file
+     *          audioclip | playlist | playlistPkg | metadata | file
      *      state: string - transport state
      *                  init | pending | waiting | finished | closed | failed
      *      direction: string - up | down
@@ -174,11 +173,6 @@ class Transport
                 $res['realsize'] = $check['size'];
                 $res['realsum'] = $check['realsum'];
             }
-        }
-        // do not return finished on finished search job upload
-        // - whole search is NOT finished
-        if ($res['trtype'] == "searchjob" && $res['direction'] == "up" && $res['state'] == "finished") {
-            $res['state'] = "waiting";
         }
         return $res;
     }
@@ -1045,9 +1039,9 @@ class Transport
         $title = $ret['title'];
         $pars = array();
         switch ($trtype) {
-	        case "searchjob":
-	            $r = $trec->setState('waiting', $pars);
-	            break;
+//	        case "searchjob":
+//	            $r = $trec->setState('waiting', $pars);
+//	            break;
 	        case "file":
 	            $r = $trec->setState('waiting',array_merge($pars, array(
 	                'trtype'=>$trtype,
@@ -1331,20 +1325,20 @@ class Transport
             return $ret;
         }
 
-        if ($row['trtype'] == 'searchjob') {
-            @unlink($row['localfile']);
-            $r = $trec->setState('init', array(
-                'direction'     => 'down',
-                'pdtoken'       => $ret['token'],
-                'expectedsum'   => $ret['chsum'],
-                'expectedsize'  => $ret['size'],
-                'url'           => $ret['url'],
-                'realsize'      => 0,
-            ));
-            $this->startCronJobProcess($trec->trtok);
-        } else {
+//        if ($row['trtype'] == 'searchjob') {
+//            @unlink($row['localfile']);
+//            $r = $trec->setState('init', array(
+//                'direction'     => 'down',
+//                'pdtoken'       => $ret['token'],
+//                'expectedsum'   => $ret['chsum'],
+//                'expectedsize'  => $ret['size'],
+//                'url'           => $ret['url'],
+//                'realsize'      => 0,
+//            ));
+//            $this->startCronJobProcess($trec->trtok);
+//        } else {
             $r = $trec->close();
-        }
+//        }
         if (PEAR::isError($r)) {
         	return $r;
         }
@@ -1497,7 +1491,7 @@ class Transport
                 break;
             case "audioclip":
             case "metadata":
-            case "searchjob":
+//            case "searchjob":
             case "file":
                 break;
             default:
@@ -1675,7 +1669,6 @@ class Transport
         $key = 'archiveServerLocation';
         $archiveUrl = $pr->loadGroupPref($group, $key, false);
 
-        echo "Archive URL: $archiveUrl\n";
         if ($archiveUrl) {
             $archiveUrlInfo = parse_url($archiveUrl);
             if ($archiveUrlInfo['port']) {
@@ -1835,87 +1828,6 @@ class Transport
         return $CC_DBC->query("DELETE FROM ".$CC_CONFIG['transTable']);
     }
 
-
-    /**
-     *  Install method<br>
-     *
-     *  direction: up | down
-     *  state: init | pending | waiting | finished | closed | failed | paused
-     *  trtype: audioclip | playlist | playlistPkg | searchjob | metadata | file
-     *
-     */
-//    function install()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $r = $CC_DBC->query("CREATE TABLE {$this->transTable} (
-//            id int not null,          -- primary key
-//            trtok char(16) not null,  -- transport token
-//            direction varchar(128) not null,  -- direction: up|down
-//            state varchar(128) not null,      -- state
-//            trtype varchar(128) not null,     -- transport type
-//            lock char(1) not null default 'N',-- running lock
-//            target varchar(255) default NULL, -- target system,
-//                                              -- if NULL => predefined set
-//            rtrtok char(16) default NULL,     -- remote hub's transport token
-//            mdtrtok char(16),         -- metadata transport token
-//            gunid bigint,             -- global unique id
-//            pdtoken bigint,           -- put/download token from archive
-//            url varchar(255),         -- url on remote side
-//            localfile varchar(255),   -- pathname of local part
-//            fname varchar(255),       -- mnemonic filename
-//            title varchar(255),       -- dc:title mdata value (or filename ...)
-//            expectedsum char(32),     -- expected file checksum
-//            realsum char(32),         -- checksum of transported part
-//            expectedsize int,         -- expected filesize in bytes
-//            realsize int,             -- filesize of transported part
-//            uid int,                  -- local user id of transport owner
-//            errmsg varchar(255),      -- error message string for failed tr.
-//            start timestamp,          -- starttime
-//            ts timestamp              -- mtime
-//        )");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->createSequence("{$this->transTable}_id_seq");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_id_idx
-//            ON {$this->transTable} (id)");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_trtok_idx
-//            ON {$this->transTable} (trtok)");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->query("CREATE UNIQUE INDEX {$this->transTable}_token_idx
-//            ON {$this->transTable} (pdtoken)");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->transTable}_gunid_idx
-//            ON {$this->transTable} (gunid)");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//        $r = $CC_DBC->query("CREATE INDEX {$this->transTable}_state_idx
-//            ON {$this->transTable} (state)");
-//        if (PEAR::isError($r)) {
-//        	echo $r->getMessage()." ".$r->getUserInfo();
-//        }
-//    }
-
-    /**
-     *  Uninstall method
-     */
-//    function uninstall()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("DROP TABLE {$this->transTable}");
-//        $CC_DBC->dropSequence("{$this->transTable}_id_seq");
-//    }
 }
 
 ?>

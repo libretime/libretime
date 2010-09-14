@@ -20,8 +20,8 @@ echo "***************************\n";
 echo "* StorageServer Uninstall *\n";
 echo "***************************\n";
 
-require_once('../conf.php');
-require_once('installInit.php');
+require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/installInit.php');
 campcaster_db_connect(false);
 
 function camp_uninstall_delete_files($p_path)
@@ -47,7 +47,7 @@ if (!PEAR::isError($CC_DBC)) {
         $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
         camp_install_query($sql, false);
 
-        $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id_seq");
+        $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id");
         echo "done.\n";
     } else {
         echo " * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
@@ -88,7 +88,7 @@ if (camp_db_table_exists($CC_CONFIG['transTable'])) {
     $sql = "DROP TABLE ".$CC_CONFIG['transTable'];
     camp_install_query($sql, false);
 
-    $CC_DBC->dropSequence($CC_CONFIG['transTable']."_id_seq");
+    $CC_DBC->dropSequence($CC_CONFIG['transTable']."_id");
     echo "done.\n";
 } else {
     echo " * Skipping: database table ".$CC_CONFIG['transTable']."\n";
@@ -99,7 +99,7 @@ if (camp_db_table_exists($CC_CONFIG['mdataTable'])) {
     $sql = "DROP TABLE ".$CC_CONFIG['mdataTable'];
     camp_install_query($sql, false);
 
-    $CC_DBC->dropSequence($CC_CONFIG['mdataTable']."_id_seq");
+    $CC_DBC->dropSequence($CC_CONFIG['mdataTable']."_id");
     echo "done.\n";
 } else {
     echo " * Skipping: database table ".$CC_CONFIG['mdataTable']."\n";
@@ -109,15 +109,17 @@ if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
     echo " * Removing database table ".$CC_CONFIG['filesTable']."...";
     $sql = "DROP TABLE ".$CC_CONFIG['filesTable'];
     camp_install_query($sql);
+    $CC_DBC->dropSequence($CC_CONFIG['filesTable']."_id");
+
 } else {
     echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
 }
 
-if (camp_db_sequence_exists($CC_CONFIG['filesSequence'])) {
-    $sql = "DROP SEQUENCE ".$CC_CONFIG['filesSequence'];
-    camp_install_query($sql);
-}
-
+//if (camp_db_sequence_exists($CC_CONFIG['filesSequence'])) {
+//    $sql = "DROP SEQUENCE ".$CC_CONFIG['filesSequence'];
+//    camp_install_query($sql);
+//}
+//
 if (camp_db_table_exists($CC_CONFIG['accessTable'])) {
     echo " * Removing database table ".$CC_CONFIG['accessTable']."...";
     $sql = "DROP TABLE ".$CC_CONFIG['accessTable'];
@@ -131,7 +133,7 @@ if (camp_db_table_exists($CC_CONFIG['permTable'])) {
     $sql = "DROP TABLE ".$CC_CONFIG['permTable'];
     camp_install_query($sql, false);
 
-    $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id_seq");
+    $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id");
     echo "done.\n";
 } else {
     echo " * Skipping: database table ".$CC_CONFIG['permTable']."\n";
@@ -147,7 +149,7 @@ if (camp_db_table_exists($CC_CONFIG['sessTable'])) {
 
 if (camp_db_table_exists($CC_CONFIG['subjTable'])) {
     echo " * Removing database table ".$CC_CONFIG['subjTable']."...";
-    $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id_seq");
+    $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id");
 
     $sql = "DROP TABLE ".$CC_CONFIG['subjTable'];
     camp_install_query($sql, false);
@@ -162,7 +164,7 @@ if (camp_db_table_exists($CC_CONFIG['smembTable'])) {
     $sql = "DROP TABLE ".$CC_CONFIG['smembTable'];
     camp_install_query($sql, false);
 
-    $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id_seq");
+    $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id");
     echo "done.\n";
 } else {
     echo " * Skipping: database table ".$CC_CONFIG['smembTable']."\n";
