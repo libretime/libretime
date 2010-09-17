@@ -114,6 +114,8 @@ $CC_CONFIG = array(
 );
 
 // Add database table names
+$CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
+$CC_CONFIG['playListContentsTable'] = $CC_CONFIG['tblNamePrefix'].'playlistcontents';
 $CC_CONFIG['filesTable'] = $CC_CONFIG['tblNamePrefix'].'files';
 $CC_CONFIG['mdataTable'] = $CC_CONFIG['tblNamePrefix'].'mdata';
 $CC_CONFIG['accessTable'] = $CC_CONFIG['tblNamePrefix'].'access';
@@ -127,6 +129,7 @@ $CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
 $CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
 $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
 
+$CC_CONFIG['playListSequence'] = $CC_CONFIG['playListTable'].'_id';
 $CC_CONFIG['filesSequence'] = $CC_CONFIG['filesTable'].'_id';
 $CC_CONFIG['transSequence'] = $CC_CONFIG['transTable'].'_id';
 $CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';

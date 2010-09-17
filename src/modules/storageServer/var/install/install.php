@@ -25,6 +25,9 @@ require_once(dirname(__FILE__).'/../GreenBox.php');
 require_once(dirname(__FILE__)."/installInit.php");
 campcaster_db_connect(true);
 
+$sql = "create language 'plpgsql'";
+camp_install_query($sql);
+
 //------------------------------------------------------------------------------
 // Install database tables
 //------------------------------------------------------------------------------
@@ -204,6 +207,75 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
 
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['filesTable']."\n";
+}
+
+if (!camp_db_table_exists($CC_CONFIG['playListTable'])) {
+    echo " * Creating database table ".$CC_CONFIG['playListTable']."...";
+    $sql =
+        "CREATE TABLE ".$CC_CONFIG['playListTable']."
+        (
+          id serial NOT NULL,
+          \"name\" character varying(255) NOT NULL DEFAULT ''::character varying,
+          state character varying(128) NOT NULL DEFAULT 'empty'::character varying,
+          currentlyaccessing integer NOT NULL DEFAULT 0,
+          editedby integer,
+          mtime timestamp(6) with time zone,
+          CONSTRAINT cc_playlist_pkey PRIMARY KEY (id),
+          CONSTRAINT cc_playlist_editedby_fkey FOREIGN KEY (editedby)
+              REFERENCES cc_subjs (id) MATCH SIMPLE
+              ON UPDATE NO ACTION ON DELETE NO ACTION
+        )";
+
+    camp_install_query($sql);
+
+} else {
+    echo " * Skipping: database table already exists: ".$CC_CONFIG['playListTable']."\n";
+}
+
+if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
+    echo " * Creating database table ".$CC_CONFIG['playListContentsTable']."...";
+    $sql =
+        "CREATE TABLE ".$CC_CONFIG['playListContentsTable']."
+        (
+          id serial NOT NULL,
+          playlist_id integer,
+          file_id integer,
+          position integer,
+          cliplength time without time zone DEFAULT '00:00:00.000',
+          cuein time without time zone DEFAULT '00:00:00.000',
+          cueout time without time zone DEFAULT '00:00:00.000',
+          fadein time without time zone DEFAULT '00:00:00.000',
+          fadeout time without time zone DEFAULT '00:00:00.000',
+          CONSTRAINT cc_playlistcontents_pkey PRIMARY KEY (id),
+          CONSTRAINT cc_playlistcontents_playlist_id_fkey FOREIGN KEY (playlist_id)
+              REFERENCES ".$CC_CONFIG['playListTable']." (id) MATCH SIMPLE
+              ON UPDATE NO ACTION ON DELETE NO ACTION,
+          CONSTRAINT cc_playlistcontents_file_id_fkey FOREIGN KEY (file_id)
+          	  REFERENCES ".$CC_CONFIG['filesTable']." (id) MATCH SIMPLE
+          	  ON UPDATE NO ACTION ON DELETE NO ACTION
+        );
+        
+    CREATE OR REPLACE FUNCTION calculate_position() RETURNS trigger AS 
+	\$calc_pos\$
+    BEGIN
+    	IF(TG_OP='INSERT') THEN
+        	UPDATE ".$CC_CONFIG['playListContentsTable']." SET position = (position + 1) WHERE (playlist_id = new.playlist_id AND position >= new.position AND id != new.id);
+        END IF;
+        IF(TG_OP='DELETE') THEN
+        	UPDATE ".$CC_CONFIG['playListContentsTable']." SET position = (position - 1) WHERE (playlist_id = old.playlist_id AND position > old.position);
+        END IF;
+        RETURN NULL;
+    END;
+    \$calc_pos\$
+	LANGUAGE 'plpgsql';
+
+	CREATE TRIGGER calculate_position AFTER INSERT OR DELETE ON ".$CC_CONFIG['playListContentsTable']."
+    FOR EACH ROW EXECUTE PROCEDURE calculate_position();"; 
+    
+    camp_install_query($sql);
+
+} else {
+    echo " * Skipping: database table already exists: ".$CC_CONFIG['playListContentsTable']."\n";
 }
 
 //if (!camp_db_sequence_exists($CC_CONFIG["filesSequence"])) {
