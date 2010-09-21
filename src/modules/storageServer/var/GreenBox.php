@@ -485,7 +485,7 @@ class GreenBox extends BasicStor {
         if($pl === FALSE)
             return FALSE;
             
-        $res = $pl->setMetaData($category, $value, $lang);
+        $res = $pl->setPLMetaData($category, $value, $lang);
         
         return $res;
     }
