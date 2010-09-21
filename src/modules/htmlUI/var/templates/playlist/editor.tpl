@@ -53,7 +53,7 @@
                                 <img src="img/{$i.type}.png" border="0" alt="{$i.ftype|capitalize}" {* include file="sub/alttext.tpl" *} />
                             </td>
                             <td style="border: 0">
-                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id=&oldPos={$pos}&newPos={$pos-1}')"><img src="img/bt_top_xsm.png"    alt="##move up##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&oldPos={$pos}&newPos={$pos-1}')"><img src="img/bt_top_xsm.png"    alt="##move up##" vspace=1 hspace=1/></a>
                                 <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&oldPos={$pos}&newPos={$pos+1}')"><img src="img/bt_bottom_xsm.png" alt="##move down##" vspace=1 hspace=1/></a>
                             </td>
                         </tr>

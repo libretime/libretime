@@ -25,7 +25,7 @@
           </div>
         <div id="draglist_container">
 
-           {foreach from=$PL->getFlat($PL->activeId) key='pos' item='i'}
+           {foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
            <!-- start item -->
            <div style="position: relative; left: 0px; top: 0px;">
                <!-- {$n++} -->
@@ -34,15 +34,15 @@
                    <!-- clip information -->
                    <tr><td style="border:0" colspan="5"></tr>
                    <tr class="blue1" style="cursor: move;">
-                      <td>{$i.title}</td>
-                      <td style="width: 50px;">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
-                      <td style="width: 150px">{$i.creator}</td>
-                      <td style="width: 35px; border:0"><img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/alttext.tpl"} /></td>
+                      <td>{$i.track_title}</td>
+                      <td style="width: 50px;">{assign var="_duration" value=$i.cliplength}{niceTime in=$_duration}</td>
+                      <td style="width: 150px">{$i.artist_name}</td>
+                      <td style="width: 35px; border:0"><img src="img/{$i.ftype}.png" border="0" alt="{$i.ftype|capitalize}" {include file="sub/alttext.tpl"} /></td>
                    </tr>
                    <!-- end clip information -->
                </table>
 
-               <input type="hidden" name="pl_items[{$i.attrs.id}]">
+               <input type="hidden" name="pl_items[{$i.id}]">
            </div>
            <!-- end item -->
            {/foreach}

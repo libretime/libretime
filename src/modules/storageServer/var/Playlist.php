@@ -323,7 +323,7 @@ class Playlist {
      * @param int $p_subjid
      * 		Subject id (if sessid is not specified)
      * @return boolean
-     * 		previous state
+     * 		TRUE on success.
      */
     
     public function setEditFlag($p_val=TRUE, $p_sessid=NULL, $p_subjid=NULL) {
@@ -344,7 +344,7 @@ class Playlist {
         if (PEAR::isError($r)) {
             return $r;
         }
-        return ($state == 'edited');
+        return TRUE;
     }
    
      /**
@@ -584,7 +584,7 @@ class Playlist {
             return FALSE;
   
         $res = $this->addAudioClip($ac['file_id'], $newPos, $ac['fadein'], $ac['fadeOut'], $ac['cliplength'], $ac['cuein'], $ac['cueout']);
-         if($res !== TRUE)
+        if($res !== TRUE)
             return FALSE;
         
         return TRUE;
@@ -701,7 +701,7 @@ class Playlist {
         return $res;
     }
     
-    public function setMetaData($category, $value)
+    public function setPLMetaData($category, $value)
     {    
         global $CC_CONFIG, $CC_DBC;      
        
