@@ -101,34 +101,16 @@ class BasicStor {
     /**
      * Store new file in the storage
      *
-     * @param int $p_parentId
-     * 		Parent id
      * @param array $p_values
      * 		See StoredFile::Insert() for details.
      * @param boolean $copyMedia
      * 		copy the media file if true, make symlink if false
-     * @return int|PEAR_Error
-     *      ID of the StoredFile that was created.
+     * @return StoredFile|PEAR_Error
+     *      The StoredFile that was created.
      */
     public function bsPutFile($p_values, $p_copyMedia=TRUE)
     {
-        if (!isset($p_values['filetype']) || !isset($p_values['filename'])) {
-            return NULL;
-        }
-        $ftype = strtolower($p_values['filetype']);
         $storedFile = StoredFile::Insert($p_values, $p_copyMedia);
-        if (PEAR::isError($storedFile)) {
-            $res = BasicStor::RemoveObj($id);
-            // catch constraint violations
-            switch ($storedFile->getCode()) {
-                case -3:
-                    return PEAR::raiseError(
-                        "BasicStor::bsPutFile: gunid duplication",
-                        GBERR_GUNID);
-                default:
-                    return $storedFile;
-            }
-        }
         return $storedFile;
     } // fn bsPutFile
 
@@ -857,55 +839,34 @@ class BasicStor {
      * 		Metadata element identification (e.g. dc:title)
      * @param string $value
      * 		value to store, if NULL then delete record
-     * @param string $lang
-     * 		xml:lang value for select language version
-     * @param int $mid
-     * 		(optional on unique elements) metadata record id
-     * @param string $container
-     * 		container element name for insert
-     * @param boolean $regen
-     * 		flag, if true, regenerate XML file
      * @return boolean
      */
-    public static function bsSetMetadataValue($p_id, $p_category, $p_value)/*,
-        $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)*/
+    public static function bsSetMetadataValue($p_id, $p_category, $p_value)
     {
-        global $CC_CONFIG, $CC_DBC;
-        if (!is_string($p_category) || is_array($p_value)) {
-            return FALSE;
-        }
-        if (is_a($p_id, "StoredFile")) {
-            $storedFile =& $p_id;
-        } else {
-            $storedFile = StoredFile::Recall($p_id);
-            if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                return $storedFile;
-            }
-        }
-        if ($p_category == 'dcterms:extent') {
-            $p_value = BasicStor::NormalizeExtent($p_value);
-        }
-        $columnName = BasicStor::xmlCategoryToDbColumn($p_category); // Get column name
+      global $CC_CONFIG, $CC_DBC;
+      if (!is_string($p_category) || is_array($p_value)) {
+        return FALSE;
+      }
+      if (is_a($p_id, "StoredFile")) {
+        $p_id  = $p_id->getId();
+      }
+      if ($p_category == 'dcterms:extent') {
+        $p_value = BasicStor::NormalizeExtent($p_value);
+      }
+      $columnName = BasicStor::xmlCategoryToDbColumn($p_category); // Get column name
 
-        if (!is_null($columnName)) {
-            $escapedValue = pg_escape_string($p_value);
-            $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-                 ." SET $columnName='$escapedValue'"
-                 ." WHERE id=".$storedFile->getId();
-            //var_dump($sql);
-            //$res = $storedFile->md->setMetadataValue($category, $value, $lang, $mid, $container);
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
+      if (!is_null($columnName)) {
+        $escapedValue = pg_escape_string($p_value);
+        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+             ." SET $columnName='$escapedValue'"
+             ." WHERE id=$p_id";
+        //var_dump($sql);
+        $res = $CC_DBC->query($sql);
+        if (PEAR::isError($res)) {
+          return $res;
         }
-//        if ($regen) {
-//            $r = $storedFile->md->regenerateXmlFile();
-//            if (PEAR::isError($r)) {
-//                return $r;
-//            }
-//        }
-//        return $res;
+      }
+      return TRUE;
     }
 
 
@@ -936,46 +897,37 @@ class BasicStor {
      * @param array $values
      * 		array of key/value pairs
      *      (e.g. 'dc:title'=>'New title')
-     * @param string $lang
-     * 		xml:lang value for select language version
-     * @param string $container
-     * 		Container element name for insert
-     * @param boolean $regen
-     * 		flag, if true, regenerate XML file
      * @return boolean
      */
-    public static function bsSetMetadataBatch(
-        $id, $values, $lang=NULL, $container='metadata', $regen=TRUE)
+    public static function bsSetMetadataBatch($id, $values)
     {
-        if (!is_array($values)) {
-            $values = array($values);
+      global $CC_CONFIG, $CC_DBC;
+      if (!is_array($values)) {
+          $values = array($values);
+      }
+      if (is_a($id, "StoredFile")) {
+          $storedFile =& $id;
+      } else {
+          $storedFile = StoredFile::Recall($id);
+          if (is_null($storedFile) || PEAR::isError($storedFile)) {
+              return $storedFile;
+          }
+      }
+      foreach ($values as $category => $oneValue) {
+        $columnName = BasicStor::xmlCategoryToDbColumn($category);
+        if (!is_null($columnName)) {
+          if ($category == 'dcterms:extent') {
+            $oneValue = BasicStor::NormalizeExtent($oneValue);
+          }
+          $escapedValue = pg_escape_string($oneValue);
+          $sqlValues[] = "$columnName = '$escapedValue'";
         }
-        if (is_a($id, "StoredFile")) {
-            $storedFile =& $id;
-        } else {
-            $storedFile = StoredFile::Recall($id);
-            if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                return $storedFile;
-            }
-        }
-        foreach ($values as $category => $oneValue) {
-            $res = BasicStor::bsSetMetadataValue($storedFile, $category,
-                $oneValue/*, $lang, NULL, $container, FALSE*/);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-        }
-//        if ($regen) {
-//            $storedFile = StoredFile::Recall($id);
-//            if (is_null($storedFile) || PEAR::isError($storedFile)) {
-//                return $storedFile;
-//            }
-//            $r = $storedFile->md->regenerateXmlFile();
-//            if (PEAR::isError($r)) {
-//                return $r;
-//            }
-//        }
-        return TRUE;
+      }
+      $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+           ." SET ".join(",", $sqlValues)
+           ." WHERE id=$id";
+      $CC_DBC->query($sql);
+      return TRUE;
     }
 
     /**
@@ -1869,7 +1821,7 @@ class BasicStor {
         $res = preg_match("|^([0-9a-fA-F]{16})?$|", $p_gunid);
         return $res;
     }
-    
+
     /**
      * Set playlist edit flag
      *

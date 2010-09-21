@@ -200,15 +200,6 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     echo "Importing: [".sprintf("%05d",$g_fileCount+1)."] $p_filepath\n";
 
-    $metadata = camp_get_audio_metadata($p_filepath, $p_testOnly);
-    if (PEAR::isError($metadata)) {
-    	import_err($metadata);
-    	return;
-    }
-    // bsSetMetadataBatch doesnt like these values
-    unset($metadata['audio']);
-    unset($metadata['playtime_seconds']);
-
     if (!$p_testOnly) {
         if ($p_importMode == "copy") {
             $doCopyFiles = true;
@@ -216,36 +207,15 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
             $doCopyFiles = false;
         }
         $values = array(
-            "filename" => $metadata['ls:filename'],
             "filepath" => $p_filepath,
-            "metadata" => "$STORAGE_SERVER_PATH/var/emptyMdata.xml",
-            "gunid" => NULL,
-            "filetype" => "audioclip",
             "md5" => $md5sum,
-            "mime" => $metadata['dc:format']
         );
-//        $timeBegin = microtime(true);
         $storedFile = $greenbox->bsPutFile($values, $doCopyFiles);
         if (PEAR::isError($storedFile)) {
         	import_err($storedFile, "Error in bsPutFile()");
         	echo var_export($metadata)."\n";
         	return;
         }
-        $id = $storedFile->getId();
-//        $timeEnd = microtime(true);
-//        echo " * Store file time: ".($timeEnd-$timeBegin)."\n";
-
-        // Note: the bsSetMetadataBatch() takes up .25 of a second
-        // on my 3Ghz computer.  We should try to speed this up.
-//        $timeBegin = microtime(true);
-        $r = $greenbox->bsSetMetadataBatch($id, $metadata);
-        if (PEAR::isError($r)) {
-        	import_err($r, "Error in bsSetMetadataBatch()");
-        	echo var_export($metadata)."\n";
-        	return;
-        }
-//        $timeEnd = microtime(true);
-//        echo " * Metadata store time: ".($timeEnd-$timeBegin)."\n";
     } else {
         echo "==========================================================================\n";
         echo "METADATA\n";
