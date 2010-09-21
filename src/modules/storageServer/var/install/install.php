@@ -256,8 +256,8 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
           	  REFERENCES ".$CC_CONFIG['filesTable']." (id) MATCH SIMPLE
           	  ON UPDATE NO ACTION ON DELETE CASCADE
         );
-        
-    CREATE OR REPLACE FUNCTION calculate_position() RETURNS trigger AS 
+
+    CREATE OR REPLACE FUNCTION calculate_position() RETURNS trigger AS
 	\$calc_pos\$
     BEGIN
     	IF(TG_OP='INSERT') THEN
@@ -272,8 +272,8 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 	LANGUAGE 'plpgsql';
 
 	CREATE TRIGGER calculate_position AFTER INSERT OR DELETE ON ".$CC_CONFIG['playListContentsTable']."
-    FOR EACH ROW EXECUTE PROCEDURE calculate_position();"; 
-    
+    FOR EACH ROW EXECUTE PROCEDURE calculate_position();";
+
     camp_install_query($sql);
 
 } else {
@@ -293,54 +293,6 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 //} else {
 //    echo " * Skipping: database sequence already exists: ".$CC_CONFIG['filesSequence']."\n";
 //}
-
-/**
- * id  subjns  subject predns  predicate   objns   object
- * y1  literal xmbf    NULL    namespace   literal http://www.sotf.org/xbmf
- * x1  gunid   <gunid> xbmf    contributor NULL    NULL
- * x2  mdid    x1      xbmf    role        literal Editor
- *
- * predefined shortcuts:
- *      _L              = literal
- *      _G              = gunid (global id of media file)
- *      _I              = mdid (local id of metadata record)
- *      _nssshortcut    = namespace shortcut definition
- *      _blank          = blank node
- */
-if (!camp_db_table_exists($CC_CONFIG['mdataTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['mdataTable']."...";
-    //$CC_DBC->createSequence($CC_CONFIG['mdataSequence']);
-    $sql = "CREATE TABLE ".$CC_CONFIG['mdataTable']." (
-        id SERIAL PRIMARY KEY,
-        gunid bigint,
-        subjns varchar(255),             -- subject namespace shortcut/uri
-        subject varchar(255) not null default '',
-        predns varchar(255),             -- predicate namespace shortcut/uri
-        predicate varchar(255) not null,
-        predxml char(1) not null default 'T', -- Tag or Attribute
-        objns varchar(255),              -- object namespace shortcut/uri
-        object text
-    )";
-    camp_install_query($sql, false);
-
-//    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['mdataTable']."_id_idx
-//        ON ".$CC_CONFIG['mdataTable']." (id)";
-//    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['mdataTable']."_gunid_idx
-        ON ".$CC_CONFIG['mdataTable']." (gunid)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['mdataTable']."_subj_idx
-        ON ".$CC_CONFIG['mdataTable']." (subjns, subject)";
-    camp_install_query($sql, false);
-
-    $sql = "CREATE INDEX ".$CC_CONFIG['mdataTable']."_pred_idx
-        ON ".$CC_CONFIG['mdataTable']." (predns, predicate)";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['mdataTable']."\n";
-}
 
 if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
     echo " * Creating database table ".$CC_CONFIG['accessTable']."...";

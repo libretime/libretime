@@ -94,17 +94,6 @@ if (camp_db_table_exists($CC_CONFIG['transTable'])) {
     echo " * Skipping: database table ".$CC_CONFIG['transTable']."\n";
 }
 
-if (camp_db_table_exists($CC_CONFIG['mdataTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['mdataTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['mdataTable'];
-    camp_install_query($sql, false);
-
-    $CC_DBC->dropSequence($CC_CONFIG['mdataTable']."_id");
-    echo "done.\n";
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['mdataTable']."\n";
-}
-
 if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
     echo " * Removing database table ".$CC_CONFIG['filesTable']."...";
     $sql = "DROP TABLE ".$CC_CONFIG['filesTable']." CASCADE";

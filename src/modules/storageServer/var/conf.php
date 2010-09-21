@@ -117,7 +117,6 @@ $CC_CONFIG = array(
 $CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
 $CC_CONFIG['playListContentsTable'] = $CC_CONFIG['tblNamePrefix'].'playlistcontents';
 $CC_CONFIG['filesTable'] = $CC_CONFIG['tblNamePrefix'].'files';
-$CC_CONFIG['mdataTable'] = $CC_CONFIG['tblNamePrefix'].'mdata';
 $CC_CONFIG['accessTable'] = $CC_CONFIG['tblNamePrefix'].'access';
 $CC_CONFIG['permTable'] = $CC_CONFIG['tblNamePrefix'].'perms';
 $CC_CONFIG['sessTable'] = $CC_CONFIG['tblNamePrefix'].'sess';
@@ -136,7 +135,6 @@ $CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';
 $CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
 $CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
 $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
-$CC_CONFIG['mdataSequence'] = $CC_CONFIG['mdataTable'].'_id';
 
 $CC_CONFIG['sysSubjs'] = array(
     'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']

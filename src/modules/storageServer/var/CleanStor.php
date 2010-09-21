@@ -90,16 +90,8 @@ function camp_empty_db($db) {
 	        $sql = "DELETE FROM ".$CC_CONFIG['filesTable'];
 	        camp_install_query($sql, false);
 	    }
-		else {
-	        echo " * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
-	    }
-	    if (camp_db_table_exists($CC_CONFIG['mdataTable'])) {
-	        echo " * Deleting from database table ".$CC_CONFIG['mdataTable']."\n";
-	        $sql = "DELETE FROM ".$CC_CONFIG['mdataTable'];
-	        camp_install_query($sql, false);
-	    }
-		else {
-	        echo " * Skipping: database table ".$CC_CONFIG['mdataTable']."\n";
+		  else {
+	        echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
 	    }
 	}
 }

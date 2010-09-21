@@ -68,3 +68,4 @@ ALTER TABLE cc_schedule ADD CONSTRAINT unique_id UNIQUE (id);
 
 CREATE SEQUENCE schedule_group_id_seq;
 
+DROP TABLE cc_mdata CASCADE;
