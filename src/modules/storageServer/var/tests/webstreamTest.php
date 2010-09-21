@@ -1,4 +1,5 @@
 <?php
+/*
 header("Content-type: text/plain");
 echo "\n#StorageServer storeWebstream  test:\n";
 
@@ -57,4 +58,5 @@ if (PEAR::isError($r)) {
 echo "$r\n";
 
 echo "#storeWebstream test: OK.\n\n"
+*/
 ?>

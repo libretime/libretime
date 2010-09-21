@@ -1003,14 +1003,12 @@ class StoredFile {
 
 
     /**
-     * Get metadata as XML string
+     * Get metadata as array, indexed by the column names in the database.
      *
-     * @return XML string
-     * @see MetaData
+     * @return array
      */
     public function getMetadata()
     {
-        //return $this->md->getMetadata();
         return $this->md;
     }
 

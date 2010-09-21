@@ -52,9 +52,19 @@ ALTER TABLE cc_files
 ALTER TABLE cc_files
    ADD COLUMN url character varying(1024);
 
-   
-   
+ALTER TABLE cc_schedule RENAME playlist  TO playlist_id;
+ALTER TABLE cc_schedule ALTER playlist_id TYPE integer;
+ALTER TABLE cc_schedule ADD COLUMN group_id integer;
+ALTER TABLE cc_schedule ADD COLUMN file_id integer;
+ALTER TABLE cc_schedule
+   ADD COLUMN fade_in time without time zone DEFAULT '00:00:00.000';
+ALTER TABLE cc_schedule
+   ADD COLUMN fade_out time without time zone DEFAULT '00:00:00.000';
+ALTER TABLE cc_schedule
+   ADD COLUMN cue_in time without time zone DEFAULT '00:00:00.000';
+ALTER TABLE cc_schedule
+   ADD COLUMN cue_out time without time zone DEFAULT '00:00:00.000';
+ALTER TABLE cc_schedule ADD CONSTRAINT unique_id UNIQUE (id);
 
+CREATE SEQUENCE schedule_group_id_seq;
 
-
-   

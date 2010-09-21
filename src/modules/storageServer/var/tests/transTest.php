@@ -1,4 +1,5 @@
 <?php
+/*
 header("Content-type: text/plain");
 
 require_once('../conf.php');
@@ -28,14 +29,8 @@ if (PEAR::isError($result)) {
 } else {
     var_dump($result);
 }
-//$client = XML_RPC2_Client::create('http://localhost/~paul/campcaster/storageServer/var/xmlrpc/xrLocStor2.php', array('backend'=>'php', 'prefix' => "Campcaster_Remote."));
-////var_dump($client);
-//$result = $client->System_Ping("woo");
-//var_dump($result);
-exit;
 
-
-/* ========== STORE ========== */
+// ========== STORE ==========
 
 echo"#  Store: ";
 //$parid = $gb->_getHomeDirIdFromSess($sessid);
@@ -57,7 +52,7 @@ $oid = $storedFile->getId();
 $comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
 echo "$oid\n";
 
-/* ========== DELETE FROM HUB ========== */
+// ========== DELETE FROM HUB ==========
 echo"#  loginToArchive: ";
 $r = $tr->loginToArchive();
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()." / ".$r->getUserInfo()."\n"; exit(1); }
@@ -80,7 +75,7 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()." / ".$r->getUserInfo()."
 var_export($r); echo"\n";
 
 
-/* ========== UPLOAD ========== */
+// ========== UPLOAD ==========
 echo "#  UPLOAD test:\n";
 echo"#  uploadAudioClip2Hub: ";
 $r = $gb->upload2Hub($gunid);
@@ -91,16 +86,9 @@ $trtok = $r;
 echo"#  logout: "; $r = Alib::Logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
 echo "$r\n";
-/*
-*/
 #$trtok='280a6f1c18389620';
 
 for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, sleep(2)){
-/*
-    echo"# $nu: Transport: cronMain: "; $r = $tr->cronMain();
-    if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
-    var_export($r); echo"\n";
-*/
     echo"#  getTransportInfo: "; $r = $gb->getTransportInfo($trtok);
     if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
     $state = $r['state'];
@@ -108,7 +96,7 @@ for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, 
 }
 if($state=='failed') exit(1);
 
-/* === DELETE LOCAL === */
+// === DELETE LOCAL ===
 echo "#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 echo "#  Delete: ";    $r = $ls->deleteAudioClip($sessid, $gunid, TRUE);
 if (PEAR::isError($r)) {
@@ -124,14 +112,8 @@ if (PEAR::isError($r)) {
 echo "$r\n";
 $comm = "ls -l ".$CC_CONFIG['storageDir']."/a23";
 echo `$comm`;
-/*
-*/
 
-#echo"TMPEND\n"; exit;
-#echo `tail -n 25 ../trans/log`; exit;
-#$sleeptime=10; echo "sleep $sleeptime\n"; sleep($sleeptime);
-
-/* === DOWNLOAD === */
+// === DOWNLOAD ===
 echo "#  DOWNLOAD test:\n";
 echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
 
@@ -146,11 +128,6 @@ if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
 
 for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, sleep(2)){
-/*
-    echo"# $nu: Transport: cronMain: "; $r = $tr->cronMain();
-    if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
-    var_export($r); echo"\n";
-*/
     echo"#  getTransportInfo: "; $r = $gb->getTransportInfo($trtok);
     if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1); }
     $state = $r['state'];
@@ -159,40 +136,8 @@ for($state='', $nu=1; ($state!='closed' && $state!='failed' && $nu<=12); $nu++, 
 if($state=='failed') exit(1);
 
 $comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
-/*
-*/
-
-/*
-echo"#  Login: ".($sessid = Alib::Login('root', 'q'))."\n";
-echo"#  Delete: ";    $r = $ls->deleteAudioClip($sessid, $gunid, TRUE);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-echo"#  logout: "; $r = Alib::Logout($sessid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-*/
-
-#echo `tail -n 20 ../trans/log`; exit;
-
-/*
-echo"#  Transport loginToArchive: "; $r = $tr->loginToArchive();
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-var_export($r['sessid']); echo"\n";
-
-echo"#  Transport logoutFromArchive: "; $r = $tr->logoutFromArchive($r['sessid']);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-var_export($r['status']); echo"\n";
-
-echo"#  Ping: ";
-$r = $tr->ping();
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-var_export($r); echo"\n";
-
-echo"#  Delete: ";    $r = $gb->deleteAudioClip($sessid, $gunid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-*/
 
 if(file_exists("../trans/log")) echo `tail -n 25 ../trans/log`;
-echo "#Transport test: OK.\n\n"
+echo "#Transport test: OK.\n\n";
+*/
 ?>

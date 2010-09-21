@@ -371,11 +371,18 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
 if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
     echo " * Creating database table ".$CC_CONFIG['scheduleTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['scheduleTable']."("
-    ."   id          BIGINT      NOT NULL,"
-    ."   playlist    BIGINT      NOT NULL,"
-    ."   starts      TIMESTAMP   NOT NULL,"
-    ."   ends        TIMESTAMP   NOT NULL,"
-    ."   PRIMARY KEY(id))";
+          ."  id bigint NOT NULL,"
+          ."  playlist_id integer NOT NULL,"
+          ."  starts timestamp without time zone NOT NULL,"
+          ."  ends timestamp without time zone NOT NULL,"
+          ."  group_id integer,"
+          ."  file_id integer,"
+          ."  fade_in time without time zone DEFAULT '00:00:00'::time without time zone,"
+          ."  fade_out time without time zone DEFAULT '00:00:00'::time without time zone,"
+          ."  cue_in time without time zone DEFAULT '00:00:00'::time without time zone,"
+          ."  cue_out time without time zone DEFAULT '00:00:00'::time without time zone,"
+          ."  CONSTRAINT cc_schedule_pkey PRIMARY KEY (id),"
+          ."  CONSTRAINT unique_id UNIQUE (id))";
     camp_install_query($sql);
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['scheduleTable']."\n";

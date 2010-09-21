@@ -107,7 +107,7 @@ if (camp_db_table_exists($CC_CONFIG['mdataTable'])) {
 
 if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
     echo " * Removing database table ".$CC_CONFIG['filesTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['filesTable'];
+    $sql = "DROP TABLE ".$CC_CONFIG['filesTable']." CASCADE";
     camp_install_query($sql);
     $CC_DBC->dropSequence($CC_CONFIG['filesTable']."_id");
 
@@ -151,7 +151,7 @@ if (camp_db_table_exists($CC_CONFIG['subjTable'])) {
     echo " * Removing database table ".$CC_CONFIG['subjTable']."...";
     $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id");
 
-    $sql = "DROP TABLE ".$CC_CONFIG['subjTable'];
+    $sql = "DROP TABLE ".$CC_CONFIG['subjTable']." CASCADE";
     camp_install_query($sql, false);
 
     echo "done.\n";

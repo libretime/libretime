@@ -1,4 +1,6 @@
 <?php
+
+require_once(dirname(__FILE__)."/../../storageServer/var/Schedule.php");
 /**
  * @package Campcaster
  * @subpackage htmlUI
@@ -1006,8 +1008,8 @@ class uiScheduler extends uiCalendar {
      */
     function initXmlRpc()
     {
-        include_once(dirname(__FILE__).'/ui_schedulerPhpClient.class.php');
-        $this->spc =& SchedulerPhpClient::factory($mdefs, FALSE, FALSE);
+//        include_once(dirname(__FILE__).'/ui_schedulerPhpClient.class.php');
+//        $this->spc =& SchedulerPhpClient::factory($mdefs, FALSE, FALSE);
     } // fn initXmlRpc
 
 
@@ -1033,36 +1035,41 @@ class uiScheduler extends uiCalendar {
         $datetime = $formdata['date']['Y']
             .sprintf('%02d', $formdata['date']['m'])
             .sprintf('%02d', $formdata['date']['d'])
-            .'T'.sprintf('%02d', $formdata['time']['H'])
+            .' '.sprintf('%02d', $formdata['time']['H'])
             .':'.sprintf('%02d', $formdata['time']['i'])
             .':'.sprintf('%02d', $formdata['time']['s']);
 
-        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
-        if ($this->_isError($r)) {
-            return FALSE;
-        }
-        return TRUE;
+        $item = new ScheduleItem();
+        $groupId = $item->add($datetime, $gunid);
+        return is_numeric($groupId);
+//        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
+//        if ($this->_isError($r)) {
+//            return FALSE;
+//        }
+//        return TRUE;
     } // fn uploadPlaylistMethod
 
 
     /**
-     * Remove a playlist from the scheduler.
+     * Remove an item from the scheduler.
      *
      * @param string $id
-     *      gunid of the playlist
+     *      groupId of the item
      * @return boolean
      *      TRUE on success, FALSE on failure.
      */
-    function removeFromScheduleMethod($id)
+    function removeFromScheduleMethod($p_groupId)
     {
-        $r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $id);
-        if ($this->_isError($r)) {
-            return FALSE;
-        }
-        if (UI_VERBOSE) {
-            $this->Base->_retMsg('Entry with ScheduleId $1 removed.', $id);
-        }
-        return TRUE;
+      $item = new ScheduleItem($p_groupId);
+      $success = $item->remove();
+      //$r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $id);
+      if (!$success) {
+        return FALSE;
+      }
+      if (UI_VERBOSE) {
+        $this->Base->_retMsg('Entry with ScheduleId $1 removed.', $id);
+      }
+      return TRUE;
     } // fn removeFromScheduleMethod
 
 
@@ -1077,11 +1084,14 @@ class uiScheduler extends uiCalendar {
      */
     function displayScheduleMethod($from, $to)
     {
-        $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
-        if ($this->_isError($r)) {
-            return FALSE;
-        }
-        return $r;
+      // NOTE: Need to fix times.
+      $items = Schedule::GetItems($from, $to);
+      return $items;
+//        $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
+//        if ($this->_isError($r)) {
+//            return FALSE;
+//        }
+//        return $r;
     } // fn displayScheduleMethod
 
 
@@ -1260,6 +1270,7 @@ class uiScheduler extends uiCalendar {
 
     public function getSchedulerTime()
     {
+      return time();
         static $first, $cached;
         if (!$first) {
             $first = time();

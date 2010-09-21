@@ -1,7 +1,4 @@
 <?php
-require_once(dirname(__FILE__).'/../conf.php');
-require_once('PHPUnit.php');
-require_once('DB.php');
 require_once(dirname(__FILE__).'/../StoredFile.php');
 require_once(dirname(__FILE__).'/../BasicStor.php');
 require_once(dirname(__FILE__).'/../GreenBox.php');
@@ -18,9 +15,9 @@ class BasicStorTest extends PHPUnit_TestCase {
 
     private $greenbox;
 
-    function __construct($name) {
-        parent::__construct($name);
-    }
+//    function __construct($name) {
+//        parent::__construct($name);
+//    }
 
     function setup() {
         $this->greenbox = new GreenBox();
@@ -42,6 +39,7 @@ class BasicStorTest extends PHPUnit_TestCase {
             $this->fail("Metadata has unexpected values:\n".$str);
         }
         //var_dump($metadata);
+        //$this->assertTrue(FALSE);
     }
 
     function testPutFile() {
