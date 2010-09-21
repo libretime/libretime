@@ -19,50 +19,56 @@
                             <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></td>
                             <td style="width: 200px">##Title##</td>
                             <td style="white-space: nowrap">##Clip length##</td>
-                            <td>                     ##Original##</td>
+                            <td>##Cue In##</td>
+                            <td>##Cue Out##</td>
                             <td style="width: 200px">##Artist##</td>
                             <td style="width: 30px;">##Type##</td>
                             <td style="width: 30px; border: 0">##Move##</td>
                         </tr>
                     <!-- end repeat after 14 columns -->
                     <!-- start item -->
-                    {foreach from=$PL->getFlat($PL->activeId) key='pos' item='i'}
-                        {*
+                    {foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
+                        
                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', {if $i.firstInList == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})" style="background-color: #bbb">
                             <td></td>
-                            <td colspan="5" style="border: 0; cursor: pointer">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
+                            <td colspan="7" style="border: 0; cursor: pointer">##Fade In## {$i.fadein|string_format:"%d"} ms</td>
                         </tr>
                         <!-- /fade information -->
-                        *}
+                        
                         <tr class="{cycle values='blue1, blue2'}">
-                            <td><input type="checkbox" class="checkbox" name="{$i.attrs.id}"/></td>
-                            <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
+                            <td><input type="checkbox" class="checkbox" name="{$pos}"/></td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.track_title}</td>
                             <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
-                                {assign var="_playlength" value=$i.attrs.clipLength}{niceTime in=$_playlength}
+                                {assign var="_playlength" value=$i.cliplength}{niceTime in=$_playlength}
                             </td>
                             <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
-                                {assign var="_duration" value=$i.playlength}{niceTime in=$_duration}
+                                {assign var="_duration" value=$i.cuein}{niceTime in=$_duration}
                             </td>
-                            <td {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
+                            <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
+                                {assign var="_duration" value=$i.cueout}{niceTime in=$_duration}
+                            </td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.artist_name}</td>
                             <td {include file="playlist/actionhandler.tpl"}>
-                                <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl" *} />
+                                <img src="img/{$i.type}.png" border="0" alt="{$i.ftype|capitalize}" {* include file="sub/alttext.tpl" *} />
                             </td>
                             <td style="border: 0">
-                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.png"    alt="##move up##" vspace=1 hspace=1/></a>
-                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')"><img src="img/bt_bottom_xsm.png" alt="##move down##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id=&oldPos={$pos}&newPos={$pos-1}')"><img src="img/bt_top_xsm.png"    alt="##move up##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&oldPos={$pos}&newPos={$pos+1}')"><img src="img/bt_bottom_xsm.png" alt="##move down##" vspace=1 hspace=1/></a>
                             </td>
                         </tr>
-                    {/foreach}
-                        {if isset($pos)}
-                        {*
-                        <!-- fade information -->
+                        
+                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: #bbb">
                             <td></td>
-                            <td colspan="5" style="border: 0; cursor: pointer">##Fade## {$i.fadeout_ms|string_format:"%d"} ms</td>
+                            <td colspan="7" style="border: 0; cursor: pointer">##Fade Out## {$i.fadeout|string_format:"%d"} ms</td>
                         </tr>
                         <!-- /fade information -->
-                        *}
+                    {/foreach}
+                        {if isset($pos)}
+                        
+                       
+                        
                         {else}
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td style="border: 0" colspan="7" align="center">##Empty playlist##</td>
@@ -78,8 +84,6 @@
                     <input type="button" class="button_large" onClick="collector_clearAll('PL', 'PL.removeItem')" value="##Clear Playlist##" />
                 </div>
                 <div class="container_button">
-                    <input type="button" class="button_large" value="##Save Playlist##"    onClick="hpopup('{$UI_HANDLER}?act=PL.save')">
-                    <input type="button" class="button_large" value="##Revert to Saved##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRevert',  'PL.revertChanges',  400, 50)">
                     <input type="button" class="button_large" value="##Delete Playlist##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmDelete',  'PL.deleteActive',   400, 50)">
                 </div>
                 <div class="container_button">

@@ -11,23 +11,19 @@ class uiPlaylist
 	public $activeId;
 	public $title;
 	public $duration;
-	public $changed;
-	public $token;
-
+	
 	private $Base;
 	private $reloadUrl;
 	private $redirectUrl;
 	private $returnUrl;
 	private $flat;
 
-    public function __construct(&$uiBase)
+    public function __construct($uiBase)
     {
-        $this->Base =& $uiBase;
+        $this->Base = $uiBase;
         $this->activeId =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
-        $this->changed =& $_SESSION[UI_PLAYLIST_SESSNAME]['changed'];
-        $this->title = $this->Base->getMetadataValue($this->activeId, UI_MDATA_KEY_TITLE);
-        $this->duration = $this->Base->getMetadataValue($this->activeId, UI_MDATA_KEY_DURATION);
-        $this->token =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
+        $this->title = $this->Base->gb->getPLMetadataValue($this->activeId, UI_MDATA_KEY_TITLE);
+        $this->duration = $this->Base->gb->getPLMetadataValue($this->activeId, UI_MDATA_KEY_DURATION);
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
         $this->returnUrl = UI_BROWSER.'?act=PL.simpleManagement';
@@ -58,12 +54,13 @@ class uiPlaylist
 
     private function getPLArray($id)
     {
-        return $this->Base->gb->getPlaylistArray($id, $this->Base->sessid);
+        $res =  $this->Base->gb->getPlaylistArray($id);
+        return $res;
     } // fn getPLArray
 
 
     public function getActiveArr()
-    {
+    { 
         if (!$this->activeId) {
             return FALSE;
         }
@@ -86,7 +83,7 @@ class uiPlaylist
         // look PL
         // store access token to ls_pref abd session
         // load PL into session
-        if ($this->token) {
+        if ($this->activeId) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('You already have an open playlist. Close it first.');
             }
@@ -99,17 +96,19 @@ class uiPlaylist
              }
             return FALSE;
         }
-        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
-        if (PEAR::isError($token)) {
+        $res = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
+        if (PEAR::isError($res)) {
             if (UI_VERBOSE === TRUE) {
-            	print_r($token);
+            	print_r($res);
             }
             $this->Base->_retMsg('Unable to open playlist "$1".', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
             return FALSE;
         }
-        $this->token = $token;
-        $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
+        
+        $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid);
         $this->activeId = $plid;
+        $_SESSION['pl'] = "Activating playlist with id: " . $this->activeId;
+        
         if ($msg && UI_VERBOSE) {
         	$this->Base->_retMsg('Playlist "$1" opened.', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
         }
@@ -119,21 +118,19 @@ class uiPlaylist
 
 
     public function release($msg=TRUE)
-    {
-        // get token from ls_pref
+    {  
         // release PL
         // delete PL from session
-        // remove token from ls_pref
-        if (!$this->token) {
+        if (!$this->activeId) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('There is no playlist available to unlock.');
             }
             return FALSE;
         }
-        $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
-        if (PEAR::isError($plgunid)) {
+        $res = $this->Base->gb->releaseLockedPlaylist($this->activeId, $this->Base->sessid);
+        if (PEAR::isError($res)) {
             if (UI_VERBOSE === TRUE) {
-            	print_r($plgunid);
+            	print_r($res);
             }
             if (UI_WARNING) {
             	$this->Base->_retMsg('Unable to release playlist.');
@@ -144,62 +141,10 @@ class uiPlaylist
         	$this->Base->_retMsg('Playlist "$1" released.', $this->Base->getMetadataValue(BasicStor::IdFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         }
         $this->activeId = NULL;
-        $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
-
-        $this->changed = FALSE;
+        
         return TRUE;
     } // fn release
-
-
-    public function save()
-    {
-        $tmpid = $this->activeId;
-        $this->release(FALSE);
-        $this->activate($tmpid, FALSE);
-        $this->changed = FALSE;
-        if (UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" saved.', $this->Base->getMetadataValue($tmpid, UI_MDATA_KEY_TITLE));
-        }
-
-        $this->Base->SCRATCHPAD->reloadMetadata();
-        return $this->activeId;
-    } // fn save
-
-
-    public function revert()
-    {
-        if (!$this->token) {
-            if (UI_WARNING) {
-            	$this->Base->_retMsg('No playlists have been locked by you.');
-            }
-            return FALSE;
-        }
-        $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
-        if (PEAR::isError($plgunid)) {
-            if (UI_VERBOSE === TRUE) {
-            	print_r($plgunid);
-            }
-            if (UI_WARNING) {
-            	$this->Base->_retMsg('Unable to revert to locked state.');
-            }
-            return FALSE;
-        }
-        if (UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" reverted.', $this->Base->getMetadataValue(BasicStor::IdFromGunid($plgunid), UI_MDATA_KEY_TITLE));
-        }
-        $this->activeId = NULL;
-        $this->token    = NULL;
-        $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
-
-        if ($this->activate(BasicStor::IdFromGunid($plgunid), FALSE) !== TRUE) {
-            return FALSE;
-        }
-
-        $this->changed = FALSE;
-
-        return $this->activeId;
-    } // fn revert
 
 
     public function reportLookedPL($setMsg=FALSE)
@@ -216,20 +161,17 @@ class uiPlaylist
 
     public function loadLookedFromPref()
     {
-        $this->changed = TRUE;
-
-        if (is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            list ($plid, $token) = explode (':', $saved);
-
-            if (!$this->Base->gb->existsPlaylist($plid, $this->Base->sessid)) {
+        if (is_string($plid = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
+           
+            if (!$this->Base->gb->existsPlaylist($plid)) {
                 $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
                 $this->Base->_retMsg('Playlist not found in database.');
                 $this->Base->redirUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
                 return FALSE;
             }
+            
             $this->activeId = $plid;
-            $this->token = $token;
-
+         
             $this->Base->redirUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
             return TRUE;
         }
@@ -244,14 +186,14 @@ class uiPlaylist
      * @param array $duration
      * @return unknown
      */
-    public function addItem($elemIds, $duration=NULL)
+    public function addItem($elemIds, $pos=NULL, $duration=NULL)
     {
-        $this->changed = TRUE;
         $fadeIn = NULL;
         $fadeOut = NULL;
-        $length = NULL;
-        $clipstart = NULL;
-
+        $cliplength = NULL;
+        $cueIn = NULL;
+        $cueIn = NULL;
+       
         /*
         gstreamer bug:
         Warning: The clipEnd can't be bigger than ninety nine percent (99%) of the clipLength,
@@ -264,15 +206,16 @@ class uiPlaylist
             	$this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
-        }
+        }       
         if (!is_array($elemIds)) {
             $elemIds = array($elemIds);
-        }
+        }  
         if (isset($duration)) {
             $length = sprintf('%02d', $duration['H']).':'.sprintf('%02d', $duration['i']).':'.sprintf('%02d', $duration['s']).'.000000';
         }
+        
         foreach ($elemIds as $elemId) {
-            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid, $fadeIn, $fadeOut, $length, $clipstart, $clipend);
+            $r = $this->Base->gb->addAudioClipToPlaylist($this->activeId, $elemId, $pos, $fadeIn, $fadeOut, $cliplength, $cueIn, $cueOut);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
                 	print_r($r);
@@ -285,21 +228,23 @@ class uiPlaylist
     } // fn addItem
 
 
-    public function removeItem($elemIds)
+    public function removeItem($positions)
     {
-        $this->changed = TRUE;
-
-        if (!$elemIds) {
+        if (!$positions) {
             if (UI_WARNING) {
             	$this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
         }
-        if (!is_array($elemIds))
-            $elemIds = array($elemIds);
-
-        foreach ($elemIds as $elemId) {
-            if ($this->Base->gb->delAudioClipFromPlaylist($this->token, $elemId, $this->Base->sessid) !== TRUE) {
+        if (!is_array($positions))
+            $positions = array($positions);
+        
+        //so the automatic updating of playlist positioning doesn't affect removal.
+        sort($positions);
+        $positions = array_reverse($positions);
+      
+        foreach ($positions as $pos) {
+            if ($this->Base->gb->delAudioClipFromPlaylist($this->activeId, $pos) !== TRUE) {
                 $this->Base->_retMsg('Cannot remove item from playlist.');
                 return FALSE;
             }
@@ -321,23 +266,25 @@ class uiPlaylist
         // create PL
         // activate
         // add clip if $id is set
-        $this->changed = TRUE;
-
-        if (is_array($this->activeId)) {
+       
+        if ($this->activeId) {
             $this->Base->_retMsg('A playlist is already opened.');
             return FALSE;
         }
         $datetime = strftime('%Y-%m-%d %H:%M:%S');
         $plid = $this->Base->gb->createPlaylist($datetime, $this->Base->sessid);
+      
         if (!$plid) {
             $this->Base->_retMsg('Cannot create playlist.');
             return FALSE;
         }
 
-        $this->Base->setMetadataValue($plid, UI_MDATA_KEY_CREATOR, $this->Base->login);
-        $this->Base->setMetadataValue($plid, UI_MDATA_KEY_DESCRIPTION, tra('created at $1', $datetime));
+        $this->Base->gb->setPLMetadataValue($plid, UI_MDATA_KEY_CREATOR, $this->Base->login);
+        $this->Base->gb->setPLMetadataValue($plid, UI_MDATA_KEY_DESCRIPTION, tra('created at $1', $datetime));
 
+        
         if ($this->activate($plid)===FALSE) {
+            $this->Base->_retMsg('Cannot activate playlist.');
             return FALSE;
         }
         if ($ids) {
@@ -345,6 +292,7 @@ class uiPlaylist
                 return FALSE;
             }
         }
+        
         return $plid;
     } // fn create
 
@@ -400,7 +348,6 @@ class uiPlaylist
 
     public function changeTransition($id, $type, $duration)
     {
-        $this->changed = TRUE;
         $pause = $pause;
         $xfade = Playlist::secondsToPlaylistTime($duration/1000);
 
@@ -467,12 +414,10 @@ class uiPlaylist
     } // fn changeTransition
 
 
-    public function moveItem($id, $pos)
+    public function moveItem($oldPos, $newPos)
     {
-        $this->changed = TRUE;
-
-        $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
-        if (PEAR::isError($r)) {
+        $r = $this->Base->gb->moveAudioClipInPlaylist($this->activeId, $oldPos, $newPos);
+        if (PEAR::isError($r) || $r === FALSE) {
             if (UI_VERBOSE === TRUE) {
             	print_r($r);
             }
@@ -485,8 +430,6 @@ class uiPlaylist
 
     public function reorder($items)
     {
-        $this->changed  = TRUE;
-
         // just to be sure items are in right order
         asort($items);
         $pos = 0;
@@ -647,7 +590,9 @@ class uiPlaylist
 
         foreach ($mask['playlist'] as $k=>$v) {
             $mask['playlist'][$k]['element'] = uiBase::formElementEncode($v['element']);
-            if ($getval = $this->Base->getMetadataValue($id, $v['element'], $langid)) {
+            
+            $getval = $this->Base->gb->getPLMetadataValue($id, $v['element'], $langid);
+            if ($getval) {
                 $mask['playlist'][$k]['default']                = $getval;
                 $mask['playlist'][$k]['attributes']['onFocus']  = 'MData_confirmChange(this)';
             };
@@ -679,8 +624,6 @@ class uiPlaylist
 
     public function editMetaData($formdata)
     {
-        $this->changed = TRUE;
-
         include(dirname(__FILE__).'/formmask/metadata.inc.php');
 
         $id             = $this->activeId;
@@ -692,8 +635,9 @@ class uiPlaylist
         } else {
             $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
         }
-
+     
         foreach ($mask['playlist'] as $k=>$v) {
+            
             $formdata[uiBase::formElementEncode($v['element'])] ? $mData[uiBase::formElementDecode($v['element'])] = $formdata[uiBase::formElementEncode($v['element'])] : NULL;
         }
 
@@ -702,7 +646,7 @@ class uiPlaylist
         }
 
         foreach ($mData as $key => $val) {
-            $r = $this->Base->gb->setMetadataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
+            $r = $this->Base->gb->setPLMetadataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
                 	print_r($r);
@@ -712,7 +656,7 @@ class uiPlaylist
         }
         if (UI_VERBOSE) {
         	$this->Base->_retMsg('Metadata saved.');
-        }
+        }  
     } // fn editMetadata
 
 
@@ -720,9 +664,12 @@ class uiPlaylist
     {
         $id = $this->activeId;
         $this->release(FALSE);
-        if ($this->Base->delete($id)) {
+       
+        $res = $this->Base->gb->deletePlaylist($id);
+        if ($res === TRUE) {
             return $id;
         }
+
         $this->Base->_retMsg('Cannot delete this playlist.');
         return FALSE;
     } // fn deleteActive

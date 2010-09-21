@@ -115,6 +115,26 @@ if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
     echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
 }
 
+if (camp_db_table_exists($CC_CONFIG['playListTable'])) {
+    echo " * Removing database table ".$CC_CONFIG['playListTable']."...";
+    $sql = "DROP TABLE ".$CC_CONFIG['playListTable'];
+    camp_install_query($sql);
+    $CC_DBC->dropSequence($CC_CONFIG['playListTable']."_id");
+
+} else {
+    echo " * Skipping: database table ".$CC_CONFIG['playListTable']."\n";
+}
+
+if (camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
+    echo " * Removing database table ".$CC_CONFIG['playListContentsTable']."...";
+    $sql = "DROP TABLE ".$CC_CONFIG['playListContentsTable'];
+    camp_install_query($sql);
+    $CC_DBC->dropSequence($CC_CONFIG['playListContentsTable']."_id");
+
+} else {
+    echo " * Skipping: database table ".$CC_CONFIG['playListContentsTable']."\n";
+}
+
 //if (camp_db_sequence_exists($CC_CONFIG['filesSequence'])) {
 //    $sql = "DROP SEQUENCE ".$CC_CONFIG['filesSequence'];
 //    camp_install_query($sql);

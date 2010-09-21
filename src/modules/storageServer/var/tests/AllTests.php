@@ -4,9 +4,11 @@ require_once('DB.php');
 require_once('PHPUnit.php');
 require_once 'BasicStorTests.php';
 require_once 'SchedulerTests.php';
+require_once 'PlayListTests.php';
 
 $suite  = new PHPUnit_TestSuite("BasicStorTest");
 $suite->addTestSuite("SchedulerTests");
+$suite->addTestSuite("PlayListTests");
 $result = PHPUnit::run($suite);
 
 echo $result->toString();
