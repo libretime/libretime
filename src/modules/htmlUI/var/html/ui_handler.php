@@ -301,12 +301,12 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "PL.create":
-    	$ids = (isset($_REQUEST['id']) ? $_REQUEST['id'] : null);
-	    if (($ui_tmpid = $uiHandler->PLAYLIST->create($ids)) !== FALSE) {
+    	//$ids = (isset($_REQUEST['id']) ? $_REQUEST['id'] : null);
+	    if (($ui_tmpid = $uiHandler->PLAYLIST->create()) !== FALSE) {
 	        if ($ids) {
-	        	$uiHandler->SCRATCHPAD->addItem($ids);
+	        	//$uiHandler->SCRATCHPAD->addItem($ids);
 	        }
-	        $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+	        //$uiHandler->SCRATCHPAD->addItem($ui_tmpid);
 	    }
 	    $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData');
 	    break;
@@ -366,7 +366,7 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "PL.moveItem":
-	    $uiHandler->PLAYLIST->moveItem($_REQUEST['id'], $_REQUEST['pos']);
+	    $uiHandler->PLAYLIST->moveItem($_REQUEST['oldPos'], $_REQUEST['newPos']);
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
@@ -382,12 +382,12 @@ switch ($_REQUEST['act']) {
 
     case "PL.editMetaData":
 	    $uiHandler->PLAYLIST->editMetaData($_REQUEST);
-	    $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+	    //$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
 	    break;
 
     case "PL.deleteActive":
 	    if (($ui_tmpid = $uiHandler->PLAYLIST->deleteActive()) !== FALSE) {
-	    	$uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
+	    	//$uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
 	    }
 	    $uiHandler->PLAYLIST->setReload();
 	    break;

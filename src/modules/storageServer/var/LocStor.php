@@ -988,15 +988,15 @@ class LocStor extends BasicStor {
      */
     public function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
-//        $ex = $this->existsPlaylist($sessid, $playlistId);
-//        if (PEAR::isError($ex)) {
-//            return $ex;
-//        }
-//        if (!$ex) {
-//            return PEAR::raiseError(
-//                'LocStor::playlistIsAvailable: playlist not exists'
-//            );
-//        }
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if (PEAR::isError($ex)) {
+            return $ex;
+        }
+        if (!$ex) {
+            return PEAR::raiseError(
+                'LocStor::playlistIsAvailable: playlist not exists'
+            );
+        }
         $ie = $this->isEdited($playlistId);
         if ($ie === FALSE) {
             return TRUE;

@@ -1432,7 +1432,7 @@ class BasicStor {
      */
     public static function GetObjType($oid)
     {
-				$type = "unknown";
+		$type = "unknown";
         $gunid = BasicStor::GunidFromId($oid);
         if (PEAR::isError($gunid)) {
             return $gunid;
@@ -1662,13 +1662,12 @@ class BasicStor {
         $res = preg_match("|^([0-9a-fA-F]{16})?$|", $p_gunid);
         return $res;
     }
-
-
+    
     /**
      * Set playlist edit flag
      *
      * @param string $p_playlistId
-     * 		Playlist global unique ID
+     * 		Playlist unique ID
      * @param boolean $p_val
      * 		Set/clear of edit flag
      * @param string $p_sessid
@@ -1686,15 +1685,15 @@ class BasicStor {
                 return $p_subjid;
             }
         }
-        $storedFile = StoredFile::RecallByGunid($p_playlistId);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
+        $pl = Playlist::Recall($p_playlistId);
+        if (is_null($pl) || PEAR::isError($pl)) {
+            return $pl;
         }
-        $state = $storedFile->getState();
+        $state = $pl->getState();
         if ($p_val) {
-            $r = $storedFile->setState('edited', $p_subjid);
+            $r = $pl->setState('edited', $p_subjid);
         } else {
-            $r = $storedFile->setState('ready', 'NULL');
+            $r = $pl->setState('ready', 'NULL');
         }
         if (PEAR::isError($r)) {
             return $r;
@@ -1713,14 +1712,14 @@ class BasicStor {
      */
     public function isEdited($p_playlistId)
     {
-        $storedFile = StoredFile::RecallByGunid($p_playlistId);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
+        $pl = Playlist::Recall($p_playlistId);
+        if (is_null($pl) || PEAR::isError($pl)) {
+            return $pl;
         }
-        if (!$storedFile->isEdited($p_playlistId)) {
+        if (!$pl->isEdited($p_playlistId)) {
             return FALSE;
         }
-        return $storedFile->isEditedBy($p_playlistId);
+        return $pl->isEditedBy($p_playlistId);
     }
 
 

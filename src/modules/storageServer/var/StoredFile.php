@@ -459,6 +459,7 @@ class StoredFile {
             }
         }
     }
+    
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
@@ -585,7 +586,6 @@ class StoredFile {
         $storedFile = StoredFile::RecallByGunid($storedFile->gunid);
         return $storedFile;
     }
-
 
     /**
      * Fetch instance of StoreFile object.<br>
@@ -1063,7 +1063,6 @@ class StoredFile {
         return TRUE;
     }
 
-
     /**
      * Set mime-type of virtual file
      *
@@ -1161,7 +1160,10 @@ class StoredFile {
 
     /**
      * Returns gunIds of the playlists the stored file is in.
+     * TODO update this to work with new tables.
      */
+   
+    /*
     public function getPlaylists() {
         global $CC_CONFIG, $CC_DBC;
 
@@ -1176,17 +1178,7 @@ class StoredFile {
 
         return $playlists;
     }
-
-    public function isScheduled() {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT * "
-            ." FROM ".$CC_CONFIG['scheduleTable']
-            ." WHERE ends > now() and playlist=x'{$this->gunid}'::bigint";
-        $scheduled = $CC_DBC->getAll($sql);
-
-        return $scheduled;
-    }
+    */   
 
 
     /**

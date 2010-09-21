@@ -472,21 +472,35 @@ class GreenBox extends BasicStor {
      */
     public function createPlaylist($fname, $sessid='')
     {
-        global $CC_CONFIG, $CC_DBC;
-        $gunid = StoredFile::CreateGunid();
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
-        if (PEAR::isError($gunid2)) {
-            return $gunid2;
-        }
-        // get local id:
-        $id = BasicStor::IdFromGunid($gunid2);
-        if (PEAR::isError($id)) {
-            return $id;
-        }
-        return $id;
+        $pl = new Playlist();
+        $pl = $pl->create($fname);
+        
+        return $pl;
     } // fn createPlaylist
 
+    public function setPLMetadataValue($id, $category, $value, $lang=NULL, $mid=NULL)
+    {
+        $pl = Playlist::Recall($id);
+        
+        if($pl === FALSE)
+            return FALSE;
+            
+        $res = $pl->setMetaData($category, $value, $lang);
+        
+        return $res;
+    }
+    
+    public function getPLMetadataValue($id, $category, $langId=NULL)
+    {
+        $pl = Playlist::Recall($id);
+        
+        if($pl === FALSE)
+            return FALSE;
+            
+        $res = $pl->getPLMetaData($category);
+        
+        return $res;
+    }
 
     /**
      * Return playlist as XML string
@@ -513,15 +527,19 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return array
      */
-    public function getPlaylistArray($id, $sessid)
+    public function getPlaylistArray($id)
     {
-        $gunid = BasicStor::GunidFromId($id);
-        $pl = StoredFile::Recall($id);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
         }
-        $gunid = $pl->gunid;
-        return $pl->md->genPhpArray();
+        
+        $res = $pl->getContents();
+        
+        if(is_null($res))
+            return array();
+        
+        return $res;
     } // fn getPlaylistArray
 
 
@@ -535,45 +553,32 @@ class GreenBox extends BasicStor {
      * @return string
      * 		playlist access token
      */
-    public function lockPlaylistForEdit($id, $sessid)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $gunid = BasicStor::GunidFromId($id);
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        $res = $lc->editPlaylist($sessid, $gunid);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return $res['token'];
-    } // fn lockPlaylistForEdit
+    public function lockPlaylistForEdit($id, $sessid) {
+        $pl = Playlist::Recall($id);
+        
+        if($pl === FALSE)
+            return;
+        
+        $res = $pl->lock($sessid);
+    }
 
 
     /**
-     * Release token, regenerate XML from DB and clear edit flag.
+     *  clear edit flag.
      *
-     * @param string $token
-     *      playlist access token
      * @param string $sessid
      *      session ID
      * @return string gunid
      */
-    public function releaseLockedPlaylist($token, $sessid)
-    {
-        $gunid = $this->bsCloseDownload($token, 'metadata');
-        if (PEAR::isError($gunid)) {
-            return $gunid;
-        }
-        $storedFile = StoredFile::RecallByGunid($gunid);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-//        $r = $storedFile->md->regenerateXmlFile();
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
-        $this->setEditFlag($gunid, FALSE, $sessid);
-        return $gunid;
-    } // fn releaseLockedPlaylist
+    public function releaseLockedPlaylist($id, $sessid) {
+        $pl = Playlist::Recall($id);
+        
+        if($pl === FALSE)
+            return FALSE;
+            
+        $res = $pl->unlock($sessid);
+        return $res;
+    }
 
 
     /**
@@ -596,32 +601,17 @@ class GreenBox extends BasicStor {
      *      optional clipstart time format hh:mm:ss.ssssss - relative to begin
      * @param string $clipend
      *      optional $clipend time format hh:mm:ss.ssssss - relative to begin
-     * @return string, generated playlistElement gunid
+     * @return boolean, true if added.
      */
-    public function addAudioClipToPlaylist($token, $acId, $sessid,
-        $fadeIn=NULL, $fadeOut=NULL, $length=NULL, $clipstart=NULL, $clipend=NULL)
+    public function addAudioClipToPlaylist($id, $acId, $pos=NULL, $fadeIn=NULL, $fadeOut=NULL, $cliplength=NULL, $cueIn=NULL, $cueOut=NULL)
     {
-        require_once("Playlist.php");
-        $pl = StoredFile::RecallByToken($token);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
         }
-        $acGunid = BasicStor::GunidFromId($acId);
-        if ($pl->cyclicRecursion($acGunid)){
-            return PEAR::raiseError(
-                "GreenBox::addAudioClipToPlaylist: cyclic-recursion detected".
-                " ($type)"
-            );
-        }
-        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $length, $clipstart, $clipend);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        // recalculate offsets and total length:
-        $r = $pl->recalculateTimes();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+        
+        $res = $pl->addAudioClip($acId, $pos, $fadeIn, $fadeOut, $cliplength, $cueIn, $cueOut);
+        
         return $res;
     } // fn addAudioClipToPlaylist
 
@@ -629,159 +619,100 @@ class GreenBox extends BasicStor {
     /**
      * Remove audioclip from playlist
      *
-     * @param string $token
-     *      playlist access token
-     * @param string $plElGunid
-     *      global id of deleted playlistElement
-     * @param string $sessid
-     *      session ID
-     * @return boolean
+     * @param string $id
+     *      playlist id
+     * @param int $pos
+     *      position of element in playlist to delete.
+     * @return boolean, true if deleted.
      * @todo rename this function to "deleteAudioClipFromPlaylist"
      */
-    public function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
+    public function delAudioClipFromPlaylist($id, $pos)
     {
-        require_once("Playlist.php");
-        $pl = StoredFile::RecallByToken($token);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
         }
-        $res = $pl->delAudioClip($plElGunid);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        // recalculate offsets and total length:
-        $r = $pl->recalculateTimes();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+        
+        $res = $pl->delAudioClip($pos);
+        
         return $res;
-    } // fn delAudioClipFromPlaylist
-
-
+    } 
+    
+     /**
+     * Move audioClip to the new position in the playlist.
+     *
+     * This method may change id attributes of playlistElements and/or
+     * fadeInfo.
+     *
+     * @param string $id
+     *      playlist id
+     * @param id $oldPos
+     *      old position in playlist
+     * @param int $newPos
+     *      new position in playlist
+     * @return boolean
+     */
+    public function moveAudioClipInPlaylist($id, $oldPos, $newPos)
+    {
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
+        }
+        
+        $res = $pl->moveAudioClip($oldPos, $newPos);
+        
+        return $res;
+    } 
+    
     /**
      * Change fadeInfo values
      *
-     * @param string $token
-     *      playlist access token
-     * @param string $plElGunid
-     *      global id of deleted playlistElement
+     * @param string $id
+     *      playlist id
      * @param string $fadeIn
      *      in time format hh:mm:ss.ssssss
      * @param string $fadeOut
      *      in time format hh:mm:ss.ssssss
-     * @param sessid $string
-     *      session ID
      * @return boolean
      */
-    public function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
+    public function changeFadeInfo($id, $pos, $fadeIn, $fadeOut)
     {
-        require_once("Playlist.php");
-        $pl = StoredFile::RecallByToken($token);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
+        $pl = Playlist::Recall($id);
+         if ($pl === FALSE) {
+            return FALSE;
         }
-        $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        // recalculate offsets and total length:
-        $r = $pl->recalculateTimes();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return TRUE;
-    } // fn changeFadeInfo
-
+        
+        $res = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
+        
+        return $res;
+    } 
+    
     /**
-     * Change cueIn/curOut values for playlist element
+     * Change cueIn/cueOut values for playlist element
      *
-     * @param string $token
-     *      playlist access token
-     * @param string $plElGunid
-     *      global id of deleted playlistElement
-     * @param string $clipStart
+     * @param string $id
+     *      playlist id
+     * @param string $cueIn
      *      in time format hh:mm:ss.ssssss
-     * @param string $clipEnd
+     * @param string $cueOut
      *      in time format hh:mm:ss.ssssss
      *      relative to begin
      * @param sessid $string
      *      session ID
      * @return boolean or pear error object
      */
-    public function changeClipLength($token, $plElGunid, $clipStart, $clipEnd, $sessid)
+    public function changeClipLength($id, $cueIn, $cueOut)
     {
-        require_once("Playlist.php");
-        $pl = StoredFile::RecallByToken($token);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
         }
-        $res = $pl->changeClipLength($plElGunid, $clipStart, $clipEnd);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        // recalculate offsets and total length:
-        $r = $pl->recalculateTimes();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return TRUE;
-    } // fn changeFadeInfo
-
-
-    /**
-     * Move audioClip to the new position in the playlist.
-     *
-     * This method may change id attributes of playlistElements and/or
-     * fadeInfo.
-     *
-     * @param string $token
-     *      playlist access token
-     * @param string $plElGunid
-     *      global id of deleted playlistElement
-     * @param int $newPos
-     *      new position in playlist
-     * @param string $sessid
-     *      session ID
-     * @return boolean
-     */
-    public function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
-    {
-        require_once("Playlist.php");
-        $pl = StoredFile::RecallByToken($token);
-        if (is_null($pl) || PEAR::isError($pl)) {
-            return $pl;
-        }
-        $res = $pl->moveAudioClip($plElGunid, $newPos);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        // recalculate offsets and total length:
-        $r = $pl->recalculateTimes();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return TRUE;
-    } // fn moveAudioClipInPlaylist
-
-
-    /**
-     * RollBack playlist changes to the locked state
-     *
-     * @param string $token
-     *      playlist access token
-     * @param string $sessid
-     *      session ID
-     * @return string
-     * 		gunid of playlist
-     */
-    public function revertEditedPlaylist($token, $sessid='')
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        return $lc->revertEditedPlaylist($token, $sessid);
-    } // fn revertEditedPlaylist
-
-
+        
+        $res = $pl->changeClipLength($pos, $cueIn, $cueOut);
+        
+        return $res;
+    } 
+    
     /**
      * Delete a Playlist metafile.
      *
@@ -791,14 +722,11 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public function deletePlaylist($id, $sessid)
+    public function deletePlaylist($id)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $gunid = BasicStor::GunidFromId($id);
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        return $lc->deletePlaylist($sessid, $gunid);
-    } // fn deletePlaylist
-
+        return Playlist::Delete($id);
+       
+    } 
 
     /**
      * Find info about clip at specified offset in playlist.
@@ -951,12 +879,14 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean
      */
-    public function existsPlaylist($id, $sessid)
+    public function existsPlaylist($id)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $gunid = BasicStor::GunidFromId($id);
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        return $lc->existsPlaylist($sessid, $gunid);
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
+        }
+      
+        return TRUE;
     } // fn existsPlaylist
 
 
@@ -974,10 +904,17 @@ class GreenBox extends BasicStor {
      */
     public function playlistIsAvailable($id, $sessid)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $gunid = BasicStor::GunidFromId($id);
-        $lc = new LocStor($CC_DBC, $CC_CONFIG);
-        return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
+        $pl = Playlist::Recall($id);
+        if ($pl === FALSE) {
+            return FALSE;
+        }
+        
+        $res = $pl->isEdited();
+        
+        if($res !== FALSE)
+            return $res;
+            
+        return TRUE;
     } // fn playlistIsAvailable
 
 

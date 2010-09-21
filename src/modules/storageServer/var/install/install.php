@@ -171,7 +171,7 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
           bit_rate character varying(32),
           sample_rate character varying(32),
           format character varying(128),
-          length character(16),
+          length time without time zone,
           album_title character varying(512),
           genre character varying(64),
           comments text,
@@ -220,6 +220,8 @@ if (!camp_db_table_exists($CC_CONFIG['playListTable'])) {
           currentlyaccessing integer NOT NULL DEFAULT 0,
           editedby integer,
           mtime timestamp(6) with time zone,
+          creator character varying(32),
+          description character varying(512),
           CONSTRAINT cc_playlist_pkey PRIMARY KEY (id),
           CONSTRAINT cc_playlist_editedby_fkey FOREIGN KEY (editedby)
               REFERENCES cc_subjs (id) MATCH SIMPLE
@@ -249,10 +251,10 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
           CONSTRAINT cc_playlistcontents_pkey PRIMARY KEY (id),
           CONSTRAINT cc_playlistcontents_playlist_id_fkey FOREIGN KEY (playlist_id)
               REFERENCES ".$CC_CONFIG['playListTable']." (id) MATCH SIMPLE
-              ON UPDATE NO ACTION ON DELETE NO ACTION,
+              ON UPDATE NO ACTION ON DELETE CASCADE,
           CONSTRAINT cc_playlistcontents_file_id_fkey FOREIGN KEY (file_id)
           	  REFERENCES ".$CC_CONFIG['filesTable']." (id) MATCH SIMPLE
-          	  ON UPDATE NO ACTION ON DELETE NO ACTION
+          	  ON UPDATE NO ACTION ON DELETE CASCADE
         );
         
     CREATE OR REPLACE FUNCTION calculate_position() RETURNS trigger AS 
