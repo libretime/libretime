@@ -1,4 +1,42 @@
 <?php
+/*
+ * Format of search criteria: hash, with following structure:<br>
+ *   <ul>
+ *     <li>filetype - string, type of searched files,
+ *       meaningful values: 'audioclip', 'webstream', 'playlist', 'all'</li>
+ *     <li>operator - string, type of conditions join
+ *       (any condition matches / all conditions match),
+ *       meaningful values: 'and', 'or', ''
+ *       (may be empty or ommited only with less then 2 items in
+ *       &quot;conditions&quot; field)
+ *     </li>
+ *     <li>orderby : string - metadata category for sorting (optional)
+ *          or array of strings for multicolumn orderby
+ *          [default: dc:creator, dc:source, dc:title]
+ *     </li>
+ *     <li>desc : boolean - flag for descending order (optional)
+ *          or array of boolean for multicolumn orderby
+ *          (it corresponds to elements of orderby field)
+ *          [default: all ascending]
+ *     </li>
+ *     <li>conditions - array of hashes with structure:
+ *       <ul>
+ *           <li>cat - string, metadata category name</li>
+ *           <li>op - string, operator - meaningful values:
+ *               'full', 'partial', 'prefix', '=', '&lt;',
+ *               '&lt;=', '&gt;', '&gt;='</li>
+ *           <li>val - string, search value</li>
+ *       </ul>
+ *     </li>
+ *   </ul>
+ *  <p>
+ *  Format of search/browse results: hash, with following structure:<br>
+ *   <ul>
+ *      <li>results : array of gunids have found</li>
+ *      <li>cnt : integer - number of matching items</li>
+ *   </ul>
+ *
+ */
 define('GBERR_DENY', 40);
 define('GBERR_FILEIO', 41);
 define('GBERR_FILENEX', 42);
@@ -47,10 +85,16 @@ $g_metadata_xml_to_db_mapping = array(
  */
 class BasicStor {
     public $storId;
-
+    private $fileTypes;
 
     public function __construct()
     {
+        $this->filetypes = array(
+            'all'=>NULL,
+            'audioclip'=>'audioclip',
+            'webstream'=>'webstream',
+            'playlist'=>'playlist',
+        );
     }
 
 
@@ -175,9 +219,9 @@ class BasicStor {
             $res = BasicStor::RemoveObj($id, $forced);
             return $res;
         }
-        
+
         $storedFile = StoredFile::Recall($id);
-            
+
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
@@ -188,12 +232,12 @@ class BasicStor {
         }
         // move to trash:
         switch (BasicStor::GetObjType($id)) {
-            
+
             case "audioclip":
                 $playLists = $storedFile->getPlaylists();
                 $item_gunid = $storedFile->getGunid();
                 if( $playLists != NULL) {
-                   
+
                     foreach($playLists as $key=>$val) {
                         $playList_id = BasicStor::IdFromGunidBigInt($val["gunid"]);
                         $playList_titles[] = BasicStor::bsGetMetadataValue($playList_id, "dc:title");
@@ -203,7 +247,7 @@ class BasicStor {
                     );
                 }
                 break;
-                
+
             case "playlist":
                 if($storedFile->isScheduled()) {
                      return PEAR::raiseError(
@@ -211,18 +255,18 @@ class BasicStor {
                     );
                 }
                 break;
-                
+
             case "webstream":
-               
+
                 break;
             default:
         }
-     
+
         $res = $storedFile->setState('deleted');
         if (PEAR::isError($res)) {
             return $res;
         }
-       
+
 	    return TRUE;
     }
 
@@ -715,13 +759,9 @@ class BasicStor {
      * @param string $gunid
      * 		Virtual file's gunid, optional, used only if not
      *      null, id is then ignored
-     * @param string $lang
-     * 		xml:lang value for select language version
-     * @param string $deflang
-     * 		xml:lang for default language
      * @return string|PEAR_Error
      */
-    public function bsGetTitle($id, $gunid=NULL, $lang=NULL, $deflang=NULL)
+    public function bsGetTitle($id, $gunid=NULL)
     {
         if (is_null($gunid)) {
             $storedFile = StoredFile::Recall($id);
@@ -731,39 +771,10 @@ class BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-//        $r = $storedFile->md->getMetadataValue('dc:title', $lang, $deflang);
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
         $r = $storedFile->md["title"];
-        $title = (isset($r[0]['value']) ? $r[0]['value'] : 'unknown');
+        $title = (empty($r) ? 'unknown' : $r);
         return $title;
     }
-
-
-    /**
-     * Get metadata element value
-     *
-     * @param int $id
-     * 		Virtual file's local id
-     * @param string $category
-     * 		metadata element name
-     * @param string $lang
-     * 		xml:lang value for select language version
-     * @param string $deflang
-     * 		xml:lang for default language
-     * @return array
-     * 		array of matching records (as hash {id, value, attrs})
-     * @see Metadata::getMetadataValue
-     */
-//    public function bsGetMetadataValue($id, $category, $lang=NULL, $deflang=NULL)
-//    {
-//        $storedFile = StoredFile::Recall($id);
-//        if (PEAR::isError($storedFile)) {
-//            return $storedFile;
-//        }
-//        return $storedFile->md->getMetadataValue($category, $lang, $deflang);
-//    }
 
 
     /**
@@ -794,17 +805,22 @@ class BasicStor {
         } elseif (is_array($category)) {
             $values = array();
 			      foreach ($category as $tmpCat) {
-//				        $values[$tmpCat] = $storedFile->md->getMetadataValue($tmpCat);
 				        $values[$tmpCat] = $storedFile->md[$tmpCat];
 			      }
 			      return $values;
         } else {
-//            return $storedFile->md->getMetadataValue($category);
             return $storedFile->md[$category];
         }
     }
 
 
+    /**
+     * Convert XML name to database column name.  Used for backwards compatibility
+     * with old code.
+     *
+     * @param string $p_category
+     * @return string|null
+     */
     public static function xmlCategoryToDbColumn($p_category)
     {
         global $g_metadata_xml_to_db_mapping;
@@ -815,10 +831,21 @@ class BasicStor {
     }
 
 
+    /**
+     * Convert database column name to XML name.
+     *
+     * @param string $p_dbColumn
+     * @return string|null
+     */
     public static function dbColumnToXmlCatagory($p_dbColumn)
     {
         global $g_metadata_xml_to_db_mapping;
-        return array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+        $str = array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+        // make return value consistent with xmlCategoryToDbColumn()
+        if ($str === FALSE) {
+            $str = null;
+        }
+        return $str;
     }
 
     /**
@@ -951,6 +978,50 @@ class BasicStor {
         return TRUE;
     }
 
+    /**
+     * Method returning array with where-parts of sql queries
+     *
+     * @param array $conditions
+     * 		See 'conditions' field in search criteria format
+     *      definition in class documentation
+     * @return array
+     * 		array of strings - WHERE-parts of SQL queries
+     */
+    private function _makeWhereArr($conditions)
+    {
+        $ops = array('full'=>"='%s'", 'partial'=>"ILIKE '%%%s%%'",
+            'prefix'=>"ILIKE '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
+            '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
+        );
+        $whereArr = array();
+        if (is_array($conditions)) {
+            foreach ($conditions as $cond) {
+                $columnName = BasicStor::xmlCategoryToDbColumn($cond['cat']);
+                $op = strtolower($cond['op']);
+                $value = $cond['val'];
+                if (!empty($value)) {
+                    $splittedQn = XML_Util::splitQualifiedName($catQn);
+                    $catNs = $splittedQn['namespace'];
+                    $cat = $splittedQn['localPart'];
+                    $opVal = sprintf($ops[$op], pg_escape_string($value));
+                    // retype for timestamp value
+                    if ($cat == 'mtime') {
+                        switch ($op) {
+                            case 'partial':
+                            case 'prefix':
+                            	break;
+                            default:
+                                $retype = "::timestamp with time zone";
+                                $opVal = "$retype $opVal$retype";
+                        }
+                    }
+                    $sqlCond = " {$columnName} {$opVal}\n";
+                    $whereArr[] = $sqlCond;
+                }
+            }
+        }
+        return $whereArr;
+    }
 
     /**
      * Search in local metadata database.
@@ -1000,17 +1071,133 @@ class BasicStor {
      *          creator: string - dc:creator from metadata
      *          source: string - dc:source from metadata
      *          length: string - dcterms:extent in extent format
-     * @see DataEngine
      */
     public function bsLocalSearch($criteria, $limit=0, $offset=0)
     {
-        require_once("DataEngine.php");
-        $de = new DataEngine($this);
-        $res = $de->localSearch($criteria, $limit, $offset);
-        if (PEAR::isError($res)) {
-            return $res;
+        global $CC_CONFIG, $CC_DBC;
+
+        // Input values
+        $filetype = (isset($criteria['filetype']) ? $criteria['filetype'] : 'all');
+        $filetype = strtolower($filetype);
+        if (!array_key_exists($filetype, $this->filetypes)) {
+            return PEAR::raiseError(__FILE__.":".__LINE__.': unknown filetype in search criteria');
         }
-        return $res;
+        $filetype = $this->filetypes[$filetype];
+        $operator = (isset($criteria['operator']) ? $criteria['operator'] : 'and');
+        $operator = strtolower($operator);
+        $conditions = (isset($criteria['conditions']) ? $criteria['conditions'] : array());
+
+        // Create the WHERE clause - this is the actual search part
+        $whereArr = $this->_makeWhereArr($conditions);
+
+        // Metadata values to fetch
+        $metadataNames = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title', 'dcterms:extent');
+
+        // Order by clause
+        $orderby = TRUE;
+        $orderByAllowedValues = array('dc:creator', 'dc:source', 'dc:title', 'dcterms:extent', "ls:track_num");
+        $orderByDefaults = array('dc:creator', 'dc:source', 'dc:title');
+        if ((!isset($criteria['orderby']))
+        	|| (is_array($criteria['orderby']) && (count($criteria['orderby'])==0))) {
+      		// default ORDER BY
+            // PaulB: track number removed because it doesnt work yet because
+            // if track_num is not an integer (e.g. bad metadata like "1/20",
+            // or if the field is blank) the SQL statement gives an error.
+            //$orderbyQns  = array('dc:creator', 'dc:source', 'ls:track_num', 'dc:title');
+            $orderbyQns = $orderByDefaults;
+        } else {
+            // ORDER BY clause is given in the parameters.
+
+            // Convert the parameter to an array if it isnt already.
+            $orderbyQns = $criteria['orderby'];
+            if (!is_array($orderbyQns)) {
+                $orderbyQns = array($orderbyQns);
+            }
+
+            // Check that it has valid ORDER BY values, if not, revert
+            // to the default ORDER BY values.
+            foreach ($orderbyQns as $metadataTag) {
+                if (!in_array($metadataTag, $orderByAllowedValues)) {
+                    $orderbyQns = $orderByDefaults;
+                    break;
+                }
+            }
+        }
+
+        $descA = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
+        if (!is_array($descA)) {
+            $descA = array($descA);
+        }
+
+        $orderBySql = array();
+        // $dataName contains the names of the metadata columns we want to
+        // fetch.  It is indexed numerically starting from 1, and the value
+        // in the array is the qualified name with ":" replaced with "_".
+        // e.g. "dc:creator" becomes "dc_creator".
+        foreach ($orderbyQns as $xmlTag) {
+            $columnName = BasicStor::xmlCategoryToDbColumn($xmlTag);
+            $orderBySql[] = $columnName;
+        }
+
+        // Build WHERE clause
+        $whereClause = " WHERE (state='ready' OR state='edited')";
+        if (!is_null($filetype)) {
+        	$whereClause .= " AND (ftype='$filetype')";
+        }
+        if (count($whereArr) != 0) {
+            if ($operator == 'and') {
+                $whereClause .= " AND ((".join(") AND (", $whereArr)."))";
+            } else {
+                $whereClause .= " AND ((".join(") OR (", $whereArr)."))";
+            }
+        }
+
+        // Final query
+        $sql = "SELECT * "
+                 . " FROM ".$CC_CONFIG["filesTable"]
+                 . $whereClause;
+        if ($orderby) {
+           $sql .= " ORDER BY ".join(",", $orderBySql);
+        }
+
+        $_SESSION["debug"] = $sql;
+
+        $countRowsSql = "SELECT COUNT(*) "
+                 . " FROM ".$CC_CONFIG["filesTable"]
+                 . $whereClause;
+        $cnt = $CC_DBC->GetOne($countRowsSql);
+
+        // Get the number of results
+        if (PEAR::isError($cnt)) {
+        	return $cnt;
+        }
+
+        // Get actual results
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+            ($offset != 0 ? " OFFSET $offset" : '' );
+        $res = $CC_DBC->getAll($sql.$limitPart);
+        if (PEAR::isError($res)) {
+        	return $res;
+        }
+        if (!is_array($res)) {
+        	$res = array();
+        }
+        $eres = array();
+        foreach ($res as $it) {
+            $gunid = StoredFile::NormalizeGunid($it['gunid']);
+            $eres[] = array(
+            	'id' => $it['id'],
+                'gunid' => $gunid,
+                'type' => strtolower($it['ftype']),
+                'title' => $it['track_title'],
+                'creator' => $it['artist_name'],
+                'duration' => $it['length'],
+                'length' => $it['length'],
+                'source' => $it['album_title'],
+                'track_num' => $it['track_number'],
+            );
+        }
+        return array('results'=>$eres, 'cnt'=>$cnt);
     }
 
 
@@ -1029,13 +1216,33 @@ class BasicStor {
      * 		hash, fields:
      *       results : array with found values
      *       cnt : integer - number of matching values
-     * @see DataEngine
      */
     public function bsBrowseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
-        require_once("DataEngine.php");
-        $de = new DataEngine($this);
-        return $de->browseCategory($category, $limit, $offset, $criteria);
+        global $CC_CONFIG, $CC_DBC;
+        $category = strtolower($category);
+        $columnName = BasicStor::xmlCategoryToDbColumn($category);
+        if (is_null($columnName)) {
+            return new PEAR_Error(__FILE__.":".__LINE__." -- could not map XML category to DB column.");
+        }
+        $sql = "SELECT DISTINCT $columnName FROM ".$CC_CONFIG["filesTable"];
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+            ($offset != 0 ? " OFFSET $offset" : '' );
+        $countRowsSql = "SELECT COUNT(DISTINCT $columnName) FROM ".$CC_CONFIG["filesTable"];
+
+        //$_SESSION["debug"]  = $sql;
+        $cnt = $CC_DBC->GetOne($countRowsSql);
+        if (PEAR::isError($cnt)) {
+        	return $cnt;
+        }
+        $res = $CC_DBC->getCol($sql.$limitPart);
+        if (PEAR::isError($res)) {
+        	return $res;
+        }
+        if (!is_array($res)) {
+        	$res = array();
+        }
+        return array('results'=>$res, 'cnt'=>$cnt);
     }
 
 
@@ -1585,7 +1792,7 @@ class BasicStor {
         global $CC_CONFIG;
         return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid=x'$p_gunid'::bigint");
     }
-    
+
      /**
      * Get local id from global id (big int).
      *
