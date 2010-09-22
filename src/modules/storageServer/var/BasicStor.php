@@ -1112,7 +1112,7 @@ class BasicStor {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        $_SESSION["debug"] = $sql;
+        //$_SESSION["debug"] = $sql;
 
         $countRowsSql = "SELECT COUNT(*) "
                  . " FROM ".$CC_CONFIG["filesTable"]

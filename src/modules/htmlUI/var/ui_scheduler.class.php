@@ -339,7 +339,6 @@ class uiScheduler extends uiCalendar {
         $thisDay = strftime("%Y-%m-%d", $this->Day[0]['timestamp']);
         $nextDay = strftime("%Y-%m-%d", $this->Day[0]['timestamp'] + 86400);
         $arr = $this->displayScheduleMethod($thisDay.' 00:00:00', $nextDay.' 00:00:00');
-        //$_SESSION["debug"] = $arr;
         if (!is_array($arr)) {
             return FALSE;
         }
@@ -347,93 +346,95 @@ class uiScheduler extends uiCalendar {
         $items = array();
         foreach ($arr as $key => $val) {
         	$start = self::datetimeToTimestamp($val['start']);
-            $end = self::datetimeToTimestamp($val['end']);
+          $end = self::datetimeToTimestamp($val['end']);
         	$Y = strftime('%Y', $start);
-            $m = number_format(strftime('%m', $start));
-            $d = number_format(strftime('%d', $start));
-            $h = number_format(strftime('%H', $start));
-            $M = number_format(strftime('%i', $start));
+          $m = number_format(strftime('%m', $start));
+          $d = number_format(strftime('%d', $start));
+          $h = number_format(strftime('%H', $start));
+          $M = number_format(strftime('%i', $start));
 
-            $id = BasicStor::IdFromGunid($val['playlistId']);
+          $id = $val['playlistId'];
+          $startHour = (int)strftime('%H', $start);
+          $endHour = (int)strftime('%H', $end);
+          $startTime = substr($val['start'], strpos($val['start'], ' ')+1);
+          $endTime = substr($val['end'], strpos($val['end'], ' ') + 1);
+          $track = StoredFile::Recall($val["file_id"]);
+          $trackMetadata = $track->getMetadata();
+          $title = $trackMetadata["track_title"];
+          $creator = $trackMetadata["artist_name"];
 
-            $startHour = (int)strftime('%H', $start);
-            $endHour = (int)strftime('%H', $end);
-            $startTime = substr($val['start'], strpos($val['start'], 'T')+1);
-            $endTime = substr($val['end'], strpos($val['end'], 'T') + 1);
-            $title = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
-            $creator = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
+          // Item starts today
+          if (strftime('%Y-%m-%d', $start) === $thisDay) {
+              $endsToday = (strftime('%d', $start) === strftime('%d', $end)) ? TRUE : FALSE;
+              $endsHere = strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE;
+          	$items[$startHour]['start'][] =
+          	   array('id' => $id,
+                     'scheduleid' => $val['id'],
+                     'start' => $startTime,
+                     'end' => $endTime,
+                     'title' => $title,
+                     'creator' => $creator,
+                     'type' => 'Playlist',
+                     'endstoday' => $endsToday,
+                     'endshere' => $endsHere);
+          }
 
-            // Item starts today
-            if (strftime('%Y%m%d', $start) === $thisDay) {
-                $endsToday = (strftime('%d', $start) === strftime('%d', $end)) ? TRUE : FALSE;
-                $endsHere = strftime('%H', $start) === strftime('%H', $end) ? TRUE : FALSE;
-            	$items[$startHour]['start'][] =
-            	   array('id' => $id,
-	                     'scheduleid' => $val['id'],
-	                     'start' => $startTime,
-	                     'end' => $endTime,
-	                     'title' => $title,
-	                     'creator' => $creator,
-	                     'type' => 'Playlist',
-	                     'endstoday' => $endsToday,
-                         'endshere' => $endsHere);
-            }
+          // Item ends today
+          if ( (strftime('%Y-%m-%d', $end) === $thisDay) && ($startHour !== $endHour) ) {
+              $startsYesterday = (strftime('%d', $start) === strftime('%d', $end)) ? FALSE : TRUE;
 
-            // Item ends today
-            if ( (strftime('%Y%m%d', $end) === $thisDay) && ($startHour !== $endHour) ) {
-                $startsYesterday = (strftime('%d', $start) === strftime('%d', $end)) ? FALSE : TRUE;
+          	$items[$endHour]['end'][] =
+          	   array('id' => $id,
+                     'scheduleid' => $val['id'],
+                     'start' => $startTime,
+                     'end' => $endTime,
+                     'title' => $title,
+                     'creator' => $creator,
+                     'type' => 'Playlist',
+                     'startsyesterday' => $startsYesterday);
+          }
 
-            	$items[$endHour]['end'][] =
-            	   array('id' => $id,
-	                     'scheduleid' => $val['id'],
-	                     'start' => $startTime,
-	                     'end' => $endTime,
-	                     'title' => $title,
-	                     'creator' => $creator,
-	                     'type' => 'Playlist',
-	                     'startsyesterday' => $startsYesterday);
-            }
-
-            $diffHours = floor(($end - $start)/3600);
-            // If the item spans three hours or more
-            if ( $diffHours > 2 ) {
-                // $skip becomes true if we dont actually have to do
-                // this section.
-                $skip = false;
-                if (strftime('%Y%m%d', $start) === $thisDay) {
-                    // For the edge case of starting at the end of
-                    // today.
-                    if ($startHour == 23) {
-                        $skip = true;
-                    }
-                    $countStart = $startHour + 1;
-                } else {
-                    $countStart = 0;
-                }
-                if (strftime('%Y%m%d', $end) === $thisDay) {
-                    // For the edge case of ending at the beginning
-                    // of today.
-                    if ($endHour == 0) {
-                        $skip = true;
-                    }
-                    $countEnd = $endHour - 1;
-                } else {
-                    $countEnd = 23;
-                }
-                if (!$skip) {
-                    for ($i = $countStart; $i <= $countEnd; $i++) {
-                    	$items[$i]['span'] =
-                    	   array('id' => $id,
-        	                     'scheduleid' => $val['id'],
-        	                     'start' => $startTime,
-        	                     'end' => $endTime,
-        	                     'title' => $title,
-        	                     'creator' => $creator,
-        	                     'type' => 'Playlist');
-                    }
-                }
-            }
+          $diffHours = floor(($end - $start)/3600);
+          // If the item spans three hours or more
+          if ( $diffHours > 2 ) {
+              // $skip becomes true if we dont actually have to do
+              // this section.
+              $skip = false;
+              if (strftime('%Y-%m-%d', $start) === $thisDay) {
+                  // For the edge case of starting at the end of
+                  // today.
+                  if ($startHour == 23) {
+                      $skip = true;
+                  }
+                  $countStart = $startHour + 1;
+              } else {
+                  $countStart = 0;
+              }
+              if (strftime('%Y-%m-%d', $end) === $thisDay) {
+                  // For the edge case of ending at the beginning
+                  // of today.
+                  if ($endHour == 0) {
+                      $skip = true;
+                  }
+                  $countEnd = $endHour - 1;
+              } else {
+                  $countEnd = 23;
+              }
+              if (!$skip) {
+                  for ($i = $countStart; $i <= $countEnd; $i++) {
+                  	$items[$i]['span'] =
+                  	   array('id' => $id,
+      	                     'scheduleid' => $val['id'],
+      	                     'start' => $startTime,
+      	                     'end' => $endTime,
+      	                     'title' => $title,
+      	                     'creator' => $creator,
+      	                     'type' => 'Playlist');
+                  }
+              }
+          }
         }
+
         return $items;
     } // fn getDayEntrys
 
@@ -522,7 +523,7 @@ class uiScheduler extends uiCalendar {
     {
         global $ui_fmask;
         foreach ($this->availablePlaylists as $val) {
-            $ui_fmask['schedule']['gunid_duration']['options'][$val['gunid'].'|'.$val['duration']] = $val['title'];
+            $ui_fmask['schedule']['id_duration']['options'][$val['id'].'|'.$val['duration']] = $val['title'];
         }
 
         $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -549,6 +550,7 @@ class uiScheduler extends uiCalendar {
             $this->Base->SCRATCHPAD->addItem($id);
             $this->availablePlaylists[] = array(
                 'gunid'     => BasicStor::GunidFromId($id),
+                'id'        => $id,
                 'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
                 'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
             );
@@ -742,9 +744,10 @@ class uiScheduler extends uiCalendar {
      */
     public static function datetimeToTimestamp($i)
     {
-        $i = str_replace('T', ' ', $i);
-        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, ' ');
-        return self::strtotime($formatted);
+      $i = str_replace('-', '', $i);
+      $i = str_replace(' ', 'T', $i);
+      $i = substr($i, 0, 17);
+      return self::strtotime($i);
     } // fn datetimeToTimestamp
 
 
@@ -1043,7 +1046,7 @@ class uiScheduler extends uiCalendar {
 
         $item = new ScheduleGroup();
         $groupId = $item->add($datetime, null, $gunid);
-        $_SESSION["debug"] = $groupId;
+        //$_SESSION["debug"] = $groupId;
         return is_numeric($groupId);
 //        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
 //        if ($this->_isError($r)) {
@@ -1087,16 +1090,9 @@ class uiScheduler extends uiCalendar {
      */
     function displayScheduleMethod($from, $to)
     {
-      // NOTE: Need to fix times.
-      //$_SESSION["debug"] = "FROM: $from,  TO: $to<br>";
-      //$from = substr($from, 0, 4)."-".
       $items = Schedule::GetItems($from, $to);
+      //$_SESSION["debug"] = $items;
       return $items;
-//        $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
-//        if ($this->_isError($r)) {
-//            return FALSE;
-//        }
-//        return $r;
     } // fn displayScheduleMethod
 
 

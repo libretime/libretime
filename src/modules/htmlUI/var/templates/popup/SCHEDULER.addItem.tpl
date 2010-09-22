@@ -106,13 +106,13 @@ function SCHEDULE_snap2Next()
 
 function SCHEDULE_selectedDuration()
 {
-    var arr = document.forms["schedule"].elements["gunid_duration"].value.split("|");
+    var arr = document.forms["schedule"].elements["id_duration"].value.split("|");
     return arr[1].slice(0, 8);
 }
 
 function SCHEDULE_selectedGunid()
 {
-    var arr = document.forms["schedule"].elements["gunid_duration"].value.split("|");
+    var arr = document.forms["schedule"].elements["id_duration"].value.split("|");
     return arr[0];
 }
 {/literal}

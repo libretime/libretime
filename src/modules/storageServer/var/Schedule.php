@@ -241,7 +241,9 @@ class Schedule {
    *    "id" (DB id)
    *
    * @param $fromDateTime
+   *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
    * @param $toDateTime
+   *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
    */
   public static function GetItems($fromDateTime, $toDateTime, $playlistsOnly = true) {
     global $CC_CONFIG, $CC_DBC;
