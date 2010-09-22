@@ -241,7 +241,6 @@ class uiScratchPad
      */
     public function reloadMetadata()
     {
-        $_SESSION['pl'] = $this->items;
         foreach ($this->items as $key => $val) {
             if($val['type'] === 'playlist')
                 $this->items[$key] = $this->Base->getPLMetaInfo($val['id']);
@@ -249,5 +248,16 @@ class uiScratchPad
                 $this->items[$key] = $this->Base->getMetaInfo($val['id']);
         }
     }
+    
+    public function reloadActivePLMetadata($id)
+    {
+        foreach ($this->items as $key => $val) {
+            if($val['id'] === $id) {
+                $this->items[$key] = $this->Base->getPLMetaInfo($val['id']);
+                return;
+            }
+        }
+    }
+    
 } // class uiScratchPad
 ?>

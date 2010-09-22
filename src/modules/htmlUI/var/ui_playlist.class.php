@@ -225,7 +225,7 @@ class uiPlaylist
             }
         }
         
-        $this->Base->SCRATCHPAD->reloadMetadata();
+        $this->Base->SCRATCHPAD->reloadActivePLMetadata($this->activeId);
         
         return TRUE;
     } // fn addItem
@@ -253,7 +253,7 @@ class uiPlaylist
             }
         }
         
-        $this->Base->SCRATCHPAD->reloadMetadata();
+        $this->Base->SCRATCHPAD->reloadActivePLMetadata($this->activeId);
         
         return TRUE;
     } // fn removeItem
