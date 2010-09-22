@@ -527,26 +527,20 @@ class uiBase
     } // fn _retMsg
 
 
+    public function getPLMetaInfo($id) 
+    {
+        $data = array('id' => $id,
+                      'title' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_TITLE),
+                      'creator' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                      'duration' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_DURATION),
+                      'type' => 'playlist',
+                );
+         return ($data);     
+    }
+    
     public function getMetaInfo($id)
     {
         $type = strtolower(GreenBox::getFileType($id));
-
-        if($type == 'playlist') {
-            require_once("../../../storageServer/var/Playlist.php");
-
-            $playList = new Playlist(GreenBox::GunidFromId($id));
-            $playListData = $playList->export();
-
-            for ($i = 1; $i < count($playListData); $i++) {
-
-                $entry = StoredFile::RecallByGunid($playListData["".$i]["gunid"]);
-                $playListEntries[] = $entry->getName();
-
-            }
-
-            $_SESSION['mdata'] = $playListEntries;
-
-        }
 
         $data = array('id' => $id,
                       'gunid' => BasicStor::GunidFromId($id),
@@ -557,8 +551,6 @@ class uiBase
                       'source' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_SOURCE) : NULL,
                       'bitRate' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_BITRATE) : NULL,
                       'sampleRate' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_SAMPLERATE) : NULL,
-                      //'isAvailable' => $type == 'playlist' ? $this->gb->playlistIsAvailable($id, $this->sessid) : NULL,
-                      'content' => $type == 'playlist' ? join("/", $playListEntries) : NULL,
                 );
          return ($data);
     } // fn getMetaInfo

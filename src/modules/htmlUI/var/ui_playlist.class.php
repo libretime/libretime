@@ -224,6 +224,9 @@ class uiPlaylist
                 return FALSE;
             }
         }
+        
+        $this->Base->SCRATCHPAD->reloadMetadata();
+        
         return TRUE;
     } // fn addItem
 
@@ -249,6 +252,9 @@ class uiPlaylist
                 return FALSE;
             }
         }
+        
+        $this->Base->SCRATCHPAD->reloadMetadata();
+        
         return TRUE;
     } // fn removeItem
 
@@ -656,7 +662,9 @@ class uiPlaylist
         }
         if (UI_VERBOSE) {
         	$this->Base->_retMsg('Metadata saved.');
-        }  
+        } 
+
+        $this->Base->SCRATCHPAD->reloadMetadata();
     } // fn editMetadata
 
 

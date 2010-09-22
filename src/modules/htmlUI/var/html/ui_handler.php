@@ -295,7 +295,7 @@ switch ($_REQUEST['act']) {
 
     case "PL.activate":
 	    if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {
-	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id'], TRUE);
 	    }
 	    $uiHandler->PLAYLIST->setRedirect();
 	    break;
@@ -306,7 +306,7 @@ switch ($_REQUEST['act']) {
 	        if ($ids) {
 	        	//$uiHandler->SCRATCHPAD->addItem($ids);
 	        }
-	        //$uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+	        $uiHandler->SCRATCHPAD->addItem($ui_tmpid, TRUE);
 	    }
 	    $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData');
 	    break;
