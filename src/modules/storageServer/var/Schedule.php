@@ -1,6 +1,6 @@
 <?php
 
-class ScheduleItem {
+class ScheduleGroup {
 
   private $groupId;
 
@@ -46,10 +46,15 @@ class ScheduleItem {
   /**
    * Add a music clip or playlist to the schedule.
    *
-   * @param $p_audioFileId
-   * @param $p_playlistId
    * @param $p_datetime
+   *    In the format YYYY-MM-DD HH:MM:SS.mmmmmm
+   * @param $p_audioFileId
+   *    (optional, either this or $p_playlistId must be set) DB ID of the audio file
+   * @param $p_playlistId
+   *    (optional, either this of $p_audioFileId must be set) DB ID of the playlist
    * @param $p_options
+   *    Does nothing at the moment.
+   *
    * @return int|PEAR_Error
    *    Return PEAR_Error if the item could not be added.
    */
@@ -78,9 +83,10 @@ class ScheduleItem {
       $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
       $id = $this->dateToId($p_datetime);
       $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-        ." (id, playlist_id, starts, ends, group_id, file_id)"
+        ." (id, playlist_id, starts, ends, clip_length, group_id, file_id)"
         ." VALUES ($id, 0, TIMESTAMP '$p_datetime', "
         ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
+        ." '$length',"
         ." {$this->groupId}, $p_audioFileId)";
       $result = $CC_DBC->query($sql);
       if (PEAR::isError($result)) {
@@ -91,9 +97,47 @@ class ScheduleItem {
 
     } elseif (!is_null($p_playlistId)){
       // Schedule a whole playlist
-    }
 
-    // return group ID
+      // Load existing playlist
+      $playlist = Playlist::Recall($p_playlistId);
+      if (is_null($playlist)) {
+        return new PEAR_Error("Could not find playlist.");
+      }
+
+      // Check if there are any conflicts with existing entries
+      $length = trim($playlist->getLength());
+      if (empty($length)) {
+        return new PEAR_Error("Length is empty.");
+      }
+      if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
+        return new PEAR_Error("Schedule conflict.");
+      }
+
+      // Insert all items into the schedule
+      $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
+      $id = $this->dateToId($p_datetime);
+      $itemStartTime = $p_datetime;
+
+      $plItems = $playlist->getContents();
+      foreach ($plItems as $row) {
+        $trackLength = $row["cliplength"];
+        $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
+          ." (id, playlist_id, starts, ends, group_id, file_id,"
+          ." clip_length, cue_in, cue_out, fade_in, fade_out)"
+          ." VALUES ($id, $p_playlistId, TIMESTAMP '$itemStartTime', "
+          ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
+          ." {$this->groupId}, {$row['file_id']}, '$trackLength', '{$row['cuein']}',"
+          ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+          var_dump($sql);
+          return $result;
+        }
+        $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
+        $id = $this->dateToId($itemStartTime);
+      }
+      return $this->groupId;
+    }
   }
 
   public function addAfter($p_groupId, $p_audioFileId) {
@@ -124,6 +168,28 @@ class ScheduleItem {
     $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
          ." WHERE group_id = ".$this->groupId;
     return $CC_DBC->query($sql);
+  }
+
+  /**
+   * Return the number of items in this group.
+   * @return string
+   */
+  public function count() {
+    global $CC_CONFIG, $CC_DBC;
+    $sql = "SELECT COUNT(*) FROM {$CC_CONFIG['scheduleTable']}"
+          ." WHERE group_id={$this->groupId}";
+    return $CC_DBC->GetOne($sql);
+  }
+
+  /*
+   * Return the list of items in this group as a 2D array.
+   * @return array
+   */
+  public function getItems() {
+    global $CC_CONFIG, $CC_DBC;
+    $sql = "SELECT * FROM {$CC_CONFIG['scheduleTable']}"
+          ." WHERE group_id={$this->groupId}";
+    return $CC_DBC->GetAll($sql);
   }
 
   public function reschedule($toDateTime) {

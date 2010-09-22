@@ -57,6 +57,8 @@ ALTER TABLE cc_schedule ALTER playlist_id TYPE integer;
 ALTER TABLE cc_schedule ADD COLUMN group_id integer;
 ALTER TABLE cc_schedule ADD COLUMN file_id integer;
 ALTER TABLE cc_schedule
+   ADD COLUMN clip_length time without time zone DEFAULT '00:00:00.000000';
+ALTER TABLE cc_schedule
    ADD COLUMN fade_in time without time zone DEFAULT '00:00:00.000';
 ALTER TABLE cc_schedule
    ADD COLUMN fade_out time without time zone DEFAULT '00:00:00.000';

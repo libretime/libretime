@@ -403,6 +403,7 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
           ."  ends timestamp without time zone NOT NULL,"
           ."  group_id integer,"
           ."  file_id integer,"
+          ."  clip_length time without time zone DEFAULT '00:00:00'::time without time zone,"
           ."  fade_in time without time zone DEFAULT '00:00:00'::time without time zone,"
           ."  fade_out time without time zone DEFAULT '00:00:00'::time without time zone,"
           ."  cue_in time without time zone DEFAULT '00:00:00'::time without time zone,"

@@ -62,7 +62,7 @@ class uiScheduler extends uiCalendar {
     private $availablePlaylists;
 
     public $firstDayOfWeek;
-	private $scriptError;
+	  private $scriptError;
     public $error;
 
 
@@ -298,9 +298,9 @@ class uiScheduler extends uiCalendar {
     {
         // build array within all entrys of current week
         $this->buildWeek();
-        $thisWeekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
-        $nextWeekStart = strftime("%Y%m%d", $this->Week[6]['timestamp'] + 86400);
-        $arr = $this->displayScheduleMethod($thisWeekStart.'T00:00:00', $nextWeekStart.'T00:00:00');
+        $thisWeekStart = strftime("%Y-%m-%d", $this->Week[0]['timestamp']);
+        $nextWeekStart = strftime("%Y-%m-%d", $this->Week[6]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisWeekStart.' 00:00:00', $nextWeekStart.' 00:00:00');
 
         if (!is_array($arr)) {
             return FALSE;
@@ -330,16 +330,16 @@ class uiScheduler extends uiCalendar {
     /**
      * Get all items scheduled for a given day.
      *
-     * @return false|array
+     * @return array|false
      */
     public function getDayEntrys()
     {
         // build array within all entrys of current day
         $this->buildDay();
-        $thisDay = strftime("%Y%m%d", $this->Day[0]['timestamp']);
-        $nextDay = strftime("%Y%m%d", $this->Day[0]['timestamp'] + 86400);
-        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
-
+        $thisDay = strftime("%Y-%m-%d", $this->Day[0]['timestamp']);
+        $nextDay = strftime("%Y-%m-%d", $this->Day[0]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisDay.' 00:00:00', $nextDay.' 00:00:00');
+        //$_SESSION["debug"] = $arr;
         if (!is_array($arr)) {
             return FALSE;
         }
@@ -440,8 +440,8 @@ class uiScheduler extends uiCalendar {
     /*
     function getDayHourlyEntrys($year, $month, $day)
     {
-        $date = $year.$month.$day;
-        $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
+        $date = $year.'-'.$month.'-'.$day;
+        $arr = $this->displayScheduleMethod($date.' 00:00:00', $date.' 23:59:59.999999');
         if (!count($arr))
             return FALSE;
         foreach ($arr as $key => $val) {
@@ -460,8 +460,8 @@ class uiScheduler extends uiCalendar {
     private function getDayUsage($year, $month, $day)
     {
         $thisDay = $year.$month.$day;
-        $nextDay = strftime("%Y%m%d", strtotime('+1 day', strtotime("$year-$month-$day")));
-        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
+        $nextDay = strftime("%Y-%m-%d", strtotime('+1 day', strtotime("$year-$month-$day")));
+        $arr = $this->displayScheduleMethod($thisDay.' 00:00:00', $nextDay.' 00:00:00');
 
         if (!is_array($arr)) {
             return FALSE;
@@ -595,8 +595,8 @@ class uiScheduler extends uiCalendar {
     public function getScheduledPlaylist($p_playlist_nr=0, $p_period=3600)
     {
         $now = time();
-        $start = strftime('%Y%m%dT%H:%M:%S', $now);
-        $end =  $p_playlist_nr ? strftime('%Y%m%dT%H:%M:%S', $now + $p_period) : strftime('%Y%m%dT%H:%M:%S', $now);
+        $start = strftime('%Y-%m-%d %H:%M:%S', $now);
+        $end =  $p_playlist_nr ? strftime('%Y-%m-%d %H:%M:%S', $now + $p_period) : strftime('%Y-%m-%d %H:%M:%S', $now);
         $playlists = $this->displayScheduleMethod($start, $end);
 
         if (!is_array($playlists) || !count($playlists)) {
@@ -803,8 +803,8 @@ class uiScheduler extends uiCalendar {
 
     private function _receiveScheduledDays($dfrom, $dto)
     {
-        $dfrom = $dfrom.'T00:00:00';
-        $dto = $dto.'T23:59:59';
+        $dfrom = $dfrom.' 00:00:00';
+        $dto = $dto.' 23:59:59';
         if (($pArr = $this->displayScheduleMethod($dfrom, $dto)) === FALSE) {
             return array(FALSE);
         }
@@ -1033,14 +1033,17 @@ class uiScheduler extends uiCalendar {
     {
         $gunid = $formdata['playlist'];
         $datetime = $formdata['date']['Y']
+            .'-'
             .sprintf('%02d', $formdata['date']['m'])
+            .'-'
             .sprintf('%02d', $formdata['date']['d'])
             .' '.sprintf('%02d', $formdata['time']['H'])
             .':'.sprintf('%02d', $formdata['time']['i'])
             .':'.sprintf('%02d', $formdata['time']['s']);
 
-        $item = new ScheduleItem();
-        $groupId = $item->add($datetime, $gunid);
+        $item = new ScheduleGroup();
+        $groupId = $item->add($datetime, null, $gunid);
+        $_SESSION["debug"] = $groupId;
         return is_numeric($groupId);
 //        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
 //        if ($this->_isError($r)) {
@@ -1060,7 +1063,7 @@ class uiScheduler extends uiCalendar {
      */
     function removeFromScheduleMethod($p_groupId)
     {
-      $item = new ScheduleItem($p_groupId);
+      $item = new ScheduleGroup($p_groupId);
       $success = $item->remove();
       //$r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $id);
       if (!$success) {
@@ -1077,14 +1080,16 @@ class uiScheduler extends uiCalendar {
      * Get the scheduled items between the $from and $to dates.
      *
      * @param string $from
-     *      In the format YYYMMDDTHH:MM:SS
+     *      In the format "YYYY-MM-DD HH:MM:SS.nnnnnn"
      * @param string $to
-     *      In the format YYYMMDDTHH:MM:SS
+     *      In the format "YYYY-MM-DD HH:MM:SS.nnnnnn"
      * @return array|false
      */
     function displayScheduleMethod($from, $to)
     {
       // NOTE: Need to fix times.
+      //$_SESSION["debug"] = "FROM: $from,  TO: $to<br>";
+      //$from = substr($from, 0, 4)."-".
       $items = Schedule::GetItems($from, $to);
       return $items;
 //        $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);

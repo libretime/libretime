@@ -47,40 +47,40 @@ class Playlist {
 	 * @var timestamp
 	 */
 	private $mtime;
-	
+
 	/**
 	 * @var MetaData
 	 */
 	public $md;
-	
+
 	private $categories = array("dc:title" => "name", "dc:creator" => "creator", "dc:description" => "description", "dcterms:extent" => "length");
-	
-	
+
+
     public function __construct($p_gunid=NULL)
     {
-    
+
     }
-    
+
     public static function Insert($p_values)
     {
         global $CC_CONFIG, $CC_DBC;
 
         // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
-        $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");  
-        
+        $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
+
         // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
       	$storedPlaylist->id = isset($p_values['id']) && is_integer($p_values['id'])?"'".$p_values['id']."'":'DEFAULT';
-        
+
         // Insert record into the database
         $escapedName = pg_escape_string($storedPlaylist->name);
- 
+
         $CC_DBC->query("BEGIN");
         $sql = "INSERT INTO ".$CC_CONFIG['playListTable']
                 ."(id, name, state, mtime)"
                 ." VALUES ({$storedPlaylist->id}, '{$escapedName}', "
                 ." 'incomplete', now())";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -89,31 +89,31 @@ class Playlist {
 
         if (!is_integer($storedPlaylist->id)) {
         	// NOTE: POSTGRES-SPECIFIC
-			$sql = "SELECT currval('".$CC_CONFIG["playListSequence"]."_seq')";
+			    $sql = "SELECT currval('".$CC_CONFIG["playListSequence"]."_seq')";
         	$storedPlaylist->id = $CC_DBC->getOne($sql);
         }
-        
-        // Save state 
+
+        // Save state
         $res = $storedPlaylist->setState('ready');
-       
+
         // Commit changes
         $res = $CC_DBC->query("COMMIT");
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         // Recall the object to get all the proper values
         //$storedPlaylist = Playlist::Recall($storedPlaylist->id);
         return $storedPlaylist->id;
     }
-    
+
     public static function Delete($id) {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $CC_DBC->query("BEGIN");
         $sql = "DELETE FROM ".$CC_CONFIG['playListTable']. " WHERE id='{$id}'";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -126,49 +126,50 @@ class Playlist {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         return TRUE;
     }
-    
+
  	/**
-     * Fetch instance of StoredPlaylist object.<br>
-     * @param string $p_gunid
-     * 		global unique id of file
-     * @return StoredFile|Playlist|NULL
+     * Fetch instance of Playlist object.<br>
+     *
+     * @param string $id
+     * 		DB id of file
+     * @return Playlist|NULL
      *      Return NULL if the object doesnt exist in the DB.
      */
     public static function Recall($id) {
-  
+
         global $CC_DBC, $CC_CONFIG;
-        
+
         $escapedID = pg_escape_string($id);
-       
+
         $sql = "SELECT id,"
             ." name, state, currentlyaccessing, editedby, "
             ." mtime"
             ." FROM ".$CC_CONFIG['playListTable']
             ." WHERE id ='{$escapedID}'";
         $row = $CC_DBC->getRow($sql);
-        
+
         if (PEAR::isError($row)) {
             return FALSE;
         }
         if (is_null($row)) {
             return FALSE;
         }
-        
+
         $storedPlaylist = new Playlist($id);
-        
+
         $storedPlaylist->id = $row['id'];
         $storedPlaylist->name = $row['name'];
         $storedPlaylist->state = $row['state'];
         $storedPlaylist->currentlyaccessing = $row['currentlyaccessing'];
         $storedPlaylist->editedby = $row['editedby'];
         $storedPlaylist->mtime = $row['mtime'];
-       
+
         return $storedPlaylist;
     }
-    
+
      /**
      * Rename stored virtual playlist
      *
@@ -189,7 +190,7 @@ class Playlist {
         $this->name = $p_newname;
         return TRUE;
     }
-    
+
  	/**
      * Get mnemonic playlist name
      *
@@ -207,7 +208,7 @@ class Playlist {
             ." WHERE id='$id'";
         return $CC_DBC->getOne($sql);
     }
-    
+
 	/**
      * Set state of virtual playlist
      *
@@ -233,7 +234,7 @@ class Playlist {
         $this->editedby = $p_editedby;
         return TRUE;
     }
-    
+
      /**
      * Get storage-internal file state
      *
@@ -252,7 +253,7 @@ class Playlist {
             ." WHERE id='$id'";
         return $CC_DBC->getOne($sql);
     }
-    
+
     /**
      * TODO have to change this.
      * */
@@ -269,7 +270,7 @@ class Playlist {
         return $scheduled;
     }
     */
-    
+
  	/**
      * Returns true if virtual file is currently in use.<br>
      * Static or dynamic call is possible.
@@ -295,7 +296,7 @@ class Playlist {
         }
         return ($ca > 0);
     }
-    
+
     /**
      * Returns id of user editing playlist
      *
@@ -304,13 +305,13 @@ class Playlist {
      * @return int id of user editing playlist
      */
     public function isEdited() {
-        
-        if($this->state === 'edited') {        
+
+        if($this->state === 'edited') {
             return $this->editedby;
-        }    
+        }
         return FALSE;
     }
-    
+
 /**
      * Set playlist edit flag
      *
@@ -325,16 +326,16 @@ class Playlist {
      * @return boolean
      * 		TRUE on success.
      */
-    
+
     public function setEditFlag($p_val=TRUE, $p_sessid=NULL, $p_subjid=NULL) {
-        
+
         if (!is_null($p_sessid)) {
             $p_subjid = Alib::GetSessUserId($p_sessid);
             if (PEAR::isError($p_subjid)) {
                 return $p_subjid;
             }
         }
-           
+
         $state = $this->state;
         if ($p_val) {
             $r = $this->setState('edited', $p_subjid);
@@ -346,7 +347,7 @@ class Playlist {
         }
         return TRUE;
     }
-   
+
      /**
      * Return local ID of virtual file.
      *
@@ -355,53 +356,51 @@ class Playlist {
     public function getId() {
         return $this->id;
     }
-    
+
     private function getNextPos() {
-        
+
         global $CC_CONFIG, $CC_DBC;
-         
-        $sql = "SELECT MAX(position) AS nextPos 
+
+        $sql = "SELECT MAX(position) AS nextPos
         	FROM cc_playlistcontents
         	WHERE playlist_id='{$this->getId()}'";
-       
+
         $res = $CC_DBC->getOne($sql);
-        
+
         if(is_null($res))
             return 0;
-            
+
         if(PEAR::isError($res)){
             return $res;
         }
 
         return $res + 1;
     }
-    
+
+    /**
+     * Get the entire playlist as a two dimentional array, sorted in order of play.
+     * @return array
+     */
     public function getContents() {
-        
         global $CC_CONFIG, $CC_DBC;
-         
-        $sql = "SELECT * 
-        	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id 
+        $sql = "SELECT *
+        	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
         	WHERE C.playlist_id='{$this->getId()}' ORDER BY C.position";
-       
         return $CC_DBC->getAll($sql);
     }
-    
+
     public function getLength() {
-        
         global $CC_CONFIG, $CC_DBC;
-      
         $sql = "SELECT SUM(cliplength) AS length FROM ".$CC_CONFIG['playListContentsTable']
                 ." WHERE playlist_id='{$this->getId()}' group by playlist_id";
-       
         $res =  $CC_DBC->getRow($sql);
         if (PEAR::isError($res)) {
         	return $res;
         }
-        
+
         if(is_null($res))
             return '00:00:00.000000';
-        
+
         return $res['length'];
     }
 
@@ -419,8 +418,8 @@ class Playlist {
         if (PEAR::isError($pl_id)) {
             return $pl_id;
         }
-       
-        return $pl_id;
+        $this->id = $pl_id;
+        return $this->id;
     }
 
     /**
@@ -448,7 +447,7 @@ class Playlist {
 
 
     /**
-     * Unlock playlist 
+     * Unlock playlist
      *
      * @param sessId
      * 		reference to GreenBox object
@@ -456,37 +455,33 @@ class Playlist {
      * 		previous state or error object
      */
     public function unlock($sessid)
-    { 
+    {
         $r = $this->lock($sessid, NULL, FALSE);
         return $r;
     }
 
 
     /**
-     *  Add audioClip specified by local id to the playlist
+     *  Add audio clip to the playlist
      *
-     * @param string $acId
+     * @param string $p_id
      * 		local ID of added file
-     * @param string $fadeIn
+     * @param string $p_position
+     *    optional, Which position in the playlist to insert the audio clip
+     * @param string $p_fadeIn
      * 		optional, in time format hh:mm:ss.ssssss - total duration
-     * @param string $fadeOut
+     * @param string $p_fadeOut
      * 		optional, in time format hh:mm:ss.ssssss - total duration
-     * @param string $plElGunid
-     * 		optional playlist element gunid
-     * @param string $length
+     * @param string $p_clipLength
      * 		optional length in in time format hh:mm:ss.ssssss -
      *      for webstream (or for overrule length of audioclip)
-     * @param string $clipstart
-     *      optional clipstart in time format hh:mm:ss.ssssss - relative to begin
-     * @param string $clipend
-     *      optional $clipend in time format hh:mm:ss.ssssss - relative to begin
-     * @return string
-     * 		generated playlistElement gunid
+     * @return true|PEAR_Error
+     * 		TRUE on success
      */
-    public function addAudioClip($acId, $pos=NULL, $fadeIn=NULL, $fadeOut=NULL, $cliplength=NULL, $cuein=NULL, $cueout=NULL)
+    public function addAudioClip($p_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
         //get audio clip.
-        $ac = StoredFile::Recall($acId);
+        $ac = StoredFile::Recall($p_id);
         if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
@@ -496,31 +491,31 @@ class Playlist {
         	return $acInfo;
         }
         extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
-        if (!is_null($cliplength)) {
-        	$acLen = $cliplength;
+        if (!is_null($p_clipLength)) {
+        	$acLen = $p_clipLength;
         }
-        
-        //insert at end of playlist.
-        if(is_null($pos))
-            $pos = $this->getNextPos();
-        if (PEAR::isError($pos)) {
-        	return $pos;
+
+        // insert at end of playlist.
+        if (is_null($p_position))
+          $p_position = $this->getNextPos();
+        if (PEAR::isError($p_position)) {
+        	return $p_position;
         }
-            
+
 	    // insert default values if parameter was empty
-        $cuein = !is_null($cuein) ? $cuein : '00:00:00.000000';
-        $cueout = !is_null($cueout) ? $cueout : $acLen;
+        $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
+        $p_cueout = !is_null($p_cueout) ? $p_cueout : $acLen;
 
         $acLengthS = $clipLengthS = self::playlistTimeToSeconds($acLen);
-        if (!is_null($cuein)) {
-            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($cuein);
+        if (!is_null($p_cuein)) {
+            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($p_cuein);
         }
-        if (!is_null($cueout)) {
-            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($cueout));
+        if (!is_null($p_cueout)) {
+            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($p_cueout));
         }
-        $clipLength = self::secondsToPlaylistTime($clipLengthS);
+        $p_clipLength = self::secondsToPlaylistTime($clipLengthS);
 
-        $res = $this->insertPlaylistElement($this->getId(), $acId, $pos, $clipLength, $cuein, $cueout, $fadeIn, $fadeOut);
+        $res = $this->insertPlaylistElement($this->getId(), $p_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -538,10 +533,10 @@ class Playlist {
     public function delAudioClip($pos)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $CC_DBC->query("BEGIN");
         $sql = "DELETE FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -554,10 +549,10 @@ class Playlist {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         return TRUE;
     }
-    
+
  	/**
      * Move audioClip to the new position in the playlist
      *
@@ -570,10 +565,10 @@ class Playlist {
     public function moveAudioClip($oldPos, $newPos)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $CC_DBC->query("BEGIN");
         $sql = "SELECT * FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$oldPos}'";
-       
+
         $ac = $CC_DBC->getRow($sql);
         if (PEAR::isError($ac)) {
             return $ac;
@@ -582,11 +577,11 @@ class Playlist {
         $res = $this->delAudioClip($oldPos);
         if($res !== TRUE)
             return FALSE;
-  
+
         $res = $this->addAudioClip($ac['file_id'], $newPos, $ac['fadein'], $ac['fadeOut'], $ac['cliplength'], $ac['cuein'], $ac['cueout']);
         if($res !== TRUE)
             return FALSE;
-        
+
         return TRUE;
     }
 
@@ -605,11 +600,11 @@ class Playlist {
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $CC_DBC->query("BEGIN");
-        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " . 
+        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " .
         "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -622,7 +617,7 @@ class Playlist {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         return TRUE;
     }
 
@@ -640,11 +635,11 @@ class Playlist {
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $CC_DBC->query("BEGIN");
-        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET cuein='{$cueIn}', cueout='{$cueOut}' " . 
+        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET cuein='{$cueIn}', cueout='{$cueOut}' " .
         "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -657,7 +652,7 @@ class Playlist {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         return TRUE;
     }
 
@@ -678,21 +673,21 @@ class Playlist {
      */
     public function getPlaylistClipAtPosition($pos)
     {
-        
+
     }
-    
+
     public function getPLMetaData($category)
-    {    
-        global $CC_CONFIG, $CC_DBC;  
+    {
+        global $CC_CONFIG, $CC_DBC;
 
         $cat = $this->categories[$category];
         if($cat === 'length') {
             return $this->getLength();
         }
-     
+
         $sql = "SELECT {$cat} AS mdata FROM ".$CC_CONFIG['playListTable'].
         " WHERE id='{$this->getId()}'";
-       
+
         $res = $CC_DBC->getOne($sql);
         if (PEAR::isError($res)) {
             return FALSE;
@@ -700,16 +695,16 @@ class Playlist {
 
         return $res;
     }
-    
+
     public function setPLMetaData($category, $value)
-    {    
-        global $CC_CONFIG, $CC_DBC;      
-       
+    {
+        global $CC_CONFIG, $CC_DBC;
+
          $cat = $this->categories[$category];
-        
-        $sql = "UPDATE ".$CC_CONFIG['playListTable']. " SET {$cat}='{$value}'" . 
+
+        $sql = "UPDATE ".$CC_CONFIG['playListTable']. " SET {$cat}='{$value}'" .
         " WHERE id='{$this->getId()}'";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1001,15 +996,15 @@ class Playlist {
     private function getAudioClipInfo($ac)
     {
         $ac_id = BasicStor::IdFromGunid($ac->gunid);
-        
-        $r = $ac->md['dcterms:extent'];  
+
+        $r = $ac->md['dcterms:extent'];
         if (isset($r)) {
         	$acLen = $r;
         } else {
         	$acLen = '00:00:00.000000';
         }
-        
-        $r = $ac->md['dc:title'];  
+
+        $r = $ac->md['dc:title'];
         if (isset($r)) {
         	$acTit = $r;
         } else {
@@ -1018,7 +1013,7 @@ class Playlist {
         $elType = BasicStor::GetObjType($ac_id);
         $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
         $elType = $trTbl[$elType];
-        
+
         return compact('acGunid', 'acLen', 'acTit', 'elType');
     }
 
@@ -1132,7 +1127,7 @@ class Playlist {
      * 		fadeIn value in ss.ssssss or extent format
      * @param string $fadeOut
      * 		fadeOut value in ss.ssssss or extent format
-   
+
      * @return array with fields:
      *  <ul>
      *   <li>plElId int - record id of playlistElement</li>
@@ -1144,17 +1139,17 @@ class Playlist {
     private function insertPlaylistElement($plId, $fileId, $pos, $clipLength, $cuein, $cueout, $fadeIn=NULL, $fadeOut=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         if(is_null($fadeIn))
             $fadeIn = '00:00:00.000';
         if(is_null($fadeOut))
             $fadeOut = '00:00:00.000';
-        
+
         $CC_DBC->query("BEGIN");
         $sql = "INSERT INTO ".$CC_CONFIG['playListContentsTable']
                 . "(playlist_id, file_id, position, cliplength, cuein, cueout, fadein, fadeout)"
                 . "VALUES ('{$plId}', '{$fileId}', '{$pos}', '{$clipLength}', '{$cuein}', '{$cueout}', '{$fadeIn}', '{$fadeOut}')";
-       
+
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             $CC_DBC->query("ROLLBACK");
@@ -1167,7 +1162,7 @@ class Playlist {
             $CC_DBC->query("ROLLBACK");
             return $res;
         }
-        
+
         return TRUE;
     }
 

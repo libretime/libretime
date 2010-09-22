@@ -106,7 +106,7 @@ if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
 
 if (camp_db_table_exists($CC_CONFIG['playListTable'])) {
     echo " * Removing database table ".$CC_CONFIG['playListTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['playListTable'];
+    $sql = "DROP TABLE ".$CC_CONFIG['playListTable']." CASCADE";
     camp_install_query($sql);
     $CC_DBC->dropSequence($CC_CONFIG['playListTable']."_id");
 
