@@ -42,40 +42,26 @@ class BasicStorTest extends PHPUnit_TestCase {
         //$this->assertTrue(FALSE);
     }
 
-    function testPutFile() {
+    function testDeleteAndPutFile() {
         $STORAGE_SERVER_PATH = dirname(__FILE__)."/../../";
         $filePath = dirname(__FILE__)."/ex1.mp3";
-        $md5sum = md5_file($filePath);
-        $metadata = camp_get_audio_metadata($filePath);
-        if (PEAR::isError($metadata)) {
-            $this->fail($metadata->getMessage());
-            return;
+
+        $md5 = md5_file($filePath);
+        $duplicate = StoredFile::RecallByMd5($md5);
+        if ($duplicate) {
+          $duplicate->delete();
         }
-        // bsSetMetadataBatch doesnt like these values
-        unset($metadata['audio']);
-        unset($metadata['playtime_seconds']);
-        $values = array(
-            "filename" => $metadata['ls:filename'],
-            "filepath" => $filePath,
-            "metadata" => "$STORAGE_SERVER_PATH/var/emptyMdata.xml",
-            "gunid" => NULL,
-            "filetype" => "audioclip",
-            "md5" => $md5sum,
-            "mime" => $metadata['dc:format']
-        );
+
+        $values = array("filepath" => $filePath);
         $storedFile = $this->greenbox->bsPutFile($values, false);
-        $this->assertFalse(PEAR::isError($storedFile));
+        if (PEAR::isError($storedFile)) {
+          $this->fail("Failed to create StoredFile: ".$storedFile->getMessage());
+          return;
+        }
         $id = $storedFile->getId();
         if (!is_numeric($id)) {
             $this->fail("StoredFile not created correctly. id = ".$id);
             return;
-        }
-
-        $r = $this->greenbox->bsSetMetadataBatch($storedFile, $metadata);
-        if (PEAR::isError($r)) {
-        	$this->fail($r->getMessage());
-        	//echo var_export($metadata)."\n";
-        	return;
         }
     }
 

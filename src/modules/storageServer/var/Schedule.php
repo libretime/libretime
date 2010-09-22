@@ -44,13 +44,14 @@ class ScheduleItem {
 //  }
 
   /**
+   * Add a music clip or playlist to the schedule.
    *
    * @param $p_audioFileId
    * @param $p_playlistId
    * @param $p_datetime
    * @param $p_options
-   * @return int|null
-   *    Return null if the item could not be added.
+   * @return int|PEAR_Error
+   *    Return PEAR_Error if the item could not be added.
    */
   public function add($p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
     global $CC_CONFIG, $CC_DBC;
@@ -60,14 +61,17 @@ class ScheduleItem {
       // Load existing track
       $track = StoredFile::Recall($p_audioFileId);
       if (is_null($track)) {
-        return null;
+        return new PEAR_Error("Could not find audio track.");
       }
 
       // Check if there are any conflicts with existing entries
       $metadata = $track->getMetadata();
       $length = trim($metadata["length"]);
+      if (empty($length)) {
+        return new PEAR_Error("Length is empty.");
+      }
       if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
-        return null;
+        return new PEAR_Error("Schedule conflict.");
       }
 
       // Insert into the table
@@ -78,7 +82,11 @@ class ScheduleItem {
         ." VALUES ($id, 0, TIMESTAMP '$p_datetime', "
         ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
         ." {$this->groupId}, $p_audioFileId)";
-      $CC_DBC->query($sql);
+      $result = $CC_DBC->query($sql);
+      if (PEAR::isError($result)) {
+        var_dump($sql);
+        return $result;
+      }
       return $this->groupId;
 
     } elseif (!is_null($p_playlistId)){
@@ -136,9 +144,14 @@ class Schedule {
    *
    * @param string $p_datetime
    * @param string $p_length
+   *
+   * @return boolean|PEAR_Error
    */
   public static function isScheduleEmptyInRange($p_datetime, $p_length) {
     global $CC_CONFIG, $CC_DBC;
+    if (empty($p_length)) {
+      return new PEAR_Error("Schedule::isSchedulerEmptyInRange: param p_length is empty.");
+    }
     $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
       ." WHERE (starts <= '$p_datetime') "
       ." AND (ends >= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";

@@ -459,52 +459,70 @@ class StoredFile {
             }
         }
     }
-    
+
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
      *  Create instance of StoredFile object and insert new file
      *
      * @param array $p_values
-     *      "id" - optional, local object id in the tree
-     *      "gunid" - optional, unique id, for insert file with gunid
-     *      "filename" - optional
-     *      "filepath" - local path to media file, not needed for Playlist
-     *      "metadata" - local path to metadata XML file or XML string
-     *      "filetype" - internal file type
-     *      "mime" - MIME type, highly recommended to pass in
-     *      "md5" - MD5 sum, highly recommended to pass in
+     *      "filepath" - required, local path to media file
+     *      "id" - optional, local object id, will be generated if not given
+     *      "gunid" - optional, unique id, for insert file with gunid, will be generated if not given
+     *      "filename" - optional, will use "filepath" if not given
+     *      "metadata" - optional, array of extra metadata, will be automatically calculated if not given.
+     *      "mime" - optional, MIME type, highly recommended to pass in, will be automatically calculated if not given.
+     *      "md5" - optional, MD5 sum, highly recommended to pass in, will be automatically calculated if not given.
+     *
      *  @param boolean $p_copyMedia
      * 		copy the media file if true, make symlink if false
+     *
      *  @return StoredFile|NULL|PEAR_Error
      */
     public static function Insert($p_values, $p_copyMedia=TRUE)
     {
         global $CC_CONFIG, $CC_DBC;
 
+        if (!isset($p_values["filepath"])) {
+          return new PEAR_Error("StoredFile::Insert: filepath not set.");
+        }
+        if (!file_exists($p_values['filepath'])) {
+            return PEAR::raiseError("StoredFile::Insert: ".
+                "media file not found ({$p_values['filepath']})");
+        }
+
         $gunid = isset($p_values['gunid'])?$p_values['gunid']:NULL;
 
         // Create the StoredFile object
         $storedFile = new StoredFile($gunid);
-        $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $storedFile->gunid;
+
+        // Get metadata
+        if (isset($p_values["metadata"])) {
+          $metadata = $p_values['metadata'];
+        } else {
+          $metadata = camp_get_audio_metadata($p_values["filepath"]);
+        }
+
+        $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $p_values["filepath"];
         // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
       	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?"'".$p_values['id']."'":'DEFAULT';
-        $storedFile->ftype = $p_values['filetype'];
-        if ($storedFile->ftype == 'playlist') {
-            $storedFile->mime = 'application/smil';
-        } else {
-            $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
-        }
-#        $storedFile->filepath = $p_values['filepath'];
+      	$storedFile->ftype = isset($p_values['filetype']) ? strtolower($p_values['filetype']) : "audioclip";
+        $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
+        // $storedFile->filepath = $p_values['filepath'];
         if (isset($p_values['md5'])) {
             $storedFile->md5 = $p_values['md5'];
         } elseif (file_exists($p_values['filepath'])) {
-#            echo "StoredFile::Insert: WARNING: Having to recalculate MD5 value\n";
+            //echo "StoredFile::Insert: WARNING: Having to recalculate MD5 value\n";
             $storedFile->md5 = md5_file($p_values['filepath']);
         }
 
+        // Check for duplicates -- return duplicate
+        $duplicate = StoredFile::RecallByMd5($storedFile->md5);
+        if ($duplicate) {
+          return $duplicate;
+        }
+
         $storedFile->exists = FALSE;
-        $emptyState = TRUE;
 
         // Insert record into the database
         $escapedName = pg_escape_string($storedFile->name);
@@ -528,52 +546,22 @@ class StoredFile {
 					$sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."_seq')";
         	$storedFile->id = $CC_DBC->getOne($sql);
         }
-        // Insert metadata
-        $metadata = $p_values['metadata'];
         BasicStor::bsSetMetadataBatch($storedFile->id, $metadata);
 
-        // $mdataLoc = ($metadata[0]=="/")? "file":"string";
-        // for non-absolute paths:
-//        $mdataLoc = ($metadata[0]!="<")? "file":"string";
-//        if (is_null($metadata) || ($metadata == '') ) {
-//            $metadata = dirname(__FILE__).'/emptyMdata.xml';
-//            $mdataLoc = 'file';
-//        } else {
-//            $emptyState = FALSE;
-//        }
-//        if ( ($mdataLoc == 'file') && !file_exists($metadata)) {
-//            return PEAR::raiseError("StoredFile::Insert: ".
-//                "metadata file not found ($metadata)");
-//        }
-//        $res = $storedFile->md->insert($metadata, $mdataLoc, $storedFile->ftype);
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-
         // Save media file
-        if (!empty($p_values['filepath'])) {
-            if (!file_exists($p_values['filepath'])) {
-                return PEAR::raiseError("StoredFile::Insert: ".
-                    "media file not found ({$p_values['filepath']})");
-            }
-            $res = $storedFile->addFile($p_values['filepath'], $p_copyMedia);
-            if (PEAR::isError($res)) {
-                echo "StoredFile::Insert: ERROR adding file: '".$res->getMessage()."'\n";
-                $CC_DBC->query("ROLLBACK");
-                return $res;
-            }
-            if (empty($storedFile->mime)) {
-#                echo "StoredFile::Insert: WARNING: Having to recalculate MIME value\n";
-                $storedFile->setMime($storedFile->getMime());
-            }
-            $emptyState = FALSE;
+        $res = $storedFile->addFile($p_values['filepath'], $p_copyMedia);
+        if (PEAR::isError($res)) {
+            echo "StoredFile::Insert: ERROR adding file: '".$res->getMessage()."'\n";
+            $CC_DBC->query("ROLLBACK");
+            return $res;
+        }
+        if (empty($storedFile->mime)) {
+            //echo "StoredFile::Insert: WARNING: Having to recalculate MIME value\n";
+            $storedFile->setMime($storedFile->getMime());
         }
 
         // Save state
-        if (!$emptyState) {
-            $res = $storedFile->setState('ready');
-        }
+        $storedFile->setState('ready');
 
         // Commit changes
         $res = $CC_DBC->query("COMMIT");
@@ -1160,7 +1148,7 @@ class StoredFile {
      * Returns gunIds of the playlists the stored file is in.
      * TODO update this to work with new tables.
      */
-   
+
     /*
     public function getPlaylists() {
         global $CC_CONFIG, $CC_DBC;
@@ -1176,7 +1164,7 @@ class StoredFile {
 
         return $playlists;
     }
-    */   
+    */
 
 
     /**
