@@ -308,18 +308,28 @@ class uiScheduler extends uiCalendar {
 
         $items = array();
         foreach ($arr as $key => $val) {
-        	$id = BasicStor::IdFromGunid($val['playlistId']);
+          if ($val["count"] == "1") {
+            $track = StoredFile::Recall($val["file_id"]);
+            $trackMetadata = $track->getMetadata();
+            $title = $trackMetadata["track_title"];
+            $creator = $trackMetadata["artist_name"];
+          } else {
+            $title = $val["name"];
+            $creator = $val["creator"];
+          }
+
+        	$id = $val["group_id"]; //BasicStor::IdFromGunid($val['playlistId']);
         	$startDay = strftime('%d', self::datetimeToTimestamp($val['start']));
         	$startHour = number_format(strftime('%H', self::datetimeToTimestamp($val['start'])));
             $items[$startDay][$startHour][]= array (
                 'id' => $id,
-                'scheduleid'=> $val['id'],
-                'start' => substr($val['start'], strpos($val['start'], 'T')+1),
-                'end' => substr($val['end'], strpos($val['end'], 'T')+1),
+                'scheduleid'=> $id, //$val['id'],
+                'start' => substr($val['start'], strpos($val['start'], ' ')+1),
+                'end' => substr($val['end'], strpos($val['end'], ' ')+1),
                 'start_stamp' => self::datetimeToTimestamp($val['start']),
                 'end_stamp' => self::datetimeToTimestamp($val['end']),
-                'title' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                'creator' => $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                'title' => $title,
+                'creator' => $creator,
                 'type' => 'Playlist'
             );
         }
@@ -358,11 +368,16 @@ class uiScheduler extends uiCalendar {
           $endHour = (int)strftime('%H', $end);
           $startTime = substr($val['start'], strpos($val['start'], ' ')+1);
           $endTime = substr($val['end'], strpos($val['end'], ' ') + 1);
-          $track = StoredFile::Recall($val["file_id"]);
-          $trackMetadata = $track->getMetadata();
-          $title = $trackMetadata["track_title"];
-          $creator = $trackMetadata["artist_name"];
 
+          if ($val["count"] == "1") {
+            $track = StoredFile::Recall($val["file_id"]);
+            $trackMetadata = $track->getMetadata();
+            $title = $trackMetadata["track_title"];
+            $creator = $trackMetadata["artist_name"];
+          } else {
+            $title = $val["name"];
+            $creator = $val["creator"];
+          }
           // Item starts today
           if (strftime('%Y-%m-%d', $start) === $thisDay) {
               $endsToday = (strftime('%d', $start) === strftime('%d', $end)) ? TRUE : FALSE;
@@ -1088,9 +1103,9 @@ class uiScheduler extends uiCalendar {
      *      In the format "YYYY-MM-DD HH:MM:SS.nnnnnn"
      * @return array|false
      */
-    function displayScheduleMethod($from, $to)
+    function displayScheduleMethod($p_from, $p_to, $p_playlistsOnly = true)
     {
-      $items = Schedule::GetItems($from, $to);
+      $items = Schedule::GetItems($p_from, $p_to, $p_playlistsOnly);
       //$_SESSION["debug"] = $items;
       return $items;
     } // fn displayScheduleMethod

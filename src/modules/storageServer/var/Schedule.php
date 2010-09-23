@@ -235,26 +235,55 @@ class Schedule {
 
   /**
    * Returns array indexed numberically of:
-   *    "playlistId" (gunid)
-   *    "start"
-   *    "end"
-   *    "id" (DB id)
+   *    "playlistId"/"playlist_id" (aliases to the same thing)
+   *    "start"/"starts" (aliases to the same thing)
+   *    "end"/"ends" (aliases to the same thing)
+   *    "group_id"/"id" (aliases to the same thing)
+   *    "clip_length"
+   *    "name" (playlist only)
+   *    "creator" (playlist only)
+   *    "file_id" (audioclip only)
+   *    "count" (number of items in the playlist, always 1 for audioclips.
+   *      Note that playlists with one item will also have count = 1.
    *
-   * @param $fromDateTime
+   * @param string $p_fromDateTime
    *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-   * @param $toDateTime
+   * @param string $p_toDateTime
    *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
+   * @param boolean $p_playlistsOnly
+   *    Retreive playlists as a single item.
    */
-  public static function GetItems($fromDateTime, $toDateTime, $playlistsOnly = true) {
+  public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true) {
     global $CC_CONFIG, $CC_DBC;
-    $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-          ." WHERE (starts >= TIMESTAMP '$fromDateTime') "
-          ." AND (ends <= TIMESTAMP '$toDateTime')";
-    $rows = $CC_DBC->GetAll($sql);
-    foreach ($rows as &$row) {
-      $row["playlistId"] = $row["playlist_id"];
-      $row["start"] = $row["starts"];
-      $row["end"] = $row["ends"];
+    if (!$p_playlistsOnly) {
+      $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
+            ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') "
+            ." AND (ends <= TIMESTAMP '$p_toDateTime')";
+      $rows = $CC_DBC->GetAll($sql);
+      foreach ($rows as &$row) {
+        $row["count"] = "1";
+        $row["playlistId"] = $row["playlist_id"];
+        $row["start"] = $row["starts"];
+        $row["end"] = $row["ends"];
+        $row["id"] = $row["group_id"];
+      }
+    } else {
+      $sql = "SELECT MIN(name) AS name, MIN(creator) AS creator, group_id, "
+           ." SUM(clip_length) AS clip_length,"
+           ." MIN(file_id) AS file_id, COUNT(*) as count,"
+           ." MIN(playlist_id) AS playlist_id, MIN(starts) AS starts, MAX(ends) AS ends"
+           ." FROM ".$CC_CONFIG["scheduleTable"]
+           ." LEFT JOIN ".$CC_CONFIG["playListTable"]." ON playlist_id = ".$CC_CONFIG["playListTable"].".id"
+           ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
+           ." GROUP BY group_id"
+           ." ORDER BY starts";
+      $rows = $CC_DBC->GetAll($sql);
+      foreach ($rows as &$row) {
+        $row["playlistId"] = $row["playlist_id"];
+        $row["start"] = $row["starts"];
+        $row["end"] = $row["ends"];
+        $row["id"] = $row["group_id"];
+      }
     }
     return $rows;
   }
