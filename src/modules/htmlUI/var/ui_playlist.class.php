@@ -55,6 +55,7 @@ class uiPlaylist
     private function getPLArray($id)
     {
         $res =  $this->Base->gb->getPlaylistArray($id);
+        $_SESSION['pl'] = $res;
         return $res;
     } // fn getPLArray
 
@@ -107,7 +108,6 @@ class uiPlaylist
         
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid);
         $this->activeId = $plid;
-        $_SESSION['pl'] = "Activating playlist with id: " . $this->activeId;
         
         if ($msg && UI_VERBOSE) {
         	$this->Base->_retMsg('Playlist "$1" opened.', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
@@ -302,56 +302,6 @@ class uiPlaylist
         return $plid;
     } // fn create
 
-
-    /**
-     * WARNING: THIS FUNCTION IS REALLY SSSLLLLOOOOWWWW!
-     *
-     * @param unknown_type $id
-     * @return array
-     */
-    public function getFlat($id)
-    {
-    	$this->flat = array();
-        $this->_plwalk($this->getPLArray($id));
-
-        if (count($this->flat) > 0) {
-            reset($this->flat);
-            $this->flat[key($this->flat)]['firstInList'] = true;
-            end($this->flat);
-            $this->flat[key($this->flat)]['lastInList'] = true;
-            reset($this->flat);
-            return $this->flat;
-        } else {
-            return array();
-        }
-    } // fn getFlat
-
-
-    private function _plwalk($arr, $parent=0, $attrs=0)
-    {
-    	// Note: the array $this->flat needs to be initialized before
-    	// this function is called.
-        foreach ($arr['children'] as $node => $sub) {
-            if ($sub['elementname']===UI_PL_ELEM_PLAYLIST) {
-                $this->_plwalk($sub, $node, $sub['attrs']);
-            }
-            if ($sub['elementname']===UI_FILETYPE_AUDIOCLIP || $sub['elementname']===UI_FILETYPE_PLAYLIST) {
-                #$this->flat["$parent.$node"] = $sub['attrs'];
-                #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
-                $this->flat[$parent] = $this->Base->getMetaInfo(BasicStor::IdFromGunid($sub['attrs']['id']));
-                $this->flat[$parent]['attrs'] = $attrs;
-                $this->flat[$parent]['playlength'] = $sub['attrs']['playlength'];
-            }
-            if ($sub['elementname']===UI_PL_ELEM_FADEINFO) {
-                $this->flat[$parent][UI_PL_ELEM_FADEIN]  = Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEIN]);
-                $this->flat[$parent][UI_PL_ELEM_FADEOUT] = Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEOUT]);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs'][UI_PL_ELEM_FADEIN]  ? Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEIN])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs'][UI_PL_ELEM_FADEOUT] ? Playlist::playlistTimeToSeconds($sub['attrs'][UI_PL_ELEM_FADEOUT]) * 1000 : 0;
-            }
-        }
-    } // fn _plwalk
-
-
     public function changeTransition($id, $type, $duration)
     {
         $pause = $pause;
@@ -422,72 +372,20 @@ class uiPlaylist
 
     public function moveItem($oldPos, $newPos)
     {
+        $response = array();
+        
         $r = $this->Base->gb->moveAudioClipInPlaylist($this->activeId, $oldPos, $newPos);
         if (PEAR::isError($r) || $r === FALSE) {
-            if (UI_VERBOSE === TRUE) {
-            	print_r($r);
-            }
-            $this->Base->_retMsg('Cannot move item.');
-            return FALSE;
+            $response["error"] = "Failed to Move file.";
+            $response["oldPos"] = $oldPos;
+            $response["newPos"] = $newPos;
         }
-        return TRUE;
+        else{
+          $response["error"] = FALSE;  
+        }
+        
+        die(json_encode($response));
     } // fn moveItem
-
-
-    public function reorder($items)
-    {
-        // just to be sure items are in right order
-        asort($items);
-        $pos = 0;
-        foreach ($items as $id => $v) {
-            $pos++;
-            $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
-            if (PEAR::isError($r)) {
-                if (UI_VERBOSE === TRUE) {
-                	print_r($r);
-                }
-                $this->Base->_retMsg('Cannot move item.');
-                return FALSE;
-            }
-        }
-        return TRUE;
-    } // fn reorder
-
-
-    private function getCurrElement($id)
-    {
-        $arr = $this->getFlat($this->activeId);
-        while ($val = current($arr)) {
-            if ($val['attrs']['id'] == $id) {
-                return current($arr);
-            }
-            next($arr);
-        }
-    } // fn getCurrElement
-
-
-    private function getPrevElement($id)
-    {
-        $arr = $this->getFlat($this->activeId);
-        while ($val = current($arr)) {
-            if ($val['attrs']['id'] == $id) {
-                return prev($arr);
-            }
-            next($arr);
-        }
-    } // fn getPrevElement
-
-
-    private function getNextElement($id)
-    {
-        $arr = $this->getFlat($this->activeId);
-        while ($val = current($arr)) {
-            if ($val['attrs']['id'] == $id) {
-                return next($arr);
-            }
-            next($arr);
-        }
-    } // fn getNextElement
 
 
     public function changeTransitionForm($id, $type, $mask)
@@ -600,7 +498,7 @@ class uiPlaylist
             $getval = $this->Base->gb->getPLMetadataValue($id, $v['element'], $langid);
             if ($getval) {
                 $mask['playlist'][$k]['default']                = $getval;
-                $mask['playlist'][$k]['attributes']['onFocus']  = 'MData_confirmChange(this)';
+                //$mask['playlist'][$k]['attributes']['onFocus']  = 'MData_confirmChange(this)';
             };
         }
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);

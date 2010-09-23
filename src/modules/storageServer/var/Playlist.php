@@ -103,8 +103,6 @@ class Playlist {
             return $res;
         }
 
-        // Recall the object to get all the proper values
-        //$storedPlaylist = Playlist::Recall($storedPlaylist->id);
         return $storedPlaylist->id;
     }
 
@@ -533,6 +531,11 @@ class Playlist {
     public function delAudioClip($pos)
     {
         global $CC_CONFIG, $CC_DBC;
+        
+        if($pos < 0 || $pos >= $this->getNextPos())
+            return FALSE;
+            
+        $pos = pg_escape_string($pos);
 
         $CC_DBC->query("BEGIN");
         $sql = "DELETE FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
@@ -565,6 +568,12 @@ class Playlist {
     public function moveAudioClip($oldPos, $newPos)
     {
         global $CC_CONFIG, $CC_DBC;
+        
+        if($newPos < 0 || $newPos >= $this->getNextPos() || $oldPos < 0 || $oldPos >= $this->getNextPos())
+            return FALSE;
+            
+        $oldPos = pg_escape_string($oldPos);
+        $newPos = pg_escape_string($newPos);
 
         $CC_DBC->query("BEGIN");
         $sql = "SELECT * FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$oldPos}'";

@@ -78,12 +78,24 @@ class uiScratchPad
             $arr = explode(' ', $spData);
             $maxLength = $this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY];
 			$arr = array_slice($arr, 0, $maxLength);
-            foreach ($arr as $gunid) {
-                if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                	$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
-                    if ($id != FALSE) {
-                        if ($i = $this->Base->getMetaInfo($id)) {
-                            $this->items[] = $i;
+            foreach ($arr as $item) {
+                //for audiofiles.
+                list($type, $savedId) = explode(":", $item);
+               
+                if($type === 'pl') { 
+                    $id = $savedId;
+                    if ($i = $this->Base->getPLMetaInfo($id)) {
+                        $this->items[] = $i;
+                    }
+                }
+                else {
+                    $gunid = $savedId;
+                    if (preg_match('/[0-9]{1,20}/', $gunid)) {
+                    	$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
+                        if ($id != FALSE) {
+                            if ($i = $this->Base->getMetaInfo($id)) {
+                                $this->items[] = $i;
+                            }
                         }
                     }
                 }
@@ -99,8 +111,12 @@ class uiScratchPad
     public function save()
     {
         foreach ($this->items as $val) {
-            //$str .= $val['gunid'].':'.$val['added'].' ';       // new format
-            $str .= $this->Base->toInt8($val['gunid']).' ';      // Akos old format
+            if($val['type'] === 'playlist') {
+                $str .= 'pl:'.$val['id'].' ';
+            }
+            else {
+                $str .= 'ac:'.$this->Base->toInt8($val['gunid']).' ';
+            }
         }
         $this->Base->gb->savePref($this->Base->sessid, UI_SCRATCHPAD_KEY, $str);
     } // fn save

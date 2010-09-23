@@ -1,0 +1,115 @@
+.pl_container {
+	width:607px;
+	background:#5286BA;
+}
+
+.pl_header {
+	height: 25px;
+	color:#ffffff;	
+	font-weight: bold;
+	padding: 8px 20px 0 20px;
+}
+
+.pl_header_left {
+	float:left;
+}
+
+.pl_header_left span {
+	font-size: 18px;
+}
+
+.pl_header_right {
+	float:right;
+}
+
+.pl_header_right span {
+	font-size: 16px;
+	padding-left: 20px;
+}
+
+.pl_contents {
+	clear:left;
+}
+
+.pl_contents form{
+	margin:0;
+}
+
+#pl_sortable {
+	list-style-type: none;
+	padding: 0;
+  	margin: 0;
+}
+
+.pl_head {
+	background-color: #8baed1;
+	margin-top: 10px;
+}
+
+.pl_head span {
+	display:inline-block;
+}
+
+.pl_main {
+	clear: left;
+}
+
+.pl_row {
+    background-color: #d5e2ee;
+    clear:left;
+    cursor:move;
+}
+
+.pl_row span {
+	display:inline-block;
+}
+
+.pl_input{
+	width: 5%;
+}
+
+.pl_title{
+	width: 25%;
+}
+
+.pl_artist{
+	width: 24%;
+}
+
+.pl_length{
+	width: 9%;
+}
+
+.pl_cue_in{
+	width: 9%;
+}
+
+.pl_cue_out{
+	width: 9%;
+}
+
+.pl_playlength{
+	width: 9%;
+}
+
+.pl_empty{
+	text-align: center;
+	font-weight:bold;
+	font-size: 18px;
+	color: #ffffff;
+	margin: 1em 0;
+}
+
+.pl_footer {
+	clear:left;
+	font-size: 12px;
+    padding: 4px 5px 5px 0;
+    background-color: #8baed1;
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.pl_container_button {
+	text-align: right;
+	padding: 6px;
+}

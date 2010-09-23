@@ -6,11 +6,12 @@
     <title>Campcaster</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    {* <link rel="stylesheet" href="styles.css"> *}
-    <link href="styles_campcaster.css" rel="stylesheet" type="text/css" />
-    
+    <link href="styles_campcaster.css" rel="stylesheet" type="text/css" /> 
     <link href="assets/plupload/plupload.queue.css" rel="stylesheet" type="text/css" />
+    <link href="css/playlist.css" rel="stylesheet" type="text/css" />
+    
 	<script type="text/javascript" src="assets/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="assets/jquery-ui-1.7.3.custom.min.js"></script>
 	
 	<script type="text/javascript" src="assets/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="assets/plupload/jquery.plupload.queue.min.js"></script>
@@ -21,6 +22,8 @@
     {include file="script/collector.js.tpl"}
     {include file="script/alttext.js.tpl"}
     
+    <script type="text/javascript" src="js/playlist.js"></script>
+   
 </head>
 
 <body>

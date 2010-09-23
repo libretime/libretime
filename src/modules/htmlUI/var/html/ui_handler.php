@@ -128,7 +128,7 @@ switch ($_REQUEST['act']) {
 
     case "SEARCH.newSearch":
 	    $uiHandler->SEARCH->newSearch($_REQUEST);
-      $NO_REDIRECT = true;
+        $NO_REDIRECT = true;
 	    $_REQUEST["act"] = "SEARCH";
 	    include("ui_browser.php");
 	    break;
@@ -367,7 +367,6 @@ switch ($_REQUEST['act']) {
 
     case "PL.moveItem":
 	    $uiHandler->PLAYLIST->moveItem($_REQUEST['oldPos'], $_REQUEST['newPos']);
-	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
     case "PL.reorder":
