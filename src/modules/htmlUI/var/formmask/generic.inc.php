@@ -771,8 +771,8 @@ $ui_fmask = array(
             'label'     => 'Time',
             'options'   => array('format' => 'His'),
         ),
-        'gunid_duration'  => array(
-            'element'   => 'gunid_duration',
+        'id_duration'  => array(
+            'element'   => 'id_duration',
             'type'      => 'select',
             'label'     => 'Playlist',
             'required'  => TRUE,

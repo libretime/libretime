@@ -33,11 +33,11 @@ function contextmenu(param) {
             case "PL.addItem":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
             break;
-            
+
             case "PL.addStream":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setItemPlaylengthForm&id="+param+"', 'PL.setStreamPlaylength', 400, 50)\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
             break;
-            
+
             case "PL.setCliplength":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.setClipLength&elemId="+param+"', 'PL.setClipLength', 400, 50)\" "+oF+">&nbsp;##Set clip length##&nbsp;</a></li>";
             break;
@@ -95,7 +95,8 @@ function contextmenu(param) {
             break;
 
             case "SCHEDULER.addItem":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
+            //contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&"+param+"', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.removeItem":
@@ -103,11 +104,16 @@ function contextmenu(param) {
             break;
 
             case "SCHEDULER.addPL":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1');"+
-            "hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&today=1&hour=0&minute=0');"+
-            "location.href='ui_browser.php?act=SCHEDULER';"+
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: "+
+//            "hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&today=1&hour=0&minute=0');"+
+            "location.href='{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1';"+
             "popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&playlistId="+param+"', 'Schedule', 420, 200)\" "+oF+
             ">&nbsp;##Schedule##&nbsp;</a></li>";
+//            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1');"+
+//            "hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&today=1&hour=0&minute=0');"+
+//            "location.href='ui_browser.php?act=SCHEDULER';"+
+//            "popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&playlistId="+param+"', 'Schedule', 420, 200)\" "+oF+
+//            ">&nbsp;##Schedule##&nbsp;</a></li>";
             break;
 
             case "SUBJECTS.chgPasswd":
