@@ -538,7 +538,7 @@ class Playlist {
         $pos = pg_escape_string($pos);
 
         $CC_DBC->query("BEGIN");
-        $sql = "DELETE FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $sql = "DELETE FROM ".$CC_CONFIG['playListContentsTable']." WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
 
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
@@ -575,7 +575,6 @@ class Playlist {
         $oldPos = pg_escape_string($oldPos);
         $newPos = pg_escape_string($newPos);
 
-        $CC_DBC->query("BEGIN");
         $sql = "SELECT * FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$oldPos}'";
 
         $ac = $CC_DBC->getRow($sql);
@@ -610,20 +609,11 @@ class Playlist {
     {
         global $CC_CONFIG, $CC_DBC;
 
-        $CC_DBC->query("BEGIN");
         $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " .
         "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
 
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
             return $res;
         }
 
@@ -644,25 +634,91 @@ class Playlist {
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
         global $CC_CONFIG, $CC_DBC;
-
-        $CC_DBC->query("BEGIN");
-        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET cuein='{$cueIn}', cueout='{$cueOut}' " .
-        "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-
+        $oldCueIn; 
+        $oldCueOut;
+        $errArray= array();
+       
+        if(is_null($pos) || is_null($cueIn) && is_null($cueOut))
+            return FALSE;
+        
+        if($pos < 0 || $pos >= $this->getNextPos())
+            return FALSE;
+        
+        $sql =  $sql = "SELECT length AS original_length
+        	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
+        	WHERE C.playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $origLength = $CC_DBC->getOne($sql);
+        
+     
+        $sql = "SELECT cuein, cueout FROM ".$CC_CONFIG['playListContentsTable']." 
+        WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $res = $CC_DBC->getRow($sql);
+        
+        $oldCueIn = $res['cuein'];
+        $oldCueOut = $res['cueout'];
+        
+        if(!is_null($cueIn) && !is_null($cueOut)){
+            if($cueIn > $cueOut) {
+                $errArray["error"]="Can't set cue in to be larger than cue out.";
+                return $errArray;
+            }
+            if($cueOut > $origLength){
+                $errArray["error"] ="Can't set cue out to be greater than file length.";
+                return $errArray;
+            }
+            
+            $cueIn = pg_escape_string($cueIn);
+            $cueOut = pg_escape_string($cueOut);
+            
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
+            " SET cuein='{$cueIn}', cueout='{$cueOut}', ".
+            "cliplength=(cliplength + interval '{$oldCueIn}' - interval '{$cueIn}' - interval '{$oldCueOut}' + interval '{$cueOut}') " .
+            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+                       
+        }
+        else if(!is_null($cueIn)) {
+            
+            if($cueIn > $oldCueOut) {
+                $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                return $errArray;
+            }
+            
+            $cueIn = pg_escape_string($cueIn);
+                   
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
+            " SET cuein='{$cueIn}', cliplength=(cliplength + interval '{$oldCueIn}' - interval '{$cueIn}') " .
+            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        }
+        else if(!is_null($cueOut)) {
+            
+            if($cueOut < $oldCueIn) {
+                $errArray["error"] ="Can't set cue out to be smaller than cue in.";
+                return $errArray;
+            }
+            
+            if($cueOut > $origLength){
+                $errArray["error"] ="Can't set cue out to be greater than file length.";
+                return $errArray;
+            }
+            
+            $cueOut = pg_escape_string($cueOut);
+            
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
+            " SET cueout='{$cueOut}', cliplength=(cliplength - interval '{$oldCueOut}' + interval '{$cueOut}') " .
+            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        }
+              
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
+            $errArray["error"] =$res->getMessage();
+            return $errArray;
         }
+        
+        $sql = "SELECT cliplength FROM ".$CC_CONFIG['playListContentsTable']." 
+        WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $cliplength = $CC_DBC->getOne($sql);
 
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        return TRUE;
+        return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut);
     }
 
     /**

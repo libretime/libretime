@@ -390,99 +390,27 @@ class uiPlaylist
 
     public function changeTransitionForm($id, $type, $mask)
     {
-        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $s = $this->getCurrElement($id);
-        switch ($type) {
-            case "fadeIn":
-                $d = $this->getCurrElement($id);
-                $duration = $d['fadein_ms'];
-                $form->setConstants(array('headline' => '<b>'.$s['title'].'</b>'));
-            break;
-            case "transition":
-                $d = $this->getPrevElement($id);
-                $duration = $s['fadein_ms'];
-                $form->setConstants(array('headline' => '<b>'.$d['title'].'</b> <-> <b>'.$s['title'].'</b>'));
-            break;
-            case "fadeOut":
-                $d = $this->getCurrElement($id);
-                $duration = $d['fadeout_ms'];
-                $form->setConstants(array('headline' => '<b>'.$s['title'].'</b>'));
-            break;
-        }
-        $form->setConstants(array('id'       => $id,
-                                  'duration' => $duration)
-        );
-        uiBase::parseArrayToForm($form, $mask[$type]);
-        uiBase::parseArrayToForm($form, $mask['all']);
-        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
-        $form->accept($renderer);
-        return $renderer->toArray();
+       
     } // fn changeTransitionForm
 
 
     public function changeAllTransitionsForm($mask)
     {
-        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        uiBase::parseArrayToForm($form, $mask['transition']);
-        uiBase::parseArrayToForm($form, $mask['all']);
-        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
-        $form->accept($renderer);
-        return $renderer->toArray();
+        
     } // fn changeAllTransitionsForm
 
 
-    public function setClipLengthForm($id, $elemId, $mask)
+    function setClipLength($pos, $cueIn, $cueOut)
     {
-        if (isset($elemId)) {
-            $mask['act']['constant'] = 'PL.setClipLength';
-            $mask['elemId']['constant'] = $elemId;
-            $element = $this->getCurrElement($elemId);
-            $playLegthS = Playlist::playlistTimeToSeconds($element['playlength']);
-            $clipStartS = Playlist::playlistTimeToSeconds($element['attrs']['clipStart']);
-            $clipEndS   = Playlist::playlistTimeToSeconds($element['attrs']['clipEnd']);
-            $mask['duration']['constant']  = round($playLegthS);
-            $mask['clipLength']['default'] = round($clipEndS - $clipStartS);
-            $mask['clipStart']['default']  = round($clipStartS);
-            $mask['clipEnd']['default']    = round($clipEndS);
-            for ($n=0; $n<=round($playLegthS); $n++) {
-                $options[$n] = date('i:s', $n);
-            }
-            $mask['clipStart']['options']  = $options;
-            $mask['clipLength']['options'] = $options;
-            $mask['clipEnd']['options']    = array_reverse(array_reverse($options), true);
-        } else {
-            $mask['act']['constant'] = 'PL.addItem';
-            $mask['id']['constant'] = $id;
-            $mask['clipLength']['default'] = substr($this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION), 0, 8);
-            $mask['duration']['constant'] = $mask['playlength']['default'];
-        }
+        $response = array();
+        $response["type"] = "cue";
+        $response["pos"] = $pos;
+       
+        $res = $this->Base->gb->changeClipLength($this->activeId, $pos, $cueIn, $cueOut);
 
-        $form = new HTML_QuickForm('PL_setClipLengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        uiBase::parseArrayToForm($form, $mask);
-        $renderer = new HTML_QuickForm_Renderer_Array(true, true);
-        $form->accept($renderer);
-        return $renderer->toArray();
-    } // fn setClipLengthForm
-
-    function setClipLength($p_elemId, &$p_mask)
-    {
-        $form = new HTML_QuickForm('PL_setClipLengthForm', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        uiBase::parseArrayToForm($form, $p_mask);
-
-        if (!$form->validate()) {
-            return false;
-        }
-        $values = $form->exportValues();
-        $elem = $this->getCurrElement($values['elemId']);
-        if (!$elem) {
-            return false;
-        }
-
-        $clipStart = GreenBox::secondsToPlaylistTime($values['clipStart']);
-        $clipEnd = GreenBox::secondsToPlaylistTime($values['clipEnd']);
-
-        $this->Base->gb->changeClipLength($this->token, $p_elemId, $clipStart, $clipEnd, $this->Base->sessid);
-
+        $response = array_merge($response, $res);
+                
+        die(json_encode($response));
     }
 
 

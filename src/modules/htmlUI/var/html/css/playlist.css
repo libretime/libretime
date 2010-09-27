@@ -1,5 +1,5 @@
 .pl_container {
-	width:607px;
+	width:800px;
 	background:#5286BA;
 }
 
@@ -48,6 +48,9 @@
 
 .pl_head span {
 	display:inline-block;
+	vertical-align: top;
+	padding-top: 0.5em;
+	font-weight: bold;
 }
 
 .pl_main {
@@ -62,6 +65,8 @@
 
 .pl_row span {
 	display:inline-block;
+	vertical-align: middle;
+	padding: 0.2em 0;
 }
 
 .pl_input{
@@ -69,27 +74,47 @@
 }
 
 .pl_title{
-	width: 25%;
+	width: 21%;
 }
 
 .pl_artist{
-	width: 24%;
+	width: 20%;
 }
 
 .pl_length{
-	width: 9%;
+	width: 11%;
 }
 
 .pl_cue_in{
-	width: 9%;
+	width: 11%;
 }
 
 .pl_cue_out{
-	width: 9%;
+	width: 11%;
 }
 
 .pl_playlength{
-	width: 9%;
+	width: 11%;
+}
+
+.pl_fade_in{
+	padding: 0.2em 2em;
+	border-top: thin ridge black;
+	background-color: #cccccc;
+}
+
+.pl_fade_out{
+	padding-left: 2em;
+	background-color: #cccccc;
+	padding: 0.2em 2em;	
+}
+
+.pl_time{
+	cursor: pointer;
+}
+
+.pl_time input{
+
 }
 
 .pl_empty{

@@ -9,7 +9,7 @@
     <div class="pl_head">
         <span class="pl_input"><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></span>
         <span class="pl_title">##Title##</span>
-        <span class="pl_artist">##Artist##</span>
+        <span class="pl_artist">##Creator##</span>
         <span class="pl_length">##Length##</span>
         <span class="pl_cue_in">##Cue In##</span>
         <span class="pl_cue_out">##Cue Out##</span>
@@ -19,6 +19,7 @@
     	<ul id="pl_sortable">
         	{foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
         	<li class="pl_row" id="pl_{$pos}">
+        		<div class="pl_fade_in">fade in: {$i.fadein}</div>
                 <span class="pl_input">
                 	<input type="checkbox" class="checkbox" name="{$pos}"/>
                 </span>
@@ -29,17 +30,18 @@
                 	{$i.artist_name}
                 </span>
                 <span class="pl_length" >
-                    {assign var="_playlength" value=$i.length}{niceTime in=$_playlength}
+                    {$i.length}
                 </span>
-                <span class="pl_cue_in">
-                    {assign var="_duration" value=$i.cuein}{niceTime in=$_duration}
+                <span class="pl_cue_in pl_time">
+                    {$i.cuein}
                 </span>
-                <span class="pl_cue_out">
-                    {assign var="_duration" value=$i.cueout}{niceTime in=$_duration}
+                <span class="pl_cue_out pl_time">
+                    {$i.cueout}
                 </span>
                 <span class="pl_playlength">
-                    {assign var="_duration" value=$i.cliplength}{niceTime in=$_duration}
+                    {$i.cliplength}
                 </span>
+                <div class="pl_fade_out">fade out: {$i.fadeout}</div>
             </li>
         	{/foreach}
         	{if is_null($pos)}  

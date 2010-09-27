@@ -701,7 +701,7 @@ class GreenBox extends BasicStor {
      *      session ID
      * @return boolean or pear error object
      */
-    public function changeClipLength($id, $cueIn, $cueOut)
+    public function changeClipLength($id, $pos, $cueIn, $cueOut)
     {
         $pl = Playlist::Recall($id);
         if ($pl === FALSE) {
