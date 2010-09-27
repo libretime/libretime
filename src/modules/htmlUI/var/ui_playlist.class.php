@@ -302,74 +302,6 @@ class uiPlaylist
         return $plid;
     } // fn create
 
-    public function changeTransition($id, $type, $duration)
-    {
-        $pause = $pause;
-        $xfade = Playlist::secondsToPlaylistTime($duration/1000);
-
-        if ($id) {
-            // just change fade between 2 clips
-            $curr = $this->getCurrElement($id);
-            $prev = $this->getPrevElement($id);
-            $next = $this->getNextElement($id);
-
-            switch ($type) {
-                case "fadeX":
-                    $item[$prev['attrs']['id']] =
-                                  array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($prev[UI_PL_ELEM_FADEIN]),
-                                        UI_PL_ELEM_FADEOUT => $xfade
-                                  );
-                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
-                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
-                                  );
-                break;
-                case "pause":
-                    $item[$prev['attrs']['id']] =
-                                  array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($prev[UI_PL_ELEM_FADEIN]),
-                                        UI_PL_ELEM_FADEOUT => $pause
-                                  );
-                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $pause,
-                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
-                                  );
-                break;
-                case "fadeIn":
-                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
-                                        UI_PL_ELEM_FADEOUT => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEOUT])
-                                  );
-                break;
-                case "fadeOut":
-                    $item[$id] = array(UI_PL_ELEM_FADEIN  => Playlist::secondsToPlaylistTime($curr[UI_PL_ELEM_FADEIN]),
-                                       UI_PL_ELEM_FADEOUT => $xfade
-                                 );
-                break;
-            }
-            foreach ($item as $i=>$val) {
-                $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
-                if (PEAR::isError($r)) {
-                    if (UI_VERBOSE === TRUE) {
-                    	print_r($r);
-                    }
-                    $this->Base->_retMsg('Changing fade information failed.');
-                    return FALSE;
-                }
-            }
-        } else {
-            // change fade of all clips
-            foreach ($this->getFlat($this->activeId) as $v) {
-                $r = $this->Base->gb->changeFadeInfo($this->token, $v['attrs']['id'], $type==='pause'?$pause:$xfade, $type==='pause'?$pause:$xfade, $this->Base->sessid);
-                if (PEAR::isError($r)) {
-                    if (UI_VERBOSE === TRUE) {
-                    	print_r($r);
-                    }
-                    $this->Base->_retMsg('Changing fade information failed.');
-                    return FALSE;
-                }
-            }
-        }
-        return TRUE;
-    } // fn changeTransition
-
-
     public function moveItem($oldPos, $newPos)
     {
         $response = array();
@@ -388,30 +320,27 @@ class uiPlaylist
     } // fn moveItem
 
 
-    public function changeTransitionForm($id, $type, $mask)
-    {
-       
-    } // fn changeTransitionForm
-
-
-    public function changeAllTransitionsForm($mask)
-    {
-        
-    } // fn changeAllTransitionsForm
-
-
-    function setClipLength($pos, $cueIn, $cueOut)
+    public function setClipLength($pos, $cueIn, $cueOut)
     {
         $response = array();
-        $response["type"] = "cue";
-        $response["pos"] = $pos;
        
         $res = $this->Base->gb->changeClipLength($this->activeId, $pos, $cueIn, $cueOut);
 
-        $response = array_merge($response, $res);
+        $response = $res;
                 
         die(json_encode($response));
     }
+    
+    public function setFadeLength($pos, $fadeIn, $fadeOut)
+    {
+        $response = array();
+        
+        $res = $this->Base->gb->changeFadeInfo($this->activeId, $pos, $fadeIn, $fadeOut);
+        
+        $response = $res;
+                
+        die(json_encode($response));
+    } // fn setFade
 
 
     public function metaDataForm($langid)

@@ -325,6 +325,10 @@ switch ($_REQUEST['act']) {
     case "PL.setClipLength":
 	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);   
 	    break;
+	    
+	case "PL.setFadeLength":
+	    $uiHandler->PLAYLIST->setFadeLength($_REQUEST['pos'], $_REQUEST['fadeIn'], $_REQUEST['fadeOut']);   
+	    break;
 
     case "PL.removeItem":
 	    $uiHandler->PLAYLIST->removeItem($_REQUEST['id']);
