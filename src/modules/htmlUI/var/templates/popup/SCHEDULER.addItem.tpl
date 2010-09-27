@@ -25,8 +25,12 @@
 {literal}
 function SCHEDULE_submit()
 {
-    document.forms["schedule"].elements["playlist"].value = SCHEDULE_selectedGunid();
+    document.forms["schedule"].elements["playlist"].value = SCHEDULE_selectedId();
     document.forms["schedule"].submit();
+    if (window.opener && !window.opener.closed) {
+    	 window.opener.location.reload();
+    }
+    window.close();
 }
 
 function SCHEDULE_snap2Hour()
@@ -110,7 +114,7 @@ function SCHEDULE_selectedDuration()
     return arr[1].slice(0, 8);
 }
 
-function SCHEDULE_selectedGunid()
+function SCHEDULE_selectedId()
 {
     var arr = document.forms["schedule"].elements["id_duration"].value.split("|");
     return arr[0];

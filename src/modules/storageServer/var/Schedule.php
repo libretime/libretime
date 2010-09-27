@@ -57,6 +57,7 @@ class ScheduleGroup {
    *
    * @return int|PEAR_Error
    *    Return PEAR_Error if the item could not be added.
+   *    Error code 555 is a scheduling conflict.
    */
   public function add($p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
     global $CC_CONFIG, $CC_DBC;
@@ -76,7 +77,7 @@ class ScheduleGroup {
         return new PEAR_Error("Length is empty.");
       }
       if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
-        return new PEAR_Error("Schedule conflict.");
+        return new PEAR_Error("Schedule conflict.", 555);
       }
 
       // Insert into the table
@@ -110,7 +111,7 @@ class ScheduleGroup {
         return new PEAR_Error("Length is empty.");
       }
       if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
-        return new PEAR_Error("Schedule conflict.");
+        return new PEAR_Error("Schedule conflict.", 555);
       }
 
       // Insert all items into the schedule
@@ -219,8 +220,9 @@ class Schedule {
       return new PEAR_Error("Schedule::isSchedulerEmptyInRange: param p_length is empty.");
     }
     $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-      ." WHERE (starts <= '$p_datetime') "
-      ." AND (ends >= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";
+      ." WHERE (starts >= '$p_datetime') "
+      ." AND (ends <= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";
+    //$_SESSION["debug"] = $sql;
     $count = $CC_DBC->GetOne($sql);
     return ($count == '0');
   }

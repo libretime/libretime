@@ -1032,11 +1032,11 @@ class uiScheduler extends uiCalendar {
 
 
     /**
-     * Upload a playlist to the scheduler.
+     * Add an item to the scheduler.
      *
      * @param array $formdata
      *      Must have the following keys set:
-     *      ['playlist'] -> gunid of playlist
+     *      ['playlist'] -> id of playlist
      *      ['date']['Y'] - Year
      *      ['date']['m'] - month
      *      ['date']['d'] - day
@@ -1044,12 +1044,12 @@ class uiScheduler extends uiCalendar {
      *      ['date']['i'] - minute
      *      ['date']['s'] - second
      *
-     * @return boolean
-     *      TRUE on success, FALSE on failure.
+     * @return int|PEAR_Error
+     *
      */
-    function uploadPlaylistMethod(&$formdata)
+    function addItem(&$formdata)
     {
-        $gunid = $formdata['playlist'];
+        $playlistId = $formdata['playlist'];
         $datetime = $formdata['date']['Y']
             .'-'
             .sprintf('%02d', $formdata['date']['m'])
@@ -1060,15 +1060,10 @@ class uiScheduler extends uiCalendar {
             .':'.sprintf('%02d', $formdata['time']['s']);
 
         $item = new ScheduleGroup();
-        $groupId = $item->add($datetime, null, $gunid);
+        $groupId = $item->add($datetime, null, $playlistId);
         //$_SESSION["debug"] = $groupId;
-        return is_numeric($groupId);
-//        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
-//        if ($this->_isError($r)) {
-//            return FALSE;
-//        }
-//        return TRUE;
-    } // fn uploadPlaylistMethod
+        return $groupId;
+    }
 
 
     /**

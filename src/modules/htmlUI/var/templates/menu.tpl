@@ -49,10 +49,10 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         </li>
         <li class="nav-main"><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>
             <ul>
-                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=month&target=SCHEDULER">##Month##</a></li>
-                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=week&target=SCHEDULER">##Week##</a></li>
-                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&target=SCHEDULER">##Day##</a></li>
                 <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1&target=SCHEDULER">##Today##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=day&target=SCHEDULER">##Day##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=week&target=SCHEDULER">##Week##</a></li>
+                <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=month&target=SCHEDULER">##Month##</a></li>
                 {* if Alib::CheckPerm($SUBJECTS->Base->userid, 'schedulerStatus') *}
                     <li><a href="{$UI_HANDLER}?act=SCHEDULER.set&view=status&target=SCHEDULER">##Status##</a></li>
                 {* /if *}

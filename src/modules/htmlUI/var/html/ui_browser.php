@@ -153,6 +153,7 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case "SCHEDULER.addItem":
+              $uiHandler->SCHEDULER->setScheduleAtTime($_REQUEST);
 	            $Smarty->display('popup/SCHEDULER.addItem.tpl');
 	            break;
 

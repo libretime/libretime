@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__).'/../ui_handler_init.php');
+require_once(dirname(__FILE__).'/../ui_browser_init.php');
+ob_start();
+
 require_once("../Input.php");
 
 if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
@@ -405,7 +407,10 @@ switch ($_REQUEST['act']) {
 
     case "SCHEDULER.set":
 	    $uiHandler->SCHEDULER->set($_REQUEST);
-	    $uiHandler->SCHEDULER->setReload();
+	    //$uiHandler->SCHEDULER->setReload();
+      $NO_REDIRECT = true;
+      $_REQUEST["act"] = "SCHEDULER";
+      include("ui_browser.php");
 	    break;
 
     case "SCHEDULER.setScheduleAtTime":
@@ -414,9 +419,16 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "SCHEDULER.addItem":
-	    $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
-	    $uiHandler->SCHEDULER->setReload();
-	    break;
+	    $groupId = $uiHandler->SCHEDULER->addItem($_REQUEST);
+	    if (PEAR::isError($groupId) && $groupId->getCode() == 555) {
+          $Smarty->assign("USER_ERROR", "Scheduling conflict.");
+      }
+
+	    //$uiHandler->SCHEDULER->setReload();
+      $NO_REDIRECT = true;
+      $_REQUEST["act"] = "SCHEDULER";
+      include("ui_browser.php");
+      break;
 
     case "SCHEDULER.removeItem":
 	    $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST['scheduleId']);
