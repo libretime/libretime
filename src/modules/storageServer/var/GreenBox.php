@@ -87,8 +87,7 @@ class GreenBox extends BasicStor {
             return $storedFile;
         }
         $oid = $storedFile->getId();
-        $r = $this->bsSetMetadataValue(
-            $oid, 'ls:url', $url, NULL, NULL, 'metadata');
+        $r = $this->bsSetMetadataValue($oid, 'ls:url', $url);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -356,18 +355,14 @@ class GreenBox extends BasicStor {
      * 		Session id
      * @param string $value
      * 		The value to store, if NULL then delete record
-     * @param string $lang
-     * 		xml:lang value for select language version
-     * @param int $mid
-     * 		(optional on unique elements) Metadata record id
      * @return boolean
      */
-    public function setMetadataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
+    public function setMetadataValue($id, $category, $sessid, $value)
     {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsSetMetadataValue($id, $category, $value /*, $lang, $mid*/);
+        return $this->bsSetMetadataValue($id, $category, $value);
     } // fn setMetadataValue
 
 
@@ -474,31 +469,31 @@ class GreenBox extends BasicStor {
     {
         $pl = new Playlist();
         $pl = $pl->create($fname);
-        
+
         return $pl;
     } // fn createPlaylist
 
     public function setPLMetadataValue($id, $category, $value, $lang=NULL, $mid=NULL)
     {
         $pl = Playlist::Recall($id);
-        
+
         if($pl === FALSE)
             return FALSE;
-            
+
         $res = $pl->setPLMetaData($category, $value, $lang);
-        
+
         return $res;
     }
-    
+
     public function getPLMetadataValue($id, $category, $langId=NULL)
     {
         $pl = Playlist::Recall($id);
-        
+
         if($pl === FALSE)
             return FALSE;
-            
+
         $res = $pl->getPLMetaData($category);
-        
+
         return $res;
     }
 
@@ -533,12 +528,12 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->getContents();
-        
+
         if(is_null($res))
             return array();
-        
+
         return $res;
     } // fn getPlaylistArray
 
@@ -555,10 +550,10 @@ class GreenBox extends BasicStor {
      */
     public function lockPlaylistForEdit($id, $sessid) {
         $pl = Playlist::Recall($id);
-        
+
         if($pl === FALSE)
             return;
-        
+
         $res = $pl->lock($sessid);
     }
 
@@ -572,10 +567,10 @@ class GreenBox extends BasicStor {
      */
     public function releaseLockedPlaylist($id, $sessid) {
         $pl = Playlist::Recall($id);
-        
+
         if($pl === FALSE)
             return FALSE;
-            
+
         $res = $pl->unlock($sessid);
         return $res;
     }
@@ -609,9 +604,9 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->addAudioClip($acId, $pos, $fadeIn, $fadeOut, $cliplength, $cueIn, $cueOut);
-        
+
         return $res;
     } // fn addAudioClipToPlaylist
 
@@ -632,12 +627,12 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->delAudioClip($pos);
-        
+
         return $res;
-    } 
-    
+    }
+
      /**
      * Move audioClip to the new position in the playlist.
      *
@@ -658,12 +653,12 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->moveAudioClip($oldPos, $newPos);
-        
+
         return $res;
-    } 
-    
+    }
+
     /**
      * Change fadeInfo values
      *
@@ -681,12 +676,12 @@ class GreenBox extends BasicStor {
          if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
-        
+
         return $res;
-    } 
-    
+    }
+
     /**
      * Change cueIn/cueOut values for playlist element
      *
@@ -707,12 +702,12 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->changeClipLength($pos, $cueIn, $cueOut);
-        
+
         return $res;
-    } 
-    
+    }
+
     /**
      * Delete a Playlist metafile.
      *
@@ -725,8 +720,8 @@ class GreenBox extends BasicStor {
     public function deletePlaylist($id)
     {
         return Playlist::Delete($id);
-       
-    } 
+
+    }
 
     /**
      * Find info about clip at specified offset in playlist.
@@ -885,7 +880,7 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-      
+
         return TRUE;
     } // fn existsPlaylist
 
@@ -908,12 +903,12 @@ class GreenBox extends BasicStor {
         if ($pl === FALSE) {
             return FALSE;
         }
-        
+
         $res = $pl->isEdited();
-        
+
         if($res !== FALSE)
             return $res;
-            
+
         return TRUE;
     } // fn playlistIsAvailable
 

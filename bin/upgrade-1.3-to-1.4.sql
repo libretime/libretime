@@ -51,6 +51,70 @@ ALTER TABLE cc_files
    ADD COLUMN channels integer;
 ALTER TABLE cc_files
    ADD COLUMN url character varying(1024);
+ALTER TABLE cc_files
+   ADD COLUMN bpm character varying(8);
+ALTER TABLE cc_files
+   ADD COLUMN rating character varying(8);
+ALTER TABLE cc_files
+   ADD COLUMN encoded_by character varying(255);
+ALTER TABLE cc_files
+   ADD COLUMN disc_number character varying(8);
+ALTER TABLE cc_files
+   ADD COLUMN mood character varying(64);
+ALTER TABLE cc_files
+   ADD COLUMN label character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN composer character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN encoder character varying(64);
+ALTER TABLE cc_files
+   ADD COLUMN checksum character varying(256);
+ALTER TABLE cc_files
+   ADD COLUMN lyrics text;
+ALTER TABLE cc_files
+   ADD COLUMN orchestra character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN conductor character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN lyricist character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN original_lyricist character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN radio_station_name character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN info_url character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN artist_url character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN audio_source_url character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN radio_station_url character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN buy_this_url character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN isrc_number character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN catalog_number character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN original_artist character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN copyright character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN report_datetime character varying(32);
+ALTER TABLE cc_files
+   ADD COLUMN report_location character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN report_organization character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN subject character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN contributor character varying(512);
+ALTER TABLE cc_files
+   ADD COLUMN language character varying(512);
+   
+
+
+
 
 ALTER TABLE cc_schedule RENAME playlist  TO playlist_id;
 ALTER TABLE cc_schedule ALTER playlist_id TYPE integer;
