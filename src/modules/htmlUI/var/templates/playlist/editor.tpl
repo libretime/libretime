@@ -2,7 +2,7 @@
 <div class="pl_container" >
     <div class="pl_header">
         <div class="pl_header_left"><span>##Playlist Editor## </span></div>
-        <div class="pl_header_right"><span>{$PL->title}</span><span>{niceTime in=$PL->duration} </span></div>
+        <div class="pl_header_right"><span>{$PL->title}</span><span class="pl_duration">{$PL->duration} </span></div>
     </div>
     <div class="pl_contents">
     <form name="PL">
@@ -19,29 +19,29 @@
     	<ul id="pl_sortable">
         	{foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
         	<li class="pl_row" id="pl_{$pos}">
-        		<div class="pl_fade_in">fade in: {$i.fadein}</div>
-                <span class="pl_input">
-                	<input type="checkbox" class="checkbox" name="{$pos}"/>
-                </span>
-                <span class="pl_title">
-                	{$i.track_title}
-                </span>
-                <span class="pl_artist">
-                	{$i.artist_name}
-                </span>
-                <span class="pl_length" >
-                    {$i.length}
-                </span>
-                <span class="pl_cue_in pl_time">
-                    {$i.cuein}
-                </span>
-                <span class="pl_cue_out pl_time">
-                    {$i.cueout}
-                </span>
-                <span class="pl_playlength">
-                    {$i.cliplength}
-                </span>
-                <div class="pl_fade_out">fade out: {$i.fadeout}</div>
+        		<div class="pl_fade_in"><span>Fade in: </span><span class="pl_time">{$i.fadein}</span></div>
+                    <span class="pl_input">
+                    	<input type="checkbox" class="checkbox" name="{$pos}"/>
+                    </span>
+                    <span class="pl_title">
+                    	{$i.track_title}
+                    </span>
+                    <span class="pl_artist">
+                    	{$i.artist_name}
+                    </span>
+                    <span class="pl_length" >
+                        {$i.length}
+                    </span>
+                    <span class="pl_cue_in pl_time">
+                        {$i.cuein}
+                    </span>
+                    <span class="pl_cue_out pl_time">
+                        {$i.cueout}
+                    </span>
+                    <span class="pl_playlength">
+                        {$i.cliplength}
+                    </span>
+                <div class="pl_fade_out"><span>Fade out: </span><span class="pl_time">{$i.fadeout}</span></div>
             </li>
         	{/foreach}
         	{if is_null($pos)}  

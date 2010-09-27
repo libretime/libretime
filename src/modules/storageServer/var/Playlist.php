@@ -608,16 +608,59 @@ class Playlist {
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
         global $CC_CONFIG, $CC_DBC;
-
-        $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " .
-        "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $errArray= array();
+        
+        if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
+            $errArray["error"]="Invalid position.";
+            return $errArray;
+        }
+        
+        $sql =  $sql = "SELECT cliplength
+        	FROM cc_playlistcontents WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        $clipLength = $CC_DBC->getOne($sql);
+        
+        if(!is_null($fadeIn) && !is_null($fadeOut)) {
+            
+            if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($clipLength)) {
+                $errArray["error"]="Fade In can't be larger than overall playlength.";
+                return $errArray;
+            }
+            if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($clipLength)) {
+                $errArray["error"]="Fade Out can't be larger than overall playlength.";
+                return $errArray;
+            }
+        
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " .
+        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        }
+        else if(!is_null($fadeIn)) {
+            
+            if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($clipLength)) {
+                $errArray["error"]="Fade In can't be larger than overall playlength.";
+                return $errArray;
+            }
+            
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}' " .
+        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        }
+        else if(!is_null($fadeOut)){
+            
+            if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($clipLength)) {
+                $errArray["error"]="Fade Out can't be larger than overall playlength.";
+                return $errArray;
+            }
+        
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadeout='{$fadeOut}' " .
+        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+        }
 
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
-            return $res;
+            $errArray["error"] =$res->getMessage();
+            return $errArray;
         }
 
-        return TRUE;
+        return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
 
     /**
@@ -634,36 +677,40 @@ class Playlist {
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
         global $CC_CONFIG, $CC_DBC;
-        $oldCueIn; 
-        $oldCueOut;
         $errArray= array();
        
-        if(is_null($pos) || is_null($cueIn) && is_null($cueOut))
-            return FALSE;
+        if(is_null($cueIn) && is_null($cueOut)) {
+            $errArray["error"]="Cue in and cue out are null.";
+            return $errArray;
+        }
         
-        if($pos < 0 || $pos >= $this->getNextPos())
-            return FALSE;
+        if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
+            $errArray["error"]="Invalid position.";
+            return $errArray;
+        }
         
-        $sql =  $sql = "SELECT length AS original_length
+        $sql =  $sql = "SELECT length AS original_length, cuein, cueout, fadein, fadeout
         	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
         	WHERE C.playlist_id='{$this->getId()}' AND position='{$pos}'";
-        $origLength = $CC_DBC->getOne($sql);
-        
-     
-        $sql = "SELECT cuein, cueout FROM ".$CC_CONFIG['playListContentsTable']." 
-        WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
         $res = $CC_DBC->getRow($sql);
         
+        $origLength = $res['original_length'];
         $oldCueIn = $res['cuein'];
         $oldCueOut = $res['cueout'];
+        $fadeIn = $res['fadein'];
+        $fadeOut = $res['fadeout'];
         
         if(!is_null($cueIn) && !is_null($cueOut)){
-            if($cueIn > $cueOut) {
-                $errArray["error"]="Can't set cue in to be larger than cue out.";
+            
+            if($cueOut === ""){
+                $cueOut = $origLength;
+            }
+            if(Playlist::playlistTimeToSeconds($cueIn) > Playlist::playlistTimeToSeconds($cueOut)) {
+                $errArray["error"]= "Can't set cue in to be larger than cue out.";
                 return $errArray;
             }
-            if($cueOut > $origLength){
-                $errArray["error"] ="Can't set cue out to be greater than file length.";
+            if(Playlist::playlistTimeToSeconds($cueOut) > Playlist::playlistTimeToSeconds($origLength)){
+                $errArray["error"] = "Can't set cue out to be greater than file length.";
                 return $errArray;
             }
             
@@ -672,13 +719,13 @@ class Playlist {
             
             $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
             " SET cuein='{$cueIn}', cueout='{$cueOut}', ".
-            "cliplength=(cliplength + interval '{$oldCueIn}' - interval '{$cueIn}' - interval '{$oldCueOut}' + interval '{$cueOut}') " .
+            "cliplength=(interval '{$cueOut}' - interval '{$cueIn}') " .
             "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
                        
         }
         else if(!is_null($cueIn)) {
             
-            if($cueIn > $oldCueOut) {
+            if(Playlist::playlistTimeToSeconds($cueIn) > Playlist::playlistTimeToSeconds($oldCueOut)) {
                 $errArray["error"] = "Can't set cue in to be larger than cue out.";
                 return $errArray;
             }
@@ -686,17 +733,21 @@ class Playlist {
             $cueIn = pg_escape_string($cueIn);
                    
             $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET cuein='{$cueIn}', cliplength=(cliplength + interval '{$oldCueIn}' - interval '{$cueIn}') " .
+            " SET cuein='{$cueIn}', cliplength=(interval '{$oldCueOut}' - interval '{$cueIn}') " .
             "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
         }
         else if(!is_null($cueOut)) {
             
-            if($cueOut < $oldCueIn) {
+            if($cueOut === ""){
+                $cueOut = $origLength;
+            }
+            
+            if(Playlist::playlistTimeToSeconds($cueOut) < Playlist::playlistTimeToSeconds($oldCueIn)) {
                 $errArray["error"] ="Can't set cue out to be smaller than cue in.";
                 return $errArray;
             }
             
-            if($cueOut > $origLength){
+            if(Playlist::playlistTimeToSeconds($cueOut) > Playlist::playlistTimeToSeconds($origLength)){
                 $errArray["error"] ="Can't set cue out to be greater than file length.";
                 return $errArray;
             }
@@ -704,7 +755,7 @@ class Playlist {
             $cueOut = pg_escape_string($cueOut);
             
             $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET cueout='{$cueOut}', cliplength=(cliplength - interval '{$oldCueOut}' + interval '{$cueOut}') " .
+            " SET cueout='{$cueOut}', cliplength=(interval '{$cueOut}' - interval '{$oldCueIn}') " .
             "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
         }
               
@@ -717,8 +768,36 @@ class Playlist {
         $sql = "SELECT cliplength FROM ".$CC_CONFIG['playListContentsTable']." 
         WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
         $cliplength = $CC_DBC->getOne($sql);
+        
+        if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($cliplength)){
+            $fadeIn = $cliplength;
+            
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
+            " SET fadein='{$fadeIn}' " .
+            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            
+            $res = $CC_DBC->query($sql);
+            if (PEAR::isError($res)) {
+                $errArray["error"] =$res->getMessage();
+                return $errArray;
+            }
+        }
+        if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($cliplength)){
+            $fadeOut = $cliplength;
+            
+            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
+            " SET fadeout='{$fadeOut}' " .
+            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            
+            $res = $CC_DBC->query($sql);
+            if (PEAR::isError($res)) {
+                $errArray["error"] =$res->getMessage();
+                return $errArray;
+            }
+        }
 
-        return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut);
+        return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut, "length"=>$this->getLength(),
+                        "fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
 
     /**

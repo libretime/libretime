@@ -48,8 +48,9 @@
 
 .pl_head span {
 	display:inline-block;
-	vertical-align: top;
-	padding-top: 0.5em;
+	vertical-align: middle;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
 	font-weight: bold;
 }
 
@@ -66,47 +67,62 @@
 .pl_row span {
 	display:inline-block;
 	vertical-align: middle;
-	padding: 0.2em 0;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
 }
 
 .pl_input{
-	width: 5%;
+	width: 25px;
 }
 
 .pl_title{
-	width: 21%;
+	width: 160px;
+	padding-right: 10px;
 }
 
 .pl_artist{
-	width: 20%;
+	width: 140px;
+	padding-right: 10px;
 }
 
 .pl_length{
-	width: 11%;
+	width: 100px;
 }
 
 .pl_cue_in{
-	width: 11%;
+	width: 100px;
 }
 
 .pl_cue_out{
-	width: 11%;
+	width: 100px;
 }
 
 .pl_playlength{
-	width: 11%;
+	width: 100px;
 }
 
 .pl_fade_in{
 	padding: 0.2em 2em;
-	border-top: thin ridge black;
+	border-top: thin solid #999999;
 	background-color: #cccccc;
+}
+
+.pl_fade_in span{
+	display: inline-block;
+	width: 60px;
+	padding-right: 5px;
 }
 
 .pl_fade_out{
 	padding-left: 2em;
 	background-color: #cccccc;
 	padding: 0.2em 2em;	
+}
+
+.pl_fade_out span{
+	display: inline-block;
+	width: 60px;
+	padding-right: 5px;
 }
 
 .pl_time{
