@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require_once(dirname(__FILE__).'/../conf.php');
-require_once(dirname(__FILE__).'/../../../alib/var/Subjects.php');
+require_once(dirname(__FILE__).'/../Subjects.php');
 require_once('DB.php');
 require_once('Console/Getopt.php');
 

@@ -452,17 +452,17 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 }
 
 
-if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
-    ."   id            BIGINT      NOT NULL,"
-    ."   audioClipId   BIGINT      NOT NULL,"
-    ."   timestamp     TIMESTAMP   NOT NULL,"
-    ."   PRIMARY KEY(id))";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
-}
+//if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
+//    echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
+//    $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
+//    ."   id            BIGINT      NOT NULL,"
+//    ."   audioClipId   BIGINT      NOT NULL,"
+//    ."   timestamp     TIMESTAMP   NOT NULL,"
+//    ."   PRIMARY KEY(id))";
+//    camp_install_query($sql);
+//} else {
+//    echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
+//}
 
 
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {

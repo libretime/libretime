@@ -193,13 +193,13 @@ if (camp_db_table_exists($CC_CONFIG['backupTable'])) {
     echo " * Skipping: database table ".$CC_CONFIG['backupTable']."\n";
 }
 
-if (camp_db_table_exists($CC_CONFIG['playlogTable'])) {
-    echo " * Removing database table ".$CC_CONFIG['playlogTable']."...";
-    $sql = "DROP TABLE ".$CC_CONFIG['playlogTable'];
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table ".$CC_CONFIG['playlogTable']."\n";
-}
+//if (camp_db_table_exists($CC_CONFIG['playlogTable'])) {
+//    echo " * Removing database table ".$CC_CONFIG['playlogTable']."...";
+//    $sql = "DROP TABLE ".$CC_CONFIG['playlogTable'];
+//    camp_install_query($sql);
+//} else {
+//    echo " * Skipping: database table ".$CC_CONFIG['playlogTable']."\n";
+//}
 
 echo "************************************\n";
 echo "* StorageServer Uninstall Complete *\n";

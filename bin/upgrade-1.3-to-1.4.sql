@@ -113,9 +113,6 @@ ALTER TABLE cc_files
    ADD COLUMN language character varying(512);
    
 
-
-
-
 ALTER TABLE cc_schedule RENAME playlist  TO playlist_id;
 ALTER TABLE cc_schedule ALTER playlist_id TYPE integer;
 ALTER TABLE cc_schedule ADD COLUMN group_id integer;

@@ -28,8 +28,6 @@ case "$1" in
         # remove generated files
         rm -rf $vardir/htmlUI/var/html/img/*
         rm -rf $vardir/htmlUI/var/templates_c/*
-        rm -rf $vardir/archiveServer/var/access/*
-        rm -rf $vardir/archiveServer/var/trans/*
         rm -rf $vardir/storageServer/var/access/*
         rm -rf $vardir/storageServer/var/trans/*
 

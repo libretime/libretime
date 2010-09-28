@@ -124,7 +124,7 @@ $CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
 $CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
 $CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
 $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
-$CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
+//$CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
 $CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
 $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
 
