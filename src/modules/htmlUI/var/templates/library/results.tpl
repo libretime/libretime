@@ -25,7 +25,7 @@
                 <tr class="background-color: {cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file=$action_handler} style="cursor: pointer">
-                        {if $PLAYLIST.id == $i.id}
+                        {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                             <b>{$i.title|truncate:30:"...":true}</b>
                         {else}
                             {$i.title|truncate:30:"...":true}
@@ -33,15 +33,15 @@
                     </td>
                     <td {include file=$action_handler} style="cursor: pointer">
                     {$i.creator}
-                    {if $PL->isAvailable($i.id) == false}
-                    (editing: {$PL->isUsedBy($i.id)})
+                    {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
+                    	(editing: {$PL->isUsedBy($i.id)})
                     {/if}
                     </td>
                     <td {include file=$action_handler} style="cursor: pointer">{$i.source}</td>
                     <td {include file=$action_handler} style="cursor: pointer" align="center">{$i.track_num}</td>
                     <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
-                    	{if $PL->isAvailable($i.id) == false}
+                    	{if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                             <div align="left"><img src="img/ico_lock.png">
                         	<img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /></div>
                         {else}

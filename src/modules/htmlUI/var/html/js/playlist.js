@@ -195,7 +195,7 @@ $(document).ready(function() {
     
     function addTextInput(){
     	var time = $(this).text().trim();
-    	var input = $("<input type='text' value="+time+" size='10' maxlength='15'/>");
+    	var input = $("<input type='text' value="+time+" size='13' maxlength='15'/>");
     	
     	//Firefox seems to have problems losing focus otherwise, Chrome is fine.
     	$(":input").blur();

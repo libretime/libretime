@@ -440,9 +440,6 @@ class uiPlaylist
 
     public function isAvailable($id)
     {
-        if (Greenbox::getFileType($id) !== UI_FILETYPE_PLAYLIST) {
-            return TRUE;
-        }
         if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE) {
             return TRUE;
         }
@@ -452,9 +449,6 @@ class uiPlaylist
 
     function isUsedBy($id)
     {
-        if (Greenbox::getFileType($id) !== UI_FILETYPE_PLAYLIST) {
-            return FALSE;
-        }
         if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
              return Subjects::GetSubjName($userid);
         }

@@ -1092,9 +1092,12 @@ class BasicStor {
         }
 
         // Build WHERE clause
-        $whereClause = " WHERE (state='ready' OR state='edited')";
+        $whereClause = "";
         if (!is_null($filetype)) {
-        	$whereClause .= " AND (ftype='$filetype')";
+        	$whereClause .= "WHERE (ftype='$filetype')";
+        }
+        else {
+            $whereClause .= "WHERE (ftype is NOT NULL)";
         }
         if (count($whereArr) != 0) {
             if ($operator == 'and') {
@@ -1105,51 +1108,53 @@ class BasicStor {
         }
 
         // Final query
-        $sql = "SELECT * "
-                 . " FROM ".$CC_CONFIG["filesTable"]
-                 . $whereClause;
+        
+        $sql = "SELECT * FROM ((SELECT creator AS artist_name, NULL AS album_title, 
+                name AS track_title, length, NULL AS track_number, 
+                PL.id, 'playlist' AS ftype 
+                FROM ".$CC_CONFIG["playListTable"]." AS PL, 
+                (SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
+                FROM ".$CC_CONFIG["playListContentsTable"]." group by playlist_id) AS T 
+                WHERE PL.id = T.id) 
+                
+                UNION 
+                
+                SELECT artist_name, album_title, track_title, text(length) AS length, 
+                track_number, id, ftype FROM " .$CC_CONFIG["filesTable"].") AS Content ";
+        
+        $sql .= $whereClause;
+                 
         if ($orderby) {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        //$_SESSION["debug"] = $sql;
-
-        $countRowsSql = "SELECT COUNT(*) "
-                 . " FROM ".$CC_CONFIG["filesTable"]
-                 . $whereClause;
-        $cnt = $CC_DBC->GetOne($countRowsSql);
-
-        // Get the number of results
-        if (PEAR::isError($cnt)) {
-        	return $cnt;
-        }
-
-        // Get actual results
-        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
-            ($offset != 0 ? " OFFSET $offset" : '' );
-        $res = $CC_DBC->getAll($sql.$limitPart);
+        $_SESSION["br"] = $sql;
+        
+        $res = $CC_DBC->getAll($sql);
         if (PEAR::isError($res)) {
         	return $res;
         }
         if (!is_array($res)) {
         	$res = array();
         }
+        
+        $count = count($res);
+        
+        $res = array_slice($res, $offset != 0 ? $offset : 0, $limit != 0 ? $limit : 10);
+        
         $eres = array();
         foreach ($res as $it) {
-            $gunid = StoredFile::NormalizeGunid($it['gunid']);
             $eres[] = array(
             	'id' => $it['id'],
-                'gunid' => $gunid,
                 'type' => strtolower($it['ftype']),
                 'title' => $it['track_title'],
                 'creator' => $it['artist_name'],
                 'duration' => $it['length'],
-                'length' => $it['length'],
                 'source' => $it['album_title'],
                 'track_num' => $it['track_number'],
             );
         }
-        return array('results'=>$eres, 'cnt'=>$cnt);
+        return array('results'=>$eres, 'cnt'=>$count);
     }
 
 
