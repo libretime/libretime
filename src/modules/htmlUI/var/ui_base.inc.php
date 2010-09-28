@@ -500,7 +500,7 @@ class uiBase
         $res = $CC_DBC->query("SELECT to_hex($gunid)");
         $row = $res->fetchRow();
         return $row['to_hex'];
-    } // fn toHex
+    }
 
 
     public function toInt8($gunid)
@@ -509,7 +509,7 @@ class uiBase
         $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
         $row = $res->fetchRow();
         return $row['int8'];
-    } // fn toInt8
+    }
 
 
     /**
@@ -524,10 +524,10 @@ class uiBase
         }
        	$args = func_get_args();
         $_SESSION['alertMsg'] .= call_user_func_array('tra', $args).'\n';
-    } // fn _retMsg
+    }
 
 
-    public function getPLMetaInfo($id) 
+    public function getPLMetaInfo($id)
     {
         $data = array('id' => $id,
                       'title' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_TITLE),
@@ -535,9 +535,9 @@ class uiBase
                       'duration' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_DURATION),
                       'type' => 'playlist',
                 );
-         return ($data);     
+         return ($data);
     }
-    
+
     public function getMetaInfo($id)
     {
         $type = strtolower(GreenBox::getFileType($id));
@@ -553,7 +553,7 @@ class uiBase
                       'sampleRate' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_SAMPLERATE) : NULL,
                 );
          return ($data);
-    } // fn getMetaInfo
+    }
 
 
     public function getMetadataValue($id, $key, $langid=NULL, $deflangid=UI_DEFAULT_LANGID)
@@ -566,37 +566,16 @@ class uiBase
         }
 
         return $this->gb->getMetadataValue($id, $key, $this->sessid, $langid, $deflangid);
-    } // fn getMetadataValue
+    }
 
 
-    public function setMetadataValue($id, $key, $value, $langid=NULL)
+    public function setMetadataValue($id, $key, $value)
     {
-        if (!$langid) {
-            $langid = UI_DEFAULT_LANGID;
-        }
-//        if (ini_get('magic_quotes_gpc')) {
-//            $value = str_replace("\'", "'", $value);
-//        }
-
-        if ($this->gb->setMetadataValue($id, $key, $this->sessid, $value, $langid)) {
+        if ($this->gb->setMetadataValue($id, $key, $this->sessid, $value)) {
             return TRUE;
         }
         return FALSE;
-    } // fn setMetadataValue
-
-
-    /**
-     * @param unknown_type $id
-     * @return string/FALSE
-     */
-//    private function _getFileTitle($id)
-//    {
-//        if (is_array($arr = GreenBox::GetPath($id))) {
-//            $file = array_pop($arr);
-//            return $file['name'];
-//        }
-//        return FALSE;
-//    } // fn _getFileTitle
+    }
 
 
     public static function formElementEncode($str)
@@ -604,7 +583,7 @@ class uiBase
         $str = str_replace(':', '__', $str);
         #$str = str_replace('.', '_', $str);
         return $str;
-    } // fn formElementEncode
+    }
 
 
     public static function formElementDecode($str)
@@ -612,7 +591,7 @@ class uiBase
         $str = str_replace('__', ':', $str);
         #$str = str_replace('_', '.', $str);
         return $str;
-    } // fn formElementDecode
+    }
 
 } // class uiBase
 ?>

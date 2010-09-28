@@ -76,13 +76,10 @@ override_dh_install:
 		debian/tmp/etc/apache/90_php_campcaster.conf \
 			debian/campcaster-station/usr/share/campcaster/etc/
 	# CONFIG files
-	mkdir -p debian/campcaster-station/etc/campcaster/archiveServer
 	mkdir -p debian/campcaster-station/etc/campcaster/storageServer
 	mkdir -p debian/campcaster-station/etc/campcaster/storageAdmin
 	mkdir -p debian/campcaster-station/etc/campcaster/htmlUI
 	#
-	mv -f debian/tmp/var/Campcaster/archiveServer/var/conf.php \
-			debian/campcaster-station/etc/campcaster/archiveServer/conf.php
 	mv -f debian/tmp/var/Campcaster/storageServer/var/conf.php \
 			debian/campcaster-station/etc/campcaster/storageServer/conf.php
 	mv -f debian/tmp/var/Campcaster/storageServer/var/campcaster_version.php \
@@ -93,7 +90,6 @@ override_dh_install:
 			debian/campcaster-station/etc/campcaster/htmlUI/ui_conf.php
 	#
 	mv -f debian/tmp/var/Campcaster/alib \
-	      debian/tmp/var/Campcaster/archiveServer \
 	      debian/tmp/var/Campcaster/getid3 \
 	      debian/tmp/var/Campcaster/htmlUI \
 	      debian/tmp/var/Campcaster/index.php \
@@ -102,7 +98,6 @@ override_dh_install:
 	      debian/tmp/var/Campcaster/storageAdmin \
 			debian/campcaster-station/usr/share/campcaster/www
 	# symlink CONFIG files
-	ln -s  /etc/campcaster/archiveServer/conf.php debian/campcaster-station/usr/share/campcaster/www/archiveServer/var/conf.php
 	ln -s  /etc/campcaster/storageServer/conf.php debian/campcaster-station/usr/share/campcaster/www/storageServer/var/conf.php
 	ln -s  /etc/campcaster/storageServer/campcaster_version.php debian/campcaster-station/usr/share/campcaster/www/storageServer/var/
 	ln -s  /etc/campcaster/storageAdmin/conf.php  debian/campcaster-station/usr/share/campcaster/www/storageAdmin/var/conf.php

@@ -85,28 +85,27 @@ TEST_RUNNER     = ${PHP_DIR}/tests/index.php
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all dir_setup doc clean docclean depclean distclean dist install
-.PHONY: db_init db_clean
+.PHONY: all clean depclean distclean dist install
 
 all:
 
-dir_setup: ${DOXYGEN_DIR}
+#dir_setup: ${DOXYGEN_DIR}
 
-doc:
-	${DOXYGEN} ${DOXYGEN_CONFIG}
+#doc:
+#	${DOXYGEN} ${DOXYGEN_CONFIG}
 
-clean: db_clean
+clean: 
 #	${RM} ...
 
-docclean:
-	${RMDIR} ${DOXYGEN_DIR}/html
+#docclean:
+#	${RMDIR} ${DOXYGEN_DIR}/html
 
 depclean: clean
 
-dist: all
-	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
+#dist: all
+#	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
 
-distclean: clean docclean
+distclean: clean 
 #	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
 #check: all ${TEST_RUNNER}
@@ -126,19 +125,19 @@ install: all
 # IMPORTANT: db_init and db_clean are commented out only for Campcaster,
 # where alib is initialized through storageServer module
 
-db_init:
+#db_init:
 #	cd var/install; php -q install.php
 
-db_clean:
+#db_clean:
 #	cd var/install; php -q uninstall.php
 
-${TMP_DIR}:
-	${MKDIR} ${TMP_DIR}
+#${TMP_DIR}:
+#	${MKDIR} ${TMP_DIR}
 
-${DOXYGEN_DIR}:
-	${MKDIR} ${DOXYGEN_DIR}
+#${DOXYGEN_DIR}:
+#	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}:
+#${TEST_RUNNER}:
 
 #-------------------------------------------------------------------------------
 #   Pattern rules

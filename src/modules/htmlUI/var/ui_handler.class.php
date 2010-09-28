@@ -472,23 +472,26 @@ class uiHandler extends uiBase {
 
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $k => $v) {
-                $formdata[$key.'___'.uiBase::formElementEncode($v['element'])] ? $mData[uiBase::formElementDecode($v['element'])] = $formdata[$key.'___'.uiBase::formElementEncode($v['element'])] : NULL;
+              $element = uiBase::formElementEncode($v['element']);
+                if ($formdata[$key.'___'.$element])
+                  $mData[uiBase::formElementDecode($v['element'])] = $formdata[$key.'___'.$element];
             }
         }
 
+        $_SESSION["debug"] = $mData;
         if (!count($mData)) {
         	return;
         }
 
         foreach ($mData as $key => $val) {
-            $r = $this->setMetadataValue($id, $key, $val, $curr_langid);
+            $r = $this->setMetadataValue($id, $key, $val);
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
 
         $this->_retMsg('Audioclip metadata has been updated.');
-    } // fn editMetadata
+    }
 
 
     /**

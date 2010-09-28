@@ -195,8 +195,7 @@ class LocStor extends BasicStor {
             return $storedFile;
         }
         $oid = $storedFile->getId();
-        $r = $this-> bsSetMetadataValue(
-            $oid, 'ls:url', $url /*, NULL, NULL, 'metadata'*/);
+        $r = $this-> bsSetMetadataValue($oid, 'ls:url', $url);
         if (PEAR::isError($r)) {
             return $r;
         }

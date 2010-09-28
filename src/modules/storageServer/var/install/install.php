@@ -25,8 +25,14 @@ require_once(dirname(__FILE__).'/../GreenBox.php');
 require_once(dirname(__FILE__)."/installInit.php");
 campcaster_db_connect(true);
 
-$sql = "create language 'plpgsql'";
-camp_install_query($sql);
+$langIsInstalled = $CC_DBC->GetOne('select count(*) FROM pg_language WHERE lanname = \'plpgsql\'');
+if ($langIsInstalled == '0') {
+  echo " * Installing Postgres scripting language\n";
+  $sql = "CREATE LANGUAGE 'plpgsql'";
+  camp_install_query($sql);
+} else {
+  echo " * Postgres scripting language already installed\n";
+}
 
 //------------------------------------------------------------------------------
 // Install database tables
@@ -179,6 +185,36 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
           track_number integer,
           channels integer,
           url character varying(1024),
+          bpm character varying(8),
+          rating character varying(8),
+          encoded_by character varying(255),
+          disc_number character varying(8),
+          mood character varying(64),
+          label character varying(512),
+          composer character varying(512),
+          encoder character varying(64),
+          checksum character varying(256),
+          lyrics text,
+          orchestra character varying(512),
+          conductor character varying(512),
+          lyricist character varying(512),
+          original_lyricist character varying(512),
+          radio_station_name character varying(512),
+          info_url character varying(512),
+          artist_url character varying(512),
+          audio_source_url character varying(512),
+          radio_station_url character varying(512),
+          buy_this_url character varying(512),
+          isrc_number character varying(512),
+          catalog_number character varying(512),
+          original_artist character varying(512),
+          copyright character varying(512),
+          report_datetime character varying(32),
+          report_location character varying(512),
+          report_organization character varying(512),
+          subject character varying(512),
+          contributor character varying(512),
+          \"language\" character varying(512),
           CONSTRAINT cc_files_pkey PRIMARY KEY (id),
           CONSTRAINT cc_files_editedby_fkey FOREIGN KEY (editedby)
               REFERENCES cc_subjs (id) MATCH SIMPLE
@@ -416,17 +452,17 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 }
 
 
-if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
-    $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
-    ."   id            BIGINT      NOT NULL,"
-    ."   audioClipId   BIGINT      NOT NULL,"
-    ."   timestamp     TIMESTAMP   NOT NULL,"
-    ."   PRIMARY KEY(id))";
-    camp_install_query($sql);
-} else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
-}
+//if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
+//    echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
+//    $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
+//    ."   id            BIGINT      NOT NULL,"
+//    ."   audioClipId   BIGINT      NOT NULL,"
+//    ."   timestamp     TIMESTAMP   NOT NULL,"
+//    ."   PRIMARY KEY(id))";
+//    camp_install_query($sql);
+//} else {
+//    echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
+//}
 
 
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {

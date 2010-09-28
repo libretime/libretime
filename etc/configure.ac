@@ -32,23 +32,23 @@ AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2010 Sourcefabric O.P.S. under the GNU GPL])
 AC_REVISION($Revision$)
 
-AC_CONFIG_SRCDIR(../src/products/scheduler/src/main.cxx)
+dnl AC_CONFIG_SRCDIR(../src/products/scheduler/src/main.cxx)
 
-AC_PROG_CC()
-AC_PROG_CXX()
+dnl AC_PROG_CC()
+dnl AC_PROG_CXX()
 
 
 dnl-----------------------------------------------------------------------------
 dnl  specify whether debug info should be compiled into the executable
 dnl-----------------------------------------------------------------------------
-AC_SUBST(DEBUG)
+dnl AC_SUBST(DEBUG)
 
-AC_ARG_ENABLE([debug],
-            AC_HELP_STRING([--enable-debug], [compile with debug info (no)]),
-            [DEBUG=${enable_debug}],
-            [DEBUG=no])
+dnl AC_ARG_ENABLE([debug],
+dnl             AC_HELP_STRING([--enable-debug], [compile with debug info (no)]),
+dnl             [DEBUG=${enable_debug}],
+dnl             [DEBUG=no])
 
-AC_MSG_RESULT([compiling with debug info: ${DEBUG}])
+dnl AC_MSG_RESULT([compiling with debug info: ${DEBUG}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -245,29 +245,29 @@ AC_MSG_RESULT([using audio output device for the station: ${STATION_AUDIO_OUT}])
 dnl-----------------------------------------------------------------------------
 dnl  specify the audio output device for the studio
 dnl-----------------------------------------------------------------------------
-AC_SUBST(STUDIO_AUDIO_OUT)
+dnl AC_SUBST(STUDIO_AUDIO_OUT)
 
-AC_ARG_WITH([studio-audio-out],
-            AC_HELP_STRING([--with-studio-audio-out],
-               [use the specified audio output device for the studio,
-                either ALSA or OSS (default)]),
-            [STUDIO_AUDIO_OUT=${withval}], [STUDIO_AUDIO_OUT=default])
+dnl AC_ARG_WITH([studio-audio-out],
+dnl             AC_HELP_STRING([--with-studio-audio-out],
+dnl                [use the specified audio output device for the studio,
+dnl                 either ALSA or OSS (default)]),
+dnl             [STUDIO_AUDIO_OUT=${withval}], [STUDIO_AUDIO_OUT=default])
 
-AC_MSG_RESULT([using audio output device for studio: ${STUDIO_AUDIO_OUT}])
+dnl AC_MSG_RESULT([using audio output device for studio: ${STUDIO_AUDIO_OUT}])
 
 
 dnl-----------------------------------------------------------------------------
 dnl  specify the audio output device for the studio for cueing
 dnl-----------------------------------------------------------------------------
-AC_SUBST(STUDIO_AUDIO_CUE)
+dnl AC_SUBST(STUDIO_AUDIO_CUE)
 
-AC_ARG_WITH([studio-audio-cue],
-            AC_HELP_STRING([--with-studio-audio-cue],
-               [use the specified audio cue device for the studio,
-                either ALSA or OSS (default)]),
-            [STUDIO_AUDIO_CUE=${withval}], [STUDIO_AUDIO_CUE=default])
+dnl AC_ARG_WITH([studio-audio-cue],
+dnl             AC_HELP_STRING([--with-studio-audio-cue],
+dnl                [use the specified audio cue device for the studio,
+dnl                 either ALSA or OSS (default)]),
+dnl             [STUDIO_AUDIO_CUE=${withval}], [STUDIO_AUDIO_CUE=default])
 
-AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
+dnl AC_MSG_RESULT([using audio cue device for studio: ${STUDIO_AUDIO_CUE}])
 
 
 dnl-----------------------------------------------------------------------------
@@ -279,8 +279,8 @@ dnl fancy variables to avoid duplication of hard-coded values :(
 dnl-----------------------------------------------------------------------------
 
 dnl set up the alib module
-AC_CONFIG_COMMANDS([../src/modules/alib/tmp/configure],
-                   [../src/modules/alib/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/alib/tmp/configure],
+dnl                   [../src/modules/alib/bin/autogen.sh])
 
 dnl set up the getid3 module
 AC_CONFIG_COMMANDS([../src/modules/getid3/tmp/configure],
@@ -299,57 +299,51 @@ AC_CONFIG_COMMANDS([../src/modules/storageServer/tmp/configure],
                    [../src/modules/storageServer/bin/autogen.sh])
 
 dnl set up the core module
-AC_CONFIG_COMMANDS([../src/modules/core/tmp/configure],
-                   [../src/modules/core/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/core/tmp/configure],
+dnl                    [../src/modules/core/bin/autogen.sh])
 
 dnl set up the authentication module
-AC_CONFIG_COMMANDS([../src/modules/authentication/tmp/configure],
-                   [../src/modules/authentication/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/authentication/tmp/configure],
+dnl                    [../src/modules/authentication/bin/autogen.sh])
 
 dnl set up the db module
-AC_CONFIG_COMMANDS([../src/modules/db/tmp/configure],
-                   [../src/modules/db/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/db/tmp/configure],
+dnl                    [../src/modules/db/bin/autogen.sh])
 
 dnl set up the storage client module
-AC_CONFIG_COMMANDS([../src/modules/storageClient/tmp/configure],
-                   [../src/modules/storageClient/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/storageClient/tmp/configure],
+dnl                    [../src/modules/storageClient/bin/autogen.sh])
 
 dnl set up the playlist executor module
-AC_CONFIG_COMMANDS([../src/modules/playlistExecutor/tmp/configure],
-                   [../src/modules/playlistExecutor/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/playlistExecutor/tmp/configure],
+dnl                    [../src/modules/playlistExecutor/bin/autogen.sh])
 
 dnl set up the event scheduler module
-AC_CONFIG_COMMANDS([../src/modules/eventScheduler/tmp/configure],
-                   [../src/modules/eventScheduler/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/eventScheduler/tmp/configure],
+dnl                    [../src/modules/eventScheduler/bin/autogen.sh])
 
 dnl set up the scheduler client module
-AC_CONFIG_COMMANDS([../src/modules/schedulerClient/tmp/configure],
-                   [../src/modules/schedulerClient/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/schedulerClient/tmp/configure],
+dnl                    [../src/modules/schedulerClient/bin/autogen.sh])
 
 dnl set up the  widgets module
-AC_CONFIG_COMMANDS([../src/modules/widgets/tmp/configure],
-                   [../src/modules/widgets/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/modules/widgets/tmp/configure],
+dnl                    [../src/modules/widgets/bin/autogen.sh])
 
 dnl set up the scheduler product
-AC_CONFIG_COMMANDS([../src/products/scheduler/tmp/configure],
-                   [../src/products/scheduler/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/products/scheduler/tmp/configure],
+dnl                    [../src/products/scheduler/bin/autogen.sh])
 
 dnl set up the gLiveSupport product
-AC_CONFIG_COMMANDS([../src/products/gLiveSupport/tmp/configure],
-                   [../src/products/gLiveSupport/bin/autogen.sh])
+dnl AC_CONFIG_COMMANDS([../src/products/gLiveSupport/tmp/configure],
+dnl                    [../src/products/gLiveSupport/bin/autogen.sh])
 
 
 
 dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
-[compiling the following external libraries that are needed
-by Campcaster:
-
-    libodbc++ 0.2.5
-    taglib 1.5
-    xmlrpc++ 2004-07-13
-
+[
 using the following configuration settings:
 
     hostname:                               ${HOSTNAME}
@@ -362,8 +356,6 @@ using the following configuration settings:
     database user:                          ${DB_USER}
     database user password:                 ${DB_PASSWORD}
     station audio output device:            ${STATION_AUDIO_OUT}
-    studio audio output device:             ${STUDIO_AUDIO_OUT}
-    studio audio cue device:                ${STUDIO_AUDIO_CUE}
     creating Campcaster database:           ${CREATE_LS_DATABASE}
     creating ODBC data source:              ${CREATE_ODBC_DATA_SOURCE}
     initialize Campcaster database:         ${INIT_LS_DATABASE}

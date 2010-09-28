@@ -251,49 +251,49 @@ cat $modules_dir/storageServer/var/conf_only.php.template \
     | sed -e "$replace_sed_string" \
     > $configdir/storageServer.conf.php
 
-cat $modules_dir/authentication/etc/webAuthentication.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/webAuthentication.xml
-
-cat $modules_dir/db/etc/connectionManagerFactory.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/connectionManagerFactory.xml
-
-cat $modules_dir/db/etc/simpleConnectionManager.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/simpleConnectionManager.xml
-
-cat $modules_dir/schedulerClient/etc/schedulerClientFactory.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/schedulerClientFactory.xml
-
-cat $modules_dir/schedulerClient/etc/schedulerDaemonXmlRpcClient.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/schedulerDaemonXmlRpcClient.xml
-
-cat $modules_dir/storageClient/etc/webAuthenticationClient.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/webAuthenticationClient.xml
-
-cat $modules_dir/storageClient/etc/webStorage.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/webStorage.xml
-
-cat $products_dir/scheduler/etc/campcaster-scheduler.xml.template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/campcaster-scheduler.xml
-
-cat $products_dir/gLiveSupport/etc/campcaster-studio.xml.user-template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/campcaster-studio.xml
-
-cat $products_dir/gLiveSupport/etc/authenticationClient.xml.user-template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/authenticationClient.xml
-
-cat $products_dir/gLiveSupport/etc/storageClient.xml.user-template \
-    | sed -e "$replace_sed_string" \
-    > $configdir/storageClient.xml
+#cat $modules_dir/authentication/etc/webAuthentication.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/webAuthentication.xml
+#
+#cat $modules_dir/db/etc/connectionManagerFactory.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/connectionManagerFactory.xml
+#
+#cat $modules_dir/db/etc/simpleConnectionManager.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/simpleConnectionManager.xml
+#
+#cat $modules_dir/schedulerClient/etc/schedulerClientFactory.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/schedulerClientFactory.xml
+#
+#cat $modules_dir/schedulerClient/etc/schedulerDaemonXmlRpcClient.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/schedulerDaemonXmlRpcClient.xml
+#
+#cat $modules_dir/storageClient/etc/webAuthenticationClient.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/webAuthenticationClient.xml
+#
+#cat $modules_dir/storageClient/etc/webStorage.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/webStorage.xml
+#
+#cat $products_dir/scheduler/etc/campcaster-scheduler.xml.template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/campcaster-scheduler.xml
+#
+#cat $products_dir/gLiveSupport/etc/campcaster-studio.xml.user-template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/campcaster-studio.xml
+#
+#cat $products_dir/gLiveSupport/etc/authenticationClient.xml.user-template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/authenticationClient.xml
+#
+#cat $products_dir/gLiveSupport/etc/storageClient.xml.user-template \
+#    | sed -e "$replace_sed_string" \
+#    > $configdir/storageClient.xml
 
 
 #-------------------------------------------------------------------------------
@@ -302,9 +302,7 @@ cat $products_dir/gLiveSupport/etc/storageClient.xml.user-template \
 echo "Creating public HTML directory and links to web interfaces..."
 
 mkdir -p $htmldir
-
 rm -f $htmldir/campcaster
-
 ln -s $modules_dir $htmldir/campcaster
 
 

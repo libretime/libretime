@@ -54,9 +54,9 @@ define('GBERR_GUNID', 53);
 define('GBERR_BGERR', 54);
 define('GBERR_NOTIMPL', 69);
 
-require_once(dirname(__FILE__)."/../../alib/var/Alib.php");
-require_once("StoredFile.php");
-require_once("Transport.php");
+require_once(dirname(__FILE__)."/Alib.php");
+require_once(dirname(__FILE__)."/StoredFile.php");
+require_once(dirname(__FILE__)."/Transport.php");
 
 $g_metadata_xml_to_db_mapping = array(
         'dc:format' => "format",
@@ -72,7 +72,37 @@ $g_metadata_xml_to_db_mapping = array(
 				"ls:filename" => "name",
 				"ls:year" => "year",
     		"ls:url" => "url",
-    		"ls:track_num" => "track_number");
+    		"ls:track_num" => "track_number",
+        "ls:mood" => "mood",
+        "ls:bpm" => "bpm",
+        "ls:disc_num" => "disc_number",
+        "ls:rating" => "rating",
+        "ls:encoded_by" => "encoded_by",
+        "dc:publisher" => "label",
+        "ls:composer" => "composer",
+        "ls:encoder" => "encoder",
+        "ls:crc" => "checksum",
+        "ls:lyrics" => "lyrics",
+        "ls:orchestra" => "orchestra",
+        "ls:conductor" => "conductor",
+        "ls:lyricist" => "lyricist",
+        "ls:originallyricist" => "original_lyricist",
+        "ls:radiostationname" => "radio_station_name",
+        "ls:audiofileinfourl" => "info_url",
+        "ls:artisturl" => "artist_url",
+        "ls:audiosourceurl" => "audio_source_url",
+        "ls:radiostationurl" => "radio_station_url",
+        "ls:buycdurl" => "buy_this_url",
+        "ls:isrcnumber" => "isrc_number",
+        "ls:catalognumber" => "catalog_number",
+        "ls:originalartist" => "original_artist",
+        "dc:rights" => "copyright",
+        "dcterms:temporal" => "report_datetime",
+        "dcterms:spatial" => "report_location",
+        "dcterms:entity" => "report_organization",
+        "dc:subject" => "subject",
+        "dc:contributor" => "contributor",
+        "dc:language" => "language");
 
 /**
  * Core of Campcaster file storage module
