@@ -1142,6 +1142,7 @@ class BasicStor {
         //"dcterms:extent" => "length",
 		//"dc:title" => "track_title",
     	//"dc:creator" => "artist_name",
+    	//dc:description
         
         global $g_metadata_xml_to_db_mapping;
         $plSelect = "SELECT ";
@@ -1160,6 +1161,10 @@ class BasicStor {
             else if ($key === "dcterms:extent"){
                 $plSelect .= "length, ";
                 $fileSelect .= "text(".$val.") AS ".$val.", ";
+            }
+            else if ($key === "dc:description"){
+                $plSelect .= "text(description) AS ".$val.", ";
+                $fileSelect .= $val.", ";
             }
             else {
                 $plSelect .= "NULL AS ".$val.", ";
@@ -1232,6 +1237,14 @@ class BasicStor {
     public function bsBrowseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
+        
+        $pl_cat = array(
+            "dcterms:extent" => "length",
+    		"dc:title" => "name",
+        	"dc:creator" => "creator",
+        	"dc:description" => "description"
+        );
+        
         $category = strtolower($category);
         $columnName = BasicStor::xmlCategoryToDbColumn($category);
         if (is_null($columnName)) {
@@ -1242,7 +1255,7 @@ class BasicStor {
             ($offset != 0 ? " OFFSET $offset" : '' );
         $countRowsSql = "SELECT COUNT(DISTINCT $columnName) FROM ".$CC_CONFIG["filesTable"];
 
-        //$_SESSION["debug"]  = $sql;
+        //$_SESSION["br"]  = "in Browse Category: ".$category;
         $cnt = $CC_DBC->GetOne($countRowsSql);
         if (PEAR::isError($cnt)) {
         	return $cnt;
@@ -1254,6 +1267,56 @@ class BasicStor {
         if (!is_array($res)) {
         	$res = array();
         }
+        
+        if (array_key_exists($category, $pl_cat) && $category !== "dcterms:extent") {
+            $columnName = $pl_cat[$category];
+            
+            $sql = "SELECT DISTINCT $columnName FROM ".$CC_CONFIG["playListTable"];
+            $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+                ($offset != 0 ? " OFFSET $offset" : '' );
+            $countRowsSql = "SELECT COUNT(DISTINCT $columnName) FROM ".$CC_CONFIG["playListTable"];
+    
+            $pl_cnt = $CC_DBC->GetOne($countRowsSql);
+            if (PEAR::isError($cnt)) {
+            	return $cnt;
+            }
+            $pl_res = $CC_DBC->getCol($sql.$limitPart);
+            if (PEAR::isError($res)) {
+            	return $pl_res;
+            }
+            if (!is_array($pl_res)) {
+            	$pl_res = array();
+            }  
+
+            $res = array_merge($res, $pl_res);
+            $res = array_slice($res, 0, $limit);
+            $cnt = $cnt + $pl_cnt;
+        }
+        else if ($category === "dcterms:extent") {
+                $columnName = $pl_cat[$category];
+                
+                $sql = "SELECT DISTINCT SUM(cliplength) AS $columnName FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
+                $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+                    ($offset != 0 ? " OFFSET $offset" : '' );
+                $countRowsSql = "SELECT COUNT(DISTINCT SUM(cliplength)) FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
+        
+                $pl_cnt = $CC_DBC->GetOne($countRowsSql);
+                if (PEAR::isError($cnt)) {
+                	return $cnt;
+                }
+                $pl_res = $CC_DBC->getCol($sql.$limitPart);
+                if (PEAR::isError($res)) {
+                	return $pl_res;
+                }
+                if (!is_array($pl_res)) {
+                	$pl_res = array();
+                }  
+    
+                $res = array_merge($res, $pl_res);
+                $res = array_slice($res, 0, $limit);
+                $cnt = $cnt + $pl_cnt;
+            }
+        
         return array('results'=>$res, 'cnt'=>$cnt);
     }
 
