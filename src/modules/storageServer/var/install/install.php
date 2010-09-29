@@ -308,7 +308,13 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 	LANGUAGE 'plpgsql';
 
 	CREATE TRIGGER calculate_position AFTER INSERT OR DELETE ON ".$CC_CONFIG['playListContentsTable']."
-    FOR EACH ROW EXECUTE PROCEDURE calculate_position();";
+    FOR EACH ROW EXECUTE PROCEDURE calculate_position();
+    
+    CREATE OR REPLACE VIEW cc_playlisttimes AS 
+	SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
+	FROM ".$CC_CONFIG['playListContentsTable']." group by playlist_id;
+    
+    ";
 
     camp_install_query($sql);
 

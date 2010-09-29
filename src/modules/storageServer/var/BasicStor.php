@@ -1173,14 +1173,12 @@ class BasicStor {
         }
         
         $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype 
-                FROM ".$CC_CONFIG["playListTable"]." AS PL, 
-                (SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
-                FROM ".$CC_CONFIG["playListContentsTable"]." group by playlist_id) AS T 
-                WHERE PL.id = T.id) 
-                
+                FROM ".$CC_CONFIG["playListTable"]." AS PL
+				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id) 
+				          
                 UNION 
                 
-                ".$fileSelect."id, ftype FROM " .$CC_CONFIG["filesTable"].") AS Content ";
+                (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
         
         $sql .= $whereClause;
                  
@@ -1188,7 +1186,7 @@ class BasicStor {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        $_SESSION["br"] = $sql;
+        //$_SESSION["br"] = $sql;
         
         $res = $CC_DBC->getAll($sql);
         if (PEAR::isError($res)) {
@@ -1199,6 +1197,7 @@ class BasicStor {
         }
         
         $count = count($res);
+        $_SESSION["br"] .= "  COUNT: ".$count;
         
         $res = array_slice($res, $offset != 0 ? $offset : 0, $limit != 0 ? $limit : 10);
         
