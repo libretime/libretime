@@ -59,20 +59,20 @@ require_once(dirname(__FILE__)."/StoredFile.php");
 require_once(dirname(__FILE__)."/Transport.php");
 
 $g_metadata_xml_to_db_mapping = array(
-        'dc:format' => "format",
+        "dc:format" => "format",
         "ls:bitrate" => "bit_rate",
-    		"ls:samplerate" => "sample_rate",
+    	"ls:samplerate" => "sample_rate",
         "dcterms:extent" => "length",
-				"dc:title" => "track_title",
-				"dc:description" => "comments",
-    		"dc:type" => "genre",
-    		"dc:creator" => "artist_name",
+		"dc:title" => "track_title",
+		"dc:description" => "comments",
+    	"dc:type" => "genre",
+    	"dc:creator" => "artist_name",
         "dc:source" => "album_title",
-    		"ls:channels" => "channels",
-				"ls:filename" => "name",
-				"ls:year" => "year",
-    		"ls:url" => "url",
-    		"ls:track_num" => "track_number",
+    	"ls:channels" => "channels",
+		"ls:filename" => "name",
+		"ls:year" => "year",
+    	"ls:url" => "url",
+    	"ls:track_num" => "track_number",
         "ls:mood" => "mood",
         "ls:bpm" => "bpm",
         "ls:disc_num" => "disc_number",
@@ -1139,9 +1139,35 @@ class BasicStor {
 
         // Final query
         
-        $sql = "SELECT * FROM ((SELECT creator AS artist_name, NULL AS album_title, 
-                name AS track_title, length, NULL AS track_number, 
-                PL.id, 'playlist' AS ftype 
+        //"dcterms:extent" => "length",
+		//"dc:title" => "track_title",
+    	//"dc:creator" => "artist_name",
+        
+        global $g_metadata_xml_to_db_mapping;
+        $plSelect = "SELECT ";
+        $fileSelect = "SELECT ";
+        $_SESSION["br"] = "";
+        foreach ($g_metadata_xml_to_db_mapping as $key => $val){
+            $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
+            if($key === "dc:title"){
+                $plSelect .= "name AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+            else if ($key === "dc:creator"){
+                $plSelect .= "creator AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+            else if ($key === "dcterms:extent"){
+                $plSelect .= "length, ";
+                $fileSelect .= "text(".$val.") AS ".$val.", ";
+            }
+            else {
+                $plSelect .= "NULL AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }       
+        }
+        
+        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype 
                 FROM ".$CC_CONFIG["playListTable"]." AS PL, 
                 (SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
                 FROM ".$CC_CONFIG["playListContentsTable"]." group by playlist_id) AS T 
@@ -1149,8 +1175,7 @@ class BasicStor {
                 
                 UNION 
                 
-                SELECT artist_name, album_title, track_title, text(length) AS length, 
-                track_number, id, ftype FROM " .$CC_CONFIG["filesTable"].") AS Content ";
+                ".$fileSelect."id, ftype FROM " .$CC_CONFIG["filesTable"].") AS Content ";
         
         $sql .= $whereClause;
                  
@@ -2100,35 +2125,6 @@ class BasicStor {
             array('filetype'=>'all', 'conditions'=>array())
         );
     }
-
-
-    /**
-     * dump
-     *
-     */
-//    public function dump($id='', $indch='    ', $ind='', $format='{name}')
-//    {
-//        if ($id=='') {
-//            $id = $this->storId;
-//        }
-//        return parent::dump($id, $indch, $ind, $format);
-//    }
-
-
-    /**
-     *
-     *
-     */
-//    public function dumpDir($id='', $format='$o["name"]')
-//    {
-//        if ($id == '') {
-//            $id = $this->storId;
-//        }
-//        $arr = M2tree::GetDir($id, 'id,name');
-//        $arr = array_map(create_function('$o', 'return "'.$format .'";'), $arr);
-//        return join('', $arr);
-//    }
-
 
     /**
      *
