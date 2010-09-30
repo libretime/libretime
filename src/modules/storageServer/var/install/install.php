@@ -310,9 +310,14 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 	CREATE TRIGGER calculate_position AFTER INSERT OR DELETE ON ".$CC_CONFIG['playListContentsTable']."
     FOR EACH ROW EXECUTE PROCEDURE calculate_position();
     
-    CREATE OR REPLACE VIEW cc_playlisttimes AS 
-	SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
-	FROM ".$CC_CONFIG['playListContentsTable']." group by playlist_id;
+    CREATE OR REPLACE VIEW cc_playlisttimes AS (
+    SELECT PL.id, COALESCE(T.length, '00:00:00') AS length
+    from ".$CC_CONFIG['playListTable']." AS PL LEFT JOIN 
+    (SELECT playlist_id AS id, text(SUM(cliplength)) AS length  
+    FROM ".$CC_CONFIG['playListContentsTable']." GROUP BY playlist_id) AS T
+    
+    ON PL.id = T.id
+    );
     
     ";
 

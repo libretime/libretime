@@ -26,7 +26,7 @@
                     <td {include file="scratchpad/actionhandler.tpl"} style="cursor: pointer">
                         {if $i.type|lower == "playlist"}
 
-                            {if $_PL_activeId == $i.id}
+                            {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                                 <div style="font-weight: bold; cursor: pointer">
                             {else}
                                 <div style="cursor: pointer">
@@ -40,7 +40,7 @@
                     {assign var="_duration" value=$i.duration}
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
-                        {if $_PL_activeId == $i.id}
+                        {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                             <div align="left"><img src="img/ico_lock.png">
                             <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl"*} /></div>
                         {else}

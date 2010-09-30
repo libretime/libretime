@@ -1294,10 +1294,12 @@ class BasicStor {
         else if ($category === "dcterms:extent") {
                 $columnName = $pl_cat[$category];
                 
-                $sql = "SELECT DISTINCT SUM(cliplength) AS $columnName FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
                 $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
                     ($offset != 0 ? " OFFSET $offset" : '' );
-                $countRowsSql = "SELECT COUNT(DISTINCT SUM(cliplength)) FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
+                
+                $sql = "SELECT DISTINCT length AS $columnName FROM ".$CC_CONFIG["playListTimeView"];
+                
+                $countRowsSql = "SELECT COUNT(DISTINCT length) FROM ".$CC_CONFIG["playListTimeView"];
         
                 $pl_cnt = $CC_DBC->GetOne($countRowsSql);
                 if (PEAR::isError($cnt)) {
