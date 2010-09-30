@@ -127,6 +127,7 @@ $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
 //$CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
 $CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
 $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
+$CC_CONFIG['playListTimeView'] = $CC_CONFIG['tblNamePrefix'].'playlisttimes';
 
 $CC_CONFIG['playListSequence'] = $CC_CONFIG['playListTable'].'_id';
 $CC_CONFIG['filesSequence'] = $CC_CONFIG['filesTable'].'_id';

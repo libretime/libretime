@@ -35,7 +35,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         </li>
         <li class="nav-main"><a>##Playlists##</a>
             <ul>
-                {if $PL->getActiveArr()}
+                {if $PL->getActiveId()}
                     <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Edit Playlist##</a></li>
                 {else}
                     {if $PL->reportLookedPL()}

@@ -1173,14 +1173,12 @@ class BasicStor {
         }
         
         $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype 
-                FROM ".$CC_CONFIG["playListTable"]." AS PL, 
-                (SELECT playlist_id AS id, text(SUM(cliplength)) AS length 
-                FROM ".$CC_CONFIG["playListContentsTable"]." group by playlist_id) AS T 
-                WHERE PL.id = T.id) 
-                
+                FROM ".$CC_CONFIG["playListTable"]." AS PL
+				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id) 
+				          
                 UNION 
                 
-                ".$fileSelect."id, ftype FROM " .$CC_CONFIG["filesTable"].") AS Content ";
+                (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
         
         $sql .= $whereClause;
                  
@@ -1188,7 +1186,7 @@ class BasicStor {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        $_SESSION["br"] = $sql;
+        //$_SESSION["br"] = $sql;
         
         $res = $CC_DBC->getAll($sql);
         if (PEAR::isError($res)) {
@@ -1199,6 +1197,7 @@ class BasicStor {
         }
         
         $count = count($res);
+        $_SESSION["br"] .= "  COUNT: ".$count;
         
         $res = array_slice($res, $offset != 0 ? $offset : 0, $limit != 0 ? $limit : 10);
         
@@ -1295,10 +1294,12 @@ class BasicStor {
         else if ($category === "dcterms:extent") {
                 $columnName = $pl_cat[$category];
                 
-                $sql = "SELECT DISTINCT SUM(cliplength) AS $columnName FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
                 $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
                     ($offset != 0 ? " OFFSET $offset" : '' );
-                $countRowsSql = "SELECT COUNT(DISTINCT SUM(cliplength)) FROM ".$CC_CONFIG["playListContentsTable"]." GROUP BY playlist_id";
+                
+                $sql = "SELECT DISTINCT length AS $columnName FROM ".$CC_CONFIG["playListTimeView"];
+                
+                $countRowsSql = "SELECT COUNT(DISTINCT length) FROM ".$CC_CONFIG["playListTimeView"];
         
                 $pl_cnt = $CC_DBC->GetOne($countRowsSql);
                 if (PEAR::isError($cnt)) {
