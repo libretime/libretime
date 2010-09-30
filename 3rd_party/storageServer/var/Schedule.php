@@ -238,10 +238,10 @@ class Schedule {
   /**
    * Returns array indexed numberically of:
    *    "playlistId"/"playlist_id" (aliases to the same thing)
-   *    "start"/"starts" (aliases to the same thing)
-   *    "end"/"ends" (aliases to the same thing)
+   *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
+   *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
    *    "group_id"/"id" (aliases to the same thing)
-   *    "clip_length"
+   *    "clip_length" (for playlists only, this is the length of the entire playlist)
    *    "name" (playlist only)
    *    "creator" (playlist only)
    *    "file_id" (audioclip only)
@@ -254,9 +254,12 @@ class Schedule {
    *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
    * @param boolean $p_playlistsOnly
    *    Retreive playlists as a single item.
+   * @return array
+   * 		Returns empty array if nothing found
    */
   public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true) {
     global $CC_CONFIG, $CC_DBC;
+    $rows = array();
     if (!$p_playlistsOnly) {
       $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
             ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') "
@@ -279,32 +282,122 @@ class Schedule {
            ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
            ." GROUP BY group_id"
            ." ORDER BY starts";
+      //var_dump($sql);
       $rows = $CC_DBC->GetAll($sql);
-      foreach ($rows as &$row) {
-        $row["playlistId"] = $row["playlist_id"];
-        $row["start"] = $row["starts"];
-        $row["end"] = $row["ends"];
-        $row["id"] = $row["group_id"];
+      if (!PEAR::isError($rows)) {
+        foreach ($rows as &$row) {
+          $row["playlistId"] = $row["playlist_id"];
+          $row["start"] = $row["starts"];
+          $row["end"] = $row["ends"];
+          $row["id"] = $row["group_id"];
+        }
       }
     }
     return $rows;
   }
 
-  function getSchedulerTime() {
+  public function getSchedulerTime() {
 
   }
 
-  function getCurrentlyPlaying() {
+  public function getCurrentlyPlaying() {
 
   }
 
-  function getNextItem($nextCount = 1) {
+  public function getNextItem($nextCount = 1) {
 
   }
 
-  function getStatus() {
+  public function getStatus() {
 
   }
+
+  private static function CcTimeToPypoTime($p_time) {
+    $p_time = substr($p_time, 0, 19);
+    $p_time = str_replace(" ", "-", $p_time);
+    $p_time = str_replace(":", "-", $p_time);
+    return $p_time;
+  }
+
+  /**
+   * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
+   *
+   * @param string $range
+   * 		In the format "YYYY-MM-DD HH:mm:ss"
+   * @param string $source
+   * 		In the format "YYYY-MM-DD HH:mm:ss"
+   */
+	public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
+	{
+    global $CC_CONFIG, $CC_DBC;
+//		$api_key = $this->input->post('api_key');
+//		if(!in_array($api_key, $CFG->ml_api_keys))
+//		{
+//			//header('HTTP/1.0 401 Unauthorized');
+//			//print 'You are not allowed to access this ressource. Sorry.';
+//			//exit;
+//		}
+    $range_start = Schedule::CcTimeToPypoTime($p_fromDateTime);
+    $range_end = Schedule::CcTimeToPypoTime($p_toDateTime);
+    $range_dt = array('start' => $range_start, 'end' => $range_end);
+
+		// Scheduler wants everything in a playlist
+		$data = Schedule::GetItems($p_fromDateTime, $p_toDateTime, true);
+		//var_dump($data);
+  	$playlists = array();
+
+		if (is_array($data) && count($data) > 0)
+		{
+			foreach ($data as $dx)
+			{
+			  // Is this the first item in the playlist?
+				$start = $dx['start'];
+				// chop off subseconds
+        $start = substr($start, 0, 19);
+
+        // Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
+        $pkey = Schedule::CcTimeToPypoTime($start);
+        $timestamp =  strtotime($start);
+				$playlists[$pkey]['source'] = "PLAYLIST";
+				$playlists[$pkey]['x_ident'] = $dx["playlist_id"];
+				$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
+				$playlists[$pkey]['timestamp'] = $timestamp;
+				$playlists[$pkey]['duration'] = $dx['clip_length'];
+				$playlists[$pkey]['played'] = '0';
+				$playlists[$pkey]['schedule_id'] = $dx['group_id'];
+			}
+		}
+
+		foreach ($playlists as &$playlist)
+		{
+		  $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
+      $items = $scheduleGroup->getItems();
+			$medias = array();
+			$playlist['subtype'] = '1';
+			foreach ($items as $item)
+			{
+			  $storedFile = StoredFile::Recall($item["file_id"]);
+  			$uri = $storedFile->getFileUrl();
+				$medias[] = array(
+					'id' => $item["file_id"],
+					'uri' => $uri,
+					'fade_in' => $item["fade_in"],
+					'fade_out' => $item["fade_out"],
+					'fade_cross' => 0,
+					'cue_in' => $item["cue_in"],
+					'cue_out' => $item["cue_out"],
+					);
+			}
+			$playlist['medias'] = $medias;
+		}
+
+		$result = array();
+		$result['status'] = array('range' => $range_dt, 'version' => 0.1);
+		$result['playlists'] = $playlists;
+		$result['check'] = 1;
+
+		print json_encode($result);
+	}
 
 }
 

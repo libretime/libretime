@@ -1440,6 +1440,15 @@ class StoredFile {
         return $this->filepath;
     }
 
+    /**
+     * Get the URL to access this file.
+     */
+    public function getFileUrl()
+    {
+      global $CC_CONFIG;
+      return "http://".$CC_CONFIG["storageUrlHost"].$CC_CONFIG["storageUrlPath"]
+        ."/stor/".substr($this->gunid, 0, 3)."/{$this->gunid}";
+    }
 
     /**
      * Get real filename of metadata file
