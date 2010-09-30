@@ -1,5 +1,0 @@
-[PostgreSQL_Campcaster]
-Description = PostgreSQL driver for Campcaster
-Driver      = /usr/lib/odbc/psqlodbc.so
-Setup       = /usr/lib/odbc/libodbcpsqlS.so
-
