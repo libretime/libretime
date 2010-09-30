@@ -22,6 +22,7 @@ echo "*************************\n";
 
 require_once(dirname(__FILE__).'/../conf.php');
 require_once(dirname(__FILE__).'/../backend/GreenBox.php');
+require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 require_once(dirname(__FILE__)."/installInit.php");
 campcaster_db_connect(true);
 
@@ -516,8 +517,8 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
     echo " * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
     $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
     Prefs::Insert($CC_CONFIG["systemPrefId"], 'stationName', "Radio Station 1");
-    $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
-    Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);
+//    $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
+//    Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);
     echo "done.\n";
 } else {
     echo " * Skipping: database table already exists: ".$CC_CONFIG['prefTable']."\n";
@@ -566,7 +567,6 @@ echo "done.\n";
 //------------------------------------------------------------------------
 // Install Cron job
 //------------------------------------------------------------------------
-require_once(dirname(__FILE__).'/../cron/Cron.php');
 $m = '*/2';
 $h ='*';
 $dom = '*';

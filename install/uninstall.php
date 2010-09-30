@@ -22,6 +22,7 @@ echo "***************************\n";
 
 require_once(dirname(__FILE__).'/../conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
+require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 campcaster_db_connect(false);
 
 function camp_uninstall_delete_files($p_path)
@@ -57,7 +58,6 @@ if (!PEAR::isError($CC_DBC)) {
 //------------------------------------------------------------------------
 // Uninstall Cron job
 //------------------------------------------------------------------------
-require_once(dirname(__FILE__).'/../cron/Cron.php');
 $old_regex = '/transportCron\.php/';
 echo " * Uninstall storageServer cron job...\n";
 
