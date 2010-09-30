@@ -30,12 +30,8 @@
 #  Determine directories, files
 #-------------------------------------------------------------------------------
 
-reldir=`dirname $0`/..
-phpdir=ls_storageAdmin_phppart_dir
-if [ "$phpdir" == "ls_storageAdmin_phppart_dir" ]
-then
-    phpdir=`cd $reldir/var; pwd`
-fi
+reldir=`dirname $0`
+phpdir=$reldir
 mkdir -p $reldir/tmp
 tmpmaindir=`cd $reldir/tmp; pwd`
 dbxml="db.xml"

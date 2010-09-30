@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2010 Sourcefabric O.P.S.
 #
 #   This file is part of the Campcaster project.
-#   http://campcaster.campware.org/
+#   http://campcaster.sourcefabric.org/
 #
 #   Campcaster is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,28 +20,24 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #-------------------------------------------------------------------------------
-
 #-------------------------------------------------------------------------------
-#   Run this script to configure the environment.
+#  This script imports audio files to the Campcaster storageServer.
 #
-#   This script in effect calls the real automake / autoconf configure script
+#  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
 
-# assume we're in $basedir
+#-------------------------------------------------------------------------------
+#  Determine directories, files
+#-------------------------------------------------------------------------------
 reldir=`dirname $0`
-basedir=`cd $reldir; pwd;`
-test -z "$basedir" && basedir=.
+phpdir=$reldir
+filelistpathname=.
 
-bindir=$basedir/bin
-tmpdir=$basedir/tmp
+#-------------------------------------------------------------------------------
+#   Do import
+#-------------------------------------------------------------------------------
+invokePwd=$PWD
+#echo $invokePwd
+cd $phpdir
 
-
-autogen=$bindir/autogen.sh
-configure=$tmpdir/configure
-
-if [ ! -x $configure ]; then
-    (cd $basedir && $autogen $*)
-fi
-
-(cd $tmpdir && $configure $*)
-
+php -q campcaster-import.php --dir "$invokePwd" "$@" || exit 1
