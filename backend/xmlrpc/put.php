@@ -29,7 +29,7 @@
 
 define('USE_FLOCK', TRUE);
 
-require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/../../conf.php');
 require_once('DB.php');
 require_once(dirname(__FILE__).'/../LocStor.php');
 

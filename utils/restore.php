@@ -4,13 +4,12 @@ define('VERBOSE', FALSE);
 #define('VERBOSE', TRUE);
 
 header("Content-type: text/plain");
-require_once 'conf.php';
-require_once "$STORAGE_SERVER_PATH/var/conf.php";
 require_once 'DB.php';
 require_once "XML/Util.php";
 require_once "XML/Beautifier.php";
-require_once "$STORAGE_SERVER_PATH/var/BasicStor.php";
-require_once "$STORAGE_SERVER_PATH/var/Prefs.php";
+require_once dirname(__FILE__)."/../conf.php";
+require_once dirname(__FILE__)."/../backend/BasicStor.php";
+require_once dirname(__FILE__)."/../backend/Prefs.php";
 
 /* =========================================================== misc functions */
 function ls_restore_processObject($el)

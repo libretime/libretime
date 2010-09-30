@@ -12,9 +12,9 @@
      *
      */
 
-    require_once(dirname(__FILE__).'/../var/conf.php');
-    require_once(dirname(__FILE__).'/../var/GreenBox.php');
-    require_once(dirname(__FILE__).'/../var/Restore.php');
+    require_once(dirname(__FILE__).'/../conf.php');
+    require_once(dirname(__FILE__).'/../backend/GreenBox.php');
+    require_once(dirname(__FILE__).'/../backend/Restore.php');
     include_once('DB.php');
 
     PEAR::setErrorHandling(PEAR_ERROR_RETURN);

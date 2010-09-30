@@ -7,7 +7,12 @@ require_once("LocStor.php");
 if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded LocStor<br>";
 }
+require_once("Playlist.php");
+require_once("Renderer.php");
 require_once('Prefs.php');
+require_once("Backup.php");
+require_once('Restore.php');
+require_once("Transport.php");
 
 /**
  * GreenBox class
@@ -749,7 +754,6 @@ class GreenBox extends BasicStor {
     public function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0,
         $lang=NULL, $deflang=NULL)
     {
-        require_once("Playlist.php");
         $pl = StoredFile::RecallByGunid($plid);
         if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
@@ -924,7 +928,6 @@ class GreenBox extends BasicStor {
      */
       public function playlistTimeToSeconds($plt)
       {
-          require_once("Playlist.php");
           return Playlist::playlistTimeToSeconds($plt);
       }
 
@@ -939,7 +942,6 @@ class GreenBox extends BasicStor {
      */
       public static function secondsToPlaylistTime($s0)
       {
-          require_once("Playlist.php");
           return Playlist::secondsToPlaylistTime($s0);
       } // fn secondsToPlaylistTime
 
@@ -957,7 +959,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToFileOpen($sessid, $plid)
     {
-        require_once("Renderer.php");
         $r = Renderer::rnRender2FileOpen($this, $plid);
         if (PEAR::isError($r)) {
             return $r;
@@ -977,7 +978,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToFileCheck($token)
     {
-        require_once("Renderer.php");
         $r = Renderer::rnRender2FileCheck($this, $token);
         if (PEAR::isError($r)) {
             return $r;
@@ -998,7 +998,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToFileList($status='')
     {
-        require_once("Renderer.php");
         return Renderer::rnRender2FileList($this, $status);
     } // fn renderPlaylistToFileList
 
@@ -1013,7 +1012,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToFileClose($token)
     {
-        require_once("Renderer.php");
         $r = Renderer::rnRender2FileClose($this, $token);
         if (PEAR::isError($r)) {
             return $r;
@@ -1034,7 +1032,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToStorageOpen($sessid, $plid)
     {
-        require_once("Renderer.php");
         $owner = GreenBox::getSessUserId($sessid);
         if (PEAR::isError($owner)) {
             return $owner;
@@ -1058,7 +1055,6 @@ class GreenBox extends BasicStor {
      */
     public function renderPlaylistToStorageCheck($token)
     {
-        require_once("Renderer.php");
         $r = Renderer::rnRender2StorageCheck($this, $token);
         if (PEAR::isError($r)) {
             return $r;
@@ -1164,7 +1160,6 @@ class GreenBox extends BasicStor {
      */
     public function createBackupOpen($sessid, $criteria='')
     {
-        require_once("Backup.php");
         $bu = new Backup($this);
         if (PEAR::isError($bu)) {
             return $bu;
@@ -1186,7 +1181,6 @@ class GreenBox extends BasicStor {
      */
     public function createBackupCheck($token)
     {
-        require_once("Backup.php");
         $bu = new Backup($this);
         if (PEAR::isError($bu)) {
             return $bu;
@@ -1209,7 +1203,6 @@ class GreenBox extends BasicStor {
      */
     public function createBackupList($sessid, $stat='')
     {
-        require_once("Backup.php");
         $bu = new Backup($this);
         if (PEAR::isError($bu)) {
             return $bu;
@@ -1228,7 +1221,6 @@ class GreenBox extends BasicStor {
      */
     public function createBackupClose($token)
     {
-        require_once("Backup.php");
         $bu = new Backup($this);
         if (PEAR::isError($bu)) {
             return $bu;
@@ -1250,7 +1242,6 @@ class GreenBox extends BasicStor {
      */
     public function backupRestoreOpen($sessid, $filename)
     {
-        require_once('Restore.php');
         $rs = new Restore($this);
         if (PEAR::isError($rs)) {
             return $rs;
@@ -1272,7 +1263,6 @@ class GreenBox extends BasicStor {
      */
     public function backupRestoreCheck($token)
     {
-        require_once('Restore.php');
         $rs = new Restore($this);
         if (PEAR::isError($rs)) {
             return $rs;
@@ -1290,7 +1280,6 @@ class GreenBox extends BasicStor {
      *      is success
      */
     public function backupRestoreClose($token) {
-    	require_once('Restore.php');
     	$rs = new Restore($this);
     	if (PEAR::isError($rs)) {
     	    return $rs;
@@ -1433,7 +1422,6 @@ class GreenBox extends BasicStor {
      */
     public function getTransportInfo($trtok)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->getTransportInfo($trtok);
     } // fn getTransportInfo
@@ -1451,7 +1439,6 @@ class GreenBox extends BasicStor {
      */
     public function turnOnOffTransports($sessid, $onOff=NULL)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->turnOnOffTransports($sessid, $onOff);
     } // fn turnOnOffTransports
@@ -1469,7 +1456,6 @@ class GreenBox extends BasicStor {
      */
     public function doTransportAction($trtok, $action)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         $res = $tr->doTransportAction($trtok, $action);
         return $res;
@@ -1488,7 +1474,6 @@ class GreenBox extends BasicStor {
      */
     public function uploadFile2Hub($filePath)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->uploadFile2Hub($filePath);
     } // fn uploadFile2Hub
@@ -1503,7 +1488,6 @@ class GreenBox extends BasicStor {
      */
     public function getHubInitiatedTransfers()
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->getHubInitiatedTransfers();
     } // fn getHubInitiatedTransfers
@@ -1520,7 +1504,6 @@ class GreenBox extends BasicStor {
      */
     public function startHubInitiatedTransfer($trtok)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->startHubInitiatedTransfer($trtok);
     } // fn startHubInitiatedTransfer
@@ -1542,7 +1525,6 @@ class GreenBox extends BasicStor {
      */
     public function upload2Hub($gunid, $withContent=FALSE)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->upload2Hub($gunid, $withContent);
     } // fn upload2Hub
@@ -1566,7 +1548,6 @@ class GreenBox extends BasicStor {
         if (PEAR::isError($uid)) {
             return $uid;
         }
-        require_once("Transport.php");
         $tr = new Transport($this);
         return $tr->downloadFromHub($uid, $gunid, $withContent);
     } // fn downloadFromHub
@@ -1583,7 +1564,6 @@ class GreenBox extends BasicStor {
      */
     public function globalSearch($criteria)
     {
-        require_once("Transport.php");
         $tr = new Transport($this);
         //return $tr->globalSearch($criteria);
         return $tr->remoteSearch($criteria);
@@ -1602,7 +1582,6 @@ class GreenBox extends BasicStor {
      */
 //    public function getSearchResults($trtok, $andClose=TRUE)
 //    {
-//        require_once("Transport.php");
 //        $tr = new Transport($this);
 //        return $tr->getSearchResults($trtok, $andClose);
 //    } // fn getSearchResults

@@ -1,6 +1,5 @@
 <?
-require_once('conf.php');
-require_once("$STORAGE_SERVER_PATH/var/conf.php");
+require_once(dirname(__FILE__)."/../conf.php");
 header("Conten-type: text/plain");
 $dbname = $CC_CONFIG['dsn']['database'];
 $dbuser = $CC_CONFIG['dsn']['username'];

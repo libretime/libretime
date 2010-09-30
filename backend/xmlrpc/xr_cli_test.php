@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/../../conf.php');
 include_once("XML/RPC.php");
 include_once("Console/Getopt.php");
 

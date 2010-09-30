@@ -57,6 +57,7 @@ define('GBERR_NOTIMPL', 69);
 require_once(dirname(__FILE__)."/Alib.php");
 require_once(dirname(__FILE__)."/StoredFile.php");
 require_once(dirname(__FILE__)."/Transport.php");
+require_once(dirname(__FILE__)."/Playlist.php");
 
 $g_metadata_xml_to_db_mapping = array(
         "dc:format" => "format",
@@ -910,7 +911,6 @@ class BasicStor {
     private static function NormalizeExtent($v)
     {
         if (!preg_match("|^\d{2}:\d{2}:\d{2}.\d{6}$|", $v)) {
-            require_once("Playlist.php");
             $s = Playlist::playlistTimeToSeconds($v);
             $t = Playlist::secondsToPlaylistTime($s);
             return $t;
@@ -1138,12 +1138,12 @@ class BasicStor {
         }
 
         // Final query
-        
+
         //"dcterms:extent" => "length",
 		//"dc:title" => "track_title",
     	//"dc:creator" => "artist_name",
     	//dc:description
-        
+
         global $g_metadata_xml_to_db_mapping;
         $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -1169,25 +1169,25 @@ class BasicStor {
             else {
                 $plSelect .= "NULL AS ".$val.", ";
                 $fileSelect .= $val.", ";
-            }       
+            }
         }
-        
-        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype 
+
+        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
-				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id) 
-				          
-                UNION 
-                
+				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
+
+                UNION
+
                 (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
-        
+
         $sql .= $whereClause;
-                 
+
         if ($orderby) {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
         //$_SESSION["br"] = $sql;
-        
+
         $res = $CC_DBC->getAll($sql);
         if (PEAR::isError($res)) {
         	return $res;
@@ -1195,12 +1195,12 @@ class BasicStor {
         if (!is_array($res)) {
         	$res = array();
         }
-        
+
         $count = count($res);
         $_SESSION["br"] .= "  COUNT: ".$count;
-        
+
         $res = array_slice($res, $offset != 0 ? $offset : 0, $limit != 0 ? $limit : 10);
-        
+
         $eres = array();
         foreach ($res as $it) {
             $eres[] = array(
@@ -1236,14 +1236,14 @@ class BasicStor {
     public function bsBrowseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $pl_cat = array(
             "dcterms:extent" => "length",
     		"dc:title" => "name",
         	"dc:creator" => "creator",
         	"dc:description" => "description"
         );
-        
+
         $category = strtolower($category);
         $columnName = BasicStor::xmlCategoryToDbColumn($category);
         if (is_null($columnName)) {
@@ -1266,15 +1266,15 @@ class BasicStor {
         if (!is_array($res)) {
         	$res = array();
         }
-        
+
         if (array_key_exists($category, $pl_cat) && $category !== "dcterms:extent") {
             $columnName = $pl_cat[$category];
-            
+
             $sql = "SELECT DISTINCT $columnName FROM ".$CC_CONFIG["playListTable"];
             $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
                 ($offset != 0 ? " OFFSET $offset" : '' );
             $countRowsSql = "SELECT COUNT(DISTINCT $columnName) FROM ".$CC_CONFIG["playListTable"];
-    
+
             $pl_cnt = $CC_DBC->GetOne($countRowsSql);
             if (PEAR::isError($cnt)) {
             	return $cnt;
@@ -1285,7 +1285,7 @@ class BasicStor {
             }
             if (!is_array($pl_res)) {
             	$pl_res = array();
-            }  
+            }
 
             $res = array_merge($res, $pl_res);
             $res = array_slice($res, 0, $limit);
@@ -1293,14 +1293,14 @@ class BasicStor {
         }
         else if ($category === "dcterms:extent") {
                 $columnName = $pl_cat[$category];
-                
+
                 $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
                     ($offset != 0 ? " OFFSET $offset" : '' );
-                
+
                 $sql = "SELECT DISTINCT length AS $columnName FROM ".$CC_CONFIG["playListTimeView"];
-                
+
                 $countRowsSql = "SELECT COUNT(DISTINCT length) FROM ".$CC_CONFIG["playListTimeView"];
-        
+
                 $pl_cnt = $CC_DBC->GetOne($countRowsSql);
                 if (PEAR::isError($cnt)) {
                 	return $cnt;
@@ -1311,13 +1311,13 @@ class BasicStor {
                 }
                 if (!is_array($pl_res)) {
                 	$pl_res = array();
-                }  
-    
+                }
+
                 $res = array_merge($res, $pl_res);
                 $res = array_slice($res, 0, $limit);
                 $cnt = $cnt + $pl_cnt;
             }
-        
+
         return array('results'=>$res, 'cnt'=>$cnt);
     }
 
@@ -1342,7 +1342,6 @@ class BasicStor {
     public function bsExportPlaylistOpen($plids, $type='lspl', $withContent=TRUE)
     {
         global $CC_CONFIG;
-        require_once("Playlist.php");
         if (!is_array($plids)) {
             $plids = array($plids);
         }
@@ -1388,7 +1387,6 @@ class BasicStor {
             if (file_exists($MDfname)) {
                 switch ($it['type']) {
 	                case "playlist":
-	                    require_once("Playlist.php");
 	                    $storedFile = $r = StoredFile::RecallByGunid($it['gunid']);
 	                    switch ($type) {
 	                        case "smil":
@@ -1616,7 +1614,6 @@ class BasicStor {
             }
         }
         // playlists:
-        require_once("Playlist.php");
         $d = @dir($tmpdp);
         if ($d !== false) {
             while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {

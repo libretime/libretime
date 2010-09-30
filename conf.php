@@ -50,24 +50,24 @@ $CC_CONFIG = array(
     'StationPrefsGr'=> 'StationPrefs',
     //'AllGr'         => 'All',
     'TrashName'     => 'trash_',
-    'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
-    'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
-    'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
-    'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
-    'pearPath'      =>  dirname(__FILE__).'/../../../../usr/lib/pear',
+    'storageDir'    =>  dirname(__FILE__).'/stor',
+    'bufferDir'     =>  dirname(__FILE__).'/stor/buffer',
+    'transDir'      =>  dirname(__FILE__).'/trans',
+    'accessDir'     =>  dirname(__FILE__).'/access',
+    'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear',
 //    'zendPath'      =>  dirname(__FILE__).'/../../../../usr/lib',
-    'cronDir'       =>  dirname(__FILE__).'/../../storageServer/var/cron',
+    'cronDir'       =>  dirname(__FILE__).'/backend/cron',
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
 
     /* ==================================================== URL configuration */
-    'storageUrlPath'        => '/campcasterStorageServer',
+    'storageUrlPath'        => '/campcaster/backend',
     'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
 
     /* ================================================ archive configuration */
-    'archiveUrlPath'        => '/campcasterStorageServer',
+    'archiveUrlPath'        => '/campcaster/backend',
     'archiveXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'archiveUrlHost'        => 'localhost',
 //    'archiveUrlHost'        => '192.168.30.166',
@@ -107,7 +107,7 @@ $CC_CONFIG = array(
     /* =================================================== cron configuration */
     'cronUserName'      => 'www-data',
 #    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
-    'lockfile'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer/cron.lock',
+    'lockfile'     =>  dirname(__FILE__).'/stor/buffer/cron.lock',
     'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
     'paramdir'          => dirname(__FILE__).'/cron/params',
     'systemPrefId' => "0", // ID for system prefs in prefs table

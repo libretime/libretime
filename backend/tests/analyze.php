@@ -7,7 +7,7 @@ echo "TEST\n";
 $gunid = $argv[1];
 echo "GUNID: $gunid\n";
 
-require_once('../conf.php');
+require_once('../../conf.php');
 require_once('DB.php');
 require_once('../GreenBox.php');
 

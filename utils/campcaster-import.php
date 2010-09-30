@@ -12,11 +12,10 @@ set_time_limit(0);
 error_reporting(E_ALL);
 set_error_handler("camp_import_error_handler", E_ALL & !E_NOTICE);
 
-require_once('conf.php');
-require_once("$STORAGE_SERVER_PATH/var/conf.php");
 require_once('DB.php');
-require_once("$STORAGE_SERVER_PATH/var/GreenBox.php");
 require_once('Console/Getopt.php');
+require_once(dirname(__FILE__)."/../conf.php");
+require_once(dirname(__FILE__)."/../backend/GreenBox.php");
 
 function camp_import_error_handler()
 {

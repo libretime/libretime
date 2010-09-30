@@ -2,7 +2,7 @@
 /*
 header("Content-type: text/plain");
 
-require_once('../conf.php');
+require_once('../../conf.php');
 require_once('DB.php');
 require_once('../GreenBox.php');
 require_once('../LocStor.php');

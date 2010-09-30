@@ -3,7 +3,7 @@
 header("Content-type: text/plain");
 echo "\n#StorageServer storeWebstream  test:\n";
 
-require_once('../conf.php');
+require_once('../../conf.php');
 require_once('DB.php');
 require_once('../GreenBox.php');
 

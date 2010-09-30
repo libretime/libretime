@@ -1,5 +1,4 @@
 <?php
-//require_once("ObjClasses.php");
 define('ALIBERR_NOTGR', 20);
 define('ALIBERR_BADSMEMB', 21);
 

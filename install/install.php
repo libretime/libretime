@@ -21,7 +21,7 @@ echo "* StorageServer Install *\n";
 echo "*************************\n";
 
 require_once(dirname(__FILE__).'/../conf.php');
-require_once(dirname(__FILE__).'/../GreenBox.php');
+require_once(dirname(__FILE__).'/../backend/GreenBox.php');
 require_once(dirname(__FILE__)."/installInit.php");
 campcaster_db_connect(true);
 
@@ -309,16 +309,16 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 
 	CREATE TRIGGER calculate_position AFTER INSERT OR DELETE ON ".$CC_CONFIG['playListContentsTable']."
     FOR EACH ROW EXECUTE PROCEDURE calculate_position();
-    
+
     CREATE OR REPLACE VIEW cc_playlisttimes AS (
     SELECT PL.id, COALESCE(T.length, '00:00:00') AS length
-    from ".$CC_CONFIG['playListTable']." AS PL LEFT JOIN 
-    (SELECT playlist_id AS id, text(SUM(cliplength)) AS length  
+    from ".$CC_CONFIG['playListTable']." AS PL LEFT JOIN
+    (SELECT playlist_id AS id, text(SUM(cliplength)) AS length
     FROM ".$CC_CONFIG['playListContentsTable']." GROUP BY playlist_id) AS T
-    
+
     ON PL.id = T.id
     );
-    
+
     ";
 
     camp_install_query($sql);

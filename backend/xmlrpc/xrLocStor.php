@@ -23,7 +23,7 @@ ini_set("error_append_string", "</string></value>
 header("Content-type: text/xml");
 
 /* ================================================================= includes */
-require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/../../conf.php');
 require_once('DB.php');
 require_once("XML/RPC/Server.php");
 require_once('XR_LocStor.php');
