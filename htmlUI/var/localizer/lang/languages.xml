@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languages>
+	<item>
+		<Id>ID</Id>
+		<Name>Indonesian</Name>
+		<NativeName>Bahasa Indonesia</NativeName>
+	</item>
+	<item>
+		<Id>am_AM</Id>
+		<Name>Armenian</Name>
+		<NativeName>հայերեն</NativeName>
+	</item>
+	<item>
+		<Id>ar_JO</Id>
+		<Name>Arabic (JO)</Name>
+		<NativeName>اللغة العربية (JO)</NativeName>
+	</item>
+	<item>
+		<Id>cz_CZ</Id>
+		<Name>Czech</Name>
+		<NativeName>Čeština</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>de_DE</Id>
+		<Name>German</Name>
+		<NativeName>Deutsch</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>default_DEFAULT</Id>
+		<Name>Default</Name>
+		<NativeName>Default</NativeName>
+	</item>
+	<item>
+		<Id>en_GB</Id>
+		<Name>English (GB)</Name>
+		<NativeName>English (GB)</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>en_US</Id>
+		<Name>English (US)</Name>
+		<NativeName>English (US)</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>es_CO</Id>
+		<Name>Spanish (CO)</Name>
+		<NativeName>Español (CO)</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>fr_FR</Id>
+		<Name>French</Name>
+		<NativeName>Français</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>gl_ES</Id>
+		<Name>Galician</Name>
+		<NativeName>Galego</NativeName>
+	</item>
+	<item>
+		<Id>hu_HU</Id>
+		<Name>Hungarian</Name>
+		<NativeName>Magyar</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>it_IT</Id>
+		<Name>Italian</Name>
+		<NativeName>Italiano</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>nl_NL</Id>
+		<Name>Dutch</Name>
+		<NativeName>Nederlands</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>pl_PL</Id>
+		<Name>Polish</Name>
+		<NativeName>Polski</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>pt_BR</Id>
+		<Name>Portuguese Brazilian</Name>
+		<NativeName>Português do Brasil</NativeName>
+	</item>
+	<item>
+		<Id>pt_PT</Id>
+		<Name>Portuguese</Name>
+		<NativeName>Português</NativeName>
+	</item>
+	<item>
+		<Id>ru_RU</Id>
+		<Name>Russian</Name>
+		<NativeName>По-pусски</NativeName>
+	</item>
+	<item>
+		<Id>sr_CS</Id>
+		<Name>Serbian</Name>
+		<NativeName>Srpski</NativeName>
+		<Completed>1</Completed>
+	</item>
+	<item>
+		<Id>sv_SE</Id>
+		<Name>Swedish</Name>
+		<NativeName>Svenska</NativeName>
+	</item>
+</languages>

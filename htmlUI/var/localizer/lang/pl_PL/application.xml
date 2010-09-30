@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>pl_PL</Id>
+	<item>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<value>Rozmiar pliku jest większy niż dopuszczalne maksimum w ustawieniach systemowych. Zobacz roździał &quot;Troubleshooting&quot; w pomocy (&quot;Help&quot;).</value>
+	</item>
+	<item>
+		<key>&quot;$1&quot; uses an unsupported file type.</key>
+		<value>&quot;$1&quot; ma nieodpowiedne rozszerzenie</value>
+	</item>
+	<item>
+		<key>A playlist is already opened.</key>
+		<value>Jest już otwarta inna lista utworów</value>
+	</item>
+	<item>
+		<key>Access denied.</key>
+		<value>Nie masz uprawnień do tej strefy</value>
+	</item>
+	<item>
+		<key>Access to home directory failed.</key>
+		<value>Brak dostępu do katalogu domowego</value>
+	</item>
+	<item>
+		<key>Cannot create playlist.</key>
+		<value>Nie można utworzyć listy utworów</value>
+	</item>
+	<item>
+		<key>Cannot delete this playlist.</key>
+		<value>Nie można usunąć tej listy utworów</value>
+	</item>
+	<item>
+		<key>Cannot move item.</key>
+		<value>Nie można przenieść elementu</value>
+	</item>
+	<item>
+		<key>Cannot remove item from playlist.</key>
+		<value>Nie można usunąć elementu z listy utworów</value>
+	</item>
+	<item>
+		<key>Changing fade information failed.</key>
+		<value>Nie udało się zmienić tagów</value>
+	</item>
+	<item>
+		<key>Data of audioclip saved.</key>
+		<value>Zapisano dane pliku</value>
+	</item>
+	<item>
+		<key>Entry $1 is already on the scratchpad. It has been moved to the top of the list.</key>
+		<value>Element $1 już jest w schowku. Został przeniesiony na początek listy</value>
+	</item>
+	<item>
+		<key>Entry added at $1 with ScheduleId $2.</key>
+		<value>Dodano element w $1, ma numer $2</value>
+	</item>
+	<item>
+		<key>Entry with ScheduleId $1 removed.</key>
+		<value>Element nr $1 został usunięty</value>
+	</item>
+	<item>
+		<key>Error while saving settings.</key>
+		<value>Błąd podczas zapisu ustawień</value>
+	</item>
+	<item>
+		<key>Error while trying to add item to playlist.</key>
+		<value>Błąd podczas próby dodania elementu do listy</value>
+	</item>
+	<item>
+		<key>Error while uploading logo.</key>
+		<value>Błąd podczas wysyłania obrazka</value>
+	</item>
+	<item>
+		<key>Error: $1</key>
+		<value>Błąd: $1</value>
+	</item>
+	<item>
+		<key>File &quot;$1&quot; has not been uploaded.</key>
+		<value>Plik &quot;$1&quot; nie został wysłany</value>
+	</item>
+	<item>
+		<key>Found locked playlist.</key>
+		<value>Jest zablokowana lista utworów</value>
+	</item>
+	<item>
+		<key>Group &quot;$1&quot; added.</key>
+		<value>Dodano grupę &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Invalid or incomplete form data.</key>
+		<value>Formularz jest nieprawidłowy albo niekompletny</value>
+	</item>
+	<item>
+		<key>Login failed.</key>
+		<value>Nieudane logowanie</value>
+	</item>
+	<item>
+		<key>Metadata saved.</key>
+		<value>Informacje zostały zapisane</value>
+	</item>
+	<item>
+		<key>No item(s) selected.</key>
+		<value>Żadne elementy nie są zaznaczone</value>
+	</item>
+	<item>
+		<key>No playlists have been locked by you.</key>
+		<value>Nie zablokowałeś żadnej listy utworów</value>
+	</item>
+	<item>
+		<key>Nothing selected.</key>
+		<value>Żadne elementy nie są zaznaczone</value>
+	</item>
+	<item>
+		<key>Old password was incorrect.</key>
+		<value>Nieprawidłowe stare hasło</value>
+	</item>
+	<item>
+		<key>Password changed.</key>
+		<value>Hasło zmienione pomyślnie</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; opened.</key>
+		<value>Lista utworów &quot;$1&quot; otwarta</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; released.</key>
+		<value>Lista utworów &quot;$1&quot; utworzona</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; reverted.</key>
+		<value>Lista utworów &quot;$1&quot; przywrócona</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; saved.</key>
+		<value>Lista utworów &quot;$1&quot; zapisana</value>
+	</item>
+	<item>
+		<key>Playlist has been locked by &quot;$1&quot;.</key>
+		<value>Lista utworów jest zablokowana przez &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Playlist not found in database.</key>
+		<value>Nie znaleziono listy utworów w bazie danych</value>
+	</item>
+	<item>
+		<key>Scheduler did not start. Check setting of &quot;UI_SCHEDULER_DAEMON_CMD&quot; in ui_conf.php. File &quot;/tmp/scheduler.log&quot; could be helpful.</key>
+		<value>Scheduler nie jest uruchomiony. Sprawdź ustawienia &quot;UI_SCHEDULER_DAEMON_CMD&quot; w pliku ui_conf.php. Plik &quot;/tmp/scheduler.log&quot; może być pomocny</value>
+	</item>
+	<item>
+		<key>Scheduler is running.</key>
+		<value>Scheduler jest uruchomiony</value>
+	</item>
+	<item>
+		<key>Settings saved.</key>
+		<value>Ustawienia zostały zapisane</value>
+	</item>
+	<item>
+		<key>Stream data saved.</key>
+		<value>Strumień został zapisany</value>
+	</item>
+	<item>
+		<key>The scratchpad length is not set in system preferences, so it cannot be used.</key>
+		<value>Pojemność schowka nie jest ustawiona w ustawieniach systemowych, więc nie może być użyty</value>
+	</item>
+	<item>
+		<key>The target is not a folder.</key>
+		<value>Element docelowy nie jest katalogiem</value>
+	</item>
+	<item>
+		<key>There is no playlist available to unlock.</key>
+		<value>Nie ma żadnych list utworów do odblokowania</value>
+	</item>
+	<item>
+		<key>Unable to open playlist &quot;$1&quot;.</key>
+		<value>Nie udało się otworzyć listy &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Unable to release playlist.</key>
+		<value>Nie udało się opublikować listę utworów</value>
+	</item>
+	<item>
+		<key>Unable to revert to locked state.</key>
+		<value>Nie udało się wrócić do stanu zablokowanego</value>
+	</item>
+	<item>
+		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
+		<value>Nie udało się ustawić wartości &quot;$2&quot; dla &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Upload of file &quot;$1&quot; was incomplete.</key>
+		<value>Nie dokończono wysyłanie pliku &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>User &quot;$1&quot; added.</key>
+		<value>Dodano użytkownika &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>User or group &quot;$1&quot; already exists.</key>
+		<value>Już istnieje użytkownik lub grupa &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Warning: station preferences have not been set up properly.</key>
+		<value>Uwaga: preferencje radia nie są właściwie ustawione</value>
+	</item>
+	<item>
+		<key>You already have an open playlist. Close it first.</key>
+		<value>Masz już otwartą listę utworów. Musisz ją najpierw zamknąć</value>
+	</item>
+</translations>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>sr_CS</Id>
+	<item>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<value>Aploudovan fajl je veci nego što je dozvoljeno u sistemskim podešavanjima. Za dodatne informacije, pogledaj &quot;Pomoc&quot;, poglavlje &quot;Rešavanje problema&quot;.</value>
+	</item>
+	<item>
+		<key>&quot;$1&quot; uses an unsupported file type.</key>
+		<value>$1 koristi nepodržan tip fajla.</value>
+	</item>
+	<item>
+		<key>A playlist is already opened.</key>
+		<value>Plej lista je već aktivna.</value>
+	</item>
+	<item>
+		<key>Access denied.</key>
+		<value>Pristup zabranjen.</value>
+	</item>
+	<item>
+		<key>Access to home directory failed.</key>
+		<value>Pristup početnom direktorijumu nije moguć.</value>
+	</item>
+	<item>
+		<key>Cannot create playlist.</key>
+		<value>Ne možete kreirati plej listu.</value>
+	</item>
+	<item>
+		<key>Cannot delete this playlist.</key>
+		<value>Ne možete  obrisati ovu plej listu.</value>
+	</item>
+	<item>
+		<key>Cannot move item.</key>
+		<value>Ne možete pomeriti fajl.</value>
+	</item>
+	<item>
+		<key>Cannot remove item from playlist.</key>
+		<value>Ne možete ukloniti fajl iz plej liste.</value>
+	</item>
+	<item>
+		<key>Changing fade information failed.</key>
+		<value>Greška u Mix Fade vrednostima.</value>
+	</item>
+	<item>
+		<key>Data of audioclip saved.</key>
+		<value>Podaci o audio fajlu su sačuvani.</value>
+	</item>
+	<item>
+		<key>Entry $1 is already on the scratchpad. It has been moved to the top of the list.</key>
+		<value>Unos $1 se već nalazi u Pripremi i pomeren je na vrh liste.</value>
+	</item>
+	<item>
+		<key>Entry added at $1 with ScheduleId $2.</key>
+		<value>Podatak je unet  u $1 sa rasporedom ID $2.</value>
+	</item>
+	<item>
+		<key>Entry with ScheduleId $1 removed.</key>
+		<value>Unos sa rasporedom ID $1 je uklonjen.</value>
+	</item>
+	<item>
+		<key>Error while saving settings.</key>
+		<value>Greška pri snimanju  podešavanja.</value>
+	</item>
+	<item>
+		<key>Error while trying to add item to playlist.</key>
+		<value>Greška pri dodavanju u plej listu.</value>
+	</item>
+	<item>
+		<key>Error while uploading logo.</key>
+		<value>Greška pri upucivanju Logoa.</value>
+	</item>
+	<item>
+		<key>Error: $1</key>
+		<value>Greška: $1</value>
+	</item>
+	<item>
+		<key>File &quot;$1&quot; has not been uploaded.</key>
+		<value>Fajl &quot;$1 nije aploudovan.</value>
+	</item>
+	<item>
+		<key>Found locked playlist.</key>
+		<value>Pronađena je zaključana plej lista.</value>
+	</item>
+	<item>
+		<key>Group &quot;$1&quot; added.</key>
+		<value>Grupa  &quot;$1&quot; je dodana.</value>
+	</item>
+	<item>
+		<key>Invalid or incomplete form data.</key>
+		<value>Postoji greška u formi podatka.</value>
+	</item>
+	<item>
+		<key>Login failed.</key>
+		<value>Pogrešna prijava.</value>
+	</item>
+	<item>
+		<key>Metadata saved.</key>
+		<value>Metadata sačuvana.</value>
+	</item>
+	<item>
+		<key>No item(s) selected.</key>
+		<value>Nijedan fajl nije odabran.</value>
+	</item>
+	<item>
+		<key>No playlists have been locked by you.</key>
+		<value>Niste zaključali ni jednu plej listu.</value>
+	</item>
+	<item>
+		<key>Nothing selected.</key>
+		<value>Ništa nije odabrano.</value>
+	</item>
+	<item>
+		<key>Old password was incorrect.</key>
+		<value>Stara lozinka je nevažeća.</value>
+	</item>
+	<item>
+		<key>Password changed.</key>
+		<value>Lozinka je promenjena.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; opened.</key>
+		<value>Plej lista &quot;$1&quot; je otvorena.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; released.</key>
+		<value>Plej lista &quot;$1&quot; je puštena.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; reverted.</key>
+		<value>Plej lista &quot;$1&quot; je vraćena.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; saved.</key>
+		<value>Plej lista &quot;$1&quot; je sačuvana.</value>
+	</item>
+	<item>
+		<key>Playlist has been locked by &quot;$1&quot;.</key>
+		<value>Plej lista je zaključao &quot;$1&quot;.</value>
+	</item>
+	<item>
+		<key>Playlist not found in database.</key>
+		<value>Plejlista nije pronadjena u bazi podataka.</value>
+	</item>
+	<item>
+		<key>Scheduler did not start. Check setting of &quot;UI_SCHEDULER_DAEMON_CMD&quot; in ui_conf.php. File &quot;/tmp/scheduler.log&quot; could be helpful.</key>
+		<value>Raspored nije počeo. Proverite podešavanja &quot;UI_SCHEDULER_DAEMON_CMD&quot; u ui_conf.php. Fajl &quot;/tmp/scheduler.log&quot; bi bio od pomoći.</value>
+	</item>
+	<item>
+		<key>Scheduler is running.</key>
+		<value>Raspored je u funkciji.</value>
+	</item>
+	<item>
+		<key>Settings saved.</key>
+		<value>Podešavanja  su sačuvana.</value>
+	</item>
+	<item>
+		<key>Stream data saved.</key>
+		<value>Podaci o strimu su sačuvani.</value>
+	</item>
+	<item>
+		<key>The scratchpad length is not set in system preferences, so it cannot be used.</key>
+		<value>Dužina pripremne tabele nije podešena u sistemu, pa ne može biti upotrebljena.</value>
+	</item>
+	<item>
+		<key>The target is not a folder.</key>
+		<value>Traženo nije folder.</value>
+	</item>
+	<item>
+		<key>There is no playlist available to unlock.</key>
+		<value>Nema ni jedne plej lista koja se može otključati.</value>
+	</item>
+	<item>
+		<key>Unable to open playlist &quot;$1&quot;.</key>
+		<value>Nije moguće aktivirati plej listu &quot;$1&quot;.</value>
+	</item>
+	<item>
+		<key>Unable to release playlist.</key>
+		<value>Ne možete da pustite plej listu.</value>
+	</item>
+	<item>
+		<key>Unable to revert to locked state.</key>
+		<value>Ne možete da se vratite na zaključano stanje.</value>
+	</item>
+	<item>
+		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
+		<value>Ne možete podesiti &quot;$1&quot; na vrednost &quot;$2&quot;.</value>
+	</item>
+	<item>
+		<key>Upload of file &quot;$1&quot; was incomplete.</key>
+		<value>Aploud fajla &quot;$1&quot; nije kompletan.</value>
+	</item>
+	<item>
+		<key>User &quot;$1&quot; added.</key>
+		<value>Korisnik  &quot;$1&quot; je dodat.</value>
+	</item>
+	<item>
+		<key>User or group &quot;$1&quot; already exists.</key>
+		<value>Korisnik ili grupa &quot;$1&quot; već postoji.</value>
+	</item>
+	<item>
+		<key>Warning: station preferences have not been set up properly.</key>
+		<value>Upozorenje: podešavanja stanice nisu pravilno postavljena.</value>
+	</item>
+	<item>
+		<key>You already have an open playlist. Close it first.</key>
+		<value>Plej lista je već otvorena. Najpre je zatvorite.</value>
+	</item>
+</translations>

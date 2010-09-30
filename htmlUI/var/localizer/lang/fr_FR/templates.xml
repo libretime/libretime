@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>fr_FR</Id>
+	<item>
+		<key>5.1</key>
+		<value>5,1</value>
+	</item>
+	<item>
+		<key>And</key>
+		<value>et</value>
+	</item>
+	<item>
+		<key>Crossfade</key>
+		<value>Transition</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path)</key>
+		<value>Répertoire cible (chemin relatif)</value>
+	</item>
+	<item>
+		<key>Mono</key>
+		<value>Mono</value>
+	</item>
+	<item>
+		<key>Or</key>
+		<value>ou</value>
+	</item>
+	<item>
+		<key>Pause</key>
+		<value>Pause</value>
+	</item>
+	<item>
+		<key>Stereo</key>
+		<value>Stereo</value>
+	</item>
+	<item>
+		<key>full</key>
+		<value>exact</value>
+	</item>
+	<item>
+		<key>partial</key>
+		<value>contient</value>
+	</item>
+	<item>
+		<key>prefix</key>
+		<value>commence par</value>
+	</item>
+	<item>
+		<key>April</key>
+		<value>Avril</value>
+	</item>
+	<item>
+		<key>August</key>
+		<value>Août</value>
+	</item>
+	<item>
+		<key>December</key>
+		<value>Décembre</value>
+	</item>
+	<item>
+		<key>February</key>
+		<value>Février</value>
+	</item>
+	<item>
+		<key>January</key>
+		<value>Janvier</value>
+	</item>
+	<item>
+		<key>July</key>
+		<value>Juillet</value>
+	</item>
+	<item>
+		<key>June</key>
+		<value>Juin</value>
+	</item>
+	<item>
+		<key>March</key>
+		<value>Mars</value>
+	</item>
+	<item>
+		<key>May</key>
+		<value>Mai</value>
+	</item>
+	<item>
+		<key>November</key>
+		<value>Novembre</value>
+	</item>
+	<item>
+		<key>October</key>
+		<value>Octobre</value>
+	</item>
+	<item>
+		<key>September</key>
+		<value>Septembre</value>
+	</item>
+	<item>
+		<key>Access</key>
+		<value>Accès</value>
+	</item>
+	<item>
+		<key>Action</key>
+		<value>Action</value>
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value>Ajouter un fichier</value>
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value>Ajouter un groupe</value>
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value>Ajouter des membres</value>
+	</item>
+	<item>
+		<key>Add User</key>
+		<value>Ajouter un utilisateur</value>
+	</item>
+	<item>
+		<key>Add files to ScratchPad</key>
+		<value>Ajouter des fichiers à la collection</value>
+	</item>
+	<item>
+		<key>Add files to open Playlist</key>
+		<value>Ajouter des fichiers à la playlist ouverte</value>
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value>Ajouter les morceaux choisis</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>Ajouter à la collection</value>
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value>Ajouter au groupe</value>
+	</item>
+	<item>
+		<key>Add to playlist</key>
+		<value>Ajouter à la plalist</value>
+	</item>
+	<item>
+		<key>Are you sure to delete $1 selected files?</key>
+		<value>Effacer les $1 fichiers choisis ?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value>Effacer le fichier &quot;$1&quot; ?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete open Playlist?</key>
+		<value>Effacer la playlist ouverte ?</value>
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value>Abandonner tous les changements ?</value>
+	</item>
+	<item>
+		<key>Are you sure to logout?</key>
+		<value>Déconnexion ?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove &quot;$1&quot;?</key>
+		<value>Effacer &quot;$1&quot; ?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value>Effacer la playlist &quot;$1&quot; ?</value>
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value>Changer les informations existantes ?</value>
+	</item>
+	<item>
+		<key>Artist</key>
+		<value>Artiste</value>
+	</item>
+	<item>
+		<key>Audioclip</key>
+		<value>Morceau</value>
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value>Revenir à la navigation</value>
+	</item>
+	<item>
+		<key>Browse</key>
+		<value>Navigation</value>
+	</item>
+	<item>
+		<key>CW</key>
+		<value>CW</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Annuler</value>
+	</item>
+	<item>
+		<key>Cannot connect to Scheduler</key>
+		<value>Connexion au Scheduler imposible</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Modifier l&apos;entrée</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Modifier la sortie</value>
+	</item>
+	<item>
+		<key>Change Fades</key>
+		<value>Modifier les passages</value>
+	</item>
+	<item>
+		<key>Change Password</key>
+		<value>Modifier votre mot de passe</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Modifier les transitions</value>
+	</item>
+	<item>
+		<key>Change password</key>
+		<value>Modifier votre mot de passe</value>
+	</item>
+	<item>
+		<key>Change password for: $1</key>
+		<value>Modifier le mot de passe de: $1</value>
+	</item>
+	<item>
+		<key>Clear</key>
+		<value>Effacer</value>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value>Effacer la playlist</value>
+	</item>
+	<item>
+		<key>Close</key>
+		<value>Fermer</value>
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value>Fermer la playlist</value>
+	</item>
+	<item>
+		<key>Connection to $1 port $2 $3</key>
+		<value>Connexion à $1, port $2 $3</value>
+	</item>
+	<item>
+		<key>Count</key>
+		<value>Total</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Créateur</value>
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value>Membres actuels</value>
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value>Vue du jour</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Data</value>
+	</item>
+	<item>
+		<key>Day</key>
+		<value>Jour</value>
+	</item>
+	<item>
+		<key>Delete</key>
+		<value>Effacer</value>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value>Effacer la playlist</value>
+	</item>
+	<item>
+		<key>Delete files</key>
+		<value>Effacer les fichiers</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Description</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path):</key>
+		<value>Répertoire cible (chemin relatif):</value>
+	</item>
+	<item>
+		<key>New folder name:</key>
+		<value>Nom du nouveau répertoire:</value>
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value>Enregistrer les changements ?</value>
+	</item>
+	<item>
+		<key>Duration</key>
+		<value>Durée</value>
+	</item>
+	<item>
+		<key>Edit</key>
+		<value>Edition</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Edition de la playlist</value>
+	</item>
+	<item>
+		<key>Fade</key>
+		<value>Passage</value>
+	</item>
+	<item>
+		<key>File List</key>
+		<value>Liste des fichiers</value>
+	</item>
+	<item>
+		<key>File Management</key>
+		<value>Gestion des fichiers</value>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value>Structure des répertoires</value>
+	</item>
+	<item>
+		<key>Fr</key>
+		<value>V</value>
+	</item>
+	<item>
+		<key>Friday</key>
+		<value>Vendredi</value>
+	</item>
+	<item>
+		<key>Go</key>
+		<value>Go</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Aide</value>
+	</item>
+	<item>
+		<key>Insert playlist here</key>
+		<value>Insérer la playlist ici</value>
+	</item>
+	<item>
+		<key>Item</key>
+		<value>Elément</value>
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value>Recherche</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Liste des répertoires</value>
+	</item>
+	<item>
+		<key>Listen</key>
+		<value>Écouter</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Utilisateur</value>
+	</item>
+	<item>
+		<key>Main</key>
+		<value>Début</value>
+	</item>
+	<item>
+		<key>Manage Group: $1</key>
+		<value>Gestion du groupe $1</value>
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value>Gestion des membres du groupe</value>
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value>Fichiers</value>
+	</item>
+	<item>
+		<key>Members</key>
+		<value>Membres</value>
+	</item>
+	<item>
+		<key>Metadata XML</key>
+		<value>Informations XML</value>
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>L</value>
+	</item>
+	<item>
+		<key>Monday</key>
+		<value>Lundi</value>
+	</item>
+	<item>
+		<key>Month</key>
+		<value>Mois</value>
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value>Vue du mois</value>
+	</item>
+	<item>
+		<key>Move</key>
+		<value>Déplacer</value>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value>Action:</value>
+	</item>
+	<item>
+		<key>Music</key>
+		<value>Musique</value>
+	</item>
+	<item>
+		<key>New</key>
+		<value>Nouveau</value>
+	</item>
+	<item>
+		<key>New Playlist using this files</key>
+		<value>Nouvelle playlist à partir de ces fichiers</value>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value>Nouvelle playlist vide</value>
+	</item>
+	<item>
+		<key>New playlist using this files</key>
+		<value>Nouvelle playlist à partir de ces fichiers</value>
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value>Aucun élément</value>
+	</item>
+	<item>
+		<key>No group members</key>
+		<value>Aucun membre dans le groupe</value>
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value>Aucun élément correspondant</value>
+	</item>
+	<item>
+		<key>No objects</key>
+		<value>Aucun objet</value>
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value>Il ne reste plus rien</value>
+	</item>
+	<item>
+		<key>Now Playing</key>
+		<value>Maintenant</value>
+	</item>
+	<item>
+		<key>OK</key>
+		<value>OK</value>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value>Ouvrir la dernière playlist</value>
+	</item>
+	<item>
+		<key>Page</key>
+		<value>Page</value>
+	</item>
+	<item>
+		<key>Playing Next</key>
+		<value>Morceau suivant</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Playlist</value>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value>Edition de la playlist</value>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value>Informations sur la playlist</value>
+	</item>
+	<item>
+		<key>Playlists</key>
+		<value>Playlists</value>
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value>Préférences</value>
+	</item>
+	<item>
+		<key>Range</key>
+		<value>Vue</value>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value>RawAnalyze</value>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value>Enlever la sélection</value>
+	</item>
+	<item>
+		<key>Remove files</key>
+		<value>Enlever les fichiers</value>
+	</item>
+	<item>
+		<key>Remove from ScratchPad</key>
+		<value>Enlever de la collection</value>
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value>Enlever du groupe</value>
+	</item>
+	<item>
+		<key>Remove from playlist</key>
+		<value>Enlever de la playlist</value>
+	</item>
+	<item>
+		<key>Remove playlist</key>
+		<value>Enlever la playlist</value>
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value>Enlever la sélection</value>
+	</item>
+	<item>
+		<key>Reorder Playlist</key>
+		<value>Réordonner la playlist</value>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value>Revenir à la dernière sauvegarde</value>
+	</item>
+	<item>
+		<key>Sa</key>
+		<value>S</value>
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value>Samedi</value>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value>Sauvegarder la playlist</value>
+	</item>
+	<item>
+		<key>Schedule</key>
+		<value>Programmation</value>
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value>Programmation</value>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value>Programmation</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>Collection</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Recherche</value>
+	</item>
+	<item>
+		<key>Show Info</key>
+		<value>Montrer les informations</value>
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value>Utilisateur</value>
+	</item>
+	<item>
+		<key>Start Scheduler</key>
+		<value>Démarrer le Scheduler</value>
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value>Préférences de la station</value>
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value>Heure de la station</value>
+	</item>
+	<item>
+		<key>Station settings</key>
+		<value>Préférences de la station</value>
+	</item>
+	<item>
+		<key>Stream has wrong content type &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Le stream a un mauvais &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;</value>
+	</item>
+	<item>
+		<key>Stream is wanted type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Le stream est &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;</value>
+	</item>
+	<item>
+		<key>Su</key>
+		<value>D</value>
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value>Dimanche</value>
+	</item>
+	<item>
+		<key>Th</key>
+		<value>J</value>
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value>Jeudi</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Heure</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Titre</value>
+	</item>
+	<item>
+		<key>Today</key>
+		<value>Aujourd&apos;hui</value>
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value>Vue de l&apos;arborescence</value>
+	</item>
+	<item>
+		<key>Tu</key>
+		<value>Ma</value>
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value>Mardi</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Type</value>
+	</item>
+	<item>
+		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
+		<value>URL est &lt;font color=&quot;green&quot;&gt;valide&lt;/font&gt;</value>
+	</item>
+	<item>
+		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
+		<value>URL ne semble &lt;font color=&quot;red&quot;&gt;pas valide&lt;/font&gt;. Code erreur: $1</value>
+	</item>
+	<item>
+		<key>Use to create playlist</key>
+		<value>Utiliser pour créer une playlist</value>
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value>Gestion des utilisateurs et groupes</value>
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value>Utilisateurs et Groupes</value>
+	</item>
+	<item>
+		<key>Voice</key>
+		<value>Voix</value>
+	</item>
+	<item>
+		<key>We</key>
+		<value>Me</value>
+	</item>
+	<item>
+		<key>Webstream</key>
+		<value>Webstream</value>
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value>Mercredi</value>
+	</item>
+	<item>
+		<key>Week</key>
+		<value>Semaine</value>
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value>Vue de la semaine</value>
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value>Vous devez avoir au moins une playlist non ouverte dans la collection pour la programmer</value>
+	</item>
+	<item>
+		<key>_Name of translator</key>
+		<value>radio@potok.waw.pl</value>
+	</item>
+	<item>
+		<key>_Native language name</key>
+		<value>Francais (FR)</value>
+	</item>
+	<item>
+		<key>audioclip</key>
+		<value>Morceau</value>
+	</item>
+	<item>
+		<key>calendar week</key>
+		<value>calendrier</value>
+	</item>
+	<item>
+		<key>copy</key>
+		<value>copier</value>
+	</item>
+	<item>
+		<key>empty</key>
+		<value>vide</value>
+	</item>
+	<item>
+		<key>go up</key>
+		<value>déplacer vers le haut</value>
+	</item>
+	<item>
+		<key>h</key>
+		<value>h</value>
+	</item>
+	<item>
+		<key>in use by: $1</key>
+		<value>utilisé par: $1</value>
+	</item>
+	<item>
+		<key>login</key>
+		<value>Connexion</value>
+	</item>
+	<item>
+		<key>logout</key>
+		<value>Déconnexion</value>
+	</item>
+	<item>
+		<key>m</key>
+		<value>m</value>
+	</item>
+	<item>
+		<key>move</key>
+		<value>déplacer</value>
+	</item>
+	<item>
+		<key>move down</key>
+		<value>déplacer vers le bas</value>
+	</item>
+	<item>
+		<key>move up</key>
+		<value>déplacer vers le haut</value>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value>nouveau&amp;nbsp;répertoire</value>
+	</item>
+	<item>
+		<key>next</key>
+		<value>suivant</value>
+	</item>
+	<item>
+		<key>permissions</key>
+		<value>permissions</value>
+	</item>
+	<item>
+		<key>playlist</key>
+		<value>playlist</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>précédent</value>
+	</item>
+	<item>
+		<key>s</key>
+		<value>s</value>
+	</item>
+	<item>
+		<key>sign over</key>
+		<value>sign over</value>
+	</item>
+	<item>
+		<key>tomorrow</key>
+		<value>demain</value>
+	</item>
+	<item>
+		<key>webstream</key>
+		<value>webstream</value>
+	</item>
+	<item>
+		<key>yesterday</key>
+		<value>hier</value>
+	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value />
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value />
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value />
+	</item>
+	<item>
+		<key>State</key>
+		<value />
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value />
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value />
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value />
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value />
+	</item>
+</translations>

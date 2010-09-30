@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>ru_RU</Id>
+	<item>
+		<key>5.1</key>
+		<value>5.1</value>
+	</item>
+	<item>
+		<key>And</key>
+		<value>И</value>
+	</item>
+	<item>
+		<key>Crossfade</key>
+		<value>Кросс-фэйд</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path)</key>
+		<value>Папка назначения (относительный путь)</value>
+	</item>
+	<item>
+		<key>Mono</key>
+		<value>Моно</value>
+	</item>
+	<item>
+		<key>Or</key>
+		<value>Или</value>
+	</item>
+	<item>
+		<key>Pause</key>
+		<value>Пауза</value>
+	</item>
+	<item>
+		<key>Stereo</key>
+		<value>Стерео</value>
+	</item>
+	<item>
+		<key>full</key>
+		<value>полный</value>
+	</item>
+	<item>
+		<key>partial</key>
+		<value>частичный</value>
+	</item>
+	<item>
+		<key>prefix</key>
+		<value>префикс</value>
+	</item>
+	<item>
+		<key>April</key>
+		<value>Апрель</value>
+	</item>
+	<item>
+		<key>August</key>
+		<value>Август</value>
+	</item>
+	<item>
+		<key>December</key>
+		<value>Декабрь</value>
+	</item>
+	<item>
+		<key>February</key>
+		<value>Февраль</value>
+	</item>
+	<item>
+		<key>January</key>
+		<value>Январь</value>
+	</item>
+	<item>
+		<key>July</key>
+		<value>Июль</value>
+	</item>
+	<item>
+		<key>June</key>
+		<value>Июнь</value>
+	</item>
+	<item>
+		<key>March</key>
+		<value>Март</value>
+	</item>
+	<item>
+		<key>May</key>
+		<value>Май</value>
+	</item>
+	<item>
+		<key>November</key>
+		<value>Ноябрь</value>
+	</item>
+	<item>
+		<key>October</key>
+		<value>Октябрь</value>
+	</item>
+	<item>
+		<key>September</key>
+		<value>Сентябрь</value>
+	</item>
+	<item>
+		<key>Access</key>
+		<value>Доступ</value>
+	</item>
+	<item>
+		<key>Action</key>
+		<value>Действие</value>
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value>Добавить аудио</value>
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value>Добавить группу</value>
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value>Добавить члена</value>
+	</item>
+	<item>
+		<key>Add User</key>
+		<value>Добавить пользователя</value>
+	</item>
+	<item>
+		<key>Add files to ScratchPad</key>
+		<value>Добавить файлы в скреч-пад</value>
+	</item>
+	<item>
+		<key>Add files to open Playlist</key>
+		<value>Добавит файлы в открытый плей-лист</value>
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value>Добавить отмеченное</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>Добавить в скреч-пад</value>
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value>Добавить в группу</value>
+	</item>
+	<item>
+		<key>Add to playlist</key>
+		<value>Добавит в плей-лист</value>
+	</item>
+	<item>
+		<key>Are you sure to delete $1 selected files?</key>
+		<value>Вы уверены, что хотите удалить выбранные файлы: $1?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value>Вы уверены, что хотите удалить файл &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to delete open Playlist?</key>
+		<value>Вы уверены, что хотите удалить открытый плей-лист?</value>
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value>Вы уверены, что хотите отменить все изменения?</value>
+	</item>
+	<item>
+		<key>Are you sure to logout?</key>
+		<value>Вы уверены, что хотите выйти?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove &quot;$1&quot;?</key>
+		<value>Вы уверены, что хотите удалить &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value>Вы уверены, что хотите удалить плей-лист &quot;$1&quot;?</value>
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value>Вы уверены, что хотите изменить существующие метаданные?</value>
+	</item>
+	<item>
+		<key>Artist</key>
+		<value>Исполнитель</value>
+	</item>
+	<item>
+		<key>Audioclip</key>
+		<value>Аудиоклип</value>
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value>Вернуться к обзору</value>
+	</item>
+	<item>
+		<key>Browse</key>
+		<value>Просмотреть</value>
+	</item>
+	<item>
+		<key>CW</key>
+		<value>CW</value>
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value>Отменить</value>
+	</item>
+	<item>
+		<key>Cannot connect to Scheduler</key>
+		<value>Не удается подключиться к планировщику</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Изменить Fadein</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Изменить Fadeout</value>
+	</item>
+	<item>
+		<key>Change Fades</key>
+		<value>Изменить фейды</value>
+	</item>
+	<item>
+		<key>Change Password</key>
+		<value>Изменить пароль</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Изменить перемещение</value>
+	</item>
+	<item>
+		<key>Change password</key>
+		<value>Изменить пароль</value>
+	</item>
+	<item>
+		<key>Change password for: $1</key>
+		<value>Изменить пароль для: $1</value>
+	</item>
+	<item>
+		<key>Clear</key>
+		<value>Очистить</value>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value>Очистить плей-лист</value>
+	</item>
+	<item>
+		<key>Close</key>
+		<value>Закрыть</value>
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value>Закрыть плей-лист</value>
+	</item>
+	<item>
+		<key>Connection to $1 port $2 $3</key>
+		<value>Подключение к $1 порт $2 $3</value>
+	</item>
+	<item>
+		<key>Count</key>
+		<value>Считать</value>
+	</item>
+	<item>
+		<key>Creator</key>
+		<value>Создатель</value>
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value>Текущие члены</value>
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value>Вид по дням</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Данные</value>
+	</item>
+	<item>
+		<key>Day</key>
+		<value>День</value>
+	</item>
+	<item>
+		<key>Delete</key>
+		<value>Удалить</value>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value>Удалить плей-лист</value>
+	</item>
+	<item>
+		<key>Delete files</key>
+		<value>Удалить файлы</value>
+	</item>
+	<item>
+		<key>Description</key>
+		<value>Описание</value>
+	</item>
+	<item>
+		<key>Destination folder (relative path):</key>
+		<value>Папка назначения (относительный путь):</value>
+	</item>
+	<item>
+		<key>New folder name:</key>
+		<value>Новое имя папки:</value>
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value>Вы хотите сохранить изменения?</value>
+	</item>
+	<item>
+		<key>Duration</key>
+		<value>Продолжительность</value>
+	</item>
+	<item>
+		<key>Edit</key>
+		<value>Правка</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Правка плей-листа</value>
+	</item>
+	<item>
+		<key>Fade</key>
+		<value>Фэйд</value>
+	</item>
+	<item>
+		<key>File List</key>
+		<value>Список файлов</value>
+	</item>
+	<item>
+		<key>File Management</key>
+		<value>Управление файлами</value>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value>Структура папки</value>
+	</item>
+	<item>
+		<key>Fr</key>
+		<value>Пт</value>
+	</item>
+	<item>
+		<key>Friday</key>
+		<value>Пятница</value>
+	</item>
+	<item>
+		<key>Go</key>
+		<value>Вперед</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Помощь</value>
+	</item>
+	<item>
+		<key>Insert playlist here</key>
+		<value>Вставить плей-лист сюда</value>
+	</item>
+	<item>
+		<key>Item</key>
+		<value>Объект</value>
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value>Поиск в библиотеке</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Список папок</value>
+	</item>
+	<item>
+		<key>Listen</key>
+		<value>Слушать</value>
+	</item>
+	<item>
+		<key>Login</key>
+		<value>Логин</value>
+	</item>
+	<item>
+		<key>Main</key>
+		<value>Основной</value>
+	</item>
+	<item>
+		<key>Manage Group: $1</key>
+		<value>Управлять группой: $1</value>
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value>Управлять членами группы</value>
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value>Библиотека медиа</value>
+	</item>
+	<item>
+		<key>Members</key>
+		<value>Участники</value>
+	</item>
+	<item>
+		<key>Metadata XML</key>
+		<value>Метаданные XML</value>
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>Пн</value>
+	</item>
+	<item>
+		<key>Monday</key>
+		<value>Понедельник</value>
+	</item>
+	<item>
+		<key>Month</key>
+		<value>Месяц</value>
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value>Вид по месяцам</value>
+	</item>
+	<item>
+		<key>Move</key>
+		<value>Перенос</value>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value>Множественные дейтвия:</value>
+	</item>
+	<item>
+		<key>Music</key>
+		<value>Музыка</value>
+	</item>
+	<item>
+		<key>New</key>
+		<value>Новое</value>
+	</item>
+	<item>
+		<key>New Playlist using this files</key>
+		<value>Новый плей-лист использует эти файлы</value>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value>Новый пустой плей-лист</value>
+	</item>
+	<item>
+		<key>New playlist using this files</key>
+		<value>Новый плей-лист использует эти файлы</value>
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value>Нет записи</value>
+	</item>
+	<item>
+		<key>No group members</key>
+		<value>Нет членов группы</value>
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value>Совпадений не найдено</value>
+	</item>
+	<item>
+		<key>No objects</key>
+		<value>Нет объектов</value>
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value>Ничего не осталось</value>
+	</item>
+	<item>
+		<key>Now Playing</key>
+		<value>Сейчас играет</value>
+	</item>
+	<item>
+		<key>OK</key>
+		<value>OK</value>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value>Открыть последний плей-лист</value>
+	</item>
+	<item>
+		<key>Page</key>
+		<value>Страница</value>
+	</item>
+	<item>
+		<key>Playing Next</key>
+		<value>Следующий</value>
+	</item>
+	<item>
+		<key>Playlist</key>
+		<value>Плей-лист</value>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value>Редактор плей-листа</value>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value>Метаданные плей-листа</value>
+	</item>
+	<item>
+		<key>Playlists</key>
+		<value>Плей-листы</value>
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value>Настройки</value>
+	</item>
+	<item>
+		<key>Range</key>
+		<value>Ранжировать</value>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value>Предварительный анализ</value>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value>Удалить отмеченное</value>
+	</item>
+	<item>
+		<key>Remove files</key>
+		<value>Удалить файлы</value>
+	</item>
+	<item>
+		<key>Remove from ScratchPad</key>
+		<value>Удалить из скреч-пада</value>
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value>Удалить из группы</value>
+	</item>
+	<item>
+		<key>Remove from playlist</key>
+		<value>Удалить из плей-листа</value>
+	</item>
+	<item>
+		<key>Remove playlist</key>
+		<value>Удалить плей-лист</value>
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value>Удалить отмеченное</value>
+	</item>
+	<item>
+		<key>Reorder Playlist</key>
+		<value>Переупорядочить плей-лист</value>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value>Вернуться к сохраненному</value>
+	</item>
+	<item>
+		<key>Sa</key>
+		<value>Сб</value>
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value>Суббота</value>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value>Сохранить плей-лист</value>
+	</item>
+	<item>
+		<key>Schedule</key>
+		<value>Назначить</value>
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value>Планировщик</value>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value>Навигация по планировщику</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>Скреч-пад</value>
+	</item>
+	<item>
+		<key>Search</key>
+		<value>Поиск</value>
+	</item>
+	<item>
+		<key>Show Info</key>
+		<value>Показать информацию</value>
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value>Подписаться</value>
+	</item>
+	<item>
+		<key>Start Scheduler</key>
+		<value>Запустить планировщик</value>
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value>Настройки станции</value>
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value>Время станции</value>
+	</item>
+	<item>
+		<key>Station settings</key>
+		<value>Настройки станции</value>
+	</item>
+	<item>
+		<key>Stream has wrong content type &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Поток имеет неправильный тип &lt;font color=&quot;red&quot;&gt;$1&lt;/font&gt;. </value>
+	</item>
+	<item>
+		<key>Stream is wanted type &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;.</key>
+		<value>Потоку необходим тип &lt;font color=&quot;green&quot;&gt;$1&lt;/font&gt;. </value>
+	</item>
+	<item>
+		<key>Su</key>
+		<value>Вс</value>
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value>Воскресенье</value>
+	</item>
+	<item>
+		<key>Th</key>
+		<value>Чт</value>
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value>Четверг</value>
+	</item>
+	<item>
+		<key>Time</key>
+		<value>Время</value>
+	</item>
+	<item>
+		<key>Title</key>
+		<value>Заголовок</value>
+	</item>
+	<item>
+		<key>Today</key>
+		<value>Сегодня</value>
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value>В виде дерева</value>
+	</item>
+	<item>
+		<key>Tu</key>
+		<value>Вт</value>
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value>Вторник</value>
+	</item>
+	<item>
+		<key>Type</key>
+		<value>Тип</value>
+	</item>
+	<item>
+		<key>URL is &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;.</key>
+		<value>URL: &lt;font color=&quot;green&quot;&gt;valid&lt;/font&gt;. </value>
+	</item>
+	<item>
+		<key>URL seems &lt;font color=&quot;red&quot;&gt;invalid&lt;/font&gt;. Returned error-code: $1.</key>
+		<value>URL очевидно &lt;font color=&quot;red&quot;&gt;не правильный&lt;/font&gt;. Возвращенный код ошибки: $1.</value>
+	</item>
+	<item>
+		<key>Use to create playlist</key>
+		<value>Использовать для создания плей-листа</value>
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value>Управление пользователем/группой</value>
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value>Пользователь/группы</value>
+	</item>
+	<item>
+		<key>Voice</key>
+		<value>Голос</value>
+	</item>
+	<item>
+		<key>We</key>
+		<value>Ср</value>
+	</item>
+	<item>
+		<key>Webstream</key>
+		<value>Веб-поток</value>
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value>Среда</value>
+	</item>
+	<item>
+		<key>Week</key>
+		<value>Неделя</value>
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value>Вид по неделям</value>
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value>Необходим, по крайней мере, один не открытый плей-лист в скреч-паде чтобы запланировать его.</value>
+	</item>
+	<item>
+		<key>_Name of translator</key>
+		<value>_Название переводчика</value>
+	</item>
+	<item>
+		<key>_Native language name</key>
+		<value>_Родной язык</value>
+	</item>
+	<item>
+		<key>audioclip</key>
+		<value>аудиоклип</value>
+	</item>
+	<item>
+		<key>calendar week</key>
+		<value>календарная неделя</value>
+	</item>
+	<item>
+		<key>copy</key>
+		<value>копировать</value>
+	</item>
+	<item>
+		<key>empty</key>
+		<value>пусто</value>
+	</item>
+	<item>
+		<key>go up</key>
+		<value>наверх</value>
+	</item>
+	<item>
+		<key>h</key>
+		<value>h</value>
+	</item>
+	<item>
+		<key>in use by: $1</key>
+		<value>используется: $1</value>
+	</item>
+	<item>
+		<key>login</key>
+		<value>войти</value>
+	</item>
+	<item>
+		<key>logout</key>
+		<value>выйти</value>
+	</item>
+	<item>
+		<key>m</key>
+		<value>m</value>
+	</item>
+	<item>
+		<key>move</key>
+		<value>перенос</value>
+	</item>
+	<item>
+		<key>move down</key>
+		<value>перенос вниз</value>
+	</item>
+	<item>
+		<key>move up</key>
+		<value>перенос вверх</value>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value>новая&amp;nbsp;папка</value>
+	</item>
+	<item>
+		<key>next</key>
+		<value>следующий</value>
+	</item>
+	<item>
+		<key>permissions</key>
+		<value>разрешение</value>
+	</item>
+	<item>
+		<key>playlist</key>
+		<value>плей-лист</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>предыдущий</value>
+	</item>
+	<item>
+		<key>s</key>
+		<value>s</value>
+	</item>
+	<item>
+		<key>sign over</key>
+		<value>передать подписку</value>
+	</item>
+	<item>
+		<key>tomorrow</key>
+		<value>завтра</value>
+	</item>
+	<item>
+		<key>webstream</key>
+		<value>веб-поток</value>
+	</item>
+	<item>
+		<key>yesterday</key>
+		<value>вчера</value>
+	</item>
+	<item>
+		<key>Export Playlist</key>
+		<value>Экспортировать плей-лист</value>
+	</item>
+	<item>
+		<key>Import Playlist</key>
+		<value>Импортировать плей-лист</value>
+	</item>
+	<item>
+		<key>Transfer to the hub</key>
+		<value>Передать в концентратор</value>
+	</item>
+	<item>
+		<key>Transfer from the hub</key>
+		<value>Передать из концентратора</value>
+	</item>
+	<item>
+		<key>The file has been added to the transfer queue</key>
+		<value>Файл был добавлен в очередь перемещения!</value>
+	</item>
+	<item>
+		<key>Hub Browse</key>
+		<value>Просмотреть концентратор</value>
+	</item>
+	<item>
+		<key>Hub Search</key>
+		<value>Искать в концентраторе</value>
+	</item>
+	<item>
+		<key>Transfers</key>
+		<value>Передачи</value>
+	</item>
+	<item>
+		<key>State</key>
+		<value>Состояние</value>
+	</item>
+	<item>
+		<key>Resuming transfer(s).</key>
+		<value>Возобновить передачу</value>
+	</item>
+	<item>
+		<key>Pausing transfer(s).</key>
+		<value>Приостановить передачу</value>
+	</item>
+	<item>
+		<key>Are you sure to cancel transfer(s)?</key>
+		<value>Вы уверены, что хотите отменить передачу</value>
+	</item>
+	<item>
+		<key>Choose a backup file</key>
+		<value>Выбрать резервный файл </value>
+	</item>
+	<item>
+		<key>Restore status</key>
+		<value>Восстановить состояние</value>
+	</item>
+</translations>

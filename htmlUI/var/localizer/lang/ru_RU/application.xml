@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+	<Id>ru_RU</Id>
+	<item>
+		<key>The uploaded file is bigger than allowed in system settings. See &quot;Help&quot;, chapter &quot;Troubleshooting&quot; for more information.</key>
+		<value>Загруженный файл больше, чем позволяют настройки системы. Более подробную информацию смотри в разделе &quot;Помощь&quot;, глава &quot;Устранение неполадок&quot;.</value>
+	</item>
+	<item>
+		<key>&quot;$1&quot; uses an unsupported file type.</key>
+		<value>&quot;$1&quot; использует неподдерживаемое расширение файла.</value>
+	</item>
+	<item>
+		<key>A playlist is already opened.</key>
+		<value>Плей-лист уже открыт.</value>
+	</item>
+	<item>
+		<key>Access denied.</key>
+		<value>В доступе отказано.</value>
+	</item>
+	<item>
+		<key>Access to home directory failed.</key>
+		<value>Не удалось войти в домашний каталог.</value>
+	</item>
+	<item>
+		<key>Cannot create playlist.</key>
+		<value>Не удается создать плей-лист.</value>
+	</item>
+	<item>
+		<key>Cannot delete this playlist.</key>
+		<value>Не удается удалить этот плей-лист.</value>
+	</item>
+	<item>
+		<key>Cannot move item.</key>
+		<value>Не удается переместить объект.</value>
+	</item>
+	<item>
+		<key>Cannot remove item from playlist.</key>
+		<value>Не удается удалить объект из плей-листа.</value>
+	</item>
+	<item>
+		<key>Changing fade information failed.</key>
+		<value>Неудача изменения информации о затухании.</value>
+	</item>
+	<item>
+		<key>Data of audioclip saved.</key>
+		<value>Данные аудиозаписи сохранены.</value>
+	</item>
+	<item>
+		<key>Entry $1 is already on the scratchpad. It has been moved to the top of the list.</key>
+		<value>Запись $1 уже есть на скреч-паде. Она была помещена в начало списка.</value>
+	</item>
+	<item>
+		<key>Entry added at $1 with ScheduleId $2.</key>
+		<value>Запись добавлена в $1 с присвоенным ID $2.</value>
+	</item>
+	<item>
+		<key>Entry with ScheduleId $1 removed.</key>
+		<value>Запись с присвоенным ID $1 удалена.</value>
+	</item>
+	<item>
+		<key>Error while saving settings.</key>
+		<value>Ошибка в настройках сохранения.</value>
+	</item>
+	<item>
+		<key>Error while trying to add item to playlist.</key>
+		<value>Ошибка при попытке добавления объекта в плей-лист.</value>
+	</item>
+	<item>
+		<key>Error while uploading logo.</key>
+		<value>Ошибка при загрузке логотипа.</value>
+	</item>
+	<item>
+		<key>Error: $1</key>
+		<value>Ошибка: $1.</value>
+	</item>
+	<item>
+		<key>File &quot;$1&quot; has not been uploaded.</key>
+		<value>Файл $1 не загружен.</value>
+	</item>
+	<item>
+		<key>Found locked playlist.</key>
+		<value>Найден заблокированный плей-лист.</value>
+	</item>
+	<item>
+		<key>Group &quot;$1&quot; added.</key>
+		<value>Добавлена группа $1.</value>
+	</item>
+	<item>
+		<key>Invalid or incomplete form data.</key>
+		<value>Неправильные или неполные данные формы.</value>
+	</item>
+	<item>
+		<key>Login failed.</key>
+		<value>Неправильный логин.</value>
+	</item>
+	<item>
+		<key>Metadata saved.</key>
+		<value>Метаданные сохранены.</value>
+	</item>
+	<item>
+		<key>No item(s) selected.</key>
+		<value>Нет выбранного объекта.</value>
+	</item>
+	<item>
+		<key>No playlists have been locked by you.</key>
+		<value>Вами не заблокирован ни один плей-лист</value>
+	</item>
+	<item>
+		<key>Nothing selected.</key>
+		<value>Нет выбранных объектов.</value>
+	</item>
+	<item>
+		<key>Old password was incorrect.</key>
+		<value>Старый пароль неверен.</value>
+	</item>
+	<item>
+		<key>Password changed.</key>
+		<value>Пароль изменен.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; opened.</key>
+		<value>Плей-лист $1 открыт.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; released.</key>
+		<value>Плей-лист $1 опубликован.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; reverted.</key>
+		<value>Плей-лист $1 в исходном состоянии.</value>
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; saved.</key>
+		<value>Плей-лист $1 сохранен.</value>
+	</item>
+	<item>
+		<key>Playlist has been locked by &quot;$1&quot;.</key>
+		<value>Плей-лист был заблокирован &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>Playlist not found in database.</key>
+		<value>Плей-лист не найден в базе данных.</value>
+	</item>
+	<item>
+		<key>Scheduler did not start. Check setting of &quot;UI_SCHEDULER_DAEMON_CMD&quot; in ui_conf.php. File &quot;/tmp/scheduler.log&quot; could be helpful.</key>
+		<value>Планировщик не запустился. Проверьте настройки &quot;UI_SCHEDULER_DAEMON_CMD&quot; в ui_conf.php. Файл &quot;/tmp/scheduler.log&quot; может быть полезен.</value>
+	</item>
+	<item>
+		<key>Scheduler is running.</key>
+		<value>Планировщик работает.</value>
+	</item>
+	<item>
+		<key>Settings saved.</key>
+		<value>Настройки сохранены.</value>
+	</item>
+	<item>
+		<key>Stream data saved.</key>
+		<value>Данные потока сохранены.</value>
+	</item>
+	<item>
+		<key>The scratchpad length is not set in system preferences, so it cannot be used.</key>
+		<value>Длина скреч-пада не установлена в настройках системы, поэтому не может использоваться.</value>
+	</item>
+	<item>
+		<key>The target is not a folder.</key>
+		<value>Объект не является папкой.</value>
+	</item>
+	<item>
+		<key>There is no playlist available to unlock.</key>
+		<value>Нет плей-листов доступных для блокирования.</value>
+	</item>
+	<item>
+		<key>Unable to open playlist &quot;$1&quot;.</key>
+		<value>Невозможно открыть плей-лист &quot;$1&quot;.</value>
+	</item>
+	<item>
+		<key>Unable to release playlist.</key>
+		<value>Невозможно опубликовать плей-лист.</value>
+	</item>
+	<item>
+		<key>Unable to revert to locked state.</key>
+		<value>Невозможно вернуться к состоянию блокировки.</value>
+	</item>
+	<item>
+		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
+		<value>Невозможно перевести &quot;$1&quot; в значение &quot;$2&quot;.</value>
+	</item>
+	<item>
+		<key>Upload of file &quot;$1&quot; was incomplete.</key>
+		<value>Загрузка файла &quot;$1&quot; была не завершена.</value>
+	</item>
+	<item>
+		<key>User &quot;$1&quot; added.</key>
+		<value>Добавлен пользователь &quot;$1&quot;.</value>
+	</item>
+	<item>
+		<key>User or group &quot;$1&quot; already exists.</key>
+		<value>Пользователь или группа &quot;$1&quot; уже существует.</value>
+	</item>
+	<item>
+		<key>Warning: station preferences have not been set up properly.</key>
+		<value>Осторожно: настройки станции не были установлены правильно.</value>
+	</item>
+	<item>
+		<key>You already have an open playlist. Close it first.</key>
+		<value>У вас уже открыт плей-лист. Сначала зкройте его.</value>
+	</item>
+</translations>
