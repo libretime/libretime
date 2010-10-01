@@ -240,7 +240,7 @@ class uiBase
         'CALENDAR'     => array('class' => 'uicalendar', 'file' => 'ui_calendar.class.php'),
         array('class' => 'jscom', 'file' => 'ui_jscom.php'),
         'TWITTER'      => array('class' => 'uitwitter', 'file' => 'ui_twitter.class.php'),
-        array('class' => 'twitter', 'file' => 'lib/twitter.class.php')
+        array('class' => 'twitter', 'file' => 'twitter.class.php')
     );
 
 
