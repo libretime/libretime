@@ -1,7 +1,0 @@
-en:table
-{
-    section1:table
-    {
-        foo:string      { "fou" }
-    }
-}

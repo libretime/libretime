@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/htmlUI/ui_browser_init.php');
+require_once(dirname(__FILE__).'/ui_browser_init.php');
 
 if (UI_DEBUG === TRUE) {
 	$Smarty->assign('DEBUG', TRUE);

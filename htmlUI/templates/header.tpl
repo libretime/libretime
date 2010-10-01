@@ -20,8 +20,8 @@
     {include file="script/contextmenu.js.tpl"}
     {include file="script/collector.js.tpl"}
     {include file="script/alttext.js.tpl"}
-
-    <script type="text/javascript" src="js/playlist.js"></script>
+    
+    <script type="text/javascript" src="htmlUI/html/js/playlist.js"></script>
 
 </head>
 

@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/htmlUI/ui_browser_init.php');
+require_once(dirname(__FILE__).'/ui_browser_init.php');
 ob_start();
 
 require_once("../Input.php");
