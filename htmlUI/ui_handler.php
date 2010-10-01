@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__).'/ui_browser_init.php');
 ob_start();
 
-require_once("../Input.php");
+require_once("Input.php");
 
 if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
     echo __FILE__.':line '.__LINE__.": Action {$_REQUEST['act']} Begin<br>";
