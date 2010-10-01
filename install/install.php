@@ -527,7 +527,7 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
 //------------------------------------------------------------------------
 // Install storage directories
 //------------------------------------------------------------------------
-foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
+foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
         @mkdir($CC_CONFIG[$d], 02775);
