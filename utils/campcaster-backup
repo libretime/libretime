@@ -91,7 +91,7 @@ tmpdir=`mktemp -d $tmpmaindir/tmp.XXXXXX`
 echo "Backuping to $destdir/$destfile :"
 echo "Dumping database  ..."
 cd $phpdir
-php -q backup.php > $tmpdir/$dbxml
+php -q campcaster_backup.php > $tmpdir/$dbxml
 echo "Packaging stored files ..."
 cd $phpdir
 storpath=`php -q getStorPath.php`
