@@ -9,7 +9,7 @@ define('UI_ERROR', TRUE);
 
 // Note: this needs to be a variable, not a define because other
 // parts of the application do not read in this file.
-$WHITE_SCREEN_OF_DEATH = FALSE;
+$WHITE_SCREEN_OF_DEATH = false;
 
 if (UI_DEBUG) {
 	error_reporting(E_ALL);
@@ -24,8 +24,8 @@ define('UI_UPLOAD_LANGID', UI_DEFAULT_LANGID);
 define('UI_TIMEZONEOFFSET', date('Z'));
 
 // Basic scripts
-define('UI_HANDLER', 'ui_handler.php');
-define('UI_BROWSER', 'ui_browser.php');
+define('UI_HANDLER', 'htmlUI/ui_handler.php');
+define('UI_BROWSER', 'htmlUI/ui_browser.php');
 
 // HTML Form stuff
 define('UI_STANDARD_FORM_METHOD', 'POST');
