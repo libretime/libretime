@@ -43,6 +43,12 @@ $CC_CONFIG = array(
         'phptype'       => 'pgsql',
         'database'      => 'campcaster',
     ),
+    'webServerUser' => 'www-data',
+
+    "rootDir" => dirname(__FILE__),
+    "smartyTemplate" => dirname(__FILE__)."/htmlUI/templates",
+    "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
+
     'tblNamePrefix' => 'cc_',
     /* ================================================ storage configuration */
     'authCookieName'=> 'campcaster_session_id',
@@ -143,9 +149,8 @@ $CC_CONFIG['sysSubjs'] = array(
 $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);
 
-// see if a ~/.campcaster/storageServer.conf.php exists, and
+// See if a ~/.campcaster/storageServer.conf.php exists, and
 // overwrite the settings from there if any
-
 $this_file = null;
 if (isset($_SERVER["SCRIPT_FILENAME"])) {
     $this_file = $_SERVER["SCRIPT_FILENAME"];
@@ -167,23 +172,30 @@ if (!is_null($this_file)) {
     }
 }
 
-// workaround for missing folders
+// Check that all the required directories exist.
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
-        @mkdir($CC_CONFIG[$d], 02775);
-        if (file_exists($CC_CONFIG[$d])) {
-            $rp = realpath($CC_CONFIG[$d]);
-            //echo " * Directory $rp created\n";
-        } else {
-            echo " * Error: directory {$CC_CONFIG[$d]} was missing.\n";
-            echo " * I tried to create it, but couldn't, sorry!.\n";
-            exit(1);
-        }
+      echo " * Error: directory {$CC_CONFIG[$d]} is missing.\n";
+      echo " * Please run the install script again.\n";
+      exit(1);
     } else {
         $rp = realpath($CC_CONFIG[$d]);
     }
     $CC_CONFIG[$d] = $rp;
 }
 
+// Check that htmlUI/templates_c has the right permissions
+$ss=@stat($CC_CONFIG["smartyTemplateCompiled"]);
+$groupOwner = (function_exists('posix_getgrgid'))?@posix_getgrgid($ss['gid']):'';
+if (!empty($groupOwner) && ($groupOwner["name"] != $CC_CONFIG["webServerUser"])) {
+  echo " * Error: Your directory permissions for {$CC_CONFIG['smartyTemplateCompiled']} are not set correctly.<br>\n";
+  echo " * The group perms need to be set to the web server user, in this case '{$CC_CONFIG['webServerUser']}'.<br>\n";
+  exit(1);
+}
+$fileperms=@fileperms($CC_CONFIG["smartyTemplateCompiled"]);
+if (!($fileperms & 0x0400)) {
+  echo " * Error: Sticky bit not set for {$CC_CONFIG['smartyTemplateCompiled']}.<br>\n";
+  exit(1);
+}
 ?>
