@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../ui_browser_init.php');
+require_once(dirname(__FILE__).'/htmlUI/ui_browser_init.php');
 ob_start();
 
 require_once("../Input.php");
@@ -19,9 +19,9 @@ switch ($_REQUEST['act']) {
 	        # $uiHandler->PLAYLIST->reportLookedPL();
 	        $uiHandler->PLAYLIST->loadLookedFromPref();
 	    }
-	    include('../templates/loader/index.tpl');
-	    include('../templates/popup/_reload_parent.tpl');
-	    include('../templates/popup/_close.tpl');
+	    include('/templates/loader/index.tpl');
+	    include('/templates/popup/_reload_parent.tpl');
+	    include('/templates/popup/_close.tpl');
 	    exit;
 
     case "logout":

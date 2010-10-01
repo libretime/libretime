@@ -1,5 +1,5 @@
 <?php
-require_once("../../../storageServer/var/Playlist.php");
+require_once(dirname(__FILE__)."/../backend/Playlist.php");
 
 /**
  * @package Campcaster

@@ -6,5 +6,5 @@ if (strpos($_SERVER['PHP_SELF'], '~') !== false) {
     $base = "/campcaster";   
 }
 
-header("LOCATION: $base/htmlUI/var/html/ui_browser.php");
+header("LOCATION: $base/ui_browser.php");
 ?>

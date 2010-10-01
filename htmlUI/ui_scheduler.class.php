@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__)."/../../storageServer/var/Schedule.php");
+require_once(dirname(__FILE__)."/../backend/Schedule.php");
 /**
  * @package Campcaster
  * @subpackage htmlUI

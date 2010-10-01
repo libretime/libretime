@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../ui_browser_init.php');
+require_once(dirname(__FILE__).'/htmlUI/ui_browser_init.php');
 
 if (UI_DEBUG === TRUE) {
 	$Smarty->assign('DEBUG', TRUE);
@@ -427,5 +427,6 @@ if ($uiBrowser->userid) {
         $Smarty->assign('simpleSearchForm',   $uiBrowser->SEARCH->simpleSearchForm($ui_fmask['simplesearch']));
     }
 }
+
 $Smarty->display('main.tpl');
 ?>

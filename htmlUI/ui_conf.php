@@ -122,7 +122,8 @@ define('UI_RESTORETOKEN_KEY', 'restoreToken');
 if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__."<br>";
 }
-require_once(dirname(__FILE__).'/../../storageServer/var/conf.php');
+
+require_once(dirname(__FILE__).'/../conf.php');
 define('UI_VERSION', CAMPCASTER_VERSION);
 define('UI_VERSION_FULLNAME', 'Campcaster '.UI_VERSION);
 define('UI_COPYRIGHT_DATE', CAMPCASTER_COPYRIGHT_DATE);
@@ -162,17 +163,19 @@ if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__."<br>";
 }
 require_once(dirname(__FILE__).'/ui_base.inc.php');
+
 if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded ui_base.inc.php<br>";
 }
-require_once(dirname(__FILE__).'/../../storageServer/var/GreenBox.php');
+require_once(dirname(__FILE__).'/../backend/GreenBox.php');
+
 if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded GreenBox<br>";
 }
 require_once(dirname(__FILE__).'/formmask/generic.inc.php');
+require_once(dirname(__FILE__).'/../3rd_party/php/pear/DB.php');
+require_once(dirname(__FILE__).'/../3rd_party/php/pear/HTML/QuickForm.php');
 
-require_once('DB.php');
-require_once('HTML/QuickForm.php');
 
 // Connect to the database
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
@@ -185,6 +188,7 @@ if (PEAR::isError($CC_DBC)) {
     echo "</table>";
     exit;
 }
+
 if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Connected to database<br>";
 }
