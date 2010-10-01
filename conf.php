@@ -41,7 +41,7 @@ $CC_CONFIG = array(
         'password'      => 'test',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'Campcaster-paul',
+        'database'      => 'campcaster',
     ),
     'tblNamePrefix' => 'cc_',
     /* ================================================ storage configuration */
@@ -76,11 +76,11 @@ $CC_CONFIG = array(
     'archiveAccountPass'    => 'q',
 
     /* ============================================== scheduler configuration */
-    'schedulerUrlPath'        => '',
-    'schedulerXMLRPC'         => 'RC2',
-    'schedulerUrlHost'        => 'localhost',
-    'schedulerUrlPort'        => 3344,
-    'schedulerPass'           => 'change_me',
+//    'schedulerUrlPath'        => '',
+//    'schedulerXMLRPC'         => 'RC2',
+//    'schedulerUrlHost'        => 'localhost',
+//    'schedulerUrlPort'        => 3344,
+//    'schedulerPass'           => 'change_me',
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
@@ -168,7 +168,7 @@ if (!is_null($this_file)) {
 }
 
 // workaround for missing folders
-foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', 'cronDir') as $d) {
+foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
         @mkdir($CC_CONFIG[$d], 02775);
@@ -176,7 +176,8 @@ foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'pearPath', '
             $rp = realpath($CC_CONFIG[$d]);
             //echo " * Directory $rp created\n";
         } else {
-            echo " * Failed creating {$CC_CONFIG[$d]}\n";
+            echo " * Error: directory {$CC_CONFIG[$d]} was missing.\n";
+            echo " * I tried to create it, but couldn't, sorry!.\n";
             exit(1);
         }
     } else {

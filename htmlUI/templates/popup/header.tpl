@@ -5,7 +5,7 @@
 <head>
     <title>Campcaster</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="styles_popup.css" rel="stylesheet" type="text/css" />
+    <link href="htmlUI/html/styles_popup.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript">
     {UIBROWSER->getAlertMsg assign='alertMsg'}

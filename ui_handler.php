@@ -19,9 +19,9 @@ switch ($_REQUEST['act']) {
 	        # $uiHandler->PLAYLIST->reportLookedPL();
 	        $uiHandler->PLAYLIST->loadLookedFromPref();
 	    }
-	    include('/templates/loader/index.tpl');
-	    include('/templates/popup/_reload_parent.tpl');
-	    include('/templates/popup/_close.tpl');
+	    include(dirname(__FILE__).'/htmlUI/templates/loader/index.tpl');
+	    include(dirname(__FILE__).'/htmlUI/templates/popup/_reload_parent.tpl');
+	    include(dirname(__FILE__).'/htmlUI/templates/popup/_close.tpl');
 	    exit;
 
     case "logout":
@@ -323,11 +323,11 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "PL.setClipLength":
-	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);   
+	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);
 	    break;
-	    
+
 	case "PL.setFadeLength":
-	    $uiHandler->PLAYLIST->setFadeLength($_REQUEST['pos'], $_REQUEST['fadeIn'], $_REQUEST['fadeOut']);   
+	    $uiHandler->PLAYLIST->setFadeLength($_REQUEST['pos'], $_REQUEST['fadeIn'], $_REQUEST['fadeOut']);
 	    break;
 
     case "PL.removeItem":
