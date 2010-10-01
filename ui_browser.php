@@ -282,19 +282,6 @@ if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
 if ($uiBrowser->userid) {
     $action = isset($_REQUEST['act']) ? $_REQUEST['act'] : null;
     switch ($action) {
-        case "fileList":
-//	        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
-//	        $Smarty->assign('fileList', TRUE);
-//
-//	        if ($_REQUEST['tree'] == 'Y') {
-//	        	$Smarty->assign('showTree', TRUE);
-//	        } else{
-//	        	$Smarty->assign('showObjects', TRUE);
-//	        }
-//
-//	        $Smarty->assign('delOverride', $_REQUEST['delOverride']);
-	        break;
-
         case "permissions":
 //	        $Smarty->assign('structure',   $uiBrowser->getStructure($uiBrowser->id));
 //	        $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
@@ -426,6 +413,10 @@ if ($uiBrowser->userid) {
     if ($action != 'SCHEDULER') {
         $Smarty->assign('simpleSearchForm',   $uiBrowser->SEARCH->simpleSearchForm($ui_fmask['simplesearch']));
     }
+}
+if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {
+    echo __FILE__.':line '.__LINE__.": action ($action) processing complete<br>";
+    //var_dump($Smarty);
 }
 
 $Smarty->display('main.tpl');

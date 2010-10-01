@@ -4,6 +4,12 @@ session_start();
 
 // initialize objects ###############################################
 $Smarty = new Smarty;
+$Smarty->caching = false;
+$Smarty->template_dir = dirname(__FILE__).'/templates/';
+$Smarty->compile_dir  = dirname(__FILE__).'/templates_c/';
+//$Smarty->config_dir   = '/web/www.example.com/guestbook/configs/';
+//$Smarty->cache_dir    = '/web/www.example.com/guestbook/cache/';
+
 $uiBrowser = new uiBrowser($CC_CONFIG);
 $uiBrowser->init();
 
