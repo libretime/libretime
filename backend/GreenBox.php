@@ -560,6 +560,8 @@ class GreenBox extends BasicStor {
             return;
 
         $res = $pl->lock($sessid);
+        
+        return $res;
     }
 
 
