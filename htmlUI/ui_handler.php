@@ -19,9 +19,9 @@ switch ($_REQUEST['act']) {
 	        # $uiHandler->PLAYLIST->reportLookedPL();
 	        $uiHandler->PLAYLIST->loadLookedFromPref();
 	    }
-	    include(dirname(__FILE__).'/htmlUI/templates/loader/index.tpl');
-	    include(dirname(__FILE__).'/htmlUI/templates/popup/_reload_parent.tpl');
-	    include(dirname(__FILE__).'/htmlUI/templates/popup/_close.tpl');
+	    include(dirname(__FILE__).'/templates/loader/index.tpl');
+	    include(dirname(__FILE__).'/templates/popup/_reload_parent.tpl');
+	    include(dirname(__FILE__).'/templates/popup/_close.tpl');
 	    exit;
 
     case "logout":

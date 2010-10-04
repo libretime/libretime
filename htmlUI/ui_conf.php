@@ -24,8 +24,8 @@ define('UI_UPLOAD_LANGID', UI_DEFAULT_LANGID);
 define('UI_TIMEZONEOFFSET', date('Z'));
 
 // Basic scripts
-define('UI_HANDLER', 'htmlUI/ui_handler.php');
-define('UI_BROWSER', 'htmlUI/ui_browser.php');
+define('UI_HANDLER', 'ui_handler.php');
+define('UI_BROWSER', 'ui_browser.php');
 
 // HTML Form stuff
 define('UI_STANDARD_FORM_METHOD', 'POST');
