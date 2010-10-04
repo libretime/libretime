@@ -41,10 +41,10 @@
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
                         {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
-                            <div align="left"><img src="img/ico_lock.png">
-                            <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl"*} /></div>
+                            <div align="left"><img src="html/img/ico_lock.png">
+                            <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl"*} /></div>
                         {else}
-                        <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl" *} /> {/if}
+                        <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl" *} /> {/if}
                     </td>
                 </tr>
                 <!-- end item -->

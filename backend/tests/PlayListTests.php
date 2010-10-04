@@ -1,8 +1,13 @@
 <?php
 
-require_once(dirname(__FILE__).'/../conf.php');
-require_once('PHPUnit.php');
+$path = dirname(__FILE__).'/../../3rd_party/php/pear';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
+//require_once(dirname(__FILE__).'/../../conf.php');
 require_once('DB.php');
+require_once('PHPUnit.php');
+
+require_once(dirname(__FILE__).'/../../conf.php');
 require_once(dirname(__FILE__).'/../GreenBox.php');
 require_once(dirname(__FILE__).'/../Playlist.php');
 
@@ -80,6 +85,7 @@ class PlayListTests extends PHPUnit_TestCase {
         }     
     }
     
+    /*
     function testGBGetPLMetaData() {
         $pl = new Playlist();
         $name = "Testing";
@@ -132,6 +138,7 @@ class PlayListTests extends PHPUnit_TestCase {
            return; 
         } 
     }
+    */
     
 }
 

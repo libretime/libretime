@@ -4,7 +4,7 @@
     <tr>
 		<td>
             <div id="logo">
-              <img src="img/logo.png">
+              <img src="html/img/logo.png">
             </div>
 		</td>
 

@@ -42,10 +42,10 @@
                     <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
                     	{if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
-                            <div align="left"><img src="img/ico_lock.png">
-                        	<img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /></div>
+                            <div align="left"><img src="html/img/ico_lock.png">
+                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /></div>
                         {else}
-                        	<img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />
+                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />
                         {/if}
                     </td>
                 </tr>
