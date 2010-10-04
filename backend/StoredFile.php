@@ -504,7 +504,8 @@ class StoredFile {
 
         $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $p_values["filepath"];
         // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
-      	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?"'".$p_values['id']."'":'DEFAULT';
+      	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?(int)$p_values['id']:null;
+        $sqlId = !is_null($storedFile->id)?"'".$storedFile->id."'":'DEFAULT';
       	$storedFile->ftype = isset($p_values['filetype']) ? strtolower($p_values['filetype']) : "audioclip";
         $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
         // $storedFile->filepath = $p_values['filepath'];
@@ -529,7 +530,7 @@ class StoredFile {
         $CC_DBC->query("BEGIN");
         $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
                 ."(id, name, gunid, mime, state, ftype, mtime, md5)"
-                ."VALUES ({$storedFile->id}, '{$escapedName}', "
+                ."VALUES ({$sqlId}, '{$escapedName}', "
                 ." x'{$storedFile->gunid}'::bigint,"
                 ." '{$storedFile->mime}', 'incomplete', '$escapedFtype',"
                 ." now(), '{$storedFile->md5}')";
