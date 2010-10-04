@@ -127,18 +127,18 @@ function S_getSecond($param)
  */
 function S_niceTime($param)
 {
-    require_once("../../../storageServer/var/Playlist.php");
-    
+    require_once("../backend/Playlist.php");
+
     $sec = round(Playlist::playlistTimeToSeconds($param['in']));
-   
+
     $hours = $sec / 3600;
     $mins = ($sec % 3600) / 60;
     $secs = (($sec % 3600) % 60);
-    
+
     if(intval($hours))
         return sprintf("%02d:%02d:%02d", $hours, $mins, $secs);
     else
         return sprintf("%02d:%02d", $mins, $secs);
-    
+
 } // fn S_niceTime
 ?>
