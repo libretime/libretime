@@ -1,5 +1,4 @@
 <?php
-define('ACCESS_TYPE', 'restore');
 
 /**
  * @package Campcaster
@@ -49,6 +48,8 @@ class Restore {
      */
     private $gb;
 
+    private $ACCESS_TYPE = 'restore';
+
     /**
      * @param GreenBox $gb
      * 		greenbox object reference
@@ -58,7 +59,7 @@ class Restore {
         global $CC_CONFIG;
         $this->gb =& $gb;
         $this->token = null;
-        $this->logFile = $CC_CONFIG['bufferDir'].'/'.ACCESS_TYPE.'.log';
+        $this->logFile = $CC_CONFIG['bufferDir'].'/'.$this->ACCESS_TYPE.'.log';
         if ($this->loglevel == 'debug') {
         	$this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
         }

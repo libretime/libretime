@@ -4,7 +4,6 @@
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- *
  */
 
 // Do not allow remote execution
@@ -16,30 +15,55 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-echo "*************************\n";
-echo "* StorageServer Install *\n";
-echo "*************************\n";
+echo "**********************\n";
+echo "* Campcaster Install *\n";
+echo "**********************\n";
 
 require_once(dirname(__FILE__).'/../conf.php');
 require_once(dirname(__FILE__).'/../backend/GreenBox.php');
 require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 require_once(dirname(__FILE__)."/installInit.php");
+
+echo " *** Database Installation ***\n";
+
+//sudo -u postgres createuser --no-superuser --no-createdb --no-createrole -A -P myuser
+
+// Create the database user
+$command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
+  ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' CREATEDB NOCREATEUSER;\" 2>/dev/null";
+@exec($command, $output, $results);
+if ($results == 0) {
+  echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
+} else {
+  echo "   * User {$CC_CONFIG['dsn']['username']} already exists.\n";
+}
+
+$command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
+@exec($command, $output, $results);
+if ($results == 0) {
+  echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
+} else {
+  echo "   * Database '{$CC_CONFIG['dsn']['database']}' already exists.\n";
+}
+
+// Connect to DB
 campcaster_db_connect(true);
 
+// Install postgres scripting language
 $langIsInstalled = $CC_DBC->GetOne('select count(*) FROM pg_language WHERE lanname = \'plpgsql\'');
 if ($langIsInstalled == '0') {
-  echo " * Installing Postgres scripting language\n";
+  echo "   * Installing Postgres scripting language...\n";
   $sql = "CREATE LANGUAGE 'plpgsql'";
   camp_install_query($sql);
 } else {
-  echo " * Postgres scripting language already installed\n";
+  echo "   * Postgres scripting language already installed\n";
 }
 
 //------------------------------------------------------------------------------
 // Install database tables
 //------------------------------------------------------------------------------
 if (!camp_db_table_exists($CC_CONFIG['subjTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['subjTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['subjTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['subjTable']." (
         id int not null PRIMARY KEY,
         login varchar(255) not null default'',
@@ -62,11 +86,11 @@ if (!camp_db_table_exists($CC_CONFIG['subjTable'])) {
     $CC_DBC->createSequence($CC_CONFIG['subjSequence']);
     echo "done.\n";
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['subjTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['subjTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['smembTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['smembTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['smembTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['smembTable']." (
         id int not null PRIMARY KEY,
         uid int not null default 0,
@@ -82,11 +106,11 @@ if (!camp_db_table_exists($CC_CONFIG['smembTable'])) {
     //$CC_DBC->createSequence($CC_CONFIG['smembSequence']);
     echo "done.\n";
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['smembTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['smembTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['permTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['permTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['permTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['permTable']." (
         permid int not null PRIMARY KEY,
         subj int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
@@ -110,11 +134,11 @@ if (!camp_db_table_exists($CC_CONFIG['permTable'])) {
     //$CC_DBC->createSequence($CC_CONFIG['permSequence']);
     echo "done.\n";
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['permTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['permTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['sessTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['sessTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['sessTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['sessTable']." (
         sessid char(32) not null PRIMARY KEY,
         userid int REFERENCES ".$CC_CONFIG['subjTable']." ON DELETE CASCADE,
@@ -134,32 +158,29 @@ if (!camp_db_table_exists($CC_CONFIG['sessTable'])) {
         ON ".$CC_CONFIG['sessTable']." (login)";
     camp_install_query($sql);
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['sessTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['sessTable']."\n";
 }
 
 /**
  * file states:
- *  <ul>
- *      <li>empty</li>
- *      <li>incomplete</li>
- *      <li>ready</li>
- *      <li>edited</li>
- *      <li>deleted</li>
- *  </ul>
+ *   empty
+ *   incomplete
+ *   ready
+ *   edited
+ *   deleted
+ *
  * file types:
- *  <ul>
- *      <li>audioclip</li>
- *      <li>playlist</li>
- *      <li>webstream</li>
- *  </ul>
+ *   audioclip
+ *   playlist
+ *   webstream
+ *
  * access types:
- *  <ul>
- *      <li>access</li>
- *      <li>download</li>
- *  </ul>
+ *   access
+ *   download
+ *
  */
 if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['filesTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['filesTable']."...";
     $sql =
         "CREATE TABLE ".$CC_CONFIG['filesTable']."
         (
@@ -243,11 +264,11 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
     //$CC_DBC->createSequence($CC_CONFIG['filesSequence']);
 
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['filesTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['filesTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['playListTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['playListTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['playListTable']."...";
     $sql =
         "CREATE TABLE ".$CC_CONFIG['playListTable']."
         (
@@ -268,11 +289,11 @@ if (!camp_db_table_exists($CC_CONFIG['playListTable'])) {
     camp_install_query($sql);
 
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['playListTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['playListTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['playListContentsTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['playListContentsTable']."...";
     $sql =
         "CREATE TABLE ".$CC_CONFIG['playListContentsTable']."
         (
@@ -325,7 +346,7 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
     camp_install_query($sql);
 
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['playListContentsTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['playListContentsTable']."\n";
 }
 
 //if (!camp_db_sequence_exists($CC_CONFIG["filesSequence"])) {
@@ -343,7 +364,7 @@ if (!camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
 //}
 
 if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['accessTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['accessTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['accessTable']." (
         gunid bigint,                             -- global unique id
         token bigint,                             -- access token
@@ -368,10 +389,10 @@ if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
         ON ".$CC_CONFIG['accessTable']." (parent)";
     camp_install_query($sql);
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['accessTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['accessTable']."\n";
 }
 
-echo " * Inserting default users...\n";
+echo "   * Inserting default users...\n";
 $gb = new GreenBox();
 $r = $gb->initData(true);
 if (PEAR::isError($r)) {
@@ -385,7 +406,7 @@ if (PEAR::isError($r)) {
 //------------------------------------------------------------------------------
 
 if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['transTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['transTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['transTable']." (
         id int not null,          -- primary key
         trtok char(16) not null,  -- transport token
@@ -436,14 +457,14 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
         ON ".$CC_CONFIG['transTable']." (state)";
     camp_install_query($sql);
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['transTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['transTable']."\n";
 }
 
 /**
  * Scheduler tables.
  */
 if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['scheduleTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['scheduleTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['scheduleTable']."("
           ."  id bigint NOT NULL,"
           ."  playlist_id integer NOT NULL,"
@@ -460,7 +481,7 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
           ."  CONSTRAINT unique_id UNIQUE (id))";
     camp_install_query($sql);
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['scheduleTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['scheduleTable']."\n";
 }
 
 
@@ -478,7 +499,7 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 
 
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['backupTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['backupTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['backupTable']." ("
     ."   token       VARCHAR(64)     NOT NULL,"
     ."   sessionId   VARCHAR(64)     NOT NULL,"
@@ -488,11 +509,11 @@ if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
     ."   PRIMARY KEY(token))";
     camp_install_query($sql);
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['backupTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['backupTable']."\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
-    echo " * Creating database table ".$CC_CONFIG['prefTable']."...";
+    echo "   * Creating database table ".$CC_CONFIG['prefTable']."...";
     //$CC_DBC->createSequence($CC_CONFIG['prefSequence']);
     $sql = "CREATE TABLE ".$CC_CONFIG['prefTable']." (
         id int not null,
@@ -514,36 +535,37 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
         ON ".$CC_CONFIG['prefTable']." (subjid)";
     camp_install_query($sql);
 
-    echo " * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
+    echo "   * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
     $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
     Prefs::Insert($CC_CONFIG["systemPrefId"], 'stationName', "Radio Station 1");
 //    $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
 //    Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);
     echo "done.\n";
 } else {
-    echo " * Skipping: database table already exists: ".$CC_CONFIG['prefTable']."\n";
+    echo "   * Skipping: database table already exists: ".$CC_CONFIG['prefTable']."\n";
 }
 
 //------------------------------------------------------------------------
 // Install storage directories
 //------------------------------------------------------------------------
+echo " *** Directory Setup ***\n";
 foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
         @mkdir($CC_CONFIG[$d], 02775);
         if (file_exists($CC_CONFIG[$d])) {
             $rp = realpath($CC_CONFIG[$d]);
-            echo " * Directory $rp created\n";
+            echo "   * Directory $rp created\n";
         } else {
-            echo " * Failed creating {$CC_CONFIG[$d]}\n";
+            echo "   * Failed creating {$CC_CONFIG[$d]}\n";
             exit(1);
         }
     } elseif (is_writable($CC_CONFIG[$d])) {
         $rp = realpath($CC_CONFIG[$d]);
-        echo " * Skipping directory already exists: $rp\n";
+        echo "   * Skipping directory already exists: $rp\n";
     } else {
         $rp = realpath($CC_CONFIG[$d]);
-        echo " * WARNING: Directory already exists, but is not writable: $rp\n";
+        echo "   * WARNING: Directory already exists, but is not writable: $rp\n";
         //exit(1);
     }
     $CC_CONFIG[$d] = $rp;
@@ -553,16 +575,28 @@ foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as
 // Storage directory writability test
 //------------------------------------------------------------------------
 
-echo " * Testing writability of ".$CC_CONFIG['storageDir']."...";
-if (!($fp = @fopen($CC_CONFIG['storageDir']."/_writeTest", 'w'))) {
-    echo "\nPlease make directory {$CC_CONFIG['storageDir']} writeable by your webserver".
-        "\nand run install again\n\n";
-    exit(1);
-} else {
-    fclose($fp);
-    unlink($CC_CONFIG['storageDir']."/_writeTest");
-}
-echo "done.\n";
+//echo "   * Testing writability of ".$CC_CONFIG['storageDir']."...";
+//if (!($fp = @fopen($CC_CONFIG['storageDir']."/_writeTest", 'w'))) {
+//    echo "\nPlease make directory {$CC_CONFIG['storageDir']} writeable by your webserver".
+//        "\nand run install again\n\n";
+//    exit(1);
+//} else {
+//    fclose($fp);
+//    unlink($CC_CONFIG['storageDir']."/_writeTest");
+//}
+//echo "done.\n";
+
+
+//
+// Make sure the Smarty Templates Compiled directory has the right perms
+//
+echo "   * Setting dir permissions...\n";
+install_setDirPermissions($CC_CONFIG["smartyTemplateCompiled"]);
+install_setDirPermissions($CC_CONFIG["storageDir"]);
+install_setDirPermissions($CC_CONFIG["bufferDir"]);
+install_setDirPermissions($CC_CONFIG["transDir"]);
+install_setDirPermissions($CC_CONFIG["accessDir"]);
+
 
 //------------------------------------------------------------------------
 // Install Cron job
@@ -595,8 +629,8 @@ $cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
 $cron->closeCrontab();
 echo "   Done.\n";
 
-echo "**********************************\n";
-echo "* StorageServer Install Complete *\n";
-echo "**********************************\n";
+echo "*******************************\n";
+echo "* Campcaster Install Complete *\n";
+echo "*******************************\n";
 
 ?>
