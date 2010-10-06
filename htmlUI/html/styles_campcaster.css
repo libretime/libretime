@@ -53,7 +53,6 @@ form {
     background-color: #F7F9FB;
     padding: 0 25px 0 25px;
     cursor: pointer;
-    width: 100px;
 }
 
 .button_wide {
@@ -321,6 +320,7 @@ input, select {
     border: 1px solid #cfcfcf;
     padding: 6px;
     margin-bottom: 21px;
+    width: 250px;
 }
 
 .container_elements h1 {
@@ -333,6 +333,14 @@ input, select {
     font-size: 14px;
     margin: 0 0 4px 0;
     color: #666;
+}
+
+.container_elements table {
+	width: 100%;
+}
+
+.container_elements .button {
+	width: 80px;
 }
 
 .head {
@@ -359,7 +367,6 @@ input, select {
 
 .container_table {
     font-size: 12px;
-    /*height: 275px;*/
     overflow: auto;
 }
 
@@ -372,9 +379,8 @@ table {
 table td {
     font-size: 12px;
     padding: 2px 6px 0px 6px;
-    border-right: 1px solid #333;
     height: 19px;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 table tr.blue_head td {
@@ -385,7 +391,7 @@ table tr.blue_head td {
 
 }
 
-A#blue_head {
+.blue_head a, .footer a {
     font-size: 12px;
     color:#fff;
 }
@@ -1026,4 +1032,12 @@ table.masterpalette td{
 
 .sp_tool_tip table td {
 	border: 0;
+}
+
+#cc_right_panel h1 {
+	cursor: pointer;
+}
+
+.active_pl {
+	font-weight: bold;
 }

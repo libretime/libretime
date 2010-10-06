@@ -20,34 +20,34 @@
         	{foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
         	<li class="pl_row" id="pl_{$pos}">
         		<div class="pl_fade_in"><span>Fade in: </span><span class="pl_time">{$i.fadein}</span></div>
-                    <span class="pl_input">
-                    	<input type="checkbox" class="checkbox" name="{$pos}"/>
-                    </span>
-                    <span class="pl_title">
-                    	{$i.track_title}
-                    </span>
-                    <span class="pl_artist">
-                    	{$i.artist_name}
-                    </span>
-                    <span class="pl_length" >
-                        {$i.length}
-                    </span>
-                    <span class="pl_cue_in pl_time">
-                        {$i.cuein}
-                    </span>
-                    <span class="pl_cue_out pl_time">
-                        {$i.cueout}
-                    </span>
-                    <span class="pl_playlength">
-                        {$i.cliplength}
-                    </span>
+                <span class="pl_input">
+                	<input type="checkbox" class="checkbox" name="{$pos}"/>
+                </span>
+                <span class="pl_title">
+                	{$i.track_title}
+                </span>
+                <span class="pl_artist">
+                	{$i.artist_name}
+                </span>
+                <span class="pl_length" >
+                    {$i.length}
+                </span>
+                <span class="pl_cue_in pl_time">
+                    {$i.cuein}
+                </span>
+                <span class="pl_cue_out pl_time">
+                    {$i.cueout}
+                </span>
+                <span class="pl_playlength">
+                    {$i.cliplength}
+                </span>
                 <div class="pl_fade_out"><span>Fade out: </span><span class="pl_time">{$i.fadeout}</span></div>
             </li>
         	{/foreach}
-        	{if is_null($pos)}  
-            	<li class="pl_empty">##Empty playlist##</li>   
-        	{/if}
     	</ul>
+    	{if is_null($pos)}  
+        	<div class="pl_empty">##Empty playlist##</div>   
+    	{/if}
     </div>
     
     </form>
@@ -57,7 +57,7 @@
         <input type="button" class="button_large" onClick="collector_clearAll('PL', 'PL.removeItem')" value="##Clear Playlist##" />
     </div>
     <div class="pl_container_button">
-        <input type="button" class="button_large" value="##Close Playlist##"   onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)">
+        <input type="button" class="button_large" onClick="location.href='{$UI_HANDLER}?act=PL.release'" value="##Close Playlist##">
         <input type="button" class="button_large" value="##Description##"      onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
         <input type="button" class="button_large" value="##Delete Playlist##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmDelete',  'PL.deleteActive',   400, 50)">
     </div>

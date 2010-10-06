@@ -17,6 +17,7 @@ $Smarty->assign('editItem', null);
 $Smarty->assign('changeStationPrefs', FALSE);
 $Smarty->assign('PL_simpleManagement', FALSE);
 $Smarty->assign('showBackup', FALSE);
+$Smarty->assign('showSidePL', TRUE);
 
 if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
     if (isset($WHITE_SCREEN_OF_DEATH) && ($WHITE_SCREEN_OF_DEATH == TRUE)) {

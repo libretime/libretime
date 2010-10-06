@@ -5,16 +5,15 @@
 <form name="SP">
     <div class="container_elements">
         <h1>##ScratchPad##</h1>
-        <div class="head" style="width:255px; height: 21px;">&nbsp;</div>
-        <div class="container_table" style="width:275px;">
-            <table style="width:255px;">
+        <div class="container_table">
+            <table id="SP_table">
 
             <!-- start table header -->
                 <tr class="blue_head">
-                    <td style="width: 1px"><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
-                    <td style="width: *"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 1px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Duration##</td>
-                    <td style="width: 1px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');" id="blue_head">##Type##</td>
+                    <td><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
+                    <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');">##Title##</a></td>
+                    <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');">##Length##</td>
+                    <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reorder&by=title', 'order');">##Type##</td>
                 </tr>
             <!-- end table header -->
 
@@ -23,13 +22,13 @@
                 <!-- start item -->
                 <tr class="{cycle values='blue1, blue2'}" id="scratchpad_item_{$i.id}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                    <td {include file="scratchpad/actionhandler.tpl"} style="cursor: pointer">
+                    <td {include file="scratchpad/actionhandler.tpl"}>
                         {if $i.type|lower == "playlist"}
 
                             {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
-                                <div style="font-weight: bold; cursor: pointer">
+                                <div class="active_pl">
                             {else}
-                                <div style="cursor: pointer">
+                                <div>
                             {/if}
                                 {$i.title|truncate:14:"...":true}
                                 </div>
@@ -38,13 +37,15 @@
                         {/if}  {* for some reason object call doesn't like usage of array *}
                     </td>
                     {assign var="_duration" value=$i.duration}
-                    <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
-                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
+                    <td {include file="scratchpad/actionhandler.tpl"}>{niceTime in=$_duration}</td>
+                    <td {include file="scratchpad/actionhandler.tpl"}>
                         {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
-                            <div align="left"><img src="html/img/ico_lock.png">
-                            <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl"*} /></div>
+                            <div>
+                            <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" />
+                            <img src="html/img/ico_lock.png">
+                            </div>
                         {else}
-                        <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {* include file="sub/alttext.tpl" *} /> {/if}
+                        <img src="html/img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" /> {/if}
                     </td>
                 </tr>
                 <!-- end item -->
@@ -57,7 +58,7 @@
             </table>
         </div>
 
-        <div class="footer" style="width:250px;">
+        <div class="footer">
             <select name="SP_multiaction" onChange="collector_submit('SP', this.value)">
                 <option>##Multiple Action:##</option>
                 <option value="SP.removeItem">##Remove files##</option>
@@ -73,7 +74,7 @@
                 document.forms['SP'].elements['all'].checked = false;
                 collector_switchAll('SP');
             </script>
-            <a href="#" onClick="collector_clearAll('SP', 'SP.removeItem')" id="blue_head">##Clear##</a>
+            <a href="#" onClick="collector_clearAll('SP', 'SP.removeItem')">##Clear##</a>
         </div>
 
     </div>

@@ -315,11 +315,11 @@ switch ($_REQUEST['act']) {
 
     case "PL.addItem":
         if (isset($_REQUEST['id'])) {
-    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id'], $_REQUEST['playlength']) !== FALSE) {
+    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id']) !== FALSE) {
     	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     	    }
         }
-	    $uiHandler->PLAYLIST->setReload();
+	    $uiHandler->PLAYLIST->setReload("ui_browser.php?id=&act=BROWSE");
 	    break;
 
     case "PL.setClipLength":
@@ -337,7 +337,7 @@ switch ($_REQUEST['act']) {
 
     case "PL.release":
 	    $uiHandler->PLAYLIST->release();
-	    $uiHandler->PLAYLIST->setReload();
+	    $uiHandler->PLAYLIST->setReturn();
 	    break;
 
     case "PL.save":
@@ -391,7 +391,7 @@ switch ($_REQUEST['act']) {
 
     case "PL.deleteActive":
 	    if (($ui_tmpid = $uiHandler->PLAYLIST->deleteActive()) !== FALSE) {
-	    	//$uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
+	    	$uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
 	    }
 	    $uiHandler->PLAYLIST->setReload();
 	    break;

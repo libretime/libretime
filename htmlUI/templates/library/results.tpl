@@ -7,45 +7,45 @@
 
 {if $_results.cnt > 0}
     <form name="SEARCHRESULTS">
-    <div class="head" style="width:600px; height: 21px;">&nbsp;</div>
-    <div class="container_table" style="width: 600px; height: auto;">
-
-            <table style="width: 600px;">
+    <div class="container_table">
+            <table id="search_results">
                 <tr class="blue_head">
-                    <td style="width: 20px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
-                    <td style="width: 200px;"><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:title" id="blue_head">##Title##</a></td>
-                    <td style="width: 195px"><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:creator" id="blue_head">##Creator##</a></td>
-                    <td style="width: 195px"><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:source" id="blue_head">##Album##</a></td>
-                    <td style="width: 25px"><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=ls:track_num" id="blue_head">##Track##</a></td>
-                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dcterms:extent" id="blue_head">##Duration##</a></td>
-                    <td style="width: 41px; border: 0; text-align: center">{*<a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type" id="blue_head">*}##Type##{*</a>*}</td>
+                    <td><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:title" >##Title##</a></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:creator" >##Creator##</a></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dc:source" >##Album##</a></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=ls:track_num" >##Track##</a></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=dcterms:extent" >##Length##</a></td>
+                    <td><a href="{$UI_HANDLER}?act={$_act_prefix}.reorder&by=type" >##Type##</a></td>
                 </tr>
                 {foreach from=$_results.items item=i}
             <!-- start item -->
-                <tr class="background-color: {cycle values='blue1, blue2'}">
+                <tr class="{cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                    <td {include file=$action_handler} style="cursor: pointer">
+                    <td {include file=$action_handler}>
                         {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                             <b>{$i.title|truncate:30:"...":true}</b>
                         {else}
                             {$i.title|truncate:30:"...":true}
                         {/if}
                     </td>
-                    <td {include file=$action_handler} style="cursor: pointer">
+                    <td {include file=$action_handler}>
                     {$i.creator}
                     {if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
                     	(editing: {$PL->isUsedBy($i.id)})
                     {/if}
                     </td>
-                    <td {include file=$action_handler} style="cursor: pointer">{$i.source}</td>
-                    <td {include file=$action_handler} style="cursor: pointer" align="center">{$i.track_num}</td>
-                    <td {include file=$action_handler} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
-                    <td {include file=$action_handler} style="border: 0; text-align: center; cursor: pointer">
+                    <td {include file=$action_handler}>{$i.source}</td>
+                    <td {include file=$action_handler}>{$i.track_num}</td>
+                    <td {include file=$action_handler}>{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
+                    <td {include file=$action_handler}>
                     	{if $i.type == 'playlist' && $PL->isAvailable($i.id) == false}
-                            <div align="left"><img src="html/img/ico_lock.png">
-                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} /></div>
+                            <div>
+                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}"/>
+                        	<img src="html/img/ico_lock.png">
+                        	</div>
                         {else}
-                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {* include file="sub/alttext.tpl" *} />
+                        	<img src="html/img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}"/>
                         {/if}
                     </td>
                 </tr>
@@ -54,7 +54,7 @@
             </table>
 
     </div>
-    <div class="footer" style="width: 595px;">
+    <div class="footer">
 
          <div class="counter">
             {* {if $_results.prev}<a href="{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=prev" id="blue_head">##previous##</a>{/if}  *}

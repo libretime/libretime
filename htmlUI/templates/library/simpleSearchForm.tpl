@@ -4,7 +4,7 @@
                 <h1>##Library Search##</h1>
                 <form action="ui_handler.php" method="post" name="simplesearch" id="simplesearch"><input name="act" type="hidden" value="SEARCH.simpleSearch" />
                     <div>
-                        <input size="20" maxlength="50" name="criterium" type="text" style="width: 184px;" />
+                        <input size="27" maxlength="50" name="criterium" type="text"/>
                         <input type="button" class="button_small" value="##Go##" onClick="submit()"/>
                     </div>
                 </form>

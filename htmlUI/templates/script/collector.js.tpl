@@ -17,7 +17,11 @@ function collector_submit(formname, action, script, name, width, height)
     }
 
     if (href == '') return false;
-    
+
+    if (action === 'PL.addItem') {
+    	location.href='ui_handler.php?act='+ action + href;
+    	return;
+    }   
     
     if (action == 'delete') {
                 {/literal}

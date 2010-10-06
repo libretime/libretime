@@ -1,21 +1,37 @@
 
 $(document).ready(function() {
-	  
-    $("#pl_sortable").sortable();
+	
+	$('#search_results').find('tr').not('.blue_head').draggable({ 
+		connectToSortable: 'ul#spl_sortable', 
+		helper: 'clone' 
+	});
+	
+	$('#cc_right_panel').find('h1').click(function(){
+		$(this).siblings().toggle();
+	});
     
-    $("#pl_sortable" ).bind( "sortstop", function(event, ui) {	
-    	var li, newPos, oldPos;
+    function movePLItem(event, ui) {	
+    	var ul, li, newPos, oldPos, id_prefix, tag;
     	
+    	tag = ui.item.get(0).tagName
+    	
+    	if( tag === "TR")
+    		return;
+    	
+    	ul = $(this);
     	li = ui.item;
-        newPos = $(this).children().index(li);
-        oldPos = li.attr('id').split("_").pop();  
+    	
+    	var temp = li.attr('id').split("_");
+    	
+        newPos = ul.children().index(li);
+        oldPos = temp[1]; 
+        id_prefix = temp[0];
         
-        $.post("ui_handler.php",
+        $.post('ui_handler.php',
         		
         	{ 'act': 'PL.moveItem', 'oldPos': oldPos, 'newPos': newPos },
         	
         	function(data){
-        		var ul =  $("#pl_sortable");
         		
         		if(data.error) {
         			var size,
@@ -23,10 +39,10 @@ $(document).ready(function() {
         			
         			size = $(ul).children().size();
         			
-        			tmp_ul = $("<ul/>");
+        			tmp_ul = $('<ul/>');
         			for(var i=0; i<size; i++)
         			{
-        				tmp_ul.append(ul.find("#pl_"+i));
+        				tmp_ul.append(ul.find('#'+id_prefix+'_'+i));
         			}
         		
         			//restore the UI to the previous order.
@@ -38,15 +54,44 @@ $(document).ready(function() {
 	        		//redo playlist positional ids, input names.
         			$(ul).children().each(function(index){	
 	                	var li = $(this);
-	                	li.attr('id', 'pl_'+index);	
-	                	li.find(".pl_input").find("input").attr('name', index);
+	                	li.attr('id', id_prefix+'_'+index);	
+	                	li.find('.'+id_prefix+'_input').find('input').attr('name', index);
 	                });
         		}	
         	},
         	
         	"json"
         );
-   	});
+   	}
+    
+    function addPLItem(event, ui){
+    	var tr, id, ul;
+    	
+    	ul = $(this);
+    	tr = ui.item; 	
+    	id = tr.find("input").attr('name');
+    	
+    	ul.find('tr').remove();
+    	
+    	location.href='ui_handler.php?act=PL.addItem&id='+id;
+   
+    }
+    
+    /*
+    function test(event, ui){
+    	alert('out');
+    }
+    */
+    
+    //PL main editor.
+    $("#pl_sortable").sortable();
+    $("#pl_sortable" ).bind( "sortstop", movePLItem);
+    
+    //PL side bar editor.
+    $("#spl_sortable").sortable();
+    $("#spl_sortable" ).bind( "sortstop", movePLItem);
+    $("#spl_sortable" ).bind( "sortreceive", addPLItem);
+    //$("#spl_sortable" ).bind( "sortout", test);
     
     function removeCueInput(){
     	var span = $(this).parent();

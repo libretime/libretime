@@ -77,13 +77,17 @@
             {include file="twitter/settings.tpl"}
         {/if}
         
-        <div class="content">
+        <div class="content" id="cc_right_panel">
             {if $simpleSearchForm}
                 {include file="library/simpleSearchForm.tpl"}
             {/if}
 
             {if $SCRATCHPAD}
                 {include file="scratchpad/main.tpl"}
+            {/if}
+            
+            {if $showSidePL && !$PL_simpleManagement}
+                {include file="playlist/sidebar.tpl"}
             {/if}
         </div>
     {/if}

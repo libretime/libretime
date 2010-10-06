@@ -55,12 +55,11 @@
 }
 
 .pl_main {
-	clear: left;
+
 }
 
 .pl_row {
     background-color: #d5e2ee;
-    clear:left;
     cursor:move;
 }
 
@@ -153,4 +152,30 @@
 .pl_container_button {
 	text-align: right;
 	padding: 6px;
+}
+
+#spl_sortable {
+	list-style-type: none;
+	padding: 0;
+  	margin: 0;
+}
+
+#spl_head {
+	background-color: #8BAED1;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.spl_title {
+	width: 73px;
+}
+
+.spl_artist {
+	width: 83px;
+}
+
+.spl_empty {
+	height: 30px;
+	text-align: center;
+	padding-top: 10px;
 }

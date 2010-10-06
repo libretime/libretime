@@ -30,9 +30,12 @@ class uiPlaylist
     } // constructor
 
 
-    public function setReload()
+    public function setReload($url=NULL)
     {
-        $this->Base->redirUrl = $this->reloadUrl;
+        if($url)
+           $this->Base->redirUrl = $url; 
+        else
+            $this->Base->redirUrl = $this->reloadUrl;
     } // fn setReload
 
 
