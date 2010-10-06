@@ -276,9 +276,9 @@ class uiPlaylist
         // add clip if $id is set
        
         if ($this->activeId) {
-            $this->Base->_retMsg('A playlist is already opened.');
-            return FALSE;
+            $this->release();
         }
+        
         $datetime = strftime('%Y-%m-%d %H:%M:%S');
         $plid = $this->Base->gb->createPlaylist($datetime, $this->Base->sessid);
       

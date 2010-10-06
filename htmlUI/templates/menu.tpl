@@ -35,14 +35,9 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         </li>
         <li class="nav-main"><a>##Playlists##</a>
             <ul>
+            	<li><a onClick="hpopup('{$UI_HANDLER}?act=PL.create')">##New empty Playlist##</a></li>
                 {if $PL->getActiveId()}
                     <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Edit Playlist##</a></li>
-                {else}
-                    {if $PL->reportLookedPL()}
-                        <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">##Reopen Playlist##</a></li>
-                    {else}
-                        <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.create')">##New empty Playlist##</a></li>
-                    {/if}
                 {/if}
                 <li><a href="{$UI_BROWSER}?act=PL.import">##Import Playlist##</a></li>
             </ul>
