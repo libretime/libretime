@@ -2,21 +2,16 @@
 $(document).ready(function() {
 	
 	$('#search_results').find('tr').not('.blue_head').draggable({ 
-		connectToSortable: 'ul#spl_sortable', 
 		helper: 'clone' 
 	});
+	
 	
 	$('#cc_right_panel').find('h1').click(function(){
 		$(this).siblings().toggle();
 	});
     
     function movePLItem(event, ui) {	
-    	var ul, li, newPos, oldPos, id_prefix, tag;
-    	
-    	tag = ui.item.get(0).tagName
-    	
-    	if( tag === "TR")
-    		return;
+    	var ul, li, newPos, oldPos, id_prefix;
     	
     	ul = $(this);
     	li = ui.item;
@@ -68,12 +63,27 @@ $(document).ready(function() {
     	var tr, id, ul;
     	
     	ul = $(this);
-    	tr = ui.item; 	
+    	tr = ui.helper; 	
+    	
+    	if(tr.get(0).tagName === 'LI')
+    		return;
+    	
     	id = tr.find("input").attr('name');
     	
-    	ul.find('tr').remove();
+    	hpopup('ui_handler.php?act=PL.addItem&id='+id);
     	
-    	location.href='ui_handler.php?act=PL.addItem&id='+id;
+    	/*
+    	$.post('ui_handler.php',
+        		
+        	{ 'act': 'SPL.addItem', 'id': id },
+        	
+        	function(data){
+        		var x;
+        	},
+        	
+        	"json"
+        );
+        */
    
     }
     
@@ -90,8 +100,9 @@ $(document).ready(function() {
     //PL side bar editor.
     $("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", movePLItem);
-    $("#spl_sortable" ).bind( "sortreceive", addPLItem);
-    //$("#spl_sortable" ).bind( "sortout", test);
+    
+    $("#spl_sortable").droppable();
+	$("#spl_sortable" ).bind( "drop", addPLItem);
     
     function removeCueInput(){
     	var span = $(this).parent();

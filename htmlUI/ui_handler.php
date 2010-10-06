@@ -315,11 +315,11 @@ switch ($_REQUEST['act']) {
 
     case "PL.addItem":
         if (isset($_REQUEST['id'])) {
-    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id']) !== FALSE) {
+    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id']) === TRUE) {
     	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     	    }
         }
-	    $uiHandler->PLAYLIST->setReload("ui_browser.php?id=&act=BROWSE");
+	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
     case "PL.setClipLength":

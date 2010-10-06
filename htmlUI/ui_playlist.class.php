@@ -36,6 +36,7 @@ class uiPlaylist
            $this->Base->redirUrl = $url; 
         else
             $this->Base->redirUrl = $this->reloadUrl;
+            
     } // fn setReload
 
 
