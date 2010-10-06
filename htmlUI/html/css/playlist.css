@@ -166,6 +166,20 @@
 	color: #ffffff;
 }
 
+#spl_info {
+	margin: 1em 0;
+}
+
+#spl_info div{
+	padding-top: 5px;
+}
+
+#spl_info .sub{
+	font-weight: bold;
+	margin-right: 3px;
+	margin-left: 15px;
+}
+
 .spl_title {
 	width: 73px;
 }

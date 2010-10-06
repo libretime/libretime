@@ -299,7 +299,7 @@ switch ($_REQUEST['act']) {
 	    if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {
 	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id'], TRUE);
 	    }
-	    $uiHandler->PLAYLIST->setRedirect();
+	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
     case "PL.create":
@@ -337,7 +337,7 @@ switch ($_REQUEST['act']) {
 
     case "PL.release":
 	    $uiHandler->PLAYLIST->release();
-	    $uiHandler->PLAYLIST->setReturn();
+	    $uiHandler->PLAYLIST->setReload();
 	    break;
 
     case "PL.save":
