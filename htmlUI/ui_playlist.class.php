@@ -89,11 +89,9 @@ class uiPlaylist
         // store access token to ls_pref abd session
         // load PL into session
         if ($this->activeId) {
-            if (UI_WARNING) {
-            	$this->Base->_retMsg('You already have an open playlist. Close it first.');
-            }
-            return FALSE;
+            $this->release();
         }
+        
         $userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid);
         if ($userid !== TRUE) {
              if (UI_WARNING) {
