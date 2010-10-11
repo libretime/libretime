@@ -46,7 +46,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                php-db,
                libserial-dev (>= 0.5.2)
 Standards-Version: 3.8.4
-Homepage: http://campware.org/en/camp/campcaster_news/
+Homepage: http://campcaster.sourcefabric.org/
 
 
 Package: campcaster-libs
