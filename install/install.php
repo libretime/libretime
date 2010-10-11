@@ -24,13 +24,16 @@ require_once(dirname(__FILE__).'/../backend/GreenBox.php');
 require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 require_once(dirname(__FILE__)."/installInit.php");
 
+// Need to check that we are superuser before running this.
+
 echo " *** Database Installation ***\n";
 
 //sudo -u postgres createuser --no-superuser --no-createdb --no-createrole -A -P myuser
 
 // Create the database user
 $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
-  ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' CREATEDB NOCREATEUSER;\" 2>/dev/null";
+  ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
+//echo $command."\n";
 @exec($command, $output, $results);
 if ($results == 0) {
   echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
@@ -38,7 +41,8 @@ if ($results == 0) {
   echo "   * User {$CC_CONFIG['dsn']['username']} already exists.\n";
 }
 
-$command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
+$command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
+//echo $command."\n";
 @exec($command, $output, $results);
 if ($results == 0) {
   echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
@@ -50,11 +54,11 @@ if ($results == 0) {
 campcaster_db_connect(true);
 
 // Install postgres scripting language
-$langIsInstalled = $CC_DBC->GetOne('select count(*) FROM pg_language WHERE lanname = \'plpgsql\'');
+$langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
 if ($langIsInstalled == '0') {
   echo "   * Installing Postgres scripting language...\n";
   $sql = "CREATE LANGUAGE 'plpgsql'";
-  camp_install_query($sql);
+  camp_install_query($sql, false);
 } else {
   echo "   * Postgres scripting language already installed\n";
 }
@@ -392,19 +396,6 @@ if (!camp_db_table_exists($CC_CONFIG['accessTable'])) {
     echo "   * Skipping: database table already exists: ".$CC_CONFIG['accessTable']."\n";
 }
 
-echo "   * Inserting default users...\n";
-$gb = new GreenBox();
-$r = $gb->initData(true);
-if (PEAR::isError($r)) {
-    echo "\n   * ERROR: ";
-    print_r($r);
-}
-//echo "done.\n";
-
-//------------------------------------------------------------------------------
-// Submodules
-//------------------------------------------------------------------------------
-
 if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
     echo "   * Creating database table ".$CC_CONFIG['transTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['transTable']." (
@@ -485,19 +476,6 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 }
 
 
-//if (!camp_db_table_exists($CC_CONFIG['playlogTable'])) {
-//    echo " * Creating database table ".$CC_CONFIG['playlogTable']."...";
-//    $sql = "CREATE TABLE ".$CC_CONFIG['playlogTable']."("
-//    ."   id            BIGINT      NOT NULL,"
-//    ."   audioClipId   BIGINT      NOT NULL,"
-//    ."   timestamp     TIMESTAMP   NOT NULL,"
-//    ."   PRIMARY KEY(id))";
-//    camp_install_query($sql);
-//} else {
-//    echo " * Skipping: database table already exists: ".$CC_CONFIG['playlogTable']."\n";
-//}
-
-
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
     echo "   * Creating database table ".$CC_CONFIG['backupTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['backupTable']." ("
@@ -544,6 +522,19 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
 } else {
     echo "   * Skipping: database table already exists: ".$CC_CONFIG['prefTable']."\n";
 }
+
+//------------------------------------------------------------------------
+// Install default data
+//------------------------------------------------------------------------
+echo " *** Inserting Default Data ***\n";
+$gb = new GreenBox();
+$r = $gb->initData(true);
+if (PEAR::isError($r)) {
+    echo "\n   * ERROR: ";
+    print_r($r);
+}
+//echo "done.\n";
+
 
 //------------------------------------------------------------------------
 // Install storage directories

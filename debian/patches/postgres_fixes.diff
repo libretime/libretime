@@ -44,47 +44,4 @@ Index: campcaster/bin/postInstallStation.sh
  
  
  #-------------------------------------------------------------------------------
-Index: campcaster/src/modules/storageServer/bin/createDatabase.sh
-===================================================================
---- campcaster.orig/src/modules/storageServer/bin/createDatabase.sh	2010-08-26 14:51:38.000000000 +0200
-+++ campcaster/src/modules/storageServer/bin/createDatabase.sh	2010-08-26 14:51:40.000000000 +0200
-@@ -171,7 +171,7 @@
-         || echo "Couldn't create database user $ls_dbuser.";
- 
-     su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
--                                    OWNER $ls_dbuser ENCODING 'utf-8';\" \
-+                                    OWNER $ls_dbuser;\" \
-                             | psql template1" \
-         || echo "Couldn't create database $ls_database.";
- else
-@@ -187,7 +187,7 @@
-     echo "    ENCRYPTED PASSWORD '$ls_dbpassword'";
-     echo "    CREATEDB NOCREATEUSER;";
-     echo "CREATE DATABASE \"$ls_database\"";
--    echo "    OWNER $ls_dbuser ENCODING 'utf-8';";
-+    echo "    OWNER $ls_dbuser;";
- fi
- 
- 
-Index: campcaster/src/products/scheduler/bin/createDatabase.sh
-===================================================================
---- campcaster.orig/src/products/scheduler/bin/createDatabase.sh	2010-08-26 14:51:38.000000000 +0200
-+++ campcaster/src/products/scheduler/bin/createDatabase.sh	2010-08-26 14:51:40.000000000 +0200
-@@ -166,7 +166,7 @@
-         || echo "Couldn't create database user $dbuser.";
- 
-     su - $postgres_user -c "echo \"CREATE DATABASE \\\"$database\\\" \
--                                    OWNER $dbuser ENCODING 'utf-8';\" \
-+                                    OWNER $dbuser;\" \
-                             | psql template1" \
-         || echo "Couldn't create database $database.";
- else
-@@ -182,7 +182,7 @@
-     echo "    ENCRYPTED PASSWORD '$dbpassword'";
-     echo "    CREATEDB NOCREATEUSER;";
-     echo "CREATE DATABASE \"$database\"";
--    echo "    OWNER $dbuser ENCODING 'utf-8';";
-+    echo "    OWNER $dbuser;";
- fi
- 
- 
+

@@ -1,6 +1,0 @@
-?package(campcaster-studio):\
-  needs="X11" \
-  section="Applications/Sound"\
-  title="Campcaster-Studio"\
-  command="/usr/bin/campcaster-studio"\
-  icon="/usr/share/pixmaps/campcaster.xpm"

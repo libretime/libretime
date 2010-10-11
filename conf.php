@@ -8,16 +8,16 @@ global $CC_CONFIG;
 // Note that these values can be overridden by the user config file,
 // located in ~/.campcaster/storageServer.conf.php
 // To disable this, set this variable to false.
-define('ALLOW_CONF_OVERRIDE', false);
+//define('ALLOW_CONF_OVERRIDE', false);
 
 $CC_CONFIG = array(
     // Database config
     'dsn'           => array(
-        'username'      => 'test2',
-        'password'      => 'test',
+        'username'      => 'campcaster',
+        'password'      => 'campcaster',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'campcaster2',
+        'database'      => 'campcaster',
     ),
 
     // Name of the web server user
@@ -92,11 +92,11 @@ $CC_CONFIG = array(
     'archiveAccountPass'    => 'q',
 
     /* ============================================== scheduler configuration */
-//    'schedulerUrlPath'        => '',
-//    'schedulerXMLRPC'         => 'RC2',
-//    'schedulerUrlHost'        => 'localhost',
-//    'schedulerUrlPort'        => 3344,
-//    'schedulerPass'           => 'change_me',
+    'schedulerUrlPath'        => '',
+    'schedulerXMLRPC'         => 'RC2',
+    'schedulerUrlHost'        => 'localhost',
+    'schedulerUrlPort'        => 3344,
+    'schedulerPass'           => 'change_me',
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
@@ -162,30 +162,30 @@ $CC_CONFIG['sysSubjs'] = array(
 $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);
 
-if (ALLOW_CONF_OVERRIDE) {
-  // See if a ~/.campcaster/storageServer.conf.php exists, and
-  // overwrite the settings from there if any
-  $this_file = null;
-  if (isset($_SERVER["SCRIPT_FILENAME"])) {
-      $this_file = $_SERVER["SCRIPT_FILENAME"];
-  } elseif(isset($argv[0])) {
-      $this_file = $argv[0];
-  }
-  if (!is_null($this_file)) {
-      $fileowner_id = fileowner($this_file);
-      $fileowner_array = posix_getpwuid($fileowner_id);
-      $fileowner_homedir = $fileowner_array['dir'];
-      $fileowner_name = $fileowner_array['name'];
-      $home_conf = $fileowner_homedir . '/.campcaster/storageServer.conf.php';
-      if (file_exists($home_conf)) {
-          $default_config = $CC_CONFIG;
-          $developer_name = $fileowner_name;
-          include($home_conf);
-          $user_config = $CC_CONFIG;
-          $CC_CONFIG = $user_config + $default_config;
-      }
-  }
-}
+//if (ALLOW_CONF_OVERRIDE) {
+//  // See if a ~/.campcaster/storageServer.conf.php exists, and
+//  // overwrite the settings from there if any
+//  $this_file = null;
+//  if (isset($_SERVER["SCRIPT_FILENAME"])) {
+//      $this_file = $_SERVER["SCRIPT_FILENAME"];
+//  } elseif(isset($argv[0])) {
+//      $this_file = $argv[0];
+//  }
+//  if (!is_null($this_file)) {
+//      $fileowner_id = fileowner($this_file);
+//      $fileowner_array = posix_getpwuid($fileowner_id);
+//      $fileowner_homedir = $fileowner_array['dir'];
+//      $fileowner_name = $fileowner_array['name'];
+//      $home_conf = $fileowner_homedir . '/.campcaster/storageServer.conf.php';
+//      if (file_exists($home_conf)) {
+//          $default_config = $CC_CONFIG;
+//          $developer_name = $fileowner_name;
+//          include($home_conf);
+//          $user_config = $CC_CONFIG;
+//          $CC_CONFIG = $user_config + $default_config;
+//      }
+//  }
+//}
 
 // Check that all the required directories exist.
 //foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
