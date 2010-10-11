@@ -50,15 +50,15 @@ Major features of Campcaster:
 
 INSTALLATION
 ------------
-Please see this page for typical user install:
+Please see this page for a typical user installation:
 http://en.flossmanuals.net/Campcaster
 
-If you are developer, see this page:
+If you are a developer, please see this page:
 http://wiki.sourcefabric.org/display/CC/Campcaster+Dev+Site
 
 Quick links to our resources
 ----------------------------
-    User Manual: http://en.flossmanuals.net/CampCaster/Introduction
+    User Manual: http://en.flossmanuals.net/Campcaster/Introduction
     Forums and mailing lists: http://forum.sourcefabric.org
     Bug Tracking: http://dev.sourcefabric.org
     Code view/review: http://code.sourcefabric.org
@@ -73,8 +73,8 @@ Quick links to our resources
     Copyright (c) 2010 Sourcefabric O.P.S.
 
     This file is part of the Campcaster project.
-    http://campcaster.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
+    http://campcaster.sourcefabric.org/
+    To report bugs, send an e-mail to campcaster-support@lists.sourcefabric.org
 
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
