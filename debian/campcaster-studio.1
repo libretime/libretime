@@ -8,7 +8,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH CAMPCASTER\-STUDIO 1 "February  4, 2010"
+.TH CAMPCASTER\-STUDIO 1 "October 5, 2010"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -21,37 +21,39 @@
 .\" .br        insert line break
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
+.nh
 .SH NAME
-campcaster-studio \- graphical interface to campcaster radio station
+campcaster-studio \- native interface for Campcaster
 .SH SYNOPSIS
 .B campcaster-studio
 .SH DESCRIPTION
-campcaster-studio is a desktop application which connect to the
-campcaster-server and allows you to do live shows or schedule automated
+campcaster-studio is a desktop application which connects to the
+Campcaster server and enables you to broadcast live shows or schedule automated
 playback.
 .PP
-Campcaster is the first free and open radio management software, providing
+Campcaster Studio is mainly targeted at doing live shows, though it is possible
+to do automated scheduling through this interface as well. Note that Campcaster Web
+has a much more robust interface for handling automated scheduling.
+.PP
+Campcaster is free and open radio management software, providing
 live studio broadcast capabilities as well as the remote automation in one
 integrated system. The scalability of Campcaster allows implementation in a
-number of use scenarios, ranging from an unmanned broadcast unit accessed from
-remote through the Internet to a local network of Campcaster machines inside a
+number of use scenarios, ranging from an unmanned broadcast unit accessed via 
+the Internet to a local network of Campcaster machines inside a
 radio station handling live broadcasts and delivering program automation by
 accessing a central audio storage system. Campcaster is capable of combining
 local audio files and remote web streams, supporting the widely used MP3 format
 and the open equivalent OGG Vorbis.
 .PP
-Campcaster Studio is mainly targeted at doing live shows, though it is possible
-to do automated scheduling through this interface as well. Note that the Web
-component has a much more robust interface for handling automated scheduling.
 .SH SEE ALSO
+.URL "http://en.flossmanuals.net/campcaster/" "Online manual" ,
+.br
 .BR campcaster-scheduler (1),
 .BR campcaster-import (1).
 .SH AUTHOR
-Campcaster was written by the Media Develoment Loan Fund (MDLF) at the Center
-for Advanced Media\-Prague (CAMP).
-.br
-For full credits see
-.URL "http://www.campware.org/en/camp/about_campware/619/" "campware.org"  .
+Campcaster was written by Sourcefabric with the support of the Media Develoment 
+Loan Fund. For full credits see:
+.URL "http://campcaster.sourcefabric.org/" "campcaster.sourcefabric.org".
 .PP
 This manual page was written by Robin Gareus <robin@gareus.org>,
 for the Debian project (and may be used by others).
