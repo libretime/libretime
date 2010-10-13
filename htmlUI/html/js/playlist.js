@@ -71,28 +71,9 @@ $(document).ready(function() {
     	id = tr.find("input").attr('name');
     	
     	hpopup('ui_handler.php?act=PL.addItem&id='+id);
-    	
-    	/*
-    	$.post('ui_handler.php',
-        		
-        	{ 'act': 'SPL.addItem', 'id': id },
-        	
-        	function(data){
-        		var x;
-        	},
-        	
-        	"json"
-        );
-        */
-   
+
     }
-    
-    /*
-    function test(event, ui){
-    	alert('out');
-    }
-    */
-    
+  
     //PL main editor.
     $("#pl_sortable").sortable();
     $("#pl_sortable" ).bind( "sortstop", movePLItem);
@@ -149,6 +130,7 @@ $(document).ready(function() {
         			span.append(time);
         			span.click(addTextInput);
         			alert(data.error);
+        			return;
         		}
     			span = li.find(".pl_playlength");
     			span.empty();
