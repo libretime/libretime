@@ -5,7 +5,7 @@
 	<input type="button" class="button" value="Delete"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmDelete',  'PL.deleteActive',   400, 50)" />
 	<div id="spl_info">
 		<div><span class="sub">Title:</span><span>{$PL->title}</span></div>
-		<div><span class="sub">Length:</span><span>{$PL->duration}</span></div>
+		<div><span class="sub">Length:</span><span>{niceTime in=$PL->duration}</span></div>
 	</div>
 	
 	<form name="SPL">
@@ -21,7 +21,7 @@
 		<span class="spl_input"><input type="checkbox" class="checkbox" name="{$pos}"/></span>
 		<span class="spl_title">{$i.track_title|truncate:12:"...":true}</span>
 		<span class="spl_artist">{$i.artist_name|truncate:12:"...":true}</span>
-		 <span>{niceTime in=$i.length}</span>
+		 <span>{niceTime in=$i.cliplength}</span>
 		</li>
 		{/foreach}
 	
