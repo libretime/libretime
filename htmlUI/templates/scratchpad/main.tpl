@@ -3,7 +3,7 @@
 
 <!-- start scratch pad -->
 <form name="SP">
-    <div class="container_elements">
+    <div class="container_elements side_elements">
         <h1>##ScratchPad##</h1>
         <div class="container_table">
             <table id="SP_table">

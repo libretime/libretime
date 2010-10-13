@@ -1,4 +1,4 @@
-<div class="container_elements">
+<div class="container_elements side_elements">
 	<h1>##Open Playlist##</h1>
 	{if $PL->activeId}
 	<input type="button" class="button" onClick="location.href='ui_browser.php?id=&act=PL.simpleManagement'"   value="Edit" />

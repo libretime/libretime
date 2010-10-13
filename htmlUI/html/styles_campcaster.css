@@ -316,11 +316,14 @@ input, select {
     float: left;
 }
 
+.side_elements {
+	width: 250px;
+}
+
 .container_elements {
     border: 1px solid #cfcfcf;
     padding: 6px;
     margin-bottom: 21px;
-    width: 250px;
 }
 
 .container_elements h1 {

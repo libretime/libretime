@@ -78,17 +78,18 @@
         {/if}
         
         <div class="content" id="cc_right_panel">
-            {if $simpleSearchForm}
+            {if $simpleSearchForm && !showLibrary}
                 {include file="library/simpleSearchForm.tpl"}
+            {/if}
+            
+            {if $showSidePL && !$PL_simpleManagement }
+                {include file="playlist/sidebar.tpl"}
             {/if}
 
             {if $SCRATCHPAD}
                 {include file="scratchpad/main.tpl"}
-            {/if}
+            {/if}     
             
-            {if $showSidePL && !$PL_simpleManagement}
-                {include file="playlist/sidebar.tpl"}
-            {/if}
         </div>
     {/if}
 
