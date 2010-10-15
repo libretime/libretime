@@ -29,23 +29,28 @@ function collector_submit(formname, action, script, name, width, height)
     }
     else {
         //alert(action);
-        //hpopup(script + '?act=' + action + href);
 
-		$.post(script + '?act=' + action + href,
-        		
-        	{},
-        	
-        	function(data){
-        		
-        		if(data.error){
-        			alert(data.error);
-        		}
-        		
-        		location.reload();
-        	},
-        	
-        	"json"
-        );
+        if(action === 'PL.removeItem') {
+
+    		$.post(script + '?act=' + action + href,
+            		
+            	{},
+            	
+            	function(data){
+            		
+            		if(data.error){
+            			alert(data.error);
+            		}
+            		
+            		location.reload();
+            	},
+            	
+            	"json"
+            );
+        }
+        else {
+        	hpopup(script + '?act=' + action + href);
+        }
     }
 }
 
