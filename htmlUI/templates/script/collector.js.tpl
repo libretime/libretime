@@ -24,8 +24,29 @@ function collector_submit(formname, action, script, name, width, height)
                 return;
                 {literal}
     }
-    if (name)   popup (script + '?act=' + action + href, popup, width, height);
-    else        hpopup(script + '?act=' + action + href);
+    if (name){ 
+        popup (script + '?act=' + action + href, popup, width, height);
+    }
+    else {
+        //alert(action);
+        //hpopup(script + '?act=' + action + href);
+
+		$.post(script + '?act=' + action + href,
+        		
+        	{},
+        	
+        	function(data){
+        		
+        		if(data.error){
+        			alert(data.error);
+        		}
+        		
+        		location.reload();
+        	},
+        	
+        	"json"
+        );
+    }
 }
 
 function collector_switchAll(formname)

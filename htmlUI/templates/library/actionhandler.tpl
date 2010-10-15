@@ -1,4 +1,4 @@
-onClick="return contextmenu('{$i.id}'
+onClick="return contextmenu('{$i.id}' , '{$i.type}'
     , 'SP.addItem'
     
     {if $i.type|lower == 'audioclip'}
@@ -34,6 +34,7 @@ onClick="return contextmenu('{$i.id}'
             {else}
                 , 'SCHEDULER.addPL'
                 , 'PL.addItem'
+                , 'PL.activate'
                 , 'delete'
             {/if}
         {else}

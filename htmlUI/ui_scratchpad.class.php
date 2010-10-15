@@ -129,7 +129,7 @@ class uiScratchPad
      * 		One or more media IDs.
      * @return boolean
      */
-    public function addItem($ids, $playlist=FALSE)
+    public function addItem($ids, $type=null)
     {
         if (!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
             if (UI_WARNING) {
@@ -149,10 +149,10 @@ class uiScratchPad
 
         $scratchpad = $this->get();
         foreach ($ids as $id) {
-            if($playlist === FALSE)
-                $item = $this->Base->getMetaInfo($id);
-            else
+            if($type === 'playlist')
                 $item = $this->Base->getPLMetaInfo($id);
+            else
+                $item = $this->Base->getMetaInfo($id);
 
             foreach ($scratchpad as $key => $val) {
                 if ($val['id'] == $item['id']) {

@@ -114,7 +114,7 @@ switch ($_REQUEST['act']) {
 	    break;
 
     case "SP.addItem":
-	    $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+	    $uiHandler->SCRATCHPAD->addItem($_REQUEST['id'], $_REQUEST['type']);
 	    $uiHandler->SCRATCHPAD->setReload();
 	    break;
 
@@ -297,7 +297,7 @@ switch ($_REQUEST['act']) {
 
     case "PL.activate":
 	    if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {
-	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id'], TRUE);
+	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id'], 'playlist');
 	    }
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
@@ -308,7 +308,7 @@ switch ($_REQUEST['act']) {
 	        if ($ids) {
 	        	//$uiHandler->SCRATCHPAD->addItem($ids);
 	        }
-	        $uiHandler->SCRATCHPAD->addItem($ui_tmpid, TRUE);
+	        $uiHandler->SCRATCHPAD->addItem($ui_tmpid, 'playlist');
 	    }
 	    $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData');
 	    break;
@@ -319,8 +319,7 @@ switch ($_REQUEST['act']) {
     	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     	    }
         }
-	    $uiHandler->PLAYLIST->setReload();
-	    break;
+	    die('{"jsonrpc" : "2.0"}');
 
     case "PL.setClipLength":
 	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);
@@ -332,8 +331,9 @@ switch ($_REQUEST['act']) {
 
     case "PL.removeItem":
 	    $uiHandler->PLAYLIST->removeItem($_REQUEST['id']);
-	    $uiHandler->PLAYLIST->setReload();
-	    break;
+	    //$uiHandler->PLAYLIST->setReload();
+	    //break;
+	    die('{"jsonrpc" : "2.0"}');
 
     case "PL.release":
 	    $uiHandler->PLAYLIST->release();

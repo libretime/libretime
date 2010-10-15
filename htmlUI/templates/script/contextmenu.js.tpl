@@ -1,6 +1,5 @@
 {literal}
 <script type="text/javascript">
-// www.jjam.de - Kontextmen� mit JavaScript - Version 15.12.2002
 
 //  Browser detection
 ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
@@ -11,19 +10,19 @@ contextmenuStatus = 0;
 document.onclick  = hidecontextmenu;
 
 
-function contextmenu(param) {
+function contextmenu(param, type) {
     var contextmenuHeader  = "<div class='contextmenu' id='contextmenu' style='position: absolute; top: -1000; left: 0; z-index: 100'>" +
     "<ul>";
     var contextmenuFooter  = "</ul></div>";
     var contextmenuHtml    = '';
 
     var sp2         = "&nbsp;&nbsp;";
-    var sp5         = sp2 + sp2 + "&nbsp;";                     // Leerzeichen als Abstandshalter (flexibler und code-sparender als eine aufwendige Tabellenkonstruktion) ;
-    var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um h�sslichen Linkrahmen in einigen Browsern zu vermeiden;
+    var sp5         = sp2 + sp2 + "&nbsp;";                    
+    var oF          = "onfocus = 'if (this.blur) this.blur()'";
     var entry       = new Array();
     //contextmenuStatus = 0;
-
-    for (var i = 1; i < contextmenu.arguments.length; ++i) {
+   
+    for (var i = 2; i < contextmenu.arguments.length; ++i) {
         switch (contextmenu.arguments[i]) {
             {/literal}
             case "PL.release":
@@ -71,7 +70,7 @@ function contextmenu(param) {
             break;
 
             case "SP.addItem":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to ScratchPad##&nbsp;</a></li>";
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"&type="+type+"')\" "+oF+">&nbsp;##Add to ScratchPad##&nbsp;</a></li>";
             break;
 
             case "SP.removeItem":

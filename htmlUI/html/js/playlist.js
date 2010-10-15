@@ -70,8 +70,21 @@ $(document).ready(function() {
     	
     	id = tr.find("input").attr('name');
     	
-    	hpopup('ui_handler.php?act=PL.addItem&id='+id);
-
+    	$.post("ui_handler.php",
+        		
+            	{ 'act': 'PL.addItem', 'id': id },
+            	
+            	function(data){
+            		
+            		if(data.error){
+            			alert(data.error);
+            		}
+            		
+            		location.reload();
+            	},
+            	
+            	"json"
+            );
     }
   
     //PL main editor.
