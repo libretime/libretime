@@ -321,6 +321,14 @@ switch ($_REQUEST['act']) {
         }
         $uiHandler->PLAYLIST->setReload();
         break;
+        
+    case "SPL.addItem":
+        if (isset($_REQUEST['id'])) {
+    	    if ($uiHandler->PLAYLIST->addItem($_REQUEST['id']) === TRUE) {
+    	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+    	    }
+        }
+        die('{"jsonrpc" : "2.0"}');
 	   
     case "PL.setClipLength":
 	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);

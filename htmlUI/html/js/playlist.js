@@ -72,7 +72,7 @@ $(document).ready(function() {
     	
     	$.post("ui_handler.php",
         		
-            	{ 'act': 'PL.addItem', 'id': id },
+            	{ 'act': 'SPL.addItem', 'id': id },
             	
             	function(data){
             		
