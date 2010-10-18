@@ -90,7 +90,7 @@ class uiSubjects
         }
 
         $tmpPassword = $request['passwd']==='' ? NULL : $request['passwd'];
-        $res = $this->Base->gb->addSubj($request['login'], $tmpPassword);
+        $res = BasicStor::addSubj($request['login'], $tmpPassword);
         if (PEAR::isError($res)) {
             $this->Base->_retMsg($res->getMessage());
             return FALSE;

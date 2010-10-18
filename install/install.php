@@ -527,13 +527,48 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
 // Install default data
 //------------------------------------------------------------------------
 echo " *** Inserting Default Data ***\n";
-$gb = new GreenBox();
-$r = $gb->initData(true);
-if (PEAR::isError($r)) {
-    echo "\n   * ERROR: ";
-    print_r($r);
+
+// Add the "Station Preferences" group
+if (!empty($CC_CONFIG['StationPrefsGr'])) {
+    if (!Subjects::GetSubjId('scheduler')) {
+        echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
+        $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
+        Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
+        echo "done.\n";
+    } else {
+        echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
+    }
 }
-//echo "done.\n";
+
+// Add the root user if it doesnt exist yet.
+$rootUid = Subjects::GetSubjId('root');
+if (!$rootUid) {
+    echo "   * Creating user 'root'...";
+    $rootUid = BasicStor::addSubj("root", $CC_CONFIG['tmpRootPass']);
+
+    // Add root user to the admin group
+    //$r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
+    //if (PEAR::isError($r)) {
+    //return $r;
+    //}
+    echo "done.\n";
+} else {
+    echo "   * Skipping: user already exists: 'root'\n";
+}
+
+// Create the user named 'scheduler'.
+if (!Subjects::GetSubjId('scheduler')) {
+    echo "   * Creating user 'scheduler'...";
+    $subid = Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
+    $res = Alib::AddPerm($subid, 'read', '0', 'A');
+    //$r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
+    echo "done.\n";
+} else {
+    echo "   * Skipping: user already exists: 'scheduler'\n";
+}
+
+// Need to add 'scheduler' to group StationPrefs
+Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
 
 
 //------------------------------------------------------------------------
