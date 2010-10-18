@@ -9,7 +9,7 @@
 		</td>
 
 		<td>
-		   {assign var="_now value=$SCHEDULER->getSchedulerTime(true)}
+		   {assign var="_now" value=$SCHEDULER->getSchedulerTime()}
            {if !$_now}
              {assign var="_now" value=$smarty.now}
            {/if}
