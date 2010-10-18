@@ -1,6 +1,9 @@
 <?php
-
+require_once(dirname(__FILE__)."/ui_calendar.class.php");
 require_once(dirname(__FILE__)."/../backend/Schedule.php");
+require_once('Calendar/Month/Weekdays.php');
+require_once('Calendar/Week.php');
+
 /**
  * @package Campcaster
  * @subpackage htmlUI
@@ -601,7 +604,7 @@ class uiScheduler extends uiCalendar {
 
 
     /**
-     * Get an scheduled playlist
+     * Get a scheduled item.
      *
      * Note: just use methods here which work without valid authentification.
      *
@@ -708,12 +711,14 @@ class uiScheduler extends uiCalendar {
     public function getScheduleInfo_jscom($p_playlist_nr=0)
     {
         // just use methods which work without valid authentification
-
         $c_pl = self::getScheduledPlaylist();
+        $n_clip = null;
         if ($c_clip = $this->getClipFromCurrent($c_pl, 0)) {
             $n_clip = $this->getClipFromCurrent($c_pl, 1);
         }
-        if ($u_pl = self::getScheduledPlaylist(1)) {
+        $u_clip = null;
+        $u_pl_start = null;
+        if ($u_pl = self::getScheduledPlaylist(2)) {
             $u_clip = $this->getClipFromPlaylist($u_pl);
             $u_pl_start = explode(':', date('H:i:s', self::datetimeToTimestamp($u_pl['start'])));
         }
@@ -729,10 +734,9 @@ class uiScheduler extends uiCalendar {
             'current.duration.m'    => $c_clip['duration']['m'],
             'current.duration.s'    => $c_clip['duration']['s'],
 
-
             'next'                  => $n_clip ? 1 : 0,
             'next.title'            => $n_clip ? addcslashes($n_clip['title'], "'") : "",
-            'next.pltitle'          => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($n_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'next.pltitle'          => addcslashes($this->Base->getMetadataValue($n_clip, UI_MDATA_KEY_TITLE), "'"),
             'next.duration.h'       => $n_clip ? $n_clip['duration']['h'] : 0,
             'next.duration.m'       => $n_clip ? $n_clip['duration']['m'] : 0,
             'next.duration.s'       => $n_clip ? $n_clip['duration']['s'] : 0,
@@ -748,7 +752,7 @@ class uiScheduler extends uiCalendar {
             'upcoming.plstart.s'    => $u_pl_start[2],
 
         );
-    } // fn getNowPlaying4jscom
+    }
 
 
     /**
@@ -783,11 +787,9 @@ class uiScheduler extends uiCalendar {
     protected function _scheduledDays($period)
     {
         if ($period === 'month') {
-            require_once('Calendar/Month/Weekdays.php');
             $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
             $Period->build();
         } elseif ($period === 'week') {
-            require_once('Calendar/Week.php');
             $Period = new Calendar_Week($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
             $Period->build();
         } else {
@@ -1296,4 +1298,5 @@ class uiScheduler extends uiCalendar {
     }
 
 } // class uiScheduler
+
 ?>
