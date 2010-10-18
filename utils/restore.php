@@ -196,7 +196,7 @@ foreach ($subjects as $login => $subj) {
                 if (VERBOSE) {
                     echo " adding user $login ...\n";
                 }
-                $uid = $bs->addSubj($login, $subj['pass'], $subj['realname'], TRUE);
+                $uid = BasicStor::addSubj($login, $subj['pass'], $subj['realname'], TRUE);
                 ls_restore_checkErr($uid, __LINE__);
             }
             break;
@@ -212,7 +212,7 @@ foreach ($subjects as $login => $subj) {
             if (VERBOSE) {
                 echo " adding group $login ...\n";
             }
-            $uid = $bs->addSubj($login, NULL);
+            $uid = BasicStor::addSubj($login, NULL);
             ls_restore_checkErr($uid, __LINE__);
 //            var_export($uid); echo " ";
           break;

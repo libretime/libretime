@@ -1,7 +1,6 @@
 <?php
 /**
  * @package Campcaster
- * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
@@ -39,21 +38,7 @@ function camp_uninstall_delete_files($p_path)
             }
             rmdir($p_path);
         }
-//      list($dirList,$fileList) = File_Find::maptree($p_path);
-//        foreach ($fileList as $filepath) {
-//            echo " * Removing file $filepath...";
-//            @unlink($filepath);
-//            echo "done.\n";
-//        }
-//        foreach ($dirList as $dirpath) {
-//            echo " * Removing directory $dirpath...";
-//            @rmdir($dirpath);
-//            echo "done.\n";
-//        }
     }
-//    echo " * Removing $p_path...";
-//    @rmdir($p_path);
-//    echo "done.\n";
 }
 
 //------------------------------------------------------------------------
@@ -64,11 +49,139 @@ function camp_uninstall_delete_files($p_path)
 //------------------------------------------------------------------------
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...\n";
 $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
-@exec($command, $output, $results);
+//$command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']}";
+@exec($command, $output, $dbDeleteFailed);
 
+//------------------------------------------------------------------------
+// Delete DB tables
+// We do this if dropping the database fails above.
+//------------------------------------------------------------------------
+if ($dbDeleteFailed) {
+  echo " * Couldn't delete the database, so deleting all the DB tables...\n";
+  campcaster_db_connect(true);
+  if (!PEAR::isError($CC_DBC)) {
+      if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
+          echo "   * Removing database table ".$CC_CONFIG['prefTable']."...";
+          $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
+          camp_install_query($sql, false);
 
-//campcaster_db_connect(true);
-//$CC_DBC->disconnect();
+          $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id");
+          echo "done.\n";
+      } else {
+          echo "   * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
+      }
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['transTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['transTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['transTable'];
+      camp_install_query($sql, false);
+
+      $CC_DBC->dropSequence($CC_CONFIG['transTable']."_id");
+      echo "done.\n";
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['transTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['filesTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['filesTable']." CASCADE";
+      camp_install_query($sql);
+      $CC_DBC->dropSequence($CC_CONFIG['filesTable']."_id");
+
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['playListTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['playListTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['playListTable']." CASCADE";
+      camp_install_query($sql);
+      $CC_DBC->dropSequence($CC_CONFIG['playListTable']."_id");
+
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['playListTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['playListContentsTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['playListContentsTable'];
+      camp_install_query($sql);
+      $CC_DBC->dropSequence($CC_CONFIG['playListContentsTable']."_id");
+
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['playListContentsTable']."\n";
+  }
+
+  //if (camp_db_sequence_exists($CC_CONFIG['filesSequence'])) {
+  //    $sql = "DROP SEQUENCE ".$CC_CONFIG['filesSequence'];
+  //    camp_install_query($sql);
+  //}
+  //
+  if (camp_db_table_exists($CC_CONFIG['accessTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['accessTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['accessTable'];
+      camp_install_query($sql);
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['accessTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['permTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['permTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['permTable'];
+      camp_install_query($sql, false);
+
+      $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id");
+      echo "done.\n";
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['permTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['sessTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['sessTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['sessTable'];
+      camp_install_query($sql);
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['sessTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['subjTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['subjTable']."...";
+      $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id");
+
+      $sql = "DROP TABLE ".$CC_CONFIG['subjTable']." CASCADE";
+      camp_install_query($sql, false);
+
+      echo "done.\n";
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['subjTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['smembTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['smembTable']."...";
+      $sql = "DROP TABLE ".$CC_CONFIG['smembTable'];
+      camp_install_query($sql, false);
+
+      $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id");
+      echo "done.\n";
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['smembTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['scheduleTable']."...";
+      camp_install_query("DROP TABLE ".$CC_CONFIG['scheduleTable']);
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['scheduleTable']."\n";
+  }
+
+  if (camp_db_table_exists($CC_CONFIG['backupTable'])) {
+      echo "   * Removing database table ".$CC_CONFIG['backupTable']."...";
+      camp_install_query("DROP TABLE ".$CC_CONFIG['backupTable']);
+  } else {
+      echo "   * Skipping: database table ".$CC_CONFIG['backupTable']."\n";
+  }
+}
 
 
 //------------------------------------------------------------------------
@@ -100,152 +213,12 @@ camp_uninstall_delete_files($CC_CONFIG['storageDir']);
 camp_uninstall_delete_files($CC_CONFIG['transDir']);
 camp_uninstall_delete_files($CC_CONFIG['accessDir']);
 
-//------------------------------------------------------------------------
-// Delete DB tables
-//------------------------------------------------------------------------
-//echo " * Deleting DB tables...\n";
-//if (!PEAR::isError($CC_DBC)) {
-//    if (camp_db_table_exists($CC_CONFIG['prefTable'])) {
-//        echo "   * Removing database table ".$CC_CONFIG['prefTable']."...";
-//        $sql = "DROP TABLE ".$CC_CONFIG['prefTable'];
-//        camp_install_query($sql, false);
-//
-//        $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id");
-//        echo "done.\n";
-//    } else {
-//        echo "   * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
-//    }
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['transTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['transTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['transTable'];
-//    camp_install_query($sql, false);
-//
-//    $CC_DBC->dropSequence($CC_CONFIG['transTable']."_id");
-//    echo "done.\n";
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['transTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['filesTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['filesTable']." CASCADE";
-//    camp_install_query($sql);
-//    $CC_DBC->dropSequence($CC_CONFIG['filesTable']."_id");
-//
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['playListTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['playListTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['playListTable']." CASCADE";
-//    camp_install_query($sql);
-//    $CC_DBC->dropSequence($CC_CONFIG['playListTable']."_id");
-//
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['playListTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['playListContentsTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['playListContentsTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['playListContentsTable'];
-//    camp_install_query($sql);
-//    $CC_DBC->dropSequence($CC_CONFIG['playListContentsTable']."_id");
-//
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['playListContentsTable']."\n";
-//}
-//
-////if (camp_db_sequence_exists($CC_CONFIG['filesSequence'])) {
-////    $sql = "DROP SEQUENCE ".$CC_CONFIG['filesSequence'];
-////    camp_install_query($sql);
-////}
-////
-//if (camp_db_table_exists($CC_CONFIG['accessTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['accessTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['accessTable'];
-//    camp_install_query($sql);
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['accessTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['permTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['permTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['permTable'];
-//    camp_install_query($sql, false);
-//
-//    $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id");
-//    echo "done.\n";
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['permTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['sessTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['sessTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['sessTable'];
-//    camp_install_query($sql);
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['sessTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['subjTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['subjTable']."...";
-//    $CC_DBC->dropSequence($CC_CONFIG['subjTable']."_id");
-//
-//    $sql = "DROP TABLE ".$CC_CONFIG['subjTable']." CASCADE";
-//    camp_install_query($sql, false);
-//
-//    echo "done.\n";
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['subjTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['smembTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['smembTable']."...";
-//    $sql = "DROP TABLE ".$CC_CONFIG['smembTable'];
-//    camp_install_query($sql, false);
-//
-//    $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id");
-//    echo "done.\n";
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['smembTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['scheduleTable']."...";
-//    camp_install_query("DROP TABLE ".$CC_CONFIG['scheduleTable']);
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['scheduleTable']."\n";
-//}
-//
-//if (camp_db_table_exists($CC_CONFIG['backupTable'])) {
-//    echo "   * Removing database table ".$CC_CONFIG['backupTable']."...";
-//    camp_install_query("DROP TABLE ".$CC_CONFIG['backupTable']);
-//} else {
-//    echo "   * Skipping: database table ".$CC_CONFIG['backupTable']."\n";
-//}
 
 //------------------------------------------------------------------------
 // Disconnect from the database
 //------------------------------------------------------------------------
 //echo " * Disconnecting from database...\n";
 //$CC_DBC->disconnect();
-
-//------------------------------------------------------------------------
-// Delete the database
-// Note: we do all the table-dropping above because this command usually fails
-// because there are usually still connections to the database.
-//------------------------------------------------------------------------
-//echo " * Dropping the database ".$CC_CONFIG['dsn']['database']."...\n";
-//$command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']}";
-//@exec($command, $output, $results);
-//if ($results == 0) {
-//  echo " * Database '{$CC_CONFIG['dsn']['database']}' deleted.\n";
-//} else {
-//  echo " * Could not delete database '{$CC_CONFIG['dsn']['database']}'.\n";
-//}
 
 //------------------------------------------------------------------------
 // Delete the user

@@ -1736,7 +1736,7 @@ class BasicStor {
      * @param string $realname
      * @return int|PEAR_Error
      */
-    public function addSubj($login, $pass=NULL, $realname='')
+    public static function addSubj($login, $pass=NULL, $realname='')
     {
         global $CC_CONFIG;
         $uid = Subjects::AddSubj($login, $pass, $realname);
@@ -2112,80 +2112,6 @@ class BasicStor {
 
 
     /* =============================================== test and debug methods */
-    /**
-     * Reset storageServer for debugging.
-     *
-     * @param boolean $loadSampleData
-     * 		Flag for allow sample data loading
-     * @param boolean $filesOnly
-     * 		Flag for operate only on files in storage
-     * @return array
-     * 		result of localSearch with filetype 'all' and no conditions,
-     *      i.e. array of hashes, fields:
-     *       cnt : integer - number of inserted files
-     *       results : array of hashes:
-     *          gunid: string
-     *          type: string - audioclip | playlist | webstream
-     *          title: string - dc:title from metadata
-     *          creator: string - dc:creator from metadata
-     *          source: string - dc:source from metadata
-     *          length: string - dcterms:extent in extent format
-     */
-    public function resetStorage($loadSampleData=TRUE, $filesOnly=FALSE)
-    {
-        global $CC_CONFIG;
-        if ($filesOnly) {
-            $this->deleteFiles();
-        } else {
-            $this->deleteData();
-        }
-        $tr = new Transport($this);
-        $tr->resetData();
-        $res = array('cnt'=>0, 'results'=>array());
-        if (!$loadSampleData) {
-            return $res;
-        }
-        $samples = dirname(__FILE__)."/tests/sampleData.php";
-        if (file_exists($samples)) {
-            include($samples);
-        } else {
-            $sampleData = array();
-        }
-        foreach ($sampleData as $k => $it) {
-            $type = $it['type'];
-            $xml = $it['xml'];
-            if (isset($it['gunid'])) {
-                $gunid = $it['gunid'];
-            } else {
-                $gunid = '';
-            }
-            switch($type){
-                case "audioclip":
-                    $media = $it['media'];
-                    $fname = basename($media);
-                    break;
-                case "playlist":
-                case "webstream":
-                    $media = '';
-                    $fname = basename($xml);
-                    break;
-            }
-            $values = array(
-                "filename" => $fname,
-                "filepath" => $media,
-                "metadata" => $xml,
-                "gunid" => $gunid,
-                "filetype" => $type
-            );
-            $r = $this->bsPutFile($values);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-        }
-        return $this->bsLocalSearch(
-            array('filetype'=>'all', 'conditions'=>array())
-        );
-    }
 
     /**
      *
@@ -2212,117 +2138,6 @@ class BasicStor {
                 $this->bsDeleteFile($item['id'], TRUE);
             }
         }
-    }
-
-
-    /**
-     * deleteData
-     *
-     * @return void
-     */
-    public function deleteData()
-    {
-        $this->deleteFiles();
-        Alib::DeleteData();
-        $this->initData();
-    }
-
-
-    /**
-     * initData - initialize
-     *
-     */
-    public function initData($p_verbose = false)
-    {
-        global $CC_CONFIG;
-        // Create the Admin group
-//        if (!empty($CC_CONFIG['AdminsGr'])) {
-//            if (!Subjects::GetSubjId($CC_CONFIG['AdminsGr'])) {
-//                echo "   * Creating group '".$CC_CONFIG['AdminsGr']."'...";
-//                // Add the admin group
-//                $admid = Subjects::AddSubj($CC_CONFIG['AdminsGr']);
-//                if (PEAR::isError($admid)) {
-//                    return $admid;
-//                }
-//
-//                // Add the "all" permission to the "admin" group
-//                $res = Alib::AddPerm($admid, '_all', $this->storId, 'A');
-//                if (PEAR::isError($res)) {
-//                    return $res;
-//                }
-//                echo "done.\n";
-//            } else {
-//                echo "   * Skipping: group already exists: '".$CC_CONFIG['AdminsGr']."'\n";
-//            }
-//        }
-
-        // Add the "all" group
-//        if (!empty($CC_CONFIG['AllGr'])) {
-//            if (!Subjects::GetSubjId($CC_CONFIG['AllGr'])) {
-//                echo "   * Creating group '".$CC_CONFIG['AllGr']."'...";
-//                $allid = Subjects::AddSubj($CC_CONFIG['AllGr']);
-//                if (PEAR::isError($allid)) {
-//                    return $allid;
-//                }
-//
-//                // Add the "read" permission to the "all" group.
-//                Alib::AddPerm($allid, 'read', $this->storId, 'A');
-//                echo "done.\n";
-//            } else {
-//                echo "   * Skipping: group already exists: '".$CC_CONFIG['AllGr']."'\n";
-//            }
-//        }
-
-        // Add the "Station Preferences" group
-        if (!empty($CC_CONFIG['StationPrefsGr'])) {
-            if (!Subjects::GetSubjId('scheduler')) {
-                echo "   * Creating group '".$CC_CONFIG['StationPrefsGr']."'...";
-                $stPrefGr = Subjects::AddSubj($CC_CONFIG['StationPrefsGr']);
-                if (PEAR::isError($stPrefGr)) {
-                    return $stPrefGr;
-                }
-                Subjects::AddSubjectToGroup('root', $CC_CONFIG['StationPrefsGr']);
-                echo "done.\n";
-            } else {
-                echo "   * Skipping: group already exists: '".$CC_CONFIG['StationPrefsGr']."'\n";
-            }
-        }
-
-        // Add the root user if it doesnt exist yet.
-        $rootUid = Subjects::GetSubjId('root');
-        if (!$rootUid) {
-            echo "   * Creating user 'root'...";
-            $rootUid = $this->addSubj("root", $CC_CONFIG['tmpRootPass']);
-            if (PEAR::isError($rootUid)) {
-                return $rootUid;
-            }
-
-            // Add root user to the admin group
-//            $r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
-//            if (PEAR::isError($r)) {
-//                return $r;
-//            }
-            echo "done.\n";
-        } else {
-            echo "   * Skipping: user already exists: 'root'\n";
-        }
-
-        // Create the user named 'scheduler'.
-        if (!Subjects::GetSubjId('scheduler')) {
-            echo "   * Creating user 'scheduler'...";
-            $subid = Subjects::AddSubj('scheduler', $CC_CONFIG['schedulerPass']);
-            $res = Alib::AddPerm($subid, 'read', '0', 'A');
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-            //$r = Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['AllGr']);
-            echo "done.\n";
-        } else {
-            echo "   * Skipping: user already exists: 'scheduler'\n";
-        }
-
-        // Need to add 'scheduler' to group StationPrefs
-        Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
     }
 
 
