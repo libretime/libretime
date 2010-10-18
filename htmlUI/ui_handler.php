@@ -319,8 +319,9 @@ switch ($_REQUEST['act']) {
     	    	$uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     	    }
         }
-	    die('{"jsonrpc" : "2.0"}');
-
+        $uiHandler->PLAYLIST->setReload();
+        break;
+	   
     case "PL.setClipLength":
 	    $uiHandler->PLAYLIST->setClipLength($_REQUEST['pos'], $_REQUEST['cueIn'], $_REQUEST['cueOut']);
 	    break;
@@ -331,10 +332,9 @@ switch ($_REQUEST['act']) {
 
     case "PL.removeItem":
 	    $uiHandler->PLAYLIST->removeItem($_REQUEST['id']);
-	    //$uiHandler->PLAYLIST->setReload();
-	    //break;
-	    die('{"jsonrpc" : "2.0"}');
-
+	    $uiHandler->PLAYLIST->setReload();
+	    break;
+	   
     case "PL.release":
 	    $uiHandler->PLAYLIST->release();
 	    $uiHandler->PLAYLIST->setReload();

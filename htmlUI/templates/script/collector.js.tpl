@@ -30,6 +30,7 @@ function collector_submit(formname, action, script, name, width, height)
     else {
         //alert(action);
 
+        /*
         if(action === 'PL.removeItem') {
 
     		$.post(script + '?act=' + action + href,
@@ -51,6 +52,9 @@ function collector_submit(formname, action, script, name, width, height)
         else {
         	hpopup(script + '?act=' + action + href);
         }
+        */
+
+        hpopup(script + '?act=' + action + href);
     }
 }
 
