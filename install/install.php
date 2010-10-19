@@ -471,10 +471,18 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
           ."  CONSTRAINT cc_schedule_pkey PRIMARY KEY (id),"
           ."  CONSTRAINT unique_id UNIQUE (id))";
     camp_install_query($sql);
+
 } else {
     echo "   * Skipping: database table already exists: ".$CC_CONFIG['scheduleTable']."\n";
 }
 
+if (!camp_db_sequence_exists("schedule_group_id_seq")) {
+  echo "   * Creating sequence 'schedule_group_id_seq'...";
+  $sql = "CREATE SEQUENCE schedule_group_id_seq";
+  camp_install_query($sql);
+} else {
+  echo "   * Skipping: sequence already exists 'schedule_group_id_seq'.\n";
+}
 
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
     echo "   * Creating database table ".$CC_CONFIG['backupTable']."...";
