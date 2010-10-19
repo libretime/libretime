@@ -36,7 +36,7 @@
 	                       {foreach from=$_entrys[$_hour].end item="i"}
     	                       {if $i.startsyesterday}
     	                          <div {include file="scheduler/removeitem.tpl"}>
-    	                              <img src="img/playlist.png" border="0" {* include file="sub/alttext.tpl"*}>
+    	                              <img src="html/img/playlist.png" border="0" {* include file="sub/alttext.tpl"*}>
     	                              &nbsp;
     	                              <b>{$i.title}</b>
     	                              ##yesterday## {$i.start} - {$i.end}
@@ -50,7 +50,7 @@
 	                   {if $_entrys[$_hour].start}
 	                       {foreach from=$_entrys[$_hour].start item="i"}
 	                          <div {include file="scheduler/removeitem.tpl"}>
-	                              <img src="img/playlist.png" border="0" {*include file="sub/alttext.tpl"*}>
+	                              <img src="html/img/playlist.png" border="0" {*include file="sub/alttext.tpl"*}>
 	                              &nbsp;
 	                              <b>{$i.title}</b>
 

@@ -154,12 +154,13 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case "SCHEDULER.addItem":
-              $uiHandler->SCHEDULER->setScheduleAtTime($_REQUEST);
+                $uiHandler->SCHEDULER->setScheduleAtTime($_REQUEST);
 	            $Smarty->display('popup/SCHEDULER.addItem.tpl');
 	            break;
 
             case "SCHEDULER.removeItem":
-	            $Smarty->assign('playlistName', $uiBrowser->getMetadataValue($_REQUEST['playlistId'], UI_MDATA_KEY_TITLE));
+                $info = $uiBrowser->getPLMetaInfo($_REQUEST['playlistId']);
+	            $Smarty->assign('playlistName', $info['title']);
 	            $Smarty->display('popup/SCHEDULER.removeItem.tpl');
 	            break;
 

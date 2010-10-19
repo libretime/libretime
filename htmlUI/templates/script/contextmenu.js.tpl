@@ -95,11 +95,11 @@ function contextmenu(param, type) {
 
             case "SCHEDULER.addItem":
             //contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&"+param+"', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&id="+param+"', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.removeItem":
-            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 50)\" "+oF+">&nbsp;##Remove playlist##&nbsp;</a></li>";
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&id="+param+"', 'Schedule', 400, 50)\" "+oF+">&nbsp;##Remove playlist##&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.addPL":

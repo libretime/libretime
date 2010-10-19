@@ -88,9 +88,9 @@ function SCHEDULE_snap2Next()
     var duration = SCHEDULE_timeToMilliseconds(SCHEDULE_selectedDuration());
 
     // Get the date of the "next item" (time is set to midnight).
-    var beginDate = new Date({$SCHEDULER->scheduleNext.year},
-                             {$SCHEDULER->scheduleNext.month},
-                             {$SCHEDULER->scheduleNext.day});
+    var beginDate = new Date("{$SCHEDULER->scheduleNext.year}",
+                             "{$SCHEDULER->scheduleNext.month}",
+                             "{$SCHEDULER->scheduleNext.day}");
     //debugBeginDate = ""+beginDate;
 
     // Calculate the final time by starting with the "next item" date at midnight,

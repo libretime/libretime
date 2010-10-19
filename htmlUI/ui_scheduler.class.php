@@ -209,6 +209,7 @@ class uiScheduler extends uiCalendar {
 //        $hour = $arr['hour'];
 //        $minute = $arr['minute'];
 //        $second = $arr['second'];
+       
         extract($arr);
 
         if (isset($today)) {
@@ -565,13 +566,8 @@ class uiScheduler extends uiCalendar {
     public function getPlaylistToSchedule($id)
     {
         if ($id) {
-            $this->Base->SCRATCHPAD->addItem($id);
-            $this->availablePlaylists[] = array(
-                'gunid'     => BasicStor::GunidFromId($id),
-                'id'        => $id,
-                'title'     => $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                'duration'  => $this->Base->getMetadataValue($id, UI_MDATA_KEY_DURATION),
-            );
+            $this->Base->SCRATCHPAD->addItem($id, 'playlist');
+            $this->availablePlaylists[] = $this->Base->getPLMetaInfo($id);
             return TRUE;
         } else {
             return $this->copyPlaylistFromScratchpad();
@@ -1063,7 +1059,6 @@ class uiScheduler extends uiCalendar {
 
         $item = new ScheduleGroup();
         $groupId = $item->add($datetime, null, $playlistId);
-        //$_SESSION["debug"] = $groupId;
         return $groupId;
     }
 

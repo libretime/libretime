@@ -127,7 +127,7 @@ class ScheduleGroup {
           ." clip_length, cue_in, cue_out, fade_in, fade_out)"
           ." VALUES ($id, $p_playlistId, TIMESTAMP '$itemStartTime', "
           ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
-          ." {$this->groupId}, {$row['file_id']}, '$trackLength', '{$row['cuein']}',"
+          ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
           ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
         $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
@@ -168,6 +168,7 @@ class ScheduleGroup {
     }
     $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
          ." WHERE group_id = ".$this->groupId;
+         
     return $CC_DBC->query($sql);
   }
 
