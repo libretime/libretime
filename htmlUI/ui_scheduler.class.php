@@ -322,12 +322,11 @@ class uiScheduler extends uiCalendar {
             $creator = $val["creator"];
           }
 
-        	$id = $val["group_id"]; //BasicStor::IdFromGunid($val['playlistId']);
         	$startDay = strftime('%d', self::datetimeToTimestamp($val['start']));
         	$startHour = number_format(strftime('%H', self::datetimeToTimestamp($val['start'])));
             $items[$startDay][$startHour][]= array (
-                'id' => $id,
-                'scheduleid'=> $id, //$val['id'],
+                'id' => $val['playlistId'],
+                'scheduleid'=> $val["group_id"],
                 'start' => substr($val['start'], strpos($val['start'], ' ')+1),
                 'end' => substr($val['end'], strpos($val['end'], ' ')+1),
                 'start_stamp' => self::datetimeToTimestamp($val['start']),
