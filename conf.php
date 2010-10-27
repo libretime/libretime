@@ -5,11 +5,6 @@ define('CAMPCASTER_COPYRIGHT_DATE', '2010');
 // These are the default values for the config.
 global $CC_CONFIG;
 
-// Note that these values can be overridden by the user config file,
-// located in ~/.campcaster/storageServer.conf.php
-// To disable this, set this variable to false.
-//define('ALLOW_CONF_OVERRIDE', false);
-
 $CC_CONFIG = array(
     // Database config
     'dsn'           => array(
@@ -26,6 +21,8 @@ $CC_CONFIG = array(
     // prefix for table names in the database
     'tblNamePrefix' => 'cc_',
 
+    /* ================================================ storage configuration */
+
     // main directory for storing binary media files
     'storageDir'    =>  dirname(__FILE__).'/stor',
 
@@ -39,7 +36,6 @@ $CC_CONFIG = array(
     'accessDir'     =>  dirname(__FILE__).'/access',
     'cronDir'       =>  dirname(__FILE__).'/backend/cron',
 
-    /* ================================================ storage configuration */
     "rootDir" => dirname(__FILE__),
     "smartyTemplate" => dirname(__FILE__)."/htmlUI/templates",
     "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
@@ -62,7 +58,7 @@ $CC_CONFIG = array(
     'validate'      =>  TRUE,
 
     // enable/disable safe delete (move to trash)
-    'useTrash'      =>  TRUE,
+    'useTrash'      =>  FALSE,
 
     /* ==================================================== URL configuration */
     // path-URL-part of storageServer base dir
@@ -98,7 +94,7 @@ $CC_CONFIG = array(
     'schedulerUrlPort'        => 3344,
     'schedulerPass'           => 'change_me',
 
-    /* ==================================== aplication-specific configuration */
+    /* ==================================== application-specific configuration */
     'objtypes'      => array(
         'Storage'       => array(/*'Folder',*/ 'File' /*, 'Replica'*/),
         'File'          => array(),
@@ -140,7 +136,6 @@ $CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
 $CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
 $CC_CONFIG['transTable'] = $CC_CONFIG['tblNamePrefix'].'trans';
 $CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
-//$CC_CONFIG['playlogTable'] = $CC_CONFIG['tblNamePrefix'].'playlog';
 $CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
 $CC_CONFIG['backupTable'] = $CC_CONFIG['tblNamePrefix'].'backup';
 $CC_CONFIG['playListTimeView'] = $CC_CONFIG['tblNamePrefix'].'playlisttimes';
@@ -161,31 +156,6 @@ $CC_CONFIG['sysSubjs'] = array(
 // Add PEAR to the PHP path
 $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);
-
-//if (ALLOW_CONF_OVERRIDE) {
-//  // See if a ~/.campcaster/storageServer.conf.php exists, and
-//  // overwrite the settings from there if any
-//  $this_file = null;
-//  if (isset($_SERVER["SCRIPT_FILENAME"])) {
-//      $this_file = $_SERVER["SCRIPT_FILENAME"];
-//  } elseif(isset($argv[0])) {
-//      $this_file = $argv[0];
-//  }
-//  if (!is_null($this_file)) {
-//      $fileowner_id = fileowner($this_file);
-//      $fileowner_array = posix_getpwuid($fileowner_id);
-//      $fileowner_homedir = $fileowner_array['dir'];
-//      $fileowner_name = $fileowner_array['name'];
-//      $home_conf = $fileowner_homedir . '/.campcaster/storageServer.conf.php';
-//      if (file_exists($home_conf)) {
-//          $default_config = $CC_CONFIG;
-//          $developer_name = $fileowner_name;
-//          include($home_conf);
-//          $user_config = $CC_CONFIG;
-//          $CC_CONFIG = $user_config + $default_config;
-//      }
-//  }
-//}
 
 // Check that all the required directories exist.
 //foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
