@@ -1160,7 +1160,7 @@ class BasicStor {
             }
             else if ($key === "dcterms:extent"){
                 $plSelect .= "length, ";
-                $fileSelect .= "text(".$val.") AS ".$val.", ";
+                $fileSelect .= "length, ";
             }
             else if ($key === "dc:description"){
                 $plSelect .= "text(description) AS ".$val.", ";
@@ -1186,7 +1186,7 @@ class BasicStor {
            $sql .= " ORDER BY ".join(",", $orderBySql);
         }
 
-        //$_SESSION["br"] = $sql;
+        $_SESSION["debugsql"] = $sql;
 
         $res = $CC_DBC->getAll($sql);
         if (PEAR::isError($res)) {
