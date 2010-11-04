@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <propel>
+    <datasources default="campcaster">
+      <datasource id="campcaster">
+        <adapter>pgsql</adapter> <!-- sqlite, mysql, myssql, oracle, or pgsql -->
+        <connection>
+          <dsn>pgsql:host=localhost;port=5432;dbname=Campcaster-naomiaro;user=test;password=test</dsn>
+        </connection>
+      </datasource>
+    </datasources>
+  </propel>
+</config>
