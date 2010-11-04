@@ -5,7 +5,7 @@
       <datasource id="campcaster">
         <adapter>pgsql</adapter> <!-- sqlite, mysql, myssql, oracle, or pgsql -->
         <connection>
-          <dsn>pgsql:host=localhost;port=5432;dbname=Campcaster-naomiaro;user=test;password=test</dsn>
+          <dsn>pgsql:host=localhost;port=5432;dbname=campcaster;user=campcaster;password=campcaster</dsn>
         </connection>
       </datasource>
     </datasources>
