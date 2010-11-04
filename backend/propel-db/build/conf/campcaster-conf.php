@@ -9,7 +9,7 @@ $conf = array (
       'adapter' => 'pgsql',
       'connection' => 
       array (
-        'dsn' => 'pgsql:host=localhost;port=5432;dbname=Campcaster-naomiaro;user=test;password=test',
+        'dsn' => 'pgsql:host=localhost;port=5432;dbname=campcaster;user=campcaster;password=campcaster',
       ),
     ),
     'default' => 'campcaster',
