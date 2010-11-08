@@ -52,8 +52,6 @@ from obp import *
 
 
 PYPO_VERSION = '0.1'
-OBP_MIN_VERSION = 2010100101 # required obp version
-
 
 #set up command-line options
 parser = OptionParser()
@@ -84,13 +82,9 @@ try:
     FILE_DIR = config['file_dir']
     TMP_DIR = config['tmp_dir']
     BASE_URL = config['base_url']
-    OBP_API_BASE = BASE_URL + 'mod/medialibrary/'
-    EXPORT_URL = OBP_API_BASE + config['export_path']
+    API_BASE = config['api_base']
     EXPORT_SOURCE = config['export_source']
-    
-    OBP_STATUS_URL = OBP_API_BASE + 'status/version/json'
-    OBP_API_KEY = config['obp_api_key']
-    
+    OBP_API_KEY = config['api_key']
     POLL_INTERVAL = float(config['poll_interval'])
     PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
@@ -106,9 +100,6 @@ except Exception, e:
 #TIME = time.localtime(time.time())
 TIME = (2010, 6, 26, 15, 33, 23, 2, 322, 0)
     
-    
-    
-    
 
 class Global:
     def __init__(self):
@@ -117,33 +108,9 @@ class Global:
         
     def selfcheck(self):
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
-        
-        obp_version = self.api_client.get_obp_version()
-        
-        
-        if obp_version == 0:
-            print '#################################################'
-            print 'Unable to get OBP version. Is OBP up and running?'
-            print '#################################################'
-            print
-            sys.exit()
-         
-        elif obp_version < OBP_MIN_VERSION:
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo not compatible with this version of OBP'
-            print
-            sys.exit()
-         
-        else:
-            print 'OBP API: ' + str(OBP_API_BASE)
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo is compatible with this version of OBP'
-            print
-
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = ApiClient(API_BASE, self.api_auth)
+        self.api_client.check_version()
             
         """
         Uncomment the following lines to let pypo check if
@@ -165,40 +132,30 @@ class Playout:
         self.cache_dir = CACHE_DIR 
         self.file_dir = FILE_DIR 
         self.tmp_dir = TMP_DIR 
-        self.export_url = EXPORT_URL
         self.export_source = EXPORT_SOURCE
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = ApiClient(API_BASE, self.api_auth)
         self.cue_file = CueFile()
         
         self.schedule_file = CACHE_DIR + 'schedule'
         
         # set initial state
         self.range_updated = False
-  
-    
     
     
     def push_liquidsoap(self,options):
         logger = logging.getLogger("push_liquidsoap")
-        
         print options
-        
         #pkey = '2010-10-26-21-00-00'
-        
         pkey = options
-        
         src = self.cache_dir + str(pkey) + '/list.lsp'
-        
         print src
-        
-        
+s        
         if True == os.access(src, os.R_OK):
             print 'OK - Can read'
             
         pl_file = open(src, "r")
-
 
 
         """
@@ -209,20 +166,14 @@ class Playout:
         
         for line in pl_file.readlines():
             print line.strip() 
-        
             #tn.write('q.push ' + pl_entry)
             #tn.write("\n")
-            
             tn.write('scheduler.push %s' % (line.strip()))
             tn.write("\n")
             
-         
-            
         tn.write("scheduler_q0.queue \n")
-        
         tn.write("scheduler_q1.queue \n")
         #time.sleep(2)
-        
         
         #print tn.read_all()
         
@@ -230,9 +181,6 @@ class Playout:
         
         tn.write('scheduler.flip')
         tn.write("\n")
-            
-        
-        
         
         #tn.write("live_in.stop\n")
         #tn.write("stream_disable\n")
@@ -263,9 +211,7 @@ class Playout:
         
         
         tn.write("exit\n")
-        
         print tn.read_all()
-        
         status = 1
         sys.exit()
             

@@ -237,12 +237,12 @@ $start = intval(date('U'));
 if ($DEBUG_IMPORT) {
     $testonly = false;
     $importMode = "link";
-    $files = array("/home/paul/music/Tom Petty/Anthology - Through the Years disc 2/13 - Into The Great Wide Open.ogg");
-    $dsn =  array('username' => 'test',
-                  'password' => 'test',
+    $files = array("/path/to/your/test/file.mp3");
+    $dsn =  array('username' => 'campcaster',
+                  'password' => 'campcaster',
                   'hostspec' => 'localhost',
                   'phptype' => 'pgsql',
-                  'database' => 'Campcaster-paul');
+                  'database' => 'campcaster');
 } else {
     $dsn = $CC_CONFIG['dsn'];
 }

@@ -1,4 +1,6 @@
 <?php
+require_once("StoredFile.php");
+require_once("BasicStor.php");
 
 class ScheduleGroup {
 
@@ -320,6 +322,11 @@ class Schedule {
     return $p_time;
   }
 
+  private static function PypoTimeToCcTime($p_time) {
+  	$t = explode("-", $p_time);
+  	return $t[0]."-".$t[1]."-".$t[2]." ".$t[3].":".$t[4].":00";
+  }
+  
   /**
    * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
    *
@@ -330,35 +337,29 @@ class Schedule {
    */
 	public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
 	{
-    global $CC_CONFIG, $CC_DBC;
-//		$api_key = $this->input->post('api_key');
-//		if(!in_array($api_key, $CFG->ml_api_keys))
-//		{
-//			//header('HTTP/1.0 401 Unauthorized');
-//			//print 'You are not allowed to access this ressource. Sorry.';
-//			//exit;
-//		}
-    $range_start = Schedule::CcTimeToPypoTime($p_fromDateTime);
-    $range_end = Schedule::CcTimeToPypoTime($p_toDateTime);
-    $range_dt = array('start' => $range_start, 'end' => $range_end);
-
+	    global $CC_CONFIG, $CC_DBC;
+	    $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
+	    $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
+	    $range_dt = array('start' => $range_start, 'end' => $range_end);
+		//var_dump($range_dt);
+		
 		// Scheduler wants everything in a playlist
-		$data = Schedule::GetItems($p_fromDateTime, $p_toDateTime, true);
-		//var_dump($data);
-  	$playlists = array();
+		$data = Schedule::GetItems($range_start, $range_end, true);
+		//echo "<pre>";var_dump($data);
+	  	$playlists = array();
 
 		if (is_array($data) && count($data) > 0)
 		{
 			foreach ($data as $dx)
 			{
-			  // Is this the first item in the playlist?
+			    // Is this the first item in the playlist?
 				$start = $dx['start'];
 				// chop off subseconds
-        $start = substr($start, 0, 19);
-
-        // Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
-        $pkey = Schedule::CcTimeToPypoTime($start);
-        $timestamp =  strtotime($start);
+		        $start = substr($start, 0, 19);
+		
+		        // Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
+		        $pkey = Schedule::CcTimeToPypoTime($start);
+		        $timestamp =  strtotime($start);
 				$playlists[$pkey]['source'] = "PLAYLIST";
 				$playlists[$pkey]['x_ident'] = $dx["playlist_id"];
 				$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
@@ -371,14 +372,14 @@ class Schedule {
 
 		foreach ($playlists as &$playlist)
 		{
-		  $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
-      $items = $scheduleGroup->getItems();
+		    $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
+      		$items = $scheduleGroup->getItems();
 			$medias = array();
 			$playlist['subtype'] = '1';
 			foreach ($items as $item)
 			{
-			  $storedFile = StoredFile::Recall($item["file_id"]);
-  			$uri = $storedFile->getFileUrl();
+			  	$storedFile = StoredFile::Recall($item["file_id"]);
+  				$uri = $storedFile->getFileUrl();
 				$medias[] = array(
 					'id' => $item["file_id"],
 					'uri' => $uri,
@@ -393,7 +394,7 @@ class Schedule {
 		}
 
 		$result = array();
-		$result['status'] = array('range' => $range_dt, 'version' => 0.1);
+		$result['status'] = array('range' => $range_dt, 'version' => 0.2);
 		$result['playlists'] = $playlists;
 		$result['check'] = 1;
 

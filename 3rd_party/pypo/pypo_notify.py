@@ -41,27 +41,20 @@ from util import *
 from obp import *
 from dls import *
 
-
-
 PYPO_VERSION = '0.9'
-OBP_MIN_VERSION = 2010040501 # required obp version
 
 
-#set up command-line options
+# Set up command-line options
 parser = OptionParser()
 
 # help screeen / info
 usage = "%prog [options]" + " - notification gateway"
 parser = OptionParser(usage=usage)
 
-#options
+# Options
 #parser.add_option("-p", "--playing", help="Tell daddy what is playing right now", dest="playing", default=False, metavar=False)
-
 parser.add_option("-p", "--playing", help="Tell daddy what is playing right now", default=False, action="store_true", dest="playing")
-
-
 parser.add_option("-t", "--playlist-type", help="Tell daddy what is playing right now", metavar="playlist_type")
-
 parser.add_option("-M", "--media-id", help="Tell daddy what is playing right now", metavar="media_id")
 parser.add_option("-U", "--user-id", help="Tell daddy what is playing right now", metavar="user_id")
 parser.add_option("-P", "--playlist-id", help="Tell daddy what is playing right now", metavar="playlist_id")
@@ -79,10 +72,8 @@ try:
     config = ConfigObj('config.cfg')
     TMP_DIR = config['tmp_dir']
     BASE_URL = config['base_url']
-    OBP_API_BASE = BASE_URL + 'mod/medialibrary/'
-    
-    OBP_STATUS_URL = OBP_API_BASE + 'status/version/json'
-    OBP_API_KEY = config['obp_api_key']
+    API_BASE = BASE_URL + 'mod/medialibrary/'
+    API_KEY = config['api_key']
     
 except Exception, e:
     print 'error: ', e
@@ -95,53 +86,23 @@ class Global:
         
     def selfcheck(self):
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
+        self.api_client.check_version()
         
-        obp_version = self.api_client.get_obp_version()
-        
-        if obp_version == 0:
-            print '#################################################'
-            print 'Unable to get OBP version. Is OBP up and running?'
-            print '#################################################'
-            print
-            sys.exit()
-         
-        elif obp_version < OBP_MIN_VERSION:
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo not compatible with this version of OBP'
-            print
-            sys.exit()
-         
-        else:
-            print 'OBP API: ' + str(OBP_API_BASE)
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo is compatible with this version of OBP'
-            print
-
 class Notify:
     def __init__(self):
-
-        self.tmp_dir = TMP_DIR 
-        
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
-        
+        self.tmp_dir = TMP_DIR         
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
         self.dls_client = DlsClient('127.0.0.128', 50008, 'myusername', 'mypass')
-
-    
 
     
     def start_playing(self, options):
         logger = logging.getLogger("start_playing")
-
         tnow = time.localtime(time.time())
         
         #print options
-
-
 
         print '#################################################'
         print '# calling obp to tell about what\'s playing     #'
@@ -170,23 +131,13 @@ class Notify:
             response = self.api_client.update_start_playing(options.playlist_type, options.export_source, media_id, options.playlist_id, options.transmission_id) 
 
             print response
-
-
-
-
-        
         
         sys.exit()  
 
-        
-        
-            
     
     def start_playing_legacy(self, options):
         logger = logging.getLogger("start_playing")
-
         tnow = time.localtime(time.time())
-        
 
         print '#################################################'
         print '# calling obp to tell about what\'s playing     #'
@@ -248,10 +199,6 @@ class Notify:
         except Exception, e:
             print e
         
-         
-
-     
-            
 
 if __name__ == '__main__':
   
@@ -270,7 +217,6 @@ if __name__ == '__main__':
 
 run = True
 while run == True:
-    
     logger = logging.getLogger("pypo notify")
             
     if options.playing:
@@ -278,8 +224,5 @@ while run == True:
         except Exception, e:
             print e
         sys.exit()  
-        
-
-            
 
     sys.exit()
