@@ -6,7 +6,7 @@
 """
 Python part of radio playout (pypo)
 
-The main functionas are "fetch" (./pypo_cli.py -f) and "push" (./pypo_cli.py -p)
+The main functions are "fetch" (./pypo_cli.py -f) and "push" (./pypo_cli.py -p)
 
 Also check out the php counterpart that handles the api requests:
 https://lab.digris.ch/svn/elgg/trunk/unstable/mod/medialibrary/application/controllers/api/pypo.php
@@ -20,7 +20,7 @@ Attention & ToDos
 made for python version 2.5!!
 should work with 2.6 as well with a bit of adaption. for 
 sure the json parsing has to be changed
-(2.6 has an parser, pypo brigs it's own -> util/json.py)
+(2.6 has an parser, pypo brings it's own -> util/json.py)
 """
 
 # python defaults (debian default)
@@ -41,36 +41,35 @@ import telnetlib
 import random
 import string
 import operator
+import inspect
 
 # additional modules (should be checked)
 from configobj import ConfigObj
 
 # custom imports
 from util import *
-from obp import *
+from api_clients import *
 
+PYPO_VERSION = '0.2'
 
-
-PYPO_VERSION = '0.1'
-OBP_MIN_VERSION = 2010100101 # required obp version
-
-
-#set up command-line options
+# Set up command-line options
 parser = OptionParser()
 
 # help screeen / info
 usage = "%prog [options]" + " - python playout system"
 parser = OptionParser(usage=usage)
 
-#options
+# Options
+parser.add_option("-v", "--compat", help="Check compatibility with server API version", default=False, action="store_true", dest="check_compat")
+
 parser.add_option("-f", "--fetch-scheduler", help="Fetch from scheduler - scheduler (loop, interval in config file)", default=False, action="store_true", dest="fetch_scheduler")
 parser.add_option("-p", "--push-scheduler", help="Push scheduler to Liquidsoap (loop, interval in config file)", default=False, action="store_true", dest="push_scheduler")
 
 parser.add_option("-F", "--fetch-daypart", help="Fetch from daypart - scheduler (loop, interval in config file)", default=False, action="store_true", dest="fetch_daypart")
 parser.add_option("-P", "--push-daypart", help="Push daypart to Liquidsoap (loop, interval in config file)", default=False, action="store_true", dest="push_daypart")
 
-parser.add_option("-b", "--cleanup", help="Faeili Butzae aka cleanup", default=False, action="store_true", dest="cleanup")
-parser.add_option("-j", "--jingles", help="Get new jungles from obp, comma separated list if jingle-id's as argument", metavar="LIST")
+parser.add_option("-b", "--cleanup", help="Cleanup", default=False, action="store_true", dest="cleanup")
+parser.add_option("-j", "--jingles", help="Get new jingles from obp, comma separated list if jingle-id's as argument", metavar="LIST")
 parser.add_option("-c", "--check", help="Check the cached schedule and exit", default=False, action="store_true", dest="check")
 
 # parse options
@@ -85,66 +84,37 @@ try:
     CACHE_DIR = config['cache_dir']
     FILE_DIR = config['file_dir']
     TMP_DIR = config['tmp_dir']
-    BASE_URL = config['base_url']
-    OBP_API_BASE = BASE_URL + 'mod/medialibrary/'
-    EXPORT_URL = OBP_API_BASE + config['export_path']
-    
-    OBP_STATUS_URL = OBP_API_BASE + 'status/version/json'
-    OBP_API_KEY = config['obp_api_key']
-    
+    API_BASE = config['api_base']
+    API_KEY = config['api_key']
     POLL_INTERVAL = float(config['poll_interval'])
     PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
-    PREPARE_AHEAD = config['prepare_ahead']
+    #PREPARE_AHEAD = config['prepare_ahead']
     CACHE_FOR = config['cache_for']
     CUE_STYLE = config['cue_style']
-    
+    #print config
 except Exception, e:
-    print 'error: ', e
+    print 'Error loading config file: ', e
     sys.exit()
     
 #TIME = time.localtime(time.time())
 TIME = (2010, 6, 26, 15, 33, 23, 2, 322, 0)
     
-    
-    
-    
+# to help with debugging - get the current line number
+def lineno():
+    """Returns the current function name and line number in our program."""
+    return "File " +inspect.currentframe().f_code.co_filename + " / Line " + str(inspect.currentframe().f_back.f_lineno) + ": "
 
 class Global:
     def __init__(self):
         #print '#   global initialisation'
         print
         
-    def selfcheck(self):
-        
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
-        
-        obp_version = self.api_client.get_obp_version()
-        
-        
-        if obp_version == 0:
-            print '#################################################'
-            print 'Unable to get OBP version. Is OBP up and running?'
-            print '#################################################'
-            print
-            sys.exit()
-         
-        elif obp_version < OBP_MIN_VERSION:
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo not compatible with this version of OBP'
-            print
-            sys.exit()
-         
-        else:
-            print 'OBP API: ' + str(OBP_API_BASE)
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo is compatible with this version of OBP'
-            print
-
+    def selfcheck(self):       
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
+        self.api_client.check_version()
             
         """
         Uncomment the following lines to let pypo check if
@@ -153,8 +123,7 @@ class Global:
 #        while self.status.check_ls(LS_HOST, LS_PORT) == 0:
 #            print 'Unable to connect to liquidsoap. Is it up and running?'
 #            time.sleep(2)
-            
-        
+                
   
 """
 
@@ -162,38 +131,30 @@ class Global:
 class Playout:
     def __init__(self):
         #print '#   init fallback' 
-        
          
         self.file_dir = FILE_DIR 
         self.tmp_dir = TMP_DIR 
-        self.export_url = EXPORT_URL
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
-        
-        
         
         # set initial state
         self.range_updated = False
-        
-
-      
         
     """
     Fetching part of pypo
     - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
     - Saves a serialized file of the schedule
-    - playlists are prepared. (brought to ls format) and, if not mounted via nsf, files are copied
+    - playlists are prepared. (brought to liquidsoap format) and, if not mounted via nsf, files are copied
       to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
     - runs the cleanup routine, to get rid of unused cashed files
     """  
     def fetch(self, export_source):
         """
-        wrapper script for fetchin whole shedule (in json)
+        wrapper script for fetching the whole schedule (in json)
         """
         logger = logging.getLogger("fetch")
-        
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -215,34 +176,30 @@ class Playout:
             try: 
                 self.generate_range_dp()
             except Exception, e: 
-                logger.error("%s", e)
+                logger.error(lineno() + "%s", e)
         
-        
-        # get shedule
+        # get schedule
         try:
-            while self.get_schedule(self.export_source) != 1:
+            while self.get_schedule() != 1:
                 logger.warning("failed to read from export url")
                 time.sleep(1)
                 
-        except Exception, e: logger.error("%s", e)
+        except Exception, e: logger.error(lineno() +"%s", e)
 
         # prepare the playlists
         if CUE_STYLE == 'pre':
             try: self.prepare_playlists_cue(self.export_source)
-            except Exception, e: logger.error("%s", e)
+            except Exception, e: logger.error(lineno() + "%s", e)
         elif CUE_STYLE == 'otf':
             try: self.prepare_playlists(self.export_source)
-            except Exception, e: logger.error("%s", e)
+            except Exception, e: logger.error(lineno() + "%s", e)
 
         # cleanup
         try: self.cleanup(self.export_source)
-        except Exception, e: logger.error("%s", e)
+        except Exception, e: logger.error(lineno() + "%s", e)
             
         logger.info("fetch loop completed")
-
             
-            
-        
         
     """
     This is actually a bit ugly (again feel free to improve!!)
@@ -250,9 +207,7 @@ class Playout:
     we do this at 18h. The hour before the state is set back to 'False'
     """
     def generate_range_dp(self):
-        
         logger = logging.getLogger("generate_range_dp")
-        
         logger.debug("trying to trigger daypart update")
         
         tnow = time.localtime(time.time())
@@ -261,7 +216,6 @@ class Playout:
             self.range_updated = False
             
         if(tnow[3] == 17 and self.range_updated == False):
-            
             try: 
                 print self.api_client.generate_range_dp()
                 logger.info("daypart updated")
@@ -269,61 +223,25 @@ class Playout:
                 
             except Exception, e:
                 print e
-
         
         
-    def get_schedule(self, export_source):
-        
-        logger = logging.getLogger("fetch.get_schedule")
-
-        """
-        calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
-        (seconds are ignored, just here for consistency)
-        """
-        
-        
-        self.export_source = export_source
-        
-        tnow = time.localtime(time.time())
-        tstart = time.localtime(time.time() - 3600 * int(CACHE_FOR))
-        tend = time.localtime(time.time() + 3600 * int(PREPARE_AHEAD))
-
-        range = {}
-        range['start'] = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
-        range['end'] = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
-
-        
-        export_url = self.export_url + range['start'] + ',' + range['end'] + '/' + self.export_source
-        logger.info("export from %s", export_url)
-
-        try:
-            response_json = urllib.urlopen(export_url, self.api_auth).read()
-            response = json.read(response_json)
-            logger.info("export status %s", response['check'])
-            status = response['check']
-            schedule = response['playlists']
-            
-        except Exception, e:
-            print e
-            status = 0
-            
+    def get_schedule(self):
+        logger = logging.getLogger("Playout.get_schedule")
+        status, response = self.api_client.get_schedule();
+                    
         if status == 1:
-            
-            logger.info("dump serialized shedule to %s", self.schedule_file)
-            
+            logger.info("dump serialized schedule to %s", self.schedule_file)
+            schedule = response['playlists']
             try:
                 schedule_file = open(self.schedule_file, "w")
                 pickle.dump(schedule, schedule_file)
                 schedule_file.close()
                     
             except Exception, e:
-                print e
+                print lineno() + e
                 status = 0
                 
         return status
-            
-            
-        
         
     
     """
@@ -674,13 +592,12 @@ class Playout:
             
     """
     The counterpart - the push loop periodically (minimal 1/2 of the playlist-grid) 
-    checks if there is a playlist that should be sheduled at the current time.
+    checks if there is a playlist that should be scheduled at the current time.
     If yes, the temporary liquidsoap playlist gets replaced with the corresponding one,
-    then liquid is asked (via telnet) to reload and immediately play it
+    then liquidsoap is asked (via telnet) to reload and immediately play it.
     """
     def push(self, export_source):
         logger = logging.getLogger("push")
-
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -710,11 +627,9 @@ class Playout:
         str_tcomming = "%04d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4])
         str_tcomming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4], tcomming[5])
 
-
         print '--'
         print str_tnow_s + ' now'
         print str_tcomming_s + ' comming'
-
 
         playnow = None
         
@@ -731,19 +646,15 @@ class Playout:
                     playlist = self.schedule[pkey]
                     
                     if int(playlist['played']) != 1:
-                        
                         print '!!!!!!!!!!!!!!!!!!!'
                         print 'MATCH'
 
-    
                         """
                         ok we have a match, replace the current playlist and
                         force liquidsoap to refresh
                         Add a 'played' state to the list in schedule, so it is not called again 
                         in the next push loop
                         """
-                        
-                        
                         ptype = playlist['subtype']
                         
                         try:
@@ -757,9 +668,7 @@ class Playout:
                             transmission_id = 0
                             print e
                         
-                        
                         print 'Playlist id:',
-                        
                         
                         if(self.push_liquidsoap(pkey, ptype, user_id, playlist_id, transmission_id, self.push_ahead) == 1):
                             self.schedule[pkey]['played'] = 1
@@ -767,7 +676,7 @@ class Playout:
                             Call api to update schedule states and
                             write changes back to cache file
                             """
-                            self.api_client.update_shedueled_item(int(playlist['schedule_id']), 1)
+                            self.api_client.update_scheduled_item(int(playlist['schedule_id']), 1)
                             schedule_file = open(self.schedule_file, "w")
                             pickle.dump(self.schedule, schedule_file)
                             schedule_file.close() 
@@ -779,7 +688,6 @@ class Playout:
 
         
     def push_init(self, export_source):
-        
         logger = logging.getLogger("push_init")
         
         self.export_source = export_source
@@ -798,7 +706,6 @@ class Playout:
             schedule = None
 
         return schedule
-    
     
     
     def push_liquidsoap(self, pkey, ptype, user_id, playlist_id, transmission_id, push_ahead):
@@ -841,17 +748,9 @@ class Playout:
                 
             tn.write("exit\n")
             print tn.read_all()
-                
-            
-            
-            
-            
-            
-            
             print 'sleeping for %s s' % (self.push_ahead)
             time.sleep(self.push_ahead)
             
-
             print 'sending "flip"'
             tn = telnetlib.Telnet(LS_HOST, 1234)
             
@@ -867,7 +766,6 @@ class Playout:
             tn.write("vars.playlist_id %s\n" % playlist_id)
             tn.write("vars.transmission_id %s\n" % transmission_id)
             tn.write("vars.playlist_type %s\n" % ptype)
-            
             
 #            if(int(ptype) < 5):
 #                tn.write(self.export_source + '.flip')
@@ -885,7 +783,6 @@ class Playout:
                 tn.write("live_in.stop")
                 tn.write("\n") 
             
-            
             tn.write("exit\n")
             
             print tn.read_all()
@@ -899,7 +796,6 @@ class Playout:
     
     def push_liquidsoap_legacy(self, pkey, ptype, p_id, user_id):
         logger = logging.getLogger("push_liquidsoap")
-        
         logger.debug('trying to push %s to liquidsoap', pkey)
         
         self.export_source = export_source
@@ -957,9 +853,6 @@ class Playout:
                 """
                 tn.write("pl.pl_id '%s'\n" % p_id)
                 tn.write("pl.user_id '%s'\n" % user_id)
-                
-                
-                
                 tn.write("exit\n")
                 
                 print tn.read_all()
@@ -976,7 +869,7 @@ class Playout:
     
 
     """
-    Updates the jinles. Give comma separated list of jingle tracks
+    Updates the jingles. Give comma separated list of jingle tracks.
     """
     def update_jingles(self, options):
         print 'jingles'
@@ -985,7 +878,7 @@ class Playout:
         print jingle_list
         for media_id in jingle_list:
             # api path maybe should not be hard-coded
-            src = OBP_API_BASE + 'api/pypo/get_media/' + str(media_id)
+            src = API_BASE + 'api/pypo/get_media/' + str(media_id)
             print src
             # include the hourly jungles for the moment
             dst = "%s%s/%s.mp3" % (self.file_dir, 'jingles/hourly', str(media_id))
@@ -1001,9 +894,6 @@ class Playout:
                 print e
                 logger.error("%s", e)
 
-
-  
-    
     
     def check_schedule(self, export_source):
         logger = logging.getLogger("check_schedule")
@@ -1020,8 +910,6 @@ class Playout:
         except Exception, e:
             logger.error("%s", e)
             schedule = None
-
-
 
         #for pkey in schedule:
         for pkey in sorted(schedule.iterkeys()):
@@ -1042,18 +930,17 @@ class Playout:
             for media in playlist['medias']:
                 print media
             
-            
             print 
-            
             
 
 if __name__ == '__main__':
   
     print
-    print '#########################################'
-    print '#           *** pypo  ***               #'
-    print '#         obp python playout            #'
-    print '#########################################'
+    print '###########################################'
+    print '#             *** pypo  ***               #'
+    print '#      Liquidsoap + External Scheduler    #'
+    print '#            Playout System               #'
+    print '###########################################'
     print
     
     # initialize
@@ -1141,5 +1028,5 @@ while run == True:
             print e
         sys.exit()
             
-
+		
     sys.exit()

@@ -10,8 +10,8 @@ This function acts as a gateway between liquidsoap and the obp-api.
 Mainliy used to tell the plattform what pypo/LS does.
 
 Main case: 
- - whenever LS starts playing a new track, its on_metadata callback calls
-   a function in ls (notify(m)) which then calls the pythin script here
+ - whenever Liquidsoap starts playing a new track, its on_metadata callback calls
+   a function in liquidsoap (notify(m)) which then calls the python script here
    with the currently starting filename as parameter 
  - this python script takes this parameter, tries to extract the actual
    media id from it, and then calls back to obp via api to tell about
@@ -42,11 +42,7 @@ from configobj import ConfigObj
 from util import *
 from obp import *
 
-
-
 PYPO_VERSION = '0.9'
-OBP_MIN_VERSION = 2010040501 # required obp version
-
 
 #set up command-line options
 parser = OptionParser()
@@ -69,11 +65,9 @@ try:
     config = ConfigObj('config.cfg')
     TMP_DIR = config['tmp_dir']
     BASE_URL = config['base_url']
-    OBP_API_BASE = BASE_URL + 'mod/medialibrary/'
+    API_BASE = BASE_URL + 'mod/medialibrary/'
     EXPORT_SOURCE = config['export_source']
-    
-    OBP_STATUS_URL = OBP_API_BASE + 'status/version/json'
-    OBP_API_KEY = config['obp_api_key']
+    API_KEY = config['api_key']
     
 except Exception, e:
     print 'error: ', e
@@ -86,31 +80,9 @@ class Global:
         
     def selfcheck(self):
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
-        
-        obp_version = self.api_client.get_obp_version()
-        
-        if obp_version == 0:
-            print '#################################################'
-            print 'Unable to get OBP version. Is OBP up and running?'
-            print '#################################################'
-            print
-            sys.exit()
-         
-        elif obp_version < OBP_MIN_VERSION:
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo not compatible with this version of OBP'
-            print
-            sys.exit()
-         
-        else:
-            print 'OBP API: ' + str(OBP_API_BASE)
-            print 'OBP version: ' + str(obp_version)
-            print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-            print 'pypo is compatible with this version of OBP'
-            print
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
+        self.api_client.check_version()
 
 class Notify:
     def __init__(self):
@@ -118,15 +90,14 @@ class Notify:
         self.tmp_dir = TMP_DIR 
         self.export_source = EXPORT_SOURCE
         
-        self.api_auth = urllib.urlencode({'api_key': OBP_API_KEY})
-        self.api_client = ApiClient(OBP_API_BASE, self.api_auth)
+        self.api_auth = urllib.urlencode({'api_key': API_KEY})
+        self.api_client = api_client.api_client_factory(config)
 
     
     def start_playing(self, options):
         logger = logging.getLogger("start_playing")
 
         tnow = time.localtime(time.time())
-
 
         path = options
         
@@ -151,17 +122,10 @@ class Notify:
         print "Media ID: ", 
         print id            
           
-        
-        
         # self.api_client.update_start_playing(id, self.export_source, path) 
-        
         txt = "test this update"
-        
-        
-        
+
         # Echo client program
-
-
         HOST = '172.16.16.128'    # The remote host
         PORT = 50008              # The same port as used by the server
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -200,12 +164,7 @@ class Notify:
         if data == "session":
             print 'KKK'
         
-        
         time.sleep(0.1)
-        
-        
-        
-        
         print 'DONE'  
 
      
@@ -237,7 +196,4 @@ while run == True:
             print e
         sys.exit()  
         
-
-            
-
     sys.exit()

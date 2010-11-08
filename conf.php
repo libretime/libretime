@@ -23,6 +23,8 @@ $CC_CONFIG = array(
 
     /* ================================================ storage configuration */
 
+    'apiKey' => array('AAA'),
+    
     // main directory for storing binary media files
     'storageDir'    =>  dirname(__FILE__).'/stor',
 
@@ -40,7 +42,8 @@ $CC_CONFIG = array(
     "smartyTemplate" => dirname(__FILE__)."/htmlUI/templates",
     "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
     'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear',
-
+    'zendPath'      =>  dirname(__FILE__).'/3rd_party/php/Zend',
+    
      // secret token cookie name
     'authCookieName'=> 'campcaster_session_id',
 
@@ -148,14 +151,16 @@ $CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
 $CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
 $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
 
-// system users/groups - cannot be deleted
+// System users/groups - they cannot be deleted
 $CC_CONFIG['sysSubjs'] = array(
     'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']
 );
 
-// Add PEAR to the PHP path
+// Add libs to the PHP path
 $old_include_path = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath'].PATH_SEPARATOR.$old_include_path);
+set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
+					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
+					.PATH_SEPARATOR.$old_include_path);
 
 // Check that all the required directories exist.
 //foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
