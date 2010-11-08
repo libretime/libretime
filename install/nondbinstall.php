@@ -24,6 +24,32 @@ require_once(dirname(__FILE__).'/../backend/GreenBox.php');
 require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 require_once(dirname(__FILE__)."/installInit.php");
 
+// Need to check that we are superuser before running this.
+
+echo " *** Database Installation ***\n";
+
+//sudo -u postgres createuser --no-superuser --no-createdb --no-createrole -A -P myuser
+
+// Create the database user
+$command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
+  ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
+//echo $command."\n";
+@exec($command, $output, $results);
+if ($results == 0) {
+  echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
+} else {
+  echo "   * User {$CC_CONFIG['dsn']['username']} already exists.\n";
+}
+
+$command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
+//echo $command."\n";
+@exec($command, $output, $results);
+if ($results == 0) {
+  echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
+} else {
+  echo "   * Database '{$CC_CONFIG['dsn']['database']}' already exists.\n";
+}
+
 // Connect to DB
 campcaster_db_connect(true);
 
@@ -36,6 +62,12 @@ if ($langIsInstalled == '0') {
 } else {
   echo "   * Postgres scripting language already installed\n";
 }
+
+// Put Propel sql files in Database
+$command = "../3rd_party/php/propel/generator/bin/propel-gen ../backend/propel-db/ insert-sql";
+echo $command."\n";
+@exec($command, $output, $results);
+
 
 //------------------------------------------------------------------------
 // Install default data
