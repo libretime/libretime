@@ -74,8 +74,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'PlaylistId', 'FileId', 'Position', 'Cliplength', 'Cuein', 'Cueout', 'Fadein', 'Fadeout', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'playlistId', 'fileId', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
 		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
 		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
@@ -89,8 +89,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'PlaylistId' => 1, 'FileId' => 2, 'Position' => 3, 'Cliplength' => 4, 'Cuein' => 5, 'Cueout' => 6, 'Fadein' => 7, 'Fadeout' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'playlistId' => 1, 'fileId' => 2, 'position' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbPosition' => 3, 'DbCliplength' => 4, 'DbCuein' => 5, 'DbCueout' => 6, 'DbFadein' => 7, 'DbFadeout' => 8, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbPosition' => 3, 'dbCliplength' => 4, 'dbCuein' => 5, 'dbCueout' => 6, 'dbFadein' => 7, 'dbFadeout' => 8, ),
 		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::POSITION => 3, self::CLIPLENGTH => 4, self::CUEIN => 5, self::CUEOUT => 6, self::FADEIN => 7, self::FADEOUT => 8, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'POSITION' => 3, 'CLIPLENGTH' => 4, 'CUEIN' => 5, 'CUEOUT' => 6, 'FADEIN' => 7, 'FADEOUT' => 8, ),
 		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'position' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
@@ -309,7 +309,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getId();
+				$key = (string) $obj->getDbId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -329,7 +329,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
 			if (is_object($value) && $value instanceof CcPlaylistcontents) {
-				$key = (string) $value->getId();
+				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;

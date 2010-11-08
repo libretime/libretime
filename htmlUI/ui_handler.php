@@ -403,6 +403,13 @@ switch ($_REQUEST['act']) {
 	    }
 	    $uiHandler->PLAYLIST->setReload();
 	    break;
+	    
+	 case "PL.delete":
+	    if (($ui_tmpid = $uiHandler->PLAYLIST->delete($_REQUEST['id'])) !== FALSE) {
+	    	$uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
+	    }
+	    $uiHandler->PLAYLIST->setReload();
+	    break;
 
     case "PL.export":
 	    $uiHandler->redirUrl = UI_BROWSER."?popup[]=PL.redirect2DownloadExportedFile&id={$_REQUEST['id']}&playlisttype={$_REQUEST['playlisttype']}&exporttype={$_REQUEST['exporttype']}";
@@ -436,7 +443,6 @@ switch ($_REQUEST['act']) {
           $Smarty->assign("USER_ERROR", "Scheduling conflict.");
       }
 
-	    //$uiHandler->SCHEDULER->setReload();
       $NO_REDIRECT = true;
       $_REQUEST["act"] = "SCHEDULER";
       include("ui_browser.php");

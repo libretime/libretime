@@ -35,13 +35,13 @@ onClick="return contextmenu('{$i.id}' , '{$i.type}'
                 , 'SCHEDULER.addPL'
                 , 'PL.addItem'
                 , 'PL.activate'
-                , 'delete'
+                , 'PL.delete'
             {/if}
         {else}
             , 'SCHEDULER.addPL'
             , 'PL.activate'
             , 'PL.create'
-            , 'delete'
+            , 'PL.delete'
             , 'PL.export'
         {/if}
     {/if}

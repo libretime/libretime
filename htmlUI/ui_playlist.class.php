@@ -100,7 +100,7 @@ class uiPlaylist
             return FALSE;
         }
         $res = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
-        if (PEAR::isError($res)) {
+        if (PEAR::isError($res) || $res === FALSE) {
             if (UI_VERBOSE === TRUE) {
             	print_r($res);
             }
@@ -130,7 +130,7 @@ class uiPlaylist
             return FALSE;
         }
         $res = $this->Base->gb->releaseLockedPlaylist($this->activeId, $this->Base->sessid);
-        if (PEAR::isError($res)) {
+        if (PEAR::isError($res) || $res === FALSE) {
             if (UI_VERBOSE === TRUE) {
             	print_r($res);
             }
@@ -438,7 +438,17 @@ class uiPlaylist
         $this->Base->_retMsg('Cannot delete this playlist.');
         return FALSE;
     } // fn deleteActive
+    
+    public function delete($id)
+    {
+        $res = $this->Base->gb->deletePlaylist($id);
+        if ($res === TRUE) {
+            return $id;
+        }
 
+        $this->Base->_retMsg('Cannot delete this playlist.');
+        return FALSE;
+    }
 
     public function isAvailable($id)
     {

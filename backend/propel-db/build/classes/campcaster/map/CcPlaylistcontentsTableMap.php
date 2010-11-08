@@ -38,15 +38,15 @@ class CcPlaylistcontentsTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		$this->setPrimaryKeyMethodInfo('cc_playlistcontents_id_seq');
 		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addForeignKey('PLAYLIST_ID', 'PlaylistId', 'INTEGER', 'cc_playlist', 'ID', false, null, null);
-		$this->addForeignKey('FILE_ID', 'FileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
-		$this->addColumn('POSITION', 'Position', 'INTEGER', false, null, null);
-		$this->addColumn('CLIPLENGTH', 'Cliplength', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUEIN', 'Cuein', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUEOUT', 'Cueout', 'TIME', false, null, '00:00:00');
-		$this->addColumn('FADEIN', 'Fadein', 'TIME', false, null, '00:00:00');
-		$this->addColumn('FADEOUT', 'Fadeout', 'TIME', false, null, '00:00:00');
+		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
+		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', false, null, null);
+		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
+		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
+		$this->addColumn('CLIPLENGTH', 'DbCliplength', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CUEIN', 'DbCuein', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CUEOUT', 'DbCueout', 'TIME', false, null, '00:00:00');
+		$this->addColumn('FADEIN', 'DbFadein', 'TIME', false, null, '00:00:00');
+		$this->addColumn('FADEOUT', 'DbFadeout', 'TIME', false, null, '00:00:00');
 		// validators
 	} // initialize()
 

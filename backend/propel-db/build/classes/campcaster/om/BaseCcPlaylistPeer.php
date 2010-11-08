@@ -71,8 +71,8 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'State', 'Currentlyaccessing', 'Editedby', 'Mtime', 'Creator', 'Description', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'state', 'currentlyaccessing', 'editedby', 'mtime', 'creator', 'description', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbState', 'DbCurrentlyaccessing', 'DbEditedby', 'DbMtime', 'DbCreator', 'DbDescription', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbState', 'dbCurrentlyaccessing', 'dbEditedby', 'dbMtime', 'dbCreator', 'dbDescription', ),
 		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::STATE, self::CURRENTLYACCESSING, self::EDITEDBY, self::MTIME, self::CREATOR, self::DESCRIPTION, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'STATE', 'CURRENTLYACCESSING', 'EDITEDBY', 'MTIME', 'CREATOR', 'DESCRIPTION', ),
 		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'state', 'currentlyaccessing', 'editedby', 'mtime', 'creator', 'description', ),
@@ -86,8 +86,8 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'State' => 2, 'Currentlyaccessing' => 3, 'Editedby' => 4, 'Mtime' => 5, 'Creator' => 6, 'Description' => 7, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'state' => 2, 'currentlyaccessing' => 3, 'editedby' => 4, 'mtime' => 5, 'creator' => 6, 'description' => 7, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbState' => 2, 'DbCurrentlyaccessing' => 3, 'DbEditedby' => 4, 'DbMtime' => 5, 'DbCreator' => 6, 'DbDescription' => 7, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbState' => 2, 'dbCurrentlyaccessing' => 3, 'dbEditedby' => 4, 'dbMtime' => 5, 'dbCreator' => 6, 'dbDescription' => 7, ),
 		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::STATE => 2, self::CURRENTLYACCESSING => 3, self::EDITEDBY => 4, self::MTIME => 5, self::CREATOR => 6, self::DESCRIPTION => 7, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'STATE' => 2, 'CURRENTLYACCESSING' => 3, 'EDITEDBY' => 4, 'MTIME' => 5, 'CREATOR' => 6, 'DESCRIPTION' => 7, ),
 		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'state' => 2, 'currentlyaccessing' => 3, 'editedby' => 4, 'mtime' => 5, 'creator' => 6, 'description' => 7, ),
@@ -304,7 +304,7 @@ abstract class BaseCcPlaylistPeer {
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getId();
+				$key = (string) $obj->getDbId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -324,7 +324,7 @@ abstract class BaseCcPlaylistPeer {
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
 			if (is_object($value) && $value instanceof CcPlaylist) {
-				$key = (string) $value->getId();
+				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;

@@ -2,6 +2,12 @@
 # NOTE: You have to load all classes that use session variables BEFORE you make a call to session_start()!!!
 session_start();
 
+// Initialize Propel with the runtime configuration
+Propel::init(__DIR__."/../backend/propel-db/build/conf/campcaster-conf.php");
+
+// Add the generated 'classes' directory to the include path
+set_include_path(__DIR__."/../backend/propel-db/build/classes" . PATH_SEPARATOR . get_include_path());
+
 // initialize objects ###############################################
 $Smarty = new Smarty;
 $Smarty->caching = false;
@@ -22,13 +28,12 @@ $uiBase =& $uiBrowser;
 $jscom = new jscom(array("jscom_wrapper"));
 $jscom->handler();
 
-
 // load Smarty+filters ##############################################
 require_once(dirname(__FILE__).'/ui_smartyExtensions.inc.php');
+
 //$Smarty->load_filter('output', 'trimwhitespace');
 //$Smarty->load_filter('post', 'template_marker');
 $Smarty->load_filter('output', 'localizer');
-
 
 // some basic things ################################################
 foreach (get_defined_constants() as $k=>$v) {

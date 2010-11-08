@@ -38,14 +38,14 @@ class CcPlaylistTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		$this->setPrimaryKeyMethodInfo('cc_playlist_id_seq');
 		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('NAME', 'Name', 'VARCHAR', true, 255, '');
-		$this->addColumn('STATE', 'State', 'VARCHAR', true, 128, 'empty');
-		$this->addColumn('CURRENTLYACCESSING', 'Currentlyaccessing', 'INTEGER', true, null, 0);
-		$this->addForeignKey('EDITEDBY', 'Editedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
-		$this->addColumn('MTIME', 'Mtime', 'TIMESTAMP', false, 6, null);
-		$this->addColumn('CREATOR', 'Creator', 'VARCHAR', false, 32, null);
-		$this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 512, null);
+		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
+		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
+		$this->addColumn('STATE', 'DbState', 'VARCHAR', true, 128, 'empty');
+		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
+		$this->addForeignKey('EDITEDBY', 'DbEditedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
+		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('CREATOR', 'DbCreator', 'VARCHAR', false, 32, null);
+		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
 		// validators
 	} // initialize()
 

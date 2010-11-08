@@ -6,25 +6,25 @@
  *
  * 
  *
- * @method     CcPlaylistcontentsQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     CcPlaylistcontentsQuery orderByPlaylistId($order = Criteria::ASC) Order by the playlist_id column
- * @method     CcPlaylistcontentsQuery orderByFileId($order = Criteria::ASC) Order by the file_id column
- * @method     CcPlaylistcontentsQuery orderByPosition($order = Criteria::ASC) Order by the position column
- * @method     CcPlaylistcontentsQuery orderByCliplength($order = Criteria::ASC) Order by the cliplength column
- * @method     CcPlaylistcontentsQuery orderByCuein($order = Criteria::ASC) Order by the cuein column
- * @method     CcPlaylistcontentsQuery orderByCueout($order = Criteria::ASC) Order by the cueout column
- * @method     CcPlaylistcontentsQuery orderByFadein($order = Criteria::ASC) Order by the fadein column
- * @method     CcPlaylistcontentsQuery orderByFadeout($order = Criteria::ASC) Order by the fadeout column
+ * @method     CcPlaylistcontentsQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method     CcPlaylistcontentsQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
+ * @method     CcPlaylistcontentsQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method     CcPlaylistcontentsQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
+ * @method     CcPlaylistcontentsQuery orderByDbCliplength($order = Criteria::ASC) Order by the cliplength column
+ * @method     CcPlaylistcontentsQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
+ * @method     CcPlaylistcontentsQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
+ * @method     CcPlaylistcontentsQuery orderByDbFadein($order = Criteria::ASC) Order by the fadein column
+ * @method     CcPlaylistcontentsQuery orderByDbFadeout($order = Criteria::ASC) Order by the fadeout column
  *
- * @method     CcPlaylistcontentsQuery groupById() Group by the id column
- * @method     CcPlaylistcontentsQuery groupByPlaylistId() Group by the playlist_id column
- * @method     CcPlaylistcontentsQuery groupByFileId() Group by the file_id column
- * @method     CcPlaylistcontentsQuery groupByPosition() Group by the position column
- * @method     CcPlaylistcontentsQuery groupByCliplength() Group by the cliplength column
- * @method     CcPlaylistcontentsQuery groupByCuein() Group by the cuein column
- * @method     CcPlaylistcontentsQuery groupByCueout() Group by the cueout column
- * @method     CcPlaylistcontentsQuery groupByFadein() Group by the fadein column
- * @method     CcPlaylistcontentsQuery groupByFadeout() Group by the fadeout column
+ * @method     CcPlaylistcontentsQuery groupByDbId() Group by the id column
+ * @method     CcPlaylistcontentsQuery groupByDbPlaylistId() Group by the playlist_id column
+ * @method     CcPlaylistcontentsQuery groupByDbFileId() Group by the file_id column
+ * @method     CcPlaylistcontentsQuery groupByDbPosition() Group by the position column
+ * @method     CcPlaylistcontentsQuery groupByDbCliplength() Group by the cliplength column
+ * @method     CcPlaylistcontentsQuery groupByDbCuein() Group by the cuein column
+ * @method     CcPlaylistcontentsQuery groupByDbCueout() Group by the cueout column
+ * @method     CcPlaylistcontentsQuery groupByDbFadein() Group by the fadein column
+ * @method     CcPlaylistcontentsQuery groupByDbFadeout() Group by the fadeout column
  *
  * @method     CcPlaylistcontentsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlaylistcontentsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -41,25 +41,25 @@
  * @method     CcPlaylistcontents findOne(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query
  * @method     CcPlaylistcontents findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query, or a new CcPlaylistcontents object populated from the query conditions when no match is found
  *
- * @method     CcPlaylistcontents findOneById(int $id) Return the first CcPlaylistcontents filtered by the id column
- * @method     CcPlaylistcontents findOneByPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
- * @method     CcPlaylistcontents findOneByFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column
- * @method     CcPlaylistcontents findOneByPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
- * @method     CcPlaylistcontents findOneByCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
- * @method     CcPlaylistcontents findOneByCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
- * @method     CcPlaylistcontents findOneByCueout(string $cueout) Return the first CcPlaylistcontents filtered by the cueout column
- * @method     CcPlaylistcontents findOneByFadein(string $fadein) Return the first CcPlaylistcontents filtered by the fadein column
- * @method     CcPlaylistcontents findOneByFadeout(string $fadeout) Return the first CcPlaylistcontents filtered by the fadeout column
+ * @method     CcPlaylistcontents findOneByDbId(int $id) Return the first CcPlaylistcontents filtered by the id column
+ * @method     CcPlaylistcontents findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
+ * @method     CcPlaylistcontents findOneByDbFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column
+ * @method     CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
+ * @method     CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
+ * @method     CcPlaylistcontents findOneByDbCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
+ * @method     CcPlaylistcontents findOneByDbCueout(string $cueout) Return the first CcPlaylistcontents filtered by the cueout column
+ * @method     CcPlaylistcontents findOneByDbFadein(string $fadein) Return the first CcPlaylistcontents filtered by the fadein column
+ * @method     CcPlaylistcontents findOneByDbFadeout(string $fadeout) Return the first CcPlaylistcontents filtered by the fadeout column
  *
- * @method     array findById(int $id) Return CcPlaylistcontents objects filtered by the id column
- * @method     array findByPlaylistId(int $playlist_id) Return CcPlaylistcontents objects filtered by the playlist_id column
- * @method     array findByFileId(int $file_id) Return CcPlaylistcontents objects filtered by the file_id column
- * @method     array findByPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
- * @method     array findByCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
- * @method     array findByCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
- * @method     array findByCueout(string $cueout) Return CcPlaylistcontents objects filtered by the cueout column
- * @method     array findByFadein(string $fadein) Return CcPlaylistcontents objects filtered by the fadein column
- * @method     array findByFadeout(string $fadeout) Return CcPlaylistcontents objects filtered by the fadeout column
+ * @method     array findByDbId(int $id) Return CcPlaylistcontents objects filtered by the id column
+ * @method     array findByDbPlaylistId(int $playlist_id) Return CcPlaylistcontents objects filtered by the playlist_id column
+ * @method     array findByDbFileId(int $file_id) Return CcPlaylistcontents objects filtered by the file_id column
+ * @method     array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
+ * @method     array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
+ * @method     array findByDbCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
+ * @method     array findByDbCueout(string $cueout) Return CcPlaylistcontents objects filtered by the cueout column
+ * @method     array findByDbFadein(string $fadein) Return CcPlaylistcontents objects filtered by the fadein column
+ * @method     array findByDbFadeout(string $fadeout) Return CcPlaylistcontents objects filtered by the fadeout column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -172,39 +172,39 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     int|array $id The value to use as filter.
+	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterById($id = null, $comparison = null)
+	public function filterByDbId($dbId = null, $comparison = null)
 	{
-		if (is_array($id) && null === $comparison) {
+		if (is_array($dbId) && null === $comparison) {
 			$comparison = Criteria::IN;
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::ID, $id, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::ID, $dbId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the playlist_id column
 	 * 
-	 * @param     int|array $playlistId The value to use as filter.
+	 * @param     int|array $dbPlaylistId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByPlaylistId($playlistId = null, $comparison = null)
+	public function filterByDbPlaylistId($dbPlaylistId = null, $comparison = null)
 	{
-		if (is_array($playlistId)) {
+		if (is_array($dbPlaylistId)) {
 			$useMinMax = false;
-			if (isset($playlistId['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $playlistId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbPlaylistId['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $dbPlaylistId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($playlistId['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $playlistId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbPlaylistId['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $dbPlaylistId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -214,28 +214,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $playlistId, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $dbPlaylistId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the file_id column
 	 * 
-	 * @param     int|array $fileId The value to use as filter.
+	 * @param     int|array $dbFileId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByFileId($fileId = null, $comparison = null)
+	public function filterByDbFileId($dbFileId = null, $comparison = null)
 	{
-		if (is_array($fileId)) {
+		if (is_array($dbFileId)) {
 			$useMinMax = false;
-			if (isset($fileId['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $fileId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFileId['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $dbFileId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fileId['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $fileId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFileId['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $dbFileId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -245,28 +245,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $fileId, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $dbFileId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the position column
 	 * 
-	 * @param     int|array $position The value to use as filter.
+	 * @param     int|array $dbPosition The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByPosition($position = null, $comparison = null)
+	public function filterByDbPosition($dbPosition = null, $comparison = null)
 	{
-		if (is_array($position)) {
+		if (is_array($dbPosition)) {
 			$useMinMax = false;
-			if (isset($position['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $position['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbPosition['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $dbPosition['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($position['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $position['max'], Criteria::LESS_EQUAL);
+			if (isset($dbPosition['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $dbPosition['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -276,28 +276,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $position, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $dbPosition, $comparison);
 	}
 
 	/**
 	 * Filter the query on the cliplength column
 	 * 
-	 * @param     string|array $cliplength The value to use as filter.
+	 * @param     string|array $dbCliplength The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByCliplength($cliplength = null, $comparison = null)
+	public function filterByDbCliplength($dbCliplength = null, $comparison = null)
 	{
-		if (is_array($cliplength)) {
+		if (is_array($dbCliplength)) {
 			$useMinMax = false;
-			if (isset($cliplength['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $cliplength['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCliplength['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($cliplength['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $cliplength['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCliplength['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -307,28 +307,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $cliplength, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength, $comparison);
 	}
 
 	/**
 	 * Filter the query on the cuein column
 	 * 
-	 * @param     string|array $cuein The value to use as filter.
+	 * @param     string|array $dbCuein The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByCuein($cuein = null, $comparison = null)
+	public function filterByDbCuein($dbCuein = null, $comparison = null)
 	{
-		if (is_array($cuein)) {
+		if (is_array($dbCuein)) {
 			$useMinMax = false;
-			if (isset($cuein['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $cuein['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCuein['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($cuein['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $cuein['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCuein['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -338,28 +338,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $cuein, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein, $comparison);
 	}
 
 	/**
 	 * Filter the query on the cueout column
 	 * 
-	 * @param     string|array $cueout The value to use as filter.
+	 * @param     string|array $dbCueout The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByCueout($cueout = null, $comparison = null)
+	public function filterByDbCueout($dbCueout = null, $comparison = null)
 	{
-		if (is_array($cueout)) {
+		if (is_array($dbCueout)) {
 			$useMinMax = false;
-			if (isset($cueout['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $cueout['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCueout['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($cueout['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $cueout['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCueout['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -369,28 +369,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $cueout, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout, $comparison);
 	}
 
 	/**
 	 * Filter the query on the fadein column
 	 * 
-	 * @param     string|array $fadein The value to use as filter.
+	 * @param     string|array $dbFadein The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByFadein($fadein = null, $comparison = null)
+	public function filterByDbFadein($dbFadein = null, $comparison = null)
 	{
-		if (is_array($fadein)) {
+		if (is_array($dbFadein)) {
 			$useMinMax = false;
-			if (isset($fadein['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $fadein['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFadein['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $dbFadein['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fadein['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $fadein['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFadein['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $dbFadein['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -400,28 +400,28 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $fadein, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::FADEIN, $dbFadein, $comparison);
 	}
 
 	/**
 	 * Filter the query on the fadeout column
 	 * 
-	 * @param     string|array $fadeout The value to use as filter.
+	 * @param     string|array $dbFadeout The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
-	public function filterByFadeout($fadeout = null, $comparison = null)
+	public function filterByDbFadeout($dbFadeout = null, $comparison = null)
 	{
-		if (is_array($fadeout)) {
+		if (is_array($dbFadeout)) {
 			$useMinMax = false;
-			if (isset($fadeout['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $fadeout['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFadeout['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $dbFadeout['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fadeout['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $fadeout['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFadeout['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $dbFadeout['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -431,7 +431,7 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $fadeout, $comparison);
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::FADEOUT, $dbFadeout, $comparison);
 	}
 
 	/**
@@ -509,7 +509,7 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	public function filterByCcPlaylist($ccPlaylist, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $ccPlaylist->getId(), $comparison);
+			->addUsingAlias(CcPlaylistcontentsPeer::PLAYLIST_ID, $ccPlaylist->getDbId(), $comparison);
 	}
 
 	/**
@@ -572,7 +572,7 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	public function prune($ccPlaylistcontents = null)
 	{
 		if ($ccPlaylistcontents) {
-			$this->addUsingAlias(CcPlaylistcontentsPeer::ID, $ccPlaylistcontents->getId(), Criteria::NOT_EQUAL);
+			$this->addUsingAlias(CcPlaylistcontentsPeer::ID, $ccPlaylistcontents->getDbId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;

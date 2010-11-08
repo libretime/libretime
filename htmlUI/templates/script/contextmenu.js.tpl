@@ -49,6 +49,10 @@ function contextmenu(param, type) {
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Edit##&nbsp;</a></li>";
             break;
 
+            case "PL.delete":
+            contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.delete&id="+param+"')\" "+oF+">&nbsp;##Delete##&nbsp;</a></li>";
+            break;
+
             case "PL.create":
             contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##Use to create playlist##&nbsp;</a></li>";
             break;

@@ -121,28 +121,28 @@
     </index>
   </table>
   <table name="cc_playlist" phpName="CcPlaylist">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="state" phpName="State" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
-    <column name="currentlyaccessing" phpName="Currentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="editedby" phpName="Editedby" type="INTEGER" required="false"/>
-    <column name="mtime" phpName="Mtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="creator" phpName="Creator" type="VARCHAR" size="32" required="false"/>
-    <column name="description" phpName="Description" type="VARCHAR" size="512" required="false"/>
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="state" phpName="DbState" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
+    <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
+    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="creator" phpName="DbCreator" type="VARCHAR" size="32" required="false"/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_playlist_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
   </table>
   <table name="cc_playlistcontents" phpName="CcPlaylistcontents">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="playlist_id" phpName="PlaylistId" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="FileId" type="INTEGER" required="false"/>
-    <column name="position" phpName="Position" type="INTEGER" required="false"/>
-    <column name="cliplength" phpName="Cliplength" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cuein" phpName="Cuein" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cueout" phpName="Cueout" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fadein" phpName="Fadein" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fadeout" phpName="Fadeout" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
+    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
+    <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
+    <column name="cliplength" phpName="DbCliplength" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cuein" phpName="DbCuein" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cueout" phpName="DbCueout" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="fadein" phpName="DbFadein" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="fadeout" phpName="DbFadeout" type="TIME" required="false" defaultValue="00:00:00"/>
     <foreign-key foreignTable="cc_files" name="cc_playlistcontents_file_id_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>

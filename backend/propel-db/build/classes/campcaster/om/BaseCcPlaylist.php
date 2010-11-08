@@ -127,7 +127,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getId()
+	public function getDbId()
 	{
 		return $this->id;
 	}
@@ -137,7 +137,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getName()
+	public function getDbName()
 	{
 		return $this->name;
 	}
@@ -147,7 +147,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getState()
+	public function getDbState()
 	{
 		return $this->state;
 	}
@@ -157,7 +157,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getCurrentlyaccessing()
+	public function getDbCurrentlyaccessing()
 	{
 		return $this->currentlyaccessing;
 	}
@@ -167,7 +167,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getEditedby()
+	public function getDbEditedby()
 	{
 		return $this->editedby;
 	}
@@ -181,7 +181,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getMtime($format = 'Y-m-d H:i:s')
+	public function getDbMtime($format = 'Y-m-d H:i:s')
 	{
 		if ($this->mtime === null) {
 			return null;
@@ -210,7 +210,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getCreator()
+	public function getDbCreator()
 	{
 		return $this->creator;
 	}
@@ -220,7 +220,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getDescription()
+	public function getDbDescription()
 	{
 		return $this->description;
 	}
@@ -231,7 +231,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setId($v)
+	public function setDbId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -243,7 +243,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setId()
+	} // setDbId()
 
 	/**
 	 * Set the value of [name] column.
@@ -251,7 +251,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setName($v)
+	public function setDbName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -263,7 +263,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setName()
+	} // setDbName()
 
 	/**
 	 * Set the value of [state] column.
@@ -271,7 +271,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setState($v)
+	public function setDbState($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -283,7 +283,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setState()
+	} // setDbState()
 
 	/**
 	 * Set the value of [currentlyaccessing] column.
@@ -291,7 +291,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setCurrentlyaccessing($v)
+	public function setDbCurrentlyaccessing($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -303,7 +303,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setCurrentlyaccessing()
+	} // setDbCurrentlyaccessing()
 
 	/**
 	 * Set the value of [editedby] column.
@@ -311,7 +311,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setEditedby($v)
+	public function setDbEditedby($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -327,7 +327,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setEditedby()
+	} // setDbEditedby()
 
 	/**
 	 * Sets the value of [mtime] column to a normalized version of the date/time value specified.
@@ -336,7 +336,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setMtime($v)
+	public function setDbMtime($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -376,7 +376,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setMtime()
+	} // setDbMtime()
 
 	/**
 	 * Set the value of [creator] column.
@@ -384,7 +384,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setCreator($v)
+	public function setDbCreator($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -396,7 +396,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setCreator()
+	} // setDbCreator()
 
 	/**
 	 * Set the value of [description] column.
@@ -404,7 +404,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcPlaylist The current object (for fluent API support)
 	 */
-	public function setDescription($v)
+	public function setDbDescription($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -416,7 +416,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setDescription()
+	} // setDbDescription()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -682,7 +682,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows += 1;
-					$this->setId($pk);  //[IMV] update autoincrement primary key
+					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows += CcPlaylistPeer::doUpdate($this, $con);
@@ -824,28 +824,28 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				return $this->getId();
+				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getName();
+				return $this->getDbName();
 				break;
 			case 2:
-				return $this->getState();
+				return $this->getDbState();
 				break;
 			case 3:
-				return $this->getCurrentlyaccessing();
+				return $this->getDbCurrentlyaccessing();
 				break;
 			case 4:
-				return $this->getEditedby();
+				return $this->getDbEditedby();
 				break;
 			case 5:
-				return $this->getMtime();
+				return $this->getDbMtime();
 				break;
 			case 6:
-				return $this->getCreator();
+				return $this->getDbCreator();
 				break;
 			case 7:
-				return $this->getDescription();
+				return $this->getDbDescription();
 				break;
 			default:
 				return null;
@@ -871,14 +871,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		$keys = CcPlaylistPeer::getFieldNames($keyType);
 		$result = array(
-			$keys[0] => $this->getId(),
-			$keys[1] => $this->getName(),
-			$keys[2] => $this->getState(),
-			$keys[3] => $this->getCurrentlyaccessing(),
-			$keys[4] => $this->getEditedby(),
-			$keys[5] => $this->getMtime(),
-			$keys[6] => $this->getCreator(),
-			$keys[7] => $this->getDescription(),
+			$keys[0] => $this->getDbId(),
+			$keys[1] => $this->getDbName(),
+			$keys[2] => $this->getDbState(),
+			$keys[3] => $this->getDbCurrentlyaccessing(),
+			$keys[4] => $this->getDbEditedby(),
+			$keys[5] => $this->getDbMtime(),
+			$keys[6] => $this->getDbCreator(),
+			$keys[7] => $this->getDbDescription(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -916,28 +916,28 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				$this->setId($value);
+				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setName($value);
+				$this->setDbName($value);
 				break;
 			case 2:
-				$this->setState($value);
+				$this->setDbState($value);
 				break;
 			case 3:
-				$this->setCurrentlyaccessing($value);
+				$this->setDbCurrentlyaccessing($value);
 				break;
 			case 4:
-				$this->setEditedby($value);
+				$this->setDbEditedby($value);
 				break;
 			case 5:
-				$this->setMtime($value);
+				$this->setDbMtime($value);
 				break;
 			case 6:
-				$this->setCreator($value);
+				$this->setDbCreator($value);
 				break;
 			case 7:
-				$this->setDescription($value);
+				$this->setDbDescription($value);
 				break;
 		} // switch()
 	}
@@ -963,14 +963,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		$keys = CcPlaylistPeer::getFieldNames($keyType);
 
-		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setState($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setCurrentlyaccessing($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setEditedby($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setMtime($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setCreator($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDescription($arr[$keys[7]]);
+		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbState($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbCurrentlyaccessing($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbEditedby($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbMtime($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbCreator($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbDescription($arr[$keys[7]]);
 	}
 
 	/**
@@ -1016,7 +1016,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->getId();
+		return $this->getDbId();
 	}
 
 	/**
@@ -1027,7 +1027,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 */
 	public function setPrimaryKey($key)
 	{
-		$this->setId($key);
+		$this->setDbId($key);
 	}
 
 	/**
@@ -1036,7 +1036,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return null === $this->getId();
+		return null === $this->getDbId();
 	}
 
 	/**
@@ -1051,13 +1051,13 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setName($this->name);
-		$copyObj->setState($this->state);
-		$copyObj->setCurrentlyaccessing($this->currentlyaccessing);
-		$copyObj->setEditedby($this->editedby);
-		$copyObj->setMtime($this->mtime);
-		$copyObj->setCreator($this->creator);
-		$copyObj->setDescription($this->description);
+		$copyObj->setDbName($this->name);
+		$copyObj->setDbState($this->state);
+		$copyObj->setDbCurrentlyaccessing($this->currentlyaccessing);
+		$copyObj->setDbEditedby($this->editedby);
+		$copyObj->setDbMtime($this->mtime);
+		$copyObj->setDbCreator($this->creator);
+		$copyObj->setDbDescription($this->description);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1074,7 +1074,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 
 
 		$copyObj->setNew(true);
-		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
+		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**
@@ -1125,9 +1125,9 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	public function setCcSubjs(CcSubjs $v = null)
 	{
 		if ($v === null) {
-			$this->setEditedby(NULL);
+			$this->setDbEditedby(NULL);
 		} else {
-			$this->setEditedby($v->getId());
+			$this->setDbEditedby($v->getId());
 		}
 
 		$this->aCcSubjs = $v;

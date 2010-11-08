@@ -63,67 +63,30 @@ class Playlist {
 
     public static function Insert($p_values)
     {
-        global $CC_CONFIG, $CC_DBC;
-
-        // Create the StoredPlaylist object
+         // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
         $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
+    	$storedPlaylist->mtime = new DateTime("now");
+    
+    	$pl = new CcPlaylist();
+    	$pl->setDbName($storedPlaylist->name);
+    	$pl->setDbState("incomplete");
+    	$pl->setDbMtime($storedPlaylist->mtime);
+    	$pl->save();
 
-        // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
-      	$storedPlaylist->id = isset($p_values['id']) && is_integer($p_values['id'])?"'".$p_values['id']."'":'DEFAULT';
+    	$storedPlaylist->id = $pl->getDbId();
+        $storedPlaylist->setState('ready');
 
-        // Insert record into the database
-        $escapedName = pg_escape_string($storedPlaylist->name);
-
-        $CC_DBC->query("BEGIN");
-        $sql = "INSERT INTO ".$CC_CONFIG['playListTable']
-                ."(id, name, state, mtime)"
-                ." VALUES ({$storedPlaylist->id}, '{$escapedName}', "
-                ." 'incomplete', now())";
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        if (!is_integer($storedPlaylist->id)) {
-        	// NOTE: POSTGRES-SPECIFIC
-			    $sql = "SELECT currval('".$CC_CONFIG["playListSequence"]."_seq')";
-        	$storedPlaylist->id = $CC_DBC->getOne($sql);
-        }
-
-        // Save state
-        $res = $storedPlaylist->setState('ready');
-
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        return $storedPlaylist->id;
+	    return $storedPlaylist->id;
+	
     }
 
     public static function Delete($id) {
-        global $CC_CONFIG, $CC_DBC;
-
-        $CC_DBC->query("BEGIN");
-        $sql = "DELETE FROM ".$CC_CONFIG['playListTable']. " WHERE id='{$id}'";
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
+        $pl = CcPlaylistQuery::create()->findPK($id);
+    	if($pl === NULL)
+    	    return FALSE;
+    
+    	$pl->delete();
 
         return TRUE;
     }
@@ -133,37 +96,22 @@ class Playlist {
      *
      * @param string $id
      * 		DB id of file
-     * @return Playlist|NULL
-     *      Return NULL if the object doesnt exist in the DB.
+     * @return Playlist|FALSE
+     *      Return FALSE if the object doesnt exist in the DB.
      */
     public static function Recall($id) {
 
-        global $CC_DBC, $CC_CONFIG;
+        $pl = CcPlaylistQuery::create()->findPK($id);
+    	if($pl === NULL)
+    	    return FALSE;
 
-        $escapedID = pg_escape_string($id);
-
-        $sql = "SELECT id,"
-            ." name, state, currentlyaccessing, editedby, "
-            ." mtime"
-            ." FROM ".$CC_CONFIG['playListTable']
-            ." WHERE id ='{$escapedID}'";
-        $row = $CC_DBC->getRow($sql);
-
-        if (PEAR::isError($row)) {
-            return FALSE;
-        }
-        if (is_null($row)) {
-            return FALSE;
-        }
-
-        $storedPlaylist = new Playlist($id);
-
-        $storedPlaylist->id = $row['id'];
-        $storedPlaylist->name = $row['name'];
-        $storedPlaylist->state = $row['state'];
-        $storedPlaylist->currentlyaccessing = $row['currentlyaccessing'];
-        $storedPlaylist->editedby = $row['editedby'];
-        $storedPlaylist->mtime = $row['mtime'];
+        $storedPlaylist = new Playlist();
+        $storedPlaylist->id = $pl->getDbId();
+        $storedPlaylist->name = $pl->getDbName();
+        $storedPlaylist->state = $pl->getDbState();
+        $storedPlaylist->currentlyaccessing = $pl->getDbCurrentlyaccessing();
+        $storedPlaylist->editedby = $pl->getDbEditedby();
+        $storedPlaylist->mtime = $pl->getDbMtime();
 
         return $storedPlaylist;
     }
@@ -176,15 +124,15 @@ class Playlist {
      */
     public function setName($p_newname)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $escapedName = pg_escape_string($p_newname);
-        $sql = "UPDATE ".$CC_CONFIG['playListTable']
-            ." SET name='$escapedName', mtime=now()"
-            ." WHERE id='{$this->id}'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+    	
+    	if($pl === NULL)
+    	    return FALSE;
+    
+    	$pl->setDbName($p_newname);
+    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->save();
+
         $this->name = $p_newname;
         return TRUE;
     }
@@ -198,13 +146,14 @@ class Playlist {
      */
     public function getName($id=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
         if (is_null($id)) {
             return $this->name;
         }
-        $sql = "SELECT name FROM ".$CC_CONFIG['playListTable']
-            ." WHERE id='$id'";
-        return $CC_DBC->getOne($sql);
+        $pl = CcPlaylistQuery::create()->findPK($id);
+        if($pl === NULL)
+    	    return FALSE;
+    	    
+        return $pl->getDbName();
     }
 
 	/**
@@ -218,16 +167,19 @@ class Playlist {
      */
     public function setState($p_state, $p_editedby=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $escapedState = pg_escape_string($p_state);
-        $eb = (!is_null($p_editedby) ? ", editedBy=$p_editedby" : '');
-        $sql = "UPDATE ".$CC_CONFIG['playListTable']
-            ." SET state='$escapedState'$eb, mtime=now()"
-            ." WHERE id='{$this->id}'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+        
+    	if($pl === NULL)
+    	    return FALSE;  	
+    	 
+    	$pl->setDbState($p_state);
+    	$pl->setDbMtime(new DateTime("now"));
+    	
+    	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
+    	$pl->setDbEditedby($eb);
+    	
+    	$pl->save();
+    	
         $this->state = $p_state;
         $this->editedby = $p_editedby;
         return TRUE;
@@ -243,13 +195,15 @@ class Playlist {
      */
     public function getState($id=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
         if (is_null($id)) {
             return $this->state;
         }
-        $sql = "SELECT state FROM ".$CC_CONFIG['playListTable']
-            ." WHERE id='$id'";
-        return $CC_DBC->getOne($sql);
+        
+        $pl = CcPlaylistQuery::create()->findPK($id);    
+    	if($pl === NULL)
+    	    return FALSE;
+    	    
+    	return $pl->getDbState();
     }
 
     /**
@@ -334,14 +288,13 @@ class Playlist {
             }
         }
 
-        $state = $this->state;
         if ($p_val) {
             $r = $this->setState('edited', $p_subjid);
         } else {
-            $r = $this->setState('ready', 'NULL');
+            $r = $this->setState('ready');
         }
-        if (PEAR::isError($r)) {
-            return $r;
+        if ($r === FALSE) {
+            return FALSE;
         }
         return TRUE;
     }
@@ -356,21 +309,13 @@ class Playlist {
     }
 
     private function getNextPos() {
-
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT MAX(position) AS nextPos
-        	FROM cc_playlistcontents
-        	WHERE playlist_id='{$this->getId()}'";
-
-        $res = $CC_DBC->getOne($sql);
+        
+        $res = CcPlaylistQuery::create()
+            ->findPK($this->id)
+            ->computeLastPosition();
 
         if(is_null($res))
             return 0;
-
-        if(PEAR::isError($res)){
-            return $res;
-        }
 
         return $res + 1;
     }
@@ -476,10 +421,10 @@ class Playlist {
      * @return true|PEAR_Error
      * 		TRUE on success
      */
-    public function addAudioClip($p_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
+    public function addAudioClip($ac_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
         //get audio clip.
-        $ac = StoredFile::Recall($p_id);
+        $ac = StoredFile::Recall($ac_id);
         if (is_null($ac) || PEAR::isError($ac)) {
         	return $ac;
         }
@@ -512,8 +457,10 @@ class Playlist {
             $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($p_cueout));
         }
         $p_clipLength = self::secondsToPlaylistTime($clipLengthS);
-
-        $res = $this->insertPlaylistElement($this->getId(), $p_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
+        
+        $_SESSION['debug'] = "Playlist id: " .$this->id."</br>";
+        
+        $res = $this->insertPlaylistElement($this->id, $ac_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -530,29 +477,18 @@ class Playlist {
      */
     public function delAudioClip($pos)
     {
-        global $CC_CONFIG, $CC_DBC;
-        
         if($pos < 0 || $pos >= $this->getNextPos())
             return FALSE;
+        
+        $row = CcPlaylistcontentsQuery::create()
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbPosition($pos)
+            ->find();
             
-        $pos = pg_escape_string($pos);
+        if(is_null($row))
+            return FALSE;
 
-        $CC_DBC->query("BEGIN");
-        $sql = "DELETE FROM ".$CC_CONFIG['playListContentsTable']." WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
+        $row->delete();
         return TRUE;
     }
 
@@ -844,7 +780,7 @@ class Playlist {
     {
         global $CC_CONFIG, $CC_DBC;
 
-         $cat = $this->categories[$category];
+        $cat = $this->categories[$category];
 
         $sql = "UPDATE ".$CC_CONFIG['playListTable']. " SET {$cat}='{$value}'" .
         " WHERE id='{$this->getId()}'";
@@ -1282,30 +1218,21 @@ class Playlist {
      */
     private function insertPlaylistElement($plId, $fileId, $pos, $clipLength, $cuein, $cueout, $fadeIn=NULL, $fadeOut=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
-
         if(is_null($fadeIn))
             $fadeIn = '00:00:00.000';
         if(is_null($fadeOut))
             $fadeOut = '00:00:00.000';
-
-        $CC_DBC->query("BEGIN");
-        $sql = "INSERT INTO ".$CC_CONFIG['playListContentsTable']
-                . "(playlist_id, file_id, position, cliplength, cuein, cueout, fadein, fadeout)"
-                . "VALUES ('{$plId}', '{$fileId}', '{$pos}', '{$clipLength}', '{$cuein}', '{$cueout}', '{$fadeIn}', '{$fadeOut}')";
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
-
-        // Commit changes
-        $res = $CC_DBC->query("COMMIT");
-        if (PEAR::isError($res)) {
-            $CC_DBC->query("ROLLBACK");
-            return $res;
-        }
+        
+        $row = new CcPlaylistcontents();
+        $row->setDbPlaylistId($plId);
+        $row->setDbFileId($fileId);
+        $row->setDbPosition($pos);
+        $row->setDbCliplength($clipLength);
+        $row->setDbCuein($cuein);
+        $row->setDbCueout($cueout);
+        $row->setDbFadein($fadeIn);
+        $row->setDbFadeout($fadeOut);
+        $row->save();
 
         return TRUE;
     }

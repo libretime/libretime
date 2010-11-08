@@ -45,7 +45,7 @@ onClick="return contextmenu('{$i.id}'
             , 'SCHEDULER.addPL'
             , 'PL.activate'
             , 'PL.create'
-            , 'delete'
+            , 'PL.delete'
             , 'PL.export'
         {/if}
     {/if}

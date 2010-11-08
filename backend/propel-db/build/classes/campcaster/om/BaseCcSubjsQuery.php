@@ -547,7 +547,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	public function filterByCcPlaylist($ccPlaylist, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcSubjsPeer::ID, $ccPlaylist->getEditedby(), $comparison);
+			->addUsingAlias(CcSubjsPeer::ID, $ccPlaylist->getDbEditedby(), $comparison);
 	}
 
 	/**
