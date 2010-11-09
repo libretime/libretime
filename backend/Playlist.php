@@ -326,14 +326,6 @@ class Playlist {
      */
     public function getContents() {
         
-        /*
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT *
-        	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
-        	WHERE C.playlist_id='{$this->getId()}' ORDER BY C.position";
-        return $CC_DBC->getAll($sql);
-        */
-        
         $files;
         
         $rows = CcPlaylistcontentsQuery::create()
@@ -592,6 +584,8 @@ class Playlist {
         
             $row->setDbFadeout($fadeOut);
         }
+        
+        $row->save();
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
