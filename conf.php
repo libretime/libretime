@@ -29,10 +29,10 @@ $CC_CONFIG = array(
     'storageDir'    =>  dirname(__FILE__).'/stor',
 
     // directory for temporary files
- 		'bufferDir'     =>  dirname(__FILE__).'/stor/buffer',
+ 	'bufferDir'     =>  dirname(__FILE__).'/stor/buffer',
 
     // directory for incomplete transferred files
- 		'transDir'      =>  dirname(__FILE__).'/trans',
+ 	'transDir'      =>  dirname(__FILE__).'/trans',
 
     // directory for symlinks to accessed files
     'accessDir'     =>  dirname(__FILE__).'/access',
@@ -43,6 +43,8 @@ $CC_CONFIG = array(
     "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
     'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear',
     'zendPath'      =>  dirname(__FILE__).'/3rd_party/php/Zend',
+    'phingPath'      =>  dirname(__FILE__).'/3rd_party/php/phing',
+    'LogPath'      =>  dirname(__FILE__).'/3rd_party/php/Log',
     
      // secret token cookie name
     'authCookieName'=> 'campcaster_session_id',
@@ -65,13 +67,13 @@ $CC_CONFIG = array(
 
     /* ==================================================== URL configuration */
     // path-URL-part of storageServer base dir
- 		'storageUrlPath'        => '/campcaster/backend',
+ 	'storageUrlPath'        => '/campcaster/backend',
 
     // XMLRPC server script address relative to storageUrlPath
- 		'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
+ 	'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
 
     // host and port of storageServer
- 		'storageUrlHost'        => 'localhost',
+ 	'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
 
     /* ================================================ remote link configuration */
