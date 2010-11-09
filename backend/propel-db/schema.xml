@@ -47,7 +47,7 @@
     <column name="bit_rate" phpName="BitRate" type="VARCHAR" size="32" required="false"/>
     <column name="sample_rate" phpName="SampleRate" type="VARCHAR" size="32" required="false"/>
     <column name="format" phpName="Format" type="VARCHAR" size="128" required="false"/>
-    <column name="length" phpName="Length" type="TIME" required="false"/>
+    <column name="length" phpName="DbLength" type="TIME" required="false"/>
     <column name="album_title" phpName="AlbumTitle" type="VARCHAR" size="512" required="false"/>
     <column name="genre" phpName="Genre" type="VARCHAR" size="64" required="false"/>
     <column name="comments" phpName="Comments" type="LONGVARCHAR" required="false"/>

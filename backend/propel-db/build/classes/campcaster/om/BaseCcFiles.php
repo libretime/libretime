@@ -578,7 +578,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getLength($format = '%X')
+	public function getDbLength($format = '%X')
 	{
 		if ($this->length === null) {
 			return null;
@@ -1312,7 +1312,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setLength($v)
+	public function setDbLength($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -1352,7 +1352,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setLength()
+	} // setDbLength()
 
 	/**
 	 * Set the value of [album_title] column.
@@ -2598,7 +2598,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getFormat();
 				break;
 			case 15:
-				return $this->getLength();
+				return $this->getDbLength();
 				break;
 			case 16:
 				return $this->getAlbumTitle();
@@ -2750,7 +2750,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[12] => $this->getBitRate(),
 			$keys[13] => $this->getSampleRate(),
 			$keys[14] => $this->getFormat(),
-			$keys[15] => $this->getLength(),
+			$keys[15] => $this->getDbLength(),
 			$keys[16] => $this->getAlbumTitle(),
 			$keys[17] => $this->getGenre(),
 			$keys[18] => $this->getComments(),
@@ -2870,7 +2870,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setFormat($value);
 				break;
 			case 15:
-				$this->setLength($value);
+				$this->setDbLength($value);
 				break;
 			case 16:
 				$this->setAlbumTitle($value);
@@ -3022,7 +3022,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[12], $arr)) $this->setBitRate($arr[$keys[12]]);
 		if (array_key_exists($keys[13], $arr)) $this->setSampleRate($arr[$keys[13]]);
 		if (array_key_exists($keys[14], $arr)) $this->setFormat($arr[$keys[14]]);
-		if (array_key_exists($keys[15], $arr)) $this->setLength($arr[$keys[15]]);
+		if (array_key_exists($keys[15], $arr)) $this->setDbLength($arr[$keys[15]]);
 		if (array_key_exists($keys[16], $arr)) $this->setAlbumTitle($arr[$keys[16]]);
 		if (array_key_exists($keys[17], $arr)) $this->setGenre($arr[$keys[17]]);
 		if (array_key_exists($keys[18], $arr)) $this->setComments($arr[$keys[18]]);
@@ -3199,7 +3199,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setBitRate($this->bit_rate);
 		$copyObj->setSampleRate($this->sample_rate);
 		$copyObj->setFormat($this->format);
-		$copyObj->setLength($this->length);
+		$copyObj->setDbLength($this->length);
 		$copyObj->setAlbumTitle($this->album_title);
 		$copyObj->setGenre($this->genre);
 		$copyObj->setComments($this->comments);

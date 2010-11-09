@@ -29,4 +29,20 @@ class CcPlaylist extends BaseCcPlaylist {
                 $stmt->execute();
                 return $stmt->fetchColumn();
         }
+
+	public function computeLength()
+        {
+                $con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
+
+                $sql = 'SELECT SUM('.CcPlaylistcontentsPeer::CLIPLENGTH.') AS length'
+                . ' FROM ' .CcPlaylistcontentsPeer::TABLE_NAME
+                . ' WHERE ' .CcPlaylistcontentsPeer::PLAYLIST_ID. ' = :p1';
+
+                $stmt = $con->prepare($sql);
+                $stmt->bindValue(':p1', $this->getDbId());
+                $stmt->execute();
+                return $stmt->fetchColumn();
+        }
+
+
 } // CcPlaylist

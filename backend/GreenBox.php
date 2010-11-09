@@ -636,8 +636,10 @@ class GreenBox extends BasicStor {
         }
 
         $res = $pl->delAudioClip($pos);
+        if($res === FALSE)
+            return FALSE;
 
-        return $res;
+        return TRUE;
     }
 
      /**

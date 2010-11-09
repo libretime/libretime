@@ -53,7 +53,8 @@ class Playlist {
 	 */
 	public $md;
 
-	private $categories = array("dc:title" => "name", "dc:creator" => "creator", "dc:description" => "description", "dcterms:extent" => "length");
+	//using propel's phpNames.
+	private $categories = array("dc:title" => "DbName", "dc:creator" => "DbCreator", "dc:description" => "DbDescription", "dcterms:extent" => "length");
 
 
     public function __construct($p_gunid=NULL)
@@ -233,20 +234,19 @@ class Playlist {
      */
     public function isAccessed($id=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
         if (is_null($id)) {
             return ($this->currentlyaccessing > 0);
         }
-        $sql = "SELECT currentlyAccessing FROM ".$CC_CONFIG['playListTable']
-            ." WHERE id='$id'";
-        $ca = $CC_DBC->getOne($sql);
-        if (is_null($ca)) {
+        
+        $pl = CcPlaylistQuery::create()->findPK($id);    
+    	if (is_null($pl)) {
             return PEAR::raiseError(
                 "StoredPlaylist::isAccessed: invalid id ($id)",
                 GBERR_FOBJNEX
             );
-        }
-        return ($ca > 0);
+    	}
+    	    
+    	return ($pl->getDbCurrentlyaccessing() > 0);
     }
 
     /**
@@ -325,26 +325,40 @@ class Playlist {
      * @return array
      */
     public function getContents() {
+        
+        /*
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT *
         	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
         	WHERE C.playlist_id='{$this->getId()}' ORDER BY C.position";
         return $CC_DBC->getAll($sql);
+        */
+        
+        $files;
+        
+        $rows = CcPlaylistcontentsQuery::create()
+            ->joinWith('CcFiles')
+            ->orderByDbPosition()
+            ->filterByDbPlaylistId($this->id)
+            ->find();
+    	
+        foreach ($rows as $row) {
+                $files[] = $row->toArray(BasePeer::TYPE_PHPNAME, true, true);
+        }
+        
+        return $files;
     }
 
     public function getLength() {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT SUM(cliplength) AS length FROM ".$CC_CONFIG['playListContentsTable']
-                ." WHERE playlist_id='{$this->getId()}' group by playlist_id";
-        $res =  $CC_DBC->getRow($sql);
-        if (PEAR::isError($res)) {
-        	return $res;
-        }
+       
+        $res = CcPlaylistQuery::create()
+            ->findPK($this->id)
+            ->computeLength();
 
         if(is_null($res))
             return '00:00:00.000000';
 
-        return $res['length'];
+        return $res;
     }
 
     /**
@@ -423,6 +437,9 @@ class Playlist {
      */
     public function addAudioClip($ac_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
+        
+        $_SESSION['debug'] = "in add";
+        
         //get audio clip.
         $ac = StoredFile::Recall($ac_id);
         if (is_null($ac) || PEAR::isError($ac)) {
@@ -458,8 +475,6 @@ class Playlist {
         }
         $p_clipLength = self::secondsToPlaylistTime($clipLengthS);
         
-        $_SESSION['debug'] = "Playlist id: " .$this->id."</br>";
-        
         $res = $this->insertPlaylistElement($this->id, $ac_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
         	return $res;
@@ -483,13 +498,13 @@ class Playlist {
         $row = CcPlaylistcontentsQuery::create()
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
-            ->find();
+            ->findOne();
             
         if(is_null($row))
             return FALSE;
 
         $row->delete();
-        return TRUE;
+        return $row;
     }
 
  	/**
@@ -503,26 +518,14 @@ class Playlist {
      */
     public function moveAudioClip($oldPos, $newPos)
     {
-        global $CC_CONFIG, $CC_DBC;
-        
         if($newPos < 0 || $newPos >= $this->getNextPos() || $oldPos < 0 || $oldPos >= $this->getNextPos())
             return FALSE;
-            
-        $oldPos = pg_escape_string($oldPos);
-        $newPos = pg_escape_string($newPos);
 
-        $sql = "SELECT * FROM ".$CC_CONFIG['playListContentsTable']. " WHERE playlist_id='{$this->getId()}' AND position='{$oldPos}'";
-
-        $ac = $CC_DBC->getRow($sql);
-        if (PEAR::isError($ac)) {
-            return $ac;
-        }
-
-        $res = $this->delAudioClip($oldPos);
-        if($res !== TRUE)
+        $row = $this->delAudioClip($oldPos);
+        if($row === FALSE)
             return FALSE;
 
-        $res = $this->addAudioClip($ac['file_id'], $newPos, $ac['fadein'], $ac['fadeOut'], $ac['cliplength'], $ac['cuein'], $ac['cueout']);
+        $res = $this->addAudioClip($row->getDbFileId(), $newPos, $row->getDbFadein(), $row->getDbFadeout(), $row->getDbCliplength(), $row->getDbCuein(), $row->getDbCueout());
         if($res !== TRUE)
             return FALSE;
 
@@ -543,7 +546,6 @@ class Playlist {
      */
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
-        global $CC_CONFIG, $CC_DBC;
         $errArray= array();
         
         if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
@@ -551,9 +553,12 @@ class Playlist {
             return $errArray;
         }
         
-        $sql =  $sql = "SELECT cliplength
-        	FROM cc_playlistcontents WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-        $clipLength = $CC_DBC->getOne($sql);
+        $row = CcPlaylistcontentsQuery::create()
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbPosition($pos)
+            ->findOne();
+            
+        $clipLength = $row->getDbCliplength();
         
         if(!is_null($fadeIn) && !is_null($fadeOut)) {
             
@@ -566,8 +571,8 @@ class Playlist {
                 return $errArray;
             }
         
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}', fadeout='{$fadeOut}' " .
-        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            $row->setDbFadein($fadeIn);
+            $row->setDbFadeout($fadeOut);
         }
         else if(!is_null($fadeIn)) {
             
@@ -575,9 +580,8 @@ class Playlist {
                 $errArray["error"]="Fade In can't be larger than overall playlength.";
                 return $errArray;
             }
-            
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadein='{$fadeIn}' " .
-        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+           
+            $row->setDbFadein($fadeIn);
         }
         else if(!is_null($fadeOut)){
             
@@ -586,14 +590,7 @@ class Playlist {
                 return $errArray;
             }
         
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. " SET fadeout='{$fadeOut}' " .
-        	"WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-        }
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $errArray["error"] =$res->getMessage();
-            return $errArray;
+            $row->setDbFadeout($fadeOut);
         }
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
@@ -612,7 +609,6 @@ class Playlist {
      */
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
-        global $CC_CONFIG, $CC_DBC;
         $errArray= array();
        
         if(is_null($cueIn) && is_null($cueOut)) {
@@ -624,17 +620,21 @@ class Playlist {
             $errArray["error"]="Invalid position.";
             return $errArray;
         }
+       
+        $row = CcPlaylistcontentsQuery::create()
+            ->joinWith(CcFiles)
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbPosition($pos)
+            ->findOne();
+            
+        $oldCueIn = $row->getDBCuein();
+        $oldCueOut = $row->getDbCueout();
+        $fadeIn = $row->getDbFadein();
+        $fadeOut = $row->getDbFadeout();
         
-        $sql =  $sql = "SELECT length AS original_length, cuein, cueout, fadein, fadeout
-        	FROM cc_playlistcontents C JOIN cc_files F ON C.file_id = F.id
-        	WHERE C.playlist_id='{$this->getId()}' AND position='{$pos}'";
-        $res = $CC_DBC->getRow($sql);
+        $file = $row->getCcFiles();
+        $origLength = $file->getDbLength();
         
-        $origLength = $res['original_length'];
-        $oldCueIn = $res['cuein'];
-        $oldCueOut = $res['cueout'];
-        $fadeIn = $res['fadein'];
-        $fadeOut = $res['fadeout'];
         
         if(!is_null($cueIn) && !is_null($cueOut)){
             
@@ -650,13 +650,10 @@ class Playlist {
                 return $errArray;
             }
             
-            $cueIn = pg_escape_string($cueIn);
-            $cueOut = pg_escape_string($cueOut);
-            
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET cuein='{$cueIn}', cueout='{$cueOut}', ".
-            "cliplength=(interval '{$cueOut}' - interval '{$cueIn}') " .
-            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            $row->setDbCuein($cueIn);
+            $row->setDbCueout($cueOut);
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut) 
+                    - Playlist::playlistTimeToSeconds($cueIn)));
                        
         }
         else if(!is_null($cueIn)) {
@@ -666,11 +663,9 @@ class Playlist {
                 return $errArray;
             }
             
-            $cueIn = pg_escape_string($cueIn);
-                   
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET cuein='{$cueIn}', cliplength=(interval '{$oldCueOut}' - interval '{$cueIn}') " .
-            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            $row->setDbCuein($cueIn);
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($oldCueOut) 
+                    - Playlist::playlistTimeToSeconds($cueIn)));
         }
         else if(!is_null($cueOut)) {
             
@@ -688,49 +683,25 @@ class Playlist {
                 return $errArray;
             }
             
-            $cueOut = pg_escape_string($cueOut);
-            
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET cueout='{$cueOut}', cliplength=(interval '{$cueOut}' - interval '{$oldCueIn}') " .
-            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
+            $row->setDbCueout($cueOut);
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut) 
+                    - Playlist::playlistTimeToSeconds($oldCueIn)));
         }
-              
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            $errArray["error"] =$res->getMessage();
-            return $errArray;
-        }
-        
-        $sql = "SELECT cliplength FROM ".$CC_CONFIG['playListContentsTable']." 
-        WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-        $cliplength = $CC_DBC->getOne($sql);
+
+        $cliplength = $row->getDbCliplength();
         
         if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($cliplength)){
             $fadeIn = $cliplength;
             
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET fadein='{$fadeIn}' " .
-            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-            
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                $errArray["error"] =$res->getMessage();
-                return $errArray;
-            }
+            $row->setDbFadein($fadeIn);
         }
         if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($cliplength)){
             $fadeOut = $cliplength;
-            
-            $sql = "UPDATE ".$CC_CONFIG['playListContentsTable']. 
-            " SET fadeout='{$fadeOut}' " .
-            "WHERE playlist_id='{$this->getId()}' AND position='{$pos}'";
-            
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                $errArray["error"] =$res->getMessage();
-                return $errArray;
-            }
+           
+            $row->setDbFadein($fadeOut);
         }
+        
+        $row->save();
 
         return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut, "length"=>$this->getLength(),
                         "fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
@@ -758,37 +729,25 @@ class Playlist {
 
     public function getPLMetaData($category)
     {
-        global $CC_CONFIG, $CC_DBC;
-
         $cat = $this->categories[$category];
+        
         if($cat === 'length') {
             return $this->getLength();
         }
-
-        $sql = "SELECT {$cat} AS mdata FROM ".$CC_CONFIG['playListTable'].
-        " WHERE id='{$this->getId()}'";
-
-        $res = $CC_DBC->getOne($sql);
-        if (PEAR::isError($res)) {
-            return FALSE;
-        }
-
-        return $res;
+        
+        $row = CcPlaylistQuery::create()->findPK($this->id);       
+        $method = 'get' . $cat;
+        return $row->$method();
     }
 
     public function setPLMetaData($category, $value)
     {
-        global $CC_CONFIG, $CC_DBC;
-
         $cat = $this->categories[$category];
 
-        $sql = "UPDATE ".$CC_CONFIG['playListTable']. " SET {$cat}='{$value}'" .
-        " WHERE id='{$this->getId()}'";
-
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $row = CcPlaylistQuery::create()->findPK($this->id);       
+        $method = 'set' . $cat;
+        $row->$method($value);
+        $row->save();
 
         return TRUE;
     }
@@ -803,46 +762,7 @@ class Playlist {
      */
     public function export()
     {
-        $plGunid = $this->gunid;
-        $arr = $this->md->genPhpArray();
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        $plArr = array('els'=>array());
-        // cycle over playlistElements inside playlist:
-        foreach ($arr['children'] as $i => $plEl) {
-            switch ($plEl['elementname']) {
-            case "playlistElement":  // process playlistElement
-                $plElObj = new PlaylistElement($this, $plEl);
-                $plInfo = $plElObj->analyze();
-                $plArr['els'][] = $plInfo;
-                break;
-            default:
-            }
-        }
-        $res  = array(array('gunid'=>$plGunid, 'type'=>'playlist'));
-        $dd = 0;
-        $found = FALSE;
-        foreach ($plArr['els'] as $el) {
-            extract($el);   // acLen, elOffset, acGunid, fadeIn, fadeOut, playlist
-            switch ($el['type']) {
-            case "playlist":
-                $pl = StoredFile::RecallByGunid($acGunid);
-                if (is_null($pl) || PEAR::isError($pl)) {
-                	return $pl;
-                }
-                $res2 = $pl->export();
-                if (PEAR::isError($res2)) {
-                	return $res2;
-                }
-                $res = array_merge($res, $res2);
-                break;
-            default:
-                $res[]  = array('gunid'=>$acGunid, 'type'=>$el['type']);
-                break;
-            }
-        }
-        return $res;
+        
     }
 
 
@@ -887,51 +807,6 @@ class Playlist {
         return $res;
     }
 
-
-    /**
-     * Cyclic-recursion checking
-     *
-     * @param string $insGunid
-     * 		gunid of playlist being inserted
-     * @return boolean
-     * 		true if recursion is detected
-     */
-    public function cyclicRecursion($insGunid)
-    {
-        if ($this->gunid == $insGunid) {
-        	return TRUE;
-        }
-        $pl = StoredFile::RecallByGunid($insGunid);
-        if (is_null($pl) || PEAR::isError($pl)) {
-        	return $pl;
-        }
-        $arr = $pl->md->genPhpArray();
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        $els =& $arr['children'];
-        if (!is_array($els)) {
-        	return FALSE;
-        }
-        foreach ($els as $i => $plEl) {
-            if ($plEl['elementname'] != "playlistElement") {
-            	continue;
-            }
-            foreach ($plEl['children'] as $j => $elCh) {
-                if ($elCh['elementname'] != "playlist") {
-                	continue;
-                }
-                $nextGunid = $elCh['attrs']['id'];
-                $res = $this->cyclicRecursion($nextGunid);
-                if ($res) {
-                	return TRUE;
-                }
-            }
-        }
-        return FALSE;
-    }
-
-
     /**
      * Export playlist as simplified SMIL XML file.
      *
@@ -943,25 +818,7 @@ class Playlist {
      */
     public function outputToSmil($toString=TRUE)
     {
-        $plGunid = $this->gunid;
-        $arr = $this->md->genPhpArray();
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        if ($toString) {
-            $r = PlaylistTagExport::OutputToSmil($this, $arr);
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            return $r;
-        } else {
-            return array(
-                'type'       => 'playlist',
-                'gunid'      => $plGunid,
-                'src'        => PL_URL_RELPATH."$plGunid.smil",
-                'playlength' => $arr['attrs']['playlength'],
-            );
-        }
+       
     }
 
 
@@ -976,26 +833,7 @@ class Playlist {
      */
     public function outputToM3u($toString=TRUE)
     {
-        $plGunid = $this->gunid;
-        $arr = $this->md->genPhpArray();
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        if ($toString) {
-            $r = PlaylistTagExport::OutputToM3u($this, $arr);
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            return $r;
-        } else {
-            return array(
-                'type'       => 'playlist',
-                'gunid'      => $plGunid,
-                'uri'        => PL_URL_RELPATH."$plGunid.m3u",
-                'playlength' => $arr['attrs']['playlength'],
-                'title'      => $arr['attrs']['title'],
-            );
-        }
+       
     }
 
 
@@ -1010,56 +848,10 @@ class Playlist {
      */
     public function outputToRss($toString=TRUE)
     {
-        $plGunid = $this->gunid;
-        $arr = $this->md->genPhpArray();
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        if ($toString) {
-            $r = PlaylistTagExport::OutputToRss($this, $arr);
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            return $r;
-        } else {
-            return array(
-                'type'       => 'playlist',
-                'gunid'      => $plGunid,
-                'src'        => PL_URL_RELPATH."$plGunid.smil",
-                'playlength' => $arr['attrs']['playlength'],
-            );
-        }
+       
     }
-
-
-    /**
-     * Set values of auxiliary metadata
-     *
-     * @return mixed
-     * 		true or error object
-     */
-    private function setAuxMetadata()
-    {
-        // get info about playlist
-        $plInfo = $this->getPlaylistInfo();
-        if (PEAR::isError($plInfo)) {
-        	return $plInfo;
-        }
-        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
-        // set gunid as id attr in playlist tag:
-        $mid = $this->_getMidOrInsert('id', $parid, $this->gunid, 'A');
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $this->gunid, $parid,  'id', 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
-
+    
+    
     /**
      * Get audioClip length and title
      *
@@ -1095,90 +887,6 @@ class Playlist {
         $elType = $trTbl[$elType];
 
         return compact('acGunid', 'acLen', 'acTit', 'elType');
-    }
-
-
-    /**
-     * Get info about playlist
-     * @param $ac
-     * audio clip from cc_files.
-     *
-     * @return array with fields:
-     *  <ul>
-     *   <li>plLen string - length of playlist in dcterms:extent format</li>
-     *   <li>parid int - metadata record id of playlist container</li>
-     *   <li>metaParid int - metadata record id of metadata container</li>
-     *  </ul>
-     */
-    private function getPlaylistInfo($ac)
-    {
-        $parid = $this->getContainer('playlist');
-        if (PEAR::isError($parid)) {
-        	return $parid;
-        }
-        // get playlist length and record id:
-        $r = $this->md->getMetadataElement('playlength', $parid);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        if (isset($r[0])) {
-            $plLen = $r[0]['value'];
-        } else {
-            $r = $this->md->getMetadataElement('dcterms:extent');
-            if (PEAR::isError($r)) {
-            	return $r;
-            }
-            if (isset($r[0])) {
-                $plLen = $r[0]['value'];
-            } else {
-                $plLen = '00:00:00.000000';
-            }
-        }
-        // get main playlist container
-        $parid = $this->getContainer('playlist');
-        if (PEAR::isError($parid)) {
-        	return $parid;
-        }
-        // get metadata container (optionally insert it)
-        $metaParid = $this->getContainer('metadata', $parid, TRUE);
-        if (PEAR::isError($metaParid)) {
-        	return $metaParid;
-        }
-        return compact('plLen', 'parid', 'metaParid');
-    }
-
-
-    /**
-     * Get container record id, optionally insert new container
-     *
-     * @param string $containerName
-     * @param int $parid
-     * 		parent record id
-     * @param boolean $insertIfNone - flag if insert may be done
-     *      if container wouldn't be found
-     * @return int
-     * 		metadata record id of container
-     */
-    private function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
-    {
-        $r = $this->md->getMetadataElement($containerName, $parid);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $id = $r[0]['mid'];
-        if (!is_null($id)) {
-        	return $id;
-        }
-        if (!$insertIfNone || is_null($parid)) {
-            return PEAR::raiseError(
-                "Playlist::getContainer: can't find container ($containerName)"
-            );
-        }
-        $id = $this->md->insertMetadataElement($parid, $containerName);
-        if (PEAR::isError($id)) {
-        	return $id;
-        }
-        return $id;
     }
 
 

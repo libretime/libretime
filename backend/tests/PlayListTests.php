@@ -3,6 +3,13 @@
 $path = dirname(__FILE__).'/../../3rd_party/php/pear';
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
+require_once(dirname(__FILE__).'/../../3rd_party/php/propel/runtime/lib/Propel.php');
+// Initialize Propel with the runtime configuration
+Propel::init(dirname(__FILE__)."/../../backend/propel-db/build/conf/campcaster-conf.php");
+
+// Add the generated 'classes' directory to the include path
+set_include_path(dirname(__FILE__)."/../../backend/propel-db/build/classes" . PATH_SEPARATOR . get_include_path());
+
 //require_once(dirname(__FILE__).'/../../conf.php');
 require_once('DB.php');
 require_once('PHPUnit.php');
@@ -33,6 +40,7 @@ class PlayListTests extends PHPUnit_TestCase {
      
     }
     
+    /*
     function testGBCreatePlaylist() {
         
         $pl = new Playlist();
@@ -72,6 +80,7 @@ class PlayListTests extends PHPUnit_TestCase {
            return;
         }
     }
+    */
     
     function testGBSetPLMetaData() {
         $pl = new Playlist();
@@ -85,7 +94,7 @@ class PlayListTests extends PHPUnit_TestCase {
         }     
     }
     
-    /*
+   /*
     function testGBGetPLMetaData() {
         $pl = new Playlist();
         $name = "Testing";
@@ -111,6 +120,7 @@ class PlayListTests extends PHPUnit_TestCase {
         } 
     }
     
+    
     function testMoveAudioClip() {
         $pl = new Playlist();
         $pl_id = $pl->create("Move");
@@ -125,6 +135,8 @@ class PlayListTests extends PHPUnit_TestCase {
            return; 
         } 
     }
+    
+    
     
     function testDeleteAudioClip() {
         $pl = new Playlist();

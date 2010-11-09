@@ -21,7 +21,7 @@
  * @method     CcFilesQuery orderByBitRate($order = Criteria::ASC) Order by the bit_rate column
  * @method     CcFilesQuery orderBySampleRate($order = Criteria::ASC) Order by the sample_rate column
  * @method     CcFilesQuery orderByFormat($order = Criteria::ASC) Order by the format column
- * @method     CcFilesQuery orderByLength($order = Criteria::ASC) Order by the length column
+ * @method     CcFilesQuery orderByDbLength($order = Criteria::ASC) Order by the length column
  * @method     CcFilesQuery orderByAlbumTitle($order = Criteria::ASC) Order by the album_title column
  * @method     CcFilesQuery orderByGenre($order = Criteria::ASC) Order by the genre column
  * @method     CcFilesQuery orderByComments($order = Criteria::ASC) Order by the comments column
@@ -75,7 +75,7 @@
  * @method     CcFilesQuery groupByBitRate() Group by the bit_rate column
  * @method     CcFilesQuery groupBySampleRate() Group by the sample_rate column
  * @method     CcFilesQuery groupByFormat() Group by the format column
- * @method     CcFilesQuery groupByLength() Group by the length column
+ * @method     CcFilesQuery groupByDbLength() Group by the length column
  * @method     CcFilesQuery groupByAlbumTitle() Group by the album_title column
  * @method     CcFilesQuery groupByGenre() Group by the genre column
  * @method     CcFilesQuery groupByComments() Group by the comments column
@@ -144,7 +144,7 @@
  * @method     CcFiles findOneByBitRate(string $bit_rate) Return the first CcFiles filtered by the bit_rate column
  * @method     CcFiles findOneBySampleRate(string $sample_rate) Return the first CcFiles filtered by the sample_rate column
  * @method     CcFiles findOneByFormat(string $format) Return the first CcFiles filtered by the format column
- * @method     CcFiles findOneByLength(string $length) Return the first CcFiles filtered by the length column
+ * @method     CcFiles findOneByDbLength(string $length) Return the first CcFiles filtered by the length column
  * @method     CcFiles findOneByAlbumTitle(string $album_title) Return the first CcFiles filtered by the album_title column
  * @method     CcFiles findOneByGenre(string $genre) Return the first CcFiles filtered by the genre column
  * @method     CcFiles findOneByComments(string $comments) Return the first CcFiles filtered by the comments column
@@ -198,7 +198,7 @@
  * @method     array findByBitRate(string $bit_rate) Return CcFiles objects filtered by the bit_rate column
  * @method     array findBySampleRate(string $sample_rate) Return CcFiles objects filtered by the sample_rate column
  * @method     array findByFormat(string $format) Return CcFiles objects filtered by the format column
- * @method     array findByLength(string $length) Return CcFiles objects filtered by the length column
+ * @method     array findByDbLength(string $length) Return CcFiles objects filtered by the length column
  * @method     array findByAlbumTitle(string $album_title) Return CcFiles objects filtered by the album_title column
  * @method     array findByGenre(string $genre) Return CcFiles objects filtered by the genre column
  * @method     array findByComments(string $comments) Return CcFiles objects filtered by the comments column
@@ -709,22 +709,22 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the length column
 	 * 
-	 * @param     string|array $length The value to use as filter.
+	 * @param     string|array $dbLength The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByLength($length = null, $comparison = null)
+	public function filterByDbLength($dbLength = null, $comparison = null)
 	{
-		if (is_array($length)) {
+		if (is_array($dbLength)) {
 			$useMinMax = false;
-			if (isset($length['min'])) {
-				$this->addUsingAlias(CcFilesPeer::LENGTH, $length['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbLength['min'])) {
+				$this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($length['max'])) {
-				$this->addUsingAlias(CcFilesPeer::LENGTH, $length['max'], Criteria::LESS_EQUAL);
+			if (isset($dbLength['max'])) {
+				$this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -734,7 +734,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::LENGTH, $length, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength, $comparison);
 	}
 
 	/**

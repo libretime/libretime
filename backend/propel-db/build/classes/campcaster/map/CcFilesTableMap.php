@@ -53,7 +53,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('BIT_RATE', 'BitRate', 'VARCHAR', false, 32, null);
 		$this->addColumn('SAMPLE_RATE', 'SampleRate', 'VARCHAR', false, 32, null);
 		$this->addColumn('FORMAT', 'Format', 'VARCHAR', false, 128, null);
-		$this->addColumn('LENGTH', 'Length', 'TIME', false, null, null);
+		$this->addColumn('LENGTH', 'DbLength', 'TIME', false, null, null);
 		$this->addColumn('ALBUM_TITLE', 'AlbumTitle', 'VARCHAR', false, 512, null);
 		$this->addColumn('GENRE', 'Genre', 'VARCHAR', false, 64, null);
 		$this->addColumn('COMMENTS', 'Comments', 'LONGVARCHAR', false, null, null);
