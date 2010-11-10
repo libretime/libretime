@@ -1,6 +1,6 @@
 <?php
 
-
+require_once('Common.php');
 
 /**
  * Skeleton subclass for representing a row from the 'cc_files' table.
@@ -14,5 +14,16 @@
  * @package    propel.generator.campcaster
  */
 class CcFiles extends BaseCcFiles {
+
+	public function getDbLength()
+        {
+                return Common::getTimeInSub($this, 'LENGTH');
+        }
+
+        public function setDbLength($time)
+        {
+                return Common::setTimeInSub($this, 'LENGTH', $time);
+        }
+
 
 } // CcFiles

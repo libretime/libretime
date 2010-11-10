@@ -401,7 +401,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getId()
+	public function getDbId()
 	{
 		return $this->id;
 	}
@@ -978,7 +978,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setId($v)
+	public function setDbId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -990,7 +990,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setId()
+	} // setDbId()
 
 	/**
 	 * Set the value of [gunid] column.
@@ -2411,7 +2411,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows += 1;
-					$this->setId($pk);  //[IMV] update autoincrement primary key
+					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows += CcFilesPeer::doUpdate($this, $con);
@@ -2553,7 +2553,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				return $this->getId();
+				return $this->getDbId();
 				break;
 			case 1:
 				return $this->getGunid();
@@ -2735,7 +2735,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	{
 		$keys = CcFilesPeer::getFieldNames($keyType);
 		$result = array(
-			$keys[0] => $this->getId(),
+			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getGunid(),
 			$keys[2] => $this->getName(),
 			$keys[3] => $this->getMime(),
@@ -2825,7 +2825,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				$this->setId($value);
+				$this->setDbId($value);
 				break;
 			case 1:
 				$this->setGunid($value);
@@ -3007,7 +3007,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	{
 		$keys = CcFilesPeer::getFieldNames($keyType);
 
-		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
+		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setGunid($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setMime($arr[$keys[3]]);
@@ -3150,7 +3150,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->getId();
+		return $this->getDbId();
 	}
 
 	/**
@@ -3161,7 +3161,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 */
 	public function setPrimaryKey($key)
 	{
-		$this->setId($key);
+		$this->setDbId($key);
 	}
 
 	/**
@@ -3170,7 +3170,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return null === $this->getId();
+		return null === $this->getDbId();
 	}
 
 	/**
@@ -3253,7 +3253,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 
 		$copyObj->setNew(true);
-		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
+		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**

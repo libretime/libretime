@@ -32,7 +32,7 @@
     <column name="totime" phpName="Totime" type="TIMESTAMP" required="true"/>
   </table>
   <table name="cc_files" phpName="CcFiles">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="gunid" phpName="Gunid" type="BIGINT" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="mime" phpName="Mime" type="VARCHAR" size="255" required="true" defaultValue=""/>

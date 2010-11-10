@@ -6,7 +6,7 @@
  *
  * 
  *
- * @method     CcFilesQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     CcFilesQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcFilesQuery orderByGunid($order = Criteria::ASC) Order by the gunid column
  * @method     CcFilesQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     CcFilesQuery orderByMime($order = Criteria::ASC) Order by the mime column
@@ -60,7 +60,7 @@
  * @method     CcFilesQuery orderByContributor($order = Criteria::ASC) Order by the contributor column
  * @method     CcFilesQuery orderByLanguage($order = Criteria::ASC) Order by the language column
  *
- * @method     CcFilesQuery groupById() Group by the id column
+ * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByGunid() Group by the gunid column
  * @method     CcFilesQuery groupByName() Group by the name column
  * @method     CcFilesQuery groupByMime() Group by the mime column
@@ -129,7 +129,7 @@
  * @method     CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
  * @method     CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
  *
- * @method     CcFiles findOneById(int $id) Return the first CcFiles filtered by the id column
+ * @method     CcFiles findOneByDbId(int $id) Return the first CcFiles filtered by the id column
  * @method     CcFiles findOneByGunid(string $gunid) Return the first CcFiles filtered by the gunid column
  * @method     CcFiles findOneByName(string $name) Return the first CcFiles filtered by the name column
  * @method     CcFiles findOneByMime(string $mime) Return the first CcFiles filtered by the mime column
@@ -183,7 +183,7 @@
  * @method     CcFiles findOneByContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method     CcFiles findOneByLanguage(string $language) Return the first CcFiles filtered by the language column
  *
- * @method     array findById(int $id) Return CcFiles objects filtered by the id column
+ * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByGunid(string $gunid) Return CcFiles objects filtered by the gunid column
  * @method     array findByName(string $name) Return CcFiles objects filtered by the name column
  * @method     array findByMime(string $mime) Return CcFiles objects filtered by the mime column
@@ -348,18 +348,18 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     int|array $id The value to use as filter.
+	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterById($id = null, $comparison = null)
+	public function filterByDbId($dbId = null, $comparison = null)
 	{
-		if (is_array($id) && null === $comparison) {
+		if (is_array($dbId) && null === $comparison) {
 			$comparison = Criteria::IN;
 		}
-		return $this->addUsingAlias(CcFilesPeer::ID, $id, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ID, $dbId, $comparison);
 	}
 
 	/**
@@ -1707,7 +1707,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	public function prune($ccFiles = null)
 	{
 		if ($ccFiles) {
-			$this->addUsingAlias(CcFilesPeer::ID, $ccFiles->getId(), Criteria::NOT_EQUAL);
+			$this->addUsingAlias(CcFilesPeer::ID, $ccFiles->getDbId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;

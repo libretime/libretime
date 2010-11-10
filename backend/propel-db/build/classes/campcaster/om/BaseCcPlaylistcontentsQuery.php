@@ -445,7 +445,7 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	public function filterByCcFiles($ccFiles, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $ccFiles->getId(), $comparison);
+			->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
 	}
 
 	/**

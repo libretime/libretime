@@ -398,7 +398,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcPlaylistcontentsPeer::FILE_ID;
 		}
 
-		if ($this->aCcFiles !== null && $this->aCcFiles->getId() !== $v) {
+		if ($this->aCcFiles !== null && $this->aCcFiles->getDbId() !== $v) {
 			$this->aCcFiles = null;
 		}
 
@@ -770,7 +770,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($this->aCcPlaylist !== null && $this->playlist_id !== $this->aCcPlaylist->getDbId()) {
 			$this->aCcPlaylist = null;
 		}
-		if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getId()) {
+		if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
 			$this->aCcFiles = null;
 		}
 	} // ensureConsistency
@@ -1391,7 +1391,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setDbFileId(NULL);
 		} else {
-			$this->setDbFileId($v->getId());
+			$this->setDbFileId($v->getDbId());
 		}
 
 		$this->aCcFiles = $v;
