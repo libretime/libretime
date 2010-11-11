@@ -935,6 +935,9 @@ class BasicStor {
       if (!is_array($values)) {
           $values = array($values);
       }
+      if (count($values) == 0) {
+        return true;
+      }
       if (is_a($id, "StoredFile")) {
           $storedFile =& $id;
       } else {
@@ -949,9 +952,30 @@ class BasicStor {
           if ($category == 'dcterms:extent') {
             $oneValue = BasicStor::NormalizeExtent($oneValue);
           }
-          $escapedValue = pg_escape_string($oneValue);
-          $sqlValues[] = "$columnName = '$escapedValue'";
+          // Since track_number is an integer, you cannot set
+          // it to be the empty string, so we NULL it instead.
+          if ($columnName == 'track_number' && empty($oneValue)) {
+            $sqlPart = "$columnName = NULL";
+          } elseif (($columnName == 'length') && (strlen($oneValue) > 8)) {
+            // Postgres doesnt like it if you try to store really large hour
+            // values.  TODO: We need to fix the underlying problem of getting the
+            // right values.
+            $parts = explode(':', $oneValue);
+            $hour = intval($parts[0]);
+            if ($hour > 24) {
+              continue;
+            } else {
+              $sqlPart = "$columnName = '$oneValue'";
+            }
+          } else {
+            $escapedValue = pg_escape_string($oneValue);
+            $sqlPart = "$columnName = '$escapedValue'";
+          }
+          $sqlValues[] = $sqlPart;
         }
+      }
+      if (count($sqlValues)==0) {
+        return TRUE;
       }
       $sql = "UPDATE ".$CC_CONFIG["filesTable"]
            ." SET ".join(",", $sqlValues)

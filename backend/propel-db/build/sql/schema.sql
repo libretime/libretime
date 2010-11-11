@@ -9,7 +9,7 @@ DROP TABLE "cc_access" CASCADE;
 CREATE TABLE "cc_access"
 (
 	"id" serial  NOT NULL,
-	"gunid" INT8,
+	"gunid" CHAR(32),
 	"token" INT8,
 	"chsum" CHAR(32) default '' NOT NULL,
 	"ext" VARCHAR(128) default '' NOT NULL,
@@ -61,10 +61,11 @@ DROP TABLE "cc_files" CASCADE;
 CREATE TABLE "cc_files"
 (
 	"id" serial  NOT NULL,
-	"gunid" INT8  NOT NULL,
+	"gunid" CHAR(32)  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
 	"mime" VARCHAR(255) default '' NOT NULL,
 	"ftype" VARCHAR(128) default '' NOT NULL,
+	"filepath" TEXT default '',
 	"state" VARCHAR(128) default 'empty' NOT NULL,
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
@@ -339,7 +340,7 @@ CREATE TABLE "cc_trans"
 	"target" VARCHAR(255),
 	"rtrtok" CHAR(16),
 	"mdtrtok" CHAR(16),
-	"gunid" INT8,
+	"gunid" CHAR(32),
 	"pdtoken" INT8,
 	"url" VARCHAR(255),
 	"localfile" VARCHAR(255),
