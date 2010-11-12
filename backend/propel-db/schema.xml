@@ -3,7 +3,7 @@
 <database name="campcaster" defaultIdMethod="native">
   <table name="cc_access" phpName="CcAccess">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="gunid" phpName="Gunid" type="BIGINT" required="false"/>
+    <column name="gunid" phpName="Gunid" type="CHAR" size="32" required="false"/>
     <column name="token" phpName="Token" type="BIGINT" required="false"/>
     <column name="chsum" phpName="Chsum" type="CHAR" size="32" required="true" defaultValue=""/>
     <column name="ext" phpName="Ext" type="VARCHAR" size="128" required="true" defaultValue=""/>
@@ -33,10 +33,11 @@
   </table>
   <table name="cc_files" phpName="CcFiles">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="gunid" phpName="Gunid" type="BIGINT" required="true"/>
+    <column name="gunid" phpName="Gunid" type="char" size="32" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="mime" phpName="Mime" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="ftype" phpName="Ftype" type="VARCHAR" size="128" required="true" defaultValue=""/>
+    <column name="filepath" phpName="filepath" type="LONGVARCHAR" required="false" defaultValue=""/>
     <column name="state" phpName="State" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
     <column name="currentlyaccessing" phpName="Currentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="Editedby" type="INTEGER" required="false"/>
@@ -232,7 +233,7 @@
     <column name="target" phpName="Target" type="VARCHAR" size="255" required="false" defaultValue="NULL"/>
     <column name="rtrtok" phpName="Rtrtok" type="CHAR" size="16" required="false" defaultValue="NULL"/>
     <column name="mdtrtok" phpName="Mdtrtok" type="CHAR" size="16" required="false"/>
-    <column name="gunid" phpName="Gunid" type="BIGINT" required="false"/>
+    <column name="gunid" phpName="Gunid" type="char" size="32" required="false"/>
     <column name="pdtoken" phpName="Pdtoken" type="BIGINT" required="false"/>
     <column name="url" phpName="Url" type="VARCHAR" size="255" required="false"/>
     <column name="localfile" phpName="Localfile" type="VARCHAR" size="255" required="false"/>

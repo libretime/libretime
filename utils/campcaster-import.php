@@ -137,7 +137,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 
     // Check for non-supported file type
     if (!preg_match('/\.(ogg|mp3)$/i', $p_filepath, $var)) {
-        echo "IGNORED: $p_filepath\n";
+        echo "IGNORED:   [xxxxx] $p_filepath\n";
         //echo " * WARNING: File extension not supported - skipping file: $p_filepath\n";
         return;
     }

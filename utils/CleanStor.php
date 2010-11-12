@@ -12,7 +12,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 require_once('../conf.php');
 require_once('DB.php');
 require_once('../install/installInit.php');
-require_once ('StoredFile.php');
+require_once('../backend/StoredFile.php');
 
 function printUsage() {
 

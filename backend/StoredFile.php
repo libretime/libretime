@@ -1,6 +1,7 @@
 <?php
 require_once("Playlist.php");
 require_once(dirname(__FILE__)."/../3rd_party/getid3/var/getid3.php");
+require_once("BasicStor.php");
 
 /**
  * Track numbers in metadata tags can come in many formats:
@@ -300,7 +301,7 @@ class StoredFile {
 	 *
 	 * @var string
 	 */
-	private $gunidBigint;
+	//private $gunidBigint;
 
 	/**
 	 * @var string
@@ -346,13 +347,13 @@ class StoredFile {
 	 */
 	private $md5;
 
-
-	// *** Variables NOT stored in the database ***
-
 	/**
 	 * @var string
 	 */
 	private $filepath;
+
+
+	// *** Variables NOT stored in the database ***
 
 	/**
 	 * Directory where the file is located.
@@ -384,10 +385,10 @@ class StoredFile {
         global $CC_DBC;
         $this->gunid = $p_gunid;
         if (empty($this->gunid)) {
-            $this->gunid = StoredFile::CreateGunid();
+            $this->gunid = StoredFile::generateGunid();
         }
-        $this->resDir = $this->_getResDir($this->gunid);
-        $this->filepath = "{$this->resDir}/{$this->gunid}";
+        //$this->resDir = $this->_getResDir($this->gunid);
+        //$this->filepath = "{$this->resDir}/{$this->gunid}";
         $this->exists = is_file($this->filepath) && is_readable($this->filepath);
         $this->md = $this->loadMetadata();
     }
@@ -401,7 +402,7 @@ class StoredFile {
         global $CC_CONFIG, $CC_DBC;
         $escapedValue = pg_escape_string($this->gunid);
         $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"]
-              ." WHERE gunid=x'$escapedValue'::bigint";
+              ." WHERE gunid='$escapedValue'";
         //var_dump($sql);
         $this->md = $CC_DBC->getRow($sql);
         if (PEAR::isError($this->md)) {
@@ -409,6 +410,7 @@ class StoredFile {
             $this->md = null;
             return $error;
         }
+        $this->filepath = $this->md["filepath"];
         if (is_null($this->md)) {
             $this->md = array();
             return;
@@ -465,7 +467,7 @@ class StoredFile {
      *  Create instance of StoredFile object and insert new file
      *
      * @param array $p_values
-     *      "filepath" - required, local path to media file
+     *      "filepath" - required, local path to media file (where it is before import)
      *      "id" - optional, local object id, will be generated if not given
      *      "gunid" - optional, unique id, for insert file with gunid, will be generated if not given
      *      "filename" - optional, will use "filepath" if not given
@@ -503,9 +505,9 @@ class StoredFile {
         }
 
         $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $p_values["filepath"];
-        // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
       	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?(int)$p_values['id']:null;
-        $sqlId = !is_null($storedFile->id)?"'".$storedFile->id."'":'DEFAULT';
+        // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
+      	$sqlId = !is_null($storedFile->id)?"'".$storedFile->id."'":'DEFAULT';
       	$storedFile->ftype = isset($p_values['filetype']) ? strtolower($p_values['filetype']) : "audioclip";
         $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
         // $storedFile->filepath = $p_values['filepath'];
@@ -531,7 +533,7 @@ class StoredFile {
         $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
                 ."(id, name, gunid, mime, state, ftype, mtime, md5)"
                 ."VALUES ({$sqlId}, '{$escapedName}', "
-                ." x'{$storedFile->gunid}'::bigint,"
+                ." '{$storedFile->gunid}',"
                 ." '{$storedFile->mime}', 'incomplete', '$escapedFtype',"
                 ." now(), '{$storedFile->md5}')";
         //$_SESSION["debug"] .= "sql: ".$sql."<br>";
@@ -550,6 +552,7 @@ class StoredFile {
 
         // Save media file
         $res = $storedFile->addFile($p_values['filepath'], $p_copyMedia);
+
         if (PEAR::isError($res)) {
             echo "StoredFile::Insert: ERROR adding file: '".$res->getMessage()."'\n";
             $CC_DBC->query("ROLLBACK");
@@ -596,17 +599,18 @@ class StoredFile {
         if (!is_null($p_oid)) {
             $cond = "id='".intval($p_oid)."'";
         } elseif (!is_null($p_gunid)) {
-            $cond = "gunid=x'$p_gunid'::bigint";
+            $cond = "gunid='$p_gunid'";
         } elseif (!is_null($p_md5sum)) {
             $cond = "md5='$p_md5sum'";
         } else {
             return null;
         }
-        $sql = "SELECT id, to_hex(gunid)as gunid, gunid as gunid_bigint,"
+        $sql = "SELECT id, gunid,"
             ." name, mime, ftype, state, currentlyaccessing, editedby, "
             ." mtime, md5"
             ." FROM ".$CC_CONFIG['filesTable']
             ." WHERE $cond";
+        //echo $sql;
         $row = $CC_DBC->getRow($sql);
         if (PEAR::isError($row)) {
             return $row;
@@ -614,7 +618,7 @@ class StoredFile {
         if (is_null($row)) {
             return null;
         }
-        $gunid = StoredFile::NormalizeGunid($row['gunid']);
+        $gunid = $row['gunid'];
         if ($row['ftype'] == 'audioclip') {
             $storedFile = new StoredFile($gunid);
         } elseif ($row['ftype'] == 'playlist') {
@@ -623,9 +627,9 @@ class StoredFile {
             $storedFile = new StoredFile($gunid);
         }
         $storedFile->loadMetadata();
-        $storedFile->gunidBigint = $row['gunid_bigint'];
+        //$storedFile->gunidBigint = $row['gunid_bigint'];
         //$storedFile->md->gunidBigint = $row['gunid_bigint'];
-        $storedFile->md["gunid"] = $row['gunid_bigint'];
+        $storedFile->md["gunid"] = $row['gunid'];
         $storedFile->id = $row['id'];
         $storedFile->name = $row['name'];
         $storedFile->mime = $row['mime'];
@@ -678,7 +682,7 @@ class StoredFile {
     public static function RecallByToken($p_token)
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT to_hex(gunid) as gunid"
+        $sql = "SELECT gunid"
             ." FROM ".$CC_CONFIG['accessTable']
             ." WHERE token=x'$p_token'::bigint";
         $gunid = $CC_DBC->getOne($sql);
@@ -689,10 +693,27 @@ class StoredFile {
             return PEAR::raiseError(
             "StoredFile::RecallByToken: invalid token ($p_token)", GBERR_AOBJNEX);
         }
-        $gunid = StoredFile::NormalizeGunid($gunid);
         return StoredFile::Recall(null, $gunid);
     }
 
+
+    /**
+     * Generate the location to store the file.
+     * It creates the subdirectory if needed.
+     */
+    private function generateFilePath()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
+        // see Transport::_getResDir too for resDir name create code
+        if (!is_dir($resDir)) {
+            mkdir($resDir, 02775);
+            chmod($resDir, 02775);
+        }
+        $info = pathinfo($this->name);
+        $fileExt = strtolower($info["extension"]);
+        return "{$resDir}/{$this->gunid}.{$fileExt}";
+    }
 
     /**
      * Insert media file to filesystem
@@ -705,30 +726,43 @@ class StoredFile {
      */
     public function addFile($p_localFilePath, $p_copyMedia=TRUE)
     {
+        global $CC_CONFIG, $CC_DBC;
         if ($this->exists) {
         	return FALSE;
         }
-        // for files downloaded from archive:
+        // for files downloaded from remote instance:
         if ($p_localFilePath == $this->filepath) {
             $this->exists = TRUE;
             return TRUE;
         }
         umask(0002);
+        $dstFile = '';
         if ($p_copyMedia) {
-            $r = @copy($p_localFilePath, $this->filepath);
+            $dstFile = $this->generateFilePath();
+            $r = @copy($p_localFilePath, $dstFile);
+            if (!$r) {
+                $this->exists = FALSE;
+                return PEAR::raiseError(
+                    "StoredFile::addFile: file save failed".
+                    " ($p_localFilePath, {$this->filepath})",GBERR_FILEIO
+                );
+            }
         } else {
-            $r = @symlink($p_localFilePath, $this->filepath);
+            $dstFile = $p_localFilePath;
+            $r = TRUE;
+            //$r = @symlink($p_localFilePath, $dstFile);
         }
-        if ($r) {
-            $this->exists = TRUE;
-            return TRUE;
-        } else {
-            $this->exists = FALSE;
-            return PEAR::raiseError(
-                "StoredFile::addFile: file save failed".
-                " ($p_localFilePath, {$this->filepath})",GBERR_FILEIO
-            );
+        $this->filepath = $dstFile;
+        $sqlPath = pg_escape_string($this->filepath);
+        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+            ." SET filepath='{$sqlPath}'"
+            ." WHERE id={$this->id}";
+        $res = $CC_DBC->query($sql);
+        if (PEAR::isError($res)) {
+            return $res;
         }
+        $this->exists = TRUE;
+        return TRUE;
     }
 
 
@@ -1013,7 +1047,7 @@ class StoredFile {
         $escapedName = pg_escape_string($p_newname);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
             ." SET name='$escapedName', mtime=now()"
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1039,7 +1073,7 @@ class StoredFile {
         $eb = (!is_null($p_editedby) ? ", editedBy=$p_editedby" : '');
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
             ." SET state='$escapedState'$eb, mtime=now()"
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1065,7 +1099,7 @@ class StoredFile {
         $escapedMime = pg_escape_string($p_mime);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
             ." SET mime='$escapedMime', mtime=now()"
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1087,7 +1121,7 @@ class StoredFile {
         $escapedMd5 = pg_escape_string($p_md5sum);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
             ." SET md5='$escapedMd5', mtime=now()"
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1119,7 +1153,7 @@ class StoredFile {
 //        }
         $sql = "SELECT to_hex(token)as token, ext "
             ." FROM ".$CC_CONFIG['accessTable']
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $tokens = $CC_DBC->getAll($sql);
         if (is_array($tokens)) {
             foreach ($tokens as $i => $item) {
@@ -1130,13 +1164,13 @@ class StoredFile {
             }
         }
         $sql = "DELETE FROM ".$CC_CONFIG['accessTable']
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
         }
         $sql = "DELETE FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1182,7 +1216,7 @@ class StoredFile {
             return ($this->currentlyaccessing > 0);
         }
         $sql = "SELECT currentlyAccessing FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'$p_gunid'::bigint";
+            ." WHERE gunid='$p_gunid'";
         $ca = $CC_DBC->getOne($sql);
         if (is_null($ca)) {
             return PEAR::raiseError(
@@ -1229,7 +1263,7 @@ class StoredFile {
             $p_playlistId = $this->gunid;
         }
         $sql = "SELECT editedBy FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'$p_playlistId'::bigint";
+            ." WHERE gunid='$p_playlistId'";
         $ca = $CC_DBC->getOne($sql);
         if (PEAR::isError($ca)) {
             return $ca;
@@ -1270,9 +1304,9 @@ class StoredFile {
     public function exists()
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT to_hex(gunid) "
+        $sql = "SELECT gunid "
             ." FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'{$this->gunid}'::bigint";
+            ." WHERE gunid='{$this->gunid}'";
         $indb = $CC_DBC->getRow($sql);
         if (PEAR::isError($indb)) {
             return $indb;
@@ -1291,15 +1325,17 @@ class StoredFile {
      * Create new global unique id
      * @return string
      */
-    public static function CreateGunid()
+    public static function generateGunid()
     {
-        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
-        $initString = microtime().$ip.rand()."org.mdlf.campcaster";
-        $hash = md5($initString);
-        // non-negative int8
-        $hsd = substr($hash, 0, 1);
-        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
-        return StoredFile::NormalizeGunid($res);
+      return md5(uniqid("", true));
+
+//        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
+//        $initString = microtime().$ip.rand();
+//        $hash = md5($initString);
+//        // non-negative int8
+//        $hsd = substr($hash, 0, 1);
+//        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
+//        return StoredFile::NormalizeGunid($res);
     }
 
 
@@ -1308,10 +1344,10 @@ class StoredFile {
      *
      * @return string
      */
-    public static function NormalizeGunid($p_gunid)
-    {
-        return str_pad($p_gunid, 16, "0", STR_PAD_LEFT);
-    }
+//    public static function NormalizeGunid($p_gunid)
+//    {
+//        return str_pad($p_gunid, 16, "0", STR_PAD_LEFT);
+//    }
 
 
     /**
@@ -1386,7 +1422,7 @@ class StoredFile {
             return $this->state;
         }
         $sql = "SELECT state FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'$p_gunid'::bigint";
+            ." WHERE gunid='$p_gunid'";
         return $CC_DBC->getOne($sql);
     }
 
@@ -1405,7 +1441,7 @@ class StoredFile {
             return $this->name;
         }
         $sql = "SELECT name FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid=x'$p_gunid'::bigint";
+            ." WHERE gunid='$p_gunid'";
         return $CC_DBC->getOne($sql);
     }
 
@@ -1416,18 +1452,18 @@ class StoredFile {
      *
      * @return string
      */
-    private function _getResDir()
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
-        //$this->gb->debugLog("$resDir");
-        // see Transport::_getResDir too for resDir name create code
-        if (!is_dir($resDir)) {
-            mkdir($resDir, 02775);
-            chmod($resDir, 02775);
-        }
-        return $resDir;
-    }
+//    private function _getResDir()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
+//        //$this->gb->debugLog("$resDir");
+//        // see Transport::_getResDir too for resDir name create code
+//        if (!is_dir($resDir)) {
+//            mkdir($resDir, 02775);
+//            chmod($resDir, 02775);
+//        }
+//        return $resDir;
+//    }
 
 
     /**
@@ -1472,7 +1508,6 @@ class StoredFile {
     private function _getAccessFileName($p_token, $p_ext='EXT')
     {
         global $CC_CONFIG;
-        $token = StoredFile::NormalizeGunid($p_token);
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 

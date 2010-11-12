@@ -23,7 +23,4 @@
 #-------------------------------------------------------------------------------
 #  This script cleans audio files in the Campcaster storageServer.
 
-reldir=`dirname $0`/..
-cd $reldir/var
-
 php -q CleanStor.php  "$@" || exit 1
