@@ -70,7 +70,7 @@ function ls_restore_restoreObject($obj, /*$parid,*/ $reallyInsert=TRUE){
                     "gunid" => $obj['gunid'],
                     "filetype" => strtolower($obj['type'])
                 );
-                $r = $bs->bsPutFile($values);
+                $r = StoredFile::Insert($values);
                 ls_restore_checkErr($r, __LINE__);
             }
         break;

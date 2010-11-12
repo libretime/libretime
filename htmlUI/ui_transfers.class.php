@@ -155,8 +155,9 @@ class uiTransfers
 
     function upload2Hub($id)
     {
-        $gunid = BasicStor::GunidFromId($id);
-        $type = BasicStor::GetType($gunid);
+        $media = StoredFile::Recall($id);
+        $gunid = $media->getGunid();
+        $type = $media->getType();
 
         switch ($type) {
             case 'audioClip':

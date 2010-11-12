@@ -60,7 +60,7 @@ class SchedulerTests extends PHPUnit_TestCase {
   function testAddAndRemovePlaylist() {
     // Create a playlist
     $playlist = new Playlist();
-    $playlist->create("Scheduler Unit Test");
+    $playlist->create("Scheduler Unit Test ".uniqid());
     $result = $playlist->addAudioClip($this->storedFile->getId());
     $result = $playlist->addAudioClip($this->storedFile2->getId());
     $result = $playlist->addAudioClip($this->storedFile2->getId());
@@ -76,7 +76,7 @@ class SchedulerTests extends PHPUnit_TestCase {
       $this->fail("Wrong number of items added.");
     }
     $items = $group->getItems();
-    if ($items[1]["starts"] != "2010-11-11 01:30:34.231") {
+    if (!is_array($items) || ($items[1]["starts"] != "2010-11-11 01:30:34.231")) {
       $this->fail("Wrong start time for 2nd item.");
     }
 

@@ -124,7 +124,7 @@ class uiHandler extends uiBase {
 			$metadata['ls:filename'] = basename($audio_file);
 		}
 
-		// bsSetMetadataBatch doesnt like these values
+		// setMetadataBatch doesnt like these values
 		unset($metadata['audio']);
 		unset($metadata['playtime_seconds']);
 
@@ -141,7 +141,7 @@ class uiHandler extends uiBase {
 			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $storedFile->getMessage() + '}}');
 		}
 
-		$result = $this->gb->bsSetMetadataBatch($storedFile->getId(), $metadata);
+		$result = $storedFile->setMetadataBatch($metadata);
 
 		return $storedFile->getId();
 	}
@@ -263,12 +263,6 @@ class uiHandler extends uiBase {
         $id  = $formdata['id'];
         $folderId = $formdata['folderId'];
 
-        if (Greenbox::getFileType($folderId) != 'Folder') {
-            $this->_retMsg('The target is not a folder.');
-            $this->redirUrl = UI_BROWSER."?act=fileList";
-            return FALSE;
-        }
-
         if (!$this->_validateForm($formdata, $mask)) {
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
             return FALSE;
@@ -301,7 +295,7 @@ class uiHandler extends uiBase {
             $metadata['ls:filename'] = $formdata['mediafile']['name'];
         }
 
-        // bsSetMetadataBatch doesnt like these values
+        // setMetadataBatch doesnt like these values
         unset($metadata['audio']);
         unset($metadata['playtime_seconds']);
 
@@ -326,7 +320,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $result = $this->gb->bsSetMetadataBatch($storedFile->getId(), $metadata);
+        $result = $storedFile->setMetadataBatch($metadata);
 
         $this->redirUrl = UI_BROWSER."?act=addFileMData&id=".$storedFile->getId();
         $this->_retMsg('Audioclip has been uploaded successfully.');
@@ -353,45 +347,45 @@ class uiHandler extends uiBase {
      * @param unknown_type $langid
      * @return void
      */
-    function translateMetadata($id, $langid=UI_DEFAULT_LANGID)
-    {
-        include(dirname(__FILE__).'/formmask/metadata.inc.php');
-
-        $ia = $this->gb->analyzeFile($id, $this->sessid);
-        if (PEAR::isError($ia)) {
-            $this->_retMsg($ia->getMessage());
-            return;
-        }
-        // This is really confusing: the import script does not do it
-        // this way.  Which way is the right way?
-        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
-//        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
-
-        // some data from raw audio
-//        if (isset($ia['audio']['channels'])) {
-//        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
+//    function translateMetadata($id, $langid=UI_DEFAULT_LANGID)
+//    {
+//        include(dirname(__FILE__).'/formmask/metadata.inc.php');
+//
+//        $ia = $this->gb->analyzeFile($id, $this->sessid);
+//        if (PEAR::isError($ia)) {
+//            $this->_retMsg($ia->getMessage());
+//            return;
 //        }
-//        if (isset($ia['audio']['sample_rate'])) {
-//        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+//        // This is really confusing: the import script does not do it
+//        // this way.  Which way is the right way?
+//        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
+////        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
+//
+//        // some data from raw audio
+////        if (isset($ia['audio']['channels'])) {
+////        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
+////        }
+////        if (isset($ia['audio']['sample_rate'])) {
+////        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+////        }
+////        if (isset($ia['audio']['bitrate'])) {
+////        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
+////        }
+////        if (isset($ia['audio']['codec'])) {
+////        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
+////        }
+//
+//        // from id3 Tags
+//        // loop main, music, talk
+//        foreach ($mask['pages'] as $key => $val) {
+//        	// loop through elements
+//            foreach ($mask['pages'][$key] as $k => $v) {
+//            	if (isset($v['element']) && isset($ia[$v['element']])) {
+//	                $this->setMetadataValue($id, $v['element'], $ia[$v['element']], $langid);
+//            	}
+//            }
 //        }
-//        if (isset($ia['audio']['bitrate'])) {
-//        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
-//        }
-//        if (isset($ia['audio']['codec'])) {
-//        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
-//        }
-
-        // from id3 Tags
-        // loop main, music, talk
-        foreach ($mask['pages'] as $key => $val) {
-        	// loop through elements
-            foreach ($mask['pages'][$key] as $k => $v) {
-            	if (isset($v['element']) && isset($ia[$v['element']])) {
-	                $this->setMetadataValue($id, $v['element'], $ia[$v['element']], $langid);
-            	}
-            }
-        }
-    }
+//    }
 
 
     /**
@@ -403,13 +397,8 @@ class uiHandler extends uiBase {
     function addWebstream($formdata, $mask)
     {
         $id  = $formdata['id'];
-        $folderId = $formdata['folderId'];
+        //$folderId = $formdata['folderId'];
 
-        if (Greenbox::getFileType($folderId) != 'Folder') {
-            $this->_retMsg ('The target is not a folder.');
-            $this->redirUrl = UI_BROWSER."?act=fileList";
-            return FALSE;
-        }
         if (!$this->_validateForm($formdata, $mask)) {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
@@ -534,16 +523,13 @@ class uiHandler extends uiBase {
         }
 
         foreach ($ids as $id) {
-            if (Greenbox::getFileType($id) == 'playlist') {
-                $r = $this->gb->deletePlaylist($id, $this->sessid);
-            } else {
-                $r = $this->gb->deleteFile($id, $this->sessid);
-            }
+          $media = StoredFile::Recall($id);
+          $r = $media->delete();
 
-            if (PEAR::isError($r)) {
-                $this->_retMsg($r->getMessage());
-                return FALSE;
-            }
+          if (PEAR::isError($r)) {
+              $this->_retMsg($r->getMessage());
+              return FALSE;
+          }
         }
 
         return TRUE;

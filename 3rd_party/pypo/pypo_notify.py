@@ -38,7 +38,7 @@ from configobj import ConfigObj
 
 # custom imports
 from util import *
-from obp import *
+from api_clients import *
 from dls import *
 
 PYPO_VERSION = '0.9'

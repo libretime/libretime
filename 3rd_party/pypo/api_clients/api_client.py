@@ -17,7 +17,7 @@ def api_client_factory(config):
 		print 'API Client "'+config["api_client"]+'" not supported.  Please check your config file.'
 		print
 		sys.exit()
-
+	
 class ApiClientInterface:
 
 	# This is optional.
@@ -25,10 +25,16 @@ class ApiClientInterface:
 	# 3rd party software.
 	def check_version(self):
 		nil
-		
+	
+	# Required.	
 	# This is the main method you need to implement when creating a new API client.
 	def get_schedule(self):
 		return 0, []
+	
+	# Required.
+	# This downloads the media from the server.
+	def get_media(self, src, dst):
+		nil
 		
 	# This is optional.
 	# You dont actually have to implement this function for the liquidsoap playout to work.
@@ -76,7 +82,7 @@ class CampcasterApiClient(ApiClientInterface):
 			try:
 				if e[1] == 404:
 					print '#####################################'
-					print '# Unable to contact the OBP-API'
+					print '# Unable to contact the Campcaster-API'
 					print '# ' + url
 					print '#####################################'
 					sys.exit()
@@ -140,6 +146,18 @@ class CampcasterApiClient(ApiClientInterface):
 
 		return status, response			
 
+
+	def get_media(self, src, dst):
+		logger = logging.getLogger("CampcasterApiClient.get_media")
+		
+		try:
+			src = src + "&api_key=" + self.config["api_key"]
+			urllib.urlretrieve(src, dst, False)
+			logger.info("downloaded %s to %s", src, dst)
+		except Exception, e:
+			logger.error("%s", e)
+
+
 	def update_scheduled_item(self, item_id, value):
 		logger = logging.getLogger("CampcasterApiClient.update_scheduled_item")
 		
@@ -160,20 +178,18 @@ class CampcasterApiClient(ApiClientInterface):
 	
 	
 	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		return
-		logger = logging.getLogger("ApiClient.update_scheduled_item")
-	
-		url = self.api_url + 'schedule/update_start_playing.php' \
-		+ '?playlist_type=' + str(playlist_type) \
-		+ '&export_source=' + str(export_source) \
-		+ '&media_id=' + str(media_id) \
-		+ '&playlist_id=' + str(playlist_id) \
-		+ '&transmission_id=' + str(transmission_id)
-		
+		logger = logging.getLogger("CampcasterApiClient.update_scheduled_item")
+
+		url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
+		url = url.replace("%%playlist_type%%", str(playlist_type))
+		url = url.replace("%%export_source%%", str(export_source))
+		url = url.replace("%%media_id%%", str(media_id))
+		url = url.replace("%%playlist_id%%", str(playlist_id))
+		url = url.replace("%%transmission_id%%", str(transmission_id))			
 		print url
 		
 		try:
-			response = urllib.urlopen(url, self.api_auth)
+			response = urllib.urlopen(url)
 			response = json.read(response.read())
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
@@ -188,7 +204,7 @@ class CampcasterApiClient(ApiClientInterface):
 	
 	
 	def generate_range_dp(self):
-		logger = logging.getLogger("ApiClient.generate_range_dp")
+		logger = logging.getLogger("CampcasterApiClient.generate_range_dp")
 	
 		url = self.api_url + 'schedule/generate_range_dp.php'
 		
@@ -208,6 +224,10 @@ class CampcasterApiClient(ApiClientInterface):
 
     
 ################################################################################
+# OpenBroadcast API Client
+################################################################################
+# Also check out the php counterpart that handles the api requests:
+# https://lab.digris.ch/svn/elgg/trunk/unstable/mod/medialibrary/application/controllers/api/pypo.php
 
 OBP_MIN_VERSION = 2010100101 # required obp version
         
@@ -215,9 +235,8 @@ class ObpApiClient():
 
 	def __init__(self, config):
 		self.config = config
-		#self.api_url = api_url
-		#self.api_auth = api_auth
-
+		self.api_auth = urllib.urlencode({'api_key': self.config["api_key"]})
+		
 	def check_version(self):
 		obp_version = self.get_obp_version()
 		
@@ -240,11 +259,12 @@ class ObpApiClient():
 			print 'pypo is compatible with this version of OBP'
 			print
 	
+	
 	def get_obp_version(self):
-		logger = logging.getLogger("ApiClient.get_obp_version")
-		# lookup OBP version
-		
-		url = self.api_url + 'api/pypo/status/json'
+		logger = logging.getLogger("ObpApiClient.get_obp_version")
+
+		# lookup OBP version		
+		url = self.config["base_url"] + self.config["api_base"]+ self.config["version_url"]
 		
 		try:    
 			logger.debug("Trying to contact %s", url)
@@ -258,7 +278,7 @@ class ObpApiClient():
 				if e[1] == 401:
 					print '#####################################'
 					print '# YOUR API KEY SEEMS TO BE INVALID'
-					print '# ' + self.api_auth
+					print '# ' + self.config["api_auth"]
 					print '#####################################'
 					sys.exit()
 					
@@ -279,15 +299,26 @@ class ObpApiClient():
 			obp_version = 0
 			logger.error("Unable to detect OBP Version - %s", e)
 	
-		
 		return obp_version
+
 	
-	
+	def get_media(self, src, dest):
+		try:
+			print '** urllib auth with: ',
+			print self.api_auth
+			urllib.urlretrieve(src, dst, False, self.api_auth)
+			logger.info("downloaded %s to %s", src, dst)
+		except Exception, e:
+			logger.error("%s", e)
+
+
 	def update_scheduled_item(self, item_id, value):
-		logger = logging.getLogger("ApiClient.update_shedueled_item")
+		logger = logging.getLogger("ObpApiClient.update_scheduled_item")
 		# lookup OBP version
 		
-		url = self.api_url + 'api/pypo/update_scheduled_item/' + str(item_id) + '?played=' + str(value)
+		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
+		url = url.replace("%%item_id%%", str(item_id))
+		url = url.replace("%%played%%", str(value))
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)
@@ -300,22 +331,18 @@ class ObpApiClient():
 			api_status = False
 			logger.critical("Unable to connect to the OBP API - %s", e)
 	
-		
 		return response
 	
 	
 	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-	
-		logger = logging.getLogger("ApiClient.update_shedueled_item")
-	
-		url = self.api_url + 'api/pypo/update_start_playing/' \
-		+ '?playlist_type=' + str(playlist_type) \
-		+ '&export_source=' + str(export_source) \
-		+ '&export_source=' + str(export_source) \
-		+ '&media_id=' + str(media_id) \
-		+ '&playlist_id=' + str(playlist_id) \
-		+ '&transmission_id=' + str(transmission_id)
+		logger = logging.getLogger("ApiClient.update_scheduled_item")
 		
+		url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
+		url = url.replace("%%playlist_type%%", str(playlist_type))
+		url = url.replace("%%export_source%%", str(export_source))
+		url = url.replace("%%media_id%%", str(media_id))
+		url = url.replace("%%playlist_id%%", str(playlist_id))
+		url = url.replace("%%transmission_id%%", str(transmission_id))		
 		print url
 		
 		try:
@@ -330,14 +357,13 @@ class ObpApiClient():
 			api_status = False
 			logger.critical("Unable to connect to the OBP API - %s", e)
 	
-		
 		return response
 	
 	
 	def generate_range_dp(self):
-		logger = logging.getLogger("ApiClient.generate_range_dp")
+		logger = logging.getLogger("ObpApiClient.generate_range_dp")
 	
-		url = self.api_url + 'api/pypo/generate_range_dp/'
+		url = self.config["base_url"] + self.config["api_base"] + self.config["generate_range_url"]
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)

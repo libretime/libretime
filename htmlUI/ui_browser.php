@@ -137,20 +137,21 @@ if (isset($_REQUEST['popup']) && is_array($_REQUEST['popup'])){
 	            break;
 
             case "PL.downloadExportedFile":
-	            $exportedPlaylist = $uiBrowser->gb->exportPlaylistOpen($uiBrowser->sessid,
-	            			BasicStor::GunidFromId($_REQUEST['id']),
-	            			$_REQUEST['playlisttype'],
-	            		    $_REQUEST['exporttype']=='playlistOnly'?true:false);
-	            $fp = fopen($exportedPlaylist['fname'],'r');
-	            if (is_resource($fp)) {
-	                header("Content-Type: application/octet-stream");
-	                header("Content-Length: " . filesize($exportedPlaylist['fname']));
-	                header('Content-Disposition: attachment; filename="playlist.tar"');
-	                header("Content-Transfer-Encoding: binary\n");
-	                fpassthru($fp);
-	                   $uiBrowser->gb->exportPlaylistClose($exportedPlaylist['token']);
-	            }
-	            //$Smarty->display('popup/PLAYLIST.downloadExportedFile.tpl');
+
+//	            $exportedPlaylist = $uiBrowser->gb->exportPlaylistOpen($uiBrowser->sessid,
+//	            			BasicStor::GunidFromId($_REQUEST['id']),
+//	            			$_REQUEST['playlisttype'],
+//	            		    $_REQUEST['exporttype']=='playlistOnly'?true:false);
+//	            $fp = fopen($exportedPlaylist['fname'],'r');
+//	            if (is_resource($fp)) {
+//	                header("Content-Type: application/octet-stream");
+//	                header("Content-Length: " . filesize($exportedPlaylist['fname']));
+//	                header('Content-Disposition: attachment; filename="playlist.tar"');
+//	                header("Content-Transfer-Encoding: binary\n");
+//	                fpassthru($fp);
+//	                   $uiBrowser->gb->exportPlaylistClose($exportedPlaylist['token']);
+//	            }
+//	            //$Smarty->display('popup/PLAYLIST.downloadExportedFile.tpl');
 	            break;
 
             case "SCHEDULER.addItem":
@@ -354,10 +355,10 @@ if ($uiBrowser->userid) {
 	        $Smarty->assign('showFile', TRUE);
 	        break;
 
-        case "_analyzeFile":
-	        $Smarty->assign('_analyzeFile', $uiBrowser->analyzeFile($uiBrowser->id, 'text'));
-	        $Smarty->assign('showFile', TRUE);
-	        break;
+//        case "_analyzeFile":
+//	        $Smarty->assign('_analyzeFile', $uiBrowser->analyzeFile($uiBrowser->id, 'text'));
+//	        $Smarty->assign('showFile', TRUE);
+//	        break;
 
         case "changeStationPrefs":
 	        $Smarty->assign('dynform', $uiBrowser->changeStationPrefs($ui_fmask['stationPrefs']));

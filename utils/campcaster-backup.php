@@ -26,16 +26,9 @@ function admDumpFolder(&$bs, $fid, $ind='')
 //    	echo $name->getMessage();
 //    	exit;
 //    }
-    $type = BasicStor::GetObjType($fid);
-    if (PEAR::isError($type)) {
-    	echo $type->getMessage();
-    	exit;
-    }
-    $gunid = BasicStor::GunidFromId($fid);
-    if (PEAR::isError($gunid)) {
-    	echo $gunid->getMessage();
-    	exit;
-    }
+    $media = StoredFile::Recall($fid);
+    $type = $media->getType();
+    $gunid = $media->getGunid();
     $pars  = array();
     if ($gunid) {
     	$pars['id']="$gunid";

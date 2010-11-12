@@ -365,10 +365,12 @@ class uiTwitter {
             return FALSE;
         }
 
+        $f = StoredFile::RecallByGunid($clip['gunid']);
+        $pl = Playlist::Recall($pl['playlistId']);
         return array(
-            'tracktitle' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
-            'trackartist' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_CREATOR, $this->Base->sessid),
-            'playlisttitle' => $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($pl['playlistId']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
+            'tracktitle' => $f->getMetadataValue(UI_MDATA_KEY_TITLE), //$this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
+            'trackartist' => $f->getMetadataValue(UI_MDATA_KEY_CREATOR), // $this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($clip['gunid']), UI_MDATA_KEY_CREATOR, $this->Base->sessid),
+            'playlisttitle' => $pl->getName() //$this->Base->gb->getMetadataValue(BasicStor::IdFromGunid($pl['playlistId']), UI_MDATA_KEY_TITLE, $this->Base->sessid),
         );
     }
 

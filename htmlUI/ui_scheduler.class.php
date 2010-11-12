@@ -209,7 +209,7 @@ class uiScheduler extends uiCalendar {
 //        $hour = $arr['hour'];
 //        $minute = $arr['minute'];
 //        $second = $arr['second'];
-       
+
         extract($arr);
 
         if (isset($today)) {
@@ -456,25 +456,6 @@ class uiScheduler extends uiCalendar {
         return $items;
     } // fn getDayEntrys
 
-    /*
-    function getDayHourlyEntrys($year, $month, $day)
-    {
-        $date = $year.'-'.$month.'-'.$day;
-        $arr = $this->displayScheduleMethod($date.' 00:00:00', $date.' 23:59:59.999999');
-        if (!count($arr))
-            return FALSE;
-        foreach ($arr as $key => $val) {
-            $items[date('H', self::datetimeToTimestamp($val['start']))][]= array (
-                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
-                'title'     => $this->Base->getMetadataValue(BasicStor::IdFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
-                'creator'   => $this->Base->getMetadataValue(BasicStor::IdFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
-            );
-        }
-        #print_r($items);
-        return $items;
-    }
-    */
 
     private function getDayUsage($year, $month, $day)
     {
@@ -487,11 +468,12 @@ class uiScheduler extends uiCalendar {
         }
 
         foreach ($arr as $key => $val) {
-        	$id = BasicStor::IdFromGunid($val['playlistId']);
-            $arr[$key]['title'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
-            $arr[$key]['creator'] = $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
-            $arr[$key]['pos'] = self::datetimeToTimestamp($val['start']);
-            $arr[$key]['span'] = date('H', self::datetimeToTimestamp($val['end'])) - date('H', self::datetimeToTimestamp($val['start'])) +1;
+          $pl = Playlist::Recall($val['playlistId']);
+        	//$id = BasicStor::IdFromGunid($val['playlistId']);
+          $arr[$key]['title'] = $pl->getName(); //$this->Base->getMetadataValue($id, UI_MDATA_KEY_TITLE);
+          $arr[$key]['creator'] = $pl->getPLMetaData("dc:title");// $this->Base->getMetadataValue($id, UI_MDATA_KEY_CREATOR);
+          $arr[$key]['pos'] = self::datetimeToTimestamp($val['start']);
+          $arr[$key]['span'] = date('H', self::datetimeToTimestamp($val['end'])) - date('H', self::datetimeToTimestamp($val['start'])) +1;
         }
         return $arr;
     } // fn getDayUsage
@@ -595,7 +577,7 @@ class uiScheduler extends uiCalendar {
         }
 
         return TRUE;
-    } // fn copyPlfromSP
+    }
 
 
     /**
@@ -707,22 +689,27 @@ class uiScheduler extends uiCalendar {
     {
         // just use methods which work without valid authentification
         $c_pl = self::getScheduledPlaylist();
+        $pl = Playlist::Recall($c_pl['playlistId']);
+
         $n_clip = null;
         if ($c_clip = $this->getClipFromCurrent($c_pl, 0)) {
             $n_clip = $this->getClipFromCurrent($c_pl, 1);
         }
+        $nextClip = StoredFile::Recall($n_clip);
         $u_clip = null;
         $u_pl_start = null;
         if ($u_pl = self::getScheduledPlaylist(2)) {
             $u_clip = $this->getClipFromPlaylist($u_pl);
             $u_pl_start = explode(':', date('H:i:s', self::datetimeToTimestamp($u_pl['start'])));
         }
+        $upcomingClip = StoredFile::Recall($u_pl['playlistId']);
 
         return array(
             'current'               => $c_clip ? 1 : 0,
             'current.title'         => addcslashes($c_clip['title'], "'"),
-            'current.pltitle'       => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($c_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
-            'current.elapsed.h'     => $c_clip['elapsed']['h'],
+            //'current.pltitle'       => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($c_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'current.pltitle'       => addcslashes($pl->getName(), "'"),
+        		'current.elapsed.h'     => $c_clip['elapsed']['h'],
             'current.elapsed.m'     => $c_clip['elapsed']['m'],
             'current.elapsed.s'     => $c_clip['elapsed']['s'],
             'current.duration.h'    => $c_clip['duration']['h'],
@@ -731,15 +718,17 @@ class uiScheduler extends uiCalendar {
 
             'next'                  => $n_clip ? 1 : 0,
             'next.title'            => $n_clip ? addcslashes($n_clip['title'], "'") : "",
-            'next.pltitle'          => addcslashes($this->Base->getMetadataValue($n_clip, UI_MDATA_KEY_TITLE), "'"),
-            'next.duration.h'       => $n_clip ? $n_clip['duration']['h'] : 0,
+            //'next.pltitle'          => addcslashes($this->Base->getMetadataValue($n_clip, UI_MDATA_KEY_TITLE), "'"),
+            'next.pltitle'          => addcslashes($nextClip->getTitle(), "'"),
+        		'next.duration.h'       => $n_clip ? $n_clip['duration']['h'] : 0,
             'next.duration.m'       => $n_clip ? $n_clip['duration']['m'] : 0,
             'next.duration.s'       => $n_clip ? $n_clip['duration']['s'] : 0,
 
             'upcoming'              => $u_pl ? 1 : 0,
             'upcoming.title'        => addcslashes($u_clip['title'], "'"),
-            'upcoming.pltitle'      => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($u_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
-            'upcoming.duration.h'   => $u_clip['duration']['h'],
+            //'upcoming.pltitle'      => addcslashes($this->Base->getMetadataValue(BasicStor::IdFromGunid($u_pl['playlistId']), UI_MDATA_KEY_TITLE), "'"),
+            'upcoming.pltitle'      => addcslashes($upcomingClip->getName(), "'"),
+        		'upcoming.duration.h'   => $u_clip['duration']['h'],
             'upcoming.duration.m'   => $u_clip['duration']['m'],
             'upcoming.duration.s'   => $u_clip['duration']['s'],
             'upcoming.plstart.h'    => $u_pl_start[0],

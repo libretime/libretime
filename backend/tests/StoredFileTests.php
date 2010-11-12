@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/../StoredFile.php');
-require_once(dirname(__FILE__).'/../BasicStor.php');
-require_once(dirname(__FILE__).'/../GreenBox.php');
+//require_once(dirname(__FILE__).'/../BasicStor.php');
+//require_once(dirname(__FILE__).'/../GreenBox.php');
 
 $dsn = $CC_CONFIG['dsn'];
 $CC_DBC = DB::connect($dsn, TRUE);
@@ -11,16 +11,13 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-class BasicStorTest extends PHPUnit_TestCase {
+class StoredFileTest extends PHPUnit_TestCase {
 
-    private $greenbox;
-
-//    function __construct($name) {
-//        parent::__construct($name);
-//    }
+    function __construct($name) {
+        parent::__construct($name);
+    }
 
     function setup() {
-        $this->greenbox = new GreenBox();
     }
 
     function testGetAudioMetadata() {
@@ -53,11 +50,13 @@ class BasicStorTest extends PHPUnit_TestCase {
         }
 
         $values = array("filepath" => $filePath);
-        $storedFile = $this->greenbox->bsPutFile($values, false);
+        // Insert and link to file, dont copy it
+        $storedFile = StoredFile::Insert($values, false);
         if (PEAR::isError($storedFile)) {
           $this->fail("Failed to create StoredFile: ".$storedFile->getMessage());
           return;
         }
+        //var_dump($storedFile);
         $id = $storedFile->getId();
         if (!is_numeric($id)) {
             $this->fail("StoredFile not created correctly. id = ".$id);

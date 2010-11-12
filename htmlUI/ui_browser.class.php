@@ -2,7 +2,6 @@
 /**
  * @package Campcaster
  * @subpackage htmlUI
-
  */
 class uiBrowser extends uiBase {
 
@@ -389,8 +388,8 @@ class uiBrowser extends uiBase {
     function listen2Audio($clipid)
     {
         global $CC_CONFIG;
-        $id   = BasicStor::IdFromGunid($clipid);
-        $type = Greenbox::getFileType($id);
+        $media = StoredFile::RecallByGunid($clipid);
+        $type = $media->getType();
 
         if (1) {
             header("Location: http://{$_SERVER['SERVER_NAME']}".$CC_CONFIG['accessRawAudioUrl']."?sessid={$this->sessid}&id=$clipid\n");

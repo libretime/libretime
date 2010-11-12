@@ -1,11 +1,10 @@
 <?php
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": Greenbox begin<br>";
+}
 require_once("BasicStor.php");
 if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded BasicStor<br>";
-}
-require_once("LocStor.php");
-if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
-    echo __FILE__.':line '.__LINE__.": Loaded LocStor<br>";
 }
 require_once("Playlist.php");
 require_once("Renderer.php");
@@ -51,7 +50,7 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('write', null, $p_sessionId)) !== TRUE) {
             return $res;
         }
-        $storedFile = $this->bsPutFile($p_values);
+        $storedFile = StoredFile::Insert($p_values);
         return $storedFile;
     } // fn putFile
 
@@ -87,12 +86,11 @@ class GreenBox extends BasicStor {
             "gunid" => $gunid,
             "filetype" => "webstream"
         );
-        $storedFile = $this->bsPutFile($values);
+        $storedFile = StoredFile::Insert($values);
         if (PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $oid = $storedFile->getId();
-        $r = $this->bsSetMetadataValue($oid, 'ls:url', $url);
+        $r = $storedFile->setMetadataValue('ls:url', $url);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -152,13 +150,13 @@ class GreenBox extends BasicStor {
      * 		Session id
      * @return array
      */
-    public function analyzeFile($id, $sessid='')
-    {
-        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        return $this->bsAnalyzeFile($id);
-    } // fn analyzeFile
+//    public function analyzeFile($id, $sessid='')
+//    {
+//        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        return $this->bsAnalyzeFile($id);
+//    }
 
 
     /**
@@ -171,13 +169,13 @@ class GreenBox extends BasicStor {
      * 		Session id
      * @return boolean|PEAR_Error
      */
-    public function renameFile($id, $newName, $sessid='')
-    {
-        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        return $this->bsRenameFile($id, $newName);
-    } // fn renameFile
+//    public function renameFile($id, $newName, $sessid='')
+//    {
+//        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        return $this->bsRenameFile($id, $newName);
+//    }
 
 
     /**
@@ -193,23 +191,23 @@ class GreenBox extends BasicStor {
      *      session id
      * @return TRUE|PEAR_Error
      */
-    public function replaceFile($id, $mediaFileLP, $mdataFileLP, $sessid='')
-    {
-        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        return $this->bsReplaceFile($id, $mediaFileLP, $mdataFileLP);
-    } // fn replaceFile
+//    public function replaceFile($id, $mediaFileLP, $mdataFileLP, $sessid='')
+//    {
+//        if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        return $this->bsReplaceFile($id, $mediaFileLP, $mdataFileLP);
+//    }
 
 
     /**
      * Delete file
      *
      * @param int $id
-     *      virt.file's local id
+     *      local id
      * @param int $sessid
      * @param boolean $forced
-     *      if true don't use trash
+     *      if true don't use trash -- now ignored
      * @return true|PEAR_Error
      */
     public function deleteFile($id, $sessid='', $forced=FALSE)
@@ -217,8 +215,9 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsDeleteFile($id, $forced);
-    } // fn deleteFile
+        $f = StoredFile::Recall($id);
+        return $f->delete(true);
+    }
 
 
     /* ------------------------------------------------------------- metadata */
@@ -260,7 +259,8 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsGetMetadata($id);
+        $f = StoredFile::Recall($id);
+        return $f->getMetadata();
     }
 
 
@@ -345,8 +345,9 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsGetMetadataValue($id, $category);
-    } // fn getMetadataValue
+        $f = StoredFile::Recall($id);
+        return $f->getMetadataValue($category);
+    }
 
 
     /**
@@ -367,7 +368,8 @@ class GreenBox extends BasicStor {
         if (($res = BasicStor::Authorize('write', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        return $this->bsSetMetadataValue($id, $category, $value);
+        $f = StoredFile::Recall($id);
+        return $f->setMetadataValue($category, $value);
     } // fn setMetadataValue
 
 
@@ -560,7 +562,7 @@ class GreenBox extends BasicStor {
             return;
 
         $res = $pl->lock($sessid);
-        
+
         return $res;
     }
 
@@ -743,10 +745,6 @@ class GreenBox extends BasicStor {
      *      current playtime (hh:mm:ss.ssssss)
      * @param int $distance
      *      0=current clip; 1=next clip ...
-     * @param string $lang
-     *      xml:lang value for select language version
-     * @param string $deflang
-     *      xml:lang for default language
      * @return array of matching clip info:
      *   <ul>
      *      <li>gunid string, global unique id of clip</li>
@@ -755,10 +753,9 @@ class GreenBox extends BasicStor {
      *      <li>duration string, total playlength of clip </li>
      *   </ul>
      */
-    public function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0,
-        $lang=NULL, $deflang=NULL)
+    public function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0)
     {
-        $pl = StoredFile::RecallByGunid($plid);
+        $pl = Playlist::Recall($plid);
         if (is_null($pl) || PEAR::isError($pl)) {
             return $pl;
         }
@@ -767,23 +764,17 @@ class GreenBox extends BasicStor {
             return $res;
         }
         $res['title'] = NULL;
-        $id = BasicStor::IdFromGunid($res['gunid']);
-        if (PEAR::isError($id)) {
-            return $id;
+        $f = StoredFile::RecallByGunid($res['gunid']);
+        if (PEAR::isError($f)) {
+            return $f;
         }
-        if (!is_null($id)) {
-            $res['title'] = $this->bsGetMetadataValue($id, "dc:title");
-        }
+        $res['title'] = $f->getMetadataValue("dc:title");
         $res['playlist_title'] = NULL;
-        $id = BasicStor::IdFromGunid($plid);
-        if (PEAR::isError($id)) {
-            return $id;
-        }
-        if (!is_null($id)) {
-            $res['playlist'] = $this->bsGetMetadataValue($id, "dc:title");
-        }
+        $pl = Playlist::Recall($plid);
+        $res['playlist'] = $pl->getName();
+
         return $res;
-    } // fn displayPlaylistClipAtOffset
+    }
 
 
     /**
@@ -1100,7 +1091,7 @@ class GreenBox extends BasicStor {
         $fakeFile = $CC_CONFIG['accessDir']."/$token.rss";
         if ($token != '123456789abcdeff' || !file_exists($fakeFile)){
             return PEAR::raiseError(
-                "LocStor::renderPlaylistToRSSCheck: invalid token ($token)"
+                "renderPlaylistToRSSCheck: invalid token ($token)"
             );
         }
         return array(
@@ -1593,20 +1584,6 @@ class GreenBox extends BasicStor {
 
     /* ========================================================= info methods */
     /**
-     * Get type of stored file (by local id)
-     *
-     * @param int $id
-     *      local id
-     * @return string|PEAR_Error
-     */
-    public static function getFileType($id)
-    {
-        $type = BasicStor::GetObjType($id);
-        return $type;
-    } // fn getFileType
-
-
-    /**
      * Check if file gunid exists in the storage and
      * user have permission to read it
      *
@@ -1619,12 +1596,11 @@ class GreenBox extends BasicStor {
      */
     public function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $id = BasicStor::IdFromGunid($gunid);
-        $ex = $this->bsExistsFile($id, $ftype);
-        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        return $ex;
+      if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
+          return $res;
+      }
+      $f = StoredFile::RecallByGunid($gunid);
+      return $f->existsFile();
     } // fn existsFile
 
 
