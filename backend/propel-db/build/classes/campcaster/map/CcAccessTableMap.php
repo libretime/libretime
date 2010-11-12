@@ -39,7 +39,7 @@ class CcAccessTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_access_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('GUNID', 'Gunid', 'BIGINT', false, null, null);
+		$this->addColumn('GUNID', 'Gunid', 'CHAR', false, 32, null);
 		$this->addColumn('TOKEN', 'Token', 'BIGINT', false, null, null);
 		$this->addColumn('CHSUM', 'Chsum', 'CHAR', true, 32, '');
 		$this->addColumn('EXT', 'Ext', 'VARCHAR', true, 128, '');

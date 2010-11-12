@@ -39,10 +39,11 @@ class CcFilesTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_files_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('GUNID', 'Gunid', 'BIGINT', true, null, null);
+		$this->addColumn('GUNID', 'Gunid', 'CHAR', true, 32, null);
 		$this->addColumn('NAME', 'Name', 'VARCHAR', true, 255, '');
 		$this->addColumn('MIME', 'Mime', 'VARCHAR', true, 255, '');
 		$this->addColumn('FTYPE', 'Ftype', 'VARCHAR', true, 128, '');
+		$this->addColumn('FILEPATH', 'filepath', 'LONGVARCHAR', false, null, '');
 		$this->addColumn('STATE', 'State', 'VARCHAR', true, 128, 'empty');
 		$this->addColumn('CURRENTLYACCESSING', 'Currentlyaccessing', 'INTEGER', true, null, 0);
 		$this->addForeignKey('EDITEDBY', 'Editedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);

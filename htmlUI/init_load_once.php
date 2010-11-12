@@ -8,6 +8,10 @@ Propel::init(__DIR__."/../backend/propel-db/build/conf/campcaster-conf.php");
 // Add the generated 'classes' directory to the include path
 set_include_path(__DIR__."/../backend/propel-db/build/classes" . PATH_SEPARATOR . get_include_path());
 
+//DateTime in PHP 5.3.0+ need a default timezone set.
+$tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'America/Toronto';
+date_default_timezone_set($tz);
+
 // initialize objects ###############################################
 $Smarty = new Smarty;
 $Smarty->caching = false;

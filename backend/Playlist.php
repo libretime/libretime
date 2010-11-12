@@ -67,8 +67,7 @@ class Playlist {
          // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
         $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
-        $tz = ini_get('date.timezone');
-    	$storedPlaylist->mtime = new DateTime("now", new DateTimeZone($tz));
+    	$storedPlaylist->mtime = new DateTime("now");
     
     	$pl = new CcPlaylist();
     	$pl->setDbName($storedPlaylist->name);
@@ -132,7 +131,7 @@ class Playlist {
     	    return FALSE;
     
     	$pl->setDbName($p_newname);
-    	$pl->setDbMtime(new DateTime("now", new DateTimeZone(ini_get('date.timezone'))));
+    	$pl->setDbMtime(new DateTime("now"));
     	$pl->save();
 
         $this->name = $p_newname;
@@ -175,7 +174,7 @@ class Playlist {
     	    return FALSE;  	
     	 
     	$pl->setDbState($p_state);
-    	$pl->setDbMtime(new DateTime("now", new DateTimeZone(ini_get('date.timezone'))));
+    	$pl->setDbMtime(new DateTime("now"));
     	
     	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
     	$pl->setDbEditedby($eb);
