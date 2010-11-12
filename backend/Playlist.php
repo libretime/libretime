@@ -67,7 +67,8 @@ class Playlist {
          // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
         $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
-    	$storedPlaylist->mtime = new DateTime("now");
+        $tz = ini_get('date.timezone');
+    	$storedPlaylist->mtime = new DateTime("now", new DateTimeZone($tz));
     
     	$pl = new CcPlaylist();
     	$pl->setDbName($storedPlaylist->name);
@@ -131,7 +132,7 @@ class Playlist {
     	    return FALSE;
     
     	$pl->setDbName($p_newname);
-    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->setDbMtime(new DateTime("now", new DateTimeZone(ini_get('date.timezone'))));
     	$pl->save();
 
         $this->name = $p_newname;
@@ -174,7 +175,7 @@ class Playlist {
     	    return FALSE;  	
     	 
     	$pl->setDbState($p_state);
-    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->setDbMtime(new DateTime("now", new DateTimeZone(ini_get('date.timezone'))));
     	
     	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
     	$pl->setDbEditedby($eb);
@@ -929,12 +930,14 @@ class Playlist {
         $row->setDbPlaylistId($plId);
         $row->setDbFileId($fileId);
         $row->setDbPosition($pos);
+        $row->save();
+        
         $row->setDbCliplength($clipLength);
         $row->setDbCuein($cuein);
         $row->setDbCueout($cueout);
         $row->setDbFadein($fadeIn);
         $row->setDbFadeout($fadeOut);
-        $row->save();
+        
 
         return TRUE;
     }

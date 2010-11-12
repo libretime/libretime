@@ -17,53 +17,63 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
 
 	public function getDbFadein()
 	{
-		return Common::getTimeInSub($this, 'FADEIN');
+		return $this->fadein;
 	}
 
 	public function setDbFadein($time)
-        {
-                return Common::setTimeInSub($this, 'FADEIN', $time);
-        }
+    {
+		$this->fadein = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
+        return Common::setTimeInSub($this, 'FADEIN', $time);
+    }
 
 	public function getDbFadeout()
-        {
-                return Common::getTimeInSub($this, 'FADEOUT');
-        }
+    {
+        return $this->fadeout;
+    }
 
 	public function setDbFadeout($time)
-        {
-                return Common::setTimeInSub($this, 'FADEOUT', $time);
-        }
+    {
+		$this->fadeout = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
+        return Common::setTimeInSub($this, 'FADEOUT', $time);
+    }
 
 	public function getDbCuein()
-        {
-                return Common::getTimeInSub($this, 'CUEIN');
-        }
+    {
+        return $this->cuein;
+    }
 
 	public function setDbCuein($time)
-        {
-                return Common::setTimeInSub($this, 'CUEIN', $time);
-        }
+    {
+		$this->cuein = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEIN;
+        return Common::setTimeInSub($this, 'CUEIN', $time);
+    }
 
 	public function getDbCueout()
-        {
-                return Common::getTimeInSub($this, 'CUEOUT');
-        }
+    {
+        return $this->cueout;
+    }
 
-        public function setDbCueout($time)
-        {
-                return Common::setTimeInSub($this, 'CUEOUT', $time);
-        }
+    public function setDbCueout($time)
+    {
+		$this->cueout = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEOUT;
+        return Common::setTimeInSub($this, 'CUEOUT', $time);
+    }
 
 	public function getDbCliplength()
-        {
-                return Common::getTimeInSub($this, 'CLIPLENGTH');
-        }
+    {
+        return $this->cliplength;
+    }
 
-        public function setDbCliplength($time)
-        {
-                return Common::setTimeInSub($this, 'CLIPLENGTH', $time);
-        }
+    public function setDbCliplength($time)
+    {
+        $this->cliplength = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CLIPLENGTH;
+        return Common::setTimeInSub($this, 'CLIPLENGTH', $time);
+    }
 
 
 
