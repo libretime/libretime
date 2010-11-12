@@ -47,7 +47,7 @@ class CcTransTableMap extends TableMap {
 		$this->addColumn('TARGET', 'Target', 'VARCHAR', false, 255, null);
 		$this->addColumn('RTRTOK', 'Rtrtok', 'CHAR', false, 16, null);
 		$this->addColumn('MDTRTOK', 'Mdtrtok', 'CHAR', false, 16, null);
-		$this->addColumn('GUNID', 'Gunid', 'BIGINT', false, null, null);
+		$this->addColumn('GUNID', 'Gunid', 'CHAR', false, 32, null);
 		$this->addColumn('PDTOKEN', 'Pdtoken', 'BIGINT', false, null, null);
 		$this->addColumn('URL', 'Url', 'VARCHAR', false, 255, null);
 		$this->addColumn('LOCALFILE', 'Localfile', 'VARCHAR', false, 255, null);

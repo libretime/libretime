@@ -16,14 +16,16 @@ require_once('Common.php');
 class CcFiles extends BaseCcFiles {
 
 	public function getDbLength()
-        {
-                return Common::getTimeInSub($this, 'LENGTH');
-        }
+    {
+        return $this->length;
+    }
 
-        public function setDbLength($time)
-        {
-                return Common::setTimeInSub($this, 'LENGTH', $time);
-        }
+    public function setDbLength($time)
+    {
+		$this->length = $time;
+		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::LENGTH;
+        return Common::setTimeInSub($this, 'LENGTH', $time);
+    }
 
 
 } // CcFiles

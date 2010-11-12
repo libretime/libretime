@@ -935,12 +935,14 @@ class Playlist {
         $row->setDbPlaylistId($plId);
         $row->setDbFileId($fileId);
         $row->setDbPosition($pos);
+        $row->save();
+        
         $row->setDbCliplength($clipLength);
         $row->setDbCuein($cuein);
         $row->setDbCueout($cueout);
         $row->setDbFadein($fadeIn);
         $row->setDbFadeout($fadeOut);
-        $row->save();
+        
 
         return TRUE;
     }

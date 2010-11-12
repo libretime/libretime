@@ -11,6 +11,7 @@
  * @method     CcFilesQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     CcFilesQuery orderByMime($order = Criteria::ASC) Order by the mime column
  * @method     CcFilesQuery orderByFtype($order = Criteria::ASC) Order by the ftype column
+ * @method     CcFilesQuery orderByfilepath($order = Criteria::ASC) Order by the filepath column
  * @method     CcFilesQuery orderByState($order = Criteria::ASC) Order by the state column
  * @method     CcFilesQuery orderByCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
  * @method     CcFilesQuery orderByEditedby($order = Criteria::ASC) Order by the editedby column
@@ -65,6 +66,7 @@
  * @method     CcFilesQuery groupByName() Group by the name column
  * @method     CcFilesQuery groupByMime() Group by the mime column
  * @method     CcFilesQuery groupByFtype() Group by the ftype column
+ * @method     CcFilesQuery groupByfilepath() Group by the filepath column
  * @method     CcFilesQuery groupByState() Group by the state column
  * @method     CcFilesQuery groupByCurrentlyaccessing() Group by the currentlyaccessing column
  * @method     CcFilesQuery groupByEditedby() Group by the editedby column
@@ -134,6 +136,7 @@
  * @method     CcFiles findOneByName(string $name) Return the first CcFiles filtered by the name column
  * @method     CcFiles findOneByMime(string $mime) Return the first CcFiles filtered by the mime column
  * @method     CcFiles findOneByFtype(string $ftype) Return the first CcFiles filtered by the ftype column
+ * @method     CcFiles findOneByfilepath(string $filepath) Return the first CcFiles filtered by the filepath column
  * @method     CcFiles findOneByState(string $state) Return the first CcFiles filtered by the state column
  * @method     CcFiles findOneByCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
  * @method     CcFiles findOneByEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
@@ -188,6 +191,7 @@
  * @method     array findByName(string $name) Return CcFiles objects filtered by the name column
  * @method     array findByMime(string $mime) Return CcFiles objects filtered by the mime column
  * @method     array findByFtype(string $ftype) Return CcFiles objects filtered by the ftype column
+ * @method     array findByfilepath(string $filepath) Return CcFiles objects filtered by the filepath column
  * @method     array findByState(string $state) Return CcFiles objects filtered by the state column
  * @method     array findByCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
  * @method     array findByEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
@@ -365,29 +369,20 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the gunid column
 	 * 
-	 * @param     string|array $gunid The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $gunid The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByGunid($gunid = null, $comparison = null)
 	{
-		if (is_array($gunid)) {
-			$useMinMax = false;
-			if (isset($gunid['min'])) {
-				$this->addUsingAlias(CcFilesPeer::GUNID, $gunid['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($gunid['max'])) {
-				$this->addUsingAlias(CcFilesPeer::GUNID, $gunid['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($gunid)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $gunid)) {
+				$gunid = str_replace('*', '%', $gunid);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::GUNID, $gunid, $comparison);
@@ -457,6 +452,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::FTYPE, $ftype, $comparison);
+	}
+
+	/**
+	 * Filter the query on the filepath column
+	 * 
+	 * @param     string $filepath The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByfilepath($filepath = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($filepath)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $filepath)) {
+				$filepath = str_replace('*', '%', $filepath);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::FILEPATH, $filepath, $comparison);
 	}
 
 	/**
