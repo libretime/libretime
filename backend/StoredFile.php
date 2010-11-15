@@ -433,7 +433,7 @@ class StoredFile {
             $this->gunid = StoredFile::generateGunid();
         }
         else {
-          $this->md = $this->loadMetadata();
+          $this->loadMetadata();
           $this->exists = is_file($this->filepath) && is_readable($this->filepath);
         }
     }
@@ -492,6 +492,7 @@ class StoredFile {
               ." WHERE gunid='$escapedValue'";
         //var_dump($sql);
         $this->md = $CC_DBC->getRow($sql);
+        //var_dump($this->md);
         if (PEAR::isError($this->md)) {
             $error = $this->md;
             $this->md = null;
@@ -508,7 +509,9 @@ class StoredFile {
                 $compatibilityData[$xmlName] = $value;
             }
         }
+        //var_dump($compatibilityData);
         $this->md = array_merge($this->md, $compatibilityData);
+        //var_dump($this->md);
         //$_SESSION["debug"] = $this->md;
     }
 

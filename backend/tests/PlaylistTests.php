@@ -42,22 +42,22 @@ class PlaylistTests extends PHPUnit_TestCase {
     function setup() {
         global $CC_CONFIG, $CC_DBC;
         $this->greenbox = new GreenBox();
-        
+
          // Add a file
         $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
         $this->storedFile = StoredFile::Insert($values, false);
-        
+
         // Add a file
         $values = array("filepath" => dirname(__FILE__)."/test10002.mp3");
         $this->storedFile2 = StoredFile::Insert($values, false);
-        
+
     }
 
     function testGBCreatePlaylist() {
 
         $pl = new Playlist();
-        $pl_id = $pl->create("create");
-        
+        $pl_id = $pl->create("Playlist UnitTest: create ".date("g:i a"));
+
         if (!is_int($pl_id)) {
             $this->fail("problems creating playlist.");
             return;
@@ -66,7 +66,7 @@ class PlaylistTests extends PHPUnit_TestCase {
 
     function testGBLock() {
         $pl = new Playlist();
-        $pl_id = $pl->create("lock test");
+        $pl_id = $pl->create("Playlist Metadata: lock ".date("g:i a"));
 
         $sessid = Alib::Login('root', 'q');
 
@@ -80,7 +80,7 @@ class PlaylistTests extends PHPUnit_TestCase {
 
     function testGBUnLock() {
         $pl = new Playlist();
-        $pl_id = $pl->create("unlock test");
+        $pl_id = $pl->create("Playlist UnitTest: unlock ".date("g:i a"));
 
         $sessid = Alib::Login('root', 'q');
 
@@ -92,12 +92,12 @@ class PlaylistTests extends PHPUnit_TestCase {
            return;
         }
     }
-    
+
     function testGBSetPLMetaData() {
         $pl = new Playlist();
-        $pl_id = $pl->create("set meta data test");
+        $pl_id = $pl->create("Playlist UnitTest: Set Metadata ".date("g:i a"));
 
-        $res = $this->greenbox->setPLMetadataValue($pl_id, "dc:title", "A Title");
+        $res = $this->greenbox->setPLMetadataValue($pl_id, "dc:title", "Playlist Unit Test: Updated Title ".date("g:i a"));
 
         if($res !== TRUE) {
            $this->fail("problems setting playlist metadata.");
@@ -107,7 +107,7 @@ class PlaylistTests extends PHPUnit_TestCase {
 
     function testGBGetPLMetaData() {
         $pl = new Playlist();
-        $name = "Testing";
+        $name = "Playlist UnitTest: GetMetadata ".date("g:i a");
         $pl_id = $pl->create($name);
 
         $res = $this->greenbox->getPLMetadataValue($pl_id, "dc:title");
@@ -121,12 +121,13 @@ class PlaylistTests extends PHPUnit_TestCase {
     function testAddAudioClip() {
 
         $pl = new Playlist();
-        $pl_id = $pl->create("Playlist Unit Test ". uniqid());
+        $pl_id = $pl->create("Playlist Unit Test ". date("g:i a"));
         $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
         if($res !== TRUE) {
            $this->fail("problems adding audioclip to playlist.");
            return;
         }
+
         $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
         if($res !== TRUE) {
            $this->fail("problems adding audioclip 2 to playlist.");
@@ -136,7 +137,7 @@ class PlaylistTests extends PHPUnit_TestCase {
 
     function testMoveAudioClip() {
         $pl = new Playlist();
-        $pl_id = $pl->create("Move");
+        $pl_id = $pl->create("Playlist Unit Test: Move ". date("g:i a"));
 
         $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
         $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
@@ -151,7 +152,7 @@ class PlaylistTests extends PHPUnit_TestCase {
 
     function testDeleteAudioClip() {
         $pl = new Playlist();
-        $pl_id = $pl->create("Delete");
+        $pl_id = $pl->create("Playlist UnitTest: Delete ".date("g:i a"));
 
         $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
         $res = $this->greenbox->delAudioClipFromPlaylist($pl_id, 0);
@@ -161,19 +162,19 @@ class PlaylistTests extends PHPUnit_TestCase {
            return;
         }
     }
-    
+
     function testFadeInfo() {
         $pl = new Playlist();
-        $pl_id = $pl->create("Fade Info");
-        
+        $pl_id = $pl->create("Playlist Unit Test: Fade Info " . date("g:i a"));
+
         $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
-        
+
         $res = $this->greenbox->changeFadeInfo($pl_id, 0, '00:00:01.14', null);
-       
+
         if(!is_array($res) && count($res) !== 2) {
            $this->fail("problems setting fade in playlist.");
-           return; 
-        } 
+           return;
+        }
     }
 }
 

@@ -1,7 +1,5 @@
 <?php
 require_once(dirname(__FILE__).'/../StoredFile.php');
-//require_once(dirname(__FILE__).'/../BasicStor.php');
-//require_once(dirname(__FILE__).'/../GreenBox.php');
 
 $dsn = $CC_CONFIG['dsn'];
 $CC_DBC = DB::connect($dsn, TRUE);
@@ -43,14 +41,16 @@ class StoredFileTest extends PHPUnit_TestCase {
         $STORAGE_SERVER_PATH = dirname(__FILE__)."/../../";
         $filePath = dirname(__FILE__)."/ex1.mp3";
 
+        // Delete any old data from previous tests
         $md5 = md5_file($filePath);
         $duplicate = StoredFile::RecallByMd5($md5);
         if ($duplicate) {
           $duplicate->delete();
         }
 
-        $values = array("filepath" => $filePath);
-        // Insert and link to file, dont copy it
+        // Test inserting a file by linking
+        $values = array("filepath" => $filePath,
+                        "dc:description" => "Unit test ".time());
         $storedFile = StoredFile::Insert($values, false);
         if (PEAR::isError($storedFile)) {
           $this->fail("Failed to create StoredFile: ".$storedFile->getMessage());
@@ -63,6 +63,7 @@ class StoredFileTest extends PHPUnit_TestCase {
             return;
         }
 
+        // Test loading metadata
         $f = new StoredFile();
         $f->__setGunid($storedFile->getGunid());
         $f->loadMetadata();
@@ -71,7 +72,22 @@ class StoredFileTest extends PHPUnit_TestCase {
           return;
         }
         //var_dump($md);
+
+        // Check if the length field has been set.
+        $f2 = StoredFile::RecallByGunid($storedFile->getGunid());
+        $m2 = $f2->getMetadata();
+        if (!isset($m2["length"]) || $m2["length"] == "00:00:00.000000") {
+          $this->fail("Length not reporting correctly in metadata.");
+          return;
+        }
+
     }
 
+    function testFoo() {
+         // Add a file
+        $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
+        $this->storedFile = StoredFile::Insert($values, false);
+
+    }
 }
 ?>
