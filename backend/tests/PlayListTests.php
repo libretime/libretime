@@ -18,6 +18,10 @@ require_once(dirname(__FILE__).'/../../conf.php');
 require_once(dirname(__FILE__).'/../GreenBox.php');
 require_once(dirname(__FILE__).'/../Playlist.php');
 
+$tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'America/Toronto';
+date_default_timezone_set($tz);
+
+//old database connection still needed to get a session instance.
 $dsn = $CC_CONFIG['dsn'];
 $CC_DBC = DB::connect($dsn, TRUE);
 if (PEAR::isError($CC_DBC)) {
@@ -40,13 +44,12 @@ class PlayListTests extends PHPUnit_TestCase {
      
     }
     
-    /*
     function testGBCreatePlaylist() {
         
         $pl = new Playlist();
         $pl_id = $pl->create("create");
         
-        if (PEAR::isError($pl_id)) {
+        if (!is_int($pl_id)) {
             $this->fail("problems creating playlist.");
             return;
         }
@@ -80,7 +83,6 @@ class PlayListTests extends PHPUnit_TestCase {
            return;
         }
     }
-    */
     
     function testGBSetPLMetaData() {
         $pl = new Playlist();
@@ -94,7 +96,6 @@ class PlayListTests extends PHPUnit_TestCase {
         }     
     }
     
-   /*
     function testGBGetPLMetaData() {
         $pl = new Playlist();
         $name = "Testing";
@@ -119,8 +120,7 @@ class PlayListTests extends PHPUnit_TestCase {
            return; 
         } 
     }
-    
-    
+       
     function testMoveAudioClip() {
         $pl = new Playlist();
         $pl_id = $pl->create("Move");
@@ -134,9 +134,7 @@ class PlayListTests extends PHPUnit_TestCase {
            $this->fail("problems moving audioclip in playlist.");
            return; 
         } 
-    }
-    
-    
+    }   
     
     function testDeleteAudioClip() {
         $pl = new Playlist();
@@ -150,7 +148,20 @@ class PlayListTests extends PHPUnit_TestCase {
            return; 
         } 
     }
-    */
+    
+    function testFadeInfo() {
+        $pl = new Playlist();
+        $pl_id = $pl->create("Fade Info");
+        
+        $this->greenbox->addAudioClipToPlaylist($pl_id, '1');
+        
+        $res = $this->greenbox->changeFadeInfo($pl_id, 0, '00:00:01.14', null);
+       
+        if(!is_array($res) && count($res) !== 2) {
+           $this->fail("problems setting fade in playlist.");
+           return; 
+        } 
+    }
     
 }
 
