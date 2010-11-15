@@ -431,23 +431,26 @@ class Playlist {
      * @return true|PEAR_Error
      * 		TRUE on success
      */
-    public function addAudioClip($ac_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
+    public function addAudioClip($p_mediaId, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
         $_SESSION['debug'] = "in add";
 
         //get audio clip.
-        $ac = StoredFile::Recall($ac_id);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
+        $media = StoredFile::Recall($p_mediaId);
+        if (is_null($media) || PEAR::isError($media)) {
+        	return $media;
         }
         // get information about audioClip
-        $acInfo = $this->getAudioClipInfo($ac);
-        if (PEAR::isError($acInfo)) {
-        	return $acInfo;
-        }
-        extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
+//        $acInfo = $this->getAudioClipInfo($ac);
+//        if (PEAR::isError($acInfo)) {
+//        	return $acInfo;
+//        }
+//        extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
+        $metadata = $media->getMetadata();
+        $length = $metadata["length"];
+
         if (!is_null($p_clipLength)) {
-        	$acLen = $p_clipLength;
+        	$length = $p_clipLength;
         }
 
         // insert at end of playlist.
@@ -459,18 +462,18 @@ class Playlist {
 
 	      // insert default values if parameter was empty
         $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
-        $p_cueout = !is_null($p_cueout) ? $p_cueout : $acLen;
+        $p_cueout = !is_null($p_cueout) ? $p_cueout : $length;
 
-        $acLengthS = $clipLengthS = self::playlistTimeToSeconds($acLen);
+        $mediaLengthSec = $clipLengthSec = self::playlistTimeToSeconds($length);
         if (!is_null($p_cuein)) {
-            $clipLengthS = $acLengthS - self::playlistTimeToSeconds($p_cuein);
+            $clipLengthSec = $mediaLengthSec - self::playlistTimeToSeconds($p_cuein);
         }
         if (!is_null($p_cueout)) {
-            $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($p_cueout));
+            $clipLengthSec = $clipLengthSec - ($mediaLengthSec - self::playlistTimeToSeconds($p_cueout));
         }
-        $p_clipLength = self::secondsToPlaylistTime($clipLengthS);
+        $p_clipLength = self::secondsToPlaylistTime($clipLengthSec);
 
-        $res = $this->insertPlaylistElement($this->id, $ac_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
+        $res = $this->insertPlaylistElement($this->id, $p_mediaId, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
         	return $res;
         }
@@ -862,29 +865,29 @@ class Playlist {
      *   <li>elType string - audioClip | playlist</li>
      *  </ul>
      */
-    private function getAudioClipInfo($p_media)
-    {
-        $ac_id = $p_media->getId();
-
-        $r = $p_media->getMetadataValue('dcterms:extent');
-        if (isset($r)) {
-        	$acLen = $r;
-        } else {
-        	$acLen = '00:00:00.000000';
-        }
-
-        $r = $p_media->getMetadataValue('dc:title');
-        if (isset($r)) {
-        	$acTit = $r;
-        } else {
-        	$acTit = $acGunid;
-        }
-        $elType = $p_media->getType();
-        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
-        $elType = $trTbl[$elType];
-
-        return compact('acGunid', 'acLen', 'acTit', 'elType');
-    }
+//    private function getAudioClipInfo($p_media)
+//    {
+//        $ac_id = $p_media->getId();
+//
+//        $r = $p_media->getMetadataValue('dcterms:extent');
+//        if (isset($r)) {
+//        	$acLen = $r;
+//        } else {
+//        	$acLen = '00:00:00.000000';
+//        }
+//
+//        $r = $p_media->getMetadataValue('dc:title');
+//        if (isset($r)) {
+//        	$acTit = $r;
+//        } else {
+//        	$acTit = $acGunid;
+//        }
+//        $elType = $p_media->getType();
+//        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
+//        $elType = $trTbl[$elType];
+//
+//        return compact('acGunid', 'acLen', 'acTit', 'elType');
+//    }
 
 
     /**
@@ -933,13 +936,13 @@ class Playlist {
         $row->setDbFileId($fileId);
         $row->setDbPosition($pos);
         $row->save();
-        
+
         $row->setDbCliplength($clipLength);
         $row->setDbCuein($cuein);
         $row->setDbCueout($cueout);
         $row->setDbFadein($fadeIn);
         $row->setDbFadeout($fadeOut);
-        
+
 
         return TRUE;
     }
