@@ -32,6 +32,8 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 class PlaylistTests extends PHPUnit_TestCase {
 
     private $greenbox;
+    private $storedFile;
+    private $storedFile2;
 
     function __construct($name) {
         parent::__construct($name);
@@ -40,7 +42,15 @@ class PlaylistTests extends PHPUnit_TestCase {
     function setup() {
         global $CC_CONFIG, $CC_DBC;
         $this->greenbox = new GreenBox();
-
+        
+         // Add a file
+        $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
+        $this->storedFile = StoredFile::Insert($values, false);
+        
+        // Add a file
+        $values = array("filepath" => dirname(__FILE__)."/test10002.mp3");
+        $this->storedFile2 = StoredFile::Insert($values, false);
+        
     }
 
     function testGBCreatePlaylist() {
@@ -109,22 +119,15 @@ class PlaylistTests extends PHPUnit_TestCase {
     }
 
     function testAddAudioClip() {
-        // Add a file
-        $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
-        $this->storedFile = StoredFile::Insert($values, false);
-
-        // Add a file
-        $values = array("filepath" => dirname(__FILE__)."/test10002.mp3");
-        $this->storedFile2 = StoredFile::Insert($values, false);
 
         $pl = new Playlist();
         $pl_id = $pl->create("Playlist Unit Test ". uniqid());
-        $res = $pl->addAudioClip($this->storedFile->getId());
+        $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
         if($res !== TRUE) {
            $this->fail("problems adding audioclip to playlist.");
            return;
         }
-        $res = $pl->addAudioClip($this->storedFile2->getId());
+        $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
         if($res !== TRUE) {
            $this->fail("problems adding audioclip 2 to playlist.");
            return;
@@ -135,8 +138,8 @@ class PlaylistTests extends PHPUnit_TestCase {
         $pl = new Playlist();
         $pl_id = $pl->create("Move");
 
-        $this->greenbox->addAudioClipToPlaylist($pl_id, '1');
-        $this->greenbox->addAudioClipToPlaylist($pl_id, '2');
+        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
+        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
 
         $res = $this->greenbox->moveAudioClipInPlaylist($pl_id, 0, 1);
 
@@ -150,7 +153,7 @@ class PlaylistTests extends PHPUnit_TestCase {
         $pl = new Playlist();
         $pl_id = $pl->create("Delete");
 
-        $this->greenbox->addAudioClipToPlaylist($pl_id, '1');
+        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
         $res = $this->greenbox->delAudioClipFromPlaylist($pl_id, 0);
 
         if($res !== TRUE) {
@@ -163,7 +166,7 @@ class PlaylistTests extends PHPUnit_TestCase {
         $pl = new Playlist();
         $pl_id = $pl->create("Fade Info");
         
-        $this->greenbox->addAudioClipToPlaylist($pl_id, '1');
+        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
         
         $res = $this->greenbox->changeFadeInfo($pl_id, 0, '00:00:01.14', null);
        
