@@ -62,8 +62,16 @@ class StoredFileTest extends PHPUnit_TestCase {
             $this->fail("StoredFile not created correctly. id = ".$id);
             return;
         }
-    }
 
+        $f = new StoredFile();
+        $f->__setGunid($storedFile->getGunid());
+        $f->loadMetadata();
+        if (!is_array($md = $f->getMetadata())) {
+          $this->fail("Unable to load metadata.");
+          return;
+        }
+        //var_dump($md);
+    }
 
 }
 ?>

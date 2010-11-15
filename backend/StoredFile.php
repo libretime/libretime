@@ -432,8 +432,17 @@ class StoredFile {
         if (empty($this->gunid)) {
             $this->gunid = StoredFile::generateGunid();
         }
-        $this->exists = is_file($this->filepath) && is_readable($this->filepath);
-        $this->md = $this->loadMetadata();
+        else {
+          $this->md = $this->loadMetadata();
+          $this->exists = is_file($this->filepath) && is_readable($this->filepath);
+        }
+    }
+
+    /**
+     * For testing only, do not use.
+     */
+    public function __setGunid($p_guid) {
+      $this->gunid = $p_guid;
     }
 
     /**
