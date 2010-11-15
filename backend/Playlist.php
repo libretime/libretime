@@ -68,7 +68,7 @@ class Playlist {
         $storedPlaylist = new Playlist();
         $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
     	$storedPlaylist->mtime = new DateTime("now");
-    
+
     	$pl = new CcPlaylist();
     	$pl->setDbName($storedPlaylist->name);
     	$pl->setDbState("incomplete");
@@ -79,20 +79,30 @@ class Playlist {
         $storedPlaylist->setState('ready');
 
 	    return $storedPlaylist->id;
-	
+
     }
 
     public static function Delete($id) {
-        $pl = CcPlaylistQuery::create()->findPK($id);
+      $pl = CcPlaylistQuery::create()->findPK($id);
     	if($pl === NULL)
-    	    return FALSE;
-    
-    	$pl->delete();
+   	    return FALSE;
 
-        return TRUE;
+    	$pl->delete();
+      return TRUE;
     }
 
- 	/**
+
+    /**
+     * Delete the file from all playlists.
+     * @param string $p_fileId
+     */
+    public static function DeleteFileFromAllPlaylists($p_fileId)
+    {
+      CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
+    }
+
+
+ 		/**
      * Fetch instance of Playlist object.<br>
      *
      * @param string $id
@@ -126,10 +136,10 @@ class Playlist {
     public function setName($p_newname)
     {
         $pl = CcPlaylistQuery::create()->findPK($this->id);
-    	
+
     	if($pl === NULL)
     	    return FALSE;
-    
+
     	$pl->setDbName($p_newname);
     	$pl->setDbMtime(new DateTime("now"));
     	$pl->save();
@@ -153,7 +163,7 @@ class Playlist {
         $pl = CcPlaylistQuery::create()->findPK($id);
         if($pl === NULL)
     	    return FALSE;
-    	    
+
         return $pl->getDbName();
     }
 
@@ -169,18 +179,18 @@ class Playlist {
     public function setState($p_state, $p_editedby=NULL)
     {
         $pl = CcPlaylistQuery::create()->findPK($this->id);
-        
+
     	if($pl === NULL)
-    	    return FALSE;  	
-    	 
+    	    return FALSE;
+
     	$pl->setDbState($p_state);
     	$pl->setDbMtime(new DateTime("now"));
-    	
+
     	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
     	$pl->setDbEditedby($eb);
-    	
+
     	$pl->save();
-    	
+
         $this->state = $p_state;
         $this->editedby = $p_editedby;
         return TRUE;
@@ -199,11 +209,11 @@ class Playlist {
         if (is_null($id)) {
             return $this->state;
         }
-        
-        $pl = CcPlaylistQuery::create()->findPK($id);    
+
+        $pl = CcPlaylistQuery::create()->findPK($id);
     	if($pl === NULL)
     	    return FALSE;
-    	    
+
     	return $pl->getDbState();
     }
 
@@ -237,15 +247,15 @@ class Playlist {
         if (is_null($id)) {
             return ($this->currentlyaccessing > 0);
         }
-        
-        $pl = CcPlaylistQuery::create()->findPK($id);    
+
+        $pl = CcPlaylistQuery::create()->findPK($id);
     	if (is_null($pl)) {
             return PEAR::raiseError(
                 "StoredPlaylist::isAccessed: invalid id ($id)",
                 GBERR_FOBJNEX
             );
     	}
-    	    
+
     	return ($pl->getDbCurrentlyaccessing() > 0);
     }
 
@@ -309,7 +319,7 @@ class Playlist {
     }
 
     private function getNextPos() {
-        
+
         $res = CcPlaylistQuery::create()
             ->findPK($this->id)
             ->computeLastPosition();
@@ -325,24 +335,21 @@ class Playlist {
      * @return array
      */
     public function getContents() {
-        
-        $files;
-        
+        $files = array();
         $rows = CcPlaylistcontentsQuery::create()
             ->joinWith('CcFiles')
             ->orderByDbPosition()
             ->filterByDbPlaylistId($this->id)
             ->find();
-    	
+
         foreach ($rows as $row) {
-                $files[] = $row->toArray(BasePeer::TYPE_PHPNAME, true, true);
+          $files[] = $row->toArray(BasePeer::TYPE_PHPNAME, true, true);
         }
-        
+
         return $files;
     }
 
     public function getLength() {
-       
         $res = CcPlaylistQuery::create()
             ->findPK($this->id)
             ->computeLength();
@@ -426,9 +433,8 @@ class Playlist {
      */
     public function addAudioClip($ac_id, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
-        
         $_SESSION['debug'] = "in add";
-        
+
         //get audio clip.
         $ac = StoredFile::Recall($ac_id);
         if (is_null($ac) || PEAR::isError($ac)) {
@@ -451,7 +457,7 @@ class Playlist {
         	return $p_position;
         }
 
-	    // insert default values if parameter was empty
+	      // insert default values if parameter was empty
         $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
         $p_cueout = !is_null($p_cueout) ? $p_cueout : $acLen;
 
@@ -463,7 +469,7 @@ class Playlist {
             $clipLengthS = $clipLengthS - ($acLengthS - self::playlistTimeToSeconds($p_cueout));
         }
         $p_clipLength = self::secondsToPlaylistTime($clipLengthS);
-        
+
         $res = $this->insertPlaylistElement($this->id, $ac_id, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
         	return $res;
@@ -483,12 +489,12 @@ class Playlist {
     {
         if($pos < 0 || $pos >= $this->getNextPos())
             return FALSE;
-        
+
         $row = CcPlaylistcontentsQuery::create()
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
-            
+
         if(is_null($row))
             return FALSE;
 
@@ -536,21 +542,21 @@ class Playlist {
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
         $errArray= array();
-        
+
         if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
             $errArray["error"]="Invalid position.";
             return $errArray;
         }
-        
+
         $row = CcPlaylistcontentsQuery::create()
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
-            
+
         $clipLength = $row->getDbCliplength();
-        
+
         if(!is_null($fadeIn) && !is_null($fadeOut)) {
-            
+
             if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($clipLength)) {
                 $errArray["error"]="Fade In can't be larger than overall playlength.";
                 return $errArray;
@@ -559,29 +565,29 @@ class Playlist {
                 $errArray["error"]="Fade Out can't be larger than overall playlength.";
                 return $errArray;
             }
-        
+
             $row->setDbFadein($fadeIn);
             $row->setDbFadeout($fadeOut);
         }
         else if(!is_null($fadeIn)) {
-            
+
             if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($clipLength)) {
                 $errArray["error"]="Fade In can't be larger than overall playlength.";
                 return $errArray;
             }
-           
+
             $row->setDbFadein($fadeIn);
         }
         else if(!is_null($fadeOut)){
-            
+
             if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($clipLength)) {
                 $errArray["error"]="Fade Out can't be larger than overall playlength.";
                 return $errArray;
             }
-        
+
             $row->setDbFadeout($fadeOut);
         }
-        
+
         $row->save();
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
@@ -601,34 +607,34 @@ class Playlist {
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
         $errArray= array();
-       
+
         if(is_null($cueIn) && is_null($cueOut)) {
             $errArray["error"]="Cue in and cue out are null.";
             return $errArray;
         }
-        
+
         if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
             $errArray["error"]="Invalid position.";
             return $errArray;
         }
-       
+
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFiles)
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
-            
+
         $oldCueIn = $row->getDBCuein();
         $oldCueOut = $row->getDbCueout();
         $fadeIn = $row->getDbFadein();
         $fadeOut = $row->getDbFadeout();
-        
+
         $file = $row->getCcFiles();
         $origLength = $file->getDbLength();
-        
-        
+
+
         if(!is_null($cueIn) && !is_null($cueOut)){
-            
+
             if($cueOut === ""){
                 $cueOut = $origLength;
             }
@@ -640,58 +646,58 @@ class Playlist {
                 $errArray["error"] = "Can't set cue out to be greater than file length.";
                 return $errArray;
             }
-            
+
             $row->setDbCuein($cueIn);
             $row->setDbCueout($cueOut);
-            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut) 
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut)
                     - Playlist::playlistTimeToSeconds($cueIn)));
-                       
+
         }
         else if(!is_null($cueIn)) {
-            
+
             if(Playlist::playlistTimeToSeconds($cueIn) > Playlist::playlistTimeToSeconds($oldCueOut)) {
                 $errArray["error"] = "Can't set cue in to be larger than cue out.";
                 return $errArray;
             }
-            
+
             $row->setDbCuein($cueIn);
-            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($oldCueOut) 
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($oldCueOut)
                     - Playlist::playlistTimeToSeconds($cueIn)));
         }
         else if(!is_null($cueOut)) {
-            
+
             if($cueOut === ""){
                 $cueOut = $origLength;
             }
-            
+
             if(Playlist::playlistTimeToSeconds($cueOut) < Playlist::playlistTimeToSeconds($oldCueIn)) {
                 $errArray["error"] ="Can't set cue out to be smaller than cue in.";
                 return $errArray;
             }
-            
+
             if(Playlist::playlistTimeToSeconds($cueOut) > Playlist::playlistTimeToSeconds($origLength)){
                 $errArray["error"] ="Can't set cue out to be greater than file length.";
                 return $errArray;
             }
-            
+
             $row->setDbCueout($cueOut);
-            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut) 
+            $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut)
                     - Playlist::playlistTimeToSeconds($oldCueIn)));
         }
 
         $cliplength = $row->getDbCliplength();
-        
+
         if(Playlist::playlistTimeToSeconds($fadeIn) > Playlist::playlistTimeToSeconds($cliplength)){
             $fadeIn = $cliplength;
-            
+
             $row->setDbFadein($fadeIn);
         }
         if(Playlist::playlistTimeToSeconds($fadeOut) > Playlist::playlistTimeToSeconds($cliplength)){
             $fadeOut = $cliplength;
-           
+
             $row->setDbFadein($fadeOut);
         }
-        
+
         $row->save();
 
         return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut, "length"=>$this->getLength(),
@@ -721,12 +727,12 @@ class Playlist {
     public function getPLMetaData($category)
     {
         $cat = $this->categories[$category];
-        
+
         if($cat === 'length') {
             return $this->getLength();
         }
-        
-        $row = CcPlaylistQuery::create()->findPK($this->id);       
+
+        $row = CcPlaylistQuery::create()->findPK($this->id);
         $method = 'get' . $cat;
         return $row->$method();
     }
@@ -735,7 +741,7 @@ class Playlist {
     {
         $cat = $this->categories[$category];
 
-        $row = CcPlaylistQuery::create()->findPK($this->id);       
+        $row = CcPlaylistQuery::create()->findPK($this->id);
         $method = 'set' . $cat;
         $row->$method($value);
         $row->save();
@@ -753,7 +759,7 @@ class Playlist {
      */
     public function export()
     {
-        
+
     }
 
 
@@ -809,7 +815,7 @@ class Playlist {
      */
     public function outputToSmil($toString=TRUE)
     {
-       
+
     }
 
 
@@ -824,7 +830,7 @@ class Playlist {
      */
     public function outputToM3u($toString=TRUE)
     {
-       
+
     }
 
 
@@ -839,15 +845,15 @@ class Playlist {
      */
     public function outputToRss($toString=TRUE)
     {
-       
+
     }
-    
-    
+
+
     /**
      * Get audioClip length and title
      *
-     * @param int $acId
-     * 		local id of audioClip inserted to playlist
+     * @param StoredFile $p_media
+     *
      * @return array with fields:
      *  <ul>
      *   <li>acGunid, string - audioClip gunid</li>
@@ -856,24 +862,24 @@ class Playlist {
      *   <li>elType string - audioClip | playlist</li>
      *  </ul>
      */
-    private function getAudioClipInfo($ac)
+    private function getAudioClipInfo($p_media)
     {
-        $ac_id = BasicStor::IdFromGunid($ac->gunid);
+        $ac_id = $p_media->getId();
 
-        $r = $ac->md['dcterms:extent'];
+        $r = $p_media->getMetadataValue('dcterms:extent');
         if (isset($r)) {
         	$acLen = $r;
         } else {
         	$acLen = '00:00:00.000000';
         }
 
-        $r = $ac->md['dc:title'];
+        $r = $p_media->getMetadataValue('dc:title');
         if (isset($r)) {
         	$acTit = $r;
         } else {
         	$acTit = $acGunid;
         }
-        $elType = BasicStor::GetObjType($ac_id);
+        $elType = $p_media->getType();
         $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
         $elType = $trTbl[$elType];
 
@@ -921,7 +927,7 @@ class Playlist {
             $fadeIn = '00:00:00.000';
         if(is_null($fadeOut))
             $fadeOut = '00:00:00.000';
-        
+
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($plId);
         $row->setDbFileId($fileId);
@@ -1384,21 +1390,21 @@ class PlaylistAudioClipExport
 
     public static function OutputToRss(&$pl, $plac, $ind='')
     {
-        $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::RecallByGunid($gunid);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
+        $id = $plac['attrs']['id'];
+        $playlist = Playlist::Recall($id);
+        if (is_null($playlist) || PEAR::isError($playlist)) {
+        	return $playlist;
         }
-        $RADext = $ac->getFileExtension();
+        $RADext = $playlist->getFileExtension();
         if (PEAR::isError($RADext)) {
         	return $RADext;
         }
-        $title = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:title');
-        $desc = $pl->gb->bsGetMetadataValue($ac->getId(), 'dc:description');
+        $title = $playlist->getName();
+        $desc = $playlist->getPLMetaData("dc:description");
         return array(
             'type'       => 'audioclip',
-            'gunid'      => $gunid,
-            'src'        => "http://XXX/YY/$gunid.$RADext",
+            'gunid'      => $id,
+            'src'        => "http://XXX/YY/$id.$RADext",
             'playlength' => $plac['attrs']['playlength'],
             'title'      => $title,
             'desc'      => $desc,

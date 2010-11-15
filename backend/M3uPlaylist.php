@@ -73,65 +73,65 @@ class M3uPlaylist {
      */
     function import(&$gb, $aPath, $rPath, &$gunids, $plid, $subjid=NULL)
     {
-        $path = realpath("$aPath/$rPath");
-        if (FALSE === $path) {
-            return PEAR::raiseError(
-                "M3uPlaylist::import: file doesn't exist ($aPath/$rPath)"
-            );
-        }
-        $arr = M3uPlaylist::parse($path);
-        if (PEAR::isError($arr)) {
-        	return $arr;
-        }
-        require_once("Playlist.php");
-        $pl =& Playlist::create($gb, $plid, "imported_M3U");
-        if (PEAR::isError($pl)) {
-        	return $pl;
-        }
-        $r = $pl->lock($gb, $subjid);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        foreach ($arr as $i => $it) {
-            list($md, $uri) = preg_split("|\n|", $it);
-            list($length, $title) = preg_split("|, *|", $md);
-            // $gunid  = StoredFile::CreateGunid();
-            $gunid = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
-            $acId = BasicStor::IdFromGunid($gunid);
-            if (PEAR::isError($acId)) {
-            	return $acId;
-            }
-            $length = Playlist::secondsToPlaylistTime($length);
-            $offset = '???';
-            if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
-                switch (strtolower($ext = $va[1])) {
-                    case "lspl":
-                    case "xml":
-                    case "smil":
-                    case "m3u":
-                        $acId = $gb->bsImportPlaylistRaw($gunid,
-                            $aPath, $uri, $ext, $gunids, $subjid);
-                        if (PEAR::isError($acId)) {
-                        	break;
-                        }
-                        //no break!
-                    default:
-                        if (is_null($gunid)) {
-                            return PEAR::raiseError(
-                                "M3uPlaylist::import: no gunid");
-                        }
-                        $r = $pl->addAudioClip($acId);
-                        if (PEAR::isError($r)) {
-                        	return $r;
-                        }
-                }
-            }
-        }
-        $r = $pl->unlock($gb);
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return $pl;
+//        $path = realpath("$aPath/$rPath");
+//        if (FALSE === $path) {
+//            return PEAR::raiseError(
+//                "M3uPlaylist::import: file doesn't exist ($aPath/$rPath)"
+//            );
+//        }
+//        $arr = M3uPlaylist::parse($path);
+//        if (PEAR::isError($arr)) {
+//        	return $arr;
+//        }
+//        require_once("Playlist.php");
+//        $pl =& Playlist::create($gb, $plid, "imported_M3U");
+//        if (PEAR::isError($pl)) {
+//        	return $pl;
+//        }
+//        $r = $pl->lock($gb, $subjid);
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
+//        foreach ($arr as $i => $it) {
+//            list($md, $uri) = preg_split("|\n|", $it);
+//            list($length, $title) = preg_split("|, *|", $md);
+//            // $gunid  = StoredFile::CreateGunid();
+//            $gunid = ( isset($gunids[basename($uri)]) ?  $gunids[basename($uri)] : NULL);
+//            $acId = BasicStor::IdFromGunid($gunid);
+//            if (PEAR::isError($acId)) {
+//            	return $acId;
+//            }
+//            $length = Playlist::secondsToPlaylistTime($length);
+//            $offset = '???';
+//            if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
+//                switch (strtolower($ext = $va[1])) {
+//                    case "lspl":
+//                    case "xml":
+//                    case "smil":
+//                    case "m3u":
+//                        $acId = $gb->bsImportPlaylistRaw($gunid,
+//                            $aPath, $uri, $ext, $gunids, $subjid);
+//                        if (PEAR::isError($acId)) {
+//                        	break;
+//                        }
+//                        //no break!
+//                    default:
+//                        if (is_null($gunid)) {
+//                            return PEAR::raiseError(
+//                                "M3uPlaylist::import: no gunid");
+//                        }
+//                        $r = $pl->addAudioClip($acId);
+//                        if (PEAR::isError($r)) {
+//                        	return $r;
+//                        }
+//                }
+//            }
+//        }
+//        $r = $pl->unlock($gb);
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
+//        return $pl;
     }
 
     /**

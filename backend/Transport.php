@@ -1417,7 +1417,7 @@ class Transport
                             "gunid" => $row['gunid'],
                             "filetype" => "audioclip"
                         );
-                        $storedFile = $this->gb->bsPutFile($values);
+                        $storedFile = StoredFile::Insert($values);
                         if (PEAR::isError($storedFile)) {
                             $mdtrec->setLock(FALSE);
                             return $storedFile;
@@ -1473,7 +1473,7 @@ class Transport
                     "gunid" => $row['gunid'],
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->gb->bsPutFile($values);
+                $storedFile = StoredFile::Insert($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }

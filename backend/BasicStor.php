@@ -59,51 +59,51 @@ require_once(dirname(__FILE__)."/StoredFile.php");
 require_once(dirname(__FILE__)."/Transport.php");
 require_once(dirname(__FILE__)."/Playlist.php");
 
-$g_metadata_xml_to_db_mapping = array(
-        "dc:format" => "format",
-        "ls:bitrate" => "bit_rate",
-    	"ls:samplerate" => "sample_rate",
-        "dcterms:extent" => "length",
-		"dc:title" => "track_title",
-		"dc:description" => "comments",
-    	"dc:type" => "genre",
-    	"dc:creator" => "artist_name",
-        "dc:source" => "album_title",
-    	"ls:channels" => "channels",
-		"ls:filename" => "name",
-		"ls:year" => "year",
-    	"ls:url" => "url",
-    	"ls:track_num" => "track_number",
-        "ls:mood" => "mood",
-        "ls:bpm" => "bpm",
-        "ls:disc_num" => "disc_number",
-        "ls:rating" => "rating",
-        "ls:encoded_by" => "encoded_by",
-        "dc:publisher" => "label",
-        "ls:composer" => "composer",
-        "ls:encoder" => "encoder",
-        "ls:crc" => "checksum",
-        "ls:lyrics" => "lyrics",
-        "ls:orchestra" => "orchestra",
-        "ls:conductor" => "conductor",
-        "ls:lyricist" => "lyricist",
-        "ls:originallyricist" => "original_lyricist",
-        "ls:radiostationname" => "radio_station_name",
-        "ls:audiofileinfourl" => "info_url",
-        "ls:artisturl" => "artist_url",
-        "ls:audiosourceurl" => "audio_source_url",
-        "ls:radiostationurl" => "radio_station_url",
-        "ls:buycdurl" => "buy_this_url",
-        "ls:isrcnumber" => "isrc_number",
-        "ls:catalognumber" => "catalog_number",
-        "ls:originalartist" => "original_artist",
-        "dc:rights" => "copyright",
-        "dcterms:temporal" => "report_datetime",
-        "dcterms:spatial" => "report_location",
-        "dcterms:entity" => "report_organization",
-        "dc:subject" => "subject",
-        "dc:contributor" => "contributor",
-        "dc:language" => "language");
+//$g_metadata_xml_to_db_mapping = array(
+//        "dc:format" => "format",
+//        "ls:bitrate" => "bit_rate",
+//    	"ls:samplerate" => "sample_rate",
+//        "dcterms:extent" => "length",
+//		"dc:title" => "track_title",
+//		"dc:description" => "comments",
+//    	"dc:type" => "genre",
+//    	"dc:creator" => "artist_name",
+//        "dc:source" => "album_title",
+//    	"ls:channels" => "channels",
+//		"ls:filename" => "name",
+//		"ls:year" => "year",
+//    	"ls:url" => "url",
+//    	"ls:track_num" => "track_number",
+//        "ls:mood" => "mood",
+//        "ls:bpm" => "bpm",
+//        "ls:disc_num" => "disc_number",
+//        "ls:rating" => "rating",
+//        "ls:encoded_by" => "encoded_by",
+//        "dc:publisher" => "label",
+//        "ls:composer" => "composer",
+//        "ls:encoder" => "encoder",
+//        "ls:crc" => "checksum",
+//        "ls:lyrics" => "lyrics",
+//        "ls:orchestra" => "orchestra",
+//        "ls:conductor" => "conductor",
+//        "ls:lyricist" => "lyricist",
+//        "ls:originallyricist" => "original_lyricist",
+//        "ls:radiostationname" => "radio_station_name",
+//        "ls:audiofileinfourl" => "info_url",
+//        "ls:artisturl" => "artist_url",
+//        "ls:audiosourceurl" => "audio_source_url",
+//        "ls:radiostationurl" => "radio_station_url",
+//        "ls:buycdurl" => "buy_this_url",
+//        "ls:isrcnumber" => "isrc_number",
+//        "ls:catalognumber" => "catalog_number",
+//        "ls:originalartist" => "original_artist",
+//        "dc:rights" => "copyright",
+//        "dcterms:temporal" => "report_datetime",
+//        "dcterms:spatial" => "report_location",
+//        "dcterms:entity" => "report_organization",
+//        "dc:subject" => "subject",
+//        "dc:contributor" => "contributor",
+//        "dc:language" => "language");
 
 /**
  * Core of Campcaster file storage module
@@ -139,11 +139,11 @@ class BasicStor {
      * @return StoredFile|PEAR_Error
      *      The StoredFile that was created.
      */
-    public function bsPutFile($p_values, $p_copyMedia=TRUE)
-    {
-        $storedFile = StoredFile::Insert($p_values, $p_copyMedia);
-        return $storedFile;
-    } // fn bsPutFile
+//    public function bsPutFile($p_values, $p_copyMedia=TRUE)
+//    {
+//        $storedFile = StoredFile::Insert($p_values, $p_copyMedia);
+//        return $storedFile;
+//    }
 
 
     /**
@@ -154,28 +154,28 @@ class BasicStor {
      * @param string $newName
      * @return boolean|PEAR_Error
      */
-    public function bsRenameFile($id, $newName)
-    {
-        switch (BasicStor::GetObjType($id)) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-                $storedFile = StoredFile::Recall($id);
-                if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                    // catch nonerror exception:
-                    //if($storedFile->getCode() != GBERR_FOBJNEX)
-                    return $storedFile;
-                }
-                $res = $storedFile->setName($newName);
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-                break;
-            case "File":
-            default:
-        }
-        return TRUE;
-    }
+//    public function bsRenameFile($id, $newName)
+//    {
+//        switch (BasicStor::GetObjType($id)) {
+//            case "audioclip":
+//            case "playlist":
+//            case "webstream":
+//                $storedFile = StoredFile::Recall($id);
+//                if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//                    // catch nonerror exception:
+//                    //if($storedFile->getCode() != GBERR_FOBJNEX)
+//                    return $storedFile;
+//                }
+//                $res = $storedFile->setName($newName);
+//                if (PEAR::isError($res)) {
+//                    return $res;
+//                }
+//                break;
+//            case "File":
+//            default:
+//        }
+//        return TRUE;
+//    }
 
 
     /**
@@ -192,27 +192,27 @@ class BasicStor {
      * @return true|PEAR_Error
      * @exception PEAR::error
      */
-    public function bsReplaceFile($id, $localFilePath, $metadataFilePath, $mdataLoc='file')
-    {
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        if (!empty($metadataFilePath) &&
-                ($mdataLoc!='file' || file_exists($metadataFilePath))) {
-            $r = $storedFile->setMetadata($metadataFilePath, $mdataLoc);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-        }
-        if (!empty($localFilePath) && file_exists($localFilePath)) {
-            $r = $storedFile->setRawMediaData($localFilePath);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-        }
-        return TRUE;
-    }
+//    public function bsReplaceFile($id, $localFilePath, $metadataFilePath, $mdataLoc='file')
+//    {
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        if (!empty($metadataFilePath) &&
+//                ($mdataLoc!='file' || file_exists($metadataFilePath))) {
+//            $r = $storedFile->setMetadata($metadataFilePath, $mdataLoc);
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
+//        }
+//        if (!empty($localFilePath) && file_exists($localFilePath)) {
+//            $r = $storedFile->setRawMediaData($localFilePath);
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
+//        }
+//        return TRUE;
+//    }
 
 
     /**
@@ -224,64 +224,64 @@ class BasicStor {
      * 		If true don't use trash
      * @return true|PEAR_Error
      */
-    public function bsDeleteFile($id, $forced=FALSE)
-    {
-        global $CC_CONFIG;
-        // full delete:
-        if (!$CC_CONFIG['useTrash'] || $forced) {
-            $res = BasicStor::RemoveObj($id, $forced);
-            return $res;
-        }
-
-        $storedFile = StoredFile::Recall($id);
-
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        if ($storedFile->isAccessed()) {
-             return PEAR::raiseError(
-                'Cannot delete an object that is currently accessed.'
-            );
-        }
-        // move to trash:
-        switch (BasicStor::GetObjType($id)) {
-
-            case "audioclip":
-                $playLists = $storedFile->getPlaylists();
-                $item_gunid = $storedFile->getGunid();
-                if( $playLists != NULL) {
-
-                    foreach($playLists as $key=>$val) {
-                        $playList_id = BasicStor::IdFromGunidBigInt($val["gunid"]);
-                        $playList_titles[] = BasicStor::bsGetMetadataValue($playList_id, "dc:title");
-                    }
-                    return PEAR::raiseError(
-                        'Please remove this song from all playlists: ' . join(",", $playList_titles)
-                    );
-                }
-                break;
-
-            case "playlist":
-                if($storedFile->isScheduled()) {
-                     return PEAR::raiseError(
-                        'Cannot delete an object that is scheduled to play.'
-                    );
-                }
-                break;
-
-            case "webstream":
-
-                break;
-            default:
-        }
-
-        $res = $storedFile->setState('deleted');
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-
-	    return TRUE;
-    }
+//    public function bsDeleteFile($id, $forced=FALSE)
+//    {
+//        global $CC_CONFIG;
+//        // full delete:
+//        if (!$CC_CONFIG['useTrash'] || $forced) {
+//            $res = BasicStor::RemoveObj($id, $forced);
+//            return $res;
+//        }
+//
+//        $storedFile = StoredFile::Recall($id);
+//
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        if ($storedFile->isAccessed()) {
+//             return PEAR::raiseError(
+//                'Cannot delete an object that is currently accessed.'
+//            );
+//        }
+//        // move to trash:
+//        switch (BasicStor::GetObjType($id)) {
+//
+//            case "audioclip":
+//                $playLists = $storedFile->getPlaylists();
+//                $item_gunid = $storedFile->getGunid();
+//                if( $playLists != NULL) {
+//
+//                    foreach($playLists as $key=>$val) {
+//                        $playList_id = BasicStor::IdFromGunidBigInt($val["gunid"]);
+//                        $playList_titles[] = BasicStor::bsGetMetadataValue($playList_id, "dc:title");
+//                    }
+//                    return PEAR::raiseError(
+//                        'Please remove this song from all playlists: ' . join(",", $playList_titles)
+//                    );
+//                }
+//                break;
+//
+//            case "playlist":
+//                if($storedFile->isScheduled()) {
+//                     return PEAR::raiseError(
+//                        'Cannot delete an object that is scheduled to play.'
+//                    );
+//                }
+//                break;
+//
+//            case "webstream":
+//
+//                break;
+//            default:
+//        }
+//
+//        $res = $storedFile->setState('deleted');
+//        if (PEAR::isError($res)) {
+//            return $res;
+//        }
+//
+//	    return TRUE;
+//    }
 
 
     /* ----------------------------------------------------- put, access etc. */
@@ -472,42 +472,42 @@ class BasicStor {
      * 		array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
-    public function bsOpenDownload($id, $part='media')
-    {
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        $gunid = $storedFile->gunid;
-        switch ($part) {
-            case "media":
-                $realfile = $storedFile->getRealFileName();
-                $ext = $storedFile->getFileExtension();
-                $filename = $storedFile->getName();
-                break;
-            case "metadata":
-                $realfile = $storedFile->getRealMetadataFileName();
-                $ext = "xml";
-                $filename = $storedFile->getName();
-                break;
-            default:
-                return PEAR::raiseError(
-                 "BasicStor::bsOpenDownload: unknown part ($part)"
-                );
-        }
-        $acc = BasicStor::bsAccess($realfile, $ext, $gunid, 'download');
-        if (PEAR::isError($acc)) {
-            return $acc;
-        }
-        $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
-        $chsum = md5_file($realfile);
-        $size = filesize($realfile);
-        return array(
-            'url'=>$url, 'token'=>$acc['token'],
-            'chsum'=>$chsum, 'size'=>$size,
-            'filename'=>$filename
-        );
-    }
+//    public function bsOpenDownload($id, $part='media')
+//    {
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        $gunid = $storedFile->gunid;
+//        switch ($part) {
+//            case "media":
+//                $realfile = $storedFile->getRealFileName();
+//                $ext = $storedFile->getFileExtension();
+//                $filename = $storedFile->getName();
+//                break;
+//            case "metadata":
+//                $realfile = $storedFile->getRealMetadataFileName();
+//                $ext = "xml";
+//                $filename = $storedFile->getName();
+//                break;
+//            default:
+//                return PEAR::raiseError(
+//                 "BasicStor::bsOpenDownload: unknown part ($part)"
+//                );
+//        }
+//        $acc = BasicStor::bsAccess($realfile, $ext, $gunid, 'download');
+//        if (PEAR::isError($acc)) {
+//            return $acc;
+//        }
+//        $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
+//        $chsum = md5_file($realfile);
+//        $size = filesize($realfile);
+//        return array(
+//            'url'=>$url, 'token'=>$acc['token'],
+//            'chsum'=>$chsum, 'size'=>$size,
+//            'filename'=>$filename
+//        );
+//    }
 
 
     /**
@@ -520,19 +520,19 @@ class BasicStor {
      * @return string
      * 		gunid
      */
-    public function bsCloseDownload($token, $part='media')
-    {
-        if (!BasicStor::bsCheckToken($token, 'download')) {
-            return PEAR::raiseError(
-             "BasicStor::bsCloseDownload: invalid token ($token)"
-            );
-        }
-        $r = BasicStor::bsRelease($token, 'download');
-        if (PEAR::isError($r)){
-            return $r;
-        }
-        return (is_null($r['gunid']) ? $r['realFname'] : $r['gunid']);
-    }
+//    public function bsCloseDownload($token, $part='media')
+//    {
+//        if (!BasicStor::bsCheckToken($token, 'download')) {
+//            return PEAR::raiseError(
+//             "BasicStor::bsCloseDownload: invalid token ($token)"
+//            );
+//        }
+//        $r = BasicStor::bsRelease($token, 'download');
+//        if (PEAR::isError($r)){
+//            return $r;
+//        }
+//        return (is_null($r['gunid']) ? $r['realFname'] : $r['gunid']);
+//    }
 
 
     /**
@@ -551,35 +551,35 @@ class BasicStor {
      *      fname string: writable local filename
      *      token string: PUT token
      */
-    public function bsOpenPut($chsum, $gunid, $owner=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        if (!is_null($gunid)) {
-            $gunid = StoredFile::NormalizeGunid($gunid);
-        }
-        $escapedChsum = pg_escape_string($chsum);
-        $token = StoredFile::CreateGunid();
-        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
-            ." WHERE token=x'$token'::bigint");
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $gunidSql = (is_null($gunid) ? "NULL" : "x'{$gunid}'::bigint" );
-        $ownerSql = (is_null($owner) ? "NULL" : "$owner" );
-        $res = $CC_DBC->query("
-            INSERT INTO ".$CC_CONFIG['accessTable']."
-                (gunid, token, ext, chsum, type, owner, ts)
-            VALUES
-                ($gunidSql, x'$token'::bigint,
-                    '', '$escapedChsum', 'put', $ownerSql, now())");
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $fname = $CC_CONFIG['accessDir']."/$token";
-        touch($fname);      // is it needed?
-        $url = BasicStor::GetUrlPart()."xmlrpc/put.php?token=$token";
-        return array('url'=>$url, 'fname'=>$fname, 'token'=>$token);
-    }
+//    public function bsOpenPut($chsum, $gunid, $owner=NULL)
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        if (!is_null($gunid)) {
+//            $gunid = StoredFile::NormalizeGunid($gunid);
+//        }
+//        $escapedChsum = pg_escape_string($chsum);
+//        $token = StoredFile::CreateGunid();
+//        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
+//            ." WHERE token=x'$token'::bigint");
+//        if (PEAR::isError($res)) {
+//            return $res;
+//        }
+//        $gunidSql = (is_null($gunid) ? "NULL" : "x'{$gunid}'::bigint" );
+//        $ownerSql = (is_null($owner) ? "NULL" : "$owner" );
+//        $res = $CC_DBC->query("
+//            INSERT INTO ".$CC_CONFIG['accessTable']."
+//                (gunid, token, ext, chsum, type, owner, ts)
+//            VALUES
+//                ($gunidSql, x'$token'::bigint,
+//                    '', '$escapedChsum', 'put', $ownerSql, now())");
+//        if (PEAR::isError($res)) {
+//            return $res;
+//        }
+//        $fname = $CC_CONFIG['accessDir']."/$token";
+//        touch($fname);      // is it needed?
+//        $url = BasicStor::GetUrlPart()."xmlrpc/put.php?token=$token";
+//        return array('url'=>$url, 'fname'=>$fname, 'token'=>$token);
+//    }
 
 
     /**
@@ -593,58 +593,58 @@ class BasicStor {
      *      fname string, local path of the file having been put
      *      owner int, local subject id - owner of token
      */
-    public function bsClosePut($token)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $token = StoredFile::NormalizeGunid($token);
-
-        if (!BasicStor::bsCheckToken($token, 'put')) {
-            return PEAR::raiseError(
-                "BasicStor::bsClosePut: invalid token ($token)",
-                GBERR_TOKEN);
-        }
-        $row = $CC_DBC->getRow(
-            "SELECT chsum, owner FROM ".$CC_CONFIG['accessTable']
-            ." WHERE token=x'{$token}'::bigint");
-        if (PEAR::isError($row)) {
-            return $row;
-        }
-        $fname = $CC_CONFIG['accessDir']."/$token";
-        $md5sum = md5_file($fname);
-
-        $chsum = $row['chsum'];
-        $owner = $row['owner'];
-        $error = null;
-        if ( (trim($chsum) != '') && ($chsum != $md5sum) ) {
-            // Delete the file if the checksums do not match.
-            if (file_exists($fname)) {
-                @unlink($fname);
-            }
-            $error = new PEAR_Error(
-                 "BasicStor::bsClosePut: md5sum does not match (token=$token)".
-                 " [$chsum/$md5sum]",
-                 GBERR_PUT);
-        } else {
-            // Remember the MD5 sum
-            $storedFile = StoredFile::RecallByToken($token);
-            if (!is_null($storedFile) && !PEAR::isError($storedFile)) {
-                $storedFile->setMd5($md5sum);
-            } else {
-#                $error = $storedFile;
-            }
-        }
-
-        // Delete entry from access table.
-        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
-            ." WHERE token=x'$token'::bigint");
-        if (PEAR::isError($error)) {
-            return $error;
-        } elseif (PEAR::isError($res)) {
-            return $res;
-        }
-
-        return array('fname'=>$fname, 'owner'=>$owner);
-    }
+//    public function bsClosePut($token)
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $token = StoredFile::NormalizeGunid($token);
+//
+//        if (!BasicStor::bsCheckToken($token, 'put')) {
+//            return PEAR::raiseError(
+//                "BasicStor::bsClosePut: invalid token ($token)",
+//                GBERR_TOKEN);
+//        }
+//        $row = $CC_DBC->getRow(
+//            "SELECT chsum, owner FROM ".$CC_CONFIG['accessTable']
+//            ." WHERE token=x'{$token}'::bigint");
+//        if (PEAR::isError($row)) {
+//            return $row;
+//        }
+//        $fname = $CC_CONFIG['accessDir']."/$token";
+//        $md5sum = md5_file($fname);
+//
+//        $chsum = $row['chsum'];
+//        $owner = $row['owner'];
+//        $error = null;
+//        if ( (trim($chsum) != '') && ($chsum != $md5sum) ) {
+//            // Delete the file if the checksums do not match.
+//            if (file_exists($fname)) {
+//                @unlink($fname);
+//            }
+//            $error = new PEAR_Error(
+//                 "BasicStor::bsClosePut: md5sum does not match (token=$token)".
+//                 " [$chsum/$md5sum]",
+//                 GBERR_PUT);
+//        } else {
+//            // Remember the MD5 sum
+//            $storedFile = StoredFile::RecallByToken($token);
+//            if (!is_null($storedFile) && !PEAR::isError($storedFile)) {
+//                $storedFile->setMd5($md5sum);
+//            } else {
+//#                $error = $storedFile;
+//            }
+//        }
+//
+//        // Delete entry from access table.
+//        $res = $CC_DBC->query("DELETE FROM ".$CC_CONFIG['accessTable']
+//            ." WHERE token=x'$token'::bigint");
+//        if (PEAR::isError($error)) {
+//            return $error;
+//        } elseif (PEAR::isError($res)) {
+//            return $res;
+//        }
+//
+//        return array('fname'=>$fname, 'owner'=>$owner);
+//    }
 
 
     /**
@@ -660,31 +660,31 @@ class BasicStor {
      *      realsum: string - checksum of uploaded file
      *   	)
      */
-    public function bsCheckPut($token)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        if (!BasicStor::bsCheckToken($token, 'put')) {
-            return PEAR::raiseError(
-             "BasicStor::bsCheckPut: invalid token ($token)"
-            );
-        }
-        $chsum = $CC_DBC->getOne("
-            SELECT chsum FROM ".$CC_CONFIG['accessTable']."
-            WHERE token=x'{$token}'::bigint
-            ");
-        if (PEAR::isError($chsum)) {
-            return $chsum;
-        }
-        $fname = $CC_CONFIG['accessDir']."/$token";
-        $md5sum = md5_file($fname);
-        $size = filesize($fname);
-        $status = ($chsum == $md5sum);
-        return array(
-            'status'=>$status, 'size'=>$size,
-            'expectedsum'=>$chsum,
-            'realsum'=>$md5sum,
-        );
-    }
+//    public function bsCheckPut($token)
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        if (!BasicStor::bsCheckToken($token, 'put')) {
+//            return PEAR::raiseError(
+//             "BasicStor::bsCheckPut: invalid token ($token)"
+//            );
+//        }
+//        $chsum = $CC_DBC->getOne("
+//            SELECT chsum FROM ".$CC_CONFIG['accessTable']."
+//            WHERE token=x'{$token}'::bigint
+//            ");
+//        if (PEAR::isError($chsum)) {
+//            return $chsum;
+//        }
+//        $fname = $CC_CONFIG['accessDir']."/$token";
+//        $md5sum = md5_file($fname);
+//        $size = filesize($fname);
+//        $status = ($chsum == $md5sum);
+//        return array(
+//            'status'=>$status, 'size'=>$size,
+//            'expectedsum'=>$chsum,
+//            'realsum'=>$md5sum,
+//        );
+//    }
 
 
     /**
@@ -693,14 +693,14 @@ class BasicStor {
      * @return string
      * 		URL
      */
-    public static function GetUrlPart()
-    {
-        global $CC_CONFIG;
-        $host = $CC_CONFIG['storageUrlHost'];
-        $port = $CC_CONFIG['storageUrlPort'];
-        $path = $CC_CONFIG['storageUrlPath'];
-        return "http://$host:$port$path/";
-    }
+//    public static function GetUrlPart()
+//    {
+//        global $CC_CONFIG;
+//        $host = $CC_CONFIG['storageUrlHost'];
+//        $port = $CC_CONFIG['storageUrlPort'];
+//        $path = $CC_CONFIG['storageUrlPath'];
+//        return "http://$host:$port$path/";
+//    }
 
 
     /**
@@ -711,17 +711,17 @@ class BasicStor {
      * @return array
      * 		array of tokens
      */
-    public static function GetTokensByType($type)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $res = $CC_DBC->query(
-            "SELECT TO_HEX(token) AS token FROM ".$CC_CONFIG['accessTable']." WHERE type=?",
-            array($type));
-        while ($row = $res->fetchRow()) {
-             $r[] = $row['token'];
-        }
-        return $r;
-    }
+//    public static function GetTokensByType($type)
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $res = $CC_DBC->query(
+//            "SELECT TO_HEX(token) AS token FROM ".$CC_CONFIG['accessTable']." WHERE type=?",
+//            array($type));
+//        while ($row = $res->fetchRow()) {
+//             $r[] = $row['token'];
+//        }
+//        return $r;
+//    }
 
 
     /* ----------------------------------------------------- metadata methods */
@@ -737,14 +737,14 @@ class BasicStor {
      * 		'file'|'string'
      * @return boolean|PEAR_Error
      */
-    public function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
-    {
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        return $storedFile->setMetadata($mdata, $mdataLoc);
-    }
+//    public function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
+//    {
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        return $storedFile->setMetadata($mdata, $mdataLoc);
+//    }
 
 
     /**
@@ -754,14 +754,14 @@ class BasicStor {
      * 		Virtual file's local id
      * @return string|PEAR_Error
      */
-    public function bsGetMetadata($id)
-    {
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        return $storedFile->getMetadata();
-    }
+//    public function bsGetMetadata($id)
+//    {
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        return $storedFile->getMetadata();
+//    }
 
 
     /**
@@ -774,20 +774,20 @@ class BasicStor {
      *      null, id is then ignored
      * @return string|PEAR_Error
      */
-    public function bsGetTitle($id, $gunid=NULL)
-    {
-        if (is_null($gunid)) {
-            $storedFile = StoredFile::Recall($id);
-        } else {
-            $storedFile = StoredFile::RecallByGunid($gunid);
-        }
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        $r = $storedFile->md["title"];
-        $title = (empty($r) ? 'unknown' : $r);
-        return $title;
-    }
+//    public function bsGetTitle($id, $gunid=NULL)
+//    {
+//        if (is_null($gunid)) {
+//            $storedFile = StoredFile::Recall($id);
+//        } else {
+//            $storedFile = StoredFile::RecallByGunid($gunid);
+//        }
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        $r = $storedFile->md["title"];
+//        $title = (empty($r) ? 'unknown' : $r);
+//        return $title;
+//    }
 
 
     /**
@@ -804,27 +804,27 @@ class BasicStor {
      * 		if an array is passed, an array is returned.
      * @see Metadata::getMetadataValue
      */
-    public function bsGetMetadataValue($id, $category = null)
-    {
-        if (!is_numeric($id)) {
-            return null;
-        }
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        if (is_null($category)) {
-            return $storedFile->md;
-        } elseif (is_array($category)) {
-            $values = array();
-			      foreach ($category as $tmpCat) {
-				        $values[$tmpCat] = $storedFile->md[$tmpCat];
-			      }
-			      return $values;
-        } else {
-            return $storedFile->md[$category];
-        }
-    }
+//    public function bsGetMetadataValue($id, $category = null)
+//    {
+//        if (!is_numeric($id)) {
+//            return null;
+//        }
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        if (is_null($category)) {
+//            return $storedFile->md;
+//        } elseif (is_array($category)) {
+//            $values = array();
+//			      foreach ($category as $tmpCat) {
+//				        $values[$tmpCat] = $storedFile->md[$tmpCat];
+//			      }
+//			      return $values;
+//        } else {
+//            return $storedFile->md[$category];
+//        }
+//    }
 
 
     /**
@@ -834,14 +834,14 @@ class BasicStor {
      * @param string $p_category
      * @return string|null
      */
-    public static function xmlCategoryToDbColumn($p_category)
-    {
-        global $g_metadata_xml_to_db_mapping;
-        if (array_key_exists($p_category, $g_metadata_xml_to_db_mapping)) {
-            return $g_metadata_xml_to_db_mapping[$p_category];
-        }
-        return null;
-    }
+//    public static function xmlCategoryToDbColumn($p_category)
+//    {
+//        global $g_metadata_xml_to_db_mapping;
+//        if (array_key_exists($p_category, $g_metadata_xml_to_db_mapping)) {
+//            return $g_metadata_xml_to_db_mapping[$p_category];
+//        }
+//        return null;
+//    }
 
 
     /**
@@ -850,16 +850,16 @@ class BasicStor {
      * @param string $p_dbColumn
      * @return string|null
      */
-    public static function dbColumnToXmlCatagory($p_dbColumn)
-    {
-        global $g_metadata_xml_to_db_mapping;
-        $str = array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
-        // make return value consistent with xmlCategoryToDbColumn()
-        if ($str === FALSE) {
-            $str = null;
-        }
-        return $str;
-    }
+//    public static function dbColumnToXmlCatagory($p_dbColumn)
+//    {
+//        global $g_metadata_xml_to_db_mapping;
+//        $str = array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+//        // make return value consistent with xmlCategoryToDbColumn()
+//        if ($str === FALSE) {
+//            $str = null;
+//        }
+//        return $str;
+//    }
 
     /**
      * Set metadata element value
@@ -872,33 +872,33 @@ class BasicStor {
      * 		value to store, if NULL then delete record
      * @return boolean
      */
-    public static function bsSetMetadataValue($p_id, $p_category, $p_value)
-    {
-      global $CC_CONFIG, $CC_DBC;
-      if (!is_string($p_category) || is_array($p_value)) {
-        return FALSE;
-      }
-      if (is_a($p_id, "StoredFile")) {
-        $p_id  = $p_id->getId();
-      }
-      if ($p_category == 'dcterms:extent') {
-        $p_value = BasicStor::NormalizeExtent($p_value);
-      }
-      $columnName = BasicStor::xmlCategoryToDbColumn($p_category); // Get column name
-
-      if (!is_null($columnName)) {
-        $escapedValue = pg_escape_string($p_value);
-        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-             ." SET $columnName='$escapedValue'"
-             ." WHERE id=$p_id";
-        //var_dump($sql);
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-          return $res;
-        }
-      }
-      return TRUE;
-    }
+//    public static function bsSetMetadataValue($p_id, $p_category, $p_value)
+//    {
+//      global $CC_CONFIG, $CC_DBC;
+//      if (!is_string($p_category) || is_array($p_value)) {
+//        return FALSE;
+//      }
+//      if (is_a($p_id, "StoredFile")) {
+//        $p_id  = $p_id->getId();
+//      }
+//      if ($p_category == 'dcterms:extent') {
+//        $p_value = BasicStor::NormalizeExtent($p_value);
+//      }
+//      $columnName = BasicStor::xmlCategoryToDbColumn($p_category); // Get column name
+//
+//      if (!is_null($columnName)) {
+//        $escapedValue = pg_escape_string($p_value);
+//        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+//             ." SET $columnName='$escapedValue'"
+//             ." WHERE id=$p_id";
+//        //var_dump($sql);
+//        $res = $CC_DBC->query($sql);
+//        if (PEAR::isError($res)) {
+//          return $res;
+//        }
+//      }
+//      return TRUE;
+//    }
 
 
     /**
@@ -908,15 +908,15 @@ class BasicStor {
      * 		value to normalize
      * @return string
      */
-    private static function NormalizeExtent($v)
-    {
-        if (!preg_match("|^\d{2}:\d{2}:\d{2}.\d{6}$|", $v)) {
-            $s = Playlist::playlistTimeToSeconds($v);
-            $t = Playlist::secondsToPlaylistTime($s);
-            return $t;
-        }
-        return $v;
-    }
+//    private static function NormalizeExtent($v)
+//    {
+//        if (!preg_match("|^\d{2}:\d{2}:\d{2}.\d{6}$|", $v)) {
+//            $s = Playlist::playlistTimeToSeconds($v);
+//            $t = Playlist::secondsToPlaylistTime($s);
+//            return $t;
+//        }
+//        return $v;
+//    }
 
 
     /**
@@ -929,60 +929,60 @@ class BasicStor {
      *      (e.g. 'dc:title'=>'New title')
      * @return boolean
      */
-    public static function bsSetMetadataBatch($id, $values)
-    {
-      global $CC_CONFIG, $CC_DBC;
-      if (!is_array($values)) {
-          $values = array($values);
-      }
-      if (count($values) == 0) {
-        return true;
-      }
-      if (is_a($id, "StoredFile")) {
-          $storedFile =& $id;
-      } else {
-          $storedFile = StoredFile::Recall($id);
-          if (is_null($storedFile) || PEAR::isError($storedFile)) {
-              return $storedFile;
-          }
-      }
-      foreach ($values as $category => $oneValue) {
-        $columnName = BasicStor::xmlCategoryToDbColumn($category);
-        if (!is_null($columnName)) {
-          if ($category == 'dcterms:extent') {
-            $oneValue = BasicStor::NormalizeExtent($oneValue);
-          }
-          // Since track_number is an integer, you cannot set
-          // it to be the empty string, so we NULL it instead.
-          if ($columnName == 'track_number' && empty($oneValue)) {
-            $sqlPart = "$columnName = NULL";
-          } elseif (($columnName == 'length') && (strlen($oneValue) > 8)) {
-            // Postgres doesnt like it if you try to store really large hour
-            // values.  TODO: We need to fix the underlying problem of getting the
-            // right values.
-            $parts = explode(':', $oneValue);
-            $hour = intval($parts[0]);
-            if ($hour > 24) {
-              continue;
-            } else {
-              $sqlPart = "$columnName = '$oneValue'";
-            }
-          } else {
-            $escapedValue = pg_escape_string($oneValue);
-            $sqlPart = "$columnName = '$escapedValue'";
-          }
-          $sqlValues[] = $sqlPart;
-        }
-      }
-      if (count($sqlValues)==0) {
-        return TRUE;
-      }
-      $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-           ." SET ".join(",", $sqlValues)
-           ." WHERE id=$id";
-      $CC_DBC->query($sql);
-      return TRUE;
-    }
+//    public static function bsSetMetadataBatch($id, $values)
+//    {
+//      global $CC_CONFIG, $CC_DBC;
+//      if (!is_array($values)) {
+//          $values = array($values);
+//      }
+//      if (count($values) == 0) {
+//        return true;
+//      }
+//      if (is_a($id, "StoredFile")) {
+//          $storedFile =& $id;
+//      } else {
+//          $storedFile = StoredFile::Recall($id);
+//          if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//              return $storedFile;
+//          }
+//      }
+//      foreach ($values as $category => $oneValue) {
+//        $columnName = BasicStor::xmlCategoryToDbColumn($category);
+//        if (!is_null($columnName)) {
+//          if ($category == 'dcterms:extent') {
+//            $oneValue = BasicStor::NormalizeExtent($oneValue);
+//          }
+//          // Since track_number is an integer, you cannot set
+//          // it to be the empty string, so we NULL it instead.
+//          if ($columnName == 'track_number' && empty($oneValue)) {
+//            $sqlPart = "$columnName = NULL";
+//          } elseif (($columnName == 'length') && (strlen($oneValue) > 8)) {
+//            // Postgres doesnt like it if you try to store really large hour
+//            // values.  TODO: We need to fix the underlying problem of getting the
+//            // right values.
+//            $parts = explode(':', $oneValue);
+//            $hour = intval($parts[0]);
+//            if ($hour > 24) {
+//              continue;
+//            } else {
+//              $sqlPart = "$columnName = '$oneValue'";
+//            }
+//          } else {
+//            $escapedValue = pg_escape_string($oneValue);
+//            $sqlPart = "$columnName = '$escapedValue'";
+//          }
+//          $sqlValues[] = $sqlPart;
+//        }
+//      }
+//      if (count($sqlValues)==0) {
+//        return TRUE;
+//      }
+//      $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+//           ." SET ".join(",", $sqlValues)
+//           ." WHERE id=$id";
+//      $CC_DBC->query($sql);
+//      return TRUE;
+//    }
 
     /**
      * Method returning array with where-parts of sql queries
@@ -1002,7 +1002,7 @@ class BasicStor {
         $whereArr = array();
         if (is_array($conditions)) {
             foreach ($conditions as $cond) {
-                $columnName = BasicStor::xmlCategoryToDbColumn($cond['cat']);
+                $columnName = StoredFile::xmlCategoryToDbColumn($cond['cat']);
                 $op = strtolower($cond['op']);
                 $value = $cond['val'];
                 if (!empty($value)) {
@@ -1141,7 +1141,7 @@ class BasicStor {
         // in the array is the qualified name with ":" replaced with "_".
         // e.g. "dc:creator" becomes "dc_creator".
         foreach ($orderbyQns as $xmlTag) {
-            $columnName = BasicStor::xmlCategoryToDbColumn($xmlTag);
+            $columnName = StoredFile::xmlCategoryToDbColumn($xmlTag);
             $orderBySql[] = $columnName;
         }
 
@@ -1269,7 +1269,7 @@ class BasicStor {
         );
 
         $category = strtolower($category);
-        $columnName = BasicStor::xmlCategoryToDbColumn($category);
+        $columnName = StoredFile::xmlCategoryToDbColumn($category);
         if (is_null($columnName)) {
             return new PEAR_Error(__FILE__.":".__LINE__." -- could not map XML category to DB column.");
         }
@@ -1363,103 +1363,103 @@ class BasicStor {
      *      fname string: readable fname,
      *      token string: access token
      */
-    public function bsExportPlaylistOpen($plids, $type='lspl', $withContent=TRUE)
-    {
-        global $CC_CONFIG;
-        if (!is_array($plids)) {
-            $plids = array($plids);
-        }
-        $gunids = array();
-        foreach ($plids as $plid) {
-            $pl = StoredFile::RecallByGunid($plid);
-            if (is_null($pl) || PEAR::isError($pl)) {
-                return $pl;
-            }
-            if ($withContent) {
-                $gunidsX = $pl->export();
-                if (PEAR::isError($gunidsX)) {
-                    return $gunidsX;
-                }
-            } else {
-                $gunidsX = array(array('gunid'=>$plid, 'type'=>'playlist'));
-            }
-            $gunids = array_merge($gunids, $gunidsX);
-        }
-        $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
-        $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
-        $res = array();
-        $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plExport_');
-        $tmpf = "$tmpn.tar";
-        $tmpd = "$tmpn.dir";
-        mkdir($tmpd);
-        $tmpdp = "$tmpn.dir/playlist";
-        mkdir($tmpdp);
-        if ($withContent) {
-            $tmpdc = "$tmpn.dir/audioClip";
-            mkdir($tmpdc);
-        }
-        foreach ($gunids as $i => $it) {
-            $storedFile = StoredFile::RecallByGunid($it['gunid']);
-            if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                return $storedFile;
-            }
-//            $MDfname = $storedFile->md->getFileName();
-            $MDfname = $storedFile->md["name"];
-            if (PEAR::isError($MDfname)) {
-                return $MDfname;
-            }
-            if (file_exists($MDfname)) {
-                switch ($it['type']) {
-	                case "playlist":
-	                    $storedFile = $r = StoredFile::RecallByGunid($it['gunid']);
-	                    switch ($type) {
-	                        case "smil":
-	                            $string = $r = $storedFile->outputToSmil();
-	                            break;
-	                        case "m3u":
-	                            $string = $r = $storedFile->outputToM3u();
-	                            break;
-	                        default:
-//	                            $string = $r = $storedFile->md->genXmlDoc();
-	                    }
-	                    if (PEAR::isError($r)) {
-	                        return $r;
-	                    }
-	                    $r = BasicStor::WriteStringToFile($string, "$tmpdp/{$it['gunid']}.$plExt");
-	                    if (PEAR::isError($r)) {
-	                        return $r;
-	                    }
-	                    break;
-	                default:
-	                    copy($MDfname, "$tmpdc/{$it['gunid']}.xml"); break;
-                } // switch
-            } // if file_exists()
-            $RADfname = $storedFile->getRealFileName();
-            if (PEAR::isError($RADfname)) {
-                return $RADfname;
-            }
-            $RADext = $storedFile->getFileExtension();
-            if (PEAR::isError($RADext)) {
-                return $RADext;
-            }
-            if (file_exists($RADfname)) {
-                copy($RADfname, "$tmpdc/{$it['gunid']}.$RADext");
-            }
-        }
-        if (count($plids)==1) {
-            copy("$tmpdp/$plid.$plExt", "$tmpd/exportedPlaylist.$plExt");
-        }
-        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
-        @rmdir($tmpdc);
-        @rmdir($tmpdp);
-        @rmdir($tmpd);
-        unlink($tmpn);
-        $acc = BasicStor::bsAccess($tmpf, 'tar', NULL/*gunid*/, 'access');
-        if (PEAR::isError($acc)) {
-            return $acc;
-        }
-        return $acc;
-    }
+//    public function bsExportPlaylistOpen($plids, $type='lspl', $withContent=TRUE)
+//    {
+//        global $CC_CONFIG;
+//        if (!is_array($plids)) {
+//            $plids = array($plids);
+//        }
+//        $gunids = array();
+//        foreach ($plids as $plid) {
+//            $pl = StoredFile::RecallByGunid($plid);
+//            if (is_null($pl) || PEAR::isError($pl)) {
+//                return $pl;
+//            }
+//            if ($withContent) {
+//                $gunidsX = $pl->export();
+//                if (PEAR::isError($gunidsX)) {
+//                    return $gunidsX;
+//                }
+//            } else {
+//                $gunidsX = array(array('gunid'=>$plid, 'type'=>'playlist'));
+//            }
+//            $gunids = array_merge($gunids, $gunidsX);
+//        }
+//        $plExts = array('lspl'=>"lspl", 'smil'=>"smil", 'm3u'=>"m3u");
+//        $plExt = (isset($plExts[$type]) ? $plExts[$type] : "xml" );
+//        $res = array();
+//        $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plExport_');
+//        $tmpf = "$tmpn.tar";
+//        $tmpd = "$tmpn.dir";
+//        mkdir($tmpd);
+//        $tmpdp = "$tmpn.dir/playlist";
+//        mkdir($tmpdp);
+//        if ($withContent) {
+//            $tmpdc = "$tmpn.dir/audioClip";
+//            mkdir($tmpdc);
+//        }
+//        foreach ($gunids as $i => $it) {
+//            $storedFile = StoredFile::RecallByGunid($it['gunid']);
+//            if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//                return $storedFile;
+//            }
+////            $MDfname = $storedFile->md->getFileName();
+//            $MDfname = $storedFile->md["name"];
+//            if (PEAR::isError($MDfname)) {
+//                return $MDfname;
+//            }
+//            if (file_exists($MDfname)) {
+//                switch ($it['type']) {
+//	                case "playlist":
+//	                    $storedFile = $r = StoredFile::RecallByGunid($it['gunid']);
+//	                    switch ($type) {
+//	                        case "smil":
+//	                            $string = $r = $storedFile->outputToSmil();
+//	                            break;
+//	                        case "m3u":
+//	                            $string = $r = $storedFile->outputToM3u();
+//	                            break;
+//	                        default:
+////	                            $string = $r = $storedFile->md->genXmlDoc();
+//	                    }
+//	                    if (PEAR::isError($r)) {
+//	                        return $r;
+//	                    }
+//	                    $r = BasicStor::WriteStringToFile($string, "$tmpdp/{$it['gunid']}.$plExt");
+//	                    if (PEAR::isError($r)) {
+//	                        return $r;
+//	                    }
+//	                    break;
+//	                default:
+//	                    copy($MDfname, "$tmpdc/{$it['gunid']}.xml"); break;
+//                } // switch
+//            } // if file_exists()
+//            $RADfname = $storedFile->getRealFileName();
+//            if (PEAR::isError($RADfname)) {
+//                return $RADfname;
+//            }
+//            $RADext = $storedFile->getFileExtension();
+//            if (PEAR::isError($RADext)) {
+//                return $RADext;
+//            }
+//            if (file_exists($RADfname)) {
+//                copy($RADfname, "$tmpdc/{$it['gunid']}.$RADext");
+//            }
+//        }
+//        if (count($plids)==1) {
+//            copy("$tmpdp/$plid.$plExt", "$tmpd/exportedPlaylist.$plExt");
+//        }
+//        $res = `cd $tmpd; tar cf $tmpf * --remove-files`;
+//        @rmdir($tmpdc);
+//        @rmdir($tmpdp);
+//        @rmdir($tmpd);
+//        unlink($tmpn);
+//        $acc = BasicStor::bsAccess($tmpf, 'tar', NULL/*gunid*/, 'access');
+//        if (PEAR::isError($acc)) {
+//            return $acc;
+//        }
+//        return $acc;
+//    }
 
 
     /**
@@ -1470,22 +1470,22 @@ class BasicStor {
      * 		Access token obtained from bsExportPlaylistOpen method call.
      * @return true/PEAR_Error
      */
-    public function bsExportPlaylistClose($token)
-    {
-        $r = BasicStor::bsRelease($token, 'access');
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        $file = $r['realFname'];
-        if (file_exists($file)) {
-            if(! @unlink($file)){
-                return PEAR::raiseError(
-                    "BasicStor::bsExportPlaylistClose: unlink failed ($file)",
-                    GBERR_FILEIO);
-            }
-        }
-        return TRUE;
-    }
+//    public function bsExportPlaylistClose($token)
+//    {
+//        $r = BasicStor::bsRelease($token, 'access');
+//        if (PEAR::isError($r)) {
+//            return $r;
+//        }
+//        $file = $r['realFname'];
+//        if (file_exists($file)) {
+//            if(! @unlink($file)){
+//                return PEAR::raiseError(
+//                    "BasicStor::bsExportPlaylistClose: unlink failed ($file)",
+//                    GBERR_FILEIO);
+//            }
+//        }
+//        return TRUE;
+//    }
 
 
     /**
@@ -1506,59 +1506,59 @@ class BasicStor {
      * @return int
      * 		Result file local id (or error object)
      */
-    public function bsImportPlaylistRaw($plid, $aPath, $rPath, $ext, &$gunids, $subjid)
-    {
-        $id = BasicStor::IdFromGunid($plid);
-        if (!is_null($id)) {
-            return $id;
-        }
-        $path = realpath("$aPath/$rPath");
-        if (FALSE === $path) {
-            return PEAR::raiseError(
-                "BasicStor::bsImportPlaylistRaw: file doesn't exist ($aPath/$rPath)"
-            );
-        }
-        switch ($ext) {
-            case "xml":
-            case "lspl":
-                $fname = $plid;
-                $values = array(
-                    "filename" => $fname,
-                    "metadata" => $path,
-                    "gunid" => $plid,
-                    "filetype" => "playlist"
-                );
-                $storedFile = $this->bsPutFile($values);
-                $res = $storedFile->getId();
-                break;
-            case "smil":
-                require_once("SmilPlaylist.php");
-                $res = SmilPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
-                if (PEAR::isError($res)) {
-                    break;
-                }
-                $res = $res->getId();
-                break;
-            case "m3u":
-                require_once("M3uPlaylist.php");
-                $res = M3uPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
-                if (PEAR::isError($res)) {
-                    break;
-                }
-                $res = $res->getId();
-                break;
-            default:
-                $res = PEAR::raiseError(
-                    "BasicStor::importPlaylistRaw: unknown playlist format".
-                    " (gunid:$plid, format:$ext)"
-                );
-                break;
-        }
-        if (!PEAR::isError($res)) {
-            $gunids[basename($rPath)] = $plid;
-        }
-        return $res;
-    }
+//    public function bsImportPlaylistRaw($plid, $aPath, $rPath, $ext, &$gunids, $subjid)
+//    {
+//        $id = BasicStor::IdFromGunid($plid);
+//        if (!is_null($id)) {
+//            return $id;
+//        }
+//        $path = realpath("$aPath/$rPath");
+//        if (FALSE === $path) {
+//            return PEAR::raiseError(
+//                "BasicStor::bsImportPlaylistRaw: file doesn't exist ($aPath/$rPath)"
+//            );
+//        }
+//        switch ($ext) {
+//            case "xml":
+//            case "lspl":
+//                $fname = $plid;
+//                $values = array(
+//                    "filename" => $fname,
+//                    "metadata" => $path,
+//                    "gunid" => $plid,
+//                    "filetype" => "playlist"
+//                );
+//                $storedFile = StoredFile::Insert($values);
+//                $res = $storedFile->getId();
+//                break;
+//            case "smil":
+//                require_once("SmilPlaylist.php");
+//                $res = SmilPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
+//                if (PEAR::isError($res)) {
+//                    break;
+//                }
+//                $res = $res->getId();
+//                break;
+//            case "m3u":
+//                require_once("M3uPlaylist.php");
+//                $res = M3uPlaylist::import($this, $aPath, $rPath, $gunids, $plid, $subjid);
+//                if (PEAR::isError($res)) {
+//                    break;
+//                }
+//                $res = $res->getId();
+//                break;
+//            default:
+//                $res = PEAR::raiseError(
+//                    "BasicStor::importPlaylistRaw: unknown playlist format".
+//                    " (gunid:$plid, format:$ext)"
+//                );
+//                break;
+//        }
+//        if (!PEAR::isError($res)) {
+//            $gunids[basename($rPath)] = $plid;
+//        }
+//        return $res;
+//    }
 
 
     /**
@@ -1571,95 +1571,95 @@ class BasicStor {
      * @return int
      * 		Result file local id (or error object)
      */
-    public function bsImportPlaylist($fpath, $subjid)
-    {
-        global $CC_CONFIG;
-        // untar:
-        $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plImport_');
-        $tmpd = "$tmpn.dir";
-        $tmpdc = "$tmpd/audioClip";
-        $tmpdp = "$tmpd/playlist";
-        mkdir($tmpd);
-        $res = `cd $tmpd; tar xf $fpath`;
-        // clips:
-        $d = @dir($tmpdc);
-        $entries = array();
-        $gunids = array();
-        if ($d !== false) {
-            while (false !== ($entry = $d->read())) {
-                if (preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)) {
-                    list(,$gunid, $ext) = $va;
-                    switch ($ext) {
-                        case"xml":
-                            $entries[$gunid]['metadata'] = $entry;
-                            break;
-                        default:
-                            $entries[$gunid]['rawMedia'] = $entry;
-                            $entries[$gunid]['rawMediaExt'] = $ext;
-                            $gunids[$entry] = $gunid;
-                            break;
-                    }
-                }
-            }
-            $d->close();
-        }
-        $res = TRUE;
-        foreach ($entries as $gunid => $it) {
-            $rawMedia = "$tmpdc/{$it['rawMedia']}";
-            if (!file_exists($rawMedia)) {
-                $rawMedia = NULL;
-            }
-            $metadata = "$tmpdc/{$it['metadata']}";
-            if (!file_exists($metadata)) {
-                $metadata = NULL;
-            }
-            $exists = $this->bsExistsFile($gunid, NULL, TRUE);
-            if( $exists ) {
-                $res = BasicStor::IdFromGunid($gunid);
-                if (!PEAR::isError($res)) {
-                    $res = $this->bsDeleteFile($res, TRUE);
-                }
-            }
-            if (!PEAR::isError($res) ) {
-                $values = array(
-                    "filename" => $gunid,
-                    "filepath" => $rawMedia,
-                    "metadata" => $metadata,
-                    "gunid" => $gunid,
-                    "filetype" => "audioclip"
-                );
-                $storedFile = $this->bsPutFile($values);
-                $res = $storedFile->getId();
-            }
-            @unlink("$tmpdc/{$it['rawMedia']}");
-            @unlink("$tmpdc/{$it['metadata']}");
-            if (PEAR::isError($res)) {
-                break;
-            }
-        }
-        // playlists:
-        $d = @dir($tmpdp);
-        if ($d !== false) {
-            while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
-                if (preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)) {
-                    list(,$gunid, $ext) = $va;
-                    $res = $this->bsImportPlaylistRaw($gunid,
-                        $tmpdp, $entry, $ext, $gunids, $subjid);
-                    unlink("$tmpdp/$entry");
-                    if (PEAR::isError($res)) {
-                        break;
-                    }
-                }
-            }
-            $d->close();
-        }
-        //@rmdir($tmpdc); @rmdir($tmpdp); @rmdir($tmpd);
-        @system("rm -rf $tmpdc");
-        @system("rm -rf $tmpdp");
-        @system("rm -rf $tmpd");
-        @unlink($tmpn);
-        return $res;
-    }
+//    public function bsImportPlaylist($fpath, $subjid)
+//    {
+//        global $CC_CONFIG;
+//        // untar:
+//        $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plImport_');
+//        $tmpd = "$tmpn.dir";
+//        $tmpdc = "$tmpd/audioClip";
+//        $tmpdp = "$tmpd/playlist";
+//        mkdir($tmpd);
+//        $res = `cd $tmpd; tar xf $fpath`;
+//        // clips:
+//        $d = @dir($tmpdc);
+//        $entries = array();
+//        $gunids = array();
+//        if ($d !== false) {
+//            while (false !== ($entry = $d->read())) {
+//                if (preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)) {
+//                    list(,$gunid, $ext) = $va;
+//                    switch ($ext) {
+//                        case"xml":
+//                            $entries[$gunid]['metadata'] = $entry;
+//                            break;
+//                        default:
+//                            $entries[$gunid]['rawMedia'] = $entry;
+//                            $entries[$gunid]['rawMediaExt'] = $ext;
+//                            $gunids[$entry] = $gunid;
+//                            break;
+//                    }
+//                }
+//            }
+//            $d->close();
+//        }
+//        $res = TRUE;
+//        foreach ($entries as $gunid => $it) {
+//            $rawMedia = "$tmpdc/{$it['rawMedia']}";
+//            if (!file_exists($rawMedia)) {
+//                $rawMedia = NULL;
+//            }
+//            $metadata = "$tmpdc/{$it['metadata']}";
+//            if (!file_exists($metadata)) {
+//                $metadata = NULL;
+//            }
+//            $f = StoredFile::RecallByGunid($gunid);
+//            if (!PEAR::isError($f)) {
+//              $exists = $f->existsFile();
+//              if ( $exists ) {
+//                $res = $f->delete();
+//              }
+//            }
+//            if (!PEAR::isError($res) ) {
+//                $values = array(
+//                    "filename" => $gunid,
+//                    "filepath" => $rawMedia,
+//                    "metadata" => $metadata,
+//                    "gunid" => $gunid,
+//                    "filetype" => "audioclip"
+//                );
+//                $storedFile = StoredFile::Insert($values);
+//                $res = $storedFile->getId();
+//            }
+//            @unlink("$tmpdc/{$it['rawMedia']}");
+//            @unlink("$tmpdc/{$it['metadata']}");
+//            if (PEAR::isError($res)) {
+//                break;
+//            }
+//        }
+//        // playlists:
+//        $d = @dir($tmpdp);
+//        if ($d !== false) {
+//            while ((!PEAR::isError($res)) && false !== ($entry = $d->read())) {
+//                if (preg_match("|^([0-9a-fA-F]{16})\.(.*)$|", $entry, $va)) {
+//                    list(,$gunid, $ext) = $va;
+//                    $res = $this->bsImportPlaylistRaw($gunid,
+//                        $tmpdp, $entry, $ext, $gunids, $subjid);
+//                    unlink("$tmpdp/$entry");
+//                    if (PEAR::isError($res)) {
+//                        break;
+//                    }
+//                }
+//            }
+//            $d->close();
+//        }
+//        //@rmdir($tmpdc); @rmdir($tmpdp); @rmdir($tmpd);
+//        @system("rm -rf $tmpdc");
+//        @system("rm -rf $tmpdp");
+//        @system("rm -rf $tmpd");
+//        @unlink($tmpn);
+//        return $res;
+//    }
 
 
     /* --------------------------------------------------------- info methods */
@@ -1671,15 +1671,15 @@ class BasicStor {
      * 		Virtual file's local id
      * @return array
      */
-    public function bsAnalyzeFile($id)
-    {
-        $storedFile = StoredFile::Recall($id);
-        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-            return $storedFile;
-        }
-        $ia = $storedFile->analyzeFile();
-        return $ia;
-    }
+//    public function bsAnalyzeFile($id)
+//    {
+//        $storedFile = StoredFile::Recall($id);
+//        if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//            return $storedFile;
+//        }
+//        $ia = $storedFile->analyzeFile();
+//        return $ia;
+//    }
 
 
     /**
@@ -1693,37 +1693,37 @@ class BasicStor {
      * 		select file by gunid (id is then ignored)
      * @return boolean
      */
-    public function bsExistsFile($id, $ftype=NULL, $byGunid=FALSE)
-    {
-        if ($byGunid) {
-            $storedFile = StoredFile::RecallByGunid($id);
-        } else {
-            $storedFile = StoredFile::Recall($id);
-        }
-        if (is_null($storedFile)) {
-            return $storedFile;
-        }
-        if (PEAR::isError($storedFile)) {
-            // catch some exceptions
-            switch ($storedFile->getCode()) {
-                case GBERR_FILENEX:
-                case GBERR_FOBJNEX:
-                    return FALSE;
-                    break;
-                default:
-                	return $storedFile;
-            }
-        }
-        $realFtype = BasicStor::GetType($storedFile->gunid);
-        if (!is_null($ftype) && (
-            (strtolower($realFtype) != strtolower($ftype))
-            // webstreams are subset of audioclips
-            && !($realFtype == 'webstream' && $ftype == 'audioclip')
-        )) {
-            return FALSE;
-        }
-        return TRUE;
-    }
+//    public function bsExistsFile($id, $ftype=NULL, $byGunid=FALSE)
+//    {
+//        if ($byGunid) {
+//            $storedFile = StoredFile::RecallByGunid($id);
+//        } else {
+//            $storedFile = StoredFile::Recall($id);
+//        }
+//        if (is_null($storedFile)) {
+//            return $storedFile;
+//        }
+//        if (PEAR::isError($storedFile)) {
+//            // catch some exceptions
+//            switch ($storedFile->getCode()) {
+//                case GBERR_FILENEX:
+//                case GBERR_FOBJNEX:
+//                    return FALSE;
+//                    break;
+//                default:
+//                	return $storedFile;
+//            }
+//        }
+//        $realFtype = BasicStor::GetType($storedFile->gunid);
+//        if (!is_null($ftype) && (
+//            (strtolower($realFtype) != strtolower($ftype))
+//            // webstreams are subset of audioclips
+//            && !($realFtype == 'webstream' && $ftype == 'audioclip')
+//        )) {
+//            return FALSE;
+//        }
+//        return TRUE;
+//    }
 
 
     /* ---------------------------------------------------- redefined methods */
@@ -1734,22 +1734,25 @@ class BasicStor {
      * 		Local object id
      * @return string|PEAR_Error
      */
-    public static function GetObjType($oid)
-    {
-		$type = "unknown";
-        $gunid = BasicStor::GunidFromId($oid);
-        if (PEAR::isError($gunid)) {
-            return $gunid;
-        }
-        $ftype = BasicStor::GetType($gunid);
-        if (PEAR::isError($ftype)) {
-            return $ftype;
-        }
-        if (!is_null($ftype)) {
-            $type = $ftype;
-        }
-        return $type;
-    }
+//    public static function GetObjType($p_id)
+//    {
+//		    $type = "unknown";
+//		    $f = StoredFile::Recall($p_id);
+//		    return $f->getType();
+
+//        $gunid = BasicStor::GunidFromId($oid);
+//        if (PEAR::isError($gunid)) {
+//            return $gunid;
+//        }
+//        $ftype = BasicStor::GetType($gunid);
+//        if (PEAR::isError($ftype)) {
+//            return $ftype;
+//        }
+//        if (!is_null($ftype)) {
+//            $type = $ftype;
+//        }
+//        return $type;
+//    }
 
 
     /**
@@ -1883,12 +1886,12 @@ class BasicStor {
      * @return int
      * 		Local id
      */
-    public static function IdFromGunid($p_gunid)
-    {
-        global $CC_DBC;
-        global $CC_CONFIG;
-        return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid=x'$p_gunid'::bigint");
-    }
+//    public static function IdFromGunid($p_gunid)
+//    {
+//        global $CC_DBC;
+//        global $CC_CONFIG;
+//        return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid=x'$p_gunid'::bigint");
+//    }
 
      /**
      * Get local id from global id (big int).
@@ -1898,12 +1901,12 @@ class BasicStor {
      * @return int
      * 		Local id
      */
-    public static function IdFromGunidBigInt($p_gunid)
-    {
-        global $CC_DBC;
-        global $CC_CONFIG;
-        return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid='$p_gunid'");
-    }
+//    public static function IdFromGunidBigInt($p_gunid)
+//    {
+//        global $CC_DBC;
+//        global $CC_CONFIG;
+//        return $CC_DBC->getOne("SELECT id FROM ".$CC_CONFIG['filesTable']." WHERE gunid='$p_gunid'");
+//    }
 
 
     /**
@@ -1914,25 +1917,25 @@ class BasicStor {
      * @return string
      * 		Global id
      */
-    public static function GunidFromId($p_id)
-    {
-        global $CC_CONFIG;
-        global $CC_DBC;
-        if (!is_numeric($p_id)) {
-            return NULL;
-        }
-        $gunid = $CC_DBC->getOne("
-            SELECT to_hex(gunid)as gunid FROM ".$CC_CONFIG['filesTable']."
-            WHERE id='$p_id'
-        ");
-        if (PEAR::isError($gunid)) {
-            return $gunid;
-        }
-        if (is_null($gunid)) {
-            return NULL;
-        }
-        return StoredFile::NormalizeGunid($gunid);
-    }
+//    public static function GunidFromId($p_id)
+//    {
+//        global $CC_CONFIG;
+//        global $CC_DBC;
+//        if (!is_numeric($p_id)) {
+//            return NULL;
+//        }
+//        $gunid = $CC_DBC->getOne("
+//            SELECT to_hex(gunid)as gunid FROM ".$CC_CONFIG['filesTable']."
+//            WHERE id='$p_id'
+//        ");
+//        if (PEAR::isError($gunid)) {
+//            return $gunid;
+//        }
+//        if (is_null($gunid)) {
+//            return NULL;
+//        }
+//        return StoredFile::NormalizeGunid($gunid);
+//    }
 
 
     /**
@@ -1942,16 +1945,16 @@ class BasicStor {
      * 		Global unique id of file
      * @return string
      */
-    public static function GetType($p_gunid)
-    {
-        global $CC_CONFIG;
-        global $CC_DBC;
-        $ftype = $CC_DBC->getOne("
-            SELECT ftype FROM ".$CC_CONFIG['filesTable']."
-            WHERE gunid=x'$p_gunid'::bigint
-        ");
-        return $ftype;
-    }
+//    public static function GetType($p_gunid)
+//    {
+//        global $CC_CONFIG;
+//        global $CC_DBC;
+//        $ftype = $CC_DBC->getOne("
+//            SELECT ftype FROM ".$CC_CONFIG['filesTable']."
+//            WHERE gunid=x'$p_gunid'::bigint
+//        ");
+//        return $ftype;
+//    }
 
 
     /**
@@ -1961,11 +1964,11 @@ class BasicStor {
      * 		Global unique ID
      * @return boolean
      */
-    protected static function CheckGunid($p_gunid)
-    {
-        $res = preg_match("|^([0-9a-fA-F]{16})?$|", $p_gunid);
-        return $res;
-    }
+//    protected static function CheckGunid($p_gunid)
+//    {
+//        $res = preg_match("|^([0-9a-fA-F]{16})?$|", $p_gunid);
+//        return $res;
+//    }
 
     /**
      * Set playlist edit flag
@@ -2035,24 +2038,24 @@ class BasicStor {
      * @return int
      * 		New object local id
      */
-    protected static function CopyObj($id, $newParid, $after=NULL)
-    {
-        switch (BasicStor::GetObjType($id)) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-                $storedFile = StoredFile::Recall($id);
-                if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                    return $storedFile;
-                }
-                $ac2 = StoredFile::CopyOf($storedFile, $nid);
-                //$ac2->setName(M2tree::GetObjName($nid));
-                break;
-            case "File":
-            default:
-        }
-        return $nid;
-    }
+//    protected static function CopyObj($id, $newParid, $after=NULL)
+//    {
+//        switch (BasicStor::GetObjType($id)) {
+//            case "audioclip":
+//            case "playlist":
+//            case "webstream":
+//                $storedFile = StoredFile::Recall($id);
+//                if (is_null($storedFile) || PEAR::isError($storedFile)) {
+//                    return $storedFile;
+//                }
+//                $ac2 = StoredFile::CopyOf($storedFile, $nid);
+//                //$ac2->setName(M2tree::GetObjName($nid));
+//                break;
+//            case "File":
+//            default:
+//        }
+//        return $nid;
+//    }
 
 
     /**
@@ -2065,50 +2068,50 @@ class BasicStor {
      * 		Unconditional delete
      * @return true|PEAR_Error
      */
-    public static function RemoveObj($id, $forced=FALSE)
-    {
-        $ot = BasicStor::GetObjType($id);
-        if (PEAR::isError($ot)) {
-            return $ot;
-        }
-        switch ($ot) {
-            case "audioclip":
-            case "playlist":
-            case "webstream":
-                $storedFile = StoredFile::Recall($id);
-                if (is_null($storedFile)) {
-                    return TRUE;
-                }
-                if (PEAR::isError($storedFile)) {
-                    return $storedFile;
-                }
-                if ($storedFile->isEdited() && !$forced) {
-                    return PEAR::raiseError(
-                        'BasicStor::RemoveObj(): is edited'
-                    );
-                }
-                if ($storedFile->isAccessed() && !$forced) {
-                    return PEAR::raiseError(
-                        'BasicStor::RemoveObj(): is accessed'
-                    );
-                }
-                $storedFile->delete();
-                break;
-            case "File":
-//            case "Folder":
-//            case "Replica":
-                break;
-            default:
-                return PEAR::raiseError(
-                    "BasicStor::bsDeleteFile: unknown obj type ($ot)"
-                );
-        }
-        $res = Alib::RemoveObj($id);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return TRUE;
-    }
+//    public static function RemoveObj($id, $forced=FALSE)
+//    {
+//        $ot = BasicStor::GetObjType($id);
+//        if (PEAR::isError($ot)) {
+//            return $ot;
+//        }
+//        switch ($ot) {
+//            case "audioclip":
+//            case "playlist":
+//            case "webstream":
+//                $storedFile = StoredFile::Recall($id);
+//                if (is_null($storedFile)) {
+//                    return TRUE;
+//                }
+//                if (PEAR::isError($storedFile)) {
+//                    return $storedFile;
+//                }
+//                if ($storedFile->isEdited() && !$forced) {
+//                    return PEAR::raiseError(
+//                        'BasicStor::RemoveObj(): is edited'
+//                    );
+//                }
+//                if ($storedFile->isAccessed() && !$forced) {
+//                    return PEAR::raiseError(
+//                        'BasicStor::RemoveObj(): is accessed'
+//                    );
+//                }
+//                $storedFile->delete();
+//                break;
+//            case "File":
+////            case "Folder":
+////            case "Replica":
+//                break;
+//            default:
+//                return PEAR::raiseError(
+//                    "BasicStor::bsDeleteFile: unknown obj type ($ot)"
+//                );
+//        }
+//        $res = Alib::RemoveObj($id);
+//        if (PEAR::isError($res)) {
+//            return $res;
+//        }
+//        return TRUE;
+//    }
 
 
     /* ========================================================= misc methods */
@@ -2153,16 +2156,17 @@ class BasicStor {
      *
      * @return void
      */
-    private function deleteFiles()
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $ids = $CC_DBC->getAll("SELECT id FROM ".$CC_CONFIG['filesTable']);
-        if (is_array($ids)) {
-            foreach ($ids as $i => $item) {
-                $this->bsDeleteFile($item['id'], TRUE);
-            }
-        }
-    }
+//    private function deleteFiles()
+//    {
+//        global $CC_CONFIG, $CC_DBC;
+//        $ids = $CC_DBC->getAll("SELECT id FROM ".$CC_CONFIG['filesTable']);
+//        if (is_array($ids)) {
+//            foreach ($ids as $i => $item) {
+//              $f = StoredFile::Recall($item['id']);
+//              $f->delete();
+//            }
+//        }
+//    }
 
 
     /**

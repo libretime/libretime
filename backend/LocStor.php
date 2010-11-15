@@ -1,4 +1,7 @@
 <?php
+if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
+    echo __FILE__.':line '.__LINE__.": LocStor loading<br>";
+}
 require_once("BasicStor.php");
 if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded BasicStor<br>";
@@ -107,10 +110,7 @@ class LocStor extends BasicStor {
         if ($fname == '') {
             $fname = "newFile";
         }
-        $res = $this->bsRenameFile($storedFile->id, $fname);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $storedFile->setName($fname);
         return $this->bsOpenPut($chsum, $storedFile->gunid);
     }
 
@@ -194,8 +194,7 @@ class LocStor extends BasicStor {
         if (is_null($storedFile) || PEAR::isError($storedFile)) {
             return $storedFile;
         }
-        $oid = $storedFile->getId();
-        $r = $this-> bsSetMetadataValue($oid, 'ls:url', $url);
+        $r = $storedFile->setMetadataValue('ls:url', $url);
         if (PEAR::isError($r)) {
             return $r;
         }
@@ -263,7 +262,8 @@ class LocStor extends BasicStor {
         if (PEAR::isError($ex)) {
             return $ex;
         }
-        $id = BasicStor::IdFromGunid($gunid);
+        $media = StoredFile::RecallByGunid($gunid);
+        $id = $media->getId();
         if (is_null($id) || !$ex) {
             return PEAR::raiseError(
                 "LocStor::downloadRawAudioDataOpen: gunid not found ($gunid)",
@@ -306,7 +306,8 @@ class LocStor extends BasicStor {
     {
 //        $res = $this->existsAudioClip($sessid, $gunid);
 //        if(PEAR::isError($res)) return $res;
-        $id = BasicStor::IdFromGunid($gunid);
+        $media = StoredFile::RecallByGunid($gunid)
+        $id = $media->getGunid();
         if (is_null($id)) {
             return PEAR::raiseError(
              "LocStor::downloadMetadataOpen: gunid not found ($gunid)"
@@ -351,7 +352,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('read', $storedFile->getId(), $sessid)) !== TRUE) {
             return $res;
         }
-        $md = $this->bsGetMetadata($storedFile->getId());
+        $md = $storedFile->getMetadata();
         if (PEAR::isError($md)) {
             return $md;
         }
@@ -504,15 +505,14 @@ class LocStor extends BasicStor {
      */
     protected function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $id = BasicStor::IdFromGunid($gunid);
-        if (is_null($id)) {
-            return FALSE;
-        }
         if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
             return $res;
         }
-        $ex = $this->bsExistsFile($id, $ftype);
-        return $ex;
+        $f = StoredFile::RecallByGunid($gunid);
+        if (PEAR::isError($f)) {
+            return FALSE;
+        }
+        return $f->existsFile();
     }
 
 
@@ -540,7 +540,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('write', $storedFile->getId(), $sessid)) !== TRUE) {
             return $res;
         }
-        $res = $this->bsDeleteFile($storedFile->getId(), $forced);
+        $res = $storedFile->delete();
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -602,26 +602,14 @@ class LocStor extends BasicStor {
             "metadata" => dirname(__FILE__).'/emptyPlaylist.xml',
             "gunid" => $playlistId,
             "filetype" => "playlist");
+        // This is all wrong now.
         $storedFile = StoredFile::Insert($values);
-        if (PEAR::isError($storedFile)) {
-            $res = BasicStor::RemoveObj($oid);
-            return $storedFile;
-        }
         if ($fname == '') {
             $fname = "newFile.xml";
         }
-        $res = $this->bsRenameFile($oid, $fname);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $res = $storedFile->setState('ready');
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $res = $storedFile->setMime('application/smil');
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $storedFile->setName($fname);
+				$storedFile->setState('ready');
+        $storedFile->setMime('application/smil');
         return $storedFile->gunid;
     }
 
@@ -775,7 +763,7 @@ class LocStor extends BasicStor {
         if (($res = BasicStor::Authorize('write', $storedFile->getId(), $sessid)) !== TRUE) {
             return $res;
         }
-        $res = $this->bsDeleteFile($storedFile->getId(), $forced);
+        $res = $storedFile->delete();
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -803,32 +791,32 @@ class LocStor extends BasicStor {
      *  }
      */
     public function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
-    {
-        if ($recursive) {
-            require_once("AccessRecur.php");
-            $r = AccessRecur::accessPlaylist($this, $sessid, $playlistId);
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-            return $r;
-        }
-        $ex = $this->existsPlaylist($sessid, $playlistId);
-        if (PEAR::isError($ex)) {
-            return $ex;
-        }
-        if (!$ex) {
-            return PEAR::raiseError(
-                "LocStor::accessPlaylist: playlist not found ($playlistId)",
-                GBERR_NOTF
-            );
-        }
-        $id = BasicStor::IdFromGunid($playlistId);
-        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
-            return $res;
-        }
-        $res = $this->bsOpenDownload($id, 'metadata', $parent);
-        #unset($res['filename']);
-        return $res;
+//    {
+//        if ($recursive) {
+//            require_once("AccessRecur.php");
+//            $r = AccessRecur::accessPlaylist($this, $sessid, $playlistId);
+//            if (PEAR::isError($r)) {
+//                return $r;
+//            }
+//            return $r;
+//        }
+//        $ex = $this->existsPlaylist($sessid, $playlistId);
+//        if (PEAR::isError($ex)) {
+//            return $ex;
+//        }
+//        if (!$ex) {
+//            return PEAR::raiseError(
+//                "LocStor::accessPlaylist: playlist not found ($playlistId)",
+//                GBERR_NOTF
+//            );
+//        }
+//        $id = BasicStor::IdFromGunid($playlistId);
+//        if (($res = BasicStor::Authorize('read', $id, $sessid)) !== TRUE) {
+//            return $res;
+//        }
+//        $res = $this->bsOpenDownload($id, 'metadata', $parent);
+//        #unset($res['filename']);
+//        return $res;
     }
 
 
@@ -953,7 +941,8 @@ class LocStor extends BasicStor {
         if (PEAR::isError($res)) {
             return $res;
         }
-        return BasicStor::GunidFromId($res);
+        $media = StoredFile::Recall($id);
+        return $media->getGunId();
     }
 
 
@@ -1444,7 +1433,7 @@ class LocStor extends BasicStor {
                     "gunid" => $pars['gunid'],
                     "filetype" => "audioclip"
                 );
-                $storedFile = $this->bsPutFile($values);
+                $storedFile = StoredFile::Insert($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -1462,7 +1451,7 @@ class LocStor extends BasicStor {
                     "gunid" => $pars['gunid'],
                     "filetype" => "playlist"
                 );
-                $storedFile = $this->bsPutFile($values);
+                $storedFile = StoredFile::Insert($values);
                 if (PEAR::isError($storedFile)) {
                 	return $storedFile;
                 }
@@ -1534,97 +1523,99 @@ class LocStor extends BasicStor {
      */
     function downloadOpen($sessid, $trtype, $pars=array())
     {
-        global $CC_CONFIG;
-        switch ($trtype) {
-            case "unknown":
-            case "audioclip":
-            case "metadata":
-            case "playlist":
-            case "playlistPkg":
-                if (!isset($pars['gunid'])) {
-                    return PEAR::raiseError("Archive::downloadOpen: gunid not set");
-                }
-                break;
-        }
-        $gunid = $pars['gunid'];
-        // resolve trtype by object type:
-        if ( ($trtype == 'unknown') || ($trtype == 'playlistPkg') ) {
-            $trtype2 = BasicStor::GetType($gunid);
-            if (PEAR::isError($trtype2)) {
-            	return $trtype2;
-            }
-            // required with content:
-            $trtype = ( ($trtype2 == 'playlist') && ($trtype == 'playlistPkg') ?
-                'playlistPkg' : $trtype2);
-			//return PEAR::raiseError("Archive::downloadOpen: TT=$trtype TT2=$trtype2 G=$gunid");
-        }
-        switch ($trtype) {
-            case "audioclip":
-                $res = $this->downloadRawAudioDataOpen($sessid, $gunid);
-                break;
-            case "metadata":
-                $res = $this->downloadMetadataOpen($sessid, $gunid);
-                break;
-            case "playlist":
-                $res = $this->accessPlaylist($sessid, $gunid);
-                break;
-            case "playlistPkg":
-                $res = $this->bsExportPlaylistOpen($gunid);
-                if (PEAR::isError($res)) {
-                	return $res;
-                }
-                $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
-                $plfpath = "$tmpn.lspl";
-                copy($res['fname'], $plfpath);
-                $res = $this->bsExportPlaylistClose($res['token']);
-                if (PEAR::isError($res)) {
-                	return $res;
-                }
-                $fname = "transported_playlist.lspl";
-                $id = BasicStor::IdFromGunid($gunid);
-                $acc = BasicStor::bsAccess($plfpath, 'lspl', NULL, 'download');
-                if (PEAR::isError($acc)) {
-                	return $acc;
-                }
-                $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
-                $chsum = md5_file($plfpath);
-                $size = filesize($plfpath);
-                $res = array(
-                    'url'=>$url, 'token'=>$acc['token'],
-                    'chsum'=>$chsum, 'size'=>$size,
-                    'filename'=>$fname
-                );
-                break;
-            case "searchjob":
-                $res = $pars;
-                break;
-            case "file":
-                $res = array();
-                break;
-            default:
-                return PEAR::raiseError("Archive::downloadOpen: NotImpl ($trtype)");
-        }
-        if (PEAR::isError($res)) {
-        	return $res;
-        }
-        switch ($trtype) {
-            case "audioclip":
-            case "metadata":
-            case "playlist":
-            case "playlistPkg":
-                $title = $this->bsGetTitle(NULL, $gunid);
-                break;
-            case "searchjob":
-            	$title = 'searchjob';
-            	break;
-            case "file":
-            	$title = 'regular file';
-            	break;
-            default:
-        }
-        $res['title'] = $title;
-        $res['trtype'] = $trtype;
-        return $res;
+//        global $CC_CONFIG;
+//        switch ($trtype) {
+//            case "unknown":
+//            case "audioclip":
+//            case "metadata":
+//            case "playlist":
+//            case "playlistPkg":
+//                if (!isset($pars['gunid'])) {
+//                    return PEAR::raiseError("Archive::downloadOpen: gunid not set");
+//                }
+//                break;
+//        }
+//        $gunid = $pars['gunid'];
+//        // resolve trtype by object type:
+//        if ( ($trtype == 'unknown') || ($trtype == 'playlistPkg') ) {
+//            $media = StoredFile::RecallByGunid($gunid);
+//            $trtype2 = $media->getType();
+//            if (PEAR::isError($trtype2)) {
+//            	return $trtype2;
+//            }
+//            // required with content:
+//            $trtype = ( ($trtype2 == 'playlist') && ($trtype == 'playlistPkg') ?
+//                'playlistPkg' : $trtype2);
+//			//return PEAR::raiseError("Archive::downloadOpen: TT=$trtype TT2=$trtype2 G=$gunid");
+//        }
+//        switch ($trtype) {
+//            case "audioclip":
+//                $res = $this->downloadRawAudioDataOpen($sessid, $gunid);
+//                break;
+//            case "metadata":
+//                $res = $this->downloadMetadataOpen($sessid, $gunid);
+//                break;
+//            case "playlist":
+//                $res = $this->accessPlaylist($sessid, $gunid);
+//                break;
+//            case "playlistPkg":
+//                $res = $this->bsExportPlaylistOpen($gunid);
+//                if (PEAR::isError($res)) {
+//                	return $res;
+//                }
+//                $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
+//                $plfpath = "$tmpn.lspl";
+//                copy($res['fname'], $plfpath);
+//                $res = $this->bsExportPlaylistClose($res['token']);
+//                if (PEAR::isError($res)) {
+//                	return $res;
+//                }
+//                $fname = "transported_playlist.lspl";
+//                $id = BasicStor::IdFromGunid($gunid);
+//                $acc = BasicStor::bsAccess($plfpath, 'lspl', NULL, 'download');
+//                if (PEAR::isError($acc)) {
+//                	return $acc;
+//                }
+//                $url = BasicStor::GetUrlPart()."access/".basename($acc['fname']);
+//                $chsum = md5_file($plfpath);
+//                $size = filesize($plfpath);
+//                $res = array(
+//                    'url'=>$url, 'token'=>$acc['token'],
+//                    'chsum'=>$chsum, 'size'=>$size,
+//                    'filename'=>$fname
+//                );
+//                break;
+//            case "searchjob":
+//                $res = $pars;
+//                break;
+//            case "file":
+//                $res = array();
+//                break;
+//            default:
+//                return PEAR::raiseError("Archive::downloadOpen: NotImpl ($trtype)");
+//        }
+//        if (PEAR::isError($res)) {
+//        	return $res;
+//        }
+//        switch ($trtype) {
+//            case "audioclip":
+//            case "metadata":
+//            case "playlist":
+//            case "playlistPkg":
+//                $f = StoredFile::RecallByGunid($gunid);
+//                $title = $f->getTitle();
+//                break;
+//            case "searchjob":
+//            	$title = 'searchjob';
+//            	break;
+//            case "file":
+//            	$title = 'regular file';
+//            	break;
+//            default:
+//        }
+//        $res['title'] = $title;
+//        $res['trtype'] = $trtype;
+//        return $res;
     }
 
 

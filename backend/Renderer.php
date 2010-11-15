@@ -205,36 +205,36 @@ class Renderer
      */
     function rnRender2StorageCore(&$gb, $token)
     {
-        $r = BasicStor::bsRelease($token, 'render');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $realOgg = $r['realFname'];
-        $owner = $r['owner'];
-        $gunid = $r['gunid'];
-        $fileName = 'rendered_playlist';
-        $id = BasicStor::IdFromGunid($gunid);
-        if (PEAR::isError($id)) {
-        	return $id;
-        }
-        $mdata = '';
-        foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
-            $val = $gb->bsGetMetadataValue($id, $item);
-            $mdata .= "  <$item>$val</$item>\n";
-        }
-        $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
-        //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
-        $values = array(
-            "filename" => $fileName,
-            "filepath" => $realOgg,
-            "metadata" => $mdata,
-            "filetype" => "audioclip"
-        );
-        $storedFile = $gb->bsPutFile($values);
-        if (PEAR::isError($storedFile)) {
-        	return $storedFile;
-        }
-        return array('gunid' => $storedFile->getGunid());
+//        $r = BasicStor::bsRelease($token, 'render');
+//        if (PEAR::isError($r)) {
+//        	return $r;
+//        }
+//        $realOgg = $r['realFname'];
+//        $owner = $r['owner'];
+//        $gunid = $r['gunid'];
+//        $fileName = 'rendered_playlist';
+//        $id = BasicStor::IdFromGunid($gunid);
+//        if (PEAR::isError($id)) {
+//        	return $id;
+//        }
+//        $mdata = '';
+//        foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
+//            $val = $gb->bsGetMetadataValue($id, $item);
+//            $mdata .= "  <$item>$val</$item>\n";
+//        }
+//        $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
+//        //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
+//        $values = array(
+//            "filename" => $fileName,
+//            "filepath" => $realOgg,
+//            "metadata" => $mdata,
+//            "filetype" => "audioclip"
+//        );
+//        $storedFile = $gb->bsPutFile($values);
+//        if (PEAR::isError($storedFile)) {
+//        	return $storedFile;
+//        }
+//        return array('gunid' => $storedFile->getGunid());
     }
 
 

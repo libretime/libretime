@@ -77,12 +77,12 @@ class uiScratchPad
             // get the scratchpad list
             $arr = explode(' ', $spData);
             $maxLength = $this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY];
-			$arr = array_slice($arr, 0, $maxLength);
+			      $arr = array_slice($arr, 0, $maxLength);
             foreach ($arr as $item) {
                 //for audiofiles.
                 list($type, $savedId) = explode(":", $item);
-               
-                if($type === 'pl') { 
+
+                if($type === 'pl') {
                     $id = $savedId;
                     if ($i = $this->Base->getPLMetaInfo($id)) {
                         $this->items[] = $i;
@@ -91,9 +91,10 @@ class uiScratchPad
                 else {
                     $gunid = $savedId;
                     if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                    	$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
-                        if ($id != FALSE) {
-                            if ($i = $this->Base->getMetaInfo($id)) {
+                      $f = StoredFile::RecallByGunid($gunid);
+                    	//$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
+                        if (!PEAR::isError($f)) {
+                            if ($i = $this->Base->getMetaInfo($f->getId())) {
                                 $this->items[] = $i;
                             }
                         }
@@ -115,7 +116,7 @@ class uiScratchPad
                 $str .= 'pl:'.$val['id'].' ';
             }
             else {
-                $str .= 'ac:'.$this->Base->toInt8($val['gunid']).' ';
+                $str .= 'ac:'.$val['gunid'].' ';
             }
         }
         $this->Base->gb->savePref($this->Base->sessid, UI_SCRATCHPAD_KEY, $str);
@@ -264,7 +265,7 @@ class uiScratchPad
                 $this->items[$key] = $this->Base->getMetaInfo($val['id']);
         }
     }
-    
+
     public function reloadActivePLMetadata($id)
     {
         foreach ($this->items as $key => $val) {
@@ -274,6 +275,6 @@ class uiScratchPad
             }
         }
     }
-    
+
 } // class uiScratchPad
 ?>

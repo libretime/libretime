@@ -209,9 +209,9 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
             "filepath" => $p_filepath,
             "md5" => $md5sum,
         );
-        $storedFile = $greenbox->bsPutFile($values, $doCopyFiles);
+        $storedFile = StoredFile::Insert($values, $doCopyFiles);
         if (PEAR::isError($storedFile)) {
-        	import_err($storedFile, "Error in bsPutFile()");
+        	import_err($storedFile, "Error in StoredFile::Insert()");
         	echo var_export($metadata)."\n";
         	return;
         }

@@ -269,7 +269,8 @@ class uiBase
                 $this->id = $this->gb->storId;
             }
             if (!is_null($this->id)) {
-                $this->type = Greenbox::getFileType($this->id);
+              $f = StoredFile::Recall($this->id);
+              $this->type = $f->getType();
             }
         }
 
@@ -481,35 +482,35 @@ class uiBase
      * 		local ID of file
      * @param string $format
      */
-    public function analyzeFile($id, $format)
-    {
-        $ia = $this->gb->analyzeFile($id, $this->sessid);
-        $s  = $ia['playtime_seconds'];
-        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
-
-        if ($format=='text') {
-            return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
-        }
-        return FALSE;
-    } // fn analyzeFile
-
-
-    public function toHex($gunid)
-    {
-        global $CC_DBC;
-        $res = $CC_DBC->query("SELECT to_hex($gunid)");
-        $row = $res->fetchRow();
-        return $row['to_hex'];
-    }
+//    public function analyzeFile($id, $format)
+//    {
+//        $ia = $this->gb->analyzeFile($id, $this->sessid);
+//        $s  = $ia['playtime_seconds'];
+//        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
+//
+//        if ($format=='text') {
+//            return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
+//        }
+//        return FALSE;
+//    }
 
 
-    public function toInt8($gunid)
-    {
-        global $CC_DBC;
-        $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
-        $row = $res->fetchRow();
-        return $row['int8'];
-    }
+//    public function toHex($gunid)
+//    {
+//        global $CC_DBC;
+//        $res = $CC_DBC->query("SELECT to_hex($gunid)");
+//        $row = $res->fetchRow();
+//        return $row['to_hex'];
+//    }
+
+
+//    public function toInt8($gunid)
+//    {
+//        global $CC_DBC;
+//        $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
+//        $row = $res->fetchRow();
+//        return $row['int8'];
+//    }
 
 
     /**
@@ -540,17 +541,17 @@ class uiBase
 
     public function getMetaInfo($id)
     {
-        $type = strtolower(GreenBox::getFileType($id));
-
+        $media = StoredFile::Recall($id);
+        $type = strtolower($media->getType());
         $data = array('id' => $id,
-                      'gunid' => BasicStor::GunidFromId($id),
-                      'title' => $this->getMetadataValue($id, UI_MDATA_KEY_TITLE),
-                      'creator' => $this->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
-                      'duration' => $this->getMetadataValue($id, UI_MDATA_KEY_DURATION),
+                      'gunid' => $media->getGunid(),
+                      'title' => $media->getMetadataValue($id, UI_MDATA_KEY_TITLE),
+                      'creator' => $media->getMetadataValue($id, UI_MDATA_KEY_CREATOR),
+                      'duration' => $media->getMetadataValue($id, UI_MDATA_KEY_DURATION),
                       'type' => $type,
-                      'source' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_SOURCE) : NULL,
-                      'bitRate' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_BITRATE) : NULL,
-                      'sampleRate' => $type == 'audioclip' ? $this->getMetadataValue($id, UI_MDATA_KEY_SAMPLERATE) : NULL,
+                      'source' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_SOURCE) : NULL,
+                      'bitRate' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_BITRATE) : NULL,
+                      'sampleRate' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_SAMPLERATE) : NULL,
                 );
          return ($data);
     }
