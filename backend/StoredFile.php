@@ -1146,7 +1146,7 @@ class StoredFile {
         $escapedValue = pg_escape_string($p_value);
         $sql = "UPDATE ".$CC_CONFIG["filesTable"]
              ." SET $columnName='$escapedValue'"
-             ." WHERE id=$p_id";
+             ." WHERE id={$this->id}";
         //var_dump($sql);
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
@@ -1207,7 +1207,7 @@ class StoredFile {
       }
       $sql = "UPDATE ".$CC_CONFIG["filesTable"]
            ." SET ".join(",", $sqlValues)
-           ." WHERE id=$id";
+           ." WHERE id={$this->id}";
       $CC_DBC->query($sql);
       return TRUE;
     }
