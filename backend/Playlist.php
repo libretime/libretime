@@ -364,9 +364,6 @@ class Playlist {
     {
         $values = array("filename" => $fname);
         $pl_id = Playlist::Insert($values);
-        if (PEAR::isError($pl_id)) {
-            return $pl_id;
-        }
         $this->id = $pl_id;
         return $this->id;
     }
