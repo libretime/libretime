@@ -19,29 +19,29 @@
     	<ul id="pl_sortable">
         	{foreach from=$PL->getActiveArr($PL->activeId) key='pos' item='i'}
         	<li class="pl_row" id="pl_{$pos}">
-        		<div class="pl_fade_in"><span>Fade in: </span><span class="pl_time">{$i.DbFadein}</span></div>
+        		<div class="pl_fade_in"><span>Fade in: </span><span class="pl_time">{$i.fadein}</span></div>
                 <span class="pl_input">
                 	<input type="checkbox" class="checkbox" name="{$pos}"/>
                 </span>
                 <span class="pl_title">
-                	{$i.CcFiles.TrackTitle}
+                	{$i.CcFiles.track_title}
                 </span>
                 <span class="pl_artist">
-                	{$i.CcFiles.ArtistName}
+                	{$i.CcFiles.artist_name}
                 </span>
                 <span class="pl_length" >
-                    {$i.CcFiles.DbLength}
+                    {$i.CcFiles.length}
                 </span>
                 <span class="pl_cue_in pl_time">
-                    {$i.DbCuein}
+                    {$i.cuein}
                 </span>
                 <span class="pl_cue_out pl_time">
-                    {$i.DbCueout}
+                    {$i.cueout}
                 </span>
                 <span class="pl_playlength">
-                    {$i.DbCliplength}
+                    {$i.cliplength}
                 </span>
-                <div class="pl_fade_out"><span>Fade out: </span><span class="pl_time">{$i.DbFadeout}</span></div>
+                <div class="pl_fade_out"><span>Fade out: </span><span class="pl_time">{$i.fadeout}</span></div>
             </li>
         	{/foreach}
     	</ul>

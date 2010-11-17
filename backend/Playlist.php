@@ -343,7 +343,7 @@ class Playlist {
             ->find();
 
         foreach ($rows as $row) {
-          $files[] = $row->toArray(BasePeer::TYPE_PHPNAME, true, true);
+          $files[] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
         }
 
         return $files;
