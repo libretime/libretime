@@ -8,15 +8,15 @@ require_once(dirname(__FILE__)."/../backend/Playlist.php");
  */
 class uiPlaylist
 {
-	public $activeId;
-	public $title;
-	public $duration;
+    public $activeId;
+    public $title;
+    public $duration;
 
-	private $Base;
-	private $reloadUrl;
-	private $redirectUrl;
-	private $returnUrl;
-	private $flat;
+    private $Base;
+    private $reloadUrl;
+    private $redirectUrl;
+    private $returnUrl;
+    private $flat;
 
     public function __construct($uiBase)
     {
@@ -32,11 +32,11 @@ class uiPlaylist
 
     public function setReload($url=NULL)
     {
-        if($url)
-           $this->Base->redirUrl = $url;
-        else
+        if($url) {
+            $this->Base->redirUrl = $url;
+        } else {
             $this->Base->redirUrl = $this->reloadUrl;
-
+        }
     } // fn setReload
 
 
@@ -94,15 +94,15 @@ class uiPlaylist
 
         $userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid);
         if ($userid !== TRUE) {
-             if (UI_WARNING) {
-             	$this->Base->_retMsg('Playlist has been locked by "$1".', Subjects::GetSubjName($userid));
-             }
+            if (UI_WARNING) {
+                $this->Base->_retMsg('Playlist has been locked by "$1".', Subjects::GetSubjName($userid));
+            }
             return FALSE;
         }
         $res = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         if (PEAR::isError($res) || $res === FALSE) {
             if (UI_VERBOSE === TRUE) {
-            	print_r($res);
+                print_r($res);
             }
             $this->Base->_retMsg('Unable to open playlist "$1".', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
             return FALSE;
@@ -112,7 +112,7 @@ class uiPlaylist
         $this->activeId = $plid;
 
         if ($msg && UI_VERBOSE) {
-        	$this->Base->_retMsg('Playlist "$1" opened.', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
+            $this->Base->_retMsg('Playlist "$1" opened.', $this->Base->getMetadataValue($plid, UI_MDATA_KEY_TITLE));
         }
 
         return TRUE;
@@ -125,17 +125,17 @@ class uiPlaylist
         // delete PL from session
         if (!$this->activeId) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('There is no playlist available to unlock.');
+                $this->Base->_retMsg('There is no playlist available to unlock.');
             }
             return FALSE;
         }
         $res = $this->Base->gb->releaseLockedPlaylist($this->activeId, $this->Base->sessid);
         if (PEAR::isError($res) || $res === FALSE) {
             if (UI_VERBOSE === TRUE) {
-            	print_r($res);
+                print_r($res);
             }
             if (UI_WARNING) {
-            	$this->Base->_retMsg('Unable to release playlist.');
+                $this->Base->_retMsg('Unable to release playlist.');
             }
             return FALSE;
         }
@@ -150,7 +150,7 @@ class uiPlaylist
     {
         if (is_string($this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
             if ($setMsg == TRUE) {
-            	$this->Base->_retMsg('Found locked playlist.');
+                $this->Base->_retMsg('Found locked playlist.');
             }
             return TRUE;
         }
@@ -194,15 +194,15 @@ class uiPlaylist
         $cueIn = NULL;
 
         /*
-        gstreamer bug:
-        Warning: The clipEnd can't be bigger than ninety nine percent (99%) of the clipLength,
-        this means also if no clipEnd is defined it should be 00:00:00.000000 and not the clipLength.
-        $clipend = '00:00:00.000000';
-        */
+         gstreamer bug:
+         Warning: The clipEnd can't be bigger than ninety nine percent (99%) of the clipLength,
+         this means also if no clipEnd is defined it should be 00:00:00.000000 and not the clipLength.
+         $clipend = '00:00:00.000000';
+         */
 
         if (!$elemIds) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('No item(s) selected.');
+                $this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
         }
@@ -217,7 +217,7 @@ class uiPlaylist
             $r = $this->Base->gb->addAudioClipToPlaylist($this->activeId, $elemId, $pos, $fadeIn, $fadeOut, $cliplength, $cueIn, $cueOut);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
-                	print_r($r);
+                    print_r($r);
                 }
                 $this->Base->_retMsg('Error while trying to add item to playlist.');
                 return FALSE;
@@ -234,12 +234,12 @@ class uiPlaylist
     {
         if (!$positions) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('No item(s) selected.');
+                $this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
         }
         if (!is_array($positions))
-            $positions = array($positions);
+        $positions = array($positions);
 
         //so the automatic updating of playlist positioning doesn't affect removal.
         sort($positions);
@@ -312,7 +312,7 @@ class uiPlaylist
             $response["newPos"] = $newPos;
         }
         else{
-          $response["error"] = FALSE;
+            $response["error"] = FALSE;
         }
 
         die(json_encode($response));
@@ -364,7 +364,7 @@ class uiPlaylist
         $form->setConstants(array('act'  => 'PL.editMetaData',
                                   'id'   => $id,
                                   'curr_langid' => $langid
-                            )
+        )
         );
         $renderer = new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
@@ -402,20 +402,20 @@ class uiPlaylist
         }
 
         if (!count($mData)) {
-        	return;
+            return;
         }
 
         foreach ($mData as $key => $val) {
             $r = $this->Base->gb->setPLMetadataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 if (UI_VERBOSE === TRUE) {
-                	print_r($r);
+                    print_r($r);
                 }
                 $this->Base->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
         if (UI_VERBOSE) {
-        	$this->Base->_retMsg('Metadata saved.');
+            $this->Base->_retMsg('Metadata saved.');
         }
 
         $this->Base->SCRATCHPAD->reloadMetadata();
@@ -459,7 +459,7 @@ class uiPlaylist
     function isUsedBy($id)
     {
         if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE) {
-             return Subjects::GetSubjName($userid);
+            return Subjects::GetSubjName($userid);
         }
         return FALSE;
     } // fn isUsedBy

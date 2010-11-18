@@ -35,12 +35,12 @@ class Renderer
         // recall playlist:
         $pl = StoredFile::RecallByGunid($plid);
         if (is_null($pl) || PEAR::isError($pl)) {
-        	return $pl;
+            return $pl;
         }
         // smil export:
         $smil = $pl->outputToSmil();
         if (PEAR::isError($smil)) {
-        	return $smil;
+            return $smil;
         }
         // temporary file for smil:
         $tmpn = tempnam($CC_CONFIG['bufferDir'], 'plRender_');
@@ -56,7 +56,7 @@ class Renderer
         // open access to output file:         /*gunid*/      /*parent*/
         $acc = BasicStor::bsAccess($outf, RENDER_EXT, $plid, 'render', 0, $owner);
         if (PEAR::isError($acc)) {
-        	return $acc;
+            return $acc;
         }
         extract($acc);
         $statf = Renderer::getStatusFile($gb, $token);
@@ -70,7 +70,7 @@ class Renderer
         if ($res === FALSE) {
             return PEAR::raiseError(
                 'Renderer::rnRender2File: Error running renderer'
-            );
+                );
         }
         return array('token'=>$token);
     }
@@ -93,7 +93,7 @@ class Renderer
         if (!file_exists($statf)) {
             return PEAR::raiseError(
                 'Renderer::rnRender2FileCheck: Invalid token'
-            );
+                );
         }
         $status = trim(file_get_contents($statf));
         $url    = Renderer::getUrl($gb, $token);
@@ -142,7 +142,7 @@ class Renderer
         global $CC_CONFIG;
         $r = BasicStor::bsRelease($token, 'render');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $realOgg = $r['realFname'];
         $tmpn = $CC_CONFIG['bufferDir']."/".basename($realOgg, '.'.RENDER_EXT);
@@ -171,7 +171,7 @@ class Renderer
     {
         $r = Renderer::rnRender2FileCheck($gb, $token);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $status = $r['status'];
         $res = array('status' => $status, 'gunid'=>'NULL');
@@ -182,7 +182,7 @@ class Renderer
             case "success":
                 $r = Renderer::rnRender2StorageCore($gb, $token);
                 if (PEAR::isError($r)) {
-                	return $r;
+                    return $r;
                 }
                 $res['gunid'] = $r['gunid'];
                 break;
@@ -205,36 +205,36 @@ class Renderer
      */
     function rnRender2StorageCore(&$gb, $token)
     {
-//        $r = BasicStor::bsRelease($token, 'render');
-//        if (PEAR::isError($r)) {
-//        	return $r;
-//        }
-//        $realOgg = $r['realFname'];
-//        $owner = $r['owner'];
-//        $gunid = $r['gunid'];
-//        $fileName = 'rendered_playlist';
-//        $id = BasicStor::IdFromGunid($gunid);
-//        if (PEAR::isError($id)) {
-//        	return $id;
-//        }
-//        $mdata = '';
-//        foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
-//            $val = $gb->bsGetMetadataValue($id, $item);
-//            $mdata .= "  <$item>$val</$item>\n";
-//        }
-//        $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
-//        //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
-//        $values = array(
-//            "filename" => $fileName,
-//            "filepath" => $realOgg,
-//            "metadata" => $mdata,
-//            "filetype" => "audioclip"
-//        );
-//        $storedFile = $gb->bsPutFile($values);
-//        if (PEAR::isError($storedFile)) {
-//        	return $storedFile;
-//        }
-//        return array('gunid' => $storedFile->getGunid());
+        //        $r = BasicStor::bsRelease($token, 'render');
+        //        if (PEAR::isError($r)) {
+        //        	return $r;
+        //        }
+        //        $realOgg = $r['realFname'];
+        //        $owner = $r['owner'];
+        //        $gunid = $r['gunid'];
+        //        $fileName = 'rendered_playlist';
+        //        $id = BasicStor::IdFromGunid($gunid);
+        //        if (PEAR::isError($id)) {
+        //        	return $id;
+        //        }
+        //        $mdata = '';
+        //        foreach (array('dc:title', 'dcterms:extent', 'dc:creator', 'dc:description') as $item) {
+        //            $val = $gb->bsGetMetadataValue($id, $item);
+        //            $mdata .= "  <$item>$val</$item>\n";
+        //        }
+        //        $mdata = "<audioClip>\n <metadata>\n$mdata </metadata>\n</audioClip>\n";
+        //        //$mdata = "<audioClip>\n <metadata>\n$mdata<dcterms:extent>0</dcterms:extent>\n</metadata>\n</audioClip>\n";
+        //        $values = array(
+        //            "filename" => $fileName,
+        //            "filepath" => $realOgg,
+        //            "metadata" => $mdata,
+        //            "filetype" => "audioclip"
+        //        );
+        //        $storedFile = $gb->bsPutFile($values);
+        //        if (PEAR::isError($storedFile)) {
+        //        	return $storedFile;
+        //        }
+        //        return array('gunid' => $storedFile->getGunid());
     }
 
 

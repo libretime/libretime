@@ -164,12 +164,12 @@ class XmlParser {
         $res = xml_parse($xml_parser, $data, TRUE);
         if (!$res) {
             $this->err = array(TRUE,
-                sprintf("XML error: %s at line %d\n",
-                    xml_error_string(xml_get_error_code($xml_parser)),
-                    xml_get_current_line_number($xml_parser)
-                )
+            sprintf("XML error: %s at line %d\n",
+            xml_error_string(xml_get_error_code($xml_parser)),
+            xml_get_current_line_number($xml_parser)
+            )
             );
-//            var_dump($data);
+            //            var_dump($data);
         }
         xml_parser_free($xml_parser);
     }
@@ -188,31 +188,31 @@ class XmlParser {
     function &parse($data='', $loc='file')
     {
         switch ($loc) {
-	        case "file":
-	            if (!is_file($data)) {
-	                return PEAR::raiseError(
+            case "file":
+                if (!is_file($data)) {
+                    return PEAR::raiseError(
 	                    "XmlParser::parse: file not found ($data)"
-	                );
-	            }
-	            if (!is_readable($data)) {
-	                return PEAR::raiseError(
+                    );
+                }
+                if (!is_readable($data)) {
+                    return PEAR::raiseError(
 	                    "XmlParser::parse: can't read file ($data)"
-	                );
-	            }
-	            $data = file_get_contents($data);
-	        case "string":
-	            $parser = new XmlParser($data);
-	            if ($parser->isError()) {
-	                return PEAR::raiseError(
+                    );
+                }
+                $data = file_get_contents($data);
+            case "string":
+                $parser = new XmlParser($data);
+                if ($parser->isError()) {
+                    return PEAR::raiseError(
 	                    "XmlParser::parse: ".$parser->getError()
-	                );
-	            }
-	            $tree = $parser->getTree();
-	            break;
-	        default:
-	            return PEAR::raiseError(
+                    );
+                }
+                $tree = $parser->getTree();
+                break;
+            default:
+                return PEAR::raiseError(
 	                "XmlParser::parse: unsupported source location ($loc)"
-	            );
+                );
         }
         return $tree;
     }
@@ -237,7 +237,7 @@ class XmlParser {
             $atnm = $a['localPart'];
             unset($attrs[$atn]);
             if ($atns == 'xmlns') {
-            	$nSpaces[$atnm] = $atv;
+                $nSpaces[$atnm] = $atv;
             } else if ($atns == NULL && $atnm == 'xmlns') {
                 $nSpaces[''] = $atv;
             } else {
@@ -280,7 +280,7 @@ class XmlParser {
     function characterData($parser, $data) {
         $cnt = count($this->stack);
         if (trim($data)!='') {
-        	$this->stack[$cnt-1]->content .= $data;
+            $this->stack[$cnt-1]->content .= $data;
         }
     }
 
@@ -299,7 +299,7 @@ class XmlParser {
         //if(substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";"){
         //    $this->stack[$cnt-1]->content .= trim($data);
         //}else{
-            $this->stack[$cnt-1]->content .= "*** $data ***";
+        $this->stack[$cnt-1]->content .= "*** $data ***";
         //}
     }
 
@@ -376,7 +376,7 @@ class XmlParser {
         }
         $res .= XML_Util::replaceEntities("{$el->content}");
         if ($haveCh) {
-        	$res .= "\n{$ind}";
+            $res .= "\n{$ind}";
         }
         $res .= "</{$fullName}>";
         return $res;

@@ -80,18 +80,18 @@ function _getDArr($format)
 {
     #$arr['']  = '00';
     switch($format) {
-    case 'h':
-        for($n=0; $n<=23; $n++) {
-            $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
-        }
-        break;
+        case 'h':
+            for($n=0; $n<=23; $n++) {
+                $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
+            }
+            break;
 
-    case 'm':
-    case 's':
-        for($n=0; $n<=59; $n++) {
-            $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
-        }
-        break;
+        case 'm':
+        case 's':
+            for($n=0; $n<=59; $n++) {
+                $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
+            }
+            break;
     }
 
     return $arr;
@@ -238,9 +238,9 @@ class uiBase
         'EXCHANGE'     => array('class' => 'uiexchange', 'file' => 'ui_exchange.class.php'),
         'TRANSFERS'    => array('class' => 'uitransfers', 'file' => 'ui_transfers.class.php'),
         'CALENDAR'     => array('class' => 'uicalendar', 'file' => 'ui_calendar.class.php'),
-        array('class' => 'jscom', 'file' => 'ui_jscom.php'),
+    array('class' => 'jscom', 'file' => 'ui_jscom.php'),
         'TWITTER'      => array('class' => 'uitwitter', 'file' => 'ui_twitter.class.php'),
-        array('class' => 'twitter', 'file' => 'twitter.class.php')
+    array('class' => 'twitter', 'file' => 'twitter.class.php')
     );
 
 
@@ -253,8 +253,7 @@ class uiBase
         global $CC_DBC, $CC_CONFIG;
         $this->gb = new GreenBox();
         $CC_CONFIG['accessRawAudioUrl'] = $CC_CONFIG['storageUrlPath'].'/xmlrpc/simpleGet.php';
-        $this->sessid = isset($_REQUEST[$CC_CONFIG['authCookieName']]) ?
-                            $_REQUEST[$CC_CONFIG['authCookieName']] : null;
+        $this->sessid = isset($_REQUEST[$CC_CONFIG['authCookieName']]) ? $_REQUEST[$CC_CONFIG['authCookieName']] : null;
         $this->userid = GreenBox::GetSessUserId($this->sessid);
         $this->login = Alib::GetSessLogin($this->sessid);
         if (PEAR::isError($this->login)) {
@@ -269,8 +268,8 @@ class uiBase
                 $this->id = $this->gb->storId;
             }
             if (!is_null($this->id)) {
-              $f = StoredFile::Recall($this->id);
-              $this->type = $f->getType();
+                $f = StoredFile::Recall($this->id);
+                $this->type = $f->getType();
             }
         }
 
@@ -314,10 +313,10 @@ class uiBase
     {
         global $CC_CONFIG;
         if (!is_array($this->STATIONPREFS) || ($reload === TRUE) ) {
-        	$this->STATIONPREFS = array();
+            $this->STATIONPREFS = array();
             foreach ($mask as $key => $val) {
                 if (isset($val['isPref']) && $val['isPref']) {
-                	$setting = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], $val['element']);
+                    $setting = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], $val['element']);
                     if (is_string($setting)) {
                         $this->STATIONPREFS[$val['element']] = $setting;
                     } elseif ($val['required']) {
@@ -399,9 +398,9 @@ class uiBase
                 }
 
                 $elem[$v['element']] =& $form->createElement($type,
-                    $v['element'],
-                    $label,
-                    $attrs);
+                $v['element'],
+                $label,
+                $attrs);
                 if (!$groupit) {
                     $form->addElement($elem[$v['element']]);
                 }
@@ -458,21 +457,21 @@ class uiBase
      * @param array $input
      * 		array of form-elements
      */
-//    function _dateArr2Str(&$input)
-//    {
-//        foreach ($input as $k => $v){
-//            if (is_array($v)) {
-//                if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
-//                    $input[$k] = $v['Y'].$v['y'].'-'.sprintf('%02d', $v['M'].$v['m']).'-'.sprintf('%02d', $v['d']);
-//                }
-//                if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
-//                    $input[$k] = sprintf('%02d', $v['H'].$v['h']).':'.sprintf('%02d', $v['i']).':'.sprintf('%02d', $v['s']);
-//                }
-//            }
-//        }
-//
-//        return $input;
-//    } // fn _dateArr2Str
+    //    function _dateArr2Str(&$input)
+    //    {
+    //        foreach ($input as $k => $v){
+    //            if (is_array($v)) {
+    //                if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
+    //                    $input[$k] = $v['Y'].$v['y'].'-'.sprintf('%02d', $v['M'].$v['m']).'-'.sprintf('%02d', $v['d']);
+    //                }
+    //                if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
+    //                    $input[$k] = sprintf('%02d', $v['H'].$v['h']).':'.sprintf('%02d', $v['i']).':'.sprintf('%02d', $v['s']);
+    //                }
+    //            }
+    //        }
+    //
+    //        return $input;
+    //    } // fn _dateArr2Str
 
 
     /**
@@ -482,35 +481,35 @@ class uiBase
      * 		local ID of file
      * @param string $format
      */
-//    public function analyzeFile($id, $format)
-//    {
-//        $ia = $this->gb->analyzeFile($id, $this->sessid);
-//        $s  = $ia['playtime_seconds'];
-//        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
-//
-//        if ($format=='text') {
-//            return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
-//        }
-//        return FALSE;
-//    }
+    //    public function analyzeFile($id, $format)
+    //    {
+    //        $ia = $this->gb->analyzeFile($id, $this->sessid);
+    //        $s  = $ia['playtime_seconds'];
+    //        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
+    //
+    //        if ($format=='text') {
+    //            return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
+    //        }
+    //        return FALSE;
+    //    }
 
 
-//    public function toHex($gunid)
-//    {
-//        global $CC_DBC;
-//        $res = $CC_DBC->query("SELECT to_hex($gunid)");
-//        $row = $res->fetchRow();
-//        return $row['to_hex'];
-//    }
+    //    public function toHex($gunid)
+    //    {
+    //        global $CC_DBC;
+    //        $res = $CC_DBC->query("SELECT to_hex($gunid)");
+    //        $row = $res->fetchRow();
+    //        return $row['to_hex'];
+    //    }
 
 
-//    public function toInt8($gunid)
-//    {
-//        global $CC_DBC;
-//        $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
-//        $row = $res->fetchRow();
-//        return $row['int8'];
-//    }
+    //    public function toInt8($gunid)
+    //    {
+    //        global $CC_DBC;
+    //        $res = $CC_DBC->query("SELECT x'$gunid'::bigint");
+    //        $row = $res->fetchRow();
+    //        return $row['int8'];
+    //    }
 
 
     /**
@@ -535,8 +534,8 @@ class uiBase
                       'creator' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_CREATOR),
                       'duration' => $this->gb->getPLMetadataValue($id, UI_MDATA_KEY_DURATION),
                       'type' => 'playlist',
-                );
-         return ($data);
+        );
+        return ($data);
     }
 
     public function getMetaInfo($id)
@@ -552,8 +551,8 @@ class uiBase
                       'source' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_SOURCE) : NULL,
                       'bitRate' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_BITRATE) : NULL,
                       'sampleRate' => $type == 'audioclip' ? $media->getMetadataValue($id, UI_MDATA_KEY_SAMPLERATE) : NULL,
-                );
-         return ($data);
+        );
+        return ($data);
     }
 
 
@@ -594,5 +593,5 @@ class uiBase
         return $str;
     }
 
-} // class uiBase
-?>
+    } // class uiBase
+    ?>

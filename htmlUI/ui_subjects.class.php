@@ -6,10 +6,10 @@
  */
 class uiSubjects
 {
-	public $Base;
-	private $reloadUrl;
-	private $suRedirUrl;
-	private $redirUrl;
+    public $Base;
+    private $reloadUrl;
+    private $suRedirUrl;
+    private $redirUrl;
 
     public function __construct(&$uiBase)
     {
@@ -22,19 +22,19 @@ class uiSubjects
 
     public function setReload()
     {
-         $this->Base->redirUrl = $this->reloadUrl;
+        $this->Base->redirUrl = $this->reloadUrl;
     }
 
 
     public function setSuRedir()
     {
-         $this->Base->redirUrl = $this->suRedirUrl;
+        $this->Base->redirUrl = $this->suRedirUrl;
     }
 
 
     public function setRedir()
     {
-         $this->Base->redirUrl = $this->redirUrl;
+        $this->Base->redirUrl = $this->redirUrl;
     }
 
 
@@ -62,15 +62,15 @@ class uiSubjects
     }
 
 
-   /**
-    * Create a new user or group (empty password => create group).
-    *
-    * @param array $request
-    * 		Must have keys -> value:
-    * 		login - string
-    * 		passwd - string
-    * @return string
-    */
+    /**
+     * Create a new user or group (empty password => create group).
+     *
+     * @param array $request
+     * 		Must have keys -> value:
+     * 		login - string
+     * 		passwd - string
+     * @return string
+     */
     public function addSubj($request)
     {
         include(dirname(__FILE__). '/formmask/subjects.inc.php');

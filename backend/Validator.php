@@ -67,12 +67,12 @@ class Validator {
             'webstream' => "webstreamFormat",
         );
         if (!isset($formats[$format])) {
-        	return $this->_err(VAL_FORMAT);
+            return $this->_err(VAL_FORMAT);
         }
         $formatName = $formats[$format];
         $formatFile = dirname(__FILE__)."/$formatName.php";
         if (!file_exists($formatFile)) {
-        	return $this->_err(VAL_FORMAT);
+            return $this->_err(VAL_FORMAT);
         }
         require($formatFile);
         $this->formTree = $$formatName;
@@ -151,15 +151,15 @@ class Validator {
         $dname = (($node->ns? $node->ns.":" : '').$node->name);
         $formTree =& $this->formTree;
         if (DEBUG) {
-        	echo"\nVAL::validateNode: 1 $dname/$fname\n";
+            echo"\nVAL::validateNode: 1 $dname/$fname\n";
         }
         // check root node name:
         if ($dname != $fname) {
-        	return $this->_err(VAL_ROOT, $fname);
+            return $this->_err(VAL_ROOT, $fname);
         }
         // check if this element is defined in format:
         if (!isset($formTree[$fname])) {
-        	return $this->_err(VAL_NOTDEF, $fname);
+            return $this->_err(VAL_NOTDEF, $fname);
         }
         // check element content
         if (isset($formTree[$fname]['regexp'])) {
@@ -171,12 +171,12 @@ class Validator {
         // validate attributes:
         $ra = $this->validateAttributes($node, $fname);
         if (PEAR::isError($ra)) {
-        	return $ra;
+            return $ra;
         }
         // validate children:
         $r = $this->validateChildren($node, $fname);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return TRUE;
     }
@@ -251,7 +251,7 @@ class Validator {
             // call children recursive:
             $r = $this->validateNode($node->children[$i], $chname);
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             $childs[$chname] = TRUE;
         }
@@ -269,13 +269,13 @@ class Validator {
                 foreach ($fchilds['oneof'] as $i => $ch) {
                     if (isset($childs[$ch])) {
                         if ($one) {
-                        	return $this->_err(VAL_UNEXPONEOF, "$ch in $fname");
+                            return $this->_err(VAL_UNEXPONEOF, "$ch in $fname");
                         }
                         $one = TRUE;
                     }
                 }
                 if (!$one) {
-                	return $this->_err(VAL_NOONEOF);
+                    return $this->_err(VAL_NOONEOF);
                 }
             }
         }
@@ -340,9 +340,9 @@ class Validator {
     {
         $formTree =& $this->formTree;
         $listed = (
-            isset($formTree[$fname][$nType][$reqType]) ?
-            array_search($chname, $formTree[$fname][$nType][$reqType]) :
-            FALSE
+        isset($formTree[$fname][$nType][$reqType]) ?
+        array_search($chname, $formTree[$fname][$nType][$reqType]) :
+        FALSE
         );
         return $listed;
     }
@@ -360,22 +360,22 @@ class Validator {
     function _err($errno, $par='')
     {
         $msg = array(
-            VAL_ROOT        => 'Wrong root element',
-            VAL_NOREQE      => 'Required element missing',
-            VAL_NOONEOF     => 'One-of element missing',
-            VAL_UNKNOWNE    => 'Unknown element',
-            VAL_UNKNOWNA    => 'Unknown attribute',
-            VAL_NOTDEF      => 'Not defined',
-            VAL_UNEXPONEOF  => 'Unexpected second object from one-of set',
-            VAL_FORMAT      => 'Unknown format',
-            VAL_CONTENT     => 'Invalid content',
-            VAL_NOREQA      => 'Required attribute missing',
-            VAL_ATTRIB      => 'Invalid attribute format',
-            VAL_PREDXML     => 'Invalid predicate type',
+        VAL_ROOT        => 'Wrong root element',
+        VAL_NOREQE      => 'Required element missing',
+        VAL_NOONEOF     => 'One-of element missing',
+        VAL_UNKNOWNE    => 'Unknown element',
+        VAL_UNKNOWNA    => 'Unknown attribute',
+        VAL_NOTDEF      => 'Not defined',
+        VAL_UNEXPONEOF  => 'Unexpected second object from one-of set',
+        VAL_FORMAT      => 'Unknown format',
+        VAL_CONTENT     => 'Invalid content',
+        VAL_NOREQA      => 'Required attribute missing',
+        VAL_ATTRIB      => 'Invalid attribute format',
+        VAL_PREDXML     => 'Invalid predicate type',
         );
         return PEAR::raiseError(
             "Validator: {$msg[$errno]} #$errno ($par, gunid={$this->gunid})",
-            $errno
+        $errno
         );
     }
 

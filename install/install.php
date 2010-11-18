@@ -32,22 +32,22 @@ echo " *** Database Installation ***\n";
 
 // Create the database user
 $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
-  ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
+." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
 //echo $command."\n";
 @exec($command, $output, $results);
 if ($results == 0) {
-  echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
+    echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
 } else {
-  echo "   * User {$CC_CONFIG['dsn']['username']} already exists.\n";
+    echo "   * User {$CC_CONFIG['dsn']['username']} already exists.\n";
 }
 
 $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
 //echo $command."\n";
 @exec($command, $output, $results);
 if ($results == 0) {
-  echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
+    echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
 } else {
-  echo "   * Database '{$CC_CONFIG['dsn']['database']}' already exists.\n";
+    echo "   * Database '{$CC_CONFIG['dsn']['database']}' already exists.\n";
 }
 
 // Connect to DB
@@ -56,11 +56,11 @@ campcaster_db_connect(true);
 // Install postgres scripting language
 $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
 if ($langIsInstalled == '0') {
-  echo "   * Installing Postgres scripting language...\n";
-  $sql = "CREATE LANGUAGE 'plpgsql'";
-  camp_install_query($sql, false);
+    echo "   * Installing Postgres scripting language...\n";
+    $sql = "CREATE LANGUAGE 'plpgsql'";
+    camp_install_query($sql, false);
 } else {
-  echo "   * Postgres scripting language already installed\n";
+    echo "   * Postgres scripting language already installed\n";
 }
 
 //------------------------------------------------------------------------------
@@ -249,9 +249,9 @@ if (!camp_db_table_exists($CC_CONFIG['filesTable'])) {
 
     camp_install_query($sql, false);
 
-//    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_id_idx
-//        ON ".$CC_CONFIG['filesTable']." (id)";
-//    camp_install_query($sql, false);
+    //    $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_id_idx
+    //        ON ".$CC_CONFIG['filesTable']." (id)";
+    //    camp_install_query($sql, false);
 
     $sql = "CREATE UNIQUE INDEX ".$CC_CONFIG['filesTable']."_gunid_idx
         ON ".$CC_CONFIG['filesTable']." (gunid)";
@@ -457,19 +457,19 @@ if (!camp_db_table_exists($CC_CONFIG['transTable'])) {
 if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
     echo "   * Creating database table ".$CC_CONFIG['scheduleTable']."...";
     $sql = "CREATE TABLE ".$CC_CONFIG['scheduleTable']."("
-          ."  id bigint NOT NULL,"
-          ."  playlist_id integer NOT NULL,"
-          ."  starts timestamp without time zone NOT NULL,"
-          ."  ends timestamp without time zone NOT NULL,"
-          ."  group_id integer,"
-          ."  file_id integer,"
-          ."  clip_length time without time zone DEFAULT '00:00:00'::time without time zone,"
-          ."  fade_in time without time zone DEFAULT '00:00:00'::time without time zone,"
-          ."  fade_out time without time zone DEFAULT '00:00:00'::time without time zone,"
-          ."  cue_in time without time zone DEFAULT '00:00:00'::time without time zone,"
-          ."  cue_out time without time zone DEFAULT '00:00:00'::time without time zone,"
-          ."  CONSTRAINT cc_schedule_pkey PRIMARY KEY (id),"
-          ."  CONSTRAINT unique_id UNIQUE (id))";
+    ."  id bigint NOT NULL,"
+    ."  playlist_id integer NOT NULL,"
+    ."  starts timestamp without time zone NOT NULL,"
+    ."  ends timestamp without time zone NOT NULL,"
+    ."  group_id integer,"
+    ."  file_id integer,"
+    ."  clip_length time without time zone DEFAULT '00:00:00'::time without time zone,"
+    ."  fade_in time without time zone DEFAULT '00:00:00'::time without time zone,"
+    ."  fade_out time without time zone DEFAULT '00:00:00'::time without time zone,"
+    ."  cue_in time without time zone DEFAULT '00:00:00'::time without time zone,"
+    ."  cue_out time without time zone DEFAULT '00:00:00'::time without time zone,"
+    ."  CONSTRAINT cc_schedule_pkey PRIMARY KEY (id),"
+    ."  CONSTRAINT unique_id UNIQUE (id))";
     camp_install_query($sql);
 
 } else {
@@ -477,11 +477,11 @@ if (!camp_db_table_exists($CC_CONFIG['scheduleTable'])) {
 }
 
 if (!camp_db_sequence_exists("schedule_group_id_seq")) {
-  echo "   * Creating sequence 'schedule_group_id_seq'...";
-  $sql = "CREATE SEQUENCE schedule_group_id_seq";
-  camp_install_query($sql);
+    echo "   * Creating sequence 'schedule_group_id_seq'...";
+    $sql = "CREATE SEQUENCE schedule_group_id_seq";
+    camp_install_query($sql);
 } else {
-  echo "   * Skipping: sequence already exists 'schedule_group_id_seq'.\n";
+    echo "   * Skipping: sequence already exists 'schedule_group_id_seq'.\n";
 }
 
 if (!camp_db_table_exists($CC_CONFIG['backupTable'])) {
@@ -524,8 +524,8 @@ if (!camp_db_table_exists($CC_CONFIG['prefTable'])) {
     echo "   * Inserting starting data into table ".$CC_CONFIG['prefTable']."...";
     $stPrefGr = Subjects::GetSubjId($CC_CONFIG['StationPrefsGr']);
     Prefs::Insert($CC_CONFIG["systemPrefId"], 'stationName', "Radio Station 1");
-//    $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
-//    Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);
+    //    $genres = file_get_contents( dirname(__FILE__).'/../genres.xml');
+    //    Prefs::Insert($CC_CONFIG["systemPrefId"], 'genres', $genres);
     echo "done.\n";
 } else {
     echo "   * Skipping: database table already exists: ".$CC_CONFIG['prefTable']."\n";

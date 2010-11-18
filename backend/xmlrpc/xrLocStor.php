@@ -40,7 +40,7 @@ function errHndl($errno, $errmsg, $filename, $linenum, $vars)
             break;
         default:
             $xr = new XML_RPC_Response(0, 805,
-                htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
+            htmlspecialchars("ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)"));
             header("Content-type: text/xml");
             echo $xr->serialize();
             exit($errno);
@@ -159,10 +159,10 @@ $defs = array();
 foreach ($methods as $method => $description) {
     $defs["locstor.$method"] = array(
             "function" => array(&$locStor, "xr_$method"),
-            // NOTE: the way this signature is set up, every function must take at least one parameter!
+    // NOTE: the way this signature is set up, every function must take at least one parameter!
             "signature" => array(
-                array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
-            ),
+    array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
+    ),
             "docstring" => $description
     );
 }

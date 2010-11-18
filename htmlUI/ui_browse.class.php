@@ -102,7 +102,7 @@ class uiBrowse
             $this->setCategory(array('col' => $col,
                                      'category' => $this->col[$col]['category']));
             $this->setValue(
-                array('col'      => $col,
+            array('col'      => $col,
                       'category' => $this->col[$col]['category'],
                       'value'    => $this->col[$col]['value']));
         }
@@ -118,7 +118,7 @@ class uiBrowse
      */
     public function getCriteria()
     {
-    	return $this->criteria;
+        return $this->criteria;
     } // fn getCriteria
 
 
@@ -152,8 +152,8 @@ class uiBrowse
                                       'category' => uiBase::formElementEncode($this->col[$n]['category'])));
 
             $mask2['browse_columns']['value']['options'] = $this->options($this->col[$n]['values']['results']);
-          	$mask2['browse_columns']['category']['attributes']['id'] = "category_" . $n;
-          	$mask2['browse_columns']['value']['attributes']['id'] = "category_value_" . $n;
+            $mask2['browse_columns']['category']['attributes']['id'] = "category_" . $n;
+            $mask2['browse_columns']['value']['attributes']['id'] = "category_value_" . $n;
 
             $mask2['browse_columns']['value']['default'] = $this->col[$n]['form_value'];
             uiBase::parseArrayToForm($form, $mask2['browse_columns']);
@@ -214,7 +214,7 @@ class uiBrowse
         // reload the values.
         for ($i = $columnNumber; $i <= 3; $i++) {
             $browseValues = $this->Base->gb->browseCategory(
-                $this->col[$i]["category"], $tmpCriteria, $this->Base->sessid);
+            $this->col[$i]["category"], $tmpCriteria, $this->Base->sessid);
             if (!PEAR::isError($browseValues)) {
                 $this->col[$i]['values'] = $browseValues;
             }
@@ -222,7 +222,7 @@ class uiBrowse
         }
 
         if($redirect) {
-        	$this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+            $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         }
     } // fn setCategory
 
@@ -249,10 +249,10 @@ class uiBrowse
         if ($value == '%%all%%') {
             unset($this->col[$columnNumber]['criteria']['conditions']);
         } else {
-        	$conditions = array('cat' => uiBase::formElementDecode($category),
+            $conditions = array('cat' => uiBase::formElementDecode($category),
                               'op' => '=',
 	                            'val' => $value);
-    	    $this->col[$columnNumber]['criteria']['conditions'] = $conditions;
+            $this->col[$columnNumber]['criteria']['conditions'] = $conditions;
         }
 
         // Clear all columns above this one of selected values.
@@ -273,64 +273,64 @@ class uiBrowse
         for ($tmpColNum = $columnNumber + 1; $tmpColNum <= 3; $tmpColNum++) {
             $tmpCategory = $this->col[$tmpColNum]['category'];
             $browseValues = $this->Base->gb->browseCategory(
-                $tmpCategory, $tmpCriteria, $this->Base->sessid);
+            $tmpCategory, $tmpCriteria, $this->Base->sessid);
             if (!PEAR::isError($browseValues)) {
                 $this->col[$tmpColNum]['values'] = $browseValues;
             }
         }
 
         if($redirect) {
-        	$this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
+            $this->Base->redirUrl = UI_BROWSER.'?act='.$this->prefix;
         }
     } // fn setValue
 
     public function refresh($p_param){
-    	$category_1 = array(
+        $category_1 = array(
     		'col' => 1,
     		'category' => $p_param['cat1']
-    	);
+        );
 
-    	$value_1 = array(
+        $value_1 = array(
     		'col' => 1,
     		'category' => $p_param['cat1'],
     		'value' => array(
-    			0 =>	$p_param['val1']
-    		)
-    	);
+        0 =>	$p_param['val1']
+        )
+        );
 
-    	$category_2 = array(
+        $category_2 = array(
     		'col' => 2,
     		'category' => $p_param['cat2']
-    	);
+        );
 
-    	$value_2 = array(
+        $value_2 = array(
     		'col' => 2,
     		'category' => $p_param['cat2'],
     		'value' => array(
-    			0 =>	$p_param['val2']
-    		)
-    	);
+        0 =>	$p_param['val2']
+        )
+        );
 
-    	$category_3 = array(
+        $category_3 = array(
     		'col' => 3,
     		'category' => $p_param['cat3']
-    	);
+        );
 
-    	$value_3 = array(
+        $value_3 = array(
     		'col' => 3,
     		'category' => $p_param['cat3'],
     		'value' => array(
-    			0 =>	$p_param['val3']
-    		)
-    	);
+        0 =>	$p_param['val3']
+        )
+        );
 
-    	$this->setCategory($category_1, false);
-    	$this->setCategory($category_2, false);
-    	$this->setCategory($category_3, false);
+        $this->setCategory($category_1, false);
+        $this->setCategory($category_2, false);
+        $this->setCategory($category_3, false);
 
-    	$this->setValue($value_1, false);
-    	$this->setValue($value_2, false);
-    	$this->setValue($value_3, true);
+        $this->setValue($value_1, false);
+        $this->setValue($value_2, false);
+        $this->setValue($value_3, true);
     }
 
     /**
@@ -414,10 +414,10 @@ class uiBrowse
         }
 
         if (!isset($this->results['pagination'][1])) {
-        	$this->results['pagination'][1] = '|<<';
+            $this->results['pagination'][1] = '|<<';
         }
         if (!isset($this->results['pagination'][$maxp])) {
-        	$this->results['pagination'][$maxp] = '>>|';
+            $this->results['pagination'][$maxp] = '>>|';
         }
         $this->results['next']  = ($results['cnt'] > ($this->criteria['offset'] + $this->criteria['limit'])) ? TRUE : FALSE;
         $this->results['prev']  = ($this->criteria['offset'] > 0) ? TRUE : FALSE;
@@ -490,9 +490,9 @@ class uiBrowse
 
         for ($n = 1; $n <= 3; $n++) {
             $browseValues = $this->Base->gb->browseCategory(
-                $this->col[$n]['category'],
-                $tmpCriteria,
-                $this->Base->sessid);
+            $this->col[$n]['category'],
+            $tmpCriteria,
+            $this->Base->sessid);
             if (!PEAR::isError($browseValues)) {
                 $this->col[$n]['values'] = $browseValues;
             }

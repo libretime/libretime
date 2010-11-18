@@ -26,7 +26,7 @@ function camp_import_error_handler()
 
 function printUsage()
 {
-		global $CC_CONFIG;
+    global $CC_CONFIG;
     echo "There are two ways to import audio files into Campcaster: linking\n";
     echo "or copying.\n";
     echo "\n";
@@ -71,11 +71,11 @@ function import_err($p_pearErrorObj, $txt='')
 {
     global $g_errors;
     if (PEAR::isError($p_pearErrorObj)) {
-    	$msg = $p_pearErrorObj->getMessage()." ".$p_pearErrorObj->getUserInfo();
+        $msg = $p_pearErrorObj->getMessage()." ".$p_pearErrorObj->getUserInfo();
     }
     echo "\nERROR: $msg\n";
     if (!empty($txt)) {
-    	echo "ERROR: $txt\n";
+        echo "ERROR: $txt\n";
     }
     $g_errors++;
 }
@@ -174,20 +174,20 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
                 global $g_errors;
                 $g_errors++;
                 echo "ERROR: $p_filepath\n"
-                    ."       When importing with the '--link' option, files must be set\n"
-                    ."       world-readable.  The file permissions for the file cannot be\n"
-                    ."       changed.  Check that you are not trying to import from a FAT32\n"
-                    ."       drive.  Otherwise, this problem might be fixed by running this \n"
-                    ."       script with 'sudo'.\n";
+                ."       When importing with the '--link' option, files must be set\n"
+                ."       world-readable.  The file permissions for the file cannot be\n"
+                ."       changed.  Check that you are not trying to import from a FAT32\n"
+                ."       drive.  Otherwise, this problem might be fixed by running this \n"
+                ."       script with 'sudo'.\n";
                 return;
             }
         }
     }
 
-//    $timeBegin = microtime(true);
+    //    $timeBegin = microtime(true);
     $md5sum = md5_file($p_filepath);
-//    $timeEnd = microtime(true);
-//    echo " * MD5 time: ".($timeEnd-$timeBegin)."\n";
+    //    $timeEnd = microtime(true);
+    //    echo " * MD5 time: ".($timeEnd-$timeBegin)."\n";
 
     // Look up md5sum in database
     $duplicate = StoredFile::RecallByMd5($md5sum);
@@ -211,9 +211,9 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         );
         $storedFile = StoredFile::Insert($values, $doCopyFiles);
         if (PEAR::isError($storedFile)) {
-        	import_err($storedFile, "Error in StoredFile::Insert()");
-        	echo var_export($metadata)."\n";
-        	return;
+            import_err($storedFile, "Error in StoredFile::Insert()");
+            echo var_export($metadata)."\n";
+            return;
         }
     } else {
         echo "==========================================================================\n";
@@ -250,8 +250,8 @@ if ($DEBUG_IMPORT) {
 PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "camp_import_error_handler");
 $CC_DBC = DB::connect($dsn, TRUE);
 if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
+    echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+    exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
@@ -308,8 +308,8 @@ if (is_null($importMode)) {
 global $CC_CONFIG;
 
 if (!is_writable($CC_CONFIG["storageDir"])) {
-	echo "ERROR: You do not have write permissions to the directory you are trying to import to:\n " . $CC_CONFIG["storageDir"] . "\n\n";
-	exit;
+    echo "ERROR: You do not have write permissions to the directory you are trying to import to:\n " . $CC_CONFIG["storageDir"] . "\n\n";
+    exit;
 }
 
 global $g_fileCount;
@@ -335,9 +335,9 @@ if (is_array($files)) {
 $end = intval(date('U'));
 $time = $end - $start;
 if ($time > 0) {
-	$speed = round(($g_fileCount+$g_duplicates)/$time, 1);
+    $speed = round(($g_fileCount+$g_duplicates)/$time, 1);
 } else {
-	$speed = ($g_fileCount+$g_duplicates);
+    $speed = ($g_fileCount+$g_duplicates);
 }
 
 echo "==========================================================================\n";

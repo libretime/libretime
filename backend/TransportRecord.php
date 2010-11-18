@@ -12,9 +12,9 @@ define('TR_LEAVE_CLOSED', TRUE);
  */
 class TransportRecord
 {
-	/**
-	 * @var DB
-	 */
+    /**
+     * @var DB
+     */
     //public $dbc;
 
     /**
@@ -72,12 +72,12 @@ class TransportRecord
         $trec = new TransportRecord($tr);
         $trec->trtok = $trtok = $tr->_createTransportToken();
         $trec->row = array_merge($defaults,
-            array('trtype'=>$trtype, 'direction'=>$direction));
+        array('trtype'=>$trtype, 'direction'=>$direction));
         $trec->recalled = TRUE;
         if (!isset($defaults['title'])) {
             $defaults['title'] = $trec->getTitle();
             if (PEAR::isError($defaults['title'])) {
-            	return $defaults['title'];
+                return $defaults['title'];
             }
         }
         $id = $CC_DBC->nextId($CC_CONFIG['transSequence']);
@@ -96,7 +96,7 @@ class TransportRecord
         ";
         $res = $CC_DBC->query($query);
         if (PEAR::isError($res)) {
-        	return $res;
+            return $res;
         }
         return $trec;
     }
@@ -126,7 +126,7 @@ class TransportRecord
             WHERE trtok='$trtok'
         ");
         if (PEAR::isError($row)) {
-        	return $row;
+            return $row;
         }
         if (is_null($row)) {
             return PEAR::raiseError("TransportRecord::recall:".
@@ -170,16 +170,16 @@ class TransportRecord
             UPDATE ".$CC_CONFIG['transTable']."
             SET $set
             WHERE trtok='{$this->trtok}'".
-            (is_null($oldState) ? '' : " AND state='$oldState'").
-            (is_null($lock) ? '' : " AND lock = '$slock'")
+        (is_null($oldState) ? '' : " AND state='$oldState'").
+        (is_null($lock) ? '' : " AND lock = '$slock'")
         );
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         // return TRUE;
         $affRows = $CC_DBC->affectedRows();
         if (PEAR::isError($affRows)) {
-        	return $affRows;
+            return $affRows;
         }
         return ($affRows == 1);
     }
@@ -217,7 +217,7 @@ class TransportRecord
         global $CC_CONFIG, $CC_DBC;
         $pidsql = (is_null($pid) ? "NULL" : "$pid" );
         if ($this->dropped) {
-        	return TRUE;
+            return TRUE;
         }
         $slock = ($lock ? 'Y' : 'N');
         $nlock = (!$lock);
@@ -228,11 +228,11 @@ class TransportRecord
             WHERE trtok='{$this->trtok}' AND lock = '$snlock'"
         );
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $affRows = $CC_DBC->affectedRows();
         if (PEAR::isError($affRows)) {
-        	return $affRows;
+            return $affRows;
         }
         if ($affRows === 0) {
             $ltxt = ($lock ? 'lock' : 'unlock' );
@@ -303,7 +303,7 @@ class TransportRecord
         }
         $r = $this->setState('failed', array('errmsg'=>$msg));
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return TRUE;
     }
@@ -326,7 +326,7 @@ class TransportRecord
         if (TR_LEAVE_CLOSED) {
             $r = $this->setState('closed');
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
         } else {
             $r = $CC_DBC->query("
@@ -334,7 +334,7 @@ class TransportRecord
                 WHERE trtok='{$this->trtok}'
             ");
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             $this->recalled = FALSE;
             $this->dropped  = TRUE;
@@ -383,7 +383,7 @@ class TransportRecord
         $defStr = 'unknown';
         $trtype = $this->getTransportType();   //contains recall check
         if (PEAR::isError($trtype)) {
-        	return $trtype;
+            return $trtype;
         }
         switch ($trtype) {
             case "audioclip":
@@ -396,9 +396,9 @@ class TransportRecord
                 }
                 if (PEAR::isError($title)) {
                     if ($title->getCode() == GBERR_FOBJNEX) {
-                    	$title = $defStr;
+                        $title = $defStr;
                     } else {
-                    	return $title;
+                        return $title;
                     }
                 }
                 break;
@@ -407,10 +407,10 @@ class TransportRecord
                 break;
             case "file":
                 $title = ( isset($this->row['localfile']) ?
-                    basename($this->row['localfile']) : 'regular file');
+                basename($this->row['localfile']) : 'regular file');
                 break;
             default:
-            	$title = $defStr;
+                $title = $defStr;
         }
         return $title;
     }
