@@ -24,7 +24,7 @@ $CC_CONFIG = array(
     /* ================================================ storage configuration */
 
     'apiKey' => array('AAA'),
-    
+
     // main directory for storing binary media files
     'storageDir'    =>  dirname(__FILE__).'/stor',
 
@@ -45,7 +45,7 @@ $CC_CONFIG = array(
     'zendPath'      =>  dirname(__FILE__).'/3rd_party/php/Zend',
     'phingPath'      =>  dirname(__FILE__).'/3rd_party/php/phing',
     'LogPath'      =>  dirname(__FILE__).'/3rd_party/php/Log',
-    
+
      // secret token cookie name
     'authCookieName'=> 'campcaster_session_id',
 
@@ -75,6 +75,8 @@ $CC_CONFIG = array(
     // host and port of storageServer
  	'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
+
+    'apiPath' 				=> '/campcaster/api/',
 
     /* ================================================ remote link configuration */
     // path-URL-part of remote server base dir
