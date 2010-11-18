@@ -300,7 +300,7 @@ class Transport
                     return $mdtrec;
                 }
                 // handle raw media file:
-                $fpath = $storedFile->getRealFileName();
+                $fpath = $storedFile->getRealFilePath();
                 if (PEAR::isError($fpath)) {
                     return $fpath;
                 }

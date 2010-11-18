@@ -953,7 +953,7 @@ class StoredFile {
         $values = array(
             "id" => $p_nid,
             "filename" => $p_src->name,
-            "filepath" => $p_src->getRealFileName(),
+            "filepath" => $p_src->getRealFilePath(),
             "filetype" => $p_src->getType()
         );
         $storedFile = StoredFile::Insert($values);
@@ -1028,7 +1028,7 @@ class StoredFile {
      */
     public function accessRawMediaData($p_parent='0')
     {
-        $realFname = $this->getRealFileName();
+        $realFname = $this->getRealFilePath();
         $ext = $this->getFileExtension();
         $res = BasicStor::bsAccess($realFname, $ext, $this->gunid, 'access', $p_parent);
         if (PEAR::isError($res)) {
@@ -1679,13 +1679,17 @@ class StoredFile {
         //        return $resDir;
         //    }
 
+        public function getRealFileName()
+        {
+            return $this->gunid.".".$this->getFileExtension();
+        }
 
         /**
          * Get real filename of raw media data
          *
          * @return string
          */
-        public function getRealFileName()
+        public function getRealFilePath()
         {
             return $this->filepath;
         }
@@ -1697,7 +1701,7 @@ class StoredFile {
         {
             global $CC_CONFIG;
             return "http://".$CC_CONFIG["storageUrlHost"]
-            ."api/get_media.php?file_id={$this->gunid}";
+            .$CC_CONFIG["apiPath"]."get_media.php?file={$this->getRealFileName()}";
         }
 
         /**

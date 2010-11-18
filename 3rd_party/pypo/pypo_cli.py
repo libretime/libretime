@@ -57,6 +57,11 @@ from util import *
 from api_clients import *
 
 PYPO_VERSION = '0.2'
+PYPO_MEDIA_SKIP = 1
+PYPO_MEDIA_LIVE_SESSION = 2
+PYPO_MEDIA_STREAM = 3
+PYPO_MEDIA_FILE_URL = 4
+PYPO_MEDIA_FILE_LOCAL = 5
 
 # Set up command-line options
 parser = OptionParser()
@@ -68,6 +73,7 @@ parser = OptionParser(usage=usage)
 # Options
 parser.add_option("-v", "--compat", help="Check compatibility with server API version", default=False, action="store_true", dest="check_compat")
 
+parser.add_option("-t", "--test", help="Do a test to make sure everything is working properly.", default=False, action="store_true", dest="test")
 parser.add_option("-f", "--fetch-scheduler", help="Fetch from scheduler - scheduler (loop, interval in config file)", default=False, action="store_true", dest="fetch_scheduler")
 parser.add_option("-p", "--push-scheduler", help="Push scheduler to Liquidsoap (loop, interval in config file)", default=False, action="store_true", dest="push_scheduler")
 
@@ -107,14 +113,8 @@ except Exception, e:
 #TIME = time.localtime(time.time())
 TIME = (2010, 6, 26, 15, 33, 23, 2, 322, 0)
     
-# to help with debugging - get the current line number
-def lineno():
-    """Returns the current function name and line number in our program."""
-    return "File " +inspect.currentframe().f_code.co_filename + " / Line " + str(inspect.currentframe().f_back.f_lineno) + ": "
-
 class Global:
     def __init__(self):
-        #print '#   global initialisation'
         print
         
     def selfcheck(self):       
@@ -122,14 +122,6 @@ class Global:
         self.api_client = api_client.api_client_factory(config)
         self.api_client.check_version()
             
-        """
-        Uncomment the following lines to let pypo check if
-        liquidsoap is running. (checks for a telnet server)
-        """
-#        while self.status.check_ls(LS_HOST, LS_PORT) == 0:
-#            print 'Unable to connect to liquidsoap. Is it up and running?'
-#            time.sleep(2)
-                
   
 """
 
@@ -147,6 +139,9 @@ class Playout:
         
         # set initial state
         self.range_updated = False
+    
+    def test_api(self):
+        self.api_client.test()
         
     """
     Fetching part of pypo
@@ -182,7 +177,7 @@ class Playout:
             try: 
                 self.generate_range_dp()
             except Exception, e: 
-                logger.error(lineno() + "%s", e)
+                logger.error("%s", e)
         
         # get schedule
         try:
@@ -190,19 +185,19 @@ class Playout:
                 logger.warning("failed to read from export url")
                 time.sleep(1)
                 
-        except Exception, e: logger.error(lineno() +"%s", e)
+        except Exception, e: logger.error("%s", e)
 
         # prepare the playlists
         if CUE_STYLE == 'pre':
             try: self.prepare_playlists_cue(self.export_source)
-            except Exception, e: logger.error(lineno() + "%s", e)
+            except Exception, e: logger.error("%s", e)
         elif CUE_STYLE == 'otf':
             try: self.prepare_playlists(self.export_source)
-            except Exception, e: logger.error(lineno() + "%s", e)
+            except Exception, e: logger.error("%s", e)
 
         # cleanup
         try: self.cleanup(self.export_source)
-        except Exception, e: logger.error(lineno() + "%s", e)
+        except Exception, e: logger.error("%s", e)
             
         logger.info("fetch loop completed")
             
@@ -244,7 +239,7 @@ class Playout:
                 schedule_file.close()
                     
             except Exception, e:
-                print lineno() + e
+                logger.critical("Exception %s", e)
                 status = 0
                 
         return status
@@ -269,8 +264,11 @@ class Playout:
         except Exception, e:
             logger.error("%s", e)
             schedule = None
- 
-        #for pkey in schedule:
+
+        # Dont do anything if schedule is empty
+        if (not schedule):
+            return
+        
         try:
             for pkey in sorted(schedule.iterkeys()):
                 logger.info("found playlist at %s", pkey)
@@ -295,8 +293,10 @@ class Playout:
                 
                 # TODO: maybe a bit more modular.. 
                 silence_file = self.file_dir + 'basic/silence.mp3'
-                
-                if int(playlist['played']) == 1:
+
+                mediaType = api_client.get_media_type(playlist)
+                if (mediaType == PYPO_MEDIA_SKIP):
+                #if int(playlist['played']) == 1:
                     logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
                 
                 elif int(playlist['subtype']) == 5:
@@ -568,7 +568,7 @@ class Playout:
             for dir in d:
                 timestamp = os.path.getmtime(os.path.join(r, dir))
                 
-                logger.debug('Folder "Age": %s - %s', round((((now - offset) - timestamp) / 60), 2), os.path.join(r, dir))
+                logger.debug( 'Folder "Age": %s - %s', round((((now - offset) - timestamp) / 60), 2), os.path.join(r, dir))
             
                 if now - offset > timestamp:
                     try:
@@ -944,11 +944,14 @@ if __name__ == '__main__':
 
 run = True
 while run == True:
-    
     logger = logging.getLogger("pypo")
     
     loops = 0
     
+    if options.test:
+        po.test_api()
+        sys.exit()
+        
     while options.fetch_scheduler:
         try: po.fetch('scheduler')
         except Exception, e:
@@ -973,7 +976,6 @@ while run == True:
         
             
     while options.push_scheduler:
-        
         po.push('scheduler')
         
         try: po.push('scheduler')
@@ -988,7 +990,6 @@ while run == True:
         
             
     while options.push_daypart:
-        
         po.push('daypart')
         
         try: po.push('daypart')

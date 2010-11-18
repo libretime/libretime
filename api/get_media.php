@@ -20,12 +20,13 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$file_id = $_GET["file_id"];
+$filename = $_GET["file"];
+$file_id = substr($filename, 0, strpos($filename, "."));
 if (ctype_alnum($file_id) && strlen($file_id) == 32) {
   $media = StoredFile::RecallByGunid($file_id);
   if ($media != null && !PEAR::isError($media)) {
     //var_dump($media);
-    $filepath = $media->getRealFileName();
+    $filepath = $media->getRealFilePath();
     if(!is_file($filepath))
     {
     	header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");

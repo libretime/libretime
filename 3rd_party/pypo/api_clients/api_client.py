@@ -7,6 +7,8 @@ import urllib
 import logging
 from util import json
 import os
+from urlparse import urlparse
+
 
 def api_client_factory(config):
 	if config["api_client"] == "campcaster":	
@@ -28,7 +30,9 @@ class ApiClientInterface:
 	
 	# Required.	
 	# This is the main method you need to implement when creating a new API client.
-	def get_schedule(self):
+	# start and end are for testing purposes.
+	# start and end are strings in the format YYYY-DD-MM-hh-mm-ss
+	def get_schedule(self, start=None, end=None):
 		return 0, []
 	
 	# Required.
@@ -49,6 +53,12 @@ class ApiClientInterface:
 	def generate_range_dp(self):
 		nil
 
+	# Put here whatever tests you want to run to make sure your API is working
+	def test(self):
+		nil
+		
+	#def get_media_type(self, playlist):
+	#	nil
 
 class CampcasterApiClient(ApiClientInterface):
 
@@ -65,6 +75,7 @@ class CampcasterApiClient(ApiClientInterface):
 			logger.debug("Trying to contact %s", url)
 			response = urllib.urlopen(url)
 			data = response.read()
+			logger.debug("Data: %s", data)
 			response_json = json.read(data)
 			version = response_json['version']
 			logger.debug("Campcaster Version %s detected", version)    
@@ -94,6 +105,27 @@ class CampcasterApiClient(ApiClientInterface):
 
 		return version
 
+
+	def test(self):
+		logger = logging.getLogger("CampcasterApiClient.test")
+		status, items = self.get_schedule('2010-01-01-00-00-00', '2011-01-01-00-00-00')
+		#print items
+		schedule = items["playlists"]
+		logger.debug("Number of playlists found: %s", str(len(schedule)))
+		count = 1
+		for pkey in sorted(schedule.iterkeys()):
+			logger.debug("Playlist #%s",str(count))
+			count+=1
+			#logger.info("found playlist at %s", pkey)
+			#print pkey
+			playlist = schedule[pkey]
+			for item in playlist["medias"]:
+				filename = urlparse(item["uri"])
+				filename = filename.query[5:]
+				#print filename
+				self.get_media(item["uri"], filename)
+
+
 	def check_version(self):
 		version = self.__get_campcaster_version()
 		if (version == 0):
@@ -110,7 +142,7 @@ class CampcasterApiClient(ApiClientInterface):
 			print 'pypo is compatible with this version of Campcaster.'
 			print
 
-	def get_schedule(self):
+	def get_schedule(self, start=None, end=None):
 		logger = logging.getLogger("CampcasterApiClient.get_schedule")
 		
 		"""
@@ -118,12 +150,17 @@ class CampcasterApiClient(ApiClientInterface):
 		(seconds are ignored, just here for consistency)
 		"""
 		tnow = time.localtime(time.time())
-		tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
-		tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
-	
+		if (not start):
+			tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
+			start = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
+			
+		if (not end):			
+			tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
+			end = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
+			
 		range = {}
-		range['start'] = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
-		range['end'] = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
+		range['start'] = start
+		range['end'] = end
 		
 		# Construct the URL
 		export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
@@ -138,6 +175,7 @@ class CampcasterApiClient(ApiClientInterface):
 		status = 0
 		try:
 			response_json = urllib.urlopen(export_url).read()
+			logger.debug("%s", response_json)
 			response = json.read(response_json)
 			logger.info("export status %s", response['check'])
 			status = response['check']
@@ -152,7 +190,9 @@ class CampcasterApiClient(ApiClientInterface):
 		
 		try:
 			src = src + "&api_key=" + self.config["api_key"]
-			urllib.urlretrieve(src, dst, False)
+			# check if file exists already before downloading again
+			filename, headers = urllib.urlretrieve(src, dst)
+			
 			logger.info("downloaded %s to %s", src, dst)
 		except Exception, e:
 			logger.error("%s", e)
@@ -222,7 +262,8 @@ class CampcasterApiClient(ApiClientInterface):
 			
 		return response
 
-    
+
+		
 ################################################################################
 # OpenBroadcast API Client
 ################################################################################
@@ -300,6 +341,49 @@ class ObpApiClient():
 			logger.error("Unable to detect OBP Version - %s", e)
 	
 		return obp_version
+
+
+	def get_schedule(self, start=None, end=None):
+		logger = logging.getLogger("CampcasterApiClient.get_schedule")
+		
+		"""
+		calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
+		(seconds are ignored, just here for consistency)
+		"""
+		tnow = time.localtime(time.time())
+		if (not start):
+			tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
+			start = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
+			
+		if (not end):			
+			tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
+			end = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
+			
+		range = {}
+		range['start'] = start
+		range['end'] = end
+		
+		# Construct the URL
+		export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
+		
+		# Insert the start and end times into the URL        
+		export_url = export_url.replace('%%api_key%%', self.config["api_key"])
+		export_url = export_url.replace('%%from%%', range['start'])
+		export_url = export_url.replace('%%to%%', range['end'])
+		logger.info("export from %s", export_url)
+	
+		response = ""
+		status = 0
+		try:
+			response_json = urllib.urlopen(export_url).read()
+			logger.debug("%s", response_json)
+			response = json.read(response_json)
+			logger.info("export status %s", response['check'])
+			status = response['check']
+		except Exception, e:
+			print e
+
+		return status, response			
 
 	
 	def get_media(self, src, dest):

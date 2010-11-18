@@ -7,17 +7,16 @@ require_once(dirname(__FILE__).'/../../conf.php');
 require_once('DB.php');
 require_once('PHPUnit.php');
 require_once 'StoredFileTests.php';
-//require_once 'SchedulerTests.php';
+require_once 'SchedulerTests.php';
 //require_once 'SchedulerExportTests.php';
 require_once 'PlaylistTests.php';
 
 //$suite  = new PHPUnit_TestSuite("PlayListTests");
-$suite  = new PHPUnit_TestSuite("StoredFileTest");
 //$suite = new PHPUnit_TestSuite("SchedulerTests");
-//$suite->addTestSuite("BasicStorTest");
-//$suite->addTestSuite("SchedulerTests");
-//$suite->addTestSuite("SchedulerExportTests");
+$suite  = new PHPUnit_TestSuite("StoredFileTest");
 $suite->addTestSuite("PlaylistTests");
+$suite->addTestSuite("SchedulerTests");
+//$suite->addTestSuite("SchedulerExportTests");
 $result = PHPUnit::run($suite);
 
 echo $result->toString();
