@@ -93,7 +93,7 @@ class ScheduleGroup {
             ." {$this->groupId}, $p_audioFileId)";
             $result = $CC_DBC->query($sql);
             if (PEAR::isError($result)) {
-                var_dump($sql);
+                //var_dump($sql);
                 return $result;
             }
             return $this->groupId;
@@ -109,7 +109,7 @@ class ScheduleGroup {
 
             // Check if there are any conflicts with existing entries
             $length = trim($playlist->getLength());
-            var_dump($length);
+            //var_dump($length);
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
@@ -123,10 +123,10 @@ class ScheduleGroup {
             $itemStartTime = $p_datetime;
 
             $plItems = $playlist->getContents();
-            var_dump($plItems);
+            //var_dump($plItems);
             foreach ($plItems as $row) {
                 $trackLength = $row["cliplength"];
-                var_dump($trackLength);
+                //var_dump($trackLength);
                 $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
                 ." (id, playlist_id, starts, ends, group_id, file_id,"
                 ." clip_length, cue_in, cue_out, fade_in, fade_out)"
@@ -136,7 +136,7 @@ class ScheduleGroup {
                 ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
                 $result = $CC_DBC->query($sql);
                 if (PEAR::isError($result)) {
-                    var_dump($sql);
+                    //var_dump($sql);
                     return $result;
                 }
                 $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
@@ -173,7 +173,7 @@ class ScheduleGroup {
         }
         $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id = ".$this->groupId;
-
+        //echo $sql;
         return $CC_DBC->query($sql);
     }
 
@@ -229,9 +229,9 @@ class Schedule {
         ." WHERE (starts >= '$p_datetime') "
         ." AND (ends <= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";
         //$_SESSION["debug"] = $sql;
-        var_dump($sql);
+        //var_dump($sql);
         $count = $CC_DBC->GetOne($sql);
-        var_dump($count);
+        //var_dump($count);
         return ($count == '0');
     }
 
