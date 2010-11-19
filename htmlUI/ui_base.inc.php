@@ -267,10 +267,15 @@ class uiBase
             } else {
                 $this->id = $this->gb->storId;
             }
-            if (!is_null($this->id)) {
-                $f = StoredFile::Recall($this->id);
-                $this->type = $f->getType();
+            if (isset($_REQUEST["type"]) && ($_REQUEST["type"] == "playlist")) {
+                $this->type = "playlist";
+            } else {
+                $this->type = "audioclip";
             }
+//            if (!is_null($this->id)) {
+//                $f = StoredFile::Recall($this->id);
+//                $this->type = $f->getType();
+//            }
         }
 
     }
