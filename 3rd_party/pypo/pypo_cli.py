@@ -128,14 +128,12 @@ class Global:
 """
 class Playout:
     def __init__(self):
-        #print '#   init fallback' 
-         
         self.file_dir = FILE_DIR 
-        self.tmp_dir = TMP_DIR 
-        
+        self.tmp_dir = TMP_DIR         
         self.api_auth = urllib.urlencode({'api_key': API_KEY})
         self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
+        self.silence_file = self.file_dir + 'basic/silence.mp3'
         
         # set initial state
         self.range_updated = False
@@ -155,7 +153,7 @@ class Playout:
         """
         wrapper script for fetching the whole schedule (in json)
         """
-        logger = logging.getLogger("fetch")
+        logger = logging.getLogger()
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -163,7 +161,6 @@ class Playout:
         
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass
-        
         
         """
         Trigger daypart range-generation. (Only if daypart-instance)
@@ -208,7 +205,7 @@ class Playout:
     we do this at 18h. The hour before the state is set back to 'False'
     """
     def generate_range_dp(self):
-        logger = logging.getLogger("generate_range_dp")
+        logger = logging.getLogger()
         logger.debug("trying to trigger daypart update")
         
         tnow = time.localtime(time.time())
@@ -227,7 +224,7 @@ class Playout:
         
         
     def get_schedule(self):
-        logger = logging.getLogger("Playout.get_schedule")
+        logger = logging.getLogger()
         status, response = self.api_client.get_schedule();
                     
         if status == 1:
@@ -252,7 +249,7 @@ class Playout:
     file is eg 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
     def prepare_playlists_cue(self, export_source):
-        logger = logging.getLogger("fetch.prepare_playlists")
+        logger = logging.getLogger()
         
         self.export_source =  export_source
 
@@ -291,243 +288,19 @@ class Playout:
                 print 'source id:   ' + str(playlist['x_ident'])
                 print '*****************************************'
                 
-                # TODO: maybe a bit more modular.. 
-                silence_file = self.file_dir + 'basic/silence.mp3'
-
-                mediaType = api_client.get_media_type(playlist)
-                if (mediaType == PYPO_MEDIA_SKIP):
-                #if int(playlist['played']) == 1:
+                #mediaType = api_client.get_media_type(playlist)
+                #if (mediaType == PYPO_MEDIA_SKIP):
+                if int(playlist['played']) == 1:
                     logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
                 
                 elif int(playlist['subtype']) == 5:
-                    """
-                    This is a live session, so silence is scheduled
-                    Maybe not the most elegant solution :)
-                    It adds 20 time 30min silence to the playlist
-                    Silence file has to be in <file_dir>/basic/silence.mp3 
-                    """
-                    logger.debug("found %s seconds of live/studio session at %s", pkey, playlist['duration'])
-                    
-                    if os.path.isfile(silence_file):
-                        logger.debug('file stored at: %s' + silence_file)
-                        
-                        for i in range (0, 19):
-                            ls_playlist += silence_file + "\n"
-        
-                    else:
-                        print 'Could not find silence file!'
-                        print 'File is expected to be at: ' + silence_file
-                        logger.critical('File is expected to be at: %s', silence_file)
-                        sys.exit()
-                
+                    ls_playlist = self.handle_live_session(playlist, pkey, ls_playlist)
+                                    
                 elif int(playlist['subtype']) == 6:
-                    """
-                    This is a live-cast session
-                    Create a silence list. (could eg also be a fallback list..)
-                    """
-                    logger.debug("found %s seconds of live-cast session at %s", pkey, playlist['duration'])
+                    ls_playlist = self.handle_live_cast(playlist, pkey, ls_playlist)
                     
-                    if os.path.isfile(silence_file):
-                        logger.debug('file stored at: %s' + silence_file)
-                        
-                        for i in range (0, 19):
-                            ls_playlist += silence_file + "\n"
-    
-                    else:
-                        print 'Could not find silence file!'
-                        print 'File is expected to be at: ' + silence_file
-                        logger.critical('File is expected to be at: %s', silence_file)
-                        sys.exit()
-                    
-                
                 elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
-                
-                    for media in playlist['medias']:
-                        logger.debug("found track at %s", media['uri'])
-                        
-                        try:
-                            src = media['uri']
-                            
-                            if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
-                                dst = "%s%s/%s.mp3" % (self.cache_dir, str(pkey), str(media['id']))
-                                do_cue = False
-                            else:
-                                dst = "%s%s/%s_cue_%s-%s.mp3" % \
-                                (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000))
-                                do_cue = True
-                                
-                            #print "dst_cue: " + dst
-                            
-                            # check if it is a remote file, if yes download
-                            if src[0:4] == 'http' and do_cue == False:
-                                
-                                if os.path.isfile(dst):
-                                    logger.debug("file already in cache: %s", dst)
-                                    
-                                else:
-                                    logger.debug("try to download %s", src)
-                                    api_client.get_media(src, dst)
-                                    #try:
-                                    #    print '** urllib auth with: ',
-                                    #    print self.api_auth
-                                    #    urllib.urlretrieve (src, dst, False, self.api_auth)
-                                    #    logger.info("downloaded %s to %s", src, dst)
-                                    #except Exception, e:
-                                    #    logger.error("%s", e)
-                                        
-                            elif src[0:4] == 'http' and do_cue == True:
-                                if os.path.isfile(dst):
-                                    logger.debug("file already in cache: %s", dst)
-                                    print 'cached'
-                                    
-                                else:
-                                    logger.debug("try to download and cue %s", src)
-                                    
-                                    print '***'
-                                    dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
-                                    print dst_tmp
-                                    print '***'
-                                    api_client.get_media(src, dst_tmp)
-                                    #try:
-                                    #    print '** urllib auth with: ',
-                                    #    print self.api_auth
-                                    #    urllib.urlretrieve (src, dst_tmp, False, self.api_auth)
-                                    #    logger.info("downloaded %s to %s", src, dst_tmp)
-                                    #except Exception, e:
-                                    #    logger.error("%s", e)
-                                    #    
-                                        
-                                    # cue
-                                    print "STARTIONG CUE"
-                                    print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
-                                    print "END CUE"
-                                        
-                                    if True == os.access(dst, os.R_OK):
-                                        
-                                        try: fsize = os.path.getsize(dst)
-                                        except Exception, e:
-                                            logger.error("%s", e)
-                                            fsize = 0  
-                                            
-                                    if fsize > 0:
-                                        logger.debug('try to remove temporary file: %s' + dst_tmp)
-                                        try: os.remove(dst_tmp)
-                                        except Exception, e:
-                                            logger.error("%s", e)
-                                            
-                                    else:
-                                        logger.warning('something went wrong cueing: %s - using uncued file' + dst)
-                                        try: os.rename(dst_tmp, dst)
-                                        except Exception, e:
-                                            logger.error("%s", e) 
-                                        
-                                        
-                            else:
-                                """
-                                Handle files on nas. Pre-cueing not implemented at the moment.
-                                (not needed by openbroadcast, feel free to add this)
-                                """
-                                # assume the file is local
-                                # logger.info("local file assumed for : %s", src)
-                                # dst = src
-                                
-                                
-                                """
-                                Here an implementation for localy stored files.
-                                Works the same as with remote files, just replaced API-download with
-                                file copy.
-                                """
-                                if do_cue == False:
-                                    
-                                    if os.path.isfile(dst):
-                                        logger.debug("file already in cache: %s", dst)
-                                        
-                                    else:
-                                        logger.debug("try to copy file to cache %s", src)
-                                        try:
-                                            shutil.copy(src, dst)
-                                            logger.info("copied %s to %s", src, dst)
-                                        except Exception, e:
-                                            logger.error("%s", e)
-                                            
-                                if do_cue == True:
-                                    
-                                    if os.path.isfile(dst):
-                                        logger.debug("file already in cache: %s", dst)
-                                        
-                                    else:
-                                        logger.debug("try to copy and cue %s", src)
-                                        
-                                        print '***'
-                                        dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)])
-                                        print dst_tmp
-                                        print '***'
-                                        
-                                        try:
-                                            shutil.copy(src, dst_tmp)
-                                            logger.info("copied %s to %s", src, dst_tmp)
-                                        except Exception, e:
-                                            logger.error("%s", e)
-                                            
-                                            
-                                        # cue
-                                        print "STARTIONG CUE"
-                                        print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
-                                        print "END CUE"
-                                            
-                                        if True == os.access(dst, os.R_OK):
-                                            
-                                            try: fsize = os.path.getsize(dst)
-                                            except Exception, e:
-                                                logger.error("%s", e)
-                                                fsize = 0  
-                                                
-                                        if fsize > 0:
-                                            logger.debug('try to remove temporary file: %s' + dst_tmp)
-                                            try: os.remove(dst_tmp)
-                                            except Exception, e:
-                                                logger.error("%s", e)
-                                                
-                                        else:
-                                            logger.warning('something went wrong cueing: %s - using uncued file' + dst)
-                                            try: os.rename(dst_tmp, dst)
-                                            except Exception, e:
-                                                logger.error("%s", e) 
-                                
-                            if True == os.access(dst, os.R_OK):
-                                # check filesize (avoid zero-byte files)
-                                #print 'waiting: ' + dst
-                                
-                                try: fsize = os.path.getsize(dst)
-                                except Exception, e:
-                                    logger.error("%s", e)
-                                    fsize = 0
-                                    
-                                if fsize > 0:
-    
-                                    pl_entry = 'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s":%s' % \
-                                    (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), str(float(media['fade_out']) / 1000), dst)
-    
-                                    print pl_entry
-    
-                                    """
-                                    Tracks are only added to the playlist if they are accessible
-                                    on the file system and larger than 0 bytes.
-                                    So this can lead to playlists shorter than expectet.
-                                    (there is a hardware silence detector for this cases...) 
-                                    """
-                                    ls_playlist += pl_entry + "\n"
-                                    
-                                    logger.debug("everything ok, adding %s to playlist", pl_entry)
-                                else:
-                                    print 'zero-file: ' + dst + ' from ' + src 
-                                    logger.warning("zero-size file - skiping %s. will not add it to playlist", dst)
-                                
-                            else:
-                                logger.warning("something went wrong. file %s not available. will not add it to playlist", dst)
-                                
-                        except Exception, e: logger.info("%s", e)
-                    
+                    ls_playlist = self.handle_media_file(playlist, pkey, ls_playlist)
                     
                 """
                 This is kind of hackish. We add a bunch of "silence" tracks to the end of each playlist.
@@ -536,7 +309,7 @@ class Playout:
                 20 x silence = 10 hours
                 """
                 for i in range (0, 1):
-                    ls_playlist += silence_file + "\n"
+                    ls_playlist += self.silence_file + "\n"
                     print '',
                             
                 # write playlist file
@@ -549,8 +322,222 @@ class Playout:
             logger.info("%s", e)
                 
 
+    def handle_live_session(self, playlist, pkey, ls_playlist):
+        """
+        This is a live session, so silence is scheduled.
+        Maybe not the most elegant solution :)
+        It adds 20 times 30min silence to the playlist
+        Silence file has to be in <file_dir>/basic/silence.mp3 
+        """
+        logger = logging.getLogger()        
+        logger.debug("found %s seconds of live/studio session at %s", pkey, playlist['duration'])
+        
+        if os.path.isfile(self.silence_file):
+            logger.debug('file stored at: %s' + self.silence_file)
+            
+            for i in range (0, 19):
+                ls_playlist += self.silence_file + "\n"
+
+        else:
+            print 'Could not find silence file!'
+            print 'File is expected to be at: ' + self.silence_file
+            logger.critical('File is expected to be at: %s', self.silence_file)
+            sys.exit()
+        
+
+    def handle_live_cast(self, playlist, pkey, ls_playlist):
+        """
+        This is a live-cast session
+        Create a silence list. (could eg also be a fallback list..)
+        """
+        logger = logging.getLogger()        
+        logger.debug("found %s seconds of live-cast session at %s", pkey, playlist['duration'])
+        
+        if os.path.isfile(self.silence_file):
+            logger.debug('file stored at: %s' + self.silence_file)
+            
+            for i in range (0, 19):
+                ls_playlist += self.silence_file + "\n"
+
+        else:
+            print 'Could not find silence file!'
+            print 'File is expected to be at: ' + self.silence_file
+            logger.critical('File is expected to be at: %s', self.silence_file)
+            sys.exit()
+        return ls_playlist
+    
+    
+    def handle_media_file(self, playlist, pkey, ls_playlist):
+        """
+        This handles both remote and local files.
+        """
+        logger = logging.getLogger()
+        for media in playlist['medias']:
+            logger.debug("found track at %s", media['uri'])
+            
+            try:
+                src = media['uri']
+                
+                if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
+                    dst = "%s%s/%s.mp3" % (self.cache_dir, str(pkey), str(media['id']))
+                    do_cue = False
+                else:
+                    dst = "%s%s/%s_cue_%s-%s.mp3" % \
+                    (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000))
+                    do_cue = True
+                    
+                # check if it is a remote file, if yes download
+                if src[0:4] == 'http':
+                    self.handle_remote_file(media, dst, do_cue)
+                else:
+                    # Assume local file
+                    self.handle_local_file(media, dst, do_cue)
+                    
+                if True == os.access(dst, os.R_OK):
+                    # check filesize (avoid zero-byte files)
+                    #print 'waiting: ' + dst
+                    try: fsize = os.path.getsize(dst)
+                    except Exception, e:
+                        logger.error("%s", e)
+                        fsize = 0
+                        
+                    if fsize > 0:
+                        pl_entry = 'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s":%s' % \
+                        (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), str(float(media['fade_out']) / 1000), dst)
+
+                        print pl_entry
+
+                        """
+                        Tracks are only added to the playlist if they are accessible
+                        on the file system and larger than 0 bytes.
+                        So this can lead to playlists shorter than expectet.
+                        (there is a hardware silence detector for this cases...) 
+                        """
+                        ls_playlist += pl_entry + "\n"
+                        
+                        logger.debug("everything ok, adding %s to playlist", pl_entry)
+                    else:
+                        print 'zero-file: ' + dst + ' from ' + src 
+                        logger.warning("zero-size file - skiping %s. will not add it to playlist", dst)
+                    
+                else:
+                    logger.warning("something went wrong. file %s not available. will not add it to playlist", dst)
+                    
+            except Exception, e: logger.info("%s", e)
+        return ls_playlist
+    
+        
+    def handle_remote_file(self, media, dst, do_cue):
+        logger = logging.getLogger()
+        if do_cue == False: 
+            if os.path.isfile(dst):
+                logger.debug("file already in cache: %s", dst)
+            else:
+                logger.debug("try to download %s", src)
+                api_client.get_media(src, dst)
+                    
+        else:
+            if os.path.isfile(dst):
+                logger.debug("file already in cache: %s", dst)
+                print 'cached'
+                
+            else:
+                logger.debug("try to download and cue %s", src)
+                
+                print '***'
+                dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
+                print dst_tmp
+                print '***'
+                api_client.get_media(src, dst_tmp)
+                    
+                # cue
+                print "STARTING CUE"
+                print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
+                print "END CUE"
+                    
+                if True == os.access(dst, os.R_OK):
+                    try: fsize = os.path.getsize(dst)
+                    except Exception, e:
+                        logger.error("%s", e)
+                        fsize = 0  
+                        
+                if fsize > 0:
+                    logger.debug('try to remove temporary file: %s' + dst_tmp)
+                    try: os.remove(dst_tmp)
+                    except Exception, e:
+                        logger.error("%s", e)
+                        
+                else:
+                    logger.warning('something went wrong cueing: %s - using uncued file' + dst)
+                    try: os.rename(dst_tmp, dst)
+                    except Exception, e:
+                        logger.error("%s", e) 
+    
+    
+    def handle_local_file(self, media, dst, do_cue):
+        """
+        Handle files on NAS. Pre-cueing not implemented at the moment.
+        (not needed by openbroadcast, feel free to add this)
+        Here an implementation for localy stored files.
+        Works the same as with remote files, just replaced API-download with
+        file copy.
+        """
+        logger = logging.getLogger()        
+        if do_cue == False:
+            if os.path.isfile(dst):
+                logger.debug("file already in cache: %s", dst)
+                
+            else:
+                logger.debug("try to copy file to cache %s", src)
+                try:
+                    shutil.copy(src, dst)
+                    logger.info("copied %s to %s", src, dst)
+                except Exception, e:
+                    logger.error("%s", e)
+        else:                                                
+            if os.path.isfile(dst):
+                logger.debug("file already in cache: %s", dst)
+                
+            else:
+                logger.debug("try to copy and cue %s", src)
+                
+                print '***'
+                dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)])
+                print dst_tmp
+                print '***'
+                
+                try:
+                    shutil.copy(src, dst_tmp)
+                    logger.info("copied %s to %s", src, dst_tmp)
+                except Exception, e:
+                    logger.error("%s", e)
+                    
+                # cue
+                print "STARTIONG CUE"
+                print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
+                print "END CUE"
+                    
+                if True == os.access(dst, os.R_OK):
+                    try: fsize = os.path.getsize(dst)
+                    except Exception, e:
+                        logger.error("%s", e)
+                        fsize = 0  
+                        
+                if fsize > 0:
+                    logger.debug('try to remove temporary file: %s' + dst_tmp)
+                    try: os.remove(dst_tmp)
+                    except Exception, e:
+                        logger.error("%s", e)
+                        
+                else:
+                    logger.warning('something went wrong cueing: %s - using uncued file' + dst)
+                    try: os.rename(dst_tmp, dst)
+                    except Exception, e:
+                        logger.error("%s", e) 
+    
+    
     def cleanup(self, export_source):
-        logger = logging.getLogger("cleanup")
+        logger = logging.getLogger()
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -590,7 +577,7 @@ class Playout:
     then liquidsoap is asked (via telnet) to reload and immediately play it.
     """
     def push(self, export_source):
-        logger = logging.getLogger("push")
+        logger = logging.getLogger()
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -681,7 +668,7 @@ class Playout:
 
         
     def push_init(self, export_source):
-        logger = logging.getLogger("push_init")
+        logger = logging.getLogger()
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -702,7 +689,7 @@ class Playout:
     
     
     def push_liquidsoap(self, pkey, ptype, user_id, playlist_id, transmission_id, push_ahead):
-        logger = logging.getLogger("push_liquidsoap")
+        logger = logging.getLogger()
         
         #self.export_source = export_source
         
@@ -788,7 +775,7 @@ class Playout:
     
     
     def push_liquidsoap_legacy(self, pkey, ptype, p_id, user_id):
-        logger = logging.getLogger("push_liquidsoap")
+        logger = logging.getLogger()
         logger.debug('trying to push %s to liquidsoap', pkey)
         
         self.export_source = export_source
@@ -889,7 +876,7 @@ class Playout:
 
     
     def check_schedule(self, export_source):
-        logger = logging.getLogger("check_schedule")
+        logger = logging.getLogger()
 
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
@@ -944,7 +931,7 @@ if __name__ == '__main__':
 
 run = True
 while run == True:
-    logger = logging.getLogger("pypo")
+    logger = logging.getLogger()
     
     loops = 0
     

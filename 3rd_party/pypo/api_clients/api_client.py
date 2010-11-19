@@ -67,7 +67,7 @@ class CampcasterApiClient(ApiClientInterface):
 		#self.api_auth = api_auth
 
 	def __get_campcaster_version(self):
-		logger = logging.getLogger("CampcasterApiClient.get_campcaster_version")
+		logger = logging.getLogger()
 		url = self.config["base_url"] + self.config["api_base"] + self.config["version_url"]
 		url = url.replace("%%api_key%%", self.config["api_key"])
 
@@ -107,7 +107,7 @@ class CampcasterApiClient(ApiClientInterface):
 
 
 	def test(self):
-		logger = logging.getLogger("CampcasterApiClient.test")
+		logger = logging.getLogger()
 		status, items = self.get_schedule('2010-01-01-00-00-00', '2011-01-01-00-00-00')
 		#print items
 		schedule = items["playlists"]
@@ -143,7 +143,7 @@ class CampcasterApiClient(ApiClientInterface):
 			print
 
 	def get_schedule(self, start=None, end=None):
-		logger = logging.getLogger("CampcasterApiClient.get_schedule")
+		logger = logging.getLogger()
 		
 		"""
 		calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
@@ -186,7 +186,7 @@ class CampcasterApiClient(ApiClientInterface):
 
 
 	def get_media(self, src, dst):
-		logger = logging.getLogger("CampcasterApiClient.get_media")
+		logger = logging.getLogger()
 		
 		try:
 			src = src + "&api_key=" + self.config["api_key"]
@@ -199,7 +199,7 @@ class CampcasterApiClient(ApiClientInterface):
 
 
 	def update_scheduled_item(self, item_id, value):
-		logger = logging.getLogger("CampcasterApiClient.update_scheduled_item")
+		logger = logging.getLogger()
 		
 		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
 
@@ -218,7 +218,7 @@ class CampcasterApiClient(ApiClientInterface):
 	
 	
 	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		logger = logging.getLogger("CampcasterApiClient.update_scheduled_item")
+		logger = logging.getLogger()
 
 		url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
 		url = url.replace("%%playlist_type%%", str(playlist_type))
@@ -244,7 +244,7 @@ class CampcasterApiClient(ApiClientInterface):
 	
 	
 	def generate_range_dp(self):
-		logger = logging.getLogger("CampcasterApiClient.generate_range_dp")
+		logger = logging.getLogger()
 	
 		url = self.api_url + 'schedule/generate_range_dp.php'
 		
