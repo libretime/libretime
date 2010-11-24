@@ -373,21 +373,21 @@ class Playout:
         """
         logger = logging.getLogger()
         for media in playlist['medias']:
-            logger.debug("found track at %s", media['uri'])
+            logger.debug("Processing track %s", media['uri'])
             
             try:
-                src = media['uri']
-                
                 if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
+                    logger.debug('No cue in/out detected for this file')
                     dst = "%s%s/%s.mp3" % (self.cache_dir, str(pkey), str(media['id']))
                     do_cue = False
                 else:
+                    logger.debug('Cue in/out detected')
                     dst = "%s%s/%s_cue_%s-%s.mp3" % \
                     (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000))
                     do_cue = True
                     
                 # check if it is a remote file, if yes download
-                if src[0:4] == 'http':
+                if media['uri'][0:4] == 'http':
                     self.handle_remote_file(media, dst, do_cue)
                 else:
                     # Assume local file
@@ -405,7 +405,7 @@ class Playout:
                         pl_entry = 'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s":%s' % \
                         (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), str(float(media['fade_out']) / 1000), dst)
 
-                        print pl_entry
+                        logger.debug(pl_entry)
 
                         """
                         Tracks are only added to the playlist if they are accessible
@@ -417,7 +417,7 @@ class Playout:
                         
                         logger.debug("everything ok, adding %s to playlist", pl_entry)
                     else:
-                        print 'zero-file: ' + dst + ' from ' + src 
+                        print 'zero-file: ' + dst + ' from ' + media['uri']
                         logger.warning("zero-size file - skiping %s. will not add it to playlist", dst)
                     
                 else:
@@ -433,8 +433,8 @@ class Playout:
             if os.path.isfile(dst):
                 logger.debug("file already in cache: %s", dst)
             else:
-                logger.debug("try to download %s", src)
-                api_client.get_media(src, dst)
+                logger.debug("try to download %s", media['uri'])
+                self.api_client.get_media(media['uri'], dst)
                     
         else:
             if os.path.isfile(dst):
@@ -442,13 +442,13 @@ class Playout:
                 print 'cached'
                 
             else:
-                logger.debug("try to download and cue %s", src)
+                logger.debug("try to download and cue %s", media['uri'])
                 
-                print '***'
+                #print '***'
                 dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
-                print dst_tmp
-                print '***'
-                api_client.get_media(src, dst_tmp)
+                #print dst_tmp
+                #print '***'
+                self.api_client.get_media(media['uri'], dst_tmp)
                     
                 # cue
                 print "STARTING CUE"
@@ -488,10 +488,10 @@ class Playout:
                 logger.debug("file already in cache: %s", dst)
                 
             else:
-                logger.debug("try to copy file to cache %s", src)
+                logger.debug("try to copy file to cache %s", media['uri'])
                 try:
-                    shutil.copy(src, dst)
-                    logger.info("copied %s to %s", src, dst)
+                    shutil.copy(media['uri'], dst)
+                    logger.info("copied %s to %s", media['uri'], dst)
                 except Exception, e:
                     logger.error("%s", e)
         else:                                                
@@ -499,7 +499,7 @@ class Playout:
                 logger.debug("file already in cache: %s", dst)
                 
             else:
-                logger.debug("try to copy and cue %s", src)
+                logger.debug("try to copy and cue %s", media['uri'])
                 
                 print '***'
                 dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)])
@@ -507,8 +507,8 @@ class Playout:
                 print '***'
                 
                 try:
-                    shutil.copy(src, dst_tmp)
-                    logger.info("copied %s to %s", src, dst_tmp)
+                    shutil.copy(media['uri'], dst_tmp)
+                    logger.info("copied %s to %s", media['uri'], dst_tmp)
                 except Exception, e:
                     logger.error("%s", e)
                     
@@ -537,16 +537,15 @@ class Playout:
     
     
     def cleanup(self, export_source):
+        """
+        Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
+        and deletes them. 
+        """
         logger = logging.getLogger()
         
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
         self.schedule_file = self.cache_dir + 'schedule'
-
-        """
-        Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
-        and deletes them. 
-        """
 
         offset = 3600 * int(CACHE_FOR)
         now = time.time()
@@ -619,7 +618,7 @@ class Playout:
         
         else:    
             for pkey in self.schedule:
-                logger.debug('found playlist schedulet at: %s', pkey)
+                logger.debug('found playlist scheduled at: %s', pkey)
                 
                 #if pkey[0:16] == str_tnow:
                 if pkey[0:16] == str_tcomming:
@@ -674,8 +673,8 @@ class Playout:
         self.cache_dir = CACHE_DIR + self.export_source + '/'
         self.schedule_file = self.cache_dir + 'schedule'
         
-        # load the shedule from cache
-        logger.debug('load shedule from cache')
+        # load the schedule from cache
+        logger.debug('loading schedule from cache...')
         try:
             schedule_file = open(self.schedule_file, "r")
             schedule = pickle.load(schedule_file)

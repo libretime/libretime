@@ -41,7 +41,7 @@ $values = array(
     "gunid" => $gunid,
     "filetype" => "audioclip"
 );
-$storedFile = $gb->bsPutFile($values);
+$storedFile = StoredFile::Insert($values);
 if (PEAR::isError($storedFile)) {
     if ($storedFile->getCode()!=GBERR_GUNID) {
         echo "ERROR: ".$storedFile->getMessage()."\n";

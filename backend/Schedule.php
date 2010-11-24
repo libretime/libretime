@@ -213,11 +213,13 @@ class Schedule {
     }
 
     /**
-     * Return true if there is nothing in the schedule for the given times.
+     * Return true if there is nothing in the schedule for the given start time
+     * up to the length of time after that.
      *
      * @param string $p_datetime
+     *    In the format YYYY-MM-DD HH:MM:SS.mmmmmm
      * @param string $p_length
-     *
+     *    In the format HH:MM:SS.mmmmmm
      * @return boolean|PEAR_Error
      */
     public static function isScheduleEmptyInRange($p_datetime, $p_length) {
@@ -268,7 +270,8 @@ class Schedule {
      *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
      *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
      *    "group_id"/"id" (aliases to the same thing)
-     *    "clip_length" (for playlists only, this is the length of the entire playlist)
+     *    "clip_length" (for audio clips this is the length of the audio clip,
+     *    				 for playlists this is the length of the entire playlist)
      *    "name" (playlist only)
      *    "creator" (playlist only)
      *    "file_id" (audioclip only)
@@ -339,17 +342,84 @@ class Schedule {
 
     }
 
-    private static function CcTimeToPypoTime($p_time) {
+    /**
+     * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
+     * to "YYYY-MM-DD-HH-mm-SS".
+     *
+     * @param string $p_time
+     * @return string
+     */
+    private static function CcTimeToPypoTime($p_time)
+    {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(" ", "-", $p_time);
         $p_time = str_replace(":", "-", $p_time);
         return $p_time;
     }
 
-    private static function PypoTimeToCcTime($p_time) {
+    /**
+     * Convert a time string in the format "YYYY-MM-DD-HH-mm-SS" to
+     * "YYYY-MM-DD HH:mm:SS".
+     *
+     * @param string $p_time
+     * @return string
+     */
+    private static function PypoTimeToCcTime($p_time)
+    {
         $t = explode("-", $p_time);
         return $t[0]."-".$t[1]."-".$t[2]." ".$t[3].":".$t[4].":00";
     }
+
+    /**
+     * Converts a time value as a string (with format HH:MM:SS.mmmmmm) to
+     * millisecs.
+     *
+     * @param string $p_time
+     * @return int
+     */
+    private static function WallTimeToMillisecs($p_time)
+    {
+        $t = explode(":", $p_time);
+        $millisecs = 0;
+        if (strpos($t[2], ".")) {
+            $secParts = explode(".", $t[2]);
+            $millisecs = $secParts[1];
+            $millisecs = substr($millisecs, 0, 3);
+            $millisecs = intval($millisecs);
+            $seconds = intval($secParts[0]);
+        } else {
+            $seconds = intval($t[2]);
+        }
+        $ret = $millisecs + ($seconds * 1000) + ($t[1] * 60 * 1000) + ($t[0] * 60 * 60 * 1000);
+        return $ret;
+    }
+
+
+    /**
+     * Compute the difference between two times in the format "HH:MM:SS.mmmmmm".
+     * Note: currently only supports calculating millisec differences.
+     *
+     * @param string $p_time1
+     * @param string $p_time2
+     * @return double
+     */
+    private static function TimeDiff($p_time1, $p_time2)
+    {
+        $parts1 = explode(".", $p_time1);
+        $parts2 = explode(".", $p_time2);
+        $diff = 0;
+        if ( (count($parts1) > 1) && (count($parts2) > 1) ) {
+            $millisec1 = substr($parts1[1], 0, 3);
+            $millisec1 = str_pad($millisec1, 3, "0");
+            $millisec1 = intval($millisec1);
+            $millisec2 = substr($parts2[1], 0, 3);
+            $millisec2 = str_pad($millisec2, 3, "0");
+            $millisec2 = intval($millisec2);
+            $diff = abs(millisec1 - millisec2)/1000;
+        }
+        return $diff;
+    }
+
 
     /**
      * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
@@ -404,14 +474,20 @@ class Schedule {
             {
                 $storedFile = StoredFile::Recall($item["file_id"]);
                 $uri = $storedFile->getFileUrl();
+
+                // For pypo, a cueout of zero means no cueout
+                $cueOut = "0";
+                if (Schedule::TimeDiff($item["cue_out"], $item["clip_length"]) > 0.001) {
+                    $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
+                }
                 $medias[] = array(
 					'id' => $storedFile->getGunid(), //$item["file_id"],
 					'uri' => $uri,
-					'fade_in' => $item["fade_in"],
-					'fade_out' => $item["fade_out"],
+					'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
+					'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
 					'fade_cross' => 0,
-					'cue_in' => $item["cue_in"],
-					'cue_out' => $item["cue_out"],
+					'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
+					'cue_out' => $cueOut
                 );
             }
             $playlist['medias'] = $medias;
@@ -423,6 +499,24 @@ class Schedule {
         $result['check'] = 1;
 
         print json_encode($result);
+    }
+
+
+    /**
+     * Remove all items from the schedule in the given range.
+     *
+     * @param string $p_start
+     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
+     * @param string $p_end
+     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
+     */
+    public static function RemoveItemsInRange($p_start, $p_end)
+    {
+        $items = Schedule::GetItems($p_start, $p_end);
+        foreach ($items as $item) {
+            $scheduleGroup = new ScheduleGroup($item["group_id"]);
+            $scheduleGroup->remove();
+        }
     }
 
 }

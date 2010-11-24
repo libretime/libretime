@@ -57,16 +57,23 @@ class Playlist {
     private $categories = array("dc:title" => "DbName", "dc:creator" => "DbCreator", "dc:description" => "DbDescription", "dcterms:extent" => "length");
 
 
+    /**
+     * @param string $p_gunid
+     */
     public function __construct($p_gunid=NULL)
     {
 
     }
 
-    public static function Insert($p_values)
+    /**
+     * @param array $p_name
+     * 		The name of the playlist
+     */
+    private static function Insert($p_name = null)
     {
         // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
-        $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
+        $storedPlaylist->name = !empty($p_name) ? $p_name : date("H:i:s");
         $storedPlaylist->mtime = new DateTime("now");
 
         $pl = new CcPlaylist();
@@ -325,8 +332,9 @@ class Playlist {
         ->findPK($this->id)
         ->computeLastPosition();
 
-        if(is_null($res))
-        return 0;
+        if(is_null($res)) {
+            return 0;
+        }
 
         return $res + 1;
     }
@@ -355,8 +363,9 @@ class Playlist {
         ->findPK($this->id)
         ->computeLength();
 
-        if(is_null($res))
-        return '00:00:00.000000';
+        if(is_null($res)) {
+            return '00:00:00.000000';
+        }
 
         return $res;
     }
@@ -370,11 +379,18 @@ class Playlist {
      */
     public function create($fname=NULL)
     {
-        $values = array("filename" => $fname);
-        $pl_id = Playlist::Insert($values);
+        $pl_id = Playlist::Insert($fname);
         $this->id = $pl_id;
         return $this->id;
     }
+
+
+    public static function findPlaylistByName($p_name)
+    {
+        $res = CcPlaylistQuery::create()->findByDbName($p_name);
+        return $res;
+    }
+
 
     /**
      * Lock playlist for edit

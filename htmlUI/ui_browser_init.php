@@ -8,7 +8,7 @@ require_once(dirname(__FILE__).'/ui_handler.class.php');
 // often used classes ###############################################
 require_once(dirname(__FILE__).'/../3rd_party/php/propel/runtime/lib/Propel.php');
 require_once(dirname(__FILE__).'/../3rd_party/php/Smarty/libs/Smarty.class.php');
-require_once(dirname(__FILE__).'/../3rd_party/php/pear/HTML/QuickForm/Renderer/ArraySmarty.php');
+require_once('HTML/QuickForm/Renderer/ArraySmarty.php');
 require_once(dirname(__FILE__).'/ui_scratchpad.class.php');
 require_once(dirname(__FILE__).'/ui_search.class.php');
 require_once(dirname(__FILE__).'/ui_browse.class.php');

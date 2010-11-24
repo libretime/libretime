@@ -836,6 +836,25 @@ class StoredFile {
 
 
     /**
+     * Find and return the first exact match for the original file name
+     * that was used on import.
+     * @param string $p_name
+     */
+    public static function findByOriginalName($p_name)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT id FROM ".$CC_CONFIG["filesTable"]
+            ." WHERE name='".pg_escape_string($p_name)."'";
+        $id = $CC_DBC->getOne($sql);
+        if (is_numeric($id)) {
+            return StoredFile::Recall($id);
+        } else {
+            return NULL;
+        }
+    }
+
+
+    /**
      * Delete and insert media file
      *
      * @param string $p_localFilePath

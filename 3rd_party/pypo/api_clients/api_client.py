@@ -164,6 +164,7 @@ class CampcasterApiClient(ApiClientInterface):
 		
 		# Construct the URL
 		export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
+		logger.debug("Exporting schedule using URL: "+export_url)
 		
 		# Insert the start and end times into the URL        
 		export_url = export_url.replace('%%api_key%%', self.config["api_key"])
