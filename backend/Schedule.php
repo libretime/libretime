@@ -461,6 +461,10 @@ class Schedule {
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
+                $playlists[$pkey]['user_id'] = 0;
+                $playlists[$pkey]['id'] = $dx["playlist_id"];
+            	$playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
+            	$playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]); 
             }
         }
 
@@ -487,7 +491,8 @@ class Schedule {
 					'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
 					'fade_cross' => 0,
 					'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
-					'cue_out' => $cueOut
+					'cue_out' => $cueOut,
+                    'export_source' => 'scheduler'
                 );
             }
             $playlist['medias'] = $medias;

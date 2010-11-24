@@ -257,24 +257,28 @@ class Playout:
             schedule_file = open(self.schedule_file, "r")
             schedule = pickle.load(schedule_file)
             schedule_file.close()
-            
         except Exception, e:
             logger.error("%s", e)
             schedule = None
 
         # Dont do anything if schedule is empty
         if (not schedule):
+            logger.debug("Schedule is empty.")
             return
-        
+
+        scheduleKeys = sorted(schedule.iterkeys())
+                
         try:
-            for pkey in sorted(schedule.iterkeys()):
+            for pkey in scheduleKeys:
                 logger.info("found playlist at %s", pkey)
                 #print pkey
                 playlist = schedule[pkey]
                 
                 # create playlist directory
-                try: os.mkdir(self.cache_dir + str(pkey))
-                except Exception, e: pass
+                try:
+                    os.mkdir(self.cache_dir + str(pkey))
+                except Exception, e:
+                    pass
                 
                 ls_playlist = '';
                 
@@ -343,6 +347,7 @@ class Playout:
             print 'File is expected to be at: ' + self.silence_file
             logger.critical('File is expected to be at: %s', self.silence_file)
             sys.exit()
+        return ls_playlist
         
 
     def handle_live_cast(self, playlist, pkey, ls_playlist):
@@ -370,6 +375,7 @@ class Playout:
     def handle_media_file(self, playlist, pkey, ls_playlist):
         """
         This handles both remote and local files.
+        Returns an updated ls_playlist string.
         """
         logger = logging.getLogger()
         for media in playlist['medias']:
@@ -439,7 +445,7 @@ class Playout:
         else:
             if os.path.isfile(dst):
                 logger.debug("file already in cache: %s", dst)
-                print 'cached'
+                #print 'cached'
                 
             else:
                 logger.debug("try to download and cue %s", media['uri'])
@@ -451,9 +457,10 @@ class Playout:
                 self.api_client.get_media(media['uri'], dst_tmp)
                     
                 # cue
-                print "STARTING CUE"
-                print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
-                print "END CUE"
+                logger.debug("STARTING CUE")
+                debugDst = self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
+                logger.debug(debugDst)
+                logger.debug("END CUE")
                     
                 if True == os.access(dst, os.R_OK):
                     try: fsize = os.path.getsize(dst)
@@ -539,38 +546,41 @@ class Playout:
     def cleanup(self, export_source):
         """
         Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
-        and deletes them. 
+        and deletes them.
         """
         logger = logging.getLogger()
-        
+
         self.export_source = export_source
         self.cache_dir = CACHE_DIR + self.export_source + '/'
         self.schedule_file = self.cache_dir + 'schedule'
-
         offset = 3600 * int(CACHE_FOR)
         now = time.time()
 
-        for r, d, f in os.walk(CACHE_DIR):
+        for r, d, f in os.walk(self.cache_dir):
             for dir in d:
-                timestamp = os.path.getmtime(os.path.join(r, dir))
-                
-                logger.debug( 'Folder "Age": %s - %s', round((((now - offset) - timestamp) / 60), 2), os.path.join(r, dir))
-            
-                if now - offset > timestamp:
-                    try:
-                        logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)
-                        shutil.rmtree(os.path.join(r, dir))
-                    except Exception, e:
-                        logger.error("%s", e)
-                        pass
-                    else: 
-                        logger.info('sucessfully removed %s', os.path.join(r, dir))
-                        
-    
+                try:
+                    timestamp = time.mktime(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
+                    #logger.debug('dir          : %s', (dir))
+                    #logger.debug('age          : %s', (round((now - timestamp),1)))
+                    #logger.debug('delete in    : %ss', (round((offset - (now - timestamp)),1)))
+                    #logger.debug('Folder "Age": %s - %s', round((((now - offset) - timestamp) / 60), 2), os.path.join(r, dir))
+
+                    if (now - timestamp) > offset:
+                        try:
+                            logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)
+                            shutil.rmtree(os.path.join(r, dir))
+                        except Exception, e:
+                            logger.error("%s", e)
+                            pass
+                        else:
+                            logger.info('sucessfully removed %s', os.path.join(r, dir))
+                except Exception, e:
+                    print e
+                    logger.error("%s", e)                        
             
             
     """
-    The counterpart - the push loop periodically (minimal 1/2 of the playlist-grid) 
+    The Push Loop - the push loop periodically (minimal 1/2 of the playlist-grid) 
     checks if there is a playlist that should be scheduled at the current time.
     If yes, the temporary liquidsoap playlist gets replaced with the corresponding one,
     then liquidsoap is asked (via telnet) to reload and immediately play it.
@@ -606,9 +616,9 @@ class Playout:
         str_tcomming = "%04d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4])
         str_tcomming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4], tcomming[5])
 
-        print '--'
-        print str_tnow_s + ' now'
-        print str_tcomming_s + ' comming'
+        #print '--'
+        #print str_tnow_s + ' now'
+        #print str_tcomming_s + ' comming'
 
         playnow = None
         
@@ -618,15 +628,14 @@ class Playout:
         
         else:    
             for pkey in self.schedule:
-                logger.debug('found playlist scheduled at: %s', pkey)
                 
-                #if pkey[0:16] == str_tnow:
                 if pkey[0:16] == str_tcomming:
+                    logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = self.schedule[pkey]
                     
                     if int(playlist['played']) != 1:
-                        print '!!!!!!!!!!!!!!!!!!!'
-                        print 'MATCH'
+                        #print '!!!!!!!!!!!!!!!!!!!'
+                        #print 'MATCH'
 
                         """
                         ok we have a match, replace the current playlist and
@@ -647,9 +656,10 @@ class Playout:
                             transmission_id = 0
                             print e
                         
-                        print 'Playlist id:',
+                        #print 'Playlist id:',
                         
-                        if(self.push_liquidsoap(pkey, ptype, user_id, playlist_id, transmission_id, self.push_ahead) == 1):
+                        if (self.push_liquidsoap(pkey, ptype, user_id, playlist_id, transmission_id, self.push_ahead) == 1):
+                            logger.debug("Pushed to liquidsoap, updating 'played' status.")
                             self.schedule[pkey]['played'] = 1
                             """
                             Call api to update schedule states and
@@ -658,12 +668,11 @@ class Playout:
                             self.api_client.update_scheduled_item(int(playlist['schedule_id']), 1)
                             schedule_file = open(self.schedule_file, "w")
                             pickle.dump(self.schedule, schedule_file)
-                            schedule_file.close() 
+                            schedule_file.close()
+                            logger.debug("Wrote schedule to disk")
                     
                 #else:
                 #    print 'Nothing to do...'
-                    
-                        
 
         
     def push_init(self, export_source):
@@ -699,11 +708,11 @@ class Playout:
         
         src = self.cache_dir + str(pkey) + '/list.lsp'
         
-        print src
+        logger.debug(src)
         
         try:
             if True == os.access(src, os.R_OK):
-                print 'OK - Can read'
+                logger.debug('OK - Can read playlist file')
                 
             pl_file = open(src, "r")
     
@@ -712,34 +721,33 @@ class Playout:
             """
             tn = telnetlib.Telnet(LS_HOST, 1234)
             
-            
-            if(int(ptype) == 6):
+            if (int(ptype) == 6):
                 tn.write("live_in.start")
                 tn.write("\n") 
                 
             
-            if(int(ptype) < 5):
+            if (int(ptype) < 5):
                 for line in pl_file.readlines():
-                    print line.strip() 
+                    logger.debug(line.strip())
                     tn.write(self.export_source + '.push %s' % (line.strip()))
                     tn.write("\n")
                     #time.sleep(0.1)
                 
             tn.write("exit\n")
-            print tn.read_all()
-            print 'sleeping for %s s' % (self.push_ahead)
+            logger.debug(tn.read_all())
+            logger.debug('sleeping for %s s' % (self.push_ahead))
             time.sleep(self.push_ahead)
             
-            print 'sending "flip"'
+            logger.debug('sending "flip"')
             tn = telnetlib.Telnet(LS_HOST, 1234)
             
             """
             Pass some extra information to liquidsoap
             """
-            print 'user_id: %s' % user_id
-            print 'playlist_id: %s' % playlist_id
-            print 'transmission_id: %s' % transmission_id
-            print 'ptype: %s' % ptype
+            logger.debug('user_id: %s', user_id)
+            logger.debug('playlist_id: %s', playlist_id)
+            logger.debug('transmission_id: %s', transmission_id)
+            logger.debug('ptype: %s', ptype)
             
             tn.write("vars.user_id %s\n" % user_id)
             tn.write("vars.playlist_id %s\n" % playlist_id)
@@ -764,7 +772,7 @@ class Playout:
             
             tn.write("exit\n")
             
-            print tn.read_all()
+            logger.debug(tn.read_all())
             status = 1
         except Exception, e:
             logger.error('%s', e)
@@ -773,78 +781,78 @@ class Playout:
         return status
     
     
-    def push_liquidsoap_legacy(self, pkey, ptype, p_id, user_id):
-        logger = logging.getLogger()
-        logger.debug('trying to push %s to liquidsoap', pkey)
-        
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
-
-        src = self.cache_dir + str(pkey) + '/list.lsp'
-        dst = self.cache_dir + 'current.lsp'
-        
-        print src
-        print dst
-        
-        print '*************'
-        print ptype
-        print '*************'
-        
-        if True == os.access(src, os.R_OK):
-            try:
-                shutil.copy2(src, dst)
-                logger.debug('copy %s to %s', src, dst)
-                """
-                i know this could be wrapped, maybe later..
-                """
-                tn = telnetlib.Telnet(LS_HOST, 1234)
-                tn.write("\n")
-                tn.write("live_in.stop\n")
-                tn.write("stream_disable\n")
-                time.sleep(0.2)
-                tn.write("\n")
-                #tn.write("reload_current\n")
-                tn.write("current.reload\n")
-                time.sleep(0.2)
-                tn.write("skip_current\n")
-                
-                if(int(ptype) == 6):
-                    """
-                    Couchcaster comming. Stop/Start live input to have ls re-read it's playlist
-                    """
-                    print 'Couchcaster - switching to stream'
-                    tn.write("live_in.start\n")
-                    time.sleep(0.2)
-                    tn.write("stream_enable\n")
-                
-                if(int(ptype) == 7):
-                    """
-                    Recast comming. Start the live input
-                    """
-                    print 'Recast - switching to stream'
-                    tn.write("live_in.start\n")
-                    time.sleep(0.2)
-                    tn.write("stream_enable\n")
-                
-                """
-                Pass some extra information to liquidsoap
-                """
-                tn.write("pl.pl_id '%s'\n" % p_id)
-                tn.write("pl.user_id '%s'\n" % user_id)
-                tn.write("exit\n")
-                
-                print tn.read_all()
-                
-                status = 1
-                
-            except Exception, e:
-                logger.error('%s', e)
-                status = 0
-        else:
-            status = 0
-                
-        return status
+    #def push_liquidsoap_legacy(self, pkey, ptype, p_id, user_id):
+    #    logger = logging.getLogger()
+    #    logger.debug('trying to push %s to liquidsoap', pkey)
+    #    
+    #    self.export_source = export_source
+    #    self.cache_dir = CACHE_DIR + self.export_source + '/'
+    #    self.schedule_file = self.cache_dir + 'schedule'
+    #
+    #    src = self.cache_dir + str(pkey) + '/list.lsp'
+    #    dst = self.cache_dir + 'current.lsp'
+    #    
+    #    print src
+    #    print dst
+    #    
+    #    print '*************'
+    #    print ptype
+    #    print '*************'
+    #    
+    #    if True == os.access(src, os.R_OK):
+    #        try:
+    #            shutil.copy2(src, dst)
+    #            logger.debug('copy %s to %s', src, dst)
+    #            """
+    #            i know this could be wrapped, maybe later..
+    #            """
+    #            tn = telnetlib.Telnet(LS_HOST, 1234)
+    #            tn.write("\n")
+    #            tn.write("live_in.stop\n")
+    #            tn.write("stream_disable\n")
+    #            time.sleep(0.2)
+    #            tn.write("\n")
+    #            #tn.write("reload_current\n")
+    #            tn.write("current.reload\n")
+    #            time.sleep(0.2)
+    #            tn.write("skip_current\n")
+    #            
+    #            if(int(ptype) == 6):
+    #                """
+    #                Couchcaster comming. Stop/Start live input to have ls re-read it's playlist
+    #                """
+    #                print 'Couchcaster - switching to stream'
+    #                tn.write("live_in.start\n")
+    #                time.sleep(0.2)
+    #                tn.write("stream_enable\n")
+    #            
+    #            if(int(ptype) == 7):
+    #                """
+    #                Recast comming. Start the live input
+    #                """
+    #                print 'Recast - switching to stream'
+    #                tn.write("live_in.start\n")
+    #                time.sleep(0.2)
+    #                tn.write("stream_enable\n")
+    #            
+    #            """
+    #            Pass some extra information to liquidsoap
+    #            """
+    #            tn.write("pl.pl_id '%s'\n" % p_id)
+    #            tn.write("pl.user_id '%s'\n" % user_id)
+    #            tn.write("exit\n")
+    #            
+    #            print tn.read_all()
+    #            
+    #            status = 1
+    #            
+    #        except Exception, e:
+    #            logger.error('%s', e)
+    #            status = 0
+    #    else:
+    #        status = 0
+    #            
+    #    return status
     
 
     """

@@ -164,26 +164,47 @@ class CampcasterApiClient(ApiClientInterface):
 		
 		# Construct the URL
 		export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
-		logger.debug("Exporting schedule using URL: "+export_url)
+		#logger.debug("Exporting schedule using URL: "+export_url)
 		
 		# Insert the start and end times into the URL        
 		export_url = export_url.replace('%%api_key%%', self.config["api_key"])
 		export_url = export_url.replace('%%from%%', range['start'])
 		export_url = export_url.replace('%%to%%', range['end'])
-		logger.info("export from %s", export_url)
+		logger.info("Fetching schedule from %s", export_url)
 	
 		response = ""
 		status = 0
 		try:
 			response_json = urllib.urlopen(export_url).read()
-			logger.debug("%s", response_json)
+			#logger.debug("%s", response_json)
 			response = json.read(response_json)
-			logger.info("export status %s", response['check'])
+			#logger.info("export status %s", response['check'])
 			status = response['check']
 		except Exception, e:
 			print e
 
-		return status, response			
+		schedule = response["playlists"]
+		scheduleKeys = sorted(schedule.iterkeys())
+		
+		# Remove all playlists that have passed current time
+		try:
+			tnow = time.localtime(time.time())
+			str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+			toRemove = []
+			for pkey in scheduleKeys:
+				if (str_tnow_s > schedule[pkey]['end']):
+					toRemove.append(pkey)
+				else:
+					break
+			#logger.debug("Remove keys: %s", toRemove)
+			for index in toRemove:
+				del schedule[index]
+			#logger.debug("Schedule dict: %s", schedule)
+		except Exception, e:
+			logger.debug("'Ignore Past Playlists' feature not supported by API: %s", e)
+		response["playlists"] = schedule
+
+		return status, response
 
 
 	def get_media(self, src, dst):
@@ -200,68 +221,71 @@ class CampcasterApiClient(ApiClientInterface):
 
 
 	def update_scheduled_item(self, item_id, value):
-		logger = logging.getLogger()
-		
-		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
-
-		try:
-			response = urllib.urlopen(url, self.api_auth)
-			response = json.read(response.read())
-			logger.info("API-Status %s", response['status'])
-			logger.info("API-Message %s", response['message'])
-	
-		except Exception, e:
-			print e
-			api_status = False
-			logger.critical("Unable to connect - %s", e)
-	
-		return response
+		pass
+		#logger = logging.getLogger()
+		#
+		#url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
+		#
+		#try:
+		#	response = urllib.urlopen(url, self.api_auth)
+		#	response = json.read(response.read())
+		#	logger.info("API-Status %s", response['status'])
+		#	logger.info("API-Message %s", response['message'])
+		#
+		#except Exception, e:
+		#	print e
+		#	api_status = False
+		#	logger.critical("Unable to connect - %s", e)
+		#
+		#return response
 	
 	
 	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		logger = logging.getLogger()
-
-		url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
-		url = url.replace("%%playlist_type%%", str(playlist_type))
-		url = url.replace("%%export_source%%", str(export_source))
-		url = url.replace("%%media_id%%", str(media_id))
-		url = url.replace("%%playlist_id%%", str(playlist_id))
-		url = url.replace("%%transmission_id%%", str(transmission_id))			
-		print url
-		
-		try:
-			response = urllib.urlopen(url)
-			response = json.read(response.read())
-			logger.info("API-Status %s", response['status'])
-			logger.info("API-Message %s", response['message'])
-			logger.info("TXT %s", response['str_dls'])
-	
-		except Exception, e:
-			print e
-			api_status = False
-			logger.critical("Unable to connect - %s", e)
-	
-		return response
+		pass
+		#logger = logging.getLogger()
+		#
+		#url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
+		#url = url.replace("%%playlist_type%%", str(playlist_type))
+		#url = url.replace("%%export_source%%", str(export_source))
+		#url = url.replace("%%media_id%%", str(media_id))
+		#url = url.replace("%%playlist_id%%", str(playlist_id))
+		#url = url.replace("%%transmission_id%%", str(transmission_id))			
+		#print url
+		#
+		#try:
+		#	response = urllib.urlopen(url)
+		#	response = json.read(response.read())
+		#	logger.info("API-Status %s", response['status'])
+		#	logger.info("API-Message %s", response['message'])
+		#	logger.info("TXT %s", response['str_dls'])
+		#
+		#except Exception, e:
+		#	print e
+		#	api_status = False
+		#	logger.critical("Unable to connect - %s", e)
+		#
+		#return response
 	
 	
 	def generate_range_dp(self):
-		logger = logging.getLogger()
-	
-		url = self.api_url + 'schedule/generate_range_dp.php'
-		
-		try:
-			response = urllib.urlopen(url, self.api_auth)
-			response = json.read(response.read())
-			logger.debug("Trying to contact %s", url)
-			logger.info("API-Status %s", response['status'])
-			logger.info("API-Message %s", response['message'])
-	
-		except Exception, e:
-			print e
-			api_status = False
-			logger.critical("Unable to handle the request - %s", e)
-			
-		return response
+		pass
+		#logger = logging.getLogger()
+		#
+		#url = self.api_url + 'schedule/generate_range_dp.php'
+		#
+		#try:
+		#	response = urllib.urlopen(url, self.api_auth)
+		#	response = json.read(response.read())
+		#	logger.debug("Trying to contact %s", url)
+		#	logger.info("API-Status %s", response['status'])
+		#	logger.info("API-Message %s", response['message'])
+		#
+		#except Exception, e:
+		#	print e
+		#	api_status = False
+		#	logger.critical("Unable to handle the request - %s", e)
+		#	
+		#return response
 
 
 		
