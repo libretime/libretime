@@ -3,8 +3,8 @@
     Copyright (c) 2010 Sourcefabric O.P.S.
 
     This file is part of the Campcaster project.
-    http://campcaster.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
+    http://campcaster.sourcefabric.org/
+    To report bugs, send an e-mail to contact@sourcefabric.org
 
     Campcaster is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,9 +22,8 @@
 
 --------------------------------------------------------------------------------
 
-Please see this page for typical user install:
+Please see this page for a typical user install:
 http://en.flossmanuals.net/Campcaster
 
-If you are developer, see this page:
+If you are a developer, see this page:
 http://wiki.sourcefabric.org/display/CC/Campcaster+Dev+Site
-
