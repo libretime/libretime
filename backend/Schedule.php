@@ -11,6 +11,21 @@ class ScheduleGroup {
     }
 
     /**
+     * Return true if the schedule group exists in the DB.
+     * @return boolean
+     */
+    public function exists() {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG['scheduleTable']
+                ." WHERE group_id=".$this->groupId;
+        $result = $CC_DBC->GetOne($sql);
+        if (PEAR::isError($result)) {
+            return $result;
+        }
+        return $result != "0";
+    }
+
+    /**
      * Convert a date to an ID by stripping out all characters
      * and padding with zeros.
      *
@@ -204,6 +219,22 @@ class ScheduleGroup {
         //    $sql = "UPDATE ".$CC_CONFIG["scheduleTable"]. " SET id=, starts=,ends="
     }
 
+    public function notifyGroupStartPlay() {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
+                ." SET schedule_group_played=TRUE"
+                ." WHERE group_id=".$this->groupId;
+        return $CC_DBC->query($sql);
+    }
+
+    public function notifyMediaItemStartPlay($p_fileId) {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
+                ." SET media_item_played=TRUE"
+                ." WHERE group_id=".$this->groupId
+                ." AND file_id=".pg_escape_string($p_fileId);
+        return $CC_DBC->query($sql);
+    }
 }
 
 class Schedule {
@@ -464,7 +495,7 @@ class Schedule {
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx["playlist_id"];
             	$playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
-            	$playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]); 
+            	$playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]);
             }
         }
 

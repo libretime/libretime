@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
 """
 Python part of radio playout (pypo)
 
-This function acts as a gateway between liquidsoap and the obp-api.
-Mainliy used to tell the plattform what pypo/LS does.
+This function acts as a gateway between liquidsoap and the server API.
+Mainly used to tell the platform what pypo/liquidsoap does.
 
 Main case: 
  - whenever LS starts playing a new track, its on_metadata callback calls
-   a function in ls (notify(m)) which then calls the pythin script here
+   a function in ls (notify(m)) which then calls the python script here
    with the currently starting filename as parameter 
  - this python script takes this parameter, tries to extract the actual
-   media id from it, and then calls back to obp via api to tell about
-
+   media id from it, and then calls back to the API to tell about it about it.
 
 """
 
@@ -52,14 +49,14 @@ usage = "%prog [options]" + " - notification gateway"
 parser = OptionParser(usage=usage)
 
 # Options
-#parser.add_option("-p", "--playing", help="Tell daddy what is playing right now", dest="playing", default=False, metavar=False)
-parser.add_option("-p", "--playing", help="Tell daddy what is playing right now", default=False, action="store_true", dest="playing")
-parser.add_option("-t", "--playlist-type", help="Tell daddy what is playing right now", metavar="playlist_type")
-parser.add_option("-M", "--media-id", help="Tell daddy what is playing right now", metavar="media_id")
-parser.add_option("-U", "--user-id", help="Tell daddy what is playing right now", metavar="user_id")
-parser.add_option("-P", "--playlist-id", help="Tell daddy what is playing right now", metavar="playlist_id")
-parser.add_option("-T", "--transmission-id", help="Tell daddy what is playing right now", metavar="transmission_id")
-parser.add_option("-E", "--export-source", help="Tell daddy what is playing right now", metavar="export_source")
+parser.add_option("-d", "--data", help="Pass JSON data from liquidsoap into this script.", metavar="data")
+#parser.add_option("-p", "--playing", help="Tell server what is playing right now.", default=False, action="store_true", dest="playing")
+#parser.add_option("-t", "--playlist-type", help="", metavar="playlist_type")
+parser.add_option("-m", "--media-id", help="ID of the file that is currently playing.", metavar="media_id")
+#parser.add_option("-U", "--user-id", help="", metavar="user_id")
+#parser.add_option("-P", "--playlist-id", help="", metavar="playlist_id")
+#parser.add_option("-T", "--transmission-id", help="", metavar="transmission_id")
+#parser.add_option("-E", "--export-source", help="", metavar="export_source")
 
 # parse options
 (options, args) = parser.parse_args()
@@ -70,10 +67,6 @@ logging.config.fileConfig("logging.cfg")
 # loading config file
 try:
     config = ConfigObj('config.cfg')
-    TMP_DIR = config['tmp_dir']
-    BASE_URL = config['base_url']
-    API_BASE = BASE_URL + 'mod/medialibrary/'
-    API_KEY = config['api_key']
     
 except Exception, e:
     print 'error: ', e
@@ -85,144 +78,156 @@ class Global:
         print
         
     def selfcheck(self):
-        
-        self.api_auth = urllib.urlencode({'api_key': API_KEY})
-        self.api_client = api_client.api_client_factory(config)
-        self.api_client.check_version()
+        pass
+        #self.api_client = api_client.api_client_factory(config)
+        #self.api_client.check_version()
         
 class Notify:
     def __init__(self):
-        self.tmp_dir = TMP_DIR         
-        self.api_auth = urllib.urlencode({'api_key': API_KEY})
         self.api_client = api_client.api_client_factory(config)
-        self.dls_client = DlsClient('127.0.0.128', 50008, 'myusername', 'mypass')
+        #self.dls_client = DlsClient('127.0.0.128', 50008, 'myusername', 'mypass')
 
     
-    def start_playing(self, options):
-        logger = logging.getLogger("start_playing")
-        tnow = time.localtime(time.time())
+    def notify_media_start_playing(self, data, media_id):
+        logger = logging.getLogger()
+        #tnow = time.localtime(time.time())
         
-        #print options
+        logger.debug('#################################################')
+        logger.debug('# Calling server to update about what\'s playing #')
+        logger.debug('#################################################')
+        logger.debug('data = '+ str(data))
+        #print 'options.data = '+ options.data
+        #data = json.read(options.data)
+        response = self.api_client.notify_media_item_start_playing(data, media_id) 
+        logger.debug("Response: "+str(response))
 
-        print '#################################################'
-        print '# calling obp to tell about what\'s playing     #'
-        print '#################################################'      
-
-        if int(options.playlist_type) < 5:
-            print 'seems to be a playlist'
-            
-            try:
-                media_id = int(options.media_id)
-            except Exception, e:
-                media_id = 0
-            
-            response = self.api_client.update_start_playing(options.playlist_type, options.export_source, media_id, options.playlist_id, options.transmission_id) 
-
-            print response
-
-        if int(options.playlist_type) == 6:
-            print 'seems to be a couchcast'
-            
-            try:
-                media_id = int(options.media_id)
-            except Exception, e:
-                media_id = 0
-            
-            response = self.api_client.update_start_playing(options.playlist_type, options.export_source, media_id, options.playlist_id, options.transmission_id) 
-
-            print response
-        
-        sys.exit()  
-
+    #def start_playing(self, options):
+    #    logger = logging.getLogger("start_playing")
+    #    tnow = time.localtime(time.time())
+    #    
+    #    #print options
+    #
+    #    logger.debug('#################################################')
+    #    logger.debug('# Calling server to update about what\'s playing #')
+    #    logger.debug('#################################################')
+    #
+    #    if int(options.playlist_type) < 5:
+    #        logger.debug('seems to be a playlist')
+    #        
+    #        try:
+    #            media_id = int(options.media_id)
+    #        except Exception, e:
+    #            media_id = 0
+    #        
+    #        response = self.api_client.update_start_playing(options.playlist_type, options.export_source, media_id, options.playlist_id, options.transmission_id) 
+    #
+    #        logger.debug(response)
+    #
+    #    if int(options.playlist_type) == 6:
+    #        logger.debug('seems to be a couchcast')
+    #        
+    #        try:
+    #            media_id = int(options.media_id)
+    #        except Exception, e:
+    #            media_id = 0
+    #        
+    #        response = self.api_client.update_start_playing(options.playlist_type, options.export_source, media_id, options.playlist_id, options.transmission_id) 
+    #
+    #        logger.debug(response)
+    #    
+    #    sys.exit()  
     
-    def start_playing_legacy(self, options):
-        logger = logging.getLogger("start_playing")
-        tnow = time.localtime(time.time())
-
-        print '#################################################'
-        print '# calling obp to tell about what\'s playing     #'
-        print '#################################################'
-
-        path = options
-        
-        print
-        print path
-        print 
-                
-        if 'pl_id' in path:
-            print 'seems to be a playlist'
-            type = 'playlist'
-            id = path[5:] 
-                
-        elif 'text' in path:
-            print 'seems to be a playlist'
-            type = 'text'
-            id = path[4:]
-            print id
-        
-        else:
-            print 'seems to be a single track (media)'
-            type = 'media'
-            try:
-                file = path.split("/")[-1:][0]
-                if file.find('_cue_') > 0:
-                    id = file.split("_cue_")[0]
-                else:
-                    id = file.split(".")[-2:][0]
-                
-            except Exception, e:
-                #print e
-                id = False
-            
-        try:
-            id = id
-        except Exception, e:
-            #print e
-            id = False
-        
-        print 
-        print type + " id: ", 
-        print id            
-          
-        
-        response = self.api_client.update_start_playing(type, id, self.export_source, path) 
-        
-        print 'DONE' 
-        
-        try:
-            txt = response['txt']
-            print '#######################################'
-            print txt
-            print '#######################################'
-            #self.dls_client.set_txt(txt)
-
-        except Exception, e:
-            print e
+    #def start_playing_legacy(self, options):
+    #    logger = logging.getLogger("start_playing")
+    #    tnow = time.localtime(time.time())
+    #
+    #    print '#################################################'
+    #    print '# Calling server to update about what\'s playing     #'
+    #    print '#################################################'
+    #
+    #    path = options
+    #    
+    #    print
+    #    print path
+    #    print 
+    #            
+    #    if 'pl_id' in path:
+    #        print 'seems to be a playlist'
+    #        type = 'playlist'
+    #        id = path[5:] 
+    #            
+    #    elif 'text' in path:
+    #        print 'seems to be a playlist'
+    #        type = 'text'
+    #        id = path[4:]
+    #        print id
+    #    
+    #    else:
+    #        print 'seems to be a single track (media)'
+    #        type = 'media'
+    #        try:
+    #            file = path.split("/")[-1:][0]
+    #            if file.find('_cue_') > 0:
+    #                id = file.split("_cue_")[0]
+    #            else:
+    #                id = file.split(".")[-2:][0]
+    #            
+    #        except Exception, e:
+    #            #print e
+    #            id = False
+    #        
+    #    try:
+    #        id = id
+    #    except Exception, e:
+    #        #print e
+    #        id = False
+    #    
+    #    print 
+    #    print type + " id: ", 
+    #    print id            
+    #      
+    #    
+    #    response = self.api_client.update_start_playing(type, id, self.export_source, path) 
+    #    
+    #    print 'DONE' 
+    #    
+    #    try:
+    #        txt = response['txt']
+    #        print '#######################################'
+    #        print txt
+    #        print '#######################################'
+    #        #self.dls_client.set_txt(txt)
+    #
+    #    except Exception, e:
+    #        print e
         
 
 if __name__ == '__main__':
-  
     print
     print '#########################################'
     print '#           *** pypo  ***               #'
     print '#     pypo notification gateway         #'
     print '#########################################'
-    print
     
     # initialize
     g = Global()
-    g.selfcheck()
-    n = Notify()
-
-
-run = True
-while run == True:
-    logger = logging.getLogger("pypo notify")
-            
-    if options.playing:
-        try: n.start_playing(options)
-        except Exception, e:
-            print e
-        sys.exit()  
-
-    sys.exit()
+    logger = logging.getLogger()
+    #if options.playing:
+    #    try: n.start_playing(options)
+    #    except Exception, e:
+    #        print e
+    #    sys.exit()  
+    if not options.data:
+        print "NOTICE: 'data' command-line argument not given."
+        sys.exit()
+    
+    if not options.media_id:
+        print "NOTICE: 'media_id' command-line argument not given."
+        sys.exit()
+    
+    try:
+        g.selfcheck()
+        n = Notify()
+        n.notify_media_start_playing(options.data, options.media_id)
+    except Exception, e:
+        print e

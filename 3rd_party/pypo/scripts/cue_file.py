@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
 
 """
 cue script that gets called by liquidsoap if a file in the playlist

@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
 """
 Python part of radio playout (pypo)
 
 This function acts as a gateway between liquidsoap and the obp-api.
-Mainliy used to tell the plattform what pypo/LS does.
+Mainliy used to tell the platform what pypo/LS does.
 
 Main case: 
  - whenever Liquidsoap starts playing a new track, its on_metadata callback calls
    a function in liquidsoap (notify(m)) which then calls the python script here
    with the currently starting filename as parameter 
  - this python script takes this parameter, tries to extract the actual
-   media id from it, and then calls back to obp via api to tell about
-
+   media id from it, and then calls back to API to tell it about it.
 
 """
 
@@ -171,7 +168,6 @@ class Notify:
             
 
 if __name__ == '__main__':
-  
     print
     print '#########################################'
     print '#           *** pypo  ***               #'
