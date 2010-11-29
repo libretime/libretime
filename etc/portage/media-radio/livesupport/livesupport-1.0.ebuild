@@ -6,8 +6,8 @@ inherit eutils flag-o-matic
 
 IUSE=""
 
-DESCRIPTION="LiveSupport is a radio broadcast support tool."
-HOMEPAGE="http://livesupport.campware.org/"
+DESCRIPTION="Campcaster is a radio broadcast support tool."
+HOMEPAGE="http://campcaster.sourcefabric.org/"
 SRC_URI="mirror://sourceforge/${PN}/${P}.tar.bz2"
 
 LICENSE="GPL-2"
