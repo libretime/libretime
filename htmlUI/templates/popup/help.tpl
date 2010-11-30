@@ -91,7 +91,7 @@ DIV.blockquote
 </div>
         <H2>Register for community support</H2>
         <P>Please register at <a href="https://login.sourcefabric.org/register">https://login.sourcefabric.org/register</a> 
-	for community suport in the <a href="http://forum.sourcefabric.org/">Sourcefabric forum</a>.
+	for community support in the <a href="http://forum.sourcefabric.org/">Sourcefabric forums</a>.
         </P>
 	<H2>Navigation</H2>
 	<H3>Context menus</H3>
