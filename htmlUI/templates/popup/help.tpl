@@ -280,7 +280,8 @@ DIV.blockquote
 	manual</A> chapter 4.12.
 	</P>
 	<H2>Where to go for help</H2>
-        <P>If you cannot access the <a href="http://forum.sourcefabric.org/">Sourcefabric forums</a> online, please contact your regional Sourcefabric repre$
+        <P>If you cannot access the <a href="http://forum.sourcefabric.org/">Sourcefabric forums</a> online, please contact 
+	your regional Sourcefabric representative, or the Sourcefabric head office at:
         </P>
         <P>Sourcefabric o.p.s.<BR>
         Salv&aacute;torsk&aacute; 10<BR>
