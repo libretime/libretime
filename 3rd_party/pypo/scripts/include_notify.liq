@@ -4,10 +4,10 @@
 
 def notify(m)
 
-  print('user_id: #{!user_id}')
-  print('playlist_id: #{!playlist_id}')
-  print('transmission_id: #{!transmission_id}')  
-  print('playlist_type: #{!playlist_type}')  
+#  print('user_id: #{!user_id}')
+#  print('playlist_id: #{!playlist_id}')
+#  print('transmission_id: #{!transmission_id}')  
+#  print('playlist_type: #{!playlist_type}')  
 
   if !playlist_type=='5' then 
     print('livesession')
@@ -20,8 +20,9 @@ def notify(m)
   end 
     
   if !playlist_type=='0' or !playlist_type=='1' or !playlist_type=='2' or !playlist_type=='3' or !playlist_type=='4' then
-  	print('playlist')
-  	system("./notify.sh --playing --playlist-type=#{!playlist_type} --media-id=#{m['media_id']} --export-source=#{m['export_source']}")
+  	print('include_notify.liq: notify on playlist')
+  	#system("./notify.sh --playing --playlist-type=#{!playlist_type} --media-id=#{m['media_id']} --export-source=#{m['export_source']}")
+  	system("./notify.sh --data='#{!pypo_data}' --media-id=#{m['media_id']}")
   end
   
 end

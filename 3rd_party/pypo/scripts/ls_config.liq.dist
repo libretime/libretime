@@ -2,9 +2,6 @@
 # liquidsoap config file                  #
 ###########################################
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
-
 # this file is specific to the obp 
 # installation. eg it assumes that there are 
 # two instances of LS running

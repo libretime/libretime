@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+###############################################################################
+# This file holds the implementations for all the API clients.
+#
+# If you want to develop a new client, here are some suggestions:
+# Get the fetch methods working first, then the push, then the liquidsoap notifier.
+# You will probably want to create a script on your server side to automatically
+# schedule a playlist one minute from the current time.
+###############################################################################
+
 import sys
 import time
 import urllib
@@ -22,49 +31,82 @@ def api_client_factory(config):
 	
 class ApiClientInterface:
 
-	# This is optional.
+	# Implementation: optional
+	#
+	# Called from: beginning of all scripts
+	#
 	# Should exit the program if this version of pypo is not compatible with
 	# 3rd party software.
 	def check_version(self):
-		nil
+		pass
 	
-	# Required.	
+	# Implementation: Required
+	#
+	# Called from: fetch loop
+	#
 	# This is the main method you need to implement when creating a new API client.
 	# start and end are for testing purposes.
 	# start and end are strings in the format YYYY-DD-MM-hh-mm-ss
 	def get_schedule(self, start=None, end=None):
 		return 0, []
 	
-	# Required.
+	# Implementation: Required
+	#
+	# Called from: fetch loop
+	#
 	# This downloads the media from the server.
 	def get_media(self, src, dst):
-		nil
+		pass
 		
-	# This is optional.
-	# You dont actually have to implement this function for the liquidsoap playout to work.
-	def update_scheduled_item(self, item_id, value):
-		nil
+	# Implementation: optional
+	#
+	# Called from: push loop
+	#
+	# Tell server that the scheduled *playlist* has started.
+	def notify_scheduled_item_start_playing(self, pkey, schedule):
+		pass
 	
-	# This is optional.
+	# Implementation: optional
 	# You dont actually have to implement this function for the liquidsoap playout to work.
-	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		nil
+	#
+	# Called from: pypo_notify.py
+	#
+	# This is a callback from liquidsoap, we use this to notify about the
+	# currently playing *song*.  We get passed a JSON string which we handed to
+	# liquidsoap in get_liquidsoap_data().
+	def notify_media_item_start_playing(self, data, media_id):
+		pass
 	
+	# Implementation: optional
+	# You dont actually have to implement this function for the liquidsoap playout to work.
 	def generate_range_dp(self):
-		nil
+		pass
 
+	# Implementation: optional
+	#
+	# Called from: push loop
+	#
+	# Return a dict of extra info you want to pass to liquidsoap
+	# You will be able to use this data in update_start_playing
+	def get_liquidsoap_data(self, pkey, schedule):
+		pass
+		
 	# Put here whatever tests you want to run to make sure your API is working
 	def test(self):
-		nil
+		pass
+		
 		
 	#def get_media_type(self, playlist):
 	#	nil
+
+################################################################################
+# Campcaster API Client
+################################################################################
 
 class CampcasterApiClient(ApiClientInterface):
 
 	def __init__(self, config):
 		self.config = config
-		#self.api_auth = api_auth
 
 	def __get_campcaster_version(self):
 		logger = logging.getLogger()
@@ -109,7 +151,6 @@ class CampcasterApiClient(ApiClientInterface):
 	def test(self):
 		logger = logging.getLogger()
 		status, items = self.get_schedule('2010-01-01-00-00-00', '2011-01-01-00-00-00')
-		#print items
 		schedule = items["playlists"]
 		logger.debug("Number of playlists found: %s", str(len(schedule)))
 		count = 1
@@ -117,12 +158,10 @@ class CampcasterApiClient(ApiClientInterface):
 			logger.debug("Playlist #%s",str(count))
 			count+=1
 			#logger.info("found playlist at %s", pkey)
-			#print pkey
 			playlist = schedule[pkey]
 			for item in playlist["medias"]:
 				filename = urlparse(item["uri"])
 				filename = filename.query[5:]
-				#print filename
 				self.get_media(item["uri"], filename)
 
 
@@ -141,6 +180,7 @@ class CampcasterApiClient(ApiClientInterface):
 			print 'Campcaster version: ' + str(version)
 			print 'pypo is compatible with this version of Campcaster.'
 			print
+
 
 	def get_schedule(self, start=None, end=None):
 		logger = logging.getLogger()
@@ -183,26 +223,26 @@ class CampcasterApiClient(ApiClientInterface):
 		except Exception, e:
 			print e
 
-		schedule = response["playlists"]
-		scheduleKeys = sorted(schedule.iterkeys())
-		
-		# Remove all playlists that have passed current time
-		try:
-			tnow = time.localtime(time.time())
-			str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-			toRemove = []
-			for pkey in scheduleKeys:
-				if (str_tnow_s > schedule[pkey]['end']):
-					toRemove.append(pkey)
-				else:
-					break
-			#logger.debug("Remove keys: %s", toRemove)
-			for index in toRemove:
-				del schedule[index]
-			#logger.debug("Schedule dict: %s", schedule)
-		except Exception, e:
-			logger.debug("'Ignore Past Playlists' feature not supported by API: %s", e)
-		response["playlists"] = schedule
+		#schedule = response["playlists"]
+		#scheduleKeys = sorted(schedule.iterkeys())
+		#
+		## Remove all playlists that have passed current time
+		#try:
+		#	tnow = time.localtime(time.time())
+		#	str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+		#	toRemove = []
+		#	for pkey in scheduleKeys:
+		#		if (str_tnow_s > schedule[pkey]['end']):
+		#			toRemove.append(pkey)
+		#		else:
+		#			break
+		#	#logger.debug("Remove keys: %s", toRemove)
+		#	for index in toRemove:
+		#		del schedule[index]
+		#	#logger.debug("Schedule dict: %s", schedule)
+		#except Exception, e:
+		#	logger.debug("'Ignore Past Playlists' feature not supported by API: %s", e)
+		#response["playlists"] = schedule
 
 		return status, response
 
@@ -220,51 +260,58 @@ class CampcasterApiClient(ApiClientInterface):
 			logger.error("%s", e)
 
 
-	def update_scheduled_item(self, item_id, value):
-		pass
-		#logger = logging.getLogger()
-		#
-		#url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
-		#
-		#try:
-		#	response = urllib.urlopen(url, self.api_auth)
-		#	response = json.read(response.read())
-		#	logger.info("API-Status %s", response['status'])
-		#	logger.info("API-Message %s", response['message'])
-		#
-		#except Exception, e:
-		#	print e
-		#	api_status = False
-		#	logger.critical("Unable to connect - %s", e)
-		#
-		#return response
+	"""
+	Tell server that the scheduled *playlist* has started.
+	"""
+	def notify_scheduled_item_start_playing(self, pkey, schedule):
+		logger = logging.getLogger()
+		playlist = schedule[pkey]
+		schedule_id = playlist["schedule_id"]		
+		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
+		url = url.replace("%%schedule_id%%", str(schedule_id))
+		url += "&api_key=" + self.config["api_key"]
+		logger.debug(url)
+		
+		try:
+			response = urllib.urlopen(url)
+			response = json.read(response.read())
+			logger.info("API-Status %s", response['status'])
+			logger.info("API-Message %s", response['message'])
+		
+		except Exception, e:
+			logger.critical("Unable to connect - %s", e)
+		
+		return response
 	
-	
-	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		pass
-		#logger = logging.getLogger()
-		#
-		#url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
-		#url = url.replace("%%playlist_type%%", str(playlist_type))
-		#url = url.replace("%%export_source%%", str(export_source))
-		#url = url.replace("%%media_id%%", str(media_id))
-		#url = url.replace("%%playlist_id%%", str(playlist_id))
-		#url = url.replace("%%transmission_id%%", str(transmission_id))			
-		#print url
-		#
-		#try:
-		#	response = urllib.urlopen(url)
-		#	response = json.read(response.read())
-		#	logger.info("API-Status %s", response['status'])
-		#	logger.info("API-Message %s", response['message'])
-		#	logger.info("TXT %s", response['str_dls'])
-		#
-		#except Exception, e:
-		#	print e
-		#	api_status = False
-		#	logger.critical("Unable to connect - %s", e)
-		#
-		#return response
+
+	"""
+	This is a callback from liquidsoap, we use this to notify about the
+	currently playing *song*.  We get passed a JSON string which we handed to
+	liquidsoap in get_liquidsoap_data().
+	"""
+	def notify_media_item_start_playing(self, data, media_id):
+		logger = logging.getLogger()
+		response = ''
+		if (data[0] != '{'):
+			return response
+		try:
+			data = json.read(data)
+			logger.debug(str(data))
+			schedule_id = data["schedule_id"]
+			url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
+			url = url.replace("%%media_id%%", str(media_id))
+			url = url.replace("%%schedule_id%%", str(schedule_id))
+			url += "&api_key=" + self.config["api_key"]
+			logger.debug(url)
+			response = urllib.urlopen(url)
+			response = json.read(response.read())
+			logger.info("API-Status %s", response['status'])
+			logger.info("API-Message %s", response['message'])
+		
+		except Exception, e:
+			logger.critical("Exception: %s", e)
+		
+		return response
 	
 	
 	def generate_range_dp(self):
@@ -287,6 +334,17 @@ class CampcasterApiClient(ApiClientInterface):
 		#	
 		#return response
 
+	def get_liquidsoap_data(self, pkey, schedule):
+		logger = logging.getLogger()
+		playlist = schedule[pkey]
+		data = dict()
+		try:
+			data["schedule_id"] = playlist['id']
+		except Exception, e:
+			data["schedule_id"] = 0
+		data = json.write(data)
+		return data
+	
 
 		
 ################################################################################
@@ -327,7 +385,7 @@ class ObpApiClient():
 	
 	
 	def get_obp_version(self):
-		logger = logging.getLogger("ObpApiClient.get_obp_version")
+		logger = logging.getLogger()
 
 		# lookup OBP version		
 		url = self.config["base_url"] + self.config["api_base"]+ self.config["version_url"]
@@ -369,7 +427,7 @@ class ObpApiClient():
 
 
 	def get_schedule(self, start=None, end=None):
-		logger = logging.getLogger("CampcasterApiClient.get_schedule")
+		logger = logging.getLogger()
 		
 		"""
 		calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
@@ -421,13 +479,15 @@ class ObpApiClient():
 			logger.error("%s", e)
 
 
-	def update_scheduled_item(self, item_id, value):
-		logger = logging.getLogger("ObpApiClient.update_scheduled_item")
-		# lookup OBP version
-		
+	"""
+	Tell server that the scheduled *playlist* has started.
+	"""
+	def notify_scheduled_item_start_playing(self, pkey, schedule):
+	#def update_scheduled_item(self, item_id, value):
+		logger = logging.getLogger()
 		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
-		url = url.replace("%%item_id%%", str(item_id))
-		url = url.replace("%%played%%", str(value))
+		url = url.replace("%%item_id%%", str(schedule[pkey]["id"]))
+		url = url.replace("%%played%%", "1")
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)
@@ -442,9 +502,18 @@ class ObpApiClient():
 	
 		return response
 	
-	
-	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
-		logger = logging.getLogger("ApiClient.update_scheduled_item")
+	"""
+	This is a callback from liquidsoap, we use this to notify about the
+	currently playing *song*.  We get passed a JSON string which we handed to
+	liquidsoap in get_liquidsoap_data().
+	"""
+	def notify_media_item_start_playing(self, data, media_id):	
+#	def update_start_playing(self, playlist_type, export_source, media_id, playlist_id, transmission_id):
+		logger = logging.getLogger()
+		playlist_type = data["playlist_type"]
+		export_source = data["export_source"]
+		playlist_id = data["playlist_id"]
+		transmission_id = data["transmission_id"]
 		
 		url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
 		url = url.replace("%%playlist_type%%", str(playlist_type))
@@ -470,7 +539,7 @@ class ObpApiClient():
 	
 	
 	def generate_range_dp(self):
-		logger = logging.getLogger("ObpApiClient.generate_range_dp")
+		logger = logging.getLogger()
 	
 		url = self.config["base_url"] + self.config["api_base"] + self.config["generate_range_url"]
 		
@@ -486,5 +555,20 @@ class ObpApiClient():
 			api_status = False
 			logger.critical("Unable to handle the OBP API request - %s", e)
 		
-		
 		return response
+
+	def get_liquidsoap_data(self, pkey, schedule):
+		playlist = schedule[pkey]
+		data = dict()
+		data["ptype"] = playlist['subtype']
+		try:
+			data["user_id"] = playlist['user_id']
+			data["playlist_id"] = playlist['id']
+			data["transmission_id"] = playlist['schedule_id']
+		except Exception, e:
+			data["playlist_id"] = 0
+			data["user_id"] = 0
+			data["transmission_id"] = 0
+		data = json.write(data)
+		return data
+	

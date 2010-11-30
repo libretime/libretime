@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
 """
 Python part of radio playout (pypo)
 
@@ -19,7 +17,7 @@ tracks over and over again.
 
 Attention & ToDos
 - liquidsoap does not like mono files! So we have to make sure that only files with 
-  2 channels are fed to LS
+  2 channels are fed to LiquidSoap
   (solved: current = audio_to_stereo(current) - maybe not with ultimate performance)
 
 
@@ -74,14 +72,14 @@ parser = OptionParser(usage=usage)
 parser.add_option("-v", "--compat", help="Check compatibility with server API version", default=False, action="store_true", dest="check_compat")
 
 parser.add_option("-t", "--test", help="Do a test to make sure everything is working properly.", default=False, action="store_true", dest="test")
-parser.add_option("-f", "--fetch-scheduler", help="Fetch from scheduler - scheduler (loop, interval in config file)", default=False, action="store_true", dest="fetch_scheduler")
-parser.add_option("-p", "--push-scheduler", help="Push scheduler to Liquidsoap (loop, interval in config file)", default=False, action="store_true", dest="push_scheduler")
+parser.add_option("-f", "--fetch-scheduler", help="Fetch the schedule from server.  This is a polling process that runs forever.", default=False, action="store_true", dest="fetch_scheduler")
+parser.add_option("-p", "--push-scheduler", help="Push the schedule to Liquidsoap. This is a polling process that runs forever.", default=False, action="store_true", dest="push_scheduler")
 
 parser.add_option("-F", "--fetch-daypart", help="Fetch from daypart - scheduler (loop, interval in config file)", default=False, action="store_true", dest="fetch_daypart")
 parser.add_option("-P", "--push-daypart", help="Push daypart to Liquidsoap (loop, interval in config file)", default=False, action="store_true", dest="push_daypart")
 
 parser.add_option("-b", "--cleanup", help="Cleanup", default=False, action="store_true", dest="cleanup")
-parser.add_option("-j", "--jingles", help="Get new jingles from obp, comma separated list if jingle-id's as argument", metavar="LIST")
+#parser.add_option("-j", "--jingles", help="Get new jingles from server, comma separated list if jingle-id's as argument", metavar="LIST")
 parser.add_option("-c", "--check", help="Check the cached schedule and exit", default=False, action="store_true", dest="check")
 
 # parse options
@@ -93,32 +91,19 @@ logging.config.fileConfig("logging.cfg")
 # loading config file
 try:
     config = ConfigObj('config.cfg')
-    CACHE_DIR = config['cache_dir']
-    FILE_DIR = config['file_dir']
-    TMP_DIR = config['tmp_dir']
-    API_BASE = config['api_base']
-    API_KEY = config['api_key']
     POLL_INTERVAL = float(config['poll_interval'])
     PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
-    #PREPARE_AHEAD = config['prepare_ahead']
-    CACHE_FOR = config['cache_for']
-    CUE_STYLE = config['cue_style']
-    #print config
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
-    
-#TIME = time.localtime(time.time())
-TIME = (2010, 6, 26, 15, 33, 23, 2, 322, 0)
     
 class Global:
     def __init__(self):
         print
         
     def selfcheck(self):       
-        self.api_auth = urllib.urlencode({'api_key': API_KEY})
         self.api_client = api_client.api_client_factory(config)
         self.api_client.check_version()
             
@@ -128,18 +113,23 @@ class Global:
 """
 class Playout:
     def __init__(self):
-        self.file_dir = FILE_DIR 
-        self.tmp_dir = TMP_DIR         
-        self.api_auth = urllib.urlencode({'api_key': API_KEY})
         self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
-        self.silence_file = self.file_dir + 'basic/silence.mp3'
-        
-        # set initial state
+        self.silence_file = config["file_dir"] + 'basic/silence.mp3'
+        self.push_ahead = 15
         self.range_updated = False
+        
     
     def test_api(self):
         self.api_client.test()
+      
+      
+    def set_export_source(self, export_source):
+        self.export_source = export_source
+        self.cache_dir = config["cache_dir"] + self.export_source + '/'
+        self.schedule_file = self.cache_dir + 'schedule.pickle'
+        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
+       
         
     """
     Fetching part of pypo
@@ -155,9 +145,7 @@ class Playout:
         """
         logger = logging.getLogger()
         
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
+        self.set_export_source(export_source)
         
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass
@@ -185,10 +173,10 @@ class Playout:
         except Exception, e: logger.error("%s", e)
 
         # prepare the playlists
-        if CUE_STYLE == 'pre':
-            try: self.prepare_playlists_cue(self.export_source)
+        if config["cue_style"] == 'pre':
+            try: self.prepare_playlists_cue()
             except Exception, e: logger.error("%s", e)
-        elif CUE_STYLE == 'otf':
+        elif config["cue_style"] == 'otf':
             try: self.prepare_playlists(self.export_source)
             except Exception, e: logger.error("%s", e)
 
@@ -210,10 +198,10 @@ class Playout:
         
         tnow = time.localtime(time.time())
         
-        if(tnow[3] == 16):
+        if (tnow[3] == 16):
             self.range_updated = False
             
-        if(tnow[3] == 17 and self.range_updated == False):
+        if (tnow[3] == 17 and self.range_updated == False):
             try: 
                 print self.api_client.generate_range_dp()
                 logger.info("daypart updated")
@@ -248,18 +236,11 @@ class Playout:
     playlist folder.
     file is eg 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
-    def prepare_playlists_cue(self, export_source):
+    def prepare_playlists_cue(self):
         logger = logging.getLogger()
         
-        self.export_source =  export_source
-
-        try:
-            schedule_file = open(self.schedule_file, "r")
-            schedule = pickle.load(schedule_file)
-            schedule_file.close()
-        except Exception, e:
-            logger.error("%s", e)
-            schedule = None
+        # Load schedule from disk
+        schedule = self.load_schedule()
 
         # Dont do anything if schedule is empty
         if (not schedule):
@@ -271,7 +252,6 @@ class Playout:
         try:
             for pkey in scheduleKeys:
                 logger.info("found playlist at %s", pkey)
-                #print pkey
                 playlist = schedule[pkey]
                 
                 # create playlist directory
@@ -282,18 +262,20 @@ class Playout:
                 
                 ls_playlist = '';
                 
-                print '*****************************************'
-                print 'pkey:        ' + str(pkey)
-                print 'cached at :  ' + self.cache_dir + str(pkey)
-                print 'subtype:     ' + str(playlist['subtype'])
-                print 'played:      ' + str(playlist['played'])
-                print 'schedule id: ' + str(playlist['schedule_id'])
-                print 'duration:    ' + str(playlist['duration'])
-                print 'source id:   ' + str(playlist['x_ident'])
-                print '*****************************************'
+                logger.debug('*****************************************')
+                logger.debug('pkey:        ' + str(pkey))
+                logger.debug('cached at :  ' + self.cache_dir + str(pkey))
+                logger.debug('subtype:     ' + str(playlist['subtype']))
+                logger.debug('played:      ' + str(playlist['played']))
+                logger.debug('schedule id: ' + str(playlist['schedule_id']))
+                logger.debug('duration:    ' + str(playlist['duration']))
+                logger.debug('source id:   ' + str(playlist['x_ident']))
+                logger.debug('*****************************************')
+
+                # Creating an API call like the next two lines would make this more flexible                
+                # mediaType = api_client.get_media_type(playlist)
+                # if (mediaType == PYPO_MEDIA_SKIP):
                 
-                #mediaType = api_client.get_media_type(playlist)
-                #if (mediaType == PYPO_MEDIA_SKIP):
                 if int(playlist['played']) == 1:
                     logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
                 
@@ -401,7 +383,6 @@ class Playout:
                     
                 if True == os.access(dst, os.R_OK):
                     # check filesize (avoid zero-byte files)
-                    #print 'waiting: ' + dst
                     try: fsize = os.path.getsize(dst)
                     except Exception, e:
                         logger.error("%s", e)
@@ -445,15 +426,11 @@ class Playout:
         else:
             if os.path.isfile(dst):
                 logger.debug("file already in cache: %s", dst)
-                #print 'cached'
                 
             else:
                 logger.debug("try to download and cue %s", media['uri'])
                 
-                #print '***'
-                dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
-                #print dst_tmp
-                #print '***'
+                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
                 self.api_client.get_media(media['uri'], dst_tmp)
                     
                 # cue
@@ -509,7 +486,7 @@ class Playout:
                 logger.debug("try to copy and cue %s", media['uri'])
                 
                 print '***'
-                dst_tmp = self.tmp_dir + "".join([random.choice(string.letters) for i in xrange(10)])
+                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)])
                 print dst_tmp
                 print '***'
                 
@@ -550,10 +527,8 @@ class Playout:
         """
         logger = logging.getLogger()
 
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
-        offset = 3600 * int(CACHE_FOR)
+        self.set_export_source(export_source)
+        offset = 3600 * int(config["cache_for"])
         now = time.time()
 
         for r, d, f in os.walk(self.cache_dir):
@@ -588,127 +563,108 @@ class Playout:
     def push(self, export_source):
         logger = logging.getLogger()
         
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
+        self.set_export_source(export_source)
         
-        self.push_ahead = 15
+        #try:
+        #    dummy = self.schedule
+        #    logger.debug('schedule already loaded')
+        #except Exception, e:
+        #    self.schedule = self.push_init(self.export_source)
+            
+        self.schedule = self.load_schedule()
+        playedItems = self.load_schedule_tracker()
         
-        try:
-            dummy = self.schedule
-            logger.debug('schedule already loaded')
-        except Exception, e:
-            self.schedule = self.push_init(self.export_source)
-            
-        self.schedule = self.push_init(self.export_source)
-            
-
-        """
-        I'm quite sure that this could be achieved in a much more elegant way in python...
-        """
-
         tcomming = time.localtime(time.time() + self.push_ahead)
         tnow = time.localtime(time.time())
         
         str_tnow = "%04d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4])
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        
+        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])        
         str_tcomming = "%04d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4])
         str_tcomming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4], tcomming[5])
-
-        #print '--'
-        #print str_tnow_s + ' now'
-        #print str_tcomming_s + ' comming'
 
         playnow = None
         
         if self.schedule == None:
-            print 'unable to loop schedule - maybe write in progress'
-            print 'will try in next loop'
+            logger.warn('Unable to loop schedule - maybe write in progress?')
+            logger.warn('Will try again in next loop.')
         
         else:    
-            for pkey in self.schedule:
-                
+            for pkey in self.schedule:                
                 if pkey[0:16] == str_tcomming:
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = self.schedule[pkey]
-                    
-                    if int(playlist['played']) != 1:
-                        #print '!!!!!!!!!!!!!!!!!!!'
-                        #print 'MATCH'
-
-                        """
-                        ok we have a match, replace the current playlist and
-                        force liquidsoap to refresh
-                        Add a 'played' state to the list in schedule, so it is not called again 
-                        in the next push loop
-                        """
+                    playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                    logger.debug("PLAYED FLAG: " + str(playedFlag)) 
+                    if not playedFlag:
+                        # We have a match, replace the current playlist and
+                        # force liquidsoap to refresh.
                         ptype = playlist['subtype']
-                        
-                        try:
-                            user_id = playlist['user_id']
-                            playlist_id = playlist['id']
-                            transmission_id = playlist['schedule_id']
-                        
-                        except Exception, e:
-                            playlist_id = 0
-                            user_id = 0
-                            transmission_id = 0
-                            print e
-                        
-                        #print 'Playlist id:',
-                        
-                        if (self.push_liquidsoap(pkey, ptype, user_id, playlist_id, transmission_id, self.push_ahead) == 1):
+
+                        if (self.push_liquidsoap(pkey, self.schedule, ptype) == 1):
                             logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                            self.schedule[pkey]['played'] = 1
-                            """
-                            Call api to update schedule states and
-                            write changes back to cache file
-                            """
-                            self.api_client.update_scheduled_item(int(playlist['schedule_id']), 1)
-                            schedule_file = open(self.schedule_file, "w")
-                            pickle.dump(self.schedule, schedule_file)
-                            schedule_file.close()
-                            logger.debug("Wrote schedule to disk")
-                    
-                #else:
-                #    print 'Nothing to do...'
+                            # Marked the current playlist as 'played' in the schedule tracker
+                            # so it is not called again in the next push loop.
+                            # Write changes back to tracker file.                            
+                            playedItems[pkey] = playlist
+                            playedItems[pkey]['played'] = 1 
+                            schedule_tracker = open(self.schedule_tracker_file, "w")
+                            pickle.dump(playedItems, schedule_tracker)
+                            schedule_tracker.close()
+                            logger.debug("Wrote schedule to disk: "+str(playedItems))
+                                                        
+                            # Call API to update schedule states
+                            logger.debug("Doing callback to server to update 'played' status.")
+                            self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
 
         
-    def push_init(self, export_source):
+    def load_schedule(self):
         logger = logging.getLogger()
+        schedule = None
         
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
-        
-        # load the schedule from cache
-        logger.debug('loading schedule from cache...')
-        try:
-            schedule_file = open(self.schedule_file, "r")
-            schedule = pickle.load(schedule_file)
-            schedule_file.close()
-            
-        except Exception, e:
-            logger.error('%s', e)
-            schedule = None
+        # create the file if it doesnt exist
+        if (not os.path.exists(self.schedule_file)):
+            logger.debug('creating file ' + self.schedule_file)
+            open(self.schedule_file, 'w').close() 
+        else:                
+            # load the schedule from cache
+            logger.debug('loading schedule file '+self.schedule_file)
+            try:
+                schedule_file = open(self.schedule_file, "r")
+                schedule = pickle.load(schedule_file)
+                schedule_file.close()
+                
+            except Exception, e:
+                logger.error('%s', e)
 
         return schedule
     
     
-    def push_liquidsoap(self, pkey, ptype, user_id, playlist_id, transmission_id, push_ahead):
+    def load_schedule_tracker(self):
         logger = logging.getLogger()
+        playedItems = dict()
+
+        # create the file if it doesnt exist
+        if (not os.path.exists(self.schedule_tracker_file)):
+            logger.debug('creating file ' + self.schedule_tracker_file)
+            schedule_tracker = open(self.schedule_tracker_file, 'w')
+            pickle.dump(playedItems, schedule_tracker)
+            schedule_tracker.close()            
+        else:        
+            try:
+                logger.debug('loading schedule tracker file '+ self.schedule_tracker_file)
+                schedule_tracker = open(self.schedule_tracker_file, "r")
+                playedItems = pickle.load(schedule_tracker)
+                schedule_tracker.close()                
+            except Exception, e:
+                logger.error('Unable to load schedule tracker file: %s', e)
+                
+        return playedItems
+
         
-        #self.export_source = export_source
-        
-        self.push_ahead = push_ahead
-        
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
-        
+    def push_liquidsoap(self, pkey, schedule, ptype):
+        logger = logging.getLogger()
+    
         src = self.cache_dir + str(pkey) + '/list.lsp'
-        
-        logger.debug(src)
         
         try:
             if True == os.access(src, os.R_OK):
@@ -724,8 +680,7 @@ class Playout:
             if (int(ptype) == 6):
                 tn.write("live_in.start")
                 tn.write("\n") 
-                
-            
+                   
             if (int(ptype) < 5):
                 for line in pl_file.readlines():
                     logger.debug(line.strip())
@@ -741,19 +696,11 @@ class Playout:
             logger.debug('sending "flip"')
             tn = telnetlib.Telnet(LS_HOST, 1234)
             
-            """
-            Pass some extra information to liquidsoap
-            """
-            logger.debug('user_id: %s', user_id)
-            logger.debug('playlist_id: %s', playlist_id)
-            logger.debug('transmission_id: %s', transmission_id)
-            logger.debug('ptype: %s', ptype)
-            
-            tn.write("vars.user_id %s\n" % user_id)
-            tn.write("vars.playlist_id %s\n" % playlist_id)
-            tn.write("vars.transmission_id %s\n" % transmission_id)
-            tn.write("vars.playlist_type %s\n" % ptype)
-            
+            # Get any extra information for liquidsoap (which will be sent back to us)
+            liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)            
+            logger.debug("Sending additional data to liquidsoap: "+liquidsoap_data)
+            tn.write("vars.pypo_data "+liquidsoap_data+"\n")
+                
 #            if(int(ptype) < 5):
 #                tn.write(self.export_source + '.flip')
 #                tn.write("\n")
@@ -761,7 +708,7 @@ class Playout:
             tn.write(self.export_source + '.flip')
             tn.write("\n")
                 
-            if(int(ptype) == 6):
+            if (int(ptype) == 6):
                 tn.write("live.active 1")
                 tn.write("\n")
             else:
@@ -772,7 +719,7 @@ class Playout:
             
             tn.write("exit\n")
             
-            logger.debug(tn.read_all())
+            tn.read_all()
             status = 1
         except Exception, e:
             logger.error('%s', e)
@@ -857,38 +804,38 @@ class Playout:
 
     """
     Updates the jingles. Give comma separated list of jingle tracks.
+    
+    NOTE: commented out because it needs to be converted to use the API client. - Paul
     """
-    def update_jingles(self, options):
-        print 'jingles'
-        
-        jingle_list = string.split(options, ',')
-        print jingle_list
-        for media_id in jingle_list:
-            # api path maybe should not be hard-coded
-            src = API_BASE + 'api/pypo/get_media/' + str(media_id)
-            print src
-            # include the hourly jungles for the moment
-            dst = "%s%s/%s.mp3" % (self.file_dir, 'jingles/hourly', str(media_id))
-            print dst
-            
-            try:
-                print '** urllib auth with: ',
-                print self.api_auth
-                opener = urllib.URLopener()
-                opener.retrieve (src, dst, False, self.api_auth)
-                logger.info("downloaded %s to %s", src, dst)
-            except Exception, e:
-                print e
-                logger.error("%s", e)
+    #def update_jingles(self, options):
+    #    print 'jingles'
+    #    
+    #    jingle_list = string.split(options, ',')
+    #    print jingle_list
+    #    for media_id in jingle_list:
+    #        # api path maybe should not be hard-coded
+    #        src = API_BASE + 'api/pypo/get_media/' + str(media_id)
+    #        print src
+    #        # include the hourly jungles for the moment
+    #        dst = "%s%s/%s.mp3" % (config["file_dir"], 'jingles/hourly', str(media_id))
+    #        print dst
+    #        
+    #        try:
+    #            print '** urllib auth with: ',
+    #            print self.api_auth
+    #            opener = urllib.URLopener()
+    #            opener.retrieve (src, dst, False, self.api_auth)
+    #            logger.info("downloaded %s to %s", src, dst)
+    #        except Exception, e:
+    #            print e
+    #            logger.error("%s", e)
 
     
     def check_schedule(self, export_source):
         logger = logging.getLogger()
 
-        self.export_source = export_source
-        self.cache_dir = CACHE_DIR + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule'
-
+        self.set_export_source(export_source)
+        
         try:
             schedule_file = open(self.schedule_file, "r")
             schedule = pickle.load(schedule_file)
@@ -898,11 +845,8 @@ class Playout:
             logger.error("%s", e)
             schedule = None
 
-        #for pkey in schedule:
         for pkey in sorted(schedule.iterkeys()):
-
             playlist = schedule[pkey]
-            
             print '*****************************************'
             print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
             print 'cached at :   ' + self.cache_dir + str(pkey)
@@ -911,7 +855,6 @@ class Playout:
             print 'schedule id:  ' + str(playlist['schedule_id'])
             print 'duration:     ' + str(playlist['duration'])
             print 'source id:    ' + str(playlist['x_ident'])
-            
             print '-----------------------------------------'
             
             for media in playlist['medias']:
@@ -921,7 +864,6 @@ class Playout:
             
 
 if __name__ == '__main__':
-  
     print
     print '###########################################'
     print '#             *** pypo  ***               #'
@@ -997,11 +939,11 @@ while run == True:
         time.sleep(PUSH_INTERVAL)
         
             
-    while options.jingles:
-        try: po.update_jingles(options.jingles)
-        except Exception, e:
-            print e
-        sys.exit()  
+    #while options.jingles:
+    #    try: po.update_jingles(options.jingles)
+    #    except Exception, e:
+    #        print e
+    #    sys.exit()  
         
             
     while options.check:
@@ -1011,7 +953,7 @@ while run == True:
         sys.exit()        
             
     while options.cleanup:
-        try: po.cleanup()
+        try: po.cleanup('scheduler')
         except Exception, e:
             print e
         sys.exit()

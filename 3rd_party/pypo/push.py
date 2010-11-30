@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# author Jonas Ohrstrom <jonas@digris.ch>
-
 """
 Python part of radio playout (pypo)
 

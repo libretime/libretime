@@ -1,6 +1,5 @@
 <?php
 require_once('../conf.php');
-require_once('DB.php');
 require_once('../backend/StoredFile.php');
 
 $api_key = $_GET['api_key'];
@@ -12,13 +11,6 @@ if(!in_array($api_key, $CC_CONFIG["apiKey"]))
 }
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
-if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 $filename = $_GET["file"];
 $file_id = substr($filename, 0, strpos($filename, "."));

@@ -1,4 +1,4 @@
-# author Jonas Ohrstrom <jonas@digris.ch>
+
 # Register the cut protocol
 def cue_protocol(arg,delay)
 	# The extraction program
