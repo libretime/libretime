@@ -1,13 +1,9 @@
 #######################################################################
 # Live input - From external icecast server
 #######################################################################
-
-
 live_in = input.http(id="live_in",autostart=false,buffer=.1, max=12.,couchcaster_list)
 live_in = buffer(id="buffer_live_in",buffer=.1,fallible=true,live_in)
 live_in = mksafe(live_in)
-
-
 
 live_active = ref false
 def live_switch(i)

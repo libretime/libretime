@@ -51,11 +51,12 @@ end
 def scheduler_status()
   print('scheduler_active: #{!scheduler_active}')
   print('scheduler_queue : #{!scheduler_queue}')
-  
-  print('user_id: #{!user_id}')
-  print('playlist_id: #{!playlist_id}')
-  print('transmission_id: #{!transmission_id}')  
-  print('playlist_type: #{!playlist_type}')  
+  print('pypo_data: #{!pypo_data}')
+
+  #print('user_id: #{!user_id}')
+  #print('playlist_id: #{!playlist_id}')
+  #print('transmission_id: #{!transmission_id}')  
+  #print('playlist_type: #{!playlist_type}')  
   
   "Done"
 end
