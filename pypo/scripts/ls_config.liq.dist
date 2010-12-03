@@ -2,8 +2,7 @@
 # liquidsoap config file                  #
 ###########################################
 
-# this file is specific to the obp 
-# installation. eg it assumes that there are 
+# This config assumes that there are 
 # two instances of LS running
 # the "scheduler" & the "fallback" instance
 
@@ -12,12 +11,11 @@
 # general settings                        #
 ###########################################
 
-log_file = "/var/log/obp/ls/<script>.log"
+log_file = "/var/log/pypo/<script>.log"
 log_level = 5
 
 # archive directory
-archive_dir = "/storage/pypo/archive/"
-
+archive_dir = "/opt/pypo/archive/"
 
 # list pointing to the current couchcaster mountpoint 
 couchcaster_list = "http://stage.openbroadcast.ch/mod/ml/api/pypo/current_couchcaster"

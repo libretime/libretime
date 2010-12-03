@@ -36,6 +36,7 @@ try:
   #os.mkdirs("/var/log/liquidsoap")
   #os.system("chown -R liquidsoap:liquidsoap /var/log/liquidsoap")
   create_path("/opt/pypo")
+  create_path("/opt/pypo/bin")
   create_path("/opt/pypo/cache")
   create_path("/opt/pypo/files")
   create_path("/opt/pypo/files/basic")
@@ -44,6 +45,11 @@ try:
   create_path("/opt/pypo/archive")
   os.system("chmod -R 755 /opt/pypo/")
   os.system("chown -R pypo:pypo /opt/pypo")
+  
+  shutil.copy("../pypo/scripts/silence-playlist.lsp", "/opt/pypo/files/basic")
+  shutil.copy("../pypo/scripts/silence.mp3", "/opt/pypo/files/basic")
+  shutil.copy("../pypo/pypo-cli.py", "/opt/pypo/bin")
+  
 except Exception, e:
   print "exception:" + str(e)
   
