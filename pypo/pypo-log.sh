@@ -10,6 +10,6 @@ clear
 
 # split
 multitail -s 2 /var/log/pypo/debug.log \
-/var/svc.d/pypo_push/log/main/current \
-/var/svc.d/pypo_fetch/log/main/current \
-/var/svc.d/pypo_ls/log/main/current
+/var/log/pypo-push/log/main/current \
+/var/log/pypo-fetch/log/main/current \
+/var/log/pypo-liquidsoap/log/main/current
