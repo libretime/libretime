@@ -16,9 +16,9 @@ require_once('../backend/StoredFile.php');
 
 function printUsage() {
 
-	global $CC_CONFIG;
+    global $CC_CONFIG;
 
-	echo "Usage:\n";
+    echo "Usage:\n";
     echo "  ./CleanStor [OPTION] \n";
     echo "\n";
     echo "Options:\n";
@@ -31,33 +31,33 @@ function printUsage() {
 }
 
 function camp_clean_files($p_path) {
- if (!empty($p_path) && (strlen($p_path) > 4)) {
+    if (!empty($p_path) && (strlen($p_path) > 4)) {
         list($dirList,$fileList) = File_Find::maptree($p_path);
 
         $array_mus;
         foreach ($fileList as $filepath) {
 
-        	if (@substr($filepath, strlen($filepath) - 3) != "xml") {
-        		$array_mus[] = $filepath;
-        	}
+            if (@substr($filepath, strlen($filepath) - 3) != "xml") {
+                $array_mus[] = $filepath;
+            }
         }
 
         foreach ($array_mus as $audio_file) {
 
-        	if (@is_link($audio_file) && !@stat($audio_file)) {
+            if (@is_link($audio_file) && !@stat($audio_file)) {
 
-        		//filesystem clean up.
-        		@unlink($audio_file);
-        		echo "unlinked $audio_file\n";
-        		@unlink($audio_file . ".xml");
-        		echo "unlinked " . $audio_file . ".xml\n";
-        		@rmdir(@dirname($audio_file));
-        		echo "removed dir " . @dirname($audio_file) . "\n";
+                //filesystem clean up.
+                @unlink($audio_file);
+                echo "unlinked $audio_file\n";
+                @unlink($audio_file . ".xml");
+                echo "unlinked " . $audio_file . ".xml\n";
+                @rmdir(@dirname($audio_file));
+                echo "removed dir " . @dirname($audio_file) . "\n";
 
-        		//database clean up.
-        		$stored_audio_file = StoredFile::RecallByGunid(@basename($audio_file));
-        		$stored_audio_file->delete();
-        	}
+                //database clean up.
+                $stored_audio_file = StoredFile::RecallByGunid(@basename($audio_file));
+                $stored_audio_file->delete();
+            }
         }
 
     }
@@ -69,8 +69,8 @@ function camp_remove_files($p_path) {
         list($dirList,$fileList) = File_Find::maptree($p_path);
 
         foreach ($fileList as $filepath) {
-        	echo " * Removing $filepath\n";
-        	@unlink($filepath);
+            echo " * Removing $filepath\n";
+            @unlink($filepath);
            	echo "done.\n";
         }
         foreach ($dirList as $dirpath) {
@@ -82,18 +82,18 @@ function camp_remove_files($p_path) {
 }
 
 function camp_empty_db($db) {
-	global $CC_CONFIG;
+    global $CC_CONFIG;
 
-	if (!PEAR::isError($db)) {
-	    if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
-	        echo " * Deleting from database table ".$CC_CONFIG['filesTable']."\n";
-	        $sql = "DELETE FROM ".$CC_CONFIG['filesTable'];
-	        camp_install_query($sql, false);
-	    }
-		  else {
-	        echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
-	    }
-	}
+    if (!PEAR::isError($db)) {
+        if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
+            echo " * Deleting from database table ".$CC_CONFIG['filesTable']."\n";
+            $sql = "DELETE FROM ".$CC_CONFIG['filesTable'];
+            camp_install_query($sql, false);
+        }
+        else {
+            echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
+        }
+    }
 }
 
 
@@ -104,17 +104,17 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 switch($argv[1]){
 
-	case '-e':
-	case '--empty':
-		camp_empty_db($CC_DBC);
-		camp_remove_files($CC_CONFIG['storageDir']);
-		break;
-	case '-c':
-	case '--clean':
-		camp_clean_files($CC_CONFIG['storageDir']);
-		break;
-	default:
-		printUsage();
+    case '-e':
+    case '--empty':
+        camp_empty_db($CC_DBC);
+        camp_remove_files($CC_CONFIG['storageDir']);
+        break;
+    case '-c':
+    case '--clean':
+        camp_clean_files($CC_CONFIG['storageDir']);
+        break;
+    default:
+        printUsage();
 
 }
 

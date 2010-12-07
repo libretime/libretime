@@ -50,11 +50,11 @@ class Transport
      */
     public $gb;
 
-	/**
-	 * File name
-	 * @var string
-	 */
-	private $cronJobScript;
+    /**
+     * File name
+     * @var string
+     */
+    private $cronJobScript;
 
     /**
      * wget --read-timeout parameter [s]
@@ -72,7 +72,7 @@ class Transport
      * wget --limit-rate parameter
      */
     private $downLimitRate = NULL;
-#    private $downLimitRate = 500;
+    #    private $downLimitRate = 500;
 
     /**
      * wget -t parameter
@@ -109,7 +109,7 @@ class Transport
      * @var int
      */
     private $upLimitRate  = NULL;
-#    private $upLimitRate  = 500;
+    #    private $upLimitRate  = 500;
 
 
     /**
@@ -122,9 +122,9 @@ class Transport
     {
         $this->gb =& $gb;
         $this->cronJobScript = realpath(
-            dirname(__FILE__).
+        dirname(__FILE__).
             '/../../storageServer/var/cron/transportCronJob.php'
-        );
+            );
     }
 
 
@@ -154,27 +154,27 @@ class Transport
     {
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $res = array();
         foreach (array(
             'trtype', 'state', 'direction', 'expectedsize', 'realsize',
             'expectedsum', 'realsum', 'title', 'errmsg'
-        ) as $k) {
-            $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
-        }
-        if ( ($trec->row['direction'] == 'down')  && file_exists($trec->row['localfile']) ){
-            $res['realsize'] = filesize($trec->row['localfile']);
-            $res['realsum']  = $this->_chsum($trec->row['localfile']);
-        }
-        if ( ($trec->row['direction'] == 'up') ){
-            $check = $this->uploadCheck($trec->row['pdtoken']);
-            if (!PEAR::isError($check)) {
-                $res['realsize'] = $check['size'];
-                $res['realsum'] = $check['realsum'];
+            ) as $k) {
+                $res[$k] = ( isset($trec->row[$k]) ? $trec->row[$k] : NULL );
             }
-        }
-        return $res;
+            if ( ($trec->row['direction'] == 'down')  && file_exists($trec->row['localfile']) ){
+                $res['realsize'] = filesize($trec->row['localfile']);
+                $res['realsum']  = $this->_chsum($trec->row['localfile']);
+            }
+            if ( ($trec->row['direction'] == 'up') ){
+                $check = $this->uploadCheck($trec->row['pdtoken']);
+                if (!PEAR::isError($check)) {
+                    $res['realsize'] = $check['size'];
+                    $res['realsum'] = $check['realsum'];
+                }
+            }
+            return $res;
     }
 
 
@@ -198,18 +198,18 @@ class Transport
         $res = $pr->loadGroupPref($group, $key);
         if (PEAR::isError($res)) {
             if ($res->getCode() !== GBERR_PREF) {
-            	return $res;
+                return $res;
             } else {
-            	$res = FALSE;  // default
+                $res = FALSE;  // default
             }
         }
         $state = !$res;
         if (is_null($onOff)) {
-        	return $state;
+            return $state;
         }
         $res = $pr->saveGroupPref($sessid, $group, $key, !$onOff);
         if (PEAR::isError($res)) {
-        	return $res;
+            return $res;
         }
         return $state;
     }
@@ -229,7 +229,7 @@ class Transport
     {
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         if ($trec->getState() == 'closed') {
             return PEAR::raiseError(
@@ -239,14 +239,14 @@ class Transport
         }
         switch ($action) {
             case 'pause';
-                $newState = 'paused';
-                break;
+            $newState = 'paused';
+            break;
             case 'resume';
-                $newState = 'waiting';
-                break;
+            $newState = 'waiting';
+            break;
             case 'cancel';
-                $newState = 'closed';
-                break;
+            $newState = 'closed';
+            break;
             default:
                 return PEAR::raiseError(
                     "Transport::doTransportAction:".
@@ -257,7 +257,7 @@ class Transport
         switch ($action) {
             case 'pause';
             case 'cancel';
-                $trec->killJob();
+            $trec->killJob();
         }
         return $res;
     }
@@ -286,35 +286,35 @@ class Transport
             case "webstream":
                 $storedFile = StoredFile::RecallByGunid($gunid);
                 if (is_null($storedFile) || PEAR::isError($storedFile)) {
-                	return $storedFile;
+                    return $storedFile;
                 }
                 // handle metadata:
                 $mdfpath = $storedFile->getRealMetadataFileName();
                 if (PEAR::isError($mdfpath)) {
-                	return $mdfpath;
+                    return $mdfpath;
                 }
                 $mdtrec = $this->_uploadGeneralFileToHub($mdfpath, 'metadata',
-                    array_merge(array('gunid'=>$gunid, 'fname'=>'metadata',), $pars)
+                array_merge(array('gunid'=>$gunid, 'fname'=>'metadata',), $pars)
                 );
                 if (PEAR::isError($mdtrec)) {
-                	return $mdtrec;
+                    return $mdtrec;
                 }
                 // handle raw media file:
-                $fpath = $storedFile->getRealFileName();
+                $fpath = $storedFile->getRealFilePath();
                 if (PEAR::isError($fpath)) {
-                	return $fpath;
+                    return $fpath;
                 }
                 $fname = $storedFile->getName();
                 if (PEAR::isError($fname)) {
-                	return $fname;
+                    return $fname;
                 }
                 $trec = $this->_uploadGeneralFileToHub($fpath, 'audioclip',
-                    array_merge(array(
+                array_merge(array(
                         'gunid'=>$gunid, 'fname'=>$fname, 'mdtrtok'=>$mdtrec->trtok,
-                    ), $pars)
+                ), $pars)
                 );
                 if (PEAR::isError($trec)) {
-                	return $trec;
+                    return $trec;
                 }
                 $this->startCronJobProcess($mdtrec->trtok);
                 break;
@@ -324,18 +324,18 @@ class Transport
                 require_once("Playlist.php");
                 $pl = StoredFile::RecallByGunid($plid);
                 if (is_null($pl) || PEAR::isError($pl)) {
-                	return $pl;
+                    return $pl;
                 }
                 $fname = $pl->getName();
                 if (PEAR::isError($fname)) {
-                	return $fname;
+                    return $fname;
                 }
                 if ($withContent) {
                     $this->trLog("upload2Hub exportPlaylistOpen BEGIN: ".strftime("%H:%M:%S"));
                     $res = $this->gb->bsExportPlaylistOpen($plid);
                     $this->trLog("upload2Hub exportPlaylistOpen END: ".strftime("%H:%M:%S"));
                     if (PEAR::isError($res)) {
-                    	return $res;
+                        return $res;
                     }
                     $tmpn = tempnam($CC_CONFIG['transDir'], 'plExport_');
                     $plfpath = "$tmpn.lspl";
@@ -344,21 +344,21 @@ class Transport
                     $this->trLog("upload2Hub end copy: ".strftime("%H:%M:%S"));
                     $res = $this->gb->bsExportPlaylistClose($res['token']);
                     if (PEAR::isError($res)) {
-                    	return $res;
+                        return $res;
                     }
                     $fname = $fname.".lspl";
                     $trtype = 'playlistPkg';
                 } else {
                     $plfpath = $pl->getRealMetadataFileName();
                     if (PEAR::isError($plfpath)) {
-                    	return $plfpath;
+                        return $plfpath;
                     }
                     $trtype = 'playlist';
                 }
                 $trec = $this->_uploadGeneralFileToHub($plfpath, $trtype,
-                    array_merge(array('gunid'=>$plid,'fname'=>$fname,), $pars));
+                array_merge(array('gunid'=>$plid,'fname'=>$fname,), $pars));
                 if (PEAR::isError($trec)) {
-                	return $trec;
+                    return $trec;
                 }
                 break;
             default:
@@ -390,9 +390,9 @@ class Transport
     {
         $trtype = ($withContent ? 'playlistPkg' : 'unknown' );
         $trec = TransportRecord::create($this, $trtype, 'down',
-            array_merge(array('gunid'=>$gunid, 'uid'=>$uid), $pars));
+        array_merge(array('gunid'=>$gunid, 'uid'=>$uid), $pars));
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $this->startCronJobProcess($trec->trtok);
         return $trec->trtok;
@@ -447,33 +447,33 @@ class Transport
      * @return string
      * 		transport token
      */
-//    function globalSearch($criteria, $resultMode='php', $pars=array())
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        // testing of hub availability and hub account configuration.
-//        // it makes searchjob not async - should be removed for real async
-//        $r = $this->loginToArchive();
-//        if (PEAR::isError($r)) {
-//            switch(intval($r->getCode())) {
-//                case 802:
-//                    return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
-//                case TRERR_XR_FAIL:
-//                    return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
-//            }
-//            return $r;
-//        }
-//        $this->logoutFromArchive($r);
-//        $criteria['resultMode'] = $resultMode;
-//        $localfile = tempnam($CC_CONFIG['transDir'], 'searchjob_');
-//        @chmod($localfile, 0660);
-//        $len = file_put_contents($localfile, serialize($criteria));
-//        $trec = $this->_uploadGeneralFileToHub($localfile, 'searchjob', $pars);
-//        if (PEAR::isError($trec)) {
-//        	return $trec;
-//        }
-//        $this->startCronJobProcess($trec->trtok);
-//        return $trec->trtok;
-//    }
+    //    function globalSearch($criteria, $resultMode='php', $pars=array())
+    //    {
+    //        global $CC_CONFIG, $CC_DBC;
+    //        // testing of hub availability and hub account configuration.
+    //        // it makes searchjob not async - should be removed for real async
+    //        $r = $this->loginToArchive();
+    //        if (PEAR::isError($r)) {
+    //            switch(intval($r->getCode())) {
+    //                case 802:
+    //                    return PEAR::raiseError("Can't login to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+    //                case TRERR_XR_FAIL:
+    //                    return PEAR::raiseError("Can't connect to Hub ({$r->getMessage()})", TRERR_XR_FAIL);
+    //            }
+    //            return $r;
+    //        }
+    //        $this->logoutFromArchive($r);
+    //        $criteria['resultMode'] = $resultMode;
+    //        $localfile = tempnam($CC_CONFIG['transDir'], 'searchjob_');
+    //        @chmod($localfile, 0660);
+    //        $len = file_put_contents($localfile, serialize($criteria));
+    //        $trec = $this->_uploadGeneralFileToHub($localfile, 'searchjob', $pars);
+    //        if (PEAR::isError($trec)) {
+    //        	return $trec;
+    //        }
+    //        $this->startCronJobProcess($trec->trtok);
+    //        return $trec->trtok;
+    //    }
 
 
     /**
@@ -486,60 +486,60 @@ class Transport
      * @return array
      * 		LS search result format (see localSearch)
      */
-//    function getSearchResults($trtok, $andClose=TRUE)
-//    {
-//        $trec = TransportRecord::recall($this, $trtok);
-//        if (PEAR::isError($trec)) {
-//        	return $trec;
-//        }
-//        $row = $trec->row;
-//        switch ($st = $trec->getState()) {
-//            case "failed":
-//                return PEAR::raiseError(
-//                    "Transport::getSearchResults:".
-//                    " global search or results transport failed".
-//                    " ({$trec->row['errmsg']})"
-//                );
-//            case "closed":
-///*
-//                $res = file_get_contents($row['localfile']);
-//                $results = unserialize($res);
-//                return $results;
-//*/
-//                return PEAR::raiseError(
-//                    "Transport::getSearchResults:".
-//                    " closed transport token ($trtok)", TRERR_TOK
-//                );
-//            case "finished":
-//                if ($row['direction'] == 'down') {
-//                    // really finished
-//                    $res = file_get_contents($row['localfile']);
-//                    $results = unserialize($res);
-//                    if ($andClose) {
-//                        $ret = $this->xmlrpcCall('archive.downloadClose',
-//                            array(
-//                               'token'     => $row['pdtoken'] ,
-//                               'trtype'     => $row['trtype'] ,
-//                            ));
-//                        if (PEAR::isError($ret)) {
-//                            return $ret;
-//                        }
-//                        @unlink($row['localfile']);
-//                        $r = $trec->close();
-//                        if (PEAR::isError($r)) {
-//                            return $r;
-//                        }
-//                    }
-//                    return $results;
-//                }
-//                // otherwise not really finished - only request upload finished
-//            default:
-//                return PEAR::raiseError(
-//                    "Transport::getSearchResults: not finished ($st)",
-//                    TRERR_NOTFIN
-//                );
-//        }
-//    }
+    //    function getSearchResults($trtok, $andClose=TRUE)
+    //    {
+    //        $trec = TransportRecord::recall($this, $trtok);
+    //        if (PEAR::isError($trec)) {
+    //        	return $trec;
+    //        }
+    //        $row = $trec->row;
+    //        switch ($st = $trec->getState()) {
+    //            case "failed":
+    //                return PEAR::raiseError(
+    //                    "Transport::getSearchResults:".
+    //                    " global search or results transport failed".
+    //                    " ({$trec->row['errmsg']})"
+    //                );
+    //            case "closed":
+    ///*
+    //                $res = file_get_contents($row['localfile']);
+    //                $results = unserialize($res);
+    //                return $results;
+    //*/
+    //                return PEAR::raiseError(
+    //                    "Transport::getSearchResults:".
+    //                    " closed transport token ($trtok)", TRERR_TOK
+    //                );
+    //            case "finished":
+    //                if ($row['direction'] == 'down') {
+    //                    // really finished
+    //                    $res = file_get_contents($row['localfile']);
+    //                    $results = unserialize($res);
+    //                    if ($andClose) {
+    //                        $ret = $this->xmlrpcCall('archive.downloadClose',
+    //                            array(
+    //                               'token'     => $row['pdtoken'] ,
+    //                               'trtype'     => $row['trtype'] ,
+    //                            ));
+    //                        if (PEAR::isError($ret)) {
+    //                            return $ret;
+    //                        }
+    //                        @unlink($row['localfile']);
+    //                        $r = $trec->close();
+    //                        if (PEAR::isError($r)) {
+    //                            return $r;
+    //                        }
+    //                    }
+    //                    return $results;
+    //                }
+    //                // otherwise not really finished - only request upload finished
+    //            default:
+    //                return PEAR::raiseError(
+    //                    "Transport::getSearchResults: not finished ($st)",
+    //                    TRERR_NOTFIN
+    //                );
+    //        }
+    //    }
 
 
     /* ------------------------ methods for ls-archive-format file transports */
@@ -563,7 +563,7 @@ class Transport
         }
         $trec = $this->_uploadGeneralFileToHub($filePath, 'file', $pars);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $this->startCronJobProcess($trec->trtok);
         return $trec->trtok;
@@ -591,15 +591,15 @@ class Transport
         global $CC_CONFIG, $CC_DBC;
         $tmpn = tempnam($CC_CONFIG['transDir'], 'HITrans_');
         $trec = TransportRecord::create($this, 'file', 'down',
-            array_merge(array(
+        array_merge(array(
                 'url'           => $url,
                 'localfile'     => $tmpn,
                 'expectedsum'   => $chsum,
                 'expectedsize'  => $size,
-            ), $pars)
+        ), $pars)
         );
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $this->startCronJobProcess($trec->trtok);
         return array('trtok'=>$trec->trtok, 'localfile'=>$tmpn);
@@ -616,9 +616,9 @@ class Transport
     function getHubInitiatedTransfers()
     {
         $ret = $this->xmlrpcCall('archive.listHubInitiatedTransfers',
-            array('target' => HOSTNAME));
+        array('target' => HOSTNAME));
         if (PEAR::isError($ret)) {
-        	return $ret;
+            return $ret;
         }
         $res = array();
         foreach ($ret as $it) {
@@ -642,87 +642,87 @@ class Transport
     function startHubInitiatedTransfer($uid, $rtrtok)
     {
         $ret = $this->xmlrpcCall('archive.listHubInitiatedTransfers',
-            array(
+        array(
                 'target'    => HOSTNAME,
                 'trtok'     => $rtrtok,
-            ));
+        ));
         if (PEAR::isError($ret)) {
-        	return $ret;
+            return $ret;
         }
         if (count($ret) != 1) {
             return PEAR::raiseError(
                 "Transport::startHubInitiatedTransfer:".
                 " wrong number of transports (".count($ret).")"
-            );
+                );
         }
         $ta = $ret[0];
         // direction invertation to locstor point of view:
         $direction = ( $ta['direction']=='up' ? 'down' : 'up' );
         $gunid  = $ta['gunid'];
         switch ($direction) {
-        case "up":
-            switch ($ta['trtype']) {
-            case "audioclip":
-            case "playlist":
-            case "playlistPkg":
-                $trtok = $this->upload2Hub($gunid, TRUE,
-                    array('rtrtok'=>$rtrtok));
-                if (PEAR::isError($trtok)) {
-                	return $trtok;
-                }
-                break;
-            //case "searchjob":  break;  // not supported yet
-            //case "file":   break;      // probably unusable
-            default:
-                return PEAR::raiseError(
-                    "Transport::startHubInitiatedTransfer:".
-                    " wrong direction / transport type combination".
-                    " ({$ta['direction']}/{$ta['trtype']})"
-                );
-            }
-            break;
-        case "down":
-            switch ($ta['trtype']) {
-            case "audioclip":
-            case "playlist":
-            case "playlistPkg":
-                $trtok = $this->downloadFromHub($uid, $gunid, TRUE,
-                    array('rtrtok'=>$rtrtok));
-                if (PEAR::isError($trtok)) {
-                	return $trtok;
-                }
-                break;
-            //case "searchjob":    break;    // probably unusable
-            case "file":
-                $r = $this->downloadFileFromHub(
-                    $ta['url'], $ta['expectedsum'], $ta['expectedsize'],
+            case "up":
+                switch ($ta['trtype']) {
+                    case "audioclip":
+                    case "playlist":
+                    case "playlistPkg":
+                        $trtok = $this->upload2Hub($gunid, TRUE,
                         array('rtrtok'=>$rtrtok));
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                extract($r);    // trtok, localfile
-                break;
-            default:
-                return PEAR::raiseError(
+                        if (PEAR::isError($trtok)) {
+                            return $trtok;
+                        }
+                        break;
+                        //case "searchjob":  break;  // not supported yet
+                        //case "file":   break;      // probably unusable
+                    default:
+                        return PEAR::raiseError(
                     "Transport::startHubInitiatedTransfer:".
                     " wrong direction / transport type combination".
                     " ({$ta['direction']}/{$ta['trtype']})"
-                );
-            }
-            break;
-        default:
-            return PEAR::raiseError(
+                        );
+                }
+                break;
+            case "down":
+                switch ($ta['trtype']) {
+                    case "audioclip":
+                    case "playlist":
+                    case "playlistPkg":
+                        $trtok = $this->downloadFromHub($uid, $gunid, TRUE,
+                        array('rtrtok'=>$rtrtok));
+                        if (PEAR::isError($trtok)) {
+                            return $trtok;
+                        }
+                        break;
+                        //case "searchjob":    break;    // probably unusable
+                    case "file":
+                        $r = $this->downloadFileFromHub(
+                        $ta['url'], $ta['expectedsum'], $ta['expectedsize'],
+                        array('rtrtok'=>$rtrtok));
+                        if (PEAR::isError($r)) {
+                            return $r;
+                        }
+                        extract($r);    // trtok, localfile
+                        break;
+                    default:
+                        return PEAR::raiseError(
+                    "Transport::startHubInitiatedTransfer:".
+                    " wrong direction / transport type combination".
+                    " ({$ta['direction']}/{$ta['trtype']})"
+                        );
+                }
+                break;
+            default:
+                return PEAR::raiseError(
                 "Transport::startHubInitiatedTransfer: ???"
-            );
+                );
         }
         $ret = $this->xmlrpcCall('archive.setHubInitiatedTransfer',
-            array(
+        array(
                 'target'    => HOSTNAME,
                 'trtok'     => $rtrtok,
                 'state'     => 'waiting',
-            ));
+        ));
         if (PEAR::isError($ret)) {
-        	return $ret;
+            return $ret;
         }
         $this->startCronJobProcess($trtok);
         return $trtok;
@@ -742,10 +742,10 @@ class Transport
     {
         global $CC_CONFIG;
         $res = $this->xmlrpcCall('locstor.login',
-            array(
+        array(
                 'login' => $CC_CONFIG['archiveAccountLogin'],
                 'pass' => $CC_CONFIG['archiveAccountPass']
-            ));
+        ));
         if (PEAR::isError($res)) {
             return $res;
         }
@@ -764,7 +764,7 @@ class Transport
     function logoutFromArchive($sessid)
     {
         $res = $this->xmlrpcCall('locstor.logout',
-            array('sessid'=>$sessid));
+        array('sessid'=>$sessid));
         return $res;
     }
 
@@ -785,19 +785,19 @@ class Transport
         if (is_null($direction)) {
             $r = $this->cronMain('up');
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             $r = $this->cronMain('down');
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             return TRUE;
         }
         // fetch all opened transports
         $transports = $this->getTransports($direction);
         if (PEAR::isError($transports)) {
-        	$this->trLog("cronMain: DB error");
-        	return FALSE;
+            $this->trLog("cronMain: DB error");
+            return FALSE;
         }
         if (count($transports) == 0) {
             if (TR_LOG_LEVEL > 1) {
@@ -828,9 +828,9 @@ class Transport
     {
         global $CC_CONFIG, $CC_DBC;
         if (TR_LOG_LEVEL > 2) {
-        	$redirect = $CC_CONFIG['transDir']."/debug.log";
+            $redirect = $CC_CONFIG['transDir']."/debug.log";
         } else {
-        	$redirect = "/dev/null";
+            $redirect = "/dev/null";
         }
         $redirect_escaped = escapeshellcmd($redirect);
         $command = "{$this->cronJobScript} {$trtok}";
@@ -860,7 +860,7 @@ class Transport
         global $CC_CONFIG;
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $row = $trec->row;
         $state = $row['state'];
@@ -903,9 +903,9 @@ class Transport
                 $res = $pr->loadGroupPref($group, $key);
                 if (PEAR::isError($res)) {
                     if ($res->getCode() !== GBERR_PREF) {
-                    	return $res;
+                        return $res;
                     } else {
-                    	$res = FALSE;  // default
+                        $res = FALSE;  // default
                     }
                 }
                 // transfers turned off
@@ -913,7 +913,7 @@ class Transport
                 if ($res) {
                     return PEAR::raiseError(
                         "Transport::cronCallMethod: transfers turned off"
-                    );
+                        );
                 }
                 // NO break here!
             default:
@@ -922,7 +922,7 @@ class Transport
                     $pid = getmypid();
                     $r = $trec->setLock(TRUE, $pid);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     $trec = TransportRecord::recall($this, $trtok);
                     if (PEAR::isError($trec)) {
@@ -954,7 +954,7 @@ class Transport
                     // unlock the job:
                     $r = $trec->setLock(FALSE);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     // logout:
                     $r = $this->logoutFromArchive($asessid);
@@ -986,20 +986,20 @@ class Transport
         $trtok = $row['trtok'];
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $ret = $this->xmlrpcCall('archive.uploadOpen',
-            array(
+        array(
                'sessid' => $asessid ,
                'chsum' => $row['expectedsum'],
-            ));
+        ));
         if (PEAR::isError($ret)) {
-        	return $ret;
+            return $ret;
         }
         $r = $trec->setState('waiting',
-            array('url'=>$ret['url'], 'pdtoken'=>$ret['token']));
+        array('url'=>$ret['url'], 'pdtoken'=>$ret['token']));
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return TRUE;
     }
@@ -1021,57 +1021,57 @@ class Transport
         $trtok = $row['trtok'];
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $ret = $this->xmlrpcCall('archive.downloadOpen',
-            array(
+        array(
                 'sessid'=> $asessid,
                 'trtype'=> $row['trtype'],
                 'pars'=>array(
                     'gunid' => $row['gunid'],
                     'token' => $row['pdtoken'],
-                ),
-            ));
+        ),
+        ));
         if (PEAR::isError($ret)) {
-        	return $ret;
+            return $ret;
         }
         $trtype = $ret['trtype'];
         $title = $ret['title'];
         $pars = array();
         switch ($trtype) {
-//	        case "searchjob":
-//	            $r = $trec->setState('waiting', $pars);
-//	            break;
-	        case "file":
-	            $r = $trec->setState('waiting',array_merge($pars, array(
+            //	        case "searchjob":
+            //	            $r = $trec->setState('waiting', $pars);
+            //	            break;
+            case "file":
+                $r = $trec->setState('waiting',array_merge($pars, array(
 	                'trtype'=>$trtype,
 	                'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
 	                'expectedsum'=>$ret['chsum'], 'expectedsize'=>$ret['size'],
 	                'fname'=>$ret['filename'],
 	                'localfile'=>$CC_CONFIG['transDir']."/$trtok",
-	            )));
-	            break;
-	        case "audioclip":
-	            $mdtrec = TransportRecord::create($this, 'metadata', 'down',
-	                array('gunid'=>$row['gunid'], 'uid'=>$row['uid'], )
-	            );
-	            if (PEAR::isError($mdtrec)) {
-	            	return $mdtrec;
-	            }
-	            $this->startCronJobProcess($mdtrec->trtok);
-	            $pars = array('mdtrtok'=>$mdtrec->trtok);
-	            // NO break here !
-	        default:
-	            $r = $trec->setState('waiting',array_merge($pars, array(
+                )));
+                break;
+            case "audioclip":
+                $mdtrec = TransportRecord::create($this, 'metadata', 'down',
+                array('gunid'=>$row['gunid'], 'uid'=>$row['uid'], )
+                );
+                if (PEAR::isError($mdtrec)) {
+                    return $mdtrec;
+                }
+                $this->startCronJobProcess($mdtrec->trtok);
+                $pars = array('mdtrtok'=>$mdtrec->trtok);
+                // NO break here !
+            default:
+                $r = $trec->setState('waiting',array_merge($pars, array(
 	                'trtype'=>$trtype,
 	                'url'=>$ret['url'], 'pdtoken'=>$ret['token'],
 	                'expectedsum'=>$ret['chsum'], 'expectedsize'=>$ret['size'],
 	                'fname'=>$ret['filename'], 'title'=>$title,
 	                'localfile'=>$CC_CONFIG['transDir']."/$trtok",
-	            )));
+                )));
         }
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return TRUE;
     }
@@ -1092,7 +1092,7 @@ class Transport
         $trtok = $row['trtok'];
         $check = $this->uploadCheck($row['pdtoken']);
         if (PEAR::isError($check)) {
-        	return $check;
+            return $check;
         }
         // test filesize
         if (!file_exists($row['localfile'])) {
@@ -1102,7 +1102,7 @@ class Transport
         }
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $size = escapeshellarg($check['size']);
         $localfile = escapeshellarg($row['localfile']);
@@ -1112,22 +1112,22 @@ class Transport
             " --speed-time {$this->upTrSpeedTime}".
             " --speed-limit {$this->upTrSpeedLimit}".
             " --connect-timeout {$this->upTrConnectTimeout}".
-            (!is_null($this->upLimitRate)?
+        (!is_null($this->upLimitRate)?
                 " --limit-rate {$this->upLimitRate}" : "").
             " -T $localfile $url";
         $r = $trec->setState('pending', array(), 'waiting');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
-        	return TRUE;
+            return TRUE;
         }
         $res = system($command, $status);
 
         // leave paused and closed transports
         $trec2 = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $state2 = $trec2->row['state'];
         if ($state2 == 'paused' || $state2 == 'closed' ) {
@@ -1144,22 +1144,22 @@ class Transport
         if ($status == 0 || $status == 18 || $status == 28 || $status == 6 || $status == 7 || $status == 56) {
             $check = $this->uploadCheck($row['pdtoken']);
             if (PEAR::isError($check)) {
-            	return $check;
+                return $check;
             }
             // test checksum
             if ($check['status'] == TRUE) {
                 // finished
                 $r = $trec->setState('finished',
-                    array('realsum'=>$check['realsum'], 'realsize'=>$check['size']));
+                array('realsum'=>$check['realsum'], 'realsize'=>$check['size']));
                 if (PEAR::isError($r)) {
-                	return $r;
+                    return $r;
                 }
             } else {
                 if (intval($check['size']) < $row['expectedsize']) {
                     $r = $trec->setState('waiting',
-                        array('realsum'=>$check['realsum'], 'realsize'=>$check['size']));
+                    array('realsum'=>$check['realsum'], 'realsize'=>$check['size']));
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                 } else {
                     // wrong md5 at finish - TODO: start again
@@ -1197,7 +1197,7 @@ class Transport
         // wget the file
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $localfile = escapeshellarg($row['localfile']);
         $url = escapeshellarg($row['url']);
@@ -1206,23 +1206,23 @@ class Transport
             " --read-timeout={$this->downTimeout}".
             " --waitretry={$this->downWaitretry}".
             " -t {$this->downRetries}".
-            (!is_null($this->downLimitRate)?
+        (!is_null($this->downLimitRate)?
                 " --limit-rate={$this->downLimitRate}" : "").
             " -O $localfile $url"
         ;
         $r = $trec->setState('pending', array(), 'waiting');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
-        	return TRUE;
+            return TRUE;
         }
         $res = system($command, $status);
 
         // leave paused and closed transports
         $trec2 = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         $state2 = $trec2->row['state'];
         if ($state2 == 'paused' || $state2 == 'closed' ) {
@@ -1242,7 +1242,7 @@ class Transport
             if ($chsum == $row['expectedsum']) {
                 // mark download as finished
                 $r = $trec->setState('finished',
-                    array('realsum'=>$chsum, 'realsize'=>$size));
+                array('realsum'=>$chsum, 'realsize'=>$size));
                 if (PEAR::isError($r)) {
                     return $r;
                 }
@@ -1250,7 +1250,7 @@ class Transport
                 // bad checksum, retry from the scratch
                 @unlink($row['localfile']);
                 $r = $trec->setState('waiting',
-                    array('realsum'=>$chsum, 'realsize'=>$size));
+                array('realsum'=>$chsum, 'realsize'=>$size));
                 if (PEAR::isError($r)) {
                     return $r;
                 }
@@ -1276,17 +1276,17 @@ class Transport
         $trtok = $row['trtok'];
         $trec = TransportRecord::recall($this, $trtok);
         if (PEAR::isError($trec)) {
-        	return $trec;
+            return $trec;
         }
         // don't close metadata transport - audioclip will close it
         if ($row['trtype'] == 'metadata') {
-        	return TRUE;
+            return TRUE;
         }
         // handle metadata transport on audioclip trtype:
         if ($row['trtype'] == 'audioclip') {
             $mdtrec = TransportRecord::recall($this, $trec->row['mdtrtok']);
             if (PEAR::isError($mdtrec)) {
-            	return $mdtrec;
+                return $mdtrec;
             }
             switch ($mdtrec->row['state']) {
                 case 'failed':
@@ -1296,7 +1296,7 @@ class Transport
                         " ({$this->trtok})"
                     );
                     break;
-                // don't close transport with nonfinished metadata transport:
+                    // don't close transport with nonfinished metadata transport:
                 case 'init':
                 case 'waiting':
                 case 'pending':
@@ -1306,18 +1306,18 @@ class Transport
                     $mdpdtoken = $mdtrec->row['pdtoken'];
             }
         } else {
-        	$mdpdtoken = NULL;
+            $mdpdtoken = NULL;
         }
         $ret = $this->xmlrpcCall('archive.uploadClose',
-            array(
+        array(
                 'token'     => $row['pdtoken'] ,
                 'trtype'      => $row['trtype'],
                 'pars'      => array(
                     'gunid'     => $row['gunid'],
                     'name'      => $row['fname'],
                     'mdpdtoken' => $mdpdtoken,
-                ),
-            ));
+        ),
+        ));
         if (PEAR::isError($ret)) {
             if ($row['trtype'] == 'audioclip') {
                 $r2 = $mdtrec->close();
@@ -1325,29 +1325,29 @@ class Transport
             return $ret;
         }
 
-//        if ($row['trtype'] == 'searchjob') {
-//            @unlink($row['localfile']);
-//            $r = $trec->setState('init', array(
-//                'direction'     => 'down',
-//                'pdtoken'       => $ret['token'],
-//                'expectedsum'   => $ret['chsum'],
-//                'expectedsize'  => $ret['size'],
-//                'url'           => $ret['url'],
-//                'realsize'      => 0,
-//            ));
-//            $this->startCronJobProcess($trec->trtok);
-//        } else {
-            $r = $trec->close();
-//        }
+        //        if ($row['trtype'] == 'searchjob') {
+        //            @unlink($row['localfile']);
+        //            $r = $trec->setState('init', array(
+        //                'direction'     => 'down',
+        //                'pdtoken'       => $ret['token'],
+        //                'expectedsum'   => $ret['chsum'],
+        //                'expectedsize'  => $ret['size'],
+        //                'url'           => $ret['url'],
+        //                'realsize'      => 0,
+        //            ));
+        //            $this->startCronJobProcess($trec->trtok);
+        //        } else {
+        $r = $trec->close();
+        //        }
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         switch ($row['trtype']) {
             case 'audioclip':
                 // close metadata transport:
                 $r = $mdtrec->close();
                 if (PEAR::isError($r)) {
-                	return $r;
+                    return $r;
                 }
                 break;
             case 'playlistPkg':
@@ -1357,7 +1357,7 @@ class Transport
                 if (preg_match("|/(plExport_[^\.]+)\.lspl$|", $ep, $va)) {
                     list(,$tmpn) = $va; $tmpn = $CC_CONFIG['transDir']."/$tmpn";
                     if (file_exists($tmpn)) {
-                    	@unlink($tmpn);
+                        @unlink($tmpn);
                     }
                 }
 
@@ -1366,238 +1366,238 @@ class Transport
         }
 
         return TRUE;
-    }
-
-
-    /**
-     * Finish the download
-     *
-     * @param array $row
-     * 		row from getTransport results
-     * @param string $asessid
-     * 		session id (from network hub)
-     * @return mixed
-     * 		boolean TRUE or error object
-     */
-    function cronDownloadFinished($row, $asessid)
-    {
-        $trtok = $row['trtok'];
-        $trec = TransportRecord::recall($this, $trtok);
-        if (PEAR::isError($trec)) {
-        	return $trec;
         }
-        switch ($row['trtype']) {
-            case "audioclip":
-                $mdtrtok = $trec->row['mdtrtok'];
-                $mdtrec = TransportRecord::recall($this, $mdtrtok);
-                if (PEAR::isError($mdtrec)) {
-                	return $mdtrec;
-                }
-                $pid = getmypid();
-                $r = $mdtrec->setLock(TRUE, $pid);
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                switch ($mdtrec->row['state']) {
-                    // don't close transport with nonfinished metadata transport:
-                    case 'init':
-                    case 'waiting':
-                    case 'pending':
-                    case 'paused':
-                        $r = $mdtrec->setLock(FALSE);
-                        if (PEAR::isError($r)) {
-                        	return $r;
-                        }
-                        return TRUE;
-                    case 'finished':  // metadata finished, close main transport
-                        $values = array(
+
+
+        /**
+         * Finish the download
+         *
+         * @param array $row
+         * 		row from getTransport results
+         * @param string $asessid
+         * 		session id (from network hub)
+         * @return mixed
+         * 		boolean TRUE or error object
+         */
+        function cronDownloadFinished($row, $asessid)
+        {
+            $trtok = $row['trtok'];
+            $trec = TransportRecord::recall($this, $trtok);
+            if (PEAR::isError($trec)) {
+                return $trec;
+            }
+            switch ($row['trtype']) {
+                case "audioclip":
+                    $mdtrtok = $trec->row['mdtrtok'];
+                    $mdtrec = TransportRecord::recall($this, $mdtrtok);
+                    if (PEAR::isError($mdtrec)) {
+                        return $mdtrec;
+                    }
+                    $pid = getmypid();
+                    $r = $mdtrec->setLock(TRUE, $pid);
+                    if (PEAR::isError($r)) {
+                        return $r;
+                    }
+                    switch ($mdtrec->row['state']) {
+                        // don't close transport with nonfinished metadata transport:
+                        case 'init':
+                        case 'waiting':
+                        case 'pending':
+                        case 'paused':
+                            $r = $mdtrec->setLock(FALSE);
+                            if (PEAR::isError($r)) {
+                                return $r;
+                            }
+                            return TRUE;
+                        case 'finished':  // metadata finished, close main transport
+                            $values = array(
                             "filename" => $row['fname'],
                             "filepath" => $trec->row['localfile'],
                             "metadata" => $mdtrec->row['localfile'],
                             "gunid" => $row['gunid'],
                             "filetype" => "audioclip"
-                        );
-                        $storedFile = StoredFile::Insert($values);
-                        if (PEAR::isError($storedFile)) {
-                            $mdtrec->setLock(FALSE);
-                            return $storedFile;
-                        }
-                        $res = $storedFile->getId();
-                        $ret = $this->xmlrpcCall('archive.downloadClose',
+                            );
+                            $storedFile = StoredFile::Insert($values);
+                            if (PEAR::isError($storedFile)) {
+                                $mdtrec->setLock(FALSE);
+                                return $storedFile;
+                            }
+                            $res = $storedFile->getId();
+                            $ret = $this->xmlrpcCall('archive.downloadClose',
                             array(
                                'token'      => $mdtrec->row['pdtoken'] ,
                                'trtype'     => 'metadata' ,
                             ));
-                        if (PEAR::isError($ret)) {
-                            $mdtrec->setLock(FALSE);
-                            return $ret;
-                        }
-                        $r = $mdtrec->close();
-                        if (PEAR::isError($r)) {
-                            $r2 = $mdtrec->setLock(FALSE);
-                            return $r;
-                        }
-                        @unlink($trec->row['localfile']);
-                        @unlink($mdtrec->row['localfile']);
-                        break;
-                    default:
-                        $r = $mdtrec->setLock(FALSE);
-                        return PEAR::raiseError("Transport::cronDownloadFinished:".
+                            if (PEAR::isError($ret)) {
+                                $mdtrec->setLock(FALSE);
+                                return $ret;
+                            }
+                            $r = $mdtrec->close();
+                            if (PEAR::isError($r)) {
+                                $r2 = $mdtrec->setLock(FALSE);
+                                return $r;
+                            }
+                            @unlink($trec->row['localfile']);
+                            @unlink($mdtrec->row['localfile']);
+                            break;
+                        default:
+                            $r = $mdtrec->setLock(FALSE);
+                            return PEAR::raiseError("Transport::cronDownloadFinished:".
                             " metadata transport in wrong state: {$mdtrec->row['state']}".
                             " ({$this->trtok})"
-                        );
-                }
-                $r = $mdtrec->setLock(FALSE);
-                if (PEAR::isError($r)) {
-                	return $r;
-                }
-                break;
-            case "metadata":
-//            case "searchjob":
-                return TRUE;     // don't close - getSearchResults should close it
-                break;
-        }
-        $ret = $this->xmlrpcCall('archive.downloadClose',
+                            );
+                    }
+                    $r = $mdtrec->setLock(FALSE);
+                    if (PEAR::isError($r)) {
+                        return $r;
+                    }
+                    break;
+                case "metadata":
+                    //            case "searchjob":
+                    return TRUE;     // don't close - getSearchResults should close it
+                    break;
+            }
+            $ret = $this->xmlrpcCall('archive.downloadClose',
             array(
                'token'     => $row['pdtoken'] ,
                'trtype'     => $row['trtype'] ,
             ));
-        if (PEAR::isError($ret)) {
-        	return $ret;
-        }
-        switch ($row['trtype']) {
-            case "playlist":
-                $values = array(
+            if (PEAR::isError($ret)) {
+                return $ret;
+            }
+            switch ($row['trtype']) {
+                case "playlist":
+                    $values = array(
                     "filename" => $row['fname'],
                     "metadata" => $trec->row['localfile'],
                     "gunid" => $row['gunid'],
                     "filetype" => "playlist"
-                );
-                $storedFile = StoredFile::Insert($values);
-                if (PEAR::isError($storedFile)) {
-                	return $storedFile;
-                }
-                $res = $storedFile->getId();
-                @unlink($row['localfile']);
-                break;
-            case "playlistPkg":
-                $subjid = $trec->row['uid'];
-                $fname = $trec->row['localfile'];
-                $res = $this->gb->bsImportPlaylist($fname, $subjid);
-                if (PEAR::isError($res)) {
-                	return $res;
-                }
-                @unlink($fname);
-                break;
-            case "audioclip":
-            case "metadata":
-//            case "searchjob":
-            case "file":
-                break;
-            default:
-                return PEAR::raiseError("DEBUG: NotImpl ".var_export($row,TRUE));
-        }
-        if (!is_null($rtrtok = $trec->row['rtrtok'])) {
-            $ret = $this->xmlrpcCall('archive.setHubInitiatedTransfer',
+                    );
+                    $storedFile = StoredFile::Insert($values);
+                    if (PEAR::isError($storedFile)) {
+                        return $storedFile;
+                    }
+                    $res = $storedFile->getId();
+                    @unlink($row['localfile']);
+                    break;
+                case "playlistPkg":
+                    $subjid = $trec->row['uid'];
+                    $fname = $trec->row['localfile'];
+                    $res = $this->gb->bsImportPlaylist($fname, $subjid);
+                    if (PEAR::isError($res)) {
+                        return $res;
+                    }
+                    @unlink($fname);
+                    break;
+                case "audioclip":
+                case "metadata":
+                    //            case "searchjob":
+                case "file":
+                    break;
+                default:
+                    return PEAR::raiseError("DEBUG: NotImpl ".var_export($row,TRUE));
+            }
+            if (!is_null($rtrtok = $trec->row['rtrtok'])) {
+                $ret = $this->xmlrpcCall('archive.setHubInitiatedTransfer',
                 array(
                     'target'    => HOSTNAME,
                     'trtok'     => $rtrtok,
                     'state'     => 'closed',
                 ));
-            if (PEAR::isError($ret)) {
-            	return $ret;
+                if (PEAR::isError($ret)) {
+                    return $ret;
+                }
             }
+            $r = $trec->close();
+            if (PEAR::isError($r)) {
+                return $r;
+            }
+            return TRUE;
         }
-        $r = $trec->close();
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
 
 
-    /* ==================================================== auxiliary methods */
-    /**
-     *  Prepare upload for general file
-     *
-     *  @param string $fpath
-     * 		local filepath of uploaded file
-     *  @param string $trtype
-     * 		transport type
-     *  @param array $pars
-     * 		default parameters (optional, internal use)
-     *  @return object - transportRecord instance
-     */
-    function _uploadGeneralFileToHub($fpath, $trtype, $pars=array())
-    {
-        $chsum = $this->_chsum($fpath);
-        $size  = filesize($fpath);
-        $trec = TransportRecord::create($this, $trtype, 'up',
+        /* ==================================================== auxiliary methods */
+        /**
+         *  Prepare upload for general file
+         *
+         *  @param string $fpath
+         * 		local filepath of uploaded file
+         *  @param string $trtype
+         * 		transport type
+         *  @param array $pars
+         * 		default parameters (optional, internal use)
+         *  @return object - transportRecord instance
+         */
+        function _uploadGeneralFileToHub($fpath, $trtype, $pars=array())
+        {
+            $chsum = $this->_chsum($fpath);
+            $size  = filesize($fpath);
+            $trec = TransportRecord::create($this, $trtype, 'up',
             array_merge(array(
                 'localfile'=>$fpath, 'fname'=>basename($fpath),
                 'expectedsum'=>$chsum, 'expectedsize'=>$size
             ), $pars)
-        );
-        if (PEAR::isError($trec)) {
-        	return $trec;
+            );
+            if (PEAR::isError($trec)) {
+                return $trec;
+            }
+            return $trec;
         }
-        return $trec;
-    }
 
 
-    /**
-     * Create new transport token
-     *
-     * @return string
-     * 		transport token
-     */
-    function _createTransportToken()
-    {
-        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
-        $initString = microtime().$ip.rand()."org.mdlf.campcaster";
-        $hash = md5($initString);
-        $res = substr($hash, 0, 16);
-        return $res;
-    }
+        /**
+         * Create new transport token
+         *
+         * @return string
+         * 		transport token
+         */
+        function _createTransportToken()
+        {
+            $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
+            $initString = microtime().$ip.rand()."org.mdlf.campcaster";
+            $hash = md5($initString);
+            $res = substr($hash, 0, 16);
+            return $res;
+        }
 
 
-    /**
-     * Get all relevant transport records
-     *
-     * @param string $direction
-     * 		'up' | 'down'
-     * @param string $target
-     * 		target hostname
-     * @param string $trtok
-     * 		transport token for specific query
-     * @return array
-     * 		array of transportRecords (as hasharrays)
-     */
-    function getTransports($direction=NULL, $target=NULL, $trtok=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        switch ($direction) {
-            case 'up':
-            	$dirCond = "direction='up' AND";
-            	break;
-            case 'down':
-            	$dirCond = "direction='down' AND";
-            	break;
-            default:
-            	$dirCond = '';
-            	break;
-        }
-        if (is_null($target)) {
-        	$targetCond = "";
-        } else {
-        	$targetCond = "target='$target' AND";
-        }
-        if (is_null($trtok)) {
-        	$trtokCond = "";
-        } else {
-        	$trtokCond = "trtok='$trtok' AND";
-        }
-        $rows = $CC_DBC->getAll("
+        /**
+         * Get all relevant transport records
+         *
+         * @param string $direction
+         * 		'up' | 'down'
+         * @param string $target
+         * 		target hostname
+         * @param string $trtok
+         * 		transport token for specific query
+         * @return array
+         * 		array of transportRecords (as hasharrays)
+         */
+        function getTransports($direction=NULL, $target=NULL, $trtok=NULL)
+        {
+            global $CC_CONFIG, $CC_DBC;
+            switch ($direction) {
+                case 'up':
+                    $dirCond = "direction='up' AND";
+                    break;
+                case 'down':
+                    $dirCond = "direction='down' AND";
+                    break;
+                default:
+                    $dirCond = '';
+                    break;
+            }
+            if (is_null($target)) {
+                $targetCond = "";
+            } else {
+                $targetCond = "target='$target' AND";
+            }
+            if (is_null($trtok)) {
+                $trtokCond = "";
+            } else {
+                $trtokCond = "trtok='$trtok' AND";
+            }
+            $rows = $CC_DBC->getAll("
             SELECT
                 id, trtok, state, trtype, direction,
                 to_hex(gunid)as gunid, to_hex(pdtoken)as pdtoken,
@@ -1608,225 +1608,225 @@ class Transport
                     state not in ('closed', 'failed', 'paused')
             ORDER BY start DESC
         ");
-        if (PEAR::isError($rows)) {
-        	return $rows;
+            if (PEAR::isError($rows)) {
+                return $rows;
+            }
+            foreach ($rows as $i => $row) {
+                $rows[$i]['pdtoken'] = StoredFile::NormalizeGunid($row['pdtoken']);
+                $rows[$i]['gunid'] = StoredFile::NormalizeGunid($row['gunid']);
+            }
+            return $rows;
         }
-        foreach ($rows as $i => $row) {
-            $rows[$i]['pdtoken'] = StoredFile::NormalizeGunid($row['pdtoken']);
-            $rows[$i]['gunid'] = StoredFile::NormalizeGunid($row['gunid']);
-        }
-        return $rows;
-    }
 
 
-    /**
-     * Check remote state of uploaded file
-     *
-     * @param string $pdtoken
-     * 		put/download token (from network hub)
-     * @return array
-     * 		hash: chsum, size, url
-     */
-    function uploadCheck($pdtoken)
-    {
-        $ret = $this->xmlrpcCall('archive.uploadCheck',
+        /**
+         * Check remote state of uploaded file
+         *
+         * @param string $pdtoken
+         * 		put/download token (from network hub)
+         * @return array
+         * 		hash: chsum, size, url
+         */
+        function uploadCheck($pdtoken)
+        {
+            $ret = $this->xmlrpcCall('archive.uploadCheck',
             array('token'=>$pdtoken));
-        return $ret;
-    }
+            return $ret;
+        }
 
 
-    /**
-     * Ping to remote Campcaster server
-     *
-     * @return string
-     * 		network hub response or error object
-     */
-    function ping()
-    {
-        $res = $this->xmlrpcCall('ping',
+        /**
+         * Ping to remote Campcaster server
+         *
+         * @return string
+         * 		network hub response or error object
+         */
+        function ping()
+        {
+            $res = $this->xmlrpcCall('ping',
             array('par'=>'ping_'.date('H:i:s')));
-        return $res;
-    }
+            return $res;
+        }
 
 
-    /**
-     * XMLRPC call to network hub.
-     *
-     * @param string $method
-     * 		method name
-     * @param array $pars
-     * 		call parameters
-     * @return mixed
-     * 		response
-     */
-    function xmlrpcCall($method, $pars=array())
-    {
-        global $CC_CONFIG;
-        $xrp = XML_RPC_encode($pars);
+        /**
+         * XMLRPC call to network hub.
+         *
+         * @param string $method
+         * 		method name
+         * @param array $pars
+         * 		call parameters
+         * @return mixed
+         * 		response
+         */
+        function xmlrpcCall($method, $pars=array())
+        {
+            global $CC_CONFIG;
+            $xrp = XML_RPC_encode($pars);
 
-        $pr = new Prefs($this->gb);
-        $group = $CC_CONFIG["StationPrefsGr"];
-        $key = 'archiveServerLocation';
-        $archiveUrl = $pr->loadGroupPref($group, $key, false);
+            $pr = new Prefs($this->gb);
+            $group = $CC_CONFIG["StationPrefsGr"];
+            $key = 'archiveServerLocation';
+            $archiveUrl = $pr->loadGroupPref($group, $key, false);
 
-        if ($archiveUrl) {
-            $archiveUrlInfo = parse_url($archiveUrl);
-            if ($archiveUrlInfo['port']) {
-                $port = $archiveUrlInfo['port'];
+            if ($archiveUrl) {
+                $archiveUrlInfo = parse_url($archiveUrl);
+                if ($archiveUrlInfo['port']) {
+                    $port = $archiveUrlInfo['port'];
+                }
+                else {
+                    $port = 80;
+                }
+
+                $c = new XML_RPC_Client($archiveUrlInfo['path'], $archiveUrlInfo['host'], $port);
             }
             else {
-                $port = 80;
-            }
-
-            $c = new XML_RPC_Client($archiveUrlInfo['path'], $archiveUrlInfo['host'], $port);
-        }
-        else {
-            $c = new XML_RPC_Client(
+                $c = new XML_RPC_Client(
                 $CC_CONFIG['archiveUrlPath']."/".$CC_CONFIG['archiveXMLRPC'],
                 $CC_CONFIG['archiveUrlHost'], $CC_CONFIG['archiveUrlPort']
-            );
-        }
+                );
+            }
 
-        $f = new XML_RPC_Message($method, array($xrp));
-        $r = $c->send($f);
-        if (!$r) {
-            return PEAR::raiseError("XML-RPC request failed", TRERR_XR_FAIL);
-        } elseif ($r->faultCode() > 0) {
-            return PEAR::raiseError($r->faultString(), $r->faultCode());
-            // return PEAR::raiseError($r->faultString().
-            //    " (code ".$r->faultCode().")", TRERR_XR_FAIL);
-        } else {
-            $v = $r->value();
-            return XML_RPC_decode($v);
-        }
-    }
-
-
-    /**
-     * Checksum of local file
-     *
-     * @param string $fpath
-     * 		local filepath
-     * @return string
-     * 		checksum
-     */
-    function _chsum($fpath)
-    {
-        return md5_file($fpath);
-    }
-
-
-    /**
-     * Check exception and eventually mark transport as failed
-     *
-     * @param mixed $res
-     * 		result object to be checked
-     * @param unknown $trec
-     * 		transport record object
-     * @return unknown
-     */
-    function _failFatal($res, $trec)
-    {
-        if (PEAR::isError($res)) {
-            switch ($res->getCode()) {
-                // non fatal:
-                case TRERR_XR_FAIL:
-                    break;
-                // fatal:
-                default:
-                    $trec->fail('', $res);
+            $f = new XML_RPC_Message($method, array($xrp));
+            $r = $c->send($f);
+            if (!$r) {
+                return PEAR::raiseError("XML-RPC request failed", TRERR_XR_FAIL);
+            } elseif ($r->faultCode() > 0) {
+                return PEAR::raiseError($r->faultString(), $r->faultCode());
+                // return PEAR::raiseError($r->faultString().
+                //    " (code ".$r->faultCode().")", TRERR_XR_FAIL);
+            } else {
+                $v = $r->value();
+                return XML_RPC_decode($v);
             }
         }
-        return $res;
-    }
 
 
-    /**
-     * Clean up transport jobs
-     *
-     * @param string $interval
-     * 		psql time interval - older closed jobs will be deleted
-     * @param boolean $forced
-     * 		if true, delete non-closed jobs too
-     * @return boolean true or error
-     */
-    function _cleanUp($interval='1 minute'/*'1 hour'*/, $forced=FALSE)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $cond = ($forced ? '' : " AND state='closed' AND lock = 'N'");
-        $r = $CC_DBC->query("
+        /**
+         * Checksum of local file
+         *
+         * @param string $fpath
+         * 		local filepath
+         * @return string
+         * 		checksum
+         */
+        function _chsum($fpath)
+        {
+            return md5_file($fpath);
+        }
+
+
+        /**
+         * Check exception and eventually mark transport as failed
+         *
+         * @param mixed $res
+         * 		result object to be checked
+         * @param unknown $trec
+         * 		transport record object
+         * @return unknown
+         */
+        function _failFatal($res, $trec)
+        {
+            if (PEAR::isError($res)) {
+                switch ($res->getCode()) {
+                    // non fatal:
+                    case TRERR_XR_FAIL:
+                        break;
+                        // fatal:
+                    default:
+                        $trec->fail('', $res);
+                }
+            }
+            return $res;
+        }
+
+
+        /**
+         * Clean up transport jobs
+         *
+         * @param string $interval
+         * 		psql time interval - older closed jobs will be deleted
+         * @param boolean $forced
+         * 		if true, delete non-closed jobs too
+         * @return boolean true or error
+         */
+        function _cleanUp($interval='1 minute'/*'1 hour'*/, $forced=FALSE)
+        {
+            global $CC_CONFIG, $CC_DBC;
+            $cond = ($forced ? '' : " AND state='closed' AND lock = 'N'");
+            $r = $CC_DBC->query("
             DELETE FROM ".$CC_CONFIG['transTable']."
             WHERE ts < now() - interval '$interval'".$cond
-        );
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Logging wrapper for PEAR error object
-     *
-     * @param string $txt
-     * 		log message
-     * @param PEAR_Error $eo
-     * @param array $row
-     * 		array returned from getRow
-     * @return mixed
-     * 		void or error object
-     */
-    function trLogPear($txt, $eo, $row=NULL)
-    {
-        $msg = $txt.$eo->getMessage()." ".$eo->getUserInfo().
-            " [".$eo->getCode()."]";
-        if (!is_null($row)) {
-            $trec = TransportRecord::recall($this, $row['trtok']);
-            if (!PEAR::isError($trec)) {
-                $trec->setState('failed', array('errmsg'=>$msg));
-            }
-            $msg .= "\n    ".serialize($row);
-        }
-        $this->trLog($msg);
-    }
-
-
-    /**
-     * Logging for debug transports
-     *
-     * @param string $msg
-     * 		log message
-     * @return mixed
-     * 		void or error object
-     */
-    function trLog($msg)
-    {
-        global $CC_CONFIG;
-        $logfile = $CC_CONFIG['transDir']."/activity.log";
-        if (FALSE === ($fp = fopen($logfile, "a"))) {
-            return PEAR::raiseError(
-                "Transport::trLog: Can't write to log ($logfile)"
             );
+            if (PEAR::isError($r)) {
+                return $r;
+            }
+            return TRUE;
         }
-        flock($fp,LOCK_SH);
-        fputs($fp, "---".date("H:i:s")."---\n $msg\n");
-        flock($fp,LOCK_UN);
-        fclose($fp);
-    }
 
 
-    /* ====================================================== install methods */
-    /**
-     * Delete all transports
-     *
-     * @return mixed
-     * 		void or error object
-     */
-    function resetData()
-    {
-        global $CC_CONFIG, $CC_DBC;
-        return $CC_DBC->query("DELETE FROM ".$CC_CONFIG['transTable']);
-    }
+        /**
+         * Logging wrapper for PEAR error object
+         *
+         * @param string $txt
+         * 		log message
+         * @param PEAR_Error $eo
+         * @param array $row
+         * 		array returned from getRow
+         * @return mixed
+         * 		void or error object
+         */
+        function trLogPear($txt, $eo, $row=NULL)
+        {
+            $msg = $txt.$eo->getMessage()." ".$eo->getUserInfo().
+            " [".$eo->getCode()."]";
+            if (!is_null($row)) {
+                $trec = TransportRecord::recall($this, $row['trtok']);
+                if (!PEAR::isError($trec)) {
+                    $trec->setState('failed', array('errmsg'=>$msg));
+                }
+                $msg .= "\n    ".serialize($row);
+            }
+            $this->trLog($msg);
+        }
+
+
+        /**
+         * Logging for debug transports
+         *
+         * @param string $msg
+         * 		log message
+         * @return mixed
+         * 		void or error object
+         */
+        function trLog($msg)
+        {
+            global $CC_CONFIG;
+            $logfile = $CC_CONFIG['transDir']."/activity.log";
+            if (FALSE === ($fp = fopen($logfile, "a"))) {
+                return PEAR::raiseError(
+                "Transport::trLog: Can't write to log ($logfile)"
+                );
+            }
+            flock($fp,LOCK_SH);
+            fputs($fp, "---".date("H:i:s")."---\n $msg\n");
+            flock($fp,LOCK_UN);
+            fclose($fp);
+        }
+
+
+        /* ====================================================== install methods */
+        /**
+         * Delete all transports
+         *
+         * @return mixed
+         * 		void or error object
+         */
+        function resetData()
+        {
+            global $CC_CONFIG, $CC_DBC;
+            return $CC_DBC->query("DELETE FROM ".$CC_CONFIG['transTable']);
+        }
 
 }
 

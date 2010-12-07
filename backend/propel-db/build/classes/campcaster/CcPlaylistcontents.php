@@ -5,7 +5,7 @@ require_once('Common.php');
 /**
  * Skeleton subclass for representing a row from the 'cc_playlistcontents' table.
  *
- * 
+ *
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
@@ -15,55 +15,55 @@ require_once('Common.php');
  */
 class CcPlaylistcontents extends BaseCcPlaylistcontents {
 
-	public function getDbFadein()
-	{
-		return $this->fadein;
-	}
-
-	public function setDbFadein($time)
+    public function getDbFadein()
     {
-		$this->fadein = $time;
-		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
+        return $this->fadein;
+    }
+
+    public function setDbFadein($time)
+    {
+        $this->fadein = $time;
+        //$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
         return Common::setTimeInSub($this, 'FADEIN', $time);
     }
 
-	public function getDbFadeout()
+    public function getDbFadeout()
     {
         return $this->fadeout;
     }
 
-	public function setDbFadeout($time)
+    public function setDbFadeout($time)
     {
-		$this->fadeout = $time;
-		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
+        $this->fadeout = $time;
+        //$this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
         return Common::setTimeInSub($this, 'FADEOUT', $time);
     }
 
-	public function getDbCuein()
+    public function getDbCuein()
     {
         return $this->cuein;
     }
 
-	public function setDbCuein($time)
+    public function setDbCuein($time)
     {
-		$this->cuein = $time;
-		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEIN;
+        $this->cuein = $time;
+        //$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEIN;
         return Common::setTimeInSub($this, 'CUEIN', $time);
     }
 
-	public function getDbCueout()
+    public function getDbCueout()
     {
         return $this->cueout;
     }
 
     public function setDbCueout($time)
     {
-		$this->cueout = $time;
-		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEOUT;
+        $this->cueout = $time;
+        //$this->modifiedColumns[] = CcPlaylistcontentsPeer::CUEOUT;
         return Common::setTimeInSub($this, 'CUEOUT', $time);
     }
 
-	public function getDbCliplength()
+    public function getDbCliplength()
     {
         return $this->cliplength;
     }
@@ -71,11 +71,8 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
     public function setDbCliplength($time)
     {
         $this->cliplength = $time;
-		//$this->modifiedColumns[] = CcPlaylistcontentsPeer::CLIPLENGTH;
+        //$this->modifiedColumns[] = CcPlaylistcontentsPeer::CLIPLENGTH;
         return Common::setTimeInSub($this, 'CLIPLENGTH', $time);
     }
-
-
-
 
 } // CcPlaylistcontents

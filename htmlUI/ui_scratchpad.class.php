@@ -1,36 +1,32 @@
 <?php
 /**
-
-
- * @package Campcaster
- * @subpackage htmlUI
-
- * @copyright 2010 Sourcefabric O.P.S.
-
- */
+* @package Campcaster
+* @subpackage htmlUI
+* @copyright 2010 Sourcefabric O.P.S.
+*/
 class uiScratchPad
 {
-	/**
-	 * @var uiBase
-	 */
-	private $Base;
+    /**
+     * @var uiBase
+     */
+    private $Base;
 
-	/**
-	 * The contents of the scratchpad.
-	 *
-	 * @var array
-	 */
-	private $items;
+    /**
+     * The contents of the scratchpad.
+     *
+     * @var array
+     */
+    private $items;
 
-	/**
-	 * @var array
-	 */
-	private $order;
+    /**
+     * @var array
+     */
+    private $order;
 
-	/**
-	 * @var string
-	 */
-	private $reloadUrl;
+    /**
+     * @var string
+     */
+    private $reloadUrl;
 
     public function __construct(&$uiBase)
     {
@@ -77,7 +73,7 @@ class uiScratchPad
             // get the scratchpad list
             $arr = explode(' ', $spData);
             $maxLength = $this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY];
-			      $arr = array_slice($arr, 0, $maxLength);
+            $arr = array_slice($arr, 0, $maxLength);
             foreach ($arr as $item) {
                 //for audiofiles.
                 list($type, $savedId) = explode(":", $item);
@@ -91,8 +87,8 @@ class uiScratchPad
                 else {
                     $gunid = $savedId;
                     if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                      $f = StoredFile::RecallByGunid($gunid);
-                    	//$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
+                        $f = StoredFile::RecallByGunid($gunid);
+                        //$id = BasicStor::IdFromGunid($this->Base->toHex($gunid));
                         if (!PEAR::isError($f)) {
                             if ($i = $this->Base->getMetaInfo($f->getId())) {
                                 $this->items[] = $i;
@@ -134,13 +130,13 @@ class uiScratchPad
     {
         if (!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('The scratchpad length is not set in system preferences, so it cannot be used.');
+                $this->Base->_retMsg('The scratchpad length is not set in system preferences, so it cannot be used.');
             }
             return false;
         }
         if (!$ids) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('No item(s) selected.');
+                $this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
         }
@@ -150,16 +146,17 @@ class uiScratchPad
 
         $scratchpad = $this->get();
         foreach ($ids as $id) {
-            if($type === 'playlist')
+            if($type === 'playlist') {
                 $item = $this->Base->getPLMetaInfo($id);
-            else
+            } else {
                 $item = $this->Base->getMetaInfo($id);
+            }
 
             foreach ($scratchpad as $key => $val) {
                 if ($val['id'] == $item['id']) {
                     unset($scratchpad[$key]);
                     if (UI_VERBOSE) {
-                    	$this->Base->_retMsg('Entry $1 is already on the scratchpad. It has been moved to the top of the list.', $item['title'], $val['added']);
+                        $this->Base->_retMsg('Entry $1 is already on the scratchpad. It has been moved to the top of the list.', $item['title'], $val['added']);
                     }
                 } else {
                     #$this->Base->incAccessCounter($id);
@@ -170,11 +167,11 @@ class uiScratchPad
 
         $maxScratchpadLength = $this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY];
         for ($n = 0; $n < $maxScratchpadLength; $n++) {
-        	if (!isset($scratchpad[$n])) {
-        		break;
-        	}
+            if (!isset($scratchpad[$n])) {
+                break;
+            }
             if (is_array($scratchpad[$n])) {
-            	$this->items[$n] = $scratchpad[$n];
+                $this->items[$n] = $scratchpad[$n];
             }
         }
         ksort($this->items);
@@ -192,7 +189,7 @@ class uiScratchPad
     {
         if (!$ids) {
             if (UI_WARNING) {
-            	$this->Base->_retMsg('No item(s) selected.');
+                $this->Base->_retMsg('No item(s) selected.');
             }
             return FALSE;
         }
@@ -232,17 +229,17 @@ class uiScratchPad
         $curr = $this->order[$by];
         $this->order = array();
         if (is_null($curr) || $curr=='DESC') {
-        	$this->order[$by] = 'ASC';
+            $this->order[$by] = 'ASC';
         } else {
-        	$this->order[$by] = 'DESC';
+            $this->order[$by] = 'DESC';
         }
         switch ($this->order[$by]) {
             case "ASC":
-            	asort($s);
-            	break;
+                asort($s);
+                break;
             case "DESC":
-            	arsort($s);
-            	break;
+                arsort($s);
+                break;
         }
         foreach ($s as $key=>$val) {
             $res[] = $this->items[$key];
@@ -259,10 +256,11 @@ class uiScratchPad
     public function reloadMetadata()
     {
         foreach ($this->items as $key => $val) {
-            if($val['type'] === 'playlist')
+            if ($val['type'] === 'playlist') {
                 $this->items[$key] = $this->Base->getPLMetaInfo($val['id']);
-            else
+            } else {
                 $this->items[$key] = $this->Base->getMetaInfo($val['id']);
+            }
         }
     }
 

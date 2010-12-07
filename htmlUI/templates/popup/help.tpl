@@ -89,8 +89,10 @@ DIV.blockquote
     <a href="http://www.sourcefabric.org" target="_blank">Sourcefabric</a>
     - maintained and distributed under GNU/GPL v3
 </div>
-
-
+        <H2>Register for community support</H2>
+        <P>Please register at <a href="https://login.sourcefabric.org/register">https://login.sourcefabric.org/register</a> 
+	for community support in the <a href="http://forum.sourcefabric.org/">Sourcefabric forums</a>.
+        </P>
 	<H2>Navigation</H2>
 	<H3>Context menus</H3>
 	<P>The Campcaster web client uses context menus extensively
@@ -274,12 +276,20 @@ DIV.blockquote
 	allowed in the PHP system settings of the machine you are running
 	Campcaster on. Please increase the settings of
 	&quot;upload_max_filesize&quot; and &quot;post_max_size&quot; in
-	php.ini. For more information, consult the <A HREF="http://manuals.campware.org/campcaster" TARGET="_blank">Campcaster
+	php.ini. For more information, consult the <A HREF="http://en.flossmanuals.net/Campcaster" TARGET="_blank">Campcaster
 	manual</A> chapter 4.12.
 	</P>
 	<H2>Where to go for help</H2>
-	<P>Campcaster has <a href="http://www.campware.org/en/camp/campcaster_news/649/">mailing lists and forums for support-related questions</a>.</P>
-    </P>
+        <P>If you cannot access the <a href="http://forum.sourcefabric.org/">Sourcefabric forums</a> online, please contact 
+	your regional Sourcefabric representative, or the Sourcefabric head office at:
+        </P>
+        <P>Sourcefabric o.p.s.<BR>
+        Salv&aacute;torsk&aacute; 10<BR>
+        110 00 Praha 1<BR>
+        Czech Republic<BR>
+        <BR>
+        Phone: +420 222 362 540   
+        </P>
 
     {if tra('_Name of translator') !== '_Name of translator'}
 	<H2>Credits</H2>

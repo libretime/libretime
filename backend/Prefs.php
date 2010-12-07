@@ -44,19 +44,19 @@ class Prefs {
     {
         $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
-        	return $subjid;
+            return $subjid;
         }
         if (is_null($subjid)) {
             return PEAR::raiseError("Prefs::loadPref: invalid session id",
-                GBERR_SESS);
+            GBERR_SESS);
         }
         $val = $this->readVal($subjid, $key);
         if (PEAR::isError($val)) {
-        	return $val;
+            return $val;
         }
         if ($val === FALSE) {
             return PEAR::raiseError("Prefs::loadPref: invalid preference key",
-                GBERR_PREF);
+            GBERR_PREF);
         }
         return $val;
     }
@@ -77,20 +77,19 @@ class Prefs {
     {
         $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
-        	return $subjid;
+            return $subjid;
         }
         if (is_null($subjid)) {
-            return PEAR::raiseError("Prefs::savePref: invalid session id",
-                GBERR_SESS);
+            return PEAR::raiseError("Prefs::savePref: invalid session id", GBERR_SESS);
         }
         $r = $this->update($subjid, $key, $value);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
             $r = $this->insert($subjid, $key, $value);
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
         }
         return TRUE;
@@ -110,19 +109,17 @@ class Prefs {
     {
         $subjid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
-        	return $subjid;
+            return $subjid;
         }
         if (is_null($subjid)) {
-            return PEAR::raiseError("Prefs::delPref: invalid session id",
-                GBERR_SESS);
+            return PEAR::raiseError("Prefs::delPref: invalid session id", GBERR_SESS);
         }
         $r = $this->delete($subjid, $key);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
-            return PEAR::raiseError("Prefs::delPref: invalid preference key",
-                GBERR_PREF);
+            return PEAR::raiseError("Prefs::delPref: invalid preference key", GBERR_PREF);
         }
         return TRUE;
     }
@@ -146,7 +143,7 @@ class Prefs {
         // if sessid is would be used here fix Transport::cronCallMethod !
         $subjid = Subjects::GetSubjId($group);
         if (PEAR::isError($subjid)) {
-        	return $subjid;
+            return $subjid;
         }
         if (is_null($subjid)) {
             return PEAR::raiseError(
@@ -154,7 +151,7 @@ class Prefs {
         }
         $val = $this->readVal($subjid, $key);
         if (PEAR::isError($val)) {
-        	return $val;
+            return $val;
         }
         if ($val === FALSE) {
             if ($returnErrorIfKeyNotExists) {
@@ -185,7 +182,7 @@ class Prefs {
     {
         $uid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
-        	return $uid;
+            return $uid;
         }
         if (is_null($uid)) {
             return PEAR::raiseError(
@@ -193,7 +190,7 @@ class Prefs {
         }
         $gid = Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
-        	return $gid;
+            return $gid;
         }
         if (is_null($gid)) {
             return PEAR::raiseError(
@@ -201,7 +198,7 @@ class Prefs {
         }
         $memb = Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
-        	return $memb;
+            return $memb;
         }
         if (!$memb) {
             return PEAR::raiseError(
@@ -209,12 +206,12 @@ class Prefs {
         }
         $r = $this->update($gid, $key, $value);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
             $r = $this->insert($gid, $key, $value);
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
         }
         return TRUE;
@@ -235,7 +232,7 @@ class Prefs {
     {
         $uid = GreenBox::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
-        	return $uid;
+            return $uid;
         }
         if (is_null($uid)) {
             return PEAR::raiseError(
@@ -243,7 +240,7 @@ class Prefs {
         }
         $gid = Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
-        	return $gid;
+            return $gid;
         }
         if (is_null($gid)) {
             return PEAR::raiseError(
@@ -251,7 +248,7 @@ class Prefs {
         }
         $memb = Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
-        	return $memb;
+            return $memb;
         }
         if (!$memb) {
             return PEAR::raiseError(
@@ -259,7 +256,7 @@ class Prefs {
         }
         $r = $this->delete($gid, $key);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($r === FALSE) {
             return PEAR::raiseError(
@@ -287,7 +284,7 @@ class Prefs {
         global $CC_CONFIG, $CC_DBC;
         $id = $CC_DBC->nextId($CC_CONFIG['prefSequence']);
         if (PEAR::isError($id)) {
-        	return $id;
+            return $id;
         }
         $r = $CC_DBC->query("
             INSERT INTO ".$CC_CONFIG['prefTable']."
@@ -296,7 +293,7 @@ class Prefs {
                 ($id, $subjid, '$keystr', '$valstr')
         ");
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return $id;
     }
@@ -320,10 +317,10 @@ class Prefs {
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($val)) {
-        	return $val;
+            return $val;
         }
         if (is_null($val)) {
-        	return FALSE;
+            return FALSE;
         }
         return $val;
     }
@@ -345,10 +342,10 @@ class Prefs {
             WHERE subjid=$subjid
         ");
         if (PEAR::isError($res)) {
-        	return $res;
+            return $res;
         }
         if (is_null($res)) {
-        	return FALSE;
+            return FALSE;
         }
         return $res;
     }
@@ -374,10 +371,10 @@ class Prefs {
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($CC_DBC->affectedRows() < 1) {
-        	return FALSE;
+            return FALSE;
         }
         return TRUE;
     }
@@ -400,10 +397,10 @@ class Prefs {
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         if ($CC_DBC->affectedRows() < 1) {
-        	return FALSE;
+            return FALSE;
         }
         return TRUE;
     }
@@ -422,7 +419,7 @@ class Prefs {
         $testVal = 'abcDef 0123 ěščřžýáíé ĚŠČŘŽÝÁÍÉ';
         $r = savePref($sessid, $testKey, $testVal);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $val = loadPref($sessid, $testKey);
         if ($val != $testVal) {
@@ -431,7 +428,7 @@ class Prefs {
         }
         $r = savePref($sessid, $testKey, '');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $val = loadPref($sessid, $testKey);
         if ($val != $testVal) {

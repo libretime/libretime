@@ -20,18 +20,18 @@ $stid = $bs->storId;
 
 function admDumpFolder(&$bs, $fid, $ind='')
 {
-		// NOTE: need to fix this, removed due to tree removal
-//    $name = M2tree::GetObjName($fid);
-//    if (PEAR::isError($name)) {
-//    	echo $name->getMessage();
-//    	exit;
-//    }
+    // NOTE: need to fix this, removed due to tree removal
+    //    $name = M2tree::GetObjName($fid);
+    //    if (PEAR::isError($name)) {
+    //    	echo $name->getMessage();
+    //    	exit;
+    //    }
     $media = StoredFile::Recall($fid);
     $type = $media->getType();
     $gunid = $media->getGunid();
     $pars  = array();
     if ($gunid) {
-    	$pars['id']="$gunid";
+        $pars['id']="$gunid";
     }
     $pars['name'] = "$name";
     switch ($type) {
@@ -65,13 +65,13 @@ function admDumpGroup(&$bs, $gid, $ind='')
 {
     $name = Subjects::GetSubjName($gid);
     if (PEAR::isError($name)) {
-    	echo $name->getMessage();
-    	exit;
+        echo $name->getMessage();
+        exit;
     }
     $isGr = Subjects::IsGroup($gid);
     if (PEAR::isError($isGr)) {
-    	echo $isGr->getMessage();
-    	exit;
+        echo $isGr->getMessage();
+        exit;
     }
     $pars = array('name'=>"$name");
     $pars['id'] = $gid;
@@ -84,8 +84,8 @@ function admDumpGroup(&$bs, $gid, $ind='')
     }
     $garr = Subjects::ListGroup($gid);
     if (PEAR::isError($garr)) {
-    	echo $garr->getMessage();
-    	exit;
+        echo $garr->getMessage();
+        exit;
     }
     $res = '';
     foreach ($garr as $i => $member) {
@@ -99,98 +99,98 @@ function admDumpGroup(&$bs, $gid, $ind='')
     );
     $prefs = admDumpPrefs($bs, $gid);
     if (!is_null($prefs)) {
-    	$res .= $prefs;
+        $res .= $prefs;
     }
     if ($res) {
-    	$tagarr['content'] = $res;
+        $tagarr['content'] = $res;
     }
     return XML_Util::createTagFromArray($tagarr, $res === '');
-//    if (!$res) {
-//    } else {
-//        return XML_Util::createTagFromArray(array(
-//            'namespace' => NSPACE,
-//            'localPart' => 'group',
-//            'attributes'=> $pars,
-//            'content'   => $res,
-//        ), FALSE);
-//    }
+    //    if (!$res) {
+    //    } else {
+    //        return XML_Util::createTagFromArray(array(
+    //            'namespace' => NSPACE,
+    //            'localPart' => 'group',
+    //            'attributes'=> $pars,
+    //            'content'   => $res,
+    //        ), FALSE);
+    //    }
 
-}
-function admDumpSubjects(&$bs, $ind='')
-{
-    $res ='';
-    $subjs = Subjects::GetSubjects('id, login, pass, type');
-    foreach ($subjs as $i => $member) {
-        switch ($member['type']) {
-            case "U":
-                $prefs = admDumpPrefs($bs, $member['id']);
-                $pars = array('login'=>"{$member['login']}", 'pass'=>"{$member['pass']}");
-                $pars['id'] = $member['id'];
-                $tagarr =                 array(
+    }
+    function admDumpSubjects(&$bs, $ind='')
+    {
+        $res ='';
+        $subjs = Subjects::GetSubjects('id, login, pass, type');
+        foreach ($subjs as $i => $member) {
+            switch ($member['type']) {
+                case "U":
+                    $prefs = admDumpPrefs($bs, $member['id']);
+                    $pars = array('login'=>"{$member['login']}", 'pass'=>"{$member['pass']}");
+                    $pars['id'] = $member['id'];
+                    $tagarr =                 array(
                     'namespace' => NSPACE,
                     'localPart' => 'user',
                     'attributes'=> $pars,
-                );
-                if (!is_null($prefs)) {
-                	$tagarr['content'] = $prefs;
-                }
-                $res .= XML_Util::createTagFromArray($tagarr , FALSE);
-                break;
-            case "G":
-                $res .= admDumpGroup($bs, $member['id'], "$ind  ");
-                break;
+                    );
+                    if (!is_null($prefs)) {
+                        $tagarr['content'] = $prefs;
+                    }
+                    $res .= XML_Util::createTagFromArray($tagarr , FALSE);
+                    break;
+                case "G":
+                    $res .= admDumpGroup($bs, $member['id'], "$ind  ");
+                    break;
+            }
         }
-    }
-#    return "$ind<subjects>\n$res$ind</subjects>\n";
-    return XML_Util::createTagFromArray(array(
+        #    return "$ind<subjects>\n$res$ind</subjects>\n";
+        return XML_Util::createTagFromArray(array(
         'namespace' => NSPACE,
         'localPart' => 'subjects',
         'content'=> $res,
-    ), FALSE);
-}
+        ), FALSE);
+    }
 
-function admDumpPrefs(&$bs, $subjid)
-{
-    $res ='';
-    $pr = new Prefs($bs);
-    $prefkeys = $pr->readKeys($subjid);
-#    var_dump($subjid); var_dump($prefkeys); #exit;
-    foreach ($prefkeys as $i => $prefk) {
-        $keystr = $prefk['keystr'];
-        $prefval = $pr->readVal($subjid, $keystr);
-        $pars = array('name'=>"$keystr", 'val'=>"$prefval");
-        $res .= XML_Util::createTagFromArray(array(
+    function admDumpPrefs(&$bs, $subjid)
+    {
+        $res ='';
+        $pr = new Prefs($bs);
+        $prefkeys = $pr->readKeys($subjid);
+        #    var_dump($subjid); var_dump($prefkeys); #exit;
+        foreach ($prefkeys as $i => $prefk) {
+            $keystr = $prefk['keystr'];
+            $prefval = $pr->readVal($subjid, $keystr);
+            $pars = array('name'=>"$keystr", 'val'=>"$prefval");
+            $res .= XML_Util::createTagFromArray(array(
             'namespace' => NSPACE,
             'localPart' => 'pref',
             'attributes'=> $pars,
-        ));
-    }
-    if (!$res) {
-    	return NULL;
-    }
-    return XML_Util::createTagFromArray(array(
+            ));
+        }
+        if (!$res) {
+            return NULL;
+        }
+        return XML_Util::createTagFromArray(array(
         'namespace' => NSPACE,
         'localPart' => 'preferences',
         'content'=> $res,
-    ), FALSE);
-}
+        ), FALSE);
+    }
 
-$subjects = admDumpSubjects($bs, ' ');
-$tree = admDumpFolder($bs, $stid, ' ');
+    $subjects = admDumpSubjects($bs, ' ');
+    $tree = admDumpFolder($bs, $stid, ' ');
 
-$res = XML_Util::getXMLDeclaration("1.0", "UTF-8")."\n";
-$node = XML_Util::createTagFromArray(array(
+    $res = XML_Util::getXMLDeclaration("1.0", "UTF-8")."\n";
+    $node = XML_Util::createTagFromArray(array(
     'namespace' => NSPACE,
     'localPart' => 'storageServer',
     'content'   => "$subjects$tree",
-), FALSE);
-$res .= $node;
+    ), FALSE);
+    $res .= $node;
 
-$fmt = new XML_Beautifier();
-$res = $fmt->formatString($res);
+    $fmt = new XML_Beautifier();
+    $res = $fmt->formatString($res);
 
-#var_export($res);
-#var_dump($res);
-echo "$res";
+    #var_export($res);
+    #var_dump($res);
+    echo "$res";
 
-?>
+    ?>

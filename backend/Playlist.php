@@ -14,81 +14,88 @@ define('INDCH', ' ');
  */
 class Playlist {
 
- // *** Variable stored in the database ***
+    // *** Variable stored in the database ***
 
-	/**
-	 * @var int
-	 */
-	private $id;
+    /**
+     * @var int
+     */
+    private $id;
 
-	/**
-	 * @var string
-	 */
-	private $name;
+    /**
+     * @var string
+     */
+    private $name;
 
-	/**
-	 * Can be 'ready', 'edited', 'incomplete'.
-	 *
-	 * @var string
-	 */
-	private $state;
+    /**
+     * Can be 'ready', 'edited', 'incomplete'.
+     *
+     * @var string
+     */
+    private $state;
 
-	/**
-	 * @var int
-	 */
-	private $currentlyaccessing;
+    /**
+     * @var int
+     */
+    private $currentlyaccessing;
 
-	/**
-	 * @var int
-	 */
-	private $editedby;
+    /**
+     * @var int
+     */
+    private $editedby;
 
-	/**
-	 * @var timestamp
-	 */
-	private $mtime;
+    /**
+     * @var timestamp
+     */
+    private $mtime;
 
-	/**
-	 * @var MetaData
-	 */
-	public $md;
+    /**
+     * @var MetaData
+     */
+    public $md;
 
-	//using propel's phpNames.
-	private $categories = array("dc:title" => "DbName", "dc:creator" => "DbCreator", "dc:description" => "DbDescription", "dcterms:extent" => "length");
+    //using propel's phpNames.
+    private $categories = array("dc:title" => "DbName", "dc:creator" => "DbCreator", "dc:description" => "DbDescription", "dcterms:extent" => "length");
 
 
+    /**
+     * @param string $p_gunid
+     */
     public function __construct($p_gunid=NULL)
     {
 
     }
 
-    public static function Insert($p_values)
+    /**
+     * @param array $p_name
+     * 		The name of the playlist
+     */
+    private static function Insert($p_name = null)
     {
-         // Create the StoredPlaylist object
+        // Create the StoredPlaylist object
         $storedPlaylist = new Playlist();
-        $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
-    	$storedPlaylist->mtime = new DateTime("now");
+        $storedPlaylist->name = !empty($p_name) ? $p_name : date("H:i:s");
+        $storedPlaylist->mtime = new DateTime("now");
 
-    	$pl = new CcPlaylist();
-    	$pl->setDbName($storedPlaylist->name);
-    	$pl->setDbState("incomplete");
-    	$pl->setDbMtime($storedPlaylist->mtime);
-    	$pl->save();
+        $pl = new CcPlaylist();
+        $pl->setDbName($storedPlaylist->name);
+        $pl->setDbState("incomplete");
+        $pl->setDbMtime($storedPlaylist->mtime);
+        $pl->save();
 
-    	$storedPlaylist->id = $pl->getDbId();
+        $storedPlaylist->id = $pl->getDbId();
         $storedPlaylist->setState('ready');
 
-	    return $storedPlaylist->id;
+        return $storedPlaylist->id;
 
     }
 
     public static function Delete($id) {
-      $pl = CcPlaylistQuery::create()->findPK($id);
-    	if($pl === NULL)
+        $pl = CcPlaylistQuery::create()->findPK($id);
+        if($pl === NULL)
    	    return FALSE;
 
-    	$pl->delete();
-      return TRUE;
+   	    $pl->delete();
+   	    return TRUE;
     }
 
 
@@ -98,11 +105,11 @@ class Playlist {
      */
     public static function DeleteFileFromAllPlaylists($p_fileId)
     {
-      CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
+        CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
 
 
- 		/**
+    /**
      * Fetch instance of Playlist object.<br>
      *
      * @param string $id
@@ -113,8 +120,8 @@ class Playlist {
     public static function Recall($id) {
 
         $pl = CcPlaylistQuery::create()->findPK($id);
-    	if($pl === NULL)
-    	    return FALSE;
+        if($pl === NULL)
+        return FALSE;
 
         $storedPlaylist = new Playlist();
         $storedPlaylist->id = $pl->getDbId();
@@ -127,7 +134,7 @@ class Playlist {
         return $storedPlaylist;
     }
 
-     /**
+    /**
      * Rename stored virtual playlist
      *
      * @param string $p_newname
@@ -137,18 +144,18 @@ class Playlist {
     {
         $pl = CcPlaylistQuery::create()->findPK($this->id);
 
-    	if($pl === NULL)
-    	    return FALSE;
+        if($pl === NULL)
+        return FALSE;
 
-    	$pl->setDbName($p_newname);
-    	$pl->setDbMtime(new DateTime("now"));
-    	$pl->save();
+        $pl->setDbName($p_newname);
+        $pl->setDbMtime(new DateTime("now"));
+        $pl->save();
 
         $this->name = $p_newname;
         return TRUE;
     }
 
- 	/**
+    /**
      * Get mnemonic playlist name
      *
      * @param string $p_gunid
@@ -162,12 +169,12 @@ class Playlist {
         }
         $pl = CcPlaylistQuery::create()->findPK($id);
         if($pl === NULL)
-    	    return FALSE;
+        return FALSE;
 
         return $pl->getDbName();
     }
 
-	/**
+    /**
      * Set state of virtual playlist
      *
      * @param string $p_state
@@ -180,23 +187,23 @@ class Playlist {
     {
         $pl = CcPlaylistQuery::create()->findPK($this->id);
 
-    	if($pl === NULL)
-    	    return FALSE;
+        if($pl === NULL)
+        return FALSE;
 
-    	$pl->setDbState($p_state);
-    	$pl->setDbMtime(new DateTime("now"));
+        $pl->setDbState($p_state);
+        $pl->setDbMtime(new DateTime("now"));
 
-    	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
-    	$pl->setDbEditedby($eb);
+        $eb = (!is_null($p_editedby) ? $p_editedby : NULL);
+        $pl->setDbEditedby($eb);
 
-    	$pl->save();
+        $pl->save();
 
         $this->state = $p_state;
         $this->editedby = $p_editedby;
         return TRUE;
     }
 
-     /**
+    /**
      * Get storage-internal file state
      *
      * @param string $p_gunid
@@ -211,10 +218,10 @@ class Playlist {
         }
 
         $pl = CcPlaylistQuery::create()->findPK($id);
-    	if($pl === NULL)
-    	    return FALSE;
+        if($pl === NULL)
+        return FALSE;
 
-    	return $pl->getDbState();
+        return $pl->getDbState();
     }
 
     /**
@@ -223,18 +230,18 @@ class Playlist {
 
     /*
      public function isScheduled() {
-        global $CC_CONFIG, $CC_DBC;
+     global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT * "
-            ." FROM ".$CC_CONFIG['scheduleTable']
-            ." WHERE ends > now() and playlist=x'{$this->gunid}'::bigint";
-        $scheduled = $CC_DBC->getAll($sql);
+     $sql = "SELECT * "
+     ." FROM ".$CC_CONFIG['scheduleTable']
+     ." WHERE ends > now() and playlist=x'{$this->gunid}'::bigint";
+     $scheduled = $CC_DBC->getAll($sql);
 
-        return $scheduled;
-    }
-    */
+     return $scheduled;
+     }
+     */
 
- 	/**
+    /**
      * Returns true if virtual file is currently in use.<br>
      * Static or dynamic call is possible.
      *
@@ -249,14 +256,14 @@ class Playlist {
         }
 
         $pl = CcPlaylistQuery::create()->findPK($id);
-    	if (is_null($pl)) {
+        if (is_null($pl)) {
             return PEAR::raiseError(
                 "StoredPlaylist::isAccessed: invalid id ($id)",
-                GBERR_FOBJNEX
+            GBERR_FOBJNEX
             );
-    	}
+        }
 
-    	return ($pl->getDbCurrentlyaccessing() > 0);
+        return ($pl->getDbCurrentlyaccessing() > 0);
     }
 
     /**
@@ -274,7 +281,8 @@ class Playlist {
         return FALSE;
     }
 
-/**
+
+    /**
      * Set playlist edit flag
      *
      * @param string $p_playlistId
@@ -309,7 +317,7 @@ class Playlist {
         return TRUE;
     }
 
-     /**
+    /**
      * Return local ID of virtual file.
      *
      * @return int
@@ -321,11 +329,12 @@ class Playlist {
     private function getNextPos() {
 
         $res = CcPlaylistQuery::create()
-            ->findPK($this->id)
-            ->computeLastPosition();
+        ->findPK($this->id)
+        ->computeLastPosition();
 
-        if(is_null($res))
+        if(is_null($res)) {
             return 0;
+        }
 
         return $res + 1;
     }
@@ -337,13 +346,13 @@ class Playlist {
     public function getContents() {
         $files = array();
         $rows = CcPlaylistcontentsQuery::create()
-            ->joinWith('CcFiles')
-            ->orderByDbPosition()
-            ->filterByDbPlaylistId($this->id)
-            ->find();
+        ->joinWith('CcFiles')
+        ->orderByDbPosition()
+        ->filterByDbPlaylistId($this->id)
+        ->find();
 
         foreach ($rows as $row) {
-          $files[] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+            $files[] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
         }
 
         return $files;
@@ -351,11 +360,12 @@ class Playlist {
 
     public function getLength() {
         $res = CcPlaylistQuery::create()
-            ->findPK($this->id)
-            ->computeLength();
+        ->findPK($this->id)
+        ->computeLength();
 
-        if(is_null($res))
+        if(is_null($res)) {
             return '00:00:00.000000';
+        }
 
         return $res;
     }
@@ -369,11 +379,18 @@ class Playlist {
      */
     public function create($fname=NULL)
     {
-        $values = array("filename" => $fname);
-        $pl_id = Playlist::Insert($values);
+        $pl_id = Playlist::Insert($fname);
         $this->id = $pl_id;
         return $this->id;
     }
+
+
+    public static function findPlaylistByName($p_name)
+    {
+        $res = CcPlaylistQuery::create()->findByDbName($p_name);
+        return $res;
+    }
+
 
     /**
      * Lock playlist for edit
@@ -392,7 +409,7 @@ class Playlist {
         if ($val && $this->isEdited() !== FALSE) {
             return PEAR::raiseError(
                 'Playlist::lock: playlist already locked'
-            );
+                );
         }
         $r = $this->setEditFlag($val, $sessid, $subjid);
         return $r;
@@ -438,29 +455,29 @@ class Playlist {
         //get audio clip.
         $media = StoredFile::Recall($p_mediaId);
         if (is_null($media) || PEAR::isError($media)) {
-        	return $media;
+            return $media;
         }
         // get information about audioClip
-//        $acInfo = $this->getAudioClipInfo($ac);
-//        if (PEAR::isError($acInfo)) {
-//        	return $acInfo;
-//        }
-//        extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
+        //        $acInfo = $this->getAudioClipInfo($ac);
+        //        if (PEAR::isError($acInfo)) {
+        //        	return $acInfo;
+        //        }
+        //        extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
         $metadata = $media->getMetadata();
         $length = $metadata["length"];
 
         if (!is_null($p_clipLength)) {
-        	$length = $p_clipLength;
+            $length = $p_clipLength;
         }
 
         // insert at end of playlist.
         if (is_null($p_position))
-          $p_position = $this->getNextPos();
+        $p_position = $this->getNextPos();
         if (PEAR::isError($p_position)) {
-        	return $p_position;
+            return $p_position;
         }
 
-	      // insert default values if parameter was empty
+        // insert default values if parameter was empty
         $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
         $p_cueout = !is_null($p_cueout) ? $p_cueout : $length;
 
@@ -475,7 +492,7 @@ class Playlist {
 
         $res = $this->insertPlaylistElement($this->id, $p_mediaId, $p_position, $p_clipLength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
         if (PEAR::isError($res)) {
-        	return $res;
+            return $res;
         }
         return TRUE;
     }
@@ -491,21 +508,21 @@ class Playlist {
     public function delAudioClip($pos)
     {
         if($pos < 0 || $pos >= $this->getNextPos())
-            return FALSE;
+        return FALSE;
 
         $row = CcPlaylistcontentsQuery::create()
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
-            ->findOne();
+        ->filterByDbPlaylistId($this->id)
+        ->filterByDbPosition($pos)
+        ->findOne();
 
         if(is_null($row))
-            return FALSE;
+        return FALSE;
 
         $row->delete();
         return $row;
     }
 
- 	/**
+    /**
      * Move audioClip to the new position in the playlist
      *
      * @param int $oldPos
@@ -517,15 +534,15 @@ class Playlist {
     public function moveAudioClip($oldPos, $newPos)
     {
         if($newPos < 0 || $newPos >= $this->getNextPos() || $oldPos < 0 || $oldPos >= $this->getNextPos())
-            return FALSE;
+        return FALSE;
 
         $row = $this->delAudioClip($oldPos);
         if($row === FALSE)
-            return FALSE;
+        return FALSE;
 
         $res = $this->addAudioClip($row->getDbFileId(), $newPos, $row->getDbFadein(), $row->getDbFadeout(), $row->getDbCliplength(), $row->getDbCuein(), $row->getDbCueout());
         if($res !== TRUE)
-            return FALSE;
+        return FALSE;
 
         return TRUE;
     }
@@ -552,9 +569,9 @@ class Playlist {
         }
 
         $row = CcPlaylistcontentsQuery::create()
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
-            ->findOne();
+        ->filterByDbPlaylistId($this->id)
+        ->filterByDbPosition($pos)
+        ->findOne();
 
         $clipLength = $row->getDbCliplength();
 
@@ -622,10 +639,10 @@ class Playlist {
         }
 
         $row = CcPlaylistcontentsQuery::create()
-            ->joinWith(CcFiles)
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
-            ->findOne();
+        ->joinWith(CcFiles)
+        ->filterByDbPlaylistId($this->id)
+        ->filterByDbPosition($pos)
+        ->findOne();
 
         $oldCueIn = $row->getDBCuein();
         $oldCueOut = $row->getDbCueout();
@@ -653,7 +670,7 @@ class Playlist {
             $row->setDbCuein($cueIn);
             $row->setDbCueout($cueOut);
             $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut)
-                    - Playlist::playlistTimeToSeconds($cueIn)));
+            - Playlist::playlistTimeToSeconds($cueIn)));
 
         }
         else if(!is_null($cueIn)) {
@@ -665,7 +682,7 @@ class Playlist {
 
             $row->setDbCuein($cueIn);
             $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($oldCueOut)
-                    - Playlist::playlistTimeToSeconds($cueIn)));
+            - Playlist::playlistTimeToSeconds($cueIn)));
         }
         else if(!is_null($cueOut)) {
 
@@ -685,7 +702,7 @@ class Playlist {
 
             $row->setDbCueout($cueOut);
             $row->setDBCliplength(Playlist::secondsToPlaylistTime(Playlist::playlistTimeToSeconds($cueOut)
-                    - Playlist::playlistTimeToSeconds($oldCueIn)));
+            - Playlist::playlistTimeToSeconds($oldCueIn)));
         }
 
         $cliplength = $row->getDbCliplength();
@@ -778,10 +795,10 @@ class Playlist {
     {
         $arr =  preg_split('/:/', $plt);
         if (isset($arr[2])) {
-          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+            return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
         }
         if (isset($arr[1])) {
-        	return intval($arr[0])*60 + floatval($arr[1]);
+            return intval($arr[0])*60 + floatval($arr[1]);
         }
         return floatval($arr[0]);
     }
@@ -865,29 +882,29 @@ class Playlist {
      *   <li>elType string - audioClip | playlist</li>
      *  </ul>
      */
-//    private function getAudioClipInfo($p_media)
-//    {
-//        $ac_id = $p_media->getId();
-//
-//        $r = $p_media->getMetadataValue('dcterms:extent');
-//        if (isset($r)) {
-//        	$acLen = $r;
-//        } else {
-//        	$acLen = '00:00:00.000000';
-//        }
-//
-//        $r = $p_media->getMetadataValue('dc:title');
-//        if (isset($r)) {
-//        	$acTit = $r;
-//        } else {
-//        	$acTit = $acGunid;
-//        }
-//        $elType = $p_media->getType();
-//        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
-//        $elType = $trTbl[$elType];
-//
-//        return compact('acGunid', 'acLen', 'acTit', 'elType');
-//    }
+    //    private function getAudioClipInfo($p_media)
+    //    {
+    //        $ac_id = $p_media->getId();
+    //
+    //        $r = $p_media->getMetadataValue('dcterms:extent');
+    //        if (isset($r)) {
+    //        	$acLen = $r;
+    //        } else {
+    //        	$acLen = '00:00:00.000000';
+    //        }
+    //
+    //        $r = $p_media->getMetadataValue('dc:title');
+    //        if (isset($r)) {
+    //        	$acTit = $r;
+    //        } else {
+    //        	$acTit = $acGunid;
+    //        }
+    //        $elType = $p_media->getType();
+    //        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip','playlist'=>'playlist');
+    //        $elType = $trTbl[$elType];
+    //
+    //        return compact('acGunid', 'acLen', 'acTit', 'elType');
+    //    }
 
 
     /**
@@ -927,9 +944,9 @@ class Playlist {
     private function insertPlaylistElement($plId, $fileId, $pos, $clipLength, $cuein, $cueout, $fadeIn=NULL, $fadeOut=NULL)
     {
         if(is_null($fadeIn))
-            $fadeIn = '00:00:00.000';
+        $fadeIn = '00:00:00.000';
         if(is_null($fadeOut))
-            $fadeOut = '00:00:00.000';
+        $fadeOut = '00:00:00.000';
 
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($plId);
@@ -962,21 +979,21 @@ class Playlist {
     {
         $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
         if (PEAR::isError($mid)) {
-        	return $mid;
+            return $mid;
         }
         $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $parid,  'playlength', 'A');
+        $mid, $newPlLen, $parid,  'playlength', 'A');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $mid = $this->_getMidOrInsert('dcterms:extent', $metaParid, $newPlLen);
         if (PEAR::isError($mid)) {
-        	return $mid;
+            return $mid;
         }
         $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $metaParid,  'dcterms:extent');
+        $mid, $newPlLen, $metaParid,  'dcterms:extent');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return TRUE;
     }
@@ -1020,26 +1037,26 @@ class PlaylistElement {
         // cycle over tags inside playlistElement
         foreach ($this->plEl['children'] as $j => $acFi) {
             switch ($acFi['elementname']) {
-	            case "playlist":
-	                $plInfo['type'] = 'playlist';
-	                break;
-	            case "audioClip":
-	                $plInfo['type'] = 'audioClip';
-	                break;
-	        }
-	        switch ($acFi['elementname']) {
-	            case "playlist":
-	            case "audioClip":
-	                $plInfo['acLen'] = $acFi['attrs']['playlength'];
-	                $plInfo['acLenS'] = Playlist::playlistTimeToSeconds($plInfo['acLen']);
-	                $plInfo['acGunid'] = $acFi['attrs']['id'];
-	                break;
-	            case "fadeInfo":
-	                $plInfo['fadeIn'] = $acFi['attrs']['fadeIn'];
-	                $plInfo['fadeInS'] = Playlist::playlistTimeToSeconds($plInfo['fadeIn']);
-	                $plInfo['fadeOut'] = $acFi['attrs']['fadeOut'];
-	                $plInfo['fadeOutS'] = Playlist::playlistTimeToSeconds($plInfo['fadeOut']);
-	                break;
+                case "playlist":
+                    $plInfo['type'] = 'playlist';
+                    break;
+                case "audioClip":
+                    $plInfo['type'] = 'audioClip';
+                    break;
+            }
+            switch ($acFi['elementname']) {
+                case "playlist":
+                case "audioClip":
+                    $plInfo['acLen'] = $acFi['attrs']['playlength'];
+                    $plInfo['acLenS'] = Playlist::playlistTimeToSeconds($plInfo['acLen']);
+                    $plInfo['acGunid'] = $acFi['attrs']['id'];
+                    break;
+                case "fadeInfo":
+                    $plInfo['fadeIn'] = $acFi['attrs']['fadeIn'];
+                    $plInfo['fadeInS'] = Playlist::playlistTimeToSeconds($plInfo['fadeIn']);
+                    $plInfo['fadeOut'] = $acFi['attrs']['fadeOut'];
+                    $plInfo['fadeOutS'] = Playlist::playlistTimeToSeconds($plInfo['fadeOut']);
+                    break;
             }
             $plInfo['clipStart'] = $this->plEl['attrs']['clipStart'];
             $plInfo['clipStartS'] = Playlist::playlistTimeToSeconds($this->plEl['attrs']['clipStart']);
@@ -1071,19 +1088,19 @@ class PlaylistTagExport
                 case "playlistElement":
                     $r = PlaylistElementExport::OutputToSmil($pl, $ple, $ind4);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$res .= $r;
+                        $res .= $r;
                     }
                     break;
                 case "metadata":
                     $r = PlaylistMetadataExport::OutputToSmil($pl, $ple, $ind4);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$res .= $r;
+                        $res .= $r;
                     }
                     break;
                 default:
@@ -1109,12 +1126,12 @@ class PlaylistTagExport
                 case"playlistElement":
                     $r = PlaylistElementExport::OutputToM3u($pl, $ple);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$res .= $r;
+                        $res .= $r;
                     }
-                break;
+                    break;
             }
         }
         $res = "#EXTM3U\n$res";
@@ -1132,21 +1149,21 @@ class PlaylistTagExport
                 case "playlistElement":
                     $r = PlaylistElementExport::OutputToRss($pl, $ple, $ind3);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$res .= $r;
+                        $res .= $r;
                     }
-                break;
+                    break;
                 case "metadata":
                     $r = PlaylistMetadataExport::OutputToRss($pl, $ple, $ind3);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$res .= $r;
+                        $res .= $r;
                     }
-                break;
+                    break;
                 default:
             }
         }
@@ -1182,33 +1199,33 @@ class PlaylistElementExport {
                 case "audioClip":
                     $r = PlaylistAudioClipExport::OutputToSmil($pl, $ac, $ind2);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$acOrPl = $r;
+                        $acOrPl = $r;
                     }
                     break;
                 case "playlist":
                     $gunid = $ac['attrs']['id'];
                     $pl2 = StoredFile::RecallByGunid($gunid);
                     if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
+                        return $pl2;
                     }
                     $r = $pl2->outputToSmil(FALSE);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$acOrPl = $r;
+                        $acOrPl = $r;
                     }
                     break;
                 case "fadeInfo":
                     $r = PlaylistFadeInfoExport::OutputToSmil($pl, $ac, $ind2);
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     if (!is_null($r)) {
-                    	$finfo = $r;
+                        $finfo = $r;
                     }
                     break;
                 default:
@@ -1236,245 +1253,245 @@ class PlaylistElementExport {
                     "{$ind3}fill = \"freeze\"\n".
                     "{$ind2}/>\n"
                 ;
-            }
-        }
-        $src = $acOrPl['src'];
-        $str = "$ind<audio src=\"$src\" begin=\"{$beginS}s\"".
-            ($anim ? ">\n$anim$ind</audio>" : " />").
+                    }
+                    }
+                    $src = $acOrPl['src'];
+                    $str = "$ind<audio src=\"$src\" begin=\"{$beginS}s\"".
+                    ($anim ? ">\n$anim$ind</audio>" : " />").
             " <!-- {$acOrPl['type']}, {$acOrPl['gunid']}, {$acOrPl['playlength']}  -->".
             "\n";
-        return $str;
-    }
-
-
-    public static function OutputToM3u(&$pl, $ple, $ind='')
-    {
-        $acOrPl = NULL;
-        foreach ($ple['children'] as $ac) {
-            switch ($ac['elementname']) {
-                case "audioClip":
-                    $r = PlaylistAudioClipExport::OutputToM3u($pl, $ac);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "playlist":
-                    $gunid = $ac['attrs']['id'];
-                    $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
-                    }
-                    $r = $pl2->outputToM3u(FALSE);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
+                    return $str;
             }
-        }
-        if (is_null($acOrPl)) {
-        	return '';
-        }
-        $playlength = ceil(Playlist::playlistTimeToSeconds($acOrPl['playlength']));
-        $title = $acOrPl['title'];
-        $uri = (isset($acOrPl['uri']) ? $acOrPl['uri'] : '???' );
-        $res  = "#EXTINF: $playlength, $title\n";
-        $res .= "$uri\n";
-        return $res;
-    }
 
 
-    public static function OutputToRss(&$pl, $ple, $ind='')
-    {
-        $acOrPl = NULL;
-        $ind2 = $ind.INDCH;
-        $anim = '';
-        foreach ($ple['children'] as $ac) {
-            switch ($ac['elementname']) {
-                case "audioClip":
-                    $r = PlaylistAudioClipExport::OutputToRss($pl, $ac, $ind2);
-                    if (PEAR::isError($r)) {
-                    	return $r;
+            public static function OutputToM3u(&$pl, $ple, $ind='')
+            {
+                $acOrPl = NULL;
+                foreach ($ple['children'] as $ac) {
+                    switch ($ac['elementname']) {
+                        case "audioClip":
+                            $r = PlaylistAudioClipExport::OutputToM3u($pl, $ac);
+                            if (PEAR::isError($r)) {
+                                return $r;
+                            }
+                            if (!is_null($r)) {
+                                $acOrPl = $r;
+                            }
+                            break;
+                        case "playlist":
+                            $gunid = $ac['attrs']['id'];
+                            $pl2 = StoredFile::RecallByGunid($gunid);
+                            if (is_null($pl2) || PEAR::isError($pl2)) {
+                                return $pl2;
+                            }
+                            $r = $pl2->outputToM3u(FALSE);
+                            if (PEAR::isError($r)) {
+                                return $r;
+                            }
+                            if (!is_null($r)) {
+                                $acOrPl = $r;
+                            }
+                            break;
                     }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "playlist":
-                    $gunid = $ac['attrs']['id'];
-                    $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
-                    }
-                    $r = $pl2->outputToRss(FALSE);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "fadeInfo":
-                	break;
-                default:
-                    return PEAR::raiseError(
+                }
+                if (is_null($acOrPl)) {
+                    return '';
+                }
+                $playlength = ceil(Playlist::playlistTimeToSeconds($acOrPl['playlength']));
+                $title = $acOrPl['title'];
+                $uri = (isset($acOrPl['uri']) ? $acOrPl['uri'] : '???' );
+                $res  = "#EXTINF: $playlength, $title\n";
+                $res .= "$uri\n";
+                return $res;
+            }
+
+
+            public static function OutputToRss(&$pl, $ple, $ind='')
+            {
+                $acOrPl = NULL;
+                $ind2 = $ind.INDCH;
+                $anim = '';
+                foreach ($ple['children'] as $ac) {
+                    switch ($ac['elementname']) {
+                        case "audioClip":
+                            $r = PlaylistAudioClipExport::OutputToRss($pl, $ac, $ind2);
+                            if (PEAR::isError($r)) {
+                                return $r;
+                            }
+                            if (!is_null($r)) {
+                                $acOrPl = $r;
+                            }
+                            break;
+                        case "playlist":
+                            $gunid = $ac['attrs']['id'];
+                            $pl2 = StoredFile::RecallByGunid($gunid);
+                            if (is_null($pl2) || PEAR::isError($pl2)) {
+                                return $pl2;
+                            }
+                            $r = $pl2->outputToRss(FALSE);
+                            if (PEAR::isError($r)) {
+                                return $r;
+                            }
+                            if (!is_null($r)) {
+                                $acOrPl = $r;
+                            }
+                            break;
+                        case "fadeInfo":
+                            break;
+                        default:
+                            return PEAR::raiseError(
                         "PlaylistElementExport::OutputToRss:".
                         " unknown tag {$ac['elementname']}"
-                    );
-            }
-        }
-        $title = (isset($acOrPl['title']) ? htmlspecialchars($acOrPl['title']) : '' );
-        $desc = (isset($acOrPl['desc']) ? htmlspecialchars($acOrPl['desc']) : '' );
-        $link = htmlspecialchars($acOrPl['src']);
-        $desc = '';
-        $str = "$ind<item>\n".
+                            );
+                    }
+                }
+                $title = (isset($acOrPl['title']) ? htmlspecialchars($acOrPl['title']) : '' );
+                $desc = (isset($acOrPl['desc']) ? htmlspecialchars($acOrPl['desc']) : '' );
+                $link = htmlspecialchars($acOrPl['src']);
+                $desc = '';
+                $str = "$ind<item>\n".
             "$ind2<title>$title</title>\n".
             "$ind2<description>$desc</description>\n".
             "$ind2<link>$link</link>\n".
             "$ind</item>\n";
-        return $str;
-    }
-}
-
-
-/**
- * @package Campcaster
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class to PlaylistAudioClip (notice the caps)
- */
-class PlaylistAudioClipExport
-{
-
-    public static function OutputToSmil(&$pl, $plac, $ind='')
-    {
-        $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::RecallByGunid($gunid);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
+                return $str;
+            }
         }
-        $RADext = $ac->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        return array(
+
+
+        /**
+         * @package Campcaster
+         * @subpackage StorageServer
+         * @copyright 2010 Sourcefabric O.P.S.
+         * @license http://www.gnu.org/licenses/gpl.txt
+         * @todo Rename this class to PlaylistAudioClip (notice the caps)
+         */
+        class PlaylistAudioClipExport
+        {
+
+            public static function OutputToSmil(&$pl, $plac, $ind='')
+            {
+                $gunid = $plac['attrs']['id'];
+                $ac = StoredFile::RecallByGunid($gunid);
+                if (is_null($ac) || PEAR::isError($ac)) {
+                    return $ac;
+                }
+                $RADext = $ac->getFileExtension();
+                if (PEAR::isError($RADext)) {
+                    return $RADext;
+                }
+                return array(
             'type'       => 'audioclip',
             'gunid'      => $gunid,
             'src'        => AC_URL_RELPATH."$gunid.$RADext",
             'playlength' => $plac['attrs']['playlength'],
-        );
-    }
+                );
+            }
 
 
-    public static function OutputToM3u(&$pl, $plac, $ind='')
-    {
-        $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::RecallByGunid($gunid);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
-        }
-        $RADext = $ac->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        return array(
+            public static function OutputToM3u(&$pl, $plac, $ind='')
+            {
+                $gunid = $plac['attrs']['id'];
+                $ac = StoredFile::RecallByGunid($gunid);
+                if (is_null($ac) || PEAR::isError($ac)) {
+                    return $ac;
+                }
+                $RADext = $ac->getFileExtension();
+                if (PEAR::isError($RADext)) {
+                    return $RADext;
+                }
+                return array(
             'playlength' => $plac['attrs']['playlength'],
             'title'      => $plac['attrs']['title'],
             'uri'        => AC_URL_RELPATH."$gunid.$RADext",
-        );
-    }
+                );
+            }
 
 
-    public static function OutputToRss(&$pl, $plac, $ind='')
-    {
-        $id = $plac['attrs']['id'];
-        $playlist = Playlist::Recall($id);
-        if (is_null($playlist) || PEAR::isError($playlist)) {
-        	return $playlist;
-        }
-        $RADext = $playlist->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        $title = $playlist->getName();
-        $desc = $playlist->getPLMetaData("dc:description");
-        return array(
+            public static function OutputToRss(&$pl, $plac, $ind='')
+            {
+                $id = $plac['attrs']['id'];
+                $playlist = Playlist::Recall($id);
+                if (is_null($playlist) || PEAR::isError($playlist)) {
+                    return $playlist;
+                }
+                $RADext = $playlist->getFileExtension();
+                if (PEAR::isError($RADext)) {
+                    return $RADext;
+                }
+                $title = $playlist->getName();
+                $desc = $playlist->getPLMetaData("dc:description");
+                return array(
             'type'       => 'audioclip',
             'gunid'      => $id,
             'src'        => "http://XXX/YY/$id.$RADext",
             'playlength' => $plac['attrs']['playlength'],
             'title'      => $title,
             'desc'      => $desc,
-        );
-    }
-}
+                );
+            }
+        }
 
 
-/**
- * @package Campcaster
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
- */
-class PlaylistFadeInfoExport
-{
+        /**
+         * @package Campcaster
+         * @subpackage StorageServer
+         * @copyright 2010 Sourcefabric O.P.S.
+         * @license http://www.gnu.org/licenses/gpl.txt
+         * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
+         */
+        class PlaylistFadeInfoExport
+        {
 
-    public static function OutputToSmil(&$pl, $plfi, $ind='')
-    {
-        $r = array(
+            public static function OutputToSmil(&$pl, $plfi, $ind='')
+            {
+                $r = array(
             'fi'=>$plfi['attrs']['fadeIn'],
             'fo'=>$plfi['attrs']['fadeOut'],
-        );
-        return $r;
-    }
+                );
+                return $r;
+            }
 
 
-    public static function OutputToM3u(&$pl, $plfa, $ind='')
-    {
-    	return '';
-    }
+            public static function OutputToM3u(&$pl, $plfa, $ind='')
+            {
+                return '';
+            }
 
 
-    public static function OutputToRss(&$pl, $plfa, $ind='')
-    {
-    	return '';
-    }
+            public static function OutputToRss(&$pl, $plfa, $ind='')
+            {
+                return '';
+            }
 
-}
-
-
-/**
- * @package Campcaster
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class to PlaylistMetadata (notice the caps)
- */
-class PlaylistMetadataExport
-{
-    public static function OutputToSmil(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
+        }
 
 
-    public static function OutputToM3u(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
+        /**
+         * @package Campcaster
+         * @subpackage StorageServer
+         * @copyright 2010 Sourcefabric O.P.S.
+         * @license http://www.gnu.org/licenses/gpl.txt
+         * @todo Rename this class to PlaylistMetadata (notice the caps)
+         */
+        class PlaylistMetadataExport
+        {
+            public static function OutputToSmil(&$pl, $md, $ind='')
+            {
+                return NULL;
+            }
 
 
-    public static function OutputToRss(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
-}
+            public static function OutputToM3u(&$pl, $md, $ind='')
+            {
+                return NULL;
+            }
 
-?>
+
+            public static function OutputToRss(&$pl, $md, $ind='')
+            {
+                return NULL;
+            }
+        }
+
+        ?>

@@ -24,7 +24,7 @@ $CC_CONFIG = array(
     /* ================================================ storage configuration */
 
     'apiKey' => array('AAA'),
-    
+
     // main directory for storing binary media files
     'storageDir'    =>  dirname(__FILE__).'/stor',
 
@@ -41,11 +41,11 @@ $CC_CONFIG = array(
     "rootDir" => dirname(__FILE__),
     "smartyTemplate" => dirname(__FILE__)."/htmlUI/templates",
     "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
-    'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear',
+    'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear/',
     'zendPath'      =>  dirname(__FILE__).'/3rd_party/php/Zend',
     'phingPath'      =>  dirname(__FILE__).'/3rd_party/php/phing',
     'LogPath'      =>  dirname(__FILE__).'/3rd_party/php/Log',
-    
+
      // secret token cookie name
     'authCookieName'=> 'campcaster_session_id',
 
@@ -75,6 +75,8 @@ $CC_CONFIG = array(
     // host and port of storageServer
  	'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
+
+    'apiPath' 				=> '/campcaster/api/',
 
     /* ================================================ remote link configuration */
     // path-URL-part of remote server base dir
@@ -163,6 +165,22 @@ $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
+
+require_once('DB.php');
+
+// Connect to the database
+$CC_DBC = DB::connect($CC_CONFIG['dsn']);
+if (PEAR::isError($CC_DBC)) {
+    echo "*** conf.php ***<br>";
+    echo "Could not connect to database.  Your current configuration is:<br>";
+    echo "<table border=1>";
+    echo "<tr><td>Host name:</td><td>".$CC_CONFIG['dsn']['hostspec']."</td></tr>";
+    echo "<tr><td>Database name:</td><td>".$CC_CONFIG['dsn']['database']."</td></tr>";
+    echo "<tr><td>User name:</td><td>".$CC_CONFIG['dsn']['username']."</td></tr>";
+    echo "</table>";
+    exit;
+}
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 // Check that all the required directories exist.
 //foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {

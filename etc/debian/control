@@ -83,7 +83,7 @@ Description: A radio program automation and support tool.
  .
  This package contains the libraries used by Campcaster.
  .
- Web site: http://campcaster.campware.org
+ Web site: http://campcaster.sourcefabric.org
 
 Package: campcaster-station
 Architecture: any
@@ -133,7 +133,7 @@ Description: A radio program automation and support tool.
  This package contains the server components of Campcaster:
  a storage server, a scheduler daemon, and a web interface.
  .
- Web site: http://campcaster.campware.org
+ Web site: http://campcaster.sourcefabric.org
 
 Package: campcaster-studio
 Architecture: any
@@ -178,4 +178,4 @@ Description: A radio program automation and support tool.
  .
  This package contains the GUI client component of Campcaster.
  .
- Web site: http://campcaster.campware.org
+ Web site: http://campcaster.sourcefabric.org

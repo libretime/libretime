@@ -83,11 +83,5 @@ class StoredFileTest extends PHPUnit_TestCase {
 
     }
 
-    function testFoo() {
-         // Add a file
-        $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
-        $this->storedFile = StoredFile::Insert($values, false);
-
-    }
 }
 ?>

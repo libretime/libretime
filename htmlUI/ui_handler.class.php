@@ -10,10 +10,10 @@ define('ACTION_BASE', '/actions' ) ;
  * @copyright 2010 Sourcefabric O.P.S.
  */
 class uiHandler extends uiBase {
-	/**
-	 * @var string
-	 */
-	public $redirUrl;
+    /**
+     * @var string
+     */
+    public $redirUrl;
 
     /**
      * Initialize a new Browser Class
@@ -28,12 +28,12 @@ class uiHandler extends uiBase {
 
     // --- authentication ---
     /**
-     * Login to the storageServer.
-     * It set sessid to the cookie with name defined in ../conf.php
-     *
-     * @param array $formdata
-     *      The REQUEST array.
-     */
+    * Login to the storageServer.
+    * It set sessid to the cookie with name defined in ../conf.php
+    *
+    * @param array $formdata
+    *      The REQUEST array.
+    */
     function login($formdata, $mask)
     {
         global $CC_CONFIG;
@@ -65,7 +65,7 @@ class uiHandler extends uiBase {
         $this->langid = $formdata['langid'];
         $this->redirUrl = UI_BROWSER.'?popup[]=_2SCHEDULER&popup[]=_close';
         return TRUE;
-     } // fn login
+    } // fn login
 
 
     /**
@@ -84,164 +84,164 @@ class uiHandler extends uiBase {
         session_destroy();
 
         if ($trigger_login) {
-             $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=login';
+            $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=login';
         } else {
-        	$this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
+            $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
         }
     } // fn logout
 
 
     // --- files ---
-	function processFile($audio_file, $caller){
+    function processFile($audio_file, $caller){
 
-		global $CC_CONFIG;
+        global $CC_CONFIG;
 
-		if ($this->testForAudioType($audio_file) === FALSE) {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "uses an unsupported file type."}}');
-		}
+        if ($this->testForAudioType($audio_file) === FALSE) {
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "uses an unsupported file type."}}');
+        }
 
-		$md5 = md5_file($audio_file);
-		$duplicate = StoredFile::RecallByMd5($md5);
-		if ($duplicate) {
-			if (PEAR::isError($duplicate)) {
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
-			}
-			else {
-				$duplicateName = $this->gb->getMetadataValue($duplicate->getId(), UI_MDATA_KEY_TITLE, $this->sessid);
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
-			}
-		}
+        $md5 = md5_file($audio_file);
+        $duplicate = StoredFile::RecallByMd5($md5);
+        if ($duplicate) {
+            if (PEAR::isError($duplicate)) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
+            }
+            else {
+                $duplicateName = $this->gb->getMetadataValue($duplicate->getId(), UI_MDATA_KEY_TITLE, $this->sessid);
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+            }
+        }
 
-		$metadata = camp_get_audio_metadata($audio_file);
+        $metadata = camp_get_audio_metadata($audio_file);
 
-		if (PEAR::isError($metadata)) {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $metadata->getMessage() + '}}');
-		}
+        if (PEAR::isError($metadata)) {
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $metadata->getMessage() + '}}');
+        }
 
-		// #2196 no id tag -> use the original filename
-		if (basename($audio_file) == $metadata['dc:title']) {
-			$metadata['dc:title'] = basename($audio_file);
-			$metadata['ls:filename'] = basename($audio_file);
-		}
+        // #2196 no id tag -> use the original filename
+        if (basename($audio_file) == $metadata['dc:title']) {
+            $metadata['dc:title'] = basename($audio_file);
+            $metadata['ls:filename'] = basename($audio_file);
+        }
 
-		// setMetadataBatch doesnt like these values
-		unset($metadata['audio']);
-		unset($metadata['playtime_seconds']);
+        // setMetadataBatch doesnt like these values
+        unset($metadata['audio']);
+        unset($metadata['playtime_seconds']);
 
-		$values = array(
+        $values = array(
             "filename" =>  basename($audio_file),
             "filepath" => $audio_file,
             "filetype" => "audioclip",
             "mime" => $metadata["dc:format"],
             "md5" => $md5
-		);
-		$storedFile = $this->gb->putFile($values, $this->sessid);
+        );
+        $storedFile = $this->gb->putFile($values, $this->sessid);
 
-		if (PEAR::isError($storedFile)) {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $storedFile->getMessage() + '}}');
-		}
+        if (PEAR::isError($storedFile)) {
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $storedFile->getMessage() + '}}');
+        }
 
-		$result = $storedFile->setMetadataBatch($metadata);
+        $result = $storedFile->setMetadataBatch($metadata);
 
-		return $storedFile->getId();
-	}
+        return $storedFile->getId();
+    }
 
-	function pluploadFile($data)
-	{
-		header('Content-type: text/plain; charset=UTF-8');
-		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-		header("Cache-Control: no-store, no-cache, must-revalidate");
-		header("Cache-Control: post-check=0, pre-check=0", false);
-		header("Pragma: no-cache");
+    function pluploadFile($data)
+    {
+        header('Content-type: text/plain; charset=UTF-8');
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
 
-		// Settings
-		$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-		$cleanupTargetDir = false; // Remove old files
-		$maxFileAge = 60 * 60; // Temp file age in seconds
+        // Settings
+        $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $cleanupTargetDir = false; // Remove old files
+        $maxFileAge = 60 * 60; // Temp file age in seconds
 
-		// 5 minutes execution time
-		@set_time_limit(5 * 60);
+        // 5 minutes execution time
+        @set_time_limit(5 * 60);
 
-		// Get parameters
-		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
-		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
-		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+        // Get parameters
+        $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
+        $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
+        $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
 
-		// Clean the fileName for security reasons
-		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
+        // Clean the fileName for security reasons
+        //$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
-		// Create target dir
-		if (!file_exists($targetDir)) {
-			@mkdir($targetDir);
-		}
+        // Create target dir
+        if (!file_exists($targetDir)) {
+            @mkdir($targetDir);
+        }
 
-		// Remove old temp files
-		if (is_dir($targetDir) && ($dir = opendir($targetDir))) {
-			while (($file = readdir($dir)) !== false) {
-				$filePath = $targetDir . DIRECTORY_SEPARATOR . $file;
+        // Remove old temp files
+        if (is_dir($targetDir) && ($dir = opendir($targetDir))) {
+            while (($file = readdir($dir)) !== false) {
+                $filePath = $targetDir . DIRECTORY_SEPARATOR . $file;
 
-				// Remove temp files if they are older than the max age
-				if (preg_match('/\\.tmp$/', $file) && (filemtime($filePath) < time() - $maxFileAge))
-				@unlink($filePath);
-			}
+                // Remove temp files if they are older than the max age
+                if (preg_match('/\\.tmp$/', $file) && (filemtime($filePath) < time() - $maxFileAge))
+                @unlink($filePath);
+            }
 
-			closedir($dir);
-		}
-		else {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
-		}
+            closedir($dir);
+        }
+        else {
+            die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
+        }
 
-		// Look for the content type header
-		if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
-		$contentType = $_SERVER["HTTP_CONTENT_TYPE"];
+        // Look for the content type header
+        if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
+        $contentType = $_SERVER["HTTP_CONTENT_TYPE"];
 
-		if (isset($_SERVER["CONTENT_TYPE"]))
-		$contentType = $_SERVER["CONTENT_TYPE"];
+        if (isset($_SERVER["CONTENT_TYPE"]))
+        $contentType = $_SERVER["CONTENT_TYPE"];
 
-		if (strpos($contentType, "multipart") !== false) {
-			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-				// Open temp file
-				$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
-				if ($out) {
-					// Read binary input stream and append it to temp file
-					$in = fopen($_FILES['file']['tmp_name'], "rb");
+        if (strpos($contentType, "multipart") !== false) {
+            if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+                // Open temp file
+                $out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+                if ($out) {
+                    // Read binary input stream and append it to temp file
+                    $in = fopen($_FILES['file']['tmp_name'], "rb");
 
-					if ($in) {
-						while ($buff = fread($in, 4096))
-						fwrite($out, $buff);
-					} else
-					die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+                    if ($in) {
+                        while ($buff = fread($in, 4096))
+                        fwrite($out, $buff);
+                    } else
+                    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
 
-					fclose($out);
-					unlink($_FILES['file']['tmp_name']);
-				} else
-				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-			} else
-			die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
-		} else {
-			// Open temp file
-			$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
-			if ($out) {
-				// Read binary input stream and append it to temp file
-				$in = fopen("php://input", "rb");
+                    fclose($out);
+                    unlink($_FILES['file']['tmp_name']);
+                } else
+                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+            } else
+            die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
+        } else {
+            // Open temp file
+            $out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+            if ($out) {
+                // Read binary input stream and append it to temp file
+                $in = fopen("php://input", "rb");
 
-				if ($in) {
-					while ($buff = fread($in, 4096))
-					fwrite($out, $buff);
-				} else
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+                if ($in) {
+                    while ($buff = fread($in, 4096))
+                    fwrite($out, $buff);
+                } else
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
 
-				fclose($out);
-				return $this->processFile($targetDir . DIRECTORY_SEPARATOR . $fileName);
+                fclose($out);
+                return $this->processFile($targetDir . DIRECTORY_SEPARATOR . $fileName);
 
-			} else
-			die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-		}
+            } else
+            die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+        }
 
-		// Return JSON-RPC response
-		die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
-	}
+        // Return JSON-RPC response
+        die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+    }
 
     /**
      * Provides file upload and store it to the storage
@@ -254,7 +254,7 @@ class uiHandler extends uiBase {
         global $CC_CONFIG;
         if ($this->testForAudioType($formdata['mediafile']['name']) === FALSE) {
             if (UI_ERROR) {
-            	$this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
+                $this->_retMsg('"$1" uses an unsupported file type.', $formdata['mediafile']['name']);
             }
             $this->redirUrl = UI_BROWSER."?act=addFileData&folderId=".$formdata['folderId'];
             return FALSE;
@@ -347,45 +347,45 @@ class uiHandler extends uiBase {
      * @param unknown_type $langid
      * @return void
      */
-//    function translateMetadata($id, $langid=UI_DEFAULT_LANGID)
-//    {
-//        include(dirname(__FILE__).'/formmask/metadata.inc.php');
-//
-//        $ia = $this->gb->analyzeFile($id, $this->sessid);
-//        if (PEAR::isError($ia)) {
-//            $this->_retMsg($ia->getMessage());
-//            return;
-//        }
-//        // This is really confusing: the import script does not do it
-//        // this way.  Which way is the right way?
-//        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
-////        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
-//
-//        // some data from raw audio
-////        if (isset($ia['audio']['channels'])) {
-////        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
-////        }
-////        if (isset($ia['audio']['sample_rate'])) {
-////        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
-////        }
-////        if (isset($ia['audio']['bitrate'])) {
-////        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
-////        }
-////        if (isset($ia['audio']['codec'])) {
-////        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
-////        }
-//
-//        // from id3 Tags
-//        // loop main, music, talk
-//        foreach ($mask['pages'] as $key => $val) {
-//        	// loop through elements
-//            foreach ($mask['pages'][$key] as $k => $v) {
-//            	if (isset($v['element']) && isset($ia[$v['element']])) {
-//	                $this->setMetadataValue($id, $v['element'], $ia[$v['element']], $langid);
-//            	}
-//            }
-//        }
-//    }
+    //    function translateMetadata($id, $langid=UI_DEFAULT_LANGID)
+    //    {
+    //        include(dirname(__FILE__).'/formmask/metadata.inc.php');
+    //
+    //        $ia = $this->gb->analyzeFile($id, $this->sessid);
+    //        if (PEAR::isError($ia)) {
+    //            $this->_retMsg($ia->getMessage());
+    //            return;
+    //        }
+    //        // This is really confusing: the import script does not do it
+    //        // this way.  Which way is the right way?
+    //        $this->setMetadataValue($id, UI_MDATA_KEY_DURATION, Playlist::secondsToPlaylistTime($ia['playtime_seconds']));
+    ////        $this->setMetadataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
+    //
+    //        // some data from raw audio
+    ////        if (isset($ia['audio']['channels'])) {
+    ////        	$this->setMetadataValue($id, UI_MDATA_KEY_CHANNELS, $ia['audio']['channels']);
+    ////        }
+    ////        if (isset($ia['audio']['sample_rate'])) {
+    ////        	$this->setMetadataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+    ////        }
+    ////        if (isset($ia['audio']['bitrate'])) {
+    ////        	$this->setMetadataValue($id, UI_MDATA_KEY_BITRATE, $ia['audio']['bitrate']);
+    ////        }
+    ////        if (isset($ia['audio']['codec'])) {
+    ////        	$this->setMetadataValue($id, UI_MDATA_KEY_ENCODER, $ia['audio']['codec']);
+    ////        }
+    //
+    //        // from id3 Tags
+    //        // loop main, music, talk
+    //        foreach ($mask['pages'] as $key => $val) {
+    //        	// loop through elements
+    //            foreach ($mask['pages'][$key] as $k => $v) {
+    //            	if (isset($v['element']) && isset($ia[$v['element']])) {
+    //	                $this->setMetadataValue($id, $v['element'], $ia[$v['element']], $langid);
+    //            	}
+    //            }
+    //        }
+    //    }
 
 
     /**
@@ -461,15 +461,15 @@ class uiHandler extends uiBase {
 
         foreach ($mask['pages'] as $key => $val) {
             foreach ($mask['pages'][$key] as $k => $v) {
-              $element = uiBase::formElementEncode($v['element']);
+                $element = uiBase::formElementEncode($v['element']);
                 if ($formdata[$key.'___'.$element])
-                  $mData[uiBase::formElementDecode($v['element'])] = $formdata[$key.'___'.$element];
+                $mData[uiBase::formElementDecode($v['element'])] = $formdata[$key.'___'.$element];
             }
         }
 
         $_SESSION["debug"] = $mData;
         if (!count($mData)) {
-        	return;
+            return;
         }
 
         foreach ($mData as $key => $val) {
@@ -491,15 +491,15 @@ class uiHandler extends uiBase {
      * @param int $id
      * 		destination folder id
      */
-//    function rename($newname, $id)
-//    {
-//        $r = $this->gb->renameFile($id, $newname, $this->sessid);
-//        if (PEAR::isError($r)) {
-//        	$this->_retMsg($r->getMessage());
-//        }
-//        //$this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
-//        $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
-//    } // fn rename
+    //    function rename($newname, $id)
+    //    {
+    //        $r = $this->gb->renameFile($id, $newname, $this->sessid);
+    //        if (PEAR::isError($r)) {
+    //        	$this->_retMsg($r->getMessage());
+    //        }
+    //        //$this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
+    //        $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
+    //    } // fn rename
 
 
     /**
@@ -517,19 +517,19 @@ class uiHandler extends uiBase {
         $this->redirUrl = UI_BROWSER."?popup[]=_reload_parent&popup[]=_close";
 
         if (is_array($id)) {
-        	$ids = $id;
+            $ids = $id;
         } else {
-        	$ids[] = $id;
+            $ids[] = $id;
         }
 
         foreach ($ids as $id) {
-          $media = StoredFile::Recall($id);
-          $r = $media->delete();
+            $media = StoredFile::Recall($id);
+            $r = $media->delete();
 
-          if (PEAR::isError($r)) {
-              $this->_retMsg($r->getMessage());
-              return FALSE;
-          }
+            if (PEAR::isError($r)) {
+                $this->_retMsg($r->getMessage());
+                return FALSE;
+            }
         }
 
         return TRUE;
@@ -548,9 +548,9 @@ class uiHandler extends uiBase {
     {
         $r = $this->gb->access($id, $this->sessid);
         if (PEAR::isError($r)) {
-        	$this->_retMsg($r->getMessage());
+            $this->_retMsg($r->getMessage());
         } else {
-        	echo $r;
+            echo $r;
         }
     } // fn getFile
 
@@ -571,24 +571,24 @@ class uiHandler extends uiBase {
 
     // --- perms ---
     /**
-     * Add new permission record
-     *
-     * @param int $subj
-     * 		local user/group id
-     * @param string $permAction
-     * 		type of action from set predefined in conf.php
-     * @param int $id
-     * 		local id of file/object
-     * @param char $allowDeny
-     * 		'A' or 'D'
-     * @return boolean
-     */
+    * Add new permission record
+    *
+    * @param int $subj
+    * 		local user/group id
+    * @param string $permAction
+    * 		type of action from set predefined in conf.php
+    * @param int $id
+    * 		local id of file/object
+    * @param char $allowDeny
+    * 		'A' or 'D'
+    * @return boolean
+    */
     function addPerm($subj, $permAction, $id, $allowDeny)
     {
         if (PEAR::isError(
-            $this->gb->addPerm(
-                $subj, $permAction, $id, $allowDeny, $this->sessid
-            )
+        $this->gb->addPerm(
+        $subj, $permAction, $id, $allowDeny, $this->sessid
+        )
         )) {
             $this->_retMsg('Access denied.');
             return FALSE;
@@ -665,14 +665,14 @@ class uiHandler extends uiBase {
             }
         }
         /*
-        foreach($mask as $k) {
-            if ($k['type']=='file' && $k['required']==TRUE) {
-                if ($_FILES[$k['element']]['error']) {
-                    $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
-                    return FALSE;
-                }
-            }
-        }  */
+         foreach($mask as $k) {
+         if ($k['type']=='file' && $k['required']==TRUE) {
+         if ($_FILES[$k['element']]['error']) {
+         $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
+         return FALSE;
+         }
+         }
+         }  */
         return TRUE;
     } // fn _validateForm
 
@@ -694,17 +694,17 @@ class uiHandler extends uiBase {
         foreach ($mask as $key => $val) {
             if (isset($val['isPref']) && $val['isPref']) {
                 if (!empty($formdata[$val['element']])) {
-                	$result = $this->gb->saveGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element'], $formdata[$val['element']]);
+                    $result = $this->gb->saveGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element'], $formdata[$val['element']]);
                     if (PEAR::isError($result))
-                        $this->_retMsg('Error while saving settings.');
+                    $this->_retMsg('Error while saving settings.');
                 } else {
                     $this->gb->delGroupPref($this->sessid, $CC_CONFIG['StationPrefsGr'], $val['element']);
                 }
             }
             if (isset($val['type'])
-            	&& ($val['type'] == 'file')
-            	&& ($val['element'] == "stationlogo")
-            	&& !empty($formdata[$val['element']]['name'])) {
+            && ($val['type'] == 'file')
+            && ($val['element'] == "stationlogo")
+            && !empty($formdata[$val['element']]['name'])) {
                 $stationLogoPath = $this->gb->loadGroupPref($CC_CONFIG['StationPrefsGr'], 'stationLogoPath');
                 $filePath = $formdata[$val['element']]['tmp_name'];
                 if (function_exists("getimagesize")) {
@@ -731,7 +731,7 @@ class uiHandler extends uiBase {
         }
 
         return TRUE;
-    } // fn changeStationPrefs
+    }
 
-} // class uiHandler
+}
 ?>

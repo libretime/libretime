@@ -11,6 +11,9 @@ define('UI_ERROR', TRUE);
 // parts of the application do not read in this file.
 $WHITE_SCREEN_OF_DEATH = false;
 
+if ($WHITE_SCREEN_OF_DEATH) {
+  echo "ui_conf.php: start<br>";
+}
 if (UI_DEBUG) {
 	error_reporting(E_ALL);
 }
@@ -173,26 +176,7 @@ if ($WHITE_SCREEN_OF_DEATH) {
     echo __FILE__.':line '.__LINE__.": Loaded GreenBox<br>";
 }
 require_once(dirname(__FILE__).'/formmask/generic.inc.php');
-require_once(dirname(__FILE__).'/../3rd_party/php/pear/DB.php');
-require_once(dirname(__FILE__).'/../3rd_party/php/pear/HTML/QuickForm.php');
-
-
-// Connect to the database
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
-if (PEAR::isError($CC_DBC)) {
-    echo "Could not connect to database.  Your current configuration is:<br>";
-    echo "<table border=1>";
-    echo "<tr><td>Host name:</td><td>".$CC_CONFIG['dsn']['hostspec']."</td></tr>";
-    echo "<tr><td>Database name:</td><td>".$CC_CONFIG['dsn']['database']."</td></tr>";
-    echo "<tr><td>User name:</td><td>".$CC_CONFIG['dsn']['username']."</td></tr>";
-    echo "</table>";
-    exit;
-}
-
-if ($WHITE_SCREEN_OF_DEATH) {
-    echo __FILE__.':line '.__LINE__.": Connected to database<br>";
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+require_once('HTML/QuickForm.php');
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
 //PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');

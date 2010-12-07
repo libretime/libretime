@@ -1,13 +1,31 @@
 =======
 CREDITS
 =======
-The original Campcaster (LiveSupport) concept was drafted by Micz Flor. It was 
-fully developed by Robert Klajn, Douglas Arellanes, Ákos Maróy, and Sava Tatić. 
-The user interface has been designed by Charles Truett, based on the initial work 
-done by a team of his then-fellow Parsons School of Design students Turi McKinley, 
-Catalin Lazia and Sangita Shah. The team was led by then-head of the school's 
-Department of Digital Design Colleen Macklin, assisted by Kunal Jain.
 
+Version 1.6.0 
+-------------
+This version marks a major change to the project, completely replacing the
+custom audio player with liquidsoap, dropping the custom desktop GUI, and 
+completely rewriting the web interface.
+
+Paul Baranowski (paul.baranowski@sourcefabric.org)
+  Role: Project Lead / Software Developer
+  Highlights:
+    - Integration and development of liquidsoap scheduler
+    - Separation of playlists from the scheduler 
+
+Naomi Aro (naomi.aro@sourcefabric.org)
+  Role: Software Developer
+  Highlights: 
+    - New User Interface
+    - Conversion to Propel DB backend
+
+Daniel James
+  Role: Documentor & QA
+
+
+Version 1.4.0 - "Monrovia"
+--------------------------
 The great deal of the work on Campcaster 1.4 "Monrovia" was commissioned by the
 Open Society Initiative for West Africa (www.osiwa.org), and by West Africa
 Democracy Radio (www.wadr.org). We would like to thank Ben Akoh at OSIWA and
@@ -17,10 +35,6 @@ A number of improvements to Campcaster 1.4 were commissioned by Openbroadcast, a
 generated radio station based in Basel, Switzerland powered by Campcaster. We are
 very grateful for their contributions, and specifically to Thomas Gilgen, Dirk Claes,
 Rigzen Latshang and Fabiano Sidler.
-
-
-Version 1.4.0 - "Monrovia"
---------------------------
 
 Douglas Arellanes (douglas.arellanes@mdlf.org)
     - Tester and user feedback
@@ -106,8 +120,14 @@ Sava Tatić
 
 Version 1.0
 -----------
-In alphabetical order:
+The original Campcaster (LiveSupport) concept was drafted by Micz Flor. It was 
+fully developed by Robert Klajn, Douglas Arellanes, Ákos Maróy, and Sava Tatić. 
+The user interface has been designed by Charles Truett, based on the initial work 
+done by a team of his then-fellow Parsons School of Design students Turi McKinley, 
+Catalin Lazia and Sangita Shah. The team was led by then-head of the school's 
+Department of Digital Design Colleen Macklin, assisted by Kunal Jain.
 
+In alphabetical order:
 Douglas Arellanes
 Michael Aschauer <mash@re-p.org>
 Micz Flor (micz.flor@web.de)
