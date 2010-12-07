@@ -1,7 +1,0 @@
-These tests require Simple Test: http://www.lastcraft.com/simple_test.php
-
-Ideally they would use PEAR::PHPUnit but the current version has bugs and
-lacks alot of the functionality (e.g. Mock Objects) which Simple Test
-provides.
-
-Modifying the simple_include.php script for your simple test install dir
