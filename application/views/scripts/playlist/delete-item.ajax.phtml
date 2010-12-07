@@ -1,0 +1,8 @@
+<?php 
+	if (count($this->playlistcontents)) {
+		echo $this->partialLoop('playlist/playlistEditorTable.phtml', $this->playlistcontents);
+	}
+	else {
+		echo '<div class="pl_empty">Empty playlist</div>'; 
+	}
+?>

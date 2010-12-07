@@ -1,0 +1,7 @@
+#!/usr/bin/php -q
+<?
+    $fp = fopen("/dev/stdin", "r");
+    $data = '';
+    while($part = fgets($fp, 1024)) $data .= $part;
+    echo urldecode($data);
+?>

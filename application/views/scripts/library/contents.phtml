@@ -1,0 +1,22 @@
+<?php 
+	if($this->files) {
+?>
+	<table id="library_display">
+	<tr>
+		<th><span class="title">Title</span></th>
+		<th><span class="artist">Artist</span></th>
+		<th><span class="album">Album</span></th>
+		<th><span class="track">Track</span></th>
+		<th><span class="length">Length</span></th>
+	</tr>
+<?php
+		echo $this->partialLoop('library/libraryTablePartial.phtml', $this->files); 
+?>
+	</table>
+<?php
+	}
+	else {
+		echo "No Results";
+	}
+?>
+
