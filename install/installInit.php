@@ -69,19 +69,19 @@ function install_setDirPermissions($filePath) {
     $fileperms = $fileperms | 0x0400; // group sticky bit
     chmod($filePath, $fileperms);
 
-    // Verify Smarty template dir permissions
-    $fileGroup = filegroup($CC_CONFIG["smartyTemplateCompiled"]);
-    $groupOwner = (function_exists('posix_getgrgid'))?@posix_getgrgid($fileGroup):'';
-    if (!empty($groupOwner) && ($groupOwner["name"] != $CC_CONFIG["webServerUser"])) {
-        echo "   * Error: Your directory permissions for {$filePath} are not set correctly.<br>\n";
-        echo "   * The group perms need to be set to the web server user, in this case '{$CC_CONFIG['webServerUser']}'.<br>\n";
-        echo "   * Currently the group is set to be '{$groupOwner['name']}'.<br>\n";
-        exit(1);
-    }
-    if (!($fileperms & 0x0400)) {
-        echo "   * Error: Sticky bit not set for {$filePath}.<br>\n";
-        exit(1);
-    }
+//    // Verify Smarty template dir permissions
+//    $fileGroup = filegroup($CC_CONFIG["smartyTemplateCompiled"]);
+//    $groupOwner = (function_exists('posix_getgrgid'))?@posix_getgrgid($fileGroup):'';
+//    if (!empty($groupOwner) && ($groupOwner["name"] != $CC_CONFIG["webServerUser"])) {
+//        echo "   * Error: Your directory permissions for {$filePath} are not set correctly.<br>\n";
+//        echo "   * The group perms need to be set to the web server user, in this case '{$CC_CONFIG['webServerUser']}'.<br>\n";
+//        echo "   * Currently the group is set to be '{$groupOwner['name']}'.<br>\n";
+//        exit(1);
+//    }
+//    if (!($fileperms & 0x0400)) {
+//        echo "   * Error: Sticky bit not set for {$filePath}.<br>\n";
+//        exit(1);
+//    }
 }
 
 ?>
