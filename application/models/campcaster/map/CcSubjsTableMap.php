@@ -35,7 +35,8 @@ class CcSubjsTableMap extends TableMap {
 		$this->setPhpName('CcSubjs');
 		$this->setClassname('CcSubjs');
 		$this->setPackage('campcaster');
-		$this->setUseIdGenerator(false);
+		$this->setUseIdGenerator(true);
+		$this->setPrimaryKeyMethodInfo('cc_subjs_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
 		$this->addColumn('LOGIN', 'Login', 'VARCHAR', true, 255, '');

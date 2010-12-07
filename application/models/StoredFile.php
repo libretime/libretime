@@ -1,26 +1,25 @@
 <?php
 require_once("Playlist.php");
-require_once("getid3/var/getid3.php");
+require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
 require_once("BasicStor.php");
 require_once("Schedule.php");
 
 global $g_metadata_xml_to_db_mapping;
-
 $g_metadata_xml_to_db_mapping = array(
     "dc:format" => "format",
     "ls:bitrate" => "bit_rate",
-  	"ls:samplerate" => "sample_rate",
+    "ls:samplerate" => "sample_rate",
     "dcterms:extent" => "length",
-	"dc:title" => "track_title",
-	"dc:description" => "comments",
-	"dc:type" => "genre",
-	"dc:creator" => "artist_name",
+    "dc:title" => "track_title",
+    "dc:description" => "comments",
+    "dc:type" => "genre",
+    "dc:creator" => "artist_name",
     "dc:source" => "album_title",
-	"ls:channels" => "channels",
-	"ls:filename" => "name",
-	"ls:year" => "year",
-	"ls:url" => "url",
-	"ls:track_num" => "track_number",
+    "ls:channels" => "channels",
+    "ls:filename" => "name",
+    "ls:year" => "year",
+    "ls:url" => "url",
+    "ls:track_num" => "track_number",
     "ls:mood" => "mood",
     "ls:bpm" => "bpm",
     "ls:disc_num" => "disc_number",
@@ -148,118 +147,118 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
     $getID3 = new getID3();
     $infoFromFile = $getID3->analyze($p_filename);
     if (PEAR::isError($infoFromFile)) {
-    	return $infoFromFile;
+        return $infoFromFile;
     }
     if (isset($infoFromFile['error'])) {
-    	return new PEAR_Error(array_pop($infoFromFile['error']));
+        return new PEAR_Error(array_pop($infoFromFile['error']));
     }
     if (!$infoFromFile['bitrate']) {
-    	return new PEAR_Error("File given is not an audio file.");
+        return new PEAR_Error("File given is not an audio file.");
     }
 
     if ($p_testonly) {
-    	print_r($infoFromFile);
+        print_r($infoFromFile);
     }
-	$titleKey = 'dc:title';
-	$flds = array(
-	    'dc:format' => array(
-	        array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'ls:bitrate' => array(
-	        array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['audio']['bitrate']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'ls:samplerate' => array(
-	       array('path'=>"['audio']['sample_rate']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'ls:encoder' => array(
-	       array('path'=>"['audio']['codec']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'dcterms:extent'=> array(
-	        array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'ls:composer'=> array(
-	        array('path'=>"['id3v2']['comments']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['id3v2']['TCOM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['id3v2']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['ogg']['comments']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'dc:description'=> array(
-	        array('path'=>"['id3v1']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['comments']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['id3v2']['COMM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['id3v2']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['ogg']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'dc:type'=> array(
-	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'dc:title' => array(
-	        array('path'=>"['id3v2']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'dc:creator' => array(
-	        array('path'=>"['id3v2']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'dc:source' => array(
-	        array('path'=>"['id3v2']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'ls:encoded_by'	=> array(
-	        array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'ls:track_num' => array(
-	        array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-	        array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-//	    'ls:genre'	    => array(
-//	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
-//	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-//	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-//	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-//	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-//	    ),
-	    'ls:channels' => array(
-	        array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
-	    ),
-	    'ls:year' => array(
-	    	array('path'=>"['comments']['date']"),
-	        array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	        array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-	    ),
-	    'ls:filename' => array(
-	        array('path'=>"['filename']"),
-	    ),
-	);
+    $titleKey = 'dc:title';
+    $flds = array(
+        'dc:format' => array(
+    array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
+    ),
+        'ls:bitrate' => array(
+    array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
+    array('path'=>"['audio']['bitrate']", 'ignoreEnc'=>TRUE),
+    ),
+        'ls:samplerate' => array(
+    array('path'=>"['audio']['sample_rate']", 'ignoreEnc'=>TRUE),
+    ),
+        'ls:encoder' => array(
+    array('path'=>"['audio']['codec']", 'ignoreEnc'=>TRUE),
+    ),
+        'dcterms:extent'=> array(
+    array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
+    ),
+        'ls:composer'=> array(
+    array('path'=>"['id3v2']['comments']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    array('path'=>"['id3v2']['TCOM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['id3v2']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    array('path'=>"['ogg']['comments']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'dc:description'=> array(
+    array('path'=>"['id3v1']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['comments']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    array('path'=>"['id3v2']['COMM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['id3v2']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    array('path'=>"['ogg']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'dc:type'=> array(
+    array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'dc:title' => array(
+    array('path'=>"['id3v2']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'dc:creator' => array(
+    array('path'=>"['id3v2']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'dc:source' => array(
+    array('path'=>"['id3v2']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'ls:encoded_by'	=> array(
+    array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'ls:track_num' => array(
+    array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+    //	    'ls:genre'	    => array(
+    //	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
+    //	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+    //	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+    //	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    //	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    //	    ),
+        'ls:channels' => array(
+    array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
+    ),
+        'ls:year' => array(
+    array('path'=>"['comments']['date']"),
+    array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+    ),
+        'ls:filename' => array(
+    array('path'=>"['filename']"),
+    ),
+    );
     $mdata = array();
     if (isset($infoFromFile['audio'])) {
-    	$mdata['audio'] = $infoFromFile['audio'];
+        $mdata['audio'] = $infoFromFile['audio'];
     }
     if (isset($infoFromFile['playtime_seconds'])) {
-		$mdata['playtime_seconds'] = $infoFromFile['playtime_seconds'];
+        $mdata['playtime_seconds'] = $infoFromFile['playtime_seconds'];
     }
 
     $titleHaveSet = FALSE;
@@ -267,7 +266,7 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
         foreach ($getid3keys as $getid3key) {
             $path = $getid3key["path"];
             $ignoreEnc = isset($getid3key["ignoreEnc"])?
-                $getid3key["ignoreEnc"]:FALSE;
+            $getid3key["ignoreEnc"]:FALSE;
             $dataPath = isset($getid3key["dataPath"])?$getid3key["dataPath"]:"";
             $encPath = isset($getid3key["encPath"])?$getid3key["encPath"]:"";
             $enc = "UTF-8";
@@ -283,7 +282,7 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
                     $encodedElement = "\$infoFromFile$path$encPath";
                     eval("\$encodedElementExists = isset($encodedElement);");
                     if ($encodedElementExists) {
-                    	eval("\$enc = $encodedElement;");
+                        eval("\$enc = $encodedElement;");
                     }
                 }
 
@@ -292,19 +291,19 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
                     $data = camp_parse_track_number($data);
                 }
                 camp_add_metadata($mdata, $key, $data, $enc);
-		        if ($key == $titleKey) {
-		        	$titleHaveSet = TRUE;
-		        }
+                if ($key == $titleKey) {
+                    $titleHaveSet = TRUE;
+                }
                 break;
             }
         }
     }
     if ($p_testonly) {
-    	var_dump($mdata);
+        var_dump($mdata);
     }
 
     if (!$titleHaveSet || trim($mdata[$titleKey]) == '') {
-    	camp_add_metadata($mdata, $titleKey, basename($p_filename));
+        camp_add_metadata($mdata, $titleKey, basename($p_filename));
     }
     return $mdata;
 }
@@ -330,96 +329,96 @@ class StoredFile {
 
     // *** Variables stored in the database ***
 
-	/**
-	 * @var int
-	 */
-	private $id;
+    /**
+     * @var int
+     */
+    private $id;
 
-	/**
-	 * Unique ID for the file.  This is stored in HEX format.  It is
-	 * converted to a bigint whenever it is used in a database call.
-	 *
-	 * @var string
-	 */
-	public $gunid;
+    /**
+     * Unique ID for the file.  This is stored in HEX format.  It is
+     * converted to a bigint whenever it is used in a database call.
+     *
+     * @var string
+     */
+    public $gunid;
 
-	/**
-	 * The unique ID of the file as it is stored in the database.
-	 * This is for debugging purposes and may not always exist in this
-	 * class.
-	 *
-	 * @var string
-	 */
-	//private $gunidBigint;
+    /**
+     * The unique ID of the file as it is stored in the database.
+     * This is for debugging purposes and may not always exist in this
+     * class.
+     *
+     * @var string
+     */
+    //private $gunidBigint;
 
-	/**
-	 * @var string
-	 */
-	private $name;
+    /**
+     * @var string
+     */
+    private $name;
 
-	/**
-	 * @var string
-	 */
-	private $mime;
+    /**
+     * @var string
+     */
+    private $mime;
 
-	/**
-	 * Can be 'audioclip'...others might be coming, like webstream.
-	 *
-	 * @var string
-	 */
-	private $ftype;
+    /**
+     * Can be 'audioclip'...others might be coming, like webstream.
+     *
+     * @var string
+     */
+    private $ftype;
 
-	/**
-	 * Can be 'ready', 'edited', 'incomplete'.
-	 *
-	 * @var string
-	 */
-	private $state;
+    /**
+     * Can be 'ready', 'edited', 'incomplete'.
+     *
+     * @var string
+     */
+    private $state;
 
-	/**
-	 * @var int
-	 */
-	private $currentlyaccessing;
+    /**
+     * @var int
+     */
+    private $currentlyaccessing;
 
-	/**
-	 * @var int
-	 */
-	private $editedby;
+    /**
+     * @var int
+     */
+    private $editedby;
 
-	/**
-	 * @var timestamp
-	 */
-	private $mtime;
+    /**
+     * @var timestamp
+     */
+    private $mtime;
 
-	/**
-	 * @var string
-	 */
-	private $md5;
+    /**
+     * @var string
+     */
+    private $md5;
 
-	/**
-	 * @var string
-	 */
-	private $filepath;
+    /**
+     * @var string
+     */
+    private $filepath;
 
 
-	// *** Variables NOT stored in the database ***
+    // *** Variables NOT stored in the database ***
 
-	/**
-	 * Directory where the file is located.
-	 *
-	 * @var string
-	 */
-	private $resDir;
+    /**
+     * Directory where the file is located.
+     *
+     * @var string
+     */
+    private $resDir;
 
-	/**
-	 * @var boolean
-	 */
-	private $exists;
+    /**
+     * @var boolean
+     */
+    private $exists;
 
-	/**
-	 * @var MetaData
-	 */
-	public $md;
+    /**
+     * @var MetaData
+     */
+    public $md;
 
     /* ========================================================== constructor */
     /**
@@ -435,8 +434,8 @@ class StoredFile {
             $this->gunid = StoredFile::generateGunid();
         }
         else {
-          $this->loadMetadata();
-          $this->exists = is_file($this->filepath) && is_readable($this->filepath);
+            $this->loadMetadata();
+            $this->exists = is_file($this->filepath) && is_readable($this->filepath);
         }
     }
 
@@ -444,7 +443,7 @@ class StoredFile {
      * For testing only, do not use.
      */
     public function __setGunid($p_guid) {
-      $this->gunid = $p_guid;
+        $this->gunid = $p_guid;
     }
 
     /**
@@ -491,7 +490,7 @@ class StoredFile {
         global $CC_CONFIG, $CC_DBC;
         $escapedValue = pg_escape_string($this->gunid);
         $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"]
-              ." WHERE gunid='$escapedValue'";
+        ." WHERE gunid='$escapedValue'";
         //var_dump($sql);
         $this->md = $CC_DBC->getRow($sql);
         //var_dump($this->md);
@@ -530,8 +529,8 @@ class StoredFile {
             $columnName = StoredFile::xmlCategoryToDbColumn($category);
             if (!is_null($columnName)) {
                 $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-                      ." SET $columnName='$escapedValue'"
-                      ." WHERE gunid = '".$this->gunid."'";
+                ." SET $columnName='$escapedValue'"
+                ." WHERE gunid = '".$this->gunid."'";
                 $CC_DBC->query($sql);
             }
         }
@@ -546,8 +545,8 @@ class StoredFile {
         foreach ($metadataColumns as $columnName) {
             if (!is_null($columnName)) {
                 $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-                      ." SET $columnName=''"
-                      ." WHERE gunid = '".$this->gunid."'";
+                ." SET $columnName=''"
+                ." WHERE gunid = '".$this->gunid."'";
                 $CC_DBC->query($sql);
             }
         }
@@ -577,7 +576,7 @@ class StoredFile {
         global $CC_CONFIG, $CC_DBC;
 
         if (!isset($p_values["filepath"])) {
-          return new PEAR_Error("StoredFile::Insert: filepath not set.");
+            return new PEAR_Error("StoredFile::Insert: filepath not set.");
         }
         if (!file_exists($p_values['filepath'])) {
             return PEAR::raiseError("StoredFile::Insert: ".
@@ -591,16 +590,16 @@ class StoredFile {
 
         // Get metadata
         if (isset($p_values["metadata"])) {
-          $metadata = $p_values['metadata'];
+            $metadata = $p_values['metadata'];
         } else {
-          $metadata = camp_get_audio_metadata($p_values["filepath"]);
+            $metadata = camp_get_audio_metadata($p_values["filepath"]);
         }
 
         $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $p_values["filepath"];
-      	$storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?(int)$p_values['id']:null;
+        $storedFile->id = isset($p_values['id']) && is_integer($p_values['id'])?(int)$p_values['id']:null;
         // NOTE: POSTGRES-SPECIFIC KEYWORD "DEFAULT" BEING USED, WOULD BE "NULL" IN MYSQL
-      	$sqlId = !is_null($storedFile->id)?"'".$storedFile->id."'":'DEFAULT';
-      	$storedFile->ftype = isset($p_values['filetype']) ? strtolower($p_values['filetype']) : "audioclip";
+        $sqlId = !is_null($storedFile->id)?"'".$storedFile->id."'":'DEFAULT';
+        $storedFile->ftype = isset($p_values['filetype']) ? strtolower($p_values['filetype']) : "audioclip";
         $storedFile->mime = (isset($p_values["mime"]) ? $p_values["mime"] : NULL );
         // $storedFile->filepath = $p_values['filepath'];
         if (isset($p_values['md5'])) {
@@ -613,7 +612,7 @@ class StoredFile {
         // Check for duplicates -- return duplicate
         $duplicate = StoredFile::RecallByMd5($storedFile->md5);
         if ($duplicate) {
-          return $duplicate;
+            return $duplicate;
         }
 
         $storedFile->exists = FALSE;
@@ -622,11 +621,11 @@ class StoredFile {
         $escapedName = pg_escape_string($storedFile->name);
         $escapedFtype = pg_escape_string($storedFile->ftype);
         $sql = "INSERT INTO ".$CC_CONFIG['filesTable']
-                ."(id, name, gunid, mime, state, ftype, mtime, md5)"
-                ."VALUES ({$sqlId}, '{$escapedName}', "
-                ." '{$storedFile->gunid}',"
-                ." '{$storedFile->mime}', 'incomplete', '$escapedFtype',"
-                ." now(), '{$storedFile->md5}')";
+        ."(id, name, gunid, mime, state, ftype, mtime, md5)"
+        ."VALUES ({$sqlId}, '{$escapedName}', "
+        ." '{$storedFile->gunid}',"
+        ." '{$storedFile->mime}', 'incomplete', '$escapedFtype',"
+        ." now(), '{$storedFile->md5}')";
         //$_SESSION["debug"] .= "sql: ".$sql."<br>";
         //echo $sql."\n";
         $res = $CC_DBC->query($sql);
@@ -636,9 +635,9 @@ class StoredFile {
         }
 
         if (!is_integer($storedFile->id)) {
-        	// NOTE: POSTGRES-SPECIFIC
-					$sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."_seq')";
-        	$storedFile->id = $CC_DBC->getOne($sql);
+            // NOTE: POSTGRES-SPECIFIC
+            $sql = "SELECT currval('".$CC_CONFIG["filesSequence"]."_seq')";
+            $storedFile->id = $CC_DBC->getOne($sql);
         }
         $storedFile->setMetadataBatch($metadata);
 
@@ -690,8 +689,8 @@ class StoredFile {
             return null;
         }
         $sql = "SELECT *"
-            ." FROM ".$CC_CONFIG['filesTable']
-            ." WHERE $cond";
+        ." FROM ".$CC_CONFIG['filesTable']
+        ." WHERE $cond";
         //echo $sql;
         $row = $CC_DBC->getRow($sql);
         if (PEAR::isError($row) || is_null($row)) {
@@ -753,8 +752,8 @@ class StoredFile {
     {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT gunid"
-            ." FROM ".$CC_CONFIG['accessTable']
-            ." WHERE token=x'$p_token'::bigint";
+        ." FROM ".$CC_CONFIG['accessTable']
+        ." WHERE token=x'$p_token'::bigint";
         $gunid = $CC_DBC->getOne($sql);
         if (PEAR::isError($gunid)) {
             return $gunid;
@@ -798,7 +797,7 @@ class StoredFile {
     {
         global $CC_CONFIG, $CC_DBC;
         if ($this->exists) {
-        	return FALSE;
+            return FALSE;
         }
         // for files downloaded from remote instance:
         if ($p_localFilePath == $this->filepath) {
@@ -825,8 +824,8 @@ class StoredFile {
         $this->filepath = $dstFile;
         $sqlPath = pg_escape_string($this->filepath);
         $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-            ." SET filepath='{$sqlPath}'"
-            ." WHERE id={$this->id}";
+        ." SET filepath='{$sqlPath}'"
+        ." WHERE id={$this->id}";
         //echo $sql."\n";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
@@ -834,6 +833,25 @@ class StoredFile {
         }
         $this->exists = TRUE;
         return TRUE;
+    }
+
+
+    /**
+     * Find and return the first exact match for the original file name
+     * that was used on import.
+     * @param string $p_name
+     */
+    public static function findByOriginalName($p_name)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT id FROM ".$CC_CONFIG["filesTable"]
+            ." WHERE name='".pg_escape_string($p_name)."'";
+        $id = $CC_DBC->getOne($sql);
+        if (is_numeric($id)) {
+            return StoredFile::Recall($id);
+        } else {
+            return NULL;
+        }
     }
 
 
@@ -853,9 +871,9 @@ class StoredFile {
         }
 
         if ($this->exists) {
-        	$r = $this->deleteFile();
+            $r = $this->deleteFile();
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
         }
         return $this->addFile($p_localFilePath);
@@ -885,19 +903,19 @@ class StoredFile {
     {
         global $CC_CONFIG;
         if (!$this->exists) {
-        	return FALSE;
+            return FALSE;
         }
         if ($this->isAccessed()) {
-             return PEAR::raiseError(
+            return PEAR::raiseError(
                 'Cannot delete a file that is currently accessed.'
-            );
+                );
         }
 
         // Check if the file is scheduled to be played in the future
         if (Schedule::IsFileScheduledInTheFuture($this->id)) {
-             return PEAR::raiseError(
+            return PEAR::raiseError(
                 'Cannot delete a file that is scheduled in the future.'
-            );
+                );
         }
 
         // Delete it from all playlists
@@ -913,12 +931,12 @@ class StoredFile {
             } else {
                 return PEAR::raiseError(
                     "StoredFile::deleteFile: unlink failed ({$this->filepath})",
-                    GBERR_FILEIO
+                GBERR_FILEIO
                 );
             }
         } else {
-          $this->exists = FALSE;
-          return TRUE;
+            $this->exists = FALSE;
+            return TRUE;
         }
     }
 
@@ -934,7 +952,7 @@ class StoredFile {
     public function analyzeFile()
     {
         if (!$this->exists) {
-        	return FALSE;
+            return FALSE;
         }
         $ia = camp_get_audio_metadata($this->filepath);
         return $ia;
@@ -955,7 +973,7 @@ class StoredFile {
         $values = array(
             "id" => $p_nid,
             "filename" => $p_src->name,
-            "filepath" => $p_src->getRealFileName(),
+            "filepath" => $p_src->getRealFilePath(),
             "filetype" => $p_src->getType()
         );
         $storedFile = StoredFile::Insert($values);
@@ -982,42 +1000,42 @@ class StoredFile {
      * 		'file'|'string'
      * @return TRUE|PEAR_Error
      */
-//    public function replace($p_oid, $p_name, $p_localFilePath='', $p_metadata='',
-//        $p_mdataLoc='file')
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("BEGIN");
-//        $res = $this->setName($p_name);
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-//        if ($p_localFilePath != '') {
-//            $res = $this->setRawMediaData($p_localFilePath);
-//        } else {
-//            $res = $this->deleteFile();
-//        }
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-//        if ($p_metadata != '') {
-//            $res = $this->setMetadata($p_metadata, $p_mdataLoc);
-//        } else {
-////            $res = $this->md->delete();
-//            $res = $this->clearMetadata();
-//        }
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-//        $res = $CC_DBC->query("COMMIT");
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-//        return TRUE;
-//    }
+    //    public function replace($p_oid, $p_name, $p_localFilePath='', $p_metadata='',
+    //        $p_mdataLoc='file')
+    //    {
+    //        global $CC_CONFIG, $CC_DBC;
+    //        $CC_DBC->query("BEGIN");
+    //        $res = $this->setName($p_name);
+    //        if (PEAR::isError($res)) {
+    //            $CC_DBC->query("ROLLBACK");
+    //            return $res;
+    //        }
+    //        if ($p_localFilePath != '') {
+    //            $res = $this->setRawMediaData($p_localFilePath);
+    //        } else {
+    //            $res = $this->deleteFile();
+    //        }
+    //        if (PEAR::isError($res)) {
+    //            $CC_DBC->query("ROLLBACK");
+    //            return $res;
+    //        }
+    //        if ($p_metadata != '') {
+    //            $res = $this->setMetadata($p_metadata, $p_mdataLoc);
+    //        } else {
+    ////            $res = $this->md->delete();
+    //            $res = $this->clearMetadata();
+    //        }
+    //        if (PEAR::isError($res)) {
+    //            $CC_DBC->query("ROLLBACK");
+    //            return $res;
+    //        }
+    //        $res = $CC_DBC->query("COMMIT");
+    //        if (PEAR::isError($res)) {
+    //            $CC_DBC->query("ROLLBACK");
+    //            return $res;
+    //        }
+    //        return TRUE;
+    //    }
 
 
     /**
@@ -1030,14 +1048,14 @@ class StoredFile {
      */
     public function accessRawMediaData($p_parent='0')
     {
-        $realFname = $this->getRealFileName();
+        $realFname = $this->getRealFilePath();
         $ext = $this->getFileExtension();
         $res = BasicStor::bsAccess($realFname, $ext, $this->gunid, 'access', $p_parent);
         if (PEAR::isError($res)) {
             return $res;
         }
         $resultArray =
-            array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);
+        array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);
         return $resultArray;
     }
 
@@ -1079,10 +1097,10 @@ class StoredFile {
                 return $res;
             }
         }
-//        $r = $this->md->regenerateXmlFile();
-//        if (PEAR::isError($r)) {
-//            return $r;
-//        }
+        //        $r = $this->md->regenerateXmlFile();
+        //        if (PEAR::isError($r)) {
+        //            return $r;
+        //        }
         return TRUE;
     }
 
@@ -1111,21 +1129,21 @@ class StoredFile {
      *      (NULL = no validation)
      * @return boolean
      */
-//    public function setMetadata($p_metadata, $p_mdataLoc='file', $p_format=NULL)
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $CC_DBC->query("BEGIN");
-//        $res = $this->md->replace($p_metadata, $p_mdataLoc, $p_format);
-//        if (PEAR::isError($res)) {
-//            $CC_DBC->query("ROLLBACK");
-//            return $res;
-//        }
-//        $res = $CC_DBC->query("COMMIT");
-//        if (PEAR::isError($res)) {
-//            return $res;
-//        }
-//        return TRUE;
-//    }
+    //    public function setMetadata($p_metadata, $p_mdataLoc='file', $p_format=NULL)
+    //    {
+    //        global $CC_CONFIG, $CC_DBC;
+    //        $CC_DBC->query("BEGIN");
+    //        $res = $this->md->replace($p_metadata, $p_mdataLoc, $p_format);
+    //        if (PEAR::isError($res)) {
+    //            $CC_DBC->query("ROLLBACK");
+    //            return $res;
+    //        }
+    //        $res = $CC_DBC->query("COMMIT");
+    //        if (PEAR::isError($res)) {
+    //            return $res;
+    //        }
+    //        return TRUE;
+    //    }
 
     /**
      * Set metadata element value
@@ -1138,27 +1156,27 @@ class StoredFile {
      */
     public function setMetadataValue($p_category, $p_value)
     {
-      global $CC_CONFIG, $CC_DBC;
-      if (!is_string($p_category) || is_array($p_value)) {
-        return FALSE;
-      }
-      if ($p_category == 'dcterms:extent') {
-        $p_value = StoredFile::NormalizeExtent($p_value);
-      }
-      $columnName = StoredFile::xmlCategoryToDbColumn($p_category); // Get column name
-
-      if (!is_null($columnName)) {
-        $escapedValue = pg_escape_string($p_value);
-        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-             ." SET $columnName='$escapedValue'"
-             ." WHERE id={$this->id}";
-        //var_dump($sql);
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-          return $res;
+        global $CC_CONFIG, $CC_DBC;
+        if (!is_string($p_category) || is_array($p_value)) {
+            return FALSE;
         }
-      }
-      return TRUE;
+        if ($p_category == 'dcterms:extent') {
+            $p_value = StoredFile::NormalizeExtent($p_value);
+        }
+        $columnName = StoredFile::xmlCategoryToDbColumn($p_category); // Get column name
+
+        if (!is_null($columnName)) {
+            $escapedValue = pg_escape_string($p_value);
+            $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+            ." SET $columnName='$escapedValue'"
+            ." WHERE id={$this->id}";
+            //var_dump($sql);
+            $res = $CC_DBC->query($sql);
+            if (PEAR::isError($res)) {
+                return $res;
+            }
+        }
+        return TRUE;
     }
 
 
@@ -1172,49 +1190,49 @@ class StoredFile {
      */
     public function setMetadataBatch($values)
     {
-      global $CC_CONFIG, $CC_DBC;
-      if (!is_array($values)) {
-          $values = array($values);
-      }
-      if (count($values) == 0) {
-        return true;
-      }
-      foreach ($values as $category => $oneValue) {
-        $columnName = StoredFile::xmlCategoryToDbColumn($category);
-        if (!is_null($columnName)) {
-          if ($category == 'dcterms:extent') {
-            $oneValue = StoredFile::NormalizeExtent($oneValue);
-          }
-          // Since track_number is an integer, you cannot set
-          // it to be the empty string, so we NULL it instead.
-          if ($columnName == 'track_number' && empty($oneValue)) {
-            $sqlPart = "$columnName = NULL";
-          } elseif (($columnName == 'length') && (strlen($oneValue) > 8)) {
-            // Postgres doesnt like it if you try to store really large hour
-            // values.  TODO: We need to fix the underlying problem of getting the
-            // right values.
-            $parts = explode(':', $oneValue);
-            $hour = intval($parts[0]);
-            if ($hour > 24) {
-              continue;
-            } else {
-              $sqlPart = "$columnName = '$oneValue'";
-            }
-          } else {
-            $escapedValue = pg_escape_string($oneValue);
-            $sqlPart = "$columnName = '$escapedValue'";
-          }
-          $sqlValues[] = $sqlPart;
+        global $CC_CONFIG, $CC_DBC;
+        if (!is_array($values)) {
+            $values = array($values);
         }
-      }
-      if (count($sqlValues)==0) {
+        if (count($values) == 0) {
+            return true;
+        }
+        foreach ($values as $category => $oneValue) {
+            $columnName = StoredFile::xmlCategoryToDbColumn($category);
+            if (!is_null($columnName)) {
+                if ($category == 'dcterms:extent') {
+                    $oneValue = StoredFile::NormalizeExtent($oneValue);
+                }
+                // Since track_number is an integer, you cannot set
+                // it to be the empty string, so we NULL it instead.
+                if ($columnName == 'track_number' && empty($oneValue)) {
+                    $sqlPart = "$columnName = NULL";
+                } elseif (($columnName == 'length') && (strlen($oneValue) > 8)) {
+                    // Postgres doesnt like it if you try to store really large hour
+                    // values.  TODO: We need to fix the underlying problem of getting the
+                    // right values.
+                    $parts = explode(':', $oneValue);
+                    $hour = intval($parts[0]);
+                    if ($hour > 24) {
+                        continue;
+                    } else {
+                        $sqlPart = "$columnName = '$oneValue'";
+                    }
+                } else {
+                    $escapedValue = pg_escape_string($oneValue);
+                    $sqlPart = "$columnName = '$escapedValue'";
+                }
+                $sqlValues[] = $sqlPart;
+            }
+        }
+        if (count($sqlValues)==0) {
+            return TRUE;
+        }
+        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+        ." SET ".join(",", $sqlValues)
+        ." WHERE id={$this->id}";
+        $CC_DBC->query($sql);
         return TRUE;
-      }
-      $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-           ." SET ".join(",", $sqlValues)
-           ." WHERE id={$this->id}";
-      $CC_DBC->query($sql);
-      return TRUE;
     }
 
 
@@ -1236,11 +1254,11 @@ class StoredFile {
      */
     public function getMetadataValue($p_name)
     {
-      if (isset($this->md[$p_name])){
-        return $this->md[$p_name];
-      } else {
-        return "";
-      }
+        if (isset($this->md[$p_name])){
+            return $this->md[$p_name];
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -1254,8 +1272,8 @@ class StoredFile {
         global $CC_CONFIG, $CC_DBC;
         $escapedName = pg_escape_string($p_newname);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
-            ." SET name='$escapedName', mtime=now()"
-            ." WHERE gunid='{$this->gunid}'";
+        ." SET name='$escapedName', mtime=now()"
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1280,8 +1298,8 @@ class StoredFile {
         $escapedState = pg_escape_string($p_state);
         $eb = (!is_null($p_editedby) ? ", editedBy=$p_editedby" : '');
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
-            ." SET state='$escapedState'$eb, mtime=now()"
-            ." WHERE gunid='{$this->gunid}'";
+        ." SET state='$escapedState'$eb, mtime=now()"
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1306,8 +1324,8 @@ class StoredFile {
         }
         $escapedMime = pg_escape_string($p_mime);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
-            ." SET mime='$escapedMime', mtime=now()"
-            ." WHERE gunid='{$this->gunid}'";
+        ." SET mime='$escapedMime', mtime=now()"
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1328,8 +1346,8 @@ class StoredFile {
         global $CC_CONFIG, $CC_DBC;
         $escapedMd5 = pg_escape_string($p_md5sum);
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
-            ." SET md5='$escapedMd5', mtime=now()"
-            ." WHERE gunid='{$this->gunid}'";
+        ." SET md5='$escapedMd5', mtime=now()"
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1356,8 +1374,8 @@ class StoredFile {
             }
         }
         $sql = "SELECT to_hex(token)as token, ext "
-            ." FROM ".$CC_CONFIG['accessTable']
-            ." WHERE gunid='{$this->gunid}'";
+        ." FROM ".$CC_CONFIG['accessTable']
+        ." WHERE gunid='{$this->gunid}'";
         $tokens = $CC_DBC->getAll($sql);
         if (is_array($tokens)) {
             foreach ($tokens as $i => $item) {
@@ -1368,13 +1386,13 @@ class StoredFile {
             }
         }
         $sql = "DELETE FROM ".$CC_CONFIG['accessTable']
-            ." WHERE gunid='{$this->gunid}'";
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
         }
         $sql = "DELETE FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='{$this->gunid}'";
+        ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
         if (PEAR::isError($res)) {
             return $res;
@@ -1390,14 +1408,14 @@ class StoredFile {
     public function getPlaylists() {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT playlist_id "
-            ." FROM ".$CC_CONFIG['playistTable']
-            ." WHERE file_id='{$this->id}'";
+        ." FROM ".$CC_CONFIG['playistTable']
+        ." WHERE file_id='{$this->id}'";
         $ids = $CC_DBC->getAll($sql);
         $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
-          foreach ($ids as $id) {
-            $playlists[] = Playlist::Recall($id);
-          }
+            foreach ($ids as $id) {
+                $playlists[] = Playlist::Recall($id);
+            }
         }
         return $playlists;
     }
@@ -1418,12 +1436,12 @@ class StoredFile {
             return ($this->currentlyaccessing > 0);
         }
         $sql = "SELECT currentlyAccessing FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='$p_gunid'";
+        ." WHERE gunid='$p_gunid'";
         $ca = $CC_DBC->getOne($sql);
         if (is_null($ca)) {
             return PEAR::raiseError(
                 "StoredFile::isAccessed: invalid gunid ($p_gunid)",
-                GBERR_FOBJNEX
+            GBERR_FOBJNEX
             );
         }
         return ($ca > 0);
@@ -1465,7 +1483,7 @@ class StoredFile {
             $p_playlistId = $this->gunid;
         }
         $sql = "SELECT editedBy FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='$p_playlistId'";
+        ." WHERE gunid='$p_playlistId'";
         $ca = $CC_DBC->getOne($sql);
         if (PEAR::isError($ca)) {
             return $ca;
@@ -1507,8 +1525,8 @@ class StoredFile {
     {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT gunid "
-            ." FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='{$this->gunid}'";
+        ." FROM ".$CC_CONFIG['filesTable']
+        ." WHERE gunid='{$this->gunid}'";
         $indb = $CC_DBC->getRow($sql);
         if (PEAR::isError($indb)) {
             return $indb;
@@ -1529,15 +1547,15 @@ class StoredFile {
      */
     public static function generateGunid()
     {
-      return md5(uniqid("", true));
+        return md5(uniqid("", true));
 
-//        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
-//        $initString = microtime().$ip.rand();
-//        $hash = md5($initString);
-//        // non-negative int8
-//        $hsd = substr($hash, 0, 1);
-//        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
-//        return StoredFile::NormalizeGunid($res);
+        //        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
+        //        $initString = microtime().$ip.rand();
+        //        $hash = md5($initString);
+        //        // non-negative int8
+        //        $hsd = substr($hash, 0, 1);
+        //        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
+        //        return StoredFile::NormalizeGunid($res);
     }
 
 
@@ -1546,10 +1564,10 @@ class StoredFile {
      *
      * @return string
      */
-//    public static function NormalizeGunid($p_gunid)
-//    {
-//        return str_pad($p_gunid, 16, "0", STR_PAD_LEFT);
-//    }
+    //    public static function NormalizeGunid($p_gunid)
+    //    {
+    //        return str_pad($p_gunid, 16, "0", STR_PAD_LEFT);
+    //    }
 
 
     /**
@@ -1600,10 +1618,10 @@ class StoredFile {
     {
         $a = $this->analyzeFile();
         if (PEAR::isError($a)) {
-        	return $a;
+            return $a;
         }
         if (isset($a['dc:format'])) {
-        	return $a['dc:format'];
+            return $a['dc:format'];
         }
         return '';
     }
@@ -1615,12 +1633,12 @@ class StoredFile {
      */
     public function getTitle()
     {
-      return $this->md["title"];
+        return $this->md["title"];
     }
 
     public function getType()
     {
-      return $this->ftype;
+        return $this->ftype;
     }
 
     /**
@@ -1638,7 +1656,7 @@ class StoredFile {
             return $this->state;
         }
         $sql = "SELECT state FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='$p_gunid'";
+        ." WHERE gunid='$p_gunid'";
         return $CC_DBC->getOne($sql);
     }
 
@@ -1657,29 +1675,9 @@ class StoredFile {
             return $this->name;
         }
         $sql = "SELECT name FROM ".$CC_CONFIG['filesTable']
-            ." WHERE gunid='$p_gunid'";
+        ." WHERE gunid='$p_gunid'";
         return $CC_DBC->getOne($sql);
     }
-
-
-    /**
-     * Get and optionally create subdirectory in real filesystem for storing
-     * raw media data.
-     *
-     * @return string
-     */
-//    private function _getResDir()
-//    {
-//        global $CC_CONFIG, $CC_DBC;
-//        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
-//        //$this->gb->debugLog("$resDir");
-//        // see Transport::_getResDir too for resDir name create code
-//        if (!is_dir($resDir)) {
-//            mkdir($resDir, 02775);
-//            chmod($resDir, 02775);
-//        }
-//        return $resDir;
-//    }
 
 
     /**
@@ -1687,7 +1685,7 @@ class StoredFile {
      *
      * @return string
      */
-    public function getRealFileName()
+    public function getRealFilePath()
     {
         return $this->filepath;
     }
@@ -1697,9 +1695,10 @@ class StoredFile {
      */
     public function getFileUrl()
     {
-      global $CC_CONFIG;
-      return "http://".$CC_CONFIG["storageUrlHost"]
-        ."api/get_media.php?file_id={$this->gunid}";
+        global $CC_CONFIG;
+        return "http://".$CC_CONFIG["storageUrlHost"]
+        .$CC_CONFIG["apiPath"]."get_media.php?file="
+        .$this->gunid.".".$this->getFileExtension();
     }
 
     /**
@@ -1727,24 +1726,25 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
+
 	public static function getFiles($query=NULL)
     {
         global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
-        
+
         $sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
 
 		if(!is_null($query)) {
 			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$query["category"]];
 			$sql = $sql . $ob . " " .$query["order"];
 		}
-        
+
         return $CC_DBC->getAll($sql);
     }
 
 	public static function searchFiles($md)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
-		
+
 		$match = array(
 			"0" => "ILIKE",
 			"1" => "=",
@@ -1754,7 +1754,7 @@ class StoredFile {
 			"5" => ">=",
 			"6" => "!=",
 		);
-        
+
         $sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
 
 		$cond = array();
@@ -1764,7 +1764,7 @@ class StoredFile {
 				$row_num = $t[1];
 
 				$string = $g_metadata_xml_to_db_mapping[$md[$key]["metadata_".$row_num]];
- 
+
 				$string = $string ." ".$match[$md[$key]["match_".$row_num]];
 
 				if ($md[$key]["match_".$row_num] === "0")
@@ -1777,11 +1777,11 @@ class StoredFile {
 		}
 
 		$where = " WHERE ". join(" AND ", $cond);
-		$sql = $sql . $where; 
+		$sql = $sql . $where;
 		//echo $sql;
-        
+
         return $CC_DBC->getAll($sql);
 	}
 
-} // class StoredFile
+}
 ?>

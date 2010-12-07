@@ -80,6 +80,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $description;
 
 	/**
+	 * The value for the show_id field.
+	 * @var        int
+	 */
+	protected $show_id;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -294,6 +300,16 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function getDbDescription()
 	{
 		return $this->description;
+	}
+
+	/**
+	 * Get the [show_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbShowId()
+	{
+		return $this->show_id;
 	}
 
 	/**
@@ -593,6 +609,26 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	} // setDbDescription()
 
 	/**
+	 * Set the value of [show_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbShowId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->show_id !== $v) {
+			$this->show_id = $v;
+			$this->modifiedColumns[] = CcShowPeer::SHOW_ID;
+		}
+
+		return $this;
+	} // setDbShowId()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -637,6 +673,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->repeats = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->day = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->description = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->show_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -645,7 +682,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 9; // 9 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 10; // 10 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -971,6 +1008,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 8:
 				return $this->getDbDescription();
 				break;
+			case 9:
+				return $this->getDbShowId();
+				break;
 			default:
 				return null;
 				break;
@@ -1003,6 +1043,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbRepeats(),
 			$keys[7] => $this->getDbDay(),
 			$keys[8] => $this->getDbDescription(),
+			$keys[9] => $this->getDbShowId(),
 		);
 		return $result;
 	}
@@ -1061,6 +1102,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 8:
 				$this->setDbDescription($value);
 				break;
+			case 9:
+				$this->setDbShowId($value);
+				break;
 		} // switch()
 	}
 
@@ -1094,6 +1138,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbRepeats($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbDay($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbDescription($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbShowId($arr[$keys[9]]);
 	}
 
 	/**
@@ -1114,6 +1159,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowPeer::REPEATS)) $criteria->add(CcShowPeer::REPEATS, $this->repeats);
 		if ($this->isColumnModified(CcShowPeer::DAY)) $criteria->add(CcShowPeer::DAY, $this->day);
 		if ($this->isColumnModified(CcShowPeer::DESCRIPTION)) $criteria->add(CcShowPeer::DESCRIPTION, $this->description);
+		if ($this->isColumnModified(CcShowPeer::SHOW_ID)) $criteria->add(CcShowPeer::SHOW_ID, $this->show_id);
 
 		return $criteria;
 	}
@@ -1183,6 +1229,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$copyObj->setDbRepeats($this->repeats);
 		$copyObj->setDbDay($this->day);
 		$copyObj->setDbDescription($this->description);
+		$copyObj->setDbShowId($this->show_id);
 
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -1240,6 +1287,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->repeats = null;
 		$this->day = null;
 		$this->description = null;
+		$this->show_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

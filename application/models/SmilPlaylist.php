@@ -58,24 +58,24 @@ class SmilPlaylist {
         }
         $lspl = SmilPlaylist::convert2lspl($gb, $path, $gunids, $parr);
         if (PEAR::isError($lspl)) {
-        	return $lspl;
+            return $lspl;
         }
         require_once("Playlist.php");
         $pl =& Playlist::create($gb, $plid, "imported_SMIL");
         if (PEAR::isError($pl)) {
-        	return $pl;
+            return $pl;
         }
         $r = $pl->lock($gb, $subjid);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $r = $pl->setMetadata($lspl, 'string', 'playlist');
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         $r = $pl->unlock($gb);
         if (PEAR::isError($r)) {
-        	return $r;
+            return $r;
         }
         return $pl;
     }
@@ -99,7 +99,7 @@ class SmilPlaylist {
         extract($parr);
         $tree = SmilPlaylist::parse($data);
         if (PEAR::isError($tree)) {
-        	return $tree;
+            return $tree;
         }
         if ($tree->name != 'smil') {
             return PEAR::raiseError("SmilPlaylist::parse: smil tag expected");
@@ -107,11 +107,11 @@ class SmilPlaylist {
         if (isset($tree->children[1])) {
             return PEAR::raiseError(sprintf(
                 "SmilPlaylist::parse: unexpected tag %s in tag smil",
-                $tree->children[1]->name
+            $tree->children[1]->name
             ));
         }
         $res = SmilPlaylistBodyElement::convert2lspl(
-            $gb, $tree->children[0], &$gunids, $parr);
+        $gb, $tree->children[0], &$gunids, $parr);
         return $res;
     }
 
@@ -136,13 +136,13 @@ class SmilPlaylistBodyElement {
         if (isset($tree->children[1])) {
             return PEAR::raiseError(sprintf(
                 "SmilPlaylist::parse: unexpected tag %s in tag body",
-                $tree->children[1]->name
+            $tree->children[1]->name
             ));
         }
         $res = SmilPlaylistParElement::convert2lspl(
-            $gb, $tree->children[0], &$gunids, $parr, $ind2);
+        $gb, $tree->children[0], &$gunids, $parr, $ind2);
         if (PEAR::isError($res)) {
-        	return $res;
+            return $res;
         }
         $title = basename($rPath);
         $playlength = '0';
@@ -165,7 +165,7 @@ class SmilPlaylistBodyElement {
  */
 class SmilPlaylistParElement {
 
-	public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+    public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
     {
         extract($parr);
         if ($tree->name != 'par') {
@@ -176,7 +176,7 @@ class SmilPlaylistParElement {
             $ch =& $tree->children[$i];
             $r = SmilPlaylistAudioElement::convert2lspl($gb, $ch, &$gunids, $parr, $ind.INDCH);
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             $res .= $r;
         }
@@ -204,7 +204,7 @@ class SmilPlaylistAudioElement {
         if (isset($tree->children[2])) {
             return PEAR::raiseError(sprintf(
                 "SmilPlaylist::parse: unexpected tag %s in tag audio",
-                $tree->children[2]->name
+            $tree->children[2]->name
             ));
         }
         $res = ''; $fadeIn = 0; $fadeOut = 0;
@@ -212,7 +212,7 @@ class SmilPlaylistAudioElement {
             $ch =& $tree->children[$i];
             $r = SmilPlaylistAnimateElement::convert2lspl($gb, $ch, &$gunids, $parr, $ind2);
             if (PEAR::isError($r)) {
-            	return $r;
+                return $r;
             }
             switch ($r['type']) {
                 case "fadeIn":  $fadeIn  = $r['val']; break;
@@ -225,7 +225,7 @@ class SmilPlaylistAudioElement {
             $fadeOut = Playlist::secondsToPlaylistTime($fadeOut);
             $fInfo   = "$ind2<fadeInfo id=\"$fiGunid\" fadeIn=\"$fadeIn\" fadeOut=\"$fadeOut\"/>\n";
         } else {
-        	$fInfo = '';
+            $fInfo = '';
         }
         $plElGunid  = StoredFile::CreateGunid();
         $acGunid     = $gunid;
@@ -238,19 +238,19 @@ class SmilPlaylistAudioElement {
                 case "m3u":
                     $type = 'playlist';
                     $acId = $gb->bsImportPlaylistRaw($gunid,
-                        $aPath, $uri, $ext, $gunids, $subjid);
+                    $aPath, $uri, $ext, $gunids, $subjid);
                     if (PEAR::isError($acId)) {
-                    	return $r;
+                        return $r;
                     }
-                   //break;
+                    //break;
                 default:
                     $ac = StoredFile::RecallByGunid($gunid);
                     if (is_null($ac) || PEAR::isError($ac)) {
-                    	return $ac;
+                        return $ac;
                     }
                     $r = $ac->md->getMetadataElement('dcterms:extent');
                     if (PEAR::isError($r)) {
-                    	return $r;
+                        return $r;
                     }
                     $playlength = $r[0]['value'];
             }
@@ -263,7 +263,7 @@ class SmilPlaylistAudioElement {
         $clipLength = Playlist::secondsToPlaylistTime($tree->attrs['clipLength']->val);
         $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\" clipStart=\"$clipStart\" clipEnd=\"$clipEnd\" clipLength=\"$clipLength\">\n".
             "$ind2<$type id=\"$acGunid\" playlength=\"$playlength\" title=\"$title\"/>\n".
-            $fInfo.
+        $fInfo.
             "$ind</playlistElement>\n";
         return $res;
     }
@@ -278,35 +278,35 @@ class SmilPlaylistAudioElement {
  */
 class SmilPlaylistAnimateElement {
 
-	public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
-	{
+    public static function convert2lspl(&$gb, &$tree, &$gunids, $parr, $ind='')
+    {
         extract($parr);
         if ($tree->name != 'animate') {
             return PEAR::raiseError("SmilPlaylist::parse: animate tag expected");
         }
         if ($tree->attrs['attributeName']->val == 'soundLevel' &&
-            $tree->attrs['from']->val == '0%' &&
-            $tree->attrs['to']->val == '100%' &&
-            $tree->attrs['calcMode']->val == 'linear' &&
-            $tree->attrs['fill']->val == 'freeze' &&
-            $tree->attrs['begin']->val == '0s' &&
-            preg_match("|^([0-9.]+)s$|", $tree->attrs['end']->val, $va)
+        $tree->attrs['from']->val == '0%' &&
+        $tree->attrs['to']->val == '100%' &&
+        $tree->attrs['calcMode']->val == 'linear' &&
+        $tree->attrs['fill']->val == 'freeze' &&
+        $tree->attrs['begin']->val == '0s' &&
+        preg_match("|^([0-9.]+)s$|", $tree->attrs['end']->val, $va)
         ) {
             return array('type'=>'fadeIn', 'val'=>intval($va[1]));
         }
         if ($tree->attrs['attributeName']->val == 'soundLevel' &&
-            $tree->attrs['from']->val == '100%' &&
-            $tree->attrs['to']->val == '0%' &&
-            $tree->attrs['calcMode']->val == 'linear' &&
-            $tree->attrs['fill']->val == 'freeze' &&
-            preg_match("|^([0-9.]+)s$|", $tree->attrs['begin']->val, $vaBegin) &&
-            preg_match("|^([0-9.]+)s$|", $tree->attrs['end']->val, $vaEnd)
+        $tree->attrs['from']->val == '100%' &&
+        $tree->attrs['to']->val == '0%' &&
+        $tree->attrs['calcMode']->val == 'linear' &&
+        $tree->attrs['fill']->val == 'freeze' &&
+        preg_match("|^([0-9.]+)s$|", $tree->attrs['begin']->val, $vaBegin) &&
+        preg_match("|^([0-9.]+)s$|", $tree->attrs['end']->val, $vaEnd)
         ) {
             return array('type'=>'fadeOut', 'val'=>($vaEnd[1] - $vaBegin[1]));
         }
         return PEAR::raiseError(
             "SmilPlaylistAnimateElement::convert2lspl: animate parameters too general"
-        );
+            );
     }
 } // class SmilPlaylistAnimateElement
 

@@ -15,6 +15,7 @@
  * @method     CcShowQuery orderByDbRepeats($order = Criteria::ASC) Order by the repeats column
  * @method     CcShowQuery orderByDbDay($order = Criteria::ASC) Order by the day column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method     CcShowQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
@@ -25,6 +26,7 @@
  * @method     CcShowQuery groupByDbRepeats() Group by the repeats column
  * @method     CcShowQuery groupByDbDay() Group by the day column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
+ * @method     CcShowQuery groupByDbShowId() Group by the show_id column
  *
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -42,6 +44,7 @@
  * @method     CcShow findOneByDbRepeats(int $repeats) Return the first CcShow filtered by the repeats column
  * @method     CcShow findOneByDbDay(int $day) Return the first CcShow filtered by the day column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
+ * @method     CcShow findOneByDbShowId(int $show_id) Return the first CcShow filtered by the show_id column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -52,6 +55,7 @@
  * @method     array findByDbRepeats(int $repeats) Return CcShow objects filtered by the repeats column
  * @method     array findByDbDay(int $day) Return CcShow objects filtered by the day column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
+ * @method     array findByDbShowId(int $show_id) Return CcShow objects filtered by the show_id column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -406,6 +410,37 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::DESCRIPTION, $dbDescription, $comparison);
+	}
+
+	/**
+	 * Filter the query on the show_id column
+	 * 
+	 * @param     int|array $dbShowId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbShowId($dbShowId = null, $comparison = null)
+	{
+		if (is_array($dbShowId)) {
+			$useMinMax = false;
+			if (isset($dbShowId['min'])) {
+				$this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbShowId['max'])) {
+				$this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId, $comparison);
 	}
 
 	/**
