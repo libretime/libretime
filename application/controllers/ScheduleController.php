@@ -12,7 +12,8 @@ class ScheduleController extends Zend_Controller_Action
 
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
-					->addActionContext('add-show-dialog', 'json')	
+					->addActionContext('add-show-dialog', 'json')
+					->addActionContext('add-show', 'json')	
                     ->initContext();
     }
 
@@ -39,13 +40,42 @@ class ScheduleController extends Zend_Controller_Action
 
     public function addShowDialogAction()
     {
-    	$user = new User();
+        $user = new User();
+        
+		$this->view->hosts = $user->getHosts();
+    }
 
-		$this->view->hosts = $user->getHosts(); 
+    public function addShowAction()
+    {
+		//name, description, hosts, allDay, repeats,
+		//start_time, duration, start_date, end_date, dofw
+
+        $name = $this->_getParam('name', 'Default Name');
+		$description = $this->_getParam('description', '');
+		$hosts = $this->_getParam('hosts');
+		$allDay = $this->_getParam('all_day', false);
+		$repeats = $this->_getParam('repeats', false);
+		$startTime = $this->_getParam('start_time');
+		$duration = $this->_getParam('duration');
+		$startDate = $this->_getParam('start_date');
+		$endDate = $this->_getParam('end_date', null);
+		$dofw = $this->_getParam('dofw');
+
+		if($repeats === false)
+			$endDate = $startDate;
+
+		$repeats = $repeats ? 1 : 0;
+		
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show($userInfo->type);
+		$show->addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $dofw, $description);
     }
 
 
 }
+
+
 
 
 

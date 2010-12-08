@@ -169,6 +169,7 @@ CREATE TABLE "cc_show"
 	"repeats" INT2  NOT NULL,
 	"day" INT2  NOT NULL,
 	"description" VARCHAR(512),
+	"show_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -331,7 +332,7 @@ DROP TABLE "cc_subjs" CASCADE;
 
 CREATE TABLE "cc_subjs"
 (
-	"id" INTEGER  NOT NULL,
+	"id" serial  NOT NULL,
 	"login" VARCHAR(255) default '' NOT NULL,
 	"pass" VARCHAR(255) default '' NOT NULL,
 	"type" CHAR(1) default 'U' NOT NULL,

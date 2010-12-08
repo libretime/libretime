@@ -699,13 +699,21 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			if ($this->isNew() ) {
+				$this->modifiedColumns[] = CcSubjsPeer::ID;
+			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
+					if ($criteria->keyContainsValue(CcSubjsPeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSubjsPeer::ID.')');
+					}
+
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows = 1;
+					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows = CcSubjsPeer::doUpdate($this, $con);
@@ -1127,7 +1135,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setId($this->id);
 		$copyObj->setLogin($this->login);
 		$copyObj->setPass($this->pass);
 		$copyObj->setType($this->type);
@@ -1180,6 +1187,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 
 		$copyObj->setNew(true);
+		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**

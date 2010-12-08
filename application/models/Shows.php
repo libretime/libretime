@@ -35,12 +35,51 @@ class Show {
 		return $event;
 	}
 
-	public function addShow() {
+	public function addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $days, $description) {
 
-		$sql = 'INSERT INTO cc_show 
-			("name", "first_show", "last_show", "start_time", "end_time", 
-			"repeats", "day", "description", "show_id")
-			VALUES ()';
+		$con = Propel::getConnection("campcaster");
+
+		$sql = "SELECT time '{$startTime}' + INTERVAL '{$duration} hour' ";
+		$r = $con->query($sql);
+        $endTime = $r->fetchColumn(0); 
+
+		$sql = "SELECT nextval('schedule_group_id_seq')";
+		$r = $con->query($sql);
+        $showId = $r->fetchColumn(0);
+
+		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$startDate} {$startTime}')";
+		$r = $con->query($sql);
+        $startDow = $r->fetchColumn(0);          
+
+		foreach ($days as $day) {
+
+			if($startDow !== $day){
+				
+				if($startDow > $day)
+					$daysAdd = 6 - $startDow + 1 + $day;
+				else
+					$daysAdd = $day - $startDow;				
+
+				$sql = "SELECT date '{$startDate}' + INTERVAL '{$daysAdd} day' ";
+				$r = $con->query($sql);
+				$start = $r->fetchColumn(0); 
+			}
+			else {
+				$start = $startDate;
+			}
+
+			$show = new CcShow();
+			$show->setDbName($name);
+			$show->setDbFirstShow($start);
+			$show->setDbLastShow($endDate);
+			$show->setDbStartTime($startTime);
+			$show->setDbEndTime($endTime);
+			$show->setDbRepeats($repeats);
+			$show->setDbDay($day);
+			$show->setDbDescription($description);
+			$show->setDbShowId($showId);
+			$show->save();
+		}
 
 	}
 

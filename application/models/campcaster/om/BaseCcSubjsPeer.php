@@ -529,6 +529,10 @@ abstract class BaseCcSubjsPeer {
 			$criteria = $values->buildCriteria(); // build Criteria from CcSubjs object
 		}
 
+		if ($criteria->containsKey(CcSubjsPeer::ID) && $criteria->keyContainsValue(CcSubjsPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSubjsPeer::ID.')');
+		}
+
 
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);

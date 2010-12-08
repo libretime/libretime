@@ -60,13 +60,13 @@ function createDateInput(name, label) {
 }
 
 function submitShow() {
-	var name, description, hosts, allDay, repeats,
+	var name, description, hosts, all_day, repeats,
 		start_time, duration, start_date, end_date, dofw;
 
 	name = $("#schedule_dialog_name").val();
 	description = $("#schedule_dialog_description").val();
 	hosts = $("#schedule_dialog_hosts").val();
-	allDay = $("#schedule_dialog_all_day").attr("checked");
+	all_day = $("#schedule_dialog_all_day").attr("checked");
 	repeats = $("#schedule_dialog_repeats").attr("checked");
 	start_time = $("#schedule_dialog_start_time").val();
 	duration = $("#schedule_dialog_duration").val();
@@ -75,6 +75,21 @@ function submitShow() {
 	dofw = $("#schedule_dialog_day_check").find(":checked").map(function(){
 		return $(this).val();
 	}).get();
+
+	if(dofw.length === 0) {
+		var time, date;
+
+		time = start_date.split("-");
+		date = new Date(time[0], time[1] - 1, time[2]);
+		dofw.push(date.getDay());
+	}
+
+	$.post("/Schedule/add-show/format/json", 
+		{ name: name, description: description, hosts: hosts, all_day: all_day, repeats: repeats, 
+			start_time: start_time, duration: duration, start_date: start_date, end_date: end_date, dofw: dofw },
+		function(data){
+			$('#schedule_calendar').fullCalendar( 'refetchEvents' );
+		});
 
 	$(this).remove();
 }

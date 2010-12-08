@@ -47,6 +47,7 @@ class CcShowTableMap extends TableMap {
 		$this->addColumn('REPEATS', 'DbRepeats', 'TINYINT', true, null, null);
 		$this->addColumn('DAY', 'DbDay', 'TINYINT', true, null, null);
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
+		$this->addColumn('SHOW_ID', 'DbShowId', 'INTEGER', true, null, null);
 		// validators
 	} // initialize()
 

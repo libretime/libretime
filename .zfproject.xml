@@ -53,6 +53,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="eventFeed"/>
           <actionMethod actionName="addShowDialog"/>
+          <actionMethod actionName="addShow"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -165,6 +166,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="addShowDialog"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="addShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
