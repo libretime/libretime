@@ -41,6 +41,18 @@ class Application_Form_AddShow extends Zend_Form
     		) 
         ));
 
+		// Add start time element
+        $this->addElement('text', 'start_time', array(
+            'label'      => 'Start Time:',
+            'required'   => true,
+            'filters'    => array('StringTrim'),
+			'validators' => array(
+				'NotEmpty',
+        		array('date', false, array('HH:mm'))
+    		) 
+        ));
+
+		/*
 		$this->addElement(
             'select',
             'start_time',
@@ -55,20 +67,18 @@ class Application_Form_AddShow extends Zend_Form
 					"02:00" => "02:00",
                 ),
          ));
+		*/
 
-		$this->addElement(
-            'select',
-            'duration',
-            array(
-				'label' => 'Duration:',
-                'required' => true,
-                'multiOptions' => array(
-                    "00:30" => "00:30",
-					"01:00" => "01:00",
-					"01:30" => "01:30",
-					"02:00" => "02:00",
-                ), 
-         ));
+		// Add duration element
+        $this->addElement('text', 'duration', array(
+            'label'      => 'Duration:',
+            'required'   => true,
+            'filters'    => array('StringTrim'),
+			'validators' => array(
+				'NotEmpty',
+        		array('date', false, array('HH:mm'))
+    		) 
+        ));
 
 		$this->addElement(
             'multiCheckbox',
