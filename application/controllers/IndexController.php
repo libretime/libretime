@@ -18,17 +18,6 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('layout');
     }
 
-    public function newfieldAction()
-    {
-        // action body
-    }
-
-    public function displayAction()
-    {
-        // action body
-    }
-
-
 }
 
 

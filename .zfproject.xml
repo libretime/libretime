@@ -53,7 +53,6 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="eventFeed"/>
           <actionMethod actionName="addShowDialog"/>
-          <actionMethod actionName="addShow"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -62,6 +61,7 @@
         <formFile formName="AdvancedSearch"/>
         <formFile formName="AdvancedSearchRow"/>
         <formFile formName="EditAudioMD"/>
+        <formFile formName="AddShow"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory/>
@@ -166,9 +166,6 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="addShowDialog"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Schedule">
-            <viewScriptFile forActionName="addShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

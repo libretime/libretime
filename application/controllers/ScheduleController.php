@@ -40,16 +40,28 @@ class ScheduleController extends Zend_Controller_Action
 
     public function addShowDialogAction()
     {
-        $user = new User();
-        
-		$this->view->hosts = $user->getHosts();
+        $request = $this->getRequest();
+        $form = new Application_Form_AddShow();
+ 
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {  
+    
+				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+				$show = new Show($userInfo->type);
+				$show->addShow($form->getValues());
+				return;
+			}     
+        }
+		$this->view->form = $form->__toString();
     }
 
-    public function addShowAction()
+    function addShow()
     {
 		//name, description, hosts, allDay, repeats,
 		//start_time, duration, start_date, end_date, dofw
 
+		/*
         $name = $this->_getParam('name', 'Default Name');
 		$description = $this->_getParam('description', '');
 		$hosts = $this->_getParam('hosts');
@@ -65,11 +77,12 @@ class ScheduleController extends Zend_Controller_Action
 			$endDate = $startDate;
 
 		$repeats = $repeats ? 1 : 0;
-		
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+		*/
 
-		$show = new Show($userInfo->type);
-		$show->addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $dofw, $description);
+		//$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		//$show = new Show($userInfo->type);
+		//$show->addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $dofw, $description);
     }
 
 

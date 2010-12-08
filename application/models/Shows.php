@@ -35,23 +35,37 @@ class Show {
 		return $event;
 	}
 
-	public function addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $days, $description) {
-
+	public function addShow($data) {
+	
 		$con = Propel::getConnection("campcaster");
 
-		$sql = "SELECT time '{$startTime}' + INTERVAL '{$duration} hour' ";
+		$sql = "SELECT time '{$data['start_time']}' + INTERVAL '{$data['duration']} hour' ";
 		$r = $con->query($sql);
         $endTime = $r->fetchColumn(0); 
 
-		$sql = "SELECT nextval('schedule_group_id_seq')";
+		$sql = "SELECT nextval('show_group_id_seq')";
 		$r = $con->query($sql);
         $showId = $r->fetchColumn(0);
 
-		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$startDate} {$startTime}')";
+		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$data['start_date']} {$data['start_time']}')";
 		$r = $con->query($sql);
-        $startDow = $r->fetchColumn(0);          
+        $startDow = $r->fetchColumn(0);  
 
-		foreach ($days as $day) {
+		if($data['no_end']) {
+			$endDate = NULL;
+		}
+		else if($data['repeats']) {
+			$endDate = $data['end_date'];
+		}
+		else {
+			$endDate = $data['start_date'];
+		} 
+
+		if($data['day_check'] === null) {
+			$data['day_check'] = array($startDow);
+		}       
+
+		foreach ($data['day_check'] as $day) {
 
 			if($startDow !== $day){
 				
@@ -60,23 +74,23 @@ class Show {
 				else
 					$daysAdd = $day - $startDow;				
 
-				$sql = "SELECT date '{$startDate}' + INTERVAL '{$daysAdd} day' ";
+				$sql = "SELECT date '{$data['start_date']}' + INTERVAL '{$daysAdd} day' ";
 				$r = $con->query($sql);
 				$start = $r->fetchColumn(0); 
 			}
 			else {
-				$start = $startDate;
+				$start = $data['start_date'];
 			}
 
 			$show = new CcShow();
-			$show->setDbName($name);
+			$show->setDbName($data['name']);
 			$show->setDbFirstShow($start);
 			$show->setDbLastShow($endDate);
-			$show->setDbStartTime($startTime);
+			$show->setDbStartTime($data['start_time']);
 			$show->setDbEndTime($endTime);
-			$show->setDbRepeats($repeats);
+			$show->setDbRepeats($data['repeats']);
 			$show->setDbDay($day);
-			$show->setDbDescription($description);
+			$show->setDbDescription($data['description']);
 			$show->setDbShowId($showId);
 			$show->save();
 		}

@@ -51,7 +51,7 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $form = new Application_Form_PlaylistMetadata();
  
-        if ($this->getRequest()->isPost()) {
+        if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {  
     
 				$formdata = $form->getValues();
