@@ -61,7 +61,7 @@ class Restore {
         $this->token = null;
         $this->logFile = $CC_CONFIG['bufferDir'].'/'.$this->ACCESS_TYPE.'.log';
         if ($this->loglevel == 'debug') {
-        	$this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
+            $this->addLogItem("-I- ".date("Ymd-H:i:s")." construct\n");
         }
     }
 
@@ -131,9 +131,9 @@ class Restore {
             }
             $r['status'] = $stat;
             if ($stat=='fault') {
-            	$r['faultString'] = $message;
+                $r['faultString'] = $message;
             } else {
-            	$r['faultString'] = '';
+                $r['faultString'] = '';
             }
             return $r;
         } else {
@@ -193,8 +193,8 @@ class Restore {
 
         //simple check of archive format
         if (is_dir($this->tmpDir.'audioClip/') &&
-            is_dir($this->tmpDir.'meta-inf/') &&
-            is_dir($this->tmpDir.'playlist/')) {
+        is_dir($this->tmpDir.'meta-inf/') &&
+        is_dir($this->tmpDir.'playlist/')) {
             //search metafiles
             $this->metafiles = $this->getMetaFiles();
             #$this->addLogItem('metafiles:'.print_r($this->metafiles,true));
@@ -205,15 +205,15 @@ class Restore {
                     $this->addLogItem("-E- ".date("Ymd-H:i:s").
                         " startRestore - addFileToStorage \n".
                         "(".$put->getMessage()."/".$put->getUserInfo().")\n"
-                    );
-                 	file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
-                    return;
+                        );
+                        file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
+                        return;
                 }
             }
         } else {
             $this->addLogItem("-E- ".date("Ymd-H:i:s")." startRestore - invalid archive format\n");
-          	file_put_contents($this->statusFile, 'fault|invalid archive format');
-          	return;
+            file_put_contents($this->statusFile, 'fault|invalid archive format');
+            return;
         }
         file_put_contents($this->statusFile, 'success');
         // unlink($backupfile);
@@ -238,13 +238,13 @@ class Restore {
         $playlists = scandir($this->tmpDir.'playlist/');
         for ($i = 0; $i < count($audioclips); $i++) {
             if (strpos($audioclips[$i],'xml')!==false)
-                $r[] = array('file' => $this->tmpDir.'audioClip/'.$audioclips[$i],
+            $r[] = array('file' => $this->tmpDir.'audioClip/'.$audioclips[$i],
                              'type' => 'audioClip',
                              'id'   => str_replace('.xml','',$audioclips[$i]));
         }
         for ($i = 0; $i < count($playlists); $i++) {
             if (strpos($playlists[$i],'xml') !== false)
-                $r[] = array('file' => $this->tmpDir.'playlist/'.$playlists[$i],
+            $r[] = array('file' => $this->tmpDir.'playlist/'.$playlists[$i],
                              'type' => 'playlist',
                              'id'   => str_replace('.xml','',$playlists[$i]));
         }
@@ -265,83 +265,83 @@ class Restore {
      *  @return mixed
      * 		true if success or PEAR_error
      */
-//    function addFileToStorage($file,$type,$gunid)
-//    {
-//        if ($this->loglevel=='debug') {
-//            $this->addLogItem("-I- ".date("Ymd-H:i:s")." addFileToStorage - file:$file | type:$type | id:$gunid\n");
-//        }
-//        require_once("XmlParser.php");
-//        $tree = XmlParser::parse($file);
-//        $mediaFileLP = str_replace('.xml','',$file);
-//        $mediaFileLP = ($type=='audioClip' && is_file($mediaFileLP))?$mediaFileLP:'';
-//        $ex = $this->gb->existsFile($this->sessid,$gunid);
-//        if (PEAR::isError($ex)) {
-//            $this->addLogItem("-E- ".date("Ymd-H:i:s").
-//                " addFileToStorage - existsFile($gunid) ".
-//                "(".$ex->getMessage()."/".$ex->getUserInfo().")\n"
-//            );
-//        }
-//        if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
-//            //replace it
-//            $id = BasicStor::IdFromGunid($gunid);
-//            $replace = $this->gb->replaceFile(
-//                $id,   				# id int, virt.file's local id
-//                $mediaFileLP,       # mediaFileLP string, local path of media file
-//                $file,              # mdataFileLP string, local path of metadata file
-//                $this->sessid);     # sessid string, session id
-//            if (PEAR::isError($replace)) {
-//            	$this->addLogItem("-E- ".date("Ymd-H:i:s").
-//            	    " addFileToStorage - replaceFile Error ".
-//                    "(".$replace->getMessage()."/".$replace->getUserInfo().")\n"
-//                );
-//        	  	file_put_contents($this->statusFile, 'fault|'.$replace->getMessage()."/".$replace->getUserInfo());
-//            	return $replace;
-//            }
-//            #$this->addLogItem("replace it \n");
-//        } else {
-//            // add as new
-//            $name = $tree->children[0]->children[0]->content;
-//            if (empty($name)) {
-//            	$name = $tree->attrs['title']->val;
-//            }
-//            if (empty($name)) {
-//            	$name = '???';
-//            }
-//            if ($this->loglevel=='debug') {
-//                $this->addLogItem("-I- ".date("Ymd-H:i:s")." putFile\n".
-//                    "$name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
-//                );
-//            }
-//            $values = array(
-//                "filename" => $name,
-//                "filepath" => $mediaFileLP,
-//                "metadata" => $file,
-//                "gunid" => $gunid,
-//                "filetype" => $type
-//            );
-//            $put = $this->gb->putFile($values, $this->sessid);
-//            //$this->addLogItem("add as new \n");
-//            if (PEAR::isError($put)) {
-//                $this->addLogItem("-E- ".date("Ymd-H:i:s").
-//                    " addFileToStorage - putFile Error ".
-//                    "(".$put->getMessage()."/".$put->getUserInfo().")\n"
-//                    ."\n---\n".file_get_contents($file)."\n---\n"
-//                );
-//           		file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
-//                //$this->addLogItem("Error Object: ".print_r($put,true)."\n");
-//                return $put;
-//            }
-//        }
-//        $ac = StoredFile::RecallByGunid($gunid);
-//        if (is_null($ac) || PEAR::isError($ac)) {
-//        	return $ac;
-//        }
-//        $res = $ac->setState('ready');
-//        if (PEAR::isError($res)) {
-//        	return $res;
-//        }
-//        return true;
-//    }
+    //    function addFileToStorage($file,$type,$gunid)
+    //    {
+    //        if ($this->loglevel=='debug') {
+    //            $this->addLogItem("-I- ".date("Ymd-H:i:s")." addFileToStorage - file:$file | type:$type | id:$gunid\n");
+    //        }
+    //        require_once("XmlParser.php");
+    //        $tree = XmlParser::parse($file);
+    //        $mediaFileLP = str_replace('.xml','',$file);
+    //        $mediaFileLP = ($type=='audioClip' && is_file($mediaFileLP))?$mediaFileLP:'';
+    //        $ex = $this->gb->existsFile($this->sessid,$gunid);
+    //        if (PEAR::isError($ex)) {
+    //            $this->addLogItem("-E- ".date("Ymd-H:i:s").
+    //                " addFileToStorage - existsFile($gunid) ".
+    //                "(".$ex->getMessage()."/".$ex->getUserInfo().")\n"
+    //            );
+    //        }
+    //        if (!PEAR::isError($ex) && $ex) { // file is exists in storage server
+    //            //replace it
+    //            $id = BasicStor::IdFromGunid($gunid);
+    //            $replace = $this->gb->replaceFile(
+    //                $id,   				# id int, virt.file's local id
+    //                $mediaFileLP,       # mediaFileLP string, local path of media file
+    //                $file,              # mdataFileLP string, local path of metadata file
+    //                $this->sessid);     # sessid string, session id
+    //            if (PEAR::isError($replace)) {
+    //            	$this->addLogItem("-E- ".date("Ymd-H:i:s").
+    //            	    " addFileToStorage - replaceFile Error ".
+    //                    "(".$replace->getMessage()."/".$replace->getUserInfo().")\n"
+    //                );
+    //        	  	file_put_contents($this->statusFile, 'fault|'.$replace->getMessage()."/".$replace->getUserInfo());
+    //            	return $replace;
+    //            }
+    //            #$this->addLogItem("replace it \n");
+    //        } else {
+    //            // add as new
+    //            $name = $tree->children[0]->children[0]->content;
+    //            if (empty($name)) {
+    //            	$name = $tree->attrs['title']->val;
+    //            }
+    //            if (empty($name)) {
+    //            	$name = '???';
+    //            }
+    //            if ($this->loglevel=='debug') {
+    //                $this->addLogItem("-I- ".date("Ymd-H:i:s")." putFile\n".
+    //                    "$name, $mediaFileLP, $file, {$this->sessid}, $gunid, $type \n"
+    //                );
+    //            }
+    //            $values = array(
+    //                "filename" => $name,
+    //                "filepath" => $mediaFileLP,
+    //                "metadata" => $file,
+    //                "gunid" => $gunid,
+    //                "filetype" => $type
+    //            );
+    //            $put = $this->gb->putFile($values, $this->sessid);
+    //            //$this->addLogItem("add as new \n");
+    //            if (PEAR::isError($put)) {
+    //                $this->addLogItem("-E- ".date("Ymd-H:i:s").
+    //                    " addFileToStorage - putFile Error ".
+    //                    "(".$put->getMessage()."/".$put->getUserInfo().")\n"
+    //                    ."\n---\n".file_get_contents($file)."\n---\n"
+    //                );
+    //           		file_put_contents($this->statusFile, 'fault|'.$put->getMessage()."/".$put->getUserInfo());
+    //                //$this->addLogItem("Error Object: ".print_r($put,true)."\n");
+    //                return $put;
+    //            }
+    //        }
+    //        $ac = StoredFile::RecallByGunid($gunid);
+    //        if (is_null($ac) || PEAR::isError($ac)) {
+    //        	return $ac;
+    //        }
+    //        $res = $ac->setState('ready');
+    //        if (PEAR::isError($res)) {
+    //        	return $res;
+    //        }
+    //        return true;
+    //    }
 
 
     /**

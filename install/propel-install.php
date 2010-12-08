@@ -19,9 +19,9 @@ echo "**********************\n";
 echo "* Campcaster Install *\n";
 echo "**********************\n";
 
-require_once(dirname(__FILE__).'/../conf.php');
-require_once(dirname(__FILE__).'/../backend/GreenBox.php');
-require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
+require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
+//require_once(dirname(__FILE__).'/../application/models/cron/Cron.php');
 require_once(dirname(__FILE__)."/installInit.php");
 
 // Need to check that we are superuser before running this.
@@ -64,7 +64,7 @@ if ($langIsInstalled == '0') {
 }
 
 // Put Propel sql files in Database
-$command = "../3rd_party/php/propel/generator/bin/propel-gen ../backend/propel-db/ insert-sql";
+$command = "../library/propel/generator/bin/propel-gen ../build/ insert-sql";
 echo $command."\n";
 @exec($command, $output, $results);
 
@@ -121,7 +121,7 @@ Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
 // Install storage directories
 //------------------------------------------------------------------------
 echo " *** Directory Setup ***\n";
-foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
+foreach (array('baseFilesDir', 'storageDir', /*'bufferDir', 'transDir', 'accessDir',*/ 'cronDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
         @mkdir($CC_CONFIG[$d], 02775);
@@ -163,43 +163,43 @@ foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as
 // Make sure the Smarty Templates Compiled directory has the right perms
 //
 echo "   * Setting dir permissions...\n";
-install_setDirPermissions($CC_CONFIG["smartyTemplateCompiled"]);
+//install_setDirPermissions($CC_CONFIG["smartyTemplateCompiled"]);
 install_setDirPermissions($CC_CONFIG["storageDir"]);
-install_setDirPermissions($CC_CONFIG["bufferDir"]);
-install_setDirPermissions($CC_CONFIG["transDir"]);
-install_setDirPermissions($CC_CONFIG["accessDir"]);
+//install_setDirPermissions($CC_CONFIG["bufferDir"]);
+//install_setDirPermissions($CC_CONFIG["transDir"]);
+//install_setDirPermissions($CC_CONFIG["accessDir"]);
 
 
 //------------------------------------------------------------------------
 // Install Cron job
 //------------------------------------------------------------------------
-$m = '*/2';
-$h ='*';
-$dom = '*';
-$mon = '*';
-$dow = '*';
-$command = realpath("{$CC_CONFIG['cronDir']}/transportCron.php");
-$old_regex = '/transportCron\.php/';
-echo " * Install storageServer cron job...\n";
-
-$cron = new Cron();
-$access = $cron->openCrontab('write');
-if ($access != 'write') {
-    do {
-        $r = $cron->forceWriteable();
-    } while ($r);
-}
-
-foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
-    if (preg_match($old_regex, $line['command'])) {
-        echo "    * Removing old entry: ".$line['command']."\n";
-        $cron->ct->delEntry($id);
-    }
-}
-echo "    * Adding new entry: ".$command."\n";
-$cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
-$cron->closeCrontab();
-echo "   Done.\n";
+//$m = '*/2';
+//$h ='*';
+//$dom = '*';
+//$mon = '*';
+//$dow = '*';
+//$command = realpath("{$CC_CONFIG['cronDir']}/transportCron.php");
+//$old_regex = '/transportCron\.php/';
+//echo " * Install storageServer cron job...\n";
+//
+//$cron = new Cron();
+//$access = $cron->openCrontab('write');
+//if ($access != 'write') {
+//    do {
+//        $r = $cron->forceWriteable();
+//    } while ($r);
+//}
+//
+//foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
+//    if (preg_match($old_regex, $line['command'])) {
+//        echo "    * Removing old entry: ".$line['command']."\n";
+//        $cron->ct->delEntry($id);
+//    }
+//}
+//echo "    * Adding new entry: ".$command."\n";
+//$cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
+//$cron->closeCrontab();
+//echo "   Done.\n";
 
 echo "*******************************\n";
 echo "* Campcaster Install Complete *\n";

@@ -24,28 +24,26 @@ $CC_CONFIG = array(
     /* ================================================ storage configuration */
 
     'apiKey' => array('AAA'),
-    
+
+    'baseFilesDir' => __DIR__."/../../files",
     // main directory for storing binary media files
-    'storageDir'    =>  dirname(__FILE__).'/../../stor',
+    'storageDir'    =>  __DIR__.'/../../files/stor',
 
     // directory for temporary files
- 	'bufferDir'     =>  dirname(__FILE__).'/../../stor/buffer',
+ 	'bufferDir'     =>  __DIR__.'/../../files/stor/buffer',
 
     // directory for incomplete transferred files
- 	'transDir'      =>  dirname(__FILE__).'/trans',
+ 	'transDir'      =>  __DIR__.'/../../files/trans',
 
     // directory for symlinks to accessed files
-    'accessDir'     =>  dirname(__FILE__).'/access',
-    'cronDir'       =>  dirname(__FILE__).'/backend/cron',
+    'accessDir'     =>  __DIR__.'/../../files/access',
+    'cronDir'       =>  __DIR__.'/../../files/cron',
 
-    "rootDir" => dirname(__FILE__),
-    "smartyTemplate" => dirname(__FILE__)."/htmlUI/templates",
-    "smartyTemplateCompiled" => dirname(__FILE__)."/htmlUI/templates_c",
-    'pearPath'      =>  dirname(__FILE__).'/3rd_party/php/pear',
-    'zendPath'      =>  dirname(__FILE__).'/3rd_party/php/Zend',
-    'phingPath'      =>  dirname(__FILE__).'/3rd_party/php/phing',
-    'LogPath'      =>  dirname(__FILE__).'/3rd_party/php/Log',
-    
+    "rootDir" => __DIR__."/../..",
+    'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
+    'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
+    'phingPath'      =>  dirname(__FILE__).'/../../library/phing',
+
      // secret token cookie name
     'authCookieName'=> 'campcaster_session_id',
 
@@ -164,30 +162,4 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
 
-// Check that all the required directories exist.
-//foreach (array('storageDir', 'bufferDir', 'transDir', 'accessDir', 'cronDir') as $d) {
-//    $test = file_exists($CC_CONFIG[$d]);
-//    if ( $test === FALSE ) {
-//      echo " * Error: directory {$CC_CONFIG[$d]} is missing.\n";
-//      echo " * Please run the install script again.\n";
-//      exit(1);
-//    } else {
-//        $rp = realpath($CC_CONFIG[$d]);
-//    }
-//    $CC_CONFIG[$d] = $rp;
-//}
-
-// Check that htmlUI/templates_c has the right permissions
-//$ss=@stat($CC_CONFIG["smartyTemplateCompiled"]);
-//$groupOwner = (function_exists('posix_getgrgid'))?@posix_getgrgid($ss['gid']):'';
-//if (!empty($groupOwner) && ($groupOwner["name"] != $CC_CONFIG["webServerUser"])) {
-//  echo " * Error: Your directory permissions for {$CC_CONFIG['smartyTemplateCompiled']} are not set correctly.<br>\n";
-//  echo " * The group perms need to be set to the web server user, in this case '{$CC_CONFIG['webServerUser']}'.<br>\n";
-//  exit(1);
-//}
-//$fileperms=@fileperms($CC_CONFIG["smartyTemplateCompiled"]);
-//if (!($fileperms & 0x0400)) {
-//  echo " * Error: Sticky bit not set for {$CC_CONFIG['smartyTemplateCompiled']}.<br>\n";
-//  exit(1);
-//}
 ?>

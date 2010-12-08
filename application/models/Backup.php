@@ -132,7 +132,7 @@ class Backup
         // get ids (and real filenames) which files match with criteria
         $srch = $this->gb->localSearch($this->criteria,$this->sessid);
         if (PEAR::isError($srch)) {
-        	return $srch;
+            return $srch;
         }
         $this->setIDs($srch);
 
@@ -167,7 +167,7 @@ class Backup
 
             return array('token'=>$this->token);
         } else {
-        	return false;
+            return false;
         }
     }
 
@@ -229,7 +229,7 @@ class Backup
         unlink($this->statusFile);
         unlink($this->tmpFile);
         if (is_file($this->tmpName)) {
-        	unlink($this->tmpName);
+            unlink($this->tmpName);
         }
         return !is_file($this->tmpFile);
     }
@@ -288,42 +288,42 @@ class Backup
      */
     private function setFilenames()
     {
-//        if ($this->loglevel=='debug') {
-//            $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
-//        }
-//        if (is_array($this->ids)) {
-//            foreach ($this->ids as $i => $item) {
-//                $gunid = $item['gunid'];
-//                // get a stored file object of this gunid
-//                $sf = StoredFile::RecallByGunid($gunid);
-//                if (is_null($sf) || PEAR::isError($sf)) {
-//                	return $sf;
-//                }
-//                $lid = BasicStor::IdFromGunid($gunid);
-//                if (($res = BasicStor::Authorize('read', $lid, $this->sessid)) !== TRUE) {
-//                    $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
-//                    return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
-//                }
-//                // if the file is a playlist then it has only a meta file
-//                if (strtolower($sf->md->format) != 'playlist') {
-//                    $this->filenames[] = array(
-//                        'filename'  => $sf->getRealFileName(),
-//                        'format'    => $sf->md->format
-//                    );
-//                }
-//                $this->filenames[] = array(
-//                    'filename'  => $sf->getRealMetadataFileName(),
-//                    'format'    => $sf->md->format
-//                );
-//                if ($this->loglevel=='debug') {
-//                    $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames - add file: {$sf->md->format}|".$sf->getRealMetadataFileName()."\n");
-//                }
-//            }
-//            return $this->filenames;
-//        } else {
-//            $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - The IDs variable isn't array.\n");
-//            return PEAR::raiseError('Backup::setFilenames : The IDs variable isn\'t array.');
-//        }
+        //        if ($this->loglevel=='debug') {
+        //            $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames\n");
+        //        }
+        //        if (is_array($this->ids)) {
+        //            foreach ($this->ids as $i => $item) {
+        //                $gunid = $item['gunid'];
+        //                // get a stored file object of this gunid
+        //                $sf = StoredFile::RecallByGunid($gunid);
+        //                if (is_null($sf) || PEAR::isError($sf)) {
+        //                	return $sf;
+        //                }
+        //                $lid = BasicStor::IdFromGunid($gunid);
+        //                if (($res = BasicStor::Authorize('read', $lid, $this->sessid)) !== TRUE) {
+        //                    $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - authorize gunid:$gunid\n");
+        //                    return PEAR::raiseError('Backup::setFilenames : Authorize ... error.');
+        //                }
+        //                // if the file is a playlist then it has only a meta file
+        //                if (strtolower($sf->md->format) != 'playlist') {
+        //                    $this->filenames[] = array(
+        //                        'filename'  => $sf->getRealFileName(),
+        //                        'format'    => $sf->md->format
+        //                    );
+        //                }
+        //                $this->filenames[] = array(
+        //                    'filename'  => $sf->getRealMetadataFileName(),
+        //                    'format'    => $sf->md->format
+        //                );
+        //                if ($this->loglevel=='debug') {
+        //                    $this->addLogItem("-I- ".date("Ymd-H:i:s")." setFilenames - add file: {$sf->md->format}|".$sf->getRealMetadataFileName()."\n");
+        //                }
+        //            }
+        //            return $this->filenames;
+        //        } else {
+        //            $this->addLogItem("-E- ".date("Ymd-H:i:s")." setFilenames - The IDs variable isn't array.\n");
+        //            return PEAR::raiseError('Backup::setFilenames : The IDs variable isn\'t array.');
+        //        }
     }
 
 
@@ -337,10 +337,10 @@ class Backup
             $this->addLogItem("-I- ".date("Ymd-H:i:s")." doIt\n");
         }
         $command = dirname(__FILe__)."/../bin/backup.sh"
-            ." {$this->tmpDir}"
-            ." {$this->tmpFile}"
-            ." {$this->statusFile}"
-            ." >> {$this->logFile} &";
+        ." {$this->tmpDir}"
+        ." {$this->tmpFile}"
+        ." {$this->statusFile}"
+        ." >> {$this->logFile} &";
         $res = system("$command");
         sleep(2);
         if ($this->loglevel=='debug') {
@@ -438,7 +438,7 @@ class Backup
     {
         $acc = BasicStor::bsAccess($this->tmpFile, BACKUP_EXT, null, ACCESS_TYPE);
         if (PEAR::isError($acc)) {
-        	return $acc;
+            return $acc;
         }
         $this->token = $acc['token'];
     }

@@ -1,4 +1,0 @@
-?package(campcaster-studio):needs="X11" section="Apps/Sound" \
-  title="Campcaster-Studio" command="/opt/campcaster/bin/campcaster-studio.sh" \
-  comment="Control your radio station" \
-  icon="/opt/campcaster/var/Campcaster/icon48.png"
