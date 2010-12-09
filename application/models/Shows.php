@@ -35,6 +35,7 @@ class Show {
 		return $event;
 	}
 
+	//end dates are non inclusive.
 	public function addShow($data) {
 	
 		$con = Propel::getConnection("campcaster");
@@ -56,10 +57,14 @@ class Show {
 			$data['repeats'] = 1;
 		}
 		else if($data['repeats']) {
-			$endDate = $data['end_date'];
+			$sql = "SELECT date '{$data['end_date']}' + INTERVAL '1 day' ";
+			$r = $con->query($sql);
+        	$endDate = $r->fetchColumn(0); 
 		}
 		else {
-			$endDate = $data['start_date'];
+			$sql = "SELECT date '{$data['start_date']}' + INTERVAL '1 day' ";
+			$r = $con->query($sql);
+        	$endDate = $r->fetchColumn(0);
 		} 
 
 		if($data['day_check'] === null) {
@@ -112,7 +117,7 @@ class Show {
 		$e_time = $show["end_time"];
 
 		foreach($res as $show) {
-			$days[] = $show["day"];
+			$days[] = $show["day"] + $deltaDay;
 		}
 
 		$shows_overlap = $this->getShows($start, $end, $days, $s_time, $e_time);
@@ -192,8 +197,7 @@ class Show {
 				if($row["repeats"]) {
 
 					if(!is_null($row["last_show"])) {
-						$time = $row["last_show"] ." ".$row["end_time"];
-						$show_end_epoch = strtotime($time);
+						$show_end_epoch = strtotime($row["last_show"]);
 					}
 
 					while(true) {
@@ -205,6 +209,7 @@ class Show {
 						if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
 							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 						}
+						//case for non-ending shows.
 						else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
 							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 						}
